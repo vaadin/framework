@@ -103,19 +103,15 @@ public class BoxLayoutTest extends AbstractTestUI {
 
         final CheckBox vertical = new CheckBox("Vertical", !horizontal);
         vertical.setImmediate(true);
-        vertical.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                view.removeAllComponents();
+        vertical.addValueChangeListener(event -> {
+            view.removeAllComponents();
 
-                view.addComponent(createControls(!vertical.getValue()
-                        .booleanValue()));
-                view.addComponent(createTestLayout(!vertical.getValue()
-                        .booleanValue()));
+            view.addComponent(createControls(!vertical.getValue()
+                    .booleanValue()));
+            view.addComponent(createTestLayout(!vertical.getValue()
+                    .booleanValue()));
 
-                view.setExpandRatio(view.getComponent(1), 1);
-
-            }
+            view.setExpandRatio(view.getComponent(1), 1);
         });
         header.addComponent(vertical);
 
@@ -201,23 +197,13 @@ public class BoxLayoutTest extends AbstractTestUI {
         layout.addComponent(height);
 
         final CheckBox margin = new CheckBox("Margin", false);
-        margin.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                l.setMargin(margin.getValue().booleanValue());
-            }
-        });
+        margin.addValueChangeListener(event -> l.setMargin(event.getValue()));
         margin.setImmediate(true);
         layout.addComponent(margin);
         layout.addComponent(margin);
 
         final CheckBox spacing = new CheckBox("Spacing", false);
-        spacing.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                l.setSpacing(spacing.getValue().booleanValue());
-            }
-        });
+        spacing.addValueChangeListener(event -> l.setSpacing(event.getValue()));
         spacing.setImmediate(true);
         layout.addComponent(spacing);
 
@@ -258,12 +244,9 @@ public class BoxLayoutTest extends AbstractTestUI {
         expand = new CheckBox("Expand");
         expand.setImmediate(true);
         expand.setEnabled(false);
-        expand.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (target != null) {
-                    l.setExpandRatio(target, expand.getValue() ? 1 : 0);
-                }
+        expand.addValueChangeListener(event -> {
+            if (target != null) {
+                l.setExpandRatio(target, expand.getValue() ? 1 : 0);
             }
         });
         cell.addComponent(expand);
@@ -359,13 +342,10 @@ public class BoxLayoutTest extends AbstractTestUI {
         componentError = new CheckBox("Error");
         componentError.setImmediate(true);
         componentError.setEnabled(false);
-        componentError.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (target != null) {
-                    target.setComponentError(componentError.getValue() ? new UserError(
-                            "Error message") : null);
-                }
+        componentError.addValueChangeListener(event -> {
+            if (target != null) {
+                target.setComponentError(componentError.getValue() ? new UserError(
+                        "Error message") : null);
             }
         });
         component.addComponent(componentError);
@@ -373,13 +353,10 @@ public class BoxLayoutTest extends AbstractTestUI {
         componentRequired = new CheckBox("Required");
         componentRequired.setImmediate(true);
         componentRequired.setEnabled(false);
-        componentRequired.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (target != null && target instanceof LegacyAbstractField) {
-                    ((LegacyAbstractField<?>) target).setRequired(componentRequired
-                            .getValue());
-                }
+        componentRequired.addValueChangeListener(event -> {
+            if (target != null && target instanceof LegacyAbstractField) {
+                ((LegacyAbstractField<?>) target).setRequired(componentRequired
+                        .getValue());
             }
         });
         component.addComponent(componentRequired);

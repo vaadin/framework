@@ -2,8 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -49,13 +47,8 @@ public class Footer extends AbstractTestUI {
 
         final CheckBox visible = new CheckBox("Footers Visible", true);
         visible.setImmediate(true);
-        visible.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                table.setFooterVisible(visible.getValue());
-
-            }
-        });
+        visible.addValueChangeListener(
+                event -> table.setFooterVisible(visible.getValue()));
 
         options.addComponent(visible);
 

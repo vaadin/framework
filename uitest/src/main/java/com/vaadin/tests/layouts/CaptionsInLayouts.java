@@ -81,13 +81,8 @@ public class CaptionsInLayouts extends AbstractTestUI {
         CheckBox requiredToggle = new CheckBox();
         requiredToggle.setImmediate(true);
         requiredToggle.setCaption("Required");
-        requiredToggle.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setRequired((Boolean) event.getProperty().getValue());
-            }
-        });
+        requiredToggle
+                .addValueChangeListener(event -> setRequired(event.getValue()));
         return requiredToggle;
     }
 
@@ -95,13 +90,7 @@ public class CaptionsInLayouts extends AbstractTestUI {
         CheckBox iconToggle = new CheckBox();
         iconToggle.setImmediate(true);
         iconToggle.setCaption("Icons");
-        iconToggle.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setIcon((Boolean) event.getProperty().getValue());
-            }
-        });
+        iconToggle.addValueChangeListener(event -> setIcon(event.getValue()));
         return iconToggle;
     }
 
@@ -127,13 +116,7 @@ public class CaptionsInLayouts extends AbstractTestUI {
         CheckBox errorToggle = new CheckBox();
         errorToggle.setImmediate(true);
         errorToggle.setCaption("Error");
-        errorToggle.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setError((Boolean) event.getProperty().getValue());
-            }
-        });
+        errorToggle.addValueChangeListener(event -> setError(event.getValue()));
         return errorToggle;
     }
 

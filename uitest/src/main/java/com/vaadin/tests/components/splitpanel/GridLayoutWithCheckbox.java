@@ -1,8 +1,6 @@
 package com.vaadin.tests.components.splitpanel;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.server.VaadinRequest;
@@ -39,13 +37,6 @@ public class GridLayoutWithCheckbox extends UI {
         grid.addComponent(l, 0, 1);
         CheckBox checkBox = new CheckBox();
         grid.addComponent(checkBox, 1, 2);
-        checkBox.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-
-            }
-        });
         Window window = new Window();
         window.setWidth(300.0f, Unit.PIXELS);
         window.setContent(grid);

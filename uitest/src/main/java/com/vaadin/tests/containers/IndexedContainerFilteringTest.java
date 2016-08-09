@@ -1,8 +1,6 @@
 package com.vaadin.tests.containers;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Sizeable;
 import com.vaadin.tests.components.TestBase;
@@ -54,15 +52,11 @@ public class IndexedContainerFilteringTest extends TestBase {
         vl.addComponent(filterString);
 
         final CheckBox cb = new CheckBox("Filter");
-        cb.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                container.removeAllContainerFilters();
-                if (((CheckBox) event.getProperty()).getValue()) {
-                    container.addContainerFilter("column1", filterString
-                            .getValue().toString(), false, false);
-                }
+        cb.addValueChangeListener(event -> {
+            container.removeAllContainerFilters();
+            if (event.getValue()) {
+                container.addContainerFilter("column1", filterString
+                        .getValue().toString(), false, false);
             }
         });
         cb.setImmediate(true);

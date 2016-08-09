@@ -2,8 +2,6 @@ package com.vaadin.tests.components.datefield;
 
 import java.util.Date;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
@@ -39,18 +37,14 @@ public class DateFieldWhenChangingValueAndEnablingParent extends AbstractTestUI 
         main.addComponent(chk);
         main.addComponent(sub);
 
-        chk.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                df1.setValue(new Date());
-                df2.setValue(new Date());
-                pdf1.setValue(new Date());
-                pdf2.setValue(new Date());
-                pdf3.setValue(new Date());
-                pdf4.setValue(new Date());
-                sub.setEnabled(chk.getValue());
-            }
+        chk.addValueChangeListener(event -> {
+            df1.setValue(new Date());
+            df2.setValue(new Date());
+            pdf1.setValue(new Date());
+            pdf2.setValue(new Date());
+            pdf3.setValue(new Date());
+            pdf4.setValue(new Date());
+            sub.setEnabled(chk.getValue());
         });
     }
 

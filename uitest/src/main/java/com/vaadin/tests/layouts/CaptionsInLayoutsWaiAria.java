@@ -3,13 +3,14 @@ package com.vaadin.tests.layouts;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.data.HasRequired;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -41,7 +42,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
     private HorizontalLayout horizontalLayout;
     private GridLayout gridLayout;
     private FormLayout formLayout;
-    private List<LegacyAbstractField<?>> components = new ArrayList<LegacyAbstractField<?>>();
+    private List<AbstractComponent> components = new ArrayList<>();
     private CssLayout cssLayout;
     private HorizontalLayout layoutParent = new HorizontalLayout();
 
@@ -78,7 +79,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
     }
 
     protected void prependCaptions(String prepend) {
-        for (LegacyAbstractField<?> c : components) {
+        for (Component c : components) {
             c.setCaption(prepend + c.getCaption());
         }
 
@@ -88,13 +89,8 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
         CheckBox requiredToggle = new CheckBox();
         requiredToggle.setImmediate(true);
         requiredToggle.setCaption("Required");
-        requiredToggle.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setRequired((Boolean) event.getProperty().getValue());
-            }
-        });
+        requiredToggle
+                .addValueChangeListener(event -> setRequired(event.getValue()));
         return requiredToggle;
     }
 
@@ -102,13 +98,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
         CheckBox iconToggle = new CheckBox();
         iconToggle.setImmediate(true);
         iconToggle.setCaption("Icons");
-        iconToggle.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setIcon((Boolean) event.getProperty().getValue());
-            }
-        });
+        iconToggle.addValueChangeListener(event -> setIcon(event.getValue()));
         return iconToggle;
     }
 
@@ -116,12 +106,8 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
         CheckBox readOnlyToggle = new CheckBox();
         readOnlyToggle.setImmediate(true);
         readOnlyToggle.setCaption("Read only");
-        readOnlyToggle.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setReadOnly((Boolean) event.getProperty().getValue());
-            }
-        });
+        readOnlyToggle
+                .addValueChangeListener(event -> setReadOnly(event.getValue()));
 
         return readOnlyToggle;
     }
@@ -131,12 +117,8 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
         enabledToggle.setImmediate(true);
         enabledToggle.setValue(true);
         enabledToggle.setCaption("Enabled");
-        enabledToggle.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setEnabled((Boolean) event.getProperty().getValue());
-            }
-        });
+        enabledToggle
+                .addValueChangeListener(event -> setEnabled(event.getValue()));
 
         return enabledToggle;
     }
@@ -144,12 +126,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
     private Component toggleInvalid() {
         CheckBox invalid = new CheckBox("Invalid");
         invalid.setImmediate(true);
-        invalid.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setInvalid((Boolean) event.getProperty().getValue());
-            }
-        });
+        invalid.addValueChangeListener(event -> setInvalid(event.getValue()));
 
         return invalid;
     }
@@ -161,20 +138,22 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
                     "Der eingegebene Wert ist nicht zulässig!");
         }
 
-        for (LegacyAbstractField<?> c : components) {
+        for (AbstractComponent c : components) {
             c.setComponentError(userError);
         }
     }
 
     protected void setRequired(boolean value) {
-        for (LegacyAbstractField<?> c : components) {
-            c.setRequired(value);
+        for (AbstractComponent c : components) {
+            if (c instanceof HasRequired) {
+                ((HasRequired) c).setRequired(value);
+            }
         }
 
     }
 
     protected void setIcon(boolean value) {
-        for (LegacyAbstractField<?> c : components) {
+        for (Component c : components) {
             if (!value) {
                 c.setIcon(null);
             } else {
@@ -185,13 +164,13 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
     }
 
     protected void setReadOnly(boolean value) {
-        for (LegacyAbstractField<?> c : components) {
+        for (Component c : components) {
             c.setReadOnly(value);
         }
     }
 
     protected void setEnabled(boolean value) {
-        for (LegacyAbstractField<?> c : components) {
+        for (Component c : components) {
             c.setEnabled(value);
         }
     }
@@ -200,18 +179,12 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
         CheckBox errorToggle = new CheckBox();
         errorToggle.setImmediate(true);
         errorToggle.setCaption("Error");
-        errorToggle.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setError((Boolean) event.getProperty().getValue());
-            }
-        });
+        errorToggle.addValueChangeListener(event -> setError(event.getValue()));
         return errorToggle;
     }
 
     protected void setError(boolean value) {
-        for (LegacyAbstractField<?> c : components) {
+        for (AbstractComponent c : components) {
             if (value) {
                 c.setComponentError(new UserError("error"));
             } else {

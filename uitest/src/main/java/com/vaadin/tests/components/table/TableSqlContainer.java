@@ -7,7 +7,6 @@ import java.util.Locale;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
@@ -65,18 +64,14 @@ public class TableSqlContainer extends AbstractTestUI {
         });
 
         final CheckBox editMode = new CheckBox("Edit mode");
-        editMode.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                table.setEditable(editMode.getValue());
-            }
-        });
+        editMode.addValueChangeListener(
+                event -> table.setEditable(editMode.getValue()));
         addComponent(editMode);
     }
 
     /**
      * (Re)creates the test table
-     * 
+     *
      * @param connectionPool
      */
     private void createTestTable(JDBCConnectionPool connectionPool) {
@@ -102,7 +97,7 @@ public class TableSqlContainer extends AbstractTestUI {
 
     /**
      * Adds test data to the test table
-     * 
+     *
      * @param connectionPool
      * @throws SQLException
      */

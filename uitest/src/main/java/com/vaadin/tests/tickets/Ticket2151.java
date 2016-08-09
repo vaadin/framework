@@ -1,7 +1,5 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -42,7 +40,6 @@ public class Ticket2151 extends LegacyApplication {
 
         checkButton(Button.class);
         checkCheckBox(CheckBox.class);
-        checkDataBinding(CheckBox.class);
 
     }
 
@@ -83,36 +80,4 @@ public class Ticket2151 extends LegacyApplication {
 
     }
 
-    private void checkDataBinding(Class<? extends LegacyAbstractField> class1) {
-        boolean ok = false;
-        LegacyAbstractField b;
-        try {
-            b = class1.newInstance();
-            b.setCaption("Button of type " + class1.getSimpleName());
-            try {
-                b.setBuffered(false);
-                ObjectProperty<String> prop = new ObjectProperty<String>(
-                        "ABC 123");
-                /*
-                 * This should throw an exception or somehow tell that the
-                 * property was invalid (wrong type). See #2223.
-                 */
-                b.setPropertyDataSource(prop);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (Exception e1) {
-            e1.printStackTrace();
-            return;
-        }
-
-        if (ok) {
-            status.setValue(status.getValue() + " "
-                    + class1.getClass().getSimpleName() + "/DB: OK");
-        } else {
-            status.setValue(status.getValue() + " "
-                    + class1.getClass().getSimpleName() + "/DB: FAILED");
-        }
-
-    }
 }

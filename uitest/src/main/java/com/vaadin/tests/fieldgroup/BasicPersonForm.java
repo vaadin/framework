@@ -18,6 +18,7 @@ import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
@@ -60,21 +61,16 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
     private Configuration configuration = new Configuration();
 
     private class ConfigurationPanel extends Panel {
+        private CheckBox preCommitCheckBox = new CheckBox("Pre Commit Fails", configuration.isPreCommitFails());
+        private CheckBox postCommitCheckBox = new CheckBox("Post Commit Fails", configuration.isPostCommitFails());
 
         public ConfigurationPanel() {
             super("Configuration", new VerticalLayout());
             ((VerticalLayout) getContent()).setMargin(true);
-            BeanItem<Configuration> bi = new BeanItem<BasicPersonForm.Configuration>(
-                    configuration);
-            FieldGroup confFieldGroup = new FieldGroup(bi);
-            confFieldGroup.setItemDataSource(bi);
-            confFieldGroup.setBuffered(false);
+            preCommitCheckBox.addValueChangeListener(event -> configuration.setPreCommitFails(event.getValue()));
+            postCommitCheckBox.addValueChangeListener(event -> configuration.setPostCommitFails(event.getValue()));
 
-            for (Object propertyId : bi.getItemPropertyIds()) {
-                ((ComponentContainer) getContent())
-                        .addComponent(confFieldGroup.buildAndBind(propertyId));
-            }
-
+            ((ComponentContainer) getContent()).addComponents(preCommitCheckBox, postCommitCheckBox);
         }
     }
 

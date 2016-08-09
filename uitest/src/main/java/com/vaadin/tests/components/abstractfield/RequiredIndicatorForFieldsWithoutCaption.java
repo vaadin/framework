@@ -3,8 +3,6 @@ package com.vaadin.tests.components.abstractfield;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -27,14 +25,10 @@ public class RequiredIndicatorForFieldsWithoutCaption extends AbstractTestUI {
 
         CheckBox required = new CheckBox("Fields required", true);
         required.setImmediate(true);
-        required.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                boolean required = (Boolean) event.getProperty().getValue();
-                for (LegacyField f : fields) {
-                    f.setRequired(required);
-                }
+        required.addValueChangeListener(event -> {
+            boolean newRequired = event.getValue();
+            for (LegacyField f : fields) {
+                f.setRequired(newRequired);
             }
         });
         addComponent(required);
@@ -72,7 +66,7 @@ public class RequiredIndicatorForFieldsWithoutCaption extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -82,7 +76,7 @@ public class RequiredIndicatorForFieldsWithoutCaption extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override

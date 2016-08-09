@@ -233,7 +233,7 @@ public class LayoutPerformanceTests extends TestBase {
                     return;
                 }
 
-                boolean wrapped = wrapInPanel.booleanValue();
+                boolean wrapped = wrapInPanel.getValue();
                 ComponentContainer container = containerType.buildLayout(
                         ((Number) levels.getValue()).intValue(),
                         ((Number) childAmount.getValue()).intValue(), leafType,

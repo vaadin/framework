@@ -1,8 +1,6 @@
 package com.vaadin.tests.containers;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.Sizeable;
 import com.vaadin.tests.components.TestBase;
@@ -87,15 +85,11 @@ public class BeanItemContainerFilteringTest extends TestBase {
             vl.addComponent(filterString);
 
             final CheckBox cb = new CheckBox("Filter on value");
-            cb.addListener(new ValueChangeListener() {
-
-                @Override
-                public void valueChange(ValueChangeEvent event) {
-                    container.removeAllContainerFilters();
-                    if (((CheckBox) event.getProperty()).getValue()) {
-                        container.addContainerFilter("value", filterString
-                                .getValue().toString(), false, false);
-                    }
+            cb.addValueChangeListener(event -> {
+                container.removeAllContainerFilters();
+                if (event.getValue()) {
+                    container.addContainerFilter("value",
+                            filterString.getValue().toString(), false, false);
                 }
             });
             cb.setImmediate(true);

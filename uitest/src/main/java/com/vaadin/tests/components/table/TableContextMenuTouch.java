@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.Action;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -12,7 +10,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
 /*
- * Differs from TableContextMenu by number of items, their numbering and 
+ * Differs from TableContextMenu by number of items, their numbering and
  * immediate/selectable/multiselect toggling
  */
 public class TableContextMenuTouch extends AbstractTestUI {
@@ -58,36 +56,25 @@ public class TableContextMenuTouch extends AbstractTestUI {
 
         final CheckBox immediateCheckBox = new CheckBox("Immediate");
         vlay.addComponent(immediateCheckBox);
-        immediateCheckBox.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                table.setImmediate(immediateCheckBox.getValue());
-            }
-        });
+        immediateCheckBox.addValueChangeListener(
+                event -> table.setImmediate(immediateCheckBox.getValue()));
         immediateCheckBox.setValue(true);
         table.setImmediate(immediateCheckBox.getValue());
 
         final CheckBox selectableCheckBox = new CheckBox("Selectable");
         final CheckBox multiselectCheckBox = new CheckBox("Multiselect");
         vlay.addComponent(selectableCheckBox);
-        selectableCheckBox.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                table.setSelectable(selectableCheckBox.getValue());
-                multiselectCheckBox.setEnabled(selectableCheckBox.getValue());
-            }
+        selectableCheckBox.addValueChangeListener(event -> {
+            table.setSelectable(selectableCheckBox.getValue());
+            multiselectCheckBox.setEnabled(selectableCheckBox.getValue());
         });
         selectableCheckBox.setValue(true);
         multiselectCheckBox.setEnabled(selectableCheckBox.getValue());
         table.setSelectable(selectableCheckBox.getValue());
 
         vlay.addComponent(multiselectCheckBox);
-        multiselectCheckBox.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                table.setMultiSelect(multiselectCheckBox.getValue());
-            }
-        });
+        multiselectCheckBox.addValueChangeListener(
+                event -> table.setMultiSelect(multiselectCheckBox.getValue()));
         multiselectCheckBox.setValue(true);
         table.setMultiSelect(multiselectCheckBox.getValue());
 

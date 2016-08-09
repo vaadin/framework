@@ -1,8 +1,6 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.Action;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -25,50 +23,34 @@ public class HeaderPositionWhenSorting extends AbstractTestUI implements
     protected void setup(VaadinRequest request) {
         CheckBox cb = new CheckBox("Item click listener");
         cb.setImmediate(true);
-        cb.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (((Boolean) event.getProperty().getValue())) {
-                    table.addItemClickListener(HeaderPositionWhenSorting.this);
-                } else {
-                    table.removeItemClickListener(HeaderPositionWhenSorting.this);
-                }
-
+        cb.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                table.addItemClickListener(HeaderPositionWhenSorting.this);
+            } else {
+                table.removeItemClickListener(HeaderPositionWhenSorting.this);
             }
         });
         addComponent(cb);
 
         CheckBox cbActionHandler = new CheckBox("Action handler");
         cbActionHandler.setImmediate(true);
-        cbActionHandler.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (((Boolean) event.getProperty().getValue())) {
-                    table.addActionHandler(HeaderPositionWhenSorting.this);
-                } else {
-                    table.removeActionHandler(HeaderPositionWhenSorting.this);
-                }
-
+        cbActionHandler.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                table.addActionHandler(HeaderPositionWhenSorting.this);
+            } else {
+                table.removeActionHandler(HeaderPositionWhenSorting.this);
             }
         });
         addComponent(cbActionHandler);
 
         CheckBox cbActionHasActions = new CheckBox("Action handler has actions");
         cbActionHasActions.setImmediate(true);
-        cbActionHasActions.addValueChangeListener(new ValueChangeListener() {
+        cbActionHasActions.addValueChangeListener(event -> {
+            actionHandlerHasActions = event.getValue();
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                actionHandlerHasActions = ((Boolean) event.getProperty()
-                        .getValue());
-
-                // Workaround to ensure actions are repainted
-                removeComponent(table);
-                addComponent(table);
-
-            }
+            // Workaround to ensure actions are repainted
+            removeComponent(table);
+            addComponent(table);
         });
         addComponent(cbActionHasActions);
 

@@ -2,8 +2,6 @@ package com.vaadin.tests.components.panel;
 
 import java.util.Map;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -41,14 +39,11 @@ public class BasicPanelTest extends TestBase {
 
         final CheckBox heightSelection = new CheckBox("Undefined height");
         heightSelection.setImmediate(true);
-        heightSelection.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (heightSelection.getValue() == Boolean.TRUE) {
-                    panel.setHeight(null);
-                } else {
-                    panel.setHeight("100%");
-                }
+        heightSelection.addValueChangeListener(event -> {
+            if (heightSelection.getValue() == Boolean.TRUE) {
+                panel.setHeight(null);
+            } else {
+                panel.setHeight("100%");
             }
         });
         actions.addComponent(heightSelection);

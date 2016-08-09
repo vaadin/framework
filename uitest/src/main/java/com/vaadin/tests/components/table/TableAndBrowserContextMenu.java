@@ -1,8 +1,6 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.Action;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -23,50 +21,34 @@ public class TableAndBrowserContextMenu extends TestBase implements
     public void setup() {
         CheckBox cb = new CheckBox("Item click listener");
         cb.setImmediate(true);
-        cb.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (((Boolean) event.getProperty().getValue())) {
-                    table.addListener(TableAndBrowserContextMenu.this);
-                } else {
-                    table.removeListener(TableAndBrowserContextMenu.this);
-                }
-
+        cb.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                table.addListener(TableAndBrowserContextMenu.this);
+            } else {
+                table.removeListener(TableAndBrowserContextMenu.this);
             }
         });
         addComponent(cb);
 
         CheckBox cbActionHandler = new CheckBox("Action handler");
         cbActionHandler.setImmediate(true);
-        cbActionHandler.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (((Boolean) event.getProperty().getValue())) {
-                    table.addActionHandler(TableAndBrowserContextMenu.this);
-                } else {
-                    table.removeActionHandler(TableAndBrowserContextMenu.this);
-                }
-
+        cbActionHandler.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                table.addActionHandler(TableAndBrowserContextMenu.this);
+            } else {
+                table.removeActionHandler(TableAndBrowserContextMenu.this);
             }
         });
         addComponent(cbActionHandler);
 
         CheckBox cbActionHasActions = new CheckBox("Action handler has actions");
         cbActionHasActions.setImmediate(true);
-        cbActionHasActions.addListener(new ValueChangeListener() {
+        cbActionHasActions.addValueChangeListener(event -> {
+            actionHandlerHasActions = event.getValue();
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                actionHandlerHasActions = ((Boolean) event.getProperty()
-                        .getValue());
-
-                // Workaround to ensure actions are repainted
-                removeComponent(table);
-                addComponent(table);
-
-            }
+            // Workaround to ensure actions are repainted
+            removeComponent(table);
+            addComponent(table);
         });
         addComponent(cbActionHasActions);
 

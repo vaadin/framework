@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.data.Property;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.PopupDateField;
@@ -14,17 +13,12 @@ public class PopupDateFieldTextEnabled extends TestBase {
     public void setup() {
         final PopupDateField field = new PopupDateField();
         final CheckBox box = new CheckBox(ENABLED, true);
-        box.addListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                field.setTextFieldEnabled((Boolean) event.getProperty()
-                        .getValue());
-                if (field.isTextFieldEnabled()) {
-                    box.setCaption(ENABLED);
-                } else {
-                    box.setCaption(DISABLED);
-                }
+        box.addValueChangeListener(event -> {
+            field.setTextFieldEnabled(event.getValue());
+            if (field.isTextFieldEnabled()) {
+                box.setCaption(ENABLED);
+            } else {
+                box.setCaption(DISABLED);
             }
         });
         addComponent(box);

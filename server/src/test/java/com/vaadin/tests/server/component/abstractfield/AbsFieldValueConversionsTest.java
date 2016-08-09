@@ -1,7 +1,6 @@
 package com.vaadin.tests.server.component.abstractfield;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Locale;
@@ -12,15 +11,14 @@ import org.junit.Test;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
 import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
+import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
 
 public class AbsFieldValueConversionsTest {
@@ -153,65 +151,6 @@ public class AbsFieldValueConversionsTest {
         assertEquals((Integer) 123456789, ds.getValue());
         assertEquals("123" + FORMATTED_SPACE + "456" + FORMATTED_SPACE + "789",
                 tf.getValue());
-    }
-
-    @Test
-    public void testBooleanNullConversion() {
-        CheckBox cb = new CheckBox();
-        cb.setConverter(new LegacyConverter<Boolean, Boolean>() {
-
-            @Override
-            public Boolean convertToModel(Boolean value,
-                    Class<? extends Boolean> targetType, Locale locale) {
-                // value from a CheckBox should never be null as long as it is
-                // not set to null (handled by conversion below).
-                assertNotNull(value);
-                return value;
-            }
-
-            @Override
-            public Boolean convertToPresentation(Boolean value,
-                    Class<? extends Boolean> targetType, Locale locale) {
-                // Datamodel -> field
-                if (value == null) {
-                    return false;
-                }
-
-                return value;
-            }
-
-            @Override
-            public Class<Boolean> getModelType() {
-                return Boolean.class;
-            }
-
-            @Override
-            public Class<Boolean> getPresentationType() {
-                return Boolean.class;
-            }
-
-        });
-        MethodProperty<Boolean> property = new MethodProperty<Boolean>(
-                paulaBean, "deceased");
-        cb.setPropertyDataSource(property);
-        assertEquals(Boolean.FALSE, property.getValue());
-        assertEquals(Boolean.FALSE, cb.getValue());
-        Boolean newDmValue = cb.getConverter().convertToPresentation(
-                cb.getValue(), Boolean.class, new Locale("fi", "FI"));
-        assertEquals(Boolean.FALSE, newDmValue);
-
-        // FIXME: Should be able to set to false here to cause datamodel to be
-        // set to false but the change will not be propagated to the Property
-        // (field value is already false)
-
-        cb.setValue(true);
-        assertEquals(Boolean.TRUE, cb.getValue());
-        assertEquals(Boolean.TRUE, property.getValue());
-
-        cb.setValue(false);
-        assertEquals(Boolean.FALSE, cb.getValue());
-        assertEquals(Boolean.FALSE, property.getValue());
-
     }
 
     // Now specific to Integer because StringToNumberConverter has been removed

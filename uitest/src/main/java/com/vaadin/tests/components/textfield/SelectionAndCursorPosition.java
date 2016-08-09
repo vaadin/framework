@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.textfield;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Button;
@@ -27,17 +25,14 @@ public class SelectionAndCursorPosition extends TestBase {
         panel.setCaption("Hackers panel");
         CheckBox ml = new CheckBox("Multiline");
         ml.setImmediate(true);
-        ml.addListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (textField.getUI() == null
-                        || textField.getUI().getSession() == null) {
-                    replaceComponent(textArea, textField);
-                    activeComponent = textField;
-                } else {
-                    replaceComponent(textField, textArea);
-                    activeComponent = textArea;
-                }
+        ml.addValueChangeListener(event -> {
+            if (textField.getUI() == null
+                    || textField.getUI().getSession() == null) {
+                replaceComponent(textArea, textField);
+                activeComponent = textField;
+            } else {
+                replaceComponent(textField, textArea);
+                activeComponent = textArea;
             }
         });
         fl.addComponent(ml);

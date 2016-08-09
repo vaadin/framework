@@ -38,24 +38,12 @@ public class DoublesInTable extends TestBase {
     protected void setup() {
         editMode = new CheckBox("Edit mode");
         editMode.setImmediate(true);
-        editMode.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                table.setEditable(editMode.getValue());
-
-            }
-        });
+        editMode.addValueChangeListener(
+                event -> table.setEditable(editMode.getValue()));
 
         useCustomConverters = new CheckBox("Use custom converters");
         useCustomConverters.setImmediate(true);
-        useCustomConverters.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                recreateTable();
-            }
-        });
+        useCustomConverters.addValueChangeListener(event -> recreateTable());
 
         localeSelect = createLocaleSelect();
         personBeanItemContainer = createContainer(100);

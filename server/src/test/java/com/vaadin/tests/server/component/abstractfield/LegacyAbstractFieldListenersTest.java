@@ -7,20 +7,20 @@ import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.server.component.AbstractListenerMethodsTestBase;
-import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Table;
 
-public class AbstractFieldListenersTest extends AbstractListenerMethodsTestBase {
+public class LegacyAbstractFieldListenersTest extends AbstractListenerMethodsTestBase {
 
     @Test
     public void testReadOnlyStatusChangeListenerAddGetRemove() throws Exception {
-        testListenerAddGetRemove(CheckBox.class,
+        testListenerAddGetRemove(Table.class,
                 ReadOnlyStatusChangeEvent.class,
                 ReadOnlyStatusChangeListener.class);
     }
 
     @Test
     public void testValueChangeListenerAddGetRemove() throws Exception {
-        testListenerAddGetRemove(CheckBox.class, ValueChangeEvent.class,
+        testListenerAddGetRemove(Table.class, ValueChangeEvent.class,
                 ValueChangeListener.class);
     }
 }

@@ -114,15 +114,9 @@ public class DateFieldRanges extends AbstractTestUI {
 
         immediateCB.setValue(true);
         immediateCB.setImmediate(true);
-        immediateCB.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-
-                inlineDynamicDateField.setImmediate(immediateCB.getValue());
-                dynamicDateField.setImmediate(immediateCB.getValue());
-
-            }
+        immediateCB.addValueChangeListener(event -> {
+            inlineDynamicDateField.setImmediate(immediateCB.getValue());
+            dynamicDateField.setImmediate(immediateCB.getValue());
         });
 
         recreate.addClickListener(new Button.ClickListener() {

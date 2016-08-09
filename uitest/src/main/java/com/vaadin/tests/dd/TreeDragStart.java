@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.vaadin.data.Container;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.HierarchicalContainer;
@@ -37,24 +35,16 @@ public class TreeDragStart extends TestBase {
         CheckBox checkBox = new CheckBox("Enabled");
         checkBox.setImmediate(true);
         checkBox.setValue(true);
-        checkBox.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                tree.setEnabled(!tree.isEnabled());
-            }
-        });
+        checkBox.addValueChangeListener(event -> tree.setEnabled(!tree.isEnabled()));
         addComponent(checkBox);
         checkBox = new CheckBox("Drag start");
         checkBox.setImmediate(true);
         checkBox.setValue(true);
-        checkBox.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (((CheckBox) event.getProperty()).getValue()) {
-                    tree.setDragMode(TreeDragMode.NODE);
-                } else {
-                    tree.setDragMode(TreeDragMode.NONE);
-                }
+        checkBox.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                tree.setDragMode(TreeDragMode.NODE);
+            } else {
+                tree.setDragMode(TreeDragMode.NONE);
             }
         });
         addComponent(checkBox);

@@ -5,7 +5,6 @@ import java.util.Arrays;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
@@ -83,17 +82,13 @@ public class TableUndefinedSize extends TestBase {
 
         CheckBox cb = new CheckBox("Column 1");
         cb.setValue(true);
-        cb.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Boolean value = (Boolean) event.getProperty().getValue();
-                tbl.setColumnCollapsed("Column 1", !value);
-                if (value) {
-                    log.log("Column 1 visible");
-                } else {
-                    log.log("Column 1 hidden");
-                }
+        cb.addValueChangeListener(event -> {
+            Boolean value = event.getValue();
+            tbl.setColumnCollapsed("Column 1", !value);
+            if (value) {
+                log.log("Column 1 visible");
+            } else {
+                log.log("Column 1 hidden");
             }
         });
         cb.setImmediate(true);
@@ -101,18 +96,14 @@ public class TableUndefinedSize extends TestBase {
 
         cb = new CheckBox("Column 2");
         cb.setValue(true);
-        cb.addListener(new ValueChangeListener() {
+        cb.addValueChangeListener(event -> {
+            Boolean value = event.getValue();
+            tbl.setColumnCollapsed("Column 2", !value);
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Boolean value = (Boolean) event.getProperty().getValue();
-                tbl.setColumnCollapsed("Column 2", !value);
-
-                if (value) {
-                    log.log("Column 2 visible");
-                } else {
-                    log.log("Column 2 hidden");
-                }
+            if (value) {
+                log.log("Column 2 visible");
+            } else {
+                log.log("Column 2 hidden");
             }
         });
         cb.setImmediate(true);
@@ -120,19 +111,15 @@ public class TableUndefinedSize extends TestBase {
 
         cb = new CheckBox("Column 3");
         cb.setValue(true);
-        cb.addListener(new ValueChangeListener() {
+        cb.addValueChangeListener(event -> {
+            Boolean value = event.getValue();
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Boolean value = (Boolean) event.getProperty().getValue();
+            tbl.setColumnCollapsed("Column 3", !value);
 
-                tbl.setColumnCollapsed("Column 3", !value);
-
-                if (value) {
-                    log.log("Column 3 visible");
-                } else {
-                    log.log("Column 3 hidden");
-                }
+            if (value) {
+                log.log("Column 3 visible");
+            } else {
+                log.log("Column 3 hidden");
             }
         });
         cb.setImmediate(true);

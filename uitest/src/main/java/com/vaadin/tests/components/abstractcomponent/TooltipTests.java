@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.abstractcomponent;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.HasValue;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
@@ -30,14 +29,14 @@ public class TooltipTests extends TestBase {
         HorizontalLayout topLayout = new HorizontalLayout();
         addComponent(topLayout);
         CheckBox panelCbox = new CheckBox("Panel");
-        panelCbox.addListener(panelListener);
+        panelCbox.addValueChangeListener(panelListener);
         topLayout.addComponent(panelCbox);
         CheckBox layoutCbox = new CheckBox("Layout");
-        layoutCbox.addListener(layoutListener);
+        layoutCbox.addValueChangeListener(layoutListener);
         topLayout.addComponent(layoutCbox);
         CheckBox labelCbox = new CheckBox("Label");
         topLayout.addComponent(labelCbox);
-        labelCbox.addListener(labelListener);
+        labelCbox.addValueChangeListener(labelListener);
 
         panel = new Panel();
         panel.setCaption("Panel caption");
@@ -55,46 +54,28 @@ public class TooltipTests extends TestBase {
         layout.addComponent(label);
     }
 
-    private final Property.ValueChangeListener panelListener = new Property.ValueChangeListener() {
-
-        @Override
-        public void valueChange(ValueChangeEvent event) {
-            boolean value = (Boolean) (event.getProperty().getValue());
-            if (value) {
-                panel.setDescription("I'm panel!");
-            } else {
-                panel.setDescription("");
-            }
+    private final HasValue.ValueChangeListener<Boolean> panelListener = event -> {
+        if (event.getValue()) {
+            panel.setDescription("I'm panel!");
+        } else {
+            panel.setDescription("");
         }
-
     };
 
-    private final Property.ValueChangeListener layoutListener = new Property.ValueChangeListener() {
-
-        @Override
-        public void valueChange(ValueChangeEvent event) {
-            boolean value = (Boolean) (event.getProperty().getValue());
-            if (value) {
-                layout.setDescription("I'm layout!");
-            } else {
-                layout.setDescription("");
-            }
+    private final HasValue.ValueChangeListener<Boolean> layoutListener = event -> {
+        if (event.getValue()) {
+            layout.setDescription("I'm layout!");
+        } else {
+            layout.setDescription("");
         }
-
     };
 
-    private final Property.ValueChangeListener labelListener = new Property.ValueChangeListener() {
-
-        @Override
-        public void valueChange(ValueChangeEvent event) {
-            boolean value = (Boolean) (event.getProperty().getValue());
-            if (value) {
-                label.setDescription("I'm label!");
-            } else {
-                label.setDescription("");
-            }
+    private final HasValue.ValueChangeListener<Boolean> labelListener = event -> {
+        if (event.getValue()) {
+            label.setDescription("I'm label!");
+        } else {
+            label.setDescription("");
         }
-
     };
 
 }

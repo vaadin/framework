@@ -1,8 +1,6 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -18,16 +16,11 @@ public class AddItemToEmptyTable extends TestBase {
         CheckBox cb = new CheckBox("Set first column width");
         cb.setValue(false);
         cb.setImmediate(true);
-        cb.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if ((Boolean) event.getProperty().getValue()) {
-                    rightTable.setColumnWidth("name", 150);
-                } else {
-                    rightTable.setColumnWidth("name", -1);
-                }
-
+        cb.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                rightTable.setColumnWidth("name", 150);
+            } else {
+                rightTable.setColumnWidth("name", -1);
             }
         });
         addComponent(cb);
@@ -35,16 +28,11 @@ public class AddItemToEmptyTable extends TestBase {
         cb = new CheckBox("Set second column width");
         cb.setValue(true);
         cb.setImmediate(true);
-        cb.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if ((Boolean) event.getProperty().getValue()) {
-                    rightTable.setColumnWidth("info", 20);
-                } else {
-                    rightTable.setColumnWidth("info", -1);
-                }
-
+        cb.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                rightTable.setColumnWidth("info", 20);
+            } else {
+                rightTable.setColumnWidth("info", -1);
             }
         });
         addComponent(cb);

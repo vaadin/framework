@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.components.checkbox;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.HasValue;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
@@ -32,12 +31,9 @@ public class CheckBoxImmediate extends AbstractTestUI {
         addComponent(status);
 
         CheckBox cb = new CheckBox("Non-immediate");
-        ValueChangeListener listener = new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                count++;
-                status.setValue("Events received: " + count);
-            }
+        HasValue.ValueChangeListener<Boolean> listener = event -> {
+            count++;
+            status.setValue("Events received: " + count);
         };
         cb.addValueChangeListener(listener);
         cb.setImmediate(false);

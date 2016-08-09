@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,7 +16,6 @@
 
 package com.vaadin.tests.components.media;
 
-import com.vaadin.data.util.MethodProperty;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.Resource;
 import com.vaadin.tests.components.TestBase;
@@ -48,20 +47,28 @@ public class AudioTest extends TestBase {
 
         addComponent(audio);
 
-        CheckBox checkBox = new CheckBox("Show controls",
-                new MethodProperty<Boolean>(audio, "showControls"));
+        CheckBox checkBox = new CheckBox("Show controls");
+        checkBox.setValue(audio.isShowControls());
+        checkBox.addValueChangeListener(
+                event -> audio.setShowControls(event.getValue()));
         checkBox.setImmediate(true);
         addComponent(checkBox);
-        checkBox = new CheckBox("HtmlContentAllowed",
-                new MethodProperty<Boolean>(audio, "htmlContentAllowed"));
+        checkBox = new CheckBox("HtmlContentAllowed");
+        checkBox.setValue(audio.isHtmlContentAllowed());
+        checkBox.addValueChangeListener(
+                event -> audio.setHtmlContentAllowed(event.getValue()));
         checkBox.setImmediate(true);
         addComponent(checkBox);
-        checkBox = new CheckBox("muted", new MethodProperty<Boolean>(audio,
-                "muted"));
+        checkBox = new CheckBox("muted");
+        checkBox.setValue(audio.isMuted());
+        checkBox.addValueChangeListener(
+                event -> audio.setMuted(event.getValue()));
         checkBox.setImmediate(true);
         addComponent(checkBox);
-        checkBox = new CheckBox("autoplay", new MethodProperty<Boolean>(audio,
-                "autoplay"));
+        checkBox = new CheckBox("autoplay");
+        checkBox.setValue(audio.isAutoplay());
+        checkBox.addValueChangeListener(
+                event -> audio.setAutoplay(event.getValue()));
         checkBox.setImmediate(true);
         addComponent(checkBox);
 

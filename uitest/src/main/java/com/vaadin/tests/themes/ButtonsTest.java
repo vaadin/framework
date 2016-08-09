@@ -1,7 +1,5 @@
 package com.vaadin.tests.themes;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
@@ -32,55 +30,39 @@ public class ButtonsTest extends com.vaadin.server.LegacyApplication {
         setTheme("reindeer");
 
         themeToggle = new CheckBox("Runo theme");
-        themeToggle.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (getTheme() == "reindeer") {
-                    setTheme("runo");
-                } else {
-                    setTheme("reindeer");
-                }
+        themeToggle.addValueChangeListener(event -> {
+            if (getTheme() == "reindeer") {
+                setTheme("runo");
+            } else {
+                setTheme("reindeer");
             }
         });
         themeToggle.setStyleName("small");
         themeToggle.setImmediate(true);
 
         styleToggle = new CheckBox("Black style");
-        styleToggle.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (!main.getContent().getStyleName().contains("black")) {
-                    main.getContent().setStyleName("black");
-                } else {
-                    main.getContent().setStyleName("");
-                }
+        styleToggle.addValueChangeListener(event -> {
+            if (!main.getContent().getStyleName().contains("black")) {
+                main.getContent().setStyleName("black");
+            } else {
+                main.getContent().setStyleName("");
             }
         });
         styleToggle.setImmediate(true);
         styleToggle.setStyleName("small");
 
         iconToggle = new CheckBox("64x icons");
-        iconToggle.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                largeIcons = !largeIcons;
-                recreateAll();
-            }
+        iconToggle.addValueChangeListener(event -> {
+            largeIcons = !largeIcons;
+            recreateAll();
         });
         iconToggle.setImmediate(true);
         iconToggle.setStyleName("small");
 
         nativeToggle = new CheckBox("Native buttons");
-        nativeToggle.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                nativeButtons = !nativeButtons;
-                recreateAll();
-            }
+        nativeToggle.addValueChangeListener(event -> {
+            nativeButtons = !nativeButtons;
+            recreateAll();
         });
         nativeToggle.setImmediate(true);
         nativeToggle.setStyleName("small");

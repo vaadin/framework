@@ -36,15 +36,11 @@ public class ColumnHeaderAlignments extends TestBase {
         });
         addComponent(theme);
         CheckBox footers = new CheckBox("Show footers");
-        footers.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                boolean visible = (Boolean) event.getProperty().getValue();
-                fooTable.setFooterVisible(visible);
-                barTable.setFooterVisible(visible);
-                bazTable.setFooterVisible(visible);
-            }
+        footers.addValueChangeListener(event -> {
+            boolean visible = event.getValue();
+            fooTable.setFooterVisible(visible);
+            barTable.setFooterVisible(visible);
+            bazTable.setFooterVisible(visible);
         });
         footers.setImmediate(true);
         addComponent(footers);

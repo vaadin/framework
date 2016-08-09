@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.richtextarea;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
@@ -93,13 +91,8 @@ public class RichTextAreaPreventsTextFieldAccess extends TestBase {
 
         CheckBox cb = new CheckBox("close");
         cb.setImmediate(true);
-        cb.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                getMainWindow().removeWindow(subWindow);
-            }
-        });
+        cb.addValueChangeListener(
+                event -> getMainWindow().removeWindow(subWindow));
         wLayout.addComponent(cb);
 
     }

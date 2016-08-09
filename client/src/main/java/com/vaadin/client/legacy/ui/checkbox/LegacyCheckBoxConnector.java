@@ -13,25 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui;
+package com.vaadin.client.legacy.ui.checkbox;
 
-import org.junit.Assert;
-import org.junit.Test;
+import com.vaadin.client.ui.checkbox.CheckBoxConnector;
+import com.vaadin.legacy.ui.LegacyCheckBox;
+import com.vaadin.shared.ui.Connect;
 
-public class CheckBoxTest {
-    @Test
-    public void initiallyFalse() {
-        CheckBox cb = new CheckBox();
-        Assert.assertFalse(cb.getValue());
-    }
-
-    @Test
-    public void testSetValue() {
-        CheckBox cb = new CheckBox();
-        cb.setValue(true);
-        Assert.assertTrue(cb.getValue());
-        cb.setValue(false);
-        Assert.assertFalse(cb.getValue());
-    }
+@Connect(LegacyCheckBox.class)
+public class LegacyCheckBoxConnector extends CheckBoxConnector {
 
 }

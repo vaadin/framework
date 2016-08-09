@@ -16,8 +16,7 @@
 package com.vaadin.tests.themes.valo;
 
 import com.vaadin.data.Container;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.HasValue;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
@@ -85,35 +84,32 @@ public class Tables extends VerticalLayout implements View {
                 verticalLines, horizontalLines, borderless, headers, compact,
                 small, rowIndex, rowCaption, rowIcon, componentsInCells);
 
-        ValueChangeListener update = new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (table == null) {
-                    table = new Table();
-                    table.setContainerDataSource(normalContainer);
-                    addComponent(table);
-                }
-                if (hierarchical.getValue() && table instanceof Table) {
-                    removeComponent(table);
-                    table = new TreeTable();
-                    table.setContainerDataSource(hierarchicalContainer);
-                    addComponent(table);
-                } else if (!hierarchical.getValue()
-                        && table instanceof TreeTable) {
-                    removeComponent(table);
-                    table = new Table();
-                    table.setContainerDataSource(normalContainer);
-                    addComponent(table);
-                }
-
-                configure(table, footer.getValue(), sized.getValue(),
-                        expandRatios.getValue(), stripes.getValue(),
-                        verticalLines.getValue(), horizontalLines.getValue(),
-                        borderless.getValue(), headers.getValue(),
-                        compact.getValue(), small.getValue(),
-                        rowIndex.getValue(), rowCaption.getValue(),
-                        rowIcon.getValue(), componentsInCells.getValue());
+        HasValue.ValueChangeListener<Boolean> update = event -> {
+            if (table == null) {
+                table = new Table();
+                table.setContainerDataSource(normalContainer);
+                addComponent(table);
             }
+            if (hierarchical.getValue() && table instanceof Table) {
+                removeComponent(table);
+                table = new TreeTable();
+                table.setContainerDataSource(hierarchicalContainer);
+                addComponent(table);
+            } else if (!hierarchical.getValue()
+                    && table instanceof TreeTable) {
+                removeComponent(table);
+                table = new Table();
+                table.setContainerDataSource(normalContainer);
+                addComponent(table);
+            }
+
+            configure(table, footer.getValue(), sized.getValue(),
+                    expandRatios.getValue(), stripes.getValue(),
+                    verticalLines.getValue(), horizontalLines.getValue(),
+                    borderless.getValue(), headers.getValue(),
+                    compact.getValue(), small.getValue(),
+                    rowIndex.getValue(), rowCaption.getValue(),
+                    rowIcon.getValue(), componentsInCells.getValue());
         };
 
         hierarchical.addValueChangeListener(update);

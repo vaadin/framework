@@ -3,12 +3,12 @@ package com.vaadin.tests.components.datefield;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.HasValue;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.legacy.data.validator.LegacyRangeValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.util.CheckBoxWithPropertyDataSource;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.PopupDateField;
 
@@ -54,15 +54,9 @@ public class DateFieldRangeValidation extends TestBase {
     }
 
     private Range range = new Range();
-    private ValueChangeListener refreshField = new ValueChangeListener() {
-
-        @Override
-        public void valueChange(ValueChangeEvent event) {
-            actualDateField.markAsDirty();
-        }
-    };
 
     private PopupDateField actualDateField;
+    private HasValue.ValueChangeListener<Boolean> refreshField = event -> actualDateField.markAsDirty();
 
     @Override
     protected void setup() {
@@ -72,14 +66,14 @@ public class DateFieldRangeValidation extends TestBase {
 
         PopupDateField fromField = createDateField();
         fromField.setPropertyDataSource(bi.getItemProperty("from"));
-        CheckBox fromInclusive = new CheckBox("From inclusive",
-                bi.getItemProperty("fromInclusive"));
-        CheckBox toInclusive = new CheckBox("To inclusive",
-                bi.getItemProperty("toInclusive"));
+        CheckBox fromInclusive = new CheckBoxWithPropertyDataSource(
+                "From inclusive", bi.getItemProperty("fromInclusive"));
+        CheckBox toInclusive = new CheckBoxWithPropertyDataSource(
+                "To inclusive", bi.getItemProperty("toInclusive"));
         fromInclusive.setImmediate(true);
-        fromInclusive.addListener(refreshField);
+        fromInclusive.addValueChangeListener(refreshField);
         toInclusive.setImmediate(true);
-        toInclusive.addListener(refreshField);
+        toInclusive.addValueChangeListener(refreshField);
 
         PopupDateField toField = createDateField();
         toField.setPropertyDataSource(bi.getItemProperty("to"));

@@ -7,8 +7,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 import com.vaadin.data.Container;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
@@ -86,15 +84,11 @@ public class EditableTableLeak extends TestBase {
     protected void setup() {
         addComponent(useFieldFactory);
         useFieldFactory.setImmediate(true);
-        useFieldFactory.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (useFieldFactory.getValue()) {
-                    table.setTableFieldFactory(new CachingFieldFactory());
-                } else {
-                    table.setTableFieldFactory(DefaultFieldFactory.get());
-                }
+        useFieldFactory.addValueChangeListener(event -> {
+            if (useFieldFactory.getValue()) {
+                table.setTableFieldFactory(new CachingFieldFactory());
+            } else {
+                table.setTableFieldFactory(DefaultFieldFactory.get());
             }
         });
         addComponent(table);

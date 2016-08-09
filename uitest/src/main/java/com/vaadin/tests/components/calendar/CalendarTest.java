@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.data.Binder;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
@@ -116,6 +116,7 @@ public class CalendarTest extends UI {
 
     private final FormLayout scheduleEventFieldLayout = new FormLayout();
     private FieldGroup scheduleEventFieldGroup = new FieldGroup();
+    private Binder<CalendarEvent> scheduledEventBinder = new Binder<>();
 
     private Button deleteEventButton;
 
@@ -435,16 +436,8 @@ public class CalendarTest extends UI {
     private void initHideWeekEndButton() {
         hideWeekendsButton = new CheckBox("Hide weekends");
         hideWeekendsButton.setImmediate(true);
-        hideWeekendsButton
-                .addValueChangeListener(new Property.ValueChangeListener() {
-
-                    private static final long serialVersionUID = 1L;
-
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        setWeekendsHidden(hideWeekendsButton.getValue());
-                    }
-                });
+        hideWeekendsButton.addValueChangeListener(
+                event -> setWeekendsHidden(hideWeekendsButton.getValue()));
     }
 
     private void setWeekendsHidden(boolean weekendsHidden) {
@@ -463,31 +456,15 @@ public class CalendarTest extends UI {
     private void initReadOnlyButton() {
         readOnlyButton = new CheckBox("Read-only mode");
         readOnlyButton.setImmediate(true);
-        readOnlyButton
-                .addValueChangeListener(new Property.ValueChangeListener() {
-
-                    private static final long serialVersionUID = 1L;
-
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        calendarComponent.setReadOnly(readOnlyButton.getValue());
-                    }
-                });
+        readOnlyButton.addValueChangeListener(event -> calendarComponent
+                .setReadOnly(readOnlyButton.getValue()));
     }
 
     private void initDisabledButton() {
         disabledButton = new CheckBox("Disabled");
         disabledButton.setImmediate(true);
-        disabledButton
-                .addValueChangeListener(new Property.ValueChangeListener() {
-
-                    private static final long serialVersionUID = 1L;
-
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        calendarComponent.setEnabled(!disabledButton.getValue());
-                    }
-                });
+        disabledButton.addValueChangeListener(event -> calendarComponent
+                .setEnabled(!disabledButton.getValue()));
     }
 
     public void initAddNewEventButton() {
@@ -517,21 +494,12 @@ public class CalendarTest extends UI {
         endDateField = createDateField("End date");
 
         final CheckBox allDayField = createCheckBox("All-day");
-        allDayField.addValueChangeListener(new Property.ValueChangeListener() {
-
-            private static final long serialVersionUID = -7104996493482558021L;
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Object value = event.getProperty().getValue();
-                if (value instanceof Boolean && Boolean.TRUE.equals(value)) {
-                    setFormDateResolution(Resolution.DAY);
-
-                } else {
-                    setFormDateResolution(Resolution.MINUTE);
-                }
+        allDayField.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                setFormDateResolution(Resolution.DAY);
+            } else {
+                setFormDateResolution(Resolution.MINUTE);
             }
-
         });
 
         captionField = createTextField("Caption");
@@ -559,7 +527,7 @@ public class CalendarTest extends UI {
             scheduleEventFieldGroup.bind(whereField, "where");
         }
         scheduleEventFieldGroup.bind(styleNameField, "styleName");
-        scheduleEventFieldGroup.bind(allDayField, "allDay");
+        scheduledEventBinder.bind(allDayField, CalendarEvent::isAllDay, null);
     }
 
     private CheckBox createCheckBox(String caption) {
@@ -1064,6 +1032,7 @@ public class CalendarTest extends UI {
         initFormFields(scheduleEventFieldLayout, event.getClass());
         scheduleEventFieldGroup.setBuffered(true);
         scheduleEventFieldGroup.setItemDataSource(item);
+        scheduledEventBinder.load(event);
     }
 
     private void setFormDateResolution(Resolution resolution) {
@@ -1096,6 +1065,7 @@ public class CalendarTest extends UI {
     private void commitCalendarEvent() throws CommitException {
         scheduleEventFieldGroup.commit();
         BasicEvent event = getFormCalendarEvent();
+        scheduledEventBinder.save(event);
         if (event.getEnd() == null) {
             event.setEnd(event.getStart());
         }
@@ -1108,6 +1078,7 @@ public class CalendarTest extends UI {
 
     private void discardCalendarEvent() {
         scheduleEventFieldGroup.discard();
+        scheduledEventBinder.load(getFormCalendarEvent());
         removeWindow(scheduleEventPopup);
     }
 

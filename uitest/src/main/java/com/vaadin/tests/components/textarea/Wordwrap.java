@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.textarea;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.CheckBox;
@@ -30,17 +28,13 @@ public class Wordwrap extends TestBase {
 
         CheckBox onoff = new CheckBox("Wrap state for the right field");
         onoff.setValue(false);
-        onoff.addListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                boolean wrap = (Boolean) event.getProperty().getValue();
-                area2.setWordwrap(wrap);
-                if (wrap) {
-                    area2.setCaption("Wrapping");
-                } else {
-                    area2.setCaption("Nonwrapping");
-                }
-
+        onoff.addValueChangeListener(event -> {
+            boolean wrap = event.getValue();
+            area2.setWordwrap(wrap);
+            if (wrap) {
+                area2.setCaption("Wrapping");
+            } else {
+                area2.setCaption("Nonwrapping");
             }
         });
         onoff.setImmediate(true);

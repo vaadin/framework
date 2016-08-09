@@ -7,7 +7,6 @@ import java.util.List;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
@@ -51,7 +50,7 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
 
     /**
      * Override to provide custom actions for the test case.
-     * 
+     *
      * @param actions
      *            Array with default actions. Add custom actions to this. Never
      *            null.
@@ -64,7 +63,7 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
      * Method that creates the "actions" shown in the upper part of the screen.
      * Override this only if you do not want the default actions. Custom actions
      * can be added through #createCustomActions();
-     * 
+     *
      * @return A List with actions to which more actions can be added.
      */
     protected List<Component> createActions() {
@@ -112,14 +111,8 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
             boolean initialState, final Command<T, Boolean> command) {
 
         CheckBox checkBox = new CheckBox(caption);
-        checkBox.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                boolean enabled = (Boolean) event.getProperty().getValue();
-                doCommand(command, enabled);
-            }
-        });
+        checkBox.addValueChangeListener(
+                event -> doCommand(command, event.getValue()));
 
         checkBox.setValue(initialState);
         checkBox.setImmediate(true);

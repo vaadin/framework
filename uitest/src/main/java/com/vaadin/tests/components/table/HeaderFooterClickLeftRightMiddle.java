@@ -1,9 +1,9 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.data.Container;
+import com.vaadin.data.HasValue;
+import com.vaadin.data.HasValue.ValueChange;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -29,19 +29,14 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
         CheckBox immediateCheckbox = new CheckBox("Immediate");
         immediateCheckbox.setImmediate(true);
         immediateCheckbox.setValue(table.isImmediate());
-        immediateCheckbox.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                table.setImmediate((Boolean) event.getProperty().getValue());
-            }
-        });
+        immediateCheckbox.addValueChangeListener(
+                event -> table.setImmediate(event.getValue()));
 
         CheckBox headerClickListenerCheckbox = new CheckBox(
                 "Header click listener");
         headerClickListenerCheckbox.setImmediate(true);
         headerClickListenerCheckbox
-                .addValueChangeListener(new ValueChangeListener() {
+                .addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
 
                     private HeaderClickListener headerClickListener = new HeaderClickListener() {
 
@@ -57,7 +52,7 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
                     };
 
                     @Override
-                    public void valueChange(ValueChangeEvent event) {
+                    public void accept(ValueChange<Boolean> event) {
                         if (table.getListeners(HeaderClickEvent.class)
                                 .isEmpty()) {
                             table.addHeaderClickListener(headerClickListener);
@@ -72,7 +67,7 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
                 "Footer click listener");
         footerClickListenerCheckbox.setImmediate(true);
         footerClickListenerCheckbox
-                .addValueChangeListener(new ValueChangeListener() {
+                .addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
 
                     private FooterClickListener footerClickListener = new FooterClickListener() {
 
@@ -87,7 +82,7 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
                     };
 
                     @Override
-                    public void valueChange(ValueChangeEvent event) {
+                    public void accept(ValueChange<Boolean> event) {
                         if (table.getListeners(FooterClickEvent.class)
                                 .isEmpty()) {
                             table.addFooterClickListener(footerClickListener);
@@ -101,26 +96,15 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
         CheckBox sortEnabledCheckbox = new CheckBox("Sortable");
         sortEnabledCheckbox.setImmediate(true);
         sortEnabledCheckbox.setValue(table.isSortEnabled());
-        sortEnabledCheckbox.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                table.setSortEnabled((Boolean) event.getProperty().getValue());
-            }
-        });
+        sortEnabledCheckbox.addValueChangeListener(
+                event -> table.setSortEnabled(event.getValue()));
 
         CheckBox columnReorderingCheckbox = new CheckBox(
                 "Column reordering allowed");
         columnReorderingCheckbox.setImmediate(true);
         columnReorderingCheckbox.setValue(table.isColumnReorderingAllowed());
-        columnReorderingCheckbox
-                .addValueChangeListener(new ValueChangeListener() {
-
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        table.setColumnReorderingAllowed((Boolean) event
-                                .getProperty().getValue());
-                    }
-                });
+        columnReorderingCheckbox.addValueChangeListener(
+                event -> table.setColumnReorderingAllowed(event.getValue()));
 
         addComponent(immediateCheckbox);
         addComponent(headerClickListenerCheckbox);

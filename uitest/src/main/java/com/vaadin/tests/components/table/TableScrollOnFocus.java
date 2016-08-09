@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Table;
@@ -13,12 +11,8 @@ public class TableScrollOnFocus extends TestBase {
         final CheckBox chkSelectable = new CheckBox("selectable");
 
         chkSelectable.setImmediate(true);
-        chkSelectable.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                table.setSelectable(chkSelectable.getValue());
-            }
-        });
+        chkSelectable.addValueChangeListener(
+                event -> table.setSelectable(chkSelectable.getValue()));
 
         table.addContainerProperty("row #", String.class, "-");
         table.setColumnWidth("row #", 150);

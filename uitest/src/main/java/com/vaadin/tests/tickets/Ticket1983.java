@@ -1,7 +1,5 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Sizeable;
@@ -116,18 +114,12 @@ public class Ticket1983 extends LegacyApplication {
             leftSide.setFirstComponent(ol);
 
             CheckBox checkBox = new CheckBox("Two col");
-            checkBox.addListener(new ValueChangeListener() {
-
-                @Override
-                public void valueChange(ValueChangeEvent event) {
-                    if ((Boolean) event.getProperty().getValue()) {
-                        table.setVisibleColumns(new Object[] { propId, propId2 });
-                    } else {
-                        table.setVisibleColumns(new Object[] { propId });
-                    }
-
+            checkBox.addValueChangeListener(event -> {
+                if (event.getValue()) {
+                    table.setVisibleColumns(new Object[] { propId, propId2 });
+                } else {
+                    table.setVisibleColumns(new Object[] { propId });
                 }
-
             });
             ol.addComponent(checkBox);
 

@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.textfield;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
@@ -28,16 +26,13 @@ public class TextFieldInputPromptAndClickShortcut extends TestBase {
 
         final CheckBox inputPromptSelection = new CheckBox("Input prompt");
         inputPromptSelection.setImmediate(true);
-        inputPromptSelection.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (event.getProperty().getValue() == Boolean.TRUE) {
-                    textField.setInputPrompt("Input prompt");
-                } else {
-                    textField.setInputPrompt(null);
-                }
-                log.log("Set input prompt: " + textField.getInputPrompt());
+        inputPromptSelection.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                textField.setInputPrompt("Input prompt");
+            } else {
+                textField.setInputPrompt(null);
             }
+            log.log("Set input prompt: " + textField.getInputPrompt());
         });
         inputPromptSelection.setImmediate(true);
 

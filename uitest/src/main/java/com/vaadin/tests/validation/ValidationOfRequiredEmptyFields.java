@@ -28,12 +28,8 @@ public class ValidationOfRequiredEmptyFields extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         requiredInput = new CheckBox("Field required");
         requiredInput.setImmediate(true);
-        requiredInput.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                tf.setRequired(requiredInput.getValue());
-            }
-        });
+        requiredInput.addValueChangeListener(
+                event -> tf.setRequired(requiredInput.getValue()));
 
         requiredErrorInput = new TextField("Required error message");
         requiredErrorInput.setImmediate(true);
@@ -46,31 +42,22 @@ public class ValidationOfRequiredEmptyFields extends AbstractTestUI {
 
         integerValidatorInput = new CheckBox("Integer validator");
         integerValidatorInput.setImmediate(true);
-        integerValidatorInput.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (integerValidatorInput.getValue()) {
-                    tf.addValidator(integerValidator);
-                } else {
-                    tf.removeValidator(integerValidator);
-                }
+        integerValidatorInput.addValueChangeListener(event -> {
+            if (integerValidatorInput.getValue()) {
+                tf.addValidator(integerValidator);
+            } else {
+                tf.removeValidator(integerValidator);
             }
         });
         stringLengthValidatorInput = new CheckBox("String length validator");
         stringLengthValidatorInput.setImmediate(true);
-        stringLengthValidatorInput
-                .addValueChangeListener(new ValueChangeListener() {
-
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        if (stringLengthValidatorInput.getValue()) {
-                            tf.addValidator(stringLengthValidator);
-                        } else {
-                            tf.removeValidator(stringLengthValidator);
-                        }
-                    }
-                });
+        stringLengthValidatorInput.addValueChangeListener(event -> {
+            if (stringLengthValidatorInput.getValue()) {
+                tf.addValidator(stringLengthValidator);
+            } else {
+                tf.removeValidator(stringLengthValidator);
+            }
+        });
 
         tf = new TextField();
         tf.setImmediate(true);

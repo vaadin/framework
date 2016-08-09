@@ -54,14 +54,11 @@ public class LowResolution extends TestBase {
         CheckBox immediate = new CheckBox(
                 "Immediate (use sync button to change fields) ");
         immediate.setValue(true);
-        immediate.addListener(new CheckBox.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                boolean immediate = !dateField.isImmediate();
-                dateField.setImmediate(immediate);
-                dateField2.setImmediate(immediate);
-                dateField3.setImmediate(immediate);
-            }
+        immediate.addListener(event -> {
+            boolean newImmediate = !dateField.isImmediate();
+            dateField.setImmediate(newImmediate);
+            dateField2.setImmediate(newImmediate);
+            dateField3.setImmediate(newImmediate);
         });
 
         getLayout().addComponent(immediate);

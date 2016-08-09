@@ -2,6 +2,7 @@ package com.vaadin.tests.tickets;
 
 import java.util.Iterator;
 
+import com.vaadin.data.HasValue;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.MethodProperty;
@@ -49,8 +50,9 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
         final VerticalLayout orderedLayout = new VerticalLayout();
         LayoutTestingPanel oltp = new LayoutTestingPanel("OrderedLayout",
                 orderedLayout);
-        CheckBox cb = new CheckBox("OrderedLayout",
-                new MethodProperty<Boolean>(oltp, "visible"));
+        CheckBox cb = new CheckBox("OrderedLayout");
+        cb.setValue(oltp.isVisible());
+        cb.addValueChangeListener(event -> oltp.setVisible(event.getValue()));
         cb.setImmediate(true);
         hidingControls.addComponent(cb);
         lo.addComponent(oltp);
@@ -60,21 +62,23 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
         // GridLayout
         GridLayout grid = new GridLayout(1, 1);
         Panel g1tp = new LayoutTestingPanel("Gridlayout with 1 column", grid);
-        cb = new CheckBox("GridLayout (1col)", new MethodProperty<Boolean>(
-                g1tp, "visible"));
+        cb = new CheckBox("GridLayout (1col)");
         cb.setImmediate(true);
         hidingControls.addComponent(cb);
         g1tp.setVisible(false);
+        cb.setValue(g1tp.isVisible());
+        cb.addValueChangeListener(event -> g1tp.setVisible(event.getValue()));
         lo.addComponent(g1tp);
         grid.setSpacing(true);
         addFields(grid);
         GridLayout grid2 = new GridLayout(2, 1);
         Panel g2tp = new LayoutTestingPanel("Gridlayout with 2 columns", grid2);
-        cb = new CheckBox("GridLayout (2cols)", new MethodProperty<Boolean>(
-                g2tp, "visible"));
+        cb = new CheckBox("GridLayout (2cols)");
         cb.setImmediate(true);
         hidingControls.addComponent(cb);
         g2tp.setVisible(false);
+        cb.setValue(g2tp.isVisible());
+        cb.addValueChangeListener(event -> g2tp.setVisible(event.getValue()));
         lo.addComponent(g2tp);
         grid2.setSpacing(true);
         addFields(grid2);
@@ -83,11 +87,12 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
         VerticalLayout el = new VerticalLayout();
         Panel elp = new LayoutTestingPanel(
                 "ExpandLayout width first component expanded", el);
-        cb = new CheckBox("ExpandLayout (vertical)",
-                new MethodProperty<Boolean>(elp, "visible"));
+        cb = new CheckBox("ExpandLayout (vertical)");
         cb.setImmediate(true);
         hidingControls.addComponent(cb);
         elp.setVisible(false);
+        cb.setValue(elp.isVisible());
+        cb.addValueChangeListener(event -> elp.setVisible(event.getValue()));
         el.setHeight("700px");
         addFields(el);
         Component firstComponent = el.getComponentIterator().next();
@@ -97,11 +102,12 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
         HorizontalLayout elh = new HorizontalLayout();
         Panel elhp = new LayoutTestingPanel(
                 "ExpandLayout width first component expanded; horizontal", elh);
-        cb = new CheckBox("ExpandLayout (horizontal)",
-                new MethodProperty<Boolean>(elhp, "visible"));
+        cb = new CheckBox("ExpandLayout (horizontal)");
         cb.setImmediate(true);
         hidingControls.addComponent(cb);
         elhp.setVisible(false);
+        cb.setValue(elhp.isVisible());
+        cb.addValueChangeListener(event -> elhp.setVisible(event.getValue()));
         elh.setWidth("2000px");
         elh.setHeight("100px");
         addFields(elh);
@@ -113,11 +119,12 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
         // CustomLayout
         VerticalLayout cl = new VerticalLayout();
         Panel clp = new LayoutTestingPanel("CustomLayout", cl);
-        cb = new CheckBox("CustomLayout", new MethodProperty<Boolean>(clp,
-                "visible"));
+        cb = new CheckBox("CustomLayout");
         cb.setImmediate(true);
         hidingControls.addComponent(cb);
         clp.setVisible(false);
+        cb.setValue(clp.isVisible());
+        cb.addValueChangeListener(event -> clp.setVisible(event.getValue()));
         lo.addComponent(clp);
         cl.addComponent(new Label("<<< Add customlayout testcase here >>>"));
 
@@ -125,11 +132,12 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
         VerticalLayout formPanelLayout = new VerticalLayout();
         formPanelLayout.setMargin(true);
         Panel formPanel = new Panel("Form", formPanelLayout);
-        cb = new CheckBox("Form", new MethodProperty<Boolean>(formPanel,
-                "visible"));
+        cb = new CheckBox("Form");
         cb.setImmediate(true);
         hidingControls.addComponent(cb);
         formPanel.setVisible(false);
+        cb.setValue(formPanel.isVisible());
+        cb.addValueChangeListener(event -> formPanel.setVisible(event.getValue()));
         formPanelLayout.addComponent(getFormPanelExample());
         lo.addComponent(formPanel);
 
@@ -145,7 +153,7 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
         f.setCaption("Test form");
         CheckBox fb2 = new CheckBox("Test button", true);
         fb2.setComponentError(new SystemError("Test error"));
-        f.addField("fb2", fb2);
+        f.getLayout().addComponent(fb2);
         TextField ft1 = new TextField("With caption");
         ft1.setComponentError(new SystemError("Error"));
         f.addField("ft1", ft1);
@@ -270,15 +278,13 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
             controls.addComponent(new Label("width"));
             controls.addComponent(new TextField(new MethodProperty<Float>(
                     testedLayout, "width")));
-            CheckBox widthPercentsCheckBox = new CheckBox("%",
-                    new MethodProperty<Boolean>(this, "widthPercents"));
+            CheckBox widthPercentsCheckBox = new CheckBox("%");
             widthPercentsCheckBox.setImmediate(true);
             controls.addComponent(widthPercentsCheckBox);
             controls.addComponent(new Label("height"));
             controls.addComponent(new TextField(new MethodProperty<Float>(
                     testedLayout, "height")));
-            CheckBox heightPercentsCheckBox = new CheckBox("%",
-                    new MethodProperty<Boolean>(this, "heightPercents"));
+            CheckBox heightPercentsCheckBox = new CheckBox("%");
             heightPercentsCheckBox.setImmediate(true);
             controls.addComponent(heightPercentsCheckBox);
             controls.addComponent(marginLeft);
@@ -289,18 +295,13 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
                 controls.addComponent(spacing);
             }
 
-            Property.ValueChangeListener marginSpacingListener = new Property.ValueChangeListener() {
-                @Override
-                public void valueChange(ValueChangeEvent event) {
-                    updateMarginsAndSpacing();
-                }
-            };
+            HasValue.ValueChangeListener<Boolean> marginSpacingListener = event -> updateMarginsAndSpacing();
 
-            marginBottom.addListener(marginSpacingListener);
-            marginTop.addListener(marginSpacingListener);
-            marginLeft.addListener(marginSpacingListener);
-            marginRight.addListener(marginSpacingListener);
-            spacing.addListener(marginSpacingListener);
+            marginBottom.addValueChangeListener(marginSpacingListener);
+            marginTop.addValueChangeListener(marginSpacingListener);
+            marginLeft.addValueChangeListener(marginSpacingListener);
+            marginRight.addValueChangeListener(marginSpacingListener);
+            spacing.addValueChangeListener(marginSpacingListener);
             updateMarginsAndSpacing();
 
             addAlignmentControls();

@@ -101,23 +101,13 @@ public class WindowMaximizeRestoreTest extends AbstractTestUI {
         });
         final CheckBox resizeable = new CheckBox("Resizeable");
         resizeable.setValue(w.isResizable());
-        resizeable.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                w.setResizable(resizeable.getValue());
-            }
-        });
+        resizeable.addValueChangeListener(
+                event -> w.setResizable(resizeable.getValue()));
         ((ComponentContainer) w.getContent()).addComponent(resizeable);
         final CheckBox closeable = new CheckBox("Closeable");
         closeable.setValue(w.isClosable());
-        closeable.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                w.setClosable(closeable.getValue());
-            }
-        });
+        closeable.addValueChangeListener(
+                event -> w.setClosable(closeable.getValue()));
         ((ComponentContainer) w.getContent()).addComponent(closeable);
         NativeButton contentFull = new NativeButton("Set Content Size Full",
                 new Button.ClickListener() {

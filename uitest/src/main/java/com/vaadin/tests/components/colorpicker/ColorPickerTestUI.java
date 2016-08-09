@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,7 +26,6 @@ import java.util.Date;
 
 import javax.imageio.ImageIO;
 
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.colorpicker.Color;
@@ -104,7 +103,7 @@ public class ColorPickerTestUI extends AbstractTestUI implements
 
         /**
          * Instantiates a new my image source.
-         * 
+         *
          * @param fg
          *            the foreground
          * @param bg
@@ -226,60 +225,45 @@ public class ColorPickerTestUI extends AbstractTestUI implements
         optLayout.setSpacing(true);
 
         rgbBox.setValue(rgbVisible);
-        rgbBox.addValueChangeListener(new CheckBox.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                rgbVisible = (Boolean) event.getProperty().getValue();
-                setPopupVisibilities();
-            }
+        rgbBox.addValueChangeListener(event -> {
+            rgbVisible = event.getValue();
+            setPopupVisibilities();
         });
         rgbBox.setImmediate(true);
         rgbBox.setId("rgbBox");
         optLayout.addComponent(rgbBox);
 
         hsvBox.setValue(hsvVisible);
-        hsvBox.addValueChangeListener(new CheckBox.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                hsvVisible = (Boolean) event.getProperty().getValue();
-                setPopupVisibilities();
-            }
+        hsvBox.addValueChangeListener(event -> {
+            hsvVisible = event.getValue();
+            setPopupVisibilities();
         });
         hsvBox.setImmediate(true);
         hsvBox.setId("hsvBox");
         optLayout.addComponent(hsvBox);
 
         swaBox.setValue(swaVisible);
-        swaBox.addValueChangeListener(new CheckBox.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                swaVisible = (Boolean) event.getProperty().getValue();
-                setPopupVisibilities();
-            }
+        swaBox.addValueChangeListener(event -> {
+            swaVisible = event.getValue();
+            setPopupVisibilities();
         });
         swaBox.setImmediate(true);
         swaBox.setId("swaBox");
         optLayout.addComponent(swaBox);
 
         hisBox.setValue(historyVisible);
-        hisBox.addValueChangeListener(new CheckBox.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                historyVisible = (Boolean) event.getProperty().getValue();
-                setPopupVisibilities();
-            }
+        hisBox.addValueChangeListener(event -> {
+            historyVisible = event.getValue();
+            setPopupVisibilities();
         });
         hisBox.setImmediate(true);
         hisBox.setId("hisBox");
         optLayout.addComponent(hisBox);
 
         txtBox.setValue(txtfieldVisible);
-        txtBox.addValueChangeListener(new CheckBox.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                txtfieldVisible = (Boolean) event.getProperty().getValue();
-                setPopupVisibilities();
-            }
+        txtBox.addValueChangeListener(event -> {
+            txtfieldVisible = event.getValue();
+            setPopupVisibilities();
         });
         txtBox.setImmediate(true);
         txtBox.setId("txtBox");
@@ -444,7 +428,7 @@ public class ColorPickerTestUI extends AbstractTestUI implements
     // This is called whenever a colorpicker popup is closed
     /**
      * Update display.
-     * 
+     *
      * @param fg
      *            the fg
      * @param bg

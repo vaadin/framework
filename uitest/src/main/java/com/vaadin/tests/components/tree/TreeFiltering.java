@@ -1,8 +1,6 @@
 package com.vaadin.tests.components.tree;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
@@ -45,14 +43,9 @@ public class TreeFiltering extends TestBase {
         final CheckBox filterType = new CheckBox(
                 "Include parent when filtering", true);
         filterType.setImmediate(true);
-        filterType.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                cont.setIncludeParentsWhenFiltering(((CheckBox) event
-                        .getProperty()).getValue());
-                ccTree.markAsDirty();
-            }
+        filterType.addValueChangeListener(event -> {
+            cont.setIncludeParentsWhenFiltering(event.getValue());
+            ccTree.markAsDirty();
         });
         addComponent(filterType);
 

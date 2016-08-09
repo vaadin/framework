@@ -20,11 +20,11 @@ import java.util.EnumSet;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.fieldgroup.FieldGroup.BindException;
-import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.legacy.ui.LegacyAbstractField;
+import com.vaadin.legacy.ui.LegacyCheckBox;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.AbstractTextField;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.InlineDateField;
@@ -174,8 +174,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
     }
 
     protected <T extends LegacyField> T createBooleanField(Class<T> fieldType) {
-        if (fieldType.isAssignableFrom(CheckBox.class)) {
-            CheckBox cb = new CheckBox(null);
+        if (fieldType.isAssignableFrom(LegacyCheckBox.class)) {
+            LegacyCheckBox cb = new LegacyCheckBox(null);
             cb.setImmediate(true);
             return (T) cb;
         } else if (AbstractTextField.class.isAssignableFrom(fieldType)) {

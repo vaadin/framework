@@ -1,9 +1,5 @@
 package com.vaadin.tests.components.select;
 
-import java.util.Iterator;
-
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.CheckBox;
@@ -27,34 +23,22 @@ public class OptionGroupBaseSelects extends ComponentTestCase<HorizontalLayout> 
     protected void initializeComponents() {
 
         CheckBox cb = new CheckBox("Switch Selects ReadOnly", false);
-        cb.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                for (Iterator<Component> it = layout.getComponentIterator(); it
-                        .hasNext();) {
-                    Component c = it.next();
-                    if (c instanceof AbstractSelect) {
-                        c.setReadOnly(!c.isReadOnly());
-                    }
+        cb.addValueChangeListener(event -> {
+            for (Component c : layout) {
+                if (c instanceof AbstractSelect) {
+                    c.setReadOnly(!c.isReadOnly());
                 }
             }
         });
         CheckBox cb2 = new CheckBox("Switch Selects Enabled", true);
-        cb2.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                for (Iterator<Component> it = layout.getComponentIterator(); it
-                        .hasNext();) {
-                    Component c = it.next();
-                    if (c instanceof AbstractSelect) {
-                        boolean enabled = !c.isEnabled();
-                        c.setEnabled(enabled);
-                        c.setCaption(c.getCaption().replace(
-                                (enabled ? "disabled" : "enabled"),
-                                (enabled ? "enabled" : "disabled")));
-                    }
+        cb2.addValueChangeListener(event -> {
+            for (Component c : layout) {
+                if (c instanceof AbstractSelect) {
+                    boolean enabled = !c.isEnabled();
+                    c.setEnabled(enabled);
+                    c.setCaption(c.getCaption().replace(
+                            (enabled ? "disabled" : "enabled"),
+                            (enabled ? "enabled" : "disabled")));
                 }
             }
         });

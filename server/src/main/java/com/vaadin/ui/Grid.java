@@ -73,6 +73,7 @@ import com.vaadin.event.SortEvent.SortNotifier;
 import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.legacy.data.util.converter.LegacyConverterUtil;
+import com.vaadin.legacy.ui.LegacyCheckBox;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
@@ -545,7 +546,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 Class<?> dataType,
                 Class<T> fieldType) throws BindException {
             T field = super.build(caption, dataType, fieldType);
-            if (field instanceof CheckBox) {
+            if (field instanceof LegacyCheckBox) {
                 field.setCaption(null);
             }
             return field;

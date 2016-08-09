@@ -6,6 +6,7 @@ import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.tests.util.CheckBoxWithPropertyDataSource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -85,7 +86,7 @@ public class Ticket736 extends LegacyApplication {
                 "readOnly", "readThrough", "writeThrough", "invalidCommitted",
                 "validationVisible", "immediate" };
         for (int i = 0; i < visibleProps.length; i++) {
-            CheckBox b = new CheckBox(visibleProps[i],
+            CheckBox b = new CheckBoxWithPropertyDataSource(visibleProps[i],
                     new MethodProperty<Boolean>(f, visibleProps[i]));
             b.setImmediate(true);
             formPropertiesLayout.addComponent(b);

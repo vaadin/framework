@@ -1,8 +1,5 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.MethodProperty;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ExternalResource;
@@ -33,33 +30,35 @@ public class Ticket2104 extends LegacyApplication {
 
         HorizontalLayout ol = new HorizontalLayout();
         main.addComponent(ol);
-        CheckBox cb = new CheckBox("immediate", new MethodProperty<Boolean>(
-                tree, "immediate"));
+        CheckBox cb = new CheckBox("immediate");
+        cb.setValue(tree.isImmediate());
+        cb.addValueChangeListener(event -> tree.setImmediate(event.getValue()));
         cb.setImmediate(true);
         ol.addComponent(cb);
-        cb = new CheckBox("selectable", new MethodProperty<Boolean>(tree,
-                "selectable"));
+        cb = new CheckBox("selectable");
+        cb.setValue(tree.isSelectable());
+        cb.addValueChangeListener(
+                event -> tree.setSelectable(event.getValue()));
         cb.setImmediate(true);
         ol.addComponent(cb);
-        cb = new CheckBox("nullsel", new MethodProperty<Boolean>(tree,
-                "nullSelectionAllowed"));
+        cb = new CheckBox("nullsel");
+        cb.setValue(tree.isNullSelectionAllowed());
+        cb.addValueChangeListener(
+                event -> tree.setNullSelectionAllowed(event.getValue()));
         cb.setImmediate(true);
         ol.addComponent(cb);
-        cb = new CheckBox("multi", new MethodProperty<Boolean>(tree,
-                "multiSelect"));
+        cb = new CheckBox("multi");
+        cb.setValue(tree.isMultiSelect());
+        cb.addValueChangeListener(
+                event -> tree.setMultiSelect(event.getValue()));
         cb.setImmediate(true);
         ol.addComponent(cb);
         cb = new CheckBox("icon");
-        cb.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (tree.getItemIconPropertyId() == null) {
-                    tree.setItemIconPropertyId("icon");
-                } else {
-                    tree.setItemIconPropertyId(null);
-                }
-
+        cb.addValueChangeListener(event -> {
+            if (tree.getItemIconPropertyId() == null) {
+                tree.setItemIconPropertyId("icon");
+            } else {
+                tree.setItemIconPropertyId(null);
             }
         });
         cb.setImmediate(true);
@@ -94,20 +93,27 @@ public class Ticket2104 extends LegacyApplication {
 
         ol = new HorizontalLayout();
         main.addComponent(ol);
-        cb = new CheckBox("immediate", new MethodProperty<Boolean>(table,
-                "immediate"));
+        cb = new CheckBox("immediate");
+        cb.setValue(table.isImmediate());
+        cb.addValueChangeListener(event -> table.setImmediate(event.getValue()));
         cb.setImmediate(true);
         ol.addComponent(cb);
-        cb = new CheckBox("selectable", new MethodProperty<Boolean>(table,
-                "selectable"));
+        cb = new CheckBox("selectable");
+        cb.setValue(table.isSelectable());
+        cb.addValueChangeListener(
+                event -> table.setSelectable(event.getValue()));
         cb.setImmediate(true);
         ol.addComponent(cb);
-        cb = new CheckBox("nullsel", new MethodProperty<Boolean>(table,
-                "nullSelectionAllowed"));
+        cb = new CheckBox("nullsel");
+        cb.setValue(table.isNullSelectionAllowed());
+        cb.addValueChangeListener(
+                event -> table.setNullSelectionAllowed(event.getValue()));
         cb.setImmediate(true);
         ol.addComponent(cb);
-        cb = new CheckBox("multi", new MethodProperty<Boolean>(table,
-                "multiSelect"));
+        cb = new CheckBox("multi");
+        cb.setValue(table.isMultiSelect());
+        cb.addValueChangeListener(
+                event -> table.setMultiSelect(event.getValue()));
         cb.setImmediate(true);
         ol.addComponent(cb);
         main.addComponent(table);

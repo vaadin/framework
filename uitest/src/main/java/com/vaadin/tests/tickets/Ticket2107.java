@@ -48,13 +48,8 @@ public class Ticket2107 extends LegacyApplication {
                 false);
         w.addComponent(b);
         b.setImmediate(true);
-        b.addListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                tf.setRequiredError(b.getValue() ? "Field must not be empty"
-                        : null);
-            }
-        });
+        b.addValueChangeListener(event -> tf.setRequiredError(
+                b.getValue() ? "Field must not be empty" : null));
     }
 
 }

@@ -2,8 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -48,29 +46,15 @@ public class FooterClick extends AbstractTestUIWithLog {
         CheckBox immediateCheckbox = new CheckBox("Immediate");
         immediateCheckbox.setImmediate(true);
         immediateCheckbox.setValue(table.isImmediate());
-        immediateCheckbox
-                .addValueChangeListener(new Property.ValueChangeListener() {
-
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        table.setImmediate((Boolean) event.getProperty()
-                                .getValue());
-                    }
-                });
+        immediateCheckbox.addValueChangeListener(
+                event -> table.setImmediate(event.getValue()));
 
         CheckBox columnReorderingCheckbox = new CheckBox(
                 "Column reordering allowed");
         columnReorderingCheckbox.setImmediate(true);
         columnReorderingCheckbox.setValue(table.isColumnReorderingAllowed());
-        columnReorderingCheckbox
-                .addValueChangeListener(new Property.ValueChangeListener() {
-
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        table.setColumnReorderingAllowed((Boolean) event
-                                .getProperty().getValue());
-                    }
-                });
+        columnReorderingCheckbox.addValueChangeListener(
+                event -> table.setColumnReorderingAllowed(event.getValue()));
 
         addComponent(immediateCheckbox);
         addComponent(columnReorderingCheckbox);

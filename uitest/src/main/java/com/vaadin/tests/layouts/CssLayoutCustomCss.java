@@ -3,8 +3,6 @@ package com.vaadin.tests.layouts;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -45,13 +43,8 @@ public class CssLayoutCustomCss extends TestBase implements ClickListener {
     private Component createMarginsToggle() {
         final CheckBox cb = new CheckBox("Margins");
         cb.setImmediate(true);
-        cb.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                ((MarginHandler) layout).setMargin(cb.getValue());
-            }
-        });
+        cb.addValueChangeListener(
+                event -> ((MarginHandler) layout).setMargin(cb.getValue()));
 
         return cb;
     }

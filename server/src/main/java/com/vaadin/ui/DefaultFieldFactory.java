@@ -20,6 +20,7 @@ import java.util.Date;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.legacy.ui.LegacyCheckBox;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.shared.util.SharedUtil;
 
@@ -116,7 +117,7 @@ public class DefaultFieldFactory implements FormFieldFactory, TableFieldFactory 
 
         // Boolean field
         if (Boolean.class.isAssignableFrom(type)) {
-            return new CheckBox();
+            return new LegacyCheckBox();
         }
 
         return new TextField();

@@ -5,8 +5,6 @@ import java.util.Random;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -71,17 +69,14 @@ public class GridSwitchRenderers extends AbstractTestUIWithLog {
 
         final CheckBox changeRenderer = new CheckBox(
                 "SetHtmlRenderer for Column 2", false);
-        changeRenderer.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Column column = grid.getColumn(getColumnProperty(1));
-                if (changeRenderer.getValue()) {
-                    column.setRenderer(new HtmlRenderer());
-                } else {
-                    column.setRenderer(new TextRenderer());
-                }
-                grid.markAsDirty();
+        changeRenderer.addValueChangeListener(event -> {
+            Column column = grid.getColumn(getColumnProperty(1));
+            if (changeRenderer.getValue()) {
+                column.setRenderer(new HtmlRenderer());
+            } else {
+                column.setRenderer(new TextRenderer());
             }
+            grid.markAsDirty();
         });
         addComponent(changeRenderer);
     }

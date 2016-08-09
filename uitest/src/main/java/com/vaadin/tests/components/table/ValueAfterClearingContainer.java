@@ -37,13 +37,9 @@ public class ValueAfterClearingContainer extends TestBase {
         final CheckBox multiselect = new CheckBox("Multiselect");
         multiselect.setImmediate(true);
         multiselect.setId("multiselect");
-        multiselect.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Boolean value = multiselect.getValue();
-                table.setMultiSelect(value == null ? false : value);
-            }
+        multiselect.addValueChangeListener(event -> {
+            Boolean value = multiselect.getValue();
+            table.setMultiSelect(value == null ? false : value);
         });
         addComponent(multiselect);
         Button addItemsButton = new Button("Add table items",

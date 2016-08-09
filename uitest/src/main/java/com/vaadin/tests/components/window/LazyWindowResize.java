@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.window;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.Page.BrowserWindowResizeEvent;
 import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -66,41 +64,24 @@ public class LazyWindowResize extends AbstractTestCase {
 
         lazyMode = new CheckBox("Lazy resize");
         lazyMode.setImmediate(true);
-        lazyMode.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setLazy(lazyMode.getValue());
-            }
-        });
+        lazyMode.addValueChangeListener(event -> setLazy(lazyMode.getValue()));
 
         resizeListenerCheckBox = new CheckBox("Resize listener");
         resizeListenerCheckBox.setImmediate(true);
-        resizeListenerCheckBox.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (resizeListenerCheckBox.getValue()) {
-                    subWindow.addListener(resizeListener);
-                    mainWindow.addListener(browserWindowResizeListener);
-                } else {
-                    subWindow.removeListener(resizeListener);
-                    mainWindow.removeListener(browserWindowResizeListener);
-                }
-
+        resizeListenerCheckBox.addValueChangeListener(event -> {
+            if (resizeListenerCheckBox.getValue()) {
+                subWindow.addListener(resizeListener);
+                mainWindow.addListener(browserWindowResizeListener);
+            } else {
+                subWindow.removeListener(resizeListener);
+                mainWindow.removeListener(browserWindowResizeListener);
             }
-
         });
         immediateCheckBox = new CheckBox("Windows immediate");
         immediateCheckBox.setImmediate(true);
-        immediateCheckBox.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                mainWindow.setImmediate(immediateCheckBox.getValue());
-                subWindow.setImmediate(immediateCheckBox.getValue());
-            }
-
+        immediateCheckBox.addValueChangeListener(event -> {
+            mainWindow.setImmediate(immediateCheckBox.getValue());
+            subWindow.setImmediate(immediateCheckBox.getValue());
         });
         mainWindow.addComponent(lazyMode);
         mainWindow.addComponent(resizeListenerCheckBox);

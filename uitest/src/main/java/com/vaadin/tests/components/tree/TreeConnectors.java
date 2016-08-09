@@ -1,8 +1,6 @@
 package com.vaadin.tests.components.tree;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -25,15 +23,11 @@ public class TreeConnectors extends TestBase {
         CheckBox cb = new CheckBox("Connectors");
         cb.setValue(false);
         cb.setImmediate(true);
-        cb.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if ((Boolean) event.getProperty().getValue()) {
-                    tree.addStyleName(BaseTheme.TREE_CONNECTORS);
-                } else {
-                    tree.removeStyleName(BaseTheme.TREE_CONNECTORS);
-                }
+        cb.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                tree.addStyleName(BaseTheme.TREE_CONNECTORS);
+            } else {
+                tree.removeStyleName(BaseTheme.TREE_CONNECTORS);
             }
         });
         addComponent(cb);

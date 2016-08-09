@@ -1,7 +1,5 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.server.LegacyApplication;
@@ -39,41 +37,35 @@ public class Ticket1857 extends LegacyApplication implements Handler {
                 false);
         footer.addComponent(actionHandlerEnabler);
         actionHandlerEnabler.setImmediate(true);
-        actionHandlerEnabler.addListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (actionHandlerEnabler.getValue().booleanValue()) {
-                    t.addActionHandler(Ticket1857.this);
-                } else {
-                    t.removeActionHandler(Ticket1857.this);
-                }
+        actionHandlerEnabler.addValueChangeListener(event -> {
+            if (actionHandlerEnabler.getValue().booleanValue()) {
+                t.addActionHandler(Ticket1857.this);
+            } else {
+                t.removeActionHandler(Ticket1857.this);
             }
         });
 
         final CheckBox cellStylesEnabler = new CheckBox("Cell styles", false);
         footer.addComponent(cellStylesEnabler);
         cellStylesEnabler.setImmediate(true);
-        cellStylesEnabler.addListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (cellStylesEnabler.getValue().booleanValue()) {
-                    t.setCellStyleGenerator(new Table.CellStyleGenerator() {
-                        @Override
-                        public String getStyle(Table source, Object itemId,
-                                Object propertyId) {
-                            Object cell = t.getContainerProperty(itemId,
-                                    propertyId).getValue();
-                            if (!(cell instanceof Integer)) {
-                                return null;
-                            }
-                            int age = ((Integer) cell).intValue();
-                            return age > 65 ? "old" : (age < 18 ? "young"
-                                    : null);
+        cellStylesEnabler.addValueChangeListener(event -> {
+            if (cellStylesEnabler.getValue().booleanValue()) {
+                t.setCellStyleGenerator(new Table.CellStyleGenerator() {
+                    @Override
+                    public String getStyle(Table source, Object itemId,
+                            Object propertyId) {
+                        Object cell = t.getContainerProperty(itemId,
+                                propertyId).getValue();
+                        if (!(cell instanceof Integer)) {
+                            return null;
                         }
-                    });
-                } else {
-                    t.setCellStyleGenerator(null);
-                }
+                        int age = ((Integer) cell).intValue();
+                        return age > 65 ? "old" : (age < 18 ? "young"
+                                : null);
+                    }
+                });
+            } else {
+                t.setCellStyleGenerator(null);
             }
         });
         cellStylesEnabler.setValue(Boolean.TRUE);
