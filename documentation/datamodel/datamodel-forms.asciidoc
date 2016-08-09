@@ -121,7 +121,8 @@ binder.forField(titleField)
   .bind(Person::getTitle, Person::setTitle);
 ----
 
-[NOTE] [classname]#Binder#.[methodname]#forField# works like a builder where [methodname]#forField# starts the process, is followed by various configuration calls for the field and [methodname]#bind# acts as the finalizing method which applies the configuration.
+[NOTE]
+[classname]#Binder#.[methodname]#forField# works like a builder where [methodname]#forField# starts the process, is followed by various configuration calls for the field and [methodname]#bind# acts as the finalizing method which applies the configuration.
 
 The validation state of each field is updated whenever the user modifies the value of that field.
 The validation state is by default shown using [classname]#Component#.[methodname]#setComponentError# which is used by the layout that the field is shown in. Whenever an error is set, the component will also get a `v-<component>-error` class name, e.g. `v-textfield-error`. This error class will by default add a red border on the component. Most built-in layouts will show the error state as a red exclamation mark icon next to the component, so that hovering or tapping the icon shows a tooltip with the message text.
@@ -129,7 +130,8 @@ The validation state is by default shown using [classname]#Component#.[methodnam
 We can also customize the way a binder displays error messages to get more flexibility than what  [methodname]#setComponentError# provides.
 The easiest way of customizing this is to configure each binding to use its own [classname]#Label# that is used to show the status for each field.
 
-[NOTE] The status label is not only used for validation errors but also for showing confirmation and helper messages.
+[NOTE]
+The status label is not only used for validation errors but also for showing confirmation and helper messages.
 
 [source, java]
 ----
@@ -243,7 +245,8 @@ We can freely mix validators and converters when defining a binding.
 Any validator defined before a converter will be run using the unconverted value whereas a validator defined after a converter will be run using the converted value.
 Correspondingly, the converter will only be run if all previous validators accept the user's value, and any validators defined after a converter will only be run if the conversion succeeded.
 
-[NOTE] A converter can be used as a validator but for code clarity and to avoid boilerplate code, you should use a validator when checking the contents and a converter when modifying the value.
+[NOTE]
+A converter can be used as a validator but for code clarity and to avoid boilerplate code, you should use a validator when checking the contents and a converter when modifying the value.
 
 [source, java]
 ----
