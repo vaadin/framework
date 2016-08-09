@@ -3,12 +3,12 @@ package com.vaadin.tests.validation;
 import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.data.validator.LegacyAbstractStringValidator;
 import com.vaadin.legacy.data.validator.LegacyCompositeValidator;
+import com.vaadin.legacy.data.validator.LegacyCompositeValidator.CombinationMode;
 import com.vaadin.legacy.data.validator.LegacyDoubleValidator;
 import com.vaadin.legacy.data.validator.LegacyEmailValidator;
 import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
 import com.vaadin.legacy.data.validator.LegacyRegexpValidator;
 import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
-import com.vaadin.legacy.data.validator.LegacyCompositeValidator.CombinationMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -37,7 +37,8 @@ public class TestValidators extends TestBase {
         // simple validators
 
         TextField tf = new TextField("A field, must contain 1-2 chars");
-        tf.addValidator(new LegacyStringLengthValidator("Invalid length", 1, 2, false));
+        tf.addValidator(
+                new LegacyStringLengthValidator("Invalid length", 1, 2, false));
         tf.setRequired(true);
         tf.setValue("ab");
         form.addField("a", tf);
@@ -67,7 +68,8 @@ public class TestValidators extends TestBase {
 
         // regular expressions
 
-        tf = new TextField("A field, must match the regular expression a.*b.*c");
+        tf = new TextField(
+                "A field, must match the regular expression a.*b.*c");
         tf.addValidator(new LegacyRegexpValidator("a.*b.*c",
                 "{0} does not match the regular expression"));
         tf.setValue("aagsabeqgc");
@@ -97,10 +99,12 @@ public class TestValidators extends TestBase {
         // TODO CompositeValidator
         tf = new TextField(
                 "A field, must be a floating point number with 4-5 chars");
-        LegacyCompositeValidator cv = new LegacyCompositeValidator(CombinationMode.AND,
+        LegacyCompositeValidator cv = new LegacyCompositeValidator(
+                CombinationMode.AND,
                 "The field must contain a floating point number with 4-5 characters");
         cv.addValidator(new LegacyStringLengthValidator(
-                "String length of '{0}' should be 4-5 characters", 4, 5, false));
+                "String length of '{0}' should be 4-5 characters", 4, 5,
+                false));
         cv.addValidator(new LegacyDoubleValidator(
                 "{0} must be a floating point number"));
         tf.addValidator(cv);
@@ -112,7 +116,8 @@ public class TestValidators extends TestBase {
         cv = new LegacyCompositeValidator(CombinationMode.OR,
                 "The field must contain a floating point  or with 4-5 characters");
         cv.addValidator(new LegacyStringLengthValidator(
-                "String length of '{0}' should be 4-5 characters", 4, 5, false));
+                "String length of '{0}' should be 4-5 characters", 4, 5,
+                false));
         cv.addValidator(new LegacyDoubleValidator(
                 "{0} must be a floating point number"));
         tf.addValidator(cv);

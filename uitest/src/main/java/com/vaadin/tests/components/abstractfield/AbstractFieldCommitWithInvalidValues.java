@@ -27,7 +27,8 @@ public class AbstractFieldCommitWithInvalidValues extends TestBase {
     protected void setup() {
         tf = new TextField("A field, must contain 1-2 chars",
                 new ObjectProperty<String>("a"));
-        tf.addValidator(new LegacyStringLengthValidator("Invalid length", 1, 2, false));
+        tf.addValidator(
+                new LegacyStringLengthValidator("Invalid length", 1, 2, false));
         tf.setBuffered(true);
         tf.setRequired(true);
 

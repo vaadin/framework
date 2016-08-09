@@ -33,8 +33,8 @@ public class Ticket846 extends LegacyApplication {
 
         // tx.setIcon(new ThemeResource("icons/16/folder.png"));
 
-        mainWin.addComponent(new Button("Validate integer",
-                new Button.ClickListener() {
+        mainWin.addComponent(
+                new Button("Validate integer", new Button.ClickListener() {
                     @Override
                     public void buttonClick(
                             com.vaadin.ui.Button.ClickEvent event) {

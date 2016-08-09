@@ -14,8 +14,8 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
-public class SimpleLoginView extends CustomComponent implements View,
-        Button.ClickListener {
+public class SimpleLoginView extends CustomComponent
+        implements View, Button.ClickListener {
 
     public static final String NAME = "login";
 
@@ -33,8 +33,8 @@ public class SimpleLoginView extends CustomComponent implements View,
         user.setWidth("300px");
         user.setRequired(true);
         user.setInputPrompt("Your username (eg. joe@email.com)");
-        user.addValidator(new LegacyEmailValidator(
-                "Username must be an email address"));
+        user.addValidator(
+                new LegacyEmailValidator("Username must be an email address"));
         user.setInvalidAllowed(false);
 
         // Create the password input field
@@ -50,7 +50,8 @@ public class SimpleLoginView extends CustomComponent implements View,
 
         // Add both to a panel
         VerticalLayout fields = new VerticalLayout(user, password, loginButton);
-        fields.setCaption("Please login to access the application. (test@test.com/passw0rd)");
+        fields.setCaption(
+                "Please login to access the application. (test@test.com/passw0rd)");
         fields.setSpacing(true);
         fields.setMargin(new MarginInfo(true, true, true, false));
         fields.setSizeUndefined();
@@ -72,8 +73,8 @@ public class SimpleLoginView extends CustomComponent implements View,
     /*
      * Validator for validating the passwords
      */
-    private static final class PasswordValidator extends
-            LegacyAbstractValidator<String> {
+    private static final class PasswordValidator
+            extends LegacyAbstractValidator<String> {
 
         public PasswordValidator() {
             super("The password provided is not valid");

@@ -28,7 +28,8 @@ public class FormCommitWithInvalidValues extends TestBase {
         form = new Form();
         form.setFooter(null);
         TextField tf = new TextField("A field, must contain 1-2 chars");
-        tf.addValidator(new LegacyStringLengthValidator("Invalid length", 1, 2, false));
+        tf.addValidator(
+                new LegacyStringLengthValidator("Invalid length", 1, 2, false));
         tf.setRequired(true);
 
         form.addField("a", tf);

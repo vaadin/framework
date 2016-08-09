@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.data.validator.LegacyCompositeValidator;
-import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
 import com.vaadin.legacy.data.validator.LegacyCompositeValidator.CombinationMode;
+import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -41,19 +41,21 @@ public class Ticket20 extends LegacyApplication {
             @Override
             public void validate(Object value) throws InvalidValueException {
                 if (!isValid(value)) {
-                    throw new InvalidValueException(value
-                            + " is not a non-negative number");
+                    throw new InvalidValueException(
+                            value + " is not a non-negative number");
                 }
             }
         });
-        LegacyCompositeValidator v2 = new LegacyCompositeValidator(CombinationMode.OR, null);
+        LegacyCompositeValidator v2 = new LegacyCompositeValidator(
+                CombinationMode.OR, null);
         v2.addValidator(v);
         v2.addValidator(new Validator() {
 
             @Override
             public void validate(Object value) throws InvalidValueException {
                 if (!"".equals("" + value)) {
-                    throw new InvalidValueException("Value is not empty string");
+                    throw new InvalidValueException(
+                            "Value is not empty string");
                 }
             }
         });
@@ -69,8 +71,8 @@ public class Ticket20 extends LegacyApplication {
             mainWin.addComponent(b);
         }
 
-        mainWin.addComponent(new Button("Validate integer",
-                new Button.ClickListener() {
+        mainWin.addComponent(
+                new Button("Validate integer", new Button.ClickListener() {
                     @Override
                     public void buttonClick(
                             com.vaadin.ui.Button.ClickEvent event) {

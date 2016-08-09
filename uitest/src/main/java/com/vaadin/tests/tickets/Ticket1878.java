@@ -185,7 +185,8 @@ public class Ticket1878 extends LegacyApplication {
         form = createForm(l1, "200px", "500px");
         BeanItem<FormObject> item = new BeanItem<FormObject>(new FormObject());
         form.setItemDataSource(item);
-        for (Iterator<?> i = item.getItemPropertyIds().iterator(); i.hasNext();) {
+        for (Iterator<?> i = item.getItemPropertyIds().iterator(); i
+                .hasNext();) {
             Object property = i.next();
             LegacyField<?> f = form.getField(property);
 
@@ -197,7 +198,8 @@ public class Ticket1878 extends LegacyApplication {
                 f.setCaption(null);
             }
 
-            f.addValidator(new LegacyStringLengthValidator("Error", 10, 8, false));
+            f.addValidator(
+                    new LegacyStringLengthValidator("Error", 10, 8, false));
         }
         // createLayout(l1, new
         // ExpandLayout(ExpandLayout.ORIENTATION_HORIZONTAL),
@@ -277,8 +279,9 @@ public class Ticket1878 extends LegacyApplication {
         }
         String alignText = align ? "-A" : "";
         String cWidth = componentWidth == null ? "" : " - " + componentWidth;
-        Panel p = new Panel(type + "/" + dirText + alignText + " " + w + "x"
-                + h + cWidth, newLayout);
+        Panel p = new Panel(
+                type + "/" + dirText + alignText + " " + w + "x" + h + cWidth,
+                newLayout);
 
         p.setWidth(w);
         p.setHeight(h);
@@ -310,8 +313,8 @@ public class Ticket1878 extends LegacyApplication {
                     newLayout.addComponent(tf);
 
                     if (align) {
-                        ((AlignmentHandler) newLayout).setComponentAlignment(
-                                tf, Alignment.BOTTOM_RIGHT);
+                        ((AlignmentHandler) newLayout).setComponentAlignment(tf,
+                                Alignment.BOTTOM_RIGHT);
                     }
                 }
             }

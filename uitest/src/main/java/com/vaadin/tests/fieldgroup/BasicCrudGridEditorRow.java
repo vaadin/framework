@@ -44,21 +44,18 @@ public class BasicCrudGridEditorRow extends AbstractBasicCrud {
         grid.addSelectionListener(new SelectionListener() {
             @Override
             public void select(SelectionEvent event) {
-                Item item = grid.getContainerDataSource().getItem(
-                        grid.getSelectedRow());
+                Item item = grid.getContainerDataSource()
+                        .getItem(grid.getSelectedRow());
                 form.edit((BeanItem<ComplexPerson>) item);
             }
         });
         grid.setEditorEnabled(true);
         grid.setSizeFull();
-        grid.getColumn("age")
-                .getEditorField()
-                .addValidator(
-                        new LegacyIntegerRangeValidator("Must be between 0 and 100",
-                                0, 100));
-        grid.getColumn("birthDate").setRenderer(
-                new DateRenderer(DateFormat.getDateInstance(DateFormat.MEDIUM,
-                        Locale.US)));
+        grid.getColumn("age").getEditorField().addValidator(
+                new LegacyIntegerRangeValidator("Must be between 0 and 100", 0,
+                        100));
+        grid.getColumn("birthDate").setRenderer(new DateRenderer(
+                DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US)));
         addComponent(grid);
         getLayout().setExpandRatio(grid, 1);
     }

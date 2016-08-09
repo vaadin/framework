@@ -96,11 +96,10 @@ public class GridThemeUI extends AbstractTestUIWithLog {
             getColumn("lastName").setEditable(false);
             setSizeFull();
             getColumn("age").getEditorField().addValidator(
-                    new LegacyIntegerRangeValidator("Must be between 0 and 100", 0,
-                            100));
-            getColumn("birthDate").setRenderer(
-                    new DateRenderer(DateFormat.getDateInstance(
-                            DateFormat.MEDIUM, Locale.US)));
+                    new LegacyIntegerRangeValidator("Must be between 0 and 100",
+                            0, 100));
+            getColumn("birthDate").setRenderer(new DateRenderer(
+                    DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US)));
         }
     }
 
@@ -137,11 +136,10 @@ public class GridThemeUI extends AbstractTestUIWithLog {
             setEditorEnabled(true);
             setSizeFull();
             getColumn("age").getEditorField().addValidator(
-                    new LegacyIntegerRangeValidator("Must be between 0 and 100", 0,
-                            100));
-            getColumn("birthDate").setRenderer(
-                    new DateRenderer(DateFormat.getDateInstance(
-                            DateFormat.MEDIUM, Locale.US)));
+                    new LegacyIntegerRangeValidator("Must be between 0 and 100",
+                            0, 100));
+            getColumn("birthDate").setRenderer(new DateRenderer(
+                    DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US)));
 
             addFooterRowAt(0);
         }

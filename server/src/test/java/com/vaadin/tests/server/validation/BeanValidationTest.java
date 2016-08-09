@@ -12,56 +12,58 @@ import com.vaadin.tests.data.bean.BeanToValidate;
 public class BeanValidationTest {
     @Test(expected = InvalidValueException.class)
     public void testBeanValidationNull() {
-        LegacyBeanValidator validator = new LegacyBeanValidator(BeanToValidate.class,
-                "firstname");
+        LegacyBeanValidator validator = new LegacyBeanValidator(
+                BeanToValidate.class, "firstname");
         validator.validate(null);
     }
 
     @Test(expected = InvalidValueException.class)
     public void testBeanValidationStringTooShort() {
-        LegacyBeanValidator validator = new LegacyBeanValidator(BeanToValidate.class,
-                "firstname");
+        LegacyBeanValidator validator = new LegacyBeanValidator(
+                BeanToValidate.class, "firstname");
         validator.validate("aa");
     }
 
     @Test
     public void testBeanValidationStringOk() {
-        LegacyBeanValidator validator = new LegacyBeanValidator(BeanToValidate.class,
-                "firstname");
+        LegacyBeanValidator validator = new LegacyBeanValidator(
+                BeanToValidate.class, "firstname");
         validator.validate("aaa");
     }
 
     @Test(expected = InvalidValueException.class)
     public void testBeanValidationIntegerTooSmall() {
-        LegacyBeanValidator validator = new LegacyBeanValidator(BeanToValidate.class, "age");
+        LegacyBeanValidator validator = new LegacyBeanValidator(
+                BeanToValidate.class, "age");
         validator.validate(17);
     }
 
     @Test
     public void testBeanValidationIntegerOk() {
-        LegacyBeanValidator validator = new LegacyBeanValidator(BeanToValidate.class, "age");
+        LegacyBeanValidator validator = new LegacyBeanValidator(
+                BeanToValidate.class, "age");
         validator.validate(18);
     }
 
     @Test(expected = InvalidValueException.class)
     public void testBeanValidationTooManyDigits() {
-        LegacyBeanValidator validator = new LegacyBeanValidator(BeanToValidate.class,
-                "decimals");
+        LegacyBeanValidator validator = new LegacyBeanValidator(
+                BeanToValidate.class, "decimals");
         validator.validate("1234.567");
     }
 
     @Test
     public void testBeanValidationDigitsOk() {
-        LegacyBeanValidator validator = new LegacyBeanValidator(BeanToValidate.class,
-                "decimals");
+        LegacyBeanValidator validator = new LegacyBeanValidator(
+                BeanToValidate.class, "decimals");
         validator.validate("123.45");
     }
 
     @Test
     public void testBeanValidationException_OneValidationError() {
         InvalidValueException[] causes = null;
-        LegacyBeanValidator validator = new LegacyBeanValidator(BeanToValidate.class,
-                "lastname");
+        LegacyBeanValidator validator = new LegacyBeanValidator(
+                BeanToValidate.class, "lastname");
         try {
             validator.validate(null);
         } catch (InvalidValueException e) {
@@ -74,8 +76,8 @@ public class BeanValidationTest {
     @Test
     public void testBeanValidationsException_TwoValidationErrors() {
         InvalidValueException[] causes = null;
-        LegacyBeanValidator validator = new LegacyBeanValidator(BeanToValidate.class,
-                "nickname");
+        LegacyBeanValidator validator = new LegacyBeanValidator(
+                BeanToValidate.class, "nickname");
         try {
             validator.validate("A");
         } catch (InvalidValueException e) {

@@ -27,8 +27,7 @@ public class ClassesSerializableTest {
 
     private static String[] BASE_PACKAGES = { "com.vaadin" };
 
-    private static String[] EXCLUDED_PATTERNS = {
-            "com\\.vaadin\\.demo\\..*", //
+    private static String[] EXCLUDED_PATTERNS = { "com\\.vaadin\\.demo\\..*", //
             "com\\.vaadin\\.external\\.org\\.apache\\.commons\\.fileupload\\..*", //
             "com\\.vaadin\\.launcher\\..*", //
             "com\\.vaadin\\.client\\..*", //
@@ -65,6 +64,8 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.connection\\.MockInitialContextFactory",
             "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.DataGenerator",
             "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.FreeformQueryUtil",
+            // the JSR-303 constraint interpolation context
+            "com\\.vaadin\\.data\\.validator\\.BeanValidator\\$1", //
             "com\\.vaadin\\.sass.*", //
             "com\\.vaadin\\.testbench.*", //
             "com\\.vaadin\\.util\\.CurrentInstance\\$1", //
@@ -149,8 +150,9 @@ public class ClassesSerializableTest {
                     nonSerializableString += ")";
                 }
             }
-            Assert.fail("Serializable not implemented by the following classes and interfaces: "
-                    + nonSerializableString);
+            Assert.fail(
+                    "Serializable not implemented by the following classes and interfaces: "
+                            + nonSerializableString);
         }
     }
 
@@ -272,8 +274,8 @@ public class ClassesSerializableTest {
         while (e.hasMoreElements()) {
             JarEntry entry = e.nextElement();
             if (entry.getName().endsWith(".class")) {
-                String nameWithoutExtension = entry.getName().replaceAll(
-                        "\\.class", "");
+                String nameWithoutExtension = entry.getName()
+                        .replaceAll("\\.class", "");
                 String className = nameWithoutExtension.replace('/', '.');
                 classes.add(className);
             }

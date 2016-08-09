@@ -1,13 +1,18 @@
 package com.vaadin.tests.data.bean;
 
+import java.util.Calendar;
+
+import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class BeanToValidate {
+
     @NotNull
     @Size(min = 3, max = 16)
     private String firstname;
@@ -25,6 +30,17 @@ public class BeanToValidate {
     @Pattern(regexp = "V*", message = "Must start with letter V")
     @Size(min = 3, max = 6, message = "Must contain 3 - 6 letters")
     private String nickname;
+
+    @Past
+    private Calendar dateOfBirth;
+
+    @NotNull
+    @Valid
+    private Address[] addresses;
+
+    @NotNull
+    @Valid
+    private Address address;
 
     public String getFirstname() {
         return firstname;
@@ -66,4 +82,27 @@ public class BeanToValidate {
         this.nickname = nickname;
     }
 
+    public Calendar getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Calendar dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public Address[] getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(Address[] address) {
+        this.addresses = address;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 }
