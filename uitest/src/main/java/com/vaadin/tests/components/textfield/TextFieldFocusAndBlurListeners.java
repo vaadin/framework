@@ -30,8 +30,8 @@ public class TextFieldFocusAndBlurListeners extends TestBase implements
         TextField tf1 = new TextField("TextField 1",
                 "Has focus and blur listeners");
         tf1.setWidth("300px");
-        tf1.addListener((FocusListener) this);
-        tf1.addListener((BlurListener) this);
+        tf1.addFocusListener(this);
+        tf1.addBlurListener(this);
 
         addComponent(tf1);
 
@@ -45,7 +45,7 @@ public class TextFieldFocusAndBlurListeners extends TestBase implements
                 TextFieldFocusAndBlurListeners.this.valueChange(event);
             }
         });
-        tf2.addListener(new FocusListener() {
+        tf2.addFocusListener(new FocusListener() {
 
             @Override
             public void focus(FocusEvent event) {
@@ -53,7 +53,7 @@ public class TextFieldFocusAndBlurListeners extends TestBase implements
             }
 
         });
-        tf2.addListener(new BlurListener() {
+        tf2.addBlurListener(new BlurListener() {
 
             @Override
             public void blur(BlurEvent event) {

@@ -83,22 +83,22 @@ public class FocusAndBlurListeners extends TestBase {
             }
         });
 
-        tf.addListener(focusListener);
-        tf.addListener(blurListener);
-        df.addListener(focusListener);
-        df.addListener(blurListener);
-        cb.addListener(focusListener);
-        cb.addListener(blurListener);
-        btn.addListener(focusListener);
-        btn.addListener(blurListener);
-        nbtn.addListener(focusListener);
-        nbtn.addListener(blurListener);
-        chkb.addListener(focusListener);
-        chkb.addListener(blurListener);
-        og.addListener(focusListener);
-        og.addListener(blurListener);
-        ogm.addListener(focusListener);
-        ogm.addListener(blurListener);
+        tf.addFocusListener(focusListener);
+        tf.addBlurListener(blurListener);
+        df.addFocusListener(focusListener);
+        df.addBlurListener(blurListener);
+        cb.addFocusListener(focusListener);
+        cb.addBlurListener(blurListener);
+        btn.addFocusListener(focusListener);
+        btn.addBlurListener(blurListener);
+        nbtn.addFocusListener(focusListener);
+        nbtn.addBlurListener(blurListener);
+        chkb.addFocusListener(focusListener);
+        chkb.addBlurListener(blurListener);
+        og.addFocusListener(focusListener);
+        og.addBlurListener(blurListener);
+        ogm.addFocusListener(focusListener);
+        ogm.addBlurListener(blurListener);
 
         l.addComponent(messages);
 

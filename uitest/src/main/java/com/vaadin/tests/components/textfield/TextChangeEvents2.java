@@ -36,7 +36,7 @@ public class TextChangeEvents2 extends TestBase {
                 }
             });
 
-            tf.addListener(new BlurListener() {
+            tf.addBlurListener(new BlurListener() {
 
                 @Override
                 public void blur(BlurEvent event) {
@@ -44,7 +44,7 @@ public class TextChangeEvents2 extends TestBase {
                 }
             });
 
-            tf.addListener(new FocusListener() {
+            tf.addFocusListener(new FocusListener() {
                 @Override
                 public void focus(FocusEvent event) {
                     System.err.println(tf.getCaption() + " focus");

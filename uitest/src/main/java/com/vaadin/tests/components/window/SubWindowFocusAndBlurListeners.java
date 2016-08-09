@@ -39,14 +39,14 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
         layout.setSizeUndefined();
 
         layout.addComponent(new TextField());
-        window.addListener(new FocusListener() {
+        window.addFocusListener(new FocusListener() {
             @Override
             public void focus(FocusEvent event) {
                 Notification.show("Focused window");
             }
         });
 
-        window.addListener(new BlurListener() {
+        window.addBlurListener(new BlurListener() {
             @Override
             public void blur(BlurEvent event) {
                 Notification.show("Blurred window");
