@@ -17,18 +17,19 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.user.client.DOM;
-import com.vaadin.client.v7.ui.VLegacyTextField;
 
 /**
  * This class represents a password field.
  *
  * @author Vaadin Ltd.
- *
  */
-public class VPasswordField extends VLegacyTextField {
+public class VPasswordField extends VTextField {
+
+    public static final String CLASSNAME = "v-passwordfield";
 
     public VPasswordField() {
         super(DOM.createInputPassword());
+        setStyleName(CLASSNAME);
     }
 
 }

@@ -7,11 +7,11 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.v7.data.validator.LegacyAbstractValidator;
 import com.vaadin.v7.data.validator.LegacyEmailValidator;
+import com.vaadin.v7.ui.LegacyPasswordField;
 import com.vaadin.v7.ui.LegacyTextField;
 
 public class SimpleLoginView extends CustomComponent
@@ -21,7 +21,7 @@ public class SimpleLoginView extends CustomComponent
 
     private final LegacyTextField user;
 
-    private final PasswordField password;
+    private final LegacyPasswordField password;
 
     private final Button loginButton;
 
@@ -38,7 +38,7 @@ public class SimpleLoginView extends CustomComponent
         user.setInvalidAllowed(false);
 
         // Create the password input field
-        password = new PasswordField("Password:");
+        password = new LegacyPasswordField("Password:");
         password.setWidth("300px");
         password.addValidator(new PasswordValidator());
         password.setRequired(true);

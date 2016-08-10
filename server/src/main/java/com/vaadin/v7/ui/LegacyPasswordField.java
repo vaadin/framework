@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package com.vaadin.ui;
+package com.vaadin.v7.ui;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
+import com.vaadin.data.Property;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -26,13 +26,37 @@ import com.vaadin.ui.declarative.DesignContext;
  * A field that is used to enter secret text information like passwords. The
  * entered text is not displayed on the screen.
  */
-public class PasswordField extends AbstractTextField {
+@Deprecated
+public class LegacyPasswordField extends LegacyAbstractTextField {
 
     /**
      * Constructs an empty PasswordField.
      */
-    public PasswordField() {
+    public LegacyPasswordField() {
         setValue("");
+    }
+
+    /**
+     * Constructs a PasswordField with given property data source.
+     *
+     * @param dataSource
+     *            the property data source for the field
+     */
+    public LegacyPasswordField(Property dataSource) {
+        setPropertyDataSource(dataSource);
+    }
+
+    /**
+     * Constructs a PasswordField with given caption and property data source.
+     *
+     * @param caption
+     *            the caption for the field
+     * @param dataSource
+     *            the property data source for the field
+     */
+    public LegacyPasswordField(String caption, Property dataSource) {
+        this(dataSource);
+        setCaption(caption);
     }
 
     /**
@@ -43,7 +67,7 @@ public class PasswordField extends AbstractTextField {
      * @param value
      *            the value for the field
      */
-    public PasswordField(String caption, String value) {
+    public LegacyPasswordField(String caption, String value) {
         setValue(value);
         setCaption(caption);
     }
@@ -54,7 +78,7 @@ public class PasswordField extends AbstractTextField {
      * @param caption
      *            the caption for the field
      */
-    public PasswordField(String caption) {
+    public LegacyPasswordField(String caption) {
         this();
         setCaption(caption);
     }
@@ -70,8 +94,8 @@ public class PasswordField extends AbstractTextField {
         super.readDesign(design, designContext);
         Attributes attr = design.attributes();
         if (attr.hasKey("value")) {
-            doSetValue(DesignAttributeHandler.readAttribute("value", attr,
-                    String.class));
+            setValue(DesignAttributeHandler.readAttribute("value", attr,
+                    String.class), false, true);
         }
     }
 
@@ -84,10 +108,16 @@ public class PasswordField extends AbstractTextField {
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        AbstractTextField def = (AbstractTextField) designContext
+        LegacyAbstractTextField def = (LegacyAbstractTextField) designContext
                 .getDefaultInstance(this);
         Attributes attr = design.attributes();
         DesignAttributeHandler.writeAttribute("value", attr, getValue(),
                 def.getValue(), String.class);
     }
+
+    @Override
+    public void clear() {
+        setValue("");
+    }
+
 }

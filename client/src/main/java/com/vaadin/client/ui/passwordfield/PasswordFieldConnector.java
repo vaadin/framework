@@ -13,16 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.client.ui.passwordfield;
 
 import com.vaadin.client.ui.VPasswordField;
-import com.vaadin.client.v7.ui.textfield.LegacyTextFieldConnector;
+import com.vaadin.client.ui.textfield.TextFieldConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.ui.PasswordField;
 
 @Connect(PasswordField.class)
-public class PasswordFieldConnector extends LegacyTextFieldConnector {
+public class PasswordFieldConnector extends TextFieldConnector {
 
     @Override
     public VPasswordField getWidget() {

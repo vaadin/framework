@@ -8,7 +8,6 @@ import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -18,7 +17,6 @@ import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Slider;
@@ -27,6 +25,8 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.TwinColSelect;
+import com.vaadin.v7.ui.LegacyPasswordField;
+import com.vaadin.v7.ui.LegacyTextField;
 
 @SuppressWarnings("rawtypes")
 public class TabIndexes extends AbstractTestUIWithLog {
@@ -114,7 +114,7 @@ public class TabIndexes extends AbstractTestUIWithLog {
         tree.addItem("Item 1");
         fields.add(tree);
         fields.add(new TwinColSelect());
-        fields.add(new PasswordField());
+        fields.add(new LegacyPasswordField());
         fields.add(new LegacyTextField());
         fields.add(new TextArea());
         fields.add(new RichTextArea());

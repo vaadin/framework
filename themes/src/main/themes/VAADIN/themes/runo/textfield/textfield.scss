@@ -25,7 +25,9 @@ textarea.v-textarea {
 	border-color: #5daee8;
 }
 input.#{$primaryStyleName}-prompt,
-textarea.v-textarea-prompt {
+input[placeholder],
+textarea.v-textarea-prompt,
+textarea[placeholder] {
 	color: #999;
 	font-style: normal;
 }

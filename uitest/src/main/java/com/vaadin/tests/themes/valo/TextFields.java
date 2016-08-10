@@ -164,20 +164,20 @@ public class TextFields extends VerticalLayout implements View {
         row.addComponent(tf);
 
         PasswordField pwf = new PasswordField("Password");
-        pwf.setInputPrompt("Secret words");
+        pwf.setPlaceholder("Secret words");
         pwf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         pwf.setIcon(FontAwesome.LOCK);
         row.addComponent(pwf);
 
         pwf = new PasswordField("Password, right-aligned");
-        pwf.setInputPrompt("Secret words");
+        pwf.setPlaceholder("Secret words");
         pwf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         pwf.addStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
         pwf.setIcon(FontAwesome.LOCK);
         row.addComponent(pwf);
 
         pwf = new PasswordField("Password, centered");
-        pwf.setInputPrompt("Secret words");
+        pwf.setPlaceholder("Secret words");
         pwf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         pwf.addStyleName(ValoTheme.TEXTFIELD_ALIGN_CENTER);
         pwf.setIcon(FontAwesome.LOCK);

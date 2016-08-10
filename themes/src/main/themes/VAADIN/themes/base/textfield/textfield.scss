@@ -13,7 +13,9 @@
 .v-textarea-focus {
 }
 input.#{$primaryStyleName}-prompt,
-textarea.v-textarea-prompt {
+textarea.v-textarea-prompt,
+input[placeholder],
+textarea[placeholder] {
 	color: #999;
 	font-style: italic;
 }
@@ -35,18 +37,18 @@ textarea.v-textarea-readonly:focus {
 .v-textarea-error,
 .#{$primaryStyleName}-error,
 .v-richtextarea-error iframe.gwt-RichTextArea {
-	background: #FFE0E0;	
+	background: #FFE0E0;
 }
 */
 /* Disabled by default
 .v-textarea-required,
 .#{$primaryStyleName}-required,
 .v-richtextarea-required iframe.gwt-RichTextArea {
-	background: #FFE0E0;	
+	background: #FFE0E0;
 }
 */
 /* Safari focus glow fix */
-.v-sa & input:focus, 
+.v-sa & input:focus,
 .v-sa & textarea:focus {
 	outline-width: medium;
 }
@@ -106,7 +108,7 @@ textarea.v-textarea-readonly:focus {
 }
 .v-richtextarea .gwt-RichTextToolbar .gwt-ToggleButton img,
 .v-richtextarea .gwt-RichTextToolbar .gwt-PushButton img {
-	
+
 }
 .v-richtextarea .gwt-RichTextToolbar .gwt-ListBox {
 	width: 24.5%;

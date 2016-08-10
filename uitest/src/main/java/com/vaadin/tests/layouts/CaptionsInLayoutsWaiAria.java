@@ -14,7 +14,6 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -26,9 +25,10 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.LegacyPasswordField;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class CaptionsInLayoutsWaiAria extends TestBase {
 
@@ -199,7 +199,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
         components.add(new LegacyTextField("Default TextBox"));
         components.add(new TextArea("Default TextArea."));
         // components.add(new RichTextArea("Default RichtTextArea"));
-        components.add(new PasswordField("Default Password"));
+        components.add(new LegacyPasswordField("Default Password"));
         components.add(new DateField("Default DateField"));
 
         // PopupDateField popupDateField = new

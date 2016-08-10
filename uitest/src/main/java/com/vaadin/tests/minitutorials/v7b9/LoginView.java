@@ -5,13 +5,13 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.LegacyPasswordField;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class LoginView extends Panel implements View {
 
@@ -24,7 +24,8 @@ public class LoginView extends Panel implements View {
         final LegacyTextField email = new LegacyTextField("Email");
         layout.addComponent(email);
 
-        final PasswordField password = new PasswordField("Password");
+        final LegacyPasswordField password = new LegacyPasswordField(
+                "Password");
         layout.addComponent(password);
 
         final Button login = new Button("Login", new Button.ClickListener() {

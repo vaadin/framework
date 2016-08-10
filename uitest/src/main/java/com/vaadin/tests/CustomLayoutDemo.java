@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,15 +21,15 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
-import com.vaadin.v7.ui.LegacyField;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.LegacyField;
 
 /**
  * This example demonstrates custom layout. All components created here are
@@ -51,7 +51,7 @@ public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication
 
     private final Panel bodyPanel = new Panel();
 
-    private final LegacyTextField username = new LegacyTextField("Username");
+    private final TextField username = new TextField("Username");
 
     private final PasswordField loginPwd = new PasswordField("Password");
 

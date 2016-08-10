@@ -54,7 +54,9 @@
 	background-color: #fff;
 }
 input.#{$primaryStyleName}-prompt,
-textarea.v-textarea-prompt {
+textarea.v-textarea-prompt,
+input[placeholder],
+textarea[placeholder] {
 	font-style: normal;
 	color: #999;
 }
@@ -105,7 +107,8 @@ textarea.v-textarea-prompt {
 	border-bottom-color: #507596;
 	background-color: #151717;
 }
-.black input.#{$primaryStyleName}-prompt {
+.black input.#{$primaryStyleName}-prompt,
+.black input[placeholder] {
 	color: #5f6366;
 }
 /* Readonly */

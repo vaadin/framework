@@ -6,6 +6,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ChameleonTheme;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.v7.ui.LegacyTextField;
@@ -45,7 +46,7 @@ public class TextFieldsCssTest extends GridLayout {
 
     private void createTextFieldWith(String caption, String primaryStyleName,
             String inputPrompt) {
-        LegacyTextField tf = new LegacyTextField();
+        TextField tf = new TextField();
         tf.setId("textfield" + debugIdCounter++);
         if (caption != null) {
             tf.setCaption(caption);
@@ -56,7 +57,7 @@ public class TextFieldsCssTest extends GridLayout {
         }
 
         if (inputPrompt != null) {
-            tf.setInputPrompt(inputPrompt);
+            tf.setPlaceholder(inputPrompt);
         }
 
         addComponent(tf);

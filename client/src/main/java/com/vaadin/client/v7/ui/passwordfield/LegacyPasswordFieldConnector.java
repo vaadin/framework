@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,19 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.grid;
 
-import com.vaadin.testbench.elements.GridElement;
-import com.vaadin.testbench.elementsbase.ServerClass;
+package com.vaadin.client.v7.ui.passwordfield;
 
-/**
- * TestBench Element API for Grid
- *
- * @since
- *
- * @author Vaadin Ltd
- * TODO move to TestBench
- */
-@ServerClass("com.vaadin.ui.LegacyGrid")
-public class LegacyGridElement extends GridElement{
+import com.vaadin.client.v7.ui.VLegacyPasswordField;
+import com.vaadin.client.v7.ui.textfield.LegacyTextFieldConnector;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.v7.ui.LegacyPasswordField;
+
+@Deprecated
+@Connect(LegacyPasswordField.class)
+public class LegacyPasswordFieldConnector extends LegacyTextFieldConnector {
+
+    @Override
+    public VLegacyPasswordField getWidget() {
+        return (VLegacyPasswordField) super.getWidget();
+    }
 }

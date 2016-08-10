@@ -29,8 +29,8 @@ import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
-import com.vaadin.testbench.elements.PasswordFieldElement;
 import com.vaadin.testbench.parallel.TestCategory;
+import com.vaadin.tests.legacyelements.LegacyPasswordFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("grid")
@@ -67,7 +67,7 @@ public class GridEditorUITest extends MultiBrowserTest {
     @Test
     public void testEditor() {
         assertFalse("Sanity check",
-                isElementPresent(PasswordFieldElement.class));
+                isElementPresent(LegacyPasswordFieldElement.class));
 
         openEditor(5);
         new Actions(getDriver()).sendKeys(Keys.ESCAPE).perform();
@@ -75,7 +75,7 @@ public class GridEditorUITest extends MultiBrowserTest {
         openEditor(10);
 
         assertTrue("Editor should be opened with a password field",
-                isElementPresent(PasswordFieldElement.class));
+                isElementPresent(LegacyPasswordFieldElement.class));
 
         assertFalse("Notification was present",
                 isElementPresent(NotificationElement.class));
