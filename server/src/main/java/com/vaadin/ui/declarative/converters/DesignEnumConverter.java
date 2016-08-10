@@ -17,7 +17,7 @@ package com.vaadin.ui.declarative.converters;
 
 import java.util.Locale;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**
@@ -27,12 +27,12 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class DesignEnumConverter implements Converter<String, Enum> {
+public class DesignEnumConverter implements LegacyConverter<String, Enum> {
 
     @Override
     public Enum convertToModel(String value, Class<? extends Enum> targetType,
             Locale locale)
-            throws com.vaadin.data.util.converter.Converter.ConversionException {
+            throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
         if (value == null || value.trim().equals("")) {
             return null;
         }
@@ -42,7 +42,7 @@ public class DesignEnumConverter implements Converter<String, Enum> {
     @Override
     public String convertToPresentation(Enum value,
             Class<? extends String> targetType, Locale locale)
-            throws com.vaadin.data.util.converter.Converter.ConversionException {
+            throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
         if (value == null) {
             return null;
         }

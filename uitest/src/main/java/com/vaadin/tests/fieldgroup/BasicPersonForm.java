@@ -6,7 +6,7 @@ import com.vaadin.data.fieldgroup.FieldGroup.CommitEvent;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitHandler;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.converter.StringToBooleanConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToBooleanConverter;
 import com.vaadin.legacy.data.validator.LegacyEmailValidator;
 import com.vaadin.legacy.data.validator.LegacyIntegerRangeValidator;
 import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
@@ -71,8 +71,8 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
             confFieldGroup.setBuffered(false);
 
             for (Object propertyId : bi.getItemPropertyIds()) {
-                ((ComponentContainer) getContent()).addComponent(confFieldGroup
-                        .buildAndBind(propertyId));
+                ((ComponentContainer) getContent())
+                        .addComponent(confFieldGroup.buildAndBind(propertyId));
             }
 
         }
@@ -161,13 +161,13 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
         addComponent(discardButton);
         addComponent(showBean);
         email.addValidator(new LegacyEmailValidator("Must be a valid address"));
-        lastName.addValidator(new LegacyStringLengthValidator("Must be min 5 chars",
-                5, null, true));
+        lastName.addValidator(new LegacyStringLengthValidator(
+                "Must be min 5 chars", 5, null, true));
 
         age.addValidator(new LegacyIntegerRangeValidator(
                 "Must be between 0 and 150, {0} is not", 0, 150));
         sex.setPageLength(0);
-        deceased.setConverter(new StringToBooleanConverter() {
+        deceased.setConverter(new LegacyStringToBooleanConverter() {
             @Override
             protected String getTrueString() {
                 return "YAY!";

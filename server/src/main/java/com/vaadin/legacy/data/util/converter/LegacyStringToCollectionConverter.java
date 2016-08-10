@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.util.converter;
+package com.vaadin.legacy.data.util.converter;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -38,11 +38,11 @@ import java.util.Locale;
  * 
  * @author Vaadin Ltd
  */
-public class StringToCollectionConverter implements
-        Converter<String, Collection> {
+public class LegacyStringToCollectionConverter implements
+        LegacyConverter<String, Collection> {
 
     private final String delimiter;
-    private final Converter<String, ?> tokenConverter;
+    private final LegacyConverter<String, ?> tokenConverter;
     private final Class<?> tokenType;
     private final CollectionFactory factory;
 
@@ -50,7 +50,7 @@ public class StringToCollectionConverter implements
      * Creates converter with <code>", "</code> as delimiter and {@link String}
      * as token model type in collection.
      */
-    public StringToCollectionConverter() {
+    public LegacyStringToCollectionConverter() {
         this(", ", null, String.class);
     }
 
@@ -61,7 +61,7 @@ public class StringToCollectionConverter implements
      * @param delimiter
      *            custom delimiter
      */
-    public StringToCollectionConverter(String delimiter) {
+    public LegacyStringToCollectionConverter(String delimiter) {
         this(delimiter, null, String.class);
     }
 
@@ -77,7 +77,7 @@ public class StringToCollectionConverter implements
      * @param tokenType
      *            expected token model type
      */
-    public StringToCollectionConverter(Converter<String, ?> tokenConverter,
+    public LegacyStringToCollectionConverter(LegacyConverter<String, ?> tokenConverter,
             Class<?> tokenType) {
         this(", ", tokenConverter, tokenType);
     }
@@ -96,8 +96,8 @@ public class StringToCollectionConverter implements
      * @param delimiter
      *            delimiter in presentation string
      */
-    public StringToCollectionConverter(String delimiter,
-            Converter<String, ?> tokenConverter, Class<?> tokenClass) {
+    public LegacyStringToCollectionConverter(String delimiter,
+            LegacyConverter<String, ?> tokenConverter, Class<?> tokenClass) {
         this(delimiter, tokenConverter, tokenClass,
                 new DefaultCollectionFactory());
     }
@@ -118,8 +118,8 @@ public class StringToCollectionConverter implements
      * @param factory
      *            factory to create resulting collection
      */
-    public StringToCollectionConverter(String delimiter,
-            Converter<String, ?> tokenConverter, Class<?> tokenClass,
+    public LegacyStringToCollectionConverter(String delimiter,
+            LegacyConverter<String, ?> tokenConverter, Class<?> tokenClass,
             CollectionFactory factory) {
         if (delimiter == null || delimiter.isEmpty()) {
             throw new IllegalArgumentException(
@@ -144,7 +144,7 @@ public class StringToCollectionConverter implements
     @Override
     public Collection convertToModel(String value,
             Class<? extends Collection> targetType, Locale locale)
-            throws Converter.ConversionException {
+            throws LegacyConverter.ConversionException {
         if (value == null) {
             return null;
         }
@@ -152,7 +152,7 @@ public class StringToCollectionConverter implements
         int index = value.indexOf(delimiter);
         int previous = 0;
         Collection result = factory.createCollection(targetType);
-        Converter converter = tokenConverter;
+        LegacyConverter converter = tokenConverter;
         while (index != -1) {
             collectToken(value.substring(previous, index), result, converter,
                     locale);
@@ -166,12 +166,12 @@ public class StringToCollectionConverter implements
     @Override
     public String convertToPresentation(Collection value,
             Class<? extends String> targetType, Locale locale)
-            throws Converter.ConversionException {
+            throws LegacyConverter.ConversionException {
         if (value == null) {
             return null;
         }
         StringBuilder builder = new StringBuilder();
-        Converter converter = tokenConverter;
+        LegacyConverter converter = tokenConverter;
         for (Iterator<?> iterator = value.iterator(); iterator.hasNext();) {
             if (converter == null) {
                 builder.append(iterator.next());
@@ -189,7 +189,7 @@ public class StringToCollectionConverter implements
     }
 
     private void collectToken(String token, Collection collection,
-            Converter converter, Locale locale) {
+            LegacyConverter converter, Locale locale) {
         if (converter == null) {
             collection.add(token);
         } else {

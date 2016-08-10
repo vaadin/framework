@@ -6,9 +6,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.util.MethodProperty;
-import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.legacy.data.Validator.InvalidValueException;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
@@ -24,7 +24,7 @@ public class AbsFieldValueConversionErrorTest {
     @Test
     public void testValidateConversionErrorParameters() {
         TextField tf = new TextField();
-        tf.setConverter(new StringToIntegerConverter());
+        tf.setConverter(new LegacyStringToIntegerConverter());
         tf.setPropertyDataSource(new MethodProperty<String>(paulaBean, "age"));
         tf.setConversionError("(Type: {0}) Converter exception message: {1}");
         tf.setValue("abc");
@@ -42,7 +42,7 @@ public class AbsFieldValueConversionErrorTest {
     @Test
     public void testConvertToModelConversionErrorParameters() {
         TextField tf = new TextField();
-        tf.setConverter(new StringToIntegerConverter());
+        tf.setConverter(new LegacyStringToIntegerConverter());
         tf.setPropertyDataSource(new MethodProperty<String>(paulaBean, "age"));
         tf.setConversionError("(Type: {0}) Converter exception message: {1}");
         tf.setValue("abc");
@@ -60,7 +60,7 @@ public class AbsFieldValueConversionErrorTest {
     @Test
     public void testNullConversionMessages() {
         TextField tf = new TextField();
-        tf.setConverter(new StringToIntegerConverter());
+        tf.setConverter(new LegacyStringToIntegerConverter());
         tf.setPropertyDataSource(new MethodProperty<String>(paulaBean, "age"));
         tf.setConversionError(null);
         tf.setValue("abc");
@@ -76,7 +76,7 @@ public class AbsFieldValueConversionErrorTest {
     @Test
     public void testDefaultConversionErrorMessage() {
         TextField tf = new TextField();
-        tf.setConverter(new StringToIntegerConverter());
+        tf.setConverter(new LegacyStringToIntegerConverter());
         tf.setPropertyDataSource(new MethodProperty<String>(paulaBean, "age"));
         tf.setValue("abc");
 

@@ -8,8 +8,8 @@ import java.util.Locale;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.StringToDoubleConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToDoubleConverter;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
@@ -147,12 +147,12 @@ public class DoublesInTable extends TestBase {
     }
 
     private void addConverters(Table t) {
-        t.setConverter("sex", new Converter<String, Sex>() {
+        t.setConverter("sex", new LegacyConverter<String, Sex>() {
 
             @Override
             public Sex convertToModel(String value,
                     Class<? extends Sex> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 // not used in this test - Table only converts to presentation
                 return null;
             }
@@ -160,7 +160,7 @@ public class DoublesInTable extends TestBase {
             @Override
             public String convertToPresentation(Sex value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 if (value == null) {
                     value = Sex.UNKNOWN;
                 }
@@ -177,7 +177,7 @@ public class DoublesInTable extends TestBase {
                 return String.class;
             }
         });
-        t.setConverter("deceased", new Converter<String, Boolean>() {
+        t.setConverter("deceased", new LegacyConverter<String, Boolean>() {
 
             @Override
             public Boolean convertToModel(String value,
@@ -207,12 +207,12 @@ public class DoublesInTable extends TestBase {
                 return String.class;
             }
         });
-        t.setConverter("age", new Converter<String, Integer>() {
+        t.setConverter("age", new LegacyConverter<String, Integer>() {
 
             @Override
             public Integer convertToModel(String value,
                     Class<? extends Integer> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 // not used in this test - Table only converts from source to
                 // target
                 return null;
@@ -221,7 +221,7 @@ public class DoublesInTable extends TestBase {
             @Override
             public String convertToPresentation(Integer value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 if (value == null) {
                     return null;
                 }
@@ -246,7 +246,7 @@ public class DoublesInTable extends TestBase {
                 return String.class;
             }
         });
-        t.setConverter("address", new Converter<String, Address>() {
+        t.setConverter("address", new LegacyConverter<String, Address>() {
 
             @Override
             public Address convertToModel(String value,
@@ -276,7 +276,7 @@ public class DoublesInTable extends TestBase {
 
         });
 
-        t.setConverter("rent", new StringToDoubleConverter() {
+        t.setConverter("rent", new LegacyStringToDoubleConverter() {
             @Override
             protected NumberFormat getFormat(Locale locale) {
                 return NumberFormat.getCurrencyInstance(locale);

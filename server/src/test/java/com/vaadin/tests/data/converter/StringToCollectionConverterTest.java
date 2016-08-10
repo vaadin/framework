@@ -29,13 +29,13 @@ import java.util.Vector;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.StringToCollectionConverter;
-import com.vaadin.data.util.converter.StringToCollectionConverter.CollectionFactory;
-import com.vaadin.data.util.converter.StringToEnumConverter;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToCollectionConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToEnumConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToCollectionConverter.CollectionFactory;
 
 /**
- * Tests for {@link StringToCollectionConverter}.
+ * Tests for {@link LegacyStringToCollectionConverter}.
  * 
  * @author Vaadin Ltd
  */
@@ -43,7 +43,7 @@ public class StringToCollectionConverterTest {
 
     @Test
     public void convertToModel_defaultCtor() {
-        StringToCollectionConverter converter = new StringToCollectionConverter();
+        LegacyStringToCollectionConverter converter = new LegacyStringToCollectionConverter();
         Collection<?> model = converter.convertToModel("a, b, c", List.class,
                 null);
         Assert.assertTrue("Unexpected model class", model instanceof ArrayList);
@@ -55,7 +55,7 @@ public class StringToCollectionConverterTest {
 
     @Test
     public void convertToModel_customDelimiter() {
-        StringToCollectionConverter converter = new StringToCollectionConverter(
+        LegacyStringToCollectionConverter converter = new LegacyStringToCollectionConverter(
                 "x");
         Collection<?> model = converter.convertToModel("axbxc", List.class,
                 null);
@@ -68,8 +68,8 @@ public class StringToCollectionConverterTest {
 
     @Test
     public void convertToModel_customConverter() {
-        StringToCollectionConverter converter = new StringToCollectionConverter(
-                ",", new StringToIntegerConverter(), Integer.class);
+        LegacyStringToCollectionConverter converter = new LegacyStringToCollectionConverter(
+                ",", new LegacyStringToIntegerConverter(), Integer.class);
         Collection<?> model = converter.convertToModel("6,2,5", List.class,
                 null);
         Assert.assertTrue("Unexpected model class", model instanceof ArrayList);
@@ -81,8 +81,8 @@ public class StringToCollectionConverterTest {
 
     @Test
     public void convertToModel_setAsCollection() {
-        StringToCollectionConverter converter = new StringToCollectionConverter(
-                " ", new StringToEnumConverter(), TestEnum.class);
+        LegacyStringToCollectionConverter converter = new LegacyStringToCollectionConverter(
+                " ", new LegacyStringToEnumConverter(), TestEnum.class);
         Collection<?> model = converter
                 .convertToModel("Z X Y", Set.class, null);
         Assert.assertTrue("Unexpected model class", model instanceof HashSet);
@@ -102,7 +102,7 @@ public class StringToCollectionConverterTest {
                 return new Vector();
             }
         };
-        StringToCollectionConverter converter = new StringToCollectionConverter(
+        LegacyStringToCollectionConverter converter = new LegacyStringToCollectionConverter(
                 ", ", null, String.class, factory);
         Collection<?> model = converter.convertToModel("a, b, c",
                 Collection.class, null);
@@ -115,7 +115,7 @@ public class StringToCollectionConverterTest {
 
     @Test
     public void convertToPresentation_default() {
-        StringToCollectionConverter converter = new StringToCollectionConverter();
+        LegacyStringToCollectionConverter converter = new LegacyStringToCollectionConverter();
         String presentation = converter.convertToPresentation(
                 Arrays.asList("a", "b", "c"), String.class, null);
 
@@ -124,7 +124,7 @@ public class StringToCollectionConverterTest {
 
     @Test
     public void convertToPresentation_customDelimiter() {
-        StringToCollectionConverter converter = new StringToCollectionConverter(
+        LegacyStringToCollectionConverter converter = new LegacyStringToCollectionConverter(
                 "x");
         String presentation = converter.convertToPresentation(
                 Arrays.asList("a", "b", "c"), String.class, null);
@@ -134,8 +134,8 @@ public class StringToCollectionConverterTest {
 
     @Test
     public void convertToPresentation_customConverter() {
-        StringToCollectionConverter converter = new StringToCollectionConverter(
-                ",", new StringToEnumConverter(), TestEnum.class);
+        LegacyStringToCollectionConverter converter = new LegacyStringToCollectionConverter(
+                ",", new LegacyStringToEnumConverter(), TestEnum.class);
         String presentation = converter.convertToPresentation(
                 Arrays.asList(TestEnum.Z, TestEnum.Y), String.class, null);
 
@@ -144,7 +144,7 @@ public class StringToCollectionConverterTest {
 
     @Test
     public void convertToModel_singleItem() {
-        StringToCollectionConverter converter = new StringToCollectionConverter();
+        LegacyStringToCollectionConverter converter = new LegacyStringToCollectionConverter();
         Collection<?> model = converter.convertToModel("a", List.class, null);
         Iterator<?> iterator = model.iterator();
         Assert.assertEquals("Incorrect fist token", "a", iterator.next());
@@ -154,14 +154,14 @@ public class StringToCollectionConverterTest {
 
     @Test
     public void convertToModel_null() {
-        StringToCollectionConverter converter = new StringToCollectionConverter();
+        LegacyStringToCollectionConverter converter = new LegacyStringToCollectionConverter();
         Assert.assertNull(converter.convertToModel(null, ArrayList.class,
                 Locale.ENGLISH));
     }
 
     @Test
     public void convertToPresentation_null() {
-        StringToCollectionConverter converter = new StringToCollectionConverter();
+        LegacyStringToCollectionConverter converter = new LegacyStringToCollectionConverter();
         Assert.assertNull(converter.convertToPresentation(null, String.class,
                 Locale.ENGLISH));
     }

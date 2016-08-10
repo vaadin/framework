@@ -3,7 +3,7 @@ package com.vaadin.tests.components.datefield;
 import java.util.Date;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.DateField;
 
@@ -25,7 +25,7 @@ public class DateFieldUnparsableDate extends TestBase {
 
         @Override
         protected Date handleUnparsableDateString(String dateString)
-                throws Converter.ConversionException {
+                throws LegacyConverter.ConversionException {
             return oldDate;
         }
     }
@@ -37,7 +37,7 @@ public class DateFieldUnparsableDate extends TestBase {
 
         @Override
         protected Date handleUnparsableDateString(String dateString)
-                throws Converter.ConversionException {
+                throws LegacyConverter.ConversionException {
             return null;
         }
     }
@@ -49,8 +49,8 @@ public class DateFieldUnparsableDate extends TestBase {
 
         @Override
         protected Date handleUnparsableDateString(String dateString)
-                throws Converter.ConversionException {
-            throw new Converter.ConversionException(
+                throws LegacyConverter.ConversionException {
+            throw new LegacyConverter.ConversionException(
                     "You should not enter invalid dates!");
         }
     }
@@ -62,11 +62,11 @@ public class DateFieldUnparsableDate extends TestBase {
 
         @Override
         protected Date handleUnparsableDateString(String dateString)
-                throws Converter.ConversionException {
+                throws LegacyConverter.ConversionException {
             if (dateString != null && dateString.equals("today")) {
                 return new Date();
             }
-            throw new Converter.ConversionException(
+            throw new LegacyConverter.ConversionException(
                     "You should not enter invalid dates!");
         }
     }

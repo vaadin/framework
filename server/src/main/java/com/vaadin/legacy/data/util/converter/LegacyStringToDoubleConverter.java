@@ -13,15 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.util.converter;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
+package com.vaadin.legacy.data.util.converter;
+
 import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
- * A converter that converts from {@link String} to {@link BigDecimal} and back.
+ * A converter that converts from {@link String} to {@link Double} and back.
  * Uses the given locale and a {@link NumberFormat} instance for formatting and
  * parsing.
  * <p>
@@ -32,29 +31,34 @@ import java.util.Locale;
  * </p>
  * 
  * @author Vaadin Ltd
- * @since 7.2
+ * @since 7.0
  */
-public class StringToBigDecimalConverter extends
-        AbstractStringToNumberConverter<BigDecimal> {
-    @Override
-    protected NumberFormat getFormat(Locale locale) {
-        NumberFormat numberFormat = super.getFormat(locale);
-        if (numberFormat instanceof DecimalFormat) {
-            ((DecimalFormat) numberFormat).setParseBigDecimal(true);
-        }
+public class LegacyStringToDoubleConverter extends
+        LegacyAbstractStringToNumberConverter<Double> {
 
-        return numberFormat;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
+     * java.util.Locale)
+     */
+    @Override
+    public Double convertToModel(String value,
+            Class<? extends Double> targetType, Locale locale)
+            throws ConversionException {
+        Number n = convertToNumber(value, targetType, locale);
+        return n == null ? null : n.doubleValue();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.util.converter.Converter#getModelType()
+     */
     @Override
-    public BigDecimal convertToModel(String value,
-            Class<? extends BigDecimal> targetType, Locale locale)
-            throws com.vaadin.data.util.converter.Converter.ConversionException {
-        return (BigDecimal) convertToNumber(value, BigDecimal.class, locale);
+    public Class<Double> getModelType() {
+        return Double.class;
     }
 
-    @Override
-    public Class<BigDecimal> getModelType() {
-        return BigDecimal.class;
-    }
 }

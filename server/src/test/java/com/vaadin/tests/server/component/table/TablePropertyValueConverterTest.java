@@ -34,7 +34,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.ui.Table;
 
 public class TablePropertyValueConverterTest {
@@ -84,20 +84,20 @@ public class TablePropertyValueConverterTest {
                 createContainer(new String[] { "col1", "col2", "col3" },
                         new Class[] { String.class, BaseClass.class,
                                 DerivedClass.class }));
-        customTable.setConverter("col1", new Converter<String, String>() {
+        customTable.setConverter("col1", new LegacyConverter<String, String>() {
             private static final long serialVersionUID = 1L;
 
             @Override
             public String convertToModel(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 return "model";
             }
 
             @Override
             public String convertToPresentation(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 return "presentation";
             }
 
@@ -112,13 +112,13 @@ public class TablePropertyValueConverterTest {
             }
 
         });
-        customTable.setConverter("col2", new Converter<String, BaseClass>() {
+        customTable.setConverter("col2", new LegacyConverter<String, BaseClass>() {
             private static final long serialVersionUID = 1L;
 
             @Override
             public BaseClass convertToModel(String value,
                     Class<? extends BaseClass> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 return new BaseClass("model");
             }
 
@@ -135,17 +135,17 @@ public class TablePropertyValueConverterTest {
             @Override
             public String convertToPresentation(BaseClass value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 return null;
             }
         });
-        customTable.setConverter("col3", new Converter<String, DerivedClass>() {
+        customTable.setConverter("col3", new LegacyConverter<String, DerivedClass>() {
             private static final long serialVersionUID = 1L;
 
             @Override
             public DerivedClass convertToModel(String value,
                     Class<? extends DerivedClass> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 return new DerivedClass("derived" + 1001);
             }
 
@@ -162,7 +162,7 @@ public class TablePropertyValueConverterTest {
             @Override
             public String convertToPresentation(DerivedClass value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 return null;
             }
         });
@@ -186,20 +186,20 @@ public class TablePropertyValueConverterTest {
                 createContainer(new String[] { "col1", "col2", "col3" },
                         new Class[] { int.class, BaseClass.class,
                                 DerivedClass.class }));
-        customTable.setConverter("col1", new Converter<String, Integer>() {
+        customTable.setConverter("col1", new LegacyConverter<String, Integer>() {
             private static final long serialVersionUID = 1L;
 
             @Override
             public Integer convertToModel(String value,
                     Class<? extends Integer> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 return 11;
             }
 
             @Override
             public String convertToPresentation(Integer value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 return "presentation";
             }
 
@@ -229,20 +229,20 @@ public class TablePropertyValueConverterTest {
     public void setUp() {
         table = new TestableTable("Test table", createContainer(new String[] {
                 "col1", "col2", "col3" }));
-        table.setConverter("col1", new Converter<String, String>() {
+        table.setConverter("col1", new LegacyConverter<String, String>() {
             private static final long serialVersionUID = 1L;
 
             @Override
             public String convertToModel(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 return "model";
             }
 
             @Override
             public String convertToPresentation(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 return "presentation";
             }
 
@@ -258,20 +258,20 @@ public class TablePropertyValueConverterTest {
 
         });
 
-        table.setConverter("col2", new Converter<String, String>() {
+        table.setConverter("col2", new LegacyConverter<String, String>() {
             private static final long serialVersionUID = 1L;
 
             @Override
             public String convertToModel(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 return "model2";
             }
 
             @Override
             public String convertToPresentation(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.data.util.converter.Converter.ConversionException {
+                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
                 return "presentation2";
             }
 
@@ -346,10 +346,10 @@ public class TablePropertyValueConverterTest {
                 Field f = Table.class
                         .getDeclaredField("propertyValueConverters");
                 f.setAccessible(true);
-                HashMap<Object, Converter<String, Object>> pvc = (HashMap<Object, Converter<String, Object>>) f
+                HashMap<Object, LegacyConverter<String, Object>> pvc = (HashMap<Object, LegacyConverter<String, Object>>) f
                         .get(this);
                 Set<Object> currentConverters = new HashSet<Object>();
-                for (Entry<Object, Converter<String, Object>> entry : pvc
+                for (Entry<Object, LegacyConverter<String, Object>> entry : pvc
                         .entrySet()) {
                     currentConverters.add(entry.getKey());
                 }

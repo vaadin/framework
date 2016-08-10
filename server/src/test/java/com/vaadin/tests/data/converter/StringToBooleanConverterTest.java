@@ -7,14 +7,14 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.StringToBooleanConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToBooleanConverter;
 
 public class StringToBooleanConverterTest {
 
-    StringToBooleanConverter converter = new StringToBooleanConverter();
-    StringToBooleanConverter yesNoConverter = new StringToBooleanConverter(
+    LegacyStringToBooleanConverter converter = new LegacyStringToBooleanConverter();
+    LegacyStringToBooleanConverter yesNoConverter = new LegacyStringToBooleanConverter(
             "yes", "no");
-    StringToBooleanConverter localeConverter = new StringToBooleanConverter() {
+    LegacyStringToBooleanConverter localeConverter = new LegacyStringToBooleanConverter() {
         @Override
         public String getFalseString(Locale locale) {
             Date d = new Date(3000000000000L);

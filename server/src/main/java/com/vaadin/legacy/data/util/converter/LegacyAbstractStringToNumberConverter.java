@@ -14,65 +14,60 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.legacy.data.util.converter;
 
-import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.ParsePosition;
-import java.util.Date;
 import java.util.Locale;
 
 /**
- * A converter that converts from {@link Date} to {@link String} and back. Uses
- * the given locale and {@link DateFormat} for formatting and parsing.
- * <p>
- * Leading and trailing white spaces are ignored when converting from a String.
- * </p>
+ * A converter that converts from the number type T to {@link String} and back.
+ * Uses the given locale and {@link NumberFormat} for formatting and parsing.
+ * Automatically trims the input string, removing any leading and trailing white
+ * space.
  * <p>
  * Override and overwrite {@link #getFormat(Locale)} to use a different format.
  * </p>
  * 
  * @author Vaadin Ltd
- * @since 7.0
+ * @since 7.1
  */
-public class StringToDateConverter implements Converter<String, Date> {
+public abstract class LegacyAbstractStringToNumberConverter<T> implements
+        LegacyConverter<String, T> {
 
     /**
-     * Returns the format used by
-     * {@link #convertToPresentation(Date, Class,Locale)} and
-     * {@link #convertToModel(String, Class, Locale)}.
+     * Returns the format used by {@link #convertToPresentation(Object, Locale)}
+     * and {@link #convertToModel(Object, Locale)}.
      * 
      * @param locale
      *            The locale to use
-     * @return A DateFormat instance
+     * @return A NumberFormat instance
+     * @since 7.1
      */
-    protected DateFormat getFormat(Locale locale) {
+    protected NumberFormat getFormat(Locale locale) {
         if (locale == null) {
             locale = Locale.getDefault();
         }
 
-        DateFormat f = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
-                DateFormat.MEDIUM, locale);
-        f.setLenient(false);
-        return f;
+        return NumberFormat.getNumberInstance(locale);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Convert the value to a Number using the given locale and
+     * {@link #getFormat(Locale)}.
      * 
-     * @see
-     * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
-     * java.lang.Class, java.util.Locale)
+     * @param value
+     *            The value to convert
+     * @param locale
+     *            The locale to use for conversion
+     * @return The converted value
+     * @throws ConversionException
+     *             If there was a problem converting the value
+     * @since 7.1
      */
-    @Override
-    public Date convertToModel(String value, Class<? extends Date> targetType,
-            Locale locale)
-            throws com.vaadin.data.util.converter.Converter.ConversionException {
-        if (targetType != getModelType()) {
-            throw new ConversionException("Converter only supports "
-                    + getModelType().getName() + " (targetType was "
-                    + targetType.getName() + ")");
-        }
-
+    protected Number convertToNumber(String value,
+            Class<? extends Number> targetType, Locale locale)
+            throws ConversionException {
         if (value == null) {
             return null;
         }
@@ -80,11 +75,18 @@ public class StringToDateConverter implements Converter<String, Date> {
         // Remove leading and trailing white space
         value = value.trim();
 
+        // Parse and detect errors. If the full string was not used, it is
+        // an error.
         ParsePosition parsePosition = new ParsePosition(0);
-        Date parsedValue = getFormat(locale).parse(value, parsePosition);
+        Number parsedValue = getFormat(locale).parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
             throw new ConversionException("Could not convert '" + value
                     + "' to " + getModelType().getName());
+        }
+
+        if (parsedValue == null) {
+            // Convert "" to null
+            return null;
         }
 
         return parsedValue;
@@ -95,27 +97,17 @@ public class StringToDateConverter implements Converter<String, Date> {
      * 
      * @see
      * com.vaadin.data.util.converter.Converter#convertToPresentation(java.lang
-     * .Object, java.lang.Class, java.util.Locale)
+     * .Object, java.util.Locale)
      */
     @Override
-    public String convertToPresentation(Date value,
+    public String convertToPresentation(T value,
             Class<? extends String> targetType, Locale locale)
-            throws com.vaadin.data.util.converter.Converter.ConversionException {
+            throws ConversionException {
         if (value == null) {
             return null;
         }
 
         return getFormat(locale).format(value);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.util.converter.Converter#getModelType()
-     */
-    @Override
-    public Class<Date> getModelType() {
-        return Date.class;
     }
 
     /*

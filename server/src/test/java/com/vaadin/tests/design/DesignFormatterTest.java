@@ -29,10 +29,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
+import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;

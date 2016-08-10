@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.LegacyPropertyHelper;
-import com.vaadin.data.util.converter.Converter.ConversionException;
+import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
 
 /**
  * ColumnProperty represents the value of one column in a RowItem. In addition

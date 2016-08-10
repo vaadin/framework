@@ -14,28 +14,28 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.legacy.data.util.converter;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
- * A converter that converts from {@link String} to {@link Byte} and back. Uses
- * the given locale and a {@link NumberFormat} instance for formatting and
+ * A converter that converts from {@link String} to {@link Integer} and back.
+ * Uses the given locale and a {@link NumberFormat} instance for formatting and
  * parsing.
  * <p>
  * Override and overwrite {@link #getFormat(Locale)} to use a different format.
  * </p>
  * 
  * @author Vaadin Ltd
- * @since 7.4
+ * @since 7.0
  */
-public class StringToByteConverter extends
-        AbstractStringToNumberConverter<Byte> {
+public class LegacyStringToIntegerConverter extends
+        LegacyAbstractStringToNumberConverter<Integer> {
 
     /**
      * Returns the format used by
-     * {@link #convertToPresentation(Byte, Class, Locale)} and
+     * {@link #convertToPresentation(Integer, Class, Locale)} and
      * {@link #convertToModel(String, Class, Locale)}
      * 
      * @param locale
@@ -58,21 +58,26 @@ public class StringToByteConverter extends
      * java.lang.Class, java.util.Locale)
      */
     @Override
-    public Byte convertToModel(String value, Class<? extends Byte> targetType,
-            Locale locale) throws ConversionException {
+    public Integer convertToModel(String value,
+            Class<? extends Integer> targetType, Locale locale)
+            throws ConversionException {
         Number n = convertToNumber(value, targetType, locale);
 
         if (n == null) {
             return null;
         }
 
-        byte byteValue = n.byteValue();
-        if (byteValue == n.longValue()) {
-            return byteValue;
+        int intValue = n.intValue();
+        if (intValue == n.longValue()) {
+            // If the value of n is outside the range of long, the return value
+            // of longValue() is either Long.MIN_VALUE or Long.MAX_VALUE. The
+            // above comparison promotes int to long and thus does not need to
+            // consider wrap-around.
+            return intValue;
         }
 
         throw new ConversionException("Could not convert '" + value + "' to "
-                + Byte.class.getName() + ": value out of range");
+                + Integer.class.getName() + ": value out of range");
 
     }
 
@@ -82,8 +87,8 @@ public class StringToByteConverter extends
      * @see com.vaadin.data.util.converter.Converter#getModelType()
      */
     @Override
-    public Class<Byte> getModelType() {
-        return Byte.class;
+    public Class<Integer> getModelType() {
+        return Integer.class;
     }
 
 }

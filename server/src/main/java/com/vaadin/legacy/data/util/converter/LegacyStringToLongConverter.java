@@ -14,28 +14,28 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.legacy.data.util.converter;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
- * A converter that converts from {@link String} to {@link Integer} and back.
- * Uses the given locale and a {@link NumberFormat} instance for formatting and
+ * A converter that converts from {@link String} to {@link Long} and back. Uses
+ * the given locale and a {@link NumberFormat} instance for formatting and
  * parsing.
  * <p>
  * Override and overwrite {@link #getFormat(Locale)} to use a different format.
  * </p>
  * 
  * @author Vaadin Ltd
- * @since 7.0
+ * @since 7.2
  */
-public class StringToIntegerConverter extends
-        AbstractStringToNumberConverter<Integer> {
+public class LegacyStringToLongConverter extends
+        LegacyAbstractStringToNumberConverter<Long> {
 
     /**
      * Returns the format used by
-     * {@link #convertToPresentation(Integer, Class, Locale)} and
+     * {@link #convertToPresentation(Long, Class, Locale)} and
      * {@link #convertToModel(String, Class, Locale)}
      * 
      * @param locale
@@ -58,26 +58,10 @@ public class StringToIntegerConverter extends
      * java.lang.Class, java.util.Locale)
      */
     @Override
-    public Integer convertToModel(String value,
-            Class<? extends Integer> targetType, Locale locale)
-            throws ConversionException {
+    public Long convertToModel(String value, Class<? extends Long> targetType,
+            Locale locale) throws ConversionException {
         Number n = convertToNumber(value, targetType, locale);
-
-        if (n == null) {
-            return null;
-        }
-
-        int intValue = n.intValue();
-        if (intValue == n.longValue()) {
-            // If the value of n is outside the range of long, the return value
-            // of longValue() is either Long.MIN_VALUE or Long.MAX_VALUE. The
-            // above comparison promotes int to long and thus does not need to
-            // consider wrap-around.
-            return intValue;
-        }
-
-        throw new ConversionException("Could not convert '" + value + "' to "
-                + Integer.class.getName() + ": value out of range");
+        return n == null ? null : n.longValue();
 
     }
 
@@ -87,8 +71,8 @@ public class StringToIntegerConverter extends
      * @see com.vaadin.data.util.converter.Converter#getModelType()
      */
     @Override
-    public Class<Integer> getModelType() {
-        return Integer.class;
+    public Class<Long> getModelType() {
+        return Long.class;
     }
 
 }

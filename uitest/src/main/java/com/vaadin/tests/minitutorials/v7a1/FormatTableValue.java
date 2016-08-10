@@ -3,7 +3,7 @@ package com.vaadin.tests.minitutorials.v7a1;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import com.vaadin.data.util.converter.StringToDoubleConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToDoubleConverter;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Table;
@@ -30,14 +30,14 @@ public class FormatTableValue extends AbstractTestUI {
         table.getItem(itemId).getItemProperty(DEFAULT_PROPERTY)
                 .setValue(3.1415);
 
-        table.setConverter(PERCENT_PROPERTY, new StringToDoubleConverter() {
+        table.setConverter(PERCENT_PROPERTY, new LegacyStringToDoubleConverter() {
             @Override
             protected NumberFormat getFormat(Locale locale) {
                 return NumberFormat.getPercentInstance(locale);
             }
         });
 
-        table.setConverter(CURRENCY_PROPERTY, new StringToDoubleConverter() {
+        table.setConverter(CURRENCY_PROPERTY, new LegacyStringToDoubleConverter() {
             @Override
             protected NumberFormat getFormat(Locale locale) {
                 return NumberFormat.getCurrencyInstance(locale);

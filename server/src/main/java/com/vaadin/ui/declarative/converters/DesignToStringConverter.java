@@ -18,7 +18,7 @@ package com.vaadin.ui.declarative.converters;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**
@@ -30,7 +30,7 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
  * @param <TYPE>
  *            Type of the data being converted.
  */
-public class DesignToStringConverter<TYPE> implements Converter<String, TYPE> {
+public class DesignToStringConverter<TYPE> implements LegacyConverter<String, TYPE> {
 
     private final Class<? extends TYPE> type;
 
@@ -72,30 +72,30 @@ public class DesignToStringConverter<TYPE> implements Converter<String, TYPE> {
 
     @Override
     public TYPE convertToModel(String value, Class<? extends TYPE> targetType,
-            Locale locale) throws Converter.ConversionException {
+            Locale locale) throws LegacyConverter.ConversionException {
         try {
             return type.cast(type
                     .getMethod(this.staticMethodName, String.class).invoke(
                             null, value));
         } catch (IllegalAccessException e) {
-            throw new Converter.ConversionException(e);
+            throw new LegacyConverter.ConversionException(e);
         } catch (IllegalArgumentException e) {
-            throw new Converter.ConversionException(e);
+            throw new LegacyConverter.ConversionException(e);
         } catch (InvocationTargetException e) {
-            throw new Converter.ConversionException(e.getCause());
+            throw new LegacyConverter.ConversionException(e.getCause());
         } catch (NoSuchMethodException e) {
-            throw new Converter.ConversionException(e);
+            throw new LegacyConverter.ConversionException(e);
         } catch (SecurityException e) {
-            throw new Converter.ConversionException(e);
+            throw new LegacyConverter.ConversionException(e);
         } catch (RuntimeException e) {
-            throw new Converter.ConversionException(e);
+            throw new LegacyConverter.ConversionException(e);
         }
     }
 
     @Override
     public String convertToPresentation(TYPE value,
             Class<? extends String> targetType, Locale locale)
-            throws Converter.ConversionException {
+            throws LegacyConverter.ConversionException {
         if (value == null) {
             return NULL_VALUE_REPRESENTATION;
         } else {

@@ -5,11 +5,11 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.DateToLongConverter;
+import com.vaadin.legacy.data.util.converter.LegacyDateToLongConverter;
 
 public class DateToLongConverterTest {
 
-    DateToLongConverter converter = new DateToLongConverter();
+    LegacyDateToLongConverter converter = new LegacyDateToLongConverter();
 
     @Test
     public void testNullConversion() {

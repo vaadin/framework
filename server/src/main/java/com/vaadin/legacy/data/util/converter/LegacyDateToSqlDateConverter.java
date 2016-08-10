@@ -17,7 +17,7 @@
 /**
  * 
  */
-package com.vaadin.data.util.converter;
+package com.vaadin.legacy.data.util.converter;
 
 import java.util.Date;
 import java.util.Locale;
@@ -32,7 +32,7 @@ import java.util.Locale;
  * @since 7.1
  * @author Vaadin Ltd
  */
-public class DateToSqlDateConverter implements Converter<Date, java.sql.Date> {
+public class LegacyDateToSqlDateConverter implements LegacyConverter<Date, java.sql.Date> {
 
     @Override
     public java.sql.Date convertToModel(Date value,

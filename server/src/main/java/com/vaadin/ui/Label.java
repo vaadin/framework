@@ -25,8 +25,8 @@ import org.jsoup.nodes.Element;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.AbstractProperty;
 import com.vaadin.data.util.LegacyPropertyHelper;
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.ConverterUtil;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverterUtil;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.ui.label.LabelState;
 import com.vaadin.shared.util.SharedUtil;
@@ -100,7 +100,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * A converter used to convert from the data model type to the field type
      * and vice versa. Label type is always String.
      */
-    private Converter<String, Object> converter = null;
+    private LegacyConverter<String, Object> converter = null;
 
     private Property<String> dataSource = null;
 
@@ -190,7 +190,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * @return
      */
     private String getDataSourceValue() {
-        return ConverterUtil.convertFromModel(getPropertyDataSource()
+        return LegacyConverterUtil.convertFromModel(getPropertyDataSource()
                 .getValue(), String.class, getConverter(), getLocale());
     }
 
@@ -258,11 +258,11 @@ public class Label extends AbstractComponent implements Property<String>,
 
         // Check if the current converter is compatible.
         if (newDataSource != null
-                && !ConverterUtil.canConverterPossiblyHandle(getConverter(),
+                && !LegacyConverterUtil.canConverterPossiblyHandle(getConverter(),
                         getType(), newDataSource.getType())) {
             // There is no converter set or there is no way the current
             // converter can be compatible.
-            Converter<String, ?> c = ConverterUtil.getConverter(String.class,
+            LegacyConverter<String, ?> c = LegacyConverterUtil.getConverter(String.class,
                     newDataSource.getType(), getSession());
             setConverter(c);
         }
@@ -528,7 +528,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * 
      * @return The converter or null if none is set.
      */
-    public Converter<String, Object> getConverter() {
+    public LegacyConverter<String, Object> getConverter() {
         return converter;
     }
 
@@ -539,8 +539,8 @@ public class Label extends AbstractComponent implements Property<String>,
      * @param converter
      *            The new converter to use.
      */
-    public void setConverter(Converter<String, ?> converter) {
-        this.converter = (Converter<String, Object>) converter;
+    public void setConverter(LegacyConverter<String, ?> converter) {
+        this.converter = (LegacyConverter<String, Object>) converter;
         markAsDirty();
     }
 

@@ -29,7 +29,6 @@ import java.util.logging.Logger;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.util.converter.Converter;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -38,6 +37,7 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.legacy.data.validator.LegacyDateRangeValidator;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.PaintException;
@@ -558,7 +558,7 @@ public class DateField extends LegacyAbstractField<Date> implements
                      * this case the invalid text remains in the DateField.
                      */
                     markAsDirty();
-                } catch (Converter.ConversionException e) {
+                } catch (LegacyConverter.ConversionException e) {
 
                     /*
                      * Datefield now contains some text that could't be parsed
@@ -659,13 +659,13 @@ public class DateField extends LegacyAbstractField<Date> implements
      * 
      * @param dateString
      * @return parsed Date
-     * @throws Converter.ConversionException
+     * @throws LegacyConverter.ConversionException
      *             to keep the old value and indicate an error
      */
     protected Date handleUnparsableDateString(String dateString)
-            throws Converter.ConversionException {
+            throws LegacyConverter.ConversionException {
         currentParseErrorMessage = null;
-        throw new Converter.ConversionException(getParseErrorMessage());
+        throw new LegacyConverter.ConversionException(getParseErrorMessage());
     }
 
     /* Property features */

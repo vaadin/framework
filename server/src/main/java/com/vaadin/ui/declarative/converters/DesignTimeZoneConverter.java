@@ -18,7 +18,7 @@ package com.vaadin.ui.declarative.converters;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**
@@ -28,12 +28,12 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class DesignTimeZoneConverter implements Converter<String, TimeZone> {
+public class DesignTimeZoneConverter implements LegacyConverter<String, TimeZone> {
 
     @Override
     public TimeZone convertToModel(String value,
             Class<? extends TimeZone> targetTimeZone, Locale locale)
-            throws Converter.ConversionException {
+            throws LegacyConverter.ConversionException {
         if (value == null || value.isEmpty()) {
             return null;
         }
@@ -44,7 +44,7 @@ public class DesignTimeZoneConverter implements Converter<String, TimeZone> {
     @Override
     public String convertToPresentation(TimeZone value,
             Class<? extends String> targetTimeZone, Locale locale)
-            throws Converter.ConversionException {
+            throws LegacyConverter.ConversionException {
         if (value == null) {
             return "";
         } else {

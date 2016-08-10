@@ -16,7 +16,7 @@
 package com.vaadin.legacy.data.validator;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.util.converter.StringToDoubleConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToDoubleConverter;
 
 /**
  * String validator for a double precision floating point number. See
@@ -25,7 +25,7 @@ import com.vaadin.data.util.converter.StringToDoubleConverter;
  * 
  * @author Vaadin Ltd.
  * @since 5.4
- * @deprecated As of 7.0. Use a {@link StringToDoubleConverter} converter on the
+ * @deprecated As of 7.0. Use a {@link LegacyStringToDoubleConverter} converter on the
  *             field instead or bind the field to a {@link Property} of type
  *             {@link Double}.
  */

@@ -3,9 +3,9 @@ package com.vaadin.tests.minitutorials.v7a1;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import com.vaadin.data.util.converter.StringToDoubleConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToDoubleConverter;
 
-public class MyStringToDoubleConverter extends StringToDoubleConverter {
+public class MyStringToDoubleConverter extends LegacyStringToDoubleConverter {
 
     @Override
     protected NumberFormat getFormat(Locale locale) {

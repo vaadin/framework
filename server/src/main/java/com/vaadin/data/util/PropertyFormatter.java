@@ -16,7 +16,7 @@
 package com.vaadin.data.util;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
 
 /**
  * Formatting proxy for a {@link Property}.
@@ -46,7 +46,7 @@ import com.vaadin.data.util.converter.Converter;
  *            type of the underlying property (a PropertyFormatter is always a
  *            Property&lt;String&gt;)
  * 
- * @deprecated As of 7.0, replaced by {@link Converter}
+ * @deprecated As of 7.0, replaced by {@link LegacyConverter}
  * @author Vaadin Ltd.
  * @since 5.3.0
  */

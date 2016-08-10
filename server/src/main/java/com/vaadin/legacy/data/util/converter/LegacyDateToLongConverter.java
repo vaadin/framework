@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.legacy.data.util.converter;
 
 import java.util.Date;
 import java.util.Locale;
@@ -25,7 +25,7 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.0
  */
-public class DateToLongConverter implements Converter<Date, Long> {
+public class LegacyDateToLongConverter implements LegacyConverter<Date, Long> {
 
     /*
      * (non-Javadoc)

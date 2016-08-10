@@ -16,7 +16,7 @@
 package com.vaadin.legacy.data.validator;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
 
 /**
  * String validator for integers. See
@@ -25,7 +25,7 @@ import com.vaadin.data.util.converter.StringToIntegerConverter;
  * 
  * @author Vaadin Ltd.
  * @since 5.4
- * @deprecated As of 7.0. Use a {@link StringToIntegerConverter} converter on
+ * @deprecated As of 7.0. Use a {@link LegacyStringToIntegerConverter} converter on
  *             the field instead or bind the field to a {@link Property} of type
  *             {@link Integer}.
  */

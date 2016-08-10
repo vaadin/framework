@@ -11,9 +11,9 @@ import org.junit.Test;
 
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.Converter.ConversionException;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
@@ -88,7 +88,7 @@ public class AbsFieldValueConversionsTest {
     @Test
     public void testStringIdentityConversion() {
         TextField tf = new TextField();
-        tf.setConverter(new Converter<String, String>() {
+        tf.setConverter(new LegacyConverter<String, String>() {
 
             @Override
             public String convertToModel(String value,
@@ -126,7 +126,7 @@ public class AbsFieldValueConversionsTest {
     public void testIntegerStringConversion() {
         TextField tf = new TextField();
 
-        tf.setConverter(new StringToIntegerConverter());
+        tf.setConverter(new LegacyStringToIntegerConverter());
         tf.setPropertyDataSource(new MethodProperty<Integer>(paulaBean, "age"));
         assertEquals(34, tf.getPropertyDataSource().getValue());
         assertEquals("34", tf.getValue());
@@ -158,7 +158,7 @@ public class AbsFieldValueConversionsTest {
     @Test
     public void testBooleanNullConversion() {
         CheckBox cb = new CheckBox();
-        cb.setConverter(new Converter<Boolean, Boolean>() {
+        cb.setConverter(new LegacyConverter<Boolean, Boolean>() {
 
             @Override
             public Boolean convertToModel(Boolean value,
@@ -245,10 +245,10 @@ public class AbsFieldValueConversionsTest {
         assertEquals(490, tf.getPropertyDataSource().getValue());
         assertEquals("490", tf.getValue());
 
-        Converter c1 = tf.getConverter();
+        LegacyConverter c1 = tf.getConverter();
 
         tf.setPropertyDataSource(new MethodProperty<Number>(nb, "number"));
-        Converter c2 = tf.getConverter();
+        LegacyConverter c2 = tf.getConverter();
         assertTrue(
                 "StringToInteger converter is ok for integer types and should stay even though property is changed",
                 c1 == c2);
@@ -260,9 +260,9 @@ public class AbsFieldValueConversionsTest {
     @Test
     public void testNullConverter() {
         TextField tf = new TextField("foo");
-        tf.setConverter(new StringToIntegerConverter());
+        tf.setConverter(new LegacyStringToIntegerConverter());
         tf.setPropertyDataSource(new ObjectProperty<Integer>(12));
-        tf.setConverter((Converter) null);
+        tf.setConverter((LegacyConverter) null);
         try {
             Object v = tf.getConvertedValue();
             System.out.println(v);

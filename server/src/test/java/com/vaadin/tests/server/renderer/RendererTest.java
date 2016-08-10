@@ -27,8 +27,8 @@ import org.junit.Test;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.server.component.grid.TestGrid;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
@@ -65,7 +65,7 @@ public class RendererTest {
         }
     }
 
-    private static class TestConverter implements Converter<String, TestBean> {
+    private static class TestConverter implements LegacyConverter<String, TestBean> {
 
         @Override
         public TestBean convertToModel(String value,
@@ -150,7 +150,7 @@ public class RendererTest {
     @Test
     public void testDefaultRendererAndConverter() throws Exception {
         assertSame(TextRenderer.class, intColumn.getRenderer().getClass());
-        assertSame(StringToIntegerConverter.class, intColumn.getConverter()
+        assertSame(LegacyStringToIntegerConverter.class, intColumn.getConverter()
                 .getClass());
 
         assertSame(TextRenderer.class, textColumn.getRenderer().getClass());
@@ -165,7 +165,7 @@ public class RendererTest {
     @Test
     public void testFindCompatibleConverter() throws Exception {
         intColumn.setRenderer(renderer());
-        assertSame(StringToIntegerConverter.class, intColumn.getConverter()
+        assertSame(LegacyStringToIntegerConverter.class, intColumn.getConverter()
                 .getClass());
 
         textColumn.setRenderer(renderer());

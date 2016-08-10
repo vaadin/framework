@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.AbstractProperty;
-import com.vaadin.data.util.converter.Converter.ConversionException;
+import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
 import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;

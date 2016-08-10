@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.util.converter;
+package com.vaadin.legacy.data.util.converter;
 
 import java.util.EnumSet;
 import java.util.Locale;
@@ -36,7 +36,7 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.4
  */
-public class StringToEnumConverter implements Converter<String, Enum> {
+public class LegacyStringToEnumConverter implements LegacyConverter<String, Enum> {
 
     @Override
     public Enum convertToModel(String value, Class<? extends Enum> targetType,

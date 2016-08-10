@@ -3,11 +3,11 @@ package com.vaadin.tests.data.converter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.StringToDoubleConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToDoubleConverter;
 
 public class StringToDoubleConverterTest {
 
-    StringToDoubleConverter converter = new StringToDoubleConverter();
+    LegacyStringToDoubleConverter converter = new LegacyStringToDoubleConverter();
 
     @Test
     public void testNullConversion() {

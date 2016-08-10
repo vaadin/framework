@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.legacy.data.util.converter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -24,25 +24,25 @@ import java.util.logging.Logger;
 import com.vaadin.server.VaadinSession;
 
 /**
- * Default implementation of {@link ConverterFactory}. Provides converters for
+ * Default implementation of {@link LegacyConverterFactory}. Provides converters for
  * standard types like {@link String}, {@link Double} and {@link Date}. </p>
  * <p>
  * Custom converters can be provided by extending this class and using
- * {@link VaadinSession#setConverterFactory(ConverterFactory)}.
+ * {@link VaadinSession#setConverterFactory(LegacyConverterFactory)}.
  * </p>
  * 
  * @author Vaadin Ltd
  * @since 7.0
  */
-public class DefaultConverterFactory implements ConverterFactory {
+public class LegacyDefaultConverterFactory implements LegacyConverterFactory {
 
     private final static Logger log = Logger
-            .getLogger(DefaultConverterFactory.class.getName());
+            .getLogger(LegacyDefaultConverterFactory.class.getName());
 
     @Override
-    public <PRESENTATION, MODEL> Converter<PRESENTATION, MODEL> createConverter(
+    public <PRESENTATION, MODEL> LegacyConverter<PRESENTATION, MODEL> createConverter(
             Class<PRESENTATION> presentationType, Class<MODEL> modelType) {
-        Converter<PRESENTATION, MODEL> converter = findConverter(
+        LegacyConverter<PRESENTATION, MODEL> converter = findConverter(
                 presentationType, modelType);
         if (converter != null) {
             log.finest(getClass().getName() + " created a "
@@ -51,12 +51,12 @@ public class DefaultConverterFactory implements ConverterFactory {
         }
 
         // Try to find a reverse converter
-        Converter<MODEL, PRESENTATION> reverseConverter = findConverter(
+        LegacyConverter<MODEL, PRESENTATION> reverseConverter = findConverter(
                 modelType, presentationType);
         if (reverseConverter != null) {
             log.finest(getClass().getName() + " created a reverse "
                     + reverseConverter.getClass());
-            return new ReverseConverter<PRESENTATION, MODEL>(reverseConverter);
+            return new LegacyReverseConverter<PRESENTATION, MODEL>(reverseConverter);
         }
 
         log.finest(getClass().getName() + " could not find a converter for "
@@ -66,17 +66,17 @@ public class DefaultConverterFactory implements ConverterFactory {
 
     }
 
-    protected <PRESENTATION, MODEL> Converter<PRESENTATION, MODEL> findConverter(
+    protected <PRESENTATION, MODEL> LegacyConverter<PRESENTATION, MODEL> findConverter(
             Class<PRESENTATION> presentationType, Class<MODEL> modelType) {
         if (presentationType == String.class) {
             // TextField converters and more
-            Converter<PRESENTATION, MODEL> converter = (Converter<PRESENTATION, MODEL>) createStringConverter(modelType);
+            LegacyConverter<PRESENTATION, MODEL> converter = (LegacyConverter<PRESENTATION, MODEL>) createStringConverter(modelType);
             if (converter != null) {
                 return converter;
             }
         } else if (presentationType == Date.class) {
             // DateField converters and more
-            Converter<PRESENTATION, MODEL> converter = (Converter<PRESENTATION, MODEL>) createDateConverter(modelType);
+            LegacyConverter<PRESENTATION, MODEL> converter = (LegacyConverter<PRESENTATION, MODEL>) createDateConverter(modelType);
             if (converter != null) {
                 return converter;
             }
@@ -86,39 +86,39 @@ public class DefaultConverterFactory implements ConverterFactory {
 
     }
 
-    protected Converter<Date, ?> createDateConverter(Class<?> sourceType) {
+    protected LegacyConverter<Date, ?> createDateConverter(Class<?> sourceType) {
         if (Long.class.isAssignableFrom(sourceType)) {
-            return new DateToLongConverter();
+            return new LegacyDateToLongConverter();
         } else if (java.sql.Date.class.isAssignableFrom(sourceType)) {
-            return new DateToSqlDateConverter();
+            return new LegacyDateToSqlDateConverter();
         } else {
             return null;
         }
     }
 
-    protected Converter<String, ?> createStringConverter(Class<?> sourceType) {
+    protected LegacyConverter<String, ?> createStringConverter(Class<?> sourceType) {
         if (Double.class.isAssignableFrom(sourceType)) {
-            return new StringToDoubleConverter();
+            return new LegacyStringToDoubleConverter();
         } else if (Float.class.isAssignableFrom(sourceType)) {
-            return new StringToFloatConverter();
+            return new LegacyStringToFloatConverter();
         } else if (Integer.class.isAssignableFrom(sourceType)) {
-            return new StringToIntegerConverter();
+            return new LegacyStringToIntegerConverter();
         } else if (Long.class.isAssignableFrom(sourceType)) {
-            return new StringToLongConverter();
+            return new LegacyStringToLongConverter();
         } else if (BigDecimal.class.isAssignableFrom(sourceType)) {
-            return new StringToBigDecimalConverter();
+            return new LegacyStringToBigDecimalConverter();
         } else if (Boolean.class.isAssignableFrom(sourceType)) {
-            return new StringToBooleanConverter();
+            return new LegacyStringToBooleanConverter();
         } else if (Date.class.isAssignableFrom(sourceType)) {
-            return new StringToDateConverter();
+            return new LegacyStringToDateConverter();
         } else if (Enum.class.isAssignableFrom(sourceType)) {
-            return new StringToEnumConverter();
+            return new LegacyStringToEnumConverter();
         } else if (BigInteger.class.isAssignableFrom(sourceType)) {
-            return new StringToBigIntegerConverter();
+            return new LegacyStringToBigIntegerConverter();
         } else if (Short.class.isAssignableFrom(sourceType)) {
-            return new StringToShortConverter();
+            return new LegacyStringToShortConverter();
         } else if (Byte.class.isAssignableFrom(sourceType)) {
-            return new StringToByteConverter();
+            return new LegacyStringToByteConverter();
         } else {
             return null;
         }

@@ -13,19 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.util.converter;
+package com.vaadin.legacy.data.util.converter;
 
 import java.io.Serializable;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinSession;
 
-public class ConverterUtil implements Serializable {
+public class LegacyConverterUtil implements Serializable {
 
     /**
      * Finds a converter that can convert from the given presentation type to
      * the given model type and back. Uses the given application to find a
-     * {@link ConverterFactory} or, if application is null, uses the
+     * {@link LegacyConverterFactory} or, if application is null, uses the
      * {@link VaadinSession#getCurrent()}.
      * 
      * @param <PRESENTATIONTYPE>
@@ -42,16 +42,16 @@ public class ConverterUtil implements Serializable {
      * @return a Converter capable of converting between the given types or null
      *         if no converter was found
      */
-    public static <PRESENTATIONTYPE, MODELTYPE> Converter<PRESENTATIONTYPE, MODELTYPE> getConverter(
+    public static <PRESENTATIONTYPE, MODELTYPE> LegacyConverter<PRESENTATIONTYPE, MODELTYPE> getConverter(
             Class<PRESENTATIONTYPE> presentationType,
             Class<MODELTYPE> modelType, VaadinSession session) {
-        Converter<PRESENTATIONTYPE, MODELTYPE> converter = null;
+        LegacyConverter<PRESENTATIONTYPE, MODELTYPE> converter = null;
         if (session == null) {
             session = VaadinSession.getCurrent();
         }
 
         if (session != null) {
-            ConverterFactory factory = session.getConverterFactory();
+            LegacyConverterFactory factory = session.getConverterFactory();
             converter = factory.createConverter(presentationType, modelType);
         }
         return converter;
@@ -77,15 +77,15 @@ public class ConverterUtil implements Serializable {
      * @return the converted value, compatible with the presentation type, or
      *         the original value if its type is compatible and no converter is
      *         set.
-     * @throws Converter.ConversionException
+     * @throws LegacyConverter.ConversionException
      *             if there was a problem converting the value
      */
     @SuppressWarnings("unchecked")
     public static <PRESENTATIONTYPE, MODELTYPE> PRESENTATIONTYPE convertFromModel(
             MODELTYPE modelValue,
             Class<? extends PRESENTATIONTYPE> presentationType,
-            Converter<PRESENTATIONTYPE, MODELTYPE> converter, Locale locale)
-            throws Converter.ConversionException {
+            LegacyConverter<PRESENTATIONTYPE, MODELTYPE> converter, Locale locale)
+            throws LegacyConverter.ConversionException {
         if (converter != null) {
             /*
              * If there is a converter, always use it. It must convert or throw
@@ -95,7 +95,7 @@ public class ConverterUtil implements Serializable {
                     modelValue, presentationType, locale);
             if (presentation != null
                     && !presentationType.isInstance(presentation)) {
-                throw new Converter.ConversionException(
+                throw new LegacyConverter.ConversionException(
                         "Converter returned an object of type "
                                 + presentation.getClass().getName()
                                 + " when expecting "
@@ -113,7 +113,7 @@ public class ConverterUtil implements Serializable {
         if (presentationType.isAssignableFrom(modelValue.getClass())) {
             return (PRESENTATIONTYPE) modelValue;
         } else {
-            throw new Converter.ConversionException(
+            throw new LegacyConverter.ConversionException(
                     "Unable to convert value of type "
                             + modelValue.getClass().getName()
                             + " to presentation type "
@@ -141,13 +141,13 @@ public class ConverterUtil implements Serializable {
      * 
      * @return the converted value, compatible with the model type, or the
      *         original value if its type is compatible and no converter is set.
-     * @throws Converter.ConversionException
+     * @throws LegacyConverter.ConversionException
      *             if there was a problem converting the value
      */
     public static <MODELTYPE, PRESENTATIONTYPE> MODELTYPE convertToModel(
             PRESENTATIONTYPE presentationValue, Class<MODELTYPE> modelType,
-            Converter<PRESENTATIONTYPE, MODELTYPE> converter, Locale locale)
-            throws Converter.ConversionException {
+            LegacyConverter<PRESENTATIONTYPE, MODELTYPE> converter, Locale locale)
+            throws LegacyConverter.ConversionException {
         if (converter != null) {
             /*
              * If there is a converter, always use it. It must convert or throw
@@ -156,7 +156,7 @@ public class ConverterUtil implements Serializable {
             MODELTYPE model = converter.convertToModel(presentationValue,
                     modelType, locale);
             if (model != null && !modelType.isInstance(model)) {
-                throw new Converter.ConversionException(
+                throw new LegacyConverter.ConversionException(
                         "Converter returned an object of type "
                                 + model.getClass().getName()
                                 + " when expecting " + modelType.getName());
@@ -178,7 +178,7 @@ public class ConverterUtil implements Serializable {
             // presentation type directly compatible with model type
             return modelType.cast(presentationValue);
         } else {
-            throw new Converter.ConversionException(
+            throw new LegacyConverter.ConversionException(
                     "Unable to convert value of type "
                             + presentationValue.getClass().getName()
                             + " to model type "
@@ -193,7 +193,7 @@ public class ConverterUtil implements Serializable {
      * presentation and model type. Does strict type checking and only returns
      * true if the converter claims it can handle exactly the given types.
      * 
-     * @see #canConverterPossiblyHandle(Converter, Class, Class)
+     * @see #canConverterPossiblyHandle(LegacyConverter, Class, Class)
      * 
      * @param converter
      *            The converter to check. If this is null the result is always
@@ -205,7 +205,7 @@ public class ConverterUtil implements Serializable {
      * @return true if the converter supports conversion between the given
      *         presentation and model type, false otherwise
      */
-    public static boolean canConverterHandle(Converter<?, ?> converter,
+    public static boolean canConverterHandle(LegacyConverter<?, ?> converter,
             Class<?> presentationType, Class<?> modelType) {
         if (converter == null) {
             return false;
@@ -235,7 +235,7 @@ public class ConverterUtil implements Serializable {
      * @return true if the converter possibly support conversion between the
      *         given presentation and model type, false otherwise
      */
-    public static boolean canConverterPossiblyHandle(Converter<?, ?> converter,
+    public static boolean canConverterPossiblyHandle(LegacyConverter<?, ?> converter,
             Class<?> presentationType, Class<?> modelType) {
         if (converter == null) {
             return false;

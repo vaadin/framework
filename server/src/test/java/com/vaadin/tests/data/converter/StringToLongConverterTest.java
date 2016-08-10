@@ -5,14 +5,14 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.ReverseConverter;
-import com.vaadin.data.util.converter.StringToLongConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.legacy.data.util.converter.LegacyReverseConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToLongConverter;
 
 public class StringToLongConverterTest {
 
-    StringToLongConverter converter = new StringToLongConverter();
-    Converter<Long, String> reverseConverter = new ReverseConverter<Long, String>(
+    LegacyStringToLongConverter converter = new LegacyStringToLongConverter();
+    LegacyConverter<Long, String> reverseConverter = new LegacyReverseConverter<Long, String>(
             converter);
 
     @Test

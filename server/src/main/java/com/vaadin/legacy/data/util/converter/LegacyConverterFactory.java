@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.legacy.data.util.converter;
 
 import java.io.Serializable;
 
@@ -26,8 +26,8 @@ import java.io.Serializable;
  * @since 7.0
  * 
  */
-public interface ConverterFactory extends Serializable {
-    public <PRESENTATION, MODEL> Converter<PRESENTATION, MODEL> createConverter(
+public interface LegacyConverterFactory extends Serializable {
+    public <PRESENTATION, MODEL> LegacyConverter<PRESENTATION, MODEL> createConverter(
             Class<PRESENTATION> presentationType, Class<MODEL> modelType);
 
 }

@@ -1,7 +1,7 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
-import com.vaadin.data.util.converter.Converter.ConversionException;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -16,7 +16,7 @@ public class IntegerTextFieldStandalone extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         final TextField textField = new TextField("Text field");
-        textField.setConverter(new StringToIntegerConverter());
+        textField.setConverter(new LegacyStringToIntegerConverter());
 
         Button submitButton = new Button("Submit value", new ClickListener() {
             @Override

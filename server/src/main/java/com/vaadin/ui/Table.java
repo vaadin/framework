@@ -42,8 +42,6 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ContainerOrderedWrapper;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ContextClickEvent;
@@ -57,6 +55,8 @@ import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverterUtil;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.LegacyCommunicationManager;
@@ -586,7 +586,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private boolean painted = false;
 
-    private HashMap<Object, Converter<String, Object>> propertyValueConverters = new HashMap<Object, Converter<String, Object>>();
+    private HashMap<Object, LegacyConverter<String, Object>> propertyValueConverters = new HashMap<Object, LegacyConverter<String, Object>>();
 
     /**
      * Set to true if the client-side should be informed that the key mapper has
@@ -2777,7 +2777,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     .getContainerPropertyIds();
             LinkedList<Object> retainableValueConverters = new LinkedList<Object>();
             for (Object propertyId : newPropertyIds) {
-                Converter<String, ?> converter = getConverter(propertyId);
+                LegacyConverter<String, ?> converter = getConverter(propertyId);
                 if (converter != null) {
                     if (typeIsCompatible(converter.getModelType(),
                             newDataSource.getType(propertyId))) {
@@ -4163,12 +4163,12 @@ public class Table extends AbstractSelect implements Action.Container,
         if (property == null) {
             return "";
         }
-        Converter<String, Object> converter = null;
+        LegacyConverter<String, Object> converter = null;
 
         if (hasConverter(colId)) {
             converter = getConverter(colId);
         } else {
-            converter = (Converter) ConverterUtil.getConverter(String.class,
+            converter = (LegacyConverter) LegacyConverterUtil.getConverter(String.class,
                     property.getType(), getSession());
         }
         Object value = property.getValue();
@@ -6071,7 +6071,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param converter
      *            The converter to use for the property id
      */
-    public void setConverter(Object propertyId, Converter<String, ?> converter) {
+    public void setConverter(Object propertyId, LegacyConverter<String, ?> converter) {
         if (!getContainerPropertyIds().contains(propertyId)) {
             throw new IllegalArgumentException("PropertyId " + propertyId
                     + " must be in the container");
@@ -6084,7 +6084,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     + converter.getModelType() + ")");
         }
         propertyValueConverters.put(propertyId,
-                (Converter<String, Object>) converter);
+                (LegacyConverter<String, Object>) converter);
         refreshRowCache();
     }
 
@@ -6108,7 +6108,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @return The converter used to format the propertyId or null if no
      *         converter has been set
      */
-    public Converter<String, Object> getConverter(Object propertyId) {
+    public LegacyConverter<String, Object> getConverter(Object propertyId) {
         return propertyValueConverters.get(propertyId);
     }
 

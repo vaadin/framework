@@ -13,16 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.util.converter;
+package com.vaadin.legacy.data.util.converter;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
- * A converter that converts from {@link String} to {@link BigInteger} and back.
+ * A converter that converts from {@link String} to {@link BigDecimal} and back.
  * Uses the given locale and a {@link NumberFormat} instance for formatting and
  * parsing.
  * <p>
@@ -33,11 +32,10 @@ import java.util.Locale;
  * </p>
  * 
  * @author Vaadin Ltd
- * @since 7.4
+ * @since 7.2
  */
-public class StringToBigIntegerConverter extends
-        AbstractStringToNumberConverter<BigInteger> {
-
+public class LegacyStringToBigDecimalConverter extends
+        LegacyAbstractStringToNumberConverter<BigDecimal> {
     @Override
     protected NumberFormat getFormat(Locale locale) {
         NumberFormat numberFormat = super.getFormat(locale);
@@ -49,19 +47,14 @@ public class StringToBigIntegerConverter extends
     }
 
     @Override
-    public BigInteger convertToModel(String value,
-            Class<? extends BigInteger> targetType, Locale locale)
-            throws com.vaadin.data.util.converter.Converter.ConversionException {
-
-        BigDecimal bigDecimalValue = (BigDecimal) convertToNumber(value,
-                BigDecimal.class, locale);
-
-        return (bigDecimalValue != null) ? bigDecimalValue.toBigInteger()
-                : null;
+    public BigDecimal convertToModel(String value,
+            Class<? extends BigDecimal> targetType, Locale locale)
+            throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+        return (BigDecimal) convertToNumber(value, BigDecimal.class, locale);
     }
 
     @Override
-    public Class<BigInteger> getModelType() {
-        return BigInteger.class;
+    public Class<BigDecimal> getModelType() {
+        return BigDecimal.class;
     }
 }

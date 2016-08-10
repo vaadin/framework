@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.legacy.data.util.converter;
 
 import java.util.Locale;
 
@@ -27,7 +27,7 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.0
  */
-public class StringToBooleanConverter implements Converter<String, Boolean> {
+public class LegacyStringToBooleanConverter implements LegacyConverter<String, Boolean> {
 
     private final String trueString;
 
@@ -37,7 +37,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * Creates converter with default string representations - "true" and "false"
      *
      */
-    public StringToBooleanConverter() {
+    public LegacyStringToBooleanConverter() {
         this(Boolean.TRUE.toString(), Boolean.FALSE.toString());
     }
 
@@ -48,7 +48,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * @param falseString string representation for <code>false</code>
      * @param trueString string representation for <code>true</code>
      */
-    public StringToBooleanConverter(String trueString, String falseString) {
+    public LegacyStringToBooleanConverter(String trueString, String falseString) {
         this.trueString = trueString;
         this.falseString = falseString;
     }

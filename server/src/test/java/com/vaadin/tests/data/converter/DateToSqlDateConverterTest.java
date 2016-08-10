@@ -6,11 +6,11 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.DateToSqlDateConverter;
+import com.vaadin.legacy.data.util.converter.LegacyDateToSqlDateConverter;
 
 public class DateToSqlDateConverterTest {
 
-    DateToSqlDateConverter converter = new DateToSqlDateConverter();
+    LegacyDateToSqlDateConverter converter = new LegacyDateToSqlDateConverter();
 
     @Test
     public void testNullConversion() {

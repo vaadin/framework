@@ -14,13 +14,13 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.legacy.data.util.converter;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
- * A converter that converts from {@link String} to {@link Short} and back. Uses
+ * A converter that converts from {@link String} to {@link Byte} and back. Uses
  * the given locale and a {@link NumberFormat} instance for formatting and
  * parsing.
  * <p>
@@ -30,12 +30,12 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.4
  */
-public class StringToShortConverter extends
-        AbstractStringToNumberConverter<Short> {
+public class LegacyStringToByteConverter extends
+        LegacyAbstractStringToNumberConverter<Byte> {
 
     /**
      * Returns the format used by
-     * {@link #convertToPresentation(Short, Class, Locale)} and
+     * {@link #convertToPresentation(Byte, Class, Locale)} and
      * {@link #convertToModel(String, Class, Locale)}
      * 
      * @param locale
@@ -58,22 +58,21 @@ public class StringToShortConverter extends
      * java.lang.Class, java.util.Locale)
      */
     @Override
-    public Short convertToModel(String value,
-            Class<? extends Short> targetType, Locale locale)
-            throws ConversionException {
+    public Byte convertToModel(String value, Class<? extends Byte> targetType,
+            Locale locale) throws ConversionException {
         Number n = convertToNumber(value, targetType, locale);
 
         if (n == null) {
             return null;
         }
 
-        short shortValue = n.shortValue();
-        if (shortValue == n.longValue()) {
-            return shortValue;
+        byte byteValue = n.byteValue();
+        if (byteValue == n.longValue()) {
+            return byteValue;
         }
 
         throw new ConversionException("Could not convert '" + value + "' to "
-                + Short.class.getName() + ": value out of range");
+                + Byte.class.getName() + ": value out of range");
 
     }
 
@@ -83,8 +82,8 @@ public class StringToShortConverter extends
      * @see com.vaadin.data.util.converter.Converter#getModelType()
      */
     @Override
-    public Class<Short> getModelType() {
-        return Short.class;
+    public Class<Byte> getModelType() {
+        return Byte.class;
     }
 
 }

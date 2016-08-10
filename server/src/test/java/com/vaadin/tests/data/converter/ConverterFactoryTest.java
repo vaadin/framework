@@ -20,27 +20,27 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.DefaultConverterFactory;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.legacy.data.util.converter.LegacyDefaultConverterFactory;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.TextField;
 
 public class ConverterFactoryTest {
 
-    public static class ConvertTo42 implements Converter<String, Integer> {
+    public static class ConvertTo42 implements LegacyConverter<String, Integer> {
 
         @Override
         public Integer convertToModel(String value,
                 Class<? extends Integer> targetType, Locale locale)
-                throws com.vaadin.data.util.converter.Converter.ConversionException {
+                throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
             return 42;
         }
 
         @Override
         public String convertToPresentation(Integer value,
                 Class<? extends String> targetType, Locale locale)
-                throws com.vaadin.data.util.converter.Converter.ConversionException {
+                throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
             return "42";
         }
 
@@ -56,12 +56,12 @@ public class ConverterFactoryTest {
 
     }
 
-    public static class ConverterFactory42 extends DefaultConverterFactory {
+    public static class ConverterFactory42 extends LegacyDefaultConverterFactory {
         @Override
-        public <PRESENTATION, MODEL> Converter<PRESENTATION, MODEL> createConverter(
+        public <PRESENTATION, MODEL> LegacyConverter<PRESENTATION, MODEL> createConverter(
                 Class<PRESENTATION> presentationType, Class<MODEL> modelType) {
             if (modelType == Integer.class) {
-                return (Converter<PRESENTATION, MODEL>) new ConvertTo42();
+                return (LegacyConverter<PRESENTATION, MODEL>) new ConvertTo42();
             }
 
             return super.createConverter(presentationType, modelType);

@@ -3,15 +3,15 @@ package com.vaadin.tests.data.converter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.Converter.ConversionException;
-import com.vaadin.data.util.converter.ReverseConverter;
-import com.vaadin.data.util.converter.StringToByteConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.legacy.data.util.converter.LegacyReverseConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToByteConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
 
 public class StringToByteConverterTest {
 
-    StringToByteConverter converter = new StringToByteConverter();
-    Converter<Byte, String> reverseConverter = new ReverseConverter<Byte, String>(
+    LegacyStringToByteConverter converter = new LegacyStringToByteConverter();
+    LegacyConverter<Byte, String> reverseConverter = new LegacyReverseConverter<Byte, String>(
             converter);
 
     @Test

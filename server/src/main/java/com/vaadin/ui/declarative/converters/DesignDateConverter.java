@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**
@@ -30,11 +30,11 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class DesignDateConverter implements Converter<String, Date> {
+public class DesignDateConverter implements LegacyConverter<String, Date> {
 
     @Override
     public Date convertToModel(String value, Class<? extends Date> targetType,
-            Locale locale) throws Converter.ConversionException {
+            Locale locale) throws LegacyConverter.ConversionException {
         for (String pattern : new String[] { "yyyy-MM-dd HH:mm:ssZ",
                 "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH",
                 "yyyy-MM-dd", "yyyy-MM", "yyyy" }) {
@@ -50,7 +50,7 @@ public class DesignDateConverter implements Converter<String, Date> {
     @Override
     public String convertToPresentation(Date value,
             Class<? extends String> targetType, Locale locale)
-            throws Converter.ConversionException {
+            throws LegacyConverter.ConversionException {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ").format(value);
     }
 

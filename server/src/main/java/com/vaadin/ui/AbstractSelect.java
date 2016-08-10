@@ -35,9 +35,6 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.Converter.ConversionException;
-import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -47,6 +44,9 @@ import com.vaadin.event.dd.acceptcriteria.ClientSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.ContainsDataFlavor;
 import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
 import com.vaadin.legacy.data.Validator.InvalidValueException;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverterUtil;
+import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
 import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.PaintException;
@@ -1265,9 +1265,9 @@ public abstract class AbstractSelect extends LegacyAbstractField<Object> impleme
 
     private String idToCaption(Object itemId) {
         try {
-            Converter<String, Object> c = (Converter<String, Object>) ConverterUtil
+            LegacyConverter<String, Object> c = (LegacyConverter<String, Object>) LegacyConverterUtil
                     .getConverter(String.class, itemId.getClass(), getSession());
-            return ConverterUtil.convertFromModel(itemId, String.class, c,
+            return LegacyConverterUtil.convertFromModel(itemId, String.class, c,
                     getLocale());
         } catch (Exception e) {
             return itemId.toString();

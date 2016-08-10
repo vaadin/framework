@@ -33,15 +33,15 @@ import org.jsoup.nodes.Element;
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.LegacyPropertyHelper;
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.Converter.ConversionException;
-import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.legacy.data.Validatable;
 import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.data.Validator.InvalidValueException;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverterUtil;
+import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.CompositeErrorMessage;
 import com.vaadin.server.ErrorMessage;
@@ -99,7 +99,7 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
      * A converter used to convert from the data model type to the field type
      * and vice versa.
      */
-    private Converter<T, Object> converter = null;
+    private LegacyConverter<T, Object> converter = null;
     /**
      * Connected data-source.
      */
@@ -459,7 +459,7 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
      */
     @Override
     public void setValue(T newFieldValue) throws Property.ReadOnlyException,
-            Converter.ConversionException {
+            LegacyConverter.ConversionException {
         setValue(newFieldValue, false);
     }
 
@@ -471,7 +471,7 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
      * @param repaintIsNotNeeded
      *            True iff caller is sure that repaint is not needed.
      * @throws Property.ReadOnlyException
-     * @throws Converter.ConversionException
+     * @throws LegacyConverter.ConversionException
      * @throws InvalidValueException
      */
     protected void setValue(T newFieldValue, boolean repaintIsNotNeeded) {
@@ -489,12 +489,12 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
      * @param ignoreReadOnly
      *            True iff if the read-only check should be ignored
      * @throws Property.ReadOnlyException
-     * @throws Converter.ConversionException
+     * @throws LegacyConverter.ConversionException
      * @throws InvalidValueException
      */
     protected void setValue(T newFieldValue, boolean repaintIsNotNeeded,
             boolean ignoreReadOnly) throws Property.ReadOnlyException,
-            Converter.ConversionException, InvalidValueException {
+            LegacyConverter.ConversionException, InvalidValueException {
 
         if (!SharedUtil.equals(newFieldValue, getInternalValue())) {
 
@@ -656,7 +656,7 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
 
         // Check if the current converter is compatible.
         if (newDataSource != null
-                && !ConverterUtil.canConverterPossiblyHandle(getConverter(),
+                && !LegacyConverterUtil.canConverterPossiblyHandle(getConverter(),
                         getType(), newDataSource.getType())) {
             // There is no converter set or there is no way the current
             // converter can be compatible.
@@ -714,7 +714,7 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
      *            from
      */
     public void setConverter(Class<?> datamodelType) {
-        Converter<T, ?> c = (Converter<T, ?>) ConverterUtil.getConverter(
+        LegacyConverter<T, ?> c = (LegacyConverter<T, ?>) LegacyConverterUtil.getConverter(
                 getType(), datamodelType, getSession());
         setConverter(c);
     }
@@ -726,7 +726,7 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
      *            The data source value to convert.
      * @return The converted value that is compatible with the UI type or the
      *         original value if its type is compatible and no converter is set.
-     * @throws Converter.ConversionException
+     * @throws LegacyConverter.ConversionException
      *             if there is no converter and the type is not compatible with
      *             the data source type.
      */
@@ -741,12 +741,12 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
      *            The data source value to convert.
      * @return The converted value that is compatible with the UI type or the
      *         original value if its type is compatible and no converter is set.
-     * @throws Converter.ConversionException
+     * @throws LegacyConverter.ConversionException
      *             if there is no converter and the type is not compatible with
      *             the data source type.
      */
     private T convertFromModel(Object newValue, Locale locale) {
-        return ConverterUtil.convertFromModel(newValue, getType(),
+        return LegacyConverterUtil.convertFromModel(newValue, getType(),
                 getConverter(), locale);
     }
 
@@ -757,12 +757,12 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
      *            The value to convert. Typically returned by
      *            {@link #getFieldValue()}
      * @return The converted value that is compatible with the data source type.
-     * @throws Converter.ConversionException
+     * @throws LegacyConverter.ConversionException
      *             if there is no converter and the type is not compatible with
      *             the data source type.
      */
     private Object convertToModel(T fieldValue)
-            throws Converter.ConversionException {
+            throws LegacyConverter.ConversionException {
         return convertToModel(fieldValue, getLocale());
     }
 
@@ -775,15 +775,15 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
      * @param locale
      *            The locale to use for the conversion
      * @return The converted value that is compatible with the data source type.
-     * @throws Converter.ConversionException
+     * @throws LegacyConverter.ConversionException
      *             if there is no converter and the type is not compatible with
      *             the data source type.
      */
     private Object convertToModel(T fieldValue, Locale locale)
-            throws Converter.ConversionException {
+            throws LegacyConverter.ConversionException {
         Class<?> modelType = getModelType();
         try {
-            return ConverterUtil.convertToModel(fieldValue,
+            return LegacyConverterUtil.convertToModel(fieldValue,
                     (Class<Object>) modelType, getConverter(), locale);
         } catch (ConversionException e) {
             throw new ConversionException(getConversionError(modelType, e), e);
@@ -1727,7 +1727,7 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
      * 
      * @return The converter or null if none is set.
      */
-    public Converter<T, Object> getConverter() {
+    public LegacyConverter<T, Object> getConverter() {
         return converter;
     }
 
@@ -1739,8 +1739,8 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
      * @param converter
      *            The new converter to use.
      */
-    public void setConverter(Converter<T, ?> converter) {
-        this.converter = (Converter<T, Object>) converter;
+    public void setConverter(LegacyConverter<T, ?> converter) {
+        this.converter = (LegacyConverter<T, Object>) converter;
         markAsDirty();
     }
 

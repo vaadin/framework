@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.DateField;
 
@@ -38,7 +38,7 @@ public class DateFieldConverterTest {
         date = new ObjectProperty<Long>(0L);
         datefield = new DateField();
         datefield.setBuffered(false);
-        datefield.setConverter(new Converter<Date, Long>() {
+        datefield.setConverter(new LegacyConverter<Date, Long>() {
 
             @Override
             public Long convertToModel(Date value,

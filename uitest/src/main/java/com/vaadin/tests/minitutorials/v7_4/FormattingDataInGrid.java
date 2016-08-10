@@ -19,8 +19,8 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.CellReference;
@@ -57,11 +57,11 @@ public class FormattingDataInGrid extends UI {
         NumberRenderer poundRenderer = new NumberRenderer(poundformat);
         grid.getColumn("amount").setRenderer(poundRenderer);
 
-        grid.getColumn("count").setConverter(new StringToIntegerConverter() {
+        grid.getColumn("count").setConverter(new LegacyStringToIntegerConverter() {
             @Override
             public String convertToPresentation(Integer value,
                     Class<? extends String> targetType, Locale locale)
-                    throws Converter.ConversionException {
+                    throws LegacyConverter.ConversionException {
                 String stringRepresentation = super.convertToPresentation(
                         value, targetType, locale);
                 if (value.intValue() % 2 == 0) {

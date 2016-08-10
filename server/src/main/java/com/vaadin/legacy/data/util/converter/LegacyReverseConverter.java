@@ -14,12 +14,12 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.legacy.data.util.converter;
 
 import java.util.Locale;
 
 /**
- * A converter that wraps another {@link Converter} and reverses source and
+ * A converter that wraps another {@link LegacyConverter} and reverses source and
  * target types.
  * 
  * @param <MODEL>
@@ -30,10 +30,10 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.0
  */
-public class ReverseConverter<PRESENTATION, MODEL> implements
-        Converter<PRESENTATION, MODEL> {
+public class LegacyReverseConverter<PRESENTATION, MODEL> implements
+        LegacyConverter<PRESENTATION, MODEL> {
 
-    private Converter<MODEL, PRESENTATION> realConverter;
+    private LegacyConverter<MODEL, PRESENTATION> realConverter;
 
     /**
      * Creates a converter from source to target based on a converter that
@@ -42,7 +42,7 @@ public class ReverseConverter<PRESENTATION, MODEL> implements
      * @param converter
      *            The converter to use in a reverse fashion
      */
-    public ReverseConverter(Converter<MODEL, PRESENTATION> converter) {
+    public LegacyReverseConverter(LegacyConverter<MODEL, PRESENTATION> converter) {
         this.realConverter = converter;
     }
 
@@ -55,7 +55,7 @@ public class ReverseConverter<PRESENTATION, MODEL> implements
     @Override
     public MODEL convertToModel(PRESENTATION value,
             Class<? extends MODEL> targetType, Locale locale)
-            throws com.vaadin.data.util.converter.Converter.ConversionException {
+            throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
         return realConverter.convertToPresentation(value, targetType, locale);
     }
 
@@ -69,7 +69,7 @@ public class ReverseConverter<PRESENTATION, MODEL> implements
     @Override
     public PRESENTATION convertToPresentation(MODEL value,
             Class<? extends PRESENTATION> targetType, Locale locale)
-            throws com.vaadin.data.util.converter.Converter.ConversionException {
+            throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
         return realConverter.convertToModel(value, targetType, locale);
     }
 

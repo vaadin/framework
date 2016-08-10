@@ -60,8 +60,6 @@ import com.vaadin.data.fieldgroup.FieldGroupFieldFactory;
 import com.vaadin.data.sort.Sort;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -73,6 +71,8 @@ import com.vaadin.event.SortEvent;
 import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.event.SortEvent.SortNotifier;
 import com.vaadin.legacy.data.Validator.InvalidValueException;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverterUtil;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
@@ -133,7 +133,7 @@ import elemental.json.JsonValue;
  * <p>
  * Each column has its own {@link Renderer} that displays data into something
  * that can be displayed in the browser. That data is first converted with a
- * {@link com.vaadin.data.util.converter.Converter Converter} into something
+ * {@link com.vaadin.legacy.data.util.converter.LegacyConverter Converter} into something
  * that the Renderer can process. This can also be an implicit step - if a
  * column has a simple data type, like a String, no explicit assignment is
  * needed.
@@ -2196,7 +2196,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         private void writeData(CellReference cell, JsonObject data) {
             Column column = getColumn(cell.getPropertyId());
-            Converter<?, ?> converter = column.getConverter();
+            LegacyConverter<?, ?> converter = column.getConverter();
             Renderer<?> renderer = column.getRenderer();
 
             Item item = cell.getItem();
@@ -3216,12 +3216,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          */
         private final Object propertyId;
 
-        private Converter<?, Object> converter;
+        private LegacyConverter<?, Object> converter;
 
         /**
          * A check for allowing the
          * {@link #Column(Grid, GridColumnState, Object) constructor} to call
-         * {@link #setConverter(Converter)} with a <code>null</code>, even if
+         * {@link #setConverter(LegacyConverter)} with a <code>null</code>, even if
          * model and renderer aren't compatible.
          */
         private boolean isFirstConverterAssignment = true;
@@ -3462,8 +3462,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          *             if no compatible converter could be found
          * 
          * @see VaadinSession#getConverterFactory()
-         * @see ConverterUtil#getConverter(Class, Class, VaadinSession)
-         * @see #setConverter(Converter)
+         * @see LegacyConverterUtil#getConverter(Class, Class, VaadinSession)
+         * @see #setConverter(LegacyConverter)
          */
         public Column setRenderer(Renderer<?> renderer) {
             if (!internalSetRenderer(renderer)) {
@@ -3491,7 +3491,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          *             if the renderer is already associated with a grid column
          */
         public <T> Column setRenderer(Renderer<T> renderer,
-                Converter<? extends T, ?> converter) {
+                LegacyConverter<? extends T, ?> converter) {
             if (renderer.getParent() != null) {
                 throw new IllegalArgumentException(
                         "Cannot set a renderer that is already connected to a grid column (in "
@@ -3520,7 +3520,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * @throws IllegalArgumentException
          *             if the types are not compatible
          */
-        public Column setConverter(Converter<?, ?> converter)
+        public Column setConverter(LegacyConverter<?, ?> converter)
                 throws IllegalArgumentException {
             Class<?> modelType = getModelType();
             if (converter != null) {
@@ -3574,7 +3574,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             isFirstConverterAssignment = false;
 
             @SuppressWarnings("unchecked")
-            Converter<?, Object> castConverter = (Converter<?, Object>) converter;
+            LegacyConverter<?, Object> castConverter = (LegacyConverter<?, Object>) converter;
             this.converter = castConverter;
 
             return this;
@@ -3594,19 +3594,19 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * 
          * @return the converter
          */
-        public Converter<?, ?> getConverter() {
+        public LegacyConverter<?, ?> getConverter() {
             return converter;
         }
 
         private <T> boolean internalSetRenderer(Renderer<T> renderer) {
 
-            Converter<? extends T, ?> converter;
+            LegacyConverter<? extends T, ?> converter;
             if (isCompatibleWithProperty(renderer, getConverter())) {
                 // Use the existing converter (possibly none) if types
                 // compatible
-                converter = (Converter<? extends T, ?>) getConverter();
+                converter = (LegacyConverter<? extends T, ?>) getConverter();
             } else {
-                converter = ConverterUtil.getConverter(
+                converter = LegacyConverterUtil.getConverter(
                         renderer.getPresentationType(), getModelType(),
                         getSession());
             }
@@ -3620,7 +3620,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         private boolean isCompatibleWithProperty(Renderer<?> renderer,
-                Converter<?, ?> converter) {
+                LegacyConverter<?, ?> converter) {
             Class<?> type;
             if (converter == null) {
                 type = getModelType();
@@ -4231,7 +4231,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * @return an encoded value ready to be sent to the client
          */
         public static <T> JsonValue encodeValue(Object modelValue,
-                Renderer<T> renderer, Converter<?, ?> converter,
+                Renderer<T> renderer, LegacyConverter<?, ?> converter,
                 Locale locale) {
             Class<T> presentationType = renderer.getPresentationType();
             T presentationValue;
@@ -4246,7 +4246,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                         // Class.cast(null) will always succeed
                         presentationValue = (T) modelValue.toString();
                     } else {
-                        throw new Converter.ConversionException(
+                        throw new LegacyConverter.ConversionException(
                                 "Unable to convert value of type "
                                         + modelValue.getClass().getName()
                                         + " to presentation type "
@@ -4258,7 +4258,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 assert presentationType.isAssignableFrom(converter
                         .getPresentationType());
                 @SuppressWarnings("unchecked")
-                Converter<T, Object> safeConverter = (Converter<T, Object>) converter;
+                LegacyConverter<T, Object> safeConverter = (LegacyConverter<T, Object>) converter;
                 presentationValue = safeConverter
                         .convertToPresentation(modelValue,
                                 safeConverter.getPresentationType(), locale);

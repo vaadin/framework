@@ -2,8 +2,8 @@ package com.vaadin.tests.minitutorials.v7a1;
 
 import java.util.Locale;
 
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.Converter.ConversionException;
+import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -50,7 +50,7 @@ public class StringMyTypeConverter extends AbstractTestUI {
 
 }
 
-class StringToNameConverter implements Converter<String, Name> {
+class StringToNameConverter implements LegacyConverter<String, Name> {
     @Override
     public Name convertToModel(String text, Class<? extends Name> targetType,
             Locale locale) throws ConversionException {

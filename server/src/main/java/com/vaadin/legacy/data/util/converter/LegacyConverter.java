@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.legacy.data.util.converter;
 
 import java.io.Serializable;
 import java.util.Locale;
@@ -47,7 +47,7 @@ import java.util.Locale;
  * @author Vaadin Ltd.
  * @since 7.0
  */
-public interface Converter<PRESENTATION, MODEL> extends Serializable {
+public interface LegacyConverter<PRESENTATION, MODEL> extends Serializable {
 
     /**
      * Converts the given value from target type to source type.
@@ -121,8 +121,8 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
 
     /**
      * An exception that signals that the value passed to
-     * {@link Converter#convertToPresentation(Object, Class, Locale)} or
-     * {@link Converter#convertToModel(Object, Class, Locale)} could not be
+     * {@link LegacyConverter#convertToPresentation(Object, Class, Locale)} or
+     * {@link LegacyConverter#convertToModel(Object, Class, Locale)} could not be
      * converted.
      * 
      * @author Vaadin Ltd
