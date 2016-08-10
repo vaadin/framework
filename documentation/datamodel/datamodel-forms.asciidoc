@@ -185,7 +185,7 @@ The following example will first validate that the entered text looks like an em
 
 [source, java]
 ----
-binder.setForField(emailField)
+binder.forField(emailField)
   .withValidator(new EmailValidator(
     "This doesn't look like a valid email address"))
   .withValidator(
