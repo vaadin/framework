@@ -6,7 +6,7 @@ import java.util.Locale;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.validator.RangeValidator;
+import com.vaadin.legacy.data.validator.LegacyRangeValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
@@ -86,7 +86,7 @@ public class DateFieldRangeValidation extends TestBase {
 
         actualDateField = createDateField();
         actualDateField.setValue(new Date(2011 - 1900, 12 - 1, 1));
-        actualDateField.addValidator(new RangeValidator<Date>("", Date.class,
+        actualDateField.addValidator(new LegacyRangeValidator<Date>("", Date.class,
                 null, null) {
             @Override
             public boolean isMinValueIncluded() {

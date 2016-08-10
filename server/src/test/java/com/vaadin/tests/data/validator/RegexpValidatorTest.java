@@ -5,13 +5,13 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.data.validator.RegexpValidator;
+import com.vaadin.legacy.data.validator.LegacyRegexpValidator;
 
 public class RegexpValidatorTest {
 
-    private RegexpValidator completeValidator = new RegexpValidator("pattern",
+    private LegacyRegexpValidator completeValidator = new LegacyRegexpValidator("pattern",
             true, "Complete match validator error");
-    private RegexpValidator partialValidator = new RegexpValidator("pattern",
+    private LegacyRegexpValidator partialValidator = new LegacyRegexpValidator("pattern",
             false, "Partial match validator error");
 
     @Test

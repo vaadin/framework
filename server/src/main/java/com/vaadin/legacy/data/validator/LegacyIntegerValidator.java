@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.validator;
+package com.vaadin.legacy.data.validator;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 
 /**
  * String validator for integers. See
- * {@link com.vaadin.data.validator.AbstractStringValidator} for more
+ * {@link com.vaadin.legacy.data.validator.LegacyAbstractStringValidator} for more
  * information.
  * 
  * @author Vaadin Ltd.
@@ -31,7 +31,7 @@ import com.vaadin.data.util.converter.StringToIntegerConverter;
  */
 @SuppressWarnings("serial")
 @Deprecated
-public class IntegerValidator extends AbstractStringValidator {
+public class LegacyIntegerValidator extends LegacyAbstractStringValidator {
 
     /**
      * Creates a validator for checking that a string can be parsed as an
@@ -40,11 +40,11 @@ public class IntegerValidator extends AbstractStringValidator {
      * @param errorMessage
      *            the message to display in case the value does not validate.
      * @deprecated As of 7.0. Use an Integer converter on the field instead
-     *             and/or use an {@link IntegerRangeValidator} for validating
+     *             and/or use an {@link LegacyIntegerRangeValidator} for validating
      *             that the value is inside a given range.
      */
     @Deprecated
-    public IntegerValidator(String errorMessage) {
+    public LegacyIntegerValidator(String errorMessage) {
         super(errorMessage);
 
     }

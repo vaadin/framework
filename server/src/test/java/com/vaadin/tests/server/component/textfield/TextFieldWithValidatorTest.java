@@ -6,11 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.validator.EmailValidator;
-import com.vaadin.data.validator.RegexpValidator;
-import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.data.Validator.InvalidValueException;
+import com.vaadin.legacy.data.validator.LegacyEmailValidator;
+import com.vaadin.legacy.data.validator.LegacyRegexpValidator;
+import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
 import com.vaadin.ui.TextField;
 
 public class TextFieldWithValidatorTest {
@@ -29,9 +29,9 @@ public class TextFieldWithValidatorTest {
 
     @Test
     public void testMultipleValidators() {
-        field.addValidator(new StringLengthValidator(
+        field.addValidator(new LegacyStringLengthValidator(
                 "Length not between 1 and 3", 1, 3, false));
-        field.addValidator(new StringLengthValidator(
+        field.addValidator(new LegacyStringLengthValidator(
                 "Length not between 2 and 4", 2, 4, false));
 
         // fails
@@ -54,9 +54,9 @@ public class TextFieldWithValidatorTest {
 
     @Test
     public void testRemoveValidator() {
-        Validator validator1 = new StringLengthValidator(
+        Validator validator1 = new LegacyStringLengthValidator(
                 "Length not between 1 and 3", 1, 3, false);
-        Validator validator2 = new StringLengthValidator(
+        Validator validator2 = new LegacyStringLengthValidator(
                 "Length not between 2 and 4", 2, 4, false);
 
         field.addValidator(validator1);
@@ -78,9 +78,9 @@ public class TextFieldWithValidatorTest {
 
     @Test
     public void testRemoveAllValidators() {
-        Validator validator1 = new StringLengthValidator(
+        Validator validator1 = new LegacyStringLengthValidator(
                 "Length not between 1 and 3", 1, 3, false);
-        Validator validator2 = new StringLengthValidator(
+        Validator validator2 = new LegacyStringLengthValidator(
                 "Length not between 2 and 4", 2, 4, false);
 
         field.addValidator(validator1);
@@ -95,7 +95,7 @@ public class TextFieldWithValidatorTest {
 
     @Test
     public void testEmailValidator() {
-        field.addValidator(new EmailValidator("Invalid e-mail address"));
+        field.addValidator(new LegacyEmailValidator("Invalid e-mail address"));
 
         // not required
 
@@ -152,7 +152,7 @@ public class TextFieldWithValidatorTest {
 
     @Test
     public void testRegexpValidator() {
-        field.addValidator(new RegexpValidator("pattern", true,
+        field.addValidator(new LegacyRegexpValidator("pattern", true,
                 "Validation failed"));
         field.setRequired(false);
 

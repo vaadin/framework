@@ -1,10 +1,10 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.data.util.MethodProperty;
-import com.vaadin.data.validator.CompositeValidator;
-import com.vaadin.data.validator.CompositeValidator.CombinationMode;
 import com.vaadin.legacy.data.Validator;
-import com.vaadin.data.validator.IntegerValidator;
+import com.vaadin.legacy.data.validator.LegacyCompositeValidator;
+import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
+import com.vaadin.legacy.data.validator.LegacyCompositeValidator.CombinationMode;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -22,8 +22,8 @@ public class Ticket20 extends LegacyApplication {
         final TextField tx = new TextField("Integer");
         mainWin.addComponent(tx);
         tx.setImmediate(true);
-        CompositeValidator v = new CompositeValidator();
-        v.addValidator(new IntegerValidator("{0} is not a number"));
+        LegacyCompositeValidator v = new LegacyCompositeValidator();
+        v.addValidator(new LegacyIntegerValidator("{0} is not a number"));
         v.addValidator(new Validator() {
 
             private boolean isValid(Object value) {
@@ -46,7 +46,7 @@ public class Ticket20 extends LegacyApplication {
                 }
             }
         });
-        CompositeValidator v2 = new CompositeValidator(CombinationMode.OR, null);
+        LegacyCompositeValidator v2 = new LegacyCompositeValidator(CombinationMode.OR, null);
         v2.addValidator(v);
         v2.addValidator(new Validator() {
 

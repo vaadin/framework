@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.validator;
+package com.vaadin.legacy.data.validator;
 
 /**
  * Validator for validating that an {@link Long} is inside a given range.
@@ -22,7 +22,7 @@ package com.vaadin.data.validator;
  * @since 7.4
  */
 @SuppressWarnings("serial")
-public class LongRangeValidator extends RangeValidator<Long> {
+public class LegacyLongRangeValidator extends LegacyRangeValidator<Long> {
 
     /**
      * Creates a validator for checking that an Long is within a given range.
@@ -39,7 +39,7 @@ public class LongRangeValidator extends RangeValidator<Long> {
      * @param maxValue
      *            The maximum value to accept or null for no limit
      */
-    public LongRangeValidator(String errorMessage, Long minValue, Long maxValue) {
+    public LegacyLongRangeValidator(String errorMessage, Long minValue, Long maxValue) {
         super(errorMessage, Long.class, minValue, maxValue);
     }
 

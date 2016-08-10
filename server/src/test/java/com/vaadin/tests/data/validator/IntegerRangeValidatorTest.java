@@ -5,17 +5,17 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.data.validator.IntegerRangeValidator;
+import com.vaadin.legacy.data.validator.LegacyIntegerRangeValidator;
 
 public class IntegerRangeValidatorTest {
 
-    private IntegerRangeValidator cleanValidator = new IntegerRangeValidator(
+    private LegacyIntegerRangeValidator cleanValidator = new LegacyIntegerRangeValidator(
             "no values", null, null);
-    private IntegerRangeValidator minValidator = new IntegerRangeValidator(
+    private LegacyIntegerRangeValidator minValidator = new LegacyIntegerRangeValidator(
             "no values", 10, null);
-    private IntegerRangeValidator maxValidator = new IntegerRangeValidator(
+    private LegacyIntegerRangeValidator maxValidator = new LegacyIntegerRangeValidator(
             "no values", null, 100);
-    private IntegerRangeValidator minMaxValidator = new IntegerRangeValidator(
+    private LegacyIntegerRangeValidator minMaxValidator = new LegacyIntegerRangeValidator(
             "no values", 10, 100);
 
     @Test

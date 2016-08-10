@@ -15,7 +15,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.MethodProperty;
-import com.vaadin.data.validator.RegexpValidator;
+import com.vaadin.legacy.data.validator.LegacyRegexpValidator;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Form;
 
@@ -23,9 +23,9 @@ public class SerializationTest {
 
     @Test
     public void testValidators() throws Exception {
-        RegexpValidator validator = new RegexpValidator(".*", "Error");
+        LegacyRegexpValidator validator = new LegacyRegexpValidator(".*", "Error");
         validator.validate("aaa");
-        RegexpValidator validator2 = serializeAndDeserialize(validator);
+        LegacyRegexpValidator validator2 = serializeAndDeserialize(validator);
         validator2.validate("aaa");
     }
 

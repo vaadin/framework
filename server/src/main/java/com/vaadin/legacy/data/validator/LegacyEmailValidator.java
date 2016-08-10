@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.validator;
+package com.vaadin.legacy.data.validator;
 
 /**
  * String validator for e-mail addresses. The e-mail address syntax is not
  * complete according to RFC 822 but handles the vast majority of valid e-mail
  * addresses correctly.
  * 
- * See {@link com.vaadin.data.validator.AbstractStringValidator} for more
+ * See {@link com.vaadin.legacy.data.validator.LegacyAbstractStringValidator} for more
  * information.
  * 
  * <p>
@@ -33,7 +33,7 @@ package com.vaadin.data.validator;
  * @since 5.4
  */
 @SuppressWarnings("serial")
-public class EmailValidator extends RegexpValidator {
+public class LegacyEmailValidator extends LegacyRegexpValidator {
 
     /**
      * Creates a validator for checking that a string is a syntactically valid
@@ -42,7 +42,7 @@ public class EmailValidator extends RegexpValidator {
      * @param errorMessage
      *            the message to display in case the value does not validate.
      */
-    public EmailValidator(String errorMessage) {
+    public LegacyEmailValidator(String errorMessage) {
         super(
                 "^([a-zA-Z0-9_\\.\\-+])+@(([a-zA-Z0-9-])+\\.)+([a-zA-Z0-9]{2,4})+$",
                 true, errorMessage);

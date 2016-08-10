@@ -8,20 +8,20 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.validator.CompositeValidator;
-import com.vaadin.data.validator.CompositeValidator.CombinationMode;
 import com.vaadin.legacy.data.Validator;
-import com.vaadin.data.validator.EmailValidator;
-import com.vaadin.data.validator.RegexpValidator;
+import com.vaadin.legacy.data.validator.LegacyCompositeValidator;
+import com.vaadin.legacy.data.validator.LegacyEmailValidator;
+import com.vaadin.legacy.data.validator.LegacyRegexpValidator;
+import com.vaadin.legacy.data.validator.LegacyCompositeValidator.CombinationMode;
 
 public class CompositeValidatorTest {
 
-    CompositeValidator and = new CompositeValidator(CombinationMode.AND,
+    LegacyCompositeValidator and = new LegacyCompositeValidator(CombinationMode.AND,
             "One validator not valid");
-    CompositeValidator or = new CompositeValidator(CombinationMode.OR,
+    LegacyCompositeValidator or = new LegacyCompositeValidator(CombinationMode.OR,
             "No validators are valid");
-    EmailValidator email = new EmailValidator("Faulty email");
-    RegexpValidator regex = new RegexpValidator("@mail.com", false,
+    LegacyEmailValidator email = new LegacyEmailValidator("Faulty email");
+    LegacyRegexpValidator regex = new LegacyRegexpValidator("@mail.com", false,
             "Partial match validator error");
 
     @Before

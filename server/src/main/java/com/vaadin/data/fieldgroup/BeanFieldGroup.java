@@ -23,7 +23,7 @@ import java.util.Map;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanUtil;
-import com.vaadin.data.validator.BeanValidator;
+import com.vaadin.legacy.data.validator.LegacyBeanValidator;
 import com.vaadin.legacy.ui.LegacyField;
 
 public class BeanFieldGroup<T> extends FieldGroup {
@@ -31,11 +31,11 @@ public class BeanFieldGroup<T> extends FieldGroup {
     private final Class<T> beanType;
 
     private static Boolean beanValidationImplementationAvailable = null;
-    private final Map<LegacyField<?>, BeanValidator> defaultValidators;
+    private final Map<LegacyField<?>, LegacyBeanValidator> defaultValidators;
 
     public BeanFieldGroup(Class<T> beanType) {
         this.beanType = beanType;
-        this.defaultValidators = new HashMap<LegacyField<?>, BeanValidator>();
+        this.defaultValidators = new HashMap<LegacyField<?>, LegacyBeanValidator>();
     }
 
     @Override
@@ -165,7 +165,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
     public void unbind(LegacyField<?> field) throws BindException {
         super.unbind(field);
 
-        BeanValidator removed = defaultValidators.remove(field);
+        LegacyBeanValidator removed = defaultValidators.remove(field);
         if (removed != null) {
             field.removeValidator(removed);
         }
@@ -177,7 +177,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
         // Add Bean validators if there are annotations
         if (isBeanValidationImplementationAvailable()
                 && !defaultValidators.containsKey(field)) {
-            BeanValidator validator = new BeanValidator(beanType,
+            LegacyBeanValidator validator = new LegacyBeanValidator(beanType,
                     getPropertyId(field).toString());
             field.addValidator(validator);
             if (field.getLocale() != null) {

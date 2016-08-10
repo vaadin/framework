@@ -2,9 +2,9 @@ package com.vaadin.tests.validation;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.validator.IntegerValidator;
-import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
+import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
@@ -17,9 +17,9 @@ public class ValidationOfRequiredEmptyFields extends AbstractTestUI {
     private CheckBox requiredInput;
     private TextField requiredErrorInput;
 
-    private Validator integerValidator = new IntegerValidator(
+    private Validator integerValidator = new LegacyIntegerValidator(
             "Must be an integer");
-    private Validator stringLengthValidator = new StringLengthValidator(
+    private Validator stringLengthValidator = new LegacyStringLengthValidator(
             "Must be 5-10 chars", 5, 10, false);
     private CheckBox integerValidatorInput;
     private CheckBox stringLengthValidatorInput;

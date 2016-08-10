@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.data.validator;
+package com.vaadin.legacy.data.validator;
 
 import com.vaadin.legacy.data.Validator;
 
@@ -26,7 +26,7 @@ import com.vaadin.legacy.data.Validator;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class NullValidator implements Validator {
+public class LegacyNullValidator implements Validator {
 
     private boolean onlyNullAllowed;
 
@@ -40,7 +40,7 @@ public class NullValidator implements Validator {
      * @param onlyNullAllowed
      *            Are only nulls allowed?
      */
-    public NullValidator(String errorMessage, boolean onlyNullAllowed) {
+    public LegacyNullValidator(String errorMessage, boolean onlyNullAllowed) {
         setErrorMessage(errorMessage);
         setNullAllowed(onlyNullAllowed);
     }

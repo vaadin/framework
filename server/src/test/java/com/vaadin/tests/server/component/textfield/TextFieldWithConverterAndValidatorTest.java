@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.validator.RangeValidator;
+import com.vaadin.legacy.data.validator.LegacyRangeValidator;
 import com.vaadin.tests.data.converter.ConverterFactoryTest.ConvertTo42;
 import com.vaadin.ui.TextField;
 
@@ -25,7 +25,7 @@ public class TextFieldWithConverterAndValidatorTest {
         field.setConverter(new ConvertTo42());
         field.setPropertyDataSource(property);
 
-        field.addValidator(new RangeValidator<Integer>("Incorrect value",
+        field.addValidator(new LegacyRangeValidator<Integer>("Incorrect value",
                 Integer.class, 42, 42));
 
         // succeeds

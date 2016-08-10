@@ -2,8 +2,8 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.MethodProperty;
-import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.AbstractComponent;
@@ -65,7 +65,7 @@ public class Ticket736 extends LegacyApplication {
 
         // Add some validators for the form
         f.getField("zip").addValidator(
-                new IntegerValidator("'{0}' is not a number"));
+                new LegacyIntegerValidator("'{0}' is not a number"));
         ((AbstractComponent) f.getField("zip")).setDescription("Jepjep");
         ((AbstractComponent) f.getField("zip")).setIcon(new ThemeResource(
                 "../runo/icons/16/folder.png"));

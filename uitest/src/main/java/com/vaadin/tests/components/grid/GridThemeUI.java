@@ -24,7 +24,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.validator.IntegerRangeValidator;
+import com.vaadin.legacy.data.validator.LegacyIntegerRangeValidator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
@@ -96,7 +96,7 @@ public class GridThemeUI extends AbstractTestUIWithLog {
             getColumn("lastName").setEditable(false);
             setSizeFull();
             getColumn("age").getEditorField().addValidator(
-                    new IntegerRangeValidator("Must be between 0 and 100", 0,
+                    new LegacyIntegerRangeValidator("Must be between 0 and 100", 0,
                             100));
             getColumn("birthDate").setRenderer(
                     new DateRenderer(DateFormat.getDateInstance(
@@ -137,7 +137,7 @@ public class GridThemeUI extends AbstractTestUIWithLog {
             setEditorEnabled(true);
             setSizeFull();
             getColumn("age").getEditorField().addValidator(
-                    new IntegerRangeValidator("Must be between 0 and 100", 0,
+                    new LegacyIntegerRangeValidator("Must be between 0 and 100", 0,
                             100));
             getColumn("birthDate").setRenderer(
                     new DateRenderer(DateFormat.getDateInstance(

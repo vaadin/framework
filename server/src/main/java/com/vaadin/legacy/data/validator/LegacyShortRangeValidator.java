@@ -13,19 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.validator;
+package com.vaadin.legacy.data.validator;
 
 /**
- * Validator for validating that an {@link Integer} is inside a given range.
+ * Validator for validating that an {@link Short} is inside a given range.
  * 
  * @author Vaadin Ltd.
- * @since 5.4
+ * @since 7.4
  */
 @SuppressWarnings("serial")
-public class IntegerRangeValidator extends RangeValidator<Integer> {
+public class LegacyShortRangeValidator extends LegacyRangeValidator<Short> {
 
     /**
-     * Creates a validator for checking that an Integer is within a given range.
+     * Creates a validator for checking that an Short is within a given range.
      * 
      * By default the range is inclusive i.e. both minValue and maxValue are
      * valid values. Use {@link #setMinValueIncluded(boolean)} or
@@ -39,9 +39,9 @@ public class IntegerRangeValidator extends RangeValidator<Integer> {
      * @param maxValue
      *            The maximum value to accept or null for no limit
      */
-    public IntegerRangeValidator(String errorMessage, Integer minValue,
-            Integer maxValue) {
-        super(errorMessage, Integer.class, minValue, maxValue);
+    public LegacyShortRangeValidator(String errorMessage, Short minValue,
+            Short maxValue) {
+        super(errorMessage, Short.class, minValue, maxValue);
     }
 
 }

@@ -13,22 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.validator;
-
-import java.math.BigDecimal;
+package com.vaadin.legacy.data.validator;
 
 /**
- * Validator for validating that an {@link BigDecimal} is inside a given range.
+ * Validator for validating that a {@link Double} is inside a given range.
  * 
  * @author Vaadin Ltd.
- * @since 7.4
+ * @since 7.0
  */
 @SuppressWarnings("serial")
-public class BigDecimalRangeValidator extends RangeValidator<BigDecimal> {
+public class LegacyDoubleRangeValidator extends LegacyRangeValidator<Double> {
 
     /**
-     * Creates a validator for checking that an BigDecimal is within a given
-     * range.
+     * Creates a validator for checking that an Double is within a given range.
      * 
      * By default the range is inclusive i.e. both minValue and maxValue are
      * valid values. Use {@link #setMinValueIncluded(boolean)} or
@@ -42,9 +39,9 @@ public class BigDecimalRangeValidator extends RangeValidator<BigDecimal> {
      * @param maxValue
      *            The maximum value to accept or null for no limit
      */
-    public BigDecimalRangeValidator(String errorMessage, BigDecimal minValue,
-            BigDecimal maxValue) {
-        super(errorMessage, BigDecimal.class, minValue, maxValue);
+    public LegacyDoubleRangeValidator(String errorMessage, Double minValue,
+            Double maxValue) {
+        super(errorMessage, Double.class, minValue, maxValue);
     }
 
 }

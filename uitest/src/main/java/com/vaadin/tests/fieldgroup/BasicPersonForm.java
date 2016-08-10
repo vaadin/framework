@@ -7,9 +7,9 @@ import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitHandler;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.converter.StringToBooleanConverter;
-import com.vaadin.data.validator.EmailValidator;
-import com.vaadin.data.validator.IntegerRangeValidator;
-import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.legacy.data.validator.LegacyEmailValidator;
+import com.vaadin.legacy.data.validator.LegacyIntegerRangeValidator;
+import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.Address;
@@ -160,11 +160,11 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
         addComponent(commitButton);
         addComponent(discardButton);
         addComponent(showBean);
-        email.addValidator(new EmailValidator("Must be a valid address"));
-        lastName.addValidator(new StringLengthValidator("Must be min 5 chars",
+        email.addValidator(new LegacyEmailValidator("Must be a valid address"));
+        lastName.addValidator(new LegacyStringLengthValidator("Must be min 5 chars",
                 5, null, true));
 
-        age.addValidator(new IntegerRangeValidator(
+        age.addValidator(new LegacyIntegerRangeValidator(
                 "Must be between 0 and 150, {0} is not", 0, 150));
         sex.setPageLength(0);
         deceased.setConverter(new StringToBooleanConverter() {

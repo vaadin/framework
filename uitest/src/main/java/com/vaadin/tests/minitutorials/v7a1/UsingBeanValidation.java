@@ -21,7 +21,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.validator.BeanValidator;
+import com.vaadin.legacy.data.validator.LegacyBeanValidator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -79,7 +79,7 @@ public class UsingBeanValidation extends UI {
         firstName.setImmediate(true);
         setContent(firstName);
 
-        firstName.addValidator(new BeanValidator(Person.class, "name"));
+        firstName.addValidator(new LegacyBeanValidator(Person.class, "name"));
     }
 
 }

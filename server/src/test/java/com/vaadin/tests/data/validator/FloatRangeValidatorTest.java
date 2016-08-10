@@ -5,17 +5,17 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.data.validator.FloatRangeValidator;
+import com.vaadin.legacy.data.validator.LegacyFloatRangeValidator;
 
 public class FloatRangeValidatorTest {
 
-    private FloatRangeValidator cleanValidator = new FloatRangeValidator(
+    private LegacyFloatRangeValidator cleanValidator = new LegacyFloatRangeValidator(
             "no values", null, null);
-    private FloatRangeValidator minValidator = new FloatRangeValidator(
+    private LegacyFloatRangeValidator minValidator = new LegacyFloatRangeValidator(
             "no values", 10.1f, null);
-    private FloatRangeValidator maxValidator = new FloatRangeValidator(
+    private LegacyFloatRangeValidator maxValidator = new LegacyFloatRangeValidator(
             "no values", null, 100.1f);
-    private FloatRangeValidator minMaxValidator = new FloatRangeValidator(
+    private LegacyFloatRangeValidator minMaxValidator = new LegacyFloatRangeValidator(
             "no values", 10.5f, 100.5f);
 
     @Test

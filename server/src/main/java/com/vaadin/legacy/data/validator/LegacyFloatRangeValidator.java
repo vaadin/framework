@@ -13,22 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.validator;
-
-import java.math.BigInteger;
+package com.vaadin.legacy.data.validator;
 
 /**
- * Validator for validating that an {@link BigInteger} is inside a given range.
+ * Validator for validating that a {@link Float} is inside a given range.
  * 
  * @author Vaadin Ltd.
  * @since 7.4
  */
 @SuppressWarnings("serial")
-public class BigIntegerRangeValidator extends RangeValidator<BigInteger> {
+public class LegacyFloatRangeValidator extends LegacyRangeValidator<Float> {
 
     /**
-     * Creates a validator for checking that an BigInteger is within a given
-     * range.
+     * Creates a validator for checking that an Float is within a given range.
      * 
      * By default the range is inclusive i.e. both minValue and maxValue are
      * valid values. Use {@link #setMinValueIncluded(boolean)} or
@@ -42,9 +39,9 @@ public class BigIntegerRangeValidator extends RangeValidator<BigInteger> {
      * @param maxValue
      *            The maximum value to accept or null for no limit
      */
-    public BigIntegerRangeValidator(String errorMessage, BigInteger minValue,
-            BigInteger maxValue) {
-        super(errorMessage, BigInteger.class, minValue, maxValue);
+    public LegacyFloatRangeValidator(String errorMessage, Float minValue,
+            Float maxValue) {
+        super(errorMessage, Float.class, minValue, maxValue);
     }
 
 }

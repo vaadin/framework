@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.validator;
+package com.vaadin.legacy.data.validator;
 
 /**
  * Validator base class for validating strings.
@@ -28,7 +28,7 @@ package com.vaadin.data.validator;
  * @since 5.4
  */
 @SuppressWarnings("serial")
-public abstract class AbstractStringValidator extends AbstractValidator<String> {
+public abstract class LegacyAbstractStringValidator extends LegacyAbstractValidator<String> {
 
     /**
      * Constructs a validator for strings.
@@ -42,7 +42,7 @@ public abstract class AbstractStringValidator extends AbstractValidator<String> 
      *            the message to be included in an {@link InvalidValueException}
      *            (with "{0}" replaced by the value that failed validation).
      * */
-    public AbstractStringValidator(String errorMessage) {
+    public LegacyAbstractStringValidator(String errorMessage) {
         super(errorMessage);
     }
 

@@ -5,17 +5,17 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.data.validator.ShortRangeValidator;
+import com.vaadin.legacy.data.validator.LegacyShortRangeValidator;
 
 public class ShortRangeValidatorTest {
 
-    private ShortRangeValidator cleanValidator = new ShortRangeValidator(
+    private LegacyShortRangeValidator cleanValidator = new LegacyShortRangeValidator(
             "no values", null, null);
-    private ShortRangeValidator minValidator = new ShortRangeValidator(
+    private LegacyShortRangeValidator minValidator = new LegacyShortRangeValidator(
             "no values", (short) 10, null);
-    private ShortRangeValidator maxValidator = new ShortRangeValidator(
+    private LegacyShortRangeValidator maxValidator = new LegacyShortRangeValidator(
             "no values", null, (short) 100);
-    private ShortRangeValidator minMaxValidator = new ShortRangeValidator(
+    private LegacyShortRangeValidator minMaxValidator = new LegacyShortRangeValidator(
             "no values", (short) 10, (short) 100);
 
     @Test

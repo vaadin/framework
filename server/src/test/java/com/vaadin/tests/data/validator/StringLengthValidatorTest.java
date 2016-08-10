@@ -5,16 +5,16 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
 
 public class StringLengthValidatorTest {
 
-    private StringLengthValidator validator = new StringLengthValidator("Error");
-    private StringLengthValidator validatorNoNull = new StringLengthValidator(
+    private LegacyStringLengthValidator validator = new LegacyStringLengthValidator("Error");
+    private LegacyStringLengthValidator validatorNoNull = new LegacyStringLengthValidator(
             "Error", 1, 5, false);
-    private StringLengthValidator validatorMinValue = new StringLengthValidator(
+    private LegacyStringLengthValidator validatorMinValue = new LegacyStringLengthValidator(
             "Error", 5, null, true);
-    private StringLengthValidator validatorMaxValue = new StringLengthValidator(
+    private LegacyStringLengthValidator validatorMaxValue = new LegacyStringLengthValidator(
             "Error", null, 15, true);
 
     @Test

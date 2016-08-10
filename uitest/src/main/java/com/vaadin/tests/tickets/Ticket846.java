@@ -1,7 +1,7 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.data.util.MethodProperty;
-import com.vaadin.data.validator.IntegerValidator;
+import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -19,7 +19,7 @@ public class Ticket846 extends LegacyApplication {
         final TextField tx = new TextField("Integer");
         mainWin.addComponent(tx);
         tx.setImmediate(true);
-        tx.addValidator(new IntegerValidator("{0} is not a number"));
+        tx.addValidator(new LegacyIntegerValidator("{0} is not a number"));
 
         final String[] visibleProps = { "required", "invalidAllowed",
                 "readOnly", "readThrough", "invalidCommitted",

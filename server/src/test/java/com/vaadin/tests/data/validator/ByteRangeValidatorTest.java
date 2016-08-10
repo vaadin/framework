@@ -5,17 +5,17 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.data.validator.ByteRangeValidator;
+import com.vaadin.legacy.data.validator.LegacyByteRangeValidator;
 
 public class ByteRangeValidatorTest {
 
-    private ByteRangeValidator cleanValidator = new ByteRangeValidator(
+    private LegacyByteRangeValidator cleanValidator = new LegacyByteRangeValidator(
             "no values", null, null);
-    private ByteRangeValidator minValidator = new ByteRangeValidator(
+    private LegacyByteRangeValidator minValidator = new LegacyByteRangeValidator(
             "no values", (byte) 10, null);
-    private ByteRangeValidator maxValidator = new ByteRangeValidator(
+    private LegacyByteRangeValidator maxValidator = new LegacyByteRangeValidator(
             "no values", null, (byte) 100);
-    private ByteRangeValidator minMaxValidator = new ByteRangeValidator(
+    private LegacyByteRangeValidator minMaxValidator = new LegacyByteRangeValidator(
             "no values", (byte) 10, (byte) 100);
 
     @Test

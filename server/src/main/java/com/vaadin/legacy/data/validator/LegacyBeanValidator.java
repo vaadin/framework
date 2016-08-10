@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.data.validator;
+package com.vaadin.legacy.data.validator;
 
 import java.io.Serializable;
 import java.util.Locale;
@@ -44,7 +44,7 @@ import com.vaadin.legacy.data.Validator;
  * @author Petri Hakala
  * @author Henri Sara
  */
-public class BeanValidator implements Validator {
+public class LegacyBeanValidator implements Validator {
 
     private static final long serialVersionUID = 1L;
     private static ValidatorFactory factory;
@@ -97,7 +97,7 @@ public class BeanValidator implements Validator {
      * @param propertyName
      *            property to validate
      */
-    public BeanValidator(Class<?> beanClass, String propertyName) {
+    public LegacyBeanValidator(Class<?> beanClass, String propertyName) {
         this.beanClass = beanClass;
         this.propertyName = propertyName;
         locale = Locale.getDefault();
@@ -168,7 +168,7 @@ public class BeanValidator implements Validator {
     /**
      * Returns a shared Validator instance to use. An instance is created using
      * the validator factory if necessary and thereafter reused by the
-     * {@link BeanValidator} instance.
+     * {@link LegacyBeanValidator} instance.
      * 
      * @return the JSR-303 {@link javax.validation.Validator} to use
      */

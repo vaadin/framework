@@ -1,8 +1,8 @@
 package com.vaadin.tests.util;
 
-import com.vaadin.data.validator.AbstractValidator;
+import com.vaadin.legacy.data.validator.LegacyAbstractValidator;
 
-public class AlwaysFailValidator extends AbstractValidator<Object> {
+public class AlwaysFailValidator extends LegacyAbstractValidator<Object> {
     public AlwaysFailValidator() {
         super("Validation error");
     }

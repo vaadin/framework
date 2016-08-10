@@ -13,19 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.validator;
+package com.vaadin.legacy.data.validator;
 
 /**
- * Validator for validating that a {@link Double} is inside a given range.
+ * Validator for validating that an {@link Integer} is inside a given range.
  * 
  * @author Vaadin Ltd.
- * @since 7.0
+ * @since 5.4
  */
 @SuppressWarnings("serial")
-public class DoubleRangeValidator extends RangeValidator<Double> {
+public class LegacyIntegerRangeValidator extends LegacyRangeValidator<Integer> {
 
     /**
-     * Creates a validator for checking that an Double is within a given range.
+     * Creates a validator for checking that an Integer is within a given range.
      * 
      * By default the range is inclusive i.e. both minValue and maxValue are
      * valid values. Use {@link #setMinValueIncluded(boolean)} or
@@ -39,9 +39,9 @@ public class DoubleRangeValidator extends RangeValidator<Double> {
      * @param maxValue
      *            The maximum value to accept or null for no limit
      */
-    public DoubleRangeValidator(String errorMessage, Double minValue,
-            Double maxValue) {
-        super(errorMessage, Double.class, minValue, maxValue);
+    public LegacyIntegerRangeValidator(String errorMessage, Integer minValue,
+            Integer maxValue) {
+        super(errorMessage, Integer.class, minValue, maxValue);
     }
 
 }

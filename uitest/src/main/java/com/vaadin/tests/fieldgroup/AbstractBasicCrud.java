@@ -26,8 +26,8 @@ import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.legacy.data.Validator.InvalidValueException;
+import com.vaadin.legacy.data.validator.LegacyIntegerRangeValidator;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -143,7 +143,7 @@ public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
 
             birthDate.setNullRepresentation("");
 
-            age.addValidator(new IntegerRangeValidator(
+            age.addValidator(new LegacyIntegerRangeValidator(
                     "Must be between 0 and 100", 0, 100));
 
             setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);

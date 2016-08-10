@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.validator;
+package com.vaadin.legacy.data.validator;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * {@link java.util.regex.Pattern#sum}
  * </p>
  * <p>
- * See {@link com.vaadin.data.validator.AbstractStringValidator} for more
+ * See {@link com.vaadin.legacy.data.validator.LegacyAbstractStringValidator} for more
  * information.
  * </p>
  * <p>
@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
  * @since 5.4
  */
 @SuppressWarnings("serial")
-public class RegexpValidator extends AbstractStringValidator {
+public class LegacyRegexpValidator extends LegacyAbstractStringValidator {
 
     private Pattern pattern;
     private boolean complete;
@@ -55,7 +55,7 @@ public class RegexpValidator extends AbstractStringValidator {
      * @param errorMessage
      *            the message to display in case the value does not validate.
      */
-    public RegexpValidator(String regexp, String errorMessage) {
+    public LegacyRegexpValidator(String regexp, String errorMessage) {
         this(regexp, true, errorMessage);
     }
 
@@ -71,7 +71,7 @@ public class RegexpValidator extends AbstractStringValidator {
      * @param errorMessage
      *            the message to display in case the value does not validate.
      */
-    public RegexpValidator(String regexp, boolean complete, String errorMessage) {
+    public LegacyRegexpValidator(String regexp, boolean complete, String errorMessage) {
         super(errorMessage);
         pattern = Pattern.compile(regexp);
         this.complete = complete;

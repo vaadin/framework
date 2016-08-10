@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.abstractfield;
 
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -27,7 +27,7 @@ public class AbstractFieldCommitWithInvalidValues extends TestBase {
     protected void setup() {
         tf = new TextField("A field, must contain 1-2 chars",
                 new ObjectProperty<String>("a"));
-        tf.addValidator(new StringLengthValidator("Invalid length", 1, 2, false));
+        tf.addValidator(new LegacyStringLengthValidator("Invalid length", 1, 2, false));
         tf.setBuffered(true);
         tf.setRequired(true);
 

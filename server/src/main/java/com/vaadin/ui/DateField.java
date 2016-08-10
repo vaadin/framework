@@ -30,7 +30,6 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.validator.DateRangeValidator;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -38,6 +37,7 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.data.Validator.InvalidValueException;
+import com.vaadin.legacy.data.validator.LegacyDateRangeValidator;
 import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.PaintException;
@@ -158,7 +158,7 @@ public class DateField extends LegacyAbstractField<Date> implements
 
     private String dateOutOfRangeMessage = "Date is out of allowed range";
 
-    private DateRangeValidator currentRangeValidator;
+    private LegacyDateRangeValidator currentRangeValidator;
 
     /**
      * Determines whether the ValueChangeEvent should be fired. Used to prevent
@@ -421,7 +421,7 @@ public class DateField extends LegacyAbstractField<Date> implements
             currentRangeValidator = null;
         }
         if (getRangeStart() != null || getRangeEnd() != null) {
-            currentRangeValidator = new DateRangeValidator(
+            currentRangeValidator = new LegacyDateRangeValidator(
                     dateOutOfRangeMessage, getRangeStart(resolution),
                     getRangeEnd(resolution), null);
             addValidator(currentRangeValidator);

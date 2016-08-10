@@ -11,7 +11,7 @@ import java.util.TimeZone;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.validator.DateRangeValidator;
+import com.vaadin.legacy.data.validator.LegacyDateRangeValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 
 public class DateRangeValidatorTest {
@@ -20,23 +20,23 @@ public class DateRangeValidatorTest {
     Calendar endDate = new GregorianCalendar(TimeZone.getTimeZone("GMT"),
             Locale.ENGLISH);
 
-    private DateRangeValidator cleanValidator;
-    private DateRangeValidator minValidator;
-    private DateRangeValidator maxValidator;
-    private DateRangeValidator minMaxValidator;
+    private LegacyDateRangeValidator cleanValidator;
+    private LegacyDateRangeValidator minValidator;
+    private LegacyDateRangeValidator maxValidator;
+    private LegacyDateRangeValidator minMaxValidator;
 
     @Before
     public void setUp() {
         startDate.set(2000, Calendar.JANUARY, 1, 12, 0, 0);
         endDate.set(2000, Calendar.FEBRUARY, 20, 12, 0, 0);
 
-        cleanValidator = new DateRangeValidator("Given date outside range",
+        cleanValidator = new LegacyDateRangeValidator("Given date outside range",
                 null, null, Resolution.DAY);
-        minValidator = new DateRangeValidator("Given date before startDate",
+        minValidator = new LegacyDateRangeValidator("Given date before startDate",
                 startDate.getTime(), null, Resolution.DAY);
-        maxValidator = new DateRangeValidator("Given date after endDate", null,
+        maxValidator = new LegacyDateRangeValidator("Given date after endDate", null,
                 endDate.getTime(), Resolution.DAY);
-        minMaxValidator = new DateRangeValidator("Given date outside range",
+        minMaxValidator = new LegacyDateRangeValidator("Given date outside range",
                 startDate.getTime(), endDate.getTime(), Resolution.DAY);
     }
 

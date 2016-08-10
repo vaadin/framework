@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.validator;
+package com.vaadin.legacy.data.validator;
 
 import com.vaadin.legacy.data.Validator;
 
@@ -44,7 +44,7 @@ import com.vaadin.legacy.data.Validator;
  * @author Vaadin Ltd.
  * @since 5.4
  */
-public abstract class AbstractValidator<T> implements Validator {
+public abstract class LegacyAbstractValidator<T> implements Validator {
 
     /**
      * Error message that is included in an {@link InvalidValueException} if
@@ -59,7 +59,7 @@ public abstract class AbstractValidator<T> implements Validator {
      *            the message to be included in an {@link InvalidValueException}
      *            (with "{0}" replaced by the value that failed validation).
      */
-    public AbstractValidator(String errorMessage) {
+    public LegacyAbstractValidator(String errorMessage) {
         this.errorMessage = errorMessage;
     }
 

@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Resource;
@@ -197,7 +197,7 @@ public class Ticket1878 extends LegacyApplication {
                 f.setCaption(null);
             }
 
-            f.addValidator(new StringLengthValidator("Error", 10, 8, false));
+            f.addValidator(new LegacyStringLengthValidator("Error", 10, 8, false));
         }
         // createLayout(l1, new
         // ExpandLayout(ExpandLayout.ORIENTATION_HORIZONTAL),

@@ -2,8 +2,8 @@ package com.vaadin.tests.fieldgroup;
 
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.data.validator.LegacyBeanValidator;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -58,7 +58,7 @@ public class MultipleValidationErrors extends AbstractTestUI {
             FieldGroup fieldGroup, String caption, String propertyId) {
         TextField textfield = new TextField(caption,
                 item.getItemProperty(propertyId));
-        textfield.addValidator(new BeanValidator(
+        textfield.addValidator(new LegacyBeanValidator(
                 PersonBeanWithValidationAnnotations.class, propertyId));
 
         fieldGroup.bind(textfield, propertyId);

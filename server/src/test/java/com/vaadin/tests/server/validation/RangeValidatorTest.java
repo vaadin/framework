@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.data.validator.IntegerRangeValidator;
+import com.vaadin.legacy.data.validator.LegacyIntegerRangeValidator;
 
 public class RangeValidatorTest {
 
@@ -14,7 +14,7 @@ public class RangeValidatorTest {
     // RangeValidator
     @Test
     public void testMinValueNonInclusive() {
-        IntegerRangeValidator iv = new IntegerRangeValidator("Failed", 0, 10);
+        LegacyIntegerRangeValidator iv = new LegacyIntegerRangeValidator("Failed", 0, 10);
         iv.setMinValueIncluded(false);
         assertFalse(iv.isValid(0));
         assertTrue(iv.isValid(10));
@@ -24,7 +24,7 @@ public class RangeValidatorTest {
 
     @Test
     public void testMinMaxValuesInclusive() {
-        IntegerRangeValidator iv = new IntegerRangeValidator("Failed", 0, 10);
+        LegacyIntegerRangeValidator iv = new LegacyIntegerRangeValidator("Failed", 0, 10);
         assertTrue(iv.isValid(0));
         assertTrue(iv.isValid(1));
         assertTrue(iv.isValid(10));
@@ -34,7 +34,7 @@ public class RangeValidatorTest {
 
     @Test
     public void testMaxValueNonInclusive() {
-        IntegerRangeValidator iv = new IntegerRangeValidator("Failed", 0, 10);
+        LegacyIntegerRangeValidator iv = new LegacyIntegerRangeValidator("Failed", 0, 10);
         iv.setMaxValueIncluded(false);
         assertTrue(iv.isValid(0));
         assertTrue(iv.isValid(9));
@@ -45,7 +45,7 @@ public class RangeValidatorTest {
 
     @Test
     public void testMinMaxValuesNonInclusive() {
-        IntegerRangeValidator iv = new IntegerRangeValidator("Failed", 0, 10);
+        LegacyIntegerRangeValidator iv = new LegacyIntegerRangeValidator("Failed", 0, 10);
         iv.setMinValueIncluded(false);
         iv.setMaxValueIncluded(false);
 

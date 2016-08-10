@@ -5,8 +5,8 @@ import java.util.Locale;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.validator.AbstractValidator;
 import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.data.validator.LegacyAbstractValidator;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.DateField;
 
@@ -35,7 +35,7 @@ public class RequiredInvalidDateField extends TestBase {
 
         Date date = new Date(2011 - 1900, 9 - 1, 1);
 
-        Validator dateValidator = new AbstractValidator<Date>(
+        Validator dateValidator = new LegacyAbstractValidator<Date>(
                 "Day of month must be an even number") {
 
             @Override

@@ -13,24 +13,38 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.validator;
+package com.vaadin.legacy.data.validator;
+
+import java.util.Date;
+
+import com.vaadin.shared.ui.datefield.Resolution;
 
 /**
- * Validator for validating that a {@link Float} is inside a given range.
+ * Validator for validating that a Date is inside a given range.
+ * 
+ * <p>
+ * Note that the comparison is done directly on the Date object so take care
+ * that the hours/minutes/seconds/milliseconds of the min/max values are
+ * properly set.
+ * </p>
  * 
  * @author Vaadin Ltd.
- * @since 7.4
+ * @since 7.0
  */
-@SuppressWarnings("serial")
-public class FloatRangeValidator extends RangeValidator<Float> {
+public class LegacyDateRangeValidator extends LegacyRangeValidator<Date> {
 
     /**
-     * Creates a validator for checking that an Float is within a given range.
-     * 
+     * Creates a validator for checking that an Date is within a given range.
+     * <p>
      * By default the range is inclusive i.e. both minValue and maxValue are
      * valid values. Use {@link #setMinValueIncluded(boolean)} or
      * {@link #setMaxValueIncluded(boolean)} to change it.
-     * 
+     * </p>
+     * <p>
+     * Note that the comparison is done directly on the Date object so take care
+     * that the hours/minutes/seconds/milliseconds of the min/max values are
+     * properly set.
+     * </p>
      * 
      * @param errorMessage
      *            the message to display in case the value does not validate.
@@ -39,9 +53,9 @@ public class FloatRangeValidator extends RangeValidator<Float> {
      * @param maxValue
      *            The maximum value to accept or null for no limit
      */
-    public FloatRangeValidator(String errorMessage, Float minValue,
-            Float maxValue) {
-        super(errorMessage, Float.class, minValue, maxValue);
+    public LegacyDateRangeValidator(String errorMessage, Date minValue,
+            Date maxValue, Resolution resolution) {
+        super(errorMessage, Date.class, minValue, maxValue);
     }
 
 }

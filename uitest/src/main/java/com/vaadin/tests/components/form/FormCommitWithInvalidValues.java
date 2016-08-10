@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.form;
 
-import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -28,7 +28,7 @@ public class FormCommitWithInvalidValues extends TestBase {
         form = new Form();
         form.setFooter(null);
         TextField tf = new TextField("A field, must contain 1-2 chars");
-        tf.addValidator(new StringLengthValidator("Invalid length", 1, 2, false));
+        tf.addValidator(new LegacyStringLengthValidator("Invalid length", 1, 2, false));
         tf.setRequired(true);
 
         form.addField("a", tf);

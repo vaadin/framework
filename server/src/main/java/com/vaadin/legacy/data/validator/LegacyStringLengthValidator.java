@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.data.validator;
+package com.vaadin.legacy.data.validator;
 
 /**
  * This <code>StringLengthValidator</code> is used to validate the length of
@@ -24,7 +24,7 @@ package com.vaadin.data.validator;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class StringLengthValidator extends AbstractStringValidator {
+public class LegacyStringLengthValidator extends LegacyAbstractStringValidator {
 
     private Integer minLength = null;
 
@@ -38,7 +38,7 @@ public class StringLengthValidator extends AbstractStringValidator {
      * @param errorMessage
      *            the message to display in case the value does not validate.
      */
-    public StringLengthValidator(String errorMessage) {
+    public LegacyStringLengthValidator(String errorMessage) {
         super(errorMessage);
     }
 
@@ -60,7 +60,7 @@ public class StringLengthValidator extends AbstractStringValidator {
      *            Are null strings permissible? This can be handled better by
      *            setting a field as required or not.
      */
-    public StringLengthValidator(String errorMessage, Integer minLength,
+    public LegacyStringLengthValidator(String errorMessage, Integer minLength,
             Integer maxLength, boolean allowNull) {
         this(errorMessage);
         setMinLength(minLength);

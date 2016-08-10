@@ -5,13 +5,13 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import com.vaadin.data.validator.NullValidator;
 import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.data.validator.LegacyNullValidator;
 
 public class NullValidatorTest {
 
-    NullValidator notNull = new NullValidator("Null not accepted", false);
-    NullValidator onlyNull = new NullValidator("Only null accepted", true);
+    LegacyNullValidator notNull = new LegacyNullValidator("Null not accepted", false);
+    LegacyNullValidator onlyNull = new LegacyNullValidator("Only null accepted", true);
 
     @Test
     public void testNullValue() {

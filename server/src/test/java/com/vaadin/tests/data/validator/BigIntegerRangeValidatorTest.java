@@ -5,17 +5,17 @@ import java.math.BigInteger;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.validator.BigIntegerRangeValidator;
+import com.vaadin.legacy.data.validator.LegacyBigIntegerRangeValidator;
 
 public class BigIntegerRangeValidatorTest {
 
-    private BigIntegerRangeValidator cleanValidator = new BigIntegerRangeValidator(
+    private LegacyBigIntegerRangeValidator cleanValidator = new LegacyBigIntegerRangeValidator(
             "no values", null, null);
-    private BigIntegerRangeValidator minValidator = new BigIntegerRangeValidator(
+    private LegacyBigIntegerRangeValidator minValidator = new LegacyBigIntegerRangeValidator(
             "no values", BigInteger.valueOf(10), null);
-    private BigIntegerRangeValidator maxValidator = new BigIntegerRangeValidator(
+    private LegacyBigIntegerRangeValidator maxValidator = new LegacyBigIntegerRangeValidator(
             "no values", null, BigInteger.valueOf(100));
-    private BigIntegerRangeValidator minMaxValidator = new BigIntegerRangeValidator(
+    private LegacyBigIntegerRangeValidator minMaxValidator = new LegacyBigIntegerRangeValidator(
             "no values", BigInteger.valueOf(10), BigInteger.valueOf(100));
 
     @Test

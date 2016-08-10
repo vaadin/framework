@@ -2,7 +2,7 @@ package com.vaadin.tests.components.datefield;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.validator.NullValidator;
+import com.vaadin.legacy.data.validator.LegacyNullValidator;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.DateField;
 
@@ -27,7 +27,7 @@ public class DefaultHandleUnparsableDateField extends TestBase {
 
         final DateField validated = new DateField("Validated Default DateField");
         validated.setImmediate(true);
-        validated.addValidator(new NullValidator("Validator: Date is NULL",
+        validated.addValidator(new LegacyNullValidator("Validator: Date is NULL",
                 false));
         addComponent(validated);
     }

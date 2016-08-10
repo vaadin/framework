@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.data.validator;
+package com.vaadin.legacy.data.validator;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -34,7 +34,7 @@ import com.vaadin.legacy.data.Validator;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class CompositeValidator implements Validator {
+public class LegacyCompositeValidator implements Validator {
 
     public enum CombinationMode {
         /**
@@ -78,7 +78,7 @@ public class CompositeValidator implements Validator {
      * Construct a composite validator in <code>AND</code> mode without error
      * message.
      */
-    public CompositeValidator() {
+    public LegacyCompositeValidator() {
         this(CombinationMode.AND, "");
     }
 
@@ -88,7 +88,7 @@ public class CompositeValidator implements Validator {
      * @param mode
      * @param errorMessage
      */
-    public CompositeValidator(CombinationMode mode, String errorMessage) {
+    public LegacyCompositeValidator(CombinationMode mode, String errorMessage) {
         setErrorMessage(errorMessage);
         setMode(mode);
     }
@@ -243,9 +243,9 @@ public class CompositeValidator implements Validator {
             if (validatorType.isAssignableFrom(v.getClass())) {
                 found.add(v);
             }
-            if (v instanceof CompositeValidator
-                    && ((CompositeValidator) v).getMode() == MODE_AND) {
-                final Collection<Validator> c = ((CompositeValidator) v)
+            if (v instanceof LegacyCompositeValidator
+                    && ((LegacyCompositeValidator) v).getMode() == MODE_AND) {
+                final Collection<Validator> c = ((LegacyCompositeValidator) v)
                         .getSubValidators(validatorType);
                 if (c != null) {
                     found.addAll(c);

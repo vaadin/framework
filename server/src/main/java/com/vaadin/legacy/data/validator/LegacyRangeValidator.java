@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.validator;
+package com.vaadin.legacy.data.validator;
 
 /**
  * An base implementation for validating any objects that implement
@@ -21,10 +21,10 @@ package com.vaadin.data.validator;
  * 
  * Verifies that the value is of the given type and within the (optionally)
  * given limits. Typically you want to use a sub class of this like
- * {@link IntegerRangeValidator}, {@link DoubleRangeValidator} or
- * {@link DateRangeValidator} in applications.
+ * {@link LegacyIntegerRangeValidator}, {@link LegacyDoubleRangeValidator} or
+ * {@link LegacyDateRangeValidator} in applications.
  * <p>
- * Note that {@link RangeValidator} always accept null values. Make a field
+ * Note that {@link LegacyRangeValidator} always accept null values. Make a field
  * required to ensure that no empty values are accepted or override
  * {@link #isValidValue(Comparable)}.
  * </p>
@@ -35,7 +35,7 @@ package com.vaadin.data.validator;
  * @author Vaadin Ltd.
  * @since 7.0
  */
-public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
+public class LegacyRangeValidator<T extends Comparable> extends LegacyAbstractValidator<T> {
 
     private T minValue = null;
     private boolean minValueIncluded = true;
@@ -55,7 +55,7 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
      * @param maxValue
      *            The maximum value that should be accepted or null for no limit
      */
-    public RangeValidator(String errorMessage, Class<T> type, T minValue,
+    public LegacyRangeValidator(String errorMessage, Class<T> type, T minValue,
             T maxValue) {
         super(errorMessage);
         this.type = type;

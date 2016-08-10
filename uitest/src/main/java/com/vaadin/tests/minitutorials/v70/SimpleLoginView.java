@@ -1,7 +1,7 @@
 package com.vaadin.tests.minitutorials.v70;
 
-import com.vaadin.data.validator.AbstractValidator;
-import com.vaadin.data.validator.EmailValidator;
+import com.vaadin.legacy.data.validator.LegacyAbstractValidator;
+import com.vaadin.legacy.data.validator.LegacyEmailValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.MarginInfo;
@@ -33,7 +33,7 @@ public class SimpleLoginView extends CustomComponent implements View,
         user.setWidth("300px");
         user.setRequired(true);
         user.setInputPrompt("Your username (eg. joe@email.com)");
-        user.addValidator(new EmailValidator(
+        user.addValidator(new LegacyEmailValidator(
                 "Username must be an email address"));
         user.setInvalidAllowed(false);
 
@@ -73,7 +73,7 @@ public class SimpleLoginView extends CustomComponent implements View,
      * Validator for validating the passwords
      */
     private static final class PasswordValidator extends
-            AbstractValidator<String> {
+            LegacyAbstractValidator<String> {
 
         public PasswordValidator() {
             super("The password provided is not valid");

@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -23,7 +23,7 @@ public class Ticket1811 extends com.vaadin.server.LegacyApplication {
         final LegacyWindow main = new LegacyWindow("#1811");
         setMainWindow(main);
 
-        Validator strLenValidator = new StringLengthValidator(
+        Validator strLenValidator = new LegacyStringLengthValidator(
                 "String must be at least 3 chars long and non-null", 3, -1,
                 false);
 

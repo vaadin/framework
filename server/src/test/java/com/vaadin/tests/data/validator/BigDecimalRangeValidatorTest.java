@@ -5,17 +5,17 @@ import java.math.BigDecimal;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.validator.BigDecimalRangeValidator;
+import com.vaadin.legacy.data.validator.LegacyBigDecimalRangeValidator;
 
 public class BigDecimalRangeValidatorTest {
 
-    private BigDecimalRangeValidator cleanValidator = new BigDecimalRangeValidator(
+    private LegacyBigDecimalRangeValidator cleanValidator = new LegacyBigDecimalRangeValidator(
             "no values", null, null);
-    private BigDecimalRangeValidator minValidator = new BigDecimalRangeValidator(
+    private LegacyBigDecimalRangeValidator minValidator = new LegacyBigDecimalRangeValidator(
             "no values", new BigDecimal(10.1), null);
-    private BigDecimalRangeValidator maxValidator = new BigDecimalRangeValidator(
+    private LegacyBigDecimalRangeValidator maxValidator = new LegacyBigDecimalRangeValidator(
             "no values", null, new BigDecimal(100.1));
-    private BigDecimalRangeValidator minMaxValidator = new BigDecimalRangeValidator(
+    private LegacyBigDecimalRangeValidator minMaxValidator = new LegacyBigDecimalRangeValidator(
             "no values", new BigDecimal(10.5), new BigDecimal(100.5));
 
     @Test

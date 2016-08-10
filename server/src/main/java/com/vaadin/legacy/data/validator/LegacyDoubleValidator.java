@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.validator;
+package com.vaadin.legacy.data.validator;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
 
 /**
  * String validator for a double precision floating point number. See
- * {@link com.vaadin.data.validator.AbstractStringValidator} for more
+ * {@link com.vaadin.legacy.data.validator.LegacyAbstractStringValidator} for more
  * information.
  * 
  * @author Vaadin Ltd.
@@ -31,7 +31,7 @@ import com.vaadin.data.util.converter.StringToDoubleConverter;
  */
 @Deprecated
 @SuppressWarnings("serial")
-public class DoubleValidator extends AbstractStringValidator {
+public class LegacyDoubleValidator extends LegacyAbstractStringValidator {
 
     /**
      * Creates a validator for checking that a string can be parsed as an
@@ -40,11 +40,11 @@ public class DoubleValidator extends AbstractStringValidator {
      * @param errorMessage
      *            the message to display in case the value does not validate.
      * @deprecated As of 7.0. Use a Double converter on the field instead and/or
-     *             use a {@link DoubleRangeValidator} for validating that the
+     *             use a {@link LegacyDoubleRangeValidator} for validating that the
      *             value is inside a given range.
      */
     @Deprecated
-    public DoubleValidator(String errorMessage) {
+    public LegacyDoubleValidator(String errorMessage) {
         super(errorMessage);
     }
 

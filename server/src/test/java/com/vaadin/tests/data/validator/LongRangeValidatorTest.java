@@ -5,17 +5,17 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.data.validator.LongRangeValidator;
+import com.vaadin.legacy.data.validator.LegacyLongRangeValidator;
 
 public class LongRangeValidatorTest {
 
-    private LongRangeValidator cleanValidator = new LongRangeValidator(
+    private LegacyLongRangeValidator cleanValidator = new LegacyLongRangeValidator(
             "no values", null, null);
-    private LongRangeValidator minValidator = new LongRangeValidator(
+    private LegacyLongRangeValidator minValidator = new LegacyLongRangeValidator(
             "no values", 10l, null);
-    private LongRangeValidator maxValidator = new LongRangeValidator(
+    private LegacyLongRangeValidator maxValidator = new LegacyLongRangeValidator(
             "no values", null, 100l);
-    private LongRangeValidator minMaxValidator = new LongRangeValidator(
+    private LegacyLongRangeValidator minMaxValidator = new LegacyLongRangeValidator(
             "no values", 10l, 100l);
 
     @Test

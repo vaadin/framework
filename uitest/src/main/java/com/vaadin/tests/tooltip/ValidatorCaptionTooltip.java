@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.tooltip;
 
-import com.vaadin.data.validator.IntegerRangeValidator;
+import com.vaadin.legacy.data.validator.LegacyIntegerRangeValidator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.TextField;
@@ -33,7 +33,7 @@ public class ValidatorCaptionTooltip extends AbstractTestUI {
         int max = 100;
         String errorMessage = "Valid value is between " + min + " and " + max
                 + ". {0} is not.";
-        IntegerRangeValidator validator = new IntegerRangeValidator(
+        LegacyIntegerRangeValidator validator = new LegacyIntegerRangeValidator(
                 errorMessage, min, max);
         fieldWithError.setValue("142");
 

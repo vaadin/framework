@@ -3,8 +3,8 @@ package com.vaadin.tests.components.abstractfield;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.validator.DoubleValidator;
-import com.vaadin.data.validator.IntegerValidator;
+import com.vaadin.legacy.data.validator.LegacyDoubleValidator;
+import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.TextField;
@@ -18,13 +18,13 @@ public class IntegerDoubleFieldsWithDataSource extends TestBase {
         addComponent(log);
 
         TextField tf = createIntegerTextField();
-        tf.addValidator(new IntegerValidator("Must be an Integer"));
+        tf.addValidator(new LegacyIntegerValidator("Must be an Integer"));
         addComponent(tf);
 
         tf = createIntegerTextField();
         tf.setCaption("Enter a double");
         tf.setPropertyDataSource(new ObjectProperty<Double>(2.1));
-        tf.addValidator(new DoubleValidator("Must be a Double"));
+        tf.addValidator(new LegacyDoubleValidator("Must be a Double"));
         addComponent(tf);
     }
 

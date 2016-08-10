@@ -5,17 +5,17 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.data.validator.DoubleRangeValidator;
+import com.vaadin.legacy.data.validator.LegacyDoubleRangeValidator;
 
 public class DoubleRangeValidatorTest {
 
-    private DoubleRangeValidator cleanValidator = new DoubleRangeValidator(
+    private LegacyDoubleRangeValidator cleanValidator = new LegacyDoubleRangeValidator(
             "no values", null, null);
-    private DoubleRangeValidator minValidator = new DoubleRangeValidator(
+    private LegacyDoubleRangeValidator minValidator = new LegacyDoubleRangeValidator(
             "no values", 10.1, null);
-    private DoubleRangeValidator maxValidator = new DoubleRangeValidator(
+    private LegacyDoubleRangeValidator maxValidator = new LegacyDoubleRangeValidator(
             "no values", null, 100.1);
-    private DoubleRangeValidator minMaxValidator = new DoubleRangeValidator(
+    private LegacyDoubleRangeValidator minMaxValidator = new LegacyDoubleRangeValidator(
             "no values", 10.5, 100.5);
 
     @Test

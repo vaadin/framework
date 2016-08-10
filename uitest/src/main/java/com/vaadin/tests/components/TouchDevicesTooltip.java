@@ -2,7 +2,7 @@ package com.vaadin.tests.components;
 
 import com.vaadin.annotations.Viewport;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
-import com.vaadin.data.validator.IntegerRangeValidator;
+import com.vaadin.legacy.data.validator.LegacyIntegerRangeValidator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
@@ -26,7 +26,7 @@ public class TouchDevicesTooltip extends AbstractTestUI {
     private void createTextField(int n) {
         TextField textField = new TextField("Value" + n);
         textField.setConverter(new StringToIntegerConverter());
-        textField.addValidator(new IntegerRangeValidator(getErrorMessage(n), 0,
+        textField.addValidator(new LegacyIntegerRangeValidator(getErrorMessage(n), 0,
                 100));
         textField.setImmediate(true);
         textField.setValue("-5");

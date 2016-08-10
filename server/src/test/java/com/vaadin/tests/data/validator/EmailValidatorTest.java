@@ -3,11 +3,11 @@ package com.vaadin.tests.data.validator;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.validator.EmailValidator;
+import com.vaadin.legacy.data.validator.LegacyEmailValidator;
 
 public class EmailValidatorTest {
 
-    private EmailValidator validator = new EmailValidator("Error");
+    private LegacyEmailValidator validator = new LegacyEmailValidator("Error");
 
     @Test
     public void testEmailValidatorWithNull() {
