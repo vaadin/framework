@@ -209,7 +209,7 @@ public class BinderTest {
     @Test
     public void bound_validatorsAreOK_noErrors() {
         Binder<Person> binder = new Binder<>();
-        Binding<Person, String> binding = binder.forField(nameField);
+        Binding<Person, String, String> binding = binder.forField(nameField);
         binding.withValidator(Validator.alwaysPass()).bind(Person::getFirstName,
                 Person::setFirstName);
 
@@ -224,7 +224,7 @@ public class BinderTest {
     @Test
     public void bound_validatorsFail_errors() {
         Binder<Person> binder = new Binder<>();
-        Binding<Person, String> binding = binder.forField(nameField);
+        Binding<Person, String, String> binding = binder.forField(nameField);
         binding.withValidator(Validator.alwaysPass());
         String msg1 = "foo";
         String msg2 = "bar";
@@ -261,4 +261,5 @@ public class BinderTest {
         binder.bind(nameField, Person::getFirstName, Person::setFirstName);
         binder.bind(p);
     }
+
 }
