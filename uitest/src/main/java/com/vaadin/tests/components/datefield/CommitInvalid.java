@@ -6,11 +6,11 @@ import java.util.Locale;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.legacy.data.Validator.InvalidValueException;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.TextField;
 
@@ -30,7 +30,7 @@ public class CommitInvalid extends TestBase {
     }
 
     ObjectProperty<Date> dateProperty;
-    private DateField dateField;
+    private LegacyDateField dateField;
     private ObjectProperty<Integer> integerProperty;
     private TextField integerField;
     private Log log;
@@ -50,9 +50,9 @@ public class CommitInvalid extends TestBase {
          */
         dateProperty = new ObjectProperty<Date>(new Date(2009 - 1900, 4 - 1, 1));
 
-        dateField = new DateField("Year", dateProperty);
+        dateField = new LegacyDateField("Year", dateProperty);
         dateField.setLocale(new Locale("fi", "FI"));
-        dateField.setResolution(DateField.RESOLUTION_DAY);
+        dateField.setResolution(LegacyDateField.RESOLUTION_DAY);
         dateField.setId("_DF");
         form.addField("date", dateField);
 

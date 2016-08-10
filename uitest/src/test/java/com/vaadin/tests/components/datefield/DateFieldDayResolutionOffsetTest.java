@@ -1,15 +1,15 @@
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.testbench.elements.DateFieldElement;
-import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.tests.tb3.AbstractTB3Test;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateFieldDayResolutionOffsetTest extends MultiBrowserTest {
 
@@ -25,8 +25,8 @@ public class DateFieldDayResolutionOffsetTest extends MultiBrowserTest {
     }
 
     private void select2ndOfSeptember() {
-        for (WebElement e : findElements(By
-                .className("v-datefield-calendarpanel-day"))) {
+        for (WebElement e : findElements(
+                By.className("v-datefield-calendarpanel-day"))) {
             if (e.getText().equals("2")) {
                 e.click();
                 break;
@@ -35,7 +35,8 @@ public class DateFieldDayResolutionOffsetTest extends MultiBrowserTest {
     }
 
     private void openDatePicker() {
-        DateFieldElement dateField = $(DateFieldElement.class).first();
+        LegacyDateFieldElement dateField = $(LegacyDateFieldElement.class)
+                .first();
 
         dateField.findElement(By.tagName("button")).click();
     }

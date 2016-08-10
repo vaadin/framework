@@ -11,11 +11,11 @@ import java.util.Set;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.legacy.data.Validator;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Layout;
@@ -103,7 +103,7 @@ public class Ticket2998 extends LegacyApplication {
 
     public class WorkoutEditor extends Window {
 
-        private DateField date = new DateField("Date");
+        private LegacyDateField date = new LegacyDateField("Date");
         private TextField kilomiters = new TextField("Kilometers");
         private TextField title = new TextField("Title/note");
 
@@ -119,7 +119,7 @@ public class Ticket2998 extends LegacyApplication {
 
             FormLayout form = new FormLayout();
             form.setSizeUndefined();
-            date.setResolution(DateField.RESOLUTION_MIN);
+            date.setResolution(LegacyDateField.RESOLUTION_MIN);
             form.addComponent(date);
             form.addComponent(kilomiters);
             form.addComponent(title);
@@ -191,7 +191,7 @@ public class Ticket2998 extends LegacyApplication {
                     });
                 }
                 if (propertyId.equals("date")) {
-                    ((DateField) f).setResolution(DateField.RESOLUTION_MIN);
+                    ((LegacyDateField) f).setResolution(LegacyDateField.RESOLUTION_MIN);
                 }
             }
             return f;

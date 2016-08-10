@@ -10,7 +10,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import com.vaadin.testbench.elements.DateFieldElement;
+import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateFieldPopupClosingTest extends MultiBrowserTest {
@@ -30,8 +30,8 @@ public class DateFieldPopupClosingTest extends MultiBrowserTest {
     }
 
     private void assertThatPopupIsVisible() {
-        waitUntil(ExpectedConditions.visibilityOfElementLocated(By
-                .className("v-datefield-popup")));
+        waitUntil(ExpectedConditions
+                .visibilityOfElementLocated(By.className("v-datefield-popup")));
     }
 
     private void assertThatPopupIsInvisible() {
@@ -69,7 +69,8 @@ public class DateFieldPopupClosingTest extends MultiBrowserTest {
     }
 
     private WebElement getToggleButton() {
-        DateFieldElement dateField = $(DateFieldElement.class).first();
+        LegacyDateFieldElement dateField = $(LegacyDateFieldElement.class)
+                .first();
 
         return dateField.findElement(By.tagName("button"));
     }

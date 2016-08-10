@@ -4,10 +4,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.PopupDateField;
 
 @SuppressWarnings("serial")
 public class PopupDateFieldStates extends AbstractTestUI {
@@ -35,9 +35,9 @@ public class PopupDateFieldStates extends AbstractTestUI {
         return 14565;
     }
 
-    private static PopupDateField createPopupDateField(final boolean enabled,
+    private static LegacyPopupDateField createPopupDateField(final boolean enabled,
             final boolean textFieldEnabled) {
-        final PopupDateField popupDatefield = new PopupDateField();
+        final LegacyPopupDateField popupDatefield = new LegacyPopupDateField();
 
         Calendar cal = GregorianCalendar.getInstance();
         cal.set(Calendar.DATE, 3);

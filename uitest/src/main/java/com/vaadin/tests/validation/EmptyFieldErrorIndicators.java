@@ -3,13 +3,13 @@ package com.vaadin.tests.validation;
 import java.util.Date;
 
 import com.vaadin.legacy.data.Validator.InvalidValueException;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.AlwaysFailValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
@@ -91,7 +91,7 @@ public class EmptyFieldErrorIndicators extends TestBase {
         };
 
         form.addField("Field", new TextField("Text"));
-        form.addField("Date", new DateField("Date"));
+        form.addField("Date", new LegacyDateField("Date"));
         // not good for automated testing with screenshots when null
         // form.addField("Inline Date", new InlineDateField("Date"));
         // same as basic DateField

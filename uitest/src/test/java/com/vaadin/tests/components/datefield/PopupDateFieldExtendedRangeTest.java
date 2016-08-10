@@ -30,8 +30,8 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
+import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -50,10 +50,11 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
 
     @Test
     public void testFirstDateField() {
-        List<DateFieldElement> dateFields = $(DateFieldElement.class).all();
+        List<LegacyDateFieldElement> dateFields = $(
+                LegacyDateFieldElement.class).all();
         assertEquals("unexpected amount of datefields", 3, dateFields.size());
 
-        DateFieldElement dateField = dateFields.get(0);
+        LegacyDateFieldElement dateField = dateFields.get(0);
 
         // open the popup
         dateField.findElement(By.tagName("button")).click();
@@ -63,14 +64,12 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
 
         // verify contents
         WebElement popup = findElement(By.className("v-datefield-popup"));
-        assertEquals(
-                "unexpected month",
-                "tammikuu 2011",
+        assertEquals("unexpected month", "tammikuu 2011",
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-month")).get(1)
                         .getText());
-        List<WebElement> headerElements = popup.findElement(
-                By.className("v-datefield-calendarpanel-weekdays"))
+        List<WebElement> headerElements = popup
+                .findElement(By.className("v-datefield-calendarpanel-weekdays"))
                 .findElements(By.tagName("td"));
         List<WebElement> weekdays = new ArrayList<WebElement>();
         for (WebElement headerElement : headerElements) {
@@ -79,28 +78,22 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
             }
         }
         assertEquals("unexpected weekday count", 7, weekdays.size());
-        assertEquals("unexpected first day of week", "MA", weekdays.get(0)
-                .getText());
-        assertEquals(
-                "unexpected weeknumber count",
-                0,
+        assertEquals("unexpected first day of week", "MA",
+                weekdays.get(0).getText());
+        assertEquals("unexpected weeknumber count", 0,
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-weeknumber"))
                         .size());
-        assertEquals(
-                "unexpected selection",
-                "1",
+        assertEquals("unexpected selection", "1",
                 popup.findElement(
                         By.className("v-datefield-calendarpanel-day-selected"))
                         .getText());
-        assertEquals(
-                "unexpected focus",
-                "1",
+        assertEquals("unexpected focus", "1",
                 popup.findElement(
                         By.className("v-datefield-calendarpanel-day-focused"))
                         .getText());
-        List<WebElement> days = popup.findElements(By
-                .className("v-datefield-calendarpanel-day"));
+        List<WebElement> days = popup
+                .findElements(By.className("v-datefield-calendarpanel-day"));
         assertEquals("unexpected day count", 42, days.size());
         assertEquals("unexpected day content", "27", days.get(0).getText());
         assertEquals("unexpected day content", "4", days.get(8).getText());
@@ -112,21 +105,15 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
                 .findElement(By.tagName("button")).click();
 
         // verify contents
-        assertEquals(
-                "unexpected month",
-                "joulukuu 2010",
+        assertEquals("unexpected month", "joulukuu 2010",
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-month")).get(1)
                         .getText());
-        assertEquals(
-                "unexpected selection",
-                "1",
+        assertEquals("unexpected selection", "1",
                 popup.findElement(
                         By.className("v-datefield-calendarpanel-day-selected"))
                         .getText());
-        assertEquals(
-                "unexpected focus",
-                0,
+        assertEquals("unexpected focus", 0,
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-day-focused"))
                         .size());
@@ -143,21 +130,15 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
                 .findElement(By.tagName("button")).click();
 
         // verify contents
-        assertEquals(
-                "unexpected month",
-                "joulukuu 2009",
+        assertEquals("unexpected month", "joulukuu 2009",
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-month")).get(1)
                         .getText());
-        assertEquals(
-                "unexpected selection",
-                0,
+        assertEquals("unexpected selection", 0,
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-day-selected"))
                         .size());
-        assertEquals(
-                "unexpected focus",
-                0,
+        assertEquals("unexpected focus", 0,
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-day-focused"))
                         .size());
@@ -178,7 +159,8 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
 
     @Test
     public void testSecondDateField() throws InterruptedException {
-        DateFieldElement dateField = $(DateFieldElement.class).all().get(1);
+        LegacyDateFieldElement dateField = $(LegacyDateFieldElement.class).all()
+                .get(1);
         ButtonElement button = $(ButtonElement.class).first();
 
         // change the date
@@ -193,14 +175,12 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
 
         // verify contents
         WebElement popup = findElement(By.className("v-datefield-popup"));
-        assertEquals(
-                "unexpected month",
-                "February 2010",
+        assertEquals("unexpected month", "February 2010",
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-month")).get(1)
                         .getText());
-        List<WebElement> headerElements = popup.findElement(
-                By.className("v-datefield-calendarpanel-weekdays"))
+        List<WebElement> headerElements = popup
+                .findElement(By.className("v-datefield-calendarpanel-weekdays"))
                 .findElements(By.tagName("td"));
         List<WebElement> weekdays = new ArrayList<WebElement>();
         for (WebElement headerElement : headerElements) {
@@ -209,28 +189,22 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
             }
         }
         assertEquals("unexpected weekday count", 7, weekdays.size());
-        assertEquals("unexpected first day of week", "SUN", weekdays.get(0)
-                .getText());
-        assertEquals(
-                "unexpected weeknumber count",
-                0,
+        assertEquals("unexpected first day of week", "SUN",
+                weekdays.get(0).getText());
+        assertEquals("unexpected weeknumber count", 0,
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-weeknumber"))
                         .size());
-        assertEquals(
-                "unexpected selection",
-                "16",
+        assertEquals("unexpected selection", "16",
                 popup.findElement(
                         By.className("v-datefield-calendarpanel-day-selected"))
                         .getText());
-        assertEquals(
-                "unexpected focus",
-                "16",
+        assertEquals("unexpected focus", "16",
                 popup.findElement(
                         By.className("v-datefield-calendarpanel-day-focused"))
                         .getText());
-        List<WebElement> days = popup.findElements(By
-                .className("v-datefield-calendarpanel-day"));
+        List<WebElement> days = popup
+                .findElements(By.className("v-datefield-calendarpanel-day"));
         assertEquals("unexpected day count", 42, days.size());
         assertEquals("unexpected day content", "31", days.get(0).getText());
         assertEquals("unexpected day content", "8", days.get(8).getText());
@@ -238,14 +212,12 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         assertEquals("unexpected day content", "13", days.get(41).getText());
 
         // navigate down
-        WebElement popupBody = popup.findElement(By
-                .className("v-datefield-calendarpanel"));
+        WebElement popupBody = popup
+                .findElement(By.className("v-datefield-calendarpanel"));
         popupBody.sendKeys(Keys.ARROW_DOWN);
 
         // ensure the focus changed
-        assertEquals(
-                "unexpected focus",
-                "23",
+        assertEquals("unexpected focus", "23",
                 popup.findElement(
                         By.className("v-datefield-calendarpanel-day-focused"))
                         .getText());
@@ -254,21 +226,15 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         popupBody.sendKeys(Keys.ARROW_DOWN);
 
         // verify contents
-        assertEquals(
-                "unexpected month",
-                "March 2010",
+        assertEquals("unexpected month", "March 2010",
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-month")).get(1)
                         .getText());
-        assertEquals(
-                "unexpected selection",
-                0,
+        assertEquals("unexpected selection", 0,
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-day-selected"))
                         .size());
-        assertEquals(
-                "unexpected focus",
-                "2",
+        assertEquals("unexpected focus", "2",
                 popup.findElement(
                         By.className("v-datefield-calendarpanel-day-focused"))
                         .getText());
@@ -286,9 +252,7 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         popupBody.sendKeys(Keys.ARROW_LEFT);
 
         // ensure the focus changed
-        assertEquals(
-                "unexpected focus",
-                "1",
+        assertEquals("unexpected focus", "1",
                 popup.findElement(
                         By.className("v-datefield-calendarpanel-day-focused"))
                         .getText());
@@ -297,21 +261,15 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         popupBody.sendKeys(Keys.ARROW_LEFT);
 
         // verify contents
-        assertEquals(
-                "unexpected month",
-                "February 2010",
+        assertEquals("unexpected month", "February 2010",
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-month")).get(1)
                         .getText());
-        assertEquals(
-                "unexpected selection",
-                "16",
+        assertEquals("unexpected selection", "16",
                 popup.findElement(
                         By.className("v-datefield-calendarpanel-day-selected"))
                         .getText());
-        assertEquals(
-                "unexpected focus",
-                "28",
+        assertEquals("unexpected focus", "28",
                 popup.findElement(
                         By.className("v-datefield-calendarpanel-day-focused"))
                         .getText());
@@ -332,7 +290,8 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
 
     @Test
     public void testThirdDateField() throws InterruptedException {
-        DateFieldElement dateField = $(DateFieldElement.class).all().get(2);
+        LegacyDateFieldElement dateField = $(LegacyDateFieldElement.class).all()
+                .get(2);
         ButtonElement button = $(ButtonElement.class).first();
 
         // change the date
@@ -347,14 +306,12 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
 
         // verify contents
         WebElement popup = findElement(By.className("v-datefield-popup"));
-        assertEquals(
-                "unexpected month",
-                "helmikuu 2010",
+        assertEquals("unexpected month", "helmikuu 2010",
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-month")).get(1)
                         .getText());
-        List<WebElement> headerElements = popup.findElement(
-                By.className("v-datefield-calendarpanel-weekdays"))
+        List<WebElement> headerElements = popup
+                .findElement(By.className("v-datefield-calendarpanel-weekdays"))
                 .findElements(By.tagName("td"));
         List<WebElement> weekdays = new ArrayList<WebElement>();
         for (WebElement headerElement : headerElements) {
@@ -363,29 +320,25 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
             }
         }
         assertEquals("unexpected weekday count", 7, weekdays.size());
-        assertEquals("unexpected first day of week", "MA", weekdays.get(0)
-                .getText());
-        List<WebElement> weeknumbers = popup.findElements(By
-                .className("v-datefield-calendarpanel-weeknumber"));
+        assertEquals("unexpected first day of week", "MA",
+                weekdays.get(0).getText());
+        List<WebElement> weeknumbers = popup.findElements(
+                By.className("v-datefield-calendarpanel-weeknumber"));
         assertEquals("unexpected weeknumber count", 6, weeknumbers.size());
-        assertEquals("unexpected weeknumber content", "5", weeknumbers.get(0)
-                .getText());
-        assertEquals("unexpected weeknumber content", "10", weeknumbers.get(5)
-                .getText());
-        assertEquals(
-                "unexpected selection",
-                "16",
+        assertEquals("unexpected weeknumber content", "5",
+                weeknumbers.get(0).getText());
+        assertEquals("unexpected weeknumber content", "10",
+                weeknumbers.get(5).getText());
+        assertEquals("unexpected selection", "16",
                 popup.findElement(
                         By.className("v-datefield-calendarpanel-day-selected"))
                         .getText());
-        assertEquals(
-                "unexpected focus",
-                "16",
+        assertEquals("unexpected focus", "16",
                 popup.findElement(
                         By.className("v-datefield-calendarpanel-day-focused"))
                         .getText());
-        List<WebElement> days = popup.findElements(By
-                .className("v-datefield-calendarpanel-day"));
+        List<WebElement> days = popup
+                .findElements(By.className("v-datefield-calendarpanel-day"));
         assertEquals("unexpected day count", 42, days.size());
         assertEquals("unexpected day content", "1", days.get(0).getText());
         assertEquals("unexpected day content", "9", days.get(8).getText());
@@ -393,8 +346,8 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         assertEquals("unexpected day content", "14", days.get(41).getText());
 
         // navigate to previous month
-        WebElement popupBody = popup.findElement(By
-                .className("v-datefield-calendarpanel"));
+        WebElement popupBody = popup
+                .findElement(By.className("v-datefield-calendarpanel"));
         new Actions(driver).keyDown(Keys.SHIFT).perform();
         popupBody.sendKeys(Keys.ARROW_LEFT);
         new Actions(driver).keyUp(Keys.SHIFT).perform();
@@ -408,22 +361,18 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         }
 
         // verify contents
-        assertEquals(
-                "unexpected month",
-                "tammikuu 2010",
+        assertEquals("unexpected month", "tammikuu 2010",
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-month")).get(1)
                         .getText());
-        weeknumbers = popup.findElements(By
-                .className("v-datefield-calendarpanel-weeknumber"));
+        weeknumbers = popup.findElements(
+                By.className("v-datefield-calendarpanel-weeknumber"));
         assertEquals("unexpected weeknumber count", 6, weeknumbers.size());
-        assertEquals("unexpected weeknumber content", "53", weeknumbers.get(0)
-                .getText());
-        assertEquals("unexpected weeknumber content", "5", weeknumbers.get(5)
-                .getText());
-        assertEquals(
-                "unexpected selection",
-                0,
+        assertEquals("unexpected weeknumber content", "53",
+                weeknumbers.get(0).getText());
+        assertEquals("unexpected weeknumber content", "5",
+                weeknumbers.get(5).getText());
+        assertEquals("unexpected selection", 0,
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-day-selected"))
                         .size());
@@ -431,11 +380,9 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         // button instead of navigating with arrow keys steals the focus
         if (!BrowserUtil.isIE(getDesiredCapabilities())
                 || BrowserUtil.isIE8(getDesiredCapabilities())) {
-            assertEquals(
-                    "unexpected focus",
-                    "16",
-                    popup.findElement(
-                            By.className("v-datefield-calendarpanel-day-focused"))
+            assertEquals("unexpected focus", "16",
+                    popup.findElement(By
+                            .className("v-datefield-calendarpanel-day-focused"))
                             .getText());
         }
         days = popup
@@ -456,33 +403,27 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
                 .findElement(By.tagName("button")).click();
 
         // verify contents
-        assertEquals(
-                "unexpected month",
-                "tammikuu 2009",
+        assertEquals("unexpected month", "tammikuu 2009",
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-month")).get(1)
                         .getText());
-        weeknumbers = popup.findElements(By
-                .className("v-datefield-calendarpanel-weeknumber"));
+        weeknumbers = popup.findElements(
+                By.className("v-datefield-calendarpanel-weeknumber"));
         assertEquals("unexpected weeknumber count", 6, weeknumbers.size());
-        assertEquals("unexpected weeknumber content", "1", weeknumbers.get(0)
-                .getText());
-        assertEquals("unexpected weeknumber content", "6", weeknumbers.get(5)
-                .getText());
-        assertEquals(
-                "unexpected selection",
-                0,
+        assertEquals("unexpected weeknumber content", "1",
+                weeknumbers.get(0).getText());
+        assertEquals("unexpected weeknumber content", "6",
+                weeknumbers.get(5).getText());
+        assertEquals("unexpected selection", 0,
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-day-selected"))
                         .size());
         // TODO: remove this check once #14406 has been fixed -- clicking the
         // button instead of navigating with arrow keys steals the focus
         if (false) {
-            assertEquals(
-                    "unexpected focus",
-                    "16",
-                    popup.findElement(
-                            By.className("v-datefield-calendarpanel-day-focused"))
+            assertEquals("unexpected focus", "16",
+                    popup.findElement(By
+                            .className("v-datefield-calendarpanel-day-focused"))
                             .getText());
         }
         days = popup

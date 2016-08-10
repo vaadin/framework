@@ -1,21 +1,21 @@
 package com.vaadin.tests.components.datefield;
 
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.legacy.ui.LegacyInlineDateField;
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.InlineDateField;
-import com.vaadin.ui.PopupDateField;
 
 @SuppressWarnings("serial")
 public class LowResolution extends TestBase {
 
     @Override
     protected void setup() {
-        final PopupDateField dateField = new PopupDateField();
+        final LegacyPopupDateField dateField = new LegacyPopupDateField();
         dateField.setValue(new java.util.Date());
-        dateField.setResolution(PopupDateField.RESOLUTION_MONTH);
-        dateField.addListener(new PopupDateField.ValueChangeListener() {
+        dateField.setResolution(LegacyPopupDateField.RESOLUTION_MONTH);
+        dateField.addListener(new LegacyPopupDateField.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 getMainWindow().showNotification(
@@ -25,10 +25,10 @@ public class LowResolution extends TestBase {
         dateField.setImmediate(true);
         getLayout().addComponent(dateField);
 
-        final PopupDateField dateField3 = new PopupDateField();
+        final LegacyPopupDateField dateField3 = new LegacyPopupDateField();
         // dateField.setValue(new java.util.Date());
-        dateField3.setResolution(PopupDateField.RESOLUTION_YEAR);
-        dateField3.addListener(new PopupDateField.ValueChangeListener() {
+        dateField3.setResolution(LegacyPopupDateField.RESOLUTION_YEAR);
+        dateField3.addListener(new LegacyPopupDateField.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 getMainWindow().showNotification(
@@ -38,10 +38,10 @@ public class LowResolution extends TestBase {
         dateField3.setImmediate(true);
         getLayout().addComponent(dateField3);
 
-        final InlineDateField dateField2 = new InlineDateField();
+        final LegacyInlineDateField dateField2 = new LegacyInlineDateField();
         dateField2.setValue(new java.util.Date());
-        dateField2.setResolution(PopupDateField.RESOLUTION_MONTH);
-        dateField2.addListener(new PopupDateField.ValueChangeListener() {
+        dateField2.setResolution(LegacyPopupDateField.RESOLUTION_MONTH);
+        dateField2.addListener(new LegacyPopupDateField.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 getMainWindow().showNotification(

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.ui;
+package com.vaadin.legacy.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,15 +36,16 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.legacy.data.Validator;
 import com.vaadin.legacy.data.Validator.InvalidValueException;
-import com.vaadin.legacy.data.validator.LegacyDateRangeValidator;
 import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.ui.LegacyAbstractField;
-import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.data.validator.LegacyDateRangeValidator;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.datefield.DateFieldConstants;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Form;
+import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -67,7 +68,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class DateField extends LegacyAbstractField<Date> implements
+public class LegacyDateField extends LegacyAbstractField<Date> implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, LegacyComponent {
 
     /**
@@ -181,7 +182,7 @@ public class DateField extends LegacyAbstractField<Date> implements
     /**
      * Constructs an empty <code>DateField</code> with no caption.
      */
-    public DateField() {
+    public LegacyDateField() {
     }
 
     /**
@@ -190,7 +191,7 @@ public class DateField extends LegacyAbstractField<Date> implements
      * @param caption
      *            the caption of the datefield.
      */
-    public DateField(String caption) {
+    public LegacyDateField(String caption) {
         setCaption(caption);
     }
 
@@ -203,7 +204,7 @@ public class DateField extends LegacyAbstractField<Date> implements
      * @param dataSource
      *            the Property to be edited with this editor.
      */
-    public DateField(String caption, Property dataSource) {
+    public LegacyDateField(String caption, Property dataSource) {
         this(dataSource);
         setCaption(caption);
     }
@@ -215,11 +216,12 @@ public class DateField extends LegacyAbstractField<Date> implements
      * @param dataSource
      *            the Property to be edited with this editor.
      */
-    public DateField(Property dataSource) throws IllegalArgumentException {
+    public LegacyDateField(Property dataSource)
+            throws IllegalArgumentException {
         if (!Date.class.isAssignableFrom(dataSource.getType())) {
-            throw new IllegalArgumentException("Can't use "
-                    + dataSource.getType().getName()
-                    + " typed property as datasource");
+            throw new IllegalArgumentException(
+                    "Can't use " + dataSource.getType().getName()
+                            + " typed property as datasource");
         }
 
         setPropertyDataSource(dataSource);
@@ -237,7 +239,7 @@ public class DateField extends LegacyAbstractField<Date> implements
      * @param value
      *            the Date value.
      */
-    public DateField(String caption, Date value) {
+    public LegacyDateField(String caption, Date value) {
         setValue(value);
         setCaption(caption);
     }
@@ -326,8 +328,8 @@ public class DateField extends LegacyAbstractField<Date> implements
 
         // Create a defensive copy against issues when using java.sql.Date (and
         // also against mutable Date).
-        getState().rangeStart = startDate != null ? new Date(
-                startDate.getTime()) : null;
+        getState().rangeStart = startDate != null
+                ? new Date(startDate.getTime()) : null;
         updateRangeValidator();
     }
 
@@ -479,15 +481,12 @@ public class DateField extends LegacyAbstractField<Date> implements
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
 
-        if (!isReadOnly()
-                && (variables.containsKey("year")
-                        || variables.containsKey("month")
-                        || variables.containsKey("day")
-                        || variables.containsKey("hour")
-                        || variables.containsKey("min")
-                        || variables.containsKey("sec")
-                        || variables.containsKey("msec") || variables
-                                .containsKey("dateString"))) {
+        if (!isReadOnly() && (variables.containsKey("year")
+                || variables.containsKey("month")
+                || variables.containsKey("day") || variables.containsKey("hour")
+                || variables.containsKey("min") || variables.containsKey("sec")
+                || variables.containsKey("msec")
+                || variables.containsKey("dateString"))) {
 
             // Old and new dates
             final Date oldDate = getValue();
@@ -545,8 +544,8 @@ public class DateField extends LegacyAbstractField<Date> implements
                 newDate = cal.getTime();
             }
 
-            if (newDate == null && dateString != null && !"".equals(
-                    dateString)) {
+            if (newDate == null && dateString != null
+                    && !"".equals(dateString)) {
                 try {
                     Date parsedDate = handleUnparsableDateString(dateString);
                     setValue(parsedDate, true);
@@ -659,7 +658,7 @@ public class DateField extends LegacyAbstractField<Date> implements
      * 
      * @param dateString
      * @return parsed Date
-     * @throws LegacyConverter.ConversionException
+     * @throws Converter.ConversionException
      *             to keep the old value and indicate an error
      */
     protected Date handleUnparsableDateString(String dateString)
@@ -816,8 +815,8 @@ public class DateField extends LegacyAbstractField<Date> implements
             // Start by a zeroed calendar to avoid having values for lower
             // resolution variables e.g. time when resolution is day
             int min, field;
-            for (Resolution r : Resolution.getResolutionsLowerThan(
-                    resolution)) {
+            for (Resolution r : Resolution
+                    .getResolutionsLowerThan(resolution)) {
                 field = r.getCalendarField();
                 min = calendar.getActualMinimum(field);
                 calendar.set(field, min);
@@ -1062,8 +1061,8 @@ public class DateField extends LegacyAbstractField<Date> implements
         return timeZone;
     }
 
-    public static class UnparsableDateString extends
-            Validator.InvalidValueException {
+    public static class UnparsableDateString
+            extends Validator.InvalidValueException {
 
         public UnparsableDateString(String message) {
             super(message);
@@ -1075,11 +1074,11 @@ public class DateField extends LegacyAbstractField<Date> implements
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         if (design.hasAttr("value") && !design.attr("value").isEmpty()) {
-            Date date = DesignAttributeHandler.getFormatter().parse(
-                    design.attr("value"), Date.class);
+            Date date = DesignAttributeHandler.getFormatter()
+                    .parse(design.attr("value"), Date.class);
             // formatting will return null if it cannot parse the string
             if (date == null) {
-                Logger.getLogger(DateField.class.getName()).info(
+                Logger.getLogger(LegacyDateField.class.getName()).info(
                         "cannot parse " + design.attr("value") + " as date");
             }
             this.setValue(date, false, true);

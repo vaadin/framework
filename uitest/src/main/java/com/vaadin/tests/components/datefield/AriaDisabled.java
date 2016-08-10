@@ -15,9 +15,9 @@
  */
 package com.vaadin.tests.components.datefield;
 
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.VerticalLayout;
 
 public class AriaDisabled extends AbstractTestUI {
@@ -28,12 +28,12 @@ public class AriaDisabled extends AbstractTestUI {
         content.setMargin(true);
         content.setSpacing(true);
 
-        final DateField disabledDateField = new DateField("Disabled DateField");
+        final LegacyDateField disabledDateField = new LegacyDateField("Disabled DateField");
         disabledDateField.setEnabled(false);
 
         setContent(content);
         content.addComponent(disabledDateField);
-        content.addComponent(new DateField("Enabled DateField"));
+        content.addComponent(new LegacyDateField("Enabled DateField"));
     }
 
     @Override

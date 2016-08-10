@@ -17,6 +17,7 @@ package com.vaadin.tests.fonticon;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.FontIcon;
 import com.vaadin.server.Page;
@@ -33,7 +34,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
@@ -110,7 +110,7 @@ public class FontIcons extends AbstractTestUI {
 
         // Basic components, caption icon only
         Class<?>[] components = { Button.class, CheckBox.class,
-                DateField.class, NativeButton.class, Link.class, Label.class,
+                LegacyDateField.class, NativeButton.class, Link.class, Label.class,
                 Panel.class, Slider.class, TextArea.class, TextField.class,
                 Upload.class };
         for (Class<?> clazz : components) {

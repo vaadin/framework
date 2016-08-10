@@ -18,12 +18,12 @@ package com.vaadin.tests;
 
 import java.util.Locale;
 
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
@@ -80,8 +80,8 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         controls.addComponent(click);
         controls.addComponent(click2);
         reportLayout.addComponent(controls);
-        final DateField cal = new DateField();
-        cal.setResolution(DateField.RESOLUTION_DAY);
+        final LegacyDateField cal = new LegacyDateField();
+        cal.setResolution(LegacyDateField.RESOLUTION_DAY);
         cal.setLocale(new Locale("en", "US"));
         reportLayout.addComponent(cal);
         reportLayout.setExpandRatio(controls, 1);

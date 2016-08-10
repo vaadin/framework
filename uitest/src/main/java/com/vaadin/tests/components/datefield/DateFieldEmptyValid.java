@@ -7,15 +7,15 @@ import java.util.Locale;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.PopupDateField;
 
 @SuppressWarnings("serial")
 public class DateFieldEmptyValid extends TestBase {
@@ -27,7 +27,7 @@ public class DateFieldEmptyValid extends TestBase {
     private SimpleDateFormat formatter = new SimpleDateFormat(
             "MMMM d, yyyy hh:mm:ss aaa", Locale.US);
 
-    public class MyDateField extends PopupDateField {
+    public class MyDateField extends LegacyPopupDateField {
         @Override
         public boolean isEmpty() {
             return super.isEmpty();
@@ -46,7 +46,7 @@ public class DateFieldEmptyValid extends TestBase {
         df.setLocale(new Locale("fi", "FI"));
         df.setValue(new Date(100000000000L));
         df.setImmediate(true);
-        df.setResolution(DateField.RESOLUTION_DAY);
+        df.setResolution(LegacyDateField.RESOLUTION_DAY);
         df.addListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {

@@ -4,12 +4,12 @@ import java.util.Date;
 
 import com.vaadin.data.Property;
 import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.DateField;
 
 public class DateFieldUnparsableDate extends TestBase {
 
-    public class MyDateField extends DateField {
+    public class MyDateField extends LegacyDateField {
         Date oldDate = null;
 
         public MyDateField(String caption) {
@@ -30,7 +30,7 @@ public class DateFieldUnparsableDate extends TestBase {
         }
     }
 
-    public class MyDateField2 extends DateField {
+    public class MyDateField2 extends LegacyDateField {
         public MyDateField2(String caption) {
             super(caption);
         }
@@ -42,7 +42,7 @@ public class DateFieldUnparsableDate extends TestBase {
         }
     }
 
-    public class MyDateField3 extends DateField {
+    public class MyDateField3 extends LegacyDateField {
         public MyDateField3(String caption) {
             super(caption);
         }
@@ -55,7 +55,7 @@ public class DateFieldUnparsableDate extends TestBase {
         }
     }
 
-    public class MyDateField4 extends DateField {
+    public class MyDateField4 extends LegacyDateField {
         public MyDateField4(String caption) {
             super(caption);
         }

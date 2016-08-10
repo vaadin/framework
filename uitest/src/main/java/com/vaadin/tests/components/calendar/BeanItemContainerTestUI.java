@@ -24,10 +24,10 @@ import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.Action;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Calendar;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
@@ -138,10 +138,10 @@ public class BeanItemContainerTestUI extends UI {
         captionField.setImmediate(true);
         TextField descriptionField = new TextField("Description");
         descriptionField.setImmediate(true);
-        DateField startField = new DateField("Start");
+        LegacyDateField startField = new LegacyDateField("Start");
         startField.setResolution(Resolution.MINUTE);
         startField.setImmediate(true);
-        DateField endField = new DateField("End");
+        LegacyDateField endField = new LegacyDateField("End");
         endField.setImmediate(true);
         endField.setResolution(Resolution.MINUTE);
 

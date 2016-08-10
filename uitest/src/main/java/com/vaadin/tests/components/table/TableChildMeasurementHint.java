@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.table;
 
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -7,7 +8,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HasChildMeasurementHint.ChildMeasurementHint;
 import com.vaadin.ui.HorizontalLayout;
@@ -151,7 +151,7 @@ public class TableChildMeasurementHint extends AbstractTestUI {
         table.addGeneratedColumn("First_Name" + 4, new Table.ColumnGenerator() {
             @Override
             public Object generateCell(Table components, Object o, Object o2) {
-                DateField b = new DateField("DateField");
+                LegacyDateField b = new LegacyDateField("DateField");
                 b.setWidthUndefined();
                 return b;
             }

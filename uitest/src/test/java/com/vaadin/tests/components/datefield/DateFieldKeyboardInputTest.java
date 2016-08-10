@@ -22,8 +22,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateFieldKeyboardInputTest extends MultiBrowserTest {
@@ -31,7 +31,7 @@ public class DateFieldKeyboardInputTest extends MultiBrowserTest {
     @Test
     public void testValueChangeEvent() {
         openTestURL();
-        WebElement dateFieldText = $(DateFieldElement.class).first()
+        WebElement dateFieldText = $(LegacyDateFieldElement.class).first()
                 .findElement(By.tagName("input"));
         dateFieldText.clear();
         int numLabelsBeforeUpdate = $(LabelElement.class).all().size();

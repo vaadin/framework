@@ -23,13 +23,13 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VCalendarPanel.FocusChangeListener;
 import com.vaadin.client.ui.VCalendarPanel.TimeChangeListener;
+import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.client.ui.VDateFieldCalendar;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.datefield.InlineDateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.ui.InlineDateField;
 
-@Connect(InlineDateField.class)
+@Connect(LegacyInlineDateField.class)
 public class InlineDateFieldConnector extends AbstractDateFieldConnector {
 
     @Override

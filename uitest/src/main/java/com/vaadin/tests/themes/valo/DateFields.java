@@ -21,6 +21,8 @@ import java.util.Locale;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;
+import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.UserError;
@@ -29,10 +31,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -50,16 +50,16 @@ public class DateFields extends VerticalLayout implements View {
         row.setSpacing(true);
         addComponent(row);
 
-        DateField date = new DateField("Default resolution");
+        LegacyDateField date = new LegacyDateField("Default resolution");
         setDate(date);
         row.addComponent(date);
 
-        date = new DateField("Error");
+        date = new LegacyDateField("Error");
         setDate(date);
         date.setComponentError(new UserError("Fix it, now!"));
         row.addComponent(date);
 
-        date = new DateField("Error, borderless");
+        date = new LegacyDateField("Error, borderless");
         setDate(date);
         date.setComponentError(new UserError("Fix it, now!"));
         date.addStyleName(ValoTheme.DATEFIELD_BORDERLESS);
@@ -70,7 +70,7 @@ public class DateFields extends VerticalLayout implements View {
         group.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
         row.addComponent(group);
 
-        final DateField date2 = new DateField();
+        final LegacyDateField date2 = new LegacyDateField();
         group.addComponent(date2);
 
         Button today = new Button("Today", new ClickListener() {
@@ -81,120 +81,120 @@ public class DateFields extends VerticalLayout implements View {
         });
         group.addComponent(today);
 
-        date = new DateField("Default resolution, explicit size");
+        date = new LegacyDateField("Default resolution, explicit size");
         setDate(date);
         row.addComponent(date);
         date.setWidth("260px");
         date.setHeight("60px");
 
-        date = new DateField("Second resolution");
+        date = new LegacyDateField("Second resolution");
         setDate(date);
         date.setResolution(Resolution.SECOND);
         row.addComponent(date);
 
-        date = new DateField("Minute resolution");
+        date = new LegacyDateField("Minute resolution");
         setDate(date);
         date.setResolution(Resolution.MINUTE);
         row.addComponent(date);
 
-        date = new DateField("Hour resolution");
+        date = new LegacyDateField("Hour resolution");
         setDate(date);
         date.setResolution(Resolution.HOUR);
         row.addComponent(date);
 
-        date = new DateField("Disabled");
+        date = new LegacyDateField("Disabled");
         setDate(date);
         date.setResolution(Resolution.HOUR);
         date.setEnabled(false);
         row.addComponent(date);
 
-        date = new DateField("Day resolution");
+        date = new LegacyDateField("Day resolution");
         setDate(date);
         date.setResolution(Resolution.DAY);
         row.addComponent(date);
 
-        date = new DateField("Month resolution");
+        date = new LegacyDateField("Month resolution");
         setDate(date);
         date.setResolution(Resolution.MONTH);
         row.addComponent(date);
 
-        date = new DateField("Year resolution");
+        date = new LegacyDateField("Year resolution");
         setDate(date);
         date.setResolution(Resolution.YEAR);
         row.addComponent(date);
 
-        date = new DateField("Custom color");
+        date = new LegacyDateField("Custom color");
         setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName("color1");
         row.addComponent(date);
 
-        date = new DateField("Custom color");
+        date = new LegacyDateField("Custom color");
         setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName("color2");
         row.addComponent(date);
 
-        date = new DateField("Custom color");
+        date = new LegacyDateField("Custom color");
         setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName("color3");
         row.addComponent(date);
 
-        date = new DateField("Small");
+        date = new LegacyDateField("Small");
         setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName(ValoTheme.DATEFIELD_SMALL);
         row.addComponent(date);
 
-        date = new DateField("Large");
+        date = new LegacyDateField("Large");
         setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName(ValoTheme.DATEFIELD_LARGE);
         row.addComponent(date);
 
-        date = new DateField("Borderless");
+        date = new LegacyDateField("Borderless");
         setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName(ValoTheme.DATEFIELD_BORDERLESS);
         row.addComponent(date);
 
-        date = new DateField("Week numbers");
+        date = new LegacyDateField("Week numbers");
         setDate(date);
         date.setResolution(Resolution.DAY);
         date.setLocale(new Locale("fi", "fi"));
         date.setShowISOWeekNumbers(true);
         row.addComponent(date);
 
-        date = new DateField("US locale");
+        date = new LegacyDateField("US locale");
         setDate(date);
         date.setResolution(Resolution.SECOND);
         date.setLocale(new Locale("en", "US"));
         row.addComponent(date);
 
-        date = new DateField("Custom format");
+        date = new LegacyDateField("Custom format");
         setDate(date);
         date.setDateFormat("E dd/MM/yyyy");
         row.addComponent(date);
 
-        date = new DateField("Tiny");
+        date = new LegacyDateField("Tiny");
         setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName(ValoTheme.DATEFIELD_TINY);
         row.addComponent(date);
 
-        date = new DateField("Huge");
+        date = new LegacyDateField("Huge");
         setDate(date);
         date.setResolution(Resolution.DAY);
         date.addStyleName(ValoTheme.DATEFIELD_HUGE);
         row.addComponent(date);
 
-        date = new InlineDateField("Date picker");
+        date = new LegacyInlineDateField("Date picker");
         setDate(date);
         setDateRange(date);
         row.addComponent(date);
 
-        date = new InlineDateField("Date picker with week numbers");
+        date = new LegacyInlineDateField("Date picker with week numbers");
         setDate(date);
         date.setLocale(new Locale("fi", "fi"));
         date.setShowISOWeekNumbers(true);
@@ -214,7 +214,7 @@ public class DateFields extends VerticalLayout implements View {
         row.addComponent(form);
     }
 
-    private void setDateRange(DateField date) {
+    private void setDateRange(LegacyDateField date) {
         date.setRangeStart(getDefaultDate());
 
         Date endDate = getDefaultDate();
@@ -222,7 +222,7 @@ public class DateFields extends VerticalLayout implements View {
         date.setRangeEnd(endDate);
     }
 
-    private void setDate(DateField date) {
+    private void setDate(LegacyDateField date) {
         date.setValue(getDefaultDate());
     }
 

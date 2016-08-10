@@ -3,10 +3,10 @@ package com.vaadin.tests.tickets;
 import java.util.Date;
 
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
@@ -126,7 +126,7 @@ public class Ticket1397 extends LegacyApplication {
         table.setPageLength(20);
         for (int i = 0; i < 1000; i++) {
 
-            final InlineDateField df = new InlineDateField("", new Date());
+            final LegacyInlineDateField df = new LegacyInlineDateField("", new Date());
             PopupView pp = new PopupView(new PopupView.Content() {
                 @Override
                 public String getMinimizedValueAsHTML() {

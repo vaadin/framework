@@ -5,11 +5,11 @@ import java.util.Date;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.DateField;
 
 public class DateFieldIsValid extends AbstractTestUIWithLog {
 
@@ -29,7 +29,7 @@ public class DateFieldIsValid extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final DateField dateField = new DateField("Insert Date: ");
+        final LegacyDateField dateField = new LegacyDateField("Insert Date: ");
         dateField.setImmediate(true);
         dateField.setDateFormat(pattern);
 

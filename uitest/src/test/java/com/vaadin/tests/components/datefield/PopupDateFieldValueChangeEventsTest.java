@@ -23,9 +23,9 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NativeSelectElement;
+import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class PopupDateFieldValueChangeEventsTest extends MultiBrowserTest {
@@ -53,7 +53,8 @@ public class PopupDateFieldValueChangeEventsTest extends MultiBrowserTest {
     }
 
     public WebElement getPopUpButton() {
-        DateFieldElement datefield = $(DateFieldElement.class).first();
+        LegacyDateFieldElement datefield = $(LegacyDateFieldElement.class)
+                .first();
         return datefield.findElement((By.className("v-datefield-button")));
     }
 
@@ -64,18 +65,18 @@ public class PopupDateFieldValueChangeEventsTest extends MultiBrowserTest {
     }
 
     public WebElement getHoursSelect() {
-        return findElement(By
-                .xpath("//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select"));
+        return findElement(By.xpath(
+                "//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select"));
     }
 
     public WebElement getMinutesSelect() {
-        return findElement(By
-                .xpath("//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select[2]"));
+        return findElement(By.xpath(
+                "//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select[2]"));
     }
 
     public WebElement getSecondsSelect() {
-        return findElement(By
-                .xpath("//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select[3]"));
+        return findElement(By.xpath(
+                "//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select[3]"));
     }
 
     public NativeSelectElement getResolutionSelect() {

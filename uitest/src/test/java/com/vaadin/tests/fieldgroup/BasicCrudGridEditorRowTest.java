@@ -26,11 +26,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.CheckBoxElement;
-import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.parallel.TestCategory;
+import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("grid")
@@ -61,7 +61,8 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
         new Actions(getDriver()).doubleClick(ritaBirthdate).perform();
 
         GridEditorElement editor = grid.getEditor();
-        DateFieldElement dateField = editor.$(DateFieldElement.class).first();
+        LegacyDateFieldElement dateField = editor
+                .$(LegacyDateFieldElement.class).first();
         WebElement input = dateField.findElement(By.xpath("input"));
         // input.click();
         input.sendKeys("Invalid", Keys.TAB);
@@ -107,7 +108,8 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
         new Actions(getDriver()).doubleClick(cell).perform();
 
         String attribute = grid.getEditor().getAttribute("style").toLowerCase();
-        assertFalse("Style should not contain top.", attribute.contains("top:"));
+        assertFalse("Style should not contain top.",
+                attribute.contains("top:"));
     }
 
 }

@@ -30,7 +30,7 @@ public class FontIconsTest extends MultiBrowserTest {
     @Test
     public void checkScreenshot() throws IOException {
         openTestURL();
-        compareScreen("all");
+        compareScreen("all-legacy");
     }
 
     @Test
@@ -53,4 +53,5 @@ public class FontIconsTest extends MultiBrowserTest {
         comboBox.sendKeys(Keys.ARROW_DOWN);
         assertEquals("Two", comboBox.getText());
     }
+
 }

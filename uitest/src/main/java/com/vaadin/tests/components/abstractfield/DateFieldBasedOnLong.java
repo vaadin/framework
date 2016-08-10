@@ -3,9 +3,9 @@ package com.vaadin.tests.components.abstractfield;
 import java.util.Date;
 
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.PopupDateField;
 
 public class DateFieldBasedOnLong extends AbstractComponentDataBindingTest {
 
@@ -14,7 +14,7 @@ public class DateFieldBasedOnLong extends AbstractComponentDataBindingTest {
 
     @Override
     protected void createFields() {
-        PopupDateField pdf = new PopupDateField("DateField");
+        LegacyPopupDateField pdf = new LegacyPopupDateField("DateField");
         addComponent(pdf);
         property = new ObjectProperty<Long>(l, Long.class);
         pdf.setPropertyDataSource(property);

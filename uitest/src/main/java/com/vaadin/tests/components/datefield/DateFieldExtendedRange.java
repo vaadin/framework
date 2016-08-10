@@ -3,14 +3,14 @@ package com.vaadin.tests.components.datefield;
 import java.util.Calendar;
 import java.util.Locale;
 
+import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyInlineDateField;
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.InlineDateField;
-import com.vaadin.ui.PopupDateField;
 
 @SuppressWarnings("serial")
 public class DateFieldExtendedRange extends TestBase {
@@ -25,7 +25,7 @@ public class DateFieldExtendedRange extends TestBase {
         layout.setWidth("600px");
         layout.setSpacing(true);
 
-        final DateField[] fields = new DateField[6];
+        final LegacyDateField[] fields = new LegacyDateField[6];
 
         Locale fi = new Locale("fi", "FI");
         Locale us = new Locale("en", "US");
@@ -41,7 +41,7 @@ public class DateFieldExtendedRange extends TestBase {
         fields[5] = makeDateField(false, fi, "Finnish locale with week numbers");
         fields[5].setShowISOWeekNumbers(true);
 
-        for (DateField f : fields) {
+        for (LegacyDateField f : fields) {
             layout.addComponent(f);
         }
 
@@ -51,7 +51,7 @@ public class DateFieldExtendedRange extends TestBase {
             @Override
             public void buttonClick(ClickEvent event) {
                 date.set(2010, 1, 16);
-                for (DateField f : fields) {
+                for (LegacyDateField f : fields) {
                     f.setValue(date.getTime());
                 }
             }
@@ -68,10 +68,10 @@ public class DateFieldExtendedRange extends TestBase {
         return 6718;
     }
 
-    private DateField makeDateField(boolean isPopup, Locale locale,
+    private LegacyDateField makeDateField(boolean isPopup, Locale locale,
             String caption) {
-        DateField df = isPopup ? new PopupDateField() : new InlineDateField();
-        df.setResolution(DateField.RESOLUTION_DAY);
+        LegacyDateField df = isPopup ? new LegacyPopupDateField() : new LegacyInlineDateField();
+        df.setResolution(LegacyDateField.RESOLUTION_DAY);
         df.setValue(date.getTime());
         df.setLocale(locale);
         df.setCaption(caption);

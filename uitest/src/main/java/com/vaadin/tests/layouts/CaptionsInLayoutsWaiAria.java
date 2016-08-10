@@ -7,6 +7,7 @@ import com.vaadin.data.HasRequired;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
@@ -18,7 +19,6 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -200,7 +200,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
         components.add(new TextArea("Default TextArea."));
         // components.add(new RichTextArea("Default RichtTextArea"));
         components.add(new PasswordField("Default Password"));
-        components.add(new DateField("Default DateField"));
+        components.add(new LegacyDateField("Default DateField"));
 
         // PopupDateField popupDateField = new
         // PopupDateField("Default DateField");
@@ -310,8 +310,8 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
             for (String width : new String[] { "auto" }) {
                 Object id = layoutSelect.addItem();
                 Item i = layoutSelect.getItem(id);
-                i.getItemProperty(CAPTION).setValue(
-                        cls.getSimpleName() + ", " + width);
+                i.getItemProperty(CAPTION)
+                        .setValue(cls.getSimpleName() + ", " + width);
                 i.getItemProperty(CLASS).setValue(cls);
                 i.getItemProperty(WIDTH).setValue(width);
             }
@@ -325,10 +325,11 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
             public void valueChange(ValueChangeEvent event) {
                 Item i = layoutSelect.getItem(event.getProperty().getValue());
 
-                setLayout(getLayout((String) i.getItemProperty(CAPTION)
-                        .getValue(), (Class<? extends Layout>) i
-                        .getItemProperty(CLASS).getValue(), (String) i
-                        .getItemProperty(WIDTH).getValue()));
+                setLayout(getLayout(
+                        (String) i.getItemProperty(CAPTION).getValue(),
+                        (Class<? extends Layout>) i.getItemProperty(CLASS)
+                                .getValue(),
+                        (String) i.getItemProperty(WIDTH).getValue()));
             }
         });
 

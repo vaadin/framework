@@ -1,9 +1,9 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.ListSelect;
@@ -27,7 +27,7 @@ public class Ticket1986 extends LegacyApplication {
         TextField f2 = new TextField("2");
         f2.setTabIndex(index++);
 
-        DateField f3 = new DateField("3");
+        LegacyDateField f3 = new LegacyDateField("3");
         f3.setTabIndex(index++);
         ComboBox cb = new ComboBox("4");
         cb.setTabIndex(index++);

@@ -10,9 +10,9 @@ import java.util.Set;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
@@ -140,8 +140,8 @@ public class CustomDateFormats extends TestBase {
 
         Label serversideValueLabel = new Label();
 
-        DateField df = new DateField();
-        df.setResolution(DateField.RESOLUTION_DAY);
+        LegacyDateField df = new LegacyDateField();
+        df.setResolution(LegacyDateField.RESOLUTION_DAY);
         df.setLocale(locale);
         df.setWidth("300px");
         df.setDateFormat(pattern);
@@ -161,7 +161,7 @@ public class CustomDateFormats extends TestBase {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                updateServerSideLabel((DateField) event.getProperty());
+                updateServerSideLabel((LegacyDateField) event.getProperty());
             }
         });
 
@@ -185,7 +185,7 @@ public class CustomDateFormats extends TestBase {
         updateServerSideLabel(df);
     }
 
-    private void updateServerSideLabel(DateField df) {
+    private void updateServerSideLabel(LegacyDateField df) {
         Data data = (Data) df.getData();
         String pattern = data.pattern;
         Locale locale = df.getLocale();

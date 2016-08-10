@@ -18,11 +18,11 @@ package com.vaadin.tests;
 
 import java.util.Random;
 
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -180,15 +180,15 @@ public class RandomLayoutStress extends com.vaadin.server.LegacyApplication {
             break;
         case 6:
             // Datefield
-            result = new DateField();
-            ((DateField) result).setStyleName("calendar");
-            ((DateField) result).setValue(new java.util.Date());
+            result = new LegacyDateField();
+            ((LegacyDateField) result).setStyleName("calendar");
+            ((LegacyDateField) result).setValue(new java.util.Date());
             result.setCaption("Calendar component " + caption);
             break;
         case 7:
             // Datefield
-            result = new DateField();
-            ((DateField) result).setValue(new java.util.Date());
+            result = new LegacyDateField();
+            ((LegacyDateField) result).setValue(new java.util.Date());
             result.setCaption("Calendar component " + caption);
             break;
         }

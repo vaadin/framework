@@ -22,16 +22,16 @@ import com.vaadin.data.Item;
 import com.vaadin.data.fieldgroup.FieldGroup.BindException;
 import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.legacy.ui.LegacyCheckBox;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyInlineDateField;
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
@@ -64,7 +64,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
     }
 
     @Override
-    public <T extends LegacyField> T createField(Class<?> type, Class<T> fieldType) {
+    public <T extends LegacyField> T createField(Class<?> type,
+            Class<T> fieldType) {
         if (Enum.class.isAssignableFrom(type)) {
             return createEnumField(type, fieldType);
         } else if (Date.class.isAssignableFrom(type)) {
@@ -74,8 +75,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
             return createBooleanField(fieldType);
         }
         if (AbstractTextField.class.isAssignableFrom(fieldType)) {
-            return fieldType.cast(createAbstractTextField(fieldType
-                    .asSubclass(AbstractTextField.class)));
+            return fieldType.cast(createAbstractTextField(
+                    fieldType.asSubclass(AbstractTextField.class)));
         } else if (fieldType == RichTextArea.class) {
             return fieldType.cast(createRichTextArea());
         }
@@ -104,7 +105,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
             populateWithEnumData(s, (Class<? extends Enum>) type);
             return (T) s;
         } else if (AbstractTextField.class.isAssignableFrom(fieldType)) {
-            return (T) createAbstractTextField((Class<? extends AbstractTextField>) fieldType);
+            return (T) createAbstractTextField(
+                    (Class<? extends AbstractTextField>) fieldType);
         }
 
         return null;
@@ -114,13 +116,14 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
             Class<T> fieldType) {
         LegacyAbstractField field;
 
-        if (InlineDateField.class.isAssignableFrom(fieldType)) {
-            field = new InlineDateField();
+        if (LegacyInlineDateField.class.isAssignableFrom(fieldType)) {
+            field = new LegacyInlineDateField();
         } else if (anyField(fieldType)
-                || DateField.class.isAssignableFrom(fieldType)) {
-            field = new PopupDateField();
+                || LegacyDateField.class.isAssignableFrom(fieldType)) {
+            field = new LegacyPopupDateField();
         } else if (AbstractTextField.class.isAssignableFrom(fieldType)) {
-            field = createAbstractTextField((Class<? extends AbstractTextField>) fieldType);
+            field = createAbstractTextField(
+                    (Class<? extends AbstractTextField>) fieldType);
         } else {
             return null;
         }
@@ -160,7 +163,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
      * @return true if any LegacyAbstractField can be assigned to the field
      */
     protected boolean anyField(Class<?> fieldType) {
-        return fieldType == LegacyField.class || fieldType == LegacyAbstractField.class;
+        return fieldType == LegacyField.class
+                || fieldType == LegacyAbstractField.class;
     }
 
     /**
@@ -179,7 +183,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
             cb.setImmediate(true);
             return (T) cb;
         } else if (AbstractTextField.class.isAssignableFrom(fieldType)) {
-            return (T) createAbstractTextField((Class<? extends AbstractTextField>) fieldType);
+            return (T) createAbstractTextField(
+                    (Class<? extends AbstractTextField>) fieldType);
         }
 
         return null;
@@ -195,8 +200,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
             field.setImmediate(true);
             return field;
         } catch (Exception e) {
-            throw new BindException("Could not create a field of type "
-                    + fieldType, e);
+            throw new BindException(
+                    "Could not create a field of type " + fieldType, e);
         }
     }
 

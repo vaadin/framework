@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.abstractfield;
 
-import com.vaadin.ui.DateField;
+import com.vaadin.legacy.ui.LegacyDateField;
 
 public class DateFieldBackedByString extends AbstractComponentDataBindingTest {
 
@@ -8,7 +8,7 @@ public class DateFieldBackedByString extends AbstractComponentDataBindingTest {
 
     @Override
     protected void createFields() {
-        DateField df = new DateField("Date field");
+        LegacyDateField df = new LegacyDateField("Date field");
         addComponent(df);
         df.setPropertyDataSource(new com.vaadin.data.util.ObjectProperty<String>(
                 s, String.class));

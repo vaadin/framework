@@ -19,26 +19,26 @@ import java.util.Date;
 
 import org.junit.Test;
 
+import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.design.DeclarativeTestBase;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.PopupDateField;
 
 /**
- * Tests the declarative support for implementations of {@link DateField}.
+ * Tests the declarative support for implementations of {@link LegacyDateField}.
  * 
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class PopupDateFieldDeclarativeTest extends
-        DeclarativeTestBase<PopupDateField> {
+public class PopupDateFieldDeclarativeTest
+        extends DeclarativeTestBase<LegacyPopupDateField> {
 
     private String getBasicDesign() {
-        return "<vaadin-popup-date-field assistive-text='at' text-field-enabled='false' show-iso-week-numbers resolution=\"MINUTE\" range-end=\"2019-01-15\" input-prompt=\"Pick a day\" value=\"2003-02-27 07:15\"></vaadin-popup-date-field>";
+        return "<com_vaadin_legacy_ui-legacy-popup-date-field assistive-text='at' text-field-enabled='false' show-iso-week-numbers resolution=\"MINUTE\" range-end=\"2019-01-15\" input-prompt=\"Pick a day\" value=\"2003-02-27 07:15\"></vaadin-popup-date-field>";
     }
 
-    private PopupDateField getBasicExpected() {
-        PopupDateField pdf = new PopupDateField();
+    private LegacyPopupDateField getBasicExpected() {
+        LegacyPopupDateField pdf = new LegacyPopupDateField();
         pdf.setShowISOWeekNumbers(true);
         pdf.setResolution(Resolution.MINUTE);
         pdf.setRangeEnd(new Date(2019 - 1900, 1 - 1, 15));
@@ -59,4 +59,12 @@ public class PopupDateFieldDeclarativeTest extends
         testRead(getBasicDesign(), getBasicExpected());
     }
 
+    @Override
+    public LegacyPopupDateField testRead(String design,
+            LegacyPopupDateField expected) {
+        return super.testRead(
+                "<html><head><meta charset='UTF-8' name='package-mapping' content='com_vaadin_legacy_ui:com.vaadin.legacy.ui'></head> "
+                        + design + "</html>",
+                expected);
+    }
 }

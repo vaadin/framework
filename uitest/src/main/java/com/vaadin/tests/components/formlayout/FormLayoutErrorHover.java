@@ -15,17 +15,17 @@
  */
 package com.vaadin.tests.components.formlayout;
 
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.PopupDateField;
 
 public class FormLayoutErrorHover extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
         FormLayout formLayout = new FormLayout();
-        PopupDateField fromDate = new PopupDateField("Date");
+        LegacyPopupDateField fromDate = new LegacyPopupDateField("Date");
         fromDate.setImmediate(true);
         formLayout.addComponent(fromDate);
 

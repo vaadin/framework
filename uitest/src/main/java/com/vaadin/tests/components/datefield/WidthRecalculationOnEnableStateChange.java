@@ -2,19 +2,19 @@ package com.vaadin.tests.components.datefield;
 
 import java.util.Date;
 
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.DateField;
 
 public class WidthRecalculationOnEnableStateChange extends TestBase {
     @Override
     public void setup() {
         setTheme("reindeer-tests");
 
-        final DateField df = new DateField();
+        final LegacyDateField df = new LegacyDateField();
         df.setValue(new Date(1203910239L));
-        df.setResolution(DateField.RESOLUTION_SEC);
+        df.setResolution(LegacyDateField.RESOLUTION_SEC);
         df.setWidth("200px");
         df.addStyleName("enabled-readonly-styled");
         addComponent(df);

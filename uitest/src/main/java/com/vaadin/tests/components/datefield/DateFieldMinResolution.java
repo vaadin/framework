@@ -5,9 +5,9 @@ import java.util.Calendar;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Label;
 
 public class DateFieldMinResolution extends TestBase {
@@ -21,8 +21,8 @@ public class DateFieldMinResolution extends TestBase {
         Calendar cal = Calendar.getInstance();
         cal.set(2019, 1, 1, 1, 1);
 
-        DateField df = new DateField("foo");
-        df.setResolution(DateField.RESOLUTION_MIN);
+        LegacyDateField df = new LegacyDateField("foo");
+        df.setResolution(LegacyDateField.RESOLUTION_MIN);
         df.setDateFormat(dformat.toPattern());
         df.setValue(cal.getTime());
         df.setImmediate(true);
@@ -32,8 +32,8 @@ public class DateFieldMinResolution extends TestBase {
         final Label lbl = new Label(dformat.format(cal.getTime()));
         lbl.setCaption("Selected date");
 
-        InlineDateField idf = new InlineDateField("bar");
-        idf.setResolution(DateField.RESOLUTION_MIN);
+        LegacyInlineDateField idf = new LegacyInlineDateField("bar");
+        idf.setResolution(LegacyDateField.RESOLUTION_MIN);
         idf.setDateFormat(dformat.toPattern());
         idf.setValue(cal.getTime());
         idf.setImmediate(true);

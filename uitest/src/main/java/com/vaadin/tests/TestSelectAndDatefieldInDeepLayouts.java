@@ -19,11 +19,11 @@ package com.vaadin.tests;
 import java.util.Collection;
 import java.util.Vector;
 
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
@@ -99,7 +99,7 @@ public class TestSelectAndDatefieldInDeepLayouts extends CustomComponent {
     }
 
     Component getDateField() {
-        return new DateField(getCaption("datefield"));
+        return new LegacyDateField(getCaption("datefield"));
     }
 
     private Collection<String> getSelectOptions() {

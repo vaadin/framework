@@ -15,12 +15,12 @@
  */
 package com.vaadin.tests.themes.valo;
 
+import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.UI;
@@ -49,7 +49,7 @@ public class ValoMiscTests extends UI {
         button.setWidth("100%");
         Button button2 = new Button("Abc");
         button2.setWidth("100%");
-        row.addComponents(button, new InlineDateField(), new CheckBox("Far"));
+        row.addComponents(button, new LegacyInlineDateField(), new CheckBox("Far"));
 
         p.setContent(row);
 
@@ -63,7 +63,7 @@ public class ValoMiscTests extends UI {
         // row.setMargin(true);
         col.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
 
-        col.addComponents(new Button("Boo"), new InlineDateField(),
+        col.addComponents(new Button("Boo"), new LegacyInlineDateField(),
                 new CheckBox("Far"), new Button("Abc"));
 
         p.setContent(col);

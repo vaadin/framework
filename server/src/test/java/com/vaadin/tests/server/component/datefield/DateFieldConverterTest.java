@@ -25,18 +25,18 @@ import org.junit.Test;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.ui.DateField;
 
 public class DateFieldConverterTest {
 
     private Property<Long> date;
-    private DateField datefield;
+    private LegacyDateField datefield;
 
     @Before
     public void setUp() {
         date = new ObjectProperty<Long>(0L);
-        datefield = new DateField();
+        datefield = new LegacyDateField();
         datefield.setBuffered(false);
         datefield.setConverter(new LegacyConverter<Date, Long>() {
 

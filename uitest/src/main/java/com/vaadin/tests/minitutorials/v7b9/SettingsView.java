@@ -5,14 +5,14 @@ import java.util.Date;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
@@ -25,7 +25,7 @@ public class SettingsView extends Panel implements View {
     public static String NAME = "settings";
 
     Navigator navigator;
-    DateField date;
+    LegacyDateField date;
     Button apply;
     Button cancel;
 
@@ -35,7 +35,7 @@ public class SettingsView extends Panel implements View {
         this.navigator = navigator;
         Layout layout = new VerticalLayout();
 
-        date = new InlineDateField("Birth date");
+        date = new LegacyInlineDateField("Birth date");
         date.setImmediate(true);
         layout.addComponent(date);
         // pretend we have a datasource:

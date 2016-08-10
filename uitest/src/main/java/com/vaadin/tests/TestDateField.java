@@ -18,11 +18,11 @@ package com.vaadin.tests;
 
 import java.util.Locale;
 
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
@@ -34,7 +34,7 @@ public class TestDateField extends CustomComponent {
 
     VerticalLayout main = new VerticalLayout();
 
-    DateField df;
+    LegacyDateField df;
 
     public TestDateField() {
         setCompositionRoot(main);
@@ -45,7 +45,7 @@ public class TestDateField extends CustomComponent {
         main.removeAllComponents();
         main.addComponent(new Label("DateField"));
 
-        df = new DateField();
+        df = new LegacyDateField();
         main.addComponent(df);
 
         final ErrorMessage errorMsg = new UserError("User error " + df);
@@ -58,19 +58,19 @@ public class TestDateField extends CustomComponent {
         df.addStyleName("thisShouldBeHarmless");
 
         // Another test: locale
-        final DateField df1 = new DateField("US locale");
+        final LegacyDateField df1 = new LegacyDateField("US locale");
         main.addComponent(df1);
         df1.setLocale(new Locale("en", "US"));
 
-        final DateField df2 = new DateField("DE locale");
+        final LegacyDateField df2 = new LegacyDateField("DE locale");
         main.addComponent(df2);
         df2.setLocale(new Locale("de", "DE"));
 
-        final DateField df3 = new DateField("RU locale");
+        final LegacyDateField df3 = new LegacyDateField("RU locale");
         main.addComponent(df3);
         df3.setLocale(new Locale("ru", "RU"));
 
-        final DateField df4 = new DateField("FI locale");
+        final LegacyDateField df4 = new LegacyDateField("FI locale");
         main.addComponent(df4);
         df4.setLocale(new Locale("fi", "FI"));
     }

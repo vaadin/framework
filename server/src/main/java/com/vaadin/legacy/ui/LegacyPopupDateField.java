@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.ui;
+package com.vaadin.legacy.ui;
 
 import java.util.Date;
 
@@ -29,32 +29,32 @@ import com.vaadin.shared.ui.datefield.PopupDateFieldState;
  * 
  * </p>
  * 
- * @see DateField
- * @see InlineDateField
+ * @see LegacyDateField
+ * @see LegacyInlineDateField
  * @author Vaadin Ltd.
  * @since 5.0
  */
-public class PopupDateField extends DateField {
+public class LegacyPopupDateField extends LegacyDateField {
 
     private String inputPrompt = null;
 
-    public PopupDateField() {
+    public LegacyPopupDateField() {
         super();
     }
 
-    public PopupDateField(Property dataSource) throws IllegalArgumentException {
+    public LegacyPopupDateField(Property dataSource) throws IllegalArgumentException {
         super(dataSource);
     }
 
-    public PopupDateField(String caption, Date value) {
+    public LegacyPopupDateField(String caption, Date value) {
         super(caption, value);
     }
 
-    public PopupDateField(String caption, Property dataSource) {
+    public LegacyPopupDateField(String caption, Property dataSource) {
         super(caption, dataSource);
     }
 
-    public PopupDateField(String caption) {
+    public LegacyPopupDateField(String caption) {
         super(caption);
     }
 

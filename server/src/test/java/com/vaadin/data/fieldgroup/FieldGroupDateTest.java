@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.legacy.ui.LegacyField;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 
 public class FieldGroupDateTest {
 
@@ -68,20 +68,20 @@ public class FieldGroupDateTest {
     public void testBuildAndBindDate() {
         LegacyField f = fieldGroup.buildAndBind("javaDate");
         Assert.assertNotNull(f);
-        Assert.assertEquals(PopupDateField.class, f.getClass());
+        Assert.assertEquals(LegacyPopupDateField.class, f.getClass());
     }
 
     @Test
     public void testBuildAndBindSqlDate() {
         LegacyField f = fieldGroup.buildAndBind("sqlDate");
         Assert.assertNotNull(f);
-        Assert.assertEquals(PopupDateField.class, f.getClass());
+        Assert.assertEquals(LegacyPopupDateField.class, f.getClass());
     }
 
     @Test
     public void clearFields() {
-        PopupDateField sqlDate = new PopupDateField();
-        PopupDateField javaDate = new PopupDateField();
+        LegacyPopupDateField sqlDate = new LegacyPopupDateField();
+        LegacyPopupDateField javaDate = new LegacyPopupDateField();
         fieldGroup.bind(sqlDate, "sqlDate");
         fieldGroup.bind(javaDate, "javaDate");
 

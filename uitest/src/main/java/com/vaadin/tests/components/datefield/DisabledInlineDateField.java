@@ -18,10 +18,10 @@ package com.vaadin.tests.components.datefield;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.InlineDateField;
 
 public class DisabledInlineDateField extends AbstractTestUI {
 
@@ -34,12 +34,12 @@ public class DisabledInlineDateField extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        DateField df = new InlineDateField("Disabled");
+        LegacyDateField df = new LegacyInlineDateField("Disabled");
         df.setValue(testDate);
         df.setEnabled(false);
         addComponent(df);
 
-        df = new InlineDateField("Read-only");
+        df = new LegacyInlineDateField("Read-only");
         df.setValue(testDate);
         df.setReadOnly(true);
         addComponent(df);

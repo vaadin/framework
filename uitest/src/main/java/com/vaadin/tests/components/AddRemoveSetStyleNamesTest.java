@@ -1,8 +1,8 @@
 package com.vaadin.tests.components;
 
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.PopupDateField;
 
 public class AddRemoveSetStyleNamesTest extends TestBase {
 
@@ -10,7 +10,7 @@ public class AddRemoveSetStyleNamesTest extends TestBase {
     private String style2 = "style2";
     private String thestyle = "thestyle";
 
-    private PopupDateField popupDateField;
+    private LegacyPopupDateField popupDateField;
     private Button button1;
     private Button button2;
     private Button button3;
@@ -19,7 +19,7 @@ public class AddRemoveSetStyleNamesTest extends TestBase {
 
     @Override
     protected void setup() {
-        popupDateField = new PopupDateField("PopupDateField");
+        popupDateField = new LegacyPopupDateField("PopupDateField");
         popupDateField.setRequired(true);
         popupDateField.setRequiredError("abcd");
         addComponent(popupDateField);

@@ -22,13 +22,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.testbench.parallel.TestCategory;
+import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserThemeTest;
 
 @TestCategory("grid")
@@ -68,7 +68,8 @@ public class GridThemeUITest extends MultiBrowserThemeTest {
 
         GridEditorElement editor = grid.getEditor();
 
-        DateFieldElement dateField = editor.$(DateFieldElement.class).first();
+        LegacyDateFieldElement dateField = editor
+                .$(LegacyDateFieldElement.class).first();
         WebElement input = dateField.findElement(By.xpath("input"));
         input.sendKeys("Invalid", Keys.TAB);
         editor.save();

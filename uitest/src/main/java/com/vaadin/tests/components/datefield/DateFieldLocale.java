@@ -3,21 +3,21 @@ package com.vaadin.tests.components.datefield;
 import java.util.Date;
 import java.util.Locale;
 
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.DateField;
 
 public class DateFieldLocale extends TestBase {
 
     @Override
     public void setup() {
-        final DateField dateField = new DateField("DateField");
+        final LegacyDateField dateField = new LegacyDateField("DateField");
         dateField.setLocale(new Locale("fi", "FI"));
         dateField.setCaption(dateField.getLocale().toString());
         dateField.setValue(new Date(2013 - 1900, 7 - 1, 27));
-        dateField.setResolution(DateField.RESOLUTION_DAY);
+        dateField.setResolution(LegacyDateField.RESOLUTION_DAY);
 
         addComponent(new Button("Change locale", new ClickListener() {
 

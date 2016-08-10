@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,13 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.tests.legacyelements;
 
-package com.vaadin.client.ui.datefield;
+import com.vaadin.testbench.elements.InlineDateFieldElement;
+import com.vaadin.testbench.elementsbase.ServerClass;
 
-import com.vaadin.legacy.ui.LegacyPopupDateField;
-import com.vaadin.shared.ui.Connect;
-
-@Connect(LegacyPopupDateField.class)
-public class PopupDateFieldConnector extends DateFieldConnector {
+/**
+ * @author Vaadin Ltd
+ *
+ */
+@ServerClass("com.vaadin.legacy.ui.LegacyInlineDateField")
+public class LegacyInlineDateFieldElement extends InlineDateFieldElement {
 
 }

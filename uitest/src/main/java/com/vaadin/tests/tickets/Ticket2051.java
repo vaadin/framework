@@ -1,10 +1,10 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.data.Item;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
@@ -37,7 +37,7 @@ public class Ticket2051 extends LegacyApplication {
         i.getItemProperty(P2).setValue(new Label("label"));
         Item i2 = t.addItem("2");
         i2.getItemProperty(P1).setValue(new Button("def"));
-        i2.getItemProperty(P2).setValue(new DateField());
+        i2.getItemProperty(P2).setValue(new LegacyDateField());
 
         layout.addComponent(t);
     }

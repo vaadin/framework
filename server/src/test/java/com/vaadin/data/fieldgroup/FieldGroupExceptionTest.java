@@ -18,14 +18,14 @@ package com.vaadin.data.fieldgroup;
 import org.junit.Test;
 
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 
 public class FieldGroupExceptionTest {
 
     @Test(expected = CommitException.class)
     public void testUnboundCommitException() throws CommitException {
         FieldGroup fieldGroup = new FieldGroup();
-        PopupDateField dateField = new PopupDateField();
+        LegacyPopupDateField dateField = new LegacyPopupDateField();
         fieldGroup.bind(dateField, "date");
         fieldGroup.commit();
     }

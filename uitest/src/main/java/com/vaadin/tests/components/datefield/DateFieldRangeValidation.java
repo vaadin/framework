@@ -6,11 +6,11 @@ import java.util.Locale;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.legacy.data.validator.LegacyRangeValidator;
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.CheckBoxWithPropertyDataSource;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.PopupDateField;
 
 public class DateFieldRangeValidation extends TestBase {
 
@@ -55,8 +55,9 @@ public class DateFieldRangeValidation extends TestBase {
 
     private Range range = new Range();
 
-    private PopupDateField actualDateField;
-    private HasValue.ValueChangeListener<Boolean> refreshField = event -> actualDateField.markAsDirty();
+    private LegacyPopupDateField actualDateField;
+    private HasValue.ValueChangeListener<Boolean> refreshField = event -> actualDateField
+            .markAsDirty();
 
     @Override
     protected void setup() {
@@ -64,7 +65,7 @@ public class DateFieldRangeValidation extends TestBase {
         range.setFrom(new Date(2011 - 1900, 12 - 1, 4));
         range.setTo(new Date(2011 - 1900, 12 - 1, 15));
 
-        PopupDateField fromField = createDateField();
+        LegacyPopupDateField fromField = createDateField();
         fromField.setPropertyDataSource(bi.getItemProperty("from"));
         CheckBox fromInclusive = new CheckBoxWithPropertyDataSource(
                 "From inclusive", bi.getItemProperty("fromInclusive"));
@@ -75,7 +76,7 @@ public class DateFieldRangeValidation extends TestBase {
         toInclusive.setImmediate(true);
         toInclusive.addValueChangeListener(refreshField);
 
-        PopupDateField toField = createDateField();
+        LegacyPopupDateField toField = createDateField();
         toField.setPropertyDataSource(bi.getItemProperty("to"));
 
         actualDateField = createDateField();
@@ -115,8 +116,8 @@ public class DateFieldRangeValidation extends TestBase {
         addComponent(actualDateField);
     }
 
-    private PopupDateField createDateField() {
-        PopupDateField df = new PopupDateField();
+    private LegacyPopupDateField createDateField() {
+        LegacyPopupDateField df = new LegacyPopupDateField();
         df.setLocale(new Locale("en", "US"));
         df.setResolution(Resolution.DAY);
         df.setBuffered(false);

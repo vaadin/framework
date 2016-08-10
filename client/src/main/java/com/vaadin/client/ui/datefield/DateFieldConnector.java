@@ -27,13 +27,13 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VCalendarPanel.FocusChangeListener;
 import com.vaadin.client.ui.VCalendarPanel.TimeChangeListener;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.client.ui.VPopupCalendar;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.datefield.PopupDateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.ui.DateField;
 
-@Connect(DateField.class)
+@Connect(LegacyDateField.class)
 public class DateFieldConnector extends TextualDateConnector {
 
     /*

@@ -13,23 +13,23 @@ import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 import com.vaadin.testbench.parallel.BrowserUtil;
+import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.tb3.newelements.FixedNotificationElement;
 import com.vaadin.tests.tb3.newelements.WindowElement;
 
 public abstract class ThemeTest extends MultiBrowserTest {
 
-    @ServerClass("com.vaadin.ui.DateField")
-    public static class DateFieldElement extends
-            com.vaadin.testbench.elements.DateFieldElement {
+    @ServerClass("com.vaadin.legacy.ui.LegacyDateField")
+    public static class DateFieldElement extends LegacyDateFieldElement {
         public void openPopup() {
             findElement(By.tagName("button")).click();
         }
     }
 
     @ServerClass("com.vaadin.ui.TabSheet")
-    public static class TabSheetElement extends
-            com.vaadin.testbench.elements.TabSheetElement {
+    public static class TabSheetElement
+            extends com.vaadin.testbench.elements.TabSheetElement {
         @Override
         public void openTab(String tabCaption) {
             super.openTab(tabCaption);
@@ -137,7 +137,8 @@ public abstract class ThemeTest extends MultiBrowserTest {
         testNotification(3, "notification-tray");
     }
 
-    private void testNotification(int id, String identifier) throws IOException {
+    private void testNotification(int id, String identifier)
+            throws IOException {
         $(ButtonElement.class).id("notifButt" + id).click();
         compareScreen(identifier);
         $(FixedNotificationElement.class).first().close();
@@ -184,8 +185,8 @@ public abstract class ThemeTest extends MultiBrowserTest {
         if (searchComboBox.findElement(By.tagName("div")).isDisplayed()) {
             searchComboBox.openPopup();
         } else {
-            WebElement textBox = searchComboBox.findElement(By
-                    .vaadin("#textbox"));
+            WebElement textBox = searchComboBox
+                    .findElement(By.vaadin("#textbox"));
             textBox.click();
             textBox.sendKeys(Keys.ARROW_DOWN);
         }

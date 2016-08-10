@@ -1,14 +1,14 @@
 package com.vaadin.tests.components.datefield;
 
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.PopupDateField;
 
 /**
  * First entering an invalid date, forcing a server roundtrip and then selecting
- * a valid date from the popup in a non-immediate {@link PopupDateField} caused
+ * a valid date from the popup in a non-immediate {@link LegacyPopupDateField} caused
  * the invalid date string to continue to show.
  */
 public class ShowSelectedDateAfterInvalid extends TestBase {
@@ -19,8 +19,8 @@ public class ShowSelectedDateAfterInvalid extends TestBase {
 
         final Form form = new Form();
 
-        PopupDateField datefield = new PopupDateField();
-        datefield.setResolution(PopupDateField.RESOLUTION_DAY);
+        LegacyPopupDateField datefield = new LegacyPopupDateField();
+        datefield.setResolution(LegacyPopupDateField.RESOLUTION_DAY);
         datefield.setDateFormat("dd/MM/yyyy");
 
         form.addField("datefield", datefield);

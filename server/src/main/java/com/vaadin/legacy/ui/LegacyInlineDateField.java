@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.ui;
+package com.vaadin.legacy.ui;
 
 import java.util.Date;
 
@@ -26,30 +26,30 @@ import com.vaadin.data.Property;
  * 
  * </p>
  * 
- * @see DateField
- * @see PopupDateField
+ * @see LegacyDateField
+ * @see LegacyPopupDateField
  * @author Vaadin Ltd.
  * @since 5.0
  */
-public class InlineDateField extends DateField {
+public class LegacyInlineDateField extends LegacyDateField {
 
-    public InlineDateField() {
+    public LegacyInlineDateField() {
         super();
     }
 
-    public InlineDateField(Property dataSource) throws IllegalArgumentException {
+    public LegacyInlineDateField(Property dataSource) throws IllegalArgumentException {
         super(dataSource);
     }
 
-    public InlineDateField(String caption, Date value) {
+    public LegacyInlineDateField(String caption, Date value) {
         super(caption, value);
     }
 
-    public InlineDateField(String caption, Property dataSource) {
+    public LegacyInlineDateField(String caption, Property dataSource) {
         super(caption, dataSource);
     }
 
-    public InlineDateField(String caption) {
+    public LegacyInlineDateField(String caption) {
         super(caption);
     }
 

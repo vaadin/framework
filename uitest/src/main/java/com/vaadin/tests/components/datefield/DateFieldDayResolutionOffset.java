@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.datefield;
 
 import com.vaadin.data.Property;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 
 import java.text.ParseException;
@@ -24,7 +24,7 @@ public class DateFieldDayResolutionOffset extends AbstractTestUI {
 
         final TimeZone timezone = TimeZone.getTimeZone("GMT");
         final SimpleDateFormat dateformat = getDateFormat(timezone);
-        final DateField dateField = getDateField(timezone, dateformat);
+        final LegacyDateField dateField = getDateField(timezone, dateformat);
 
         addComponent(dateValue);
         addComponent(dateField);
@@ -37,9 +37,9 @@ public class DateFieldDayResolutionOffset extends AbstractTestUI {
         });
     }
 
-    private DateField getDateField(TimeZone timezone,
+    private LegacyDateField getDateField(TimeZone timezone,
             SimpleDateFormat dateformat) {
-        final DateField dateField = new DateField();
+        final LegacyDateField dateField = new LegacyDateField();
         try {
             Date initialDate = dateformat.parse(initialDateString);
             dateField.setResolution(Resolution.DAY);

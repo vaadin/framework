@@ -10,19 +10,19 @@ import java.util.TimeZone;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DateField;
 
 public class DateFieldTimezone extends TestBase {
 
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
     private static final Locale EN = Locale.ENGLISH;
     private final Log log = new Log(5);
-    private final DateField dateField = new DateField();
+    private final LegacyDateField dateField = new LegacyDateField();
     private static final String nullValue = "";
 
     @Override

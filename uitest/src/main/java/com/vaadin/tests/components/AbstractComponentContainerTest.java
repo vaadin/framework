@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
+import com.vaadin.legacy.ui.LegacyInlineDateField;
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -12,9 +14,7 @@ import com.vaadin.ui.HasComponents.ComponentAttachListener;
 import com.vaadin.ui.HasComponents.ComponentDetachEvent;
 import com.vaadin.ui.HasComponents.ComponentDetachListener;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
@@ -77,7 +77,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     private Command<T, ComponentSize> addInlineDateFieldCommand = new Command<T, ComponentSize>() {
         @Override
         public void execute(T c, ComponentSize size, Object data) {
-            InlineDateField tf = new InlineDateField();
+            LegacyInlineDateField tf = new LegacyInlineDateField();
             c.addComponent(tf);
             size.apply(tf);
         }
@@ -85,7 +85,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     private Command<T, ComponentSize> addPopupDateFieldCommand = new Command<T, ComponentSize>() {
         @Override
         public void execute(T c, ComponentSize size, Object data) {
-            PopupDateField tf = new PopupDateField();
+            LegacyPopupDateField tf = new LegacyPopupDateField();
             c.addComponent(tf);
             size.apply(tf);
         }

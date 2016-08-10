@@ -2,14 +2,15 @@ package com.vaadin.tests.components.datefield;
 
 import java.util.Date;
 
+import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.VerticalLayout;
 
-public class DateFieldWhenChangingValueAndEnablingParent extends AbstractTestUI {
+public class DateFieldWhenChangingValueAndEnablingParent
+        extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -20,12 +21,12 @@ public class DateFieldWhenChangingValueAndEnablingParent extends AbstractTestUI 
         main.setMargin(true);
         setContent(main);
 
-        final DateField df1 = createDateField(true);
-        final DateField df2 = createDateField(false);
-        final PopupDateField pdf1 = createPopupDateField(true, true);
-        final PopupDateField pdf2 = createPopupDateField(true, false);
-        final PopupDateField pdf3 = createPopupDateField(false, true);
-        final PopupDateField pdf4 = createPopupDateField(false, false);
+        final LegacyDateField df1 = createDateField(true);
+        final LegacyDateField df2 = createDateField(false);
+        final LegacyPopupDateField pdf1 = createPopupDateField(true, true);
+        final LegacyPopupDateField pdf2 = createPopupDateField(true, false);
+        final LegacyPopupDateField pdf3 = createPopupDateField(false, true);
+        final LegacyPopupDateField pdf4 = createPopupDateField(false, false);
 
         sub.addComponent(df1);
         sub.addComponent(df2);
@@ -48,17 +49,17 @@ public class DateFieldWhenChangingValueAndEnablingParent extends AbstractTestUI 
         });
     }
 
-    private DateField createDateField(boolean enabled) {
-        DateField df = new DateField("DateField, "
-                + (enabled ? "enabled" : "disabled"));
+    private LegacyDateField createDateField(boolean enabled) {
+        LegacyDateField df = new LegacyDateField(
+                "DateField, " + (enabled ? "enabled" : "disabled"));
         df.setEnabled(enabled);
         df.setId("DATEFIELD_" + (enabled ? "ENABLED" : "DISABLED"));
         return df;
     }
 
-    private PopupDateField createPopupDateField(boolean enabled,
+    private LegacyPopupDateField createPopupDateField(boolean enabled,
             boolean textInputEnabled) {
-        PopupDateField df = new PopupDateField("PopupDateField, "
+        LegacyPopupDateField df = new LegacyPopupDateField("PopupDateField, "
                 + (enabled ? "enabled" : "disabled") + ", text input "
                 + (textInputEnabled ? "enabled" : "disabled"));
         df.setEnabled(enabled);

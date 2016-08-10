@@ -23,13 +23,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
+import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TextField;
 
 public class DefaultFieldGroupFieldFactoryTest {
@@ -66,16 +66,16 @@ public class DefaultFieldGroupFieldFactoryTest {
 
     @Test
     public void testDateGenerationForPopupDateField() {
-        LegacyField f = fieldFactory.createField(Date.class, DateField.class);
+        LegacyField f = fieldFactory.createField(Date.class, LegacyDateField.class);
         Assert.assertNotNull(f);
-        Assert.assertEquals(PopupDateField.class, f.getClass());
+        Assert.assertEquals(LegacyPopupDateField.class, f.getClass());
     }
 
     @Test
     public void testDateGenerationForInlineDateField() {
-        LegacyField f = fieldFactory.createField(Date.class, InlineDateField.class);
+        LegacyField f = fieldFactory.createField(Date.class, LegacyInlineDateField.class);
         Assert.assertNotNull(f);
-        Assert.assertEquals(InlineDateField.class, f.getClass());
+        Assert.assertEquals(LegacyInlineDateField.class, f.getClass());
     }
 
     @Test
@@ -89,7 +89,7 @@ public class DefaultFieldGroupFieldFactoryTest {
     public void testDateGenerationForField() {
         LegacyField f = fieldFactory.createField(Date.class, LegacyField.class);
         Assert.assertNotNull(f);
-        Assert.assertEquals(PopupDateField.class, f.getClass());
+        Assert.assertEquals(LegacyPopupDateField.class, f.getClass());
     }
 
     public enum SomeEnum {

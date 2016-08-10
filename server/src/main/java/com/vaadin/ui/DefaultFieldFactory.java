@@ -21,6 +21,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.legacy.ui.LegacyCheckBox;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.shared.util.SharedUtil;
 
@@ -34,7 +35,8 @@ import com.vaadin.shared.util.SharedUtil;
  * factories.
  * 
  */
-public class DefaultFieldFactory implements FormFieldFactory, TableFieldFactory {
+public class DefaultFieldFactory
+        implements FormFieldFactory, TableFieldFactory {
 
     private static final DefaultFieldFactory instance = new DefaultFieldFactory();
 
@@ -88,7 +90,7 @@ public class DefaultFieldFactory implements FormFieldFactory, TableFieldFactory 
      * by this method:
      * <p>
      * <b>Boolean</b>: {@link CheckBox}.<br/>
-     * <b>Date</b>: {@link DateField}(resolution: day).<br/>
+     * <b>Date</b>: {@link LegacyDateField}(resolution: day).<br/>
      * <b>Item</b>: {@link Form}. <br/>
      * <b>default field type</b>: {@link TextField}.
      * <p>
@@ -110,8 +112,8 @@ public class DefaultFieldFactory implements FormFieldFactory, TableFieldFactory 
 
         // Date field
         if (Date.class.isAssignableFrom(type)) {
-            final DateField df = new DateField();
-            df.setResolution(DateField.RESOLUTION_DAY);
+            final LegacyDateField df = new LegacyDateField();
+            df.setResolution(LegacyDateField.RESOLUTION_DAY);
             return df;
         }
 

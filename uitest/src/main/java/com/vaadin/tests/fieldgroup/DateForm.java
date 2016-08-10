@@ -8,25 +8,25 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyInlineDateField;
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TextField;
 
 public class DateForm extends AbstractTestUIWithLog {
 
     @PropertyId("date1")
-    private DateField dateField;
+    private LegacyDateField dateField;
     @PropertyId("date2")
-    private PopupDateField popupDateField;
+    private LegacyPopupDateField popupDateField;
     @PropertyId("date3")
-    private InlineDateField inlineDateField;
+    private LegacyInlineDateField inlineDateField;
     @PropertyId("date4")
     private TextField textField;
 

@@ -6,12 +6,12 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeButton;
@@ -49,7 +49,7 @@ public class FocusAndBlurListeners extends TestBase {
         TextField tf = new TextField("TextField");
         l.addComponent(tf);
 
-        DateField df = new DateField("DateField");
+        LegacyDateField df = new LegacyDateField("DateField");
         l.addComponent(df);
 
         ComboBox cb = new ComboBox("ComboBox");

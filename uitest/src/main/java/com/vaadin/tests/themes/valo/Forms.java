@@ -17,6 +17,7 @@ package com.vaadin.tests.themes.valo;
 
 import java.util.Date;
 
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.UserError;
@@ -27,7 +28,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -69,7 +69,7 @@ public class Forms extends VerticalLayout implements View {
         name.setWidth("50%");
         form.addComponent(name);
 
-        DateField birthday = new DateField("Birthday");
+        LegacyDateField birthday = new LegacyDateField("Birthday");
         birthday.setValue(new Date(80, 0, 31));
         form.addComponent(birthday);
 

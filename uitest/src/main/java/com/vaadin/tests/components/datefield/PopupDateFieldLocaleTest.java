@@ -5,10 +5,10 @@ import java.util.Locale;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.PopupDateField;
 
 public class PopupDateFieldLocaleTest extends AbstractTestUI {
 
@@ -23,11 +23,11 @@ public class PopupDateFieldLocaleTest extends AbstractTestUI {
         cal.set(Calendar.SECOND, 1);
         cal.set(Calendar.MILLISECOND, 1);
 
-        final PopupDateField pdf = new PopupDateField();
+        final LegacyPopupDateField pdf = new LegacyPopupDateField();
         pdf.setLocale(Locale.ENGLISH);
         pdf.setValue(cal.getTime());
         pdf.setImmediate(true);
-        pdf.setResolution(DateField.RESOLUTION_SEC);
+        pdf.setResolution(LegacyDateField.RESOLUTION_SEC);
         addComponent(pdf);
 
         pdf.addValueChangeListener(new ValueChangeListener() {

@@ -14,6 +14,7 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.combobox.FilteringMode;
@@ -28,7 +29,6 @@ import com.vaadin.ui.Calendar.TimeFormat;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -143,8 +143,8 @@ public class CalendarTest extends GridLayout implements View {
 
     private boolean useSecondResolution;
 
-    private DateField startDateField;
-    private DateField endDateField;
+    private LegacyDateField startDateField;
+    private LegacyDateField endDateField;
 
     public CalendarTest() {
         setSizeFull();
@@ -517,8 +517,8 @@ public class CalendarTest extends GridLayout implements View {
         return f;
     }
 
-    private DateField createDateField(String caption) {
-        DateField f = new DateField(caption);
+    private LegacyDateField createDateField(String caption) {
+        LegacyDateField f = new LegacyDateField(caption);
         if (useSecondResolution) {
             f.setResolution(Resolution.SECOND);
         } else {

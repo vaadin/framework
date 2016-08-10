@@ -21,24 +21,24 @@ import java.text.SimpleDateFormat;
 
 import org.junit.Test;
 
+import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.design.DeclarativeTestBase;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.declarative.Design;
 
 /**
- * Tests the declarative support for implementations of {@link DateField}.
+ * Tests the declarative support for implementations of {@link LegacyDateField}.
  * 
  * @since 7.4
  * @author Vaadin Ltd
  */
 public class InlineDateFieldDeclarativeTest extends
-        DeclarativeTestBase<InlineDateField> {
+        DeclarativeTestBase<LegacyInlineDateField> {
 
     @Test
     public void testInlineDateFieldToFromDesign() throws Exception {
-        InlineDateField field = new InlineDateField("Day is",
+        LegacyInlineDateField field = new LegacyInlineDateField("Day is",
                 new SimpleDateFormat("yyyy-MM-dd").parse("2003-02-27"));
         field.setResolution(Resolution.DAY);
         field.setShowISOWeekNumbers(true);
@@ -50,7 +50,7 @@ public class InlineDateFieldDeclarativeTest extends
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         Design.write(field, bos);
 
-        InlineDateField result = (InlineDateField) Design
+        LegacyInlineDateField result = (LegacyInlineDateField) Design
                 .read(new ByteArrayInputStream(bos.toByteArray()));
         assertEquals(field.getResolution(), result.getResolution());
         assertEquals(field.getCaption(), result.getCaption());

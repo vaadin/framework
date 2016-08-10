@@ -3,6 +3,8 @@ package com.vaadin.ui;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.legacy.ui.LegacyDateField;
+
 import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -11,12 +13,12 @@ import static org.hamcrest.core.IsNull.nullValue;
 
 public class DateFieldTestCase {
 
-    private DateField dateField;
+    private LegacyDateField dateField;
     private Date date;
 
     @Before
     public void setup() {
-        dateField = new DateField();
+        dateField = new LegacyDateField();
         date = new Date();
     }
 

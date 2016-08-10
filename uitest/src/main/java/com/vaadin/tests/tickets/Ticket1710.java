@@ -6,6 +6,7 @@ import com.vaadin.data.HasValue;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.SystemError;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.AlignmentInfo.Bits;
@@ -16,7 +17,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -228,14 +228,14 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
         t7.setIcon(new ThemeResource("../runo/icons/16/ok.png"));
         lo.addComponent(t7);
 
-        DateField d1 = new DateField(
+        LegacyDateField d1 = new LegacyDateField(
                 "Datefield with caption and icon, next one without caption");
         d1.setComponentError(new SystemError("Error"));
         d1.setRequired(true);
         d1.setIcon(new ThemeResource("../runo/icons/16/ok.png"));
         lo.addComponent(d1);
 
-        DateField d2 = new DateField();
+        LegacyDateField d2 = new LegacyDateField();
         d2.setComponentError(new SystemError("Error"));
         d2.setRequired(true);
         lo.addComponent(d2);

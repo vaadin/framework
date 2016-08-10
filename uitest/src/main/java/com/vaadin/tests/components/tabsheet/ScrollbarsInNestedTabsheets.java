@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.tabsheet;
 
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
@@ -32,14 +32,14 @@ public class ScrollbarsInNestedTabsheets extends TestBase {
 
     private Layout getDummyLayout1() {
         final VerticalLayout l = new VerticalLayout();
-        l.addComponent(new DateField("Date"));
+        l.addComponent(new LegacyDateField("Date"));
 
         return l;
     }
 
     private Layout getDummyLayout2() {
         final VerticalLayout l = new VerticalLayout();
-        l.addComponent(new DateField("Date"));
+        l.addComponent(new LegacyDateField("Date"));
         l.addComponent(new TextField("TextField"));
 
         return l;

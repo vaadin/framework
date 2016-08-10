@@ -3,13 +3,13 @@ package com.vaadin.tests.components.datefield;
 import java.util.Calendar;
 import java.util.Locale;
 
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.PopupDateField;
 
 @SuppressWarnings("serial")
 public class PopupDateFieldExtendedRange extends AbstractTestUI {
@@ -22,7 +22,7 @@ public class PopupDateFieldExtendedRange extends AbstractTestUI {
 
         getLayout().setSpacing(true);
 
-        final PopupDateField[] fields = new PopupDateField[3];
+        final LegacyPopupDateField[] fields = new LegacyPopupDateField[3];
 
         fields[0] = makeDateField();
         fields[0].setLocale(new Locale("fi", "FI"));
@@ -37,7 +37,7 @@ public class PopupDateFieldExtendedRange extends AbstractTestUI {
         fields[2].setShowISOWeekNumbers(true);
         fields[2].setCaption("Finnish locale with week numbers");
 
-        for (PopupDateField f : fields) {
+        for (LegacyPopupDateField f : fields) {
             addComponent(f);
         }
 
@@ -45,7 +45,7 @@ public class PopupDateFieldExtendedRange extends AbstractTestUI {
             @Override
             public void buttonClick(ClickEvent event) {
                 date.set(2010, 1, 16);
-                for (PopupDateField f : fields) {
+                for (LegacyPopupDateField f : fields) {
                     f.setValue(date.getTime());
                 }
             }
@@ -62,8 +62,8 @@ public class PopupDateFieldExtendedRange extends AbstractTestUI {
         return 6718;
     }
 
-    private PopupDateField makeDateField() {
-        PopupDateField pdf = new PopupDateField();
+    private LegacyPopupDateField makeDateField() {
+        LegacyPopupDateField pdf = new LegacyPopupDateField();
         pdf.setResolution(Resolution.DAY);
         pdf.setValue(date.getTime());
         return pdf;

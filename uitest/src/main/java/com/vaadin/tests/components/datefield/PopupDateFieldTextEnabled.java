@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.datefield;
 
+import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.PopupDateField;
 
 public class PopupDateFieldTextEnabled extends TestBase {
 
@@ -11,7 +11,7 @@ public class PopupDateFieldTextEnabled extends TestBase {
 
     @Override
     public void setup() {
-        final PopupDateField field = new PopupDateField();
+        final LegacyPopupDateField field = new LegacyPopupDateField();
         final CheckBox box = new CheckBox(ENABLED, true);
         box.addValueChangeListener(event -> {
             field.setTextFieldEnabled(event.getValue());

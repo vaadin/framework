@@ -16,6 +16,7 @@
 
 package com.vaadin.tests;
 
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.ExternalResource;
@@ -26,7 +27,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -119,7 +119,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         test(layout, button);
         button.addListener(this);
 
-        final DateField df = new DateField("DateField " + count++);
+        final LegacyDateField df = new LegacyDateField("DateField " + count++);
         test(layout, df);
 
         final CheckBox cb = new CheckBox("Checkbox " + count++);

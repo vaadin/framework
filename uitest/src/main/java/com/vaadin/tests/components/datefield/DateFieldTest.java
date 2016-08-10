@@ -7,16 +7,16 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
+import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
-import com.vaadin.ui.DateField;
 
-public class DateFieldTest<T extends DateField> extends LegacyAbstractFieldTest<T> {
+public class DateFieldTest<T extends LegacyDateField> extends LegacyAbstractFieldTest<T> {
 
     @SuppressWarnings("unchecked")
     @Override
     protected Class<T> getTestClass() {
-        return (Class<T>) DateField.class;
+        return (Class<T>) LegacyDateField.class;
     }
 
     private Command<T, Date> setValue = new Command<T, Date>() {
