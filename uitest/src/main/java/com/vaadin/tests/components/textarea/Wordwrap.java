@@ -4,7 +4,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.v7.ui.TextArea;
+import com.vaadin.ui.TextArea;
 
 public class Wordwrap extends TestBase {
 
@@ -13,11 +13,11 @@ public class Wordwrap extends TestBase {
         HorizontalLayout layout = new HorizontalLayout();
 
         TextArea area1 = new TextArea("Wrapping");
-        area1.setWordwrap(true); // The default
+        area1.setWordWrap(true); // The default
         area1.setValue(LoremIpsum.get(50) + "\n" + "Another row");
 
         final TextArea area2 = new TextArea("Nonwrapping");
-        area2.setWordwrap(false);
+        area2.setWordWrap(false);
         area2.setValue(LoremIpsum.get(50) + "\n" + "Another row");
 
         layout.addComponent(area1);
@@ -30,7 +30,7 @@ public class Wordwrap extends TestBase {
         onoff.setValue(false);
         onoff.addValueChangeListener(event -> {
             boolean wrap = event.getValue();
-            area2.setWordwrap(wrap);
+            area2.setWordWrap(wrap);
             if (wrap) {
                 area2.setCaption("Wrapping");
             } else {

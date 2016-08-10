@@ -13,27 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.textarea;
+package com.vaadin.ui;
 
-import com.vaadin.shared.annotations.DelegateToWidget;
-import com.vaadin.shared.annotations.NoLayout;
-import com.vaadin.shared.ui.textfield.TextFieldState;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class TextAreaState extends TextFieldState {
-    {
-        primaryStyleName = "v-textarea";
+public class TextAreaTest {
+    @Test
+    public void initiallyEmpty() {
+        TextArea textArea = new TextArea();
+        Assert.assertTrue(textArea.isEmpty());
     }
 
-    /**
-     * Number of visible rows in the text area. The default is 5.
-     */
-    @DelegateToWidget
-    public int rows = 5;
+    @Test
+    public void emptyAfterClear() {
+        TextArea textArea = new TextArea();
+        textArea.setValue("foobar");
+        Assert.assertFalse(textArea.isEmpty());
+        textArea.clear();
+        Assert.assertTrue(textArea.isEmpty());
+    }
 
-    /**
-     * Tells if word-wrapping should be used in the text area.
-     */
-    @DelegateToWidget
-    @NoLayout
-    public boolean wordWrap = true;
 }

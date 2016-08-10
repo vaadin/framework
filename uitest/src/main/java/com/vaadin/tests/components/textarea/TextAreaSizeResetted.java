@@ -24,8 +24,8 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
-import com.vaadin.v7.ui.TextArea;
 
 /**
  * Ticket #14080
@@ -73,6 +73,17 @@ public class TextAreaSizeResetted extends AbstractTestUI {
         textArea.setWidth(TEXTAREAWIDTH + "px");
         textArea.setValue("This is a text.");
 
+        Label serverHeight = new Label();
+        Label text = new Label();
+        textArea.addValueChangeListener(
+                event -> text.setValue(event.getValue()));
+        Button hbutton = new Button("check height", new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                serverHeight.setValue(textArea.getHeight() + " ");
+            }
+        });
         Button button = new Button("Change Height", new ClickListener() {
 
             @Override
@@ -88,6 +99,9 @@ public class TextAreaSizeResetted extends AbstractTestUI {
         layout.addComponent(textField);
         layout.addComponent(button);
         layout.addComponent(pollIndicator);
+        layout.addComponent(hbutton);
+        layout.addComponent(serverHeight);
+        layout.addComponent(text);
 
         addPollListener(new UIEvents.PollListener() {
             @Override

@@ -6,8 +6,8 @@ import com.vaadin.shared.ui.textfield.ValueChangeMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.TestUtils;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
-import com.vaadin.v7.ui.TextArea;
 
 public class TextChangeEvents extends TestBase {
     Log l = new Log(10);
@@ -56,7 +56,11 @@ public class TextChangeEvents extends TestBase {
         getLayout().addComponent(to);
 
         TextArea ta = new TextArea("Default text area");
-        ta.addTextChangeListener(inputEventListener);
+        ta.addValueChangeListener(listener -> {
+            l.log("Text change event for  " + ta.getCaption()
+                    + ", text content currently:'" + listener.getValue()
+                    + "' Cursor at index:" + ta.getCursorPosition());
+        });
         getLayout().addComponent(ta);
 
         VaadinDeveloperNameField vd = new VaadinDeveloperNameField();

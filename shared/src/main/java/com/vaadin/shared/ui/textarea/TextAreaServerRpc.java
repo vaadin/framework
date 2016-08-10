@@ -15,25 +15,11 @@
  */
 package com.vaadin.shared.ui.textarea;
 
-import com.vaadin.shared.annotations.DelegateToWidget;
-import com.vaadin.shared.annotations.NoLayout;
-import com.vaadin.shared.ui.textfield.TextFieldState;
+import com.vaadin.shared.communication.ServerRpc;
 
-public class TextAreaState extends TextFieldState {
-    {
-        primaryStyleName = "v-textarea";
-    }
+public interface TextAreaServerRpc extends ServerRpc {
 
-    /**
-     * Number of visible rows in the text area. The default is 5.
-     */
-    @DelegateToWidget
-    public int rows = 5;
+    public void setHeight(String height);
 
-    /**
-     * Tells if word-wrapping should be used in the text area.
-     */
-    @DelegateToWidget
-    @NoLayout
-    public boolean wordWrap = true;
+    public void setWidth(String width);
 }

@@ -13,13 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.textarea;
+package com.vaadin.shared.v7.ui.textarea;
 
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.annotations.NoLayout;
-import com.vaadin.shared.ui.textfield.TextFieldState;
+import com.vaadin.shared.v7.ui.textfield.LegacyAbstractTextFieldState;
 
-public class TextAreaState extends TextFieldState {
+@Deprecated
+public class LegacyTextAreaState extends LegacyAbstractTextFieldState {
     {
         primaryStyleName = "v-textarea";
     }
@@ -35,5 +36,6 @@ public class TextAreaState extends TextFieldState {
      */
     @DelegateToWidget
     @NoLayout
-    public boolean wordWrap = true;
+    public boolean wordwrap = true;
+
 }

@@ -162,8 +162,8 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
         addComponent(discardButton);
         addComponent(showBean);
         email.addValidator(new EmailValidator("Must be a valid address"));
-        lastName.addValidator(new StringLengthValidator(
-                "Must be min 5 chars", 5, null, true));
+        lastName.addValidator(new StringLengthValidator("Must be min 5 chars",
+                5, null, true));
 
         age.addValidator(new IntegerRangeValidator(
                 "Must be between 0 and 150, {0} is not", 0, 150));

@@ -19,7 +19,7 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
-import com.vaadin.v7.ui.TextArea;
+import com.vaadin.ui.TextArea;
 
 /**
  * UI for testing that @DelegateToWidget works on derived widget states.
@@ -35,21 +35,21 @@ public class OverriddenDecendants extends AbstractTestUI {
 
         TextArea normalTextArea = new TextArea();
         normalTextArea.setRows(10);
-        normalTextArea.setWordwrap(true);
+        normalTextArea.setWordWrap(true);
 
         getLayout().addComponent(normalTextArea);
 
         // @DelegateToWidget will not work with overridden state in connector
         SuperTextArea superTextArea = new SuperTextArea();
         superTextArea.setRows(10);
-        superTextArea.setWordwrap(true);
+        superTextArea.setWordWrap(true);
 
         getLayout().addComponent(superTextArea);
 
         // @DelegateToWidget will not work with overridden state in connector
         ExtraSuperTextArea extraSuperTextArea = new ExtraSuperTextArea();
         extraSuperTextArea.setRows(10);
-        extraSuperTextArea.setWordwrap(true);
+        extraSuperTextArea.setWordWrap(true);
 
         getLayout().addComponent(extraSuperTextArea);
     }

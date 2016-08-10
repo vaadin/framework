@@ -44,9 +44,8 @@ public class DragAndDropFocusObtainTest extends MultiBrowserTest {
             index++;
         }
 
-        // FIXME when old TextArea has been replaced with Vaadin 8 TextArea
         // Make sure we checked all fields
-        // Assert.assertEquals(8 + 1, index);
+        Assert.assertEquals(8 + 1, index);
 
     }
 

@@ -17,10 +17,10 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.ListSelect;
-import com.vaadin.v7.ui.TextArea;
-import com.vaadin.v7.ui.TextField;
 
 public class OrderedLayoutBasics extends TestBase {
 
@@ -140,8 +140,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setWidth("");
         ol.setCaption("Fixed height (200px) and dynamic width");
 
-        TextField tf = new TextField(
-                "100px high TextField, valign: bottom");
+        TextField tf = new TextField("100px high TextField, valign: bottom");
         tf.setHeight("100px");
         tf.setWidth("");
         ol.addComponent(tf);
@@ -243,8 +242,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
-        tf = new TextField(
-                "100% high, 50px wide TextField, valign: bottom");
+        tf = new TextField("100% high, 50px wide TextField, valign: bottom");
         tf.setHeight("100%");
         tf.setWidth("50px");
         ol.addComponent(tf);
@@ -299,8 +297,7 @@ public class OrderedLayoutBasics extends TestBase {
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.TOP_LEFT);
 
-        tf = new TextField(
-                "100% high, 50px wide TextField, valign: bottom");
+        tf = new TextField("100% high, 50px wide TextField, valign: bottom");
         tf.setHeight("100%");
         tf.setWidth("50px");
         ol.addComponent(tf);
@@ -399,6 +396,7 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setWidth("");
         ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height ("
                 + ol.getHeight() + "px) / layout_field_100pct_button_field");
+
         TextArea tf;
 
         tf = new TextArea("300px x 300px Field");
@@ -440,6 +438,7 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setWidth("");
         ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height ("
                 + ol.getHeight() + "px) / layout_basic_test");
+
         TextArea tf;
 
         tf = new TextArea("300px x 300px Field");
@@ -481,6 +480,7 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setWidth("");
         ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height ("
                 + ol.getHeight() + "px) / layout_symmetric_fields");
+
         TextArea tf;
 
         tf = new TextArea("300px x 300px Field");
@@ -519,6 +519,7 @@ public class OrderedLayoutBasics extends TestBase {
         // ol.setWidth("");
         ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height ("
                 + ol.getHeight() + "px) / layout_leftAndRight");
+
         TextArea tf;
 
         // tf = new TextField("100%x100% Field");

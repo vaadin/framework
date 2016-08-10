@@ -13,12 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.shared.ui.textfield;
 
-import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
+import com.vaadin.shared.communication.ServerRpc;
 
-public interface AbstractTextFieldServerRpc extends FocusAndBlurServerRpc {
+public interface AbstractTextFieldServerRpc extends ServerRpc {
 
     void setText(String text, int cursorPosition);
 }

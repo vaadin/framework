@@ -1,7 +1,7 @@
 package com.vaadin.tests.widgetset.server;
 
 import com.vaadin.tests.widgetset.client.superText.SuperTextAreaState;
-import com.vaadin.v7.ui.TextArea;
+import com.vaadin.ui.TextArea;
 
 /**
  * @author artamonov

@@ -26,6 +26,7 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldClientRpc;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc;
 import com.vaadin.shared.ui.textfield.TextFieldState;
@@ -43,15 +44,6 @@ public abstract class AbstractTextField extends AbstractField<String> {
 
     private final class TextFieldServerRpcImpl
             implements AbstractTextFieldServerRpc {
-        @Override
-        public void blur() {
-            fireEvent(new BlurEvent(AbstractTextField.this));
-        }
-
-        @Override
-        public void focus() {
-            fireEvent(new FocusEvent(AbstractTextField.this));
-        }
 
         @Override
         public void setText(String text, int cursorPosition) {
@@ -62,6 +54,19 @@ public abstract class AbstractTextField extends AbstractField<String> {
         }
     }
 
+    private final class TextFieldFocusAndBlurRpcImpl
+            implements FocusAndBlurServerRpc {
+        @Override
+        public void blur() {
+            fireEvent(new BlurEvent(AbstractTextField.this));
+        }
+
+        @Override
+        public void focus() {
+            fireEvent(new FocusEvent(AbstractTextField.this));
+        }
+    }
+
     private int lastKnownCursorPosition = -1;
 
     /**
@@ -69,6 +74,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
      */
     protected AbstractTextField() {
         registerRpc(new TextFieldServerRpcImpl());
+        registerRpc(new TextFieldFocusAndBlurRpcImpl());
     }
 
     @Override

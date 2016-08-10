@@ -15,16 +15,20 @@
  */
 package com.vaadin.tests.themes.valo;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.CssLayoutElement;
 import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.v7.testbench.customelements.TreeElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.TreeElement;
 
 public class ValoThemeUITest extends MultiBrowserTest {
 
@@ -118,9 +122,10 @@ public class ValoThemeUITest extends MultiBrowserTest {
     }
 
     private void selectTreeNodeByCaption(String string) {
-        WebElement e = $(TreeElement.class).first().findElement(
-                By.xpath("//div[@class='v-tree-node-caption']//span[text()='"
-                        + string + "']"));
+        WebElement e = $(TreeElement.class).first()
+                .findElement(By
+                        .xpath("//div[@class='v-tree-node-caption']//span[text()='"
+                                + string + "']"));
         e.click();
     }
 
@@ -310,6 +315,14 @@ public class ValoThemeUITest extends MultiBrowserTest {
     @Override
     protected boolean usePersistentHoverForIE() {
         return false;
+    }
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        List<DesiredCapabilities> browsersToTest = getBrowserCapabilities(
+                Browser.IE11, Browser.FIREFOX, Browser.CHROME);
+        browsersToTest.add(PHANTOMJS2());
+        return browsersToTest;
     }
 
 }

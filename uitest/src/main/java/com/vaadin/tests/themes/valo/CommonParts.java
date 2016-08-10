@@ -43,15 +43,13 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.themes.ValoTheme;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
-import com.vaadin.v7.ui.TextArea;
-import com.vaadin.v7.ui.TextField;
 
 public class CommonParts extends VerticalLayout implements View {
     public CommonParts() {
@@ -156,33 +154,27 @@ public class CommonParts extends VerticalLayout implements View {
                 setSpacing(true);
                 setMargin(true);
 
-                title.setInputPrompt("Title for the notification");
-                title.addValueChangeListener(new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        if (title.getValue() == null
-                                || title.getValue().length() == 0) {
-                            notification.setCaption(null);
-                        } else {
-                            notification.setCaption(title.getValue());
-                        }
+                title.setPlaceholder("Title for the notification");
+                title.addValueChangeListener(event -> {
+                    if (title.getValue() == null
+                            || title.getValue().length() == 0) {
+                        notification.setCaption(null);
+                    } else {
+                        notification.setCaption(title.getValue());
                     }
                 });
                 title.setValue("Notification Title");
                 title.setWidth("100%");
                 addComponent(title);
 
-                description.setInputPrompt("Description for the notification");
+                description.setPlaceholder("Description for the notification");
                 description.addStyleName(ValoTheme.TEXTAREA_SMALL);
-                description.addValueChangeListener(new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        if (description.getValue() == null
-                                || description.getValue().length() == 0) {
-                            notification.setDescription(null);
-                        } else {
-                            notification.setDescription(description.getValue());
-                        }
+                description.addValueChangeListener(listener -> {
+                    if (description.getValue() == null
+                            || description.getValue().length() == 0) {
+                        notification.setDescription(null);
+                    } else {
+                        notification.setDescription(description.getValue());
                     }
                 });
                 description.setValue(
@@ -257,21 +249,17 @@ public class CommonParts extends VerticalLayout implements View {
                 group.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
                 addComponent(group);
 
-                delay.setInputPrompt("Infinite");
+                delay.setPlaceholder("Infinite");
                 delay.addStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
                 delay.addStyleName(ValoTheme.TEXTFIELD_SMALL);
                 delay.setWidth("7em");
-                delay.addValueChangeListener(new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        try {
-                            notification.setDelayMsec(
-                                    Integer.parseInt(delay.getValue()));
-                        } catch (Exception e) {
-                            notification.setDelayMsec(-1);
-                            delay.setValue("");
-                        }
-
+                delay.addValueChangeListener(event -> {
+                    try {
+                        notification.setDelayMsec(
+                                Integer.parseInt(delay.getValue()));
+                    } catch (Exception e) {
+                        notification.setDelayMsec(-1);
+                        delay.setValue("");
                     }
                 });
                 delay.setValue("1000");

@@ -22,8 +22,8 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.vaadin.client.WidgetUtil.CssSize;
 import com.vaadin.client.v7.ui.textfield.LegacyTextFieldConnector;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.textarea.TextAreaState;
 import com.vaadin.v7.client.ui.VTextArea;
+import com.vaadin.v7.shared.ui.textarea.TextAreaState;
 import com.vaadin.v7.ui.TextArea;
 
 @Connect(TextArea.class)

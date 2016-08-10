@@ -13,15 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package com.vaadin.v7.ui;
+package com.vaadin.ui;
 
 import org.jsoup.nodes.Element;
 
-import com.vaadin.shared.v7.ui.textarea.LegacyTextAreaState;
+import com.vaadin.shared.ui.textarea.TextAreaServerRpc;
+import com.vaadin.shared.ui.textarea.TextAreaState;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
-import com.vaadin.v7.data.Property;
 
 /**
  * A text field that supports multi line editing.
@@ -32,7 +31,19 @@ public class TextArea extends AbstractTextField {
      * Constructs an empty TextArea.
      */
     public TextArea() {
-        setValue("");
+        registerRpc(new TextAreaServerRpc() {
+
+            @Override
+            public void setHeight(String height) {
+                TextArea.this.setHeight(height);
+            }
+
+            @Override
+            public void setWidth(String width) {
+                TextArea.this.setWidth(width);
+            }
+        });
+        clear();
     }
 
     /**
@@ -43,30 +54,6 @@ public class TextArea extends AbstractTextField {
      */
     public TextArea(String caption) {
         this();
-        setCaption(caption);
-    }
-
-    /**
-     * Constructs a TextArea with given property data source.
-     *
-     * @param dataSource
-     *            the data source for the field
-     */
-    public TextArea(Property dataSource) {
-        this();
-        setPropertyDataSource(dataSource);
-    }
-
-    /**
-     * Constructs a TextArea with given caption and property data source.
-     *
-     * @param caption
-     *            the caption for the field
-     * @param dataSource
-     *            the data source for the field
-     */
-    public TextArea(String caption, Property dataSource) {
-        this(dataSource);
         setCaption(caption);
     }
 
@@ -85,13 +72,13 @@ public class TextArea extends AbstractTextField {
     }
 
     @Override
-    protected LegacyTextAreaState getState() {
-        return (LegacyTextAreaState) super.getState();
+    protected TextAreaState getState() {
+        return (TextAreaState) super.getState();
     }
 
     @Override
-    protected LegacyTextAreaState getState(boolean markAsDirty) {
-        return (LegacyTextAreaState) super.getState(markAsDirty);
+    protected TextAreaState getState(boolean markAsDirty) {
+        return (TextAreaState) super.getState(markAsDirty);
     }
 
     /**
@@ -119,12 +106,12 @@ public class TextArea extends AbstractTextField {
     /**
      * Sets the text area's word-wrap mode on or off.
      *
-     * @param wordwrap
-     *            the boolean value specifying if the text area should be in
-     *            word-wrap mode.
+     * @param wordWrap
+     *            <code>true</code> to use word-wrap mode <code>false</code>
+     *            otherwise.
      */
-    public void setWordwrap(boolean wordwrap) {
-        getState().wordwrap = wordwrap;
+    public void setWordWrap(boolean wordWrap) {
+        getState().wordWrap = wordWrap;
     }
 
     /**
@@ -133,38 +120,19 @@ public class TextArea extends AbstractTextField {
      * @return <code>true</code> if the component is in word-wrap mode,
      *         <code>false</code> if not.
      */
-    public boolean isWordwrap() {
-        return getState(false).wordwrap;
+    public boolean isWordWrap() {
+        return getState(false).wordWrap;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.ui.AbstractField#readDesign(org.jsoup.nodes.Element ,
-     * com.vaadin.ui.declarative.DesignContext)
-     */
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
-        setValue(DesignFormatter.decodeFromTextNode(design.html()), false,
-                true);
+        doSetValue(DesignFormatter.decodeFromTextNode(design.html()));
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.ui.AbstractTextField#writeDesign(org.jsoup.nodes.Element
-     * , com.vaadin.ui.declarative.DesignContext)
-     */
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
         design.html(DesignFormatter.encodeForTextNode(getValue()));
     }
-
-    @Override
-    public void clear() {
-        setValue("");
-    }
-
 }

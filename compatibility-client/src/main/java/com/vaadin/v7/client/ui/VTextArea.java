@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.v7.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
@@ -45,6 +44,7 @@ import com.vaadin.client.v7.ui.VLegacyTextField;
  * @author Vaadin Ltd.
  *
  */
+@Deprecated
 public class VTextArea extends VLegacyTextField implements DragImageModifier {
 
     public static final String CLASSNAME = "v-textarea";
@@ -335,4 +335,3 @@ public class VTextArea extends VLegacyTextField implements DragImageModifier {
         }
     }
 }
-
