@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -22,7 +22,7 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
- * 
+ *
  * @author Vaadin Ltd
  */
 public class DisabledParentLayout extends AbstractTestUI {
@@ -35,7 +35,13 @@ public class DisabledParentLayout extends AbstractTestUI {
         content.setMargin(true);
 
         final VerticalLayout pane = new VerticalLayout();
-        pane.addComponent(new DateField());
+        DateField dateField = new DateField();
+        // If the field is immediate, the UI behaves differently (the value is
+        // updated and an error is indicated earlier instead of showing the date
+        // selector on the first click as the test expects. Keeping as
+        // non-immediate to test the old expected behavior.
+        dateField.setImmediate(false);
+        pane.addComponent(dateField);
 
         content.addComponent(pane);
 

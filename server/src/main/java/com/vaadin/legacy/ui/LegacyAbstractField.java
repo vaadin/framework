@@ -1798,24 +1798,6 @@ public abstract class LegacyAbstractField<T> extends AbstractComponent
         }
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Fields are automatically set to immediate if validators have been added.
-     */
-    @Override
-    public boolean isImmediate() {
-        if (getExplicitImmediateValue() != null) {
-            return getExplicitImmediateValue();
-        }
-        // Make field immediate when there is some kind of validation present
-        // (validator or required). This will avoid the UI being in a wrong
-        // state, e.g. user entered valid data but old validation error is still
-        // shown
-        return super.isImmediate() || !getValidators().isEmpty()
-                || isRequired();
-    }
-
     /*
      * (non-Javadoc)
      * 

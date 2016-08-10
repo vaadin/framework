@@ -39,9 +39,8 @@ import com.vaadin.event.ConnectorActionManager;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.ContextClickEvent.ContextClickListener;
 import com.vaadin.event.ContextClickEvent.ContextClickNotifier;
-import com.vaadin.legacy.ui.LegacyField;
-import com.vaadin.legacy.ui.LegacyField.ValueChangeEvent;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ComponentSizeValidator;
@@ -455,9 +454,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Returns the immediate mode of the component.
      * <p>
-     * Certain operations such as adding a value change listener will set the
-     * component into immediate mode if {@link #setImmediate(boolean)} has not
-     * been explicitly called with false.
+     * Since Vaadin 8, the default mode is immediate.
      * 
      * @return true if the component is in immediate mode (explicitly or
      *         implicitly set), false if the component if not in immediate mode
@@ -465,14 +462,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
     public boolean isImmediate() {
         if (explicitImmediateValue != null) {
             return explicitImmediateValue;
-        } else if (hasListeners(ValueChangeEvent.class)) {
-            /*
-             * Automatic immediate for fields that developers are interested
-             * about.
-             */
-            return true;
         } else {
-            return false;
+            return true;
         }
     }
 

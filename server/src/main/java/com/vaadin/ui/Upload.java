@@ -1194,6 +1194,27 @@ public class Upload extends AbstractComponent implements Component.Focusable,
         return super.getListeners(eventType);
     }
 
+    /**
+     * Returns the immediate mode of the component.
+     * <p>
+     * An immediate mode Upload component displays the browser file choosing
+     * button immediately, whereas a non-immediate upload only shows a Vaadin
+     * button.
+     * <p>
+     * The default mode of an Upload component is non-immediate.
+     *
+     * @return true if the component is in immediate mode, false if the
+     *         component if not in immediate mode
+     */
+    @Override
+    public boolean isImmediate() {
+        if (getExplicitImmediateValue() != null) {
+            return getExplicitImmediateValue();
+        } else {
+            return false;
+        }
+    }
+
     @Override
     protected UploadState getState() {
         return (UploadState) super.getState();

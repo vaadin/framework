@@ -16,6 +16,9 @@ public class ResynchronizeAfterAsyncRemoval extends AbstractTestUIWithLog {
     @Override
     public void setup(VaadinRequest vaadinRequest) {
         final Window window = new Window("Asynchronously removed window");
+        // without this, the size info sent in the background removes the
+        // window immediately after showing it, making the test fail
+        setImmediate(false);
         window.center();
 
         // The window will enqueue a non-immediate message reporting its current

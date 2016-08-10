@@ -10,6 +10,10 @@ public class OutOfSync extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
+        // Without this, there is an extra request from the UI that changes the
+        // request sequence compared to what the test expects
+        setImmediate(false);
+
         Button b = new Button("Click me after 1s to be out of sync");
         b.addClickListener(new ClickListener() {
 

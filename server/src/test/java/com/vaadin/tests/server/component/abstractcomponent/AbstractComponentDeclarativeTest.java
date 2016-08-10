@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -46,7 +46,7 @@ import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Test cases for reading and writing the properties of AbstractComponent.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -73,7 +73,7 @@ public class AbstractComponentDeclarativeTest extends
     public void testProperties() {
         String design = "<vaadin-label id=\"testId\" primary-style-name=\"test-style\" "
                 + "caption=\"test-caption\" locale=\"fi_FI\" description=\"test-description\" "
-                + "error=\"<div>test-error</div>\" immediate />";
+                + "error=\"<div>test-error</div>\" />";
         component.setId("testId");
         component.setPrimaryStyleName("test-style");
         component.setCaption("test-caption");
@@ -97,7 +97,7 @@ public class AbstractComponentDeclarativeTest extends
                 "<vaadin-label immediate />" };
         Boolean[] explicitImmediate = { null, Boolean.FALSE, Boolean.TRUE,
                 Boolean.TRUE };
-        boolean[] immediate = { false, false, true, true };
+        boolean[] immediate = { true, false, true, true };
         for (int i = 0; i < design.length; i++) {
             component = (AbstractComponent) Design
                     .read(new ByteArrayInputStream(design[i].getBytes(Charset

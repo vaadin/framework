@@ -38,10 +38,15 @@ public class NotificationsWaiAria extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         prefix = new TextField("Prefix", "Info");
+        // The text fields need to be non-immediate to avoid an extra event that
+        // hides the notification while the test is still trying to read its
+        // contents.
+        prefix.setImmediate(false);
         addComponent(prefix);
 
         postfix = new TextField("Postfix",
                 " - closes automatically after 10 seconds");
+        postfix.setImmediate(false);
         addComponent(postfix);
 
         role = new NativeSelect("NotificationRole");
@@ -51,6 +56,7 @@ public class NotificationsWaiAria extends AbstractTestUI {
         addComponent(role);
 
         tf = new TextArea("Text", "Hello world");
+        tf.setImmediate(false);
         tf.setRows(10);
         addComponent(tf);
         type = new ComboBox();
