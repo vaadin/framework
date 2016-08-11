@@ -30,8 +30,8 @@ import org.atmosphere.cpr.AtmosphereFramework;
 import org.atmosphere.cpr.AtmosphereFramework.AtmosphereHandlerWrapper;
 import org.atmosphere.cpr.AtmosphereHandler;
 import org.atmosphere.cpr.AtmosphereInterceptor;
-import org.atmosphere.cpr.AtmosphereRequest;
-import org.atmosphere.cpr.AtmosphereResponse;
+import org.atmosphere.cpr.AtmosphereRequestImpl;
+import org.atmosphere.cpr.AtmosphereResponseImpl;
 import org.atmosphere.interceptor.HeartbeatInterceptor;
 import org.atmosphere.util.VoidAnnotationProcessor;
 
@@ -58,8 +58,8 @@ import com.vaadin.shared.communication.PushConstants;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class PushRequestHandler implements RequestHandler,
-        SessionExpiredHandler {
+public class PushRequestHandler
+        implements RequestHandler, SessionExpiredHandler {
 
     private AtmosphereFramework atmosphere;
     private PushHandler pushHandler;
@@ -82,30 +82,26 @@ public class PushRequestHandler implements RequestHandler,
         atmosphere = getPreInitializedAtmosphere(vaadinServletConfig);
         if (atmosphere == null) {
             // Not initialized by JSR356WebsocketInitializer
-            getLogger().fine(
-                    "Initializing Atmosphere for servlet "
-                            + vaadinServletConfig.getServletName());
+            getLogger().fine("Initializing Atmosphere for servlet "
+                    + vaadinServletConfig.getServletName());
             try {
                 atmosphere = initAtmosphere(vaadinServletConfig);
             } catch (Exception e) {
-                getLogger().log(
-                        Level.WARNING,
+                getLogger().log(Level.WARNING,
                         "Failed to initialize Atmosphere for "
                                 + service.getServlet().getServletName()
-                                + ". Push will not work.", e);
+                                + ". Push will not work.",
+                        e);
                 return;
             }
         } else {
-            getLogger().fine(
-                    "Using pre-initialized Atmosphere for servlet "
-                            + vaadinServletConfig.getServletName());
+            getLogger().fine("Using pre-initialized Atmosphere for servlet "
+                    + vaadinServletConfig.getServletName());
         }
-        pushHandler
-                .setLongPollingSuspendTimeout(atmosphere
-                        .getAtmosphereConfig()
-                        .getInitParameter(
-                                com.vaadin.server.Constants.SERVLET_PARAMETER_PUSH_SUSPEND_TIMEOUT_LONGPOLLING,
-                                -1));
+        pushHandler.setLongPollingSuspendTimeout(
+                atmosphere.getAtmosphereConfig().getInitParameter(
+                        com.vaadin.server.Constants.SERVLET_PARAMETER_PUSH_SUSPEND_TIMEOUT_LONGPOLLING,
+                        -1));
         for (AtmosphereHandlerWrapper handlerWrapper : atmosphere
                 .getAtmosphereHandlers().values()) {
             AtmosphereHandler handler = handlerWrapper.atmosphereHandler;
@@ -124,7 +120,7 @@ public class PushRequestHandler implements RequestHandler,
      * Create your own request handler and override this method if you want to
      * customize the {@link PushHandler}, e.g. to dynamically decide the suspend
      * timeout.
-     * 
+     *
      * @since 7.6
      * @param service
      *            the vaadin service
@@ -158,7 +154,7 @@ public class PushRequestHandler implements RequestHandler,
 
     /**
      * Initializes Atmosphere for the given ServletConfiguration
-     * 
+     *
      * @since 7.5.0
      * @param vaadinServletConfig
      *            The servlet configuration for the servlet which should have
@@ -244,9 +240,10 @@ public class PushRequestHandler implements RequestHandler,
                 return true;
             }
             try {
-                atmosphere.doCometSupport(AtmosphereRequest
-                        .wrap((VaadinServletRequest) request),
-                        AtmosphereResponse
+                atmosphere.doCometSupport(
+                        AtmosphereRequestImpl
+                                .wrap((VaadinServletRequest) request),
+                        AtmosphereResponseImpl
                                 .wrap((VaadinServletResponse) response));
             } catch (ServletException e) {
                 // TODO PUSH decide how to handle
@@ -266,7 +263,7 @@ public class PushRequestHandler implements RequestHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.server.SessionExpiredHandler#handleSessionExpired(com.vaadin
      * .server.VaadinRequest, com.vaadin.server.VaadinResponse)
