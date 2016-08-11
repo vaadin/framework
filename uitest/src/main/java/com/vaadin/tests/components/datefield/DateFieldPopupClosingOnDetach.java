@@ -20,9 +20,9 @@ import java.util.TimerTask;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.DateField;
 
 public class DateFieldPopupClosingOnDetach extends AbstractTestUI {
 
@@ -31,7 +31,7 @@ public class DateFieldPopupClosingOnDetach extends AbstractTestUI {
         // Use polling to notice the removal of DateField.
         getUI().setPollInterval(500);
 
-        final LegacyDateField df = new LegacyDateField();
+        final DateField df = new DateField();
         getLayout().addLayoutClickListener(new LayoutClickListener() {
 
             @Override

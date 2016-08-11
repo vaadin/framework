@@ -15,11 +15,11 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.PopupDateField;
 
 /**
  * Test UI for date field Popup calendar.
@@ -35,7 +35,7 @@ public abstract class DateFieldPopupPosition extends AbstractTestUI {
         Label gap = new Label();
         gap.setWidth(250, Unit.PIXELS);
         layout.addComponent(gap);
-        LegacyPopupDateField field = new LegacyPopupDateField();
+        PopupDateField field = new PopupDateField();
         layout.addComponent(field);
     }
 

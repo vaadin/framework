@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.legacy.ui.LegacyInlineDateField;
+import com.vaadin.ui.InlineDateField;
 
-public class InlineDateFieldTest extends DateFieldTest<LegacyInlineDateField> {
+public class InlineDateFieldTest extends DateFieldTest<InlineDateField> {
 
     @Override
-    protected Class<LegacyInlineDateField> getTestClass() {
-        return LegacyInlineDateField.class;
+    protected Class<InlineDateField> getTestClass() {
+        return InlineDateField.class;
     }
 
 }

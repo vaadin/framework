@@ -15,16 +15,16 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.legacy.ui.LegacyDateField;
-import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.PopupDateField;
 
 public class DateFieldChangeResolution extends AbstractTestUI {
 
@@ -34,7 +34,7 @@ public class DateFieldChangeResolution extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final LegacyDateField dateField = new LegacyPopupDateField("Enter date");
+        final DateField dateField = new PopupDateField("Enter date");
         dateField.setResolution(Resolution.YEAR);
         dateField.setId(DATEFIELD_ID);
         dateField.setImmediate(true);

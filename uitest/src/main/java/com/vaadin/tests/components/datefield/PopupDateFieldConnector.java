@@ -1,15 +1,15 @@
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.legacy.ui.LegacyDateField;
-import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.PopupDateField;
 
 public class PopupDateFieldConnector extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(new LegacyPopupDateField());
-        addComponent(new LegacyDateField());
+        addComponent(new PopupDateField());
+        addComponent(new DateField());
     }
 
     @Override

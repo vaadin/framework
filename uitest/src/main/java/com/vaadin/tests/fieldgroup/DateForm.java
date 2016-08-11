@@ -127,8 +127,8 @@ public class DateForm extends AbstractTestUIWithLog {
         addComponent(discardButton);
         addComponent(showBean);
 
-        DateObject d = new DateObject(new Date(443457289789L), new Date(
-                443457289789L), new Date(443457289789L),
+        DateObject d = new DateObject(new Date(443457289789L),
+                new Date(443457289789L), new Date(443457289789L),
                 new Date(443457289789L));
         fieldGroup.setItemDataSource(new BeanItem<DateObject>(d));
     }

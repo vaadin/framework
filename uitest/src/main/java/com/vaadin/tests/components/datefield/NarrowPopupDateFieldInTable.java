@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Table;
 
 public class NarrowPopupDateFieldInTable extends TestBase {
@@ -11,7 +11,7 @@ public class NarrowPopupDateFieldInTable extends TestBase {
 
     @Override
     public void setup() {
-        LegacyPopupDateField df = new LegacyPopupDateField();
+        PopupDateField df = new PopupDateField();
         df.setWidth("100%");
 
         Table t = new Table();

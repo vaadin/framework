@@ -3,13 +3,13 @@ package com.vaadin.tests.components.datefield;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.legacy.ui.LegacyDateField;
-import com.vaadin.legacy.ui.LegacyInlineDateField;
-import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.InlineDateField;
+import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -25,12 +25,12 @@ public class DynamicallyChangeDateRange extends AbstractTestUI {
         layout.setMargin(true);
         setContent(layout);
 
-        final LegacyPopupDateField df = new LegacyPopupDateField();
+        final PopupDateField df = new PopupDateField();
         df.setValue(new Date(2012 - 1900, 5 - 1, 12));
         setRange(df, 5);
         layout.addComponent(df);
 
-        final LegacyInlineDateField df2 = new LegacyInlineDateField();
+        final InlineDateField df2 = new InlineDateField();
         df2.setValue(new Date(2012 - 1900, 11 - 1, 16));
 
         setRange(df2, 5);
@@ -62,11 +62,11 @@ public class DynamicallyChangeDateRange extends AbstractTestUI {
      * @param df
      * @param i
      */
-    private void setRange(LegacyDateField df, int days) {
-        df.setRangeStart(new Date(df.getValue().getTime() - days * 24 * 60 * 60
-                * 1000));
-        df.setRangeEnd(new Date(df.getValue().getTime() + days * 24 * 60 * 60
-                * 1000));
+    private void setRange(DateField df, int days) {
+        df.setRangeStart(
+                new Date(df.getValue().getTime() - days * 24 * 60 * 60 * 1000));
+        df.setRangeEnd(
+                new Date(df.getValue().getTime() + days * 24 * 60 * 60 * 1000));
 
     }
 

@@ -4,8 +4,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
-import com.vaadin.legacy.ui.LegacyInlineDateField;
-import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -14,7 +12,9 @@ import com.vaadin.ui.HasComponents.ComponentAttachListener;
 import com.vaadin.ui.HasComponents.ComponentDetachEvent;
 import com.vaadin.ui.HasComponents.ComponentDetachListener;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.NativeButton;
+import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
@@ -23,8 +23,8 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
 
 public abstract class AbstractComponentContainerTest<T extends AbstractComponentContainer>
-        extends AbstractComponentTest<T> implements ComponentAttachListener,
-        ComponentDetachListener {
+        extends AbstractComponentTest<T>
+        implements ComponentAttachListener, ComponentDetachListener {
 
     private String CATEGORY_COMPONENT_CONTAINER_FEATURES = "Component container features";
     private Command<T, ComponentSize> addButtonCommand = new Command<T, ComponentSize>() {
@@ -77,7 +77,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     private Command<T, ComponentSize> addInlineDateFieldCommand = new Command<T, ComponentSize>() {
         @Override
         public void execute(T c, ComponentSize size, Object data) {
-            LegacyInlineDateField tf = new LegacyInlineDateField();
+            InlineDateField tf = new InlineDateField();
             c.addComponent(tf);
             size.apply(tf);
         }
@@ -85,7 +85,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     private Command<T, ComponentSize> addPopupDateFieldCommand = new Command<T, ComponentSize>() {
         @Override
         public void execute(T c, ComponentSize size, Object data) {
-            LegacyPopupDateField tf = new LegacyPopupDateField();
+            PopupDateField tf = new PopupDateField();
             c.addComponent(tf);
             size.apply(tf);
         }
@@ -147,9 +147,11 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((ComponentAttachListener) AbstractComponentContainerTest.this);
+                c.addListener(
+                        (ComponentAttachListener) AbstractComponentContainerTest.this);
             } else {
-                c.removeListener((ComponentAttachListener) AbstractComponentContainerTest.this);
+                c.removeListener(
+                        (ComponentAttachListener) AbstractComponentContainerTest.this);
             }
         }
     };
@@ -159,9 +161,11 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((ComponentDetachListener) AbstractComponentContainerTest.this);
+                c.addListener(
+                        (ComponentDetachListener) AbstractComponentContainerTest.this);
             } else {
-                c.removeListener((ComponentDetachListener) AbstractComponentContainerTest.this);
+                c.removeListener(
+                        (ComponentDetachListener) AbstractComponentContainerTest.this);
             }
         }
     };
@@ -312,8 +316,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         // addCommands.put("VerticalLayout", addVerticalLayoutCommand);
 
         ComponentSize[] sizes = new ComponentSize[] {
-                new ComponentSize(null, null),
-                new ComponentSize("200px", null),
+                new ComponentSize(null, null), new ComponentSize("200px", null),
                 new ComponentSize("100%", null),
                 new ComponentSize(null, "200px"),
                 new ComponentSize(null, "100%"),
@@ -352,8 +355,8 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
 
             createClickAction("auto", componentHeightCategory,
                     setComponentHeight, Integer.valueOf(i), null);
-            createClickAction("auto", componentWidthCategory,
-                    setComponentWidth, Integer.valueOf(i), null);
+            createClickAction("auto", componentWidthCategory, setComponentWidth,
+                    Integer.valueOf(i), null);
             for (String option : options) {
                 createClickAction(option, componentHeightCategory,
                         setComponentHeight, Integer.valueOf(i), option);

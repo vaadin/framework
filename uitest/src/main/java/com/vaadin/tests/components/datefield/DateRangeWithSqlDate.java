@@ -15,12 +15,12 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.legacy.ui.LegacyDateField;
-import com.vaadin.legacy.ui.LegacyInlineDateField;
+import java.util.Locale;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-
-import java.util.Locale;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.InlineDateField;
 
 public class DateRangeWithSqlDate extends AbstractTestUI {
 
@@ -34,7 +34,7 @@ public class DateRangeWithSqlDate extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        LegacyDateField df = new LegacyInlineDateField();
+        DateField df = new InlineDateField();
         df.setLocale(Locale.US);
         df.setRangeStart(startDate);
         df.setRangeEnd(endDate);

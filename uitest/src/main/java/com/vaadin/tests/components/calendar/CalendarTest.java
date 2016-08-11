@@ -306,7 +306,8 @@ public class CalendarTest extends UI {
         event = getNewEvent("Appointment", start, end);
         event.setWhere("Office");
         event.setStyleName("color1");
-        event.setDescription("A longer description, which should display correctly.");
+        event.setDescription(
+                "A longer description, which should display correctly.");
         dataSource.addEvent(event);
 
         calendar.add(GregorianCalendar.DATE, 1);
@@ -408,9 +409,9 @@ public class CalendarTest extends UI {
                 // simulate week click
                 WeekClickHandler handler = (WeekClickHandler) calendarComponent
                         .getHandler(WeekClick.EVENT_ID);
-                handler.weekClick(new WeekClick(calendarComponent, calendar
-                        .get(GregorianCalendar.WEEK_OF_YEAR), calendar
-                        .get(GregorianCalendar.YEAR)));
+                handler.weekClick(new WeekClick(calendarComponent,
+                        calendar.get(GregorianCalendar.WEEK_OF_YEAR),
+                        calendar.get(GregorianCalendar.YEAR)));
             }
         });
 
@@ -442,8 +443,8 @@ public class CalendarTest extends UI {
 
     private void setWeekendsHidden(boolean weekendsHidden) {
         if (weekendsHidden) {
-            int firstToShow = (GregorianCalendar.MONDAY - calendar
-                    .getFirstDayOfWeek()) % 7;
+            int firstToShow = (GregorianCalendar.MONDAY
+                    - calendar.getFirstDayOfWeek()) % 7;
             calendarComponent.setFirstVisibleDayOfWeek(firstToShow + 1);
             calendarComponent.setLastVisibleDayOfWeek(firstToShow + 5);
         } else {
@@ -686,8 +687,8 @@ public class CalendarTest extends UI {
         s.setFilteringMode(FilteringMode.CONTAINS);
 
         Item i = s.addItem(DEFAULT_ITEMID);
-        i.getItemProperty("caption").setValue(
-                "Default (" + TimeZone.getDefault().getID() + ")");
+        i.getItemProperty("caption")
+                .setValue("Default (" + TimeZone.getDefault().getID() + ")");
         for (String id : TimeZone.getAvailableIDs()) {
             if (!s.containsId(id)) {
                 i = s.addItem(id);
@@ -1146,12 +1147,14 @@ public class CalendarTest extends UI {
 
     private void updateCaptionLabel() {
         DateFormatSymbols s = new DateFormatSymbols(getLocale());
-        String month = s.getShortMonths()[calendar.get(GregorianCalendar.MONTH)];
-        captionLabel.setValue(month + " "
-                + calendar.get(GregorianCalendar.YEAR));
+        String month = s.getShortMonths()[calendar
+                .get(GregorianCalendar.MONTH)];
+        captionLabel
+                .setValue(month + " " + calendar.get(GregorianCalendar.YEAR));
     }
 
-    private CalendarTestEvent getNewEvent(String caption, Date start, Date end) {
+    private CalendarTestEvent getNewEvent(String caption, Date start,
+            Date end) {
         CalendarTestEvent event = new CalendarTestEvent();
         event.setCaption(caption);
         event.setStart(start);

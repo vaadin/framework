@@ -18,10 +18,10 @@ package com.vaadin.tests.components.datefield;
 import java.util.Calendar;
 import java.util.Locale;
 
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.VerticalLayout;
 
 public class CustomDateFormatEEE extends AbstractTestUI {
@@ -31,7 +31,7 @@ public class CustomDateFormatEEE extends AbstractTestUI {
         Calendar cal = Calendar.getInstance();
         cal.set(2014, 2, 14); // Friday
 
-        LegacyDateField df = new LegacyDateField("Should display 14/03/2014 Fri");
+        DateField df = new DateField("Should display 14/03/2014 Fri");
         df.setResolution(Resolution.DAY);
         df.setLocale(new Locale("en", "US"));
 

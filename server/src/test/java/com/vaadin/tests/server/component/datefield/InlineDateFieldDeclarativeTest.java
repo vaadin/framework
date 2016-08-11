@@ -21,36 +21,36 @@ import java.text.SimpleDateFormat;
 
 import org.junit.Test;
 
-import com.vaadin.legacy.ui.LegacyDateField;
-import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.declarative.Design;
 
 /**
- * Tests the declarative support for implementations of {@link LegacyDateField}.
+ * Tests the declarative support for implementations of {@link DateField}.
  * 
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class InlineDateFieldDeclarativeTest extends
-        DeclarativeTestBase<LegacyInlineDateField> {
+public class InlineDateFieldDeclarativeTest
+        extends DeclarativeTestBase<InlineDateField> {
 
     @Test
     public void testInlineDateFieldToFromDesign() throws Exception {
-        LegacyInlineDateField field = new LegacyInlineDateField("Day is",
+        InlineDateField field = new InlineDateField("Day is",
                 new SimpleDateFormat("yyyy-MM-dd").parse("2003-02-27"));
         field.setResolution(Resolution.DAY);
         field.setShowISOWeekNumbers(true);
-        field.setRangeStart(new SimpleDateFormat("yyyy-MM-dd")
-                .parse("2001-02-27"));
-        field.setRangeEnd(new SimpleDateFormat("yyyy-MM-dd")
-                .parse("2011-02-27"));
+        field.setRangeStart(
+                new SimpleDateFormat("yyyy-MM-dd").parse("2001-02-27"));
+        field.setRangeEnd(
+                new SimpleDateFormat("yyyy-MM-dd").parse("2011-02-27"));
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         Design.write(field, bos);
 
-        LegacyInlineDateField result = (LegacyInlineDateField) Design
+        InlineDateField result = (InlineDateField) Design
                 .read(new ByteArrayInputStream(bos.toByteArray()));
         assertEquals(field.getResolution(), result.getResolution());
         assertEquals(field.getCaption(), result.getCaption());

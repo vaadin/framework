@@ -16,13 +16,13 @@
 
 package com.vaadin.tests.components.gridlayout;
 
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Panel;
 
@@ -38,7 +38,7 @@ public class LayoutAfterHidingError extends AbstractTestUI {
         gl.setWidth("100%");
         panel.setContent(gl);
 
-        final LegacyDateField df = new LegacyDateField();
+        final DateField df = new DateField();
         df.setWidth("100%");
         gl.addComponent(df);
 

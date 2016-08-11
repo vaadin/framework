@@ -7,16 +7,17 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
+import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
+import com.vaadin.ui.DateField;
 
-public class DateFieldTest<T extends LegacyDateField> extends LegacyAbstractFieldTest<T> {
+public class DateFieldTest<T extends DateField>
+        extends AbstractFieldTest<T, Date> {
 
     @SuppressWarnings("unchecked")
     @Override
     protected Class<T> getTestClass() {
-        return (Class<T>) LegacyDateField.class;
+        return (Class<T>) DateField.class;
     }
 
     private Command<T, Date> setValue = new Command<T, Date>() {
@@ -31,7 +32,8 @@ public class DateFieldTest<T extends LegacyDateField> extends LegacyAbstractFiel
     protected void createActions() {
         super.createActions();
         createResolutionSelectAction(CATEGORY_FEATURES);
-        createBooleanAction("Lenient", CATEGORY_FEATURES, false, lenientCommand);
+        createBooleanAction("Lenient", CATEGORY_FEATURES, false,
+                lenientCommand);
         createBooleanAction("Show week numbers", CATEGORY_FEATURES, false,
                 weekNumberCommand);
         createDateFormatSelectAction(CATEGORY_FEATURES);

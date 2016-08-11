@@ -20,7 +20,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
+import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -55,8 +55,7 @@ public abstract class DateFieldPopupPositionTest extends MultiBrowserTest {
     }
 
     private int getFieldBottom() {
-        LegacyDateFieldElement dateField = $(LegacyDateFieldElement.class)
-                .first();
+        DateFieldElement dateField = $(DateFieldElement.class).first();
         return dateField.getLocation().getY() + dateField.getSize().getHeight();
     }
 

@@ -22,13 +22,12 @@ package com.vaadin.tests.components.datefield;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
 
@@ -56,7 +55,7 @@ public class PopupDateFieldValueChangeEvents extends AbstractTestUIWithLog {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2010, 1, 1, 18, 19, 20);
 
-        final LegacyDateField df = new LegacyDateField(null, calendar.getTime());
+        final DateField df = new DateField(null, calendar.getTime());
         df.setResolution(Resolution.SECOND);
         df.setImmediate(true);
         hl.addComponent(df);
@@ -74,14 +73,7 @@ public class PopupDateFieldValueChangeEvents extends AbstractTestUIWithLog {
             }
         });
 
-        df.addValueChangeListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                log("Value changes: " + (++count));
-
-            }
-        });
+        df.addValueChangeListener(event -> log("Value changes: " + (++count)));
     }
 
     /*

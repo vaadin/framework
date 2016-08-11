@@ -23,9 +23,9 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NativeSelectElement;
-import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class PopupDateFieldValueChangeEventsTest extends MultiBrowserTest {
@@ -53,8 +53,7 @@ public class PopupDateFieldValueChangeEventsTest extends MultiBrowserTest {
     }
 
     public WebElement getPopUpButton() {
-        LegacyDateFieldElement datefield = $(LegacyDateFieldElement.class)
-                .first();
+        DateFieldElement datefield = $(DateFieldElement.class).first();
         return datefield.findElement((By.className("v-datefield-button")));
     }
 

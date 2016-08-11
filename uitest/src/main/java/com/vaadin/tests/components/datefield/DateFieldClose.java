@@ -15,9 +15,9 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.DateField;
 
 public class DateFieldClose extends AbstractTestUI {
 
@@ -25,7 +25,7 @@ public class DateFieldClose extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final LegacyDateField df = new LegacyDateField();
+        final DateField df = new DateField();
         df.setId(DATEFIELD_ID);
         addComponent(df);
     }

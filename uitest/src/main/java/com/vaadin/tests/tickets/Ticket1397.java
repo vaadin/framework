@@ -3,10 +3,10 @@ package com.vaadin.tests.tickets;
 import java.util.Date;
 
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
@@ -126,7 +126,7 @@ public class Ticket1397 extends LegacyApplication {
         table.setPageLength(20);
         for (int i = 0; i < 1000; i++) {
 
-            final LegacyInlineDateField df = new LegacyInlineDateField("", new Date());
+            final InlineDateField df = new InlineDateField("", new Date());
             PopupView pp = new PopupView(new PopupView.Content() {
                 @Override
                 public String getMinimizedValueAsHTML() {
@@ -143,9 +143,9 @@ public class Ticket1397 extends LegacyApplication {
 
                 TextField tf = new TextField("Editor for line " + lineNum,
 
-                "Try to edit the contents for this textfield on line "
-                        + lineNum
-                        + " and see how the overview-version changes.");
+                        "Try to edit the contents for this textfield on line "
+                                + lineNum
+                                + " and see how the overview-version changes.");
 
                 @Override
                 public String getMinimizedValueAsHTML() {
@@ -159,8 +159,8 @@ public class Ticket1397 extends LegacyApplication {
                 }
 
             });
-            table.addItem(new Object[] { "1 " + i, "2 " + i, "3 " + i,
-                    "4 " + i, "5 " + i, pp, pp2 }, new Integer(i));
+            table.addItem(new Object[] { "1 " + i, "2 " + i, "3 " + i, "4 " + i,
+                    "5 " + i, pp, pp2 }, new Integer(i));
         }
 
         main.addComponent(table);

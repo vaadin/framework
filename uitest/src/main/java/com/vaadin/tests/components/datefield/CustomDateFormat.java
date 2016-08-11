@@ -3,8 +3,9 @@ package com.vaadin.tests.components.datefield;
 import java.util.Calendar;
 import java.util.Locale;
 
-import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.DateField;
 
 public class CustomDateFormat extends TestBase {
 
@@ -15,8 +16,8 @@ public class CustomDateFormat extends TestBase {
         Calendar cal = Calendar.getInstance();
         cal.set(2010, 0, 1);
 
-        LegacyDateField df = new LegacyDateField();
-        df.setResolution(LegacyDateField.RESOLUTION_DAY);
+        DateField df = new DateField();
+        df.setResolution(Resolution.DAY);
         df.setLocale(locale);
         df.setWidth("300px");
 

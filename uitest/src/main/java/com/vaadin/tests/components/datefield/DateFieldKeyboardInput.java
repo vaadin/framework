@@ -19,12 +19,10 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.PopupDateField;
 
 public class DateFieldKeyboardInput extends AbstractTestUI {
 
@@ -32,17 +30,12 @@ public class DateFieldKeyboardInput extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         Calendar c = new GregorianCalendar(Locale.ENGLISH);
         c.set(2014, 0, 15);
-        final LegacyPopupDateField dateField = new LegacyPopupDateField("Select date",
+        final PopupDateField dateField = new PopupDateField("Select date",
                 c.getTime());
         dateField.setDateFormat("dd.MM.yyyy");
         addComponent(dateField);
-        dateField.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                addComponent(new Label("Date has been changed."));
-            }
-        });
+        dateField.addValueChangeListener(
+                event -> addComponent(new Label("Date has been changed.")));
     }
 
     @Override

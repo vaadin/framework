@@ -6,7 +6,6 @@ import com.vaadin.data.HasValue;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.MethodProperty;
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.SystemError;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.AlignmentInfo.Bits;
@@ -17,6 +16,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -137,7 +137,8 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
         hidingControls.addComponent(cb);
         formPanel.setVisible(false);
         cb.setValue(formPanel.isVisible());
-        cb.addValueChangeListener(event -> formPanel.setVisible(event.getValue()));
+        cb.addValueChangeListener(
+                event -> formPanel.setVisible(event.getValue()));
         formPanelLayout.addComponent(getFormPanelExample());
         lo.addComponent(formPanel);
 
@@ -193,7 +194,8 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
 
         lo.addComponent(new TextField("Textfield with no error in it"));
 
-        TextField tt1 = new TextField("100% wide Textfield with no error in it");
+        TextField tt1 = new TextField(
+                "100% wide Textfield with no error in it");
         tt1.setWidth("100%");
         lo.addComponent(tt1);
 
@@ -228,14 +230,14 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
         t7.setIcon(new ThemeResource("../runo/icons/16/ok.png"));
         lo.addComponent(t7);
 
-        LegacyDateField d1 = new LegacyDateField(
+        DateField d1 = new DateField(
                 "Datefield with caption and icon, next one without caption");
         d1.setComponentError(new SystemError("Error"));
         d1.setRequired(true);
         d1.setIcon(new ThemeResource("../runo/icons/16/ok.png"));
         lo.addComponent(d1);
 
-        LegacyDateField d2 = new LegacyDateField();
+        DateField d2 = new DateField();
         d2.setComponentError(new SystemError("Error"));
         d2.setRequired(true);
         lo.addComponent(d2);
@@ -276,14 +278,14 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
             controls.setSpacing(true);
             controls.setMargin(false);
             controls.addComponent(new Label("width"));
-            controls.addComponent(new TextField(new MethodProperty<Float>(
-                    testedLayout, "width")));
+            controls.addComponent(new TextField(
+                    new MethodProperty<Float>(testedLayout, "width")));
             CheckBox widthPercentsCheckBox = new CheckBox("%");
             widthPercentsCheckBox.setImmediate(true);
             controls.addComponent(widthPercentsCheckBox);
             controls.addComponent(new Label("height"));
-            controls.addComponent(new TextField(new MethodProperty<Float>(
-                    testedLayout, "height")));
+            controls.addComponent(new TextField(
+                    new MethodProperty<Float>(testedLayout, "height")));
             CheckBox heightPercentsCheckBox = new CheckBox("%");
             heightPercentsCheckBox.setImmediate(true);
             controls.addComponent(heightPercentsCheckBox);
@@ -342,8 +344,8 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
             hAlign.addItem(new Integer(Bits.ALIGNMENT_LEFT));
             hAlign.setItemCaption(new Integer(Bits.ALIGNMENT_LEFT), "left");
             hAlign.addItem(new Integer(Bits.ALIGNMENT_HORIZONTAL_CENTER));
-            hAlign.setItemCaption(
-                    new Integer(Bits.ALIGNMENT_HORIZONTAL_CENTER), "center");
+            hAlign.setItemCaption(new Integer(Bits.ALIGNMENT_HORIZONTAL_CENTER),
+                    "center");
             hAlign.addItem(new Integer(Bits.ALIGNMENT_RIGHT));
             hAlign.setItemCaption(new Integer(Bits.ALIGNMENT_RIGHT), "right");
 
@@ -370,18 +372,18 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
             lAlign.addItem(new Integer(Bits.ALIGNMENT_LEFT));
             lAlign.setItemCaption(new Integer(Bits.ALIGNMENT_LEFT), "left");
             lAlign.addItem(new Integer(Bits.ALIGNMENT_HORIZONTAL_CENTER));
-            lAlign.setItemCaption(
-                    new Integer(Bits.ALIGNMENT_HORIZONTAL_CENTER), "center");
+            lAlign.setItemCaption(new Integer(Bits.ALIGNMENT_HORIZONTAL_CENTER),
+                    "center");
             lAlign.addItem(new Integer(Bits.ALIGNMENT_RIGHT));
             lAlign.setItemCaption(new Integer(Bits.ALIGNMENT_RIGHT), "right");
 
             lAlign.addListener(new Property.ValueChangeListener() {
                 @Override
                 public void valueChange(ValueChangeEvent event) {
-                    testPanelLayout.setComponentAlignment(
-                            testedLayout,
-                            new Alignment(((Integer) lAlign.getValue())
-                                    .intValue() + Bits.ALIGNMENT_TOP));
+                    testPanelLayout.setComponentAlignment(testedLayout,
+                            new Alignment(
+                                    ((Integer) lAlign.getValue()).intValue()
+                                            + Bits.ALIGNMENT_TOP));
                 }
             });
         }
@@ -389,22 +391,22 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
         private void updateAlignments(Alignment a) {
             for (Iterator<Component> i = testedLayout.getComponentIterator(); i
                     .hasNext();) {
-                ((Layout.AlignmentHandler) testedLayout).setComponentAlignment(
-                        i.next(), a);
+                ((Layout.AlignmentHandler) testedLayout)
+                        .setComponentAlignment(i.next(), a);
             }
         }
 
         private void updateMarginsAndSpacing() {
             if (testedLayout instanceof Layout.MarginHandler) {
-                ((Layout.MarginHandler) testedLayout).setMargin(new MarginInfo(
-                        marginTop.getValue().booleanValue(), marginRight
-                                .getValue().booleanValue(), marginBottom
-                                .getValue().booleanValue(), marginLeft
-                                .getValue().booleanValue()));
+                ((Layout.MarginHandler) testedLayout).setMargin(
+                        new MarginInfo(marginTop.getValue().booleanValue(),
+                                marginRight.getValue().booleanValue(),
+                                marginBottom.getValue().booleanValue(),
+                                marginLeft.getValue().booleanValue()));
             }
             if (testedLayout instanceof Layout.SpacingHandler) {
-                ((Layout.SpacingHandler) testedLayout).setSpacing(spacing
-                        .getValue().booleanValue());
+                ((Layout.SpacingHandler) testedLayout)
+                        .setSpacing(spacing.getValue().booleanValue());
             }
         }
 

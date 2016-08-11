@@ -1,17 +1,15 @@
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.data.Property;
-import com.vaadin.legacy.ui.LegacyDateField;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 
 public class DateFieldDayResolutionOffset extends AbstractTestUI {
 
@@ -24,22 +22,18 @@ public class DateFieldDayResolutionOffset extends AbstractTestUI {
 
         final TimeZone timezone = TimeZone.getTimeZone("GMT");
         final SimpleDateFormat dateformat = getDateFormat(timezone);
-        final LegacyDateField dateField = getDateField(timezone, dateformat);
+        final DateField dateField = getDateField(timezone, dateformat);
 
         addComponent(dateValue);
         addComponent(dateField);
 
-        dateField.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                dateValue.setValue(dateformat.format(dateField.getValue()));
-            }
-        });
+        dateField.addValueChangeListener(event -> dateValue
+                .setValue(dateformat.format(dateField.getValue())));
     }
 
-    private LegacyDateField getDateField(TimeZone timezone,
+    private DateField getDateField(TimeZone timezone,
             SimpleDateFormat dateformat) {
-        final LegacyDateField dateField = new LegacyDateField();
+        final DateField dateField = new DateField();
         try {
             Date initialDate = dateformat.parse(initialDateString);
             dateField.setResolution(Resolution.DAY);

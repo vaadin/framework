@@ -5,32 +5,32 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
-import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.InlineDateField;
 
 @SuppressWarnings("serial")
-public class InlineDateFields extends ComponentTestCase<LegacyInlineDateField> {
+public class InlineDateFields extends ComponentTestCase<InlineDateField> {
 
     private static final Locale[] LOCALES = new Locale[] { Locale.US,
             Locale.TAIWAN, new Locale("fi", "FI") };
 
     @Override
-    protected Class<LegacyInlineDateField> getTestClass() {
-        return LegacyInlineDateField.class;
+    protected Class<InlineDateField> getTestClass() {
+        return InlineDateField.class;
     }
 
     @Override
     protected void initializeComponents() {
 
-        LegacyInlineDateField hidden = new LegacyInlineDateField();
+        InlineDateField hidden = new InlineDateField();
         hidden.setVisible(false); // Used to break rest of layout #8693
         addComponent(hidden);
 
         Locale locale = LOCALES[0];
 
-        LegacyInlineDateField pd = createInlineDateField("Undefined width", "-1",
+        InlineDateField pd = createInlineDateField("Undefined width", "-1",
                 locale);
         pd.setId("Locale-" + locale.toString() + "-undefined-wide");
         addTestComponent(pd);
@@ -44,10 +44,10 @@ public class InlineDateFields extends ComponentTestCase<LegacyInlineDateField> {
 
     }
 
-    private LegacyInlineDateField createInlineDateField(String caption, String width,
+    private InlineDateField createInlineDateField(String caption, String width,
             Locale locale) {
-        LegacyInlineDateField pd = new LegacyInlineDateField(caption + "("
-                + locale.toString() + ")");
+        InlineDateField pd = new InlineDateField(
+                caption + "(" + locale.toString() + ")");
         pd.setWidth(width);
         pd.setValue(new Date(12312312313L));
         pd.setLocale(locale);
@@ -78,10 +78,10 @@ public class InlineDateFields extends ComponentTestCase<LegacyInlineDateField> {
         options.put("Min", Resolution.MINUTE);
         options.put("Sec", Resolution.SECOND);
         return createSelectAction("Resolution", options, "Year",
-                new Command<LegacyInlineDateField, Resolution>() {
+                new Command<InlineDateField, Resolution>() {
 
                     @Override
-                    public void execute(LegacyInlineDateField c, Resolution value,
+                    public void execute(InlineDateField c, Resolution value,
                             Object data) {
                         c.setResolution(value);
 
@@ -95,10 +95,10 @@ public class InlineDateFields extends ComponentTestCase<LegacyInlineDateField> {
             options.put(locale.toString(), locale);
         }
         return createSelectAction("Locale", options, LOCALES[0].toString(),
-                new Command<LegacyInlineDateField, Locale>() {
+                new Command<InlineDateField, Locale>() {
 
                     @Override
-                    public void execute(LegacyInlineDateField c, Locale value,
+                    public void execute(InlineDateField c, Locale value,
                             Object data) {
                         c.setCaption(c.getCaption().replaceAll(
                                 c.getLocale().toString(), value.toString()));

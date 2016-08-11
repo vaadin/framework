@@ -27,13 +27,13 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VCalendarPanel.FocusChangeListener;
 import com.vaadin.client.ui.VCalendarPanel.TimeChangeListener;
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.client.ui.VPopupCalendar;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.datefield.PopupDateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.ui.DateField;
 
-@Connect(LegacyDateField.class)
+@Connect(DateField.class)
 public class DateFieldConnector extends TextualDateConnector {
 
     /*
@@ -81,20 +81,20 @@ public class DateFieldConnector extends TextualDateConnector {
 
         super.updateFromUIDL(uidl, client);
 
-        getWidget().calendar.setDateTimeService(getWidget()
-                .getDateTimeService());
-        getWidget().calendar.setShowISOWeekNumbers(getWidget()
-                .isShowISOWeekNumbers());
+        getWidget().calendar
+                .setDateTimeService(getWidget().getDateTimeService());
+        getWidget().calendar
+                .setShowISOWeekNumbers(getWidget().isShowISOWeekNumbers());
         if (getWidget().calendar.getResolution() != getWidget()
                 .getCurrentResolution()) {
             boolean hasSelectedDate = false;
-            getWidget().calendar.setResolution(getWidget()
-                    .getCurrentResolution());
+            getWidget().calendar
+                    .setResolution(getWidget().getCurrentResolution());
             if (getWidget().calendar.getDate() != null
                     && getWidget().getCurrentDate() != null) {
                 hasSelectedDate = true;
-                getWidget().calendar.setDate((Date) getWidget()
-                        .getCurrentDate().clone());
+                getWidget().calendar
+                        .setDate((Date) getWidget().getCurrentDate().clone());
             }
             // force re-render when changing resolution only
             getWidget().calendar.renderCalendar(hasSelectedDate);
@@ -105,8 +105,8 @@ public class DateFieldConnector extends TextualDateConnector {
             getWidget().calendar.renderCalendar();
         }
 
-        if (getWidget().getCurrentResolution().getCalendarField() <= Resolution.MONTH
-                .getCalendarField()) {
+        if (getWidget().getCurrentResolution()
+                .getCalendarField() <= Resolution.MONTH.getCalendarField()) {
             getWidget().calendar
                     .setFocusChangeListener(new FocusChangeListener() {
                         @Override
@@ -123,12 +123,13 @@ public class DateFieldConnector extends TextualDateConnector {
             getWidget().calendar.setFocusChangeListener(null);
         }
 
-        if (getWidget().getCurrentResolution().getCalendarField() > Resolution.DAY
-                .getCalendarField()) {
+        if (getWidget().getCurrentResolution()
+                .getCalendarField() > Resolution.DAY.getCalendarField()) {
             getWidget().calendar
                     .setTimeChangeListener(new TimeChangeListener() {
                         @Override
-                        public void changed(int hour, int min, int sec, int msec) {
+                        public void changed(int hour, int min, int sec,
+                                int msec) {
                             Date d = getWidget().getDate();
                             if (d == null) {
                                 // date currently null, use the value from
@@ -152,11 +153,11 @@ public class DateFieldConnector extends TextualDateConnector {
         }
 
         if (getWidget().isReadonly()) {
-            getWidget().calendarToggle.addStyleName(VPopupCalendar.CLASSNAME
-                    + "-button-readonly");
+            getWidget().calendarToggle.addStyleName(
+                    VPopupCalendar.CLASSNAME + "-button-readonly");
         } else {
-            getWidget().calendarToggle.removeStyleName(VPopupCalendar.CLASSNAME
-                    + "-button-readonly");
+            getWidget().calendarToggle.removeStyleName(
+                    VPopupCalendar.CLASSNAME + "-button-readonly");
         }
 
         getWidget().setDescriptionForAssistiveDevices(
@@ -200,18 +201,20 @@ public class DateFieldConnector extends TextualDateConnector {
     }
 
     @Override
-    protected void setWidgetStyleNameWithPrefix(String prefix,
-            String styleName, boolean add) {
+    protected void setWidgetStyleNameWithPrefix(String prefix, String styleName,
+            boolean add) {
         super.setWidgetStyleNameWithPrefix(prefix, styleName, add);
 
         // update the style change to popup calendar widget with the correct
         // prefix
         if (!styleName.startsWith("-")) {
-            getWidget().popup.setStyleName(getWidget().getStylePrimaryName()
-                    + "-popup-" + styleName, add);
+            getWidget().popup.setStyleName(
+                    getWidget().getStylePrimaryName() + "-popup-" + styleName,
+                    add);
         } else {
-            getWidget().popup.setStyleName(getWidget().getStylePrimaryName()
-                    + "-popup" + styleName, add);
+            getWidget().popup.setStyleName(
+                    getWidget().getStylePrimaryName() + "-popup" + styleName,
+                    add);
         }
     }
 

@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.gridlayout;
 
-import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Label;
 
 @SuppressWarnings("serial")
@@ -31,7 +31,7 @@ public class GridLayoutCellSizesUI extends AbstractTestUI {
         // Add some components of various shapes.
         grid.addComponent(new Button("3x1 button"), 1, 1, 3, 1);
         grid.addComponent(new Label("1x2 cell"), 1, 2, 1, 3);
-        final LegacyInlineDateField date = new LegacyInlineDateField("A 2x2 date field");
+        final InlineDateField date = new InlineDateField("A 2x2 date field");
         date.setResolution(Resolution.DAY);
         grid.addComponent(date, 2, 2, 3, 3);
 

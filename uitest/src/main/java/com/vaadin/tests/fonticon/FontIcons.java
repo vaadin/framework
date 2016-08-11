@@ -17,7 +17,6 @@ package com.vaadin.tests.fonticon;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.FontIcon;
 import com.vaadin.server.Page;
@@ -34,6 +33,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
@@ -71,13 +71,13 @@ public class FontIcons extends AbstractTestUI {
 
         layout.setIcon(icon);
 
-        layout.addComponent(new Button("Switch icon type",
-                new Button.ClickListener() {
+        layout.addComponent(
+                new Button("Switch icon type", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        buildUI(icon instanceof FontIcon ? new ThemeResource(
-                                "../runo/icons/16/user.png")
+                        buildUI(icon instanceof FontIcon
+                                ? new ThemeResource("../runo/icons/16/user.png")
                                 : FontAwesome.ANDROID);
                     }
                 }));
@@ -86,7 +86,8 @@ public class FontIcons extends AbstractTestUI {
             Action[] actions = { new Action("Do it!", icon) };
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
 
             }
 
@@ -109,10 +110,9 @@ public class FontIcons extends AbstractTestUI {
         layout.addComponent(gl);
 
         // Basic components, caption icon only
-        Class<?>[] components = { Button.class, CheckBox.class,
-                LegacyDateField.class, NativeButton.class, Link.class, Label.class,
-                Panel.class, Slider.class, TextArea.class, TextField.class,
-                Upload.class };
+        Class<?>[] components = { Button.class, CheckBox.class, DateField.class,
+                NativeButton.class, Link.class, Label.class, Panel.class,
+                Slider.class, TextArea.class, TextField.class, Upload.class };
         for (Class<?> clazz : components) {
             Component c;
             try {

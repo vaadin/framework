@@ -15,15 +15,15 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.DateField;
 
 public class DisabledDateFieldPopup extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        LegacyDateField field = new LegacyDateField();
+        DateField field = new DateField();
         field.setEnabled(false);
         addComponent(field);
     }

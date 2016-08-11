@@ -1,24 +1,22 @@
 package com.vaadin.ui;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.vaadin.legacy.ui.LegacyDateField;
-
-import java.util.Date;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.nullValue;
 
+import java.util.Date;
+
+import org.junit.Before;
+import org.junit.Test;
+
 public class DateFieldTestCase {
 
-    private LegacyDateField dateField;
+    private DateField dateField;
     private Date date;
 
     @Before
     public void setup() {
-        dateField = new LegacyDateField();
+        dateField = new DateField();
         date = new Date();
     }
 

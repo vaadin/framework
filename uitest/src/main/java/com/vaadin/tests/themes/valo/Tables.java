@@ -21,12 +21,12 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -95,8 +95,7 @@ public class Tables extends VerticalLayout implements View {
                 table = new TreeTable();
                 table.setContainerDataSource(hierarchicalContainer);
                 addComponent(table);
-            } else if (!hierarchical.getValue()
-                    && table instanceof TreeTable) {
+            } else if (!hierarchical.getValue() && table instanceof TreeTable) {
                 removeComponent(table);
                 table = new Table();
                 table.setContainerDataSource(normalContainer);
@@ -107,9 +106,9 @@ public class Tables extends VerticalLayout implements View {
                     expandRatios.getValue(), stripes.getValue(),
                     verticalLines.getValue(), horizontalLines.getValue(),
                     borderless.getValue(), headers.getValue(),
-                    compact.getValue(), small.getValue(),
-                    rowIndex.getValue(), rowCaption.getValue(),
-                    rowIcon.getValue(), componentsInCells.getValue());
+                    compact.getValue(), small.getValue(), rowIndex.getValue(),
+                    rowCaption.getValue(), rowIcon.getValue(),
+                    componentsInCells.getValue());
         };
 
         hierarchical.addValueChangeListener(update);
@@ -199,7 +198,7 @@ public class Tables extends VerticalLayout implements View {
                 @Override
                 public Object generateCell(Table source, Object itemId,
                         Object columnId) {
-                    LegacyDateField tf = new LegacyDateField();
+                    DateField tf = new DateField();
                     tf.addStyleName(ValoTheme.TABLE_COMPACT);
                     if ((Integer) itemId % 2 == 0) {
                         tf.addStyleName(ValoTheme.DATEFIELD_BORDERLESS);

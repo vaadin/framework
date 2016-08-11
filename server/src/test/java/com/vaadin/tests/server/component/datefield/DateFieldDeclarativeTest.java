@@ -21,25 +21,24 @@ import java.util.TimeZone;
 
 import org.junit.Test;
 
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.ui.DateField;
 
 /**
- * Tests the declarative support for implementations of {@link LegacyDateField}.
+ * Tests the declarative support for implementations of {@link DateField}.
  *
  * @author Vaadin Ltd
  * @since 7.4
  */
-public class DateFieldDeclarativeTest
-        extends DeclarativeTestBase<LegacyDateField> {
+public class DateFieldDeclarativeTest extends DeclarativeTestBase<DateField> {
 
     private String getYearResolutionDesign() {
-        return "<com_vaadin_legacy_ui-legacy-date-field resolution='year' value='2020'/>";
+        return "<vaadin-date-field resolution='year' value='2020'/>";
     }
 
-    private LegacyDateField getYearResolutionExpected() {
-        LegacyDateField df = new LegacyDateField();
+    private DateField getYearResolutionExpected() {
+        DateField df = new DateField();
         df.setResolution(Resolution.YEAR);
         df.setValue(new Date(2020 - 1900, 1 - 1, 1));
         return df;
@@ -48,12 +47,12 @@ public class DateFieldDeclarativeTest
     private String getTimezoneDesign() {
         String timeZone = new SimpleDateFormat("Z").format(new Date());
         return String.format(
-                "<com_vaadin_legacy_ui-legacy-date-field range-start=\"2014-05-05 00:00:00%1$s\" range-end=\"2014-06-05 00:00:00%1$s\" date-out-of-range-message=\"Please select a sensible date\" date-format=\"yyyy-MM-dd\" lenient show-iso-week-numbers parse-error-message=\"You are doing it wrong\" time-zone=\"GMT+05:00\" value=\"2014-05-15 00:00:00%1$s\"/>",
+                "<vaadin-date-field range-start=\"2014-05-05 00:00:00%1$s\" range-end=\"2014-06-05 00:00:00%1$s\" date-out-of-range-message=\"Please select a sensible date\" date-format=\"yyyy-MM-dd\" lenient show-iso-week-numbers parse-error-message=\"You are doing it wrong\" time-zone=\"GMT+05:00\" value=\"2014-05-15 00:00:00%1$s\"/>",
                 timeZone);
     }
 
-    private LegacyDateField getTimezoneExpected() {
-        LegacyDateField df = new LegacyDateField();
+    private DateField getTimezoneExpected() {
+        DateField df = new DateField();
 
         df.setRangeStart(new Date(2014 - 1900, 5 - 1, 5));
         df.setRangeEnd(new Date(2014 - 1900, 6 - 1, 5));
@@ -99,22 +98,14 @@ public class DateFieldDeclarativeTest
     public void testReadOnlyValue() {
         Date date = new Date(2020 - 1900, 1 - 1, 1);
         String timeZone = new SimpleDateFormat("Z").format(date);
-        String design = "<com_vaadin_legacy_ui-legacy-date-field readonly resolution='year' value='2020-01-01 00:00:00"
+        String design = "<vaadin-date-field readonly resolution='year' value='2020-01-01 00:00:00"
                 + timeZone + "'/>";
-        LegacyDateField df = new LegacyDateField();
+        DateField df = new DateField();
         df.setResolution(Resolution.YEAR);
         df.setValue(date);
         df.setReadOnly(true);
 
         testRead(design, df);
         testWrite(design, df);
-    }
-
-    @Override
-    public LegacyDateField testRead(String design, LegacyDateField expected) {
-        return super.testRead(
-                "<html><head><meta charset='UTF-8' name='package-mapping' content='com_vaadin_legacy_ui:com.vaadin.legacy.ui'></head> "
-                        + design + "</html>",
-                expected);
     }
 }

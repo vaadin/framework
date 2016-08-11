@@ -15,29 +15,29 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.VerticalLayout;
 
 public class PopupClosingWithEsc extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        LegacyDateField df0 = new LegacyDateField("Minute");
+        DateField df0 = new DateField("Minute");
         df0.setId("minute");
         df0.setResolution(Resolution.MINUTE);
 
-        LegacyDateField df1 = new LegacyDateField("Day");
+        DateField df1 = new DateField("Day");
         df1.setId("day");
         df1.setResolution(Resolution.DAY);
 
-        LegacyDateField df2 = new LegacyDateField("Month");
+        DateField df2 = new DateField("Month");
         df2.setId("month");
         df2.setResolution(Resolution.MONTH);
 
-        LegacyDateField df3 = new LegacyDateField("Year");
+        DateField df3 = new DateField("Year");
         df3.setId("year");
         df3.setResolution(Resolution.YEAR);
 

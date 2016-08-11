@@ -10,18 +10,18 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
+import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 import com.vaadin.testbench.parallel.BrowserUtil;
-import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.tb3.newelements.FixedNotificationElement;
 import com.vaadin.tests.tb3.newelements.WindowElement;
 
 public abstract class ThemeTest extends MultiBrowserTest {
 
-    @ServerClass("com.vaadin.legacy.ui.LegacyDateField")
-    public static class DateFieldElement extends LegacyDateFieldElement {
+    @ServerClass("com.vaadin.ui.DateField")
+    public static class MyDateFieldElement extends DateFieldElement {
         public void openPopup() {
             findElement(By.tagName("button")).click();
         }
@@ -198,13 +198,13 @@ public abstract class ThemeTest extends MultiBrowserTest {
 
     private void testDates() throws IOException {
         compareScreen("dates");
-        $(DateFieldElement.class).id("datefield0").openPopup();
+        $(MyDateFieldElement.class).id("datefield0").openPopup();
         compareScreen("dates-first-popup");
-        $(DateFieldElement.class).id("datefield1").openPopup();
+        $(MyDateFieldElement.class).id("datefield1").openPopup();
         compareScreen("dates-second-popup");
-        $(DateFieldElement.class).id("datefield2").openPopup();
+        $(MyDateFieldElement.class).id("datefield2").openPopup();
         compareScreen("dates-third-popup");
-        $(DateFieldElement.class).id("datefield3").openPopup();
+        $(MyDateFieldElement.class).id("datefield3").openPopup();
         compareScreen("dates-fourth-popup");
     }
 }

@@ -18,7 +18,7 @@ package com.vaadin.tests.components.datefield;
 import org.junit.Assert;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
+import com.vaadin.testbench.elements.DateFieldElement;
 
 /**
  * Test for date field popup calendar position in default theme.
@@ -32,7 +32,7 @@ public class DefaultDateFieldPopupPositionTest
 
     @Override
     protected void checkPopupPosition() {
-        LegacyDateFieldElement field = $(LegacyDateFieldElement.class).first();
+        DateFieldElement field = $(DateFieldElement.class).first();
         int right = field.getLocation().getX() + field.getSize().getWidth();
         WebElement popup = getPopup();
 

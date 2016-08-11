@@ -15,15 +15,15 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.InlineDateField;
 
 public class DateFieldFastForward extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(new LegacyInlineDateField());
+        addComponent(new InlineDateField());
     }
 
     @Override

@@ -3,12 +3,12 @@ package com.vaadin.tests.components.uitest.components;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import com.vaadin.legacy.ui.LegacyDateField;
-import com.vaadin.legacy.ui.LegacyInlineDateField;
-import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.tests.components.uitest.TestSampler;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.InlineDateField;
+import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.themes.ChameleonTheme;
 
 public class DatesCssTest extends GridLayout {
@@ -28,12 +28,12 @@ public class DatesCssTest extends GridLayout {
         createDateFieldWith("Small", ChameleonTheme.DATEFIELD_SMALL, null);
         createDateFieldWith("Big", ChameleonTheme.DATEFIELD_BIG, null);
 
-        LegacyDateField df = new LegacyPopupDateField("Popup date field");
+        DateField df = new PopupDateField("Popup date field");
         df.setId("datefield" + debugIdCounter++);
         df.setValue(cal.getTime());
         addComponent(df);
 
-        df = new LegacyInlineDateField("Inline date field");
+        df = new InlineDateField("Inline date field");
         df.setId("datefield" + debugIdCounter++);
         df.setValue(cal.getTime());
         addComponent(df);
@@ -47,7 +47,7 @@ public class DatesCssTest extends GridLayout {
 
     private void createDateFieldWith(String caption, String primaryStyleName,
             String width) {
-        LegacyDateField df = new LegacyDateField("Date field");
+        DateField df = new DateField("Date field");
         df.setId("datefield" + debugIdCounter++);
         df.setValue(cal.getTime());
 

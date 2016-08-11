@@ -23,13 +23,13 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VCalendarPanel.FocusChangeListener;
 import com.vaadin.client.ui.VCalendarPanel.TimeChangeListener;
-import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.client.ui.VDateFieldCalendar;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.datefield.InlineDateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.ui.InlineDateField;
 
-@Connect(LegacyInlineDateField.class)
+@Connect(InlineDateField.class)
 public class InlineDateFieldConnector extends AbstractDateFieldConnector {
 
     @Override
@@ -40,12 +40,12 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
             return;
         }
 
-        getWidget().calendarPanel.setShowISOWeekNumbers(getWidget()
-                .isShowISOWeekNumbers());
-        getWidget().calendarPanel.setDateTimeService(getWidget()
-                .getDateTimeService());
-        getWidget().calendarPanel.setResolution(getWidget()
-                .getCurrentResolution());
+        getWidget().calendarPanel
+                .setShowISOWeekNumbers(getWidget().isShowISOWeekNumbers());
+        getWidget().calendarPanel
+                .setDateTimeService(getWidget().getDateTimeService());
+        getWidget().calendarPanel
+                .setResolution(getWidget().getCurrentResolution());
         Date currentDate = getWidget().getCurrentDate();
         if (currentDate != null) {
             getWidget().calendarPanel.setDate(new Date(currentDate.getTime()));
@@ -53,12 +53,13 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
             getWidget().calendarPanel.setDate(null);
         }
 
-        if (getWidget().getCurrentResolution().getCalendarField() > Resolution.DAY
-                .getCalendarField()) {
+        if (getWidget().getCurrentResolution()
+                .getCalendarField() > Resolution.DAY.getCalendarField()) {
             getWidget().calendarPanel
                     .setTimeChangeListener(new TimeChangeListener() {
                         @Override
-                        public void changed(int hour, int min, int sec, int msec) {
+                        public void changed(int hour, int min, int sec,
+                                int msec) {
                             Date d = getWidget().getDate();
                             if (d == null) {
                                 // date currently null, use the value from
@@ -79,8 +80,8 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
                     });
         }
 
-        if (getWidget().getCurrentResolution().getCalendarField() <= Resolution.MONTH
-                .getCalendarField()) {
+        if (getWidget().getCurrentResolution()
+                .getCalendarField() <= Resolution.MONTH.getCalendarField()) {
             getWidget().calendarPanel
                     .setFocusChangeListener(new FocusChangeListener() {
                         @Override

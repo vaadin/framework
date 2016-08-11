@@ -3,9 +3,9 @@ package com.vaadin.tests.components.datefield;
 import java.util.Calendar;
 import java.util.Locale;
 
-import com.vaadin.legacy.ui.LegacyDateField;
-import com.vaadin.legacy.ui.LegacyPopupDateField;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.PopupDateField;
 
 public class PopupDateFieldPopup extends TestBase {
 
@@ -20,11 +20,11 @@ public class PopupDateFieldPopup extends TestBase {
         cal.set(Calendar.SECOND, 1);
         cal.set(Calendar.MILLISECOND, 1);
 
-        LegacyPopupDateField pdf = new LegacyPopupDateField();
+        PopupDateField pdf = new PopupDateField();
         pdf.setLocale(Locale.US);
         pdf.setValue(cal.getTime());
         pdf.setImmediate(true);
-        pdf.setResolution(LegacyDateField.RESOLUTION_SEC);
+        pdf.setResolution(Resolution.SECOND);
         addComponent(pdf);
     }
 

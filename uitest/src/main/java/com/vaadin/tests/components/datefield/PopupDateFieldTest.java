@@ -2,13 +2,13 @@ package com.vaadin.tests.components.datefield;
 
 import java.util.LinkedHashMap;
 
-import com.vaadin.legacy.ui.LegacyPopupDateField;
+import com.vaadin.ui.PopupDateField;
 
-public class PopupDateFieldTest extends DateFieldTest<LegacyPopupDateField> {
+public class PopupDateFieldTest extends DateFieldTest<PopupDateField> {
 
     @Override
-    protected Class<LegacyPopupDateField> getTestClass() {
-        return LegacyPopupDateField.class;
+    protected Class<PopupDateField> getTestClass() {
+        return PopupDateField.class;
     }
 
     @Override
@@ -26,10 +26,10 @@ public class PopupDateFieldTest extends DateFieldTest<LegacyPopupDateField> {
         options.put("åäöÅÄÖ", "åäöÅÄÖ");
 
         createSelectAction("Input prompt", category, options, "<none>",
-                new Command<LegacyPopupDateField, String>() {
+                new Command<PopupDateField, String>() {
 
                     @Override
-                    public void execute(LegacyPopupDateField c, String value,
+                    public void execute(PopupDateField c, String value,
                             Object data) {
                         c.setInputPrompt(value);
 
@@ -39,10 +39,10 @@ public class PopupDateFieldTest extends DateFieldTest<LegacyPopupDateField> {
 
     private void createTextEnabledAction(String category) {
         this.createBooleanAction("Text field enabled", category, true,
-                new Command<LegacyPopupDateField, Boolean>() {
+                new Command<PopupDateField, Boolean>() {
 
                     @Override
-                    public void execute(LegacyPopupDateField c, Boolean value,
+                    public void execute(PopupDateField c, Boolean value,
                             Object data) {
                         c.setTextFieldEnabled(value);
                     }

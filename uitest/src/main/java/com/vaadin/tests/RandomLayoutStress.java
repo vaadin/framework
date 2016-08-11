@@ -18,11 +18,11 @@ package com.vaadin.tests;
 
 import java.util.Random;
 
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -99,7 +99,8 @@ public class RandomLayoutStress extends com.vaadin.server.LegacyApplication {
 
         // Create TabSheet
         final TabSheet tabsheet = new TabSheet();
-        tabsheet.setCaption("Tabsheet, above layouts are added to this component");
+        tabsheet.setCaption(
+                "Tabsheet, above layouts are added to this component");
         layoutA = new HorizontalLayout();
         // Add 4 random components
         fillLayout(layoutA, componentCountA);
@@ -161,7 +162,8 @@ public class RandomLayoutStress extends com.vaadin.server.LegacyApplication {
             break;
         case 4:
             // Link
-            result = new Link("", new ExternalResource("http://www.vaadin.com"));
+            result = new Link("",
+                    new ExternalResource("http://www.vaadin.com"));
             result.setCaption("Link component " + caption);
             break;
         case 5:
@@ -170,25 +172,24 @@ public class RandomLayoutStress extends com.vaadin.server.LegacyApplication {
             panelLayout.setMargin(true);
             result = new Panel(panelLayout);
             result.setCaption("Panel component " + caption);
-            panelLayout
-                    .addComponent(new Label(
-                            "Panel is a container for other components, by default it draws a frame around it's "
-                                    + "extremities and may have a caption to clarify the nature of the contained components' purpose."
-                                    + " Panel contains an layout where the actual contained components are added, "
-                                    + "this layout may be switched on the fly."));
+            panelLayout.addComponent(new Label(
+                    "Panel is a container for other components, by default it draws a frame around it's "
+                            + "extremities and may have a caption to clarify the nature of the contained components' purpose."
+                            + " Panel contains an layout where the actual contained components are added, "
+                            + "this layout may be switched on the fly."));
             ((Panel) result).setWidth("250px");
             break;
         case 6:
             // Datefield
-            result = new LegacyDateField();
-            ((LegacyDateField) result).setStyleName("calendar");
-            ((LegacyDateField) result).setValue(new java.util.Date());
+            result = new DateField();
+            ((DateField) result).setStyleName("calendar");
+            ((DateField) result).setValue(new java.util.Date());
             result.setCaption("Calendar component " + caption);
             break;
         case 7:
             // Datefield
-            result = new LegacyDateField();
-            ((LegacyDateField) result).setValue(new java.util.Date());
+            result = new DateField();
+            ((DateField) result).setValue(new java.util.Date());
             result.setCaption("Calendar component " + caption);
             break;
         }

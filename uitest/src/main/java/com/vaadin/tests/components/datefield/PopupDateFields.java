@@ -5,27 +5,27 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
-import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.PopupDateField;
 
 @SuppressWarnings("serial")
-public class PopupDateFields extends ComponentTestCase<LegacyPopupDateField> {
+public class PopupDateFields extends ComponentTestCase<PopupDateField> {
 
     private static final Locale[] LOCALES = new Locale[] { Locale.US,
             Locale.TAIWAN, new Locale("fi", "FI") };
 
     @Override
-    protected Class<LegacyPopupDateField> getTestClass() {
-        return LegacyPopupDateField.class;
+    protected Class<PopupDateField> getTestClass() {
+        return PopupDateField.class;
     }
 
     @Override
     protected void initializeComponents() {
 
         for (Locale locale : LOCALES) {
-            LegacyPopupDateField pd = createPopupDateField("Undefined width", "-1",
+            PopupDateField pd = createPopupDateField("Undefined width", "-1",
                     locale);
             pd.setId("Locale-" + locale.toString() + "-undefined-wide");
             addTestComponent(pd);
@@ -40,10 +40,10 @@ public class PopupDateFields extends ComponentTestCase<LegacyPopupDateField> {
 
     }
 
-    private LegacyPopupDateField createPopupDateField(String caption, String width,
+    private PopupDateField createPopupDateField(String caption, String width,
             Locale locale) {
-        LegacyPopupDateField pd = new LegacyPopupDateField(caption + "("
-                + locale.toString() + ")");
+        PopupDateField pd = new PopupDateField(
+                caption + "(" + locale.toString() + ")");
         pd.setWidth(width);
         pd.setValue(new Date(12312312313L));
         pd.setLocale(locale);
@@ -74,10 +74,10 @@ public class PopupDateFields extends ComponentTestCase<LegacyPopupDateField> {
         options.put("Min", Resolution.MINUTE);
         options.put("Sec", Resolution.SECOND);
         return createSelectAction("Resolution", options, "Year",
-                new Command<LegacyPopupDateField, Resolution>() {
+                new Command<PopupDateField, Resolution>() {
 
                     @Override
-                    public void execute(LegacyPopupDateField c, Resolution value,
+                    public void execute(PopupDateField c, Resolution value,
                             Object data) {
                         c.setResolution(value);
 
@@ -92,10 +92,10 @@ public class PopupDateFields extends ComponentTestCase<LegacyPopupDateField> {
         options.put("åäöÅÄÖ", "åäöÅÄÖ");
 
         return createSelectAction("Input prompt", options, "<none>",
-                new Command<LegacyPopupDateField, String>() {
+                new Command<PopupDateField, String>() {
 
                     @Override
-                    public void execute(LegacyPopupDateField c, String value,
+                    public void execute(PopupDateField c, String value,
                             Object data) {
                         c.setInputPrompt(value);
 

@@ -30,8 +30,8 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
-import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -50,11 +50,10 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
 
     @Test
     public void testFirstDateField() {
-        List<LegacyDateFieldElement> dateFields = $(
-                LegacyDateFieldElement.class).all();
+        List<DateFieldElement> dateFields = $(DateFieldElement.class).all();
         assertEquals("unexpected amount of datefields", 3, dateFields.size());
 
-        LegacyDateFieldElement dateField = dateFields.get(0);
+        DateFieldElement dateField = dateFields.get(0);
 
         // open the popup
         dateField.findElement(By.tagName("button")).click();
@@ -159,8 +158,7 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
 
     @Test
     public void testSecondDateField() throws InterruptedException {
-        LegacyDateFieldElement dateField = $(LegacyDateFieldElement.class).all()
-                .get(1);
+        DateFieldElement dateField = $(DateFieldElement.class).all().get(1);
         ButtonElement button = $(ButtonElement.class).first();
 
         // change the date
@@ -290,8 +288,7 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
 
     @Test
     public void testThirdDateField() throws InterruptedException {
-        LegacyDateFieldElement dateField = $(LegacyDateFieldElement.class).all()
-                .get(2);
+        DateFieldElement dateField = $(DateFieldElement.class).all().get(2);
         ButtonElement button = $(ButtonElement.class).first();
 
         // change the date

@@ -21,8 +21,7 @@ import org.openqa.selenium.By;
 
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.DateFieldElement;
-import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
-import com.vaadin.tests.legacyelements.LegacyPopupDateFieldElement;
+import com.vaadin.testbench.elements.PopupDateFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class DateFieldWhenChangingValueAndEnablingParentTest
@@ -33,20 +32,23 @@ public class DateFieldWhenChangingValueAndEnablingParentTest
         openTestURL();
         $(CheckBoxElement.class).first().click();
 
-        assertState($(LegacyDateFieldElement.class).id("DATEFIELD_ENABLED"),
-                true, true);
-        assertState($(LegacyDateFieldElement.class).id("DATEFIELD_DISABLED"),
-                false, false);
+        assertState($(DateFieldElement.class).id("DATEFIELD_ENABLED"), true,
+                true);
+        assertState($(DateFieldElement.class).id("DATEFIELD_DISABLED"), false,
+                false);
 
-        assertState($(LegacyPopupDateFieldElement.class)
-                .id("DATEFIELD_ENABLED_ENABLED"), true, true);
-        assertState($(LegacyPopupDateFieldElement.class)
-                .id("DATEFIELD_ENABLED_DISABLED"), true, false);
+        assertState(
+                $(PopupDateFieldElement.class).id("DATEFIELD_ENABLED_ENABLED"),
+                true, true);
+        assertState(
+                $(PopupDateFieldElement.class).id("DATEFIELD_ENABLED_DISABLED"),
+                true, false);
 
         // disabling widget should always disable input
-        assertState($(LegacyPopupDateFieldElement.class)
-                .id("DATEFIELD_DISABLED_ENABLED"), false, false);
-        assertState($(LegacyPopupDateFieldElement.class)
+        assertState(
+                $(PopupDateFieldElement.class).id("DATEFIELD_DISABLED_ENABLED"),
+                false, false);
+        assertState($(PopupDateFieldElement.class)
                 .id("DATEFIELD_DISABLED_DISABLED"), false, false);
 
     }

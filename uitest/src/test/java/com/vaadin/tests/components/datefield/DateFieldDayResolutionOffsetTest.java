@@ -7,8 +7,8 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateFieldDayResolutionOffsetTest extends MultiBrowserTest {
@@ -35,8 +35,7 @@ public class DateFieldDayResolutionOffsetTest extends MultiBrowserTest {
     }
 
     private void openDatePicker() {
-        LegacyDateFieldElement dateField = $(LegacyDateFieldElement.class)
-                .first();
+        DateFieldElement dateField = $(DateFieldElement.class).first();
 
         dateField.findElement(By.tagName("button")).click();
     }

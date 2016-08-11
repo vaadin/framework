@@ -16,10 +16,10 @@
 
 package com.vaadin.client.ui.datefield;
 
-import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.ui.PopupDateField;
 
-@Connect(LegacyPopupDateField.class)
+@Connect(PopupDateField.class)
 public class PopupDateFieldConnector extends DateFieldConnector {
 
 }

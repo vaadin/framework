@@ -15,10 +15,10 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -35,14 +35,13 @@ public class DisabledParentLayout extends AbstractTestUI {
         content.setMargin(true);
 
         final VerticalLayout pane = new VerticalLayout();
-        LegacyDateField dateField = new LegacyDateField();
+        DateField dateField = new DateField();
         // If the field is immediate, the UI behaves differently (the value is
         // updated and an error is indicated earlier instead of showing the date
         // selector on the first click as the test expects. Keeping as
         // non-immediate to test the old expected behavior.
         dateField.setImmediate(false);
         pane.addComponent(dateField);
-        pane.addComponent(new LegacyDateField());
 
         content.addComponent(pane);
 

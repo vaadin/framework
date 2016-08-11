@@ -22,7 +22,7 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
+import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -36,7 +36,7 @@ public class DateFieldIsValidTest extends MultiBrowserTest {
 
         waitForElementVisible(By.id("Log"));
         waitForElementVisible(By.className("v-datefield"));
-        WebElement dateTextbox = $(LegacyDateFieldElement.class).first()
+        WebElement dateTextbox = $(DateFieldElement.class).first()
                 .findElement(By.className("v-textfield"));
         ButtonElement button = $(ButtonElement.class).first();
 
@@ -62,4 +62,5 @@ public class DateFieldIsValidTest extends MultiBrowserTest {
         Assert.assertTrue("Expected '" + expected + "' found '" + text + "'",
                 text.equals(expected));
     }
+
 }

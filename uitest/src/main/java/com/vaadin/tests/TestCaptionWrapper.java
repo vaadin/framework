@@ -16,7 +16,6 @@
 
 package com.vaadin.tests;
 
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.ExternalResource;
@@ -27,6 +26,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -53,8 +53,8 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
     VerticalLayout main = new VerticalLayout();
 
     final String eventListenerString = "Component.Listener feedback: ";
-    Label eventListenerFeedback = new Label(eventListenerString
-            + " <no events occured>");
+    Label eventListenerFeedback = new Label(
+            eventListenerString + " <no events occured>");
     int count = 0;
 
     public TestCaptionWrapper() {
@@ -70,8 +70,8 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
     public void createNewView() {
         main.removeAllComponents();
 
-        main.addComponent(new Label(
-                "Each Layout and their contained components should "
+        main.addComponent(
+                new Label("Each Layout and their contained components should "
                         + "have icon, caption, description, user error defined. "
                         + "Eeach layout should contain similar components."));
 
@@ -119,7 +119,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         test(layout, button);
         button.addListener(this);
 
-        final LegacyDateField df = new LegacyDateField("DateField " + count++);
+        final DateField df = new DateField("DateField " + count++);
         test(layout, df);
 
         final CheckBox cb = new CheckBox("Checkbox " + count++);
@@ -136,16 +136,16 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         final Label label = new Label("Label " + count++);
         test(layout, label);
 
-        final Link link = new Link("Link " + count++, new ExternalResource(
-                "www.vaadin.com"));
+        final Link link = new Link("Link " + count++,
+                new ExternalResource("www.vaadin.com"));
         test(layout, link);
 
-        final NativeSelect nativeSelect = new NativeSelect("NativeSelect "
-                + count++);
+        final NativeSelect nativeSelect = new NativeSelect(
+                "NativeSelect " + count++);
         test(layout, nativeSelect);
 
-        final OptionGroup optionGroup = new OptionGroup("OptionGroup "
-                + count++);
+        final OptionGroup optionGroup = new OptionGroup(
+                "OptionGroup " + count++);
         test(layout, optionGroup);
 
         final ProgressIndicator pi = new ProgressIndicator();
@@ -169,8 +169,8 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         final Tree tree = new Tree("Tree " + count++);
         test(layout, tree);
 
-        final TwinColSelect twinColSelect = new TwinColSelect("TwinColSelect "
-                + count++);
+        final TwinColSelect twinColSelect = new TwinColSelect(
+                "TwinColSelect " + count++);
         test(layout, twinColSelect);
 
         final Upload upload = new Upload("Upload (non-functional)", null);

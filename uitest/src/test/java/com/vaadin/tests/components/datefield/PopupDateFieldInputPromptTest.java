@@ -25,8 +25,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
+import com.vaadin.testbench.elements.PopupDateFieldElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.tests.legacyelements.LegacyPopupDateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -41,8 +41,8 @@ public class PopupDateFieldInputPromptTest extends MultiBrowserTest {
     public void testInputPrompt() {
         openTestURL();
         TextFieldElement textField = $(TextFieldElement.class).first();
-        final LegacyPopupDateFieldElement dateField = $(
-                LegacyPopupDateFieldElement.class).first();
+        final PopupDateFieldElement dateField = $(PopupDateFieldElement.class)
+                .first();
 
         // ensure initial state
         Assert.assertFalse("DateField required when it shouldn't be.",
@@ -63,7 +63,7 @@ public class PopupDateFieldInputPromptTest extends MultiBrowserTest {
     }
 
     private void waitForElementRequiredAndFocused(
-            final LegacyPopupDateFieldElement dateField, final By locator) {
+            final PopupDateFieldElement dateField, final By locator) {
         waitUntil(new ExpectedCondition<Boolean>() {
 
             @Override
@@ -84,7 +84,7 @@ public class PopupDateFieldInputPromptTest extends MultiBrowserTest {
         });
     }
 
-    private boolean isRequired(LegacyPopupDateFieldElement dateField) {
+    private boolean isRequired(PopupDateFieldElement dateField) {
         return dateField.getAttribute("class").contains("v-required");
     }
 }
