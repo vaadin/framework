@@ -120,13 +120,13 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.vaadin.external.gwt</groupId>
+			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-elemental</artifactId>
 			<version>${vaadin.gwt.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.vaadin.external.gwt</groupId>
+			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
 			<version>${vaadin.gwt.version}</version>
 		</dependency>

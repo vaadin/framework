@@ -53,7 +53,7 @@
 
 		<!-- Needed GWT dependencies, includes gwt-user -->
 		<dependency>
-			<groupId>com.vaadin.external.gwt</groupId>
+			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-elemental</artifactId>
 			<version>${vaadin.gwt.version}</version>
 		</dependency>

@@ -21,7 +21,7 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.vaadin.external.gwt</groupId>
+			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-dev</artifactId>
 			<version>${vaadin.gwt.version}</version>
 		</dependency>
