@@ -36,6 +36,11 @@
 		<javax.servlet.version>3.0.1</javax.servlet.version>
 		<javax.validation.version>1.0.0.GA</javax.validation.version>
 
+		<!-- OSGi -->
+		<osgi.javax.servlet.version>3.0.0</osgi.javax.servlet.version>
+		<osgi.execution.environment>JavaSE-1.8</osgi.execution.environment>
+		<osgi.bundle.version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</osgi.bundle.version>
+
 		<!-- Test dependencies -->
 		<junit.version>4.11</junit.version>
 
