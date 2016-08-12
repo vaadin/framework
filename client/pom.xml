@@ -51,7 +51,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Needed GWT dependencies. Required parts are packaged to jar -->
+		<!-- Needed GWT dependencies, includes gwt-user -->
 		<dependency>
 			<groupId>com.vaadin.external.gwt</groupId>
 			<artifactId>gwt-elemental</artifactId>
