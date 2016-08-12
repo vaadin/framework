@@ -242,19 +242,6 @@
 
 		<plugins>
 			<plugin>
-			    <groupId>org.codehaus.mojo</groupId>
-			    <artifactId>build-helper-maven-plugin</artifactId>
-			    <version>1.8</version>
-			    <executions>
-			      <execution>
-			        <id>parse-version</id>
-			        <goals>
-			          <goal>parse-version</goal>
-			        </goals>
-			      </execution>
-			    </executions>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>animal-sniffer-maven-plugin</artifactId>
 				<executions>
@@ -299,6 +286,12 @@
 								</resource>
 							</resources>
 						</configuration>
+					</execution>
+					<execution>
+						<id>parse-version</id>
+						<goals>
+							<goal>parse-version</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
