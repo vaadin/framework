@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -45,18 +45,18 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
  * input, and loaded dynamically ("lazy-loading") from the server. You can turn
  * on newItemsAllowed and change filtering mode (and also turn it off), but you
  * can not turn on multi-select mode.
- * 
+ *
  */
 @SuppressWarnings("serial")
-public class ComboBox extends AbstractSelect implements
-        AbstractSelect.Filtering, FieldEvents.BlurNotifier,
+public class ComboBox extends AbstractSelect
+        implements AbstractSelect.Filtering, FieldEvents.BlurNotifier,
         FieldEvents.FocusNotifier {
 
     /**
      * ItemStyleGenerator can be used to add custom styles to combo box items
      * shown in the popup. The CSS class name that will be added to the item
      * style names is <tt>v-filterselect-item-[style name]</tt>.
-     * 
+     *
      * @since 7.5.6
      * @see ComboBox#setItemStyleGenerator(ItemStyleGenerator)
      */
@@ -64,7 +64,7 @@ public class ComboBox extends AbstractSelect implements
 
         /**
          * Called by ComboBox when an item is painted.
-         * 
+         *
          * @param source
          *            the source combo box
          * @param itemId
@@ -118,7 +118,8 @@ public class ComboBox extends AbstractSelect implements
         }
     };
 
-    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
+    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(
+            this) {
         @Override
         protected void fireEvent(Component.Event event) {
             ComboBox.this.fireEvent(event);
@@ -156,7 +157,7 @@ public class ComboBox extends AbstractSelect implements
      * Flag to indicate whether to scroll the selected item visible (select the
      * page on which it is) when opening the popup or not. Only applies to
      * single select mode.
-     * 
+     *
      * This requires finding the index of the item, which can be expensive in
      * many large lazy loading containers.
      */
@@ -197,7 +198,7 @@ public class ComboBox extends AbstractSelect implements
 
     /**
      * Gets the current input prompt.
-     * 
+     *
      * @see #setInputPrompt(String)
      * @return the current input prompt, or null if not enabled
      */
@@ -224,7 +225,7 @@ public class ComboBox extends AbstractSelect implements
     /**
      * A class representing an item in a ComboBox for server to client
      * communication. This class is for internal use only and subject to change.
-     * 
+     *
      * @since
      */
     private static class ComboBoxItem implements Serializable {
@@ -353,11 +354,11 @@ public class ComboBox extends AbstractSelect implements
             }
             target.endTag("options");
 
-            target.addAttribute("totalitems", size()
-                    + (needNullSelectOption ? 1 : 0));
+            target.addAttribute("totalitems",
+                    size() + (needNullSelectOption ? 1 : 0));
             if (filteredSize > 0 || nullOptionVisible) {
-                target.addAttribute("totalMatches", filteredSize
-                        + (nullOptionVisible ? 1 : 0));
+                target.addAttribute("totalMatches",
+                        filteredSize + (nullOptionVisible ? 1 : 0));
             }
 
             // Paint variables
@@ -397,9 +398,9 @@ public class ComboBox extends AbstractSelect implements
      * field area of the component is just used to show what is selected. By
      * disabling text input, the comboBox will work in the same way as a
      * {@link NativeSelect}
-     * 
+     *
      * @see #isTextInputAllowed()
-     * 
+     *
      * @param textInputAllowed
      *            true to allow entering text, false to just show the current
      *            selection
@@ -413,7 +414,7 @@ public class ComboBox extends AbstractSelect implements
      * the selections or enter a new value if {@link #isNewItemsAllowed()}
      * returns true. If text input is disabled, the comboBox will work in the
      * same way as a {@link NativeSelect}
-     * 
+     *
      * @return
      */
     public boolean isTextInputAllowed() {
@@ -433,17 +434,17 @@ public class ComboBox extends AbstractSelect implements
     /**
      * Returns the filtered options for the current page using a container
      * filter.
-     * 
+     *
      * As a size effect, {@link #filteredSize} is set to the total number of
      * items passing the filter.
-     * 
+     *
      * The current container must be {@link Filterable} and {@link Indexed}, and
      * the filtering mode must be suitable for container filtering (tested with
      * {@link #canUseContainerFilter()}).
-     * 
+     *
      * Use {@link #getFilteredOptions()} and
      * {@link #sanitetizeList(List, boolean)} if this is not the case.
-     * 
+     *
      * @param needNullSelectOption
      * @return filtered list of options (may be empty) or null if cannot use
      *         container filters
@@ -486,7 +487,8 @@ public class ComboBox extends AbstractSelect implements
             // to page with the selected item after filtering if accepted by
             // filter
             Object selection = getValue();
-            if (isScrollToSelectedItem() && !optionRequest && selection != null) {
+            if (isScrollToSelectedItem() && !optionRequest
+                    && selection != null) {
                 // ensure proper page
                 indexToEnsureInView = indexed.indexOfId(selection);
             }
@@ -519,11 +521,11 @@ public class ComboBox extends AbstractSelect implements
     /**
      * Constructs a filter instance to use when using a Filterable container in
      * the <code>ITEM_CAPTION_MODE_PROPERTY</code> mode.
-     * 
+     *
      * Note that the client side implementation expects the filter string to
      * apply to the item caption string it sees, so changing the behavior of
      * this method can cause problems.
-     * 
+     *
      * @param filterString
      * @param filteringMode
      * @return
@@ -558,20 +560,21 @@ public class ComboBox extends AbstractSelect implements
 
     /**
      * Makes correct sublist of given list of options.
-     * 
+     *
      * If paint is not an option request (affected by page or filter change),
      * page will be the one where possible selection exists.
-     * 
+     *
      * Detects proper first and last item in list to return right page of
      * options. Also, if the current page is beyond the end of the list, it will
      * be adjusted.
-     * 
+     *
      * @param options
      * @param needNullSelectOption
      *            flag to indicate if nullselect option needs to be taken into
      *            consideration
      */
-    private List<?> sanitetizeList(List<?> options, boolean needNullSelectOption) {
+    private List<?> sanitetizeList(List<?> options,
+            boolean needNullSelectOption) {
 
         if (getPageLength() != 0 && options.size() > getPageLength()) {
 
@@ -581,7 +584,8 @@ public class ComboBox extends AbstractSelect implements
             // to page with the selected item after filtering if accepted by
             // filter
             Object selection = getValue();
-            if (isScrollToSelectedItem() && !optionRequest && selection != null) {
+            if (isScrollToSelectedItem() && !optionRequest
+                    && selection != null) {
                 // ensure proper page
                 indexToEnsureInView = options.indexOf(selection);
             }
@@ -591,8 +595,8 @@ public class ComboBox extends AbstractSelect implements
                     indexToEnsureInView, size);
             int first = getFirstItemIndexOnCurrentPage(needNullSelectOption,
                     size);
-            int last = getLastItemIndexOnCurrentPage(needNullSelectOption,
-                    size, first);
+            int last = getLastItemIndexOnCurrentPage(needNullSelectOption, size,
+                    first);
             return options.subList(first, last + 1);
         } else {
             return options;
@@ -603,7 +607,7 @@ public class ComboBox extends AbstractSelect implements
      * Returns the index of the first item on the current page. The index is to
      * the underlying (possibly filtered) contents. The null item, if any, does
      * not have an index but takes up a slot on the first page.
-     * 
+     *
      * @param needNullSelectOption
      *            true if a null option should be shown before any other options
      *            (takes up the first slot on the first page, not counted in
@@ -630,7 +634,7 @@ public class ComboBox extends AbstractSelect implements
      * the underlying (possibly filtered) contents. If needNullSelectOption is
      * true, the null item takes up the first slot on the first page,
      * effectively reducing the first page size by one.
-     * 
+     *
      * @param needNullSelectOption
      *            true if a null option should be shown before any other options
      *            (takes up the first slot on the first page, not counted in
@@ -655,7 +659,7 @@ public class ComboBox extends AbstractSelect implements
      * page is not after the end of the contents, and optionally go to the page
      * containg a specific item. There are no side effects but the adjusted page
      * index is returned.
-     * 
+     *
      * @param page
      *            page number to use as the starting point
      * @param needNullSelectOption
@@ -685,11 +689,11 @@ public class ComboBox extends AbstractSelect implements
 
     /**
      * Filters the options in memory and returns the full filtered list.
-     * 
+     *
      * This can be less efficient than using container filters, so use
      * {@link #getOptionsWithFilter(boolean)} if possible (filterable container
      * and suitable item caption mode etc.).
-     * 
+     *
      * @return
      */
     protected List<?> getFilteredOptions() {
@@ -741,7 +745,7 @@ public class ComboBox extends AbstractSelect implements
 
     /**
      * Invoked when the value of a variable has changed.
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
@@ -769,28 +773,9 @@ public class ComboBox extends AbstractSelect implements
                 BlurListener.blurMethod);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by {@link #addBlurListener(BlurListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(BlurListener listener) {
-        addBlurListener(listener);
-    }
-
     @Override
     public void removeBlurListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeBlurListener(BlurListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(BlurListener listener) {
-        removeBlurListener(listener);
     }
 
     @Override
@@ -799,34 +784,14 @@ public class ComboBox extends AbstractSelect implements
                 FocusListener.focusMethod);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addFocusListener(FocusListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(FocusListener listener) {
-        addFocusListener(listener);
-    }
-
     @Override
     public void removeFocusListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }
 
     /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeFocusListener(FocusListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(FocusListener listener) {
-        removeFocusListener(listener);
-    }
-
-    /**
      * ComboBox does not support multi select mode.
-     * 
+     *
      * @deprecated As of 7.0, use {@link ListSelect}, {@link OptionGroup} or
      *             {@link TwinColSelect} instead
      * @see com.vaadin.ui.AbstractSelect#setMultiSelect(boolean)
@@ -837,18 +802,19 @@ public class ComboBox extends AbstractSelect implements
     @Override
     public void setMultiSelect(boolean multiSelect) {
         if (multiSelect) {
-            throw new UnsupportedOperationException("Multiselect not supported");
+            throw new UnsupportedOperationException(
+                    "Multiselect not supported");
         }
     }
 
     /**
      * ComboBox does not support multi select mode.
-     * 
+     *
      * @deprecated As of 7.0, use {@link ListSelect}, {@link OptionGroup} or
      *             {@link TwinColSelect} instead
-     * 
+     *
      * @see com.vaadin.ui.AbstractSelect#isMultiSelect()
-     * 
+     *
      * @return false
      */
     @Deprecated
@@ -859,7 +825,7 @@ public class ComboBox extends AbstractSelect implements
 
     /**
      * Returns the page length of the suggestion popup.
-     * 
+     *
      * @return the pageLength
      */
     public int getPageLength() {
@@ -879,7 +845,7 @@ public class ComboBox extends AbstractSelect implements
     /**
      * Sets the page length for the suggestion popup. Setting the page length to
      * 0 will disable suggestion popup paging (all items visible).
-     * 
+     *
      * @param pageLength
      *            the pageLength to set
      */
@@ -891,7 +857,7 @@ public class ComboBox extends AbstractSelect implements
      * Sets the suggestion pop-up's width as a CSS string. By using relative
      * units (e.g. "50%") it's possible to set the popup's width relative to the
      * ComboBox itself.
-     * 
+     *
      * @see #getPopupWidth()
      * @since 7.7
      * @param width
@@ -905,10 +871,10 @@ public class ComboBox extends AbstractSelect implements
      * Sets whether to scroll the selected item visible (directly open the page
      * on which it is) when opening the combo box popup or not. Only applies to
      * single select mode.
-     * 
+     *
      * This requires finding the index of the item, which can be expensive in
      * many large lazy loading containers.
-     * 
+     *
      * @param scrollToSelectedItem
      *            true to find the page with the selected item when opening the
      *            selection popup
@@ -920,9 +886,9 @@ public class ComboBox extends AbstractSelect implements
     /**
      * Returns true if the select should find the page with the selected item
      * when opening the popup (single select combo box only).
-     * 
+     *
      * @see #setScrollToSelectedItem(boolean)
-     * 
+     *
      * @return true if the page with the selected item will be shown when
      *         opening the popup
      */
@@ -934,7 +900,7 @@ public class ComboBox extends AbstractSelect implements
      * Sets the item style generator that is used to produce custom styles for
      * showing items in the popup. The CSS class name that will be added to the
      * item style names is <tt>v-filterselect-item-[style name]</tt>.
-     * 
+     *
      * @param itemStyleGenerator
      *            the item style generator to set, or <code>null</code> to not
      *            use any custom item styles
@@ -947,7 +913,7 @@ public class ComboBox extends AbstractSelect implements
 
     /**
      * Gets the currently used item style generator.
-     * 
+     *
      * @return the itemStyleGenerator the currently used item style generator,
      *         or <code>null</code> if no generator is used
      * @since 7.5.6

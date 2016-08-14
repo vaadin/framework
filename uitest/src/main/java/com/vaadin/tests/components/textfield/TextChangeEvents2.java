@@ -22,7 +22,7 @@ public class TextChangeEvents2 extends TestBase {
             final TextField tf = new TextField("Debug");
             getLayout().addComponent(tf);
 
-            tf.addListener(new TextChangeListener() {
+            tf.addTextChangeListener(new TextChangeListener() {
                 @Override
                 public void textChange(TextChangeEvent event) {
                     System.err.println(tf.getCaption() + " textChange");
@@ -58,7 +58,7 @@ public class TextChangeEvents2 extends TestBase {
             getLayout().addComponent(tf);
             final Label l = new Label();
             getLayout().addComponent(l);
-            tf.addListener(new TextChangeListener() {
+            tf.addTextChangeListener(new TextChangeListener() {
                 @Override
                 public void textChange(TextChangeEvent event) {
                     l.setValue(event.getText());
@@ -81,7 +81,7 @@ public class TextChangeEvents2 extends TestBase {
             getLayout().addComponent(tf);
             final Label l = new Label();
             getLayout().addComponent(l);
-            tf.addListener(new TextChangeListener() {
+            tf.addTextChangeListener(new TextChangeListener() {
 
                 @Override
                 public void textChange(TextChangeEvent event) {
@@ -104,7 +104,7 @@ public class TextChangeEvents2 extends TestBase {
             getLayout().addComponent(tf);
             final Label l = new Label();
             getLayout().addComponent(l);
-            tf.addListener(new TextChangeListener() {
+            tf.addTextChangeListener(new TextChangeListener() {
 
                 @Override
                 public void textChange(TextChangeEvent event) {
@@ -132,7 +132,7 @@ public class TextChangeEvents2 extends TestBase {
                 tf.setTextChangeEventMode(TextChangeEventMode.EAGER);
                 hl.addComponent(tf);
 
-                tf.addListener(new TextChangeListener() {
+                tf.addTextChangeListener(new TextChangeListener() {
 
                     @Override
                     public void textChange(TextChangeEvent event) {
@@ -149,8 +149,8 @@ public class TextChangeEvents2 extends TestBase {
                                 TextField next = tfs[idx + 1];
                                 next.focus();
                                 if (len > 4) {
-                                    next.setValue(txt.substring(4, len > 8 ? 8
-                                            : len));
+                                    next.setValue(txt.substring(4,
+                                            len > 8 ? 8 : len));
                                 } else {
                                     next.selectAll();
                                 }

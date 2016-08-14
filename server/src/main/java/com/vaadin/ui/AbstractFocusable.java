@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,12 +28,12 @@ import com.vaadin.ui.Component.Focusable;
 /**
  * An abstract base class for focusable components. Includes API for setting the
  * tab index, programmatic focusing, and adding focus and blur listeners.
- * 
+ *
  * @since 7.6
  * @author Vaadin Ltd
  */
-public abstract class AbstractFocusable extends AbstractComponent implements
-        Focusable, FocusNotifier, BlurNotifier {
+public abstract class AbstractFocusable extends AbstractComponent
+        implements Focusable, FocusNotifier, BlurNotifier {
 
     protected AbstractFocusable() {
         registerRpc(new FocusAndBlurServerRpcImpl(this) {
@@ -50,29 +50,9 @@ public abstract class AbstractFocusable extends AbstractComponent implements
                 BlurListener.blurMethod);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by {@link #addBlurListener(BlurListener)}
-     */
-    @Override
-    @Deprecated
-    public void addListener(BlurListener listener) {
-        addBlurListener(listener);
-    }
-
     @Override
     public void removeBlurListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeBlurListener(BlurListener)}
-     */
-    @Override
-    @Deprecated
-    public void removeListener(BlurListener listener) {
-        removeBlurListener(listener);
-
     }
 
     @Override
@@ -82,29 +62,9 @@ public abstract class AbstractFocusable extends AbstractComponent implements
 
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addFocusListener(FocusListener)}
-     */
-    @Override
-    @Deprecated
-    public void addListener(FocusListener listener) {
-        addFocusListener(listener);
-    }
-
     @Override
     public void removeFocusListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeFocusListener(FocusListener)}
-     */
-    @Override
-    @Deprecated
-    public void removeListener(FocusListener listener) {
-        removeFocusListener(listener);
     }
 
     @Override

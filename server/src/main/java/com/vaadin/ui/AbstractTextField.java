@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -39,8 +39,9 @@ import com.vaadin.shared.ui.textfield.TextFieldConstants;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
-public abstract class AbstractTextField extends LegacyAbstractField<String> implements
-        BlurNotifier, FocusNotifier, TextChangeNotifier, LegacyComponent {
+public abstract class AbstractTextField extends LegacyAbstractField<String>
+        implements BlurNotifier, FocusNotifier, TextChangeNotifier,
+        LegacyComponent {
 
     /**
      * Null representation.
@@ -190,7 +191,8 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
                 String newValue = (String) variables.get("text");
 
                 // server side check for max length
-                if (getMaxLength() != -1 && newValue.length() > getMaxLength()) {
+                if (getMaxLength() != -1
+                        && newValue.length() > getMaxLength()) {
                     newValue = newValue.substring(0, getMaxLength());
                 }
                 final String oldValue = getValue();
@@ -233,17 +235,17 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
 
     /**
      * Gets the null-string representation.
-     * 
+     *
      * <p>
      * The null-valued strings are represented on the user interface by
      * replacing the null value with this string. If the null representation is
      * set null (not 'null' string), painting null value throws exception.
      * </p>
-     * 
+     *
      * <p>
      * The default value is string 'null'.
      * </p>
-     * 
+     *
      * @return the String Textual representation for null strings.
      * @see TextField#isNullSettingAllowed()
      */
@@ -253,7 +255,7 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
 
     /**
      * Is setting nulls with null-string representation allowed.
-     * 
+     *
      * <p>
      * If this property is true, writing null-representation string to text
      * field always sets the field value to real null. If this property is
@@ -262,11 +264,11 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
      * contents to real null, if the text field matches the null-string
      * representation and the current value of the field is null.
      * </p>
-     * 
+     *
      * <p>
      * By default this setting is false
      * </p>
-     * 
+     *
      * @return boolean Should the null-string represenation be always converted
      *         to null-values.
      * @see TextField#getNullRepresentation()
@@ -277,17 +279,17 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
 
     /**
      * Sets the null-string representation.
-     * 
+     *
      * <p>
      * The null-valued strings are represented on the user interface by
      * replacing the null value with this string. If the null representation is
      * set null (not 'null' string), painting null value throws exception.
      * </p>
-     * 
+     *
      * <p>
      * The default value is string 'null'
      * </p>
-     * 
+     *
      * @param nullRepresentation
      *            Textual representation for null strings.
      * @see TextField#setNullSettingAllowed(boolean)
@@ -299,7 +301,7 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
 
     /**
      * Sets the null conversion mode.
-     * 
+     *
      * <p>
      * If this property is true, writing null-representation string to text
      * field always sets the field value to real null. If this property is
@@ -308,11 +310,11 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
      * contents to real null, if the text field matches the null-string
      * representation and the current value of the field is null.
      * </p>
-     * 
+     *
      * <p>
      * By default this setting is false.
      * </p>
-     * 
+     *
      * @param nullSettingAllowed
      *            Should the null-string representation always be converted to
      *            null-values.
@@ -331,7 +333,7 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
     /**
      * Returns the maximum number of characters in the field. Value -1 is
      * considered unlimited. Terminal may however have some technical limits.
-     * 
+     *
      * @return the maxLength
      */
     public int getMaxLength() {
@@ -341,7 +343,7 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
     /**
      * Sets the maximum number of characters in the field. Value -1 is
      * considered unlimited. Terminal may however have some technical limits.
-     * 
+     *
      * @param maxLength
      *            the maxLength to set
      */
@@ -353,7 +355,7 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
      * Gets the number of columns in the editor. If the number of columns is set
      * 0, the actual number of displayed columns is determined implicitly by the
      * adapter.
-     * 
+     *
      * @return the number of columns in the editor.
      */
     public int getColumns() {
@@ -364,7 +366,7 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
      * Sets the number of columns in the editor. If the number of columns is set
      * 0, the actual number of displayed columns is determined implicitly by the
      * adapter.
-     * 
+     *
      * @param columns
      *            the number of columns to set.
      */
@@ -377,7 +379,7 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
 
     /**
      * Gets the current input prompt.
-     * 
+     *
      * @see #setInputPrompt(String)
      * @return the current input prompt, or null if not enabled
      */
@@ -388,7 +390,7 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
     /**
      * Sets the input prompt - a textual prompt that is displayed when the field
      * would otherwise be empty, to prompt the user for input.
-     * 
+     *
      * @param inputPrompt
      */
     public void setInputPrompt(String inputPrompt) {
@@ -415,11 +417,11 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
 
             /*
              * TODO check for possible (minor?) issue (not tested)
-             * 
+             *
              * -field with e.g. PropertyFormatter.
-             * 
+             *
              * -TextChangeListener and it changes value.
-             * 
+             *
              * -if formatter again changes the value, do we get an extra
              * simulated text change event ?
              */
@@ -427,7 +429,7 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
             /*
              * Fire a "simulated" text change event before value change event if
              * change is coming from the client side.
-             * 
+             *
              * Iff there is both value change and textChangeEvent in same
              * variable burst, it is a text field in non immediate mode and the
              * text change event "flushed" queued value change event. In this
@@ -458,8 +460,8 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
          * Make sure w reset lastKnownTextContent field on value change. The
          * clearing must happen here as well because TextChangeListener can
          * revert the original value. Client must respect the value in this
-         * case. LegacyAbstractField optimizes value change if the existing value is
-         * reset. Also we need to force repaint if the flag is on.
+         * case. LegacyAbstractField optimizes value change if the existing
+         * value is reset. Also we need to force repaint if the flag is on.
          */
         if (lastKnownTextContent != null) {
             lastKnownTextContent = null;
@@ -480,10 +482,10 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
 
     /**
      * Sets the mode how the TextField triggers {@link TextChangeEvent}s.
-     * 
+     *
      * @param inputEventMode
      *            the new mode
-     * 
+     *
      * @see TextChangeEventMode
      */
     public void setTextChangeEventMode(TextChangeEventMode inputEventMode) {
@@ -540,16 +542,6 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
                 listener, TextChangeListener.EVENT_METHOD);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addTextChangeListener(TextChangeListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(TextChangeListener listener) {
-        addTextChangeListener(listener);
-    }
-
     @Override
     public void removeTextChangeListener(TextChangeListener listener) {
         removeListener(TextChangeListener.EVENT_ID, TextChangeEvent.class,
@@ -557,23 +549,13 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
     }
 
     /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeTextChangeListener(TextChangeListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(TextChangeListener listener) {
-        removeTextChangeListener(listener);
-    }
-
-    /**
      * The text change timeout modifies how often text change events are
      * communicated to the application when {@link #getTextChangeEventMode()} is
      * {@link TextChangeEventMode#LAZY} or {@link TextChangeEventMode#TIMEOUT}.
-     * 
-     * 
+     *
+     *
      * @see #getTextChangeEventMode()
-     * 
+     *
      * @param timeout
      *            the timeout in milliseconds
      */
@@ -586,7 +568,7 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
      * Gets the timeout used to fire {@link TextChangeEvent}s when the
      * {@link #getTextChangeEventMode()} is {@link TextChangeEventMode#LAZY} or
      * {@link TextChangeEventMode#TIMEOUT}.
-     * 
+     *
      * @return the timeout value in milliseconds
      */
     public int getTextChangeTimeout() {
@@ -629,7 +611,7 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
      * pressing enter. The value returned by this method is updated also on
      * {@link TextChangeEvent}s. Due to this high dependency to the terminal
      * implementation this method is (at least at this point) not published.
-     * 
+     *
      * @return the text which is currently displayed in the field.
      */
     private String getCurrentTextContent() {
@@ -646,7 +628,7 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
 
     /**
      * Selects all text in the field.
-     * 
+     *
      * @since 6.4
      */
     public void selectAll() {
@@ -656,11 +638,11 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
 
     /**
      * Sets the range of text to be selected.
-     * 
+     *
      * As a side effect the field will become focused.
-     * 
+     *
      * @since 6.4
-     * 
+     *
      * @param pos
      *            the position of the first character to be selected
      * @param length
@@ -676,12 +658,12 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
     /**
      * Sets the cursor position in the field. As a side effect the field will
      * become focused.
-     * 
+     *
      * @since 6.4
-     * 
+     *
      * @param pos
      *            the position for the cursor
-     * */
+     */
     public void setCursorPosition(int pos) {
         setSelectionRange(pos, 0);
         lastKnownCursorPosition = pos;
@@ -689,14 +671,14 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
 
     /**
      * Returns the last known cursor position of the field.
-     * 
+     *
      * <p>
      * Note that due to the client server nature or the GWT terminal, Vaadin
      * cannot provide the exact value of the cursor position in most situations.
      * The value is updated only when the client side terminal communicates to
      * TextField, like on {@link ValueChangeEvent}s and {@link TextChangeEvent}
      * s. This may change later if a deep push integration is built to Vaadin.
-     * 
+     *
      * @return the cursor position
      */
     public int getCursorPosition() {
@@ -709,29 +691,9 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
                 FocusListener.focusMethod);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addFocusListener(FocusListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(FocusListener listener) {
-        addFocusListener(listener);
-    }
-
     @Override
     public void removeFocusListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeFocusListener(FocusListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(FocusListener listener) {
-        removeFocusListener(listener);
     }
 
     @Override
@@ -740,33 +702,14 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
                 BlurListener.blurMethod);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by {@link #addBlurListener(BlurListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(BlurListener listener) {
-        addBlurListener(listener);
-    }
-
     @Override
     public void removeBlurListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeBlurListener(BlurListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(BlurListener listener) {
-        removeBlurListener(listener);
-    }
-
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractField#readDesign(org.jsoup.nodes.Element ,
      * com.vaadin.ui.declarative.DesignContext)
      */
@@ -775,14 +718,14 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
         super.readDesign(design, designContext);
         Attributes attr = design.attributes();
         if (attr.hasKey("maxlength")) {
-            setMaxLength(DesignAttributeHandler.readAttribute("maxlength",
-                    attr, Integer.class));
+            setMaxLength(DesignAttributeHandler.readAttribute("maxlength", attr,
+                    Integer.class));
         }
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractField#getCustomAttributes()
      */
     @Override
@@ -797,7 +740,7 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractField#writeDesign(org.jsoup.nodes.Element,
      * com.vaadin.ui.declarative.DesignContext)
      */
@@ -807,8 +750,8 @@ public abstract class AbstractTextField extends LegacyAbstractField<String> impl
         AbstractTextField def = (AbstractTextField) designContext
                 .getDefaultInstance(this);
         Attributes attr = design.attributes();
-        DesignAttributeHandler.writeAttribute("maxlength", attr,
-                getMaxLength(), def.getMaxLength(), Integer.class);
+        DesignAttributeHandler.writeAttribute("maxlength", attr, getMaxLength(),
+                def.getMaxLength(), Integer.class);
     }
 
 }

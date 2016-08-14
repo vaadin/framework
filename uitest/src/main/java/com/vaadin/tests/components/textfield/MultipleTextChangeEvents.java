@@ -19,7 +19,7 @@ public class MultipleTextChangeEvents extends TestBase {
         TextField tf = new TextField();
         tf.setTextChangeEventMode(TextChangeEventMode.TIMEOUT);
         tf.setTextChangeTimeout(500);
-        tf.addListener(new TextChangeListener() {
+        tf.addTextChangeListener(new TextChangeListener() {
             @Override
             public void textChange(TextChangeEvent event) {
                 log.log("TextChangeEvent: " + event.getText());

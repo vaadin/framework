@@ -12,7 +12,7 @@ public class TextChangeEventsEternalLoop extends TestBase {
         final TextField tf = new TextField("Debug");
         getLayout().addComponent(tf);
 
-        tf.addListener(new TextChangeListener() {
+        tf.addTextChangeListener(new TextChangeListener() {
             @Override
             public void textChange(TextChangeEvent event) {
                 tf.setValue(event.getText());

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,10 +33,11 @@ import com.vaadin.event.FieldEvents.FocusListener;
  * better choice.
  */
 @SuppressWarnings("serial")
-public class NativeSelect extends AbstractSelect implements
-        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
+public class NativeSelect extends AbstractSelect
+        implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
-    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
+    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(
+            this) {
 
         @Override
         protected void fireEvent(Event event) {
@@ -68,7 +69,8 @@ public class NativeSelect extends AbstractSelect implements
     public void setMultiSelect(boolean multiSelect)
             throws UnsupportedOperationException {
         if (multiSelect == true) {
-            throw new UnsupportedOperationException("Multiselect not supported");
+            throw new UnsupportedOperationException(
+                    "Multiselect not supported");
         }
     }
 
@@ -87,29 +89,9 @@ public class NativeSelect extends AbstractSelect implements
                 FocusListener.focusMethod);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addFocusListener(FocusListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(FocusListener listener) {
-        addFocusListener(listener);
-    }
-
     @Override
     public void removeFocusListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeFocusListener(FocusListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(FocusListener listener) {
-        removeFocusListener(listener);
     }
 
     @Override
@@ -118,28 +100,9 @@ public class NativeSelect extends AbstractSelect implements
                 BlurListener.blurMethod);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by {@link #addBlurListener(BlurListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(BlurListener listener) {
-        addBlurListener(listener);
-    }
-
     @Override
     public void removeBlurListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeBlurListener(BlurListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(BlurListener listener) {
-        removeBlurListener(listener);
     }
 
 }

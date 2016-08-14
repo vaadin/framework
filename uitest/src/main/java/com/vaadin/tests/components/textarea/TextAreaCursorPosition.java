@@ -32,13 +32,13 @@ public class TextAreaCursorPosition extends TestBase {
         AbstractTextField newTextField = (AbstractTextField) newField;
         newTextField.setTextChangeEventMode(TextChangeEventMode.EAGER);
 
-        newTextField.addListener(new TextChangeListener() {
+        newTextField.addTextChangeListener(new TextChangeListener() {
             @Override
             public void textChange(TextChangeEvent event) {
                 AbstractTextField component = (AbstractTextField) event
                         .getComponent();
-                cursorPosition.setValue(String.valueOf(component
-                        .getCursorPosition()));
+                cursorPosition.setValue(
+                        String.valueOf(component.getCursorPosition()));
             }
         });
     }

@@ -28,6 +28,7 @@ import com.vaadin.ui.TextField;
 public class TextChangeListenerLosesFocus extends TestBase {
 
     private final TextChangeListener listener = new TextChangeListener() {
+        @Override
         public void textChange(TextChangeEvent event) {
             final String value = event.getText();
             if (value.length() > 2) {
@@ -46,13 +47,13 @@ public class TextChangeListenerLosesFocus extends TestBase {
         AbstractTextField field = new TextField();
         field.setDebugId("test-textfield");
         field.setInputPrompt("Enter at least 3 characters");
-        field.addListener(listener);
+        field.addTextChangeListener(listener);
         addComponent(field);
 
         field = new TextArea();
         field.setDebugId("test-textarea");
         field.setInputPrompt("Enter at least 3 characters");
-        field.addListener(listener);
+        field.addTextChangeListener(listener);
         addComponent(field);
 
     }

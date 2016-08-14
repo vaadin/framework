@@ -28,27 +28,27 @@ public class TextChangeEvents extends TestBase {
             }
         };
 
-        tf.addListener(inputEventListener);
+        tf.addTextChangeListener(inputEventListener);
 
         getLayout().addComponent(tf);
 
         TextField eager = new TextField("Eager");
-        eager.addListener(inputEventListener);
+        eager.addTextChangeListener(inputEventListener);
         eager.setTextChangeEventMode(TextChangeEventMode.EAGER);
         getLayout().addComponent(eager);
 
         TextField to = new TextField("Timeout 3s");
-        to.addListener(inputEventListener);
+        to.addTextChangeListener(inputEventListener);
         to.setTextChangeEventMode(TextChangeEventMode.TIMEOUT);
         to.setTextChangeTimeout(3000);
         getLayout().addComponent(to);
 
         TextArea ta = new TextArea("Default text area");
-        ta.addListener(inputEventListener);
+        ta.addTextChangeListener(inputEventListener);
         getLayout().addComponent(ta);
 
         VaadinDeveloperNameField vd = new VaadinDeveloperNameField();
-        vd.addListener(inputEventListener);
+        vd.addTextChangeListener(inputEventListener);
         getLayout().addComponent(vd);
 
         getLayout().addComponent(l);
@@ -66,22 +66,22 @@ public class TextChangeEvents extends TestBase {
 
     /**
      * "Autosuggest"
-     * 
+     *
      * Known issue is timing if suggestion comes while typing more content. IMO
      * we will not support this kind of features in default TextField, but
      * hopefully make it easily extendable to perfect suggest feature. MT
      * 2010-10
-     * 
+     *
      */
-    private class VaadinDeveloperNameField extends TextField implements
-            TextChangeListener {
+    private class VaadinDeveloperNameField extends TextField
+            implements TextChangeListener {
         private String[] names = new String[] { "Matti Tahvonen",
                 "Marc Englund", "Joonas Lehtinen", "Jouni Koivuviita",
                 "Marko Grönroos", "Artur Signell" };
 
         public VaadinDeveloperNameField() {
             setCaption("Start typing 'old' Vaadin developers.");
-            addListener((TextChangeListener) this);
+            addTextChangeListener(this);
             setStyleName("nomatch");
         }
 
@@ -94,7 +94,8 @@ public class TextChangeEvents extends TestBase {
 
         @Override
         public void textChange(TextChangeEvent event) {
-            boolean atTheEndOfText = event.getText().length() == getCursorPosition();
+            boolean atTheEndOfText = event.getText()
+                    .length() == getCursorPosition();
             String match = findMatch(event.getText());
             if (match != null) {
                 setStyleName("match");

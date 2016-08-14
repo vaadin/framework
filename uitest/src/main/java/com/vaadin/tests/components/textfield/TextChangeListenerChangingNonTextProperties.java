@@ -22,15 +22,12 @@ public class TextChangeListenerChangingNonTextProperties extends TestBase {
             @Override
             public void attach() {
                 super.attach();
-                TestUtils
-                        .injectCSS(
-                                getUI(),
-                                ".red { background:red;} "
-                                        + ".green { background:green;} .blue { background:blue;} .cyan { background:cyan;} .magenta { background:magenta;}");
+                TestUtils.injectCSS(getUI(), ".red { background:red;} "
+                        + ".green { background:green;} .blue { background:blue;} .cyan { background:cyan;} .magenta { background:magenta;}");
             }
         };
         tf2.setTextChangeEventMode(TextChangeEventMode.EAGER);
-        tf2.addListener(new TextChangeListener() {
+        tf2.addTextChangeListener(new TextChangeListener() {
             @Override
             public void textChange(TextChangeEvent event) {
                 tf2.setStyleName(getNextStyle());

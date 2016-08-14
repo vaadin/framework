@@ -26,7 +26,7 @@ public class TextChangeEventsWithNonImmediateValueChange extends TestBase {
             }
         };
 
-        tf.addListener(inputEventListener);
+        tf.addTextChangeListener(inputEventListener);
 
         // tf.setImmediate(true); // works when this is set
 
