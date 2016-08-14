@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,7 +15,7 @@
  */
 
 /**
- * 
+ *
  */
 package com.vaadin.server;
 
@@ -29,7 +29,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.server.DeploymentConfiguration.LegacyProperyToStringMode;
 import com.vaadin.server.MockUIContainingServlet.ServletInUI;
 import com.vaadin.ui.UI;
 
@@ -42,8 +41,8 @@ public class VaadinServletConfigurationTest {
 
         Class<? extends UI> uiClass = new DefaultUIProvider()
                 .getUIClass(new UIClassSelectionEvent(new VaadinServletRequest(
-                        EasyMock.createMock(HttpServletRequest.class), servlet
-                                .getService())));
+                        EasyMock.createMock(HttpServletRequest.class),
+                        servlet.getService())));
         Assert.assertEquals(MockUIContainingServlet.class, uiClass);
     }
 
@@ -55,39 +54,15 @@ public class VaadinServletConfigurationTest {
                 .getDeploymentConfiguration();
 
         Assert.assertEquals(true, configuration.isProductionMode());
-        Assert.assertEquals(LegacyProperyToStringMode.DISABLED,
-                configuration.getLegacyPropertyToStringMode());
         Assert.assertEquals(true, configuration.isCloseIdleSessions());
         Assert.assertEquals(1234, configuration.getHeartbeatInterval());
         Assert.assertEquals(4321, configuration.getResourceCacheTime());
 
         Class<? extends UI> uiClass = new DefaultUIProvider()
                 .getUIClass(new UIClassSelectionEvent(new VaadinServletRequest(
-                        EasyMock.createMock(HttpServletRequest.class), servlet
-                                .getService())));
+                        EasyMock.createMock(HttpServletRequest.class),
+                        servlet.getService())));
         Assert.assertEquals(MockUIContainingServlet.class, uiClass);
-    }
-
-    @Test
-    public void testLegacyEnabledAnnotation() throws ServletException {
-        VaadinServlet servlet = new LegacyPropertyEnabledTestServlet();
-        servlet.init(new MockServletConfig());
-        DeploymentConfiguration configuration = servlet.getService()
-                .getDeploymentConfiguration();
-
-        Assert.assertEquals(LegacyProperyToStringMode.ENABLED,
-                configuration.getLegacyPropertyToStringMode());
-    }
-
-    @Test
-    public void testLegacyWarningAnnotation() throws ServletException {
-        VaadinServlet servlet = new LegacyPropertyWarningTestServlet();
-        servlet.init(new MockServletConfig());
-        DeploymentConfiguration configuration = servlet.getService()
-                .getDeploymentConfiguration();
-
-        Assert.assertEquals(LegacyProperyToStringMode.WARNING,
-                configuration.getLegacyPropertyToStringMode());
     }
 
     @Test
@@ -106,30 +81,18 @@ public class VaadinServletConfigurationTest {
         Assert.assertEquals(false, configuration.isProductionMode());
 
         // Other params are as defined in the annotation
-        Assert.assertEquals(LegacyProperyToStringMode.DISABLED,
-                configuration.getLegacyPropertyToStringMode());
         Assert.assertEquals(true, configuration.isCloseIdleSessions());
         Assert.assertEquals(4321, configuration.getResourceCacheTime());
 
         Class<? extends UI> uiClass = new DefaultUIProvider()
                 .getUIClass(new UIClassSelectionEvent(new VaadinServletRequest(
-                        EasyMock.createMock(HttpServletRequest.class), servlet
-                                .getService())));
+                        EasyMock.createMock(HttpServletRequest.class),
+                        servlet.getService())));
         Assert.assertEquals(MockUIContainingServlet.class, uiClass);
     }
 }
 
 @VaadinServletConfiguration(productionMode = true, ui = MockUIContainingServlet.class, closeIdleSessions = true, heartbeatInterval = 1234, resourceCacheTime = 4321)
 class TestServlet extends VaadinServlet {
-
-}
-
-@VaadinServletConfiguration(productionMode = true, ui = MockUIContainingServlet.class, legacyPropertyToStringMode = LegacyProperyToStringMode.WARNING)
-class LegacyPropertyWarningTestServlet extends VaadinServlet {
-
-}
-
-@VaadinServletConfiguration(productionMode = true, ui = MockUIContainingServlet.class, legacyPropertyToStringMode = LegacyProperyToStringMode.ENABLED)
-class LegacyPropertyEnabledTestServlet extends VaadinServlet {
 
 }

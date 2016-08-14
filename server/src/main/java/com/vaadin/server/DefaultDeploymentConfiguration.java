@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,7 +17,6 @@
 package com.vaadin.server;
 
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.shared.communication.PushMode;
@@ -25,12 +24,12 @@ import com.vaadin.shared.communication.PushMode;
 /**
  * The default implementation of {@link DeploymentConfiguration} based on a base
  * class for resolving system properties and a set of init parameters.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class DefaultDeploymentConfiguration extends
-        AbstractDeploymentConfiguration {
+public class DefaultDeploymentConfiguration
+        extends AbstractDeploymentConfiguration {
     /**
      * Default value for {@link #getResourceCacheTime()} = {@value} .
      */
@@ -47,14 +46,8 @@ public class DefaultDeploymentConfiguration extends
     public static final boolean DEFAULT_CLOSE_IDLE_SESSIONS = false;
 
     /**
-     * Default value for {@link #getLegacyPropertyToStringMode()} =
-     * {@link LegacyProperyToStringMode#WARNING}.
-     */
-    public static final LegacyProperyToStringMode DEFAULT_LEGACY_PROPERTY_TO_STRING = LegacyProperyToStringMode.WARNING;
-
-    /**
      * Default value for {@link #isSyncIdCheckEnabled()} = {@value} .
-     * 
+     *
      * @since 7.3
      */
     public static final boolean DEFAULT_SYNC_ID_CHECK = true;
@@ -69,13 +62,12 @@ public class DefaultDeploymentConfiguration extends
     private boolean closeIdleSessions;
     private PushMode pushMode;
     private final Class<?> systemPropertyBaseClass;
-    private LegacyProperyToStringMode legacyPropertyToStringMode;
     private boolean syncIdCheck;
     private boolean sendUrlsAsParameters;
 
     /**
      * Create a new deployment configuration instance.
-     * 
+     *
      * @param systemPropertyBaseClass
      *            the class that should be used as a basis when reading system
      *            properties
@@ -94,30 +86,8 @@ public class DefaultDeploymentConfiguration extends
         checkHeartbeatInterval();
         checkCloseIdleSessions();
         checkPushMode();
-        checkLegacyPropertyToString();
         checkSyncIdCheck();
         checkSendUrlsAsParameters();
-    }
-
-    private void checkLegacyPropertyToString() {
-        String param = getApplicationOrSystemProperty(
-                Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING,
-                DEFAULT_LEGACY_PROPERTY_TO_STRING.getPropertyString());
-
-        for (LegacyProperyToStringMode mode : LegacyProperyToStringMode
-                .values()) {
-            if (mode.getPropertyString().equals(param)) {
-                legacyPropertyToStringMode = mode;
-                return;
-            }
-        }
-
-        getLogger()
-                .log(Level.WARNING,
-                        Constants.WARNING_UNKNOWN_LEGACY_PROPERTY_TOSTRING_VALUE,
-                        param);
-
-        legacyPropertyToStringMode = DEFAULT_LEGACY_PROPERTY_TO_STRING;
     }
 
     @Override
@@ -142,7 +112,7 @@ public class DefaultDeploymentConfiguration extends
 
     /**
      * Gets an system property value.
-     * 
+     *
      * @param parameterName
      *            the Name or the parameter.
      * @return String value or null if not found
@@ -186,7 +156,7 @@ public class DefaultDeploymentConfiguration extends
 
     /**
      * Gets an application property value.
-     * 
+     *
      * @param parameterName
      *            the Name or the parameter.
      * @return String value or null if not found
@@ -207,7 +177,7 @@ public class DefaultDeploymentConfiguration extends
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * The default is false.
      */
     @Override
@@ -295,8 +265,8 @@ public class DefaultDeploymentConfiguration extends
      */
     private void checkProductionMode() {
         productionMode = getApplicationOrSystemProperty(
-                Constants.SERVLET_PARAMETER_PRODUCTION_MODE, "false").equals(
-                "true");
+                Constants.SERVLET_PARAMETER_PRODUCTION_MODE, "false")
+                        .equals("true");
         if (!productionMode) {
             getLogger().warning(Constants.NOT_PRODUCTION_MODE_INFO);
         }
@@ -308,7 +278,7 @@ public class DefaultDeploymentConfiguration extends
     private void checkXsrfProtection() {
         xsrfProtectionEnabled = !getApplicationOrSystemProperty(
                 Constants.SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION, "false")
-                .equals("true");
+                        .equals("true");
         if (!xsrfProtectionEnabled) {
             getLogger().warning(Constants.WARNING_XSRF_PROTECTION_DISABLED);
         }
@@ -319,10 +289,9 @@ public class DefaultDeploymentConfiguration extends
      */
     private void checkResourceCacheTime() {
         try {
-            resourceCacheTime = Integer
-                    .parseInt(getApplicationOrSystemProperty(
-                            Constants.SERVLET_PARAMETER_RESOURCE_CACHE_TIME,
-                            Integer.toString(DEFAULT_RESOURCE_CACHE_TIME)));
+            resourceCacheTime = Integer.parseInt(getApplicationOrSystemProperty(
+                    Constants.SERVLET_PARAMETER_RESOURCE_CACHE_TIME,
+                    Integer.toString(DEFAULT_RESOURCE_CACHE_TIME)));
         } catch (NumberFormatException e) {
             getLogger().warning(
                     Constants.WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
@@ -332,13 +301,12 @@ public class DefaultDeploymentConfiguration extends
 
     private void checkHeartbeatInterval() {
         try {
-            heartbeatInterval = Integer
-                    .parseInt(getApplicationOrSystemProperty(
-                            Constants.SERVLET_PARAMETER_HEARTBEAT_INTERVAL,
-                            Integer.toString(DEFAULT_HEARTBEAT_INTERVAL)));
+            heartbeatInterval = Integer.parseInt(getApplicationOrSystemProperty(
+                    Constants.SERVLET_PARAMETER_HEARTBEAT_INTERVAL,
+                    Integer.toString(DEFAULT_HEARTBEAT_INTERVAL)));
         } catch (NumberFormatException e) {
-            getLogger().warning(
-                    Constants.WARNING_HEARTBEAT_INTERVAL_NOT_NUMERIC);
+            getLogger()
+                    .warning(Constants.WARNING_HEARTBEAT_INTERVAL_NOT_NUMERIC);
             heartbeatInterval = DEFAULT_HEARTBEAT_INTERVAL;
         }
     }
@@ -370,18 +338,12 @@ public class DefaultDeploymentConfiguration extends
     private void checkSendUrlsAsParameters() {
         sendUrlsAsParameters = getApplicationOrSystemProperty(
                 Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS,
-                Boolean.toString(DEFAULT_SEND_URLS_AS_PARAMETERS)).equals(
-                "true");
+                Boolean.toString(DEFAULT_SEND_URLS_AS_PARAMETERS))
+                        .equals("true");
     }
 
     private Logger getLogger() {
         return Logger.getLogger(getClass().getName());
-    }
-
-    @Override
-    @Deprecated
-    public LegacyProperyToStringMode getLegacyPropertyToStringMode() {
-        return legacyPropertyToStringMode;
     }
 
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,8 +23,6 @@ import java.util.Locale;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.util.AbstractProperty;
-import com.vaadin.data.util.LegacyPropertyHelper;
 import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.legacy.data.util.converter.LegacyConverterUtil;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -35,9 +33,9 @@ import com.vaadin.ui.declarative.DesignFormatter;
 
 /**
  * Label component for showing non-editable short texts.
- * 
+ *
  * The label content can be set to the modes specified by {@link ContentMode}
- * 
+ *
  * <p>
  * The contents of the label may contain simple formatting:
  * <ul>
@@ -51,7 +49,7 @@ import com.vaadin.ui.declarative.DesignFormatter;
  * The <b>b</b>,<b>i</b>,<b>u</b> and <b>li</b> tags can contain all the tags in
  * the list recursively.
  * </p>
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -113,7 +111,7 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * Creates a new instance of Label with text-contents.
-     * 
+     *
      * @param content
      */
     public Label(String content) {
@@ -123,7 +121,7 @@ public class Label extends AbstractComponent implements Property<String>,
     /**
      * Creates a new instance of Label with text-contents read from given
      * datasource.
-     * 
+     *
      * @param contentSource
      */
     public Label(Property contentSource) {
@@ -132,7 +130,7 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * Creates a new instance of Label with text-contents.
-     * 
+     *
      * @param content
      * @param contentMode
      */
@@ -145,7 +143,7 @@ public class Label extends AbstractComponent implements Property<String>,
     /**
      * Creates a new instance of Label with text-contents read from given
      * datasource.
-     * 
+     *
      * @param contentSource
      * @param contentMode
      */
@@ -171,7 +169,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * The value of the label is the text that is shown to the end user.
      * Depending on the {@link ContentMode} it is plain text or markup.
      * </p>
-     * 
+     *
      * @return the value of the label.
      */
     @Override
@@ -186,19 +184,20 @@ public class Label extends AbstractComponent implements Property<String>,
     /**
      * Returns the current value of the data source converted using the current
      * locale.
-     * 
+     *
      * @return
      */
     private String getDataSourceValue() {
-        return LegacyConverterUtil.convertFromModel(getPropertyDataSource()
-                .getValue(), String.class, getConverter(), getLocale());
+        return LegacyConverterUtil.convertFromModel(
+                getPropertyDataSource().getValue(), String.class,
+                getConverter(), getLocale());
     }
 
     /**
      * Set the value of the label. Value of the label is the XML contents of the
      * label. Since Vaadin 7.2, changing the value of Label instance with that
      * method will fire ValueChangeEvent.
-     * 
+     *
      * @param newStringValue
      *            the New value of the label.
      */
@@ -220,7 +219,7 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * Gets the type of the Property.
-     * 
+     *
      * @see com.vaadin.data.Property#getType()
      */
     @Override
@@ -230,7 +229,7 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * Gets the viewing data-source property.
-     * 
+     *
      * @return the data source property.
      * @see com.vaadin.data.Property.Viewer#getPropertyDataSource()
      */
@@ -242,7 +241,7 @@ public class Label extends AbstractComponent implements Property<String>,
     /**
      * Sets the property as data-source for viewing. Since Vaadin 7.2 a
      * ValueChangeEvent is fired if the new value is different from previous.
-     * 
+     *
      * @param newDataSource
      *            the new data source Property
      * @see com.vaadin.data.Property.Viewer#setPropertyDataSource(com.vaadin.data.Property)
@@ -250,20 +249,19 @@ public class Label extends AbstractComponent implements Property<String>,
     @Override
     public void setPropertyDataSource(Property newDataSource) {
         // Stops listening the old data source changes
-        if (dataSource != null
-                && Property.ValueChangeNotifier.class
-                        .isAssignableFrom(dataSource.getClass())) {
+        if (dataSource != null && Property.ValueChangeNotifier.class
+                .isAssignableFrom(dataSource.getClass())) {
             ((Property.ValueChangeNotifier) dataSource).removeListener(this);
         }
 
         // Check if the current converter is compatible.
         if (newDataSource != null
-                && !LegacyConverterUtil.canConverterPossiblyHandle(getConverter(),
-                        getType(), newDataSource.getType())) {
+                && !LegacyConverterUtil.canConverterPossiblyHandle(
+                        getConverter(), getType(), newDataSource.getType())) {
             // There is no converter set or there is no way the current
             // converter can be compatible.
-            LegacyConverter<String, ?> c = LegacyConverterUtil.getConverter(String.class,
-                    newDataSource.getType(), getSession());
+            LegacyConverter<String, ?> c = LegacyConverterUtil.getConverter(
+                    String.class, newDataSource.getType(), getSession());
             setConverter(c);
         }
 
@@ -275,9 +273,8 @@ public class Label extends AbstractComponent implements Property<String>,
         }
 
         // Listens the new data source if possible
-        if (dataSource != null
-                && Property.ValueChangeNotifier.class
-                        .isAssignableFrom(dataSource.getClass())) {
+        if (dataSource != null && Property.ValueChangeNotifier.class
+                .isAssignableFrom(dataSource.getClass())) {
             ((Property.ValueChangeNotifier) dataSource).addListener(this);
         }
         markAsDirty();
@@ -285,9 +282,9 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * Gets the content mode of the Label.
-     * 
+     *
      * @return the Content mode of the label.
-     * 
+     *
      * @see ContentMode
      */
     public ContentMode getContentMode() {
@@ -296,10 +293,10 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * Sets the content mode of the Label.
-     * 
+     *
      * @param contentMode
      *            the New content mode of the label.
-     * 
+     *
      * @see ContentMode
      */
     public void setContentMode(ContentMode contentMode) {
@@ -328,16 +325,16 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * Value change event
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public static class ValueChangeEvent extends Component.Event implements
-            Property.ValueChangeEvent {
+    public static class ValueChangeEvent extends Component.Event
+            implements Property.ValueChangeEvent {
 
         /**
          * New instance of text change event
-         * 
+         *
          * @param source
          *            the Source of the event.
          */
@@ -347,7 +344,7 @@ public class Label extends AbstractComponent implements Property<String>,
 
         /**
          * Gets the Property that has been modified.
-         * 
+         *
          * @see com.vaadin.data.Property.ValueChangeEvent#getProperty()
          */
         @Override
@@ -358,14 +355,15 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * Adds the value change listener.
-     * 
+     *
      * @param listener
      *            the Listener to be added.
      * @see com.vaadin.data.Property.ValueChangeNotifier#addListener(com.vaadin.data.Property.ValueChangeListener)
      */
     @Override
     public void addValueChangeListener(Property.ValueChangeListener listener) {
-        addListener(Label.ValueChangeEvent.class, listener, VALUE_CHANGE_METHOD);
+        addListener(Label.ValueChangeEvent.class, listener,
+                VALUE_CHANGE_METHOD);
     }
 
     /**
@@ -380,13 +378,14 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * Removes the value change listener.
-     * 
+     *
      * @param listener
      *            the Listener to be removed.
      * @see com.vaadin.data.Property.ValueChangeNotifier#removeListener(com.vaadin.data.Property.ValueChangeListener)
      */
     @Override
-    public void removeValueChangeListener(Property.ValueChangeListener listener) {
+    public void removeValueChangeListener(
+            Property.ValueChangeListener listener) {
         removeListener(Label.ValueChangeEvent.class, listener,
                 VALUE_CHANGE_METHOD);
     }
@@ -411,7 +410,7 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * Listens the value change events from data source.
-     * 
+     *
      * @see com.vaadin.data.Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
      */
     @Override
@@ -463,19 +462,19 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * Compares the Label to other objects.
-     * 
+     *
      * <p>
      * Labels can be compared to other labels for sorting label contents. This
      * is especially handy for sorting table columns.
      * </p>
-     * 
+     *
      * <p>
      * In RAW, PREFORMATTED and TEXT modes, the label contents are compared as
      * is. In XML, UIDL and HTML modes, only CDATA is compared and tags ignored.
      * If the other object is not a Label, its toString() return value is used
      * in comparison.
      * </p>
-     * 
+     *
      * @param other
      *            the Other object to compare to.
      * @return a negative integer, zero, or a positive integer as this object is
@@ -493,7 +492,7 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * Strips the tags from the XML.
-     * 
+     *
      * @param xml
      *            the String containing a XML snippet.
      * @return the original XML without tags.
@@ -525,7 +524,7 @@ public class Label extends AbstractComponent implements Property<String>,
     /**
      * Gets the converter used to convert the property data source value to the
      * label value.
-     * 
+     *
      * @return The converter or null if none is set.
      */
     public LegacyConverter<String, Object> getConverter() {
@@ -535,7 +534,7 @@ public class Label extends AbstractComponent implements Property<String>,
     /**
      * Sets the converter used to convert the label value to the property data
      * source type. The converter must have a presentation type of String.
-     * 
+     *
      * @param converter
      *            The new converter to use.
      */
@@ -544,41 +543,9 @@ public class Label extends AbstractComponent implements Property<String>,
         markAsDirty();
     }
 
-    /**
-     * Returns a string representation of this object. The returned string
-     * representation depends on if the legacy Property toString mode is enabled
-     * or disabled.
-     * <p>
-     * If legacy Property toString mode is enabled, returns the value displayed
-     * by this label.
-     * </p>
-     * <p>
-     * If legacy Property toString mode is disabled, the string representation
-     * has no special meaning
-     * </p>
-     * 
-     * @see AbstractProperty#isLegacyToStringEnabled()
-     * 
-     * @return The value displayed by this label or a string representation of
-     *         this Label object.
-     * 
-     * @deprecated As of 7.0, use {@link #getValue()} to get the value of the
-     *             label or {@link #getPropertyDataSource()}.getValue() to get
-     *             the value of the data source.
-     */
-    @Deprecated
-    @Override
-    public String toString() {
-        if (!LegacyPropertyHelper.isLegacyToStringEnabled()) {
-            return super.toString();
-        } else {
-            return LegacyPropertyHelper.legacyPropertyToString(this);
-        }
-    }
-
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
      * com.vaadin.ui.declarative.DesignContext)
      */
@@ -602,7 +569,7 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#getCustomAttributes()
      */
     @Override
@@ -616,7 +583,7 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Element
      * , com.vaadin.ui.declarative.DesignContext)
      */
