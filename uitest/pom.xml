@@ -143,6 +143,22 @@
 			</exclusions>
 		</dependency>
 
+		<!-- Vaadin 7 components -->
+		<dependency>
+			<groupId>com.vaadin.v7</groupId>
+			<artifactId>vaadin-compatibility-client-compiled</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin.v7</groupId>
+			<artifactId>vaadin-compatibility-server</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin.v7</groupId>
+			<artifactId>vaadin-compatibility-client</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- For compiling TestingWidgetSet -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>

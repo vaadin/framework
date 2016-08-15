@@ -88,6 +88,10 @@
 		<module>uitest</module>
 		<module>liferay</module>
 		<module>all</module>
+		<module>compatibility-server</module>
+		<module>compatibility-client</module>
+		<module>compatibility-client-compiled</module>
+		<module>compatibility-shared</module>
 		<!-- Nexus staging bug needs the last module to be deployed. -->
 		<module>bom</module>
 	</modules>
