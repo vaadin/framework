@@ -20,23 +20,35 @@ import org.junit.Test;
 
 import com.vaadin.data.Result;
 
-public class NullValidatorTest {
+/**
+ * @author Vaadin Ltd
+ *
+ */
+public class NotEmptyValidatorTest {
 
     @Test
     public void nullValueIsDisallowed() {
-        NotNullValidator validator = new NotNullValidator("foo");
+        NotEmptyValidator<String> validator = new NotEmptyValidator<>("foo");
         Result<String> result = validator.apply(null);
         Assert.assertTrue(result.isError());
         Assert.assertEquals("foo", result.getMessage().get());
     }
 
     @Test
-    public void nonNullValueIsAllowed() {
-        NotNullValidator validator = new NotNullValidator("foo");
-        Result<String> result = validator.apply("bar");
-        Assert.assertFalse(result.isError());
-        result.ifOk(value -> Assert.assertEquals("bar", value));
-        result.ifError(msg -> Assert.fail());
+    public void emptyValueIsDisallowed() {
+        NotEmptyValidator<String> validator = new NotEmptyValidator<>("foo");
+        Result<String> result = validator.apply("");
+        Assert.assertTrue(result.isError());
+        Assert.assertEquals("foo", result.getMessage().get());
     }
 
+    @Test
+    public void nonNullValueIsAllowed() {
+        NotEmptyValidator<Object> validator = new NotEmptyValidator<>("foo");
+        Object value = new Object();
+        Result<Object> result = validator.apply(value);
+        Assert.assertFalse(result.isError());
+        result.ifOk(val -> Assert.assertEquals(value, val));
+        result.ifError(msg -> Assert.fail());
+    }
 }
