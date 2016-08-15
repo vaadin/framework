@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.validator;
+package com.vaadin.data;
 
 import java.util.List;
 
@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.ValidationError;
+import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.AbstractField;
@@ -33,7 +34,7 @@ import com.vaadin.ui.AbstractField;
  * @author Vaadin Ltd
  *
  */
-public class BoVTest {
+public class BinderBookOfVaadinTest {
 
     static class TextField extends AbstractField<String> {
 
