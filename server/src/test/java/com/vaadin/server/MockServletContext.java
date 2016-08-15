@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,7 +15,7 @@
  */
 
 /**
- * 
+ *
  */
 package com.vaadin.server;
 
@@ -41,15 +41,15 @@ import javax.servlet.SessionTrackingMode;
 import javax.servlet.descriptor.JspConfigDescriptor;
 
 /**
- * 
- * @since
+ * Mock servlet context for tests.
+ *
  * @author Vaadin Ltd
  */
 public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getContext(java.lang.String)
      */
     @Override
@@ -59,7 +59,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getMajorVersion()
      */
     @Override
@@ -69,7 +69,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getMinorVersion()
      */
     @Override
@@ -79,7 +79,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getMimeType(java.lang.String)
      */
     @Override
@@ -89,7 +89,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getResourcePaths(java.lang.String)
      */
     @Override
@@ -99,7 +99,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getResource(java.lang.String)
      */
     @Override
@@ -109,7 +109,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getResourceAsStream(java.lang.String)
      */
     @Override
@@ -119,7 +119,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getRequestDispatcher(java.lang.String)
      */
     @Override
@@ -129,7 +129,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getNamedDispatcher(java.lang.String)
      */
     @Override
@@ -139,7 +139,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getServlet(java.lang.String)
      */
     @Override
@@ -149,7 +149,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getServlets()
      */
     @Override
@@ -159,7 +159,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getServletNames()
      */
     @Override
@@ -169,7 +169,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#log(java.lang.String)
      */
     @Override
@@ -178,7 +178,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#log(java.lang.Exception,
      * java.lang.String)
      */
@@ -188,7 +188,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#log(java.lang.String,
      * java.lang.Throwable)
      */
@@ -198,7 +198,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getRealPath(java.lang.String)
      */
     @Override
@@ -208,7 +208,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getServerInfo()
      */
     @Override
@@ -218,7 +218,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getInitParameter(java.lang.String)
      */
     @Override
@@ -228,7 +228,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getInitParameterNames()
      */
     @Override
@@ -238,7 +238,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getAttribute(java.lang.String)
      */
     @Override
@@ -248,7 +248,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getAttributeNames()
      */
     @Override
@@ -258,7 +258,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#setAttribute(java.lang.String,
      * java.lang.Object)
      */
@@ -268,7 +268,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#removeAttribute(java.lang.String)
      */
     @Override
@@ -277,7 +277,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getServletContextName()
      */
     @Override
@@ -287,7 +287,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getContextPath()
      */
     @Override
@@ -297,7 +297,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getEffectiveMajorVersion()
      */
     @Override
@@ -307,7 +307,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getEffectiveMinorVersion()
      */
     @Override
@@ -317,7 +317,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#setInitParameter(java.lang.String,
      * java.lang.String)
      */
@@ -328,7 +328,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#addServlet(java.lang.String,
      * java.lang.String)
      */
@@ -339,7 +339,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#addServlet(java.lang.String,
      * javax.servlet.Servlet)
      */
@@ -350,7 +350,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#addServlet(java.lang.String,
      * java.lang.Class)
      */
@@ -362,7 +362,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#createServlet(java.lang.Class)
      */
     @Override
@@ -373,7 +373,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * javax.servlet.ServletContext#getServletRegistration(java.lang.String)
      */
@@ -384,7 +384,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getServletRegistrations()
      */
     @Override
@@ -394,7 +394,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#addFilter(java.lang.String,
      * java.lang.String)
      */
@@ -406,7 +406,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#addFilter(java.lang.String,
      * javax.servlet.Filter)
      */
@@ -418,7 +418,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#addFilter(java.lang.String,
      * java.lang.Class)
      */
@@ -430,7 +430,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#createFilter(java.lang.Class)
      */
     @Override
@@ -441,7 +441,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getFilterRegistration(java.lang.String)
      */
     @Override
@@ -451,7 +451,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getFilterRegistrations()
      */
     @Override
@@ -461,7 +461,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getSessionCookieConfig()
      */
     @Override
@@ -471,7 +471,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#setSessionTrackingModes(java.util.Set)
      */
     @Override
@@ -481,7 +481,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getDefaultSessionTrackingModes()
      */
     @Override
@@ -491,7 +491,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getEffectiveSessionTrackingModes()
      */
     @Override
@@ -501,7 +501,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#addListener(java.lang.String)
      */
     @Override
@@ -510,7 +510,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#addListener(java.util.EventListener)
      */
     @Override
@@ -519,7 +519,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#addListener(java.lang.Class)
      */
     @Override
@@ -528,7 +528,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#createListener(java.lang.Class)
      */
     @Override
@@ -539,7 +539,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getJspConfigDescriptor()
      */
     @Override
@@ -549,7 +549,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getClassLoader()
      */
     @Override
@@ -559,7 +559,7 @@ public class MockServletContext implements ServletContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#declareRoles(java.lang.String[])
      */
     @Override
