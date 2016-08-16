@@ -6,6 +6,7 @@ import static org.junit.Assert.assertSame;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
@@ -18,6 +19,7 @@ import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.tests.data.bean.Person;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 
 public class BinderTest {
@@ -401,6 +403,167 @@ public class BinderTest {
 
         bean.setStatus("3");
         binder.load(bean);
+    }
+
+    @Test
+    public void withStatusChangeHandler_handlerGetsEvents() {
+        AtomicReference<ValidationStatusChangeEvent> event = new AtomicReference<>();
+        Binding<Person, String, String> binding = binder.forField(nameField)
+                .withValidator(notEmpty).withStatusChangeHandler(evt -> {
+                    Assert.assertNull(event.get());
+                    event.set(evt);
+                });
+        binding.bind(Person::getFirstName, Person::setLastName);
+
+        nameField.setValue("");
+
+        // First validation fails => should be event with ERROR status and
+        // message
+        binder.validate();
+
+        Assert.assertNotNull(event.get());
+        ValidationStatusChangeEvent evt = event.get();
+        Assert.assertEquals(ValidationStatus.ERROR, evt.getStatus());
+        Assert.assertEquals("Value cannot be empty", evt.getMessage().get());
+        Assert.assertEquals(nameField, evt.getSource());
+
+        nameField.setValue("foo");
+
+        event.set(null);
+        // Second validation succeeds => should be event with OK status and
+        // no message
+        binder.validate();
+
+        evt = event.get();
+        Assert.assertNotNull(evt);
+        Assert.assertEquals(ValidationStatus.OK, evt.getStatus());
+        Assert.assertFalse(evt.getMessage().isPresent());
+        Assert.assertEquals(nameField, evt.getSource());
+    }
+
+    @Test
+    public void withStatusChangeHandler_defaultStatusChangeHandlerIsReplaced() {
+        Binding<Person, String, String> binding = binder.forField(nameField)
+                .withValidator(notEmpty).withStatusChangeHandler(evt -> {
+                });
+        binding.bind(Person::getFirstName, Person::setLastName);
+
+        Assert.assertNull(nameField.getComponentError());
+
+        nameField.setValue("");
+
+        // First validation fails => should be event with ERROR status and
+        // message
+        binder.validate();
+
+        // default behavior should update component error for the nameField
+        Assert.assertNull(nameField.getComponentError());
+    }
+
+    @Test
+    public void withStatusLabel_labelIsUpdatedAccordingStatus() {
+        Label label = new Label();
+
+        Binding<Person, String, String> binding = binder.forField(nameField)
+                .withValidator(notEmpty).withStatusLabel(label);
+        binding.bind(Person::getFirstName, Person::setLastName);
+
+        nameField.setValue("");
+
+        // First validation fails => should be event with ERROR status and
+        // message
+        binder.validate();
+
+        Assert.assertTrue(label.isVisible());
+        Assert.assertEquals("Value cannot be empty", label.getValue());
+
+        nameField.setValue("foo");
+
+        // Second validation succeeds => should be event with OK status and
+        // no message
+        binder.validate();
+
+        Assert.assertFalse(label.isVisible());
+        Assert.assertEquals("", label.getValue());
+    }
+
+    @Test
+    public void withStatusLabel_defaultStatusChangeHandlerIsReplaced() {
+        Label label = new Label();
+
+        Binding<Person, String, String> binding = binder.forField(nameField)
+                .withValidator(notEmpty).withStatusLabel(label);
+        binding.bind(Person::getFirstName, Person::setLastName);
+
+        Assert.assertNull(nameField.getComponentError());
+
+        nameField.setValue("");
+
+        // First validation fails => should be event with ERROR status and
+        // message
+        binder.validate();
+
+        // default behavior should update component error for the nameField
+        Assert.assertNull(nameField.getComponentError());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void withStatusChangeHandler_addAfterBound() {
+        Binding<Person, String, String> binding = binder.forField(nameField)
+                .withValidator(notEmpty);
+        binding.bind(Person::getFirstName, Person::setLastName);
+
+        binding.withStatusChangeHandler(evt -> Assert.fail());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void withStatusLabel_addAfterBound() {
+        Label label = new Label();
+
+        Binding<Person, String, String> binding = binder.forField(nameField)
+                .withValidator(notEmpty);
+        binding.bind(Person::getFirstName, Person::setLastName);
+
+        binding.withStatusLabel(label);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void withStatusLabel_setAfterHandler() {
+        Label label = new Label();
+
+        Binding<Person, String, String> binding = binder.forField(nameField);
+        binding.bind(Person::getFirstName, Person::setLastName);
+
+        binding.withStatusChangeHandler(event -> {
+        });
+
+        binding.withStatusLabel(label);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void withStatusChangeHandler_setAfterLabel() {
+        Label label = new Label();
+
+        Binding<Person, String, String> binding = binder.forField(nameField);
+        binding.bind(Person::getFirstName, Person::setLastName);
+
+        binding.withStatusLabel(label);
+
+        binding.withStatusChangeHandler(event -> {
+        });
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void withStatusChangeHandler_setAfterOtherHandler() {
+
+        Binding<Person, String, String> binding = binder.forField(nameField);
+        binding.bind(Person::getFirstName, Person::setLastName);
+
+        binding.withStatusChangeHandler(event -> {
+        });
+
+        binding.withStatusChangeHandler(event -> {
+        });
     }
 
 }

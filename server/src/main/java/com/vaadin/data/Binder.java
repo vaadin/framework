@@ -33,6 +33,7 @@ import com.vaadin.event.Registration;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Label;
 
 /**
  * Connects one or more {@code Field} components to properties of a backing data
@@ -263,6 +264,80 @@ public class Binder<BEAN> implements Serializable {
         public HasValue<FIELDVALUE> getField();
 
         /**
+         * Sets the given {@code label} to show an error message if validation
+         * fails.
+         * <p>
+         * The validation state of each field is updated whenever the user
+         * modifies the value of that field. The validation state is by default
+         * shown using {@link AbstractComponent#setComponentError} which is used
+         * by the layout that the field is shown in. Most built-in layouts will
+         * show this as a red exclamation mark icon next to the component, so
+         * that hovering or tapping the icon shows a tooltip with the message
+         * text.
+         * <p>
+         * This method allows to customize the way a binder displays error
+         * messages to get more flexibility than what
+         * {@link AbstractComponent#setComponentError} provides (it replaces the
+         * default behavior).
+         * <p>
+         * This is just a shorthand for
+         * {@link #withStatusChangeHandler(StatusChangeHandler)} method where
+         * the handler instance hides the {@code label} if there is no error and
+         * shows it with validation error message if validation fails. It means
+         * that it cannot be called after
+         * {@link #withStatusChangeHandler(StatusChangeHandler)} method call or
+         * {@link #withStatusChangeHandler(StatusChangeHandler)} after this
+         * method call.
+         * 
+         * @see #withStatusChangeHandler(StatusChangeHandler)
+         * @see AbstractComponent#setComponentError(ErrorMessage)
+         * @param label
+         *            label to show validation status for the field
+         * @return this binding, for chaining
+         */
+        public default Binding<BEAN, FIELDVALUE, TARGET> withStatusLabel(
+                Label label) {
+            return withStatusChangeHandler(event -> {
+                label.setValue(event.getMessage().orElse(""));
+                // Only show the label when validation has failed
+                label.setVisible(
+                        ValidationStatus.ERROR.equals(event.getStatus()));
+            });
+        }
+
+        /**
+         * Sets a {@link StatusChangeHandler} to track validation status
+         * changes.
+         * <p>
+         * The validation state of each field is updated whenever the user
+         * modifies the value of that field. The validation state is by default
+         * shown using {@link AbstractComponent#setComponentError} which is used
+         * by the layout that the field is shown in. Most built-in layouts will
+         * show this as a red exclamation mark icon next to the component, so
+         * that hovering or tapping the icon shows a tooltip with the message
+         * text.
+         * <p>
+         * This method allows to customize the way a binder displays error
+         * messages to get more flexibility than what
+         * {@link AbstractComponent#setComponentError} provides (it replaces the
+         * default behavior).
+         * <p>
+         * The method may be called only once. It means there is no chain unlike
+         * {@link #withValidator(Validator)} or
+         * {@link #withConverter(Converter)}. Also it means that the shorthand
+         * method {@link #withStatusLabel(Label)} also may not be called after
+         * this method.
+         * 
+         * @see #withStatusLabel(Label)
+         * @see AbstractComponent#setComponentError(ErrorMessage)
+         * @param handler
+         *            status change handler
+         * @return this binding, for chaining
+         */
+        public Binding<BEAN, FIELDVALUE, TARGET> withStatusChangeHandler(
+                StatusChangeHandler handler);
+
+        /**
          * Validates the field value and returns a {@code Result} instance
          * representing the outcome of the validation.
          * 
@@ -293,6 +368,8 @@ public class Binder<BEAN> implements Serializable {
 
         private final HasValue<FIELDVALUE> field;
         private Registration onValueChange;
+        private StatusChangeHandler statusChangeHandler;
+        private boolean isStatusHandlerChanged;
 
         private Function<BEAN, TARGET> getter;
         private BiConsumer<BEAN, TARGET> setter;
@@ -310,11 +387,15 @@ public class Binder<BEAN> implements Serializable {
          *            the binder this instance is connected to
          * @param field
          *            the field to bind
+         * @param statusChangeHandler
+         *            handler to track validation status
          */
         @SuppressWarnings("unchecked")
-        protected BindingImpl(Binder<BEAN> binder, HasValue<FIELDVALUE> field) {
+        protected BindingImpl(Binder<BEAN> binder, HasValue<FIELDVALUE> field,
+                StatusChangeHandler statusChangeHandler) {
             this(binder, field,
-                    (Converter<FIELDVALUE, TARGET>) Converter.identity());
+                    (Converter<FIELDVALUE, TARGET>) Converter.identity(),
+                    statusChangeHandler);
         }
 
         /**
@@ -327,12 +408,16 @@ public class Binder<BEAN> implements Serializable {
          *            the field to bind
          * @param converterValidatorChain
          *            the converter/validator chain to use
+         * @param statusChangeHandler
+         *            handler to track validation status
          */
         protected BindingImpl(Binder<BEAN> binder, HasValue<FIELDVALUE> field,
-                Converter<FIELDVALUE, TARGET> converterValidatorChain) {
+                Converter<FIELDVALUE, TARGET> converterValidatorChain,
+                StatusChangeHandler statusChangeHandler) {
             this.field = field;
             this.binder = binder;
             this.converterValidatorChain = converterValidatorChain;
+            this.statusChangeHandler = statusChangeHandler;
         }
 
         @Override
@@ -372,9 +457,21 @@ public class Binder<BEAN> implements Serializable {
             checkUnbound();
             Objects.requireNonNull(converter, "converter cannot be null");
 
-            BindingImpl<BEAN, FIELDVALUE, NEWTARGET> newBinding = new BindingImpl<>(
-                    binder, field, converterValidatorChain.chain(converter));
-            return newBinding;
+            return createNewBinding(converter);
+        }
+
+        @Override
+        public Binding<BEAN, FIELDVALUE, TARGET> withStatusChangeHandler(
+                StatusChangeHandler handler) {
+            Objects.requireNonNull(handler, "Handler may not be null");
+            if (isStatusHandlerChanged) {
+                throw new IllegalStateException(
+                        "A StatusChangeHandler has already been set");
+            }
+            isStatusHandlerChanged = true;
+            checkUnbound();
+            statusChangeHandler = handler;
+            return this;
         }
 
         private void bind(BEAN bean) {
@@ -447,6 +544,23 @@ public class Binder<BEAN> implements Serializable {
         @Override
         public HasValue<FIELDVALUE> getField() {
             return field;
+        }
+
+        private <NEWTARGET> BindingImpl<BEAN, FIELDVALUE, NEWTARGET> createNewBinding(
+                Converter<TARGET, NEWTARGET> converter) {
+            BindingImpl<BEAN, FIELDVALUE, NEWTARGET> newBinding = new BindingImpl<>(
+                    binder, field, converterValidatorChain.chain(converter),
+                    statusChangeHandler);
+            return newBinding;
+        }
+
+        private void fireStatusChangeEvent(Result<?> result) {
+            ValidationStatusChangeEvent event = new ValidationStatusChangeEvent(
+                    getField(),
+                    result.isError() ? ValidationStatus.ERROR
+                            : ValidationStatus.OK,
+                    result.getMessage().orElse(null));
+            statusChangeHandler.accept(event);
         }
     }
 
@@ -601,13 +715,10 @@ public class Binder<BEAN> implements Serializable {
     public List<ValidationError<?>> validate() {
         List<ValidationError<?>> resultErrors = new ArrayList<>();
         for (BindingImpl<BEAN, ?, ?> binding : bindings) {
-            clearError(binding.field);
-
-            binding.validate().ifError(errorMessage -> {
-                resultErrors.add(
-                        new ValidationError<>(binding.field, errorMessage));
-                handleError(binding.field, errorMessage);
-            });
+            Result<?> result = binding.validate();
+            binding.fireStatusChangeEvent(result);
+            result.ifError(errorMessage -> resultErrors
+                    .add(new ValidationError<>(binding.field, errorMessage)));
         }
         return resultErrors;
     }
@@ -635,7 +746,6 @@ public class Binder<BEAN> implements Serializable {
     public void load(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
         bindings.forEach(binding -> binding.setFieldValue(bean));
-
     }
 
     /**
@@ -662,11 +772,11 @@ public class Binder<BEAN> implements Serializable {
      *            the field to bind
      * @return the new incomplete binding
      */
-    protected <FIELDVALUE> BindingImpl<BEAN, FIELDVALUE, FIELDVALUE> createBinding(
+    protected <FIELDVALUE> Binding<BEAN, FIELDVALUE, FIELDVALUE> createBinding(
             HasValue<FIELDVALUE> field) {
         Objects.requireNonNull(field, "field cannot be null");
         BindingImpl<BEAN, FIELDVALUE, FIELDVALUE> b = new BindingImpl<BEAN, FIELDVALUE, FIELDVALUE>(
-                this, field);
+                this, field, this::handleValidationStatusChange);
         return b;
     }
 
@@ -699,6 +809,22 @@ public class Binder<BEAN> implements Serializable {
     protected void handleError(HasValue<?> field, String error) {
         if (field instanceof AbstractComponent) {
             ((AbstractComponent) field).setComponentError(new UserError(error));
+        }
+
+    }
+
+    /**
+     * Default {@link StatusChangeHandler} functional method implementation.
+     * 
+     * @param event
+     *            the validation event
+     */
+    private void handleValidationStatusChange(
+            ValidationStatusChangeEvent event) {
+        HasValue<?> source = event.getSource();
+        clearError(source);
+        if (Objects.equals(ValidationStatus.ERROR, event.getStatus())) {
+            handleError(source, event.getMessage().get());
         }
     }
 

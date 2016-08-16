@@ -18,6 +18,7 @@ package com.vaadin.data;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,6 +29,7 @@ import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Slider;
 
@@ -306,6 +308,67 @@ public class BinderBookOfVaadinTest {
         Assert.assertNotNull(returning.getComponentError());
         Assert.assertNull(departing.getComponentError());
 
+    }
+
+    @Test
+    public void withStatusLabelExample() {
+        Label emailStatus = new Label();
+
+        String msg = "This doesn't look like a valid email address";
+        binder.forField(field).withValidator(new EmailValidator(msg))
+                .withStatusLabel(emailStatus)
+                .bind(BookPerson::getEmail, BookPerson::setEmail);
+
+        field.setValue("foo");
+        binder.validate();
+
+        Assert.assertTrue(emailStatus.isVisible());
+        Assert.assertEquals(msg, emailStatus.getValue());
+
+        field.setValue("foo@vaadin.com");
+        binder.validate();
+
+        Assert.assertFalse(emailStatus.isVisible());
+        Assert.assertEquals("", emailStatus.getValue());
+    }
+
+    @Test
+    public void withStatusChangeHandlerExample() {
+        Label nameStatus = new Label();
+        AtomicReference<ValidationStatusChangeEvent> event = new AtomicReference<>();
+
+        String msg = "Full name must contain at least three characters";
+        binder.forField(field).withValidator(name -> name.length() >= 3, msg)
+                .withStatusChangeHandler(statusChange -> {
+                    nameStatus.setValue(statusChange.getMessage().orElse(""));
+                    // Only show the label when validation has failed
+                    boolean error = statusChange
+                            .getStatus() == ValidationStatus.ERROR;
+                    nameStatus.setVisible(error);
+                    event.set(statusChange);
+                }).bind(BookPerson::getLastName, BookPerson::setLastName);
+
+        field.setValue("aa");
+        binder.validate();
+
+        Assert.assertTrue(nameStatus.isVisible());
+        Assert.assertEquals(msg, nameStatus.getValue());
+        Assert.assertNotNull(event.get());
+        ValidationStatusChangeEvent evt = event.get();
+        Assert.assertEquals(ValidationStatus.ERROR, evt.getStatus());
+        Assert.assertEquals(msg, evt.getMessage().get());
+        Assert.assertEquals(field, evt.getSource());
+
+        field.setValue("foo");
+        binder.validate();
+
+        Assert.assertFalse(nameStatus.isVisible());
+        Assert.assertEquals("", nameStatus.getValue());
+        Assert.assertNotNull(event.get());
+        evt = event.get();
+        Assert.assertEquals(ValidationStatus.OK, evt.getStatus());
+        Assert.assertFalse(evt.getMessage().isPresent());
+        Assert.assertEquals(field, evt.getSource());
     }
 
 }

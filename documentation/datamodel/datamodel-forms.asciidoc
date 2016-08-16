@@ -151,9 +151,9 @@ binder.forField(nameField)
     name -> name.length() >= 3,
     "Full name must contain at least three characters")
   .withStatusChangeHandler(statusChange -> {
-      nameStatus.setValue(statusChange.getMessage());
+      nameStatus.setValue(statusChange.getMessage().orElse(""));
       // Only show the label when validation has failed
-      boolean error = statusChange.getStatus() == Status.ERROR;
+      boolean error = statusChange.getStatus() == ValidationStatus.ERROR;
       nameStatus.setVisible(error);
     })
   .bind(Person::getName, Person::setName);
