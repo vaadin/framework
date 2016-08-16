@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,14 +37,14 @@ import com.vaadin.client.Util;
  * A helper class to implement keyboard shorcut handling. Keeps a list of owners
  * actions and fires actions to server. User class needs to delegate keyboard
  * events to handleKeyboardEvents function.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class ShortcutActionHandler {
 
     /**
      * An interface implemented by those users of this helper class that want to
-     * support special components like {@link VRichTextArea} that don't properly
+     * support special components like {@code VRichTextArea} that don't properly
      * propagate key down events. Those components can build support for
      * shortcut actions by traversing the closest
      * {@link ShortcutActionHandlerOwner} from the component hierarchy an
@@ -71,7 +71,7 @@ public class ShortcutActionHandler {
          * shortcut if the Paintable is currently focused (aka the target of the
          * shortcut action). Eg. a field can update its possibly changed value
          * to the server before shortcut action is fired.
-         * 
+         *
          * @param e
          *            the event that triggered the shortcut action
          */
@@ -83,7 +83,7 @@ public class ShortcutActionHandler {
     private String paintableId;
 
     /**
-     * 
+     *
      * @param pid
      *            Paintable id
      * @param c
@@ -96,7 +96,7 @@ public class ShortcutActionHandler {
 
     /**
      * Updates list of actions this handler listens to.
-     * 
+     *
      * @param c
      *            UIDL snippet containing actions
      */
@@ -119,7 +119,8 @@ public class ShortcutActionHandler {
         }
     }
 
-    public void handleKeyboardEvent(final Event event, ComponentConnector target) {
+    public void handleKeyboardEvent(final Event event,
+            ComponentConnector target) {
         final int modifiers = KeyboardListenerCollection
                 .getKeyboardModifiers(event);
         final char keyCode = (char) DOM.eventGetKeyCode(event);
@@ -192,7 +193,7 @@ public class ShortcutActionHandler {
      * {@link BeforeShortcutActionListener} via widgets could be notified when
      * they should fire value change. Big task for TextFields, DateFields and
      * various selects.
-     * 
+     *
      * <p>
      * TODO separate opera impl with generator
      */
@@ -291,7 +292,8 @@ class ShortcutAction {
     private final String caption;
     private final String key;
 
-    public ShortcutAction(String key, ShortcutKeyCombination sc, String caption) {
+    public ShortcutAction(String key, ShortcutKeyCombination sc,
+            String caption) {
         this.sc = sc;
         this.key = key;
         this.caption = caption;
