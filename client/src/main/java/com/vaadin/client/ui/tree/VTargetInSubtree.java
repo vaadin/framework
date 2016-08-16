@@ -16,12 +16,15 @@
 /**
  * 
  */
-package com.vaadin.client.ui.dd;
+package com.vaadin.client.ui.tree;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.VTree;
 import com.vaadin.client.ui.VTree.TreeNode;
+import com.vaadin.client.ui.dd.VAcceptCriterion;
+import com.vaadin.client.ui.dd.VDragAndDropManager;
+import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
 import com.vaadin.ui.Tree;
 
