@@ -15,43 +15,42 @@
  */
 package com.vaadin.server.data;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
- * A generic data source for any back end and Listing UI components.
- * 
+ * Minimal DataSource API for communication between the DataProvider and a back
+ * end service.
+ *
+ * @since
  * @param <T>
- *            data source data type
+ *            data type
+ *
+ * @see InMemoryDataSource
+ * @see BackEndDataSource
  */
-public class DataSource<T> implements
-        Function<Query, Stream<T>>, java.io.Serializable {
-
-    protected Function<Query, Stream<T>> request;
-    protected Function<Query, Integer> sizeCallback;
-
-    protected DataSource() {
-    }
+public interface DataSource<T> extends Function<Query, Stream<T>>,
+        Serializable {
 
     /**
-     * Constructs a new DataSource to request data from an arbitrary back end
-     * request function.
-     * 
-     * @param request
-     *            function that requests data from back end based on query
-     * @param sizeCallback
-     *            function that return the amount of data in back end for query
+     * Gets whether the DataSource content all available in memory or does it
+     * use some external backend.
+     *
+     * @return {@code true} if all data is in memory; {@code false} if not
      */
-    public DataSource(Function<Query, Stream<T>> request,
-            Function<Query, Integer> sizeCallback) {
-        Objects.requireNonNull(request, "Request function can't be null");
-        Objects.requireNonNull(sizeCallback, "Size callback can't be null");
-        this.request = request;
-        this.sizeCallback = sizeCallback;
-    }
+    boolean isInMemory();
+
+    /**
+     * Gets the amount of data in this DataSource.
+     *
+     * @param t
+     *            query with sorting and filtering
+     * @return the size of the data source
+     */
+    int size(Query t);
 
     /**
      * This method creates a new {@link InMemoryDataSource} from a given
@@ -79,18 +78,4 @@ public class DataSource<T> implements
     public static <T> InMemoryDataSource<T> create(T... data) {
         return new InMemoryDataSource<>(Arrays.asList(data));
     }
-
-    @Override
-    public Stream<T> apply(Query t) {
-        return request.apply(t);
-    }
-
-    public int size(Query t) {
-        return sizeCallback.apply(t);
-    }
-
-    public boolean isInMemory() {
-        return false;
-    }
-
 }

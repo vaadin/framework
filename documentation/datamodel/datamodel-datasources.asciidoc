@@ -152,7 +152,7 @@ Information about which items to fetch as well as some additional details are ma
 
 [source, java]
 ----
-DataSource<Person> dataSource = new DataSource<>(
+DataSource<Person> dataSource = new BackendDataSource<>(
   // First callback fetches items based on a query
   query -> {
     // The index of the first item to load
@@ -197,7 +197,7 @@ public interface PersonService {
 
   int getPersonCount();
 
-  static PersonSort createSort(
+  PersonSort createSort(
     String propertyName,
     boolean descending);
 }
@@ -208,11 +208,11 @@ The sorting options set through the component will be available through [interfa
 
 [source, java]
 ----
-DataSource<Person> dataSource = new DataSource<>(
+DataSource<Person> dataSource = new BackEndDataSource<>(
   query -> {
     List<PersonSort> sortOrders = new ArrayList<>();
     for(SortOrder<String> queryOrder : query.getSortOrders()) {
-      PersonSort sort = PersonService.createSort(
+      PersonSort sort = getPersonService().createSort(
         // The name of the sorted property
         queryOrder.getSorted(),
         // The sort direction for this property
@@ -220,7 +220,7 @@ DataSource<Person> dataSource = new DataSource<>(
       sortOrders.add(sort);
     }
 
-    return service.fetchPersons(
+    return getPersonService().fetchPersons(
         query.getOffset(),
         query.getLimit(),
         sortOrders
@@ -329,7 +329,7 @@ We can create a helper method for handling the filter since the same logic is ne
 
 [source, java]
 ----
-DataSource<Person> dataSource = new DataSource<>(
+DataSource<Person> dataSource = new BackEndDataSource<>(
   query -> {
 
     BackendFilter filter = query.getFilter();

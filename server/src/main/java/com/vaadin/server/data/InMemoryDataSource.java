@@ -17,6 +17,7 @@ package com.vaadin.server.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -28,14 +29,15 @@ import java.util.stream.Stream;
  * @param <T>
  *            data type
  */
-public class InMemoryDataSource<T> extends DataSource<T> {
+public class InMemoryDataSource<T> implements DataSource<T> {
 
+    private Function<Query, Stream<T>> request;
     private int size;
 
     /**
      * Constructs a new ListDataSource. This method makes a protective copy of
      * the contents of the Collection.
-     * 
+     *
      * @param collection
      *            initial data
      */
@@ -49,12 +51,44 @@ public class InMemoryDataSource<T> extends DataSource<T> {
      * Chaining constructor for making modified {@link InMemoryDataSource}s.
      * This Constructor is used internally for making sorted and filtered
      * variants of a base data source with actual data.
-     * 
+     *
      * @param request
      *            request for the new data source
      */
     protected InMemoryDataSource(Function<Query, Stream<T>> request) {
-        super(request,null);
+        this.request = request;
+    }
+
+    @Override
+    public Stream<T> apply(Query query) {
+        return request.apply(query);
+    }
+
+    /**
+     * Sets a default sorting order to the data source.
+     *
+     * @param sortOrder
+     *            a {@link Comparator} providing the needed sorting order
+     * @return new data source with modified sorting
+     */
+    public InMemoryDataSource<T> sortingBy(Comparator<T> sortOrder) {
+        return new InMemoryDataSource<>(q -> request.apply(q)
+                .sorted(sortOrder));
+    }
+
+    /**
+     * Sets a default sorting order to the data source. This method is a
+     * short-hand for {@code sortingBy(Comparator.comparing(sortOrder))}.
+     *
+     * @param sortOrder
+     *            function to sort by
+     * @param <U>
+     *            the type of the Comparable sort key
+     * @return new data source with modified sorting
+     */
+    public <U extends Comparable<? super U>> InMemoryDataSource<T> sortingBy(
+            Function<T, U> sortOrder) {
+        return sortingBy(Comparator.comparing(sortOrder));
     }
 
     @Override

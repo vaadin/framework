@@ -16,15 +16,27 @@
 package com.vaadin.server.data.datasource.bov;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 /**
- * TODO class description
+ * Data access service example.
  *
  * @author Vaadin Ltd
+ * @see Person
  */
-public interface PersonService extends Serializable{
+public interface PersonService extends Serializable {
     List<Person> fetchPersons(int offset, int limit);
 
+    List<Person> fetchPersons(int offset, int limit, Collection<PersonSort> personSorts);
+
     int getPersonCount();
+
+    public interface PersonSort extends Comparator<Person>, Serializable {
+    }
+
+    PersonSort createSort(
+            String propertyName,
+            boolean descending);
 }
