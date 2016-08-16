@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,7 +36,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasEnabled;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -44,7 +43,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.DeferredWorker;
-import com.vaadin.client.Util;
 import com.vaadin.client.VCaptionWrapper;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -52,8 +50,8 @@ import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.popupview.VisibilityChangeEvent;
 import com.vaadin.client.ui.popupview.VisibilityChangeHandler;
 
-public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
-        DeferredWorker {
+public class VPopupView extends HTML
+        implements HasEnabled, Iterable<Widget>, DeferredWorker {
 
     public static final String CLASSNAME = "v-popupview";
 
@@ -132,12 +130,12 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
     /**
      * Determines the correct position for a popup and displays the popup at
      * that position.
-     * 
+     *
      * By default, the popup is shown centered relative to its host component,
      * ensuring it is visible on the screen if possible.
-     * 
+     *
      * Can be overridden to customize the popup position.
-     * 
+     *
      * @param popup
      */
     public void showPopup(final CustomPopup popup) {
@@ -184,7 +182,7 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
 
     /**
      * Make sure that we remove the popup when the main widget is removed.
-     * 
+     *
      * @see com.google.gwt.user.client.ui.Widget#onUnload()
      */
     @Override
@@ -229,8 +227,8 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
      * (other than it being a VOverlay) is to be considered private and
      * potentially subject to change.
      */
-    public class CustomPopup extends VOverlay implements
-            StateChangeEvent.StateChangeHandler {
+    public class CustomPopup extends VOverlay
+            implements StateChangeEvent.StateChangeHandler {
 
         private ComponentConnector popupComponentConnector = null;
 
@@ -256,8 +254,8 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
                 @Override
                 public void onKeyDown(KeyDownEvent event) {
                     if (shortcutActionHandler != null) {
-                        shortcutActionHandler.handleKeyboardEvent(Event
-                                .as(event.getNativeEvent()));
+                        shortcutActionHandler.handleKeyboardEvent(
+                                Event.as(event.getNativeEvent()));
                     }
                 }
             }, KeyDownEvent.getType());
@@ -343,15 +341,12 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
         }
 
         /**
-         * Try to sync all known active child widgets to server
+         * Try to sync all known active child widgets to server.
          */
         public void syncChildren() {
             // Notify children with focus
             if ((popupComponentWidget instanceof Focusable)) {
                 ((Focusable) popupComponentWidget).setFocus(false);
-            } else {
-
-                checkForRTE(popupComponentWidget);
             }
 
             // Notify children that have used the keyboard
@@ -362,22 +357,6 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
                 }
             }
             activeChildren.clear();
-        }
-
-        private void checkForRTE(Widget popupComponentWidget2) {
-            if (popupComponentWidget2 instanceof VRichTextArea) {
-                ComponentConnector rtaConnector = Util
-                        .findConnectorFor(popupComponentWidget2);
-                if (rtaConnector != null) {
-                    rtaConnector.flush();
-                }
-            } else if (popupComponentWidget2 instanceof HasWidgets) {
-                HasWidgets hw = (HasWidgets) popupComponentWidget2;
-                Iterator<Widget> iterator = hw.iterator();
-                while (iterator.hasNext()) {
-                    checkForRTE(iterator.next());
-                }
-            }
         }
 
         private void clearPopupComponentConnector() {
