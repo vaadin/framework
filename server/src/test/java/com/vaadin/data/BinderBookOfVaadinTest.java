@@ -15,6 +15,8 @@
  */
 package com.vaadin.data;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
@@ -26,6 +28,7 @@ import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Slider;
 
 /**
@@ -93,6 +96,18 @@ public class BinderBookOfVaadinTest {
             this.email = email;
         }
 
+    }
+
+    public static class Trip {
+        private Date returnDate;
+
+        public Date getReturnDate() {
+            return returnDate;
+        }
+
+        public void setReturnDate(Date returnDate) {
+            this.returnDate = returnDate;
+        }
     }
 
     private Binder<BookPerson> binder;
@@ -236,6 +251,61 @@ public class BinderBookOfVaadinTest {
         binder.validate();
         Assert.assertEquals("Please&#32;enter&#32;a&#32;number",
                 yearOfBirthField.getComponentError().getFormattedHtmlMessage());
+    }
+
+    @Test
+    public void crossFieldValidation() {
+        Binder<Trip> binder = new Binder<>();
+        PopupDateField departing = new PopupDateField("Departing");
+        PopupDateField returning = new PopupDateField("Returning");
+
+        Binding<Trip, Date, Date> returnBinding = binder.forField(returning)
+                .withValidator(
+                        returnDate -> !returnDate.before(departing.getValue()),
+                        "Cannot return before departing");
+
+        returnBinding.bind(Trip::getReturnDate, Trip::setReturnDate);
+        departing.addValueChangeListener(event -> returnBinding.validate());
+
+        Calendar calendar = Calendar.getInstance();
+        Date past = calendar.getTime();
+        calendar.add(1, Calendar.DAY_OF_YEAR);
+        Date before = calendar.getTime();
+        calendar.add(1, Calendar.DAY_OF_YEAR);
+        Date after = calendar.getTime();
+
+        departing.setValue(before);
+        returning.setValue(after);
+
+        List<ValidationError<?>> errors = binder.validate();
+        Assert.assertTrue(errors.isEmpty());
+        Assert.assertNull(departing.getComponentError());
+        Assert.assertNull(returning.getComponentError());
+
+        // update returning => validation is done against this field
+        returning.setValue(past);
+        errors = binder.validate();
+
+        Assert.assertFalse(errors.isEmpty());
+        Assert.assertNotNull(returning.getComponentError());
+        Assert.assertNull(departing.getComponentError());
+
+        // set correct value back
+        returning.setValue(before);
+        errors = binder.validate();
+
+        Assert.assertTrue(errors.isEmpty());
+        Assert.assertNull(departing.getComponentError());
+        Assert.assertNull(returning.getComponentError());
+
+        // update departing => validation is done because of listener added
+        departing.setValue(after);
+        errors = binder.validate();
+
+        Assert.assertFalse(errors.isEmpty());
+        Assert.assertNotNull(returning.getComponentError());
+        Assert.assertNull(departing.getComponentError());
+
     }
 
 }

@@ -262,6 +262,17 @@ public class Binder<BEAN> implements Serializable {
          */
         public HasValue<FIELDVALUE> getField();
 
+        /**
+         * Validates the field value and returns a {@code Result} instance
+         * representing the outcome of the validation.
+         * 
+         * @see Binder#validate()
+         * @see Validator#apply(Object)
+         *
+         * @return the validation result.
+         */
+        public Result<TARGET> validate();
+
     }
 
     /**
@@ -372,7 +383,8 @@ public class Binder<BEAN> implements Serializable {
                     .addValueChangeListener(e -> storeFieldValue(bean));
         }
 
-        private Result<TARGET> validate() {
+        @Override
+        public Result<TARGET> validate() {
             FIELDVALUE fieldValue = field.getValue();
             Result<TARGET> dataValue = converterValidatorChain.convertToModel(
                     fieldValue, ((AbstractComponent) field).getLocale());

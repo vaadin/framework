@@ -205,15 +205,13 @@ PopupDateField departing = new PopupDateField("Departing");
 PopupDateField returning = new PopupDateField("Returning");
 
 // Store return date binding so we can revalidate it later
-FieldBinding<Trip, LocalDate> returnBinding = binder
-  .forField(returning)
-  .withValidator(
-    returnDate -> !returnDate.isBefore(departing.getValue()),
-    "Cannot return before departing")
-  .bind(Trip::getReturnDate, Trip::setReturnDate);
+Binding<Trip, Date, Date> returnBinding = binder.forField(returning)
+  .withValidator(returnDate -> !returnDate.before(departing.getValue()),
+  "Cannot return before departing");
+returnBinding.bind(Trip::getReturnDate, Trip::setReturnDate);
 
 // Revalidate return date when departure date changes
-departing.onChange(newValue -> returnBinding.validate());
+departing.addValueChangeListener(event -> returnBinding.validate());
 ----
 
 == Converting User Input
