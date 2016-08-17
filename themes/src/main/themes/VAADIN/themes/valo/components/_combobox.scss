@@ -200,7 +200,7 @@
 
 /**
  * Outputs the styles for a combobox variant input element.
- * 
+ *
  * @param {size} $unit-size ($v-unit-size) - The sizing of the input (affects the padding only, width and height are 100%)
  * @param {size | list} $padding (null) - The padding of the input. Computed from other parameters by default.
  * @param {color} $font-color (null) - The font color of the input. Computed from the $background-color by default.
@@ -256,7 +256,7 @@
 
 /**
  * Outputs the styles for a combobox variant button element.
- * 
+ *
  * @param {size} $unit-size ($v-unit-size) - The sizing of the button, which corresponds its width.
  * @param {list} $bevel ($v-textfield-bevel) - Box-shadow value according to $v-bevel documentation
  * @param {color} $background-color ($v-textfield-background-color) - The background color of the input, which affects the font color of the button
@@ -283,9 +283,6 @@
     }
     color: mix($background-color, valo-font-color($background-color));
 
-    .v-ie8 & {
-      background-color: $background-color;
-    }
   }
 
   @if $v-border-radius > 0 {

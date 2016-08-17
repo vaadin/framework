@@ -21,11 +21,6 @@
       font-weight: bold;
       $min-width: round($v-unit-size * 2.2);
       min-width: $min-width;
-
-      // IE8 + border-box + min-width == fail
-      .v-ie8 & {
-        min-width: $min-width - ($padding-width * 2);
-      }
     }
 
     .#{$primary-stylename}-friendly {
@@ -320,9 +315,9 @@
 
 
 /**
- * Outputs styles to allow vertical centering of the icon and the caption, independent of the 
+ * Outputs styles to allow vertical centering of the icon and the caption, independent of the
  * height of the button.
- * 
+ *
  * @group button
  */
 @mixin valo-button-vertical-centering {
@@ -346,11 +341,11 @@
 
 
 /**
- * Output styles for a borderless button. Expects that the targeted element 
+ * Output styles for a borderless button. Expects that the targeted element
  * already has both valo-button-static-style and valo-button-style included.
- * 
+ *
  * @param {color} $font-color (inherit) - The font color of the borderless button
- * 
+ *
  * @group button
  */
 @mixin valo-button-borderless-style ($font-color: inherit) {
@@ -380,11 +375,11 @@
 
 
 /**
- * Output styles for a "quiet" button (a button whose outline is only shown 
- * once the user hovers over the button caption). Expects that the targeted 
- * element already has both valo-button-static-style and valo-button-style 
+ * Output styles for a "quiet" button (a button whose outline is only shown
+ * once the user hovers over the button caption). Expects that the targeted
+ * element already has both valo-button-static-style and valo-button-style
  * included.
- * 
+ *
  * @group button
  */
 @mixin valo-button-quiet-style {
@@ -408,7 +403,7 @@
 
 /**
  * Output styles to align a button's icon on the right side of its caption.
- * 
+ *
  * @group button
  */
 @mixin valo-button-icon-align-right-style {
@@ -430,7 +425,7 @@
 
 /**
  * Output styles to align a button's icon on top of its caption.
- * 
+ *
  * @group button
  */
 @mixin valo-button-icon-align-top-style {

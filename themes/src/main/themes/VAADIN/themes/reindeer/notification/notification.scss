@@ -10,12 +10,6 @@
 	font-weight: bold;
 }
 
-.v-ie9 &, .v-ie10 & {
-	.#{$primaryStyleName}-caption {
-		/* Fix for #6793 */
-		font-weight: bold;
-	}
-}
 .#{$primaryStyleName}-description {
 	line-height: 1.3;
 }

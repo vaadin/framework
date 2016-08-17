@@ -24,7 +24,7 @@
 	background: #333;
 	color: #fff;
 }
-.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem { 
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem {
 	cursor: default;
 	display: block;
 	position: relative;
@@ -56,14 +56,6 @@
 .#{$primaryStyleName} span.#{$primaryStyleName}-menuitem-disabled:active {
 	opacity: .5;
 	filter: alpha(opacity=50);
-	
-	.v-ie8 & {
-		filter: none;
-		color: #999;
-		img {
-			filter: alpha(opacity=50);
-		}
-	}
 }
 
 .#{$primaryStyleName}-more-menuitem {
@@ -91,7 +83,7 @@
 .#{$primaryStyleName}-popup:focus,
 .#{$primaryStyleName}-popup .popupContent:focus,
 .#{$primaryStyleName}-popup .popupContent .#{$primaryStyleName}-submenu:focus{
-	outline: none;	
+	outline: none;
 }
 /* Checkboxes for checkable/checked menu items */
 /* Checked/unchecked requires combined style selected-(un)checked for IE6 */
@@ -101,7 +93,7 @@
 .#{$primaryStyleName}-submenu-check-column .#{$primaryStyleName}-menuitem-caption {
 	padding-left: 18px;
 }
-.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem-checked .#{$primaryStyleName}-menuitem-caption { 
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem-checked .#{$primaryStyleName}-menuitem-caption {
 	background: transparent url(img/check.gif) no-repeat left;
 }
 

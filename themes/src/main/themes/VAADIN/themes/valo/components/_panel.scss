@@ -13,8 +13,8 @@ $v-panel-background-color: scale-color(lighten($v-app-background-color, 5%), $sa
 /**
  *
  *
- * @param {string} $primary-stylename (v-panel) - 
- * @param {bool} $include-additional-styles - 
+ * @param {string} $primary-stylename (v-panel) -
+ * @param {bool} $include-additional-styles -
  *
  * @group panel
  */
@@ -72,11 +72,11 @@ $v-panel-background-color: scale-color(lighten($v-app-background-color, 5%), $sa
 /**
  *
  *
- * @param {string} $primary-stylename (v-panel) - 
- * @param {color} $background-color ($v-panel-background-color) - 
- * @param {list} $shadow ($v-shadow) - 
- * @param {list} $border ($v-panel-border) - 
- * @param {string} $border-radius ($v-border-radius) - 
+ * @param {string} $primary-stylename (v-panel) -
+ * @param {color} $background-color ($v-panel-background-color) -
+ * @param {list} $shadow ($v-shadow) -
+ * @param {list} $border ($v-panel-border) -
+ * @param {string} $border-radius ($v-border-radius) -
  *
  * @group panel
  */
@@ -93,10 +93,10 @@ $v-panel-background-color: scale-color(lighten($v-app-background-color, 5%), $sa
 /**
  *
  *
- * @param {color} $background-color ($v-background-color) - 
- * @param {list} $bevel ($v-bevel) - 
- * @param {list} $gradient (valo-gradient-style($v-gradient) valo-gradient-opacity($v-gradient)/4) - 
- * @param {list} $border ($v-panel-border) - 
+ * @param {color} $background-color ($v-background-color) -
+ * @param {list} $bevel ($v-bevel) -
+ * @param {list} $gradient (valo-gradient-style($v-gradient) valo-gradient-opacity($v-gradient)/4) -
+ * @param {list} $border ($v-panel-border) -
  *
  * @group panel
  */
@@ -112,10 +112,6 @@ $v-panel-background-color: scale-color(lighten($v-app-background-color, 5%), $sa
     $shadow: 0 0 0 first-number($border-style) first-color($border-style);
     border-bottom: none;
     margin-bottom: first-number($border-style);
-
-    .v-ie8 & {
-      outline: first-number($border-style) solid first-color($border-style);
-    }
   } @else {
     border-bottom: valo-border($border: $border, $color: $v-background-color, $strength: 0.7);
   }
@@ -132,7 +128,7 @@ $v-panel-background-color: scale-color(lighten($v-app-background-color, 5%), $sa
 /**
  *
  *
- * @param {list} $shadow (false) - 
+ * @param {list} $shadow (false) -
  *
  * @group panel
  */
@@ -192,7 +188,7 @@ $v-panel-background-color: scale-color(lighten($v-app-background-color, 5%), $sa
 /**
  *
  *
- * @param {size} $border-width (max(1px, first-number($v-panel-border))) - 
+ * @param {size} $border-width (max(1px, first-number($v-panel-border))) -
  *
  * @group panel
  */

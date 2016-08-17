@@ -59,7 +59,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
   .#{$primaryStyleName}-tablewrapper {
     border: $v-grid-border;
   }
-  
+
   // Column drag and drop elements
 
   .#{$primaryStyleName} .header-drag-table {
@@ -150,12 +150,6 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       vertical-align: middle;
     }
 
-    .v-ie8 &.open .#{$primaryStyleName}-sidebar-button:after {
-      vertical-align: middle;
-      text-align: center;
-      display: inline;
-    }
-
     .#{$primaryStyleName}-sidebar-content {
       padding: 4px 0;
       overflow-y: auto;
@@ -211,7 +205,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       border-left: none;
     }
   }
-  
+
   .#{$primaryStyleName}-editor-cells.frozen > div {
     @include box-shadow(1px 0 2px rgba(0,0,0,.1));
     border-right: $v-grid-cell-vertical-border;
@@ -356,17 +350,6 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
       display: none;
       pointer-events: none;
     }
-    
-    // IE 8-10 apply "pointer-events" only to SVG elements. 
-    // Using an empty SVG instead of an empty text node makes IE
-    // obey the "pointer-events: none" and forwards click events 
-    // to the underlying element. The data decodes to:
-    // <svg xmlns="http://www.w3.org/2000/svg"></svg>
-    .ie8 &:before,
-    .ie9 &:before,
-    .ie10 &:before {
-      content: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==);
-    } 
   }
 
   .#{$primaryStyleName}:focus .#{$primaryStyleName}-cell-focused:before {
@@ -391,7 +374,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     -moz-box-sizing: border-box;
     margin-top: nth($v-grid-border, 1) * -1;
     @include box-shadow(0 0 9px rgba(0,0,0,.2));
-    
+
     // Unbuffered footer needs to be 100% width to display correctly
     &.unbuffered {
       .#{$primaryStyleName}-editor-footer {
@@ -403,7 +386,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
   .#{$primaryStyleName}-editor-cells {
     position: relative;
     white-space: nowrap;
-    
+
     &.frozen {
       z-index: 2;
     }
@@ -422,26 +405,26 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
         vertical-align: middle;
         display: inline-block;
       }
-      
+
       .v-filterselect {
       	padding-left: 0;
       }
-      
+
       input[type="text"],
       input[type="text"].v-filterselect-input,
       input[type="password"] {
       	padding-left: $v-grid-cell-padding-horizontal;
       }
-      
+
       input[type="text"]:not(.v-filterselect-input),
       input[type="password"] {
       	padding-right: $v-grid-cell-padding-horizontal / 2;
       }
-      
+
       input[type="checkbox"] {
       	margin-left: $v-grid-cell-padding-horizontal;
       }
-      
+
       .v-textfield,
       .v-datefield,
       .v-filterselect {
@@ -450,25 +433,13 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
         min-height: 100%;
         max-height: 100%;
       }
-      
-      .v-datefield-button {
-        .v-ie8 & {
-          margin-left: -37px;
-        }
-      }
-      
-      .v-filterselect-button {
-        .v-ie8 & {
-          margin-left: -25px;
-        }
-      }
 
       .v-select,
       .v-select-select {
         min-width: 100%;
         max-width: 100%;
       }
-      
+
       &.not-editable.#{$primaryStyleName}-cell {
         float: none;
       }
@@ -555,33 +526,22 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     border-top: $v-grid-details-border-top-stripe;
     border-bottom: $v-grid-details-border-bottom-stripe;
   }
-  
+
   .#{$primaryStyleName}-spacer-deco-container {
-    border-top: $v-grid-border-size solid transparent; // same size as table wrapper border 
+    border-top: $v-grid-border-size solid transparent; // same size as table wrapper border
     position: relative;
     top: 0; // escalator will override top for scrolling and margin-top for header offset.
     z-index: 5;
   }
 
   .#{$primaryStyleName}-spacer-deco {
-    top: 0; // this will be overridden by code, but it's a good default. 
+    top: 0; // this will be overridden by code, but it's a good default.
     left: 0;
     width: $v-grid-details-marker-width;
     background-color: $v-grid-details-marker-color;
     position: absolute;
     height: 100%; // this will be overridden by code, but it's a good default.
     pointer-events: none;
-
-    // IE 8-10 apply "pointer-events" only to SVG elements. 
-    // Using an empty SVG instead of an empty text node makes IE
-    // obey the "pointer-events: none" and forwards click events 
-    // to the underlying element. The data decodes to:
-    // <svg xmlns="http://www.w3.org/2000/svg"></svg>
-    .ie8 &:before,
-    .ie9 &:before,
-    .ie10 &:before {
-      content: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==);
-    }
   }
 
   // Renderers

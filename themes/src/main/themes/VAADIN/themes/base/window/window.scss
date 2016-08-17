@@ -34,7 +34,7 @@
 
 .#{$primaryStyleName}-outerheader,
 .#{$primaryStyleName}-draggingCurtain {
- 	cursor: move;	
+ 	cursor: move;
 }
 .#{$primaryStyleName}-header {
 	font-weight: bold;
@@ -128,10 +128,7 @@ div.#{$primaryStyleName}-header {
 	position: absolute;
 	display: none;
 	pointer-events: none;
-	
-	.v-ie8 & {
-	  display: block;
-	}
+
 }
 .v-shadow-window .top-left {
     position: absolute; overflow: hidden;

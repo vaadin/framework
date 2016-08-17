@@ -186,29 +186,6 @@ $v-selection-item-selection-color: $v-selection-color !default;
 .v-shadow,
 .v-shadow-window {
   display: none;
-
-  // In IE8 windows get the same shadow as other overlays
-  .v-ie8 & {
-    display: block;
-
-    // Up to 8 shadows are supported
-    $elements: top, top-left, top-right, left, right, bottom, bottom-left, bottom-right;
-    $shadows: valo-bevel-and-shadow($shadow: $v-overlay-shadow);
-
-    @if type-of(last($shadows)) == color {
-      @include valo-ie8-shadow($shadows);
-    } @else {
-      @for $i from 1 through min(length($elements), length($shadows)) {
-        $shadow: nth($shadows, $i);
-        @if length($shadow) == 2 {
-          $shadow: flatten-list($shadow); // Workaround for a weird issue when sometimes a shadow is appended to a null list
-        }
-        @if length($shadow) > 3 {
-          @include valo-ie8-shadow($shadow: $shadow, $element: nth($elements, $i));
-        }
-      }
-    }
-  }
 }
 
 

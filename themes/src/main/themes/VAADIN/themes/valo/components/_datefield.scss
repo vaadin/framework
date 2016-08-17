@@ -188,7 +188,7 @@
 
 /**
  * Outputs the styles for a date field variant button element.
- * 
+ *
  * @param {size} $unit-size ($v-unit-size) - The sizing of the button, which corresponds its width.
  * @param {list} $bevel ($v-textfield-bevel) - Box-shadow value according to $v-bevel documentation
  * @param {color} $background-color ($v-textfield-background-color) - The background color of the input, which affects the font color of the button
@@ -301,7 +301,7 @@
 
 /**
  * Outputs the styles for calendar panel (i.e. month view).
- * 
+ *
  * @param {string} $primary-stylename (v-datefield-calendarpanel) - the primary style name for the selectors
  *
  * @group datefield
@@ -472,7 +472,7 @@
 
 /**
  * Outputs the styles for an individual day element in a calendar panel.
- * 
+ *
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-day-style {
@@ -496,7 +496,7 @@
 
 /**
  * Outputs the hover state styles for an individual day element in a calendar panel.
- * 
+ *
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-day-hover-style {
@@ -506,7 +506,7 @@
 
 /**
  * Outputs the styles for an individual day element, which are not part of the current month, in a calendar panel.
- * 
+ *
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-day-offmonth-style {
@@ -526,7 +526,7 @@
 
 /**
  * Outputs the styles for todays day element in a calendar panel.
- * 
+ *
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-day-today-style {
@@ -538,7 +538,7 @@
 
 /**
  * Outputs the styles for the selected day element in a calendar panel.
- * 
+ *
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-day-selected-style {
@@ -551,22 +551,19 @@
 
 /**
  * Outputs the focus state styles for an individual day element in a calendar panel.
- * 
+ *
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-day-focused-style {
   @include valo-focus-style;
   position: relative; // Show above other cells
 
-  .v-ie8 & {
-    border-color: $v-focus-color;
-  }
 }
 
 
 /**
  * Outputs the font icon styles for the next month button in a calendar panel.
- * 
+ *
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-nextmonth-icon-style {
@@ -577,7 +574,7 @@
 
 /**
  * Outputs the font icon styles for the previous month button in a calendar panel.
- * 
+ *
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-prevmonth-icon-style {
@@ -588,7 +585,7 @@
 
 /**
  * Outputs the font icon styles for the next year button in a calendar panel.
- * 
+ *
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-nextyear-icon-style {
@@ -599,7 +596,7 @@
 
 /**
  * Outputs the font icon styles for the previous year button in a calendar panel.
- * 
+ *
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-prevyear-icon-style {
@@ -610,7 +607,7 @@
 
 /**
  * Outputs the styles for the current month and year title element in a calendar panel.
- * 
+ *
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-month-style {

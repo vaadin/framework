@@ -46,7 +46,7 @@ body &.v-app .v-app-loading {
 	border-top: 1px solid transparent;
 }
 /**
- * Try to handle printing somehow. Reasonable printing support 
+ * Try to handle printing somehow. Reasonable printing support
  * needs application specific planning and CSS tuning.
  */
  /* Disabled for now, see #10336
@@ -186,7 +186,7 @@ body &.v-app .v-app-loading {
 .v-label h5,
 .v-label h6 {
 	line-height: normal;
-} 
+}
 /* Loading indicator states
  * Note: client side expects that loading indicator has a height. It depends on
  * this css property to ensure browsers have applied all required styles.
@@ -224,7 +224,7 @@ body &.v-app .v-app-loading {
 	padding: 2px;
 }
 
-/* Removes clear button from input fields introduced by IE10 */
+/* Removes clear button from input fields */
 input::-ms-clear {
     display: none;
 }
@@ -252,7 +252,7 @@ input::-ms-clear {
 	font-size: $font-size;
 }
 .v-ios.v-webkit & .v-scrollable {
-	-webkit-overflow-scrolling: touch; 
+	-webkit-overflow-scrolling: touch;
 }
 /* Disable native scrolling on iOS 5 due to #8792 */
 .v-ios5.v-webkit & .v-scrollable {
@@ -290,4 +290,3 @@ input::-ms-clear {
 .v-radiobutton {
 	-webkit-user-select: none;
 }
-

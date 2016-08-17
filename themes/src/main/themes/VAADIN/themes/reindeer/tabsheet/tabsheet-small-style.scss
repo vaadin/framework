@@ -55,12 +55,6 @@
 .v-ff & .#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-caption-close {
 	margin-top: -14px;
 }
-.v-ie9 &, .v-ie10 & {
-	.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-caption-close:only-child,
-	.#{$primaryStyleName}-tabs-bar .v-captiontext:first-child + .#{$primaryStyleName}-caption-close {
-    margin-top: -14px;
-	}
-}
 .#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-caption-close:hover {
 	background: #bfbfbf;
 	-webkit-box-shadow: 0 1px 0 #fff;

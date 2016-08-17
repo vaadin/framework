@@ -1,14 +1,12 @@
 @mixin chameleon-button($primaryStyleName : v-button) {
 
 .#{$primaryStyleName}:active,
-.v-ie8 & .v-pressed.#{$primaryStyleName},
 div.#{$primaryStyleName}-down {
 	background-image: url(../../img/grad-dark-bottom2.png);
 	background-color: #afafaf;
 	}
 
 .#{$primaryStyleName}:active .#{$primaryStyleName}-wrap,
-.v-ie8 & .v-pressed.#{$primaryStyleName} .#{$primaryStyleName}-wrap,
 .#{$primaryStyleName}-down .#{$primaryStyleName}-wrap {
 	background-image: url(../../img/grad-dark-top2.png);
 	border: 1px solid #888;
@@ -61,7 +59,7 @@ div.#{$primaryStyleName}-down .#{$primaryStyleName}-wrap {
 .v-ff & .#{$primaryStyleName}-wrap {
 	overflow: hidden;
 	}
-	
+
 .#{$primaryStyleName}:focus {
 	outline: none;
 	}
@@ -96,7 +94,6 @@ div.#{$primaryStyleName}-down .#{$primaryStyleName}-wrap {
 	}
 
 .#{$primaryStyleName}-small:active .#{$primaryStyleName}-wrap,
-.v-ie8 & .#{$primaryStyleName}-small.v-pressed .#{$primaryStyleName}-wrap,
 .#{$primaryStyleName}-down.small .#{$primaryStyleName}-wrap {
 	padding: 2px 10px;
 	}
@@ -115,8 +112,7 @@ div.#{$primaryStyleName}-down .#{$primaryStyleName}-wrap {
 	padding-right: 26px;
 	}
 
-.#{$primaryStyleName}-wide:active .#{$primaryStyleName}-wrap,
-.v-ie8 & .#{$primaryStyleName}-wide.v-pressed .#{$primaryStyleName}-wrap {
+.#{$primaryStyleName}-wide:active .#{$primaryStyleName}-wrap {
 	padding-left: 25px;
 	padding-right: 25px;
 	}
@@ -130,8 +126,7 @@ div.#{$primaryStyleName}-down .#{$primaryStyleName}-wrap {
 	padding-bottom: 13px;
 	}
 
-.#{$primaryStyleName}-tall:active .#{$primaryStyleName}-wrap,
-.v-ie8 & .#{$primaryStyleName}-tall.v-pressed .#{$primaryStyleName}-wrap {
+.#{$primaryStyleName}-tall:active .#{$primaryStyleName}-wrap {
 	padding-top: 12px;
 	padding-bottom: 12px;
 	}
@@ -245,7 +240,7 @@ body.v-ie & .v-pressed.#{$primaryStyleName}-borderless .#{$primaryStyleName}-wra
 	margin-left: 3px;
 	margin-right: -0.5em;
 	}
-	
+
 
 /*******************************************************************************
  * Icon-only

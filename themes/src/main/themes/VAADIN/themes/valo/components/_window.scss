@@ -47,7 +47,7 @@ $v-window-modality-curtain-background-color: #222 !default;
 /**
  *
  *
- * @param {string} $primary-stylename (v-window) - 
+ * @param {string} $primary-stylename (v-window) -
  *
  * @group window
  */
@@ -291,16 +291,6 @@ $v-window-modality-curtain-background-color: #222 !default;
     width: round($v-unit-size/2);
     height: round($v-unit-size/2);
     cursor: nwse-resize;
-
-    .v-ie8 & {
-      background: #000;
-      filter: alpha(opacity=0.1);
-    }
-
-    .v-ie8 &,
-    .v-ie9 & {
-      cursor: se-resize;
-    }
   }
 
 

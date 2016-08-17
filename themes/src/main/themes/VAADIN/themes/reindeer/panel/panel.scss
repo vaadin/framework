@@ -13,10 +13,8 @@
 	line-height: 16px; /* accommodate minimum icon size */
 }
 
-.v-webkit &, 
-.v-gecko &, 
-.v-ie9 &, 
-.v-ie10 & {
+.v-webkit &,
+.v-gecko & {
 	.#{$primaryStyleName}-caption,
 	.#{$primaryStyleName}-nocaption {
 		border-bottom-color: rgba(0,0,0,.08);

@@ -1,5 +1,5 @@
 /**
- * Outputs the global selectors and properties for the ColorPicker component - styles which are 
+ * Outputs the global selectors and properties for the ColorPicker component - styles which are
  * considered mandatory for the component to work properly.
  *
  * @param {string} $primary-stylename (v-colorpicker) - the primary style name for the selectors
@@ -213,23 +213,6 @@
 
     + .v-button-caption:not(:empty) {
       margin-left: round($v-unit-size/2);
-    }
-
-    .v-ie8 & {
-      position: relative;
-      top: auto;
-      right: auto;
-      bottom: auto;
-      left: auto;
-      width: $v-font-size;
-      height: $v-font-size;
-      display: inline-block;
-      vertical-align: middle;
-      margin: 0 round($v-font-size / -2);
-
-      + .v-button-caption {
-        margin-left: round($v-unit-size/2);
-      }
     }
   }
 

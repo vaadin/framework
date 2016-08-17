@@ -6,7 +6,7 @@
 .#{$primaryStyleName}-caption .v-errorindicator {
 	padding-right: 20px;
 	background: transparent url(../icons/16/error.png) no-repeat bottom center;
-	
+
 }
 .#{$primaryStyleName}-caption,
 .#{$primaryStyleName}-caption-light {
@@ -65,17 +65,6 @@
 	background: transparent;
 }
 .#{$primaryStyleName}-deco-light {
-	height: 0;
-	overflow: hidden;
-}
-/* IE specific rules */
-.v-ie8 & .#{$primaryStyleName}-content {
-	border-bottom: 1px solid #babfc0;
-}
-.v-ie8 & .#{$primaryStyleName}-content-light {
-	border-bottom: none;
-}
-.v-ie8 & .#{$primaryStyleName}-deco { 
 	height: 0;
 	overflow: hidden;
 }

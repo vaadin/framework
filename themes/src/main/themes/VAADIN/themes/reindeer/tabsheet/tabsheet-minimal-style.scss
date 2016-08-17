@@ -105,19 +105,6 @@
 	-moz-border-radius: 7px;
 }
 
-.v-ie9 &, .v-ie10 & {
-	.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitem .#{$primaryStyleName}-caption-close { 
-  	  &, &:hover, &:active {
-        
-        /* IE9/IE10 suffers from rounding subpixel values errors when measuring the tabs which makes the close button wrap. */
-        margin-left: 2.5px;
-            
-        /* The close button is a pixel too high in IE9/IE10, adjust for that */
-        margin-top: 1px;
-	    }        
-	}
-}
-
 .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:hover,
 .white .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:hover {
 	color: #fff;

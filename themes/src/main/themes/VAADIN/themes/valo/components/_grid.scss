@@ -127,16 +127,16 @@ $v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
       height: 100%;
       vertical-align: middle;
     }
-    
+
     &.not-editable.#{$primary-stylename}-cell {
       float: none;
     }
-    
+
     .error::before {
       border-top: round($v-unit-size / 4) solid $v-error-indicator-color;
       border-right: round($v-unit-size / 4) solid transparent;
     }
-    
+
     .error,
     .error > input {
       // taken from @mixin valo-textfield-error-style()
@@ -159,21 +159,9 @@ $v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
         @include box-shadow(none);
       }
     }
-    
+
     input[type="text"].v-datefield-textfield {
     	padding-left: $v-unit-size * 1.2;
-    }
-    
-    .v-datefield-button {
-      .v-ie8 & {
-        margin-left: 0px;
-      }
-    }
-      
-    .v-filterselect-button {
-      .v-ie8 & {
-        margin-left: 0px;
-      }
     }
 
     .v-textfield-focus,
@@ -193,7 +181,7 @@ $v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
 	  > input[type="checkbox"] {
       	margin-left: 0;
       }
-      
+
       > label {
         white-space: nowrap;
       }
@@ -215,7 +203,7 @@ $v-grid-details-border-bottom-stripe: $v-grid-cell-horizontal-border !default;
     padding: round($v-layout-spacing-vertical / 2) round($v-layout-spacing-horizontal / 2);
     margin: 0;
     outline: none;
-  }  
+  }
 
   .#{$primary-stylename}-spacer {
     margin-top: first-number($v-grid-border) * -1;

@@ -34,7 +34,7 @@
 	margin: 0;
 }
 .#{$primaryStyleName}-calendarpanel:focus {
-	outline:none;	
+	outline:none;
 }
 .#{$primaryStyleName}-calendarpanel-header td {
 	text-align: center;
@@ -95,9 +95,9 @@
 }
 .#{$primaryStyleName}-popup {
 	background: #fff;
-	 .v-ie9 &, .v-ie10 &, .v-ie11 & {
+	 .v-ie11 & {
 	 	box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .5);
-    }	
+    }
 }
 .#{$primaryStyleName}-popupcalendar input.#{$primaryStyleName}-textfield {
 	-webkit-box-sizing: border-box;

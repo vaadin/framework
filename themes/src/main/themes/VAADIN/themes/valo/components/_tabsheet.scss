@@ -1,13 +1,13 @@
 /**
  * Should the tabsheet content changes be animated.
- * 
+ *
  * @group tabsheet
  */
 $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 
 /**
- * Outputs the global selectors and properties for the TabSheet component - styles which are 
+ * Outputs the global selectors and properties for the TabSheet component - styles which are
  * considered mandatory for the component to work properly.
  *
  * @param {string} $primary-stylename (v-tabsheet) - the primary style name for the selectors
@@ -157,7 +157,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 /**
  * Outputs the styles for the tabcontainer element of a tabsheet.
- * 
+ *
  * @group tabsheet
  */
 @mixin valo-tabsheet-tabcontainer-style ($primary-stylename: v-tabsheet) {
@@ -183,7 +183,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 /**
  * Outputs the styles for the tabitemcell element of a tabsheet.
- * 
+ *
  * @group tabsheet
  */
 @mixin valo-tabsheet-tabitemcell-style ($primary-stylename: v-tabsheet) {
@@ -286,7 +286,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 /**
  * Outputs the styles for the tab scroller element of a tabsheet.
- * 
+ *
  * @group tabsheet
  */
 @mixin valo-tabsheet-scroller-style ($primary-stylename: v-tabsheet) {
@@ -309,15 +309,6 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     right: 0;
     display: block;
     @include linear-gradient(to left, $border-color 70%, rgba($border-color, 0) 100%, $fallback: transparent);
-  }
-
-  .v-ie8 &,
-  .v-ie9 & {
-    background-color: $v-background-color;
-
-    &:after {
-      background-color: $border-color;
-    }
   }
 
   button {
@@ -374,7 +365,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 /**
  * Outputs the font icon styles for the previous button element of a tabsheet scroller.
- * 
+ *
  * @group tabsheet
  */
 @mixin valo-tabsheet-scroller-prev-icon-style {
@@ -385,7 +376,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 /**
  * Outputs the font icon styles for the next button element of a tabsheet scroller.
- * 
+ *
  * @group tabsheet
  */
 @mixin valo-tabsheet-scroller-next-icon-style {
@@ -396,12 +387,12 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 /**
  * Outputs the styles for the framed tabsheet style.
- * 
+ *
  * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
  * @param {bool} $frame-inactive-tabs (true) - Should inactive tabs be framed as well (the active tab is always framed with this style)
  * @param {bool} $outer-frame (true) - Should the frame contain the whole tabsheet (i.e. tabbar and tab content). If false, works like a "borderless" style.
  * @param {size} $tab-spacing ($v-unit-size/10) - The spacing between tabs
- * 
+ *
  * @group tabsheet
  */
 @mixin valo-tabsheet-framed-style ($primary-stylename: v-tabsheet, $frame-inactive-tabs: true, $outer-frame: true, $tab-spacing: round($v-unit-size/10)) {
@@ -493,10 +484,10 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 /**
  * Outputs the styles for a tabsheet where the tabs are aligned to the position specified by the parameter in the tabbar.
- * 
+ *
  * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
  * @param {string} $align (center) - The alignment of the tabs inside the tabbar. Possible values: left, right, center.
- * 
+ *
  * @group tabsheet
  */
 @mixin valo-tabsheet-align-tabs-style ($primary-stylename: v-tabsheet, $align: center) {
@@ -508,10 +499,10 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 /**
  * Outputs the styles for a tabsheet where all tabs in the tabbar have equal width and span the entire width of the tabbar.
- * 
+ *
  * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
  * @param {bool} $flex (false) - Should the size of the tabs be proportional to their content, i.e. should the available space in the tabbar be distributed to the tabs in relation to their content sizes.
- * 
+ *
  * @group tabsheet
  */
 @mixin valo-tabsheet-equal-width-tabs-style ($primary-stylename: v-tabsheet, $flex: false) {
@@ -543,9 +534,9 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 /**
  * Outputs the styles for a tabsheet where the icons of individual tabs are on top of the tab captions.
- * 
+ *
  * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
- *  
+ *
  * @group tabsheet
  */
 @mixin valo-tabsheet-icons-on-top-style ($primary-stylename: v-tabsheet) {
@@ -577,11 +568,11 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 
 /**
- * Outputs the styles for a tabsheet where only the selected tab has the close button visible. 
+ * Outputs the styles for a tabsheet where only the selected tab has the close button visible.
  * Note that the other tabs can still be closed programmatically.
- * 
+ *
  * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
- *  
+ *
  * @group tabsheet
  */
 @mixin valo-tabsheet-only-selected-closable-style ($primary-stylename: v-tabsheet) {
@@ -596,11 +587,11 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
 
 /**
- * Outputs the styles for a tabsheet where the tabbar has increased padding to separate the tabs 
+ * Outputs the styles for a tabsheet where the tabbar has increased padding to separate the tabs
  * inside it from their surrounding container.
- * 
+ *
  * @param {string} $primary-stylename (v-tabsheet) - The primary style name for the selectors
- *  
+ *
  * @group tabsheet
  */
 @mixin valo-tabsheet-padded-tabbar-style ($primary-stylename: v-tabsheet) {

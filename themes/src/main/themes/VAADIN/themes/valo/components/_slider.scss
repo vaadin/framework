@@ -44,8 +44,8 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
 /**
  *
  *
- * @param {string} $primary-stylename (v-slider) - 
- * @param {bool} $include-additional-styles - 
+ * @param {string} $primary-stylename (v-slider) -
+ * @param {bool} $include-additional-styles -
  *
  * @group slider
  */
@@ -64,10 +64,6 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
 
       .#{$primary-stylename}-handle:after {
         opacity: 1;
-
-        .v-ie8 & {
-          visibility: visible;
-        }
       }
     }
 
@@ -103,11 +99,6 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
       margin-left: -100%;
       width: 100%;
       vertical-align: top;
-
-      .v-ie8 & {
-        position: relative;
-        left: round(-$v-slider-handle-width/2);
-      }
     }
   }
 
@@ -131,10 +122,6 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
       opacity: 0;
       @if $v-animations-enabled {
         @include transition(opacity 200ms);
-      }
-
-      .v-ie8 & {
-        visibility: hidden;
       }
     }
 
@@ -190,12 +177,6 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
         height: 101%;
         margin-left: 0;
         @include valo-gradient($color: $v-selection-color, $direction: to right);
-
-        .v-ie8 & {
-          top: round($v-slider-handle-width/2);
-          left: 0;
-          height: 130%;
-        }
       }
     }
 
@@ -229,8 +210,8 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
 /**
  *
  *
- * @param {string} $primary-stylename (v-slider) - 
- * @param {color} $background-color ($v-background-color) - 
+ * @param {string} $primary-stylename (v-slider) -
+ * @param {color} $background-color ($v-background-color) -
  *
  * @group slider
  */
@@ -251,9 +232,9 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
 /**
  *
  *
- * @param {string} $primary-stylename (v-slider) - 
- * @param {color} $background-color ($v-selection-color) - 
- * @param {list} $border ($v-border) - 
+ * @param {string} $primary-stylename (v-slider) -
+ * @param {color} $background-color ($v-selection-color) -
+ * @param {list} $border ($v-border) -
  *
  * @group slider
  */
@@ -281,7 +262,7 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
 /**
  *
  *
- * @param {string} $primary-stylename (v-slider) - 
+ * @param {string} $primary-stylename (v-slider) -
  *
  * @group slider
  */
@@ -296,8 +277,8 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
 /**
  *
  *
- * @param {string} $primary-stylename (v-slider) - 
- * @param {color} $background-color ($v-background-color) - 
+ * @param {string} $primary-stylename (v-slider) -
+ * @param {color} $background-color ($v-background-color) -
  *
  * @group slider
  */
@@ -318,8 +299,8 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
 /**
  *
  *
- * @param {string} $primary-stylename (v-slider) - 
- * @param {number} $tick-count (5) - 
+ * @param {string} $primary-stylename (v-slider) -
+ * @param {number} $tick-count (5) -
  *
  * @group slider
  */

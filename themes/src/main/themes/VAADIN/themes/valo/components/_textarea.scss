@@ -111,10 +111,4 @@
   resize: none;
   white-space: pre-wrap; // Restore default, because .v-widget sets it to normal
 
-  .v-ie8 &,
-  .v-ie9 & {
-    line-height: inherit;
-    padding-top: round($unit-size/9);
-    padding-bottom: round($unit-size/9);
-  }
 }

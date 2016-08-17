@@ -1,6 +1,3 @@
-/* Browser-specific corrections to the standard implementation */
-@import "button-ie.scss";
-
 @mixin reindeer-nativebutton-link($primaryStyleName : v-nativebutton) {
 
 .#{$primaryStyleName}-link .#{$primaryStyleName}-caption {
@@ -19,7 +16,4 @@
 
 @mixin reindeer-nativebutton($primaryStyleName : v-nativebutton) {
 	@include reindeer-nativebutton-link($primaryStyleName);
-	
-	/* Browser-specific corrections to the standard implementation */
-	@include reindeer-button-ie($primaryStyleName);
 }
