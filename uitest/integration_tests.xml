@@ -50,38 +50,6 @@
         <scp file="${demo.war}" todir="${user}@${test.integration.server}:integration-tests/servers/demo.war" keyfile="${sshkey.file}" passphrase="${passphrase}" />
     </target>
 
-    <!-- Run basic integration test test -->
-    <target name="legacy-integration-test">
-        <fail unless="testfiles" message="You need to specify the files to run using the 'testfiles' property" />
-        <subant target="run-tb2-tests" failonerror="false" antfile="test.xml">
-            <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
-            <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-            <property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
-            <property name="server.start.succeeded" value="1" />
-            <property name="browsers" value="${test_browsers}" />
-            <property name="testfiles" value="${testfiles}" />
-            <property name="test-output-dir" value="${integration_test.dir}/result/integration-test-output/${server-name}" />
-            <property name="retries" value="0" />
-            <property name="report.qualifier" value="integration-tb2/${server-name}" />
-
-            <fileset dir="." includes="test.xml" />
-        </subant>
-    </target>
-
-    <target name="integration-test-theme">
-        <subant target="run-tb2-tests" failonerror="false" antfile="test.xml">
-            <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
-            <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-            <property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
-            <property name="server.start.succeeded" value="1" />
-            <property name="testfiles" value="${testfiles-theme}" />
-            <property name="test-output-dir" value="${integration_test.dir}/result/integration-test-output/${server-name}" />
-            <property name="report.qualifier" value="integration-theme-tb2/${server-name}" />
-
-            <fileset dir="." includes="test.xml" />
-        </subant>
-    </target>
-
     <target name="run-tb3-servlet-test">
         <antcall target="run-tb3-test" inheritall="true">
             <param name="junit.test.suite" value="com.vaadin.tests.tb3.ServletIntegrationTests" />
@@ -276,35 +244,11 @@
                     </condition>
                 </fail>
 
-                <antcontrib:if>
-                    <isset property="testfiles" />
-                    <antcontrib:then>
-                        <echo>Starting legacy (TB2) test for ${target-server}</echo>
-                        <antcall target="legacy-integration-test">
-                            <param name="server-name" value="${target-server}" />
-                            <param name="deployment.url" value="http://${target-host}:${target-port}" />
-                        </antcall>
-                    </antcontrib:then>
-                    <antcontrib:else>
-                        <echo>Starting TB3 test for ${target-server}</echo>
-                        <antcall target="run-tb3-servlet-test">
-                            <param name="server-name" value="${target-server}" />
-                            <param name="deployment.url" value="http://${target-host}:${target-port}" />
-                        </antcall>
-                    </antcontrib:else>
-                </antcontrib:if>
-
-                <!-- Run theme tests in all browsers if there's a property
-                    with the test files -->
-                <antcontrib:if>
-                    <isset property="testfiles-theme" />
-                    <antcontrib:then>
-                        <antcall target="integration-test-theme">
-                            <param name="server-name" value="${target-server}" />
-                            <param name="deployment.url" value="http://${target-host}:${target-port}" />
-                        </antcall>
-                    </antcontrib:then>
-                </antcontrib:if>
+                <echo>Starting TB3 test for ${target-server}</echo>
+                <antcall target="run-tb3-servlet-test">
+                    <param name="server-name" value="${target-server}" />
+                    <param name="deployment.url" value="http://${target-host}:${target-port}" />
+                </antcall>
 
                 <!-- timeout in five minutes -->
                 <sshexec host="${target-host}" outputproperty="stop-output" timeout="600000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml shutdown-and-cleanup" failonerror="false" />
