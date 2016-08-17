@@ -36,27 +36,16 @@ public class ServletIntegrationTests {
     public static Set<String> notWebsocketCompatible = new HashSet<String>();
     static {
 
-        notJSR356Compatible.add("jetty7");
         notJSR356Compatible.add("jetty8");
         notJSR356Compatible.add("tomcat7");
         notJSR356Compatible.add("tomcat7apacheproxy");
-        notJSR356Compatible.add("osgi"); // Karaf 3, Jetty 8
 
-        // In theory GF3 could work but in reality broken
-        notWebsocketCompatible.add("glassfish3");
-        notWebsocketCompatible.add("jboss4");
-        notWebsocketCompatible.add("jboss5");
-        notWebsocketCompatible.add("jboss6");
-        notWebsocketCompatible.add("jboss7");
-        notWebsocketCompatible.add("tomcat6");
         notWebsocketCompatible.add("tomcat7apacheproxy");
         notWebsocketCompatible.add("weblogic10");
         notWebsocketCompatible.add("wildfly9-nginx");
 
-        // Requires an update to 8.5.5 and a fix for
-        // https://dev.vaadin.com/ticket/16354
-        // https://developer.ibm.com/answers/questions/186066/websocket-paths-using-uri-templates-do-not-work-pr/
-        notWebsocketCompatible.add("websphere8");
+        // Jetty 9 but no ws support by default
+        notWebsocketCompatible.add("karaf4");
 
         // If a server does not support any kind of websockets it does not
         // support JSR-356 either..
