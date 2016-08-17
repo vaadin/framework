@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,10 +15,10 @@
  */
 package com.vaadin.ui;
 
+import java.text.Normalizer.Form;
 import java.util.Date;
 
 import com.vaadin.data.Container;
-import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.legacy.ui.LegacyCheckBox;
 import com.vaadin.legacy.ui.LegacyDateField;
@@ -27,23 +27,22 @@ import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
- * This class contains a basic implementation for both {@link FormFieldFactory}
- * and {@link TableFieldFactory}. The class is singleton, use {@link #get()}
- * method to get reference to the instance.
- * 
+ * This class contains a basic implementation for {@link TableFieldFactory}. The
+ * class is singleton, use {@link #get()} method to get reference to the
+ * instance.
+ *
  * <p>
  * There are also some static helper methods available for custom built field
  * factories.
- * 
+ *
  */
-public class DefaultFieldFactory
-        implements FormFieldFactory, TableFieldFactory {
+public class DefaultFieldFactory implements TableFieldFactory {
 
     private static final DefaultFieldFactory instance = new DefaultFieldFactory();
 
     /**
      * Singleton method to get an instance of DefaultFieldFactory.
-     * 
+     *
      * @return an instance of DefaultFieldFactory
      */
     public static DefaultFieldFactory get() {
@@ -51,15 +50,6 @@ public class DefaultFieldFactory
     }
 
     protected DefaultFieldFactory() {
-    }
-
-    @Override
-    public LegacyField<?> createField(Item item, Object propertyId,
-            Component uiContext) {
-        Class<?> type = item.getItemProperty(propertyId).getType();
-        LegacyField<?> field = createFieldByPropertyType(type);
-        field.setCaption(createCaptionByPropertyId(propertyId));
-        return field;
     }
 
     @Override
@@ -76,7 +66,7 @@ public class DefaultFieldFactory
     /**
      * If name follows method naming conventions, convert the name to spaced
      * upper case text. For example, convert "firstName" to "First Name"
-     * 
+     *
      * @param propertyId
      * @return the formatted caption string
      */
@@ -95,7 +85,7 @@ public class DefaultFieldFactory
      * <b>Item</b>: {@link Form}. <br/>
      * <b>default field type</b>: {@link LegacyTextField}.
      * <p>
-     * 
+     *
      * @param type
      *            the type of the property
      * @return the most suitable generic {@link LegacyField} for given type
@@ -104,11 +94,6 @@ public class DefaultFieldFactory
         // Null typed properties can not be edited
         if (type == null) {
             return null;
-        }
-
-        // Item field
-        if (Item.class.isAssignableFrom(type)) {
-            return new Form();
         }
 
         // Date field

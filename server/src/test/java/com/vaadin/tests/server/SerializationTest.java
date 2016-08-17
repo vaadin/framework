@@ -17,29 +17,16 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.legacy.data.validator.LegacyRegexpValidator;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.ui.Form;
 
 public class SerializationTest {
 
     @Test
     public void testValidators() throws Exception {
-        LegacyRegexpValidator validator = new LegacyRegexpValidator(".*", "Error");
+        LegacyRegexpValidator validator = new LegacyRegexpValidator(".*",
+                "Error");
         validator.validate("aaa");
         LegacyRegexpValidator validator2 = serializeAndDeserialize(validator);
         validator2.validate("aaa");
-    }
-
-    @Test
-    public void testForm() throws Exception {
-        Form f = new Form();
-        String propertyId = "My property";
-        f.addItemProperty(propertyId, new MethodProperty<Object>(new Data(),
-                "dummyGetterAndSetter"));
-        f.replaceWithSelect(propertyId, new Object[] { "a", "b", null },
-                new String[] { "Item a", "ITem b", "Null item" });
-
-        serializeAndDeserialize(f);
-
     }
 
     @Test
@@ -95,8 +82,8 @@ public class SerializationTest {
         ObjectOutputStream out = new ObjectOutputStream(bs);
         out.writeObject(s);
         byte[] data = bs.toByteArray();
-        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(
-                data));
+        ObjectInputStream in = new ObjectInputStream(
+                new ByteArrayInputStream(data));
         @SuppressWarnings("unchecked")
         S s2 = (S) in.readObject();
 

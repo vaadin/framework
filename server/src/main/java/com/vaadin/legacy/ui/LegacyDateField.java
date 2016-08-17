@@ -18,7 +18,6 @@ package com.vaadin.legacy.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -44,7 +43,6 @@ import com.vaadin.shared.ui.datefield.DateFieldConstants;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Form;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -603,16 +601,6 @@ public class LegacyDateField extends LegacyAbstractField<Date> implements
                         fireValueChange(false);
                     }
 
-                    /*
-                     * Because of our custom implementation of isValid(), that
-                     * also checks the parsingSucceeded flag, we must also
-                     * notify the form (if this is used in one) that the
-                     * validity of this field has changed.
-                     *
-                     * Normally fields validity doesn't change without value
-                     * change and form depends on this implementation detail.
-                     */
-                    notifyFormOfValidityChange();
                     markAsDirty();
                 }
             } else if (newDate != oldDate
@@ -699,58 +687,11 @@ public class LegacyDateField extends LegacyAbstractField<Date> implements
              * and flags about invalid input.
              */
             setInternalValue(null);
-
-            /*
-             * Due to DateField's special implementation of isValid(),
-             * datefields validity may change although the logical value does
-             * not change. This is an issue for Form which expects that validity
-             * of Fields cannot change unless actual value changes.
-             *
-             * So we check if this field is inside a form and the form has
-             * registered this as a field. In this case we repaint the form.
-             * Without this hacky solution the form might not be able to clean
-             * validation errors etc. We could avoid this by firing an extra
-             * value change event, but feels like at least as bad solution as
-             * this.
-             */
-            notifyFormOfValidityChange();
             markAsDirty();
             return;
         }
 
         super.setValue(newValue, repaintIsNotNeeded);
-    }
-
-    /**
-     * Detects if this field is used in a Form (logically) and if so, notifies
-     * it (by repainting it) that the validity of this field might have changed.
-     */
-    private void notifyFormOfValidityChange() {
-        Component parenOfDateField = getParent();
-        boolean formFound = false;
-        while (parenOfDateField != null || formFound) {
-            if (parenOfDateField instanceof Form) {
-                Form f = (Form) parenOfDateField;
-                Collection<?> visibleItemProperties = f.getItemPropertyIds();
-                for (Object fieldId : visibleItemProperties) {
-                    LegacyField<?> field = f.getField(fieldId);
-                    if (equals(field)) {
-                        /*
-                         * this datefield is logically in a form. Do the same
-                         * thing as form does in its value change listener that
-                         * it registers to all fields.
-                         */
-                        f.markAsDirty();
-                        formFound = true;
-                        break;
-                    }
-                }
-            }
-            if (formFound) {
-                break;
-            }
-            parenOfDateField = parenOfDateField.getParent();
-        }
     }
 
     @Override
