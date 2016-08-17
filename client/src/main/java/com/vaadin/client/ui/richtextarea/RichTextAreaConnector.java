@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,12 +17,10 @@ package com.vaadin.client.ui.richtextarea;
 
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.user.client.Event;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.AbstractFieldConnector;
-import com.vaadin.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VRichTextArea;
 import com.vaadin.shared.ui.Connect;
@@ -32,8 +30,8 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.RichTextArea;
 
 @Connect(value = RichTextArea.class, loadStyle = LoadStyle.LAZY)
-public class RichTextAreaConnector extends AbstractFieldConnector implements
-        Paintable, BeforeShortcutActionListener, SimpleManagedLayout {
+public class RichTextAreaConnector extends AbstractFieldConnector
+        implements Paintable, SimpleManagedLayout {
 
     /*
      * Last value received from the server
@@ -80,8 +78,8 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
         getWidget().setEnabled(isEnabled());
         getWidget().setReadOnly(isReadOnly());
         getWidget().immediate = getState().immediate;
-        int newMaxLength = uidl.hasAttribute("maxLength") ? uidl
-                .getIntAttribute("maxLength") : -1;
+        int newMaxLength = uidl.hasAttribute("maxLength")
+                ? uidl.getIntAttribute("maxLength") : -1;
         if (newMaxLength >= 0) {
             if (getWidget().maxLength == -1) {
                 getWidget().keyPressHandler = getWidget().rta
@@ -98,11 +96,6 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
             getWidget().selectAll();
         }
 
-    }
-
-    @Override
-    public void onBeforeShortcutAction(Event e) {
-        flush();
     }
 
     @Override
@@ -125,10 +118,10 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
     @Override
     public void layout() {
         if (!isUndefinedHeight()) {
-            int rootElementInnerHeight = getLayoutManager().getInnerHeight(
-                    getWidget().getElement());
-            int formatterHeight = getLayoutManager().getOuterHeight(
-                    getWidget().formatter.getElement());
+            int rootElementInnerHeight = getLayoutManager()
+                    .getInnerHeight(getWidget().getElement());
+            int formatterHeight = getLayoutManager()
+                    .getOuterHeight(getWidget().formatter.getElement());
             int editorHeight = rootElementInnerHeight - formatterHeight;
             if (editorHeight < 0) {
                 editorHeight = 0;

@@ -28,7 +28,6 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
@@ -57,25 +56,6 @@ public class ShortcutActionHandler {
          * currently no shortcutactionhandler
          */
         ShortcutActionHandler getShortcutActionHandler();
-    }
-
-    /**
-     * A focusable {@link ComponentConnector} implementing this interface will
-     * be notified before shortcut actions are handled if it will be the target
-     * of the action (most commonly means it is the focused component during the
-     * keyboard combination is triggered by the user).
-     */
-    public interface BeforeShortcutActionListener extends ComponentConnector {
-        /**
-         * This method is called by ShortcutActionHandler before firing the
-         * shortcut if the Paintable is currently focused (aka the target of the
-         * shortcut action). Eg. a field can update its possibly changed value
-         * to the server before shortcut action is fired.
-         *
-         * @param e
-         *            the event that triggered the shortcut action
-         */
-        public void onBeforeShortcutAction(Event e);
     }
 
     private final ArrayList<ShortcutAction> actions = new ArrayList<ShortcutAction>();
@@ -155,21 +135,10 @@ public class ShortcutActionHandler {
         event.preventDefault();
 
         /*
-         * The target component might have unpublished changes, try to
+         * The focused component might have unpublished changes, try to
          * synchronize them before firing shortcut action.
          */
-        if (finalTarget instanceof BeforeShortcutActionListener) {
-            ((BeforeShortcutActionListener) finalTarget)
-                    .onBeforeShortcutAction(event);
-        } else {
-            shakeTarget(et);
-            Scheduler.get().scheduleDeferred(new Command() {
-                @Override
-                public void execute() {
-                    shakeTarget(et);
-                }
-            });
-        }
+        client.flushActiveConnector();
 
         Scheduler.get().scheduleDeferred(new Command() {
             @Override
@@ -181,37 +150,6 @@ public class ShortcutActionHandler {
                 client.updateVariable(paintableId, "action", a.getKey(), true);
             }
         });
-    }
-
-    /**
-     * We try to fire value change in the component the key combination was
-     * typed. Eg. textfield may contain newly typed text that is expected to be
-     * sent to server. This is done by removing focus and then returning it
-     * immediately back to target element.
-     * <p>
-     * This is practically a hack and should be replaced with an interface
-     * {@link BeforeShortcutActionListener} via widgets could be notified when
-     * they should fire value change. Big task for TextFields, DateFields and
-     * various selects.
-     *
-     * <p>
-     * TODO separate opera impl with generator
-     */
-    private static void shakeTarget(final Element e) {
-        blur(e);
-        if (BrowserInfo.get().isOpera()) {
-            // will mess up with focus and blur event if the focus is not
-            // deferred. Will cause a small flickering, so not doing it for all
-            // browsers.
-            Scheduler.get().scheduleDeferred(new Command() {
-                @Override
-                public void execute() {
-                    focus(e);
-                }
-            });
-        } else {
-            focus(e);
-        }
     }
 
     private static native void blur(Element e)

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,14 +18,12 @@ package com.vaadin.client.legacy.ui.textfield;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Event;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.legacy.ui.VLegacyTextField;
 import com.vaadin.client.ui.AbstractFieldConnector;
-import com.vaadin.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.shared.legacy.ui.textfield.LegacyAbstractTextFieldState;
 import com.vaadin.shared.legacy.ui.textfield.LegacyTextFieldConstants;
@@ -34,8 +32,8 @@ import com.vaadin.shared.ui.Connect.LoadStyle;
 
 @Deprecated
 @Connect(value = LegacyTextField.class, loadStyle = LoadStyle.EAGER)
-public class LegacyTextFieldConnector extends AbstractFieldConnector implements
-        Paintable, BeforeShortcutActionListener {
+public class LegacyTextFieldConnector extends AbstractFieldConnector
+        implements Paintable {
 
     @Override
     public LegacyAbstractTextFieldState getState() {
@@ -60,14 +58,14 @@ public class LegacyTextFieldConnector extends AbstractFieldConnector implements
 
         getWidget().listenTextChangeEvents = hasEventListener("ie");
         if (getWidget().listenTextChangeEvents) {
-            getWidget().textChangeEventMode = uidl
-                    .getStringAttribute(LegacyTextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE);
+            getWidget().textChangeEventMode = uidl.getStringAttribute(
+                    LegacyTextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE);
             if (getWidget().textChangeEventMode
                     .equals(LegacyTextFieldConstants.TEXTCHANGE_MODE_EAGER)) {
                 getWidget().textChangeEventTimeout = 1;
             } else {
-                getWidget().textChangeEventTimeout = uidl
-                        .getIntAttribute(LegacyTextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT);
+                getWidget().textChangeEventTimeout = uidl.getIntAttribute(
+                        LegacyTextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT);
                 if (getWidget().textChangeEventTimeout < 1) {
                     // Sanitize and allow lazy/timeout with timeout set to 0 to
                     // work as eager
@@ -91,7 +89,8 @@ public class LegacyTextFieldConnector extends AbstractFieldConnector implements
          * force updating if not focused. Lost focus issue appeared in (#15144)
          */
         if (!(Util.getFocusedElement() == getWidget().getElement())
-                || !uidl.getBooleanAttribute(LegacyTextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
+                || !uidl.getBooleanAttribute(
+                        LegacyTextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
                 || getWidget().valueBeforeEdit == null
                 || !text.equals(getWidget().valueBeforeEdit)) {
             getWidget().updateFieldContent(text);
@@ -115,11 +114,6 @@ public class LegacyTextFieldConnector extends AbstractFieldConnector implements
     @Override
     public VLegacyTextField getWidget() {
         return (VLegacyTextField) super.getWidget();
-    }
-
-    @Override
-    public void onBeforeShortcutAction(Event e) {
-        flush();
     }
 
     @Override
