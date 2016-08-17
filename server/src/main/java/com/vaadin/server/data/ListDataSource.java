@@ -29,7 +29,7 @@ import java.util.stream.Stream;
  * @param <T>
  *            data type
  */
-public class InMemoryDataSource<T> implements DataSource<T> {
+public class ListDataSource<T> implements DataSource<T> {
 
     private Function<Query, Stream<T>> request;
     private int size;
@@ -41,21 +41,21 @@ public class InMemoryDataSource<T> implements DataSource<T> {
      * @param collection
      *            initial data
      */
-    public InMemoryDataSource(Collection<T> collection) {
+    public ListDataSource(Collection<T> collection) {
         final List<T> backend = new ArrayList<>(collection);
         request = query -> backend.stream();
         size = backend.size();
     }
 
     /**
-     * Chaining constructor for making modified {@link InMemoryDataSource}s.
+     * Chaining constructor for making modified {@link ListDataSource}s.
      * This Constructor is used internally for making sorted and filtered
      * variants of a base data source with actual data.
      *
      * @param request
      *            request for the new data source
      */
-    protected InMemoryDataSource(Function<Query, Stream<T>> request) {
+    protected ListDataSource(Function<Query, Stream<T>> request) {
         this.request = request;
     }
 
@@ -71,8 +71,8 @@ public class InMemoryDataSource<T> implements DataSource<T> {
      *            a {@link Comparator} providing the needed sorting order
      * @return new data source with modified sorting
      */
-    public InMemoryDataSource<T> sortingBy(Comparator<T> sortOrder) {
-        return new InMemoryDataSource<>(q -> request.apply(q)
+    public ListDataSource<T> sortingBy(Comparator<T> sortOrder) {
+        return new ListDataSource<>(q -> request.apply(q)
                 .sorted(sortOrder));
     }
 
@@ -86,7 +86,7 @@ public class InMemoryDataSource<T> implements DataSource<T> {
      *            the type of the Comparable sort key
      * @return new data source with modified sorting
      */
-    public <U extends Comparable<? super U>> InMemoryDataSource<T> sortingBy(
+    public <U extends Comparable<? super U>> ListDataSource<T> sortingBy(
             Function<T, U> sortOrder) {
         return sortingBy(Comparator.comparing(sortOrder));
     }

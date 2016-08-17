@@ -29,7 +29,7 @@ import java.util.stream.Stream;
  * @param <T>
  *            data type
  *
- * @see InMemoryDataSource
+ * @see ListDataSource
  * @see BackEndDataSource
  */
 public interface DataSource<T> extends Function<Query, Stream<T>>,
@@ -53,21 +53,21 @@ public interface DataSource<T> extends Function<Query, Stream<T>>,
     int size(Query t);
 
     /**
-     * This method creates a new {@link InMemoryDataSource} from a given
-     * Collection. The InMemoryDataSource creates a protective List copy of all
+     * This method creates a new {@link ListDataSource} from a given
+     * Collection. The ListDataSource creates a protective List copy of all
      * the contents in the Collection.
      *
      * @param data
      *            collection of data
      * @return in-memory data source
      */
-    public static <T> InMemoryDataSource<T> create(Collection<T> data) {
-        return new InMemoryDataSource<>(data);
+    public static <T> ListDataSource<T> create(Collection<T> data) {
+        return new ListDataSource<>(data);
     }
 
     /**
-     * This method creates a new {@link InMemoryDataSource} from given
-     * objects.The InMemoryDataSource creates a protective List copy of all the
+     * This method creates a new {@link ListDataSource} from given
+     * objects.The ListDataSource creates a protective List copy of all the
      * contents in the array.
      *
      * @param data
@@ -75,7 +75,7 @@ public interface DataSource<T> extends Function<Query, Stream<T>>,
      * @return in-memory data source
      */
     @SafeVarargs
-    public static <T> InMemoryDataSource<T> create(T... data) {
-        return new InMemoryDataSource<>(Arrays.asList(data));
+    public static <T> ListDataSource<T> create(T... data) {
+        return new ListDataSource<>(Arrays.asList(data));
     }
 }

@@ -7,16 +7,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.vaadin.server.data.DataSource;
-import com.vaadin.server.data.InMemoryDataSource;
+import com.vaadin.server.data.ListDataSource;
 import com.vaadin.server.data.Query;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 
-public class InMemoryDataSourceTest {
+public class ListDataSourceTest {
 
-    private InMemoryDataSource<StrBean> dataSource;
+    private ListDataSource<StrBean> dataSource;
     private List<StrBean> data;
 
     @Before
