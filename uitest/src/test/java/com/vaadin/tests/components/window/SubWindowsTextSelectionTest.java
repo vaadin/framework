@@ -38,11 +38,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  */
 public class SubWindowsTextSelectionTest extends MultiBrowserTest {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.tests.tb3.AbstractTB3Test#getUIClass()
-     */
     @Override
     protected Class<?> getUIClass() {
         return SubWindows.class;
@@ -50,7 +45,7 @@ public class SubWindowsTextSelectionTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowserCapabilities(Browser.IE9, Browser.IE10, Browser.IE11);
+        return getBrowserCapabilities(Browser.IE11);
     }
 
     @Test

@@ -24,7 +24,6 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.components.table.CustomTableElement.ContextMenuElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -47,18 +46,10 @@ public class ColumnCollapsingAndColumnExpansionTest extends MultiBrowserTest {
         compareScreen(table, "col3");
 
         // Show column 2 using context menu (first action)
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            // IE8 can context click but the popup is off screen so it can't be
-            // interacted with...
-            ButtonElement show2 = $(ButtonElement.class).caption("Show Col2")
-                    .first();
-            show2.click();
-        } else {
-            contextClick(table.getCell(0, 0));
-            ContextMenuElement contextMenu = table.getContextMenu();
-            WebElement i = contextMenu.getItem(0);
-            i.click();
-        }
+        contextClick(table.getCell(0, 0));
+        ContextMenuElement contextMenu = table.getContextMenu();
+        WebElement i = contextMenu.getItem(0);
+        i.click();
         compareScreen(table, "col2-col3");
 
         // Show column 1 again

@@ -31,7 +31,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.CustomTestBenchCommandExecutor;
 import com.vaadin.tests.tb3.MultiBrowserThemeTestWithProxy;
@@ -74,8 +73,7 @@ public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
                 .read(new ByteArrayInputStream(((TakesScreenshot) getDriver())
                         .getScreenshotAs(OutputType.BYTES)));
         BufferedImage spinnerImage = CustomTestBenchCommandExecutor
-                .cropToElement(spinner, fullScreen,
-                        BrowserUtil.isIE8(getDesiredCapabilities()));
+                .cropToElement(spinner, fullScreen);
         assertHasManyColors("Spinner is not shown", spinnerImage);
 
     }

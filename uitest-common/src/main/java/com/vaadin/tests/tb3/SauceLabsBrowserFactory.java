@@ -59,24 +59,6 @@ public class SauceLabsBrowserFactory extends DefaultBrowserFactory {
             caps = DesiredCapabilities.safari();
             caps.setVersion(version);
             break;
-        case IE8:
-            caps = DesiredCapabilities.internetExplorer();
-            caps.setVersion("8.0");
-            caps.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION,
-                    true);
-            break;
-        case IE9:
-            caps = DesiredCapabilities.internetExplorer();
-            caps.setVersion("9.0");
-            caps.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION,
-                    true);
-            break;
-        case IE10:
-            caps = DesiredCapabilities.internetExplorer();
-            caps.setVersion("10.0");
-            caps.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION,
-                    true);
-            break;
         case IE11:
             caps = DesiredCapabilities.internetExplorer();
             caps.setVersion("11.0");

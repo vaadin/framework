@@ -42,9 +42,6 @@ public class GridDetailsLayoutExpandTest extends MultiBrowserTest {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         List<DesiredCapabilities> browsersToTest = super.getBrowsersToTest();
-        // TODO: remove when #19326 is fixed
-        browsersToTest.remove(Browser.IE8.getDesiredCapabilities());
-        browsersToTest.remove(Browser.IE9.getDesiredCapabilities());
         // for some reason PhantomJS doesn't find the label even if it detects
         // the presence
         browsersToTest.remove(Browser.PHANTOMJS.getDesiredCapabilities());

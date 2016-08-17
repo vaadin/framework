@@ -55,12 +55,6 @@ public class VaadinBrowserFactory extends DefaultBrowserFactory {
 
     public DesiredCapabilities doCreate(Browser browser) {
         switch (browser) {
-        case IE8:
-            return createIE(browser, "8");
-        case IE9:
-            return createIE(browser, "9");
-        case IE10:
-            return createIE(browser, "10");
         case IE11:
             return createIE(browser, "11");
         case PHANTOMJS:

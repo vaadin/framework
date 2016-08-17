@@ -25,7 +25,6 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -52,10 +51,6 @@ public class AbstractOrderedLayoutWithCaptionsTest extends MultiBrowserTest {
         Integer neededHeight = children.get(0).getSize().getHeight()
                 + children.get(2).getSize().getHeight();
 
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            // IE8 Reports the first element height incorrectly.
-            --neededHeight;
-        }
         assertThat(neededHeight, is(lessThanOrEqualTo(paddingHeight)));
 
     }

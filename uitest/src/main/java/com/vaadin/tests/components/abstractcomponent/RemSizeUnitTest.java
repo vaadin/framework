@@ -17,7 +17,6 @@
 package com.vaadin.tests.components.abstractcomponent;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.WebBrowser;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
 
@@ -28,13 +27,6 @@ public class RemSizeUnitTest extends AbstractTestUI {
         Label label = new Label("My height is 10.5 x 5  rem");
         label.setHeight("5rem");
         label.setWidth(10.5f, Unit.REM);
-
-        // Rem not supported in ie8, fake using pixels
-        WebBrowser webBrowser = getPage().getWebBrowser();
-        if (webBrowser.isIE() && webBrowser.getBrowserMajorVersion() == 8) {
-            label.setHeight("80px");
-            label.setWidth("168px");
-        }
 
         addComponent(label);
     }

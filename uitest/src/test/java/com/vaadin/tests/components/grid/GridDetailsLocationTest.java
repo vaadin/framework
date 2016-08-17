@@ -34,7 +34,6 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.components.grid.basicfeatures.element.CustomGridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -44,7 +43,6 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
 
     private static final int detailsDefaultHeight = 51;
     private static final int detailsDefinedHeight = 33;
-    private static final int detailsDefinedHeightIE8 = 31;
 
     private static class Param {
         private final int rowIndex;
@@ -141,22 +139,17 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
         useGenerator(true);
         toggleAndScroll(5);
 
-        verifyDetailsRowHeight(5, getDefinedHeight(), 0);
+        verifyDetailsRowHeight(5, detailsDefinedHeight, 0);
         verifyDetailsDecoratorLocation(5, 0, 0);
 
         toggleAndScroll(0);
 
-        verifyDetailsRowHeight(0, getDefinedHeight(), 0);
+        verifyDetailsRowHeight(0, detailsDefinedHeight, 0);
         // decorator elements are in DOM in the order they have been added
         verifyDetailsDecoratorLocation(0, 0, 1);
 
-        verifyDetailsRowHeight(5, getDefinedHeight(), 1);
+        verifyDetailsRowHeight(5, detailsDefinedHeight, 1);
         verifyDetailsDecoratorLocation(5, 1, 0);
-    }
-
-    private int getDefinedHeight() {
-        boolean ie8 = isIE8();
-        return ie8 ? detailsDefinedHeightIE8 : detailsDefinedHeight;
     }
 
     private void verifyDetailsRowHeight(int rowIndex, int expectedHeight,
@@ -174,11 +167,6 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
                 visibleIndexOfDeco);
         GridRowElement rowElement = getGrid().getRow(row);
 
-        int diff = 0;
-        if (isIE8() || BrowserUtil.isIE(getDesiredCapabilities(), 9)) {
-            diff = 1;
-        }
-
         Assert.assertEquals(
                 "Details deco top position does not match row top pos",
                 rowElement.getLocation().getY(),
@@ -188,7 +176,7 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
                 detailsElement.getLocation().getY()
                         + detailsElement.getSize().getHeight(),
                 detailsDecoElement.getLocation().getY()
-                        + detailsDecoElement.getSize().getHeight() + diff);
+                        + detailsDecoElement.getSize().getHeight());
     }
 
     private void verifyLocation(Param param) {
@@ -218,7 +206,7 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
                 detailsBottom, bottomBoundary);
 
         verifyDetailsRowHeight(param.getRowIndex(), param.useGenerator()
-                ? getDefinedHeight() : detailsDefaultHeight, 0);
+                ? detailsDefinedHeight : detailsDefaultHeight, 0);
         verifyDetailsDecoratorLocation(param.getRowIndex(), 0, 0);
 
         Assert.assertFalse("Notification was present",
@@ -276,10 +264,6 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
         if (use != isChecked) {
             clickValo(checkBox);
         }
-    }
-
-    private boolean isIE8() {
-        return BrowserUtil.isIE8(getDesiredCapabilities());
     }
 
     @SuppressWarnings("boxing")

@@ -179,12 +179,8 @@ public class ValoThemeUI extends UI {
         // disable it to have consistent screenshots
         // https://github.com/ariya/phantomjs/issues/10592
 
-        // IE8 also has randomness in its font rendering...
-
         return getPage().getWebBrowser().getBrowserApplication()
-                .contains("PhantomJS")
-                || (getPage().getWebBrowser().isIE() && getPage()
-                        .getWebBrowser().getBrowserMajorVersion() <= 9);
+                .contains("PhantomJS");
     }
 
     static boolean isTestMode() {

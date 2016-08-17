@@ -24,7 +24,6 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class VerticalLayoutFocusWithDOMChangesTest extends MultiBrowserTest {
@@ -55,15 +54,8 @@ public class VerticalLayoutFocusWithDOMChangesTest extends MultiBrowserTest {
         Assert.assertEquals("Just a button", activeElement.getText());
 
         DesiredCapabilities capabilities = getDesiredCapabilities();
-        if (BrowserUtil.isIE8(capabilities)
-                || BrowserUtil.isIE(capabilities, 9)) {
-            // IE8 and IE9 insert cursor in the start of input instead of end.
-            Assert.assertEquals(incrementalText + initialText,
-                    tf1.getAttribute("value"));
-        } else {
-            Assert.assertEquals(initialText + incrementalText,
-                    tf1.getAttribute("value"));
-        }
+        Assert.assertEquals(initialText + incrementalText,
+                tf1.getAttribute("value"));
     }
 
     @Test
@@ -87,14 +79,6 @@ public class VerticalLayoutFocusWithDOMChangesTest extends MultiBrowserTest {
 
         new Actions(getDriver()).sendKeys(secondText).build().perform();
         DesiredCapabilities capabilities = getDesiredCapabilities();
-        if (BrowserUtil.isIE8(capabilities)
-                || BrowserUtil.isIE(capabilities, 9)) {
-            // IE8 and IE9 insert cursor in the start of input instead of end.
-            Assert.assertEquals(secondText + firstText,
-                    tf2.getAttribute("value"));
-        } else {
-            Assert.assertEquals(firstText + secondText,
-                    tf2.getAttribute("value"));
-        }
+        Assert.assertEquals(firstText + secondText, tf2.getAttribute("value"));
     }
 }

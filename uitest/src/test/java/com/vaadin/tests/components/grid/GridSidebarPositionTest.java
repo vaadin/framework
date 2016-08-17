@@ -25,7 +25,6 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.GridElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridSidebarPositionTest extends MultiBrowserTest {
@@ -69,14 +68,7 @@ public class GridSidebarPositionTest extends MultiBrowserTest {
         Dimension popupSize = sidebarPopup.getSize();
         Point popupLocation = sidebarPopup.getLocation();
         int popupBottom = popupLocation.getY() + popupSize.getHeight();
-        int sideBarButtonTop;
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            // IE8 gets the top coordinate for the button completely wrong for
-            // some reason
-            sideBarButtonTop = 660;
-        } else {
-            sideBarButtonTop = sidebarOpenButton.getLocation().getY();
-        }
+        int sideBarButtonTop = sidebarOpenButton.getLocation().getY();
         Assert.assertTrue(popupBottom <= sideBarButtonTop);
     }
 

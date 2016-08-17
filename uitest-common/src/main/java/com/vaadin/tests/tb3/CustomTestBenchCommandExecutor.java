@@ -57,8 +57,8 @@ public class CustomTestBenchCommandExecutor {
      *
      * Copied from TestBenchCommandExecutor
      */
-    public boolean compareScreen(WebElement element, File reference,
-            boolean isIE8) throws IOException {
+    public boolean compareScreen(WebElement element, File reference)
+            throws IOException {
         BufferedImage image = null;
         try {
             image = ImageIO.read(reference);
@@ -66,7 +66,7 @@ public class CustomTestBenchCommandExecutor {
             // Don't worry, an error screen shot will be generated that later
             // can be used as the reference
         }
-        return compareScreen(element, image, reference.getName(), isIE8);
+        return compareScreen(element, image, reference.getName());
     }
 
     /**
@@ -75,14 +75,13 @@ public class CustomTestBenchCommandExecutor {
      * Copied from TestBenchCommandExecutor and added cropToElement
      */
     public boolean compareScreen(WebElement element, BufferedImage reference,
-            String referenceName, boolean isIE8) throws IOException {
+            String referenceName) throws IOException {
         for (int times = 0; times < Parameters
                 .getMaxScreenshotRetries(); times++) {
             BufferedImage screenshotImage = cropToElement(element,
                     ImageIO.read(new ByteArrayInputStream(
                             ((TakesScreenshot) actualDriver)
-                                    .getScreenshotAs(OutputType.BYTES))),
-                    isIE8);
+                                    .getScreenshotAs(OutputType.BYTES))));
             if (reference == null) {
                 // Store the screenshot in the errors directory and fail the
                 // test
@@ -112,24 +111,17 @@ public class CustomTestBenchCommandExecutor {
      *            the element to retain in the screenshot
      * @param fullScreen
      *            the full screen image
-     * @param isIE8
-     *            true if the browser is IE8
      * @return
      * @throws IOException
      */
     public static BufferedImage cropToElement(WebElement element,
-            BufferedImage fullScreen, boolean isIE8) throws IOException {
+            BufferedImage fullScreen) throws IOException {
         Point loc = element.getLocation();
         Dimension size = element.getSize();
         int x = loc.x, y = loc.y;
         int w = size.width;
         int h = size.height;
 
-        if (isIE8) {
-            // IE8 border...
-            x += 2;
-            y += 2;
-        }
         if (x >= 0 && x < fullScreen.getWidth()) {
             // X loc on screen
             // Get the part of the element which is on screen

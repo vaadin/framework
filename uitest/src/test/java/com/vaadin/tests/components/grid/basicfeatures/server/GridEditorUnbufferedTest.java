@@ -28,7 +28,6 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 
 public class GridEditorUnbufferedTest extends GridEditorTest {
 
@@ -92,10 +91,6 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
         getEditorWidgets().get(0).click();
         new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
 
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            sleep(300);
-        }
-
         String firstFieldValue = getEditorWidgets().get(0)
                 .getAttribute("value");
         assertEquals("Editor should move to row 101", "(101, 0)",
@@ -104,10 +99,6 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
         for (int i = 0; i < 10; i++) {
             new Actions(getDriver()).keyDown(Keys.SHIFT).sendKeys(Keys.ENTER)
                     .keyUp(Keys.SHIFT).perform();
-
-            if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-                sleep(300);
-            }
 
             firstFieldValue = getEditorWidgets().get(0).getAttribute("value");
             int row = 100 - i;
@@ -137,9 +128,6 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
                 getEditorWidgets().get(0).getAttribute("value"));
 
         getEditorWidgets().get(1).sendKeys(Keys.chord(Keys.CONTROL, "a"));
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            sleep(1500);
-        }
         getEditorWidgets().get(1).sendKeys("5");
         // FIXME: Needs to trigger one extra validation round-trip for now
         getGridElement().sendKeys(Keys.ENTER);

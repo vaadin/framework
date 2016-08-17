@@ -7,7 +7,6 @@ import org.openqa.selenium.By;
 import com.vaadin.testbench.elements.AbstractComponentElement;
 import com.vaadin.testbench.elements.AbstractJavaScriptComponentElement;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class BasicJavaScriptComponentTest extends MultiBrowserTest {
@@ -24,9 +23,6 @@ public class BasicJavaScriptComponentTest extends MultiBrowserTest {
 
         // Data types in JS functions
         String expected = "1970-01-01T00:00:00.111Z";
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            expected = "1970-01-01T00:00:00Z";
-        }
         Assert.assertEquals(
                 "9. Argument[4][aDate] type: elemental.json.impl.JreJsonString, value: "
                         + expected,
@@ -54,9 +50,6 @@ public class BasicJavaScriptComponentTest extends MultiBrowserTest {
                 getLogRow(idx++));
 
         expected = "1970-01-01T00:00:00.123Z";
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            expected = "1970-01-01T00:00:00Z";
-        }
 
         Assert.assertEquals(
                 "1. Argument[0] type: elemental.json.impl.JreJsonString, value: "

@@ -26,11 +26,9 @@ import java.util.Map.Entry;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.OptionGroupElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -58,14 +56,6 @@ public class GridHeightTest extends MultiBrowserTest {
 
     @Test
     public void testGridHeightAndResizingRow() throws InterruptedException {
-        if (isIE8orIE9()) {
-            /*
-             * with IE8 and IE9 and this height mode grid resizes when it
-             * shouldn't and doesn't resize when it should, pre-existing problem
-             * that isn't within the scope of this ticket
-             */
-            return;
-        }
         assertNoErrors(testGridHeightAndResizing(GridHeight.ROW3));
     }
 
@@ -168,13 +158,7 @@ public class GridHeightTest extends MultiBrowserTest {
             if (GridHeight.PX100.equals(detailsRowHeight)) {
                 result = 182;
             } else if (GridHeight.FULL.equals(detailsRowHeight)) {
-                if (isIE8orIE9()) {
-                    // pre-existing bug in IE8 & IE9, details row doesn't layout
-                    // itself properly
-                    result = 100;
-                } else {
-                    result = 131;
-                }
+                result = 131;
             } else if (GridHeight.UNDEFINED.equals(detailsRowHeight)) {
                 result = 100;
             }
@@ -183,12 +167,6 @@ public class GridHeightTest extends MultiBrowserTest {
             result = getExpectedInitialHeight(gridHeight);
         }
         return result;
-    }
-
-    private boolean isIE8orIE9() {
-        DesiredCapabilities desiredCapabilities = getDesiredCapabilities();
-        return BrowserUtil.isIE8(desiredCapabilities)
-                || BrowserUtil.isIE(desiredCapabilities, 9);
     }
 
     private void assertGridHeight(int expected, int actual) {

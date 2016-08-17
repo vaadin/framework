@@ -54,13 +54,8 @@ public class VerifyBrowserVersionTest extends MultiBrowserTest {
 
     private String getExpectedUserAgentString(DesiredCapabilities dCap) {
         if (BrowserUtil.isIE(dCap)) {
-            if (!BrowserUtil.isIE(dCap, 11)) {
-                // IE8-10
-                return "MSIE ";
-            } else {
-                // IE11
-                return "Trident/7.0; rv:";
-            }
+            // IE11
+            return "Trident/7.0; rv:";
         } else if (BrowserUtil.isFirefox(dCap)) {
             return "Firefox/";
         } else if (BrowserUtil.isChrome(dCap)) {

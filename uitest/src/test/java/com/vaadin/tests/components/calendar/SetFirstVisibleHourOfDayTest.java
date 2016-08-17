@@ -20,10 +20,8 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -88,17 +86,6 @@ public class SetFirstVisibleHourOfDayTest extends MultiBrowserTest {
         for (WebElement webElement : elements) {
             if (webElement.getText().equals(text)) {
                 webElement.click();
-                if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-                    try {
-                        // sometimes the element only gets focus from click and
-                        // we need to click the text, which is in the right edge
-                        // of the element
-                        testBenchElement(webElement)
-                                .click(webElement.getSize().getWidth() - 5, 9);
-                    } catch (StaleElementReferenceException e) {
-                        // the first click succeeded after all
-                    }
-                }
                 found = true;
                 break;
             }

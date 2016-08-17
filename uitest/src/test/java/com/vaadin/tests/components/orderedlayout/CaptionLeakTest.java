@@ -19,7 +19,6 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class CaptionLeakTest extends MultiBrowserTest {
@@ -29,7 +28,7 @@ public class CaptionLeakTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        openLog();
+        openDebugLogTab();
 
         // this should be present
         // 3 general non-connector elements, none accumulated on click
@@ -53,20 +52,13 @@ public class CaptionLeakTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        openLog();
+        openDebugLogTab();
 
         clearLog();
         $(ButtonElement.class).caption("Set non leaky content").first().click();
         // this should be present
         // 3 general non-connector elements, none accumulated on click
         checkConnectorCount();
-    }
-
-    private void openLog() {
-        openDebugLogTab();
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            openDebugLogTab();
-        }
     }
 
     private void clearLog() {

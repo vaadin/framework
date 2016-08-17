@@ -29,7 +29,6 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -61,17 +60,11 @@ public class FooterTest extends MultiBrowserTest {
         CheckBoxElement checkBox = $(CheckBoxElement.class).first();
         checkBox.click();
 
-        if (!BrowserUtil.isIE8(getDesiredCapabilities())) {
-            // excluded IE8 since its screenshots varies from run-to-run
-            compareScreen("no-footer");
-        }
+        compareScreen("no-footer");
 
         checkBox.click();
 
-        if (!BrowserUtil.isIE8(getDesiredCapabilities())) {
-            // excluded IE8 since its screenshots varies from run-to-run
-            compareScreen("footer-col1-col2-col3-a");
-        }
+        compareScreen("footer-col1-col2-col3-a");
 
         table = $(TableElement.class).first();
 
@@ -88,20 +81,14 @@ public class FooterTest extends MultiBrowserTest {
         // hide col2
         findElements(By.className("gwt-MenuItem")).get(1).click();
 
-        if (!BrowserUtil.isIE8(getDesiredCapabilities())) {
-            // excluded IE8 since its screenshots varies from run-to-run
-            compareScreen("footer-col1-col3");
-        }
+        compareScreen("footer-col1-col3");
 
         // open table column selector menu
         table.findElement(By.className("v-table-column-selector")).click();
         // show col2
         findElements(By.className("gwt-MenuItem")).get(1).click();
 
-        if (!BrowserUtil.isIE8(getDesiredCapabilities())) {
-            // excluded IE8 since its screenshots varies from run-to-run
-            compareScreen("footer-col1-col2-col3-b");
-        }
+        compareScreen("footer-col1-col2-col3-b");
 
         TextFieldElement tf = $(TextFieldElement.class).first();
         tf.clear();
@@ -167,10 +154,7 @@ public class FooterTest extends MultiBrowserTest {
         footer1 = table.getFooterCell(0);
         assertEquals("Footer1", footer1.getText());
 
-        if (!BrowserUtil.isIE8(getDesiredCapabilities())) {
-            // excluded IE8 since its screenshots varies from run-to-run
-            compareScreen("footer-col1-col2-col3-c");
-        }
+        compareScreen("footer-col1-col2-col3-c");
     }
 
     private void waitUntiltextFieldIsChangedTo(final TextFieldElement tf,

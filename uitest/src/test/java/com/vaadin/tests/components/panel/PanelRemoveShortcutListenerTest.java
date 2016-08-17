@@ -55,7 +55,6 @@ public class PanelRemoveShortcutListenerTest extends MultiBrowserTest {
         List<DesiredCapabilities> list = super.getBrowsersToTest();
         // For some reason the shortcut isn't working for these browsers when
         // tested through TestBench:
-        list.remove(Browser.IE8.getDesiredCapabilities());
         list.remove(Browser.FIREFOX.getDesiredCapabilities());
         list.remove(Browser.CHROME.getDesiredCapabilities());
         return list;

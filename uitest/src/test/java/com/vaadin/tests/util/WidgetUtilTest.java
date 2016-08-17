@@ -15,28 +15,17 @@
  */
 package com.vaadin.tests.util;
 
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.widgetset.server.WidgetUtilUI;
 
 public class WidgetUtilTest extends MultiBrowserTest {
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> l = super.getBrowsersToTest();
-        // IE8 does not support getComputedStyle
-        l.remove(Browser.IE8.getDesiredCapabilities());
-        return l;
-    }
 
     @Test
     public void testBlockElementRequiredSizeComputedStyle() {

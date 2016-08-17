@@ -17,7 +17,6 @@ package com.vaadin.tests.components.window;
 
 import java.awt.AWTException;
 import java.io.IOException;
-import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -27,7 +26,6 @@ import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -56,10 +54,4 @@ public class WindowShadowTest extends MultiBrowserTest {
         org.junit.Assert.assertNotEquals(startLoc, endLoc);
     }
 
-    // IE8 doesn't support shadow-box css rule
-    // ignore this browser in testing
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersExcludingIE8();
-    }
 }

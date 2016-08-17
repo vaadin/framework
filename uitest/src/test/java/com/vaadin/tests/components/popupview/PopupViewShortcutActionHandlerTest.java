@@ -21,7 +21,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -33,9 +32,6 @@ public class PopupViewShortcutActionHandlerTest extends MultiBrowserTest {
 
     @Override
     protected boolean requireWindowFocusForIE() {
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            return false;
-        }
         return true;
     }
 

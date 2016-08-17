@@ -41,9 +41,7 @@ public class CurrentTimeMillisTest extends MultiBrowserTest {
         openTestURL();
 
         boolean highResTimeSupported = !BrowserUtil
-                .isIE8(getDesiredCapabilities())
-                && !BrowserUtil.isIE(getDesiredCapabilities(), 9)
-                && !BrowserUtil.isPhantomJS(getDesiredCapabilities())
+                .isPhantomJS(getDesiredCapabilities())
                 && !BrowserUtil.isSafari(getDesiredCapabilities());
 
         String time = getJsonParsingTime();

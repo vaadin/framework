@@ -149,11 +149,6 @@ public abstract class AbstractTB3Test extends ParallelTest {
         int w = SCREENSHOT_WIDTH;
         int h = SCREENSHOT_HEIGHT;
 
-        if (BrowserUtil.isIE8(super.getDesiredCapabilities())) {
-            // IE8 gets size wrong, who would have guessed...
-            w += 4;
-            h += 4;
-        }
         try {
             testBench().resizeViewPortTo(w, h);
         } catch (UnsupportedOperationException e) {
@@ -1206,13 +1201,8 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * issues: https://dev.vaadin.com/ticket/18469
      */
     protected int getClientHeight(WebElement e) {
-        String script;
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            script = "return arguments[0].clientHeight;"; //
-        } else {
-            script = "var cs = window.getComputedStyle(arguments[0]);"
-                    + "return Math.ceil(parseFloat(cs.height)+parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom));";
-        }
+        String script = "var cs = window.getComputedStyle(arguments[0]);"
+                + "return Math.ceil(parseFloat(cs.height)+parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom));";
         return ((Number) executeScript(script, e)).intValue();
     }
 
@@ -1221,14 +1211,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * issues: https://dev.vaadin.com/ticket/18469
      */
     protected int getClientWidth(WebElement e) {
-        String script;
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            script = "return arguments[0].clientWidth;";
-        } else {
-            script = "var cs = window.getComputedStyle(arguments[0]);"
-                    + "var h = parseFloat(cs.width)+parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight);"
-                    + "return Math.ceil(h);";
-        }
+        String script = "var cs = window.getComputedStyle(arguments[0]);"
+                + "var h = parseFloat(cs.width)+parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight);"
+                + "return Math.ceil(h);";
 
         return ((Number) executeScript(script, e)).intValue();
     }

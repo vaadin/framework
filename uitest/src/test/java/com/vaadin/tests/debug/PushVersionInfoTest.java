@@ -20,9 +20,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
@@ -67,25 +65,8 @@ public class PushVersionInfoTest extends SingleBrowserTest {
     }
 
     private void selectInfoTab() {
-        if (isElementPresent(By.className("v-ie8"))) {
-
-            int size = findElements(By.className("v-debugwindow-tab")).size();
-            for (int i = 0; i < size; i++) {
-                WebElement tab = findElement(
-                        By.className("v-debugwindow-tab-selected"));
-                String title = tab.getAttribute("title");
-                if (title != null && title.startsWith("General information")) {
-                    break;
-                }
-                Actions actions = new Actions(getDriver());
-                actions.sendKeys(Keys.TAB);
-                actions.sendKeys(Keys.SPACE);
-                actions.build().perform();
-            }
-        } else {
-            findElements(By.className("v-debugwindow-tab")).get(0).click();
-            findElements(By.className("v-debugwindow-tab")).get(1).click();
-        }
+        findElements(By.className("v-debugwindow-tab")).get(0).click();
+        findElements(By.className("v-debugwindow-tab")).get(1).click();
     }
 
     private WebElement getPushRowValue(String key) {

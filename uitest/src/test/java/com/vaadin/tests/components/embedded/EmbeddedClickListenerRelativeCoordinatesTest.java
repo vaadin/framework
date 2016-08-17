@@ -48,12 +48,6 @@ public class EmbeddedClickListenerRelativeCoordinatesTest
     private void clickAt(int x, int y) {
         EmbeddedElement embedded = $(EmbeddedElement.class).first();
 
-        // IE8 consistently clicks two pixels left and above of the given
-        // position
-        if (isIE8()) {
-            x += 2;
-            y += 2;
-        }
         embedded.click(x, y);
     }
 
@@ -77,10 +71,6 @@ public class EmbeddedClickListenerRelativeCoordinatesTest
 
     private boolean isIE() {
         return BrowserUtil.isIE(getDesiredCapabilities());
-    }
-
-    private boolean isIE8() {
-        return BrowserUtil.isIE8(getDesiredCapabilities());
     }
 
 }

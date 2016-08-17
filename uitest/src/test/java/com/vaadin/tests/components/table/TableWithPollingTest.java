@@ -15,14 +15,11 @@
  */
 package com.vaadin.tests.components.table;
 
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -83,11 +80,4 @@ public class TableWithPollingTest extends MultiBrowserTest {
         Assert.assertEquals(width, getBodyCell(column).getSize().width);
     }
 
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        // Selenium has issues with drag-and-drop on IE8 making it impossible to
-        // drag a target as small as the table resizer. So we'll just have to
-        // ignore IE8 completely.
-        return getBrowsersExcludingIE8();
-    }
 }

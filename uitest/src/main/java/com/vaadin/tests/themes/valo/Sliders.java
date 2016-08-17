@@ -71,7 +71,7 @@ public class Sliders extends VerticalLayout implements View {
         slider.addStyleName(ValoTheme.SLIDER_NO_INDICATOR);
         row.addComponent(slider);
 
-        slider = new Slider("With ticks (not in IE8 & IE9)");
+        slider = new Slider("With ticks");
         slider.setValue(3.0);
         slider.setWidth("200px");
         slider.setMax(4);

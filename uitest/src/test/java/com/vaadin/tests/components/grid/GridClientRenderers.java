@@ -34,7 +34,6 @@ import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NativeButtonElement;
 import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.widgetset.client.grid.GridClientColumnRendererConnector.Renderers;
@@ -150,11 +149,6 @@ public class GridClientRenderers extends MultiBrowserTest {
 
         // Simulate network latency with 2000ms
         latency = 2000;
-        if (BrowserUtil.isIE8(desiredCapabilities)) {
-            // IE8 is slower than other browsers. Bigger latency is needed for
-            // stability in this test.
-            latency = 3000;
-        }
 
         // Chrome uses RGB instead of RGBA
         String colorRed = "rgba(255, 0, 0, 1)";

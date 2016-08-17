@@ -42,14 +42,14 @@ import com.vaadin.testbench.parallel.Browser;
 public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
     protected List<DesiredCapabilities> getBrowsersSupportingWebSocket() {
-        // No WebSocket support in IE8-9 and PhantomJS
-        return getBrowserCapabilities(Browser.IE10, Browser.IE11,
-                Browser.FIREFOX, Browser.CHROME);
+        // No WebSocket support in PhantomJS 1
+        return getBrowserCapabilities(Browser.IE11, Browser.FIREFOX,
+                Browser.CHROME);
     }
 
     protected List<DesiredCapabilities> getBrowsersExcludingPhantomJS() {
-        return getBrowserCapabilities(Browser.IE8, Browser.IE9, Browser.IE10,
-                Browser.IE11, Browser.CHROME, Browser.FIREFOX);
+        return getBrowserCapabilities(Browser.IE11, Browser.CHROME,
+                Browser.FIREFOX);
     }
 
     protected List<DesiredCapabilities> getBrowsersExcludingIE() {
@@ -60,30 +60,22 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
     protected List<DesiredCapabilities> getBrowsersExcludingFirefox() {
         // this is sometimes needed as the Firefox driver causes extra mouseOut
         // events that make tooltips disappear etc.
-        return getBrowserCapabilities(Browser.IE8, Browser.IE9, Browser.IE10,
-                Browser.IE11, Browser.CHROME, Browser.PHANTOMJS);
-    }
-
-    protected List<DesiredCapabilities> getBrowsersExcludingIE8() {
-        return getBrowserCapabilities(Browser.IE9, Browser.IE10, Browser.IE11,
-                Browser.FIREFOX, Browser.CHROME, Browser.PHANTOMJS);
+        return getBrowserCapabilities(Browser.IE11, Browser.CHROME,
+                Browser.PHANTOMJS);
     }
 
     protected List<DesiredCapabilities> getBrowsersSupportingShiftClick() {
-        return getBrowserCapabilities(Browser.IE8, Browser.IE9, Browser.IE10,
-                Browser.IE11, Browser.CHROME);
+        return getBrowserCapabilities(Browser.IE11, Browser.CHROME);
     }
 
     protected List<DesiredCapabilities> getIEBrowsersOnly() {
-        return getBrowserCapabilities(Browser.IE8, Browser.IE9, Browser.IE10,
-                Browser.IE11);
+        return getBrowserCapabilities(Browser.IE11);
     }
 
     protected List<DesiredCapabilities> getBrowsersSupportingContextMenu() {
-        // context menu doesn't work in phantom JS and works weirdly with IE8
-        // and selenium.
-        return getBrowserCapabilities(Browser.IE9, Browser.IE10, Browser.IE11,
-                Browser.FIREFOX, Browser.CHROME);
+        // context menu doesn't work in phantom JS
+        return getBrowserCapabilities(Browser.IE11, Browser.FIREFOX,
+                Browser.CHROME);
     }
 
     protected List<DesiredCapabilities> getBrowsersSupportingTooltip() {
@@ -99,10 +91,8 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        // Uncomment Safari and Opera if those become tested browsers again.
-        return getBrowserCapabilities(Browser.IE8, Browser.IE9, Browser.IE10,
-                Browser.IE11, Browser.FIREFOX, Browser.CHROME,
-                Browser.PHANTOMJS /* , Browser.SAFARI, Browser.OPERA */);
+        return getBrowserCapabilities(Browser.IE11, Browser.FIREFOX,
+                Browser.CHROME, Browser.PHANTOMJS);
     }
 
     protected List<DesiredCapabilities> getBrowserCapabilities(

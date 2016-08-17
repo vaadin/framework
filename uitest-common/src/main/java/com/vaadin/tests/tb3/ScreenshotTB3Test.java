@@ -36,7 +36,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.Parameters;
 import com.vaadin.testbench.ScreenshotOnFailureRule;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.screenshot.ImageFileUtil;
 
 /**
@@ -144,8 +143,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
             } else {
                 // Only the element
                 match = customTestBench(driver).compareScreen(element,
-                        referenceFile,
-                        BrowserUtil.isIE8(getDesiredCapabilities()));
+                        referenceFile);
             }
             if (match) {
                 // There might be failure files because of retries in TestBench.

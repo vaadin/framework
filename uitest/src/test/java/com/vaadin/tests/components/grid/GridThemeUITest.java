@@ -78,10 +78,6 @@ public class GridThemeUITest extends MultiBrowserThemeTest {
         TextFieldElement age = editor.$(TextFieldElement.class).caption("Age")
                 .first();
         age.sendKeys("abc", Keys.TAB);
-        if (age.getValue().equals("21")) {
-            // Yes IE8, really type into the field
-            age.sendKeys("abc", Keys.TAB);
-        }
         editor.save();
 
         compareScreen("two-invalid");

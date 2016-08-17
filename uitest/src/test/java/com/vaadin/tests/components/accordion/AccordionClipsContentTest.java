@@ -35,11 +35,6 @@ public class AccordionClipsContentTest extends MultiBrowserTest {
 
         $(NativeButtonElement.class).first().click();
 
-        // Give the button time to pop back up in IE8.
-        // If this sleep causes issues, next best thing is to click outside the
-        // button to remove focus - needs new screenshots for all browsers.
-        Thread.sleep(10);
-
         compareScreen("button-clicked");
     }
 }
