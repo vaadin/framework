@@ -194,17 +194,6 @@
     </target>
 
 
-    <target name="integration-test-liferay6">
-        <fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6/integration-test-liferay-6.0.5.html" />
-        <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
-
-        <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="300" />
-            <param name="test_browsers" value="winxp-firefox17-esr" />
-            <param name="target-server" value="liferay6" />
-        </antcall>
-    </target>
-
     <target name="integration-test-weblogic12">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="360" />
@@ -224,7 +213,6 @@
         <mkdir dir="${report.dir}" />
 
         <parallel>
-            <antcall target="integration-test-liferay6" />
             <antcall target="integration-test-weblogic12" />
             <antcall target="integration-test-glassfish4" />
             <antcall target="integration-test-payara" />
