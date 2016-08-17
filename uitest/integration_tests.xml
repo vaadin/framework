@@ -248,16 +248,8 @@
         <antcontrib:if>
             <isset property="startDelay" />
             <then>
-                <antcontrib:math result="sleepTime" datatype="int">
-                    <op op="rint">
-                        <op op="*">
-                            <num value="${startDelay}" />
-                            <op op="random" />
-                        </op>
-                    </op>
-                </antcontrib:math>
-                <echo>Delaying startup of ${target-server} with ${sleepTime} seconds</echo>
-                <sleep seconds="${sleepTime}" />
+                <echo>Delaying startup of ${target-server} with ${startDelay} seconds</echo>
+                <sleep seconds="${startDelay}" />
             </then>
         </antcontrib:if>
 
