@@ -21,7 +21,6 @@ import java.util.Collection;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.NativeEvent;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.JavaScriptConnectorHelper;
 import com.vaadin.client.Util;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -51,8 +50,7 @@ public class JavaScriptRendererConnector
     private final JavaScriptConnectorHelper helper = new JavaScriptConnectorHelper(
             this);
 
-    private final JavaScriptObject cellReferenceWrapper = createCellReferenceWrapper(
-            BrowserInfo.get().isIE8());
+    private final JavaScriptObject cellReferenceWrapper = createCellReferenceWrapper();
 
     @Override
     protected void init() {
@@ -62,14 +60,9 @@ public class JavaScriptRendererConnector
         addGetRowKey(helper.getConnectorWrapper());
     }
 
-    private static native JavaScriptObject createCellReferenceWrapper(
-            boolean isIE8)
+    private static native JavaScriptObject createCellReferenceWrapper()
     /*-{
         var reference = {};
-        if (isIE8) {
-          // IE8 only supports defineProperty for DOM objects
-          reference = $doc.createElement('div');
-        }
 
         var setProperty = function(name, getter, setter) {
             var descriptor = {
@@ -282,3 +275,4 @@ public class JavaScriptRendererConnector
         return helper;
     }
 }
+

@@ -39,7 +39,6 @@ $v-grid-header-background-color: #e7e9ea !default;
 @import "popupview/popupview.scss";
 @import "progressindicator/progressindicator.scss";
 @import "select/select.scss";
-@import "shadow/shadow.scss";
 @import "slider/slider.scss";
 @import "splitpanel/splitpanel.scss";
 @import "table/table.scss";
@@ -82,7 +81,6 @@ $v-grid-header-background-color: #e7e9ea !default;
 	@include runo-progressindicator(v-progressindicator);
 
 	@include runo-select;
-	@include runo-shadow;
 	@include runo-slider;
 	@include runo-splitpanel;
 	@include runo-table;

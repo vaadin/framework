@@ -174,7 +174,7 @@ public class VPopupCalendar extends VTextualDate
             }
         });
 
-        popup = new VOverlay(true, false, true);
+        popup = new VOverlay(true, false);
         popup.setOwner(this);
 
         FlowPanel wrapper = new FlowPanel();

@@ -646,7 +646,7 @@ public class VMenuBar extends SimpleFocusablePanel
      * @return overlay to use
      */
     protected VOverlay createOverlay() {
-        return new VOverlay(true, false, true);
+        return new VOverlay(true, false);
     }
 
     private int adjustPopupHeight(int top, final int shadowSpace) {

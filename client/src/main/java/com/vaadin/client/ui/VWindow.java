@@ -32,8 +32,6 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
@@ -211,9 +209,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             });
 
     public VWindow() {
-        super(false, false, true); // no autohide, not modal, shadow
-        // Different style of shadow for windows
-        setShadowStyle("window");
+        super(false, false); // no autohide, not modal
 
         Roles.getDialogRole().set(getElement());
         Roles.getDialogRole().setAriaRelevantProperty(getElement(),
@@ -224,9 +220,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         contentPanel.addKeyDownHandler(this);
         contentPanel.addFocusHandler(this);
         contentPanel.addBlurHandler(this);
-        if (!BrowserInfo.get().isIE8() && !BrowserInfo.get().isIE9()) {
-            addTransitionEndLayoutListener(getElement());
-        }
+        addTransitionEndLayoutListener(getElement());
 
     }
 
@@ -249,20 +243,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
          * state.
          */
         setTabStopEnabled(doTabStop);
-
-        // Fix for #14413. Any pseudo elements inside these elements are not
-        // visible on initial render unless we shake the DOM.
-        if (BrowserInfo.get().isIE8()) {
-            closeBox.getStyle().setDisplay(Display.NONE);
-            maximizeRestoreBox.getStyle().setDisplay(Display.NONE);
-            Scheduler.get().scheduleFinally(new Command() {
-                @Override
-                public void execute() {
-                    closeBox.getStyle().clearDisplay();
-                    maximizeRestoreBox.getStyle().clearDisplay();
-                }
-            });
-        }
     }
 
     @Override
@@ -673,23 +653,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void hide() {
-
-        /*
-         * If the window has a RichTextArea and the RTA is focused at the time
-         * of hiding in IE8 only the window will have some problems returning
-         * the focus to the correct place. Curiously the focus will be returned
-         * correctly if clicking on the "close" button in the window header but
-         * closing the window from a button for example in the window will fail.
-         * Symptom described in #10776
-         *
-         * The problematic part is that for the focus to be returned correctly
-         * an input element needs to be focused in the root panel. Focusing some
-         * other element apparently won't work.
-         */
-        if (BrowserInfo.get().isIE8()) {
-            fixIE8FocusCaptureIssue();
-        }
-
         if (vaadinModality) {
             hideModalityCurtain();
         }
@@ -704,19 +667,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             windowOrder.get(curIndex).setWindowOrder(curIndex++);
         }
         focusTopmostModalWindow();
-    }
-
-    private void fixIE8FocusCaptureIssue() {
-        Element e = DOM.createInputText();
-        Style elemStyle = e.getStyle();
-        elemStyle.setPosition(Position.ABSOLUTE);
-        elemStyle.setTop(-10, Unit.PX);
-        elemStyle.setWidth(0, Unit.PX);
-        elemStyle.setHeight(0, Unit.PX);
-
-        contentPanel.getElement().appendChild(e);
-        e.focus();
-        contentPanel.getElement().removeChild(e);
     }
 
     /** For internal use only. May be removed or replaced in the future. */

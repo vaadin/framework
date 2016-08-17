@@ -22,17 +22,6 @@ public class VBrowserDetailsUserAgentParserTest {
     private static final String FIREFOX_40B11_WIN = "Mozilla/5.0 (Windows NT 5.1; rv:2.0b11) Gecko/20100101 Firefox/4.0b11";
     private static final String KONQUEROR_LINUX = "Mozilla/5.0 (compatible; Konqueror/3.5; Linux) KHTML/3.5.5 (like Gecko) (Exabot-Thumbnails)";
 
-    private static final String IE6_WINDOWS = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)";
-    private static final String IE7_WINDOWS = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)";
-
-    private static final String IE8_WINDOWS = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.2)";
-    private static final String IE8_IN_IE7_MODE_WINDOWS = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.2)";
-
-    private static final String IE9_IN_IE7_MODE_WINDOWS_7 = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C)";
-    private static final String IE9_BETA_IN_IE8_MODE_WINDOWS_7 = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C)";
-    private static final String IE9_BETA_WINDOWS_7 = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
-
-    private static final String IE10_WINDOWS_8 = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)";
     private static final String IE11_WINDOWS_7 = "Mozilla/5.0 (Windows NT 6.1; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; rv:11.0) like Gecko";
     private static final String IE11_WINDOWS_PHONE_8_1_UPDATE = "Mozilla/5.0 (Mobile; Windows Phone 8.1; Android 4.0; ARM; Trident/7.0; Touch; rv:11.0; IEMobile/11.0; NOKIA; Lumia 920) Like iPhone OS 7_0_3 Mac OS X AppleWebKit/537 (KHTML, like Gecko) Mobile Safari/537";
 
@@ -344,106 +333,6 @@ public class VBrowserDetailsUserAgentParserTest {
     }
 
     @Test
-    public void testIE6() {
-        VBrowserDetails bd = new VBrowserDetails(IE6_WINDOWS);
-        assertEngineVersion(bd, -1);
-        assertIE(bd);
-        assertBrowserMajorVersion(bd, 6);
-        assertBrowserMinorVersion(bd, 0);
-        assertWindows(bd);
-    }
-
-    @Test
-    public void testIE7() {
-        VBrowserDetails bd = new VBrowserDetails(IE7_WINDOWS);
-        assertEngineVersion(bd, -1);
-        assertIE(bd);
-        assertBrowserMajorVersion(bd, 7);
-        assertBrowserMinorVersion(bd, 0);
-        assertWindows(bd);
-    }
-
-    @Test
-    public void testIE8() {
-        VBrowserDetails bd = new VBrowserDetails(IE8_WINDOWS);
-        assertTrident(bd);
-        assertEngineVersion(bd, 4);
-        assertIE(bd);
-        assertBrowserMajorVersion(bd, 8);
-        assertBrowserMinorVersion(bd, 0);
-        assertWindows(bd);
-    }
-
-    @Test
-    public void testIE8CompatibilityMode() {
-        VBrowserDetails bd = new VBrowserDetails(IE8_IN_IE7_MODE_WINDOWS);
-        bd.setIEMode(7);
-
-        assertTrident(bd);
-        assertEngineVersion(bd, 4);
-        assertIE(bd);
-        assertBrowserMajorVersion(bd, 7);
-        assertBrowserMinorVersion(bd, 0);
-
-        assertWindows(bd);
-    }
-
-    @Test
-    public void testIE9() {
-        VBrowserDetails bd = new VBrowserDetails(IE9_BETA_WINDOWS_7);
-        assertTrident(bd);
-        assertEngineVersion(bd, 5);
-        assertIE(bd);
-        assertBrowserMajorVersion(bd, 9);
-        assertBrowserMinorVersion(bd, 0);
-        assertWindows(bd);
-    }
-
-    @Test
-    public void testIE9InIE7CompatibilityMode() {
-        VBrowserDetails bd = new VBrowserDetails(IE9_IN_IE7_MODE_WINDOWS_7);
-        // bd.setIE8InCompatibilityMode();
-
-        assertTrident(bd);
-        assertEngineVersion(bd, 5);
-        assertIE(bd);
-        assertBrowserMajorVersion(bd, 7);
-        assertBrowserMinorVersion(bd, 0);
-
-        assertWindows(bd);
-    }
-
-    @Test
-    public void testIE9InIE8CompatibilityMode() {
-        VBrowserDetails bd = new VBrowserDetails(
-                IE9_BETA_IN_IE8_MODE_WINDOWS_7);
-        // bd.setIE8InCompatibilityMode();
-
-        /*
-         * Trident/4.0 in example user agent string based on beta even though it
-         * should be Trident/5.0 in real (non-beta) user agent strings
-         */
-        assertTrident(bd);
-        assertEngineVersion(bd, 4);
-        assertIE(bd);
-        assertBrowserMajorVersion(bd, 8);
-        assertBrowserMinorVersion(bd, 0);
-
-        assertWindows(bd);
-    }
-
-    @Test
-    public void testIE10() {
-        VBrowserDetails bd = new VBrowserDetails(IE10_WINDOWS_8);
-        assertTrident(bd);
-        assertEngineVersion(bd, 6);
-        assertIE(bd);
-        assertBrowserMajorVersion(bd, 10);
-        assertBrowserMinorVersion(bd, 0);
-        assertWindows(bd);
-    }
-
-    @Test
     public void testIE11() {
         VBrowserDetails bd = new VBrowserDetails(IE11_WINDOWS_7);
         assertTrident(bd);
@@ -679,3 +568,4 @@ public class VBrowserDetailsUserAgentParserTest {
     }
 
 }
+

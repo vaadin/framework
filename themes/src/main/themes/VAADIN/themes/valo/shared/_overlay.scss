@@ -144,56 +144,6 @@ $v-selection-item-font-weight: max(400, $v-font-weight);
  */
 $v-selection-item-selection-color: $v-selection-color !default;
 
-
-
-
-
-/*
- * Simulates CSS box-shadow using the extraneous shadow elements in the DOM.
- *
- * @access private
- * @deprecated The .v-shadow element is deprecated since 7.3.0
- * @group overlay
- */
-@mixin valo-ie8-shadow($shadow, $element: top) {
-  .#{$element} {
-    $shadow-offset-x: nth($shadow, 1);
-    $shadow-offset-y: nth($shadow, 2);
-    $shadow-blur: nth($shadow, 3);
-    $shadow-spread: 0;
-    @if length($shadow) > 4 {
-      $shadow-spread: nth($shadow, 4);
-    }
-    $shadow-color: last($shadow);
-    $shadow-color-opacity: round(opacity($shadow-color) * 100);
-    $shadow-color: opacify($shadow-color, 1);
-
-    position: absolute;
-    top: $shadow-offset-y - $shadow-blur - $shadow-spread;
-    right: -$shadow-offset-x + $shadow-blur - $shadow-spread;
-    bottom: -$shadow-offset-y + $shadow-blur - $shadow-spread;
-    left: $shadow-offset-x - $shadow-blur - $shadow-spread;
-    background: $shadow-color;
-    filter: alpha(opacity=#{$shadow-color-opacity}) progid:DXImageTransform.Microsoft.blur(pixelradius=#{strip-units($shadow-blur)}, makeShadow=false);
-  }
-}
-
-
-
-
-
-// Not needed in modern browsers
-.v-shadow,
-.v-shadow-window {
-  display: none;
-}
-
-
-
-
-
-
-
 /**
  * Outputs styles for overlay elements
  *

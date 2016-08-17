@@ -160,8 +160,6 @@ public class VUpload extends SimplePanel {
     private static native void setEncoding(Element form, String encoding)
     /*-{
       form.enctype = encoding;
-      // For IE8
-      form.encoding = encoding;
     }-*/;
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -393,3 +391,4 @@ public class VUpload extends SimplePanel {
     }
 
 }
+

@@ -32,7 +32,6 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.KeyEvent;
@@ -112,8 +111,6 @@ public class WidgetUtil {
     public static native Element getElementFromPoint(int clientX, int clientY)
     /*-{
         var el = $wnd.document.elementFromPoint(clientX, clientY);
-        // Call elementFromPoint two times to make sure IE8 also returns something sensible if the application is running in an iframe
-        el = $wnd.document.elementFromPoint(clientX, clientY);
         if(el != null && el.nodeType == 3) {
             el = el.parentNode;
         }
@@ -144,12 +141,6 @@ public class WidgetUtil {
     public static String escapeHTML(String html) {
         DOM.setInnerText(escapeHtmlHelper, html);
         String escapedText = DOM.getInnerHTML(escapeHtmlHelper);
-        if (BrowserInfo.get().isIE8()) {
-            // #7478 IE8 "incorrectly" returns "<br>" for newlines set using
-            // setInnerText. The same for " " which is converted to "&nbsp;"
-            escapedText = escapedText.replaceAll("<(BR|br)>", "\n");
-            escapedText = escapedText.replaceAll("&nbsp;", " ");
-        }
         return escapedText;
     }
 
@@ -545,7 +536,7 @@ public class WidgetUtil {
     public static int getRequiredWidth(
             com.google.gwt.dom.client.Element element) {
         int reqWidth = getRequiredWidthBoundingClientRect(element);
-        if (BrowserInfo.get().isIE() && !BrowserInfo.get().isIE8()) {
+        if (BrowserInfo.get().isIE()) {
             int csSize = getRequiredWidthComputedStyle(element);
             if (csSize == reqWidth + 1) {
                 // If computed style reports one pixel larger than requiredWidth
@@ -572,7 +563,7 @@ public class WidgetUtil {
     public static double getRequiredWidthDouble(
             com.google.gwt.dom.client.Element element) {
         double reqWidth = getRequiredWidthBoundingClientRectDouble(element);
-        if (BrowserInfo.get().isIE() && !BrowserInfo.get().isIE8()) {
+        if (BrowserInfo.get().isIE()) {
             double csWidth = getRequiredWidthComputedStyleDouble(element);
             if (csWidth > reqWidth && csWidth <= (reqWidth + 1)) {
                 // IE9 rounds reqHeight to integers BUT sometimes reports wrong
@@ -596,7 +587,7 @@ public class WidgetUtil {
     public static int getRequiredHeight(
             com.google.gwt.dom.client.Element element) {
         int reqHeight = getRequiredHeightBoundingClientRect(element);
-        if (BrowserInfo.get().isIE() && !BrowserInfo.get().isIE8()) {
+        if (BrowserInfo.get().isIE()) {
             int csSize = getRequiredHeightComputedStyle(element);
             if (csSize == reqHeight + 1) {
                 // If computed style reports one pixel larger than
@@ -623,7 +614,7 @@ public class WidgetUtil {
     public static double getRequiredHeightDouble(
             com.google.gwt.dom.client.Element element) {
         double reqHeight = getRequiredHeightBoundingClientRectDouble(element);
-        if (BrowserInfo.get().isIE() && !BrowserInfo.get().isIE8()) {
+        if (BrowserInfo.get().isIE()) {
             double csHeight = getRequiredHeightComputedStyleDouble(element);
             if (csHeight > reqHeight && csHeight <= (reqHeight + 1)) {
                 // IE9 rounds reqHeight to integers BUT sometimes reports wrong
@@ -693,7 +684,7 @@ public class WidgetUtil {
              return @com.vaadin.client.WidgetUtil::getRequiredHeightBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
          var height = parseFloat(heightPx); // Will automatically skip "px" suffix
-         var border = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth); // Will automatically skip "px" suffix 
+         var border = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth); // Will automatically skip "px" suffix
          var padding = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom); // Will automatically skip "px" suffix
          return height+border+padding;
      }-*/;
@@ -894,20 +885,6 @@ public class WidgetUtil {
             style.setProperty("webkitTransform", "scale(1)");
         } else {
             style.setProperty("webkitTransform", "");
-        }
-    }
-
-    /**
-     * Performs a hack to trigger a re-layout in the IE8. This is usually
-     * necessary in cases where IE8 "forgets" to update child elements when they
-     * resize.
-     *
-     * @param e
-     *            The element to perform the hack on
-     */
-    public static final void forceIE8Redraw(Element e) {
-        if (BrowserInfo.get().isIE8()) {
-            forceIERedraw(e);
         }
     }
 
@@ -1259,25 +1236,9 @@ public class WidgetUtil {
      * @return the corresponding absolute URL as a string
      */
     public static String getAbsoluteUrl(String url) {
-        if (BrowserInfo.get().isIE8()) {
-            // The hard way - must use innerHTML and attach to DOM in IE8
-            DivElement divElement = Document.get().createDivElement();
-            divElement.getStyle().setDisplay(Display.NONE);
-
-            RootPanel.getBodyElement().appendChild(divElement);
-            divElement.setInnerHTML(
-                    "<a href='" + escapeAttribute(url) + "' ></a>");
-
-            AnchorElement a = divElement.getChild(0).cast();
-            String href = a.getHref();
-
-            RootPanel.getBodyElement().removeChild(divElement);
-            return href;
-        } else {
-            AnchorElement a = Document.get().createAnchorElement();
-            a.setHref(url);
-            return a.getHref();
-        }
+        AnchorElement a = Document.get().createAnchorElement();
+        a.setHref(url);
+        return a.getHref();
     }
 
     /**
@@ -1681,7 +1642,6 @@ public class WidgetUtil {
             var cloneElement = element.cloneNode(false);
             cloneElement.style.boxSizing ="content-box";
             parentElement.appendChild(cloneElement);
-            cloneElement.style.height = "10px"; // IE8 wants the height to be set to something...
             var heightWithBorder = cloneElement.offsetHeight;
             for (i=0; i< borderNames.length; i++) {
                 cloneElement.style[borderNames[i]] = "0";
@@ -1732,14 +1692,6 @@ public class WidgetUtil {
     }
 
     private static double roundSize(double size, boolean roundUp) {
-        if (BrowserInfo.get().isIE8()) {
-            if (roundUp) {
-                return Math.ceil(size);
-            } else {
-                return (int) size;
-            }
-        }
-
         double factor = getSubPixelRoundingFactor();
         if (factor < 0 || size < 0) {
             return size;
@@ -1823,3 +1775,4 @@ public class WidgetUtil {
         return integerPart + ((int) nrFractions) / divisor;
     }
 }
+

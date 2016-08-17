@@ -27,14 +27,12 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.FontIcon;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;
-import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.AlignmentInfo;
 
@@ -63,22 +61,6 @@ public class Slot extends SimplePanel {
     private ElementResizeListener widgetResizeListener;
 
     private ElementResizeListener spacingResizeListener;
-
-    /*
-     * This listener is applied only in IE8 to workaround browser issue where
-     * IE8 forgets to update the error indicator position when the slot gets
-     * resized by widget resizing itself. #11693
-     */
-    private ElementResizeListener ie8CaptionElementResizeUpdateListener = new ElementResizeListener() {
-
-        @Override
-        public void onElementResize(ElementResizeEvent e) {
-            Element caption = getCaptionElement();
-            if (caption != null) {
-                WidgetUtil.forceIE8Redraw(caption);
-            }
-        }
-    };
 
     // Caption is placed after component unless there is some part which
     // moves it above.
@@ -176,10 +158,6 @@ public class Slot extends SimplePanel {
                         spacingResizeListener);
             }
 
-            if (BrowserInfo.get().isIE8()) {
-                lm.addElementResizeListener(getWidget().getElement(),
-                        ie8CaptionElementResizeUpdateListener);
-            }
         }
     }
 
@@ -204,10 +182,6 @@ public class Slot extends SimplePanel {
                         spacingResizeListener);
             }
 
-            if (BrowserInfo.get().isIE8()) {
-                lm.removeElementResizeListener(getWidget().getElement(),
-                        ie8CaptionElementResizeUpdateListener);
-            }
         }
     }
 
@@ -672,13 +646,8 @@ public class Slot extends SimplePanel {
                         }
                     }
                 };
-                if (BrowserInfo.get().isIE8()) {
-                    // IE8 can't fix the focus immediately. It will fail.
-                    focusTimer.schedule(25);
-                } else {
-                    // Newer IE versions can handle things immediately.
-                    focusTimer.run();
-                }
+                // Newer IE versions can handle things immediately.
+                focusTimer.run();
             }
         }
     }
@@ -831,3 +800,4 @@ public class Slot extends SimplePanel {
         }
     }
 }
+

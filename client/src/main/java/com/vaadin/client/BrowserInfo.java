@@ -253,14 +253,17 @@ public class BrowserInfo {
         return browserDetails.isSafari();
     }
 
+    @Deprecated
     public boolean isIE8() {
         return isIE() && getBrowserMajorVersion() == 8;
     }
 
+    @Deprecated
     public boolean isIE9() {
         return isIE() && getBrowserMajorVersion() == 9;
     }
 
+    @Deprecated
     public boolean isIE10() {
         return isIE() && getBrowserMajorVersion() == 10;
     }
@@ -517,3 +520,4 @@ public class BrowserInfo {
         return (getBrowserMajorVersion() > majorVersion);
     }
 }
+

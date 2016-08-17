@@ -83,14 +83,13 @@ public class VTooltip extends VOverlay {
      * @see ApplicationConnection#getVTooltip()
      */
     public VTooltip() {
-        super(false, false, true);
+        super(false, false); // no autohide, not modal
         setStyleName(CLASSNAME);
         FlowPanel layout = new FlowPanel();
         setWidget(layout);
         layout.add(em);
         DOM.setElementProperty(description, "className", CLASSNAME + "-text");
         DOM.appendChild(layout.getElement(), description);
-        setSinkShadowEvents(true);
 
         // When a tooltip is shown, the content of the tooltip changes. With a
         // tooltip being a live-area, this change is notified to a assistive

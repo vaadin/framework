@@ -245,7 +245,7 @@ public class VPopupView extends HTML
         private ShortcutActionHandler shortcutActionHandler;
 
         public CustomPopup() {
-            super(true, false, true); // autoHide, not modal, dropshadow
+            super(true, false); // autoHide, not modal
             setOwner(VPopupView.this);
             // Delegate popup keyboard events to the relevant handler. The
             // events do not propagate automatically because the popup is

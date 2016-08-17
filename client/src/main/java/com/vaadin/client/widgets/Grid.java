@@ -36,7 +36,6 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
@@ -1291,23 +1290,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private static final String ERROR_CLASS_NAME = "error";
         private static final String NOT_EDITABLE_CLASS_NAME = "not-editable";
 
-        ScheduledCommand fieldFocusCommand = new ScheduledCommand() {
-            private int count = 0;
-
-            @Override
-            public void execute() {
-                Element focusedElement = WidgetUtil.getFocusedElement();
-                if (focusedElement == grid.getElement()
-                        || focusedElement == Document.get().getBody()
-                        || count > 2) {
-                    focusColumn(focusedColumnIndex);
-                } else {
-                    ++count;
-                    Scheduler.get().scheduleDeferred(this);
-                }
-            }
-        };
-
         /**
          * A handler for events related to the Grid editor. Responsible for
          * opening, moving or closing the editor based on the received event.
@@ -1865,11 +1847,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     }
 
                     if (i == focusedColumnIndex) {
-                        if (BrowserInfo.get().isIE8()) {
-                            Scheduler.get().scheduleDeferred(fieldFocusCommand);
-                        } else {
-                            focusColumn(focusedColumnIndex);
-                        }
+                        focusColumn(focusedColumnIndex);
                     }
                 } else {
                     cell.addClassName(NOT_EDITABLE_CLASS_NAME);
@@ -3405,8 +3383,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              */
             final double widthPerRatio;
             int leftOver = 0;
-            if (BrowserInfo.get().isIE8() || BrowserInfo.get().isIE9()
-                    || BrowserInfo.getBrowserString().contains("PhantomJS")) {
+            if (BrowserInfo.getBrowserString().contains("PhantomJS")) {
                 // These browsers report subpixels as integers. this usually
                 // results into issues..
                 widthPerRatio = (int) (pixelsToDistribute / totalRatios);
@@ -4092,10 +4069,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * This is a workaround to make Chrome work like Firefox. In Chrome,
      * normally if you start a drag on one cell and release on:
      * <ul>
-     * <li>that same cell, the click event is that {@code 
-     * <td>}.
-     * <li>a cell on that same row, the click event is the parent {@code 
-     * <tr>
+     * <li>that same cell, the click event is that {@code
+     *
+    <td>}.
+     * <li>a cell on that same row, the click event is the parent {@code
+     *
+    <tr>
      * }.
      * <li>a cell on another row, the click event is the table section ancestor
      * ({@code <thead>}, {@code <tbody>} or {@code <tfoot>}).

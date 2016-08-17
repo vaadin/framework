@@ -2260,10 +2260,8 @@ public class VTree extends FocusElementPanel
      * Tell LayoutManager that a layout is needed later for this VTree
      */
     private void doLayout() {
-        // IE8 needs a hack to measure the tree again after update
-        WidgetUtil.forceIE8Redraw(getElement());
-
         // This calls LayoutManager setNeedsMeasure and layoutNow
         Util.notifyParentOfSizeChange(this, false);
     }
 }
+

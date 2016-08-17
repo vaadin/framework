@@ -18,10 +18,8 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
 import com.vaadin.client.VTooltip;
-import com.vaadin.client.WidgetUtil;
 
 public class VLabel extends HTML {
 
@@ -59,14 +57,5 @@ public class VLabel extends HTML {
         }
     }
 
-    @Override
-    public void setText(String text) {
-        if (BrowserInfo.get().isIE8()) {
-            // #3983 - IE8 incorrectly replaces \n with <br> so we do the
-            // escaping manually and set as HTML
-            super.setHTML(WidgetUtil.escapeHTML(text));
-        } else {
-            super.setText(text);
-        }
-    }
 }
+

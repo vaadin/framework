@@ -13,8 +13,6 @@
     <inherits name="com.google.gwt.logging.Logging" />
     <set-property name="gwt.logging.enabled" value="TRUE" />
 
-    <inherits name="com.vaadin.VaadinBrowserSpecificOverrides" />
-
     <source path="client" />
     <source path="shared" />
 
@@ -42,8 +40,7 @@
     <!-- Use the new cross site linker to get a nocache.js without document.write -->
     <add-linker name="xsiframe" />
 
-    <!-- Remove IE6/IE7 permutation as they are not supported -->
-    <set-property name="user.agent" value="ie8,ie9,ie10,gecko1_8,safari" />
+    <set-property name="user.agent" value="gecko1_8,safari" />
 
     <!-- Pointer event support -->
     <define-property name="modernie" values="none,yes" />
@@ -73,11 +70,6 @@
         <none>
             <when-property-is value="none" name="modernie" />
         </none>
-    </replace-with>
-
-    <replace-with class="com.vaadin.client.event.PointerEventSupportImplIE10">
-        <when-type-is class="com.vaadin.client.event.PointerEventSupportImpl" />
-        <when-property-is value="ie10" name="user.agent" />
     </replace-with>
 
     <replace-with

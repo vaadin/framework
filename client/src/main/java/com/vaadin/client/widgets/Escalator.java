@@ -132,7 +132,7 @@ import com.vaadin.shared.util.SharedUtil;
 
  Each RowContainer can be thought to have three levels of
  indices for any given displayed row (but the distinction
- matters primarily for the BodyRowContainerImpl, because of 
+ matters primarily for the BodyRowContainerImpl, because of
  the way it scrolls through data):
 
  - Logical index
@@ -151,8 +151,8 @@ import com.vaadin.shared.util.SharedUtil;
  (because of 0-based indices). In Header and
  FooterRowContainers, you are safe to assume that the logical
  index is the same as the physical index. But because the
- BodyRowContainerImpl never displays large data sources 
- entirely in the DOM, a physical index usually has no 
+ BodyRowContainerImpl never displays large data sources
+ entirely in the DOM, a physical index usually has no
  apparent direct relationship with its logical index.
 
  VISUAL INDEX is the index relating to the order that you
@@ -678,7 +678,7 @@ public class Escalator extends Widget
             var hScrollElem = hScroll.@com.vaadin.client.widget.escalator.ScrollbarBundle::getElement()();
 
             return $entry(function(e) {
-                var target = e.target || e.srcElement; // IE8 uses e.scrElement
+                var target = e.target;
 
                 // in case the scroll event was native (i.e. scrollbars were dragged, or
                 // the scrollTop/Left was manually modified), the bundles have old cache
@@ -926,14 +926,9 @@ public class Escalator extends Widget
          * class.
          */
         /*-{
-            if (element.addEventListener) {
-                // firefox likes "wheel", while others use "mousewheel"
-                var eventName = 'onmousewheel' in element ? 'mousewheel' : 'wheel';
-                element.addEventListener(eventName, this.@com.vaadin.client.widgets.JsniWorkaround::mousewheelListenerFunction);
-            } else {
-                // IE8
-                element.attachEvent("onmousewheel", this.@com.vaadin.client.widgets.JsniWorkaround::mousewheelListenerFunction);
-            }
+            // firefox likes "wheel", while others use "mousewheel"
+            var eventName = 'onmousewheel' in element ? 'mousewheel' : 'wheel';
+            element.addEventListener(eventName, this.@com.vaadin.client.widgets.JsniWorkaround::mousewheelListenerFunction);
         }-*/;
 
         public native void detachMousewheelListener(Element element)
@@ -946,14 +941,9 @@ public class Escalator extends Widget
          * class.
          */
         /*-{
-            if (element.addEventListener) {
-                // firefox likes "wheel", while others use "mousewheel"
-                var eventName = element.onwheel===undefined?"mousewheel":"wheel";
-                element.removeEventListener(eventName, this.@com.vaadin.client.widgets.JsniWorkaround::mousewheelListenerFunction);
-            } else {
-                // IE8
-                element.detachEvent("onmousewheel", this.@com.vaadin.client.widgets.JsniWorkaround::mousewheelListenerFunction);
-            }
+            // firefox likes "wheel", while others use "mousewheel"
+            var eventName = element.onwheel===undefined?"mousewheel":"wheel";
+            element.removeEventListener(eventName, this.@com.vaadin.client.widgets.JsniWorkaround::mousewheelListenerFunction);
         }-*/;
 
         public native void attachTouchListeners(Element element)
@@ -966,14 +956,10 @@ public class Escalator extends Widget
          * class.
          */
         /*-{
-            if (element.addEventListener) {
-                element.addEventListener("touchstart", this.@com.vaadin.client.widgets.JsniWorkaround::touchStartFunction);
-                element.addEventListener("touchmove", this.@com.vaadin.client.widgets.JsniWorkaround::touchMoveFunction);
-                element.addEventListener("touchend", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
-                element.addEventListener("touchcancel", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
-            } else {
-                // this would be IE8, but we don't support it with touch
-            }
+            element.addEventListener("touchstart", this.@com.vaadin.client.widgets.JsniWorkaround::touchStartFunction);
+            element.addEventListener("touchmove", this.@com.vaadin.client.widgets.JsniWorkaround::touchMoveFunction);
+            element.addEventListener("touchend", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
+            element.addEventListener("touchcancel", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
         }-*/;
 
         public native void detachTouchListeners(Element element)
@@ -986,14 +972,10 @@ public class Escalator extends Widget
          * class.
          */
         /*-{
-            if (element.removeEventListener) {
-                element.removeEventListener("touchstart", this.@com.vaadin.client.widgets.JsniWorkaround::touchStartFunction);
-                element.removeEventListener("touchmove", this.@com.vaadin.client.widgets.JsniWorkaround::touchMoveFunction);
-                element.removeEventListener("touchend", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
-                element.removeEventListener("touchcancel", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
-            } else {
-                // this would be IE8, but we don't support it with touch
-            }
+            element.removeEventListener("touchstart", this.@com.vaadin.client.widgets.JsniWorkaround::touchStartFunction);
+            element.removeEventListener("touchmove", this.@com.vaadin.client.widgets.JsniWorkaround::touchMoveFunction);
+            element.removeEventListener("touchend", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
+            element.removeEventListener("touchcancel", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
         }-*/;
 
         public void scrollToColumn(final int columnIndex,
@@ -1069,8 +1051,9 @@ public class Escalator extends Widget
 
         /**
          * The table section element ({@code <thead>}, {@code <tbody>} or
-         * {@code <tfoot>}) the rows (i.e. {@code 
-         * <tr>
+         * {@code <tfoot>}) the rows (i.e. {@code
+         *
+        <tr>
          * } tags) are contained in.
          */
         protected final TableSectionElement root;
@@ -1760,8 +1743,9 @@ public class Escalator extends Widget
          * Applies the total length of the columns to each row element.
          * <p>
          * <em>Note:</em> In contrast to {@link #reapplyColumnWidths()}, this
-         * method only modifies the width of the {@code 
-         * <tr>
+         * method only modifies the width of the {@code
+         *
+        <tr>
          * } element, not the cells within.
          */
         protected void reapplyRowWidths() {
@@ -3218,7 +3202,7 @@ public class Escalator extends Widget
                          * |3| ==> |*| ==> |5| <- newly rendered
                          * |4|     |*|
                          *  5       5
-                         *  
+                         *
                          *  1       1      |1| <- newly rendered
                          * |2|     |*|     |4|
                          * |3| ==> |*| ==> |5| <- newly rendered
@@ -3265,7 +3249,7 @@ public class Escalator extends Widget
                          *  1      |1| <-- newly rendered (by scrolling)
                          * |4|     |4|
                          * |*| ==> |*|
-                         * |*|       
+                         * |*|
                          *  5       5
                          */
                         final double newScrollTop = contentBottom
@@ -3297,7 +3281,7 @@ public class Escalator extends Widget
                          * |1|     |1|
                          * |4| ==> |4|
                          * |*|     |5| <-- newly rendered
-                         *           
+                         *
                          *  5
                          */
 
@@ -3370,7 +3354,7 @@ public class Escalator extends Widget
              *  :       :      |4| <- newly rendered
              * |5|     |5|     |5|
              * |6| ==> |*| ==> |7|
-             * |7|     |7|     
+             * |7|     |7|
              */
 
             final int logicalTargetIndex = getLogicalRowIndex(
@@ -5616,31 +5600,14 @@ public class Escalator extends Widget
         if (BrowserInfo.get().isIE()) {
             /*
              * IE refuses to scroll properly if the DIV isn't at least one pixel
-             * larger than the scrollbar controls themselves. But, probably
-             * because of subpixel rendering, in Grid, one pixel isn't enough,
-             * so we'll add two instead.
+             * larger than the scrollbar controls themselves.
              */
-            if (BrowserInfo.get().isIE9()) {
-                scrollbarThickness += 2;
-            } else {
-                scrollbarThickness += 1;
-            }
+            scrollbarThickness += 1;
         }
 
         root.appendChild(verticalScrollbar.getElement());
         verticalScrollbar.addScrollHandler(scrollHandler);
         verticalScrollbar.setScrollbarThickness(scrollbarThickness);
-
-        if (BrowserInfo.get().isIE8()) {
-            /*
-             * IE8 will have to compensate for a misalignment where it pops the
-             * scrollbar outside of its box. See Bug 3 in
-             * http://edskes.net/ie/ie8overflowandexpandingboxbugs.htm
-             */
-            Style vScrollStyle = verticalScrollbar.getElement().getStyle();
-            vScrollStyle.setRight(verticalScrollbar.getScrollbarThickness() - 1,
-                    Unit.PX);
-        }
 
         root.appendChild(horizontalScrollbar.getElement());
         horizontalScrollbar.addScrollHandler(scrollHandler);

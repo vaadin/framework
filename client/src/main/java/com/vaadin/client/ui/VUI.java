@@ -35,7 +35,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
@@ -369,16 +368,11 @@ public class VUI extends SimplePanel implements ResizeHandler,
      */
     private void triggerSizeChangeCheck() {
         /*
-         * IE (pre IE9 at least) will give us some false resize events due to
-         * problems with scrollbars. Firefox 3 might also produce some extra
-         * events. We postpone both the re-layouting and the server side event
-         * for a while to deal with these issues.
-         *
-         * We may also postpone these events to avoid slowness when resizing the
+         * We may postpone these events to avoid slowness when resizing the
          * browser window. Constantly recalculating the layout causes the resize
          * operation to be really slow with complex layouts.
          */
-        boolean lazy = resizeLazy || BrowserInfo.get().isIE8();
+        boolean lazy = resizeLazy;
 
         if (lazy) {
             delayedResizeExecutor.trigger();

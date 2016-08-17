@@ -614,8 +614,6 @@ public class MessageHandler {
                 // Unregister all the old connectors that have now been removed
                 unregisterRemovedConnectors(
                         connectorHierarchyUpdateResult.detachedConnectorIds);
-
-                getLayoutManager().cleanMeasuredSizes();
             }
 
             private void updateCaptions(
@@ -1374,7 +1372,7 @@ public class MessageHandler {
 
                     if (connector instanceof AbstractConnector) {
                         // optimization as the loop setting properties is very
-                        // slow, especially on IE8
+                        // slow
                         replaceState((AbstractConnector) connector,
                                 defaultState);
                     } else {

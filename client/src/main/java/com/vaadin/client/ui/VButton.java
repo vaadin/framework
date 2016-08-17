@@ -205,14 +205,6 @@ public class VButton extends FocusWidget implements ClickHandler {
                 DOM.setCapture(getElement());
                 isCapturing = true;
                 addStyleName(CLASSNAME_PRESSED);
-
-                if (BrowserInfo.get().isIE8() || BrowserInfo.get().isIE9()) {
-                    /*
-                     * We need to prevent the default behavior on these browsers
-                     * since user-select is not available.
-                     */
-                    event.preventDefault();
-                }
             }
             break;
         case Event.ONMOUSEUP:
@@ -225,12 +217,6 @@ public class VButton extends FocusWidget implements ClickHandler {
                 }
 
                 removeStyleName(CLASSNAME_PRESSED);
-
-                // Explicitly prevent IE 8 from propagating mouseup events
-                // upward (fixes #6753)
-                if (BrowserInfo.get().isIE8()) {
-                    event.stopPropagation();
-                }
             }
             break;
         case Event.ONMOUSEMOVE:
@@ -433,7 +419,7 @@ public class VButton extends FocusWidget implements ClickHandler {
     private static native int getHorizontalBorderAndPaddingWidth(Element elem)
     /*-{
         // THIS METHOD IS ONLY USED FOR INTERNET EXPLORER, IT DOESN'T WORK WITH OTHERS
-    	
+
     	var convertToPixel = function(elem, value) {
     	    // From the awesome hack by Dean Edwards
             // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
@@ -452,7 +438,7 @@ public class VButton extends FocusWidget implements ClickHandler {
 
             return ret;
     	}
-    	
+
      	var ret = 0;
 
         var sides = ["Right","Left"];
@@ -482,3 +468,4 @@ public class VButton extends FocusWidget implements ClickHandler {
     }-*/;
 
 }
+

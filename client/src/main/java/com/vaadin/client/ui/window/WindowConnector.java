@@ -33,13 +33,11 @@ import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
@@ -251,10 +249,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             Element layoutElement = content.getWidget().getElement();
             Style childStyle = layoutElement.getStyle();
 
-            // IE8 needs some hackery to measure its content correctly
-            WidgetUtil.forceIE8Redraw(layoutElement);
-
-            if (content.isRelativeHeight() && !BrowserInfo.get().isIE9()) {
+            if (content.isRelativeHeight()) {
                 childStyle.setPosition(Position.ABSOLUTE);
 
                 Style wrapperStyle = contentElement.getStyle();

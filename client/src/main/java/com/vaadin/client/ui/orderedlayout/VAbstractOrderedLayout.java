@@ -30,11 +30,9 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.Util;
-import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.MarginInfo;
 
 /**
@@ -561,19 +559,10 @@ public class VAbstractOrderedLayout extends FlowPanel {
 
             } else {
                 // Non-relative child without expansion should be unconstrained
-                if (BrowserInfo.get().isIE8()) {
-                    // unconstrained in IE8 is auto
-                    if (vertical) {
-                        slot.setHeight("auto");
-                    } else {
-                        slot.setWidth("auto");
-                    }
+                if (vertical) {
+                    slotStyle.clearHeight();
                 } else {
-                    if (vertical) {
-                        slotStyle.clearHeight();
-                    } else {
-                        slotStyle.clearWidth();
-                    }
+                    slotStyle.clearWidth();
                 }
             }
         }
@@ -718,7 +707,6 @@ public class VAbstractOrderedLayout extends FlowPanel {
                 }
             }
         }
-        WidgetUtil.forceIE8Redraw(getElement());
     }
 
     /**
@@ -747,3 +735,4 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
 }
+

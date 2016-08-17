@@ -66,7 +66,7 @@ public class MouseEventDetailsBuilder {
         } else if (evt.getButton() == NativeEvent.BUTTON_MIDDLE) {
             mouseEventDetails.setButton(MouseButton.MIDDLE);
         } else {
-            // IE8 does not always report a button. Assume left.
+            // No button reported? Assume left.
             mouseEventDetails.setButton(MouseButton.LEFT);
         }
         mouseEventDetails.setAltKey(evt.getAltKey());
@@ -94,3 +94,4 @@ public class MouseEventDetailsBuilder {
     }
 
 }
+

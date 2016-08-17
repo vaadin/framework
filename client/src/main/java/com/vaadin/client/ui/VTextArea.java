@@ -231,7 +231,7 @@ public class VTextArea extends VLegacyTextField implements DragImageModifier {
         if (info.isSafari()) {
             return true;
         }
-        if (info.isIE10() || info.isIE11() || info.isEdge()) {
+        if (info.isIE11() || info.isEdge()) {
             return true;
         }
         if (info.isAndroid()) {
@@ -335,3 +335,4 @@ public class VTextArea extends VLegacyTextField implements DragImageModifier {
         }
     }
 }
+

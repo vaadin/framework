@@ -162,8 +162,8 @@ public class LayoutManager {
     }
 
     /**
-     * Assigns a measured size to an element. Method defined as protected to
-     * allow separate implementation for IE8.
+     * Assigns a measured size to an element. Method defined as protected for
+     * legacy reasons.
      *
      * @param element
      *            the dom element to attach the measured size to
@@ -182,8 +182,8 @@ public class LayoutManager {
     }-*/;
 
     /**
-     * Gets the measured size for an element. Method defined as protected to
-     * allow separate implementation for IE8.
+     * Gets the measured size for an element. Method defined as protected for
+     * legacy reasons.
      *
      * @param element
      *            The element to get measured size for
@@ -281,8 +281,8 @@ public class LayoutManager {
 
     /**
      * Called once per iteration in the layout loop before size calculations so
-     * different browsers quirks can be handled. Mainly this is currently for
-     * the IE8 permutation.
+     * different browsers quirks can be handled. Mainly this exists for legacy
+     * reasons.
      */
     protected void performBrowserLayoutHacks() {
         // Permutations implement this
@@ -600,8 +600,6 @@ public class LayoutManager {
         }
         Profiler.leave("layout PostLayoutListener");
 
-        cleanMeasuredSizes();
-
         getLogger().info("Total layout phase time: "
                 + totalDuration.elapsedMillis() + "ms");
     }
@@ -800,8 +798,7 @@ public class LayoutManager {
 
     private void setNeedsOverflowFix(ComponentConnector connector) {
         // IE9 doesn't need the original fix, but for some reason it needs this
-        if (BrowserInfo.get().requiresOverflowAutoFix()
-                || BrowserInfo.get().isIE9()) {
+        if (BrowserInfo.get().requiresOverflowAutoFix()) {
             ComponentConnector scrollingBoundary = currentDependencyTree
                     .getScrollingBoundary(connector);
             if (scrollingBoundary != null) {
@@ -1822,12 +1819,6 @@ public class LayoutManager {
         everythingNeedsMeasure = true;
     }
 
-    /**
-     * Clean measured sizes which are no longer needed. Only for IE8.
-     */
-    public void cleanMeasuredSizes() {
-    }
-
     private static Logger getLogger() {
         return Logger.getLogger(LayoutManager.class.getName());
     }
@@ -1855,3 +1846,4 @@ public class LayoutManager {
         return false;
     }
 }
+

@@ -448,16 +448,7 @@ public class VAbsoluteLayout extends ComplexPanel {
                 }
                 // ensure ne values
                 Style style = getElement().getStyle();
-                /*
-                 * IE8 dies when nulling zIndex, even in IE7 mode. All other css
-                 * properties (and even in older IE's) accept null values just
-                 * fine. Assign empty string instead of null.
-                 */
-                if (zIndex != null) {
-                    style.setProperty("zIndex", zIndex);
-                } else {
-                    style.setProperty("zIndex", "");
-                }
+                style.setProperty("zIndex", zIndex);
                 style.setProperty("top", top);
                 style.setProperty("left", left);
                 style.setProperty("right", right);
@@ -506,3 +497,4 @@ public class VAbsoluteLayout extends ComplexPanel {
         }
     }
 }
+

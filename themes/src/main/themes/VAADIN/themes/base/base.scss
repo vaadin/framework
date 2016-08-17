@@ -40,7 +40,6 @@ $v-line-height: $line-height !default;
 @import "popupview/popupview.scss";
 @import "progressindicator/progressindicator.scss";
 @import "select/select.scss";
-@import "shadow/shadow.scss";
 @import "slider/slider.scss";
 @import "splitpanel/splitpanel.scss";
 @import "table/table.scss";
@@ -117,7 +116,6 @@ $v-line-height: $line-height !default;
 	@include base-progressindicator(v-progressindicator);
 
 	@include base-select;
-	@include base-shadow;
 	@include base-slider;
 	@include base-splitpanel;
 	@include base-table;

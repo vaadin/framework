@@ -66,9 +66,6 @@ public class TreeConnector extends AbstractComponentConnector
         if (uidl.hasAttribute("partialUpdate")) {
             handleUpdate(uidl);
 
-            // IE8 needs a hack to measure the tree again after update
-            WidgetUtil.forceIE8Redraw(getWidget().getElement());
-
             getWidget().rendering = false;
             return;
         }
@@ -177,9 +174,6 @@ public class TreeConnector extends AbstractComponentConnector
                     .getNodeByKey(getWidget().selectedIds.iterator().next()));
             getWidget().focusedNode.setFocused(false);
         }
-
-        // IE8 needs a hack to measure the tree again after update
-        WidgetUtil.forceIE8Redraw(getWidget().getElement());
 
         getWidget().rendering = false;
 
@@ -395,3 +389,4 @@ public class TreeConnector extends AbstractComponentConnector
         WidgetUtil.clearTextSelection();
     }
 }
+

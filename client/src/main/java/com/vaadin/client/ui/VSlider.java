@@ -64,7 +64,7 @@ public class VSlider extends SimpleFocusablePanel
     protected SliderOrientation orientation = SliderOrientation.HORIZONTAL;
 
     private final HTML feedback = new HTML("", false);
-    private final VOverlay feedbackPopup = new VOverlay(true, false, true) {
+    private final VOverlay feedbackPopup = new VOverlay(true, false) {
         {
             setOwner(VSlider.this);
         }

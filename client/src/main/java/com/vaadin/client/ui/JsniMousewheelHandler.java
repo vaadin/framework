@@ -59,9 +59,6 @@ abstract class JsniMousewheelHandler {
             // FireFox likes "wheel", while others use "mousewheel"
             var eventName = 'onmousewheel' in element ? 'mousewheel' : 'wheel';
             element.addEventListener(eventName, this.@com.vaadin.client.ui.JsniMousewheelHandler::mousewheelListenerFunction);
-        } else {
-            // IE8
-            element.attachEvent("onmousewheel", this.@com.vaadin.client.ui.JsniMousewheelHandler::mousewheelListenerFunction);
         }
     }-*/;
 
@@ -71,10 +68,8 @@ abstract class JsniMousewheelHandler {
             // FireFox likes "wheel", while others use "mousewheel"
             var eventName = element.onwheel===undefined?"mousewheel":"wheel";
             element.removeEventListener(eventName, this.@com.vaadin.client.ui.JsniMousewheelHandler::mousewheelListenerFunction);
-        } else {
-            // IE8
-            element.detachEvent("onmousewheel", this.@com.vaadin.client.ui.JsniMousewheelHandler::mousewheelListenerFunction);
         }
     }-*/;
 
 }
+

@@ -23,11 +23,9 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
-import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
@@ -388,19 +386,6 @@ public class TableConnector extends AbstractFieldConnector
     public void updateEnabledState(boolean enabledState) {
         super.updateEnabledState(enabledState);
         getWidget().enabled = isEnabled();
-
-        if (BrowserInfo.get().isIE8() && !getWidget().enabled) {
-            /*
-             * The disabled shim will not cover the table body if it is relative
-             * in IE8. See #7324
-             */
-            getWidget().scrollBodyPanel.getElement().getStyle()
-                    .setPosition(Position.STATIC);
-        } else if (BrowserInfo.get().isIE8()) {
-            getWidget().scrollBodyPanel.getElement().getStyle()
-                    .setPosition(Position.RELATIVE);
-        }
-
     }
 
     @Override
@@ -431,9 +416,6 @@ public class TableConnector extends AbstractFieldConnector
             Scheduler.get().scheduleFinally(new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    // IE8 needs some hacks to measure sizes correctly
-                    WidgetUtil.forceIE8Redraw(getWidget().getElement());
-
                     getLayoutManager().setNeedsMeasure(TableConnector.this);
                     ServerConnector parent = getParent();
                     if (parent instanceof ComponentConnector) {

@@ -81,7 +81,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
      *            to be set as an owner of menu
      */
     public VContextMenu() {
-        super(true, false, true);
+        super(true, false);
         setWidget(menu);
         setStyleName("v-contextmenu");
         getElement().setId(DOM.createUniqueId());

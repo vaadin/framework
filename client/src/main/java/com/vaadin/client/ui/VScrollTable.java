@@ -85,7 +85,6 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.HasChildMeasurementHintConnector.ChildMeasurementHint;
-import com.vaadin.client.legacy.ui.VLegacyTextField;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.TooltipInfo;
@@ -94,6 +93,7 @@ import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.VTooltip;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.legacy.ui.VLegacyTextField;
 import com.vaadin.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.client.ui.dd.DDUtil;
 import com.vaadin.client.ui.dd.VAbstractDropHandler;
@@ -3656,12 +3656,6 @@ public class VScrollTable extends FlowPanel
                     }
                 } else {
                     c.setText(caption);
-                    if (BrowserInfo.get().isIE10()) {
-                        // IE10 can some times define min-height to include
-                        // padding when setting the text...
-                        // See https://dev.vaadin.com/ticket/15169
-                        WidgetUtil.forceIERedraw(c.getElement());
-                    }
                 }
 
                 c.setSorted(false);
@@ -8416,3 +8410,4 @@ public class VScrollTable extends FlowPanel
     }
 
 }
+

@@ -197,15 +197,9 @@ public class InfoSection implements Section {
                 .getAtmosphereVersion();
         String jsVersion = applicationConfiguration.getAtmosphereJSVersion();
 
-        String themeVersion;
-        boolean themeOk;
-        if (com.vaadin.client.BrowserInfo.get().isIE8()) {
-            themeVersion = "<IE8 can't detect this>";
-            themeOk = true;
-        } else {
-            themeVersion = getThemeVersion();
-            themeOk = equalsEither(themeVersion, clientVersion, servletVersion);
-        }
+        String themeVersion = getThemeVersion();
+        boolean themeOk = equalsEither(themeVersion, clientVersion,
+                servletVersion);
 
         boolean clientOk = equalsEither(clientVersion, servletVersion,
                 themeVersion);
@@ -318,3 +312,4 @@ public class InfoSection implements Section {
     }
 
 }
+

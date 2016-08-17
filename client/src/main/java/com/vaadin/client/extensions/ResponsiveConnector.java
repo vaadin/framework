@@ -20,8 +20,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dom.client.Element;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -206,7 +204,6 @@ public class ResponsiveConnector extends AbstractExtensionConnector
         // Get all the rulesets from the stylesheet
         var theRules = new Array();
         var IEOrEdge = @com.vaadin.client.BrowserInfo::get()().@com.vaadin.client.BrowserInfo::isIE()() || @com.vaadin.client.BrowserInfo::get()().@com.vaadin.client.BrowserInfo::isEdge()();
-        var IE8 = @com.vaadin.client.BrowserInfo::get()().@com.vaadin.client.BrowserInfo::isIE8()();
 
         try {
             if (sheet.cssRules) {
@@ -219,18 +216,6 @@ public class ResponsiveConnector extends AbstractExtensionConnector
             @ResponsiveConnector::warning(*)("Can't process styles from " + sheet.href +
                 ", probably because of cross domain issues: " + e);
             return;
-        }
-
-        // Special import handling for IE8
-        if (IE8) {
-            try {
-                for(var i = 0, len = sheet.imports.length; i < len; i++) {
-                    @com.vaadin.client.extensions.ResponsiveConnector::searchStylesheetForBreakPoints(Lcom/google/gwt/core/client/JavaScriptObject;)(sheet.imports[i]);
-                }
-            } catch(e) {
-                // This is added due to IE8 failing to handle imports of some sheets for unknown reason (throws a permission denied exception)
-                @com.vaadin.client.extensions.ResponsiveConnector::error(Ljava/lang/String;)("Failed to handle imports of CSS style sheet: " + sheet.href);
-            }
         }
 
         // Loop through the rulesets
@@ -353,8 +338,6 @@ public class ResponsiveConnector extends AbstractExtensionConnector
         int width = layoutManager.getOuterWidth(element);
         int height = layoutManager.getOuterHeight(element);
 
-        boolean forceRedraw = false;
-
         String oldWidthRanges = currentWidthRanges;
         String oldHeightRanges = currentHeightRanges;
 
@@ -363,7 +346,6 @@ public class ResponsiveConnector extends AbstractExtensionConnector
 
         if (!"".equals(currentWidthRanges)) {
             element.setAttribute("width-range", currentWidthRanges);
-            forceRedraw = true;
         } else {
             element.removeAttribute("width-range");
         }
@@ -373,13 +355,8 @@ public class ResponsiveConnector extends AbstractExtensionConnector
 
         if (!"".equals(currentHeightRanges)) {
             element.setAttribute("height-range", currentHeightRanges);
-            forceRedraw = true;
         } else {
             element.removeAttribute("height-range");
-        }
-
-        if (forceRedraw) {
-            forceRedrawIfIE8(element);
         }
 
         // If a new breakpoint is triggered, ensure all sizes are updated in
@@ -388,21 +365,6 @@ public class ResponsiveConnector extends AbstractExtensionConnector
                 || !currentHeightRanges.equals(oldHeightRanges)) {
             layoutManager.setNeedsMeasureRecursively(
                     ResponsiveConnector.this.target);
-        }
-    }
-
-    /**
-     * Forces IE8 to reinterpret CSS rules.
-     * {@link com.vaadin.client.WidgetUtil#forceIE8Redraw(com.google.gwt.dom.client.Element)}
-     * doesn't work in this case.
-     *
-     * @param element
-     *            the element to redraw
-     */
-    private void forceRedrawIfIE8(Element element) {
-        if (BrowserInfo.get().isIE8()) {
-            element.addClassName("foo");
-            element.removeClassName("foo");
         }
     }
 
@@ -447,3 +409,4 @@ public class ResponsiveConnector extends AbstractExtensionConnector
     }-*/;
 
 }
+

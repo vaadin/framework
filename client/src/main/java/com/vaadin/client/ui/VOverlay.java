@@ -21,9 +21,7 @@ import java.util.logging.Logger;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
@@ -44,7 +42,7 @@ import com.vaadin.client.widgets.Overlay;
  *             directly.
  */
 @Deprecated
-public class VOverlay extends Overlay implements CloseHandler<PopupPanel> {
+public class VOverlay extends Overlay {
 
     /*
      * ApplicationConnection that this overlay belongs to, which is needed to
@@ -65,15 +63,6 @@ public class VOverlay extends Overlay implements CloseHandler<PopupPanel> {
 
     public VOverlay(boolean autoHide, boolean modal) {
         super(autoHide, modal);
-    }
-
-    /**
-     * @deprecated See main JavaDoc for VOverlay. Use the other constructors
-     *             without the <code>showShadow</code> parameter.
-     */
-    @Deprecated
-    public VOverlay(boolean autoHide, boolean modal, boolean showShadow) {
-        super(autoHide, modal, showShadow);
     }
 
     /*

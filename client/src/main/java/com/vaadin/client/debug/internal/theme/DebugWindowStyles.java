@@ -27,7 +27,7 @@ public interface DebugWindowStyles extends ClientBundle {
     @NotStrict
     public CssResource css();
 
-    // Can't embed because IE8 doesn't support datauri for fonts (images only)
+    // Could embed
     @Source("font.eot")
     @DoNotEmbed
     DataResource iconFontEot();

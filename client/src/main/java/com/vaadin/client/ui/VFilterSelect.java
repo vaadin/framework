@@ -31,7 +31,6 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
@@ -348,7 +347,7 @@ public class VFilterSelect extends Composite
          * Default constructor
          */
         SuggestionPopup() {
-            super(true, false, true);
+            super(true, false);
             debug("VFS.SP: constructor()");
             setOwner(VFilterSelect.this);
             menu = new SuggestionMenu();
@@ -469,15 +468,6 @@ public class VFilterSelect extends Composite
                             .clearWidth();
 
                     setPopupPositionAndShow(popup);
-                    // Fix for #14173
-                    // IE9 and IE10 have a bug, when resize an a element with
-                    // box-shadow.
-                    // IE9 and IE10 need explicit update to remove extra
-                    // box-shadows
-                    if (BrowserInfo.get().isIE9()
-                            || BrowserInfo.get().isIE10()) {
-                        forceReflow();
-                    }
                 }
             });
         }
@@ -857,10 +847,6 @@ public class VFilterSelect extends Composite
                     menu.setWidth(Window.getClientWidth() + "px");
 
                 }
-                if (BrowserInfo.get().isIE()
-                        && BrowserInfo.get().getBrowserMajorVersion() < 10) {
-                    setTdWidth(menu.getElement(), Window.getClientWidth() - 8);
-                }
             }
 
             setPopupPosition(left, top);
@@ -904,44 +890,6 @@ public class VFilterSelect extends Composite
                 width = WidgetUtil.escapeAttribute(suggestionPopupWidth);
             }
             menu.setWidth(width);
-
-            // IE8 or 9?
-            if (BrowserInfo.get().isIE()
-                    && BrowserInfo.get().getBrowserMajorVersion() < 10) {
-                // using legacy mode?
-                if (suggestionPopupWidth == null) {
-                    // set the TD widths manually as these browsers do not
-                    // respect display: block; width:100% rules
-                    setTdWidth(menu.getElement(), naturalMenuWidth);
-                } else {
-                    int compensation = WidgetUtil
-                            .measureHorizontalPaddingAndBorder(
-                                    menu.getElement(), 4);
-                    setTdWidth(menu.getElement(),
-                            menu.getOffsetWidth() - compensation);
-                }
-
-            }
-        }
-
-        /**
-         * Descends to child elements until finds TD elements and sets their
-         * width in pixels. Can be used to workaround IE8 & 9 TD element
-         * display: block issues
-         *
-         * @param parent
-         * @param width
-         */
-        private void setTdWidth(Node parent, int width) {
-            for (int i = 0; i < parent.getChildCount(); i++) {
-                Node child = parent.getChild(i);
-                if ("td".equals(child.getNodeName().toLowerCase())) {
-                    ((Element) child).getStyle().setWidth(width, Unit.PX);
-                } else {
-                    setTdWidth(child, width);
-                }
-
-            }
         }
 
         /**
@@ -1118,13 +1066,6 @@ public class VFilterSelect extends Composite
                 }
 
                 isFirstIteration = false;
-            }
-            if (suggestionPopupWidth != null && BrowserInfo.get().isIE()
-                    && BrowserInfo.get().getBrowserMajorVersion() < 10) {
-                // set TD width to a low value so that they won't mandate the
-                // suggestion pop-up width
-                suggestionPopup.setTdWidth(suggestionPopup.menu.getElement(),
-                        1);
             }
         }
 
@@ -2058,7 +1999,7 @@ public class VFilterSelect extends Composite
     }
 
     private void afterSelectedItemIconChange() {
-        if (BrowserInfo.get().isWebkit() || BrowserInfo.get().isIE8()) {
+        if (BrowserInfo.get().isWebkit()) {
             // Some browsers need a nudge to reposition the text field
             forceReflow();
         }

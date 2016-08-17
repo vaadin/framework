@@ -670,22 +670,6 @@ public class Util {
     }
 
     /**
-     * Performs a hack to trigger a re-layout in the IE8. This is usually
-     * necessary in cases where IE8 "forgets" to update child elements when they
-     * resize.
-     *
-     * @deprecated As of 7.4.0, use {@link WidgetUtil#forceIE8Redraw(Element)}
-     *             instead.
-     *
-     * @param e
-     *            The element to perform the hack on
-     */
-    @Deprecated
-    public static final void forceIE8Redraw(Element e) {
-        WidgetUtil.forceIE8Redraw(e);
-    }
-
-    /**
      * Performs a hack to trigger a re-layout in the IE browser. This is usually
      * necessary in cases where IE "forgets" to update child elements when they
      * resize.
@@ -1276,3 +1260,4 @@ public class Util {
         return Logger.getLogger(Util.class.getName());
     }
 }
+

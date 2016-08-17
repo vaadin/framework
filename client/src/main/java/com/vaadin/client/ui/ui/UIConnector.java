@@ -30,7 +30,6 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.dom.client.StyleElement;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -51,7 +50,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.Focusable;
@@ -486,17 +484,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     public void init(String rootPanelId,
             ApplicationConnection applicationConnection) {
-        // Create a style tag for style injections so they don't end up in
-        // the theme tag in IE8-IE10 (we don't want to wipe them out if we
-        // change theme).
-        // StyleInjectorImplIE always injects to the last style tag on the page.
-        if (BrowserInfo.get().isIE()
-                && BrowserInfo.get().getBrowserMajorVersion() < 11) {
-            StyleElement style = Document.get().createStyleElement();
-            style.setType("text/css");
-            getHead().appendChild(style);
-        }
-
         Widget shortcutContextWidget = getWidget();
         if (applicationConnection.getConfiguration().isStandalone()) {
             // Listen to body for standalone apps (#19392)
@@ -611,7 +598,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
          * height. Assuming v-ui does not have an undefined width for now, see
          * #8460.
          */
-        if (child.isRelativeHeight() && !BrowserInfo.get().isIE9()) {
+        if (child.isRelativeHeight()) {
             childStyle.setPosition(Position.ABSOLUTE);
         } else {
             childStyle.clearPosition();
