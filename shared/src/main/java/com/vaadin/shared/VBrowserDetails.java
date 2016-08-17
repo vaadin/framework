@@ -559,17 +559,14 @@ public class VBrowserDetails implements Serializable {
 
     /**
      * Checks if the browser is so old that it simply won't work with a Vaadin
-     * application. NOTE that the browser might still be capable of running
-     * Crome Frame, so you might still want to check
-     * {@link #isChromeFrameCapable()} if this returns true.
+     * application.
      *
      * @return true if the browser won't work, false if not the browser is
      *         supported or might work
      */
     public boolean isTooOldToFunctionProperly() {
         // Check Trident version to detect compatibility mode
-        if (isIE() && getBrowserMajorVersion() < 8
-                && getBrowserEngineVersion() < 4) {
+        if (isIE() && getBrowserMajorVersion() < 11) {
             return true;
         }
         // Webkit 533 in Safari 4.1+, Android 2.2+, iOS 4+
