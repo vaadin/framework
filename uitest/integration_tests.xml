@@ -131,7 +131,7 @@
     <target name="integration-test-osgi">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
-            <param name="target-server" value="osgi" />
+            <param name="target-server" value="karaf4" />
         </antcall>
     </target>
 
