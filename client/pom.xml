@@ -19,18 +19,18 @@
 		<!-- LIBRARY DEPENDENCIES (compile time) -->
 		<!-- Project modules -->
 		<dependency>
-			<groupId>com.vaadin</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>vaadin-shared</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.vaadin</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>vaadin-server</artifactId>
 			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
-					<groupId>com.vaadin</groupId>
+					<groupId>${project.groupId}</groupId>
 					<artifactId>vaadin-sass-compiler</artifactId>
 				</exclusion>
 			</exclusions>
@@ -40,14 +40,12 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
-			<version>3.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -55,7 +53,6 @@
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-elemental</artifactId>
-			<version>${vaadin.gwt.version}</version>
 		</dependency>
 	</dependencies>
 

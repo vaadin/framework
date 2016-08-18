@@ -22,12 +22,10 @@
 		<dependency>
 			<groupId>com.vaadin.external.atmosphere</groupId>
 			<artifactId>atmosphere-runtime</artifactId>
-			<version>${atmosphere.runtime.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin.external.atmosphere.client</groupId>
 			<artifactId>javascript</artifactId>
-			<version>${atmosphere.js.version}</version>
 			<type>war</type>
 			<scope>provided</scope>
 		</dependency>

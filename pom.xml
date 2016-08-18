@@ -7,7 +7,6 @@
 		<artifactId>vaadin-parent</artifactId>
 		<version>1.0.0</version>
 	</parent>
-	<groupId>com.vaadin</groupId>
 	<artifactId>vaadin-root</artifactId>
 	<name>vaadin-root</name>
 	<packaging>pom</packaging>
@@ -23,31 +22,16 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- Used version numbers for dependencies -->
-		<commons-io.version>2.4</commons-io.version>
-		<google.appengine.version>1.7.7</google.appengine.version>
-		<jsoup.version>1.8.3</jsoup.version>
 		<liferay.portal.version>6.0.2</liferay.portal.version>
+		<jetty.version>9.3.9.v20160517</jetty.version>
 
-		<vaadin.sass.version>0.9.13</vaadin.sass.version>
 		<vaadin.gwt.version>2.8.0-rc2</vaadin.gwt.version>
 		<vaadin.plugin.version>8.0-SNAPSHOT</vaadin.plugin.version>
-
-		<javax.portlet.version>2.0</javax.portlet.version>
-		<javax.servlet.version>3.0.1</javax.servlet.version>
-		<javax.validation.version>1.0.0.GA</javax.validation.version>
 
 		<!-- OSGi -->
 		<osgi.javax.servlet.version>3.0.0</osgi.javax.servlet.version>
 		<osgi.execution.environment>JavaSE-1.8</osgi.execution.environment>
 		<osgi.bundle.version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</osgi.bundle.version>
-
-		<!-- Test dependencies -->
-		<junit.version>4.11</junit.version>
-
-		<!-- Atmosphere versions -->
-		<!-- Note that this should be kept in sync with the class Constants -->
-		<atmosphere.runtime.version>2.4.5.vaadin1</atmosphere.runtime.version>
-		<atmosphere.js.version>2.3.2.vaadin1</atmosphere.js.version>
 
 		<!-- Dependency unpack directory -->
 		<dependency.unpack.directory>${project.build.directory}/dependency-unpack</dependency.unpack.directory>
@@ -108,6 +92,173 @@
 		<module>bom</module>
 	</modules>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.4</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-cli</groupId>
+				<artifactId>commons-cli</artifactId>
+				<version>1.2</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>2.6</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>1.5</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>1.6.1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.vaadin</groupId>
+				<artifactId>vaadin-sass-compiler</artifactId>
+				<version>0.9.13</version>
+			</dependency>
+			<dependency>
+				<groupId>com.carrotsearch</groupId>
+				<artifactId>smartsprites</artifactId>
+				<version>0.2.10</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt-dev</artifactId>
+				<version>${vaadin.gwt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt-elemental</artifactId>
+				<version>${vaadin.gwt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt-servlet</artifactId>
+				<version>${vaadin.gwt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.vaadin.external.atmosphere</groupId>
+				<artifactId>atmosphere-runtime</artifactId>
+				<!-- Note that this should be kept in sync with the class Constants -->
+				<version>2.4.5.vaadin1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.vaadin.external.atmosphere.client</groupId>
+				<artifactId>javascript</artifactId>
+				<type>war</type>
+				<version>2.3.2.vaadin1</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.11</version>
+			</dependency>
+			<dependency>
+				<groupId>org.easymock</groupId>
+				<artifactId>easymock</artifactId>
+				<version>3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>3.0.1</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.portlet</groupId>
+				<artifactId>portlet-api</artifactId>
+				<version>2.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.appengine</groupId>
+				<artifactId>appengine-api-1.0-sdk</artifactId>
+				<version>1.7.7</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.validation</groupId>
+				<artifactId>validation-api</artifactId>
+				<version>1.0.0.GA</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>4.2.0.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jsoup</groupId>
+				<artifactId>jsoup</artifactId>
+				<version>1.8.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>1.9.5</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hamcrest</groupId>
+				<artifactId>hamcrest-all</artifactId>
+				<version>1.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hsqldb</groupId>
+				<artifactId>hsqldb</artifactId>
+				<version>2.2.6</version>
+			</dependency>
+			<dependency>
+				<groupId>com.vaadin</groupId>
+				<artifactId>vaadin-testbench</artifactId>
+				<version>4.0.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-server</artifactId>
+				<version>${jetty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-servlets</artifactId>
+				<version>${jetty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty.websocket</groupId>
+				<artifactId>websocket-server</artifactId>
+				<version>${jetty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-webapp</artifactId>
+				<version>${jetty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-util</artifactId>
+				<version>${jetty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-proxy</artifactId>
+				<version>${jetty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.jcraft</groupId>
+				<artifactId>jsch</artifactId>
+				<version>0.1.52</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jgit</groupId>
+				<artifactId>org.eclipse.jgit</artifactId>
+				<version>3.5.1.201410131835-r</version>
+			</dependency>
+		</dependencies>
+
+	</dependencyManagement>
 	<build>
 		<pluginManagement>
 			<plugins>

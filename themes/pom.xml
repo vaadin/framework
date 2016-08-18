@@ -33,22 +33,12 @@
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-sass-compiler</artifactId>
-			<version>${vaadin.sass.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- remove cssparser override once sass-compiler is updated -->
-		<dependency>
-			<groupId>net.sourceforge.cssparser</groupId>
-			<artifactId>cssparser</artifactId>
-			<version>0.9.11</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.carrotsearch</groupId>
 			<artifactId>smartsprites</artifactId>
-			<version>0.2.10</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

@@ -11,7 +11,6 @@
 	<name>vaadin-uitest</name>
 	<packaging>war</packaging>
 	<properties>
-		<jetty.version>9.3.9.v20160517</jetty.version>
 		<skip.uitest.deployment>true</skip.uitest.deployment>
 	</properties>
 
@@ -31,26 +30,22 @@
 		<dependency>
 			<groupId>javax.portlet</groupId>
 			<artifactId>portlet-api</artifactId>
-			<version>2.0</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
-			<version>1.0.0.GA</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>4.2.0.Final</version>
 		</dependency>
 		<!-- Google App Engine -->
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-1.0-sdk</artifactId>
-			<version>1.7.7</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -59,19 +54,16 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>${jetty.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlets</artifactId>
-			<version>${jetty.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty.websocket</groupId>
 			<artifactId>websocket-server</artifactId>
-			<version>${jetty.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -96,7 +88,7 @@
 		<!-- LIBRARY DEPENDENCIES (compile time) -->
 		<!-- Project modules -->
 		<dependency>
-			<groupId>com.vaadin</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>vaadin-server</artifactId>
 			<version>${project.version}</version>
 			<exclusions>
@@ -108,7 +100,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.vaadin</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>vaadin-client</artifactId>
 			<version>${project.version}</version>
 			<exclusions>
@@ -122,27 +114,25 @@
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-elemental</artifactId>
-			<version>${vaadin.gwt.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
-			<version>${vaadin.gwt.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.vaadin</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>vaadin-client-compiled</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.vaadin</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>vaadin-themes</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.vaadin</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>vaadin-push</artifactId>
 			<version>${project.version}</version>
 			<exclusions>
@@ -155,22 +145,21 @@
 
 		<!-- For compiling TestingWidgetSet -->
 		<dependency>
-			<groupId>com.vaadin</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>vaadin-client-compiler</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Servlet 3.0 API -->
+		<!-- Servlet API -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>com.vaadin</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>vaadin-uitest-common</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
@@ -179,52 +168,43 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
-			<version>1.3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
-			<version>0.1.52</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.5</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>${commons-io.version}</version>
 		</dependency>
 		<!-- Mainly for SQLContainer tests -->
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
-			<version>2.2.6</version>
 		</dependency>
 		<!-- This should be removed once tests have been updated to use lang3 -->
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
-			<version>2.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-sass-compiler</artifactId>
-			<version>${vaadin.sass.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jgit</groupId>
 			<artifactId>org.eclipse.jgit</artifactId>
-			<version>3.5.1.201410131835-r</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.httpcomponents</groupId>
