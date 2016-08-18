@@ -5,7 +5,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.ui.Tree;
 
 public class TreeItemDoubleClick extends AbstractTestUIWithLog {
 

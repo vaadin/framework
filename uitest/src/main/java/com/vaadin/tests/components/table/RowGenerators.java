@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.GeneratedRow;
-import com.vaadin.ui.Table.RowGenerator;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.GeneratedRow;
+import com.vaadin.v7.ui.Table.RowGenerator;
 
 public class RowGenerators extends TestBase implements RowGenerator {
 

@@ -24,11 +24,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridClientColumnPropertiesTest
         extends GridBasicClientFeaturesTest {

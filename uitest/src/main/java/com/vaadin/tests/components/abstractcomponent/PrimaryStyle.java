@@ -20,7 +20,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class PrimaryStyle extends AbstractTestUI {
 
@@ -37,7 +37,7 @@ public class PrimaryStyle extends AbstractTestUI {
         button.setStyleName("state");
         addComponent(button);
 
-        final LegacyTextField tf = new LegacyTextField("Test TextField");
+        final TextField tf = new TextField("Test TextField");
         tf.setPrimaryStyleName("initial");
         tf.setStyleName("state");
         addComponent(tf);

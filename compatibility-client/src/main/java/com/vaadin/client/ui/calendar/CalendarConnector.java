@@ -72,7 +72,7 @@ import com.vaadin.shared.ui.calendar.CalendarEventId;
 import com.vaadin.shared.ui.calendar.CalendarServerRpc;
 import com.vaadin.shared.ui.calendar.CalendarState;
 import com.vaadin.shared.ui.calendar.DateConstants;
-import com.vaadin.ui.Calendar;
+import com.vaadin.v7.ui.Calendar;
 
 /**
  * Handles communication between Calendar on the server side and

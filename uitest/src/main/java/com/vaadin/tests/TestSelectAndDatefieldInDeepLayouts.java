@@ -25,8 +25,8 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Select;
 
 /**
  * This test has a somewhat deep layout within one page. At the bottom, Select

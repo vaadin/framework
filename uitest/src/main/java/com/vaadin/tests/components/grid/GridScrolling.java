@@ -15,8 +15,6 @@
  */
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -24,13 +22,15 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Grid;
 
 @SuppressWarnings("serial")
 public class GridScrolling extends AbstractTestUI {
 
-    private LegacyGrid grid;
+    private Grid grid;
 
     private IndexedContainer ds;
 
@@ -52,7 +52,7 @@ public class GridScrolling extends AbstractTestUI {
             }
         }
 
-        grid = new LegacyGrid(ds);
+        grid = new Grid(ds);
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.addComponent(grid);

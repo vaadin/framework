@@ -19,8 +19,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.VaadinRequest;
@@ -30,11 +28,13 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.DetailsGenerator;
-import com.vaadin.ui.LegacyGrid.RowReference;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.DetailsGenerator;
+import com.vaadin.v7.ui.Grid.RowReference;
+import com.vaadin.v7.ui.OptionGroup;
 
 /**
  * Tests that Grid gets correct height based on height mode, and resizes
@@ -53,14 +53,14 @@ public class GridHeight extends AbstractTestUI {
     static final String[] gridWidths = { FULL, UNDEFINED };
     static final String[] detailsRowHeights = { FULL, UNDEFINED, PX100 };
 
-    private LegacyGrid grid;
+    private Grid grid;
     private Map<Object, VerticalLayout> detailsLayouts = new HashMap<Object, VerticalLayout>();
     private OptionGroup detailsHeightSelector;
 
     @Override
     protected void setup(VaadinRequest request) {
 
-        grid = new LegacyGrid();
+        grid = new Grid();
         grid.addColumn("name", String.class);
         grid.addColumn("born", Integer.class);
 

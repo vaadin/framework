@@ -30,7 +30,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
-import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.Converter;
 
 /**
  * A converter for {@link Resource} implementations supported by
@@ -41,12 +41,12 @@ import com.vaadin.v7.data.util.converter.LegacyConverter;
  */
 @SuppressWarnings("serial")
 public class DesignResourceConverter
-        implements LegacyConverter<String, Resource> {
+        implements Converter<String, Resource> {
 
     @Override
     public Resource convertToModel(String value,
             Class<? extends Resource> targetType, Locale locale)
-            throws LegacyConverter.ConversionException {
+            throws Converter.ConversionException {
         if (!value.contains("://")) {
             // assume it'is "file://" protocol, one that is used to access a
             // file on a given path on the server, this will later be striped
@@ -68,13 +68,13 @@ public class DesignResourceConverter
     @Override
     public String convertToPresentation(Resource value,
             Class<? extends String> targetType, Locale locale)
-            throws LegacyConverter.ConversionException {
+            throws Converter.ConversionException {
         ResourceConverterByProtocol byType = ResourceConverterByProtocol
                 .byType(value.getClass());
         if (byType != null) {
             return byType.format(value);
         } else {
-            throw new LegacyConverter.ConversionException(
+            throw new Converter.ConversionException(
                     "unknown Resource type - " + value.getClass().getName());
         }
     }
@@ -109,7 +109,7 @@ public class DesignResourceConverter
 
             @Override
             public String format(Resource value)
-                    throws LegacyConverter.ConversionException {
+                    throws Converter.ConversionException {
                 return new ResourceReference(value, null, null).getURL();
             }
         },
@@ -139,7 +139,7 @@ public class DesignResourceConverter
 
             @Override
             public String format(Resource value)
-                    throws LegacyConverter.ConversionException {
+                    throws Converter.ConversionException {
                 FontIcon icon = (FontIcon) value;
                 return new ResourceReference(icon, null, null).getURL();
 
@@ -163,7 +163,7 @@ public class DesignResourceConverter
 
             @Override
             public String format(Resource value)
-                    throws LegacyConverter.ConversionException {
+                    throws Converter.ConversionException {
                 throw new UnsupportedOperationException(
                         "Use " + ResourceConverterByProtocol.FONTICON.toString()
                                 + " instead");
@@ -177,7 +177,7 @@ public class DesignResourceConverter
 
             @Override
             public String format(Resource value)
-                    throws LegacyConverter.ConversionException {
+                    throws Converter.ConversionException {
                 String path = ((FileResource) value).getSourceFile().getPath();
                 if (File.separatorChar != '/') {
                     // make sure we use '/' as file separator in templates
@@ -197,7 +197,7 @@ public class DesignResourceConverter
 
         @Override
         public String format(Resource value)
-                throws LegacyConverter.ConversionException {
+                throws Converter.ConversionException {
             // default behavior for HTTP, HTTPS, FTP and FTPS
             return ((ExternalResource) value).getURL();
         }

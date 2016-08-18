@@ -20,9 +20,9 @@ import java.util.Locale;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.Tree;
 
 public class EnumSelect extends AbstractTestUIWithLog {
 

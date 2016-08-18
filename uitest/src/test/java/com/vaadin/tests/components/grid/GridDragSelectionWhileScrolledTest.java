@@ -24,9 +24,10 @@ import org.junit.Test;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridDragSelectionWhileScrolledTest extends MultiBrowserTest {
@@ -41,7 +42,7 @@ public class GridDragSelectionWhileScrolledTest extends MultiBrowserTest {
         openTestURL();
 
         // Scroll grid to view
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         ((JavascriptExecutor) getDriver())
                 .executeScript("arguments[0].scrollIntoView(true);", grid);
 

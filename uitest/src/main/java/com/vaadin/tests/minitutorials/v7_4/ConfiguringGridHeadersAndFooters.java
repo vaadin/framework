@@ -18,17 +18,17 @@ package com.vaadin.tests.minitutorials.v7_4;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.FooterCell;
-import com.vaadin.ui.LegacyGrid.HeaderCell;
-import com.vaadin.ui.LegacyGrid.HeaderRow;
 import com.vaadin.ui.UI;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.FooterCell;
+import com.vaadin.v7.ui.Grid.HeaderCell;
+import com.vaadin.v7.ui.Grid.HeaderRow;
 
 @Theme("valo")
 public class ConfiguringGridHeadersAndFooters extends UI {
     @Override
     protected void init(VaadinRequest request) {
-        LegacyGrid grid = new LegacyGrid(GridExampleHelper.createContainer());
+        Grid grid = new Grid(GridExampleHelper.createContainer());
         grid.setColumnOrder("name", "amount", "count");
 
         grid.getDefaultHeaderRow().getCell("amount")

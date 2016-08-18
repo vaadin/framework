@@ -15,15 +15,15 @@
  */
 package com.vaadin.tests.components.textfield;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Test to verify fields become implicitly "immediate" when adding value change
@@ -60,7 +60,7 @@ public class AutomaticImmediate extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
 
-        final LegacyTextField textField = new LegacyTextField() {
+        final TextField textField = new TextField() {
 
             /*
              * (non-Javadoc)

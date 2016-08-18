@@ -25,6 +25,7 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridScrollToLineWhileResizingTest extends MultiBrowserTest {
@@ -33,7 +34,7 @@ public class GridScrollToLineWhileResizingTest extends MultiBrowserTest {
     public void testScrollToLineWorksWhileMovingSplitProgrammatically() {
         openTestURL();
 
-        $(LegacyGridElement.class).first().getCell(21, 0).click();
+        $(GridElement.class).first().getCell(21, 0).click();
 
         List<WebElement> cells = findElements(By.className("v-grid-cell"));
         boolean foundCell21 = false;

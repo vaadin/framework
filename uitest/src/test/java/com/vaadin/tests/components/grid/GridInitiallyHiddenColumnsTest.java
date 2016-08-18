@@ -22,9 +22,10 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridInitiallyHiddenColumnsTest extends SingleBrowserTest {
@@ -32,7 +33,7 @@ public class GridInitiallyHiddenColumnsTest extends SingleBrowserTest {
     @Test
     public void ensureCorrectlyRendered() {
         openTestURL("debug");
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         Assert.assertEquals("Rowling", grid.getCell(0, 0).getText());
         Assert.assertEquals("Scott", grid.getCell(1, 0).getText());
 

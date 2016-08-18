@@ -18,11 +18,11 @@ package com.vaadin.tests.components.panel;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.TextField;
 
 public class UndefinedSizeScrollbars extends AbstractTestUI {
 
@@ -36,11 +36,11 @@ public class UndefinedSizeScrollbars extends AbstractTestUI {
         GridLayout grid = new GridLayout();
         grid.setSpacing(true);
 
-        LegacyTextField text1 = new LegacyTextField();
+        TextField text1 = new TextField();
         text1.setCaption("Text1");
         text1.setRequired(true);
 
-        LegacyTextField text2 = new LegacyTextField();
+        TextField text2 = new TextField();
         text2.setCaption("Text2");
         text2.setRequired(true);
 

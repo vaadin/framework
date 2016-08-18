@@ -15,13 +15,13 @@
  */
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
 
 /**
  * Test UI Class for testing memory leak in table (#14159).

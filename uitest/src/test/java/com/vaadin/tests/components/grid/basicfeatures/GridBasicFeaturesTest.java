@@ -30,8 +30,8 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
-import com.vaadin.tests.components.grid.basicfeatures.element.CustomGridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
@@ -50,9 +50,9 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         return GridBasicFeatures.class;
     }
 
-    protected CustomGridElement getGridElement() {
+    protected GridElement getGridElement() {
         return ((TestBenchElement) findElement(By.id("testComponent")))
-                .wrap(CustomGridElement.class);
+                .wrap(GridElement.class);
     }
 
     protected void scrollGridVerticallyTo(double px) {

@@ -26,12 +26,12 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGridServerRpc;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGridState;
-import com.vaadin.ui.components.colorpicker.ColorPickerGrid;
+import com.vaadin.v7.ui.components.colorpicker.ColorPickerGrid;
 
 /**
  * A class that defines the default implementation for a color picker grid
  * connector. Connects the server side
- * {@link com.vaadin.ui.components.colorpicker.ColorPickerGrid} with the client
+ * {@link com.vaadin.v7.ui.components.colorpicker.ColorPickerGrid} with the client
  * side counterpart {@link VColorPickerGrid}
  *
  * @since 7.0.0

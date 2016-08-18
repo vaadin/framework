@@ -19,9 +19,10 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridSortIndicatorTest extends MultiBrowserTest {
@@ -29,7 +30,7 @@ public class GridSortIndicatorTest extends MultiBrowserTest {
     @Test
     public void testIndicators() throws InterruptedException {
         openTestURL();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         // Clicking the left header cell should set ascending sort order for
         // both columns.
         grid.getHeaderCell(0, 0).click();

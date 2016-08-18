@@ -2,8 +2,8 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.CellStyleGenerator;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.CellStyleGenerator;
 
 @SuppressWarnings("serial")
 public class CellStyleGeneratorTest extends TestBase {

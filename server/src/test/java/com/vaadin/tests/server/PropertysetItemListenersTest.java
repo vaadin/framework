@@ -1,9 +1,9 @@
 package com.vaadin.tests.server;
 
-import com.vaadin.data.Item.PropertySetChangeEvent;
-import com.vaadin.data.Item.PropertySetChangeListener;
-import com.vaadin.data.util.PropertysetItem;
 import com.vaadin.tests.server.component.AbstractListenerMethodsTestBase;
+import com.vaadin.v7.data.Item.PropertySetChangeEvent;
+import com.vaadin.v7.data.Item.PropertySetChangeListener;
+import com.vaadin.v7.data.util.PropertysetItem;
 
 public class PropertysetItemListenersTest
         extends AbstractListenerMethodsTestBase {

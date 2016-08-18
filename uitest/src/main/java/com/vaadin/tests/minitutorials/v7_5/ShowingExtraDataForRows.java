@@ -26,17 +26,17 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.DetailsGenerator;
-import com.vaadin.ui.LegacyGrid.RowReference;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.DetailsGenerator;
+import com.vaadin.v7.ui.Grid.RowReference;
 
 public class ShowingExtraDataForRows extends UI {
     @Override
     protected void init(VaadinRequest request) {
-        final LegacyGrid grid = new LegacyGrid();
+        final Grid grid = new Grid();
         grid.setContainerDataSource(GridExampleHelper.createContainer());
 
         grid.setDetailsGenerator(new DetailsGenerator() {

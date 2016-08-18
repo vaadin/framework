@@ -6,9 +6,9 @@ import javax.validation.constraints.NotNull;
 import com.vaadin.annotations.Viewport;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.data.util.converter.LegacyStringToIntegerConverter;
-import com.vaadin.v7.data.validator.LegacyIntegerRangeValidator;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.util.converter.StringToIntegerConverter;
+import com.vaadin.v7.data.validator.IntegerRangeValidator;
+import com.vaadin.v7.ui.TextField;
 
 @Viewport(value = "width=device-width,height=device-height")
 public class TouchDevicesTooltip extends AbstractTestUI {
@@ -24,10 +24,10 @@ public class TouchDevicesTooltip extends AbstractTestUI {
     }
 
     private void createTextField(int n) {
-        LegacyTextField textField = new LegacyTextField("Value" + n);
-        textField.setConverter(new LegacyStringToIntegerConverter());
+        TextField textField = new TextField("Value" + n);
+        textField.setConverter(new StringToIntegerConverter());
         textField.addValidator(
-                new LegacyIntegerRangeValidator(getErrorMessage(n), 0, 100));
+                new IntegerRangeValidator(getErrorMessage(n), 0, 100));
         textField.setImmediate(true);
         textField.setValue("-5");
         addComponent(textField);

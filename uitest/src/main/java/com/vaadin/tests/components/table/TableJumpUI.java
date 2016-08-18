@@ -16,7 +16,6 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
@@ -25,9 +24,10 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Test for ensuring page doesn't jump up to the Table selection on IE with
@@ -68,7 +68,7 @@ public class TableJumpUI extends AbstractTestUIWithLog {
         // After the table we have a lot of textfields so that we have to scroll
         // down to the button
         for (int i = 0; i < 40; i++) {
-            LegacyTextField tf = new LegacyTextField();
+            TextField tf = new TextField();
             tf.setValue(String.valueOf(i));
             final int j = i;
             tf.addFocusListener(new FocusListener() {

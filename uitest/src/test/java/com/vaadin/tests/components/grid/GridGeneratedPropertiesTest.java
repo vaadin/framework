@@ -21,11 +21,12 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridGeneratedPropertiesTest extends MultiBrowserTest {
@@ -33,7 +34,7 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
     @Test
     public void testMilesColumnExists() {
         openTestURL();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         assertEquals("Miles header wasn't present.", "miles",
                 grid.getHeaderCell(0, 2).getText().toLowerCase());
     }
@@ -41,7 +42,7 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
     @Test
     public void testUnsortableGeneratedProperty() {
         openTestURL();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         // Overwritten foo property should not be sortable
         GridCellElement fooHeader = grid.getHeaderCell(0, 0);
@@ -59,7 +60,7 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
     @Test
     public void testSortableGeneratedProperty() {
         openTestURL();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         // Generated property baz is sortable
         GridCellElement bazHeader = grid.getHeaderCell(0, 3);
@@ -78,7 +79,7 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         GridCellElement kmHeader = grid.getHeaderCell(0, 1);
         assertFalse("Column km was unexpectedly sorted",

@@ -16,21 +16,21 @@
 package com.vaadin.tests.declarative;
 
 import com.vaadin.annotations.DesignRoot;
-import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.fieldgroup.PropertyId;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.TextField;
 
 @DesignRoot
 public class PotusForm extends VerticalLayout {
 
     @PropertyId("firstName")
-    public LegacyTextField firstName;
+    public TextField firstName;
     @PropertyId("lastName")
-    public LegacyTextField lastName;
+    public TextField lastName;
     @PropertyId("party")
     public ComboBox party;
     @PropertyId("tookOffice")

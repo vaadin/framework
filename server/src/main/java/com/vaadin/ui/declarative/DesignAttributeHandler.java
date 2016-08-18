@@ -39,7 +39,7 @@ import org.jsoup.nodes.Node;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Alignment;
-import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.Converter;
 
 /**
  * Default attribute handler implementation used when parsing designs to
@@ -379,7 +379,7 @@ public class DesignAttributeHandler implements Serializable {
             // value is not null. How to represent null value in attributes?
             return "";
         }
-        LegacyConverter<String, Object> converter = getFormatter()
+        Converter<String, Object> converter = getFormatter()
                 .findConverterFor(sourceType);
         if (converter != null) {
             return converter.convertToPresentation(value, String.class, null);

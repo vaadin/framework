@@ -15,14 +15,14 @@
  */
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Person;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Grid;
 
 public class GridItemSetChange extends AbstractTestUI {
 
@@ -46,7 +46,7 @@ public class GridItemSetChange extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         final SneakyBeanContainer c = new SneakyBeanContainer();
-        LegacyGrid g = new LegacyGrid(c);
+        Grid g = new Grid(c);
         g.setColumns("firstName", "lastName");
         addComponent(g);
         addComponent(new Button("Reset", new ClickListener() {

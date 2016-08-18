@@ -23,8 +23,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.TextArea;
 
 /**
  * UI test for TextArea behavior when ENTER has been assigned as a keyboard

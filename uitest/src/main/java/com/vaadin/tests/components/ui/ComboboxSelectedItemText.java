@@ -2,8 +2,8 @@ package com.vaadin.tests.components.ui;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.ComboBox;
 
 public class ComboboxSelectedItemText extends AbstractTestUIWithLog {
     @Override

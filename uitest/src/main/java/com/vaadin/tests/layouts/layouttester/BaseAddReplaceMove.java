@@ -24,8 +24,8 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 /**
  *
@@ -78,7 +78,7 @@ public class BaseAddReplaceMove extends BaseLayoutTestUI {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                l2.addComponent(new LegacyTextField());
+                l2.addComponent(new TextField());
             }
         });
         btnReplace.addClickListener(new ClickListener() {

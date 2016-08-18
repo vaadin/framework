@@ -19,14 +19,14 @@ package com.vaadin.tests;
 import java.util.LinkedList;
 import java.util.Random;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.Select;
 
 public class UsingObjectsInSelect extends com.vaadin.server.LegacyApplication
         implements ValueChangeListener {

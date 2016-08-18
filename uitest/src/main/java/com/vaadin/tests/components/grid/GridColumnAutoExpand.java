@@ -17,9 +17,9 @@ package com.vaadin.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.Column;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.Column;
 
 public class GridColumnAutoExpand extends AbstractTestUI {
 
@@ -30,7 +30,7 @@ public class GridColumnAutoExpand extends AbstractTestUI {
         layout.setMargin(true);
         addComponent(layout);
 
-        LegacyGrid grid = new LegacyGrid("Broken Grid with Caption");
+        Grid grid = new Grid("Broken Grid with Caption");
         grid.setWidth("100%");
         grid.setHeight("100px");
 

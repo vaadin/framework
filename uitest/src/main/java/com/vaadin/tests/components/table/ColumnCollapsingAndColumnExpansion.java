@@ -8,9 +8,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnCollapseEvent;
-import com.vaadin.ui.Table.ColumnCollapseListener;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.ColumnCollapseEvent;
+import com.vaadin.v7.ui.Table.ColumnCollapseListener;
 
 public class ColumnCollapsingAndColumnExpansion extends AbstractTestUIWithLog {
 

@@ -6,8 +6,8 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Select;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.Select;
+import com.vaadin.v7.ui.TextField;
 
 public class FocusFromShortcutAction extends TestBase {
 
@@ -15,7 +15,7 @@ public class FocusFromShortcutAction extends TestBase {
     protected void setup() {
         final Select select = new Select("Select",
                 Arrays.asList("Option 1", "Option 2"));
-        final LegacyTextField text = new LegacyTextField("Text");
+        final TextField text = new TextField("Text");
 
         addComponent(select);
         addComponent(text);

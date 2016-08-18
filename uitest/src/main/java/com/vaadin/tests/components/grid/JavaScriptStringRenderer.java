@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.grid;
 
 import com.vaadin.annotations.JavaScript;
-import com.vaadin.ui.renderers.AbstractJavaScriptRenderer;
+import com.vaadin.v7.ui.renderers.AbstractJavaScriptRenderer;
 
 @JavaScript("JavaScriptStringRenderer.js")
 public class JavaScriptStringRenderer

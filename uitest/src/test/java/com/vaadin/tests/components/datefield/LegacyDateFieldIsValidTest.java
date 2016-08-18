@@ -23,7 +23,7 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.tests.elements.LegacyDateFieldElement;
+import com.vaadin.v7.testbench.customelements.DateFieldElement;
 
 /**
  * @author Vaadin Ltd
@@ -36,7 +36,7 @@ public class LegacyDateFieldIsValidTest extends MultiBrowserTest {
 
         waitForElementVisible(By.id("Log"));
         waitForElementVisible(By.className("v-datefield"));
-        WebElement dateTextbox = $(LegacyDateFieldElement.class).first()
+        WebElement dateTextbox = $(DateFieldElement.class).first()
                 .findElement(By.className("v-textfield"));
         ButtonElement button = $(ButtonElement.class).first();
 

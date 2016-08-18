@@ -19,9 +19,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.customelements.FixedNotificationElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.newelements.FixedNotificationElement;
 
 public class VaadinSessionAttributeTest extends MultiBrowserTest {
 

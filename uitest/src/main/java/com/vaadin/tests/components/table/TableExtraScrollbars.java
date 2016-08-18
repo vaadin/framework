@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.AbstractTestCase;
-import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.Table;
 
 public class TableExtraScrollbars extends AbstractTestCase {
 

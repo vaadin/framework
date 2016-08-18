@@ -1,16 +1,16 @@
 package com.vaadin.tests.components.treetable;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Tree.CollapseEvent;
-import com.vaadin.ui.Tree.CollapseListener;
-import com.vaadin.ui.Tree.ExpandEvent;
-import com.vaadin.ui.Tree.ExpandListener;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.Tree.CollapseEvent;
+import com.vaadin.v7.ui.Tree.CollapseListener;
+import com.vaadin.v7.ui.Tree.ExpandEvent;
+import com.vaadin.v7.ui.Tree.ExpandListener;
+import com.vaadin.v7.ui.TreeTable;
 
 public class KeepAllItemsVisible extends TestBase
         implements ExpandListener, CollapseListener {

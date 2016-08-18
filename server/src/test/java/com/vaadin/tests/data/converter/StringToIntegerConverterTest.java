@@ -3,12 +3,12 @@ package com.vaadin.tests.data.converter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
-import com.vaadin.v7.data.util.converter.LegacyStringToIntegerConverter;
+import com.vaadin.v7.data.util.converter.Converter.ConversionException;
+import com.vaadin.v7.data.util.converter.StringToIntegerConverter;
 
 public class StringToIntegerConverterTest {
 
-    LegacyStringToIntegerConverter converter = new LegacyStringToIntegerConverter();
+    StringToIntegerConverter converter = new StringToIntegerConverter();
 
     @Test
     public void testNullConversion() {

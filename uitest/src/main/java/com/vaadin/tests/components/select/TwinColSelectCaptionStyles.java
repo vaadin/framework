@@ -3,7 +3,7 @@ package com.vaadin.tests.components.select;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.TwinColSelect;
+import com.vaadin.v7.ui.TwinColSelect;
 
 public class TwinColSelectCaptionStyles extends TestBase {
 

@@ -23,7 +23,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.newelements.ComboBoxElement;
+import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 
 public class ComboBoxBorderTest extends MultiBrowserTest {
     @Test

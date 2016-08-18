@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.uitest.components;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.Action;
 import com.vaadin.tests.components.uitest.TestSampler;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.Tree;
 
 public class TreeCssTest {
     private int debugIdCounter = 0;

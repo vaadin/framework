@@ -15,7 +15,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class SubWindowFocusAndBlurListeners extends TestBase {
 
@@ -38,7 +38,7 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
         final Window window = new Window("Focus test window", layout);
         layout.setSizeUndefined();
 
-        layout.addComponent(new LegacyTextField());
+        layout.addComponent(new TextField());
         window.addFocusListener(new FocusListener() {
             @Override
             public void focus(FocusEvent event) {
@@ -74,7 +74,7 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
         main.addWindow(window);
 
         ((ComponentContainer) main.getContent())
-                .addComponent(new LegacyTextField());
+                .addComponent(new TextField());
 
         Button button = new Button("Bring to front (should focus too)",
                 new Button.ClickListener() {

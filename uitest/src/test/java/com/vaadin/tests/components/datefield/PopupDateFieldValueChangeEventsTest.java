@@ -25,8 +25,8 @@ import org.openqa.selenium.support.ui.Select;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 
 public class PopupDateFieldValueChangeEventsTest extends MultiBrowserTest {
 

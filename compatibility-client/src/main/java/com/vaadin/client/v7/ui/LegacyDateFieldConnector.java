@@ -17,13 +17,13 @@ package com.vaadin.client.v7.ui;
 
 import com.vaadin.client.ui.datefield.DateFieldConnector;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.v7.ui.LegacyDateField;
+import com.vaadin.v7.ui.DateField;
 
 /**
  * @author Vaadin Ltd
  *
  */
-@Connect(LegacyDateField.class)
+@Connect(DateField.class)
 @Deprecated
 public class LegacyDateFieldConnector extends DateFieldConnector {
 

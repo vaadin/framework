@@ -20,11 +20,11 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
-import com.vaadin.v7.data.validator.LegacyBeanValidator;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.data.validator.BeanValidator;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Mini tutorial code for
@@ -74,12 +74,12 @@ public class UsingBeanValidation extends UI {
         Person person = new Person("John", 26);
         BeanItem<Person> item = new BeanItem<Person>(person);
 
-        LegacyTextField firstName = new LegacyTextField("First name",
+        TextField firstName = new TextField("First name",
                 item.getItemProperty("name"));
         firstName.setImmediate(true);
         setContent(firstName);
 
-        firstName.addValidator(new LegacyBeanValidator(Person.class, "name"));
+        firstName.addValidator(new BeanValidator(Person.class, "name"));
     }
 
 }

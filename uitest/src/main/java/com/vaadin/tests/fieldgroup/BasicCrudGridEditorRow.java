@@ -18,24 +18,24 @@ package com.vaadin.tests.fieldgroup;
 import java.text.DateFormat;
 import java.util.Locale;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.renderers.DateRenderer;
-import com.vaadin.v7.data.validator.LegacyIntegerRangeValidator;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.data.validator.IntegerRangeValidator;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.renderers.DateRenderer;
 
 public class BasicCrudGridEditorRow extends AbstractBasicCrud {
 
-    private LegacyGrid grid;
+    private Grid grid;
 
     @Override
     protected void setup(VaadinRequest request) {
         super.setup(request);
         formType.setVisible(false);
-        grid = new LegacyGrid();
+        grid = new Grid();
 
         grid.setContainerDataSource(container);
 
@@ -52,7 +52,7 @@ public class BasicCrudGridEditorRow extends AbstractBasicCrud {
         grid.setEditorEnabled(true);
         grid.setSizeFull();
         grid.getColumn("age").getEditorField().addValidator(
-                new LegacyIntegerRangeValidator("Must be between 0 and 100", 0,
+                new IntegerRangeValidator("Must be between 0 and 100", 0,
                         100));
         grid.getColumn("birthDate").setRenderer(new DateRenderer(
                 DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US)));

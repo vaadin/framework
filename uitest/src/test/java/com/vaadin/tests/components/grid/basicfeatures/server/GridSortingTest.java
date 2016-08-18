@@ -31,10 +31,10 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridSortingTest extends GridBasicFeaturesTest {
 

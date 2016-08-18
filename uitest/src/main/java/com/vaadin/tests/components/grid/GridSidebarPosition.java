@@ -20,7 +20,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.ui.Grid;
 
 @Theme("valo")
 public class GridSidebarPosition extends AbstractTestUI {
@@ -35,7 +35,7 @@ public class GridSidebarPosition extends AbstractTestUI {
         hl.setSpacing(true);
         hl.setHeight("100%");
         setContent(hl);
-        LegacyGrid grid = new LegacyGrid("Popup window height");
+        Grid grid = new Grid("Popup window height");
         grid.setId(POPUP_WINDOW_HEIGHT);
         grid.setWidth("100px");
         for (int i = 0; i < 30; i++) {
@@ -46,7 +46,7 @@ public class GridSidebarPosition extends AbstractTestUI {
         }
         hl.addComponent(grid);
 
-        grid = new LegacyGrid("Popup moved up");
+        grid = new Grid("Popup moved up");
         grid.setId(POPUP_WINDOW_MOVED_UP);
         grid.setWidth("100px");
         grid.setHeight("400px");
@@ -56,7 +56,7 @@ public class GridSidebarPosition extends AbstractTestUI {
         hl.addComponent(grid);
         hl.setComponentAlignment(grid, Alignment.BOTTOM_LEFT);
 
-        grid = new LegacyGrid("Popup above");
+        grid = new Grid("Popup above");
         grid.setId(POPUP_ABOVE);
         grid.setWidth("100px");
         grid.setHeight("200px");

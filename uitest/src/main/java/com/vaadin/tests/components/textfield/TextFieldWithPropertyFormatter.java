@@ -5,13 +5,13 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.util.PropertyFormatter;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.PropertyFormatter;
+import com.vaadin.v7.ui.TextField;
 
 public class TextFieldWithPropertyFormatter extends TestBase {
 
@@ -87,7 +87,7 @@ public class TextFieldWithPropertyFormatter extends TestBase {
             }
         };
 
-        final LegacyTextField tf1 = new LegacyTextField();
+        final TextField tf1 = new TextField();
 
         tf1.setPropertyDataSource(formatter);
 

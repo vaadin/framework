@@ -16,7 +16,6 @@
 
 package com.vaadin.tests;
 
-import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -25,12 +24,13 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.AbstractSelect;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.OptionGroup;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.TwinColSelect;
 
 /**
  * @author Vaadin Ltd.

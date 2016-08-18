@@ -1,14 +1,14 @@
 package com.vaadin.tests.components.select;
 
 import com.vaadin.tests.components.ComponentTestCase;
-import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.TwinColSelect;
+import com.vaadin.v7.ui.AbstractSelect;
+import com.vaadin.v7.ui.ListSelect;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.OptionGroup;
+import com.vaadin.v7.ui.TwinColSelect;
 
 public class OptionGroupBaseSelects
         extends ComponentTestCase<HorizontalLayout> {

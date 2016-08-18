@@ -15,8 +15,8 @@
  */
 package com.vaadin.tests.contextclick;
 
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.TreeContextClickEvent;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.TreeContextClickEvent;
 
 public class TreeContextClick
         extends AbstractContextClickUI<Tree, TreeContextClickEvent> {

@@ -5,8 +5,8 @@ import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Table;
-import com.vaadin.v7.data.util.converter.LegacyStringToDoubleConverter;
+import com.vaadin.v7.data.util.converter.StringToDoubleConverter;
+import com.vaadin.v7.ui.Table;
 
 public class FormatTableValue extends AbstractTestUI {
 
@@ -31,7 +31,7 @@ public class FormatTableValue extends AbstractTestUI {
                 .setValue(3.1415);
 
         table.setConverter(PERCENT_PROPERTY,
-                new LegacyStringToDoubleConverter() {
+                new StringToDoubleConverter() {
                     @Override
                     protected NumberFormat getFormat(Locale locale) {
                         return NumberFormat.getPercentInstance(locale);
@@ -39,7 +39,7 @@ public class FormatTableValue extends AbstractTestUI {
                 });
 
         table.setConverter(CURRENCY_PROPERTY,
-                new LegacyStringToDoubleConverter() {
+                new StringToDoubleConverter() {
                     @Override
                     protected NumberFormat getFormat(Locale locale) {
                         return NumberFormat.getCurrencyInstance(locale);

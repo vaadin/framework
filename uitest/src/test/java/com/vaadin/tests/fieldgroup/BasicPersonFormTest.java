@@ -18,16 +18,15 @@ package com.vaadin.tests.fieldgroup;
 import org.junit.Assert;
 
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.customelements.FixedNotificationElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
-import com.vaadin.testbench.elements.TableElement;
+import com.vaadin.v7.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.TableRowElement;
-import com.vaadin.testbench.elements.TextAreaElement;
-import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.v7.testbench.customelements.TextAreaElement;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.newelements.FixedNotificationElement;
-import com.vaadin.v7.tests.elements.LegacyTextFieldElement;
+import com.vaadin.v7.testbench.customelements.TextFieldElement;
 
 public abstract class BasicPersonFormTest extends MultiBrowserTest {
 
@@ -47,7 +46,7 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
     }
 
     protected TextFieldElement getFirstNameField() {
-        return $(LegacyTextFieldElement.class).caption("First Name").first();
+        return $(TextFieldElement.class).caption("First Name").first();
     }
 
     protected TextAreaElement getLastNameArea() {
@@ -55,11 +54,11 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
     }
 
     protected TextFieldElement getEmailField() {
-        return $(LegacyTextFieldElement.class).caption("Email").first();
+        return $(TextFieldElement.class).caption("Email").first();
     }
 
     protected TextFieldElement getAgeField() {
-        return $(LegacyTextFieldElement.class).caption("Age").first();
+        return $(TextFieldElement.class).caption("Age").first();
     }
 
     protected TableElement getGenderTable() {
@@ -67,7 +66,7 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
     }
 
     protected TextFieldElement getDeceasedField() {
-        return $(LegacyTextFieldElement.class).caption("Deceased").first();
+        return $(TextFieldElement.class).caption("Deceased").first();
     }
 
     protected void showBeanValues() {

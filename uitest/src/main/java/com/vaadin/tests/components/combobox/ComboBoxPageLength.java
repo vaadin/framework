@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.combobox;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxPageLength extends ComboBoxes2<ComboBox> {
 

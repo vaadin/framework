@@ -7,9 +7,9 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 public class TableContextMenuOnField extends TestBase {
 
@@ -42,7 +42,7 @@ public class TableContextMenuOnField extends TestBase {
                     Object columnId) {
 
                 VerticalLayout layout = new VerticalLayout();
-                layout.addComponent(new LegacyTextField());
+                layout.addComponent(new TextField());
 
                 layout.addListener(new LayoutClickListener() {
 
@@ -61,7 +61,7 @@ public class TableContextMenuOnField extends TestBase {
             @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
-                return new LegacyTextField();
+                return new TextField();
             }
         });
 

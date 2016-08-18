@@ -9,11 +9,11 @@ import static org.easymock.EasyMock.verify;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.server.component.AbstractListenerMethodsTestBase;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Label.ValueChangeEvent;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeListener;
 
 public class LabelListenersTest extends AbstractListenerMethodsTestBase {
 
@@ -32,7 +32,7 @@ public class LabelListenersTest extends AbstractListenerMethodsTestBase {
                 ValueChangeListener.class);
         // record
         mockListener.valueChange(
-                anyObject(com.vaadin.data.Property.ValueChangeEvent.class));
+                anyObject(com.vaadin.v7.data.Property.ValueChangeEvent.class));
 
         // test
         underTest.addValueChangeListener(mockListener);
@@ -55,7 +55,7 @@ public class LabelListenersTest extends AbstractListenerMethodsTestBase {
                 ValueChangeListener.class);
         // record
         mockListener.valueChange(
-                anyObject(com.vaadin.data.Property.ValueChangeEvent.class));
+                anyObject(com.vaadin.v7.data.Property.ValueChangeEvent.class));
 
         expect(mockProperty.getType()).andReturn(String.class).atLeastOnce();
         expect(mockProperty.getValue()).andReturn("Any").atLeastOnce();

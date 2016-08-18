@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ThemeResource;
@@ -10,7 +9,8 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.Table;
 
 public class LabelEmbeddedClickThroughForTable extends AbstractTestUI {
 

@@ -17,14 +17,14 @@ package com.vaadin.tests.components.grid;
 
 import java.util.ArrayList;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Grid;
 
 public class GridDefaultSelectionMode extends AbstractTestUI {
 
@@ -45,7 +45,7 @@ public class GridDefaultSelectionMode extends AbstractTestUI {
         final BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class, items);
 
-        final LegacyGrid grid = new LegacyGrid();
+        final Grid grid = new Grid();
         grid.setContainerDataSource(container);
 
         VerticalLayout v = new VerticalLayout();

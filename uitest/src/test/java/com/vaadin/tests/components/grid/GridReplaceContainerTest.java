@@ -19,15 +19,16 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridReplaceContainerTest extends SingleBrowserTest {
 
     @Test
     public void selectAfterContainerChange() {
         openTestURL();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         grid.getCell(0, 0).click();
         Assert.assertTrue(grid.getRow(0).isSelected());
 

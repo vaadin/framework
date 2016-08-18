@@ -3,7 +3,7 @@ package com.vaadin.tests.push;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.TextAreaElement;
+import com.vaadin.v7.testbench.customelements.TextAreaElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 

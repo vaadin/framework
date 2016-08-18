@@ -18,12 +18,12 @@ package com.vaadin.tests;
 
 import java.util.Random;
 
-import com.vaadin.data.Item;
-import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.AbstractSelect;
+import com.vaadin.v7.ui.Select;
 
 public class UsingCustomNewItemHandlerInSelect extends CustomComponent {
 

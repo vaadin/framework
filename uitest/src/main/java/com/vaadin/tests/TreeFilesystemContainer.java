@@ -18,18 +18,18 @@ package com.vaadin.tests;
 
 import java.io.File;
 
-import com.vaadin.data.util.FilesystemContainer;
-import com.vaadin.data.util.FilesystemContainer.FileItem;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.data.util.FilesystemContainer;
+import com.vaadin.v7.data.util.FilesystemContainer.FileItem;
+import com.vaadin.v7.ui.Field;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.Tree;
 
 /**
  * Browsable file explorer using Vaadin Tree component. Demonstrates: how to use
@@ -107,7 +107,7 @@ public class TreeFilesystemContainer extends com.vaadin.server.LegacyApplication
         // Check if event occured at fsTree component
         if (event.getSource() == filesystem) {
             // Check if event is about changing value
-            if (event.getClass() == LegacyField.ValueChangeEvent.class) {
+            if (event.getClass() == Field.ValueChangeEvent.class) {
                 // Update property panel contents
                 final FileItem fileItem = (FileItem) filesystem
                         .getItem(filesystem.getValue());

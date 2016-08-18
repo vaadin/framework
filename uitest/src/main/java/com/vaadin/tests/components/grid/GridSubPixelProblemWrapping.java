@@ -18,14 +18,14 @@ package com.vaadin.tests.components.grid;
 import java.util.Random;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.SelectionMode;
 
 @Theme("valo")
 public class GridSubPixelProblemWrapping extends AbstractTestUI {
@@ -79,7 +79,7 @@ public class GridSubPixelProblemWrapping extends AbstractTestUI {
         addComponent(button);
         container = new BeanItemContainer<DataObject>(DataObject.class);
         container.addBean(new DataObject("Foo", "Bar"));
-        LegacyGrid grid = new LegacyGrid(container);
+        Grid grid = new Grid(container);
         grid.getColumn("foo").setWidth(248.525);
         grid.setSelectionMode(SelectionMode.SINGLE);
         grid.setEditorEnabled(true);

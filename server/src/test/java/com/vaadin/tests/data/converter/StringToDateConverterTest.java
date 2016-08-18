@@ -6,11 +6,11 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.v7.data.util.converter.LegacyStringToDateConverter;
+import com.vaadin.v7.data.util.converter.StringToDateConverter;
 
 public class StringToDateConverterTest {
 
-    LegacyStringToDateConverter converter = new LegacyStringToDateConverter();
+    StringToDateConverter converter = new StringToDateConverter();
 
     @Test
     public void testNullConversion() {

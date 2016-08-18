@@ -17,14 +17,14 @@ package com.vaadin.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.SelectionMode;
 
 public class SelectDuringInit extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        LegacyGrid grid = new LegacyGrid();
+        Grid grid = new Grid();
         grid.setSelectionMode(SelectionMode.MULTI);
 
         grid.addColumn("value");

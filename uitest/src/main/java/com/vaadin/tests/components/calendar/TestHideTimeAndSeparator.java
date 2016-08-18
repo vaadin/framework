@@ -6,8 +6,8 @@ import java.util.Locale;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Calendar;
-import com.vaadin.ui.components.calendar.event.CalendarEvent;
+import com.vaadin.v7.ui.Calendar;
+import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
 
 @Theme("tests-calendar")
 public class TestHideTimeAndSeparator extends AbstractTestUI {

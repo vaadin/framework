@@ -18,9 +18,9 @@ package com.vaadin.tests.components.grid;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.PersonContainer;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.v7.ui.LegacyPasswordField;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.PasswordField;
+import com.vaadin.v7.ui.TextField;
 
 public class GridEditorUI extends AbstractTestUI {
 
@@ -31,17 +31,17 @@ public class GridEditorUI extends AbstractTestUI {
         addComponent(createGrid(container));
     }
 
-    protected LegacyGrid createGrid(PersonContainer container) {
-        LegacyGrid grid = new LegacyGrid(container);
+    protected Grid createGrid(PersonContainer container) {
+        Grid grid = new Grid(container);
 
         // Don't use address since there's no converter
         grid.removeColumn("address");
 
         grid.setEditorEnabled(true);
 
-        grid.getColumn("firstName").setEditorField(new LegacyPasswordField());
+        grid.getColumn("firstName").setEditorField(new PasswordField());
 
-        LegacyTextField lastNameField = (LegacyTextField) grid
+        TextField lastNameField = (TextField) grid
                 .getColumn("lastName").getEditorField();
         lastNameField.setMaxLength(50);
 

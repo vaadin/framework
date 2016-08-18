@@ -7,7 +7,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class TextFieldInputPromptAndClickShortcut extends TestBase {
 
@@ -15,7 +15,7 @@ public class TextFieldInputPromptAndClickShortcut extends TestBase {
     protected void setup() {
         final Log log = new Log(5);
 
-        final LegacyTextField textField = new LegacyTextField();
+        final TextField textField = new TextField();
         Button button = new Button("Show Text", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {

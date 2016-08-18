@@ -2,14 +2,14 @@ package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class CustomConverterFactoryUI extends AbstractTestUI {
     @Override
     public void setup(VaadinRequest request) {
         getSession().setConverterFactory(new MyConverterFactory());
 
-        LegacyTextField tf = new LegacyTextField("This is my double field");
+        TextField tf = new TextField("This is my double field");
         tf.setImmediate(true);
         tf.setConverter(Double.class);
         addComponent(tf);

@@ -21,12 +21,12 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.Column;
-import com.vaadin.ui.LegacyGrid.DetailsGenerator;
-import com.vaadin.ui.LegacyGrid.RowReference;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.Column;
+import com.vaadin.v7.ui.Grid.DetailsGenerator;
+import com.vaadin.v7.ui.Grid.RowReference;
+import com.vaadin.v7.ui.TextArea;
 
 public class GridDetailsWidth extends AbstractTestUI {
 
@@ -35,7 +35,7 @@ public class GridDetailsWidth extends AbstractTestUI {
         final VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
 
-        final LegacyGrid grid = new LegacyGrid();
+        final Grid grid = new Grid();
 
         Column column = grid.addColumn("Hello", String.class);
         for (int i = 0; i < 3; i++) {

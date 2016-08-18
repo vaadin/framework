@@ -15,9 +15,9 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import com.vaadin.data.Property;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
+import com.vaadin.v7.data.Property;
 
 public class ComboBoxSelectingWithNewItemsAllowed extends ComboBoxSelecting {
 

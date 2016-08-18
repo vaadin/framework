@@ -22,6 +22,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridMultiSelectionScrollBarTest extends MultiBrowserTest {
 
@@ -31,7 +32,7 @@ public class GridMultiSelectionScrollBarTest extends MultiBrowserTest {
         openTestURL();
 
         assertTrue("Horizontal scrollbar should not be visible.",
-                $(LegacyGridElement.class).first().getHorizontalScroller()
+                $(GridElement.class).first().getHorizontalScroller()
                         .getAttribute("style").toLowerCase()
                         .contains("display: none;"));
 

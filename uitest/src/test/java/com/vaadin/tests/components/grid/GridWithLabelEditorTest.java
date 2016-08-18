@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridWithLabelEditorTest extends SingleBrowserTest {
 
@@ -31,6 +32,6 @@ public class GridWithLabelEditorTest extends SingleBrowserTest {
         assertNoErrorNotifications();
 
         assertEquals("LabelEditor content not correct.", "FooFoo",
-                $(LegacyGridElement.class).first().getEditor().getField(0).getText());
+                $(GridElement.class).first().getEditor().getField(0).getText());
     }
 }

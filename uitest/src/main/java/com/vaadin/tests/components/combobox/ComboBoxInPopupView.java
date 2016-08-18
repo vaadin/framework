@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.PopupView.PopupVisibilityEvent;
 import com.vaadin.ui.PopupView.PopupVisibilityListener;
+import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxInPopupView extends TestBase {
 

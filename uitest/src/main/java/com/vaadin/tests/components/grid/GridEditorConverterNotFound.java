@@ -18,7 +18,7 @@ package com.vaadin.tests.components.grid;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.ui.Grid;
 
 public class GridEditorConverterNotFound extends AbstractTestUIWithLog {
 
@@ -28,7 +28,7 @@ public class GridEditorConverterNotFound extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
 
-        LegacyGrid grid = new LegacyGrid();
+        Grid grid = new Grid();
 
         grid.addColumn("foo", Foo.class);
         grid.addRow(new Foo());

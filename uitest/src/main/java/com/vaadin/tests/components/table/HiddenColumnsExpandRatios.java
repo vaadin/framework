@@ -2,12 +2,12 @@ package com.vaadin.tests.components.table;
 
 import java.util.Random;
 
-import com.vaadin.data.Item;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.Table;
 
 public class HiddenColumnsExpandRatios extends TestBase {
 

@@ -16,20 +16,20 @@ import com.vaadin.shared.ui.table.TableConstants;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.Align;
-import com.vaadin.ui.Table.CellStyleGenerator;
-import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.ui.Table.ColumnHeaderMode;
-import com.vaadin.ui.Table.ColumnResizeEvent;
-import com.vaadin.ui.Table.ColumnResizeListener;
-import com.vaadin.ui.Table.FooterClickEvent;
-import com.vaadin.ui.Table.FooterClickListener;
-import com.vaadin.ui.Table.GeneratedRow;
-import com.vaadin.ui.Table.HeaderClickEvent;
-import com.vaadin.ui.Table.HeaderClickListener;
-import com.vaadin.ui.Table.RowGenerator;
-import com.vaadin.ui.Table.RowHeaderMode;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.Align;
+import com.vaadin.v7.ui.Table.CellStyleGenerator;
+import com.vaadin.v7.ui.Table.ColumnGenerator;
+import com.vaadin.v7.ui.Table.ColumnHeaderMode;
+import com.vaadin.v7.ui.Table.ColumnResizeEvent;
+import com.vaadin.v7.ui.Table.ColumnResizeListener;
+import com.vaadin.v7.ui.Table.FooterClickEvent;
+import com.vaadin.v7.ui.Table.FooterClickListener;
+import com.vaadin.v7.ui.Table.GeneratedRow;
+import com.vaadin.v7.ui.Table.HeaderClickEvent;
+import com.vaadin.v7.ui.Table.HeaderClickListener;
+import com.vaadin.v7.ui.Table.RowGenerator;
+import com.vaadin.v7.ui.Table.RowHeaderMode;
 
 public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         implements ItemClickListener, HeaderClickListener, FooterClickListener,

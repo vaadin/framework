@@ -5,9 +5,9 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.NativeSelectElement;
+import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.newelements.ComboBoxElement;
+import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 
 public class ComboBoxLargeIconsTest extends MultiBrowserTest {
     @Override

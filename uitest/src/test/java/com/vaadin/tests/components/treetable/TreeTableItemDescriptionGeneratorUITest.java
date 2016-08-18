@@ -24,7 +24,7 @@ import org.junit.Test;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
-import com.vaadin.testbench.elements.TreeTableElement;
+import com.vaadin.v7.testbench.customelements.TreeTableElement;
 import com.vaadin.tests.tb3.TooltipTest;
 
 /**

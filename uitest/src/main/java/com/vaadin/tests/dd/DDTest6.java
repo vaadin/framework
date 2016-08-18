@@ -10,10 +10,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.DataBoundTransferable;
@@ -42,12 +38,16 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Html5File;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.TreeDragMode;
-import com.vaadin.ui.Tree.TreeTargetDetails;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.TreeDragMode;
+import com.vaadin.v7.ui.Tree.TreeTargetDetails;
 
 public class DDTest6 extends TestBase {
 

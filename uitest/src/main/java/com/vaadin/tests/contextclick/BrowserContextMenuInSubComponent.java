@@ -27,8 +27,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.TextArea;
 
 @Widgetset(TestingWidgetSet.NAME)
 public class BrowserContextMenuInSubComponent extends AbstractTestUI {

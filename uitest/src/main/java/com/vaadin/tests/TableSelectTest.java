@@ -16,11 +16,11 @@
 
 package com.vaadin.tests;
 
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.ui.Table;
 
 public class TableSelectTest extends CustomComponent
         implements Table.ValueChangeListener {

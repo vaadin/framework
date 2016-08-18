@@ -19,11 +19,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import com.vaadin.testbench.elements.CheckBoxElement;
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.v7.tests.elements.LegacyCheckBoxElement;
+import com.vaadin.v7.testbench.customelements.CheckBoxElement;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridCheckBoxDisplayTest extends SingleBrowserTest {
@@ -31,7 +30,7 @@ public class GridCheckBoxDisplayTest extends SingleBrowserTest {
     public void testAddRow() {
         openTestURL();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         Assert.assertEquals("First item had wrong value", "true",
                 grid.getCell(0, 0).getText());
@@ -41,7 +40,7 @@ public class GridCheckBoxDisplayTest extends SingleBrowserTest {
         // First edit false item and see that the CheckBox is unchecked
         grid.getCell(1, 0).doubleClick();
 
-        CheckBoxElement checkbox = $(LegacyCheckBoxElement.class).first();
+        CheckBoxElement checkbox = $(CheckBoxElement.class).first();
         Assert.assertEquals("CheckBox was checked", "unchecked",
                 checkbox.getValue());
 
@@ -50,7 +49,7 @@ public class GridCheckBoxDisplayTest extends SingleBrowserTest {
         // Edit true item and see that the CheckBox is checked
         grid.getCell(0, 0).doubleClick();
 
-        checkbox = $(LegacyCheckBoxElement.class).first();
+        checkbox = $(CheckBoxElement.class).first();
         Assert.assertEquals("CheckBox was not checked.", "checked",
                 checkbox.getValue());
 
@@ -59,7 +58,7 @@ public class GridCheckBoxDisplayTest extends SingleBrowserTest {
         // Edit false item and confirm that the CheckBox is unchecked again
         grid.getCell(1, 0).doubleClick();
 
-        checkbox = $(LegacyCheckBoxElement.class).first();
+        checkbox = $(CheckBoxElement.class).first();
         Assert.assertEquals("CheckBox was checked", "unchecked",
                 checkbox.getValue());
     }

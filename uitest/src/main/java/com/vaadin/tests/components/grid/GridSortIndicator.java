@@ -24,7 +24,7 @@ import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.ui.Grid;
 
 /*
  * Test UI for checking that sort indicators of a Grid are updated when the sort order is changed by a
@@ -34,7 +34,7 @@ public class GridSortIndicator extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final LegacyGrid g = getGrid();
+        final Grid g = getGrid();
         addComponent(g);
         g.addSortListener(new SortListener() {
             private SortDirection oldSortDirection = null;
@@ -68,8 +68,8 @@ public class GridSortIndicator extends AbstractTestUI {
         });
     }
 
-    private final LegacyGrid getGrid() {
-        LegacyGrid g = new LegacyGrid();
+    private final Grid getGrid() {
+        Grid g = new Grid();
         g.addColumn("Name");
         g.addColumn("Value", Integer.class);
         g.addRow(new Object[] { "a", 4 });

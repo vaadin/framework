@@ -22,14 +22,14 @@ import java.util.Locale;
 
 import org.jsoup.nodes.Element;
 
-import com.vaadin.data.Property;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.ui.label.LabelState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
-import com.vaadin.v7.data.util.converter.LegacyConverter;
-import com.vaadin.v7.data.util.converter.LegacyConverterUtil;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.ConverterUtil;
 
 /**
  * Label component for showing non-editable short texts.
@@ -98,7 +98,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * A converter used to convert from the data model type to the field type
      * and vice versa. Label type is always String.
      */
-    private LegacyConverter<String, Object> converter = null;
+    private Converter<String, Object> converter = null;
 
     private Property<String> dataSource = null;
 
@@ -188,7 +188,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * @return
      */
     private String getDataSourceValue() {
-        return LegacyConverterUtil.convertFromModel(
+        return ConverterUtil.convertFromModel(
                 getPropertyDataSource().getValue(), String.class,
                 getConverter(), getLocale());
     }
@@ -220,7 +220,7 @@ public class Label extends AbstractComponent implements Property<String>,
     /**
      * Gets the type of the Property.
      *
-     * @see com.vaadin.data.Property#getType()
+     * @see com.vaadin.v7.data.Property#getType()
      */
     @Override
     public Class<String> getType() {
@@ -231,7 +231,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * Gets the viewing data-source property.
      *
      * @return the data source property.
-     * @see com.vaadin.data.Property.Viewer#getPropertyDataSource()
+     * @see com.vaadin.v7.data.Property.Viewer#getPropertyDataSource()
      */
     @Override
     public Property getPropertyDataSource() {
@@ -244,7 +244,7 @@ public class Label extends AbstractComponent implements Property<String>,
      *
      * @param newDataSource
      *            the new data source Property
-     * @see com.vaadin.data.Property.Viewer#setPropertyDataSource(com.vaadin.data.Property)
+     * @see com.vaadin.v7.data.Property.Viewer#setPropertyDataSource(com.vaadin.v7.data.Property)
      */
     @Override
     public void setPropertyDataSource(Property newDataSource) {
@@ -256,11 +256,11 @@ public class Label extends AbstractComponent implements Property<String>,
 
         // Check if the current converter is compatible.
         if (newDataSource != null
-                && !LegacyConverterUtil.canConverterPossiblyHandle(
+                && !ConverterUtil.canConverterPossiblyHandle(
                         getConverter(), getType(), newDataSource.getType())) {
             // There is no converter set or there is no way the current
             // converter can be compatible.
-            LegacyConverter<String, ?> c = LegacyConverterUtil.getConverter(
+            Converter<String, ?> c = ConverterUtil.getConverter(
                     String.class, newDataSource.getType(), getSession());
             setConverter(c);
         }
@@ -345,7 +345,7 @@ public class Label extends AbstractComponent implements Property<String>,
         /**
          * Gets the Property that has been modified.
          *
-         * @see com.vaadin.data.Property.ValueChangeEvent#getProperty()
+         * @see com.vaadin.v7.data.Property.ValueChangeEvent#getProperty()
          */
         @Override
         public Property getProperty() {
@@ -358,7 +358,7 @@ public class Label extends AbstractComponent implements Property<String>,
      *
      * @param listener
      *            the Listener to be added.
-     * @see com.vaadin.data.Property.ValueChangeNotifier#addListener(com.vaadin.data.Property.ValueChangeListener)
+     * @see com.vaadin.v7.data.Property.ValueChangeNotifier#addListener(com.vaadin.v7.data.Property.ValueChangeListener)
      */
     @Override
     public void addValueChangeListener(Property.ValueChangeListener listener) {
@@ -368,7 +368,7 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
+     *             {@link #addValueChangeListener(com.vaadin.v7.data.Property.ValueChangeListener)}
      **/
     @Override
     @Deprecated
@@ -381,7 +381,7 @@ public class Label extends AbstractComponent implements Property<String>,
      *
      * @param listener
      *            the Listener to be removed.
-     * @see com.vaadin.data.Property.ValueChangeNotifier#removeListener(com.vaadin.data.Property.ValueChangeListener)
+     * @see com.vaadin.v7.data.Property.ValueChangeNotifier#removeListener(com.vaadin.v7.data.Property.ValueChangeListener)
      */
     @Override
     public void removeValueChangeListener(
@@ -392,7 +392,7 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
+     *             {@link #removeValueChangeListener(com.vaadin.v7.data.Property.ValueChangeListener)}
      **/
     @Override
     @Deprecated
@@ -411,7 +411,7 @@ public class Label extends AbstractComponent implements Property<String>,
     /**
      * Listens the value change events from data source.
      *
-     * @see com.vaadin.data.Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
+     * @see com.vaadin.v7.data.Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
      */
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
@@ -527,7 +527,7 @@ public class Label extends AbstractComponent implements Property<String>,
      *
      * @return The converter or null if none is set.
      */
-    public LegacyConverter<String, Object> getConverter() {
+    public Converter<String, Object> getConverter() {
         return converter;
     }
 
@@ -538,8 +538,8 @@ public class Label extends AbstractComponent implements Property<String>,
      * @param converter
      *            The new converter to use.
      */
-    public void setConverter(LegacyConverter<String, ?> converter) {
-        this.converter = (LegacyConverter<String, Object>) converter;
+    public void setConverter(Converter<String, ?> converter) {
+        this.converter = (Converter<String, Object>) converter;
         markAsDirty();
     }
 

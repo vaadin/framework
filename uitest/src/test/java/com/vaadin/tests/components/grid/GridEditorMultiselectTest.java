@@ -7,9 +7,10 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridEditorMultiselectTest extends MultiBrowserTest {
@@ -38,7 +39,7 @@ public class GridEditorMultiselectTest extends MultiBrowserTest {
     }
 
     private GridElement openEditor() {
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         grid.getRow(0).doubleClick();
         Assert.assertTrue("Grid editor should be displayed.",
                 grid.getEditor().isDisplayed());

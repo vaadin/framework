@@ -26,13 +26,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.CheckBoxElement;
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.parallel.TestCategory;
-import com.vaadin.tests.components.grid.LegacyGridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.tests.elements.LegacyDateFieldElement;
+import com.vaadin.v7.testbench.customelements.DateFieldElement;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
@@ -41,7 +40,7 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
     @Before
     public void openTest() {
         openTestURL();
-        grid = $(LegacyGridElement.class).first();
+        grid = $(GridElement.class).first();
 
     }
 
@@ -62,8 +61,7 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
         new Actions(getDriver()).doubleClick(ritaBirthdate).perform();
 
         GridEditorElement editor = grid.getEditor();
-        LegacyDateFieldElement dateField = editor
-                .$(LegacyDateFieldElement.class).first();
+        DateFieldElement dateField = editor.$(DateFieldElement.class).first();
         WebElement input = dateField.findElement(By.xpath("input"));
         // input.click();
         input.sendKeys("Invalid", Keys.TAB);

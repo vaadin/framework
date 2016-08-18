@@ -27,7 +27,7 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.textarea.RichTextAreaState;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.RichTextArea;
+import com.vaadin.v7.ui.RichTextArea;
 
 @Connect(value = RichTextArea.class, loadStyle = LoadStyle.LAZY)
 public class RichTextAreaConnector extends AbstractFieldConnector

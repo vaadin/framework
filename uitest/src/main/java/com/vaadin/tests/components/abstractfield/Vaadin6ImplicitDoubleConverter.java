@@ -2,15 +2,15 @@ package com.vaadin.tests.components.abstractfield;
 
 import java.util.Locale;
 
-import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.Converter;
 
 public class Vaadin6ImplicitDoubleConverter
-        implements LegacyConverter<String, Double> {
+        implements Converter<String, Double> {
 
     @Override
     public Double convertToModel(String value,
             Class<? extends Double> targetType, Locale locale)
-            throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
+            throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
         if (null == value) {
             return null;
         }
@@ -20,7 +20,7 @@ public class Vaadin6ImplicitDoubleConverter
     @Override
     public String convertToPresentation(Double value,
             Class<? extends String> targetType, Locale locale)
-            throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
+            throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
         if (value == null) {
             return null;
         }

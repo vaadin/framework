@@ -1,19 +1,19 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
-import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.AbstractSelect;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Tree;
 
 public class ItemClickEvents extends AbstractTestUI {
 

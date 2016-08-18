@@ -1,8 +1,6 @@
 package com.vaadin.tests.appengine;
 
 import com.google.apphosting.api.DeadlineExceededException;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.LegacyApplication;
@@ -11,9 +9,11 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Notification;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.TextField;
 
 public class GAESyncTest extends LegacyApplication {
 
@@ -48,7 +48,7 @@ public class GAESyncTest extends LegacyApplication {
     private class IntrWindow extends LegacyWindow {
         private int n = 0;
         private static final long serialVersionUID = -6521351715072191625l;
-        LegacyTextField tf;
+        TextField tf;
         Label l;
         LegacyApplication app;
         GridLayout gl;
@@ -56,7 +56,7 @@ public class GAESyncTest extends LegacyApplication {
         private IntrWindow(LegacyApplication app) {
 
             this.app = app;
-            tf = new LegacyTextField("Echo thingie");
+            tf = new TextField("Echo thingie");
             tf.setImmediate(true);
             tf.addListener(new Property.ValueChangeListener() {
                 @Override

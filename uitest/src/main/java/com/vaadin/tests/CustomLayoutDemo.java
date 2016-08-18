@@ -23,13 +23,13 @@ import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.ui.Field;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.Tree;
 
 /**
  * This example demonstrates custom layout. All components created here are
@@ -156,7 +156,7 @@ public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication
         // Check if event occured at fsTree component
         if (event.getSource() == menu) {
             // Check if event is about changing value
-            if (event.getClass() == LegacyField.ValueChangeEvent.class) {
+            if (event.getClass() == Field.ValueChangeEvent.class) {
                 // Update body area with selected item
                 setBody(menu.getValue().toString());
             }

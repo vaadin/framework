@@ -24,15 +24,15 @@ import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.client.grid.GridClientColumnRendererConnector.Renderers;
 import com.vaadin.tests.widgetset.client.grid.GridClientColumnRendererRpc;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.AbstractSelect.ItemCaptionMode;
+import com.vaadin.v7.ui.NativeSelect;
 
 @Widgetset(TestingWidgetSet.NAME)
 public class GridClientColumnRenderers extends UI {

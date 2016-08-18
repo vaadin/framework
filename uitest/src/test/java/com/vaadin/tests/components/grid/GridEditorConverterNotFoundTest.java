@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridEditorConverterNotFoundTest extends GridBasicFeaturesTest {
 
@@ -33,9 +34,9 @@ public class GridEditorConverterNotFoundTest extends GridBasicFeaturesTest {
     public void testConverterNotFound() {
         openTestURL();
 
-        $(LegacyGridElement.class).first().getCell(0, 0).doubleClick();
+        $(GridElement.class).first().getCell(0, 0).doubleClick();
 
-        assertEquals("1. com.vaadin.data.Buffered$SourceException",
+        assertEquals("1. com.vaadin.v7.data.Buffered$SourceException",
                 getLogRow(0));
     }
 }

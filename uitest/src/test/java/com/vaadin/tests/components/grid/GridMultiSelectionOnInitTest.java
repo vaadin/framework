@@ -24,6 +24,7 @@ import org.openqa.selenium.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridMultiSelectionOnInitTest extends MultiBrowserTest {
@@ -32,7 +33,7 @@ public class GridMultiSelectionOnInitTest extends MultiBrowserTest {
     public void testSelectAllCheckBoxExists() {
         openTestURL();
         assertTrue("The select all checkbox was missing.",
-                $(LegacyGridElement.class).first().getHeaderCell(0, 0)
+                $(GridElement.class).first().getHeaderCell(0, 0)
                         .isElementPresent(By.tagName("input")));
     }
 
@@ -40,9 +41,9 @@ public class GridMultiSelectionOnInitTest extends MultiBrowserTest {
     public void testSetSelectedUpdatesClient() {
         openTestURL();
         assertFalse("Rows should not be selected initially.",
-                $(LegacyGridElement.class).first().getRow(0).isSelected());
+                $(GridElement.class).first().getRow(0).isSelected());
         $(ButtonElement.class).first().click();
         assertTrue("Rows should be selected after button click.",
-                $(LegacyGridElement.class).first().getRow(0).isSelected());
+                $(GridElement.class).first().getRow(0).isSelected());
     }
 }

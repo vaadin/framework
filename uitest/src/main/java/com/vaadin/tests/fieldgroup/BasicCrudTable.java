@@ -15,11 +15,11 @@
  */
 package com.vaadin.tests.fieldgroup;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.ui.Table;
 
 public class BasicCrudTable extends AbstractBasicCrud {
 

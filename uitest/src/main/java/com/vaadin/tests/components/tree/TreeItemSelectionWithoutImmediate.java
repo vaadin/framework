@@ -3,7 +3,7 @@ package com.vaadin.tests.components.tree;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.ui.Tree;
 
 @SuppressWarnings("serial")
 public class TreeItemSelectionWithoutImmediate extends AbstractTestUIWithLog {

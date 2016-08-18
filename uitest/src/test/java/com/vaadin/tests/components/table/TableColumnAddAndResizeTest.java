@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.NotificationElement;
-import com.vaadin.testbench.elements.TableElement;
+import com.vaadin.v7.testbench.customelements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TableColumnAddAndResizeTest extends MultiBrowserTest {

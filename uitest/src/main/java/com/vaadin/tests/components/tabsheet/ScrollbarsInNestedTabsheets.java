@@ -6,7 +6,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 @SuppressWarnings("serial")
 public class ScrollbarsInNestedTabsheets extends TestBase {
@@ -40,7 +40,7 @@ public class ScrollbarsInNestedTabsheets extends TestBase {
     private Layout getDummyLayout2() {
         final VerticalLayout l = new VerticalLayout();
         l.addComponent(new DateField("Date"));
-        l.addComponent(new LegacyTextField("TextField"));
+        l.addComponent(new TextField("TextField"));
 
         return l;
     }

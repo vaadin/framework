@@ -3,22 +3,10 @@ package com.vaadin.tests.components.menubar;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.testbench.By;
-import com.vaadin.testbench.elementsbase.ServerClass;
+import com.vaadin.testbench.customelements.MenuBarElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class MenuBarNavigationMouseTest extends MultiBrowserTest {
-
-    @ServerClass("com.vaadin.ui.MenuBar")
-    public static class MenuBarElement
-            extends com.vaadin.testbench.elements.MenuBarElement {
-
-        public void openMenuPath(String... captions) {
-            for (String c : captions) {
-                findElement(By.vaadin("#" + c)).click();
-            }
-        }
-    }
 
     @Override
     protected Class<?> getUIClass() {

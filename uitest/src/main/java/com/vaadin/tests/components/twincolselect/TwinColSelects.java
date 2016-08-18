@@ -3,7 +3,7 @@ package com.vaadin.tests.components.twincolselect;
 import java.util.LinkedHashMap;
 
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
-import com.vaadin.ui.TwinColSelect;
+import com.vaadin.v7.ui.TwinColSelect;
 
 public class TwinColSelects extends AbstractSelectTestCase<TwinColSelect> {
 

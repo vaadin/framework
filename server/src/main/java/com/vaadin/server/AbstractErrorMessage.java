@@ -21,7 +21,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.Buffered;
+import com.vaadin.v7.data.Buffered;
 import com.vaadin.v7.data.Validator;
 
 /**

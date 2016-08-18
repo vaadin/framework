@@ -24,7 +24,7 @@ import java.util.Map.Entry;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
-import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.Converter;
 
 /**
  * Converter for {@link ShortcutActions}.
@@ -33,7 +33,7 @@ import com.vaadin.v7.data.util.converter.LegacyConverter;
  * @author Vaadin Ltd
  */
 public class DesignShortcutActionConverter
-        implements LegacyConverter<String, ShortcutAction> {
+        implements Converter<String, ShortcutAction> {
 
     private final Map<Integer, String> keyCodeMap;
     private final Map<String, Integer> presentationMap;
@@ -122,7 +122,7 @@ public class DesignShortcutActionConverter
     @Override
     public ShortcutAction convertToModel(String value,
             Class<? extends ShortcutAction> targetType, Locale locale)
-            throws LegacyConverter.ConversionException {
+            throws Converter.ConversionException {
         if (value.length() == 0) {
             return null;
         }
@@ -163,7 +163,7 @@ public class DesignShortcutActionConverter
     @Override
     public String convertToPresentation(ShortcutAction value,
             Class<? extends String> targetType, Locale locale)
-            throws LegacyConverter.ConversionException {
+            throws Converter.ConversionException {
         StringBuilder sb = new StringBuilder();
         // handle modifiers
         if (value.getModifiers() != null) {

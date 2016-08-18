@@ -6,14 +6,14 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HasChildMeasurementHint.ChildMeasurementHint;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 public class TableChildMeasurementHint extends AbstractTestUI {
 
@@ -143,7 +143,7 @@ public class TableChildMeasurementHint extends AbstractTestUI {
         table.addGeneratedColumn("First_Name" + 3, new Table.ColumnGenerator() {
             @Override
             public Object generateCell(Table components, Object o, Object o2) {
-                LegacyTextField b = new LegacyTextField("Textfield");
+                TextField b = new TextField("Textfield");
                 b.setWidthUndefined();
                 return b;
             }

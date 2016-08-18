@@ -1,23 +1,23 @@
 package com.vaadin.tests.containers;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Sizeable;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 public class IndexedContainerFilteringTest extends TestBase {
 
     private Table table;
     private IndexedContainer container;
-    private LegacyTextField filterString;
-    private LegacyTextField position;
+    private TextField filterString;
+    private TextField position;
     private int nextToAdd = 1;
     private Label nextLabel;
 
@@ -48,7 +48,7 @@ public class IndexedContainerFilteringTest extends TestBase {
         VerticalLayout vl = new VerticalLayout();
 
         // activate & deactivate filtering
-        filterString = new LegacyTextField("Filter string:", "1");
+        filterString = new TextField("Filter string:", "1");
         vl.addComponent(filterString);
 
         final CheckBox cb = new CheckBox("Filter");
@@ -109,7 +109,7 @@ public class IndexedContainerFilteringTest extends TestBase {
         addItemAfterButton.setImmediate(true);
         vl.addComponent(addItemAfterButton);
 
-        position = new LegacyTextField("Position:", "0");
+        position = new TextField("Position:", "0");
         vl.addComponent(position);
 
         final Button addItemAtButton = new Button("addItemAt()",

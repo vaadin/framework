@@ -21,11 +21,12 @@ import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.TabSheetElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridInTabSheetTest extends MultiBrowserTest {
@@ -97,6 +98,6 @@ public class GridInTabSheetTest extends MultiBrowserTest {
     }
 
     private GridElement getGridElement() {
-        return $(LegacyGridElement.class).first();
+        return $(GridElement.class).first();
     }
 }

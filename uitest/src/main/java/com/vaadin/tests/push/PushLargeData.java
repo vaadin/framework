@@ -30,7 +30,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public abstract class PushLargeData extends AbstractTestUIWithLog {
 
@@ -51,20 +51,20 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
     private final ExecutorService executor = Executors
             .newSingleThreadExecutor();
 
-    protected LegacyTextField dataSize;
+    protected TextField dataSize;
 
-    protected LegacyTextField interval;
+    protected TextField interval;
 
-    protected LegacyTextField duration;
+    protected TextField duration;
 
     @Override
     protected void setup(VaadinRequest request) {
         dataLabel.setSizeUndefined();
-        dataSize = new LegacyTextField("Data size");
+        dataSize = new TextField("Data size");
         dataSize.setConverter(Integer.class);
-        interval = new LegacyTextField("Interval (ms)");
+        interval = new TextField("Interval (ms)");
         interval.setConverter(Integer.class);
-        duration = new LegacyTextField("Duration (ms)");
+        duration = new TextField("Duration (ms)");
         duration.setConverter(Integer.class);
 
         dataSize.setValue(DEFAULT_SIZE_BYTES + "");

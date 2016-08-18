@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.TextAreaElement;
+import com.vaadin.v7.testbench.customelements.TextAreaElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**

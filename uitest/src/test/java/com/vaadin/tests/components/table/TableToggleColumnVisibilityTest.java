@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.TableElement;
+import com.vaadin.v7.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.TableHeaderElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 

@@ -4,8 +4,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.datefield.Resolution;
@@ -16,10 +14,12 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyDateField;
-import com.vaadin.v7.ui.LegacyInlineDateField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.DateField;
+import com.vaadin.v7.ui.InlineDateField;
+import com.vaadin.v7.ui.NativeSelect;
 
 public class LegacyDateFieldRanges extends AbstractTestUI {
 
@@ -30,17 +30,17 @@ public class LegacyDateFieldRanges extends AbstractTestUI {
 
     private Label label = new Label();
     private NativeSelect resoSelect = new NativeSelect("Resolution");
-    private LegacyDateField fromRange = new LegacyDateField("Range start");
-    private LegacyDateField toRange = new LegacyDateField("Range end");
-    private LegacyDateField valueDF = new LegacyDateField("Value");
+    private DateField fromRange = new DateField("Range start");
+    private DateField toRange = new DateField("Range end");
+    private DateField valueDF = new DateField("Value");
     private CheckBox immediateCB = new CheckBox("Immediate");
     private Button recreate = new Button("Recreate static datefields");
     private Button clearRangeButton = new Button("Clear range");
 
     private GridLayout currentStaticContainer;
 
-    private LegacyDateField inlineDynamicDateField;
-    private LegacyDateField dynamicDateField;
+    private DateField inlineDynamicDateField;
+    private DateField dynamicDateField;
 
     private Calendar createCalendar() {
         Calendar c = Calendar.getInstance();
@@ -201,10 +201,10 @@ public class LegacyDateFieldRanges extends AbstractTestUI {
         endCal.add(Calendar.DATE, 30);
         GridLayout gl = new GridLayout(2, 2);
         gl.setSpacing(true);
-        LegacyDateField df = createDateField(startCal.getTime(),
+        DateField df = createDateField(startCal.getTime(),
                 endCal.getTime(), null, Resolution.DAY, false);
         gl.addComponent(df);
-        LegacyDateField inline = createDateField(startCal.getTime(),
+        DateField inline = createDateField(startCal.getTime(),
                 endCal.getTime(), null, Resolution.DAY, true);
         gl.addComponent(inline);
         inline.setId("staticInline");
@@ -213,18 +213,18 @@ public class LegacyDateFieldRanges extends AbstractTestUI {
         return gl;
     }
 
-    private LegacyDateField createDateField(Date rangeStart, Date rangeEnd,
+    private DateField createDateField(Date rangeStart, Date rangeEnd,
             Date value, Resolution resolution, boolean inline) {
 
-        LegacyDateField df = null;
+        DateField df = null;
 
         if (inline) {
-            df = new LegacyInlineDateField();
+            df = new InlineDateField();
         } else {
-            df = new LegacyDateField();
+            df = new DateField();
         }
 
-        final LegacyDateField gg = df;
+        final DateField gg = df;
         updateValuesForDateField(df);
 
         df.addValueChangeListener(new ValueChangeListener() {
@@ -245,7 +245,7 @@ public class LegacyDateFieldRanges extends AbstractTestUI {
 
     }
 
-    private void updateValuesForDateField(LegacyDateField df) {
+    private void updateValuesForDateField(DateField df) {
         Date fromVal = fromRange.getValue();
         Date toVal = toRange.getValue();
         Date value = valueDF.getValue();

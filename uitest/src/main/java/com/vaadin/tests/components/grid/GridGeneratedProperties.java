@@ -15,24 +15,24 @@
  */
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.data.Container.Filter;
-import com.vaadin.data.Container.Filterable;
-import com.vaadin.data.Container.Indexed;
-import com.vaadin.data.Item;
 import com.vaadin.data.sort.Sort;
 import com.vaadin.data.sort.SortOrder;
-import com.vaadin.data.util.GeneratedPropertyContainer;
-import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.data.util.PropertyValueGenerator;
-import com.vaadin.data.util.filter.Compare;
-import com.vaadin.data.util.filter.UnsupportedFilterException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.data.Container.Filter;
+import com.vaadin.v7.data.Container.Filterable;
+import com.vaadin.v7.data.Container.Indexed;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.GeneratedPropertyContainer;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.data.util.PropertyValueGenerator;
+import com.vaadin.v7.data.util.filter.Compare;
+import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
+import com.vaadin.v7.ui.Grid;
 
 public class GridGeneratedProperties extends AbstractTestUI {
 
@@ -43,7 +43,7 @@ public class GridGeneratedProperties extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         container = new GeneratedPropertyContainer(createContainer());
-        LegacyGrid grid = new LegacyGrid(container);
+        Grid grid = new Grid(container);
         addComponent(grid);
 
         container.addGeneratedProperty("miles",

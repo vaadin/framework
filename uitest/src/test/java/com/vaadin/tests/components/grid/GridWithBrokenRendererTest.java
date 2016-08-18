@@ -18,15 +18,16 @@ package com.vaadin.tests.components.grid;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridWithBrokenRendererTest extends SingleBrowserTest {
 
     @Test
     public void ensureRendered() {
         openTestURL();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         assertRow(grid, 0, "FI", "", "Finland");
         assertRow(grid, 1, "SE", "", "Sweden");
     }

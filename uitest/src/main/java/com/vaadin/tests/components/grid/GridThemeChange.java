@@ -22,8 +22,8 @@ import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.SelectionMode;
 
 public class GridThemeChange extends AbstractTestUI {
     private final List<String> themes = Arrays.asList("valo", "reindeer",
@@ -31,7 +31,7 @@ public class GridThemeChange extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final LegacyGrid grid = new LegacyGrid();
+        final Grid grid = new Grid();
         grid.setSelectionMode(SelectionMode.SINGLE);
 
         grid.addColumn("Theme");

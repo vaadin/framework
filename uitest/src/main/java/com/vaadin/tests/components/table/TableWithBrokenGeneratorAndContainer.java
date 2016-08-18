@@ -17,9 +17,6 @@ package com.vaadin.tests.components.table;
 
 import java.lang.reflect.InvocationTargetException;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ListenerMethod.MethodException;
 import com.vaadin.server.ErrorEvent;
 import com.vaadin.server.ErrorHandler;
@@ -30,9 +27,12 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.CacheUpdateException;
-import com.vaadin.ui.Table.ColumnGenerator;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.CacheUpdateException;
+import com.vaadin.v7.ui.Table.ColumnGenerator;
 
 public class TableWithBrokenGeneratorAndContainer extends TestBase {
 

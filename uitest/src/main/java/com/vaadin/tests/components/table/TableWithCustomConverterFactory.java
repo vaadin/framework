@@ -19,19 +19,19 @@ import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Table;
-import com.vaadin.v7.data.util.converter.LegacyConverter;
-import com.vaadin.v7.data.util.converter.LegacyDefaultConverterFactory;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.DefaultConverterFactory;
+import com.vaadin.v7.ui.Table;
 
 public class TableWithCustomConverterFactory extends AbstractTestUI {
 
     public static class MyIntegerConverter
-            implements LegacyConverter<String, Integer> {
+            implements Converter<String, Integer> {
 
         @Override
         public Integer convertToModel(String value,
                 Class<? extends Integer> targetType, Locale locale)
-                throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
+                throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
             // TODO Auto-generated method stub
             return null;
         }
@@ -39,7 +39,7 @@ public class TableWithCustomConverterFactory extends AbstractTestUI {
         @Override
         public String convertToPresentation(Integer value,
                 Class<? extends String> targetType, Locale locale)
-                throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
+                throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
             return "Integer: " + value;
         }
 
@@ -56,9 +56,9 @@ public class TableWithCustomConverterFactory extends AbstractTestUI {
     }
 
     public static class MyConverterFactory
-            extends LegacyDefaultConverterFactory {
+            extends DefaultConverterFactory {
         @Override
-        protected LegacyConverter<String, ?> createStringConverter(
+        protected Converter<String, ?> createStringConverter(
                 Class<?> sourceType) {
             if (Integer.class.isAssignableFrom(sourceType)) {
                 return new MyIntegerConverter();

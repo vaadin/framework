@@ -3,19 +3,19 @@ package com.vaadin.tests.components.table;
 import java.io.Serializable;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnReorderEvent;
-import com.vaadin.ui.Table.ColumnReorderListener;
-import com.vaadin.ui.Table.HeaderClickEvent;
-import com.vaadin.ui.Table.HeaderClickListener;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.ColumnReorderEvent;
+import com.vaadin.v7.ui.Table.ColumnReorderListener;
+import com.vaadin.v7.ui.Table.HeaderClickEvent;
+import com.vaadin.v7.ui.Table.HeaderClickListener;
 
 @Theme("valo")
 @SuppressWarnings("serial")

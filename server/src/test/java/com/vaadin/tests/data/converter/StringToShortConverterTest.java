@@ -3,15 +3,15 @@ package com.vaadin.tests.data.converter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.v7.data.util.converter.LegacyConverter;
-import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
-import com.vaadin.v7.data.util.converter.LegacyReverseConverter;
-import com.vaadin.v7.data.util.converter.LegacyStringToShortConverter;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.Converter.ConversionException;
+import com.vaadin.v7.data.util.converter.ReverseConverter;
+import com.vaadin.v7.data.util.converter.StringToShortConverter;
 
 public class StringToShortConverterTest {
 
-    LegacyStringToShortConverter converter = new LegacyStringToShortConverter();
-    LegacyConverter<Short, String> reverseConverter = new LegacyReverseConverter<Short, String>(
+    StringToShortConverter converter = new StringToShortConverter();
+    Converter<Short, String> reverseConverter = new ReverseConverter<Short, String>(
             converter);
 
     @Test

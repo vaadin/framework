@@ -19,14 +19,14 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.util.ResizeTerrorizer;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
-import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.UI;
+import com.vaadin.v7.ui.Grid;
 
 @Widgetset(TestingWidgetSet.NAME)
 public class GridResizeTerror extends UI {
     @Override
     protected void init(VaadinRequest request) {
-        LegacyGrid grid = new LegacyGrid();
+        Grid grid = new Grid();
 
         int cols = 10;
         Object[] data = new Object[cols];

@@ -15,21 +15,21 @@
  */
 package com.vaadin.tests.contextclick;
 
-import com.vaadin.data.Item;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.GridContextClickEvent;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.GridContextClickEvent;
 
 public class GridContextClick
-        extends AbstractContextClickUI<LegacyGrid, GridContextClickEvent> {
+        extends AbstractContextClickUI<Grid, GridContextClickEvent> {
 
     @Override
-    protected LegacyGrid createTestComponent() {
-        LegacyGrid grid = new LegacyGrid(PersonContainer.createWithTestData());
+    protected Grid createTestComponent() {
+        Grid grid = new Grid(PersonContainer.createWithTestData());
         grid.setFooterVisible(true);
         grid.appendFooterRow();
 

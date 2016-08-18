@@ -17,9 +17,9 @@ package com.vaadin.client.v7.ui.checkbox;
 
 import com.vaadin.client.ui.checkbox.CheckBoxConnector;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.v7.ui.LegacyCheckBox;
+import com.vaadin.v7.ui.CheckBox;
 
-@Connect(LegacyCheckBox.class)
+@Connect(CheckBox.class)
 public class LegacyCheckBoxConnector extends CheckBoxConnector {
 
 }

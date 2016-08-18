@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.uitest.components;
 
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.tests.components.uitest.TestSampler;
 import com.vaadin.tests.util.Person;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup;
+import com.vaadin.v7.data.util.BeanItem;
 
 public class FormsCssTest extends HorizontalLayout {
 

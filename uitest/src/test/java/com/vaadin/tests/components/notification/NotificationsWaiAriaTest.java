@@ -22,11 +22,11 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.shared.ui.ui.NotificationRole;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.NativeSelectElement;
+import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.data.util.converter.LegacyStringToEnumConverter;
+import com.vaadin.v7.data.util.converter.StringToEnumConverter;
 
 /**
  * Unit test class for Notification ARIA (Accessible Rich Internet Applications)
@@ -58,7 +58,7 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
         postfix.clear();
         postfix.sendKeys("- press ESC to close");
 
-        type.selectByText(LegacyStringToEnumConverter
+        type.selectByText(StringToEnumConverter
                 .enumToString(NotificationRole.ALERT, null));
 
         show.click();
@@ -83,7 +83,7 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
 
         notification.close();
 
-        type.selectByText(LegacyStringToEnumConverter
+        type.selectByText(StringToEnumConverter
                 .enumToString(NotificationRole.STATUS, null));
 
         show.click();

@@ -23,7 +23,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextArea;
+import com.vaadin.v7.ui.TextArea;
 
 public class DragAndDropWrapperInPanel extends TestBase {
 

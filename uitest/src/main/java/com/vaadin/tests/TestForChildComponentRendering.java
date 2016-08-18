@@ -26,8 +26,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Select;
 
 /**
  *

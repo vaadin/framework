@@ -4,13 +4,13 @@ import java.util.Date;
 import java.util.Locale;
 
 import com.vaadin.data.HasValue;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.CheckBoxWithPropertyDataSource;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.v7.data.validator.LegacyRangeValidator;
-import com.vaadin.v7.ui.LegacyPopupDateField;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.data.validator.RangeValidator;
+import com.vaadin.v7.ui.PopupDateField;
 
 public class DateFieldRangeValidation extends TestBase {
 
@@ -55,7 +55,7 @@ public class DateFieldRangeValidation extends TestBase {
 
     private Range range = new Range();
 
-    private LegacyPopupDateField actualDateField;
+    private PopupDateField actualDateField;
     private HasValue.ValueChangeListener<Boolean> refreshField = event -> actualDateField
             .markAsDirty();
 
@@ -65,7 +65,7 @@ public class DateFieldRangeValidation extends TestBase {
         range.setFrom(new Date(2011 - 1900, 12 - 1, 4));
         range.setTo(new Date(2011 - 1900, 12 - 1, 15));
 
-        LegacyPopupDateField fromField = createDateField();
+        PopupDateField fromField = createDateField();
         fromField.setPropertyDataSource(bi.getItemProperty("from"));
         CheckBox fromInclusive = new CheckBoxWithPropertyDataSource(
                 "From inclusive", bi.getItemProperty("fromInclusive"));
@@ -76,13 +76,13 @@ public class DateFieldRangeValidation extends TestBase {
         toInclusive.setImmediate(true);
         toInclusive.addValueChangeListener(refreshField);
 
-        LegacyPopupDateField toField = createDateField();
+        PopupDateField toField = createDateField();
         toField.setPropertyDataSource(bi.getItemProperty("to"));
 
         actualDateField = createDateField();
         actualDateField.setValue(new Date(2011 - 1900, 12 - 1, 1));
         actualDateField.addValidator(
-                new LegacyRangeValidator<Date>("", Date.class, null, null) {
+                new RangeValidator<Date>("", Date.class, null, null) {
                     @Override
                     public boolean isMinValueIncluded() {
                         return range.isFromInclusive();
@@ -116,8 +116,8 @@ public class DateFieldRangeValidation extends TestBase {
         addComponent(actualDateField);
     }
 
-    private LegacyPopupDateField createDateField() {
-        LegacyPopupDateField df = new LegacyPopupDateField();
+    private PopupDateField createDateField() {
+        PopupDateField df = new PopupDateField();
         df.setLocale(new Locale("en", "US"));
         df.setResolution(Resolution.DAY);
         df.setBuffered(false);

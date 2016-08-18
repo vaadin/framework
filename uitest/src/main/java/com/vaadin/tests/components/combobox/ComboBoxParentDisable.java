@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.combobox;
 
-import com.vaadin.data.Property;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.ui.ComboBox;
 
 /**
  * The Application's "main" class

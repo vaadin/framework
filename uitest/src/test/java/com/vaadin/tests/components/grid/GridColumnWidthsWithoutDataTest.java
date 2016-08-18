@@ -21,12 +21,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
-import com.vaadin.testbench.elements.NativeSelectElement;
+import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
@@ -34,7 +35,7 @@ public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
     @Test
     public void testWidthsWhenAddingDataBack() {
         openTestURL();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         int[] baseWidths = getColWidths(grid);
         Assert.assertEquals("Sanity check", 2, baseWidths.length);
@@ -57,7 +58,7 @@ public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
         openTestURL();
         $(ButtonElement.class).caption("Recreate without data").first().click();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         int[] baseWidths = getColWidths(grid);
         Assert.assertEquals("Sanity check", 2, baseWidths.length);
@@ -84,7 +85,7 @@ public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
         $(NativeSelectElement.class).caption("Selection mode").first()
                 .selectByText("Multi");
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         int sum = sumUsedWidths(grid);
 
@@ -93,7 +94,7 @@ public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
 
         $(ButtonElement.class).caption("Recreate without data").first().click();
 
-        grid = $(LegacyGridElement.class).first();
+        grid = $(GridElement.class).first();
         sum = sumUsedWidths(grid);
 
         // 295 instead of 300 to avoid rounding issues

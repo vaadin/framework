@@ -7,8 +7,8 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.NativeButton;
+import com.vaadin.v7.ui.LegacyWindow;
 
 @SuppressWarnings("serial")
 public class ButtonsTest extends com.vaadin.server.LegacyApplication {

@@ -19,8 +19,8 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Grid.SelectionMode;
 
 public class GridDragSelectionWhileScrolled extends AbstractTestUI {
 

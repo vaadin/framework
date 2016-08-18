@@ -18,21 +18,21 @@ package com.vaadin.tests.components.grid;
 import java.util.ArrayList;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Container.Indexed;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.data.Container.Indexed;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.ui.Grid;
 
 @Theme("valo")
 public class GridColumnWidthRecalculation extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final LegacyGrid grid = new LegacyGrid();
+        final Grid grid = new Grid();
 
         grid.addColumn("Column 1");
         grid.addColumn("Column 2");
@@ -64,7 +64,7 @@ public class GridColumnWidthRecalculation extends AbstractTestUI {
     }
 
     @SuppressWarnings("unchecked")
-    protected void swapData(LegacyGrid grid) {
+    protected void swapData(Grid grid) {
         Indexed dataSource = grid.getContainerDataSource();
         Object itemId = dataSource.getItemIds().iterator().next();
         Item item = dataSource.getItem(itemId);

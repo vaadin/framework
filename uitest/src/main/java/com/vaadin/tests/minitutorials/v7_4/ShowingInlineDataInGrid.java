@@ -18,15 +18,15 @@ package com.vaadin.tests.minitutorials.v7_4;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.grid.HeightMode;
-import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.UI;
+import com.vaadin.v7.ui.Grid;
 
 @Theme("valo")
 public class ShowingInlineDataInGrid extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        final LegacyGrid grid = new LegacyGrid();
+        final Grid grid = new Grid();
 
         grid.addColumn("Name").setSortable(true);
         grid.addColumn("Score", Integer.class);

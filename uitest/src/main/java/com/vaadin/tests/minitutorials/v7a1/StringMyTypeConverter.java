@@ -8,9 +8,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
-import com.vaadin.v7.data.util.converter.LegacyConverter;
-import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.Converter.ConversionException;
+import com.vaadin.v7.ui.TextField;
 
 public class StringMyTypeConverter extends AbstractTestUI {
 
@@ -18,7 +18,7 @@ public class StringMyTypeConverter extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         Name name = new Name("Rudolph", "Reindeer");
 
-        final LegacyTextField textField = new LegacyTextField("Name");
+        final TextField textField = new TextField("Name");
         textField.setConverter(new StringToNameConverter());
         textField.setConvertedValue(name);
 
@@ -50,7 +50,7 @@ public class StringMyTypeConverter extends AbstractTestUI {
 
 }
 
-class StringToNameConverter implements LegacyConverter<String, Name> {
+class StringToNameConverter implements Converter<String, Name> {
     @Override
     public Name convertToModel(String text, Class<? extends Name> targetType,
             Locale locale) throws ConversionException {

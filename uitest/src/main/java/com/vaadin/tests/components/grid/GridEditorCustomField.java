@@ -19,22 +19,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.legacy.ui.LegacyCustomField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.CustomField;
+import com.vaadin.v7.ui.Grid;
 
 @Theme("valo")
 public class GridEditorCustomField extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        LegacyGrid grid = new PersonTestGrid(100);
+        Grid grid = new PersonTestGrid(100);
         grid.setWidth("800px");
         grid.setColumns("firstName", "lastName", "address.city");
         grid.setEditorEnabled(true);
@@ -49,7 +49,7 @@ public class GridEditorCustomField extends AbstractTestUIWithLog {
         addComponent(grid);
     }
 
-    public static class CustomCitySelect extends LegacyCustomField<String> {
+    public static class CustomCitySelect extends CustomField<String> {
         private HorizontalLayout fieldLayout;
         private String[] values;
         private ComboBox cityComboBox;

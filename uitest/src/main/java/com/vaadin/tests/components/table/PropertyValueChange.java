@@ -1,21 +1,21 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.AbstractSelect.NewItemHandler;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.ui.TableFieldFactory;
-import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.AbstractSelect.NewItemHandler;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.DefaultFieldFactory;
+import com.vaadin.v7.ui.Field;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.ColumnGenerator;
+import com.vaadin.v7.ui.TableFieldFactory;
 
 public class PropertyValueChange extends TestBase {
 
@@ -138,7 +138,7 @@ class MyFieldFactory extends DefaultFieldFactory {
     }
 
     @Override
-    public LegacyField<?> createField(Container container, Object itemId,
+    public Field<?> createField(Container container, Object itemId,
             Object propertyId, Component uiContext) {
         if (propertyId.equals("text")) {
             // replace text fields with comboboxes

@@ -17,13 +17,13 @@ package com.vaadin.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.ui.Grid;
 
 public class GridMultiSelectionScrollBar extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        LegacyGrid grid = new LegacyGrid();
+        Grid grid = new Grid();
         grid.addColumn("X").setWidth(39.25d);
         grid.addColumn("Hello");
         grid.addColumn("World");

@@ -14,7 +14,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class WindowShouldRemoveActionHandler extends AbstractTestUI {
 
@@ -35,7 +35,7 @@ public class WindowShouldRemoveActionHandler extends AbstractTestUI {
         getLayout().setMargin(new MarginInfo(true, false, false, false));
         state = new Label("An UI with no action handlers.");
         state.setId("state");
-        addComponents(state, new LegacyTextField());
+        addComponents(state, new TextField());
 
         addButton("Add an action handler", new Button.ClickListener() {
 

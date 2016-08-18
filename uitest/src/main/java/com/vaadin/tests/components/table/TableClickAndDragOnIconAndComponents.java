@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -11,15 +9,17 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.ui.Table.RowHeaderMode;
-import com.vaadin.ui.Table.TableDragMode;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.ColumnGenerator;
+import com.vaadin.v7.ui.Table.RowHeaderMode;
+import com.vaadin.v7.ui.Table.TableDragMode;
+import com.vaadin.v7.ui.TextField;
 
 public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
 
@@ -60,7 +60,7 @@ public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 Item item = source.getItem(itemId);
-                LegacyTextField textfield = new LegacyTextField();
+                TextField textfield = new TextField();
                 textfield.setValue(
                         String.valueOf(item.getItemProperty("foo").getValue()));
                 return textfield;
@@ -74,7 +74,7 @@ public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 Item item = source.getItem(itemId);
-                LegacyTextField textfield = new LegacyTextField();
+                TextField textfield = new TextField();
                 textfield.setValue(
                         String.valueOf(item.getItemProperty("foo").getValue()));
                 textfield.setReadOnly(true);

@@ -8,8 +8,6 @@ import java.util.logging.Level;
 
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
@@ -17,9 +15,11 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.SelectionMode;
 
 @Push
 @Theme("valo")
@@ -65,7 +65,7 @@ public class GridFastAsyncUpdate extends AbstractTestUI {
 
     private int counter;
 
-    private LegacyGrid grid;
+    private Grid grid;
     private IndexedContainer container;
     private long loggingStart;
     private volatile boolean scrollLock = false;
@@ -126,7 +126,7 @@ public class GridFastAsyncUpdate extends AbstractTestUI {
         container.addContainerProperty("level", String.class, null);
         container.addContainerProperty("message", String.class, null);
 
-        grid = new LegacyGrid(container);
+        grid = new Grid(container);
         grid.setWidth("100%");
         grid.setImmediate(true);
         grid.setSelectionMode(SelectionMode.SINGLE);

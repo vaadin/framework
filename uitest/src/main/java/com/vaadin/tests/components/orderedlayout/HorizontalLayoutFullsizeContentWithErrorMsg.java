@@ -8,14 +8,14 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class HorizontalLayoutFullsizeContentWithErrorMsg
         extends AbstractTestUI {
 
     static final String FIELD_ID = "f";
     static final String BUTTON_ID = "b";
-    private LegacyTextField tf;
+    private TextField tf;
 
     @Override
     protected Integer getTicketNumber() {
@@ -33,7 +33,7 @@ public class HorizontalLayoutFullsizeContentWithErrorMsg
         HorizontalLayout hl = new HorizontalLayout();
         hl.setWidth("500px");
 
-        tf = new LegacyTextField();
+        tf = new TextField();
         tf.setId(FIELD_ID);
         tf.setWidth("100%");
         hl.addComponent(tf);

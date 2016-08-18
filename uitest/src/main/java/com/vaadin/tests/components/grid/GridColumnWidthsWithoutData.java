@@ -17,21 +17,21 @@ package com.vaadin.tests.components.grid;
 
 import java.util.EnumSet;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.SelectionMode;
+import com.vaadin.v7.ui.NativeSelect;
 
 public class GridColumnWidthsWithoutData extends AbstractTestUI {
 
     private SelectionMode selectionMode = SelectionMode.NONE;
-    private LegacyGrid grid = createGrid(true);
+    private Grid grid = createGrid(true);
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -82,13 +82,13 @@ public class GridColumnWidthsWithoutData extends AbstractTestUI {
 
     }
 
-    private void replaceGrid(LegacyGrid newGrid) {
+    private void replaceGrid(Grid newGrid) {
         ((VerticalLayout) grid.getParent()).replaceComponent(grid, newGrid);
         grid = newGrid;
     }
 
-    private LegacyGrid createGrid(boolean withData) {
-        LegacyGrid grid = new LegacyGrid();
+    private Grid createGrid(boolean withData) {
+        Grid grid = new Grid();
         grid.addColumn("foo");
         grid.addColumn("bar");
         grid.setWidth("300px");
@@ -101,7 +101,7 @@ public class GridColumnWidthsWithoutData extends AbstractTestUI {
         return grid;
     }
 
-    private void addDataToGrid(LegacyGrid grid) {
+    private void addDataToGrid(Grid grid) {
         grid.addRow("Some", "Data with more data in one col");
     }
 

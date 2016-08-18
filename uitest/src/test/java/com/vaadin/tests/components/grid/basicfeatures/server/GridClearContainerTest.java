@@ -19,10 +19,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.parallel.TestCategory;
-import com.vaadin.tests.components.grid.LegacyGridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 /**
  * Tests that removing and adding rows doesn't cause an infinite loop in the
@@ -40,7 +40,7 @@ public class GridClearContainerTest extends MultiBrowserTest {
         openTestURL();
         ButtonElement button = $(ButtonElement.class)
                 .caption("Clear and re-add").first();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         Assert.assertEquals(ERRORNOTE, "default", grid.getCell(0, 0).getText());
         Assert.assertEquals(ERRORNOTE, "default", grid.getCell(1, 0).getText());
         button.click();

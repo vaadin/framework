@@ -3,7 +3,7 @@ package com.vaadin.tests.components.tree;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomLayout;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.ui.Tree;
 
 public class ItemStyleGenerator extends TestBase {
 

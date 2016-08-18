@@ -3,10 +3,10 @@ package com.vaadin.tests.components.combobox;
 import java.util.Arrays;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.TextArea;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.TextArea;
 
 public class ComboboxInPopupViewWithItems extends TestBase {
 

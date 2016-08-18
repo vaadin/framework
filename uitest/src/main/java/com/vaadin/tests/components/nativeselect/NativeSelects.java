@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.nativeselect;
 
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
-import com.vaadin.ui.NativeSelect;
+import com.vaadin.v7.ui.NativeSelect;
 
 public class NativeSelects extends AbstractSelectTestCase<NativeSelect> {
 

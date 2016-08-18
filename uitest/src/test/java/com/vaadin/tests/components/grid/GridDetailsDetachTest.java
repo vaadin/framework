@@ -25,6 +25,7 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridDetailsDetachTest extends MultiBrowserTest {
@@ -34,8 +35,8 @@ public class GridDetailsDetachTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        $(LegacyGridElement.class).first().getCell(3, 0).click();
-        $(LegacyGridElement.class).first().getCell(5, 0).click();
+        $(GridElement.class).first().getCell(3, 0).click();
+        $(GridElement.class).first().getCell(5, 0).click();
 
         assertNoErrorNotifications();
 
@@ -49,8 +50,8 @@ public class GridDetailsDetachTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        $(LegacyGridElement.class).first().getCell(3, 0).click();
-        $(LegacyGridElement.class).first().getCell(5, 0).click();
+        $(GridElement.class).first().getCell(3, 0).click();
+        $(GridElement.class).first().getCell(5, 0).click();
 
         assertNoErrorNotifications();
 
@@ -75,8 +76,8 @@ public class GridDetailsDetachTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        $(LegacyGridElement.class).first().getCell(3, 0).click();
-        $(LegacyGridElement.class).first().getCell(5, 0).click();
+        $(GridElement.class).first().getCell(3, 0).click();
+        $(GridElement.class).first().getCell(5, 0).click();
 
         assertNoErrorNotifications();
 

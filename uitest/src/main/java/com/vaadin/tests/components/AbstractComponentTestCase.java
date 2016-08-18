@@ -11,7 +11,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Layout.SpacingHandler;
-import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.ui.Field;
 
 public abstract class AbstractComponentTestCase<T extends AbstractComponent>
         extends TestBase {
@@ -154,7 +154,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
         @Override
         public void execute(T c, String value, Object data) {
-            ((LegacyField<?>) c).setRequiredError(value);
+            ((Field<?>) c).setRequiredError(value);
         }
 
     };

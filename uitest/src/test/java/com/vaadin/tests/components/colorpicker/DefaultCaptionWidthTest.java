@@ -20,7 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import com.vaadin.testbench.elements.ColorPickerElement;
+import com.vaadin.v7.testbench.customelements.ColorPickerElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**

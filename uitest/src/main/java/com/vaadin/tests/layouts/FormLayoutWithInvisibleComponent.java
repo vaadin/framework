@@ -3,7 +3,7 @@ package com.vaadin.tests.layouts;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.TextArea;
+import com.vaadin.v7.ui.TextArea;
 
 public class FormLayoutWithInvisibleComponent extends TestBase {
 

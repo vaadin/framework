@@ -22,14 +22,14 @@ import java.util.Map;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 public class PerformanceTestBasicComponentRendering extends CustomComponent {
 
@@ -80,7 +80,7 @@ public class PerformanceTestBasicComponentRendering extends CustomComponent {
             }
             testContainer.addComponent(cb);
 
-            LegacyTextField tf = new LegacyTextField("TextField " + i);
+            TextField tf = new TextField("TextField " + i);
             tf.setDescription("DESC SDKJSDF");
             tf.setComponentError(new UserError("dsfjklsdf"));
             testContainer.addComponent(tf);

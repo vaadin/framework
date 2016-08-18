@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Table;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 public class HugeRowCount extends TestBase {
 
@@ -19,7 +19,7 @@ public class HugeRowCount extends TestBase {
         container = new MockupContainer();
         container.setSize(100000);
 
-        final LegacyTextField tf = new LegacyTextField("Rows");
+        final TextField tf = new TextField("Rows");
         tf.setValue(String.valueOf(100000));
         tf.addListener(new Property.ValueChangeListener() {
             @Override

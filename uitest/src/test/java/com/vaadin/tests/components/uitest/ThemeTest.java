@@ -8,38 +8,17 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.DateFieldElement;
+import com.vaadin.testbench.customelements.FixedNotificationElement;
+import com.vaadin.testbench.customelements.WindowElement;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.testbench.elements.DateFieldElement;
-import com.vaadin.testbench.elements.TableElement;
-import com.vaadin.testbench.elementsbase.ServerClass;
+import com.vaadin.v7.testbench.customelements.ComboBoxElement;
+import com.vaadin.testbench.elements.TabSheetElement;
+import com.vaadin.v7.testbench.customelements.TableElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.newelements.FixedNotificationElement;
-import com.vaadin.tests.tb3.newelements.WindowElement;
 
 public abstract class ThemeTest extends MultiBrowserTest {
-
-    @ServerClass("com.vaadin.ui.DateField")
-    public static class MyDateFieldElement extends DateFieldElement {
-        public void openPopup() {
-            findElement(By.tagName("button")).click();
-        }
-    }
-
-    @ServerClass("com.vaadin.ui.TabSheet")
-    public static class TabSheetElement
-            extends com.vaadin.testbench.elements.TabSheetElement {
-        @Override
-        public void openTab(String tabCaption) {
-            super.openTab(tabCaption);
-            /* Layouting takes a moment after tab has been opened. */
-            try {
-                Thread.sleep(300);
-            } catch (InterruptedException e) {
-            }
-        }
-    }
 
     @Override
     protected boolean requireWindowFocusForIE() {
@@ -66,68 +45,78 @@ public abstract class ThemeTest extends MultiBrowserTest {
         compareScreen("labels");
 
         // Buttons tab
-        themeTabSheet.openTab("Buttons");
+        openTab(themeTabSheet, "Buttons");
         compareScreen("buttons");
 
         // Embedded tab
-        themeTabSheet.openTab("Embedded");
+        openTab(themeTabSheet, "Embedded");
         compareScreen("embedded");
 
         // Dates tab
-        themeTabSheet.openTab("Dates");
+        openTab(themeTabSheet, "Dates");
         testDates();
 
         // TextFields tab
-        themeTabSheet.openTab("TextFields");
+        openTab(themeTabSheet, "TextFields");
         compareScreen("textfields");
 
         // Selects tab
-        themeTabSheet.openTab("Selects");
+        openTab(themeTabSheet, "Selects");
         testSelects();
 
         // Sliders tab
-        themeTabSheet.openTab("Sliders");
+        openTab(themeTabSheet, "Sliders");
         compareScreen("sliders");
 
         // Uploads tab
-        themeTabSheet.openTab("Uploads");
+        openTab(themeTabSheet, "Uploads");
         compareScreen("uploads");
 
         // Forms tab
-        themeTabSheet.openTab("Forms");
+        openTab(themeTabSheet, "Forms");
         compareScreen("forms");
 
         // Tables tab
-        themeTabSheet.openTab("Tables");
+        openTab(themeTabSheet, "Tables");
         testTables();
 
         // Trees tab
-        themeTabSheet.openTab("Trees");
+        openTab(themeTabSheet, "Trees");
         compareScreen("trees");
 
         // TreeTable tab
-        themeTabSheet.openTab("TreeTable");
+        openTab(themeTabSheet, "TreeTable");
         compareScreen("treetable");
 
         // Layouts tab
-        themeTabSheet.openTab("Layouts");
+        openTab(themeTabSheet, "Layouts");
         compareScreen("layouts");
 
         // TabSheets tab
-        themeTabSheet.openTab("TabSheets");
+        openTab(themeTabSheet, "TabSheets");
         compareScreen("tabsheets");
 
         // Accordions tab
-        themeTabSheet.openTab("Accordions");
+        openTab(themeTabSheet, "Accordions");
         compareScreen("accordions");
 
         // Windows tab
-        themeTabSheet.openTab("Windows");
+        openTab(themeTabSheet, "Windows");
         testWindows();
 
         // Notifications tab
-        themeTabSheet.openTab("Notifications");
+        openTab(themeTabSheet, "Notifications");
         testNotifications();
+    }
+
+    private void openTab(TabSheetElement themeTabSheet, String string) {
+        themeTabSheet.openTab(string);
+        /* Layouting takes a moment after tab has been opened. */
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+        }
+
     }
 
     private void testNotifications() throws IOException {
@@ -198,13 +187,13 @@ public abstract class ThemeTest extends MultiBrowserTest {
 
     private void testDates() throws IOException {
         compareScreen("dates");
-        $(MyDateFieldElement.class).id("datefield0").openPopup();
+        $(DateFieldElement.class).id("datefield0").openPopup();
         compareScreen("dates-first-popup");
-        $(MyDateFieldElement.class).id("datefield1").openPopup();
+        $(DateFieldElement.class).id("datefield1").openPopup();
         compareScreen("dates-second-popup");
-        $(MyDateFieldElement.class).id("datefield2").openPopup();
+        $(DateFieldElement.class).id("datefield2").openPopup();
         compareScreen("dates-third-popup");
-        $(MyDateFieldElement.class).id("datefield3").openPopup();
+        $(DateFieldElement.class).id("datefield3").openPopup();
         compareScreen("dates-fourth-popup");
     }
 }

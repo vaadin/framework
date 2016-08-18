@@ -23,7 +23,7 @@ import com.vaadin.client.ui.VTwinColSelect;
 import com.vaadin.client.ui.optiongroup.OptionGroupBaseConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.twincolselect.TwinColSelectState;
-import com.vaadin.ui.TwinColSelect;
+import com.vaadin.v7.ui.TwinColSelect;
 
 @Connect(TwinColSelect.class)
 public class TwinColSelectConnector extends OptionGroupBaseConnector

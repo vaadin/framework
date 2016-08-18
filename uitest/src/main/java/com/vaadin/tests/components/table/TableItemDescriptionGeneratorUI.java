@@ -1,16 +1,16 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.AbstractSelect.ItemDescriptionGenerator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Table;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.AbstractSelect.ItemDescriptionGenerator;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 public class TableItemDescriptionGeneratorUI extends AbstractTestUI {
 
@@ -67,7 +67,7 @@ public class TableItemDescriptionGeneratorUI extends AbstractTestUI {
                     @Override
                     public Component generateCell(Table source, Object itemId,
                             Object columnId) {
-                        LegacyTextField lbl = new LegacyTextField();
+                        TextField lbl = new TextField();
                         if (componentDescription.getValue()) {
                             lbl.setDescription("Textfield's own description");
                         }

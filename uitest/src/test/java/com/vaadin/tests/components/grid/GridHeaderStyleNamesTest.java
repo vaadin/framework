@@ -22,10 +22,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridHeaderStyleNamesTest extends SingleBrowserTest {
@@ -35,7 +35,7 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
     @Before
     public void findGridCells() {
         openTestURL();
-        grid = $(LegacyGridElement.class).first();
+        grid = $(GridElement.class).first();
     }
 
     private GridCellElement getMergedHeaderCell() {

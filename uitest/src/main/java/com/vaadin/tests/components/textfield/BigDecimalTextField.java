@@ -19,8 +19,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Locale;
 
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
@@ -28,7 +26,9 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.fieldgroup.FieldGroup;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * @since 7.2
@@ -47,7 +47,7 @@ public class BigDecimalTextField extends AbstractTestUIWithLog {
                 beanBigDecimal);
 
         FormLayout formLayout = new FormLayout();
-        LegacyTextField textField = new LegacyTextField("BigDecimal field");
+        TextField textField = new TextField("BigDecimal field");
         textField.setImmediate(true);
         textField.setValue("12");
         formLayout.addComponent(textField);
@@ -58,7 +58,7 @@ public class BigDecimalTextField extends AbstractTestUIWithLog {
         Button setValue = new Button("Set value to 15,2", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                ((LegacyTextField) fieldGroup.getField("decimal"))
+                ((TextField) fieldGroup.getField("decimal"))
                         .setValue("15,2");
             }
         });

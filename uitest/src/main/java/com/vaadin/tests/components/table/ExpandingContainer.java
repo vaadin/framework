@@ -6,14 +6,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.AbstractContainer;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.AbstractContainer;
+import com.vaadin.v7.data.util.BeanItem;
 
 @SuppressWarnings("serial")
 public class ExpandingContainer extends AbstractContainer implements

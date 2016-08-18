@@ -19,7 +19,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import com.vaadin.ui.declarative.DesignAttributeHandler;
-import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.Converter;
 
 /**
  * Utility class for {@link DesignAttributeHandler} that deals with converting
@@ -29,12 +29,12 @@ import com.vaadin.v7.data.util.converter.LegacyConverter;
  * @author Vaadin Ltd
  */
 public class DesignTimeZoneConverter
-        implements LegacyConverter<String, TimeZone> {
+        implements Converter<String, TimeZone> {
 
     @Override
     public TimeZone convertToModel(String value,
             Class<? extends TimeZone> targetTimeZone, Locale locale)
-            throws LegacyConverter.ConversionException {
+            throws Converter.ConversionException {
         if (value == null || value.isEmpty()) {
             return null;
         }
@@ -45,7 +45,7 @@ public class DesignTimeZoneConverter
     @Override
     public String convertToPresentation(TimeZone value,
             Class<? extends String> targetTimeZone, Locale locale)
-            throws LegacyConverter.ConversionException {
+            throws Converter.ConversionException {
         if (value == null) {
             return "";
         } else {

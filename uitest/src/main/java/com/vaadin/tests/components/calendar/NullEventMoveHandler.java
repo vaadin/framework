@@ -6,11 +6,11 @@ import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.Calendar;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
-import com.vaadin.ui.components.calendar.event.BasicEvent;
+import com.vaadin.v7.ui.Calendar;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventClick;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
+import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
 
 public class NullEventMoveHandler extends AbstractTestUIWithLog {
     @Override

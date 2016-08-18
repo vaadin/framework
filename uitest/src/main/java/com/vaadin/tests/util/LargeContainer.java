@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.ContainerHelpers;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.AbstractContainer;
-import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.ContainerHelpers;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.AbstractContainer;
+import com.vaadin.v7.data.util.ObjectProperty;
 
 public class LargeContainer extends AbstractContainer
         implements Container.Indexed {

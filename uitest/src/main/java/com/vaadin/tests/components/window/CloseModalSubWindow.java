@@ -15,16 +15,16 @@
  */
 package com.vaadin.tests.components.window;
 
-import com.vaadin.data.Item;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.TreeTable;
 
 @SuppressWarnings("serial")
 public class CloseModalSubWindow extends AbstractTestUIWithLog {

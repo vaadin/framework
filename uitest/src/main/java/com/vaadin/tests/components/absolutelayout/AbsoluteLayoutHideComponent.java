@@ -27,16 +27,16 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyPasswordField;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.PasswordField;
+import com.vaadin.v7.ui.TextField;
 
 public class AbsoluteLayoutHideComponent extends AbstractTestUI {
 
     private AbsoluteLayout mainLayout;
     private VerticalLayout topBar = new VerticalLayout();
     private GridLayout menu;
-    private LegacyTextField editEmail = new LegacyTextField();
-    private LegacyPasswordField editPassword = new LegacyPasswordField();
+    private TextField editEmail = new TextField();
+    private PasswordField editPassword = new PasswordField();
 
     @Override
     protected void setup(VaadinRequest request) {

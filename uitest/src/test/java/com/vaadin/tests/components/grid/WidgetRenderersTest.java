@@ -31,6 +31,7 @@ import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 /**
  * TB tests for the various builtin widget-based renderers.
@@ -142,7 +143,7 @@ public class WidgetRenderersTest extends MultiBrowserTest {
     }
 
     GridCellElement getGridCell(int row, int col) {
-        return $(LegacyGridElement.class).first().getCell(row, col);
+        return $(GridElement.class).first().getCell(row, col);
     }
 
     private void waitUntilTextUpdated(final WebElement button,

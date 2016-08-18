@@ -3,10 +3,10 @@ package com.vaadin.tests.application;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.testbench.customelements.FixedNotificationElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.newelements.FixedNotificationElement;
 
 public class TerminalErrorNotificationTest extends MultiBrowserTest {
     @Test

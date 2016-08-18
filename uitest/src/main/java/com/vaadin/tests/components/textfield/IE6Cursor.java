@@ -1,14 +1,14 @@
 package com.vaadin.tests.components.textfield;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class IE6Cursor extends TestBase {
 
     @Override
     protected void setup() {
-        LegacyTextField tf1 = new LegacyTextField("First");
-        LegacyTextField tf2 = new LegacyTextField("Second");
+        TextField tf1 = new TextField("First");
+        TextField tf2 = new TextField("Second");
         tf2.setInputPrompt("prompt");
 
         addComponent(tf1);

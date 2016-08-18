@@ -20,10 +20,10 @@ import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
-import com.vaadin.ui.TextArea;
-import com.vaadin.v7.ui.LegacyAbstractTextField;
-import com.vaadin.v7.ui.LegacyField;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.AbstractTextField;
+import com.vaadin.v7.ui.Field;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
 
 public class TextChangeListenerLosesFocus extends TestBase {
 
@@ -32,7 +32,7 @@ public class TextChangeListenerLosesFocus extends TestBase {
         public void textChange(TextChangeEvent event) {
             final String value = event.getText();
             if (value.length() > 2) {
-                ((LegacyField) event.getComponent())
+                ((Field) event.getComponent())
                         .setValue("Updated by TextChangeListener");
             }
         }
@@ -44,7 +44,7 @@ public class TextChangeListenerLosesFocus extends TestBase {
                 ".v-textfield-focus, .v-textarea-focus { "
                         + " background: #E8F0FF !important }");
 
-        LegacyAbstractTextField field = new LegacyTextField();
+        AbstractTextField field = new TextField();
         field.setDebugId("test-textfield");
         field.setInputPrompt("Enter at least 3 characters");
         field.addTextChangeListener(listener);

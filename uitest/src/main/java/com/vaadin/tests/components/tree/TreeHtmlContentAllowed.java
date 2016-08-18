@@ -18,7 +18,7 @@ package com.vaadin.tests.components.tree;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.ui.Tree;
 
 public class TreeHtmlContentAllowed extends AbstractTestUI {
 

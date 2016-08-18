@@ -22,7 +22,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.themes.ValoTheme;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Test UI for H2 label inside FormLayout.
@@ -42,7 +42,7 @@ public class FormLayoutInVerticalLayout extends AbstractTestUI {
         Label sectionLabel = createLabel();
         formLayout.addComponent(sectionLabel);
 
-        LegacyTextField nameTextField = new LegacyTextField("Name");
+        TextField nameTextField = new TextField("Name");
         nameTextField.setValue("Lorem ipsum");
         nameTextField.setWidth("50%");
         formLayout.addComponent(nameTextField);

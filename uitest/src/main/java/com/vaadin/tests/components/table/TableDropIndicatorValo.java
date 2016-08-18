@@ -7,7 +7,7 @@ import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
 @Theme("valo")
 @SuppressWarnings("serial")

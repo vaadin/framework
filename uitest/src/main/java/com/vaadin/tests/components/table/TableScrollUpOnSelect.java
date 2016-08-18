@@ -15,14 +15,14 @@
  */
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Test to see if Table appears to scroll up under an obscure set of conditions
@@ -32,11 +32,11 @@ import com.vaadin.v7.ui.LegacyTextField;
  * @author Vaadin Ltd
  */
 public class TableScrollUpOnSelect extends AbstractTestUI {
-    public LegacyTextField text = null;
+    public TextField text = null;
 
     @Override
     protected void setup(VaadinRequest request) {
-        text = new LegacyTextField();
+        text = new TextField();
         text.setImmediate(true);
 
         final Table table = new Table(null);

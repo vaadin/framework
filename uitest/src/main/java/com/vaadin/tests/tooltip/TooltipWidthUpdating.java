@@ -5,7 +5,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Test to see if the width of the tooltip element is updated if a narrower
@@ -37,15 +37,15 @@ public class TooltipWidthUpdating extends AbstractTestUI {
 
         VerticalLayout vl = new VerticalLayout();
 
-        LegacyTextField component1 = new LegacyTextField("TextField");
+        TextField component1 = new TextField("TextField");
         component1.setId("component1");
-        LegacyTextField component2 = new LegacyTextField("TextField");
-        LegacyTextField component3 = new LegacyTextField("TextField");
-        LegacyTextField component4 = new LegacyTextField("TextField");
-        LegacyTextField component5 = new LegacyTextField("TextField");
-        LegacyTextField component6 = new LegacyTextField("TextField");
-        LegacyTextField component7 = new LegacyTextField("TextField");
-        LegacyTextField component8 = new LegacyTextField("TextField");
+        TextField component2 = new TextField("TextField");
+        TextField component3 = new TextField("TextField");
+        TextField component4 = new TextField("TextField");
+        TextField component5 = new TextField("TextField");
+        TextField component6 = new TextField("TextField");
+        TextField component7 = new TextField("TextField");
+        TextField component8 = new TextField("TextField");
 
         // some count of any components should be added before (between) buttons
         // to make defect reproducible

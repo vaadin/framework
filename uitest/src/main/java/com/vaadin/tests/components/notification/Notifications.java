@@ -5,10 +5,10 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.TextArea;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.TextArea;
 
 public class Notifications extends TestBase implements ClickListener {
 

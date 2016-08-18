@@ -4,10 +4,10 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.TextField;
 
 public class CaptionEnableDisable extends AbstractTestUI {
 
@@ -19,7 +19,7 @@ public class CaptionEnableDisable extends AbstractTestUI {
 
     public FormLayout createFormLayout() {
         FormLayout layout = new FormLayout();
-        final LegacyTextField textField = new LegacyTextField("TextField");
+        final TextField textField = new TextField("TextField");
         textField.setEnabled(false);
         layout.addComponent(textField);
 

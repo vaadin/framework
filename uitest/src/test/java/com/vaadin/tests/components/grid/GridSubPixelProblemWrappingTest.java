@@ -19,10 +19,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridSubPixelProblemWrappingTest extends MultiBrowserTest {
@@ -31,7 +31,7 @@ public class GridSubPixelProblemWrappingTest extends MultiBrowserTest {
     public void addedRowShouldNotWrap() {
         openTestURL();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         // Cells in first row should be at the same y coordinate as the row
         assertRowAndCellTops(grid, 0);

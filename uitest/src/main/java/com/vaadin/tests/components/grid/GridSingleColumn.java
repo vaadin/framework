@@ -15,13 +15,13 @@
  */
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.Column;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.Column;
+import com.vaadin.v7.ui.Grid.SelectionMode;
 
 public class GridSingleColumn extends AbstractTestUI {
 
@@ -36,7 +36,7 @@ public class GridSingleColumn extends AbstractTestUI {
             addItem.getItemProperty("column1").setValue("cell");
         }
 
-        LegacyGrid grid = new LegacyGrid(indexedContainer);
+        Grid grid = new Grid(indexedContainer);
         grid.setSelectionMode(SelectionMode.NONE);
 
         Column column = grid.getColumn("column1");

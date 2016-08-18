@@ -3,9 +3,9 @@ package com.vaadin.tests.components.menubar;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.LegacyWindow;
 
 public class MenuBarRunsOutOfBrowser extends AbstractTestCase {
 

@@ -2,18 +2,18 @@ package com.vaadin.tests.components.abstractfield;
 
 import java.util.Date;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.ErrorEvent;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.UserError;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.TextField;
 
 public class TextFieldConversions extends AbstractComponentDataBindingTest {
 
-    private LegacyTextField tf;
+    private TextField tf;
 
     private Object o;
 
@@ -39,7 +39,7 @@ public class TextFieldConversions extends AbstractComponentDataBindingTest {
         });
         addComponent(dataType);
 
-        tf = new LegacyTextField("TextField");
+        tf = new TextField("TextField");
         addComponent(tf);
         tf.setErrorHandler(new ErrorHandler() {
 

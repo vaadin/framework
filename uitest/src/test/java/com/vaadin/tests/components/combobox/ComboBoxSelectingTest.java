@@ -12,7 +12,7 @@ import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.newelements.ComboBoxElement;
+import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 
 public class ComboBoxSelectingTest extends MultiBrowserTest {
 

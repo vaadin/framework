@@ -7,12 +7,12 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.Window.ResizeEvent;
 import com.vaadin.ui.Window.ResizeListener;
+import com.vaadin.v7.ui.LegacyWindow;
 
 public class WindowTest {
 

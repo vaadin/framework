@@ -3,13 +3,13 @@ package com.vaadin.tests.components.datefield;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.ui.LegacyDateField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.DateField;
 
 public class LegacyDateFieldIsValid extends AbstractTestUIWithLog {
 
@@ -29,7 +29,7 @@ public class LegacyDateFieldIsValid extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final LegacyDateField dateField = new LegacyDateField("Insert Date: ");
+        final DateField dateField = new DateField("Insert Date: ");
         dateField.setImmediate(true);
         dateField.setDateFormat(pattern);
 

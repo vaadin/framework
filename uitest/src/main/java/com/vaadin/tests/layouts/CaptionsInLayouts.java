@@ -3,9 +3,6 @@ package com.vaadin.tests.layouts;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
@@ -21,10 +18,13 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyAbstractField;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.AbstractField;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.TextField;
 
 public class CaptionsInLayouts extends AbstractTestUI {
 
@@ -38,7 +38,7 @@ public class CaptionsInLayouts extends AbstractTestUI {
     private HorizontalLayout horizontalLayout;
     private GridLayout gridLayout;
     private FormLayout formLayout;
-    private List<LegacyAbstractField<?>> components = new ArrayList<LegacyAbstractField<?>>();
+    private List<AbstractField<?>> components = new ArrayList<AbstractField<?>>();
     private CssLayout cssLayout;
     private HorizontalLayout layoutParent = new HorizontalLayout();
 
@@ -71,7 +71,7 @@ public class CaptionsInLayouts extends AbstractTestUI {
     }
 
     protected void prependCaptions(String prepend) {
-        for (LegacyAbstractField<?> c : components) {
+        for (AbstractField<?> c : components) {
             c.setCaption(prepend + c.getCaption());
         }
 
@@ -95,14 +95,14 @@ public class CaptionsInLayouts extends AbstractTestUI {
     }
 
     protected void setRequired(boolean value) {
-        for (LegacyAbstractField<?> c : components) {
+        for (AbstractField<?> c : components) {
             c.setRequired(value);
         }
 
     }
 
     protected void setIcon(boolean value) {
-        for (LegacyAbstractField<?> c : components) {
+        for (AbstractField<?> c : components) {
             if (!value) {
                 c.setIcon(null);
             } else {
@@ -121,7 +121,7 @@ public class CaptionsInLayouts extends AbstractTestUI {
     }
 
     protected void setError(boolean value) {
-        for (LegacyAbstractField<?> c : components) {
+        for (AbstractField<?> c : components) {
             if (value) {
                 c.setComponentError(new UserError("error"));
             } else {
@@ -133,13 +133,13 @@ public class CaptionsInLayouts extends AbstractTestUI {
     }
 
     private void createComponents() {
-        LegacyTextField tfUndefWide = new LegacyTextField(
+        TextField tfUndefWide = new TextField(
                 "Undefined wide text field with a very long caption, longer than the field and the layout. Lorem ipsum dolor sit amet.");
-        LegacyTextField tf100pxWide = new LegacyTextField(
+        TextField tf100pxWide = new TextField(
                 "100 px wide text field with a very long caption, longer than 100px.");
         tf100pxWide.setWidth("100px");
 
-        LegacyTextField tf500pxWide = new LegacyTextField(
+        TextField tf500pxWide = new TextField(
                 "500 px wide text field with a very long caption, longer than 500px. Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
         tf500pxWide.setWidth("500px");
 

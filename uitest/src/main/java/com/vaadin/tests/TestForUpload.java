@@ -28,7 +28,6 @@ import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
@@ -37,18 +36,19 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
-import com.vaadin.ui.Select;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.StartedEvent;
 import com.vaadin.ui.Upload.StartedListener;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyAbstractField;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.ui.AbstractField;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.Select;
+import com.vaadin.v7.ui.TextField;
 
 public class TestForUpload extends CustomComponent
         implements Upload.ProgressListener {
@@ -73,7 +73,7 @@ public class TestForUpload extends CustomComponent
 
     private final Select uploadBufferSelector;
 
-    private LegacyTextField textField;
+    private TextField textField;
 
     private Label textFieldValue;
 
@@ -99,7 +99,7 @@ public class TestForUpload extends CustomComponent
         main.addComponent(new Label(
                 "Clicking on button b updates information about upload components status or same with garbage collector."));
 
-        textField = new LegacyTextField("Test field");
+        textField = new TextField("Test field");
         textFieldValue = new Label();
         main.addComponent(textField);
         main.addComponent(textFieldValue);
@@ -218,7 +218,7 @@ public class TestForUpload extends CustomComponent
         uploadBufferSelector.setValue("memory");
         uploadBufferSelector.addItem("tempfile");
         uploadBufferSelector
-                .addListener(new LegacyAbstractField.ValueChangeListener() {
+                .addListener(new AbstractField.ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
                         setBuffer();

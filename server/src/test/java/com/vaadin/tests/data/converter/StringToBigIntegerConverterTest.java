@@ -21,11 +21,11 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.v7.data.util.converter.LegacyStringToBigIntegerConverter;
+import com.vaadin.v7.data.util.converter.StringToBigIntegerConverter;
 
 public class StringToBigIntegerConverterTest {
 
-    LegacyStringToBigIntegerConverter converter = new LegacyStringToBigIntegerConverter();
+    StringToBigIntegerConverter converter = new StringToBigIntegerConverter();
 
     @Test
     public void testNullConversion() {

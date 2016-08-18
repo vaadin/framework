@@ -1,6 +1,6 @@
 package com.vaadin.tests;
 
-import com.vaadin.data.util.MethodProperty;
+import com.vaadin.v7.data.util.MethodProperty;
 
 public class TestMethodProperty {
 

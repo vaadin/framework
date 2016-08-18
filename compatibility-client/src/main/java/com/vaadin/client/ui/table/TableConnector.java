@@ -51,7 +51,7 @@ import com.vaadin.shared.ui.table.TableConstants.Section;
 import com.vaadin.shared.ui.table.TableServerRpc;
 import com.vaadin.shared.ui.table.TableState;
 
-@Connect(com.vaadin.ui.Table.class)
+@Connect(com.vaadin.v7.ui.Table.class)
 public class TableConnector extends AbstractFieldConnector
         implements HasComponentsConnector, ConnectorHierarchyChangeHandler,
         Paintable, DirectionalManagedLayout, PostLayoutListener,

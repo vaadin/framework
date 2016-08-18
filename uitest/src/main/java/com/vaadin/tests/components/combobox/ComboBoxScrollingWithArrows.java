@@ -18,8 +18,8 @@ package com.vaadin.tests.components.combobox;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractLayout;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.ComboBox;
 
 /**
  * Test UI verifying navigating in combobox via arrow keys.

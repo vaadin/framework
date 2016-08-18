@@ -3,9 +3,9 @@ package com.vaadin.tests.components.colorpicker;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.ColorPickerArea;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.ColorPickerArea;
 
 /**
  * Tests the HSV tab slider values when initially opening the tab.

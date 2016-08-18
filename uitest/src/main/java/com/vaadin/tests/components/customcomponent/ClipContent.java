@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.customcomponent;
 
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.ui.TextField;
 
 public class ClipContent extends TestBase {
 
@@ -21,18 +21,18 @@ public class ClipContent extends TestBase {
         cc.setWidth("20px");
         cc.setHeight("20px");
 
-        final LegacyTextField w = new LegacyTextField("Width");
+        final TextField w = new TextField("Width");
         w.setValue("20px");
-        w.addListener(new LegacyTextField.ValueChangeListener() {
+        w.addListener(new TextField.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 cc.setWidth(w.getValue());
             }
         });
         addComponent(w);
-        final LegacyTextField h = new LegacyTextField("Height");
+        final TextField h = new TextField("Height");
         h.setValue("20px");
-        h.addListener(new LegacyTextField.ValueChangeListener() {
+        h.addListener(new TextField.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 cc.setHeight(h.getValue());

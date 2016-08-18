@@ -9,7 +9,7 @@ import org.junit.Test;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyWindow;
+import com.vaadin.v7.ui.LegacyWindow;
 
 public class LegacyUIAddRemoveComponentsTest {
 

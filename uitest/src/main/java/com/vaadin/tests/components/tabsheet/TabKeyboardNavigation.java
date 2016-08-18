@@ -18,7 +18,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Test if the click and key tab selection in a tabsheet generate the correct
@@ -75,11 +75,11 @@ public class TabKeyboardNavigation extends AbstractTestUI {
         addComponent(addTab);
         addComponent(focus);
 
-        LegacyTextField tf = new LegacyTextField();
+        TextField tf = new TextField();
         addComponent(tf);
         addComponent(focusblur);
         addComponent(ts);
-        tf = new LegacyTextField();
+        tf = new TextField();
         addComponent(tf);
     }
 
@@ -105,7 +105,7 @@ public class TabKeyboardNavigation extends AbstractTestUI {
         Label label = new Label("Tab " + index);
         label.setId(labelID(index));
         content.addComponent(label);
-        content.addComponent(new LegacyTextField());
+        content.addComponent(new TextField());
         Tab tab = ts.addTab(content, "Tab " + index, null);
         if (index == 2) {
             tab.setClosable(true);

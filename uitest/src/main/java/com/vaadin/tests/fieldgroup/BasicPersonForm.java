@@ -1,11 +1,5 @@
 package com.vaadin.tests.fieldgroup;
 
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitEvent;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitHandler;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.Address;
@@ -18,23 +12,29 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.util.converter.LegacyStringToBooleanConverter;
-import com.vaadin.v7.data.validator.LegacyEmailValidator;
-import com.vaadin.v7.data.validator.LegacyIntegerRangeValidator;
-import com.vaadin.v7.data.validator.LegacyStringLengthValidator;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitEvent;
+import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitHandler;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.data.util.converter.StringToBooleanConverter;
+import com.vaadin.v7.data.validator.EmailValidator;
+import com.vaadin.v7.data.validator.IntegerRangeValidator;
+import com.vaadin.v7.data.validator.StringLengthValidator;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
 
 public class BasicPersonForm extends AbstractTestUIWithLog {
 
-    private LegacyTextField firstName;
+    private TextField firstName;
     private TextArea lastName;
-    private LegacyTextField email;
-    private LegacyTextField age;
+    private TextField email;
+    private TextField age;
     private Table sex;
-    private LegacyTextField deceased;
+    private TextField deceased;
 
     public class Configuration {
         public boolean preCommitFails = false;
@@ -161,14 +161,14 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
         addComponent(commitButton);
         addComponent(discardButton);
         addComponent(showBean);
-        email.addValidator(new LegacyEmailValidator("Must be a valid address"));
-        lastName.addValidator(new LegacyStringLengthValidator(
+        email.addValidator(new EmailValidator("Must be a valid address"));
+        lastName.addValidator(new StringLengthValidator(
                 "Must be min 5 chars", 5, null, true));
 
-        age.addValidator(new LegacyIntegerRangeValidator(
+        age.addValidator(new IntegerRangeValidator(
                 "Must be between 0 and 150, {0} is not", 0, 150));
         sex.setPageLength(0);
-        deceased.setConverter(new LegacyStringToBooleanConverter() {
+        deceased.setConverter(new StringToBooleanConverter() {
             @Override
             protected String getTrueString() {
                 return "YAY!";

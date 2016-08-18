@@ -18,7 +18,7 @@ package com.vaadin.ui.declarative.converters;
 import java.util.Locale;
 
 import com.vaadin.ui.declarative.DesignAttributeHandler;
-import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.Converter;
 
 /**
  * An converter for Object to/from String for {@link DesignAttributeHandler} to
@@ -27,19 +27,19 @@ import com.vaadin.v7.data.util.converter.LegacyConverter;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class DesignObjectConverter implements LegacyConverter<String, Object> {
+public class DesignObjectConverter implements Converter<String, Object> {
 
     @Override
     public Object convertToModel(String value,
             Class<? extends Object> targetType, Locale locale)
-            throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
+            throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
         return value;
     }
 
     @Override
     public String convertToPresentation(Object value,
             Class<? extends String> targetType, Locale locale)
-            throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
+            throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
         if (value == null) {
             return null;
         }

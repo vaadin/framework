@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import com.vaadin.shared.ui.table.CollapseMenuContent;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.TableElement;
 
 public class OnlyCollapsibleInMenu extends SingleBrowserTest {
 
@@ -31,7 +32,7 @@ public class OnlyCollapsibleInMenu extends SingleBrowserTest {
     @Test
     public void testOnlyCollapsibleInMenu() {
         openTestURL();
-        CustomTableElement table = $(CustomTableElement.class).first();
+        TableElement table = $(TableElement.class).first();
 
         selectMenuPath("Component", "Columns", "Property 3", "Collapsible");
         table.getCollapseMenuToggle().click();

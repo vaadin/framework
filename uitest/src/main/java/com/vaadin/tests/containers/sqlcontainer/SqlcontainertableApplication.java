@@ -1,12 +1,12 @@
 package com.vaadin.tests.containers.sqlcontainer;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.Table;
 
 public class SqlcontainertableApplication extends LegacyApplication {
     private LegacyWindow mainWindow;

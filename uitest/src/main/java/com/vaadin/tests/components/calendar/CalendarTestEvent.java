@@ -15,12 +15,12 @@
  */
 package com.vaadin.tests.components.calendar;
 
-import com.vaadin.ui.components.calendar.event.BasicEvent;
+import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
 
 /**
  * Test CalendarEvent implementation.
  *
- * @see com.vaadin.addon.calendar.test.ui.Calendar.Event
+ * @see com.vaadin.v7.ui.addon.calendar.test.ui.Calendar.Event
  */
 public class CalendarTestEvent extends BasicEvent {
 

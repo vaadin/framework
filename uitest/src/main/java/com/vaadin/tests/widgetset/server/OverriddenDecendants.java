@@ -19,7 +19,7 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
-import com.vaadin.ui.TextArea;
+import com.vaadin.v7.ui.TextArea;
 
 /**
  * UI for testing that @DelegateToWidget works on derived widget states.

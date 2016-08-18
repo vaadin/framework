@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
-import com.vaadin.ui.OptionGroup;
+import com.vaadin.v7.ui.OptionGroup;
 
 public class OptionGroups extends AbstractSelectTestCase<OptionGroup> {
 

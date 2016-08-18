@@ -39,10 +39,10 @@ import com.vaadin.ui.declarative.converters.DesignResourceConverter;
 import com.vaadin.ui.declarative.converters.DesignShortcutActionConverter;
 import com.vaadin.ui.declarative.converters.DesignTimeZoneConverter;
 import com.vaadin.ui.declarative.converters.DesignToStringConverter;
-import com.vaadin.v7.data.util.converter.LegacyConverter;
-import com.vaadin.v7.data.util.converter.LegacyStringToBigDecimalConverter;
-import com.vaadin.v7.data.util.converter.LegacyStringToDoubleConverter;
-import com.vaadin.v7.data.util.converter.LegacyStringToFloatConverter;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.StringToBigDecimalConverter;
+import com.vaadin.v7.data.util.converter.StringToDoubleConverter;
+import com.vaadin.v7.data.util.converter.StringToFloatConverter;
 
 /**
  * Class focused on flexible and consistent formatting and parsing of different
@@ -54,9 +54,9 @@ import com.vaadin.v7.data.util.converter.LegacyStringToFloatConverter;
  */
 public class DesignFormatter implements Serializable {
 
-    private final Map<Class<?>, LegacyConverter<String, ?>> converterMap = new ConcurrentHashMap<Class<?>, LegacyConverter<String, ?>>();
-    private final LegacyConverter<String, Enum> stringEnumConverter = new DesignEnumConverter();
-    private final LegacyConverter<String, Object> stringObjectConverter = new DesignObjectConverter();
+    private final Map<Class<?>, Converter<String, ?>> converterMap = new ConcurrentHashMap<Class<?>, Converter<String, ?>>();
+    private final Converter<String, Enum> stringEnumConverter = new DesignEnumConverter();
+    private final Converter<String, Object> stringObjectConverter = new DesignObjectConverter();
 
     /**
      * Creates the formatter with default types already mapped.
@@ -83,19 +83,19 @@ public class DesignFormatter implements Serializable {
         }
         // booleans use a bit different converter than the standard one
         // "false" is boolean false, everything else is boolean true
-        LegacyConverter<String, Boolean> booleanConverter = new LegacyConverter<String, Boolean>() {
+        Converter<String, Boolean> booleanConverter = new Converter<String, Boolean>() {
 
             @Override
             public Boolean convertToModel(String value,
                     Class<? extends Boolean> targetType, Locale locale)
-                    throws LegacyConverter.ConversionException {
+                    throws Converter.ConversionException {
                 return !value.equalsIgnoreCase("false");
             }
 
             @Override
             public String convertToPresentation(Boolean value,
                     Class<? extends String> targetType, Locale locale)
-                    throws LegacyConverter.ConversionException {
+                    throws Converter.ConversionException {
                 if (value.booleanValue()) {
                     return "";
                 } else {
@@ -123,7 +123,7 @@ public class DesignFormatter implements Serializable {
         final DecimalFormat fmt = new DecimalFormat("0.###", symbols);
         fmt.setGroupingUsed(false);
 
-        LegacyConverter<String, ?> floatConverter = new LegacyStringToFloatConverter() {
+        Converter<String, ?> floatConverter = new StringToFloatConverter() {
             @Override
             protected NumberFormat getFormat(Locale locale) {
                 return fmt;
@@ -132,7 +132,7 @@ public class DesignFormatter implements Serializable {
         converterMap.put(Float.class, floatConverter);
         converterMap.put(float.class, floatConverter);
 
-        LegacyConverter<String, ?> doubleConverter = new LegacyStringToDoubleConverter() {
+        Converter<String, ?> doubleConverter = new StringToDoubleConverter() {
             @Override
             protected NumberFormat getFormat(Locale locale) {
                 return fmt;
@@ -145,7 +145,7 @@ public class DesignFormatter implements Serializable {
         bigDecimalFmt.setGroupingUsed(false);
         bigDecimalFmt.setParseBigDecimal(true);
         converterMap.put(BigDecimal.class,
-                new LegacyStringToBigDecimalConverter() {
+                new StringToBigDecimalConverter() {
                     @Override
                     protected NumberFormat getFormat(Locale locale) {
                         return bigDecimalFmt;
@@ -153,19 +153,19 @@ public class DesignFormatter implements Serializable {
                 });
 
         // strings do nothing
-        converterMap.put(String.class, new LegacyConverter<String, String>() {
+        converterMap.put(String.class, new Converter<String, String>() {
 
             @Override
             public String convertToModel(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws LegacyConverter.ConversionException {
+                    throws Converter.ConversionException {
                 return value;
             }
 
             @Override
             public String convertToPresentation(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws LegacyConverter.ConversionException {
+                    throws Converter.ConversionException {
                 return value;
             }
 
@@ -182,13 +182,13 @@ public class DesignFormatter implements Serializable {
         });
 
         // char takes the first character from the string
-        LegacyConverter<String, Character> charConverter = new DesignToStringConverter<Character>(
+        Converter<String, Character> charConverter = new DesignToStringConverter<Character>(
                 Character.class) {
 
             @Override
             public Character convertToModel(String value,
                     Class<? extends Character> targetType, Locale locale)
-                    throws LegacyConverter.ConversionException {
+                    throws Converter.ConversionException {
                 return value.charAt(0);
             }
 
@@ -209,7 +209,7 @@ public class DesignFormatter implements Serializable {
      * @param converter
      *            Converter to add.
      */
-    protected <T> void addConverter(LegacyConverter<String, T> converter) {
+    protected <T> void addConverter(Converter<String, T> converter) {
         converterMap.put(converter.getModelType(), converter);
     }
 
@@ -222,7 +222,7 @@ public class DesignFormatter implements Serializable {
      *            Converter.
      */
     protected <T> void addConverter(Class<?> type,
-            LegacyConverter<String, ?> converter) {
+            Converter<String, ?> converter) {
         converterMap.put(type, converter);
     }
 
@@ -258,7 +258,7 @@ public class DesignFormatter implements Serializable {
      *         converter for that type.
      */
     public <T> T parse(String value, Class<? extends T> type) {
-        LegacyConverter<String, T> converter = findConverterFor(type);
+        Converter<String, T> converter = findConverterFor(type);
         if (converter != null) {
             return converter.convertToModel(value, type, null);
         } else {
@@ -293,7 +293,7 @@ public class DesignFormatter implements Serializable {
         if (object == null) {
             return null;
         } else {
-            LegacyConverter<String, Object> converter = findConverterFor(
+            Converter<String, Object> converter = findConverterFor(
                     object.getClass());
             return converter.convertToPresentation(object, String.class, null);
         }
@@ -326,28 +326,28 @@ public class DesignFormatter implements Serializable {
      *         if it was not found.
      */
     @SuppressWarnings("unchecked")
-    protected <T> LegacyConverter<String, T> findConverterFor(
+    protected <T> Converter<String, T> findConverterFor(
             Class<? extends T> sourceType, boolean strict) {
         if (sourceType == Object.class) {
             // Use for propertyIds, itemIds and such. Only string type objects
             // are really supported if no special logic is implemented in the
             // component.
-            return (LegacyConverter<String, T>) stringObjectConverter;
+            return (Converter<String, T>) stringObjectConverter;
         }
 
         if (converterMap.containsKey(sourceType)) {
-            return ((LegacyConverter<String, T>) converterMap.get(sourceType));
+            return ((Converter<String, T>) converterMap.get(sourceType));
         } else if (!strict) {
             for (Class<?> supported : converterMap.keySet()) {
                 if (supported.isAssignableFrom(sourceType)) {
-                    return ((LegacyConverter<String, T>) converterMap
+                    return ((Converter<String, T>) converterMap
                             .get(supported));
                 }
             }
         }
 
         if (sourceType.isEnum()) {
-            return (LegacyConverter<String, T>) stringEnumConverter;
+            return (Converter<String, T>) stringEnumConverter;
         }
         return null;
     }
@@ -361,7 +361,7 @@ public class DesignFormatter implements Serializable {
      * @return A valid converter for a given type or its subtype, <b>null</b> if
      *         it was not found.
      */
-    protected <T> LegacyConverter<String, T> findConverterFor(
+    protected <T> Converter<String, T> findConverterFor(
             Class<? extends T> sourceType) {
         return findConverterFor(sourceType, false);
     }

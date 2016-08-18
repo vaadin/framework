@@ -1,20 +1,20 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Table;
-import com.vaadin.v7.ui.LegacyField;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.ui.DefaultFieldFactory;
+import com.vaadin.v7.ui.Field;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 public class TableUnregisterComponent extends TestBase {
 
@@ -26,13 +26,13 @@ public class TableUnregisterComponent extends TestBase {
         final Log log = new Log(5);
 
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(COL_A, LegacyTextField.class, null);
+        container.addContainerProperty(COL_A, TextField.class, null);
         container.addContainerProperty(COL_B, String.class, "");
 
         Item it = container.addItem("a");
         final ObjectProperty<String> valA = new ObjectProperty<String>(
                 "orgVal");
-        final LegacyTextField fieldA = new LegacyTextField(valA) {
+        final TextField fieldA = new TextField(valA) {
             @Override
             public void setPropertyDataSource(Property newDataSource) {
                 super.setPropertyDataSource(newDataSource);
@@ -50,10 +50,10 @@ public class TableUnregisterComponent extends TestBase {
         table.setColumnCollapsingAllowed(true);
         table.setTableFieldFactory(new DefaultFieldFactory() {
             @Override
-            public LegacyField<?> createField(Container container,
+            public Field<?> createField(Container container,
                     Object itemId, Object propertyId, Component uiContext) {
                 if (COL_B.equals(propertyId)) {
-                    LegacyField<String> field = new LegacyTextField() {
+                    Field<String> field = new TextField() {
                         @Override
                         public void setPropertyDataSource(
                                 Property newDataSource) {

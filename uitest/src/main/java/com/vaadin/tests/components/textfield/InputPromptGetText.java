@@ -23,7 +23,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * To verify bug fix: Reproducing of bug Textfield value not updated when
@@ -50,7 +50,7 @@ public class InputPromptGetText extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
 
-        final LegacyTextField tf = new LegacyTextField();
+        final TextField tf = new TextField();
         tf.setId(FIELD);
         tf.setInputPrompt("input text here");
         tf.setImmediate(true);

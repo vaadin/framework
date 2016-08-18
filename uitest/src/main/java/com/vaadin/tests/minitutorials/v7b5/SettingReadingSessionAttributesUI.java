@@ -23,7 +23,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 //Remove comment to preserve UI value when reloading
 //@PreserveOnRefresh
@@ -32,7 +32,7 @@ public class SettingReadingSessionAttributesUI extends UI {
     private String value;
 
     private VerticalLayout statusHolder = new VerticalLayout();
-    private LegacyTextField textField = new LegacyTextField();
+    private TextField textField = new TextField();
 
     @Override
     protected void init(VaadinRequest request) {

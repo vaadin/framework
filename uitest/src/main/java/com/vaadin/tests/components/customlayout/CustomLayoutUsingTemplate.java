@@ -9,7 +9,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class CustomLayoutUsingTemplate extends TestBase
         implements ClickListener {
@@ -61,7 +61,7 @@ public class CustomLayoutUsingTemplate extends TestBase
         if (event.getButton() == button1) {
             layout.addComponent(button2, "location1");
         } else {
-            layout.addComponent(new LegacyTextField("A text field!"),
+            layout.addComponent(new TextField("A text field!"),
                     "location2");
         }
     }

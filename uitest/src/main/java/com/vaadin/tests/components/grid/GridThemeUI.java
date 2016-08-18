@@ -21,26 +21,26 @@ import java.util.List;
 import java.util.Locale;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.renderers.DateRenderer;
-import com.vaadin.v7.data.validator.LegacyIntegerRangeValidator;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.data.validator.IntegerRangeValidator;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.renderers.DateRenderer;
 
 @Theme("valo")
 public class GridThemeUI extends AbstractTestUIWithLog {
 
-    private LegacyGrid grid;
+    private Grid grid;
 
     protected static String[] columns = new String[] { "firstName", "lastName",
             "gender", "birthDate", "age", "alive", "address.streetAddress",
@@ -82,7 +82,7 @@ public class GridThemeUI extends AbstractTestUIWithLog {
 
     }
 
-    public class Editor extends LegacyGrid {
+    public class Editor extends Grid {
         @Override
         public String toString() {
             return "Editor";
@@ -96,14 +96,14 @@ public class GridThemeUI extends AbstractTestUIWithLog {
             getColumn("lastName").setEditable(false);
             setSizeFull();
             getColumn("age").getEditorField().addValidator(
-                    new LegacyIntegerRangeValidator("Must be between 0 and 100",
+                    new IntegerRangeValidator("Must be between 0 and 100",
                             0, 100));
             getColumn("birthDate").setRenderer(new DateRenderer(
                     DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US)));
         }
     }
 
-    public class HeaderFooter extends LegacyGrid {
+    public class HeaderFooter extends Grid {
         @Override
         public String toString() {
             return getClass().getSimpleName();
@@ -136,7 +136,7 @@ public class GridThemeUI extends AbstractTestUIWithLog {
             setEditorEnabled(true);
             setSizeFull();
             getColumn("age").getEditorField().addValidator(
-                    new LegacyIntegerRangeValidator("Must be between 0 and 100",
+                    new IntegerRangeValidator("Must be between 0 and 100",
                             0, 100));
             getColumn("birthDate").setRenderer(new DateRenderer(
                     DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US)));

@@ -28,10 +28,10 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.v7.ui.textfield.LegacyAbstractTextFieldState;
 import com.vaadin.shared.v7.ui.textfield.LegacyTextFieldConstants;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 @Deprecated
-@Connect(value = LegacyTextField.class, loadStyle = LoadStyle.EAGER)
+@Connect(value = TextField.class, loadStyle = LoadStyle.EAGER)
 public class LegacyTextFieldConnector extends AbstractFieldConnector
         implements Paintable {
 

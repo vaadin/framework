@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Table;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 public class ClippedComponentsInTable extends TestBase {
 
@@ -23,12 +23,12 @@ public class ClippedComponentsInTable extends TestBase {
         Table t = new Table();
         addComponent(t);
 
-        t.addContainerProperty("Name", LegacyTextField.class, null);
+        t.addContainerProperty("Name", TextField.class, null);
         t.addContainerProperty("Button", Button.class, null);
 
         for (int i = 0; i < 3; i++) {
             Item item = t.addItem(i);
-            LegacyTextField tf = new LegacyTextField("", String.valueOf(i + 1));
+            TextField tf = new TextField("", String.valueOf(i + 1));
             tf.setColumns(10);
             item.getItemProperty("Name").setValue(tf);
 

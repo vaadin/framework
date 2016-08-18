@@ -2,13 +2,13 @@ package com.vaadin.tests.components.table;
 
 import java.util.Arrays;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.Sizeable;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
 
 @SuppressWarnings("serial")
 public class KeyboardNavigationWithChangingContent extends TestBase {

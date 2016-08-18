@@ -23,7 +23,7 @@ import com.vaadin.tests.widgetset.server.RoundTripTester;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 @Widgetset(TestingWidgetSet.NAME)
 public class RoundTripTest extends AbstractTestUI {
@@ -31,7 +31,7 @@ public class RoundTripTest extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         final RoundTripTester roundTripTester = new RoundTripTester();
-        final LegacyTextField payloadSize = new LegacyTextField(
+        final TextField payloadSize = new TextField(
                 "Payload size (bytes)");
         payloadSize.setConverter(Integer.class);
         payloadSize.setConvertedValue(10000);
@@ -39,7 +39,7 @@ public class RoundTripTest extends AbstractTestUI {
             payloadSize.setValue(request.getParameter("payload"));
         }
         addComponent(payloadSize);
-        final LegacyTextField testDuration = new LegacyTextField(
+        final TextField testDuration = new TextField(
                 "Test duration (ms)");
         testDuration.setConverter(Integer.class);
         testDuration.setConvertedValue(10000);

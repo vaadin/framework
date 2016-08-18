@@ -37,7 +37,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Adapted from old PortletDemo to support integration testing.
@@ -45,7 +45,7 @@ import com.vaadin.v7.ui.LegacyTextField;
 @StyleSheet("PortletConnectorResource.css")
 public class JSR286Portlet extends UI {
 
-    LegacyTextField tf = new LegacyTextField("Some value");
+    TextField tf = new TextField("Some value");
     Label userInfo = new Label();
     Link portletEdit = new Link();
     Link portletMax = new Link();

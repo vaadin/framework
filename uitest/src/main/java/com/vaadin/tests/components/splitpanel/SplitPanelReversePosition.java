@@ -8,8 +8,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalSplitPanel;
+import com.vaadin.v7.ui.TextArea;
 
 public class SplitPanelReversePosition extends TestBase {
 

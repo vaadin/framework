@@ -18,11 +18,11 @@ package com.vaadin.ui;
 
 import org.jsoup.nodes.Element;
 
-import com.vaadin.data.Property;
 import com.vaadin.shared.ui.progressindicator.ProgressBarState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
-import com.vaadin.v7.ui.LegacyAbstractField;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.ui.AbstractField;
 
 /**
  * Shows the current progress of a long running task.
@@ -35,7 +35,7 @@ import com.vaadin.v7.ui.LegacyAbstractField;
  * @since 7.1
  * @author Vaadin Ltd
  */
-public class ProgressBar extends LegacyAbstractField<Float>
+public class ProgressBar extends AbstractField<Float>
         implements Property.Viewer, Property.ValueChangeListener {
 
     private static final float DEFAULT_VALUE = 0f;

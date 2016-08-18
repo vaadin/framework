@@ -19,7 +19,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Test to see if AbstractOrderedLayout displays captions correctly with
@@ -34,7 +34,7 @@ public class AbstractOrderedLayoutWithCaptions extends AbstractTestUI {
         VerticalLayout layout = new VerticalLayout();
         layout.setSizeFull();
 
-        LegacyTextField textField = new LegacyTextField("Input Text:");
+        TextField textField = new TextField("Input Text:");
         Label label1 = new Label("LABEL 1");
         Label label2 = new Label("LABEL 2");
 

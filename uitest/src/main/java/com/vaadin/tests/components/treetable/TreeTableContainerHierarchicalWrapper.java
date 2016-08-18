@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.treetable;
 
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Tree.ExpandEvent;
-import com.vaadin.ui.Tree.ExpandListener;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
+import com.vaadin.v7.ui.Tree.ExpandEvent;
+import com.vaadin.v7.ui.Tree.ExpandListener;
+import com.vaadin.v7.ui.TreeTable;
 
 @SuppressWarnings("serial")
 public class TreeTableContainerHierarchicalWrapper extends AbstractTestUI {

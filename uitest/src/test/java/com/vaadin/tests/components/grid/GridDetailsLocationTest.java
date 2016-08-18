@@ -35,8 +35,8 @@ import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.testbench.parallel.TestCategory;
-import com.vaadin.tests.components.grid.basicfeatures.element.CustomGridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridDetailsLocationTest extends MultiBrowserTest {
@@ -301,8 +301,8 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
                 Keys.ENTER, Keys.TAB);
     }
 
-    private CustomGridElement getGrid() {
-        return $(CustomGridElement.class).first();
+    private GridElement getGrid() {
+        return $(GridElement.class).first();
     }
 
     private WebElement getVerticalScrollbar() {

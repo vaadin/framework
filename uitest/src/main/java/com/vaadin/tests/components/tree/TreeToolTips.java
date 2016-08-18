@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.tree;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.AbstractSelect;
+import com.vaadin.v7.ui.Tree;
 
 public class TreeToolTips extends TestBase {
 

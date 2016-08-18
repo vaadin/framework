@@ -21,11 +21,11 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.v7.data.util.converter.LegacyStringToBigDecimalConverter;
+import com.vaadin.v7.data.util.converter.StringToBigDecimalConverter;
 
 public class StringToBigDecimalConverterTest {
 
-    LegacyStringToBigDecimalConverter converter = new LegacyStringToBigDecimalConverter();
+    StringToBigDecimalConverter converter = new StringToBigDecimalConverter();
 
     @Test
     public void testNullConversion() {

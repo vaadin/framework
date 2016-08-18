@@ -29,7 +29,7 @@ import com.vaadin.client.ui.table.TableConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.treetable.TreeTableConstants;
 import com.vaadin.shared.ui.treetable.TreeTableState;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.ui.TreeTable;
 
 @Connect(TreeTable.class)
 public class TreeTableConnector extends TableConnector {

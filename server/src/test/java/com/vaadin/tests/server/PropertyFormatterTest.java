@@ -6,8 +6,8 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.util.PropertyFormatter;
+import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.data.util.PropertyFormatter;
 
 @SuppressWarnings("unchecked")
 public class PropertyFormatterTest {

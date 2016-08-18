@@ -18,8 +18,9 @@ package com.vaadin.tests.components.grid;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.OptionGroupElement;
+import com.vaadin.v7.testbench.customelements.OptionGroupElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class SortableHeaderStylesTest extends SingleBrowserTest {
     @Test
@@ -44,7 +45,7 @@ public class SortableHeaderStylesTest extends SingleBrowserTest {
     }
 
     private boolean hasSortableStyle(int column) {
-        return $(LegacyGridElement.class).first().getHeaderCell(0, column)
+        return $(GridElement.class).first().getHeaderCell(0, column)
                 .getAttribute("class").contains("sortable");
     }
 }

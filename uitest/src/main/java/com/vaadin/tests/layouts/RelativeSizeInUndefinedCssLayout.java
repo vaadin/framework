@@ -19,7 +19,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class RelativeSizeInUndefinedCssLayout extends AbstractTestUI {
 
@@ -37,7 +37,7 @@ public class RelativeSizeInUndefinedCssLayout extends AbstractTestUI {
 
         cssLayout.addComponent(formLayout);
 
-        LegacyTextField tf = new LegacyTextField("Enter something");
+        TextField tf = new TextField("Enter something");
         tf.setWidth("100%");
         formLayout.addComponent(tf);
 

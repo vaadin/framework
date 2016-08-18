@@ -27,9 +27,9 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.ui.Table;
 
 @Theme("reindeer")
 public class ThemeChangeOnTheFly extends AbstractTestUIWithLog {

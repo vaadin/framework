@@ -10,8 +10,8 @@ import org.junit.Test;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
-import com.vaadin.v7.data.util.converter.LegacyStringToIntegerConverter;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.util.converter.StringToIntegerConverter;
+import com.vaadin.v7.ui.TextField;
 
 public class AbsFieldDataSourceLocaleChangeTest {
 
@@ -35,9 +35,9 @@ public class AbsFieldDataSourceLocaleChangeTest {
 
     @Test
     public void localeChangesOnAttach() {
-        LegacyTextField tf = new LegacyTextField();
+        TextField tf = new TextField();
 
-        tf.setConverter(new LegacyStringToIntegerConverter() {
+        tf.setConverter(new StringToIntegerConverter() {
             @Override
             protected NumberFormat getFormat(Locale locale) {
                 if (locale == null) {

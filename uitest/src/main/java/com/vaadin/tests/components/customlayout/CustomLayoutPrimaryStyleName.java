@@ -8,7 +8,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class CustomLayoutPrimaryStyleName extends TestBase {
 
@@ -19,7 +19,7 @@ public class CustomLayoutPrimaryStyleName extends TestBase {
         try {
             final CustomLayout cl = new CustomLayout(is);
 
-            cl.addComponent(new LegacyTextField("Hello world"), "loc1");
+            cl.addComponent(new TextField("Hello world"), "loc1");
 
             cl.setPrimaryStyleName("my-customlayout");
             addComponent(cl);

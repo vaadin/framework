@@ -9,7 +9,7 @@ import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class CustomLayoutUsingTheme extends TestBase implements ClickListener {
 
@@ -20,8 +20,8 @@ public class CustomLayoutUsingTheme extends TestBase implements ClickListener {
         setTheme("tests-tickets");
         layout = new CustomLayout("Ticket1775");
         addComponent(layout);
-        layout.addComponent(new LegacyTextField("Username"), "loginUser");
-        layout.addComponent(new LegacyTextField("Password"), "loginPassword");
+        layout.addComponent(new TextField("Username"), "loginUser");
+        layout.addComponent(new TextField("Password"), "loginPassword");
         layout.addComponent(new Button("Login"), "loginButton");
         layout.setWidth(null);
 
@@ -58,7 +58,7 @@ public class CustomLayoutUsingTheme extends TestBase implements ClickListener {
 
     @Override
     public void buttonClick(ClickEvent event) {
-        layout.addComponent(new LegacyTextField("A text field!"), "location2");
+        layout.addComponent(new TextField("A text field!"), "location2");
     }
 
 }

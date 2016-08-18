@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.treetable;
 
-import com.vaadin.data.Container.Hierarchical;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.data.Container.Hierarchical;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.TreeTable;
 
 public class ChangeDataSourcePageLengthZero extends TestBase {
     @Override

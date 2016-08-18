@@ -4,9 +4,9 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.TableDragMode;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.TableDragMode;
+import com.vaadin.v7.ui.TextField;
 
 public class TableShouldNotEatValueChanges extends TestBase {
 
@@ -23,7 +23,7 @@ public class TableShouldNotEatValueChanges extends TestBase {
         t.setTabIndex(4);
         // t.setSelectable(true);
 
-        final LegacyTextField tf = new LegacyTextField();
+        final TextField tf = new TextField();
         tf.setTabIndex(1);
         ItemClickListener l = new ItemClickListener() {
 

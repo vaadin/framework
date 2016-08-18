@@ -18,21 +18,21 @@ package com.vaadin.tests.components.grid;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
-import com.vaadin.ui.renderers.ButtonRenderer;
-import com.vaadin.ui.renderers.ClickableRenderer.RendererClickEvent;
-import com.vaadin.ui.renderers.ClickableRenderer.RendererClickListener;
-import com.vaadin.ui.renderers.DateRenderer;
-import com.vaadin.ui.renderers.HtmlRenderer;
-import com.vaadin.ui.renderers.ImageRenderer;
-import com.vaadin.ui.renderers.NumberRenderer;
-import com.vaadin.ui.renderers.ProgressBarRenderer;
-import com.vaadin.ui.renderers.TextRenderer;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.SelectionMode;
+import com.vaadin.v7.ui.renderers.ButtonRenderer;
+import com.vaadin.v7.ui.renderers.ClickableRenderer.RendererClickEvent;
+import com.vaadin.v7.ui.renderers.ClickableRenderer.RendererClickListener;
+import com.vaadin.v7.ui.renderers.DateRenderer;
+import com.vaadin.v7.ui.renderers.HtmlRenderer;
+import com.vaadin.v7.ui.renderers.ImageRenderer;
+import com.vaadin.v7.ui.renderers.NumberRenderer;
+import com.vaadin.v7.ui.renderers.ProgressBarRenderer;
+import com.vaadin.v7.ui.renderers.TextRenderer;
 
 @SuppressWarnings("all")
 public class NullRenderers extends AbstractTestUI {
@@ -56,7 +56,7 @@ public class NullRenderers extends AbstractTestUI {
 
         container.addItem();
 
-        final LegacyGrid gridDefaults = new LegacyGrid(container);
+        final Grid gridDefaults = new Grid(container);
 
         gridDefaults.setId("test-grid-defaults");
         gridDefaults.setSelectionMode(SelectionMode.NONE);
@@ -91,7 +91,7 @@ public class NullRenderers extends AbstractTestUI {
 
         addComponent(gridDefaults);
 
-        final LegacyGrid gridNoDefaults = new LegacyGrid(container);
+        final Grid gridNoDefaults = new Grid(container);
 
         gridNoDefaults.setId("test-grid");
         gridNoDefaults.setSelectionMode(SelectionMode.NONE);

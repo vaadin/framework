@@ -17,7 +17,7 @@ package com.vaadin.client.ui.table;
 
 import com.vaadin.client.ui.dd.VLazyInitItemIdentifiers;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
 @AcceptCriterion(Table.TableDropCriterion.class)
 public final class VTableLazyInitItemIdentifiers

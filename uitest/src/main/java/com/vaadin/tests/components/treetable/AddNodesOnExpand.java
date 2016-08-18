@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.treetable;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.CollapseEvent;
-import com.vaadin.ui.Tree.ExpandEvent;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.CollapseEvent;
+import com.vaadin.v7.ui.Tree.ExpandEvent;
+import com.vaadin.v7.ui.TreeTable;
 
 public class AddNodesOnExpand extends TestBase {
     private TreeTable treetable;

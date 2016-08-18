@@ -3,32 +3,32 @@ package com.vaadin.tests.fieldgroup;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.fieldgroup.PropertyId;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
-import com.vaadin.v7.ui.LegacyDateField;
-import com.vaadin.v7.ui.LegacyInlineDateField;
-import com.vaadin.v7.ui.LegacyPopupDateField;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.v7.data.fieldgroup.PropertyId;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.ui.DateField;
+import com.vaadin.v7.ui.InlineDateField;
+import com.vaadin.v7.ui.PopupDateField;
+import com.vaadin.v7.ui.TextField;
 
 public class DateForm extends AbstractTestUIWithLog {
 
     @PropertyId("date1")
-    private LegacyDateField dateField;
+    private DateField dateField;
     @PropertyId("date2")
-    private LegacyPopupDateField popupDateField;
+    private PopupDateField popupDateField;
     @PropertyId("date3")
-    private LegacyInlineDateField inlineDateField;
+    private InlineDateField inlineDateField;
     @PropertyId("date4")
-    private LegacyTextField textField;
+    private TextField textField;
 
     public static class DateObject {
         private Date date1, date2, date3, date4;

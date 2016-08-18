@@ -20,8 +20,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridItemSetChangeTest extends SingleBrowserTest {
 
@@ -29,7 +29,7 @@ public class GridItemSetChangeTest extends SingleBrowserTest {
     public void testValueChangeListenersWorkAfterItemSetChange() {
         openTestURL();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         assertEquals("Last name initially wrong", "Bar",
                 grid.getCell(0, 1).getText());
 

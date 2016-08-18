@@ -2,16 +2,16 @@ package com.vaadin.tests.fieldgroup;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.data.Validator;
-import com.vaadin.v7.data.validator.LegacyBeanValidator;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.fieldgroup.FieldGroup;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.data.validator.BeanValidator;
+import com.vaadin.v7.ui.TextField;
 
 public class MultipleValidationErrors extends AbstractTestUI {
 
@@ -57,9 +57,9 @@ public class MultipleValidationErrors extends AbstractTestUI {
     private void bindTextField(
             BeanItem<PersonBeanWithValidationAnnotations> item,
             FieldGroup fieldGroup, String caption, String propertyId) {
-        LegacyTextField textfield = new LegacyTextField(caption,
+        TextField textfield = new TextField(caption,
                 item.getItemProperty(propertyId));
-        textfield.addValidator(new LegacyBeanValidator(
+        textfield.addValidator(new BeanValidator(
                 PersonBeanWithValidationAnnotations.class, propertyId));
 
         fieldGroup.bind(textfield, propertyId);

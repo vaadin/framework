@@ -24,8 +24,9 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.tests.components.table.CustomTableElement.ContextMenuElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.TableElement;
+import com.vaadin.v7.testbench.customelements.TableElement.ContextMenuElement;
 
 public class ColumnCollapsingAndColumnExpansionTest extends MultiBrowserTest {
 
@@ -33,7 +34,7 @@ public class ColumnCollapsingAndColumnExpansionTest extends MultiBrowserTest {
     public void expandCorrectlyAfterCollapse() throws IOException {
         openTestURL();
 
-        CustomTableElement table = $(CustomTableElement.class).first();
+        TableElement table = $(TableElement.class).first();
 
         // Hide col2 through UI
         table.openCollapseMenu().getItem(1).click();
@@ -77,7 +78,7 @@ public class ColumnCollapsingAndColumnExpansionTest extends MultiBrowserTest {
     @Test
     public void collapseEvents() {
         openTestURL();
-        CustomTableElement table = $(CustomTableElement.class).first();
+        TableElement table = $(TableElement.class).first();
 
         // Through menu
         table.openCollapseMenu().getItem(0).click();

@@ -1,25 +1,25 @@
 package com.vaadin.tests.validation;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.Validator;
-import com.vaadin.v7.data.validator.LegacyIntegerValidator;
-import com.vaadin.v7.data.validator.LegacyStringLengthValidator;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.validator.IntegerValidator;
+import com.vaadin.v7.data.validator.StringLengthValidator;
+import com.vaadin.v7.ui.TextField;
 
 @SuppressWarnings("deprecation")
 public class ValidationOfRequiredEmptyFields extends AbstractTestUI {
 
-    private LegacyTextField tf;
+    private TextField tf;
     private CheckBox requiredInput;
-    private LegacyTextField requiredErrorInput;
+    private TextField requiredErrorInput;
 
-    private Validator integerValidator = new LegacyIntegerValidator(
+    private Validator integerValidator = new IntegerValidator(
             "Must be an integer");
-    private Validator stringLengthValidator = new LegacyStringLengthValidator(
+    private Validator stringLengthValidator = new StringLengthValidator(
             "Must be 5-10 chars", 5, 10, false);
     private CheckBox integerValidatorInput;
     private CheckBox stringLengthValidatorInput;
@@ -31,7 +31,7 @@ public class ValidationOfRequiredEmptyFields extends AbstractTestUI {
         requiredInput.addValueChangeListener(
                 event -> tf.setRequired(requiredInput.getValue()));
 
-        requiredErrorInput = new LegacyTextField("Required error message");
+        requiredErrorInput = new TextField("Required error message");
         requiredErrorInput.setImmediate(true);
         requiredErrorInput.addValueChangeListener(new ValueChangeListener() {
             @Override
@@ -59,7 +59,7 @@ public class ValidationOfRequiredEmptyFields extends AbstractTestUI {
             }
         });
 
-        tf = new LegacyTextField();
+        tf = new TextField();
         tf.setImmediate(true);
 
         requiredInput.setValue(false);

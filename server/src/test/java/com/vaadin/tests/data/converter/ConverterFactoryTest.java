@@ -22,26 +22,26 @@ import org.junit.Test;
 
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
-import com.vaadin.v7.data.util.converter.LegacyConverter;
-import com.vaadin.v7.data.util.converter.LegacyDefaultConverterFactory;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.DefaultConverterFactory;
+import com.vaadin.v7.ui.TextField;
 
 public class ConverterFactoryTest {
 
     public static class ConvertTo42
-            implements LegacyConverter<String, Integer> {
+            implements Converter<String, Integer> {
 
         @Override
         public Integer convertToModel(String value,
                 Class<? extends Integer> targetType, Locale locale)
-                throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
+                throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
             return 42;
         }
 
         @Override
         public String convertToPresentation(Integer value,
                 Class<? extends String> targetType, Locale locale)
-                throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
+                throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
             return "42";
         }
 
@@ -58,12 +58,12 @@ public class ConverterFactoryTest {
     }
 
     public static class ConverterFactory42
-            extends LegacyDefaultConverterFactory {
+            extends DefaultConverterFactory {
         @Override
-        public <PRESENTATION, MODEL> LegacyConverter<PRESENTATION, MODEL> createConverter(
+        public <PRESENTATION, MODEL> Converter<PRESENTATION, MODEL> createConverter(
                 Class<PRESENTATION> presentationType, Class<MODEL> modelType) {
             if (modelType == Integer.class) {
-                return (LegacyConverter<PRESENTATION, MODEL>) new ConvertTo42();
+                return (Converter<PRESENTATION, MODEL>) new ConvertTo42();
             }
 
             return super.createConverter(presentationType, modelType);
@@ -78,7 +78,7 @@ public class ConverterFactoryTest {
         appWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
 
-        LegacyTextField tf = new LegacyTextField("", "123") {
+        TextField tf = new TextField("", "123") {
             @Override
             public VaadinSession getSession() {
                 return appWithCustomIntegerConverter;
@@ -98,7 +98,7 @@ public class ConverterFactoryTest {
                 .setConverterFactory(new ConverterFactory42());
         VaadinSession.setCurrent(appWithCustomIntegerConverter);
 
-        LegacyTextField tf = new LegacyTextField("", "123");
+        TextField tf = new TextField("", "123");
         tf.setConverter(Integer.class);
         // The application converter always returns 42. Current application is
         // null
@@ -113,7 +113,7 @@ public class ConverterFactoryTest {
                 .setConverterFactory(new ConverterFactory42());
         VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
 
-        LegacyTextField tf = new LegacyTextField("", "123") {
+        TextField tf = new TextField("", "123") {
             @Override
             public VaadinSession getSession() {
                 return fieldAppWithCustomIntegerConverter;

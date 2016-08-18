@@ -15,12 +15,12 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.PopupDateField;
-import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
 
 public abstract class AbstractComponentContainerTest<T extends AbstractComponentContainer>
         extends AbstractComponentTest<T>
@@ -68,7 +68,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     private Command<T, ComponentSize> addTextFieldCommand = new Command<T, ComponentSize>() {
         @Override
         public void execute(T c, ComponentSize size, Object data) {
-            LegacyTextField tf = new LegacyTextField();
+            TextField tf = new TextField();
             c.addComponent(tf);
             size.apply(tf);
         }

@@ -21,11 +21,12 @@ import static org.hamcrest.number.IsCloseTo.closeTo;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.elements.GridLayoutElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 /**
  * Tests that details row displays GridLayout contents properly.
@@ -40,7 +41,7 @@ public class GridLayoutDetailsRowTest extends MultiBrowserTest {
         openTestURL();
         waitForElementPresent(By.className("v-grid"));
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         grid.getRow(2).click(5, 5);
         waitForElementPresent(By.id("lbl2"));

@@ -22,8 +22,6 @@ package com.vaadin.tests.push;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.ui.ui.Transport;
@@ -33,11 +31,13 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.PushConfiguration;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.TextField;
 
 /**
  *
@@ -48,8 +48,8 @@ public class PushConfigurator extends VerticalLayout {
     private NativeSelect pushMode = new NativeSelect("Push mode");
     private NativeSelect transport = new NativeSelect("Transport");
     private NativeSelect fallbackTransport = new NativeSelect("Fallback");
-    private LegacyTextField parameter = new LegacyTextField("Parameter");
-    private LegacyTextField value = new LegacyTextField("Value");
+    private TextField parameter = new TextField("Parameter");
+    private TextField value = new TextField("Value");
     private Button set = new Button("Set");
     private HorizontalLayout paramValue = new HorizontalLayout();
     private VerticalLayout vl = new VerticalLayout();

@@ -3,14 +3,14 @@ package com.vaadin.tests.components.combobox;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.Person;
-import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.AbstractSelect.ItemCaptionMode;
+import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxDuplicateCaption extends TestBase {
 
@@ -40,7 +40,7 @@ public class ComboBoxDuplicateCaption extends TestBase {
 
             @Override
             public void valueChange(
-                    com.vaadin.data.Property.ValueChangeEvent event) {
+                    com.vaadin.v7.data.Property.ValueChangeEvent event) {
                 Person p = (Person) event.getProperty().getValue();
                 log.log("Person = " + p.getFirstName() + " " + p.getLastName());
             }

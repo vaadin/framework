@@ -4,21 +4,21 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.util.AbstractProperty;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.UI;
-import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
-import com.vaadin.v7.ui.LegacyAbstractField;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.AbstractProperty;
+import com.vaadin.v7.data.util.converter.Converter.ConversionException;
+import com.vaadin.v7.ui.AbstractField;
 
 public class RemoveListenersOnDetachTest {
 
     int numValueChanges = 0;
     int numReadOnlyChanges = 0;
 
-    LegacyAbstractField field = new LegacyAbstractField() {
+    AbstractField field = new AbstractField() {
         final private VaadinSession application = new AlwaysLockedVaadinSession(
                 null);
         private UI uI = new UI() {

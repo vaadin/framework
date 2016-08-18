@@ -17,12 +17,12 @@ package com.vaadin.tests.components.grid.basicfeatures;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
-import com.vaadin.data.Container;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.grid.HeightMode;
-import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.ui.Grid;
 
 @Title("Server Grid height by row on init")
 @Theme(ValoTheme.THEME_NAME)
@@ -32,7 +32,7 @@ public class GridHeightByRowOnInit extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        final LegacyGrid grid = new LegacyGrid();
+        final Grid grid = new Grid();
         Container.Indexed container = grid.getContainerDataSource();
         container.addContainerProperty(PROPERTY, String.class, "");
 

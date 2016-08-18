@@ -12,8 +12,8 @@ import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.TableDragMode;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.TableDragMode;
 
 public class DragAndDropDisable extends AbstractTestUI {
 

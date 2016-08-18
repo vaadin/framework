@@ -21,10 +21,11 @@ import org.junit.Test;
 import org.openqa.selenium.Dimension;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridColumnWidthRecalculationTest extends SingleBrowserTest {
@@ -34,7 +35,7 @@ public class GridColumnWidthRecalculationTest extends SingleBrowserTest {
     @Before
     public void open() {
         openTestURL();
-        grid = $(LegacyGridElement.class).first();
+        grid = $(GridElement.class).first();
     }
 
     @Test

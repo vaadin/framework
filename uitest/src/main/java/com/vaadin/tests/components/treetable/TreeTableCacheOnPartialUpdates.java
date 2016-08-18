@@ -5,12 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Container.Ordered;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
@@ -18,14 +12,20 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.ui.Tree.CollapseEvent;
-import com.vaadin.ui.Tree.CollapseListener;
-import com.vaadin.ui.Tree.ExpandEvent;
-import com.vaadin.ui.Tree.ExpandListener;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Container.Ordered;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.ColumnGenerator;
+import com.vaadin.v7.ui.Tree.CollapseEvent;
+import com.vaadin.v7.ui.Tree.CollapseListener;
+import com.vaadin.v7.ui.Tree.ExpandEvent;
+import com.vaadin.v7.ui.Tree.ExpandListener;
+import com.vaadin.v7.ui.TreeTable;
 
 public class TreeTableCacheOnPartialUpdates extends TestBase {
     private Log log = new Log(5);
@@ -69,7 +69,7 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
 
     public class Col3ColumnGenerator implements ColumnGenerator {
         @Override
-        public Component generateCell(final com.vaadin.ui.Table source,
+        public Component generateCell(final com.vaadin.v7.ui.Table source,
                 final Object itemId, Object columnId) {
             TestBean tb = (TestBean) itemId;
             String identifier = "Item " + itemId + "/" + columnId;
@@ -91,7 +91,7 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
 
     public class Col4ColumnGenerator implements ColumnGenerator {
         @Override
-        public Component generateCell(final com.vaadin.ui.Table source,
+        public Component generateCell(final com.vaadin.v7.ui.Table source,
                 final Object itemId, Object columnId) {
             TestBean tb = (TestBean) itemId;
             String identifier = "Expand/Collapse";

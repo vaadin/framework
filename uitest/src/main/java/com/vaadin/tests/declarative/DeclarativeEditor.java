@@ -22,10 +22,6 @@ import java.io.IOException;
 import org.apache.commons.io.IOUtils;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Property.ReadOnlyException;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.Property.ValueChangeNotifier;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.server.VaadinRequest;
@@ -33,11 +29,15 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.v7.data.Property.ReadOnlyException;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.Property.ValueChangeNotifier;
+import com.vaadin.v7.ui.TextArea;
 
 @Theme("valo")
 public class DeclarativeEditor extends UI {

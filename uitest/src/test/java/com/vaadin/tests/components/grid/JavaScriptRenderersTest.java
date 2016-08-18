@@ -18,10 +18,11 @@ package com.vaadin.tests.components.grid;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class JavaScriptRenderersTest extends MultiBrowserTest {
@@ -31,7 +32,7 @@ public class JavaScriptRenderersTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         GridCellElement cell_1_1 = grid.getCell(1, 1);
 
         GridCellElement cell_2_2 = grid.getCell(2, 2);

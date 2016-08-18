@@ -15,8 +15,6 @@
  */
 package com.vaadin.tests.components.grid;
 
-import static org.junit.Assert.assertFalse;
-
 import java.util.List;
 
 import org.junit.Assert;
@@ -25,10 +23,10 @@ import org.junit.Test;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridHeaderFooterComponentsTest extends SingleBrowserTest {
 
@@ -41,7 +39,7 @@ public class GridHeaderFooterComponentsTest extends SingleBrowserTest {
 
     @Test
     public void hideAndShowComponentsInHeader() {
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         int filterRow = 2;
         Assert.assertNull(getHeaderElement(grid, filterRow, 1));
@@ -79,7 +77,7 @@ public class GridHeaderFooterComponentsTest extends SingleBrowserTest {
 
     @Test
     public void hideAndShowComponentsInFooter() {
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         int filterRow = 0;
         Assert.assertNull(getFooterElement(grid, filterRow, 1));
@@ -121,17 +119,17 @@ public class GridHeaderFooterComponentsTest extends SingleBrowserTest {
 
         for (int i = 2; i >= 0; --i) {
             // Remove Header
-            $(LegacyGridElement.class).first().getHeaderCell(i, 0)
+            $(GridElement.class).first().getHeaderCell(i, 0)
                     .$(ButtonElement.class).first().click();
-            assertFalse("Header " + i + " should not be present.",
-                    $(LegacyGridElement.class).first()
+            Assert.assertFalse("Header " + i + " should not be present.",
+                    $(GridElement.class).first()
                             .isElementPresent(By.vaadin("#header[" + i + "]")));
 
             // Remove Footer
-            $(LegacyGridElement.class).first().getFooterCell(i, 0)
+            $(GridElement.class).first().getFooterCell(i, 0)
                     .$(ButtonElement.class).first().click();
-            assertFalse("Footer " + i + " should not be present.",
-                    $(LegacyGridElement.class).first()
+            Assert.assertFalse("Footer " + i + " should not be present.",
+                    $(GridElement.class).first()
                             .isElementPresent(By.vaadin("#footer[" + i + "]")));
         }
 

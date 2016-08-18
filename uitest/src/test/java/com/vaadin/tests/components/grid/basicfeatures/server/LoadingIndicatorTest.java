@@ -22,9 +22,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import com.vaadin.testbench.elements.GridElement;
-import com.vaadin.tests.components.grid.LegacyGridElement;
+
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class LoadingIndicatorTest extends GridBasicFeaturesTest {
     @Test
@@ -34,7 +34,7 @@ public class LoadingIndicatorTest extends GridBasicFeaturesTest {
 
         selectMenuPath("Component", "State", "Container delay", "2000");
 
-        GridElement gridElement = $(LegacyGridElement.class).first();
+        GridElement gridElement = $(GridElement.class).first();
 
         Assert.assertFalse(
                 "Loading indicator should not be visible before disabling waitForVaadin",

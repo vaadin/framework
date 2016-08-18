@@ -22,15 +22,15 @@ import java.util.Locale;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Calendar;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickHandler;
-import com.vaadin.ui.components.calendar.event.BasicEvent;
-import com.vaadin.ui.components.calendar.event.CalendarEvent;
-import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
+import com.vaadin.v7.ui.Calendar;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.DateClickHandler;
+import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
+import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
+import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider;
 
 public class NotificationTestUI extends UI {
 

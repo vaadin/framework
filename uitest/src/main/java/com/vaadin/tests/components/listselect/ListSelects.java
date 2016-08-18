@@ -3,7 +3,7 @@ package com.vaadin.tests.components.listselect;
 import java.util.LinkedHashMap;
 
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
-import com.vaadin.ui.ListSelect;
+import com.vaadin.v7.ui.ListSelect;
 
 public class ListSelects extends AbstractSelectTestCase<ListSelect> {
 

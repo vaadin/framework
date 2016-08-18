@@ -18,8 +18,8 @@ package com.vaadin.tests.components.grid;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Grid;
 
 public class GridInGridLayout extends AbstractTestUI {
 
@@ -33,10 +33,10 @@ public class GridInGridLayout extends AbstractTestUI {
         addComponent(cssLayout);
         cssLayout.addComponent(layout);
 
-        final LegacyGrid grid = new LegacyGrid();
+        final Grid grid = new Grid();
         grid.setSizeFull();
         for (int i = 0; i < 20; i++) {
-            LegacyGrid.Column column = grid.addColumn("" + i);
+            Grid.Column column = grid.addColumn("" + i);
             column.setHidable(true);
             column.setEditable(true);
         }

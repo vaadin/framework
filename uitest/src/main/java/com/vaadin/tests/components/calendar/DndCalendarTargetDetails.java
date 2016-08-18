@@ -17,7 +17,7 @@ package com.vaadin.tests.components.calendar;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.table.DndTableTargetDetails;
-import com.vaadin.ui.Calendar;
+import com.vaadin.v7.ui.Calendar;
 
 /**
  * Test UI for calendar as a drop target: CalendarTargetDetails should provide

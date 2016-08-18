@@ -20,7 +20,7 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.ui.ComboBox;
 
 /**
  * Test UI to verify that focus event actually update the ComboBox suggestion

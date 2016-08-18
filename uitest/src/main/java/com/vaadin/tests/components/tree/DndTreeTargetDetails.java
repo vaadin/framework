@@ -17,7 +17,7 @@ package com.vaadin.tests.components.tree;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.table.DndTableTargetDetails;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.ui.Tree;
 
 /**
  * Test UI for tree as a drop target: AbstractSelectTargetDetails should provide

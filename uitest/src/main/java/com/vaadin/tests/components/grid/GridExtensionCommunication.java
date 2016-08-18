@@ -16,23 +16,23 @@
 package com.vaadin.tests.components.grid;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.data.Item;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.client.grid.GridClickExtensionConnector.GridClickServerRpc;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.AbstractGridExtension;
-import com.vaadin.ui.LegacyGrid.Column;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.AbstractGridExtension;
+import com.vaadin.v7.ui.Grid.Column;
+import com.vaadin.v7.ui.Grid.SelectionMode;
 
 @Widgetset(TestingWidgetSet.NAME)
 public class GridExtensionCommunication extends AbstractTestUIWithLog {
 
     public class GridClickExtension extends AbstractGridExtension {
 
-        public GridClickExtension(LegacyGrid grid) {
+        public GridClickExtension(Grid grid) {
             super(grid);
             registerRpc(new GridClickServerRpc() {
 
@@ -60,7 +60,7 @@ public class GridExtensionCommunication extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        LegacyGrid grid = new PersonTestGrid(50);
+        Grid grid = new PersonTestGrid(50);
         grid.setSelectionMode(SelectionMode.NONE);
         new GridClickExtension(grid);
         addComponent(grid);

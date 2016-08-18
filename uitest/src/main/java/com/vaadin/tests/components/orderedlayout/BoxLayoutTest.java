@@ -5,8 +5,6 @@ import java.util.Arrays;
 
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.ThemeResource;
@@ -24,11 +22,13 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
-import com.vaadin.v7.ui.LegacyAbstractField;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.AbstractField;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.TextField;
 
 @Theme("tests-components")
 @PreserveOnRefresh
@@ -44,7 +44,7 @@ public class BoxLayoutTest extends AbstractTestUI {
     protected NativeSelect componentHeight;
     protected NativeSelect componentCaption;
     protected NativeSelect componentIcon;
-    protected LegacyTextField componentDescription;
+    protected TextField componentDescription;
     protected CheckBox componentError;
     protected CheckBox componentRequired;
 
@@ -331,7 +331,7 @@ public class BoxLayoutTest extends AbstractTestUI {
         });
         component.addComponent(componentIcon);
 
-        componentDescription = new LegacyTextField("Description");
+        componentDescription = new TextField("Description");
         componentDescription.setImmediate(true);
         componentDescription.setEnabled(false);
         componentDescription.addListener(new ValueChangeListener() {
@@ -357,8 +357,8 @@ public class BoxLayoutTest extends AbstractTestUI {
         componentRequired.setImmediate(true);
         componentRequired.setEnabled(false);
         componentRequired.addValueChangeListener(event -> {
-            if (target != null && target instanceof LegacyAbstractField) {
-                ((LegacyAbstractField<?>) target)
+            if (target != null && target instanceof AbstractField) {
+                ((AbstractField<?>) target)
                         .setRequired(componentRequired.getValue());
             }
         });
@@ -404,7 +404,7 @@ public class BoxLayoutTest extends AbstractTestUI {
                 componentDescription.setEnabled(target != null);
                 componentError.setEnabled(target != null);
                 componentRequired.setEnabled(target != null
-                        && target instanceof LegacyAbstractField);
+                        && target instanceof AbstractField);
                 align.setEnabled(target != null);
                 expand.setEnabled(target != null);
                 if (target != null) {
@@ -435,9 +435,9 @@ public class BoxLayoutTest extends AbstractTestUI {
                     }
                     componentDescription.setValue(target.getDescription());
                     componentError.setValue(target.getComponentError() != null);
-                    if (target instanceof LegacyAbstractField) {
+                    if (target instanceof AbstractField) {
                         componentRequired.setValue(
-                                ((LegacyAbstractField<?>) target).isRequired());
+                                ((AbstractField<?>) target).isRequired());
                     }
                 }
             }

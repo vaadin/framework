@@ -3,10 +3,10 @@ package com.vaadin.tests.converter;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import com.vaadin.v7.data.util.converter.LegacyStringToDoubleConverter;
+import com.vaadin.v7.data.util.converter.StringToDoubleConverter;
 
 public class StringToDoubleConverterWithThreeFractionDigits
-        extends LegacyStringToDoubleConverter {
+        extends StringToDoubleConverter {
 
     @Override
     protected NumberFormat getFormat(Locale locale) {

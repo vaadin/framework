@@ -20,27 +20,27 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.v7.tests.elements.LegacyTextFieldElement;
+import com.vaadin.v7.testbench.customelements.TextFieldElement;
 
 public class EnumTextFieldTest extends SingleBrowserTest {
     @Test
     public void validValues() {
         openTestURL();
-        $(LegacyTextFieldElement.class).first().clear();
-        $(LegacyTextFieldElement.class).first().sendKeys("Value", Keys.TAB);
+        $(TextFieldElement.class).first().clear();
+        $(TextFieldElement.class).first().sendKeys("Value", Keys.TAB);
         Assert.assertEquals("3. Value (valid)", getLogRow(0));
 
-        $(LegacyTextFieldElement.class).first().clear();
-        $(LegacyTextFieldElement.class).first().sendKeys("VaLuE");
-        $(LegacyTextFieldElement.class).first().sendKeys(Keys.TAB);
+        $(TextFieldElement.class).first().clear();
+        $(TextFieldElement.class).first().sendKeys("VaLuE");
+        $(TextFieldElement.class).first().sendKeys(Keys.TAB);
         Assert.assertEquals("5. Value (valid)", getLogRow(0));
 
-        $(LegacyTextFieldElement.class).first().clear();
-        $(LegacyTextFieldElement.class).first().sendKeys("The last value");
-        $(LegacyTextFieldElement.class).first().sendKeys(Keys.TAB);
+        $(TextFieldElement.class).first().clear();
+        $(TextFieldElement.class).first().sendKeys("The last value");
+        $(TextFieldElement.class).first().sendKeys(Keys.TAB);
         Assert.assertEquals("7. The last value (valid)", getLogRow(0));
 
-        $(LegacyTextFieldElement.class).first().clear();
+        $(TextFieldElement.class).first().clear();
         Assert.assertEquals("8. null (valid)", getLogRow(0));
 
     }
@@ -48,10 +48,10 @@ public class EnumTextFieldTest extends SingleBrowserTest {
     @Test
     public void invalidValue() {
         openTestURL();
-        $(LegacyTextFieldElement.class).first().clear();
+        $(TextFieldElement.class).first().clear();
 
-        $(LegacyTextFieldElement.class).first().sendKeys("bar");
-        $(LegacyTextFieldElement.class).first().sendKeys(Keys.TAB);
+        $(TextFieldElement.class).first().sendKeys("bar");
+        $(TextFieldElement.class).first().sendKeys(Keys.TAB);
         Assert.assertEquals("3. bar (INVALID)", getLogRow(0));
 
     }

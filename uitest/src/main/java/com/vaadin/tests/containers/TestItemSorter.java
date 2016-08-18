@@ -3,13 +3,13 @@ package com.vaadin.tests.containers;
 import java.util.Collection;
 import java.util.Comparator;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.DefaultItemSorter;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.DefaultItemSorter;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
 
 public class TestItemSorter extends TestBase {
 

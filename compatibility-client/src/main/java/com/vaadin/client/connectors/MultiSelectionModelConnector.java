@@ -46,7 +46,7 @@ import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.ui.grid.selection.MultiSelectionModelServerRpc;
 import com.vaadin.shared.ui.grid.selection.MultiSelectionModelState;
-import com.vaadin.ui.LegacyGrid.MultiSelectionModel;
+import com.vaadin.v7.ui.Grid.MultiSelectionModel;
 
 import elemental.json.JsonObject;
 

@@ -5,9 +5,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.TextField;
 
 public class VerticalLayoutExpandRatioModification extends TestBase
         implements ClickListener {
@@ -35,7 +35,7 @@ public class VerticalLayoutExpandRatioModification extends TestBase
 
         // The bottom layout
         vl2 = new VerticalLayout();
-        LegacyTextField tf = new LegacyTextField("The bottom field");
+        TextField tf = new TextField("The bottom field");
         tf.setHeight("100%");
         vl2.addComponent(tf);
 

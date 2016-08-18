@@ -15,21 +15,21 @@
  */
 package com.vaadin.tests.fieldgroup;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.ui.Grid;
 
 public class BasicCrudGrid extends AbstractBasicCrud {
 
-    private LegacyGrid grid;
+    private Grid grid;
 
     @Override
     protected void setup(VaadinRequest request) {
         super.setup(request);
-        grid = new LegacyGrid();
+        grid = new Grid();
 
         grid.setContainerDataSource(container);
 

@@ -2,7 +2,7 @@ package com.vaadin.tests.components.tree;
 
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.ui.Tree;
 
 public class TreeNodeCaptionWrapping extends TestBase {
 

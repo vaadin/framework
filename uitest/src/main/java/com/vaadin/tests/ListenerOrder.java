@@ -3,18 +3,18 @@ package com.vaadin.tests;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.vaadin.data.Container.ItemSetChangeEvent;
-import com.vaadin.data.Container.ItemSetChangeListener;
-import com.vaadin.data.Container.PropertySetChangeEvent;
-import com.vaadin.data.Container.PropertySetChangeListener;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.Select;
+import com.vaadin.v7.data.Container.ItemSetChangeEvent;
+import com.vaadin.v7.data.Container.ItemSetChangeListener;
+import com.vaadin.v7.data.Container.PropertySetChangeEvent;
+import com.vaadin.v7.data.Container.PropertySetChangeListener;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.Select;
 
 public class ListenerOrder extends com.vaadin.server.LegacyApplication
         implements Button.ClickListener, PropertySetChangeListener,

@@ -5,8 +5,8 @@ import java.util.LinkedHashMap;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.ComboBox.ItemStyleGenerator;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.ComboBox.ItemStyleGenerator;
 
 public class ComboBoxes2<T extends ComboBox> extends AbstractSelectTestCase<T> {
 

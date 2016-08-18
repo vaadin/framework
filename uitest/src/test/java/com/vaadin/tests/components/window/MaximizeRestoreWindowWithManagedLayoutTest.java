@@ -19,9 +19,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Dimension;
 
+import com.vaadin.testbench.customelements.WindowElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.newelements.WindowElement;
 
 public class MaximizeRestoreWindowWithManagedLayoutTest
         extends MultiBrowserTest {

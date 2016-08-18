@@ -25,13 +25,13 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.Column;
 import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.Column;
 
 @Theme(Reindeer.THEME_NAME)
 public class GridColumnExpand extends AbstractTestUI {
-    private LegacyGrid grid;
+    private Grid grid;
     private Label firstInfo = new Label();
     private Label secondInfo = new Label();
     private Column firstColumn;
@@ -39,7 +39,7 @@ public class GridColumnExpand extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        grid = new LegacyGrid(PersonContainer.createWithTestData());
+        grid = new Grid(PersonContainer.createWithTestData());
         grid.removeAllColumns();
         grid.addColumn("address.streetAddress");
         grid.addColumn("lastName");

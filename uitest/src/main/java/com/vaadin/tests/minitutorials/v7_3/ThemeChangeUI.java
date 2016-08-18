@@ -17,11 +17,11 @@ package com.vaadin.tests.minitutorials.v7_3;
 
 import java.util.Arrays;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.UI;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.ComboBox;
 
 public class ThemeChangeUI extends UI {
 

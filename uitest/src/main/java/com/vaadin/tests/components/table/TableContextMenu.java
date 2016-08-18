@@ -3,7 +3,7 @@ package com.vaadin.tests.components.table;
 import com.vaadin.event.Action;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
 public class TableContextMenu extends TestBase {
 

@@ -19,24 +19,24 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.Action;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.ui.Calendar;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
-import com.vaadin.ui.components.calendar.ContainerEventProvider;
-import com.vaadin.ui.components.calendar.event.BasicEvent;
-import com.vaadin.v7.ui.LegacyDateField;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.fieldgroup.FieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Calendar;
+import com.vaadin.v7.ui.DateField;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
+import com.vaadin.v7.ui.components.calendar.ContainerEventProvider;
+import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
 
 public class BeanItemContainerTestUI extends UI {
 
@@ -135,14 +135,14 @@ public class BeanItemContainerTestUI extends UI {
         final FieldGroup fieldGroup = new FieldGroup();
 
         FormLayout formLayout = new FormLayout();
-        LegacyTextField captionField = new LegacyTextField("Caption");
+        TextField captionField = new TextField("Caption");
         captionField.setImmediate(true);
-        LegacyTextField descriptionField = new LegacyTextField("Description");
+        TextField descriptionField = new TextField("Description");
         descriptionField.setImmediate(true);
-        LegacyDateField startField = new LegacyDateField("Start");
+        DateField startField = new DateField("Start");
         startField.setResolution(Resolution.MINUTE);
         startField.setImmediate(true);
-        LegacyDateField endField = new LegacyDateField("End");
+        DateField endField = new DateField("End");
         endField.setImmediate(true);
         endField.setResolution(Resolution.MINUTE);
 

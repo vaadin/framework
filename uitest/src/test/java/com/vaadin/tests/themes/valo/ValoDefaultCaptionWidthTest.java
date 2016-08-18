@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.ColorPickerElement;
+import com.vaadin.v7.testbench.customelements.ColorPickerElement;
 import com.vaadin.tests.components.colorpicker.DefaultCaptionWidthTest;
 
 /**

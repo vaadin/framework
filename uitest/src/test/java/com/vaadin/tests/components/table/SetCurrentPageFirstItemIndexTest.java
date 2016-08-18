@@ -24,7 +24,7 @@ import org.openqa.selenium.NoSuchElementException;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.TableElement;
+import com.vaadin.v7.testbench.customelements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 import junit.framework.Assert;

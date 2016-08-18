@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.TargetDetailsImpl;
@@ -25,9 +24,10 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.TableDragMode;
 
 /**
  * Test UI for table as a drop target: AbstractSelectTargetDetails should

@@ -15,8 +15,6 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -45,13 +43,15 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.themes.ValoTheme;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
 
 public class CommonParts extends VerticalLayout implements View {
     public CommonParts() {
@@ -145,13 +145,13 @@ public class CommonParts extends VerticalLayout implements View {
         Panel p = new Panel("Notifications");
         VerticalLayout content = new VerticalLayout() {
             Notification notification = new Notification("");
-            LegacyTextField title = new LegacyTextField("Title");
+            TextField title = new TextField("Title");
             TextArea description = new TextArea("Description");
             MenuBar style = new MenuBar();
             MenuBar type = new MenuBar();
             String typeString = "";
             String styleString = "";
-            LegacyTextField delay = new LegacyTextField();
+            TextField delay = new TextField();
             {
                 setSpacing(true);
                 setMargin(true);

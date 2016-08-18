@@ -9,24 +9,24 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.InlineDateField;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PopupDateField;
-import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Slider;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.TreeTable;
-import com.vaadin.ui.TwinColSelect;
-import com.vaadin.v7.ui.LegacyPasswordField;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.ListSelect;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.OptionGroup;
+import com.vaadin.v7.ui.PasswordField;
+import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.TreeTable;
+import com.vaadin.v7.ui.TwinColSelect;
 
 @SuppressWarnings("rawtypes")
 public class TabIndexes extends AbstractTestUIWithLog {
@@ -97,7 +97,7 @@ public class TabIndexes extends AbstractTestUIWithLog {
         fields.add(new ComboBox());
         fields.add(new NativeSelect());
         fields.add(new ListSelect());
-        fields.add(new LegacyTextField());
+        fields.add(new TextField());
         fields.add(new PopupDateField());
         fields.add(new InlineDateField());
         OptionGroup og = new OptionGroup();
@@ -114,8 +114,8 @@ public class TabIndexes extends AbstractTestUIWithLog {
         tree.addItem("Item 1");
         fields.add(tree);
         fields.add(new TwinColSelect());
-        fields.add(new LegacyPasswordField());
-        fields.add(new LegacyTextField());
+        fields.add(new PasswordField());
+        fields.add(new TextField());
         fields.add(new TextArea());
         fields.add(new RichTextArea());
         fields.add(new CheckBox());

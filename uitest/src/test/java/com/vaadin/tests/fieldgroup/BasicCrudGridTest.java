@@ -23,8 +23,8 @@ import org.junit.Test;
 import com.vaadin.testbench.AbstractHasTestBenchCommandExecutor;
 import com.vaadin.testbench.elements.AbstractComponentElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.tests.components.grid.LegacyGridElement;
 import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class BasicCrudGridTest extends SingleBrowserTestPhantomJS2 {
 
@@ -48,7 +48,7 @@ public class BasicCrudGridTest extends SingleBrowserTestPhantomJS2 {
         openTestURL();
 
         // Select row
-        $(LegacyGridElement.class).first().getCell(2, 2).click();
+        $(GridElement.class).first().getCell(2, 2).click();
 
         List<TextFieldElement> textFields = getFieldsLayout()
                 .$(TextFieldElement.class).all();
@@ -59,7 +59,7 @@ public class BasicCrudGridTest extends SingleBrowserTestPhantomJS2 {
         }
 
         // Deselect row
-        $(LegacyGridElement.class).first().getCell(2, 2).click();
+        $(GridElement.class).first().getCell(2, 2).click();
 
         for (TextFieldElement e : textFields) {
             Assert.assertEquals("TextField should be empty", "", e.getValue());

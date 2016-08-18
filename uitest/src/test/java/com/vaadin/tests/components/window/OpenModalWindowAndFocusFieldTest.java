@@ -20,7 +20,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.TextAreaElement;
+import com.vaadin.v7.testbench.customelements.TextAreaElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class OpenModalWindowAndFocusFieldTest extends MultiBrowserTest {

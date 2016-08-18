@@ -5,9 +5,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.tests.elements.LegacyTextFieldElement;
+import com.vaadin.v7.testbench.customelements.TextFieldElement;
 
 public class ConverterThatEnforcesAFormatTest extends MultiBrowserTest {
 
@@ -17,7 +16,7 @@ public class ConverterThatEnforcesAFormatTest extends MultiBrowserTest {
     public void setup() throws Exception {
         super.setup();
         openTestURL();
-        field = $(LegacyTextFieldElement.class).first();
+        field = $(TextFieldElement.class).first();
     }
 
     @Test

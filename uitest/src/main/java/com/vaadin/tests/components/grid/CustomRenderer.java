@@ -16,16 +16,16 @@
 package com.vaadin.tests.components.grid;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.client.SimpleTestBean;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.SelectionMode;
 
 @Widgetset(TestingWidgetSet.NAME)
 public class CustomRenderer extends AbstractTestUI {
@@ -64,7 +64,7 @@ public class CustomRenderer extends AbstractTestUI {
         Label debugLabel = new Label(INIT_DEBUG_LABEL_CAPTION);
         debugLabel.setId(DEBUG_LABEL_ID);
 
-        LegacyGrid grid = new LegacyGrid(container);
+        Grid grid = new Grid(container);
 
         grid.getColumn(INT_ARRAY_PROPERTY).setRenderer(new IntArrayRenderer());
         grid.getColumn(VOID_PROPERTY)

@@ -6,10 +6,10 @@ import java.util.List;
 
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
-import com.vaadin.v7.ui.LegacyAbstractTextField;
-import com.vaadin.v7.ui.LegacyAbstractTextField.TextChangeEventMode;
+import com.vaadin.v7.ui.AbstractTextField;
+import com.vaadin.v7.ui.AbstractTextField.TextChangeEventMode;
 
-public abstract class LegacyAbstractTextFieldTest<T extends LegacyAbstractTextField>
+public abstract class LegacyAbstractTextFieldTest<T extends AbstractTextField>
         extends LegacyAbstractFieldTest<T> implements TextChangeListener {
 
     private Command<T, Integer> maxlengthCommand = new Command<T, Integer>() {
@@ -211,7 +211,7 @@ public abstract class LegacyAbstractTextFieldTest<T extends LegacyAbstractTextFi
     }
 
     private void createTextChangeEventModeAction(String category) {
-        LinkedHashMap<String, TextChangeEventMode> options = new LinkedHashMap<String, LegacyAbstractTextField.TextChangeEventMode>();
+        LinkedHashMap<String, TextChangeEventMode> options = new LinkedHashMap<String, AbstractTextField.TextChangeEventMode>();
         for (TextChangeEventMode m : TextChangeEventMode.values()) {
             options.put(m.toString(), m);
         }
@@ -245,7 +245,7 @@ public abstract class LegacyAbstractTextFieldTest<T extends LegacyAbstractTextFi
 
     @Override
     public void textChange(TextChangeEvent event) {
-        LegacyAbstractTextField tf = (LegacyAbstractTextField) event
+        AbstractTextField tf = (AbstractTextField) event
                 .getComponent();
         log("TextChangeEvent: text='" + event.getText() + "', cursor position="
                 + event.getCursorPosition() + " (field cursor pos: "

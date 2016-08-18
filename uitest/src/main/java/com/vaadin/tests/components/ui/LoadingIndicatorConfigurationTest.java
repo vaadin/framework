@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.ui;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Alignment;
@@ -9,17 +7,19 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.ui.TextField;
 
 public class LoadingIndicatorConfigurationTest extends AbstractTestUIWithLog {
 
-    private LegacyTextField firstDelay;
-    private LegacyTextField secondDelay;
-    private LegacyTextField thirdDelay;
+    private TextField firstDelay;
+    private TextField secondDelay;
+    private TextField thirdDelay;
 
     @Override
     protected void setup(VaadinRequest request) {
-        final LegacyTextField delayField = new LegacyTextField("Delay (ms)");
+        final TextField delayField = new TextField("Delay (ms)");
         delayField.setConverter(Integer.class);
         delayField.setConvertedValue(1000);
 
@@ -74,9 +74,9 @@ public class LoadingIndicatorConfigurationTest extends AbstractTestUIWithLog {
 
     }
 
-    private LegacyTextField createIntegerTextField(String caption,
+    private TextField createIntegerTextField(String caption,
             int initialValue) {
-        LegacyTextField tf = new LegacyTextField(caption);
+        TextField tf = new TextField(caption);
         tf.setId(caption);
         tf.setConverter(Integer.class);
         tf.setImmediate(true);

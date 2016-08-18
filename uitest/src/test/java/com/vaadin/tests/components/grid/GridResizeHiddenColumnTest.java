@@ -25,10 +25,11 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridResizeHiddenColumnTest extends MultiBrowserTest {
 
@@ -39,7 +40,7 @@ public class GridResizeHiddenColumnTest extends MultiBrowserTest {
 
     @Test
     public void testDragResizeHiddenColumnSize() {
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         Actions action = new Actions(getDriver());
 
         // Check if column 'Gender' hidden

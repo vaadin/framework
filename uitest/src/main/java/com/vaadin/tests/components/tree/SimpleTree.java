@@ -2,15 +2,15 @@ package com.vaadin.tests.components.tree;
 
 import java.util.Date;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.Action;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.AbstractSelect.ItemDescriptionGenerator;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.AbstractSelect;
+import com.vaadin.v7.ui.AbstractSelect.ItemDescriptionGenerator;
+import com.vaadin.v7.ui.Tree;
 
 public class SimpleTree extends TestBase implements Action.Handler {
     private static final String[][] hardware = { //

@@ -16,13 +16,13 @@
 package com.vaadin.tests.components.grid.basicfeatures.server;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Grid;
 
 /**
  * Tests that removing and adding rows doesn't cause an infinite loop in the
@@ -37,7 +37,7 @@ public class GridClearContainer extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final LegacyGrid grid = new LegacyGrid();
+        final Grid grid = new Grid();
         ic = new IndexedContainer();
         ic.addContainerProperty("Col 1", String.class, "default");
         ic.addItem("Row 1");

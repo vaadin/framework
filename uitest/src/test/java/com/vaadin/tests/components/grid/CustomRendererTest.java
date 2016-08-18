@@ -21,10 +21,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class CustomRendererTest extends MultiBrowserTest {
@@ -60,7 +61,7 @@ public class CustomRendererTest extends MultiBrowserTest {
     }
 
     private GridElement findGrid() {
-        List<LegacyGridElement> elements = $(LegacyGridElement.class).all();
+        List<GridElement> elements = $(GridElement.class).all();
         return elements.get(0);
     }
 

@@ -19,9 +19,10 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridEditingWithNoScrollBarsTest extends MultiBrowserTest {
@@ -30,7 +31,7 @@ public class GridEditingWithNoScrollBarsTest extends MultiBrowserTest {
     public void testEditorWideEnough() {
         openTestURL();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         grid.getCell(1, 1).doubleClick();
         assertEquals(grid.getEditor().getSize().width,
                 grid.getTableWrapper().getSize().width);

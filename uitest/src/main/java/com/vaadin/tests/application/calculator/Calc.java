@@ -25,11 +25,11 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnHeaderMode;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.ColumnHeaderMode;
+import com.vaadin.v7.ui.TextField;
 
 @SuppressWarnings("serial")
 public class Calc extends AbstractTestUI {
@@ -65,7 +65,7 @@ public class Calc extends AbstractTestUI {
                     VerticalLayout vl = new VerticalLayout();
                     vl.setMargin(true);
 
-                    final LegacyTextField tf = new LegacyTextField();
+                    final TextField tf = new TextField();
                     tf.setSizeFull();
                     vl.addComponent(tf);
 
@@ -128,7 +128,7 @@ public class Calc extends AbstractTestUI {
     private VerticalLayout topLayout = new VerticalLayout();
 
     // User interface components
-    private final LegacyTextField display = new LegacyTextField();
+    private final TextField display = new TextField();
 
     private final Log log = new Log();
 

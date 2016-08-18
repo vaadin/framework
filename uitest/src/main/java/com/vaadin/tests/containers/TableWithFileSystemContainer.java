@@ -2,9 +2,9 @@ package com.vaadin.tests.containers;
 
 import java.io.File;
 
-import com.vaadin.data.util.FilesystemContainer;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.util.FilesystemContainer;
+import com.vaadin.v7.ui.Table;
 
 public class TableWithFileSystemContainer extends TestBase {
 

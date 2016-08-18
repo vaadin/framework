@@ -5,15 +5,15 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.data.Property.ReadOnlyStatusChangeEvent;
-import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
-import com.vaadin.data.util.MethodProperty;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property.ReadOnlyStatusChangeEvent;
+import com.vaadin.v7.data.Property.ReadOnlyStatusChangeListener;
+import com.vaadin.v7.data.util.MethodProperty;
+import com.vaadin.v7.ui.TextField;
 
 public class AbstractFieldReadOnlyTest {
 
@@ -23,7 +23,7 @@ public class AbstractFieldReadOnlyTest {
 
     @Test
     public void testReadOnlyProperty() {
-        LegacyTextField tf = new LegacyTextField();
+        TextField tf = new TextField();
         tf.setPropertyDataSource(
                 new MethodProperty<String>(paulaBean, "firstName"));
         assertFalse(tf.isReadOnly());
@@ -34,7 +34,7 @@ public class AbstractFieldReadOnlyTest {
     @Test
     public void testReadOnlyEventFromProperty() {
         final Label valueStore = new Label("");
-        LegacyTextField tf = new LegacyTextField();
+        TextField tf = new TextField();
         tf.addReadOnlyStatusChangeListener(new ReadOnlyStatusChangeListener() {
             @Override
             public void readOnlyStatusChange(ReadOnlyStatusChangeEvent event) {

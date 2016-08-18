@@ -15,8 +15,6 @@
  */
 package com.vaadin.tests.components.draganddropwrapper;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -28,10 +26,12 @@ import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyAbstractField;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.AbstractField;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Test UI for text area inside {@link DragAndDropWrapper}: text area should
@@ -54,7 +54,7 @@ public class DragAndDropFocusObtain extends AbstractTestUIWithLog {
 
         @Override
         public void valueChange(ValueChangeEvent event) {
-            LegacyAbstractField f = (LegacyAbstractField) event.getProperty();
+            AbstractField f = (AbstractField) event.getProperty();
             log("Value of " + f.getCaption() + " changed to " + f.getValue());
         }
     };
@@ -101,13 +101,13 @@ public class DragAndDropFocusObtain extends AbstractTestUIWithLog {
         area.addFocusListener(focusListener);
         dndLayout.addComponent(area);
 
-        LegacyTextField field = new LegacyTextField("Text field 1");
+        TextField field = new TextField("Text field 1");
         field.setValue("text");
         field.addValueChangeListener(listener);
         field.addFocusListener(focusListener);
         dndLayout.addComponent(field);
 
-        field = new LegacyTextField("Text field 2");
+        field = new TextField("Text field 2");
         field.setValue("text");
         field.addValueChangeListener(listener);
         field.addFocusListener(focusListener);

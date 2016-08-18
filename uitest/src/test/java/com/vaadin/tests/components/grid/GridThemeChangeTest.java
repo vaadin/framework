@@ -21,9 +21,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridThemeChangeTest extends MultiBrowserTest {
@@ -38,13 +39,13 @@ public class GridThemeChangeTest extends MultiBrowserTest {
     public void testThemeChange() {
         openTestURL("debug");
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         int reindeerHeight = grid.getRow(0).getSize().getHeight();
 
         grid.getCell(0, 0).click();
 
-        grid = $(LegacyGridElement.class).first();
+        grid = $(GridElement.class).first();
         int valoHeight = grid.getRow(0).getSize().getHeight();
 
         Assert.assertTrue(

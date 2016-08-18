@@ -17,14 +17,14 @@ package com.vaadin.client.v7.ui;
 
 import com.vaadin.client.ui.datefield.PopupDateFieldConnector;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.v7.ui.LegacyPopupDateField;
+import com.vaadin.v7.ui.PopupDateField;
 
 /**
  * @author Vaadin Ltd
  *
  */
 @Deprecated
-@Connect(LegacyPopupDateField.class)
+@Connect(PopupDateField.class)
 public class LegacyPopupDateFieldConnector extends PopupDateFieldConnector {
 
 }

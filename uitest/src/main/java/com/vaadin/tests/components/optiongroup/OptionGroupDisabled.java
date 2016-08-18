@@ -17,7 +17,7 @@ package com.vaadin.tests.components.optiongroup;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.OptionGroup;
+import com.vaadin.v7.ui.OptionGroup;
 
 public class OptionGroupDisabled extends AbstractTestUIWithLog {
 

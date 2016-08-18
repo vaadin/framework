@@ -32,9 +32,9 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 /**
  *
@@ -93,7 +93,7 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
     private void fillComponents() {
         for (int i = 0; i < components.length; i++) {
             String name = "Field" + i;
-            LegacyTextField field = new LegacyTextField();
+            TextField field = new TextField();
             field.setValue(name);
             components[i] = field;
         }

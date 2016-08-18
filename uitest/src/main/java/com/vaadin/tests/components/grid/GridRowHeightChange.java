@@ -3,14 +3,14 @@ package com.vaadin.tests.components.grid;
 import java.util.Arrays;
 import java.util.List;
 
-import com.vaadin.data.Property;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.NativeSelect;
 
 public class GridRowHeightChange extends AbstractTestUI {
 
@@ -19,7 +19,7 @@ public class GridRowHeightChange extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        LegacyGrid grid = new LegacyGrid();
+        Grid grid = new Grid();
 
         // create column and fill rows
         grid.addColumn("Header");

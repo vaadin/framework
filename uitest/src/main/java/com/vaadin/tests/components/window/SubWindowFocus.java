@@ -8,7 +8,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class SubWindowFocus extends TestBase {
 
@@ -30,13 +30,13 @@ public class SubWindowFocus extends TestBase {
 
         // some fields with tabindex
         for (int i = 1; i < 4; i++) {
-            LegacyTextField tf = new LegacyTextField();
+            TextField tf = new TextField();
             tf.setTabIndex(i);
             tf.setInputPrompt("Tab index " + i);
             addComponent(tf);
         }
         // field with tabindex 0
-        LegacyTextField tf = new LegacyTextField();
+        TextField tf = new TextField();
         tf.setTabIndex(0);
         tf.setInputPrompt("Tab index 0");
         addComponent(tf);
@@ -79,7 +79,7 @@ public class SubWindowFocus extends TestBase {
 
                 });
 
-                layout.addComponent(new LegacyTextField());
+                layout.addComponent(new TextField());
             }
 
         });

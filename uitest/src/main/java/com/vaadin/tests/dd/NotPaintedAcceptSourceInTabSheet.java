@@ -1,16 +1,16 @@
 package com.vaadin.tests.dd;
 
-import com.vaadin.data.Item;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.SourceIs;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.TableDragMode;
-import com.vaadin.ui.Table.TableTransferable;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.TableDragMode;
+import com.vaadin.v7.ui.Table.TableTransferable;
 
 public class NotPaintedAcceptSourceInTabSheet extends TestBase {
 

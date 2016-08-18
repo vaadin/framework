@@ -182,7 +182,7 @@ public class VFilterSelect extends Composite
 
         /**
          * Gets the style set for this suggestion item. Styles are typically set
-         * by a server-side {@link com.vaadin.ui.ComboBox.ItemStyleGenerator}.
+         * by a server-side {@link com.vaadin.v7.ui.ComboBox.ItemStyleGenerator}.
          * The returned style is prefixed by <code>v-filterselect-item-</code>.
          *
          * @since 7.5.6

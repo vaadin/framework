@@ -23,19 +23,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.NotificationElement;
-import com.vaadin.testbench.elementsbase.ServerClass;
 import com.vaadin.testbench.parallel.TestCategory;
+import com.vaadin.tests.components.grid.GridCellFocusOnResetSizeTest.MyGridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridDefaultTextRendererTest extends MultiBrowserTest {
-
-    @ServerClass("com.vaadin.tests.widgetset.server.TestWidgetComponent")
-    public static class MyGridElement extends GridElement {
-        // empty
-    }
 
     private GridElement grid;
 

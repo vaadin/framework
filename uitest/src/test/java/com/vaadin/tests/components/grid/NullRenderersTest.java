@@ -19,10 +19,11 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class NullRenderersTest extends MultiBrowserTest {
@@ -51,11 +52,11 @@ public class NullRenderersTest extends MultiBrowserTest {
     }
 
     private GridElement findGridWithDefaults() {
-        return $(LegacyGridElement.class).id("test-grid-defaults");
+        return $(GridElement.class).id("test-grid-defaults");
     }
 
     private GridElement findGridNoDefaults() {
-        return $(LegacyGridElement.class).id("test-grid");
+        return $(GridElement.class).id("test-grid");
     }
 
     private LabelElement findDebugLabel() {

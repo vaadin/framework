@@ -21,8 +21,8 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridCellFocusAdjustmentTest extends GridBasicFeaturesTest {
 

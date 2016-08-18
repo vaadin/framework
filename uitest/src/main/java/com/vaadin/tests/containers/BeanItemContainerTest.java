@@ -3,7 +3,7 @@ package com.vaadin.tests.containers;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.BeanItemContainer;
 
 public class BeanItemContainerTest {
 

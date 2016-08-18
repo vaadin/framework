@@ -20,21 +20,21 @@ import java.util.Set;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.RichTextArea;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Validator;
-import com.vaadin.v7.data.validator.LegacyStringLengthValidator;
-import com.vaadin.v7.ui.LegacyAbstractField;
-import com.vaadin.v7.ui.LegacyField;
-import com.vaadin.v7.ui.LegacyPasswordField;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.validator.StringLengthValidator;
+import com.vaadin.v7.ui.AbstractField;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.Field;
+import com.vaadin.v7.ui.ListSelect;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.PasswordField;
+import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
+import com.vaadin.v7.ui.TwinColSelect;
 
 public class FieldErrorIndication extends AbstractTestUI {
 
@@ -50,21 +50,21 @@ public class FieldErrorIndication extends AbstractTestUI {
         comboBox.addItem("ok");
         comboBox.addItem("error");
         comboBox.addValidator(
-                new LegacyStringLengthValidator("fail", 0, 2, false));
+                new StringLengthValidator("fail", 0, 2, false));
         comboBox.setValue("error");
 
         ListSelect listSelect = new ListSelect("ListSelect");
         listSelect.addItem("ok");
         listSelect.addItem("error");
         listSelect.addValidator(
-                new LegacyStringLengthValidator("fail", 0, 2, false));
+                new StringLengthValidator("fail", 0, 2, false));
         listSelect.setValue("error");
 
         NativeSelect nativeSelect = new NativeSelect("NativeSelect");
         nativeSelect.addItem("ok");
         nativeSelect.addItem("error");
         nativeSelect.addValidator(
-                new LegacyStringLengthValidator("fail", 0, 2, false));
+                new StringLengthValidator("fail", 0, 2, false));
         nativeSelect.setValue("error");
         TwinColSelect twinColSelect = new TwinColSelect("TwinColSelect");
         twinColSelect.addItem("ok");
@@ -86,12 +86,12 @@ public class FieldErrorIndication extends AbstractTestUI {
 
         vl.addComponents(comboBox, listSelect, nativeSelect, twinColSelect);
 
-        Class<? extends LegacyAbstractField>[] textFields = new Class[] {
-                LegacyTextField.class, TextArea.class, RichTextArea.class,
-                LegacyPasswordField.class };
+        Class<? extends AbstractField>[] textFields = new Class[] {
+                TextField.class, TextArea.class, RichTextArea.class,
+                PasswordField.class };
         vl = new VerticalLayout();
         hl.addComponent(vl);
-        for (Class<? extends LegacyField> fieldClass : textFields) {
+        for (Class<? extends Field> fieldClass : textFields) {
             vl.addComponent(getField(fieldClass));
         }
 
@@ -102,10 +102,10 @@ public class FieldErrorIndication extends AbstractTestUI {
      * @param fieldClass
      * @return
      */
-    private Component getField(Class<? extends LegacyField> fieldClass) {
-        LegacyAbstractField f;
+    private Component getField(Class<? extends Field> fieldClass) {
+        AbstractField f;
         try {
-            f = (LegacyAbstractField) fieldClass.newInstance();
+            f = (AbstractField) fieldClass.newInstance();
             f.setCaption(fieldClass.getSimpleName());
             f.setComponentError(new UserError("fail"));
             return f;

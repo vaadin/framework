@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.select;
 
 import com.vaadin.tests.components.combobox.ComboBoxes2;
-import com.vaadin.ui.Select;
+import com.vaadin.v7.ui.Select;
 
 public class SelectTest extends ComboBoxes2<Select> {
 

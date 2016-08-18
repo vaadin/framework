@@ -18,20 +18,20 @@ package com.vaadin.ui;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.ui.TextField;
 
 public class TextFieldTest {
 
     @Test
     public void initiallyEmpty() {
-        LegacyTextField tf = new LegacyTextField();
+        TextField tf = new TextField();
         Assert.assertTrue(tf.isEmpty());
     }
 
     @Test
     public void emptyAfterClearUsingPDS() {
-        LegacyTextField tf = new LegacyTextField(
+        TextField tf = new TextField(
                 new ObjectProperty<String>("foo"));
         Assert.assertFalse(tf.isEmpty());
         tf.clear();
@@ -40,7 +40,7 @@ public class TextFieldTest {
 
     @Test
     public void emptyAfterClear() {
-        LegacyTextField tf = new LegacyTextField();
+        TextField tf = new TextField();
         tf.setValue("foobar");
         Assert.assertFalse(tf.isEmpty());
         tf.clear();

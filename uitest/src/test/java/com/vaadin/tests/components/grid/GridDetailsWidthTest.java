@@ -22,10 +22,11 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridDetailsWidthTest extends SingleBrowserTest {
@@ -33,7 +34,7 @@ public class GridDetailsWidthTest extends SingleBrowserTest {
     @Test
     public void testSpacerTDsHaveNoWidth() {
         openTestURL();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         // Open all details rows
         grid.getCell(0, 0).click();
@@ -70,7 +71,7 @@ public class GridDetailsWidthTest extends SingleBrowserTest {
     @Test
     public void testDetailsOnSort() {
         openTestURL();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         // Open a details rows
         grid.getCell(0, 0).click();

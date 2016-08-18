@@ -24,7 +24,7 @@ import com.vaadin.shared.ui.Connect;
  * @since 7.4
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.renderers.TextRenderer.class)
+@Connect(com.vaadin.v7.ui.renderers.TextRenderer.class)
 public class TextRendererConnector extends AbstractGridRendererConnector<String> {
 
     @Override

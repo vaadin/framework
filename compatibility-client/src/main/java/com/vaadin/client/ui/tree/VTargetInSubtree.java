@@ -26,7 +26,7 @@ import com.vaadin.client.ui.dd.VAcceptCriterion;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.ui.Tree;
 
 @AcceptCriterion(Tree.TargetInSubtree.class)
 final public class VTargetInSubtree extends VAcceptCriterion {

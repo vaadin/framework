@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.abstractfield;
 
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.ui.TextField;
 
 public class AbstractFieldDataSourceReadOnly extends TestBase {
 
@@ -41,7 +41,7 @@ public class AbstractFieldDataSourceReadOnly extends TestBase {
         });
 
         // Input field
-        LegacyTextField input = new LegacyTextField("Field");
+        TextField input = new TextField("Field");
         input.setPropertyDataSource(stateHolder.getTextField());
 
         addComponent(button);

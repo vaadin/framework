@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.tests.elements.LegacyTextFieldElement;
+import com.vaadin.v7.testbench.customelements.TextFieldElement;
 
 public class UIPollingTest extends MultiBrowserTest {
 
@@ -23,7 +23,7 @@ public class UIPollingTest extends MultiBrowserTest {
                 driver.getPageSource().contains("20. 10000ms has passed"));
     }
 
-    public LegacyTextFieldElement getTextField() {
-        return $(LegacyTextFieldElement.class).first();
+    public TextFieldElement getTextField() {
+        return $(TextFieldElement.class).first();
     }
 }

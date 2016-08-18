@@ -5,15 +5,15 @@ import static org.junit.Assert.fail;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.MethodProperty;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.v7.data.Validator.InvalidValueException;
-import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
-import com.vaadin.v7.data.util.converter.LegacyStringToIntegerConverter;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.util.converter.Converter.ConversionException;
+import com.vaadin.v7.data.util.MethodProperty;
+import com.vaadin.v7.data.util.converter.StringToIntegerConverter;
+import com.vaadin.v7.ui.TextField;
 
 public class AbsFieldValueConversionErrorTest {
 
@@ -23,8 +23,8 @@ public class AbsFieldValueConversionErrorTest {
 
     @Test
     public void testValidateConversionErrorParameters() {
-        LegacyTextField tf = new LegacyTextField();
-        tf.setConverter(new LegacyStringToIntegerConverter());
+        TextField tf = new TextField();
+        tf.setConverter(new StringToIntegerConverter());
         tf.setPropertyDataSource(new MethodProperty<String>(paulaBean, "age"));
         tf.setConversionError("(Type: {0}) Converter exception message: {1}");
         tf.setValue("abc");
@@ -41,8 +41,8 @@ public class AbsFieldValueConversionErrorTest {
 
     @Test
     public void testConvertToModelConversionErrorParameters() {
-        LegacyTextField tf = new LegacyTextField();
-        tf.setConverter(new LegacyStringToIntegerConverter());
+        TextField tf = new TextField();
+        tf.setConverter(new StringToIntegerConverter());
         tf.setPropertyDataSource(new MethodProperty<String>(paulaBean, "age"));
         tf.setConversionError("(Type: {0}) Converter exception message: {1}");
         tf.setValue("abc");
@@ -59,8 +59,8 @@ public class AbsFieldValueConversionErrorTest {
 
     @Test
     public void testNullConversionMessages() {
-        LegacyTextField tf = new LegacyTextField();
-        tf.setConverter(new LegacyStringToIntegerConverter());
+        TextField tf = new TextField();
+        tf.setConverter(new StringToIntegerConverter());
         tf.setPropertyDataSource(new MethodProperty<String>(paulaBean, "age"));
         tf.setConversionError(null);
         tf.setValue("abc");
@@ -75,8 +75,8 @@ public class AbsFieldValueConversionErrorTest {
 
     @Test
     public void testDefaultConversionErrorMessage() {
-        LegacyTextField tf = new LegacyTextField();
-        tf.setConverter(new LegacyStringToIntegerConverter());
+        TextField tf = new TextField();
+        tf.setConverter(new StringToIntegerConverter());
         tf.setPropertyDataSource(new MethodProperty<String>(paulaBean, "age"));
         tf.setValue("abc");
 

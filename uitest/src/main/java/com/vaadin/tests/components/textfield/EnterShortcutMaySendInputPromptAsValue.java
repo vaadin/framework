@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.textfield;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.TextField;
 
 public class EnterShortcutMaySendInputPromptAsValue extends TestBase {
 
@@ -23,7 +23,7 @@ public class EnterShortcutMaySendInputPromptAsValue extends TestBase {
     @Override
     protected void setup() {
 
-        final LegacyTextField testField = new LegacyTextField();
+        final TextField testField = new TextField();
         testField.setInputPrompt("Enter a value");
 
         getMainWindow().addActionHandler(new Action.Handler() {

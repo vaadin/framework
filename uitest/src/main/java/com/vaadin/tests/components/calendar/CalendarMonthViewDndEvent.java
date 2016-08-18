@@ -20,14 +20,14 @@ import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Calendar;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.components.calendar.event.BasicEvent;
-import com.vaadin.ui.components.calendar.event.BasicEventProvider;
-import com.vaadin.ui.components.calendar.event.CalendarEvent;
-import com.vaadin.ui.components.calendar.event.CalendarEventProvider.EventSetChangeEvent;
-import com.vaadin.ui.components.calendar.event.CalendarEventProvider.EventSetChangeListener;
+import com.vaadin.v7.ui.Calendar;
+import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
+import com.vaadin.v7.ui.components.calendar.event.BasicEventProvider;
+import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
+import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider.EventSetChangeEvent;
+import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider.EventSetChangeListener;
 
 /**
  * Test UI for DnD regular (not all day event) in month view.

@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.tests.elements.LegacyTextFieldElement;
+import com.vaadin.v7.testbench.customelements.TextFieldElement;
 
 public class LocaleChangeOnReadOnlyFieldTest extends MultiBrowserTest {
 
@@ -15,8 +15,7 @@ public class LocaleChangeOnReadOnlyFieldTest extends MultiBrowserTest {
     public void localeIsChangedOnReadOnlyField() {
         openTestURL();
 
-        LegacyTextFieldElement textField = $(LegacyTextFieldElement.class)
-                .first();
+        TextFieldElement textField = $(TextFieldElement.class).first();
         assertThat(textField.getValue(), is("1,024,000"));
 
         $(ButtonElement.class).caption("Change Locale").first().click();

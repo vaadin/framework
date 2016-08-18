@@ -9,9 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.DefaultItemSorter;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ExternalResource;
@@ -25,10 +22,13 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.ItemStyleGenerator;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.DefaultItemSorter;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.ItemStyleGenerator;
 
 public class Components extends LegacyApplication {
 

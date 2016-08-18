@@ -20,7 +20,7 @@ import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.VNativeSelect;
 import com.vaadin.client.ui.optiongroup.OptionGroupBaseConnector;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.ui.NativeSelect;
+import com.vaadin.v7.ui.NativeSelect;
 
 @Connect(NativeSelect.class)
 public class NativeSelectConnector extends OptionGroupBaseConnector {

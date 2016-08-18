@@ -27,7 +27,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
 public class TableAfterRemovingExpandRatios extends AbstractTestUI {
 

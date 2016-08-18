@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class DefaultAlignmentTest {
 
@@ -21,7 +21,7 @@ public class DefaultAlignmentTest {
     @Test
     public void testDefaultAlignment() {
         Label label = new Label("A label");
-        LegacyTextField tf = new LegacyTextField("A TextField");
+        TextField tf = new TextField("A TextField");
         gridLayout.addComponent(label);
         gridLayout.addComponent(tf);
         Assert.assertEquals(Alignment.TOP_LEFT,
@@ -33,7 +33,7 @@ public class DefaultAlignmentTest {
     @Test
     public void testAlteredDefaultAlignment() {
         Label label = new Label("A label");
-        LegacyTextField tf = new LegacyTextField("A TextField");
+        TextField tf = new TextField("A TextField");
         gridLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         gridLayout.addComponent(label);
         gridLayout.addComponent(tf);

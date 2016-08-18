@@ -4,20 +4,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Container.Ordered;
-import com.vaadin.data.util.FilesystemContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Tree.CollapseEvent;
-import com.vaadin.ui.Tree.CollapseListener;
-import com.vaadin.ui.Tree.ExpandEvent;
-import com.vaadin.ui.Tree.ExpandListener;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Container.Ordered;
+import com.vaadin.v7.data.util.FilesystemContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Tree.CollapseEvent;
+import com.vaadin.v7.ui.Tree.CollapseListener;
+import com.vaadin.v7.ui.Tree.ExpandEvent;
+import com.vaadin.v7.ui.Tree.ExpandListener;
+import com.vaadin.v7.ui.TreeTable;
 
 public class FileSystemContainerInTreeTable extends TestBase {
 

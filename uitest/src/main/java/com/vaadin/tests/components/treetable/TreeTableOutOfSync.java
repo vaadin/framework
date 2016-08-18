@@ -20,8 +20,8 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TreeTable;
 
 public class TreeTableOutOfSync extends AbstractTestUI {
 

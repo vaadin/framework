@@ -4,16 +4,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.LegacyDateField;
-import com.vaadin.v7.ui.LegacyPopupDateField;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.ui.DateField;
+import com.vaadin.v7.ui.PopupDateField;
 
 public class ValueThroughProperty extends TestBase {
     private final Property<Date> dateProperty = new ObjectProperty<Date>(null,
@@ -28,10 +28,10 @@ public class ValueThroughProperty extends TestBase {
                         + "Using second button updates value correctly on the client-side too.",
                 ContentMode.XML));
 
-        final LegacyPopupDateField df = new LegacyPopupDateField(dateProperty);
+        final PopupDateField df = new PopupDateField(dateProperty);
         df.setLocale(new Locale("en", "US"));
         df.setImmediate(true);
-        df.setResolution(LegacyDateField.RESOLUTION_DAY);
+        df.setResolution(DateField.RESOLUTION_DAY);
         addComponent(df);
 
         Label valueLabel = new Label(df.getPropertyDataSource());

@@ -32,7 +32,7 @@ import elemental.json.JsonValue;
  * @since 7.4
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.renderers.ImageRenderer.class)
+@Connect(com.vaadin.v7.ui.renderers.ImageRenderer.class)
 public class ImageRendererConnector extends ClickableRendererConnector<String> {
 
     @Override

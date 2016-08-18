@@ -21,7 +21,7 @@ package com.vaadin.client.ui.dd;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.UIDL;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
-import com.vaadin.ui.AbstractSelect;
+import com.vaadin.v7.ui.AbstractSelect;
 
 @AcceptCriterion(AbstractSelect.AcceptItem.class)
 final public class VItemIdIs extends VAcceptCriterion {

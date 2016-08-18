@@ -16,13 +16,13 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.Align;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.Align;
 
 /**
  * Test UI for issue #13399 : Left alignment should not be set explicitly

@@ -16,10 +16,10 @@
 package com.vaadin.client.legacy.ui;
 
 import com.vaadin.client.ui.customfield.CustomFieldConnector;
-import com.vaadin.legacy.ui.LegacyCustomField;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.v7.ui.CustomField;
 
-@Connect(value = LegacyCustomField.class)
+@Connect(value = CustomField.class)
 public class LegacyCustomFieldConnector extends CustomFieldConnector {
 
 }

@@ -7,9 +7,8 @@ import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.tests.elements.LegacyTextFieldElement;
+import com.vaadin.v7.testbench.customelements.TextFieldElement;
 
 public class MultipleValidationErrorsTest extends MultiBrowserTest {
 
@@ -18,8 +17,8 @@ public class MultipleValidationErrorsTest extends MultiBrowserTest {
     }
 
     private void clearTextField(String caption) {
-        TextFieldElement textField = $(LegacyTextFieldElement.class)
-                .caption(caption).first();
+        TextFieldElement textField = $(TextFieldElement.class).caption(caption)
+                .first();
         textField.clear();
     }
 

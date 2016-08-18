@@ -3,13 +3,13 @@ package com.vaadin.tests.components.textfield;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class TextFieldMaxLengthRemovedFromDOM extends TestBase {
 
     @Override
     protected void setup() {
-        final LegacyTextField tf = new LegacyTextField();
+        final TextField tf = new TextField();
         tf.setMaxLength(11);
         tf.setRequired(true);
         tf.setImmediate(true);

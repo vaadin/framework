@@ -22,11 +22,11 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Calendar;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.BackwardHandler;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.ForwardHandler;
+import com.vaadin.v7.ui.Calendar;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.BackwardHandler;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.ForwardHandler;
 
 public class HiddenFwdBackButtons extends UI {
 

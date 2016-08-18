@@ -22,17 +22,17 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.tests.data.bean.AnotherTestEnum;
 import com.vaadin.tests.data.bean.TestEnum;
-import com.vaadin.v7.data.util.converter.LegacyConverter;
-import com.vaadin.v7.data.util.converter.LegacyReverseConverter;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.ReverseConverter;
+import com.vaadin.v7.ui.TextField;
 
 public class SpecificEnumToStringConverterTest {
 
     public class SpecificEnumToStringConverter
-            implements LegacyConverter<Enum, String> {
+            implements Converter<Enum, String> {
 
         private Class<? extends Enum> enumClass;
 
@@ -43,7 +43,7 @@ public class SpecificEnumToStringConverterTest {
         @Override
         public String convertToModel(Enum value,
                 Class<? extends String> targetType, Locale locale)
-                throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
+                throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
             if (value == null) {
                 return null;
             }
@@ -54,7 +54,7 @@ public class SpecificEnumToStringConverterTest {
         @Override
         public Enum convertToPresentation(String value,
                 Class<? extends Enum> targetType, Locale locale)
-                throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
+                throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
             if (value == null) {
                 return null;
             }
@@ -111,8 +111,8 @@ public class SpecificEnumToStringConverterTest {
 
     @Test
     public void stringToEnumWithField() {
-        LegacyTextField tf = new LegacyTextField();
-        tf.setConverter(new LegacyReverseConverter(anotherTestEnumConverter));
+        TextField tf = new TextField();
+        tf.setConverter(new ReverseConverter(anotherTestEnumConverter));
         tf.setPropertyDataSource(new ObjectProperty(AnotherTestEnum.TWO));
         Assert.assertEquals(AnotherTestEnum.TWO.toString(), tf.getValue());
         tf.setValue(AnotherTestEnum.ONE.toString());

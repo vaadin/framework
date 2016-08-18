@@ -24,7 +24,7 @@ import com.vaadin.client.ui.VTextArea;
 import com.vaadin.client.v7.ui.textfield.LegacyTextFieldConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.textarea.TextAreaState;
-import com.vaadin.ui.TextArea;
+import com.vaadin.v7.ui.TextArea;
 
 @Connect(TextArea.class)
 public class TextAreaConnector extends LegacyTextFieldConnector {

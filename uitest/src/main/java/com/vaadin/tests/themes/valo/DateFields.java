@@ -18,9 +18,6 @@ package com.vaadin.tests.themes.valo;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.util.PropertysetItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.UserError;
@@ -36,6 +33,9 @@ import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.data.fieldgroup.FieldGroup;
+import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.data.util.PropertysetItem;
 
 public class DateFields extends VerticalLayout implements View {
     public DateFields() {

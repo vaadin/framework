@@ -10,8 +10,8 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyPasswordField;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.PasswordField;
+import com.vaadin.v7.ui.TextField;
 
 public class LoginView extends Panel implements View {
 
@@ -21,10 +21,10 @@ public class LoginView extends Panel implements View {
             final String fragmentAndParameters) {
         Layout layout = new VerticalLayout();
 
-        final LegacyTextField email = new LegacyTextField("Email");
+        final TextField email = new TextField("Email");
         layout.addComponent(email);
 
-        final LegacyPasswordField password = new LegacyPasswordField(
+        final PasswordField password = new PasswordField(
                 "Password");
         layout.addComponent(password);
 

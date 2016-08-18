@@ -23,10 +23,11 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridColspansTest extends MultiBrowserTest {
@@ -40,7 +41,7 @@ public class GridColspansTest extends MultiBrowserTest {
     public void testHeaderColSpans() {
         openTestURL();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         assertEquals("5", grid.getHeaderCell(0, 1).getAttribute("colspan"));
         assertEquals("2", grid.getHeaderCell(1, 1).getAttribute("colspan"));
         assertEquals("3", grid.getHeaderCell(1, 3).getAttribute("colspan"));
@@ -50,7 +51,7 @@ public class GridColspansTest extends MultiBrowserTest {
     public void testFooterColSpans() {
         openTestURL();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         assertEquals("5", grid.getFooterCell(1, 1).getAttribute("colspan"));
         assertEquals("2", grid.getFooterCell(0, 1).getAttribute("colspan"));
         assertEquals("3", grid.getFooterCell(0, 3).getAttribute("colspan"));
@@ -60,7 +61,7 @@ public class GridColspansTest extends MultiBrowserTest {
     public void testHideFirstColumnOfColspan() {
         openTestURL();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         assertEquals("Failed initial condition.", "all the stuff",
                 grid.getHeaderCell(0, 1).getText().toLowerCase());
         assertEquals("Failed initial condition.", "first name",
@@ -76,7 +77,7 @@ public class GridColspansTest extends MultiBrowserTest {
     public void testSplittingMergedHeaders() {
         openTestURL();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         GridCellElement headerCell = grid.getHeaderCell(1, 1);
         assertEquals("Failed initial condition.", "full name",
                 headerCell.getText().toLowerCase());

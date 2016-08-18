@@ -6,8 +6,8 @@ import java.util.List;
 
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.ComponentTestCase;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.v7.ui.ComboBox;
 
 public class Comboboxes extends ComponentTestCase<ComboBox> {
 

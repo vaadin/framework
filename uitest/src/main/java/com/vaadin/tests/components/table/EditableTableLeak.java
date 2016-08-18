@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import com.vaadin.data.Container;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
@@ -15,10 +14,11 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.ui.DefaultFieldFactory;
+import com.vaadin.v7.ui.Field;
+import com.vaadin.v7.ui.Table;
 
 public class EditableTableLeak extends TestBase {
     private final Table table = new Table("ISO-3166 Country Codes and flags");
@@ -58,10 +58,10 @@ public class EditableTableLeak extends TestBase {
     }
 
     private static class CachingFieldFactory extends DefaultFieldFactory {
-        private final HashMap<Object, HashMap<Object, LegacyField<?>>> cache = new HashMap<Object, HashMap<Object, LegacyField<?>>>();
+        private final HashMap<Object, HashMap<Object, Field<?>>> cache = new HashMap<Object, HashMap<Object, Field<?>>>();
 
         @Override
-        public LegacyField<?> createField(Container container, Object itemId,
+        public Field<?> createField(Container container, Object itemId,
                 Object propertyId, Component uiContext) {
             if (cache.containsKey(itemId)) {
                 if (cache.get(itemId) != null
@@ -69,10 +69,10 @@ public class EditableTableLeak extends TestBase {
                     return cache.get(itemId).get(propertyId);
                 }
             }
-            LegacyField<?> f = super.createField(container, itemId, propertyId,
+            Field<?> f = super.createField(container, itemId, propertyId,
                     uiContext);
             if (!cache.containsKey(itemId)) {
-                cache.put(itemId, new HashMap<Object, LegacyField<?>>());
+                cache.put(itemId, new HashMap<Object, Field<?>>());
             }
             cache.get(itemId).put(propertyId, f);
             return f;

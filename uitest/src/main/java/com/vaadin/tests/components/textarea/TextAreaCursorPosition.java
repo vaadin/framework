@@ -5,15 +5,15 @@ import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextArea;
-import com.vaadin.v7.ui.LegacyAbstractField;
-import com.vaadin.v7.ui.LegacyAbstractTextField;
-import com.vaadin.v7.ui.LegacyAbstractTextField.TextChangeEventMode;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.AbstractField;
+import com.vaadin.v7.ui.AbstractTextField;
+import com.vaadin.v7.ui.AbstractTextField.TextChangeEventMode;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
 
 public class TextAreaCursorPosition extends TestBase {
 
-    private LegacyTextField cursorPosition = new LegacyTextField(
+    private TextField cursorPosition = new TextField(
             "Cursor position");
 
     @Override
@@ -29,14 +29,14 @@ public class TextAreaCursorPosition extends TestBase {
         addComponent(new Button("Force position update"));
     }
 
-    public void addListener(LegacyAbstractField newField) {
-        LegacyAbstractTextField newTextField = (LegacyAbstractTextField) newField;
+    public void addListener(AbstractField newField) {
+        AbstractTextField newTextField = (AbstractTextField) newField;
         newTextField.setTextChangeEventMode(TextChangeEventMode.EAGER);
 
         newTextField.addTextChangeListener(new TextChangeListener() {
             @Override
             public void textChange(TextChangeEvent event) {
-                LegacyAbstractTextField component = (LegacyAbstractTextField) event
+                AbstractTextField component = (AbstractTextField) event
                         .getComponent();
                 cursorPosition.setValue(
                         String.valueOf(component.getCursorPosition()));

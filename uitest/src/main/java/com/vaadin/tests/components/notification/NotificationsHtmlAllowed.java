@@ -7,19 +7,19 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextArea;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
 
 public class NotificationsHtmlAllowed extends TestBase
         implements ClickListener {
 
     private TextArea messageField;
     private CheckBox htmlAllowedBox;
-    private LegacyTextField captionField;
+    private TextField captionField;
 
     @Override
     protected void setup() {
-        captionField = new LegacyTextField("Caption", "Hello <u>world</u>");
+        captionField = new TextField("Caption", "Hello <u>world</u>");
         addComponent(captionField);
         captionField.focus();
 

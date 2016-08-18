@@ -5,10 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -17,14 +13,18 @@ import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.event.dd.acceptcriteria.Or;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
-import com.vaadin.ui.AbstractSelect.VerticalLocationIs;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.TableDragMode;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.TreeDragMode;
-import com.vaadin.ui.Tree.TreeTargetDetails;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.v7.ui.AbstractSelect.VerticalLocationIs;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.TableDragMode;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.TreeDragMode;
+import com.vaadin.v7.ui.Tree.TreeTargetDetails;
 
 public class TreeDragStart extends TestBase {
 

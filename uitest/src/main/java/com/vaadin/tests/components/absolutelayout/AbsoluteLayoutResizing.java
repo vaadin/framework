@@ -3,8 +3,8 @@ package com.vaadin.tests.components.absolutelayout;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalSplitPanel;
+import com.vaadin.v7.ui.TextArea;
 
 public class AbsoluteLayoutResizing extends TestBase {
 

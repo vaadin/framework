@@ -21,7 +21,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Test for grid required indicator location within slots.
@@ -110,7 +110,7 @@ public class GridLayoutRequiredIndicatorLocation extends AbstractTestUI {
         layout.addComponent(label);
 
         // TODO also test with captions
-        LegacyTextField field = new LegacyTextField(
+        TextField field = new TextField(
                 useCaption ? "caption" : null);
         field.setRequired(true);
         field.setWidth(width);
@@ -120,7 +120,7 @@ public class GridLayoutRequiredIndicatorLocation extends AbstractTestUI {
 
     private void addLabel(VerticalLayout layout, String width,
             Alignment alignment, boolean useCaption) {
-        LegacyTextField field = new LegacyTextField(
+        TextField field = new TextField(
                 useCaption ? "caption" : null);
         field.setRequired(true);
         field.setWidth(width);

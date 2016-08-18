@@ -32,7 +32,7 @@ public class GridLayoutAlignmentsTest extends MultiBrowserTest {
     private int middleY = 400 / 2 - 30 / 2;
     private int middleX = middleY;
     private int bottomX = 400 - 30;
-    private int bottomY = bottomX;;
+    private int bottomY = bottomX;
 
     @Override
     protected boolean requireWindowFocusForIE() {

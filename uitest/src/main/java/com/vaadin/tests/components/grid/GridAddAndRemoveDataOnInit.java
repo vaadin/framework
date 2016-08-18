@@ -15,17 +15,17 @@
  */
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.data.Container.Indexed;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.data.Container.Indexed;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Grid;
 
 public class GridAddAndRemoveDataOnInit extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        LegacyGrid gridAdd = new LegacyGrid();
+        Grid gridAdd = new Grid();
         gridAdd.setHeight("240px");
         gridAdd.setWidth("140px");
         addComponent(gridAdd);
@@ -41,7 +41,7 @@ public class GridAddAndRemoveDataOnInit extends AbstractTestUI {
             Object id = dataSource.addItem();
             dataSource.getItem(id).getItemProperty("bar").setValue(i);
         }
-        LegacyGrid gridRemove = new LegacyGrid(dataSource);
+        Grid gridRemove = new Grid(dataSource);
         gridRemove.setHeight("150px");
         gridRemove.setWidth("140px");
         addComponent(gridRemove);

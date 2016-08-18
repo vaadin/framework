@@ -19,9 +19,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.CheckBoxElement;
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridSwitchRenderersTest extends MultiBrowserTest {
@@ -35,7 +36,7 @@ public class GridSwitchRenderersTest extends MultiBrowserTest {
 
         openTestURL();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         Assert.assertTrue(
                 "Initial rendering of column 1 is not unformatted text",

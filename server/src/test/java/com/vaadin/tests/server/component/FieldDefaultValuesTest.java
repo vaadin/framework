@@ -23,13 +23,13 @@ import org.junit.Test;
 
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.ui.Slider;
-import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.ui.Field;
 
 public class FieldDefaultValuesTest {
 
     @Test
     public void testFieldsHaveDefaultValueAfterClear() throws Exception {
-        for (LegacyField<?> field : createFields()) {
+        for (Field<?> field : createFields()) {
             Object originalValue = field.getValue();
 
             field.clear();
@@ -45,7 +45,7 @@ public class FieldDefaultValuesTest {
 
     @Test
     public void testFieldsAreEmptyAfterClear() throws Exception {
-        for (LegacyField<?> field : createFields()) {
+        for (Field<?> field : createFields()) {
             field.clear();
 
             if (field instanceof Slider) {
@@ -63,11 +63,11 @@ public class FieldDefaultValuesTest {
     }
 
     @SuppressWarnings("rawtypes")
-    private static List<LegacyField<?>> createFields()
+    private static List<Field<?>> createFields()
             throws InstantiationException, IllegalAccessException {
-        List<LegacyField<?>> fieldInstances = new ArrayList<LegacyField<?>>();
+        List<Field<?>> fieldInstances = new ArrayList<Field<?>>();
 
-        for (Class<? extends LegacyField> fieldType : VaadinClasses
+        for (Class<? extends Field> fieldType : VaadinClasses
                 .getFields()) {
             fieldInstances.add(fieldType.newInstance());
         }

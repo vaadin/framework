@@ -3,7 +3,7 @@ package com.vaadin.tests.components.richtextarea;
 import java.util.LinkedHashMap;
 
 import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
-import com.vaadin.ui.RichTextArea;
+import com.vaadin.v7.ui.RichTextArea;
 
 public class RichTextAreaTest extends LegacyAbstractFieldTest<RichTextArea> {
 

@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.slider;
 
 import com.vaadin.data.Binder;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.Slider;
+import com.vaadin.v7.data.util.BeanItem;
 
 public class SliderValueFromDataSource extends AbstractTestUI {
 

@@ -23,11 +23,11 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.v7.data.util.converter.LegacyDefaultConverterFactory;
+import com.vaadin.v7.data.util.converter.DefaultConverterFactory;
 
 public class DefaultConverterFactoryTest {
 
-    private LegacyDefaultConverterFactory factory = new LegacyDefaultConverterFactory();
+    private DefaultConverterFactory factory = new DefaultConverterFactory();
 
     @Test
     public void stringToBigDecimal() {

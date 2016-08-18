@@ -8,12 +8,6 @@ import java.util.TimeZone;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Binder;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.combobox.FilteringMode;
@@ -23,34 +17,40 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Calendar;
-import com.vaadin.ui.Calendar.TimeFormat;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectEvent;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.WeekClick;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.WeekClickHandler;
-import com.vaadin.ui.components.calendar.event.BasicEvent;
-import com.vaadin.ui.components.calendar.event.BasicEventProvider;
-import com.vaadin.ui.components.calendar.event.CalendarEvent;
-import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
-import com.vaadin.ui.components.calendar.handler.BasicWeekClickHandler;
 import com.vaadin.ui.themes.ValoTheme;
-import com.vaadin.v7.ui.LegacyDateField;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.fieldgroup.FieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.ui.Calendar;
+import com.vaadin.v7.ui.Calendar.TimeFormat;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.DateField;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventClick;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.RangeSelectEvent;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.WeekClick;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.WeekClickHandler;
+import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
+import com.vaadin.v7.ui.components.calendar.event.BasicEventProvider;
+import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
+import com.vaadin.v7.ui.components.calendar.handler.BasicDateClickHandler;
+import com.vaadin.v7.ui.components.calendar.handler.BasicWeekClickHandler;
 
 /** Calendar component test application */
 @Theme("valo-test")
@@ -97,7 +97,7 @@ public class CalendarTest extends GridLayout implements View {
 
     private CheckBox readOnlyButton;
 
-    private LegacyTextField captionField;
+    private TextField captionField;
 
     private Window scheduleEventPopup;
 
@@ -143,8 +143,8 @@ public class CalendarTest extends GridLayout implements View {
 
     private boolean useSecondResolution;
 
-    private LegacyDateField startDateField;
-    private LegacyDateField endDateField;
+    private DateField startDateField;
+    private DateField endDateField;
 
     public CalendarTest() {
         setSizeFull();
@@ -466,7 +466,7 @@ public class CalendarTest extends GridLayout implements View {
         captionField = createTextField("Caption");
         captionField.setInputPrompt("Event name");
         captionField.setRequired(true);
-        final LegacyTextField whereField = createTextField("Where");
+        final TextField whereField = createTextField("Where");
         whereField.setInputPrompt("Address or location");
         final TextArea descriptionField = createTextArea("Description");
         descriptionField.setInputPrompt("Describe the event");
@@ -506,8 +506,8 @@ public class CalendarTest extends GridLayout implements View {
         return cb;
     }
 
-    private LegacyTextField createTextField(String caption) {
-        LegacyTextField f = new LegacyTextField(caption);
+    private TextField createTextField(String caption) {
+        TextField f = new TextField(caption);
         f.setNullRepresentation("");
         return f;
     }
@@ -518,8 +518,8 @@ public class CalendarTest extends GridLayout implements View {
         return f;
     }
 
-    private LegacyDateField createDateField(String caption) {
-        LegacyDateField f = new LegacyDateField(caption);
+    private DateField createDateField(String caption) {
+        DateField f = new DateField(caption);
         if (useSecondResolution) {
             f.setResolution(Resolution.SECOND);
         } else {

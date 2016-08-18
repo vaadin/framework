@@ -5,15 +5,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.data.Container;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TableFieldFactory;
-import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.ui.DefaultFieldFactory;
+import com.vaadin.v7.ui.Field;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TableFieldFactory;
 
 public class EditableModeChange extends AbstractTestUI {
 
@@ -77,7 +77,7 @@ public class EditableModeChange extends AbstractTestUI {
 
     private class ItemFieldFactory extends DefaultFieldFactory {
         @Override
-        public LegacyField<?> createField(Container container, Object itemId,
+        public Field<?> createField(Container container, Object itemId,
                 Object propertyId, Component uiContext) {
             if (selectionEvent != null) {
                 if ((selectionEvent.getItemId().equals(itemId))

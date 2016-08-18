@@ -27,6 +27,7 @@ import org.openqa.selenium.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridRendererChangeTest extends MultiBrowserTest {
 
@@ -35,7 +36,7 @@ public class GridRendererChangeTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        GridCellElement cell = $(LegacyGridElement.class).first().getCell(0, 0);
+        GridCellElement cell = $(GridElement.class).first().getCell(0, 0);
         assertTrue("No button in the first cell.",
                 cell.isElementPresent(By.tagName("button")));
         int width = cell.getSize().getWidth();
@@ -47,7 +48,7 @@ public class GridRendererChangeTest extends MultiBrowserTest {
         for (ButtonElement button : buttons) {
             button.click();
             assertNoErrorNotifications();
-            cell = $(LegacyGridElement.class).first().getCell(0, 0);
+            cell = $(GridElement.class).first().getCell(0, 0);
             assertEquals("Cell size changed", width, cell.getSize().getWidth());
         }
 

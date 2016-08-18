@@ -9,15 +9,15 @@ import java.util.Locale;
 
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
-import com.vaadin.v7.ui.LegacyDateField;
+import com.vaadin.v7.ui.DateField;
 
-public class LegacyDateFieldTest<T extends LegacyDateField>
+public class LegacyDateFieldTest<T extends DateField>
         extends LegacyAbstractFieldTest<T> {
 
     @SuppressWarnings("unchecked")
     @Override
     protected Class<T> getTestClass() {
-        return (Class<T>) LegacyDateField.class;
+        return (Class<T>) DateField.class;
     }
 
     private Command<T, Date> setValue = new Command<T, Date>() {

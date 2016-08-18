@@ -32,21 +32,21 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
-import com.vaadin.ui.RichTextArea;
-import com.vaadin.ui.Select;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.OptionGroup;
+import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.v7.ui.Select;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.TwinColSelect;
 
 public class TestCaptionWrapper extends CustomComponent implements Listener {
 
@@ -163,7 +163,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         final Table table = new Table("Table " + count++);
         test(layout, table);
 
-        final LegacyTextField tf = new LegacyTextField("Textfield " + count++);
+        final TextField tf = new TextField("Textfield " + count++);
         test(layout, tf);
 
         final Tree tree = new Tree("Tree " + count++);

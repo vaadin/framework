@@ -23,7 +23,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.CheckBoxElement;
-import com.vaadin.testbench.elements.TreeElement;
+import com.vaadin.v7.testbench.customelements.TreeElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class TreeHtmlContentAllowedTest extends SingleBrowserTest {

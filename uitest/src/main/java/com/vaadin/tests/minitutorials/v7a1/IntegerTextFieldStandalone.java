@@ -7,16 +7,16 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
-import com.vaadin.v7.data.util.converter.LegacyStringToIntegerConverter;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.util.converter.Converter.ConversionException;
+import com.vaadin.v7.data.util.converter.StringToIntegerConverter;
+import com.vaadin.v7.ui.TextField;
 
 public class IntegerTextFieldStandalone extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final LegacyTextField textField = new LegacyTextField("Text field");
-        textField.setConverter(new LegacyStringToIntegerConverter());
+        final TextField textField = new TextField("Text field");
+        textField.setConverter(new StringToIntegerConverter());
 
         Button submitButton = new Button("Submit value", new ClickListener() {
             @Override

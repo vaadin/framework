@@ -23,10 +23,11 @@ import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridWidthIncreaseTest extends MultiBrowserTest {
@@ -37,7 +38,7 @@ public class GridWidthIncreaseTest extends MultiBrowserTest {
     public void testColumnsExpandWithGrid() throws IOException {
         openTestURL();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         double accuracy = 1.0d;
         DesiredCapabilities cap = getDesiredCapabilities();

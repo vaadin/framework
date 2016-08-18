@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.treetable;
 
-import com.vaadin.data.Container.Hierarchical;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.data.Container.Hierarchical;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.TreeTable;
 
 public class TreeTablePartialUpdates extends AbstractTestUI {
 

@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.abstractfield;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.TextField;
 
 public class IntegerFieldWithoutDataSource extends TestBase {
 
@@ -14,7 +14,7 @@ public class IntegerFieldWithoutDataSource extends TestBase {
     protected void setup() {
         addComponent(log);
 
-        LegacyTextField tf = createIntegerTextField();
+        TextField tf = createIntegerTextField();
         tf.setCaption(tf.getCaption() + "(invalid allowed)");
         addComponent(tf);
         tf = createIntegerTextField();
@@ -23,8 +23,8 @@ public class IntegerFieldWithoutDataSource extends TestBase {
         addComponent(tf);
     }
 
-    private LegacyTextField createIntegerTextField() {
-        final LegacyTextField tf = new LegacyTextField("Enter an integer");
+    private TextField createIntegerTextField() {
+        final TextField tf = new TextField("Enter an integer");
         tf.setConverter(Integer.class);
         tf.setImmediate(true);
         tf.addListener(new ValueChangeListener() {

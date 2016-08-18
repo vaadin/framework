@@ -9,16 +9,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ReadOnlyStatusChangeEvent;
-import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.v7.ui.LegacyAbstractField;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ReadOnlyStatusChangeEvent;
+import com.vaadin.v7.data.Property.ReadOnlyStatusChangeListener;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.AbstractField;
 
-public abstract class LegacyAbstractFieldTest<T extends LegacyAbstractField>
+public abstract class LegacyAbstractFieldTest<T extends AbstractField>
         extends AbstractComponentTest<T>
         implements ValueChangeListener, ReadOnlyStatusChangeListener {
 
@@ -53,7 +53,7 @@ public abstract class LegacyAbstractFieldTest<T extends LegacyAbstractField>
     protected void populateSettingsMenu(MenuItem settingsMenu) {
         super.populateSettingsMenu(settingsMenu);
 
-        if (LegacyAbstractField.class.isAssignableFrom(getTestClass())) {
+        if (AbstractField.class.isAssignableFrom(getTestClass())) {
             MenuItem abstractField = settingsMenu.addItem("LegacyAbstractField",
                     null);
             abstractField.addItem("Show value", new MenuBar.Command() {
@@ -141,7 +141,7 @@ public abstract class LegacyAbstractFieldTest<T extends LegacyAbstractField>
     };
 
     @Override
-    public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
+    public void valueChange(com.vaadin.v7.data.Property.ValueChangeEvent event) {
         log(event.getClass().getSimpleName() + ", new value: "
                 + getValue(event.getProperty()));
     }

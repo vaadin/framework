@@ -22,12 +22,12 @@ import com.vaadin.tests.components.beanitemcontainer.BeanItemContainerGenerator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.FooterCell;
-import com.vaadin.ui.LegacyGrid.FooterRow;
-import com.vaadin.ui.LegacyGrid.HeaderCell;
-import com.vaadin.ui.LegacyGrid.HeaderRow;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.FooterCell;
+import com.vaadin.v7.ui.Grid.FooterRow;
+import com.vaadin.v7.ui.Grid.HeaderCell;
+import com.vaadin.v7.ui.Grid.HeaderRow;
+import com.vaadin.v7.ui.Grid.SelectionMode;
 
 @Theme("valo")
 public class GridHeaderStyleNames extends AbstractTestUIWithLog {
@@ -40,7 +40,7 @@ public class GridHeaderStyleNames extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        LegacyGrid grid = new LegacyGrid();
+        Grid grid = new Grid();
         grid.setSelectionMode(SelectionMode.MULTI);
         grid.setContainerDataSource(
                 BeanItemContainerGenerator.createContainer(100));

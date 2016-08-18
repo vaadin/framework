@@ -1,18 +1,18 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Container;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.HasValue.ValueChange;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.FooterClickEvent;
-import com.vaadin.ui.Table.FooterClickListener;
-import com.vaadin.ui.Table.HeaderClickEvent;
-import com.vaadin.ui.Table.HeaderClickListener;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.FooterClickEvent;
+import com.vaadin.v7.ui.Table.FooterClickListener;
+import com.vaadin.v7.ui.Table.HeaderClickEvent;
+import com.vaadin.v7.ui.Table.HeaderClickListener;
 
 public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
 

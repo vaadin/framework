@@ -3,10 +3,10 @@ package com.vaadin.tests.data.converter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.v7.data.util.converter.LegacyConverter;
-import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
-import com.vaadin.v7.data.util.converter.LegacyReverseConverter;
-import com.vaadin.v7.data.util.converter.LegacyStringToEnumConverter;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.Converter.ConversionException;
+import com.vaadin.v7.data.util.converter.ReverseConverter;
+import com.vaadin.v7.data.util.converter.StringToEnumConverter;
 
 public class StringToEnumConverterTest {
 
@@ -32,8 +32,8 @@ public class StringToEnumConverterTest {
         }
     }
 
-    LegacyStringToEnumConverter converter = new LegacyStringToEnumConverter();
-    LegacyConverter<Enum, String> reverseConverter = new LegacyReverseConverter<Enum, String>(
+    StringToEnumConverter converter = new StringToEnumConverter();
+    Converter<Enum, String> reverseConverter = new ReverseConverter<Enum, String>(
             converter);
 
     private String convertToString(Enum value) {

@@ -22,6 +22,7 @@ import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridSingleColumnTest extends MultiBrowserTest {
@@ -30,7 +31,7 @@ public class GridSingleColumnTest extends MultiBrowserTest {
     public void testHeaderIsVisible() {
         openTestURL();
 
-        GridCellElement cell = $(LegacyGridElement.class).first().getHeaderCell(0, 0);
+        GridCellElement cell = $(GridElement.class).first().getHeaderCell(0, 0);
         Assert.assertTrue("No header available",
                 cell.getText().equalsIgnoreCase("header"));
     }

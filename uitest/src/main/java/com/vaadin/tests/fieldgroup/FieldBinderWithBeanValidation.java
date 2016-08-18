@@ -1,9 +1,5 @@
 package com.vaadin.tests.fieldgroup;
 
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
@@ -13,19 +9,23 @@ import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
 
 public class FieldBinderWithBeanValidation extends TestBase {
 
     private Log log = new Log(5);
-    private LegacyTextField firstName;
+    private TextField firstName;
     private TextArea lastName;
-    private LegacyTextField email;
-    private LegacyTextField age;
+    private TextField email;
+    private TextField age;
     private Table sex;
-    private LegacyTextField deceased;
+    private TextField deceased;
 
     @Override
     protected void setup() {

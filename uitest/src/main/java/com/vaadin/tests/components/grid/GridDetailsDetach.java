@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.VaadinRequest;
@@ -24,15 +23,16 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.DetailsGenerator;
-import com.vaadin.ui.LegacyGrid.RowReference;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.DetailsGenerator;
+import com.vaadin.v7.ui.Grid.RowReference;
+import com.vaadin.v7.ui.Grid.SelectionMode;
 
 public class GridDetailsDetach extends AbstractTestUI {
 
-    private LegacyGrid currentGrid;
+    private Grid currentGrid;
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -70,14 +70,14 @@ public class GridDetailsDetach extends AbstractTestUI {
         addComponent(layout);
     }
 
-    private LegacyGrid generateGrid() {
+    private Grid generateGrid() {
         BeanItemContainer<GridExampleBean> container = new BeanItemContainer<GridExampleBean>(
                 GridExampleBean.class);
         for (int i = 0; i < 1000; i++) {
             container.addItem(new GridExampleBean("Bean " + i, i * i, i / 10d));
         }
 
-        final LegacyGrid grid = new LegacyGrid(container);
+        final Grid grid = new Grid(container);
         grid.setColumnOrder("name", "amount", "count");
         grid.setSizeFull();
         grid.setSelectionMode(SelectionMode.NONE);

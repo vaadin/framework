@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridColumnAutoExpandTest extends MultiBrowserTest {
 
@@ -28,7 +29,7 @@ public class GridColumnAutoExpandTest extends MultiBrowserTest {
     public void testSecondColumnHasExpanded() {
         openTestURL();
 
-        GridCellElement headerCell = $(LegacyGridElement.class).first()
+        GridCellElement headerCell = $(GridElement.class).first()
                 .getHeaderCell(0, 1);
 
         assertTrue("Column did not expand as expected",

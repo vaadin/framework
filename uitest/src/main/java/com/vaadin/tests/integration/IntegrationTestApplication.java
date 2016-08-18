@@ -1,14 +1,14 @@
 package com.vaadin.tests.integration;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.Table;
 
 public class IntegrationTestApplication extends LegacyApplication {
 

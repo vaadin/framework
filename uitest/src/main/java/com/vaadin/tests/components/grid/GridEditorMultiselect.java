@@ -2,13 +2,13 @@ package com.vaadin.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.ui.Grid;
 
 public class GridEditorMultiselect extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        LegacyGrid grid = new LegacyGrid();
+        Grid grid = new Grid();
 
         grid.addColumn("name");
         grid.addColumn("age", Integer.class);
@@ -18,7 +18,7 @@ public class GridEditorMultiselect extends AbstractTestUI {
         }
 
         grid.setEditorEnabled(true);
-        grid.setSelectionMode(LegacyGrid.SelectionMode.MULTI);
+        grid.setSelectionMode(Grid.SelectionMode.MULTI);
 
         addComponent(grid);
     }

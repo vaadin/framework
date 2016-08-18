@@ -17,9 +17,8 @@ package com.vaadin.tests.tooltip;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.TooltipTest;
-import com.vaadin.v7.tests.elements.LegacyTextFieldElement;
+import com.vaadin.v7.testbench.customelements.TextFieldElement;
 
 /**
  * Test to see if validators create error tooltips correctly.
@@ -31,7 +30,7 @@ public class ValidatorCaptionTooltipTest extends TooltipTest {
     public void validatorWithError() throws Exception {
         openTestURL();
 
-        TextFieldElement field = $(LegacyTextFieldElement.class).get(0);
+        TextFieldElement field = $(TextFieldElement.class).get(0);
         String fieldValue = field.getAttribute("value");
         String expected = "Valid value is between 0 and 100. " + fieldValue
                 + " is not.";
@@ -41,7 +40,7 @@ public class ValidatorCaptionTooltipTest extends TooltipTest {
     @Test
     public void validatorWithoutError() throws Exception {
         openTestURL();
-        TextFieldElement field = $(LegacyTextFieldElement.class).get(1);
+        TextFieldElement field = $(TextFieldElement.class).get(1);
         checkTooltip(field, null);
     }
 }

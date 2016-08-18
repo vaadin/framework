@@ -4,9 +4,9 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.TextField;
 
 public class ComplexGLColumnExpansionWithColSpan extends AbstractTestCase {
     private int cols;
@@ -35,7 +35,7 @@ public class ComplexGLColumnExpansionWithColSpan extends AbstractTestCase {
         final GridLayout gl = new GridLayout(cols, 3);
         gl.setWidth("1000px");
         // textfield spreads across all cols
-        final LegacyTextField textfield = new LegacyTextField();
+        final TextField textfield = new TextField();
         textfield.setWidth(100, Sizeable.UNITS_PERCENTAGE);
         Button b1 = new Button("new button");
         Button b2 = new Button("nothing");

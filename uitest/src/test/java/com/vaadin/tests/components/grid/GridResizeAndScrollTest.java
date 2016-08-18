@@ -18,16 +18,17 @@ package com.vaadin.tests.components.grid;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridResizeAndScrollTest extends MultiBrowserTest {
 
     @Test
     public void scrollAndClick() {
         openTestURL();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         grid.scrollToRow(49);
         // select a row (click on checkbox)
         grid.getCell(49, 0).click();

@@ -21,9 +21,9 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
 
 public class EmptySpaceOnPageAfterExpandedComponent extends AbstractTestUI {
 
@@ -44,7 +44,7 @@ public class EmptySpaceOnPageAfterExpandedComponent extends AbstractTestUI {
         GridLayout grid = new GridLayout();
         grid.setSpacing(true);
 
-        LegacyTextField text1 = new LegacyTextField();
+        TextField text1 = new TextField();
         text1.setCaption("Text1");
         text1.setRequired(true);
 

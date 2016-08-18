@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.select;
 
 import com.vaadin.tests.components.ComponentTestCase;
-import com.vaadin.ui.TwinColSelect;
+import com.vaadin.v7.ui.TwinColSelect;
 
 public class TwinColSelects extends ComponentTestCase<TwinColSelect> {
 

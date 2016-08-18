@@ -2,8 +2,8 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.Table;
 
 /**
  * Setting table height and setting column header mode as hidden leaves the body

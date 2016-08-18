@@ -27,7 +27,7 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.selection.SingleSelectionModelServerRpc;
 import com.vaadin.shared.ui.grid.selection.SingleSelectionModelState;
-import com.vaadin.ui.LegacyGrid.SingleSelectionModel;
+import com.vaadin.v7.ui.Grid.SingleSelectionModel;
 
 import elemental.json.JsonObject;
 

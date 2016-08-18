@@ -3,7 +3,7 @@ package com.vaadin.tests.components.orderedlayout;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextArea;
+import com.vaadin.v7.ui.TextArea;
 
 public class HorizontalRelativeChildren extends TestBase {
 

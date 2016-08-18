@@ -7,7 +7,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class TabSheetDiscardsMovedComponents extends TestBase {
 
@@ -20,7 +20,7 @@ public class TabSheetDiscardsMovedComponents extends TestBase {
         tabSheet.setSizeUndefined();
 
         grid.setColumns(2);
-        LegacyTextField textField = new LegacyTextField("Text field");
+        TextField textField = new TextField("Text field");
         textField.setValue("Text");
         addTestComponent(textField);
         addTestComponent(new Button("Button"));

@@ -27,7 +27,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.ComboBoxElement;
+import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**

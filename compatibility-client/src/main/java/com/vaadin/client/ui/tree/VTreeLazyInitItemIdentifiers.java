@@ -17,7 +17,7 @@ package com.vaadin.client.ui.tree;
 
 import com.vaadin.client.ui.dd.VLazyInitItemIdentifiers;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.ui.Tree;
 
 @AcceptCriterion(Tree.TreeDropCriterion.class)
 public final class VTreeLazyInitItemIdentifiers

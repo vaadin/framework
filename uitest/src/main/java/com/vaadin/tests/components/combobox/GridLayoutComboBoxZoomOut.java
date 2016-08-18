@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.tests.components.AbstractTestCase;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.LegacyWindow;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.LegacyWindow;
 
 @SuppressWarnings("serial")
 public class GridLayoutComboBoxZoomOut extends AbstractTestCase {

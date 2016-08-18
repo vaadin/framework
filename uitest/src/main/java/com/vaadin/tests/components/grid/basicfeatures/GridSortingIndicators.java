@@ -15,16 +15,16 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
 import com.vaadin.data.sort.Sort;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Grid;
 
 public class GridSortingIndicators extends AbstractTestUI {
 
@@ -34,7 +34,7 @@ public class GridSortingIndicators extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final LegacyGrid grid = new LegacyGrid(createContainer());
+        final Grid grid = new Grid(createContainer());
         addComponent(grid);
         grid.sort(Sort.by("foo").then("bar", SortDirection.DESCENDING)
                 .then("baz"));

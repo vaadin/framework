@@ -24,7 +24,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
 /**
  * Test UI for empty table: empty table (without any data) throws client side

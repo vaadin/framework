@@ -3,11 +3,11 @@ package com.vaadin.tests.components;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.HierarchicalContainer;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Tree;
 
 public class HierarchicalContainerSorting extends TestBase {
     IndexedContainer hierarchicalContainer = new HierarchicalContainer();

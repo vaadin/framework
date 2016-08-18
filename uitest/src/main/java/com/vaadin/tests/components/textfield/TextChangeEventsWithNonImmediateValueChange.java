@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.textfield;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.TextField;
 
 public class TextChangeEventsWithNonImmediateValueChange extends TestBase {
     Log l = new Log(5);
@@ -14,7 +14,7 @@ public class TextChangeEventsWithNonImmediateValueChange extends TestBase {
     @Override
     protected void setup() {
 
-        LegacyTextField tf = new LegacyTextField("Default");
+        TextField tf = new TextField("Default");
 
         TextChangeListener inputEventListener = new TextChangeListener() {
 

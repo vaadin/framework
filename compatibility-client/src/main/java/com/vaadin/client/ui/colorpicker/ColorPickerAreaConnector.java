@@ -24,11 +24,11 @@ import com.vaadin.client.ui.VColorPickerArea;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.colorpicker.ColorPickerServerRpc;
-import com.vaadin.ui.ColorPickerArea;
+import com.vaadin.v7.ui.ColorPickerArea;
 
 /**
  * A class that defines an implementation for a color picker connector. Connects
- * the server side {@link com.vaadin.ui.ColorPickerArea} with the client side
+ * the server side {@link com.vaadin.v7.ui.ColorPickerArea} with the client side
  * counterpart {@link VColorPickerArea}
  *
  * @since 7.0.0

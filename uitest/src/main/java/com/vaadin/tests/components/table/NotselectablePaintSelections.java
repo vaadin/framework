@@ -3,9 +3,9 @@ package com.vaadin.tests.components.table;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.vaadin.data.Item;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.Table;
 
 public class NotselectablePaintSelections extends TestBase {
 

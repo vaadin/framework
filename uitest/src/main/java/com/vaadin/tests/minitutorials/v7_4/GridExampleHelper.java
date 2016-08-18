@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.minitutorials.v7_4;
 
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.BeanItemContainer;
 
 public class GridExampleHelper {
     public static BeanItemContainer<GridExampleBean> createContainer() {

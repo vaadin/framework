@@ -21,10 +21,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.minitutorials.v7_5.ShowingExtraDataForRows;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 /**
  * Test for "Grid detail row outline overflows" (#17826)
@@ -45,7 +46,7 @@ public class GridSpacerDecoClipTest extends MultiBrowserTest {
     public void testNewSpacerClip() {
         openTestURL();
 
-        GridElement gridElement = $(LegacyGridElement.class).first();
+        GridElement gridElement = $(GridElement.class).first();
         gridElement.scrollToRow(999);
         GridElement.GridRowElement nextToLastRow = gridElement.getRow(998);
         nextToLastRow.doubleClick();
@@ -65,7 +66,7 @@ public class GridSpacerDecoClipTest extends MultiBrowserTest {
     public void testRemovedSpacerClip() throws InterruptedException {
         openTestURL();
 
-        GridElement gridElement = $(LegacyGridElement.class).first();
+        GridElement gridElement = $(GridElement.class).first();
         gridElement.scrollToRow(999);
         GridElement.GridRowElement lastRow = gridElement.getRow(999);
         lastRow.doubleClick(); // Open lowest Row Details

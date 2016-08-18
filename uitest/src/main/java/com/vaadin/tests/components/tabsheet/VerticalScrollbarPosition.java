@@ -2,7 +2,7 @@ package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextArea;
+import com.vaadin.v7.ui.TextArea;
 
 public class VerticalScrollbarPosition extends TestBase {
 

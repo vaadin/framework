@@ -19,11 +19,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.ComboBoxElement;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridEditorCustomFieldTest extends MultiBrowserTest {
@@ -31,7 +31,7 @@ public class GridEditorCustomFieldTest extends MultiBrowserTest {
     @Test
     public void testCustomFieldWorksInEditorRow() {
         openTestURL();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         Assert.assertEquals("Stockholm", grid.getCell(0, 2).getText());
         grid.getCell(0, 1).doubleClick();
         GridEditorElement editor = grid.getEditor();

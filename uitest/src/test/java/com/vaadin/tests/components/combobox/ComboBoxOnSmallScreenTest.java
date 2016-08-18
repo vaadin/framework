@@ -25,7 +25,7 @@ import org.openqa.selenium.WebDriver.Window;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.client.ui.VFilterSelect;
-import com.vaadin.testbench.elements.ComboBoxElement;
+import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**

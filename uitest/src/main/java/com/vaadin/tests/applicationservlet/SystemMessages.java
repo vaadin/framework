@@ -2,8 +2,6 @@ package com.vaadin.tests.applicationservlet;
 
 import java.util.Locale;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.launcher.ApplicationRunnerServlet;
 import com.vaadin.server.CustomizedSystemMessages;
 import com.vaadin.server.VaadinRequest;
@@ -12,7 +10,9 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.NativeSelect;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.NativeSelect;
 
 import elemental.json.JsonObject;
 

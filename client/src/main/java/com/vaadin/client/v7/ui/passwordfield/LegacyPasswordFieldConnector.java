@@ -19,10 +19,10 @@ package com.vaadin.client.v7.ui.passwordfield;
 import com.vaadin.client.v7.ui.VLegacyPasswordField;
 import com.vaadin.client.v7.ui.textfield.LegacyTextFieldConnector;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.v7.ui.LegacyPasswordField;
+import com.vaadin.v7.ui.PasswordField;
 
 @Deprecated
-@Connect(LegacyPasswordField.class)
+@Connect(PasswordField.class)
 public class LegacyPasswordFieldConnector extends LegacyTextFieldConnector {
 
     @Override

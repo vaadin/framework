@@ -15,15 +15,15 @@
  */
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.VerticalSplitPanel;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.SelectionMode;
 
 public class GridScrollToLineWhileResizing extends AbstractTestUI {
 
@@ -44,7 +44,7 @@ public class GridScrollToLineWhileResizing extends AbstractTestUI {
             addItem.getItemProperty("column1").setValue("cell" + i);
         }
 
-        final LegacyGrid grid = new LegacyGrid(indexedContainer);
+        final Grid grid = new Grid(indexedContainer);
         grid.setSizeFull();
 
         grid.setSelectionMode(SelectionMode.SINGLE);

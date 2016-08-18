@@ -15,8 +15,8 @@ import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.WrapperTargetDetails;
 import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.ui.Tree;
 
 public class AcceptFromComponent extends Window {
 

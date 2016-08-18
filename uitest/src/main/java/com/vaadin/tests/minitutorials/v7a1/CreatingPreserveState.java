@@ -21,7 +21,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Mini tutorial code for
@@ -39,7 +39,7 @@ public class CreatingPreserveState extends UI {
 
     @Override
     public void init(VaadinRequest request) {
-        LegacyTextField tf = new LegacyTextField(
+        TextField tf = new TextField(
                 "Instance #" + (++instanceCounter));
         tf.setImmediate(true);
 

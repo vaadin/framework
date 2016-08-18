@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.data.Container;
 import com.vaadin.data.HasValue;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -25,23 +24,24 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.Slider;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.Align;
-import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.ui.Table.RowHeaderMode;
-import com.vaadin.ui.Table.TableDragMode;
-import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.OptionGroup;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.Align;
+import com.vaadin.v7.ui.Table.ColumnGenerator;
+import com.vaadin.v7.ui.Table.RowHeaderMode;
+import com.vaadin.v7.ui.Table.TableDragMode;
+import com.vaadin.v7.ui.TextField;
+import com.vaadin.v7.ui.TreeTable;
 
 public class Tables extends VerticalLayout implements View {
 
@@ -178,13 +178,13 @@ public class Tables extends VerticalLayout implements View {
         table.removeGeneratedColumn("progress");
 
         if (componentsInRows) {
-            table.addContainerProperty("textfield", LegacyTextField.class,
+            table.addContainerProperty("textfield", TextField.class,
                     null);
             table.addGeneratedColumn("textfield", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
                         Object columnId) {
-                    LegacyTextField tf = new LegacyTextField();
+                    TextField tf = new TextField();
                     tf.setInputPrompt("Type here…");
                     // tf.addStyleName(ValoTheme.TABLE_COMPACT);
                     if ((Integer) itemId % 2 == 0) {
@@ -194,7 +194,7 @@ public class Tables extends VerticalLayout implements View {
                 }
             });
 
-            table.addContainerProperty("datefield", LegacyTextField.class,
+            table.addContainerProperty("datefield", TextField.class,
                     null);
             table.addGeneratedColumn("datefield", new ColumnGenerator() {
                 @Override
@@ -209,7 +209,7 @@ public class Tables extends VerticalLayout implements View {
                 }
             });
 
-            table.addContainerProperty("combobox", LegacyTextField.class, null);
+            table.addContainerProperty("combobox", TextField.class, null);
             table.addGeneratedColumn("combobox", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
@@ -235,7 +235,7 @@ public class Tables extends VerticalLayout implements View {
                 }
             });
 
-            table.addContainerProperty("label", LegacyTextField.class, null);
+            table.addContainerProperty("label", TextField.class, null);
             table.addGeneratedColumn("label", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
@@ -247,7 +247,7 @@ public class Tables extends VerticalLayout implements View {
                 }
             });
 
-            table.addContainerProperty("checkbox", LegacyTextField.class, null);
+            table.addContainerProperty("checkbox", TextField.class, null);
             table.addGeneratedColumn("checkbox", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
@@ -257,7 +257,7 @@ public class Tables extends VerticalLayout implements View {
                 }
             });
 
-            table.addContainerProperty("optiongroup", LegacyTextField.class,
+            table.addContainerProperty("optiongroup", TextField.class,
                     null);
             table.addGeneratedColumn("optiongroup", new ColumnGenerator() {
                 @Override
@@ -271,7 +271,7 @@ public class Tables extends VerticalLayout implements View {
                 }
             });
 
-            table.addContainerProperty("slider", LegacyTextField.class, null);
+            table.addContainerProperty("slider", TextField.class, null);
             table.addGeneratedColumn("slider", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
@@ -282,7 +282,7 @@ public class Tables extends VerticalLayout implements View {
                 }
             });
 
-            table.addContainerProperty("progress", LegacyTextField.class, null);
+            table.addContainerProperty("progress", TextField.class, null);
             table.addGeneratedColumn("progress", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,

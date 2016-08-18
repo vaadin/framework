@@ -15,22 +15,22 @@
  */
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.data.Container.Indexed;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
+import com.vaadin.v7.data.Container.Indexed;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.SelectionMode;
 
 public class GridReplaceContainer extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final LegacyGrid grid = new LegacyGrid();
+        final Grid grid = new Grid();
         grid.setSelectionMode(SelectionMode.SINGLE);
         grid.setContainerDataSource(createContainer());
         grid.addSelectionListener(new SelectionListener() {

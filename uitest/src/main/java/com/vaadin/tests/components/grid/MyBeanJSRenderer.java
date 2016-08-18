@@ -17,7 +17,7 @@ package com.vaadin.tests.components.grid;
 
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.tests.components.grid.JavaScriptRenderers.MyBean;
-import com.vaadin.ui.renderers.AbstractJavaScriptRenderer;
+import com.vaadin.v7.ui.renderers.AbstractJavaScriptRenderer;
 
 /**
  *

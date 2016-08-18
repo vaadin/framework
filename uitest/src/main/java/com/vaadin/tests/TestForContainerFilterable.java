@@ -16,16 +16,16 @@
 
 package com.vaadin.tests;
 
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 public class TestForContainerFilterable extends CustomComponent {
 
@@ -34,8 +34,8 @@ public class TestForContainerFilterable extends CustomComponent {
     Table t = new Table();
     private static String parts[] = { "Neo", "Sa", "rem", "the", "adi", "za",
             "tre", "day", "Ca", "re", "cen", "ter", "mi", "nal" };
-    LegacyTextField fooFilter = new LegacyTextField("foo-filter");
-    LegacyTextField barFilter = new LegacyTextField("bar-filter");
+    TextField fooFilter = new TextField("foo-filter");
+    TextField barFilter = new TextField("bar-filter");
     Button filterButton = new Button("Filter");
     Label count = new Label();
 

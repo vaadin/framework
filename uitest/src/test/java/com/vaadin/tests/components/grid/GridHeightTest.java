@@ -27,10 +27,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import com.vaadin.testbench.elements.GridElement;
-import com.vaadin.testbench.elements.OptionGroupElement;
+
+import com.vaadin.v7.testbench.customelements.OptionGroupElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 /**
  * Tests that Grid gets correct height based on height mode, and resizes
@@ -83,7 +84,7 @@ public class GridHeightTest extends MultiBrowserTest {
                         .selectByText(detailsRowHeight);
                 sleep(500);
 
-                GridElement grid = $(LegacyGridElement.class).first();
+                GridElement grid = $(GridElement.class).first();
                 int initialHeight = grid.getSize().getHeight();
                 try {
                     // check default height

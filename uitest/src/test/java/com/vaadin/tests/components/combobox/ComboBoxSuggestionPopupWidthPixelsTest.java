@@ -21,8 +21,8 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 
 /**
  * @author Vaadin Ltd
@@ -39,7 +39,7 @@ public class ComboBoxSuggestionPopupWidthPixelsTest extends MultiBrowserTest {
                 .findElement(By.vaadin("#textbox"));
         selectTextbox.click();
 
-        CustomComboBoxElement cb = $(CustomComboBoxElement.class).first();
+        ComboBoxElement cb = $(ComboBoxElement.class).first();
         cb.openPopup();
         WebElement popup = cb.getSuggestionPopup();
 

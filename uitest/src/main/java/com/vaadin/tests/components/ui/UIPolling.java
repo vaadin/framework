@@ -15,13 +15,13 @@
  */
 package com.vaadin.tests.components.ui;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.MethodProperty;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.util.Log;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.util.MethodProperty;
+import com.vaadin.v7.ui.TextField;
 
 public class UIPolling extends AbstractTestUIWithLog {
 
@@ -55,7 +55,7 @@ public class UIPolling extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         log = new Log(20);
         log.setNumberLogRows(true);
-        LegacyTextField pollingInterval = new LegacyTextField("Poll interval",
+        TextField pollingInterval = new TextField("Poll interval",
                 new MethodProperty<Integer>(this, "pollInterval"));
         pollingInterval.setImmediate(true);
         pollingInterval.setValue("-1");

@@ -20,9 +20,10 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridHeaderFormatChangeTest extends MultiBrowserTest {
@@ -30,7 +31,7 @@ public class GridHeaderFormatChangeTest extends MultiBrowserTest {
     @Test
     public void testHeaderRetainsSelectAllForColumnRemoval() {
         openTestURL();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         // Assert that we do not have the select all checkbox
         Assert.assertTrue(
@@ -63,7 +64,7 @@ public class GridHeaderFormatChangeTest extends MultiBrowserTest {
     @Test
     public void testHeaderRetainsSelectAllForJoinColumnAdd() {
         openTestURL();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         // Assert that we do not have the select all checkbox
         Assert.assertTrue(
@@ -96,7 +97,7 @@ public class GridHeaderFormatChangeTest extends MultiBrowserTest {
     @Test
     public void selectAllShouldKeepState() {
         openTestURL();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         // Assert that we do not have the select all checkbox
         Assert.assertTrue(

@@ -52,9 +52,9 @@ import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
-import com.vaadin.v7.data.util.converter.LegacyConverter;
-import com.vaadin.v7.data.util.converter.LegacyConverterFactory;
-import com.vaadin.v7.data.util.converter.LegacyDefaultConverterFactory;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.ConverterFactory;
+import com.vaadin.v7.data.util.converter.DefaultConverterFactory;
 
 /**
  * Contains everything that Vaadin needs to store for a specific user. This is
@@ -226,7 +226,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * The converter factory that is used to provide default converters for the
      * session.
      */
-    private LegacyConverterFactory converterFactory = new LegacyDefaultConverterFactory();
+    private ConverterFactory converterFactory = new DefaultConverterFactory();
 
     private LinkedList<RequestHandler> requestHandlers = new LinkedList<RequestHandler>();
 
@@ -591,23 +591,23 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Gets the {@link LegacyConverterFactory} used to locate a suitable
-     * {@link LegacyConverter} for fields in the session.
+     * Gets the {@link ConverterFactory} used to locate a suitable
+     * {@link Converter} for fields in the session.
      *
-     * See {@link #setConverterFactory(LegacyConverterFactory)} for more details
+     * See {@link #setConverterFactory(ConverterFactory)} for more details
      *
      * @return The converter factory used in the session
      */
-    public LegacyConverterFactory getConverterFactory() {
+    public ConverterFactory getConverterFactory() {
         assert hasLock();
         return converterFactory;
     }
 
     /**
-     * Sets the {@link LegacyConverterFactory} used to locate a suitable
-     * {@link LegacyConverter} for fields in the session.
+     * Sets the {@link ConverterFactory} used to locate a suitable
+     * {@link Converter} for fields in the session.
      * <p>
-     * The {@link LegacyConverterFactory} is used to find a suitable converter
+     * The {@link ConverterFactory} is used to find a suitable converter
      * when binding data to a UI component and the data type does not match the
      * UI component type, e.g. binding a Double to a TextField (which is based
      * on a String).
@@ -618,7 +618,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @param converterFactory
      *            The converter factory used in the session
      */
-    public void setConverterFactory(LegacyConverterFactory converterFactory) {
+    public void setConverterFactory(ConverterFactory converterFactory) {
         assert hasLock();
         this.converterFactory = converterFactory;
     }

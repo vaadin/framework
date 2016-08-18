@@ -8,7 +8,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * HorizontalLayout and VerticalLayout should not leak caption elements via
@@ -55,7 +55,7 @@ public class CaptionLeak extends AbstractTestUI {
                 try {
                     ComponentContainer target = targetClass.newInstance();
                     for (int i = 0; i < 61; i++) {
-                        target.addComponent(new LegacyTextField("Test"));
+                        target.addComponent(new TextField("Test"));
                     }
                     parent.setContent(target);
                 } catch (InstantiationException e) {

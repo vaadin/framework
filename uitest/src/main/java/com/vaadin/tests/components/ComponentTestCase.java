@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -14,8 +11,11 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.ui.Field;
+import com.vaadin.v7.ui.NativeSelect;
 
 public abstract class ComponentTestCase<T extends AbstractComponent>
         extends AbstractComponentTestCase<T> {
@@ -73,7 +73,7 @@ public abstract class ComponentTestCase<T extends AbstractComponent>
         actions.add(createReadonlyAction(false));
 
         actions.add(createErrorIndicatorAction(false));
-        if (LegacyField.class.isAssignableFrom(getTestClass())) {
+        if (Field.class.isAssignableFrom(getTestClass())) {
             actions.add(createRequiredAction(false));
         }
 

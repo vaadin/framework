@@ -9,19 +9,19 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
-import com.vaadin.v7.data.validator.LegacyAbstractValidator;
-import com.vaadin.v7.data.validator.LegacyEmailValidator;
-import com.vaadin.v7.ui.LegacyPasswordField;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.validator.AbstractValidator;
+import com.vaadin.v7.data.validator.EmailValidator;
+import com.vaadin.v7.ui.PasswordField;
+import com.vaadin.v7.ui.TextField;
 
 public class SimpleLoginView extends CustomComponent
         implements View, Button.ClickListener {
 
     public static final String NAME = "login";
 
-    private final LegacyTextField user;
+    private final TextField user;
 
-    private final LegacyPasswordField password;
+    private final PasswordField password;
 
     private final Button loginButton;
 
@@ -29,16 +29,16 @@ public class SimpleLoginView extends CustomComponent
         setSizeFull();
 
         // Create the user input field
-        user = new LegacyTextField("User:");
+        user = new TextField("User:");
         user.setWidth("300px");
         user.setRequired(true);
         user.setInputPrompt("Your username (eg. joe@email.com)");
         user.addValidator(
-                new LegacyEmailValidator("Username must be an email address"));
+                new EmailValidator("Username must be an email address"));
         user.setInvalidAllowed(false);
 
         // Create the password input field
-        password = new LegacyPasswordField("Password:");
+        password = new PasswordField("Password:");
         password.setWidth("300px");
         password.addValidator(new PasswordValidator());
         password.setRequired(true);
@@ -74,7 +74,7 @@ public class SimpleLoginView extends CustomComponent
      * Validator for validating the passwords
      */
     private static final class PasswordValidator
-            extends LegacyAbstractValidator<String> {
+            extends AbstractValidator<String> {
 
         public PasswordValidator() {
             super("The password provided is not valid");

@@ -3,11 +3,11 @@ package com.vaadin.tests.server.component.button;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.v7.data.util.ObjectProperty;
 import com.vaadin.ui.UI;
 
 /**

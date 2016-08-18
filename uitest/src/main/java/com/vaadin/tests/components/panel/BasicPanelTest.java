@@ -8,9 +8,9 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.v7.ui.TextArea;
 
 public class BasicPanelTest extends TestBase {
     private final Label scrollPosition = new Label();

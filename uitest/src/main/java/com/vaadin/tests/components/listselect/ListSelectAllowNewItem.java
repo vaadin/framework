@@ -3,7 +3,7 @@ package com.vaadin.tests.components.listselect;
 import java.util.Arrays;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.ListSelect;
+import com.vaadin.v7.ui.ListSelect;
 
 public class ListSelectAllowNewItem extends TestBase {
 

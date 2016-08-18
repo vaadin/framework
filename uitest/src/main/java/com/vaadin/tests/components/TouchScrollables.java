@@ -2,8 +2,6 @@ package com.vaadin.tests.components;
 
 import java.util.Collection;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.DataBoundTransferable;
@@ -15,7 +13,6 @@ import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.util.Person;
 import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.tests.util.TestUtils;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -27,9 +24,12 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.v7.ui.Table;
 
 public class TouchScrollables extends TestBase {
     java.util.Random r = new java.util.Random(1);

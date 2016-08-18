@@ -1,25 +1,25 @@
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Grid;
 
 @SuppressWarnings("serial")
 // @Push
 public class ProgrammaticEditorControl extends AbstractTestUIWithLog {
 
-    private LegacyGrid grid;
+    private Grid grid;
     private IndexedContainer container = new IndexedContainer();
 
     @Override
     protected void setup(VaadinRequest request) {
         container.addContainerProperty("name", String.class, null);
         container.addItem("test").getItemProperty("name").setValue("test");
-        grid = new LegacyGrid();
+        grid = new Grid();
         grid.setContainerDataSource(container);
         grid.setEditorEnabled(true);
         addComponent(grid);

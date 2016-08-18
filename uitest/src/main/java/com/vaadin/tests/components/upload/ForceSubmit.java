@@ -12,7 +12,7 @@ import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.Receiver;
 import com.vaadin.ui.Upload.StartedEvent;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class ForceSubmit extends TestBase implements Receiver {
 
@@ -29,7 +29,7 @@ public class ForceSubmit extends TestBase implements Receiver {
     @Override
     protected void setup() {
 
-        final LegacyTextField textField = new LegacyTextField("Test field");
+        final TextField textField = new TextField("Test field");
         addComponent(textField);
 
         final Upload u;

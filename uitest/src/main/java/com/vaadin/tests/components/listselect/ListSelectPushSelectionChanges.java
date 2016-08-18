@@ -18,14 +18,14 @@ package com.vaadin.tests.components.listselect;
 import java.util.Arrays;
 import java.util.Collection;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.OptionGroup;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.ListSelect;
+import com.vaadin.v7.ui.OptionGroup;
 
 public class ListSelectPushSelectionChanges extends AbstractTestUI {
 

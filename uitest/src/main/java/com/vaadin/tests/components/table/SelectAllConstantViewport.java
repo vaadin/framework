@@ -19,7 +19,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
 /**
  *

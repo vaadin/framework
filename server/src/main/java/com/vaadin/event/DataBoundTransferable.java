@@ -17,8 +17,8 @@ package com.vaadin.event;
 
 import java.util.Map;
 
-import com.vaadin.data.Container;
 import com.vaadin.ui.Component;
+import com.vaadin.v7.data.Container;
 
 /**
  * Parent class for {@link Transferable} implementations that have a Vaadin
@@ -27,7 +27,7 @@ import com.vaadin.ui.Component;
  * table column identifier when transferring a single table cell).
  *
  * The component must implement the interface
- * {@link com.vaadin.data.Container.Viewer}.
+ * {@link com.vaadin.v7.data.Container.Viewer}.
  *
  * In most cases, receivers of data transfers should depend on this class
  * instead of its concrete subclasses.
@@ -60,7 +60,7 @@ public abstract class DataBoundTransferable extends TransferableImpl {
     /**
      * Returns the container data source from which the transfer occurs.
      *
-     * {@link com.vaadin.data.Container.Viewer#getContainerDataSource()} is used
+     * {@link com.vaadin.v7.data.Container.Viewer#getContainerDataSource()} is used
      * to obtain the underlying container of the source component.
      *
      * @return Container

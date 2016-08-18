@@ -22,9 +22,9 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 public class FormLayoutResizing extends AbstractTestUI {
 
@@ -56,7 +56,7 @@ public class FormLayoutResizing extends AbstractTestUI {
     private static FormLayout createForm(String caption, Component table) {
         table.setCaption(caption);
 
-        LegacyTextField tf = new LegacyTextField("Text field");
+        TextField tf = new TextField("Text field");
         tf.setWidth("100%");
 
         FormLayout form = new FormLayout();

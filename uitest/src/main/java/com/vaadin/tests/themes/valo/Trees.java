@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.data.Container;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
@@ -25,10 +24,11 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.TreeDragMode;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.TreeDragMode;
 
 public class Trees extends VerticalLayout implements View {
     public Trees() {

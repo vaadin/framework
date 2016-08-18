@@ -3,7 +3,7 @@ package com.vaadin.tests.util;
 import java.io.Serializable;
 import java.util.Random;
 
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.BeanItemContainer;
 
 @SuppressWarnings("serial")
 public class PersonContainer extends BeanItemContainer<Person>

@@ -16,10 +16,10 @@
 
 package com.vaadin.ui;
 
-import com.vaadin.data.Property;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorServerRpc;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorState;
+import com.vaadin.v7.data.Property;
 
 /**
  * A {@link ProgressBar} which polls the server for updates.

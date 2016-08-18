@@ -4,9 +4,9 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.ColumnGenerator;
+import com.vaadin.v7.ui.TextField;
 
 public class TableColumnResizeContentsWidth extends AbstractTestUI {
 
@@ -19,7 +19,7 @@ public class TableColumnResizeContentsWidth extends AbstractTestUI {
             @Override
             public Object generateCell(Table source, Object itemId,
                     Object columnId) {
-                LegacyTextField textField = new LegacyTextField();
+                TextField textField = new TextField();
                 textField.setWidth("100%");
                 return textField;
             }

@@ -22,9 +22,9 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.DetailsGenerator;
-import com.vaadin.ui.LegacyGrid.RowReference;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.DetailsGenerator;
+import com.vaadin.v7.ui.Grid.RowReference;
 
 /**
  * Tests the layouting of Grid's details row when it contains a HorizontalLayout
@@ -37,7 +37,7 @@ public class GridDetailsLayoutExpand extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final LegacyGrid grid = new LegacyGrid();
+        final Grid grid = new Grid();
         grid.setSizeFull();
         grid.addColumn("name", String.class);
         grid.addColumn("born", Integer.class);

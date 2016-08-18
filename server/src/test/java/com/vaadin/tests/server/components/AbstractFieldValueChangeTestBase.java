@@ -3,11 +3,11 @@ package com.vaadin.tests.server.components;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.Property.ValueChangeNotifier;
-import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.v7.ui.LegacyAbstractField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.Property.ValueChangeNotifier;
+import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.ui.AbstractField;
 
 /**
  * Base class for tests for checking that value change listeners for fields are
@@ -18,15 +18,15 @@ import com.vaadin.v7.ui.LegacyAbstractField;
  *
  * Subclasses should implement {@link #setValue()} and call
  * <code>super.setValue(LegacyAbstractField)</code>. Also, subclasses should
- * typically override {@link #setValue(LegacyAbstractField)} to set the field
+ * typically override {@link #setValue(AbstractField)} to set the field
  * value via <code>changeVariables()</code>.
  */
 public abstract class AbstractFieldValueChangeTestBase<T> {
 
-    private LegacyAbstractField<T> field;
+    private AbstractField<T> field;
     private ValueChangeListener listener;
 
-    protected void setUp(LegacyAbstractField<T> field) {
+    protected void setUp(AbstractField<T> field) {
         this.field = field;
         listener = EasyMock.createStrictMock(ValueChangeListener.class);
 
@@ -116,14 +116,14 @@ public abstract class AbstractFieldValueChangeTestBase<T> {
         EasyMock.verify(listener);
     }
 
-    protected LegacyAbstractField<T> getField() {
+    protected AbstractField<T> getField() {
         return field;
     }
 
     /**
      * Override in subclasses to set value with changeVariables().
      */
-    protected void setValue(LegacyAbstractField<T> field) {
+    protected void setValue(AbstractField<T> field) {
         field.setValue((T) "newValue");
     }
 

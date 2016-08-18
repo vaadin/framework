@@ -10,14 +10,14 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.OptionGroup;
+import com.vaadin.v7.ui.TextField;
 
 public class FocusAndBlurListeners extends TestBase {
 
@@ -46,7 +46,7 @@ public class FocusAndBlurListeners extends TestBase {
     protected void setup() {
         Layout l = getLayout();
 
-        LegacyTextField tf = new LegacyTextField("TextField");
+        TextField tf = new TextField("TextField");
         l.addComponent(tf);
 
         DateField df = new DateField("DateField");

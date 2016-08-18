@@ -5,7 +5,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyWindow;
+import com.vaadin.v7.ui.LegacyWindow;
 
 public class ApplicationCloseTest extends TestBase {
 

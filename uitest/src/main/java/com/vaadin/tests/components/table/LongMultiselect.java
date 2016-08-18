@@ -2,11 +2,11 @@ package com.vaadin.tests.components.table;
 
 import java.util.Collection;
 
-import com.vaadin.data.Property;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.ui.Table;
 
 public class LongMultiselect extends AbstractTestUI {
 

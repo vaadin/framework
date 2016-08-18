@@ -3,9 +3,9 @@ package com.vaadin.tests.components.beanitemcontainer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
 
 public class TestBeanItemContainerUsage extends TestBase {
 

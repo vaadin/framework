@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Table;
 
 public class FixedHeightTable extends TestBase {
 

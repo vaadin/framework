@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.Label;
+import com.vaadin.v7.data.Property.ValueChangeListener;
 
 public class LabelTest extends AbstractComponentTest<Label>
         implements ValueChangeListener {
@@ -93,7 +93,7 @@ public class LabelTest extends AbstractComponentTest<Label>
     }
 
     @Override
-    public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
+    public void valueChange(com.vaadin.v7.data.Property.ValueChangeEvent event) {
         Object o = event.getProperty().getValue();
 
         // Distinguish between null and 'null'

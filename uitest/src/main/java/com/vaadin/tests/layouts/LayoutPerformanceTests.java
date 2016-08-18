@@ -15,10 +15,10 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.TextField;
 
 public class LayoutPerformanceTests extends TestBase {
     private static final String[] widths = { null, "100%", "200px" };
@@ -138,7 +138,7 @@ public class LayoutPerformanceTests extends TestBase {
         TEXT_FIELD {
             @Override
             public Component createContent() {
-                return new LegacyTextField("Field label");
+                return new TextField("Field label");
             }
         },
         HORIZONTAL_LAYOUT {

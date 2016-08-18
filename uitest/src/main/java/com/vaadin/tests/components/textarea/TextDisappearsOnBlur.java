@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.textarea;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.TextArea;
+import com.vaadin.v7.ui.TextArea;
 
 public class TextDisappearsOnBlur extends TestBase {
 

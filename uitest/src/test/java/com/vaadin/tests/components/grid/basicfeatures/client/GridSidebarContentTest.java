@@ -23,7 +23,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
-import com.vaadin.tests.components.grid.basicfeatures.element.CustomGridElement;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
 
@@ -53,7 +53,7 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
     @Test
     public void testAddingCustomSidebarItem() {
         openTestURL();
-        CustomGridElement gridElement = getGridElement();
+        GridElement gridElement = getGridElement();
 
         selectMenuPath("Component", "Sidebar", "Add item to end");
 

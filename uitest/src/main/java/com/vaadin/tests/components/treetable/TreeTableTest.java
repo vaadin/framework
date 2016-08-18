@@ -5,17 +5,17 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Container.Hierarchical;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.tests.components.table.Tables;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.CellStyleGenerator;
-import com.vaadin.ui.Tree.CollapseEvent;
-import com.vaadin.ui.Tree.CollapseListener;
-import com.vaadin.ui.Tree.ExpandEvent;
-import com.vaadin.ui.Tree.ExpandListener;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Container.Hierarchical;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.CellStyleGenerator;
+import com.vaadin.v7.ui.Tree.CollapseEvent;
+import com.vaadin.v7.ui.Tree.CollapseListener;
+import com.vaadin.v7.ui.Tree.ExpandEvent;
+import com.vaadin.v7.ui.Tree.ExpandListener;
+import com.vaadin.v7.ui.TreeTable;
 
 public class TreeTableTest extends Tables<TreeTable>
         implements CollapseListener, ExpandListener {
@@ -26,7 +26,7 @@ public class TreeTableTest extends Tables<TreeTable>
     }
 
     private int rootItemIds = 3;
-    private CellStyleGenerator rootGreenSecondLevelRed = new com.vaadin.ui.Table.CellStyleGenerator() {
+    private CellStyleGenerator rootGreenSecondLevelRed = new com.vaadin.v7.ui.Table.CellStyleGenerator() {
 
         @Override
         public String getStyle(Table source, Object itemId, Object propertyId) {

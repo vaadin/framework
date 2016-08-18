@@ -8,18 +8,18 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.MethodProperty;
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
-import com.vaadin.v7.data.util.converter.LegacyConverter;
-import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
-import com.vaadin.v7.data.util.converter.LegacyStringToIntegerConverter;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.util.MethodProperty;
+import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.Converter.ConversionException;
+import com.vaadin.v7.data.util.converter.StringToIntegerConverter;
+import com.vaadin.v7.ui.TextField;
 
 public class AbsFieldValueConversionsTest {
 
@@ -35,7 +35,7 @@ public class AbsFieldValueConversionsTest {
 
     @Test
     public void testWithoutConversion() {
-        LegacyTextField tf = new LegacyTextField();
+        TextField tf = new TextField();
         tf.setPropertyDataSource(
                 new MethodProperty<String>(paulaBean, "firstName"));
         assertEquals("Paula", tf.getValue());
@@ -49,7 +49,7 @@ public class AbsFieldValueConversionsTest {
     @Test
     public void testNonmodifiedBufferedFieldConversion() {
         VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
-        LegacyTextField tf = new LegacyTextField("salary");
+        TextField tf = new TextField("salary");
         tf.setBuffered(true);
         tf.setLocale(new Locale("en", "US"));
         ObjectProperty<Integer> ds = new ObjectProperty<Integer>(123456789);
@@ -66,7 +66,7 @@ public class AbsFieldValueConversionsTest {
     @Test
     public void testModifiedBufferedFieldConversion() {
         VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
-        LegacyTextField tf = new LegacyTextField("salary");
+        TextField tf = new TextField("salary");
         tf.setBuffered(true);
         tf.setLocale(new Locale("en", "US"));
         ObjectProperty<Integer> ds = new ObjectProperty<Integer>(123456789);
@@ -85,8 +85,8 @@ public class AbsFieldValueConversionsTest {
 
     @Test
     public void testStringIdentityConversion() {
-        LegacyTextField tf = new LegacyTextField();
-        tf.setConverter(new LegacyConverter<String, String>() {
+        TextField tf = new TextField();
+        tf.setConverter(new Converter<String, String>() {
 
             @Override
             public String convertToModel(String value,
@@ -122,9 +122,9 @@ public class AbsFieldValueConversionsTest {
 
     @Test
     public void testIntegerStringConversion() {
-        LegacyTextField tf = new LegacyTextField();
+        TextField tf = new TextField();
 
-        tf.setConverter(new LegacyStringToIntegerConverter());
+        tf.setConverter(new StringToIntegerConverter());
         tf.setPropertyDataSource(new MethodProperty<Integer>(paulaBean, "age"));
         assertEquals(34, tf.getPropertyDataSource().getValue());
         assertEquals("34", tf.getValue());
@@ -140,7 +140,7 @@ public class AbsFieldValueConversionsTest {
     public void testChangeReadOnlyFieldLocale() {
         VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
 
-        LegacyTextField tf = new LegacyTextField("salary");
+        TextField tf = new TextField("salary");
         tf.setLocale(new Locale("en", "US"));
         ObjectProperty<Integer> ds = new ObjectProperty<Integer>(123456789);
         ds.setReadOnly(true);
@@ -171,7 +171,7 @@ public class AbsFieldValueConversionsTest {
     public void testNumberDoubleConverterChange() {
         final VaadinSession a = new AlwaysLockedVaadinSession(null);
         VaadinSession.setCurrent(a);
-        LegacyTextField tf = new LegacyTextField() {
+        TextField tf = new TextField() {
             @Override
             public VaadinSession getSession() {
                 return a;
@@ -184,10 +184,10 @@ public class AbsFieldValueConversionsTest {
         assertEquals(490, tf.getPropertyDataSource().getValue());
         assertEquals("490", tf.getValue());
 
-        LegacyConverter c1 = tf.getConverter();
+        Converter c1 = tf.getConverter();
 
         tf.setPropertyDataSource(new MethodProperty<Number>(nb, "number"));
-        LegacyConverter c2 = tf.getConverter();
+        Converter c2 = tf.getConverter();
         assertTrue(
                 "StringToInteger converter is ok for integer types and should stay even though property is changed",
                 c1 == c2);
@@ -198,10 +198,10 @@ public class AbsFieldValueConversionsTest {
 
     @Test
     public void testNullConverter() {
-        LegacyTextField tf = new LegacyTextField("foo");
-        tf.setConverter(new LegacyStringToIntegerConverter());
+        TextField tf = new TextField("foo");
+        tf.setConverter(new StringToIntegerConverter());
         tf.setPropertyDataSource(new ObjectProperty<Integer>(12));
-        tf.setConverter((LegacyConverter) null);
+        tf.setConverter((Converter) null);
         try {
             Object v = tf.getConvertedValue();
             System.out.println(v);

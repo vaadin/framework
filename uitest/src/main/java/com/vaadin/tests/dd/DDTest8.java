@@ -2,8 +2,6 @@ package com.vaadin.tests.dd;
 
 import java.util.Collection;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -13,10 +11,12 @@ import com.vaadin.event.dd.acceptcriteria.Or;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.TreeDragMode;
-import com.vaadin.ui.Tree.TreeTargetDetails;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.AbstractSelect;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.TreeDragMode;
+import com.vaadin.v7.ui.Tree.TreeTargetDetails;
 
 /**
  * DD playground. Better quality example/prototype codes in {@link DDTest2}.

@@ -17,13 +17,13 @@ package com.vaadin.tests.components.table;
 
 import java.util.Collection;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.PersonContainer;
-import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.OptionGroup;
+import com.vaadin.v7.ui.Table;
 
 public class SortableHeaderStyles extends AbstractTestUI {
 

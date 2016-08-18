@@ -2,7 +2,7 @@ package com.vaadin.tests.layouts;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class OrderedLayoutCSSCompatibility extends TestBase {
 
@@ -21,8 +21,8 @@ public class OrderedLayoutCSSCompatibility extends TestBase {
         HorizontalLayout l = new HorizontalLayout();
         l.setMargin(true);
         l.setSpacing(true);
-        l.addComponent(new LegacyTextField("abc"));
-        l.addComponent(new LegacyTextField("def"));
+        l.addComponent(new TextField("abc"));
+        l.addComponent(new TextField("def"));
 
         addComponent(l);
 

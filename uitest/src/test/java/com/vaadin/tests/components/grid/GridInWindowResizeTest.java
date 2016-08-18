@@ -23,9 +23,10 @@ import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridInWindowResizeTest extends MultiBrowserTest {
     @Override
@@ -38,7 +39,7 @@ public class GridInWindowResizeTest extends MultiBrowserTest {
     @Test
     public void resizeWindow() {
         openTestURL();
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         int col1WidthBefore = grid.getCell(0, 0).getSize().getWidth();
         $(ButtonElement.class).caption("resize").first().click();
         int col1WidthAfter = grid.getCell(0, 0).getSize().getWidth();

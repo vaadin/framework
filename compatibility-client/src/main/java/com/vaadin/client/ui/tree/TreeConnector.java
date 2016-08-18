@@ -40,7 +40,7 @@ import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.tree.TreeConstants;
 import com.vaadin.shared.ui.tree.TreeServerRpc;
 import com.vaadin.shared.ui.tree.TreeState;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.ui.Tree;
 
 @Connect(Tree.class)
 public class TreeConnector extends AbstractComponentConnector

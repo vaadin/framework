@@ -3,11 +3,11 @@ package com.vaadin.tests.data.converter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.v7.data.util.converter.LegacyStringToFloatConverter;
+import com.vaadin.v7.data.util.converter.StringToFloatConverter;
 
 public class StringToFloatConverterTest {
 
-    LegacyStringToFloatConverter converter = new LegacyStringToFloatConverter();
+    StringToFloatConverter converter = new StringToFloatConverter();
 
     @Test
     public void testNullConversion() {

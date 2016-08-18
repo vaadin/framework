@@ -23,7 +23,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class ErrorIndicator extends AbstractTestUI {
 
@@ -37,7 +37,7 @@ public class ErrorIndicator extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         VerticalLayout layout = new VerticalLayout();
 
-        LegacyTextField inVertical = new LegacyTextField();
+        TextField inVertical = new TextField();
         inVertical.setRequired(true);
         inVertical.setRequiredError("Vertical layout tooltip");
         inVertical.setCaption("Vertical layout caption");
@@ -47,7 +47,7 @@ public class ErrorIndicator extends AbstractTestUI {
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
-        LegacyTextField inHorizontal = new LegacyTextField();
+        TextField inHorizontal = new TextField();
         inHorizontal.setRequired(true);
         inHorizontal.setRequiredError("Horizontal layout tooltip");
         inHorizontal.setCaption("Horizontal layout caption");

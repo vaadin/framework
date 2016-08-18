@@ -3,7 +3,7 @@ package com.vaadin.tests.components.beanitemcontainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
 public class BeanItemContainerNullValues extends TestBase {
 

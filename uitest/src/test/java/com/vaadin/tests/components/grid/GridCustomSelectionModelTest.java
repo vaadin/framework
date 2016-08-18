@@ -22,10 +22,11 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridCustomSelectionModelTest extends MultiBrowserTest {
@@ -35,7 +36,7 @@ public class GridCustomSelectionModelTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         GridCellElement cell = grid.getCell(0, 0);
         assertTrue("First column of Grid should not have an input element",
                 cell.findElements(By.className("input")).isEmpty());

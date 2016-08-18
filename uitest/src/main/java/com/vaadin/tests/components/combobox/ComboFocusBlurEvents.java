@@ -3,15 +3,15 @@ package com.vaadin.tests.components.combobox;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.TextField;
 
 public class ComboFocusBlurEvents extends TestBase {
 
@@ -51,7 +51,7 @@ public class ComboFocusBlurEvents extends TestBase {
             }
         });
 
-        LegacyTextField field = new LegacyTextField("Some textfield");
+        TextField field = new TextField("Some textfield");
         field.setImmediate(true);
         addComponent(field);
 

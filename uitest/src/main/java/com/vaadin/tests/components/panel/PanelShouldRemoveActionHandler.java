@@ -12,7 +12,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class PanelShouldRemoveActionHandler extends TestBase {
 
@@ -33,7 +33,7 @@ public class PanelShouldRemoveActionHandler extends TestBase {
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         panel = new Panel("A panel", layout);
-        layout.addComponent(new LegacyTextField());
+        layout.addComponent(new TextField());
         Button add = new Button("Add an action handler",
                 new Button.ClickListener() {
 

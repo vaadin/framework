@@ -18,8 +18,9 @@ package com.vaadin.tests.components.grid;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class NullHeadersTest extends SingleBrowserTest {
 
@@ -27,7 +28,7 @@ public class NullHeadersTest extends SingleBrowserTest {
     public void gridWithNullHeadersShouldBeRendered() {
         openTestURL();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         Assert.assertEquals(1, grid.getHeaderCount());
         Assert.assertEquals(3, grid.getHeaderCells(0).size());

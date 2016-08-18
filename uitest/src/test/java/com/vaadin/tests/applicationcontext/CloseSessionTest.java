@@ -4,9 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.FixedNotificationElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.newelements.FixedNotificationElement;
 
 public class CloseSessionTest extends MultiBrowserTest {
 

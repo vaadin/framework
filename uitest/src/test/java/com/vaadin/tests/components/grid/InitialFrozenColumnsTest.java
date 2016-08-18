@@ -24,6 +24,7 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class InitialFrozenColumnsTest extends MultiBrowserTest {
@@ -35,7 +36,7 @@ public class InitialFrozenColumnsTest extends MultiBrowserTest {
         Assert.assertFalse("Notification was present",
                 isElementPresent(NotificationElement.class));
 
-        WebElement cell = $(LegacyGridElement.class).first().getCell(0, 0);
+        WebElement cell = $(GridElement.class).first().getCell(0, 0);
         assertTrue(cell.getAttribute("class").contains("frozen"));
     }
 }

@@ -3,15 +3,15 @@ package com.vaadin.tests.components.textfield;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.v7.ui.LegacyAbstractTextField.TextChangeEventMode;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.AbstractTextField.TextChangeEventMode;
+import com.vaadin.v7.ui.TextField;
 
 public class TextFieldEagerRepaint extends TestBase {
 
     @Override
     protected void setup() {
 
-        final LegacyTextField tf1 = new LegacyTextField("Updates value");
+        final TextField tf1 = new TextField("Updates value");
         tf1.setTextChangeEventMode(TextChangeEventMode.EAGER);
         tf1.addTextChangeListener(new TextChangeListener() {
             @Override
@@ -24,7 +24,7 @@ public class TextFieldEagerRepaint extends TestBase {
             }
         });
 
-        final LegacyTextField tf2 = new LegacyTextField("Updates width");
+        final TextField tf2 = new TextField("Updates width");
         tf2.setTextChangeEventMode(TextChangeEventMode.EAGER);
         tf2.addTextChangeListener(new TextChangeListener() {
             @Override

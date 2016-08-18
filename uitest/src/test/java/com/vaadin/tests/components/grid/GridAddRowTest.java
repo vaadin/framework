@@ -19,9 +19,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridAddRowTest extends MultiBrowserTest {
@@ -29,7 +30,7 @@ public class GridAddRowTest extends MultiBrowserTest {
     public void testAddRow() {
         openTestURL();
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
 
         Assert.assertEquals("Lorem", grid.getCell(0, 1).getText());
         Assert.assertEquals("2", grid.getCell(1, 2).getText());

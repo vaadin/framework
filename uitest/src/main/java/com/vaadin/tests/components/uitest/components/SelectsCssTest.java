@@ -1,16 +1,16 @@
 package com.vaadin.tests.components.uitest.components;
 
 import com.vaadin.tests.components.uitest.TestSampler;
-import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.Select;
-import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.themes.ChameleonTheme;
+import com.vaadin.v7.ui.AbstractSelect;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.ListSelect;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.OptionGroup;
+import com.vaadin.v7.ui.Select;
+import com.vaadin.v7.ui.TwinColSelect;
 
 public class SelectsCssTest extends GridLayout {
 

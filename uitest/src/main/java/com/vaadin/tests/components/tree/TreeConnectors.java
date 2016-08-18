@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.tree;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
@@ -9,9 +7,11 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.TreeDragMode;
 import com.vaadin.ui.themes.BaseTheme;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.TreeDragMode;
 
 @SuppressWarnings("serial")
 public class TreeConnectors extends TestBase {

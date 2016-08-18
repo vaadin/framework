@@ -9,7 +9,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Tutorial example for
@@ -25,7 +25,7 @@ public class CookieMonsterUI extends UI {
         layout.setMargin(true);
         setContent(layout);
 
-        final LegacyTextField nameField = new LegacyTextField();
+        final TextField nameField = new TextField();
         layout.addComponent(nameField);
 
         // Read previously stored cookie value

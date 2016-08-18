@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.treetable;
 
-import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractComponent;
@@ -8,8 +7,9 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.data.Container.Hierarchical;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TreeTable;
 
 public class ExpandAnimationsInChameleon extends TestBase {
 

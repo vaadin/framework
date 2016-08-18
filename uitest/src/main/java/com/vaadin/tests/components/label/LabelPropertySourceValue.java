@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.label;
 
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
+import com.vaadin.v7.data.util.ObjectProperty;
 
 public class LabelPropertySourceValue extends AbstractTestUI {
     private Label label;

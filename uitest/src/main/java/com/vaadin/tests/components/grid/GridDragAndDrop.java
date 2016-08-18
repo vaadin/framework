@@ -20,7 +20,7 @@ import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.ui.Grid;
 
 @SuppressWarnings("serial")
 public class GridDragAndDrop extends AbstractTestUI {
@@ -32,7 +32,7 @@ public class GridDragAndDrop extends AbstractTestUI {
                 "multiple", "columns", "plus", "these", "resemble", "a",
                 "group", "here", "no", "more");
 
-        LegacyGrid grid = new LegacyGrid();
+        Grid grid = new Grid();
 
         for (String columnId : columnIds) {
             grid.addColumn(columnId);
@@ -45,7 +45,7 @@ public class GridDragAndDrop extends AbstractTestUI {
         grid.setColumnReorderingAllowed(true);
 
         grid.setFrozenColumnCount(1);
-        grid.setSelectionMode(LegacyGrid.SelectionMode.MULTI);
+        grid.setSelectionMode(Grid.SelectionMode.MULTI);
 
         addComponent(grid);
     }

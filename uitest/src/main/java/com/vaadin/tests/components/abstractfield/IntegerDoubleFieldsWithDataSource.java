@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.abstractfield;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
-import com.vaadin.v7.data.validator.LegacyDoubleValidator;
-import com.vaadin.v7.data.validator.LegacyIntegerValidator;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.data.validator.DoubleValidator;
+import com.vaadin.v7.data.validator.IntegerValidator;
+import com.vaadin.v7.ui.TextField;
 
 public class IntegerDoubleFieldsWithDataSource extends TestBase {
 
@@ -17,19 +17,19 @@ public class IntegerDoubleFieldsWithDataSource extends TestBase {
     protected void setup() {
         addComponent(log);
 
-        LegacyTextField tf = createIntegerTextField();
-        tf.addValidator(new LegacyIntegerValidator("Must be an Integer"));
+        TextField tf = createIntegerTextField();
+        tf.addValidator(new IntegerValidator("Must be an Integer"));
         addComponent(tf);
 
         tf = createIntegerTextField();
         tf.setCaption("Enter a double");
         tf.setPropertyDataSource(new ObjectProperty<Double>(2.1));
-        tf.addValidator(new LegacyDoubleValidator("Must be a Double"));
+        tf.addValidator(new DoubleValidator("Must be a Double"));
         addComponent(tf);
     }
 
-    private LegacyTextField createIntegerTextField() {
-        final LegacyTextField tf = new LegacyTextField("Enter an integer");
+    private TextField createIntegerTextField() {
+        final TextField tf = new TextField("Enter an integer");
         tf.setPropertyDataSource(new ObjectProperty<Integer>(new Integer(2)));
         tf.setImmediate(true);
         tf.addListener(new ValueChangeListener() {

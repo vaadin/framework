@@ -25,17 +25,17 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Calendar;
-import com.vaadin.ui.Calendar.TimeFormat;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventMoveHandler;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResizeHandler;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.MoveEvent;
-import com.vaadin.ui.components.calendar.event.BasicEvent;
-import com.vaadin.ui.components.calendar.event.CalendarEvent;
-import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
+import com.vaadin.v7.ui.Calendar;
+import com.vaadin.v7.ui.Calendar.TimeFormat;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventClick;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventMoveHandler;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventResizeHandler;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.MoveEvent;
+import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
+import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
+import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider;
 
 public class CalendarActionsMenuTest extends AbstractTestUI {
 
@@ -46,7 +46,7 @@ public class CalendarActionsMenuTest extends AbstractTestUI {
         calendar = new Calendar(new CalendarEventProvider() {
 
             @Override
-            public List<com.vaadin.ui.components.calendar.event.CalendarEvent> getEvents(
+            public List<com.vaadin.v7.ui.components.calendar.event.CalendarEvent> getEvents(
                     Date startDate, Date endDate) {
 
                 List<CalendarEvent> events = new ArrayList<CalendarEvent>();

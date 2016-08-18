@@ -18,12 +18,12 @@ package com.vaadin.tests.components.table;
 import java.io.Serializable;
 import java.util.List;
 
-import com.vaadin.data.util.BeanContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.util.BeanContainer;
+import com.vaadin.v7.ui.Table;
 
 /**
  *

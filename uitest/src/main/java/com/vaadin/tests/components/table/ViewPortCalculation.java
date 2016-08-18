@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.CellStyleGenerator;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.CellStyleGenerator;
 
 public class ViewPortCalculation extends TestBase {
 

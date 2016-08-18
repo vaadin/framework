@@ -6,7 +6,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxCombinedWithEnterShortcut extends TestBase {
     final String[] cities = new String[] { "Berlin", "Brussels", "Helsinki",

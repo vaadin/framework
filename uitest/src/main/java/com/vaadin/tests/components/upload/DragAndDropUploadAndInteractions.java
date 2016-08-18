@@ -15,11 +15,11 @@ import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Html5File;
 import com.vaadin.ui.Panel;
+import com.vaadin.v7.ui.ComboBox;
 
 public class DragAndDropUploadAndInteractions extends AbstractTestUIWithLog {
 

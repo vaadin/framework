@@ -6,10 +6,10 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.tests.elements.LegacyDateFieldElement;
-import com.vaadin.v7.tests.elements.LegacyInlineDateFieldElement;
-import com.vaadin.v7.tests.elements.LegacyPopupDateFieldElement;
-import com.vaadin.v7.tests.elements.LegacyTextFieldElement;
+import com.vaadin.v7.testbench.customelements.DateFieldElement;
+import com.vaadin.v7.testbench.customelements.InlineDateFieldElement;
+import com.vaadin.v7.testbench.customelements.PopupDateFieldElement;
+import com.vaadin.v7.testbench.customelements.TextFieldElement;
 
 public class DateFormTest extends MultiBrowserTest {
 
@@ -28,19 +28,19 @@ public class DateFormTest extends MultiBrowserTest {
                         "v-inline-datefield-calendarpanel-day-selected"));
         Assert.assertEquals("Unexpected TextField contents,",
                 "Jan 20, 1984 4:34:49 PM",
-                $(LegacyTextFieldElement.class).first().getValue());
+                $(TextFieldElement.class).first().getValue());
     }
 
     protected String getDateFieldValue() {
-        return $(LegacyDateFieldElement.class).first().getValue();
+        return $(DateFieldElement.class).first().getValue();
     }
 
     protected String getPopupDateFieldValue() {
-        return $(LegacyPopupDateFieldElement.class).first().getValue();
+        return $(PopupDateFieldElement.class).first().getValue();
     }
 
     protected WebElement getInlineDateFieldCalendarPanel() {
-        return $(LegacyInlineDateFieldElement.class).first()
+        return $(InlineDateFieldElement.class).first()
                 .findElement(By.className("v-inline-datefield-calendarpanel"));
     }
 

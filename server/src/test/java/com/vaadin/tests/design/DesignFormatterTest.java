@@ -42,7 +42,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignFormatter;
-import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
+import com.vaadin.v7.data.util.converter.Converter.ConversionException;
 
 /**
  * Various tests related to formatter.

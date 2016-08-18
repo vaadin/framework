@@ -22,7 +22,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
 /**
  * Tests how AbsoluteLayout handles relative sized contents.

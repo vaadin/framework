@@ -3,12 +3,12 @@ package com.vaadin.tests.components.datefield;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.Validator;
-import com.vaadin.v7.data.validator.LegacyAbstractValidator;
-import com.vaadin.v7.ui.LegacyDateField;
+import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.data.validator.AbstractValidator;
+import com.vaadin.v7.ui.DateField;
 
 public class RequiredInvalidDateField extends TestBase {
 
@@ -35,7 +35,7 @@ public class RequiredInvalidDateField extends TestBase {
 
         Date date = new Date(2011 - 1900, 9 - 1, 1);
 
-        Validator dateValidator = new LegacyAbstractValidator<Date>(
+        Validator dateValidator = new AbstractValidator<Date>(
                 "Day of month must be an even number") {
 
             @Override
@@ -55,10 +55,10 @@ public class RequiredInvalidDateField extends TestBase {
 
         // not required
         Property<Date> dateProperty1 = new ObjectProperty<Date>(date);
-        LegacyDateField dateField1 = new LegacyDateField("Not required",
+        DateField dateField1 = new DateField("Not required",
                 dateProperty1);
         dateField1.setLocale(new Locale("fi", "FI"));
-        dateField1.setResolution(LegacyDateField.RESOLUTION_DAY);
+        dateField1.setResolution(DateField.RESOLUTION_DAY);
         dateField1.setId("_DF1");
         dateField1.setImmediate(true);
         dateField1.addValidator(dateValidator);
@@ -66,10 +66,10 @@ public class RequiredInvalidDateField extends TestBase {
 
         // required
         Property<Date> dateProperty2 = new ObjectProperty<Date>(date);
-        LegacyDateField dateField2 = new LegacyDateField("Required",
+        DateField dateField2 = new DateField("Required",
                 dateProperty2);
         dateField2.setLocale(new Locale("fi", "FI"));
-        dateField2.setResolution(LegacyDateField.RESOLUTION_DAY);
+        dateField2.setResolution(DateField.RESOLUTION_DAY);
         dateField2.setId("_DF2");
         dateField2.setRequired(true);
         dateField2.setImmediate(true);

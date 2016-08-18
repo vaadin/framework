@@ -1,17 +1,17 @@
 package com.vaadin.tests.components.tree;
 
-import com.vaadin.data.Container;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.TableDragMode;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.TargetItemAllowsChildren;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.TableDragMode;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.TargetItemAllowsChildren;
 
 public class TreeDragAndDropFromTable extends TestBase {
 

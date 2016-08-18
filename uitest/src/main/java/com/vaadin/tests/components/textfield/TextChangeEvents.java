@@ -6,8 +6,8 @@ import com.vaadin.shared.ui.textfield.ValueChangeMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.TestUtils;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.TextArea;
 
 public class TextChangeEvents extends TestBase {
     Log l = new Log(10);

@@ -21,8 +21,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Table;
 
 @SuppressWarnings("serial")
 public class TableSizeInTabsheet extends AbstractTestUI {

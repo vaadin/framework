@@ -28,7 +28,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
 /**
  * Tests that previously focused component's blur event happens before any

@@ -27,7 +27,7 @@ import com.vaadin.client.ui.VOptionGroup;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.optiongroup.OptionGroupState;
-import com.vaadin.ui.OptionGroup;
+import com.vaadin.v7.ui.OptionGroup;
 
 @Connect(OptionGroup.class)
 public class OptionGroupConnector extends OptionGroupBaseConnector {

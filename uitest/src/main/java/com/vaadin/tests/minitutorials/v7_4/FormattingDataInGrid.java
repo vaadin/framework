@@ -20,21 +20,21 @@ import java.util.Locale;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.CellReference;
-import com.vaadin.ui.LegacyGrid.CellStyleGenerator;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.renderers.HtmlRenderer;
-import com.vaadin.ui.renderers.NumberRenderer;
-import com.vaadin.v7.data.util.converter.LegacyConverter;
-import com.vaadin.v7.data.util.converter.LegacyStringToIntegerConverter;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.StringToIntegerConverter;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.CellReference;
+import com.vaadin.v7.ui.Grid.CellStyleGenerator;
+import com.vaadin.v7.ui.renderers.HtmlRenderer;
+import com.vaadin.v7.ui.renderers.NumberRenderer;
 
 @Theme("valo")
 public class FormattingDataInGrid extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        LegacyGrid grid = new LegacyGrid(GridExampleHelper.createContainer());
+        Grid grid = new Grid(GridExampleHelper.createContainer());
 
         setContent(grid);
 
@@ -59,11 +59,11 @@ public class FormattingDataInGrid extends UI {
         grid.getColumn("amount").setRenderer(poundRenderer);
 
         grid.getColumn("count")
-                .setConverter(new LegacyStringToIntegerConverter() {
+                .setConverter(new StringToIntegerConverter() {
                     @Override
                     public String convertToPresentation(Integer value,
                             Class<? extends String> targetType, Locale locale)
-                            throws LegacyConverter.ConversionException {
+                            throws Converter.ConversionException {
                         String stringRepresentation = super.convertToPresentation(
                                 value, targetType, locale);
                         if (value.intValue() % 2 == 0) {

@@ -20,6 +20,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 
 public class ComboboxPopupScrollingTest extends MultiBrowserTest {
 
@@ -46,7 +47,7 @@ public class ComboboxPopupScrollingTest extends MultiBrowserTest {
     private void testNoScrollbars(String theme) {
         openTestURL("theme=" + theme);
 
-        for (CustomComboBoxElement cb : $(CustomComboBoxElement.class).all()) {
+        for (ComboBoxElement cb : $(ComboBoxElement.class).all()) {
             String caption = cb.getCaption();
             cb.openPopup();
             WebElement popup = cb.getSuggestionPopup();

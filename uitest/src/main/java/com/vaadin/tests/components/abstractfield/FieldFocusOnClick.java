@@ -6,14 +6,14 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.OptionGroup;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.OptionGroup;
+import com.vaadin.v7.ui.TextField;
 
 public class FieldFocusOnClick extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(new LegacyTextField(null, "TextField"));
+        addComponent(new TextField(null, "TextField"));
         addComponent(new CheckBox("CheckBox"));
         addComponent(
                 new OptionGroup(null, Arrays.asList("Option 1", "Option 2")));

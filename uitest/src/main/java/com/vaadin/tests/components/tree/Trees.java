@@ -5,26 +5,26 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Container.Hierarchical;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.CollapseEvent;
-import com.vaadin.ui.Tree.CollapseListener;
-import com.vaadin.ui.Tree.ExpandEvent;
-import com.vaadin.ui.Tree.ExpandListener;
-import com.vaadin.ui.Tree.ItemStyleGenerator;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Container.Hierarchical;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.CollapseEvent;
+import com.vaadin.v7.ui.Tree.CollapseListener;
+import com.vaadin.v7.ui.Tree.ExpandEvent;
+import com.vaadin.v7.ui.Tree.ExpandListener;
+import com.vaadin.v7.ui.Tree.ItemStyleGenerator;
 
 public class Trees extends AbstractSelectTestCase<Tree>
         implements ExpandListener, CollapseListener {
 
     private int rootItemIds = 3;
 
-    private ItemStyleGenerator rootGreenSecondLevelRed = new com.vaadin.ui.Tree.ItemStyleGenerator() {
+    private ItemStyleGenerator rootGreenSecondLevelRed = new com.vaadin.v7.ui.Tree.ItemStyleGenerator() {
 
         @Override
         public String getStyle(Tree source, Object itemId) {
@@ -49,7 +49,7 @@ public class Trees extends AbstractSelectTestCase<Tree>
 
     };
 
-    private ItemStyleGenerator evenItemsBold = new com.vaadin.ui.Tree.ItemStyleGenerator() {
+    private ItemStyleGenerator evenItemsBold = new com.vaadin.v7.ui.Tree.ItemStyleGenerator() {
 
         @Override
         public String getStyle(Tree source, Object itemId) {
@@ -146,7 +146,7 @@ public class Trees extends AbstractSelectTestCase<Tree>
 
     private void createItemStyleGenerator(String category) {
 
-        LinkedHashMap<String, com.vaadin.ui.Tree.ItemStyleGenerator> options = new LinkedHashMap<String, com.vaadin.ui.Tree.ItemStyleGenerator>();
+        LinkedHashMap<String, com.vaadin.v7.ui.Tree.ItemStyleGenerator> options = new LinkedHashMap<String, com.vaadin.v7.ui.Tree.ItemStyleGenerator>();
 
         options.put("-", null);
         options.put(rootGreenSecondLevelRed.toString(),
@@ -385,10 +385,10 @@ public class Trees extends AbstractSelectTestCase<Tree>
         }
     };
 
-    private Command<Tree, com.vaadin.ui.Tree.ItemStyleGenerator> itemStyleGeneratorCommand = new Command<Tree, com.vaadin.ui.Tree.ItemStyleGenerator>() {
+    private Command<Tree, com.vaadin.v7.ui.Tree.ItemStyleGenerator> itemStyleGeneratorCommand = new Command<Tree, com.vaadin.v7.ui.Tree.ItemStyleGenerator>() {
 
         @Override
-        public void execute(Tree c, com.vaadin.ui.Tree.ItemStyleGenerator value,
+        public void execute(Tree c, com.vaadin.v7.ui.Tree.ItemStyleGenerator value,
                 Object data) {
             c.setItemStyleGenerator(value);
 

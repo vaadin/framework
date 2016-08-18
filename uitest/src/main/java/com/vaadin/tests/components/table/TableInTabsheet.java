@@ -9,10 +9,10 @@ import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.Align;
 
 public class TableInTabsheet extends AbstractTestUI {
 

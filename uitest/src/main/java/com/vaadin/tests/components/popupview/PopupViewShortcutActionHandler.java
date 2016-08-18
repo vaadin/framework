@@ -22,7 +22,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupView;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Test UI to check availability of shortcut action listener in the popup view
@@ -57,7 +57,7 @@ public class PopupViewShortcutActionHandler extends AbstractTestUI {
 
         @Override
         public Component getPopupComponent() {
-            LegacyTextField field = new LegacyTextField("Enter text");
+            TextField field = new TextField("Enter text");
             field.setImmediate(true);
             field.addShortcutListener(new ShortcutListener("SearchAction",
                     ShortcutAction.KeyCode.ENTER, null) {

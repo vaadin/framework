@@ -20,7 +20,7 @@ import java.util.Collections;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.OptionGroup;
+import com.vaadin.v7.ui.OptionGroup;
 
 /**
  * Test UI for unset read-only flag of Option group with new items allowed.

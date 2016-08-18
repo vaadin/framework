@@ -21,7 +21,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.LegacyWindow;
+import com.vaadin.v7.ui.LegacyWindow;
 
 public class AllComponentTooltipTest extends AbstractTestUI {
 

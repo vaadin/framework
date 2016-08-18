@@ -5,9 +5,9 @@ import java.util.Arrays;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxSuggestionOnDetach extends TestBase {
 

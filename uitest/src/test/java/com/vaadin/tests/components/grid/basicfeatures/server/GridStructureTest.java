@@ -31,12 +31,12 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
-import com.vaadin.tests.components.grid.LegacyGridElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridStructureTest extends GridBasicFeaturesTest {
 
@@ -494,7 +494,7 @@ public class GridStructureTest extends GridBasicFeaturesTest {
 
         // Wait until page is loaded completely.
         int count = 0;
-        while (!$(LegacyGridElement.class).exists()) {
+        while (!$(GridElement.class).exists()) {
             if (count == 100) {
                 fail("Reloading page failed");
             }

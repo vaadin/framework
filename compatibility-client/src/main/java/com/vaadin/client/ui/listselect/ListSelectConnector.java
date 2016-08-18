@@ -19,7 +19,7 @@ package com.vaadin.client.ui.listselect;
 import com.vaadin.client.ui.VListSelect;
 import com.vaadin.client.ui.optiongroup.OptionGroupBaseConnector;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.ui.ListSelect;
+import com.vaadin.v7.ui.ListSelect;
 
 @Connect(ListSelect.class)
 public class ListSelectConnector extends OptionGroupBaseConnector {

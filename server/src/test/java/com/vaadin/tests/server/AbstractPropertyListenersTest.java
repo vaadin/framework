@@ -2,13 +2,13 @@ package com.vaadin.tests.server;
 
 import org.junit.Test;
 
-import com.vaadin.data.Property.ReadOnlyStatusChangeEvent;
-import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.AbstractProperty;
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.tests.server.component.AbstractListenerMethodsTestBase;
+import com.vaadin.v7.data.Property.ReadOnlyStatusChangeEvent;
+import com.vaadin.v7.data.Property.ReadOnlyStatusChangeListener;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.util.AbstractProperty;
+import com.vaadin.v7.data.util.ObjectProperty;
 
 public class AbstractPropertyListenersTest
         extends AbstractListenerMethodsTestBase {

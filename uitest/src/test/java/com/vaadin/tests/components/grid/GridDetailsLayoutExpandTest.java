@@ -24,11 +24,12 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 /**
  * Tests the layouting of Grid's details row when it contains a HorizontalLayout
@@ -53,7 +54,7 @@ public class GridDetailsLayoutExpandTest extends MultiBrowserTest {
         openTestURL();
         waitForElementPresent(By.className("v-grid"));
 
-        GridElement grid = $(LegacyGridElement.class).first();
+        GridElement grid = $(GridElement.class).first();
         int gridWidth = grid.getSize().width;
 
         grid.getRow(2).click();

@@ -2,10 +2,10 @@ package com.vaadin.tests.components.textfield;
 
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 public class TextFieldInLayoutInTable extends LegacyApplication {
 
@@ -19,7 +19,7 @@ public class TextFieldInLayoutInTable extends LegacyApplication {
         final Table table = new Table();
         table.addContainerProperty("column1", Component.class, null);
         VerticalLayout vl = new VerticalLayout();
-        final LegacyTextField textField = new LegacyTextField();
+        final TextField textField = new TextField();
         vl.addComponent(textField);
 
         table.addItem(new Object[] { vl }, 1);

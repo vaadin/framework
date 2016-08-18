@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Random;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.tests.util.TestDataGenerator;
+import com.vaadin.v7.data.util.BeanItemContainer;
 
 public class ComplexPerson {
 

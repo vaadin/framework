@@ -15,13 +15,13 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * A test case for typing in combo box input field fast plus then press TAB.
@@ -44,7 +44,7 @@ public class ComboBoxTabWhenFilter extends AbstractTestUI {
         comboBox.setNewItemsAllowed(true);
         comboBox.setFilteringMode(FilteringMode.CONTAINS);
         layout.addComponent(comboBox);
-        layout.addComponent(new LegacyTextField());
+        layout.addComponent(new TextField());
     }
 
     private IndexedContainer createContainer() {

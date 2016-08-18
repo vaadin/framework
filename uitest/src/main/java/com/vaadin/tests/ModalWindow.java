@@ -20,10 +20,10 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Simple program that demonstrates "modal windows" that block all access other
@@ -50,7 +50,7 @@ public class ModalWindow extends com.vaadin.server.LegacyApplication
         main.addComponent(new Label("ModalWindow demo"));
 
         // Main window textfield
-        final LegacyTextField f = new LegacyTextField();
+        final TextField f = new TextField();
         f.setTabIndex(1);
         main.addComponent(f);
 
@@ -87,7 +87,7 @@ public class ModalWindow extends com.vaadin.server.LegacyApplication
                 "You have to close this window before accessing others."));
 
         // Textfield for modal window
-        final LegacyTextField f = new LegacyTextField();
+        final TextField f = new TextField();
         f.setTabIndex(4);
         layout.addComponent(f);
         f.focus();

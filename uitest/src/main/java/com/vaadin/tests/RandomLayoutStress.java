@@ -27,13 +27,13 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Select;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.v7.ui.Select;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * This example demonstrates layouts. Layouts are populated with sample Vaadin
@@ -149,7 +149,7 @@ public class RandomLayoutStress extends com.vaadin.server.LegacyApplication {
             break;
         case 2:
             // TextField
-            result = new LegacyTextField();
+            result = new TextField();
             result.setCaption("TextField component " + caption);
             break;
         case 3:

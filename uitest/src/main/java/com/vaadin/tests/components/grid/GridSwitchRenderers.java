@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.Random;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.Column;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
-import com.vaadin.ui.renderers.HtmlRenderer;
-import com.vaadin.ui.renderers.TextRenderer;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.Column;
+import com.vaadin.v7.ui.Grid.SelectionMode;
+import com.vaadin.v7.ui.renderers.HtmlRenderer;
+import com.vaadin.v7.ui.renderers.TextRenderer;
 
 @SuppressWarnings("serial")
 @Theme("valo")
@@ -54,7 +54,7 @@ public class GridSwitchRenderers extends AbstractTestUIWithLog {
             item.getItemProperty(getColumnProperty(1)).setReadOnly(true);
         }
 
-        final LegacyGrid grid = new LegacyGrid(ds);
+        final Grid grid = new Grid(ds);
         grid.setWidth("100%");
 
         grid.getColumn(EXPANSION_COLUMN_ID).setWidth(50);

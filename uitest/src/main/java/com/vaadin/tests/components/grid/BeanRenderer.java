@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.grid;
 
 import com.vaadin.tests.widgetset.client.SimpleTestBean;
-import com.vaadin.ui.LegacyGrid.AbstractRenderer;
+import com.vaadin.v7.ui.Grid.AbstractRenderer;
 
 public class BeanRenderer extends AbstractRenderer<SimpleTestBean> {
     public BeanRenderer() {

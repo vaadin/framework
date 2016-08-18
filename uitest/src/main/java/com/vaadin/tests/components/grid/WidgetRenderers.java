@@ -15,22 +15,22 @@
  */
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.renderers.ButtonRenderer;
-import com.vaadin.ui.renderers.ClickableRenderer.RendererClickEvent;
-import com.vaadin.ui.renderers.ClickableRenderer.RendererClickListener;
-import com.vaadin.ui.renderers.ImageRenderer;
-import com.vaadin.ui.renderers.ProgressBarRenderer;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.SelectionMode;
+import com.vaadin.v7.ui.renderers.ButtonRenderer;
+import com.vaadin.v7.ui.renderers.ClickableRenderer.RendererClickEvent;
+import com.vaadin.v7.ui.renderers.ClickableRenderer.RendererClickListener;
+import com.vaadin.v7.ui.renderers.ImageRenderer;
+import com.vaadin.v7.ui.renderers.ProgressBarRenderer;
 
 @SuppressWarnings("all")
 public class WidgetRenderers extends AbstractTestUI {
@@ -57,7 +57,7 @@ public class WidgetRenderers extends AbstractTestUI {
                 .setValue(new ThemeResource("window/img/close.png"));
         item.getItemProperty(PROPERTY_ID).setValue("Click");
 
-        final LegacyGrid grid = new LegacyGrid(container);
+        final Grid grid = new Grid(container);
 
         grid.setId("test-grid");
         grid.setSelectionMode(SelectionMode.NONE);

@@ -24,15 +24,16 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.elements.GridElement;
+
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridSidebarPositionTest extends MultiBrowserTest {
 
     @Test
     public void heightRestrictedToBrowserWindow() {
         openTestURL();
-        GridElement gridWithVeryManyColumns = $(LegacyGridElement.class)
+        GridElement gridWithVeryManyColumns = $(GridElement.class)
                 .id(GridSidebarPosition.POPUP_WINDOW_HEIGHT);
         getSidebarOpenButton(gridWithVeryManyColumns).click();
         Dimension popupSize = getSidebarPopup().getSize();
@@ -45,7 +46,7 @@ public class GridSidebarPositionTest extends MultiBrowserTest {
     @Test
     public void popupNotBelowBrowserWindow() {
         openTestURL();
-        GridElement gridAtBottom = $(LegacyGridElement.class)
+        GridElement gridAtBottom = $(GridElement.class)
                 .id(GridSidebarPosition.POPUP_WINDOW_MOVED_UP);
         getSidebarOpenButton(gridAtBottom).click();
         WebElement sidebarPopup = getSidebarPopup();
@@ -60,7 +61,7 @@ public class GridSidebarPositionTest extends MultiBrowserTest {
     @Test
     public void popupAbove() {
         openTestURL();
-        GridElement gridPopupAbove = $(LegacyGridElement.class)
+        GridElement gridPopupAbove = $(GridElement.class)
                 .id(GridSidebarPosition.POPUP_ABOVE);
         WebElement sidebarOpenButton = getSidebarOpenButton(gridPopupAbove);
         sidebarOpenButton.click();

@@ -17,17 +17,17 @@ package com.vaadin.tests.components.grid;
 
 import java.io.Serializable;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.HeaderRow;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
-import com.vaadin.ui.LegacyGrid.SelectionModel;
-import com.vaadin.ui.renderers.NumberRenderer;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.HeaderRow;
+import com.vaadin.v7.ui.Grid.SelectionMode;
+import com.vaadin.v7.ui.Grid.SelectionModel;
+import com.vaadin.v7.ui.renderers.NumberRenderer;
 
 public class GridHeaderFormatChange extends AbstractTestUI {
 
@@ -99,12 +99,12 @@ public class GridHeaderFormatChange extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         BeanItemContainer<Person> datasource = new BeanItemContainer<Person>(
                 Person.class);
-        final LegacyGrid grid;
+        final Grid grid;
 
         datasource.addItem(new Person("Rudolph", "Reindeer", "Ruukinkatu 2-4",
                 20540, "Turku"));
 
-        grid = new LegacyGrid(datasource);
+        grid = new Grid(datasource);
         grid.setWidth("600px");
         grid.getColumn("zipCode").setRenderer(new NumberRenderer());
         grid.setColumnOrder("firstName", "lastName", "streetAddress", "zipCode",

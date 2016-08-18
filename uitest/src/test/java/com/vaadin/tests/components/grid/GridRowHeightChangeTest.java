@@ -8,9 +8,10 @@ import java.util.List;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.GridElement;
-import com.vaadin.testbench.elements.NativeSelectElement;
+
+import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridRowHeightChangeTest extends MultiBrowserTest {
 
@@ -29,7 +30,7 @@ public class GridRowHeightChangeTest extends MultiBrowserTest {
             // select theme
             $(NativeSelectElement.class).first().selectByText(theme);
 
-            GridElement grid = $(LegacyGridElement.class).first();
+            GridElement grid = $(GridElement.class).first();
 
             int gridHeight = grid.getSize().getHeight();
             int tabsheetHeight = findElements(

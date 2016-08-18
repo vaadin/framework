@@ -23,7 +23,7 @@ import org.openqa.selenium.Keys;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.newelements.ComboBoxElement;
+import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 
 public class ComboBoxResetValueTest extends MultiBrowserTest {
 

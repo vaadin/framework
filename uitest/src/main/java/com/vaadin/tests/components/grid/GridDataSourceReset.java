@@ -19,20 +19,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Grid;
 
 public class GridDataSourceReset extends AbstractTestUI {
 
     BeanItemContainer<ComplexPerson> container;
     List<ComplexPerson> persons;
-    LegacyGrid grid;
+    Grid grid;
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -40,7 +40,7 @@ public class GridDataSourceReset extends AbstractTestUI {
         container = new BeanItemContainer<ComplexPerson>(ComplexPerson.class,
                 persons);
 
-        grid = new LegacyGrid(container);
+        grid = new Grid(container);
         grid.select(container.firstItemId());
         addComponent(new Button("Remove first", new ClickListener() {
 

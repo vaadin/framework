@@ -18,16 +18,16 @@ package com.vaadin.event;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.Component;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
 
 /**
  *
  * Click event fired by a {@link Component} implementing
- * {@link com.vaadin.data.Container} interface. ItemClickEvents happens on an
+ * {@link com.vaadin.v7.data.Container} interface. ItemClickEvents happens on an
  * {@link Item} rendered somehow on terminal. Event may also contain a specific
  * {@link Property} on which the click event happened.
  *

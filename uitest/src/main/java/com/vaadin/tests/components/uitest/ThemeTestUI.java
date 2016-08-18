@@ -5,11 +5,11 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.TextField;
 
 public class ThemeTestUI extends AbstractTestUI {
 
-    private LegacyTextField customStyle;
+    private TextField customStyle;
     private Button setStyleName;
     private TestSampler sampler;
     private String customStyleName = null;
@@ -34,7 +34,7 @@ public class ThemeTestUI extends AbstractTestUI {
     }
 
     private void createCustomStyleStringField() {
-        customStyle = new LegacyTextField();
+        customStyle = new TextField();
         customStyle.setId("customstyle");
         setStyleName = new Button("Set stylename", new Button.ClickListener() {
 

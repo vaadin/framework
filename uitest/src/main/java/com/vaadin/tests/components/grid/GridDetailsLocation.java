@@ -25,14 +25,14 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.ui.LegacyGrid.DetailsGenerator;
-import com.vaadin.ui.LegacyGrid.RowReference;
-import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.DetailsGenerator;
+import com.vaadin.v7.ui.Grid.RowReference;
+import com.vaadin.v7.ui.Grid.SelectionMode;
 
 @Theme(ValoTheme.THEME_NAME)
 public class GridDetailsLocation extends UI {
@@ -51,14 +51,14 @@ public class GridDetailsLocation extends UI {
     };
 
     private TextField numberTextField;
-    private LegacyGrid grid;
+    private Grid grid;
 
     @Override
     protected void init(VaadinRequest request) {
 
         Layout layout = new VerticalLayout();
 
-        grid = new LegacyGrid(PersonContainer.createWithTestData(1000));
+        grid = new Grid(PersonContainer.createWithTestData(1000));
         grid.setSelectionMode(SelectionMode.NONE);
         layout.addComponent(grid);
 
