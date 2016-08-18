@@ -21,7 +21,6 @@ import java.util.Locale;
 import java.util.function.Function;
 
 import com.vaadin.data.Binder.Binding;
-import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
 import com.vaadin.data.Result;
 
 /**
@@ -125,14 +124,12 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
         return new Converter<P, M>() {
 
             @Override
-            public Result<M> convertToModel(P value, Locale locale)
-                    throws ConversionException {
+            public Result<M> convertToModel(P value, Locale locale) {
                 return toModel.apply(value);
             }
 
             @Override
-            public P convertToPresentation(M value, Locale locale)
-                    throws ConversionException {
+            public P convertToPresentation(M value, Locale locale) {
                 return toPresentation.apply(value);
             }
         };

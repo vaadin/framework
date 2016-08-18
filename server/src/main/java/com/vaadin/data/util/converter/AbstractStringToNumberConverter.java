@@ -20,8 +20,6 @@ import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.util.Locale;
 
-import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
-
 /**
  * A converter that converts from the number type T to {@link String} and back.
  * Uses the given locale and {@link NumberFormat} for formatting and parsing.
@@ -62,11 +60,8 @@ public abstract class AbstractStringToNumberConverter<T>
      * @param locale
      *            The locale to use for conversion
      * @return The converted value
-     * @throws ConversionException
-     *             If there was a problem converting the value
      */
-    protected Number convertToNumber(String value, Locale locale)
-            throws ConversionException {
+    protected Number convertToNumber(String value, Locale locale) {
         if (value == null) {
             return null;
         }
@@ -79,7 +74,8 @@ public abstract class AbstractStringToNumberConverter<T>
         ParsePosition parsePosition = new ParsePosition(0);
         Number parsedValue = getFormat(locale).parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
-            throw new ConversionException("Could not convert '" + value + "'");
+            throw new IllegalArgumentException(
+                    "Could not convert '" + value + "'");
         }
 
         if (parsedValue == null) {

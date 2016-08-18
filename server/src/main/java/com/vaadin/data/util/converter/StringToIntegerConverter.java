@@ -20,7 +20,6 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.vaadin.data.Result;
-import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
 
 /**
  * A converter that converts from {@link String} to {@link Integer} and back.
@@ -66,8 +65,7 @@ public class StringToIntegerConverter
     }
 
     @Override
-    public Result<Integer> convertToModel(String value, Locale locale)
-            throws ConversionException {
+    public Result<Integer> convertToModel(String value, Locale locale) {
         Number n = convertToNumber(value, locale);
 
         if (n == null) {
