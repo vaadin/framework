@@ -28,11 +28,6 @@
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-sass-compiler</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 	<build>

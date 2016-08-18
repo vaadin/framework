@@ -41,6 +41,12 @@
 			<artifactId>smartsprites</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- smartsprites dependency -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
