@@ -58,8 +58,10 @@ public class DesignContext implements Serializable {
 
     private static final String LEGACY_PREFIX = "v";
     private static final String VAADIN_PREFIX = "vaadin";
+    private static final String VAADIN7_PREFIX = "vaadin7";
 
     private static final String VAADIN_UI_PACKAGE = "com.vaadin.ui";
+    private static final String VAADIN7_UI_PACKAGE = "com.vaadin.v7.ui";
 
     // cache for object instances
     private static Map<Class<?>, Component> instanceCache = new ConcurrentHashMap<Class<?>, Component>();
@@ -102,6 +104,7 @@ public class DesignContext implements Serializable {
             addPackagePrefix(VAADIN_PREFIX, VAADIN_UI_PACKAGE);
             prefixToPackage.put(LEGACY_PREFIX, VAADIN_UI_PACKAGE);
         }
+        addPackagePrefix(VAADIN7_PREFIX, VAADIN7_UI_PACKAGE);
     }
 
     public DesignContext() {
@@ -422,7 +425,7 @@ public class DesignContext implements Serializable {
         for (String prefix : getPackagePrefixes()) {
             // Only store the prefix-name mapping if it is not a default mapping
             // (such as "vaadin" -> "com.vaadin.ui")
-            if (!VAADIN_PREFIX.equals(prefix)
+            if (!VAADIN_PREFIX.equals(prefix) && !VAADIN7_PREFIX.equals(prefix)
                     && !LEGACY_PREFIX.equals(prefix)) {
                 Node newNode = doc.createElement("meta");
                 newNode.attr("name", "package-mapping");
