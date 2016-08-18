@@ -33,9 +33,9 @@ import com.vaadin.ui.themes.Reindeer;
 /**
  * Table layout is very slow in Firefox 3.0.10 when the table contains
  * components.
- * 
+ *
  * This is adapted from the HbnContainer example application WorkoutLog.
- * 
+ *
  * Other browsers are much faster.
  */
 public class Ticket2998 extends LegacyApplication {

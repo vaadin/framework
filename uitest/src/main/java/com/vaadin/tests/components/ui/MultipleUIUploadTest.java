@@ -97,7 +97,7 @@ public class MultipleUIUploadTest extends AbstractTestUI {
 
         /**
          * Returns the fileName.
-         * 
+         *
          * @return String
          */
         public String getFileName() {
@@ -106,7 +106,7 @@ public class MultipleUIUploadTest extends AbstractTestUI {
 
         /**
          * Returns the mimeType.
-         * 
+         *
          * @return String
          */
         public String getMimeType() {

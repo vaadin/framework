@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -38,7 +38,7 @@ import elemental.json.impl.JsonUtil;
 
 /**
  * Serializes a connector hierarchy to JSON.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -47,7 +47,7 @@ public class ConnectorHierarchyWriter implements Serializable {
     /**
      * Writes a JSON object containing the connector hierarchy (parent-child
      * mappings) of the dirty connectors in the given UI.
-     * 
+     *
      * @param ui
      *            The {@link UI} whose hierarchy to write.
      * @param writer

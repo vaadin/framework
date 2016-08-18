@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -43,9 +43,9 @@ import com.vaadin.ui.components.calendar.event.CalendarEventProvider.EventSetCha
 /**
  * A event provider which uses a {@link Container} as a datasource. Container
  * used as data source.
- * 
+ *
  * NOTE: The data source must be sorted by date!
- * 
+ *
  * @since 7.1.0
  * @author Vaadin Ltd.
  */
@@ -66,7 +66,7 @@ public class ContainerEventProvider
     /**
      * Internal class to keep the container index which item this event
      * represents
-     * 
+     *
      */
     private class ContainerCalendarEvent extends BasicEvent {
         private final int index;
@@ -111,7 +111,7 @@ public class ContainerEventProvider
 
     /**
      * Constructor
-     * 
+     *
      * @param container
      *            Container to use as a data source.
      */
@@ -122,10 +122,10 @@ public class ContainerEventProvider
 
     /**
      * Set the container data source
-     * 
+     *
      * @param container
      *            The container to use as datasource
-     * 
+     *
      */
     public void setContainerDataSource(Container.Indexed container) {
         // Detach the previous container
@@ -137,7 +137,7 @@ public class ContainerEventProvider
 
     /**
      * Returns the container used as data source
-     * 
+     *
      */
     public Container.Indexed getContainerDataSource() {
         return container;
@@ -170,7 +170,7 @@ public class ContainerEventProvider
 
     /**
      * Converts an event in the container to an {@link CalendarEvent}
-     * 
+     *
      * @param index
      *            The index of the item in the container to get the event for
      * @return
@@ -242,7 +242,7 @@ public class ContainerEventProvider
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.event.CalendarEventProvider#getEvents(java.
      * util.Date, java.util.Date)
@@ -281,7 +281,7 @@ public class ContainerEventProvider
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.calendar.event.CalendarEventProvider.
      * EventSetChangeNotifier
      * #addListener(com.vaadin.addon.calendar.event.CalendarEventProvider.
@@ -296,7 +296,7 @@ public class ContainerEventProvider
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.calendar.event.CalendarEventProvider.
      * EventSetChangeNotifier
      * #removeListener(com.vaadin.addon.calendar.event.CalendarEventProvider.
@@ -309,7 +309,7 @@ public class ContainerEventProvider
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.calendar.event.CalendarEvent.EventChangeNotifier#
      * addListener
      * (com.vaadin.addon.calendar.event.CalendarEvent.EventChangeListener)
@@ -323,7 +323,7 @@ public class ContainerEventProvider
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.calendar.event.CalendarEvent.EventChangeNotifier#
      * removeListener
      * (com.vaadin.addon.calendar.event.CalendarEvent.EventChangeListener)
@@ -423,7 +423,7 @@ public class ContainerEventProvider
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.data.Container.ItemSetChangeListener#containerItemSetChange
      * (com.vaadin.data.Container.ItemSetChangeEvent)
@@ -440,7 +440,7 @@ public class ContainerEventProvider
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.data.Property.ValueChangeListener#valueChange(com.vaadin.data
      * .Property.ValueChangeEvent)
@@ -456,7 +456,7 @@ public class ContainerEventProvider
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventMoveHandler
      * #eventMove
@@ -487,7 +487,7 @@ public class ContainerEventProvider
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventResizeHandler
      * #eventResize
@@ -524,7 +524,7 @@ public class ContainerEventProvider
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#addEvent
      * (com.vaadin.addon.calendar.event.CalendarEvent)
@@ -554,7 +554,7 @@ public class ContainerEventProvider
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#removeEvent
      * (com.vaadin.addon.calendar.event.CalendarEvent)

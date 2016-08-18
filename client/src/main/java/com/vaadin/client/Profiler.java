@@ -69,7 +69,7 @@ public class Profiler {
      * Interface for getting data from the {@link Profiler}.
      * <p>
      * <b>Warning!</b> This interface is most likely to change in the future
-     * 
+     *
      * @since 7.1
      * @author Vaadin Ltd
      */
@@ -98,7 +98,7 @@ public class Profiler {
 
         /**
          * Create a new node with the given name.
-         * 
+         *
          * @param name
          */
         public Node(String name) {
@@ -107,7 +107,7 @@ public class Profiler {
 
         /**
          * Gets the name of the node
-         * 
+         *
          * @return the name of the node
          */
         public String getName() {
@@ -117,7 +117,7 @@ public class Profiler {
         /**
          * Creates a new child node or retrieves and existing child and updates
          * its total time and hit count.
-         * 
+         *
          * @param name
          *            the name of the child
          * @param timestamp
@@ -138,7 +138,7 @@ public class Profiler {
         /**
          * Gets the total time spent in this node, including time spent in sub
          * nodes
-         * 
+         *
          * @return the total time spent, in milliseconds
          */
         public double getTimeSpent() {
@@ -148,7 +148,7 @@ public class Profiler {
         /**
          * Gets the minimum time spent for one invocation of this node,
          * including time spent in sub nodes
-         * 
+         *
          * @return the time spent for the fastest invocation, in milliseconds
          */
         public double getMinTimeSpent() {
@@ -158,7 +158,7 @@ public class Profiler {
         /**
          * Gets the maximum time spent for one invocation of this node,
          * including time spent in sub nodes
-         * 
+         *
          * @return the time spent for the slowest invocation, in milliseconds
          */
         public double getMaxTimeSpent() {
@@ -167,7 +167,7 @@ public class Profiler {
 
         /**
          * Gets the number of times this node has been entered
-         * 
+         *
          * @return the number of times the node has been entered
          */
         public int getCount() {
@@ -177,7 +177,7 @@ public class Profiler {
         /**
          * Gets the total time spent in this node, excluding time spent in sub
          * nodes
-         * 
+         *
          * @return the total time spent, in milliseconds
          */
         public double getOwnTime() {
@@ -190,7 +190,7 @@ public class Profiler {
 
         /**
          * Gets the child nodes of this node
-         * 
+         *
          * @return a collection of child nodes
          */
         public Collection<Node> getChildren() {
@@ -389,7 +389,7 @@ public class Profiler {
      * Returns time relative to the particular page load time. The value should
      * not be used directly but rather difference between two values returned by
      * this method should be used to compare measurements.
-     * 
+     *
      * @since 7.6
      */
     public static double getRelativeTimeMillis() {

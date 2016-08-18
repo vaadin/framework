@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -51,7 +51,7 @@ import com.google.apphosting.api.DeadlineExceededException;
 /**
  * ApplicationServlet to be used when deploying to Google App Engine, in
  * web.xml:
- * 
+ *
  * <pre>
  *      &lt;servlet&gt;
  *              &lt;servlet-name&gt;HelloWorld&lt;/servlet-name&gt;
@@ -62,17 +62,17 @@ import com.google.apphosting.api.DeadlineExceededException;
  *              &lt;/init-param&gt;
  *      &lt;/servlet&gt;
  * </pre>
- * 
+ *
  * Session support must be enabled in appengine-web.xml:
- * 
+ *
  * <pre>
  *      &lt;sessions-enabled&gt;true&lt;/sessions-enabled&gt;
  * </pre>
- * 
+ *
  * Appengine datastore cleanup can be invoked by calling one of the applications
  * with an additional path "/CLEAN". This can be set up as a cron-job in
  * cron.xml (see appengine documentation for more information):
- * 
+ *
  * <pre>
  * &lt;cronentries&gt;
  *   &lt;cron&gt;
@@ -82,18 +82,18 @@ import com.google.apphosting.api.DeadlineExceededException;
  *   &lt;/cron&gt;
  * &lt;/cronentries&gt;
  * </pre>
- * 
+ *
  * It is recommended (but not mandatory) to extract themes and widgetsets and
  * have App Engine server these statically. Extract VAADIN folder (and it's
  * contents) 'next to' the WEB-INF folder, and add the following to
  * appengine-web.xml:
- * 
+ *
  * <pre>
  *      &lt;static-files&gt;
  *           &lt;include path=&quot;/VAADIN/**&quot; /&gt;
  *      &lt;/static-files&gt;
  * </pre>
- * 
+ *
  * Additional limitations:
  * <ul>
  * <li/>Do not change application state when serving an ApplicationResource.
@@ -295,7 +295,7 @@ public class GAEVaadinServlet extends VaadinServlet {
     /**
      * Returns the maximum inactive time for a session. This is used for
      * handling the expiration of session related information in caches etc.
-     * 
+     *
      * @param session
      * @return inactive timeout in seconds, greater than zero
      */
@@ -375,7 +375,7 @@ public class GAEVaadinServlet extends VaadinServlet {
     /**
      * Removes the ApplicationContext from the session in order to minimize the
      * data serialized to datastore and memcache.
-     * 
+     *
      * @param request
      */
     private void cleanSession(VaadinServletRequest request) {
@@ -405,7 +405,7 @@ public class GAEVaadinServlet extends VaadinServlet {
     /**
      * This will look at the timestamp and delete expired persisted Vaadin and
      * appengine sessions from the datastore.
-     * 
+     *
      * TODO Possible improvements include: 1. Use transactions (requires entity
      * groups - overkill?) 2. Delete one-at-a-time, catch possible exception,
      * continue w/ next.

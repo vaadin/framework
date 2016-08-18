@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,14 +25,14 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.Component;
 
 /**
- * 
+ *
  * Click event fired by a {@link Component} implementing
  * {@link com.vaadin.data.Container} interface. ItemClickEvents happens on an
  * {@link Item} rendered somehow on terminal. Event may also contain a specific
  * {@link Property} on which the click event happened.
- * 
+ *
  * @since 5.3
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class ItemClickEvent extends ClickEvent implements Serializable {
@@ -50,7 +50,7 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
 
     /**
      * Gets the item on which the click event occurred.
-     * 
+     *
      * @return item which was clicked
      */
     public Item getItem() {
@@ -59,7 +59,7 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
 
     /**
      * Gets a possible identifier in source for clicked Item
-     * 
+     *
      * @return
      */
     public Object getItemId() {
@@ -70,7 +70,7 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
      * Returns property on which click event occurred. Returns null if source
      * cannot be resolved at property level. For example if clicked a cell in
      * table, the "column id" is returned.
-     * 
+     *
      * @return a property id of clicked property or null if click didn't occur
      *         on any distinct property.
      */
@@ -107,7 +107,7 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
      * class really will send the events, or if it just defines the methods to
      * be able to implement an interface.
      * </p>
-     * 
+     *
      * @since 6.5
      * @see ItemClickListener
      * @see ItemClickEvent
@@ -115,7 +115,7 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
     public interface ItemClickNotifier extends Serializable {
         /**
          * Register a listener to handle {@link ItemClickEvent}s.
-         * 
+         *
          * @param listener
          *            ItemClickListener to be registered
          */
@@ -130,7 +130,7 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
 
         /**
          * Removes an ItemClickListener.
-         * 
+         *
          * @param listener
          *            ItemClickListener to be removed
          */

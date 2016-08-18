@@ -35,7 +35,7 @@ import com.vaadin.data.Validator;
  * Furthermore, required fields requires "non-empty" validator. So in addition
  * to call {@link HasRequired#setRequired(boolean)} method one should add an
  * instance of this validator explicitly so the code looks like this:
- * 
+ *
  * <pre>
  * <code>
  * Binder<Bean,String, String> binder = new Binder<>();
@@ -46,7 +46,7 @@ import com.vaadin.data.Validator;
  *              .bind(Bean::getName, Bean::setName);
  * </code>
  * </pre>
- * 
+ *
  * @see HasRequired
  * @author Vaadin Ltd
  * @since 8.0

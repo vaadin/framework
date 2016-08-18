@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -30,10 +30,10 @@ import com.vaadin.client.ui.VNotification.HideEvent;
 
 /**
  * Class that enables SuperDevMode using a ?superdevmode parameter in the url.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0
- * 
+ *
  */
 public class SuperDevMode {
 
@@ -125,13 +125,13 @@ public class SuperDevMode {
     private native static String getRecompileParameters(String moduleName)
     /*-{
         var prop_map = $wnd.__gwt_activeModules[moduleName].bindings();
-        
+
         // convert map to URL parameter string
         var props = [];
         for (var key in prop_map) {
            props.push(encodeURIComponent(key) + '=' + encodeURIComponent(prop_map[key]))
         }
-        
+
         return props.join('&') + '&';
     }-*/;
 
@@ -177,7 +177,7 @@ public class SuperDevMode {
     /**
      * The URL of the code server. The default URL (http://localhost:9876/) will
      * be used if this is empty or null.
-     * 
+     *
      * @param serverUrl
      *            The url of the code server or null to use the default
      * @return true if recompile started, false if we are running in
@@ -225,12 +225,12 @@ public class SuperDevMode {
         var mod = $wnd.__gwt_activeModules[moduleName];
         if (!mod)
             return false;
-    
+
         if (mod.superdevmode) {
            // Running in super dev mode already, it is supported
            return true;
         }
-    
+
         return !!mod.canRedirect;
     }-*/;
 
@@ -241,7 +241,7 @@ public class SuperDevMode {
      * method returns true. The application will be restarted once compilation
      * is done and then this method will return false.
      * </p>
-     * 
+     *
      * @return true if a recompile operation has started and the page will be
      *         reloaded once it is done, false if no recompilation will be done.
      */

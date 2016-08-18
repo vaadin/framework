@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,7 +26,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 /**
  * Encapsulates the data that the widgetset compiler generates for supporting a
  * connector method annotated with {@link OnStateChange}
- * 
+ *
  * @since 7.2
  * @author Vaadin Ltd
  */
@@ -39,7 +39,7 @@ public class OnStateChangeMethod {
     /**
      * Creates a new instance based on a method name, a list of parameters names
      * and a list of properties to listen for.
-     * 
+     *
      * @param methodName
      *            the name of the method to call
      * @param properties
@@ -55,7 +55,7 @@ public class OnStateChangeMethod {
      * <p>
      * If the declaring class is <code>null</code>, the method is found based on
      * the type of the connector that fired the state change event.
-     * 
+     *
      * @param declaringClass
      *            the class in which the target method is declared, or
      *            <code>null</code> to use the class of the connector firing the
@@ -78,7 +78,7 @@ public class OnStateChangeMethod {
 
     /**
      * Invokes the listener method for a state change.
-     * 
+     *
      * @param stateChangeEvent
      *            the state change event
      */
@@ -104,7 +104,7 @@ public class OnStateChangeMethod {
 
     /**
      * Gets the list of state property names to listen for.
-     * 
+     *
      * @return the list of state property names to listen for
      */
     public List<String> getProperties() {

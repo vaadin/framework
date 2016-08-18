@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,13 +26,13 @@ import com.vaadin.client.widgets.Escalator;
 /**
  * A {@link FlyweightCell} represents a cell in the {@link Grid} or
  * {@link Escalator} at a certain point in time.
- * 
+ *
  * <p>
  * Since the {@link FlyweightCell} follows the <code>Flyweight</code>-pattern
  * any instance of this object is subject to change without the user knowing it
  * and so should not be stored anywhere outside of the method providing these
  * instances.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -87,7 +87,7 @@ public class FlyweightCell {
      * Sets the DOM element for this FlyweightCell, either a <code>TD</code> or
      * a <code>TH</code>. It is the caller's responsibility to actually insert
      * the given element to the document when needed.
-     * 
+     *
      * @param element
      *            the element corresponding to this cell, cannot be null
      */
@@ -126,7 +126,7 @@ public class FlyweightCell {
      * This should only be used with asserts ("
      * <code>assert flyweightCell.teardown()</code> ") so that the code is never
      * run when asserts aren't enabled.
-     * 
+     *
      * @return always <code>true</code>
      * @see FlyweightRow#teardown()
      */

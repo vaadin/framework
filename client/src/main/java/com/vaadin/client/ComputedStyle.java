@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,7 +29,7 @@ public class ComputedStyle {
      * <p>
      * Note that this method is expensive. Wherever possible, reuse the returned
      * object.
-     * 
+     *
      * @param elem
      *            the element
      * @return the computed style
@@ -44,18 +44,18 @@ public class ComputedStyle {
       if(elem.nodeType != 1) {
           return {};
       }
-      
+
       if($wnd.document.defaultView && $wnd.document.defaultView.getComputedStyle) {
           return $wnd.document.defaultView.getComputedStyle(elem, null);
       }
-      
+
       if(elem.currentStyle) {
           return elem.currentStyle;
       }
     }-*/;
 
     /**
-     * 
+     *
      * @param name
      *            name of the CSS property in camelCase
      * @return the value of the property, normalized for across browsers (each
@@ -65,7 +65,7 @@ public class ComputedStyle {
     /*-{
         var cs = this.@com.vaadin.client.ComputedStyle::computedStyle;
         var elem = this.@com.vaadin.client.ComputedStyle::elem;
-        
+
         // Border values need to be checked separately. The width might have a 
         // meaningful value even if the border style is "none". In that case the 
         // value should be 0.
@@ -78,45 +78,45 @@ public class ComputedStyle {
             if(borderStyle == "none")
                 return "0px";
         }
-    
+
         if(cs.getPropertyValue) {
-        
+
             // Convert name to dashed format
             name = name.replace(/([A-Z])/g, "-$1").toLowerCase();
             var ret = cs.getPropertyValue(name);
-            
+
         } else {
-        
+
             var ret = cs[name];
             var style = elem.style;
-    
+
             // From the awesome hack by Dean Edwards
             // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
-    
+
             // If we're not dealing with a regular pixel number
             // but a number that has a weird ending, we need to convert it to pixels
                 if ( !/^\d+(px)?$/i.test( ret ) && /^\d/.test( ret ) ) {
                     // Remember the original values
                     var left = style.left, rsLeft = elem.runtimeStyle.left;
-    
+
                     // Put in the new values to get a computed value out
                     elem.runtimeStyle.left = cs.left;
                     style.left = ret || 0;
                     ret = style.pixelLeft + "px";
-    
+
                     // Revert the changed values
                     style.left = left;
                     elem.runtimeStyle.left = rsLeft;
                 }
-            
+
         }
-        
+
         // Normalize margin values. This is not totally valid, but in most cases 
         // it is what the user wants to know.
         if(name.indexOf("margin") > -1 && ret == "auto") {
             return "0px";
         }
-        
+
         // Some browsers return undefined width and height values as "auto", so
         // we need to retrieve those ourselves.
         if (name == "width" && ret == "auto") {
@@ -124,16 +124,16 @@ public class ComputedStyle {
         } else if (name == "height" && ret == "auto") {
             ret = elem.clientHeight + "px";
         }
-    
+
         return ret;
-        
+
     }-*/;
 
     /**
      * Retrieves the given computed property as an integer
-     * 
+     *
      * Returns 0 if the property cannot be converted to an integer
-     * 
+     *
      * @param name
      *            the property to retrieve
      * @return the integer value of the property or 0
@@ -148,9 +148,9 @@ public class ComputedStyle {
 
     /**
      * Retrieves the given computed property as a double
-     * 
+     *
      * Returns NaN if the property cannot be converted to a double
-     * 
+     *
      * @since 7.5.1
      * @param name
      *            the property to retrieve
@@ -205,7 +205,7 @@ public class ComputedStyle {
 
     /**
      * Returns the current width from the DOM.
-     * 
+     *
      * @since 7.5.1
      * @return the computed width
      */
@@ -215,7 +215,7 @@ public class ComputedStyle {
 
     /**
      * Returns the current height from the DOM.
-     * 
+     *
      * @since 7.5.1
      * @return the computed height
      */
@@ -225,13 +225,13 @@ public class ComputedStyle {
 
     /**
      * Takes a String value e.g. "12px" and parses that to Integer 12.
-     * 
+     *
      * @param String
      *            a value starting with a number
      * @return Integer the value from the string before any non-numeric
      *         characters. If the value cannot be parsed to a number, returns
      *         <code>null</code>.
-     * 
+     *
      * @deprecated Since 7.1.4, the method {@link #parseIntNative(String)} is
      *             used internally and this method does not belong in the public
      *             API of {@link ComputedStyle}. {@link #parseInt(String)} might
@@ -250,10 +250,10 @@ public class ComputedStyle {
 
     /**
      * Takes a String value e.g. "12px" and parses that to int 12.
-     * 
+     *
      * <p>
      * This method returns 0 for <code>NaN</code>.
-     * 
+     *
      * @param String
      *            a value starting with a number
      * @return int the value from the string before any non-numeric characters.
@@ -270,7 +270,7 @@ public class ComputedStyle {
 
     /**
      * Takes a String value e.g. "12.3px" and parses that to a double, 12.3.
-     * 
+     *
      * @param String
      *            a value starting with a number
      * @return the value from the string before any non-numeric characters or
@@ -283,7 +283,7 @@ public class ComputedStyle {
 
     /**
      * Returns the sum of the top and bottom border width
-     * 
+     *
      * @since 7.5.3
      * @return the sum of the top and bottom border
      */
@@ -296,7 +296,7 @@ public class ComputedStyle {
 
     /**
      * Returns the sum of the left and right border width
-     * 
+     *
      * @since 7.5.3
      * @return the sum of the left and right border
      */
@@ -309,7 +309,7 @@ public class ComputedStyle {
 
     /**
      * Returns the sum of the top and bottom padding
-     * 
+     *
      * @since 7.5.3
      * @return the sum of the top and bottom padding
      */
@@ -322,7 +322,7 @@ public class ComputedStyle {
 
     /**
      * Returns the sum of the top and bottom padding
-     * 
+     *
      * @since 7.5.3
      * @return the sum of the left and right padding
      */
@@ -335,7 +335,7 @@ public class ComputedStyle {
 
     /**
      * Returns the sum of the top and bottom margin
-     * 
+     *
      * @since 7.5.6
      * @return the sum of the top and bottom margin
      */
@@ -348,7 +348,7 @@ public class ComputedStyle {
 
     /**
      * Returns the sum of the top and bottom margin
-     * 
+     *
      * @since 7.5.6
      * @return the sum of the left and right margin
      */

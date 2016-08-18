@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,7 +33,7 @@ import com.vaadin.server.StreamVariable.StreamingStartEvent;
  * service or file system). If UI is changed as a side effect of writing to the
  * output stream, developer must handle synchronization manually.
  * <p>
- * 
+ *
  * @author Vaadin Ltd.
  * @since 6.5
  * @see PaintTarget#addVariable(VariableOwner, String, StreamVariable)
@@ -45,7 +45,7 @@ public interface StreamVariable extends Serializable {
      * {@link #streamingStarted(StreamingStartEvent)} method has been called.
      * The terminal implementation will write the streamed variable to the
      * returned output stream.
-     * 
+     *
      * @return Stream to which the uploaded file should be written.
      */
     public OutputStream getOutputStream();
@@ -59,7 +59,7 @@ public interface StreamVariable extends Serializable {
      * calling that method only if requested. The value is requested after the
      * {@link #uploadStarted(StreamingStartEvent)} event, but not after reading
      * each buffer.
-     * 
+     *
      * @return true if this {@link StreamVariable} wants to by notified during
      *         the upload of the progress of streaming.
      * @see #onProgress(StreamingProgressEvent)
@@ -91,7 +91,7 @@ public interface StreamVariable extends Serializable {
      * instance by the terminal like other methods. The implementation should
      * only return a boolean field and especially not modify UI or implement a
      * synchronization by itself.
-     * 
+     *
      * @return true if the streaming should be interrupted as soon as possible.
      */
     public boolean isInterrupted();

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -44,13 +44,13 @@ import com.vaadin.ui.declarative.Design.ComponentMapper;
  * mappings from local ids, global ids and captions to components , as well as a
  * mapping between prefixes and package names (such as "vaadin" ->
  * "com.vaadin.ui").
- * 
+ *
  * Versions prior to 7.6 use "v" as the default prefix. Versions starting with
  * 7.6 support reading designs with either "v" or "vaadin" as the prefix, but
  * only write "vaadin" by default. Writing with the legacy prefix can be
  * activated with the property or context parameter
  * {@link Constants#SERVLET_PARAMETER_LEGACY_DESIGN_PREFIX}.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -111,7 +111,7 @@ public class DesignContext implements Serializable {
     /**
      * Returns a component having the specified local id. If no component is
      * found, returns null.
-     * 
+     *
      * @param localId
      *            The local id of the component
      * @return a component whose local id equals localId
@@ -123,7 +123,7 @@ public class DesignContext implements Serializable {
     /**
      * Returns a component having the specified global id. If no component is
      * found, returns null.
-     * 
+     *
      * @param globalId
      *            The global id of the component
      * @return a component whose global id equals globalId
@@ -135,7 +135,7 @@ public class DesignContext implements Serializable {
     /**
      * Returns a component having the specified caption. If no component is
      * found, returns null.
-     * 
+     *
      * @param caption
      *            The caption of the component
      * @return a component whose caption equals the caption given as a parameter
@@ -148,15 +148,15 @@ public class DesignContext implements Serializable {
      * Creates a mapping between the given global id and the component. Returns
      * true if globalId was already mapped to some component. Otherwise returns
      * false. Also sets the id of the component to globalId.
-     * 
+     *
      * If there is a mapping from the component to a global id (gid) different
      * from globalId, the mapping from gid to component is removed.
-     * 
+     *
      * If the string was mapped to a component c different from the given
      * component, the mapping from c to the string is removed. Similarly, if
      * component was mapped to some string s different from globalId, the
      * mapping from s to component is removed.
-     * 
+     *
      * @param globalId
      *            The new global id of the component.
      * @param component
@@ -182,19 +182,19 @@ public class DesignContext implements Serializable {
      * Creates a mapping between the given local id and the component. Returns
      * true if localId was already mapped to some component or if component was
      * mapped to some string. Otherwise returns false.
-     * 
+     *
      * If the string was mapped to a component c different from the given
      * component, the mapping from c to the string is removed. Similarly, if
      * component was mapped to some string s different from localId, the mapping
      * from s to component is removed.
-     * 
+     *
      * @since 7.5.0
-     * 
+     *
      * @param component
      *            The component whose local id is to be set.
      * @param localId
      *            The new local id of the component.
-     * 
+     *
      * @return true, if there already was a local id mapping from the string to
      *         some component or from the component to some string. Otherwise
      *         returns false.
@@ -206,9 +206,9 @@ public class DesignContext implements Serializable {
 
     /**
      * Returns the local id for a component.
-     * 
+     *
      * @since 7.5.0
-     * 
+     *
      * @param component
      *            The component whose local id to get.
      * @return the local id of the component, or null if the component has no
@@ -221,13 +221,13 @@ public class DesignContext implements Serializable {
     /**
      * Creates a mapping between the given caption and the component. Returns
      * true if caption was already mapped to some component.
-     * 
+     *
      * Note that unlike mapGlobalId, if some component already has the given
      * caption, the caption is not cleared from the component. This allows
      * non-unique captions. However, only one of the components corresponding to
      * a given caption can be found using the map captionToComponent. Hence, any
      * captions that are used to identify an object should be unique.
-     * 
+     *
      * @param caption
      *            The new caption of the component.
      * @param component
@@ -245,10 +245,10 @@ public class DesignContext implements Serializable {
      * value v different from the given value, the mapping from v to key is
      * removed. Similarly, if value was mapped to some key k different from key,
      * the mapping from k to value is removed.
-     * 
+     *
      * Returns true if there already was a mapping from key to some value v or
      * if there was a mapping from value to some key k. Otherwise returns false.
-     * 
+     *
      * @param key
      *            The new key in keyToValue.
      * @param value
@@ -275,18 +275,18 @@ public class DesignContext implements Serializable {
 
     /**
      * Creates a two-way mapping between a prefix and a package name.
-     * 
+     *
      * Note that modifying the mapping for {@value #VAADIN_UI_PACKAGE} may
      * invalidate the backwards compatibility mechanism supporting reading such
      * components with either {@value #LEGACY_PREFIX} or {@value #VAADIN_PREFIX}
      * as prefix.
-     * 
+     *
      * @param prefix
      *            the prefix name without an ending dash (for instance, "vaadin"
      *            is by default used for "com.vaadin.ui")
      * @param packageName
      *            the name of the package corresponding to prefix
-     * 
+     *
      * @see #getPackagePrefixes()
      * @see #getPackagePrefix(String)
      * @see #getPackage(String)
@@ -299,10 +299,10 @@ public class DesignContext implements Serializable {
     /**
      * Gets the prefix mapping for a given package, or <code>null</code> if
      * there is no mapping for the package.
-     * 
+     *
      * @see #addPackagePrefix(String, String)
      * @see #getPackagePrefixes()
-     * 
+     *
      * @since 7.5.0
      * @param packageName
      *            the package name to get a prefix for
@@ -319,8 +319,8 @@ public class DesignContext implements Serializable {
 
     /**
      * Gets all registered package prefixes.
-     * 
-     * 
+     *
+     *
      * @since 7.5.0
      * @see #getPackage(String)
      * @return a collection of package prefixes
@@ -332,7 +332,7 @@ public class DesignContext implements Serializable {
     /**
      * Gets the package corresponding to the give prefix, or <code>null</code>
      * no package has been registered for the prefix
-     * 
+     *
      * @since 7.5.0
      * @see #addPackagePrefix(String, String)
      * @param prefix
@@ -347,7 +347,7 @@ public class DesignContext implements Serializable {
     /**
      * Returns the default instance for the given class. The instance must not
      * be modified by the caller.
-     * 
+     *
      * @param abstractComponent
      * @return the default instance for the given class. The return value must
      *         not be modified by the caller
@@ -413,7 +413,7 @@ public class DesignContext implements Serializable {
      * the specified document.
      * <p>
      * The prefixes are stored as <meta> tags under <head> in the document.
-     * 
+     *
      * @param doc
      *            the Jsoup document tree where the package mappings are written
      */
@@ -438,7 +438,7 @@ public class DesignContext implements Serializable {
      * be used when writing designs. The property or context parameter
      * {@link Constants#SERVLET_PARAMETER_LEGACY_DESIGN_PREFIX} can be used to
      * switch to the legacy prefix.
-     * 
+     *
      * @since 7.5.7
      * @return true to use the legacy prefix, false by default
      */
@@ -463,7 +463,7 @@ public class DesignContext implements Serializable {
      * initializes its attributes by calling writeDesign. As a result of the
      * writeDesign() call, this method creates the entire subtree rooted at the
      * returned Node.
-     * 
+     *
      * @param childComponent
      *            The component with state that is written in to the node
      * @return An html tree node corresponding to the given component. The tag
@@ -488,7 +488,7 @@ public class DesignContext implements Serializable {
 
     /**
      * Reads the given design node and creates the corresponding component tree
-     * 
+     *
      * @param componentDesign
      *            The design element containing the description of the component
      *            to be created.
@@ -503,13 +503,13 @@ public class DesignContext implements Serializable {
     }
 
     /**
-     * 
+     *
      * Reads the given design node and populates the given component with the
      * corresponding component tree
      * <p>
      * Additionally registers the component id, local id and caption of the
      * given component and all its children in the context
-     * 
+     *
      * @param componentDesign
      *            The design element containing the description of the component
      *            to be created
@@ -551,7 +551,7 @@ public class DesignContext implements Serializable {
     /**
      * Creates a Component corresponding to the given node. Does not set the
      * attributes for the created object.
-     * 
+     *
      * @param node
      *            a node of an html tree
      * @return a Component corresponding to node, with no attributes set.
@@ -580,7 +580,7 @@ public class DesignContext implements Serializable {
 
     /**
      * Instantiates given class via ComponentFactory.
-     * 
+     *
      * @param qualifiedClassName
      *            class name to instantiate
      * @return instance of a given class
@@ -600,7 +600,7 @@ public class DesignContext implements Serializable {
 
     /**
      * Returns the root component of a created component hierarchy.
-     * 
+     *
      * @return the root component of the hierarchy
      */
     public Component getRootComponent() {
@@ -609,7 +609,7 @@ public class DesignContext implements Serializable {
 
     /**
      * Sets the root component of a created component hierarchy.
-     * 
+     *
      * @param rootComponent
      *            the root component of the hierarchy
      */
@@ -620,7 +620,7 @@ public class DesignContext implements Serializable {
     /**
      * Adds a component creation listener. The listener will be notified when
      * components are created while parsing a design template
-     * 
+     *
      * @param listener
      *            the component creation listener to be added
      */
@@ -631,7 +631,7 @@ public class DesignContext implements Serializable {
 
     /**
      * Removes a component creation listener.
-     * 
+     *
      * @param listener
      *            the component creation listener to be removed
      */
@@ -642,7 +642,7 @@ public class DesignContext implements Serializable {
 
     /**
      * Fires component creation event
-     * 
+     *
      * @param localId
      *            localId of the component
      * @param component
@@ -659,14 +659,14 @@ public class DesignContext implements Serializable {
 
     /**
      * Interface to be implemented by component creation listeners
-     * 
+     *
      * @author Vaadin Ltd
      */
     public interface ComponentCreationListener extends Serializable {
 
         /**
          * Called when component has been created in the design context
-         * 
+         *
          * @param event
          *            the component creation event containing information on the
          *            created component
@@ -677,7 +677,7 @@ public class DesignContext implements Serializable {
     /**
      * Component creation event that is fired when a component is created in the
      * context
-     * 
+     *
      * @author Vaadin Ltd
      */
     public class ComponentCreatedEvent implements Serializable {
@@ -687,7 +687,7 @@ public class DesignContext implements Serializable {
 
         /**
          * Creates a new instance of ComponentCreatedEvent
-         * 
+         *
          * @param localId
          *            the local id of the created component
          * @param component
@@ -701,7 +701,7 @@ public class DesignContext implements Serializable {
 
         /**
          * Returns the local id of the created component or null if not exist
-         * 
+         *
          * @return the localId
          */
         public String getLocalId() {
@@ -710,7 +710,7 @@ public class DesignContext implements Serializable {
 
         /**
          * Returns the created component
-         * 
+         *
          * @return the component
          */
         public Component getComponent() {
@@ -721,7 +721,7 @@ public class DesignContext implements Serializable {
     /**
      * Helper method for component write implementors to determine whether their
      * children should be written out or not
-     * 
+     *
      * @param c
      *            The component being written
      * @param defaultC
@@ -751,7 +751,7 @@ public class DesignContext implements Serializable {
      * delegate assumes that all component data is provided by a data source
      * connected to a back end system and that the data should thus not be
      * written.
-     * 
+     *
      * @since 7.5.0
      * @see #setShouldWriteDataDelegate(ShouldWriteDataDelegate)
      * @param component
@@ -766,7 +766,7 @@ public class DesignContext implements Serializable {
     /**
      * Sets the delegate that determines whether the container data of a
      * component should be written out.
-     * 
+     *
      * @since 7.5.0
      * @see #shouldWriteChildren(Component, Component)
      * @see #getShouldWriteDataDelegate()
@@ -786,7 +786,7 @@ public class DesignContext implements Serializable {
     /**
      * Gets the delegate that determines whether the container data of a
      * component should be written out.
-     * 
+     *
      * @since 7.5.0
      * @see #setShouldWriteDataDelegate(ShouldWriteDataDelegate)
      * @see #shouldWriteChildren(Component, Component)
@@ -798,7 +798,7 @@ public class DesignContext implements Serializable {
 
     /**
      * Gets the attributes that the component did not handle
-     * 
+     *
      * @since 7.7
      * @param component
      *            the component to get the attributes for
@@ -811,7 +811,7 @@ public class DesignContext implements Serializable {
     /**
      * Sets a custom attribute not handled by the component. These attributes
      * are directly written to the component tag.
-     * 
+     *
      * @since 7.7
      * @param component
      *            the component to set the attribute for

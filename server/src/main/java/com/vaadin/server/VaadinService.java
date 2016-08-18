@@ -1095,7 +1095,7 @@ public abstract class VaadinService implements Serializable {
      *
      * Finds the given theme resource from the web content folder or using the
      * class loader and returns a stream for it
-     * 
+     *
      * @param ui
      *            The ui for which to find the resource
      * @param themeName
@@ -1668,7 +1668,7 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Checks whether Atmosphere is avilable for use
-     * 
+     *
      * @since 7.6
      * @return true if Atmosphere is available, false otherwise
      */
@@ -1793,7 +1793,7 @@ public abstract class VaadinService implements Serializable {
          * If no thread is currently holding the lock, pending changes for UIs
          * with automatic push would not be processed and pushed until the next
          * time there is a request or someone does an explicit push call.
-         * 
+         *
          * To remedy this, we try to get the lock at this point. If the lock is
          * currently held by another thread, we just back out as the queue will
          * get purged once it is released. If the lock is held by the current
@@ -1909,10 +1909,10 @@ public abstract class VaadinService implements Serializable {
      * this {@link VaadinService} if found. If current security policy disallows
      * acquiring class loader instance it will log a message and re-throw
      * {@link SecurityException}
-     * 
+     *
      * @throws SecurityException
      *             If current security policy forbids acquiring class loader
-     * 
+     *
      * @since 7.3.5
      */
     protected void setDefaultClassLoader() {
@@ -1930,7 +1930,7 @@ public abstract class VaadinService implements Serializable {
      * Called when the VaadinSession should be stored.
      * <p>
      * By default stores the VaadinSession in the underlying HTTP session.
-     * 
+     *
      * @since 7.6
      * @param session
      *            the VaadinSession to store
@@ -1949,7 +1949,7 @@ public abstract class VaadinService implements Serializable {
      * session after sanity checks have been performed.
      * <p>
      * Called by {@link #storeSession(VaadinSession, WrappedSession)}
-     * 
+     *
      * @since 7.6
      * @param wrappedSession
      *            the underlying HTTP session
@@ -1964,7 +1964,7 @@ public abstract class VaadinService implements Serializable {
     /**
      * Called when the VaadinSession should be loaded from the underlying HTTP
      * session
-     * 
+     *
      * @since 7.6
      * @param wrappedSession
      *            the underlying HTTP session
@@ -1986,7 +1986,7 @@ public abstract class VaadinService implements Serializable {
      * session after sanity checks have been performed.
      * <p>
      * Called by {@link #loadSession(WrappedSession)}.
-     * 
+     *
      * @param wrappedSession
      *            the underlying HTTP session
      * @since 7.6
@@ -2000,7 +2000,7 @@ public abstract class VaadinService implements Serializable {
     /**
      * Called when the VaadinSession should be removed from the underlying HTTP
      * session
-     * 
+     *
      * @since 7.6
      * @param wrappedSession
      *            the underlying HTTP session
@@ -2013,7 +2013,7 @@ public abstract class VaadinService implements Serializable {
     /**
      * Performs the actual removal of the VaadinSession from the underlying HTTP
      * session after sanity checks have been performed
-     * 
+     *
      * @since 7.6
      * @param wrappedSession
      *            the underlying HTTP session
@@ -2026,7 +2026,7 @@ public abstract class VaadinService implements Serializable {
     /**
      * Returns the name used for storing the VaadinSession in the underlying
      * HTTP session
-     * 
+     *
      * @since 7.6
      * @return the attribute name used for storing the VaadinSession
      */

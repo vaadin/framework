@@ -187,7 +187,7 @@ import com.vaadin.shared.util.SharedUtil;
 /**
  * A data grid view that supports columns and lazy loading of data rows from a
  * data source.
- * 
+ *
  * <h1>Columns</h1>
  * <p>
  * Each column in Grid is represented by a {@link Column}. Each
@@ -207,7 +207,7 @@ import com.vaadin.shared.util.SharedUtil;
  * <em>See:</em> {@link #addColumn(Column)}, {@link #addColumn(Column, int)} and
  * {@link #addColumns(Column...)}. <em>Also</em>
  * {@link Column#setRenderer(Renderer)}.
- * 
+ *
  * <h1>Data Sources</h1>
  * <p>
  * Grid gets its data from a {@link DataSource}, providing row objects to Grid
@@ -216,8 +216,8 @@ import com.vaadin.shared.util.SharedUtil;
  * ListDataSource}) or even a remote one, retrieving data from e.g. a REST API
  * (see {@link com.vaadin.client.data.AbstractRemoteDataSource
  * AbstractRemoteDataSource}).
- * 
- * 
+ *
+ *
  * @param <T>
  *            The row type of the grid. The row type is the POJO type from where
  *            the data is retrieved into the column cells.
@@ -234,9 +234,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Abstract base class for Grid header and footer sections.
-     * 
+     *
      * @since 7.5.0
-     * 
+     *
      * @param <ROWTYPE>
      *            the type of the rows in the section
      */
@@ -244,7 +244,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * A header or footer cell. Has a simple textual caption.
-         * 
+         *
          */
         public static class StaticCell {
 
@@ -260,7 +260,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             /**
              * Sets the text displayed in this cell.
-             * 
+             *
              * @param text
              *            a plain text caption
              */
@@ -272,7 +272,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             /**
              * Returns the text displayed in this cell.
-             * 
+             *
              * @return the plain text caption
              */
             public String getText() {
@@ -294,7 +294,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             /**
              * Returns the amount of columns the cell spans. By default is 1.
-             * 
+             *
              * @return The amount of columns the cell spans.
              */
             public int getColspan() {
@@ -304,7 +304,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             /**
              * Sets the amount of columns the cell spans. Must be more or equal
              * to 1. By default is 1.
-             * 
+             *
              * @param colspan
              *            the colspan to set
              */
@@ -320,7 +320,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             /**
              * Returns the html inside the cell.
-             * 
+             *
              * @throws IllegalStateException
              *             if trying to retrive HTML from a cell with a type
              *             other than {@link GridStaticCellType#HTML}.
@@ -338,7 +338,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * Sets the content of the cell to the provided html. All previous
              * content is discarded and the cell type is set to
              * {@link GridStaticCellType#HTML}.
-             * 
+             *
              * @param html
              *            The html content of the cell
              */
@@ -350,10 +350,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             /**
              * Returns the widget in the cell.
-             * 
+             *
              * @throws IllegalStateException
              *             if the cell is not {@link GridStaticCellType#WIDGET}
-             * 
+             *
              * @return the widget in the cell
              */
             public Widget getWidget() {
@@ -369,7 +369,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * Set widget as the content of the cell. The type of the cell
              * becomes {@link GridStaticCellType#WIDGET}. All previous content
              * is discarded.
-             * 
+             *
              * @param widget
              *            The widget to add to the cell. Should not be
              *            previously attached anywhere (widget.getParent ==
@@ -391,7 +391,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             /**
              * Returns the type of the cell.
-             * 
+             *
              * @return the type of content the cell contains.
              */
             public GridStaticCellType getType() {
@@ -400,7 +400,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             /**
              * Returns the custom style name for this cell.
-             * 
+             *
              * @return the style name or null if no style name has been set
              */
             public String getStyleName() {
@@ -409,7 +409,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             /**
              * Sets a custom style name for this cell.
-             * 
+             *
              * @param styleName
              *            the style name to set or null to not use any style
              *            name
@@ -422,7 +422,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             /**
              * Called when the cell is detached from the row
-             * 
+             *
              * @since 7.6.3
              */
             void detach() {
@@ -435,7 +435,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Abstract base class for Grid header and footer rows.
-         * 
+         *
          * @param <CELLTYPE>
          *            the type of the cells in the row
          */
@@ -458,7 +458,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             /**
              * Returns the cell on given GridColumn. If the column is merged
              * returned cell is the cell for the whole group.
-             * 
+             *
              * @param column
              *            the column in grid
              * @return the cell on given column, merged cell for merged columns,
@@ -474,7 +474,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             /**
              * Returns <code>true</code> if this row contains spanned cells.
-             * 
+             *
              * @since 7.5.0
              * @return does this row contain spanned cells
              */
@@ -484,7 +484,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             /**
              * Merges columns cells in a row
-             * 
+             *
              * @param columns
              *            the columns which header should be merged
              * @return the remaining visible cell after the merge, or the cell
@@ -522,7 +522,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             /**
              * Merges columns cells in a row
-             * 
+             *
              * @param cells
              *            The cells to merge. Must be from the same row.
              * @return The remaining visible cell after the merge, or the first
@@ -634,7 +634,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             /**
              * Returns the custom style name for this row.
-             * 
+             *
              * @return the style name or null if no style name has been set
              */
             public String getStyleName() {
@@ -643,7 +643,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             /**
              * Sets a custom style name for this row.
-             * 
+             *
              * @param styleName
              *            the style name to set or null to not use any style
              *            name
@@ -655,7 +655,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             /**
              * Called when the row is detached from the grid
-             * 
+             *
              * @since 7.6.3
              */
             void detach() {
@@ -678,7 +678,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Creates and returns a new instance of the row type.
-         * 
+         *
          * @return the created row
          */
         protected abstract ROWTYPE createRow();
@@ -694,7 +694,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Sets the visibility of the whole section.
-         * 
+         *
          * @param visible
          *            true to show this section, false to hide
          */
@@ -705,7 +705,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Returns the visibility of this section.
-         * 
+         *
          * @return true if visible, false otherwise.
          */
         public boolean isVisible() {
@@ -716,11 +716,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * Inserts a new row at the given position. Shifts the row currently at
          * that position and any subsequent rows down (adds one to their
          * indices).
-         * 
+         *
          * @param index
          *            the position at which to insert the row
          * @return the new row
-         * 
+         *
          * @throws IndexOutOfBoundsException
          *             if the index is out of bounds
          * @see #appendRow()
@@ -742,7 +742,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Adds a new row at the top of this section.
-         * 
+         *
          * @return the new row
          * @see #appendRow()
          * @see #addRowAt(int)
@@ -755,7 +755,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Adds a new row at the bottom of this section.
-         * 
+         *
          * @return the new row
          * @see #prependRow()
          * @see #addRowAt(int)
@@ -768,10 +768,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Removes the row at the given position.
-         * 
+         *
          * @param index
          *            the position of the row
-         * 
+         *
          * @throws IndexOutOfBoundsException
          *             if the index is out of bounds
          * @see #addRowAt(int)
@@ -787,10 +787,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Removes the given row from the section.
-         * 
+         *
          * @param row
          *            the row to be removed
-         * 
+         *
          * @throws IllegalArgumentException
          *             if the row does not exist in this section
          * @see #addRowAt(int)
@@ -809,11 +809,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Returns the row at the given position.
-         * 
+         *
          * @param index
          *            the position of the row
          * @return the row with the given index
-         * 
+         *
          * @throws IndexOutOfBoundsException
          *             if the index is out of bounds
          */
@@ -828,7 +828,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Returns the number of rows in this section.
-         * 
+         *
          * @return the number of rows
          */
         public int getRowCount() {
@@ -895,10 +895,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Sets the default row of this header. The default row is a special
          * header row providing a user interface for sorting columns.
-         * 
+         *
          * @param row
          *            the new default row, or null for no default row
-         * 
+         *
          * @throws IllegalArgumentException
          *             this header does not contain the row
          */
@@ -924,7 +924,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Returns the current default row of this header. The default row is a
          * special header row providing a user interface for sorting columns.
-         * 
+         *
          * @return the default row or null if no default row set
          */
         public HeaderRow getDefaultRow() {
@@ -959,7 +959,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Returns the events consumed by the header
-         * 
+         *
          * @return a collection of BrowserEvents
          */
         public Collection<String> getConsumedEvents() {
@@ -981,7 +981,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * A single row in a grid header section.
-     * 
+     *
      */
     public static class HeaderRow extends StaticSection.StaticRow<HeaderCell> {
 
@@ -1048,14 +1048,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * A single cell in a grid Footer row. Has a textual caption.
-     * 
+     *
      */
     public static class FooterCell extends StaticSection.StaticCell {
     }
 
     /**
      * A single row in a grid Footer section.
-     * 
+     *
      */
     public static class FooterRow extends StaticSection.StaticRow<FooterCell> {
 
@@ -1070,7 +1070,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * A callback interface used to notify the invoker of the editor handler
          * of completed editor requests.
-         * 
+         *
          * @param <T>
          *            the row data type
          */
@@ -1078,7 +1078,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             /**
              * The method that must be called when the request has been
              * processed correctly.
-             * 
+             *
              * @param request
              *            the original request object
              */
@@ -1087,7 +1087,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             /**
              * The method that must be called when processing the request has
              * produced an aborting error.
-             * 
+             *
              * @param request
              *            the original request object
              */
@@ -1176,7 +1176,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * A wrapper for native DOM events originating from Grid. In addition to the
      * native event, contains a {@link CellReference} instance specifying which
      * cell the event originated from.
-     * 
+     *
      * @since 7.6
      * @param <T>
      *            The row type of the grid
@@ -1192,7 +1192,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Returns the wrapped DOM event.
-         * 
+         *
          * @return the DOM event
          */
         public Event getDomEvent() {
@@ -1201,7 +1201,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Returns the Grid cell this event originated from.
-         * 
+         *
          * @return the event cell
          */
         public EventCellReference<T> getCell() {
@@ -1210,7 +1210,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Returns the Grid instance this event originated from.
-         * 
+         *
          * @return the grid
          */
         public Grid<T> getGrid() {
@@ -1221,7 +1221,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * A wrapper for native DOM events related to the {@link Editor Grid editor}
      * .
-     * 
+     *
      * @since 7.6
      * @param <T>
      *            the row type of the grid
@@ -1238,7 +1238,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Returns the editor of the Grid this event originated from.
-         * 
+         *
          * @return the related editor instance
          */
         public Editor<T> getEditor() {
@@ -1247,7 +1247,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Returns the currently focused editor widget.
-         * 
+         *
          * @return the focused editor widget or {@code null} if not editable
          */
         public Widget getEditorWidget() {
@@ -1257,7 +1257,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Returns the row index the editor is open at. If the editor is not
          * open, returns -1.
-         * 
+         *
          * @return the index of the edited row or -1 if editor is not open
          */
         public int getRowIndex() {
@@ -1267,7 +1267,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Returns the column index the editor was opened at. If the editor is
          * not open, returns -1.
-         * 
+         *
          * @return the column index or -1 if editor is not open
          */
         public int getFocusedColumnIndex() {
@@ -1278,7 +1278,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * An editor UI for Grid rows. A single Grid row at a time can be opened for
      * editing.
-     * 
+     *
      * @since 7.6
      * @param <T>
      *            the row type of the grid
@@ -1311,7 +1311,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * A handler for events related to the Grid editor. Responsible for
          * opening, moving or closing the editor based on the received event.
-         * 
+         *
          * @since 7.6
          * @author Vaadin Ltd
          * @param <T>
@@ -1321,7 +1321,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             /**
              * Handles editor-related events in an appropriate way. Opens,
              * moves, or closes the editor based on the given event.
-             * 
+             *
              * @param event
              *            the received event
              * @return true if the event was handled and nothing else should be
@@ -1510,10 +1510,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * If a cell of this Grid had focus once this editRow call was
          * triggered, the editor component at the previously focused column
          * index will be focused.
-         * 
+         *
          * If a Grid cell was not focused prior to calling this method, it will
          * be equivalent to {@code editRow(rowIndex, -1)}.
-         * 
+         *
          * @see #editRow(int, int)
          */
         public void editRow(int rowIndex) {
@@ -1533,19 +1533,19 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * Opens the editor over the row with the given index and attempts to
          * focus the editor widget in the given column index. Does not move
          * focus if the widget is not focusable or if the column index is -1.
-         * 
+         *
          * @param rowIndex
          *            the index of the row to be edited
          * @param columnIndex
          *            the column index of the editor widget that should be
          *            initially focused or -1 to not set focus
-         * 
+         *
          * @throws IllegalStateException
          *             if this editor is not enabled
          * @throws IllegalStateException
          *             if this editor is already in edit mode and in buffered
          *             mode
-         * 
+         *
          * @since 7.5
          */
         public void editRow(final int rowIndex, final int columnIndex) {
@@ -1630,7 +1630,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Cancels the currently active edit and hides the editor. Any changes
          * that are not {@link #save() saved} are lost.
-         * 
+         *
          * @throws IllegalStateException
          *             if this editor is not enabled
          * @throws IllegalStateException
@@ -1672,7 +1672,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Saves any unsaved changes to the data source and hides the editor.
-         * 
+         *
          * @throws IllegalStateException
          *             if this editor is not enabled
          * @throws IllegalStateException
@@ -1700,7 +1700,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Returns the handler responsible for binding data and editor widgets
          * to this editor.
-         * 
+         *
          * @return the editor handler or null if not set
          */
         public EditorHandler<T> getHandler() {
@@ -1710,10 +1710,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Sets the handler responsible for binding data and editor widgets to
          * this editor.
-         * 
+         *
          * @param rowHandler
          *            the new editor handler
-         * 
+         *
          * @throws IllegalStateException
          *             if this editor is currently in edit mode
          */
@@ -1731,10 +1731,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Sets the enabled state of this editor.
-         * 
+         *
          * @param enabled
          *            true if enabled, false otherwise
-         * 
+         *
          * @throws IllegalStateException
          *             if in edit mode and trying to disable
          * @throws IllegalStateException
@@ -1783,7 +1783,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * Returns the editor widget associated with the given column. If the
          * editor is not active or the column is not
          * {@link Grid.Column#isEditable() editable}, returns null.
-         * 
+         *
          * @param column
          *            the column
          * @return the widget if the editor is open and the column is editable,
@@ -1795,10 +1795,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Equivalent to {@code showOverlay()}. The argument is ignored.
-         * 
+         *
          * @param unused
          *            ignored argument
-         * 
+         *
          * @deprecated As of 7.5, use {@link #showOverlay()} instead.
          */
         @Deprecated
@@ -1809,7 +1809,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Opens the editor overlay over the table row indicated by
          * {@link #getRow()}.
-         * 
+         *
          * @since 7.5
          */
         protected void showOverlay() {
@@ -2079,7 +2079,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * Creates an editor cell corresponding to the given table cell. The
          * returned element is empty and has the same dimensions and position as
          * the table cell.
-         * 
+         *
          * @param td
          *            the table cell used as a reference
          * @return an editor cell corresponding to the given cell
@@ -2240,7 +2240,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Sets the event handler for this Editor.
-         * 
+         *
          * @since 7.6
          * @param handler
          *            the new event handler
@@ -2251,7 +2251,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Returns the event handler of this Editor.
-         * 
+         *
          * @since 7.6
          * @return the current event handler
          */
@@ -2303,7 +2303,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Gets the Grid instance for this event.
-         * 
+         *
          * @return grid
          */
         public Grid<?> getGrid() {
@@ -2312,7 +2312,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Gets the focused cell for this event.
-         * 
+         *
          * @return focused cell
          */
         public CellReference<?> getFocusedCell() {
@@ -2363,7 +2363,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Gets the Grid instance for this event.
-         * 
+         *
          * @return grid
          */
         public Grid<?> getGrid() {
@@ -2372,7 +2372,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Gets the reference of target cell for this event.
-         * 
+         *
          * @return target cell
          */
         public CellReference<?> getTargetCell() {
@@ -2423,7 +2423,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * An initial height that is given to new details rows before rendering the
      * appropriate widget that we then can be measure
-     * 
+     *
      * @see GridSpacerUpdater
      */
     private static final double DETAILS_ROW_INITIAL_HEIGHT = 50;
@@ -2494,7 +2494,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Sets focus style for the given row if needed.
-         * 
+         *
          * @param row
          *            a row object
          */
@@ -2524,7 +2524,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * <p>
          * <em>NOTE:</em> the column index is the index in DOM, not the logical
          * column index which includes hidden columns.
-         * 
+         *
          * @param rowIndex
          *            the index of the row having focus
          * @param columnIndexDOM
@@ -2605,11 +2605,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Sets focus on a cell.
-         * 
+         *
          * <p>
          * <em>Note</em>: cell focus is not the same as JavaScript's
          * {@code document.activeElement}.
-         * 
+         *
          * @param cell
          *            a cell object
          */
@@ -2620,7 +2620,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Gets list of events that can be used for cell focusing.
-         * 
+         *
          * @return list of navigation related event types
          */
         public Collection<String> getNavigationEvents() {
@@ -2792,7 +2792,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Offsets the focused cell's range.
-         * 
+         *
          * @param offset
          *            offset for fixing focused cell's range
          */
@@ -2804,7 +2804,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * Informs {@link CellFocusHandler} that certain range of rows has been
          * added to the Grid body. {@link CellFocusHandler} will fix indices
          * accordingly.
-         * 
+         *
          * @param added
          *            a range of added rows
          */
@@ -2824,7 +2824,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * Informs {@link CellFocusHandler} that certain range of rows has been
          * removed from the Grid body. {@link CellFocusHandler} will fix indices
          * accordingly.
-         * 
+         *
          * @param removed
          *            a range of removed rows
          */
@@ -2885,7 +2885,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * TODO: Currently the select all check box is shown when multi
              * selection is in use. This might result in malfunctions if no
              * SelectAllHandlers are present.
-             * 
+             *
              * Later on this could be fixed so that it check such handlers
              * exist.
              */
@@ -3068,7 +3068,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * chain. If false, the sorting order is set to ASCENDING for that
          * cell's column. If that column was already the only sorted column in
          * the Grid, the sort direction is flipped.
-         * 
+         *
          * @param cell
          *            a valid cell reference
          * @param multisort
@@ -3124,7 +3124,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Perform a sort after a delay.
-         * 
+         *
          * @param delay
          *            delay, in milliseconds
          */
@@ -3137,7 +3137,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Check if a delayed sort command has been issued but not yet carried
          * out.
-         * 
+         *
          * @return a boolean value
          */
         public boolean isDelayedSortScheduled() {
@@ -3201,7 +3201,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Calculates and applies column widths, taking into account fixed
          * widths and column expand rules
-         * 
+         *
          * @param immediately
          *            <code>true</code> if the widths should be executed
          *            immediately (ignoring lazy loading completely), or
@@ -3299,7 +3299,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             /*
              * Set all fixed widths and also calculate the size-to-fit widths
              * for the autocalculated columns.
-             * 
+             *
              * This way we know with how many pixels we have left to expand the
              * rest.
              */
@@ -3544,7 +3544,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Check whether the auto width calculation is currently scheduled.
-         * 
+         *
          * @return <code>true</code> if auto width calculation is currently
          *         scheduled
          */
@@ -3593,7 +3593,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 /*
                  * Once we have the content properly inside the DOM, we should
                  * re-measure it to make sure that it's the correct height.
-                 * 
+                 *
                  * This is rather tricky, since the row (tr) will get the
                  * height, but the spacer cell (td) has the borders, which
                  * should go on top of the previous row and next row.
@@ -3675,7 +3675,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * grid, if it contains any column hiding options or custom widgets. The
      * column hiding toggles and custom widgets become visible once the sidebar
      * has been opened.
-     * 
+     *
      * @since 7.5.0
      */
     private static class Sidebar extends Composite implements HasEnabled {
@@ -3831,7 +3831,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Returns whether the sidebar is open or not.
-         * 
+         *
          * @return <code>true</code> if open, <code>false</code> if not
          */
         public boolean isOpen() {
@@ -4100,7 +4100,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * <li>a cell on another row, the click event is the table section ancestor
      * ({@code <thead>}, {@code <tbody>} or {@code <tfoot>}).
      * </ul>
-     * 
+     *
      * @see #onBrowserEvent(Event)
      */
     private Cell cellOnPrevMouseDown;
@@ -4626,10 +4626,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Base class for grid columns internally used by the Grid. The user should
      * use {@link Column} when creating new columns.
-     * 
+     *
      * @param <C>
      *            the column type
-     * 
+     *
      * @param <T>
      *            the row type
      */
@@ -4706,10 +4706,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Constructs a new column with a simple TextRenderer.
-         * 
+         *
          * @param caption
          *            The header caption for this column
-         * 
+         *
          * @throws IllegalArgumentException
          *             if given header caption is null
          */
@@ -4720,10 +4720,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Constructs a new column with a custom renderer.
-         * 
+         *
          * @param renderer
          *            The renderer to use for rendering the cells
-         * 
+         *
          * @throws IllegalArgumentException
          *             if given Renderer is null
          */
@@ -4734,12 +4734,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Constructs a new column with a custom renderer.
-         * 
+         *
          * @param renderer
          *            The renderer to use for rendering the cells
          * @param caption
          *            The header caption for this column
-         * 
+         *
          * @throws IllegalArgumentException
          *             if given Renderer or header caption is null
          */
@@ -4751,7 +4751,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Internally used by the grid to set itself
-         * 
+         *
          * @param grid
          */
         private void setGrid(Grid<T> grid) {
@@ -4773,11 +4773,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Sets a header caption for this column.
-         * 
+         *
          * @param caption
          *            The header caption for this column
          * @return the column itself
-         * 
+         *
          */
         public Column<C, T> setHeaderCaption(String caption) {
             if (caption == null) {
@@ -4796,7 +4796,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Returns the current header caption for this column
-         * 
+         *
          * @since 7.6
          * @return the header caption string
          */
@@ -4821,10 +4821,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * <p>
          * To support other types you will need to pass a custom renderer to the
          * column via the column constructor.
-         * 
+         *
          * @param row
          *            The row object that provides the cell content.
-         * 
+         *
          * @return The cell content
          */
         public abstract C getValue(T row);
@@ -4833,7 +4833,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * The renderer to render the cell with. By default renders the data as
          * a String or adds the widget into the cell if the column type is of
          * widget type.
-         * 
+         *
          * @return The renderer to render the cell content with
          */
         public Renderer<? super C> getRenderer() {
@@ -4842,11 +4842,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Sets a custom {@link Renderer} for this column.
-         * 
+         *
          * @param renderer
          *            The renderer to use for rendering the cells
          * @return the column itself
-         * 
+         *
          * @throws IllegalArgumentException
          *             if given Renderer is null
          */
@@ -4904,7 +4904,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * <p>
          * If the column is currently {@link #isHidden() hidden}, then this set
          * width has effect only once the column has been made visible again.
-         * 
+         *
          * @param pixels
          *            the width in pixels or negative for auto sizing
          */
@@ -4936,7 +4936,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * <p>
          * <em>Note:</em> Returns the value, even if the column is currently
          * {@link #isHidden() hidden}.
-         * 
+         *
          * @return pixel width of the column, or a negative number if the column
          *         width has been automatically calculated.
          * @see #setWidth(double)
@@ -4952,7 +4952,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * This differs from {@link #getWidth()} only when the column has been
          * automatically resized, or when the column is currently
          * {@link #isHidden() hidden}, when the value is 0.
-         * 
+         *
          * @return pixel width of the column.
          */
         public double getWidthActual() {
@@ -4972,7 +4972,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * be sorted by a sortable column by clicking or tapping the column's
          * default header. Programmatic sorting using the Grid#sort methods is
          * not affected by this setting.
-         * 
+         *
          * @param sortable
          *            {@code true} if the user should be able to sort the
          *            column, {@code false} otherwise
@@ -4993,7 +4993,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * <p>
          * <em>Note:</em> it is possible to sort by this column programmatically
          * using the Grid#sort methods regardless of the returned value.
-         * 
+         *
          * @return {@code true} if the column is sortable by the user,
          *         {@code false} otherwise
          */
@@ -5003,9 +5003,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Sets whether this column can be resized by the user.
-         * 
+         *
          * @since 7.6
-         * 
+         *
          * @param resizable
          *            {@code true} if this column should be resizable,
          *            {@code false} otherwise
@@ -5027,9 +5027,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * <em>Note:</em> the column can be programmatically resized using
          * {@link #setWidth(double)} and {@link #setWidthUndefined()} regardless
          * of the returned value.
-         * 
+         *
          * @since 7.6
-         * 
+         *
          * @return {@code true} if this column is resizable, {@code false}
          *         otherwise
          */
@@ -5040,7 +5040,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Hides or shows the column. By default columns are visible before
          * explicitly hiding them.
-         * 
+         *
          * @since 7.5.0
          * @param hidden
          *            <code>true</code> to hide the column, <code>false</code>
@@ -5088,7 +5088,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Returns whether this column is hidden. Default is {@code false}.
-         * 
+         *
          * @since 7.5.0
          * @return {@code true} if the column is currently hidden, {@code false}
          *         otherwise
@@ -5103,7 +5103,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * <p>
          * <em>Note:</em> it is still possible to hide the column
          * programmatically using {@link #setHidden(boolean)}.
-         * 
+         *
          * @since 7.5.0
          * @param hidable
          *            {@code true} the user can hide this column, {@code false}
@@ -5123,7 +5123,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * <p>
          * <em>Note:</em> the column can be programmatically hidden using
          * {@link #setHidden(boolean)} regardless of the returned value.
-         * 
+         *
          * @since 7.5.0
          * @return <code>true</code> if the user can hide the column,
          *         <code>false</code> if not
@@ -5139,7 +5139,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * <p>
          * The default value is <code>null</code>. In this case the header
          * caption is used, see {@link #setHeaderCaption(String)}.
-         * 
+         *
          * @since 7.5.0
          * @param hidingToggleCaption
          *            the caption for the hiding toggle for this column
@@ -5154,7 +5154,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Gets the hiding toggle caption for this column.
-         * 
+         *
          * @since 7.5.0
          * @see #setHidingToggleCaption(String)
          * @return the hiding toggle's caption for this column
@@ -5198,7 +5198,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * This action is done "finally", once the current execution loop
          * returns. This is done to reduce overhead of unintentionally always
          * recalculate all columns, when modifying several columns at once.
-         * 
+         *
          * @param pixels
          *            the minimum width
          * @return this column
@@ -5227,7 +5227,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * This action is done "finally", once the current execution loop
          * returns. This is done to reduce overhead of unintentionally always
          * recalculate all columns, when modifying several columns at once.
-         * 
+         *
          * @param pixels
          *            the maximum width
          * @param immediately
@@ -5275,7 +5275,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * This action is done "finally", once the current execution loop
          * returns. This is done to reduce overhead of unintentionally always
          * recalculate all columns, when modifying several columns at once.
-         * 
+         *
          * @param expandRatio
          *            the expand ratio of this column. {@code 0} to not have it
          *            expand at all. A negative number to clear the expand
@@ -5294,7 +5294,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * Clears the column's expand ratio.
          * <p>
          * Same as calling {@link #setExpandRatio(int) setExpandRatio(-1)}
-         * 
+         *
          * @return this column
          */
         public Column<C, T> clearExpandRatio() {
@@ -5303,7 +5303,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Gets the minimum width for this column.
-         * 
+         *
          * @return the minimum width for this column
          * @see #setMinimumWidth(double)
          */
@@ -5313,7 +5313,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Gets the maximum width for this column.
-         * 
+         *
          * @return the maximum width for this column
          * @see #setMaximumWidth(double)
          */
@@ -5323,7 +5323,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Gets the expand ratio for this column.
-         * 
+         *
          * @return the expand ratio for this column
          * @see #setExpandRatio(int)
          */
@@ -5334,15 +5334,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Sets whether the values in this column should be editable by the user
          * when the row editor is active. By default columns are editable.
-         * 
+         *
          * @param editable
          *            {@code true} to set this column editable, {@code false}
          *            otherwise
          * @return this column
-         * 
+         *
          * @throws IllegalStateException
          *             if the editor is currently active
-         * 
+         *
          * @see Grid#editRow(int)
          * @see Grid#isEditorActive()
          */
@@ -5358,10 +5358,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Returns whether the values in this column are editable by the user
          * when the row editor is active.
-         * 
+         *
          * @return {@code true} if this column is editable, {@code false}
          *         otherwise
-         * 
+         *
          * @see #setEditable(boolean)
          */
         public boolean isEditable() {
@@ -5374,7 +5374,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             } else {
                 /*
                  * NOOP
-                 * 
+                 *
                  * Since setGrid() will call reapplyWidths as the colum is
                  * attached to a grid, it will call setWidth, which, in turn,
                  * will call this method again. Therefore, it's guaranteed that
@@ -5386,7 +5386,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Resets the default header cell contents to column header captions.
-         * 
+         *
          * @since 7.5.1
          * @param cell
          *            default header cell for this column
@@ -5825,7 +5825,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Sort indicator requires a bit more space from the cell than normally.
          * This method check that the now sorted column has enough width.
-         * 
+         *
          * @param column
          *            sorted column
          */
@@ -6059,9 +6059,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Creates the escalator updater used to update the header rows in this
      * grid. The updater is invoked when header rows or columns are added or
      * removed, or the content of existing header cells is changed.
-     * 
+     *
      * @return the new header updater instance
-     * 
+     *
      * @see GridHeader
      * @see Grid#getHeader()
      */
@@ -6074,7 +6074,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * The updater is invoked when body rows or columns are added or removed,
      * the content of body cells is changed, or the body is scrolled to expose
      * previously hidden content.
-     * 
+     *
      * @return the new body updater instance
      */
     protected EscalatorUpdater createBodyUpdater() {
@@ -6085,9 +6085,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Creates the escalator updater used to update the footer rows in this
      * grid. The updater is invoked when header rows or columns are added or
      * removed, or the content of existing header cells is changed.
-     * 
+     *
      * @return the new footer updater instance
-     * 
+     *
      * @see GridFooter
      * @see #getFooter()
      */
@@ -6097,7 +6097,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Refreshes header or footer rows on demand
-     * 
+     *
      * @param rows
      *            The row container
      * @param firstRowIsVisible
@@ -6125,7 +6125,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Focus a body cell by row and column index.
-     * 
+     *
      * @param rowIndex
      *            index of row to focus
      * @param columnIndex
@@ -6171,7 +6171,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Adds columns as the last columns in the grid.
-     * 
+     *
      * @param columns
      *            the columns to add
      */
@@ -6184,7 +6184,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Adds a column as the last column in the grid.
-     * 
+     *
      * @param column
      *            the column to add
      * @return given column
@@ -6196,13 +6196,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Inserts a column into a specific position in the grid.
-     * 
+     *
      * @param index
      *            the index where the column should be inserted into
      * @param column
      *            the column to add
      * @return given column
-     * 
+     *
      * @throws IllegalStateException
      *             if Grid's current selection model renders a selection column,
      *             and {@code index} is 0.
@@ -6285,7 +6285,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Removes a column from the grid.
-     * 
+     *
      * @param column
      *            the column to remove
      */
@@ -6324,7 +6324,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Returns the amount of columns in the grid.
      * <p>
      * <em>NOTE:</em> this includes the hidden columns in the count.
-     * 
+     *
      * @return The number of columns in the grid
      */
     public int getColumnCount() {
@@ -6335,7 +6335,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Returns a list columns in the grid, including hidden columns.
      * <p>
      * For currently visible columns, use {@link #getVisibleColumns()}.
-     * 
+     *
      * @return A unmodifiable list of the columns in the grid
      */
     public List<Column<?, T>> getColumns() {
@@ -6347,7 +6347,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Returns a list of the currently visible columns in the grid.
      * <p>
      * No {@link Column#isHidden() hidden} columns included.
-     * 
+     *
      * @since 7.5.0
      * @return A unmodifiable list of the currently visible columns in the grid
      */
@@ -6365,7 +6365,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Returns a column by its index in the grid.
      * <p>
      * <em>NOTE:</em> The indexing includes hidden columns.
-     * 
+     *
      * @param index
      *            the index of the column
      * @return The column in the given index
@@ -6391,7 +6391,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Returns the header section of this grid. The default header contains a
      * single row displaying the column captions.
-     * 
+     *
      * @return the header
      */
     protected Header getHeader() {
@@ -6400,7 +6400,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Gets the header row at given index.
-     * 
+     *
      * @param rowIndex
      *            0 based index for row. Counted from top to bottom
      * @return header row at given index
@@ -6415,11 +6415,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Inserts a new row at the given position to the header section. Shifts the
      * row currently at that position and any subsequent rows down (adds one to
      * their indices).
-     * 
+     *
      * @param index
      *            the position at which to insert the row
      * @return the new row
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the index is less than 0 or greater than row count
      * @see #appendHeaderRow()
@@ -6433,7 +6433,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Adds a new row at the bottom of the header section.
-     * 
+     *
      * @return the new row
      * @see #prependHeaderRow()
      * @see #addHeaderRowAt(int)
@@ -6448,7 +6448,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Returns the current default row of the header section. The default row is
      * a special header row providing a user interface for sorting columns.
      * Setting a header caption for column updates cells in the default header.
-     * 
+     *
      * @return the default row or null if no default row set
      */
     public HeaderRow getDefaultHeaderRow() {
@@ -6457,7 +6457,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Gets the row count for the header section.
-     * 
+     *
      * @return row count
      */
     public int getHeaderRowCount() {
@@ -6466,7 +6466,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Adds a new row at the top of the header section.
-     * 
+     *
      * @return the new row
      * @see #appendHeaderRow()
      * @see #addHeaderRowAt(int)
@@ -6479,10 +6479,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Removes the given row from the header section.
-     * 
+     *
      * @param row
      *            the row to be removed
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the row does not exist in this section
      * @see #removeHeaderRow(int)
@@ -6496,10 +6496,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Removes the row at the given position from the header section.
-     * 
+     *
      * @param index
      *            the position of the row
-     * 
+     *
      * @throws IllegalArgumentException
      *             if no row exists at given index
      * @see #removeHeaderRow(HeaderRow)
@@ -6517,10 +6517,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * <p>
      * Note: Setting the default header row will reset all cell contents to
      * Column defaults.
-     * 
+     *
      * @param row
      *            the new default row, or null for no default row
-     * 
+     *
      * @throws IllegalArgumentException
      *             header does not contain the row
      */
@@ -6530,7 +6530,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sets the visibility of the header section.
-     * 
+     *
      * @param visible
      *            true to show header section, false to hide
      */
@@ -6540,7 +6540,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Returns the visibility of the header section.
-     * 
+     *
      * @return true if visible, false otherwise.
      */
     public boolean isHeaderVisible() {
@@ -6551,7 +6551,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Returns the footer section of this grid. The default footer is empty.
-     * 
+     *
      * @return the footer
      */
     protected Footer getFooter() {
@@ -6560,7 +6560,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Gets the footer row at given index.
-     * 
+     *
      * @param rowIndex
      *            0 based index for row. Counted from top to bottom
      * @return footer row at given index
@@ -6575,11 +6575,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Inserts a new row at the given position to the footer section. Shifts the
      * row currently at that position and any subsequent rows down (adds one to
      * their indices).
-     * 
+     *
      * @param index
      *            the position at which to insert the row
      * @return the new row
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the index is less than 0 or greater than row count
      * @see #appendFooterRow()
@@ -6593,7 +6593,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Adds a new row at the bottom of the footer section.
-     * 
+     *
      * @return the new row
      * @see #prependFooterRow()
      * @see #addFooterRowAt(int)
@@ -6606,7 +6606,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Gets the row count for the footer.
-     * 
+     *
      * @return row count
      */
     public int getFooterRowCount() {
@@ -6615,7 +6615,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Adds a new row at the top of the footer section.
-     * 
+     *
      * @return the new row
      * @see #appendFooterRow()
      * @see #addFooterRowAt(int)
@@ -6628,10 +6628,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Removes the given row from the footer section.
-     * 
+     *
      * @param row
      *            the row to be removed
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the row does not exist in this section
      * @see #removeFooterRow(int)
@@ -6645,10 +6645,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Removes the row at the given position from the footer section.
-     * 
+     *
      * @param index
      *            the position of the row
-     * 
+     *
      * @throws IllegalArgumentException
      *             if no row exists at given index
      * @see #removeFooterRow(FooterRow)
@@ -6662,7 +6662,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sets the visibility of the footer section.
-     * 
+     *
      * @param visible
      *            true to show footer section, false to hide
      */
@@ -6672,7 +6672,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Returns the visibility of the footer section.
-     * 
+     *
      * @return true if visible, false otherwise.
      */
     public boolean isFooterVisible() {
@@ -6692,7 +6692,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * <p>
      * <em>Note:</em> This method will change the widget's size in the browser
      * only if {@link #getHeightMode()} returns {@link HeightMode#CSS}.
-     * 
+     *
      * @see #setHeightMode(HeightMode)
      */
     @Override
@@ -6707,7 +6707,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sets the data source used by this grid.
-     * 
+     *
      * @param dataSource
      *            the data source to use, not null
      * @throws IllegalArgumentException
@@ -6813,7 +6813,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Gets the {@Link DataSource} for this Grid.
-     * 
+     *
      * @return the data source used by this grid
      */
     public DataSource<T> getDataSource() {
@@ -6827,10 +6827,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * -1 will also disable the selection column.
      * <p>
      * The default value is 0.
-     * 
+     *
      * @param numberOfColumns
      *            the number of columns that should be frozen
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the column count is < -1 or > the number of visible
      *             columns
@@ -6878,7 +6878,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * <p>
      * <em>NOTE:</em> This includes {@link Column#isHidden() hidden columns} in
      * the count.
-     * 
+     *
      * @return the number of frozen columns
      */
     public int getFrozenColumnCount() {
@@ -6900,7 +6900,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * <p>
      * If the details for that row are visible, those will be taken into account
      * as well.
-     * 
+     *
      * @param rowIndex
      *            zero-based index of the row to scroll to.
      * @throws IllegalArgumentException
@@ -6917,7 +6917,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * <p>
      * If the details for that row are visible, those will be taken into account
      * as well.
-     * 
+     *
      * @param rowIndex
      *            zero-based index of the row to scroll to.
      * @param destination
@@ -6939,7 +6939,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * <p>
      * If the details for that row are visible, those will be taken into account
      * as well.
-     * 
+     *
      * @param rowIndex
      *            zero-based index of the row to scroll to.
      * @param destination
@@ -6988,7 +6988,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sets the vertical scroll offset.
-     * 
+     *
      * @param px
      *            the number of pixels this grid should be scrolled down
      */
@@ -6998,7 +6998,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Gets the vertical scroll offset
-     * 
+     *
      * @return the number of pixels this grid is scrolled down
      */
     public double getScrollTop() {
@@ -7007,7 +7007,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sets the horizontal scroll offset
-     * 
+     *
      * @since 7.5.0
      * @param px
      *            the number of pixels this grid should be scrolled right
@@ -7018,7 +7018,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Gets the horizontal scroll offset
-     * 
+     *
      * @return the number of pixels this grid is scrolled to the right
      */
     public double getScrollLeft() {
@@ -7027,7 +7027,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Returns the height of the scrollable area in pixels.
-     * 
+     *
      * @since 7.5.0
      * @return the height of the scrollable area in pixels
      */
@@ -7037,7 +7037,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Returns the width of the scrollable area in pixels.
-     * 
+     *
      * @since 7.5.0
      * @return the width of the scrollable area in pixels.
      */
@@ -7055,7 +7055,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * <p>
      * If Grid is currently not in {@link HeightMode#ROW}, the given value is
      * remembered, and applied once the mode is applied.
-     * 
+     *
      * @param rows
      *            The height in terms of number of rows displayed in Grid's
      *            body. If Grid doesn't contain enough rows, white space is
@@ -7067,7 +7067,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *             infinite}
      * @throws IllegalArgumentException
      *             if {@code rows} is {@link Double#isNaN(double) NaN}
-     * 
+     *
      * @see #setHeightMode(HeightMode)
      */
     public void setHeightByRows(double rows) throws IllegalArgumentException {
@@ -7079,7 +7079,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * {@link #getHeightMode()} is {@link HeightMode#ROW}.
      * <p>
      * By default, it is {@value Escalator#DEFAULT_HEIGHT_BY_ROWS}.
-     * 
+     *
      * @return the amount of rows that should be shown in Grid's body, while in
      *         {@link HeightMode#ROW}.
      * @see #setHeightByRows(double)
@@ -7099,7 +7099,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * <em>Note:</em> If headers/footers are inserted or removed, the widget
      * will resize itself to still display the required amount of rows in its
      * body. It also takes the horizontal scrollbar into account.
-     * 
+     *
      * @param heightMode
      *            the mode in to which Grid should be set
      */
@@ -7109,7 +7109,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * widget dimensions (height/width) on each state change event. The
          * original design was to have setHeight an setHeightByRow be equals,
          * and whichever was called the latest was considered in effect.
-         * 
+         *
          * But, because of Vaadin always calling setHeight on the widget, this
          * approach doesn't work.
          */
@@ -7121,7 +7121,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Returns the current {@link HeightMode} the Grid is in.
      * <p>
      * Defaults to {@link HeightMode#CSS}.
-     * 
+     *
      * @return the current HeightMode
      */
     public HeightMode getHeightMode() {
@@ -7617,7 +7617,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Sets the current selection model.
      * <p>
      * This function will call {@link SelectionModel#setGrid(Grid)}.
-     * 
+     *
      * @param selectionModel
      *            a selection model implementation.
      * @throws IllegalArgumentException
@@ -7645,7 +7645,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Gets a reference to the current selection model.
-     * 
+     *
      * @return the currently used SelectionModel instance.
      */
     public SelectionModel<T> getSelectionModel() {
@@ -7656,7 +7656,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Sets current selection mode.
      * <p>
      * This is a shorthand method for {@link Grid#setSelectionModel}.
-     * 
+     *
      * @param mode
      *            a selection mode value
      * @see {@link SelectionMode}.
@@ -7668,7 +7668,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Test if a row is selected.
-     * 
+     *
      * @param row
      *            a row object
      * @return true, if the current selection model considers the provided row
@@ -7684,7 +7684,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Only selection models implementing {@link SelectionModel.Single} and
      * {@link SelectionModel.Multi} are supported; for anything else, an
      * exception will be thrown.
-     * 
+     *
      * @param row
      *            a row object
      * @return <code>true</code> iff the current selection changed
@@ -7709,7 +7709,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Only selection models implementing {@link SelectionModel.Single} and
      * {@link SelectionModel.Multi} are supported; for anything else, an
      * exception will be thrown.
-     * 
+     *
      * @param row
      *            a row object
      * @return <code>true</code> iff the current selection changed
@@ -7730,7 +7730,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Deselect all rows using the current selection model.
-     * 
+     *
      * @param row
      *            a row object
      * @return <code>true</code> iff the current selection changed
@@ -7759,7 +7759,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Only selection models implementing {@link SelectionModel.Single} are
      * valid for this method; for anything else, use the
      * {@link Grid#getSelectedRows()} method.
-     * 
+     *
      * @return a selected row reference, or null, if no row is selected
      * @throws IllegalStateException
      *             if the current selection model is not an instance of
@@ -7776,7 +7776,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Gets currently selected rows from the current selection model.
-     * 
+     *
      * @return a non-null collection containing all currently selected rows.
      */
     public Collection<T> getSelectedRows() {
@@ -7792,7 +7792,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Sets the current sort order using the fluid Sort API. Read the
      * documentation for {@link Sort} for more information.
-     * 
+     *
      * @param s
      *            a sort instance
      */
@@ -7802,7 +7802,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sorts the Grid data in ascending order along one column.
-     * 
+     *
      * @param column
      *            a grid column reference
      */
@@ -7812,7 +7812,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sorts the Grid data along one column.
-     * 
+     *
      * @param column
      *            a grid column reference
      * @param direction
@@ -7825,7 +7825,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Sets the sort order to use. Setting this causes the Grid to re-sort
      * itself.
-     * 
+     *
      * @param order
      *            a sort order list. If set to null, the sort order is cleared.
      */
@@ -7853,7 +7853,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Get a copy of the current sort order array.
-     * 
+     *
      * @return a copy of the current sort order array
      */
     public List<SortOrder> getSortOrder() {
@@ -7876,7 +7876,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Register a GWT event handler for a sorting event. This handler gets
      * called whenever this Grid needs its data source to provide data sorted in
      * a specific order.
-     * 
+     *
      * @param handler
      *            a sort event handler
      * @return the registration for the event
@@ -7888,7 +7888,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Register a GWT event handler for a select all event. This handler gets
      * called whenever Grid needs all rows selected.
-     * 
+     *
      * @param handler
      *            a select all event handler
      */
@@ -7904,7 +7904,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * <p>
      * This handle will be fired with the current available data after
      * registration is done.
-     * 
+     *
      * @param handler
      *            a data available event handler
      * @return the registartion for the event
@@ -7928,7 +7928,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Register a BodyKeyDownHandler to this Grid. The event for this handler is
      * fired when a KeyDown event occurs while cell focus is in the Body of this
      * Grid.
-     * 
+     *
      * @param handler
      *            the key handler to register
      * @return the registration for the event
@@ -7942,7 +7942,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Register a BodyKeyUpHandler to this Grid. The event for this handler is
      * fired when a KeyUp event occurs while cell focus is in the Body of this
      * Grid.
-     * 
+     *
      * @param handler
      *            the key handler to register
      * @return the registration for the event
@@ -7955,7 +7955,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Register a BodyKeyPressHandler to this Grid. The event for this handler
      * is fired when a KeyPress event occurs while cell focus is in the Body of
      * this Grid.
-     * 
+     *
      * @param handler
      *            the key handler to register
      * @return the registration for the event
@@ -7969,7 +7969,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Register a HeaderKeyDownHandler to this Grid. The event for this handler
      * is fired when a KeyDown event occurs while cell focus is in the Header of
      * this Grid.
-     * 
+     *
      * @param handler
      *            the key handler to register
      * @return the registration for the event
@@ -7983,7 +7983,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Register a HeaderKeyUpHandler to this Grid. The event for this handler is
      * fired when a KeyUp event occurs while cell focus is in the Header of this
      * Grid.
-     * 
+     *
      * @param handler
      *            the key handler to register
      * @return the registration for the event
@@ -7997,7 +7997,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Register a HeaderKeyPressHandler to this Grid. The event for this handler
      * is fired when a KeyPress event occurs while cell focus is in the Header
      * of this Grid.
-     * 
+     *
      * @param handler
      *            the key handler to register
      * @return the registration for the event
@@ -8011,7 +8011,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Register a FooterKeyDownHandler to this Grid. The event for this handler
      * is fired when a KeyDown event occurs while cell focus is in the Footer of
      * this Grid.
-     * 
+     *
      * @param handler
      *            the key handler to register
      * @return the registration for the event
@@ -8025,7 +8025,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Register a FooterKeyUpHandler to this Grid. The event for this handler is
      * fired when a KeyUp event occurs while cell focus is in the Footer of this
      * Grid.
-     * 
+     *
      * @param handler
      *            the key handler to register
      * @return the registration for the event
@@ -8039,7 +8039,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Register a FooterKeyPressHandler to this Grid. The event for this handler
      * is fired when a KeyPress event occurs while cell focus is in the Footer
      * of this Grid.
-     * 
+     *
      * @param handler
      *            the key handler to register
      * @return the registration for the event
@@ -8052,7 +8052,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Register a BodyClickHandler to this Grid. The event for this handler is
      * fired when a Click event occurs in the Body of this Grid.
-     * 
+     *
      * @param handler
      *            the click handler to register
      * @return the registration for the event
@@ -8064,7 +8064,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Register a HeaderClickHandler to this Grid. The event for this handler is
      * fired when a Click event occurs in the Header of this Grid.
-     * 
+     *
      * @param handler
      *            the click handler to register
      * @return the registration for the event
@@ -8077,7 +8077,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Register a FooterClickHandler to this Grid. The event for this handler is
      * fired when a Click event occurs in the Footer of this Grid.
-     * 
+     *
      * @param handler
      *            the click handler to register
      * @return the registration for the event
@@ -8091,7 +8091,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Register a BodyDoubleClickHandler to this Grid. The event for this
      * handler is fired when a double click event occurs in the Body of this
      * Grid.
-     * 
+     *
      * @param handler
      *            the double click handler to register
      * @return the registration for the event
@@ -8105,7 +8105,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Register a HeaderDoubleClickHandler to this Grid. The event for this
      * handler is fired when a double click event occurs in the Header of this
      * Grid.
-     * 
+     *
      * @param handler
      *            the double click handler to register
      * @return the registration for the event
@@ -8119,7 +8119,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Register a FooterDoubleClickHandler to this Grid. The event for this
      * handler is fired when a double click event occurs in the Footer of this
      * Grid.
-     * 
+     *
      * @param handler
      *            the double click handler to register
      * @return the registration for the event
@@ -8132,7 +8132,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Register a column reorder handler to this Grid. The event for this
      * handler is fired when the Grid's columns are reordered.
-     * 
+     *
      * @since 7.5.0
      * @param handler
      *            the handler for the event
@@ -8146,7 +8146,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Register a column visibility change handler to this Grid. The event for
      * this handler is fired when the Grid's columns change visibility.
-     * 
+     *
      * @since 7.5.0
      * @param handler
      *            the handler for the event
@@ -8160,7 +8160,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Register a column resize handler to this Grid. The event for this handler
      * is fired when the Grid's columns are resized.
-     * 
+     *
      * @since 7.6
      * @param handler
      *            the handler for the event
@@ -8175,7 +8175,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Register a enabled status change handler to this Grid. The event for this
      * handler is fired when the Grid changes from disabled to enabled and
      * vice-versa.
-     * 
+     *
      * @param handler
      *            the handler for the event
      * @return the registration for the event
@@ -8225,7 +8225,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Adds a scroll handler to this grid
-     * 
+     *
      * @param handler
      *            the scroll handler to add
      * @return a handler registration for the registered scroll handler
@@ -8243,7 +8243,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Returns whether columns can be reordered with drag and drop.
-     * 
+     *
      * @since 7.5.0
      * @return <code>true</code> if columns can be reordered, false otherwise
      */
@@ -8253,7 +8253,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sets whether column reordering with drag and drop is allowed or not.
-     * 
+     *
      * @since 7.5.0
      * @param columnReorderingAllowed
      *            specifies whether column reordering is allowed
@@ -8266,7 +8266,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Sets a new column order for the grid. All columns which are not ordered
      * here will remain in the order they were before as the last columns of
      * grid.
-     * 
+     *
      * @param orderedColumns
      *            array of columns in wanted order
      */
@@ -8326,7 +8326,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sets the style generator that is used for generating styles for cells
-     * 
+     *
      * @param cellStyleGenerator
      *            the cell style generator to set, or <code>null</code> to
      *            remove a previously set generator
@@ -8339,7 +8339,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Gets the style generator that is used for generating styles for cells
-     * 
+     *
      * @return the cell style generator, or <code>null</code> if no generator is
      *         set
      */
@@ -8349,7 +8349,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sets the style generator that is used for generating styles for rows
-     * 
+     *
      * @param rowStyleGenerator
      *            the row style generator to set, or <code>null</code> to remove
      *            a previously set generator
@@ -8361,7 +8361,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Gets the style generator that is used for generating styles for rows
-     * 
+     *
      * @return the row style generator, or <code>null</code> if no generator is
      *         set
      */
@@ -8389,10 +8389,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Opens the editor over the row with the given index.
-     * 
+     *
      * @param rowIndex
      *            the index of the row to be edited
-     * 
+     *
      * @throws IllegalStateException
      *             if the editor is not enabled
      * @throws IllegalStateException
@@ -8404,7 +8404,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Returns whether the editor is currently open on some row.
-     * 
+     *
      * @return {@code true} if the editor is active, {@code false} otherwise.
      */
     public boolean isEditorActive() {
@@ -8413,7 +8413,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Saves any unsaved changes in the editor to the data source.
-     * 
+     *
      * @throws IllegalStateException
      *             if the editor is not enabled
      * @throws IllegalStateException
@@ -8426,7 +8426,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Cancels the currently active edit and hides the editor. Any changes that
      * are not {@link #saveEditor() saved} are lost.
-     * 
+     *
      * @throws IllegalStateException
      *             if the editor is not enabled
      * @throws IllegalStateException
@@ -8439,7 +8439,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Returns the handler responsible for binding data and editor widgets to
      * the editor.
-     * 
+     *
      * @return the editor handler or null if not set
      */
     public EditorHandler<T> getEditorHandler() {
@@ -8449,10 +8449,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Sets the handler responsible for binding data and editor widgets to the
      * editor.
-     * 
+     *
      * @param rowHandler
      *            the new editor handler
-     * 
+     *
      * @throws IllegalStateException
      *             if the editor is currently in edit mode
      */
@@ -8462,7 +8462,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Returns the enabled state of the editor.
-     * 
+     *
      * @return true if editing is enabled, false otherwise
      */
     public boolean isEditorEnabled() {
@@ -8471,10 +8471,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sets the enabled state of the editor.
-     * 
+     *
      * @param enabled
      *            true to enable editing, false to disable
-     * 
+     *
      * @throws IllegalStateException
      *             if in edit mode and trying to disable
      * @throws IllegalStateException
@@ -8487,7 +8487,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Returns the editor widget associated with the given column. If the editor
      * is not active, returns null.
-     * 
+     *
      * @param column
      *            the column
      * @return the widget if the editor is open, null otherwise
@@ -8498,7 +8498,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sets the caption on the save button in the Grid editor.
-     * 
+     *
      * @param saveCaption
      *            the caption to set
      * @throws IllegalArgumentException
@@ -8511,7 +8511,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Gets the current caption on the save button in the Grid editor.
-     * 
+     *
      * @return the current caption on the save button
      */
     public String getEditorSaveCaption() {
@@ -8520,7 +8520,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sets the caption on the cancel button in the Grid editor.
-     * 
+     *
      * @param cancelCaption
      *            the caption to set
      * @throws IllegalArgumentException
@@ -8533,7 +8533,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Gets the caption on the cancel button in the Grid editor.
-     * 
+     *
      * @return the current caption on the cancel button
      */
     public String getEditorCancelCaption() {
@@ -8597,7 +8597,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * <p>
      * This method is implemented only because removing widgets from Grid (added
      * via e.g. {@link Renderer}s) requires the {@link HasWidgets} interface.
-     * 
+     *
      * @param w
      *            irrelevant
      * @throws UnsupportedOperationException
@@ -8615,7 +8615,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * <p>
      * This method is implemented only because removing widgets from Grid (added
      * via e.g. {@link Renderer}s) requires the {@link HasWidgets} interface.
-     * 
+     *
      * @throws UnsupportedOperationException
      *             always
      */
@@ -8631,7 +8631,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * <p>
      * This method is implemented only because removing widgets from Grid (added
      * via e.g. {@link Renderer}s) requires the {@link HasWidgets} interface.
-     * 
+     *
      * @return never
      * @throws UnsupportedOperationException
      *             always
@@ -8648,7 +8648,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * <p>
      * This method is implemented only because removing widgets from Grid (added
      * via e.g. {@link Renderer}s) requires the {@link HasWidgets} interface.
-     * 
+     *
      * @return always <code>false</code>
      */
     @Override
@@ -8660,7 +8660,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * corresponding Widget will call removeFromParent() on itself. GWT will
          * check there that its parent (i.e. Grid) implements HasWidgets, and
          * will call this remove(Widget) method.
-         * 
+         *
          * tl;dr: all this song and dance to make sure GWT's sanity checks
          * aren't triggered, even though they effectively do nothing interesting
          * from Grid's perspective.
@@ -8670,7 +8670,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Accesses the package private method Widget#setParent()
-     * 
+     *
      * @param widget
      *            The widget to access
      * @param parent
@@ -8732,7 +8732,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Sets a new details generator for row details.
      * <p>
      * The currently opened row details will be re-rendered.
-     * 
+     *
      * @since 7.5.0
      * @param detailsGenerator
      *            the details generator to set
@@ -8759,7 +8759,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Gets the current details generator for row details.
-     * 
+     *
      * @since 7.5.0
      * @return the detailsGenerator the current details generator
      */
@@ -8772,7 +8772,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * <p>
      * This method does nothing if trying to set show already-visible details,
      * or hide already-hidden details.
-     * 
+     *
      * @since 7.5.0
      * @param rowIndex
      *            the index of the affected row
@@ -8791,17 +8791,17 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /*
          * We want to prevent opening a details row twice, so any subsequent
          * openings (or closings) of details is a NOOP.
-         * 
+         *
          * When a details row is opened, it is given an arbitrary height
          * (because Escalator requires a height upon opening). Only when it's
          * opened, Escalator will ask the generator to generate a widget, which
          * we then can measure. When measured, we correct the initial height by
          * the original height.
-         * 
+         *
          * Without this check, we would override the measured height, and revert
          * back to the initial, arbitrary, height which would most probably be
          * wrong.
-         * 
+         *
          * see GridSpacerUpdater.init for implementation details.
          */
 
@@ -8819,7 +8819,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Check whether the details for a row is visible or not.
-     * 
+     *
      * @since 7.5.0
      * @param rowIndex
      *            the index of the row for which to check details
@@ -8836,7 +8836,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * The actual recalculation is not necessarily done immediately so you
      * cannot rely on the columns being the correct width after the call
      * returns.
-     * 
+     *
      * @since 7.4.1
      */
     public void recalculateColumnWidths() {
@@ -8850,7 +8850,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * the items in the beginning of the menu that control the column hiding if
      * any columns are marked as hidable. A toggle for opening the menu will be
      * displayed whenever the menu contains at least one item.
-     * 
+     *
      * @since 7.5.0
      * @return the menu bar
      */
@@ -8860,7 +8860,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Tests whether the sidebar menu is currently open.
-     * 
+     *
      * @since 7.5.0
      * @see #getSidebarMenu()
      * @return <code>true</code> if the sidebar is open; <code>false</code> if
@@ -8872,8 +8872,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sets whether the sidebar menu is open.
-     * 
-     * 
+     *
+     *
      * @since 7.5.0
      * @see #getSidebarMenu()
      * @see #isSidebarOpen()
@@ -8916,7 +8916,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sets the buffered editor mode.
-     * 
+     *
      * @since 7.6
      * @param editorUnbuffered
      *            <code>true</code> to enable buffered editor,
@@ -8928,7 +8928,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Gets the buffered editor mode.
-     * 
+     *
      * @since 7.6
      * @return <code>true</code> if buffered editor is enabled,
      *         <code>false</code> otherwise
@@ -8942,7 +8942,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * this Grid.
      * <p>
      * Note: This cell reference will be updated when firing the next event.
-     * 
+     *
      * @since 7.5
      * @return event cell reference
      */
@@ -8953,7 +8953,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Returns a CellReference for the cell to which the given element belongs
      * to.
-     * 
+     *
      * @since 7.6
      * @param element
      *            Element to find from the cell's content.

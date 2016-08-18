@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,7 @@ import java.util.Collection;
  * locally unique non-null identifier. The interface is split into subinterfaces
  * to enable a class to implement only the functionalities it needs.
  * </p>
- * 
+ *
  * @author Vaadin Ltd
  * @since 3.0
  */
@@ -35,7 +35,7 @@ public interface Item extends Serializable {
      * Gets the Property corresponding to the given Property ID stored in the
      * Item. If the Item does not contain the Property, <code>null</code> is
      * returned.
-     * 
+     *
      * @param id
      *            identifier of the Property to get
      * @return the Property with the given ID or <code>null</code>
@@ -44,7 +44,7 @@ public interface Item extends Serializable {
 
     /**
      * Gets the collection of IDs of all Properties stored in the Item.
-     * 
+     *
      * @return unmodifiable collection containing IDs of the Properties stored
      *         the Item
      */
@@ -52,11 +52,11 @@ public interface Item extends Serializable {
 
     /**
      * Tries to add a new Property into the Item.
-     * 
+     *
      * <p>
      * This functionality is optional.
      * </p>
-     * 
+     *
      * @param id
      *            ID of the new Property
      * @param property
@@ -71,11 +71,11 @@ public interface Item extends Serializable {
 
     /**
      * Removes the Property identified by ID from the Item.
-     * 
+     *
      * <p>
      * This functionality is optional.
      * </p>
-     * 
+     *
      * @param id
      *            ID of the Property to be removed
      * @return <code>true</code> if the operation succeeded
@@ -93,7 +93,7 @@ public interface Item extends Serializable {
 
         /**
          * Sets the Item that serves as the data source of the viewer.
-         * 
+         *
          * @param newDataSource
          *            The new data source Item
          */
@@ -101,7 +101,7 @@ public interface Item extends Serializable {
 
         /**
          * Gets the Item serving as the data source of the viewer.
-         * 
+         *
          * @return data source Item
          */
         public Item getItemDataSource();
@@ -134,7 +134,7 @@ public interface Item extends Serializable {
 
         /**
          * Retrieves the Item whose contents has been modified.
-         * 
+         *
          * @return source Item of the event
          */
         public Item getItem();
@@ -148,7 +148,7 @@ public interface Item extends Serializable {
 
         /**
          * Notifies this listener that the Item's property set has changed.
-         * 
+         *
          * @param event
          *            Property set change event object
          */
@@ -173,7 +173,7 @@ public interface Item extends Serializable {
 
         /**
          * Registers a new property set change listener for this Item.
-         * 
+         *
          * @param listener
          *            The new Listener to be registered.
          */
@@ -189,7 +189,7 @@ public interface Item extends Serializable {
 
         /**
          * Removes a previously registered property set change listener.
-         * 
+         *
          * @param listener
          *            Listener to be removed.
          */

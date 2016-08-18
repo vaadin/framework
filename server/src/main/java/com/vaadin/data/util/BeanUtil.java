@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,9 +26,9 @@ import java.util.List;
 
 /**
  * Utility class for Java Beans information access.
- * 
+ *
  * @since 7.4
- * 
+ *
  * @author Vaadin Ltd
  */
 public final class BeanUtil implements Serializable {
@@ -38,21 +38,21 @@ public final class BeanUtil implements Serializable {
 
     /**
      * Returns the property descriptors of a class or an interface.
-     * 
+     *
      * For an interface, superinterfaces are also iterated as Introspector does
      * not take them into account (Oracle Java bug 4275879), but in that case,
      * both the setter and the getter for a property must be in the same
      * interface and should not be overridden in subinterfaces for the discovery
      * to work correctly.
-     * 
+     *
      * NOTE : This utility method relies on introspection (and returns
      * PropertyDescriptor) which is a part of java.beans package. The latter
      * package could require bigger JDK in the future (with Java 9+). So it may
      * be changed in the future.
-     * 
+     *
      * For interfaces, the iteration is depth first and the properties of
      * superinterfaces are returned before those of their subinterfaces.
-     * 
+     *
      * @param beanClass
      * @return
      * @throws IntrospectionException
@@ -82,7 +82,7 @@ public final class BeanUtil implements Serializable {
      * Returns {@code propertyId} class for property declared in {@code clazz}.
      * Property could be of form "property.subProperty[.subProperty2]" i.e.
      * refer to some nested property.
-     * 
+     *
      * @param clazz
      *            class where property is declared
      * @param propertyId

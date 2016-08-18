@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,7 +23,7 @@ import elemental.json.JsonArray;
 
 /**
  * RPC interface used for pushing container data to the client.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -34,7 +34,7 @@ public interface DataProviderRpc extends ClientRpc {
      * <p>
      * rowDataJson represents a JSON array of JSON objects in the following
      * format:
-     * 
+     *
      * <pre>
      * [{
      *   "d": [COL_1_JSON, COL_2_json, ...],
@@ -43,10 +43,10 @@ public interface DataProviderRpc extends ClientRpc {
      * ...
      * ]
      * </pre>
-     * 
+     *
      * where COL_INDEX is the index of the column (as a string), and COL_n_JSON
      * is valid JSON of the column's data.
-     * 
+     *
      * @param firstRowIndex
      *            the index of the first updated row
      * @param rowDataJson
@@ -59,7 +59,7 @@ public interface DataProviderRpc extends ClientRpc {
 
     /**
      * Informs the client to remove row data.
-     * 
+     *
      * @param firstRowIndex
      *            the index of the first removed row
      * @param count
@@ -71,7 +71,7 @@ public interface DataProviderRpc extends ClientRpc {
 
     /**
      * Informs the client to insert new row data.
-     * 
+     *
      * @param firstRowIndex
      *            the index of the first new row
      * @param count
@@ -86,7 +86,7 @@ public interface DataProviderRpc extends ClientRpc {
      * This should be used in the cases where the data has changed in some
      * unverifiable way. I.e. "something happened". This will lead to a
      * re-rendering of the current Grid viewport
-     * 
+     *
      * @param size
      *            the size of the new data set
      */
@@ -96,7 +96,7 @@ public interface DataProviderRpc extends ClientRpc {
      * Informs the client that rows have been updated. The client-side
      * DataSource will map the given data to correct index if it should be in
      * the cache.
-     * 
+     *
      * @since 7.6
      * @param rowArray
      *            array of updated rows

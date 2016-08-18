@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,7 +32,7 @@ import com.vaadin.data.Item;
 /**
  * A specialized Container whose contents can be accessed like it was a
  * tree-like structure.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -83,7 +83,7 @@ public class HierarchicalContainer extends IndexedContainer
 
     /**
      * Counts how many nested contents change disable calls are in progress.
-     * 
+     *
      * Pending events are only fired when the counter reaches zero again.
      */
     private int contentChangedEventsDisabledCount = 0;
@@ -196,7 +196,7 @@ public class HierarchicalContainer extends IndexedContainer
      * {@link #setParent(Object itemId, Object newParentId)} or
      * {@link com.vaadin.data.Container#removeItem(Object itemId)}.
      * </p>
-     * 
+     *
      * @param itemId
      *            the ID of the Item in the container whose child capability is
      *            to be set.
@@ -231,7 +231,7 @@ public class HierarchicalContainer extends IndexedContainer
      * also possible to detach a node from the hierarchy (and thus make it root)
      * by setting the parent <code>null</code>.
      * </p>
-     * 
+     *
      * @param itemId
      *            the ID of the item to be set as the child of the Item
      *            identified with newParentId.
@@ -361,7 +361,7 @@ public class HierarchicalContainer extends IndexedContainer
     /**
      * Moves a node (an Item) in the container immediately after a sibling node.
      * The two nodes must have the same parent in the container.
-     * 
+     *
      * @param itemId
      *            the identifier of the moved node (Item)
      * @param siblingId
@@ -403,7 +403,7 @@ public class HierarchicalContainer extends IndexedContainer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.util.IndexedContainer#addItem()
      */
     @Override
@@ -465,7 +465,7 @@ public class HierarchicalContainer extends IndexedContainer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.util.IndexedContainer#addItem(java.lang.Object)
      */
     @Override
@@ -492,7 +492,7 @@ public class HierarchicalContainer extends IndexedContainer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.util.IndexedContainer#removeAllItems()
      */
     @Override
@@ -524,7 +524,7 @@ public class HierarchicalContainer extends IndexedContainer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.util.IndexedContainer#removeItem(java.lang.Object )
      */
     @Override
@@ -599,7 +599,7 @@ public class HierarchicalContainer extends IndexedContainer
 
     /**
      * Removes the Item identified by given itemId and all its children.
-     * 
+     *
      * @see #removeItem(Object)
      * @param itemId
      *            the identifier of the Item to be removed
@@ -618,7 +618,7 @@ public class HierarchicalContainer extends IndexedContainer
     /**
      * Removes the Item identified by given itemId and all its children from the
      * given Container.
-     * 
+     *
      * @param container
      *            the container where the item is to be removed
      * @param itemId
@@ -649,7 +649,7 @@ public class HierarchicalContainer extends IndexedContainer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.util.IndexedContainer#doSort()
      */
     @Override
@@ -665,7 +665,7 @@ public class HierarchicalContainer extends IndexedContainer
     /**
      * Used to control how filtering works. @see
      * {@link #setIncludeParentsWhenFiltering(boolean)} for more information.
-     * 
+     *
      * @return true if all parents for items that match the filter are included
      *         when filtering, false if only the matching items are included
      */
@@ -679,7 +679,7 @@ public class HierarchicalContainer extends IndexedContainer
      * items themselves. Setting this to false causes the filtering to only
      * include the matching items and make items with excluded parents into root
      * items.
-     * 
+     *
      * @param includeParentsWhenFiltering
      *            true to include all parents for items that match the filter,
      *            false to only include the matching items
@@ -695,9 +695,9 @@ public class HierarchicalContainer extends IndexedContainer
 
     /*
      * Overridden to provide filtering for root & children items.
-     * 
+     *
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.util.IndexedContainer#updateContainerFiltering()
      */
     @Override
@@ -765,7 +765,7 @@ public class HierarchicalContainer extends IndexedContainer
     /**
      * Adds the given childItemId as a filteredChildren for the parentItemId and
      * sets it filteredParent.
-     * 
+     *
      * @param parentItemId
      * @param childItemId
      */
@@ -786,7 +786,7 @@ public class HierarchicalContainer extends IndexedContainer
      * filteredChildren map in the same order as they are in the children map.
      * Starts from parentItemId and recurses down as long as child items that
      * should be included are found.
-     * 
+     *
      * @param parentItemId
      *            The item id to start recurse from. Not added to a
      *            filteredChildren list
@@ -814,7 +814,7 @@ public class HierarchicalContainer extends IndexedContainer
      * when filtering. All items which passes the filters are included.
      * Additionally all items that have a child node that should be included are
      * also themselves included.
-     * 
+     *
      * @param itemId
      * @param includedItems
      * @return true if the itemId should be included in the filtered container.
@@ -841,7 +841,7 @@ public class HierarchicalContainer extends IndexedContainer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.data.util.IndexedContainer#passesFilters(java.lang.Object)
      */

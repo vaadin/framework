@@ -9,10 +9,10 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Table;
 
 /**
- * 
+ *
  * Toggling container with an empty one may result duplicate header cell in
  * client.
- * 
+ *
  */
 public class Ticket2126 extends com.vaadin.server.LegacyApplication {
 

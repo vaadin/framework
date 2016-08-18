@@ -27,7 +27,7 @@ import com.vaadin.tests.tb3.newelements.ComboBoxElement;
 
 /**
  * Test for identical item captions in ComboBox.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class ComboBoxIdenticalItemsTest extends MultiBrowserTest {

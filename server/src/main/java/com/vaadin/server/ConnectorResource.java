@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,9 +18,9 @@ package com.vaadin.server;
 
 /**
  * A resource that is served through the Connector that is using the resource.
- * 
+ *
  * @see AbstractClientConnector#setResource(String, Resource)
- * 
+ *
  * @author Vaadin Ltd
  * @version @VERSION@
  * @since 7.0.0
@@ -37,14 +37,14 @@ public interface ConnectorResource extends Resource {
      * holding session locks (to prevent locking the session during long file
      * downloads).
      * </p>
-     * 
+     *
      * @return A download stream which produces the resource content
      */
     public DownloadStream getStream();
 
     /**
      * Gets the virtual filename for this resource.
-     * 
+     *
      * @return the file name associated to this resource.
      */
     public String getFilename();

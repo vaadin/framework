@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -45,18 +45,18 @@ import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
  * Design is used for reading a component hierarchy from an html string or input
  * stream and, conversely, for writing an html representation corresponding to a
  * given component hierarchy.
- * 
+ *
  * <p>
  * In html form a valid nonempty component hierarchy contains a single root
  * element located under the &lt;body&gt; tag. A hierarchy of components is
  * achieved by nesting other elements under the root element. An empty component
  * hierarchy is represented as no elements under the &lt;body&gt; tag.
- * 
+ *
  * <p>
  * For writing a component hierarchy the root element is specified as a
  * Component parameter or as a DesignContext object containing the root
  * Component. An empty hierarchy can be written by giving a null root Component.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -73,19 +73,19 @@ public class Design implements Serializable {
      * <p>
      * Use {@link Design#setComponentFactory(ComponentFactory)} to configure
      * Vaadin to use a custom component factory.
-     * 
+     *
      * @since 7.4.1
      */
     public interface ComponentFactory extends Serializable {
         /**
          * Creates a component based on the fully qualified name derived from
          * the tag name in the design.
-         * 
+         *
          * @param fullyQualifiedClassName
          *            the fully qualified name of the component to create
          * @param context
          *            the design context for which the component is created
-         * 
+         *
          * @return a newly created component
          */
         public Component createComponent(String fullyQualifiedClassName,
@@ -98,7 +98,7 @@ public class Design implements Serializable {
      * <p>
      * Use {@link Design#setComponentMapper(ComponentMapper)} to configure
      * Vaadin to use a custom component mapper.
-     * 
+     *
      * @since 7.5.0
      * @author Vaadin Ltd
      */
@@ -111,7 +111,7 @@ public class Design implements Serializable {
          * {@link #componentToTag(Component, DesignContext)} so that the
          * resolved tag for a created component is the same as the tag for which
          * the component was created.
-         * 
+         *
          * @param tag
          *            the tag name to create a component for
          * @param componentFactory
@@ -126,7 +126,7 @@ public class Design implements Serializable {
 
         /**
          * Resolves a tag name from a component.
-         * 
+         *
          * @param component
          *            the component to get a tag name for
          * @param context
@@ -141,7 +141,7 @@ public class Design implements Serializable {
      * Default implementation of {@link ComponentFactory}, using
      * <code>Class.forName(className).newInstance()</code> for finding the
      * component class and creating a component instance.
-     * 
+     *
      * @since 7.4.1
      */
     public static class DefaultComponentFactory implements ComponentFactory {
@@ -182,7 +182,7 @@ public class Design implements Serializable {
         /**
          * Resolves a component class based on the fully qualified name of the
          * class.
-         * 
+         *
          * @param qualifiedClassName
          *            the fully qualified name of the resolved class
          * @param context
@@ -204,7 +204,7 @@ public class Design implements Serializable {
 
     /**
      * Default implementation of {@link ComponentMapper},
-     * 
+     *
      * @since 7.5.0
      */
     public static class DefaultComponentMapper implements ComponentMapper {
@@ -284,7 +284,7 @@ public class Design implements Serializable {
          * name. The name is derived by converting each uppercase letter to
          * lowercase and inserting a dash before the letter. No dash is inserted
          * before the first letter of the class name.
-         * 
+         *
          * @param className
          *            the name of the class without a package name
          * @return the html tag name corresponding to className
@@ -315,10 +315,10 @@ public class Design implements Serializable {
      * <p>
      * Please note that this setting is global, so care should be taken to avoid
      * conflicting changes.
-     * 
+     *
      * @param componentFactory
      *            the component factory to set; not <code>null</code>
-     * 
+     *
      * @since 7.4.1
      */
     public static void setComponentFactory(ComponentFactory componentFactory) {
@@ -331,11 +331,11 @@ public class Design implements Serializable {
 
     /**
      * Gets the currently used component factory.
-     * 
+     *
      * @see #setComponentFactory(ComponentFactory)
-     * 
+     *
      * @return the component factory
-     * 
+     *
      * @since 7.4.1
      */
     public static ComponentFactory getComponentFactory() {
@@ -348,10 +348,10 @@ public class Design implements Serializable {
      * <p>
      * Please note that this setting is global, so care should be taken to avoid
      * conflicting changes.
-     * 
+     *
      * @param componentMapper
      *            the component mapper to set; not <code>null</code>
-     * 
+     *
      * @since 7.5.0
      */
     public static void setComponentMapper(ComponentMapper componentMapper) {
@@ -364,11 +364,11 @@ public class Design implements Serializable {
 
     /**
      * Gets the currently used component mapper.
-     * 
+     *
      * @see #setComponentMapper(ComponentMapper)
-     * 
+     *
      * @return the component mapper
-     * 
+     *
      * @since 7.5.0
      */
     public static ComponentMapper getComponentMapper() {
@@ -377,7 +377,7 @@ public class Design implements Serializable {
 
     /**
      * Parses the given input stream into a jsoup document
-     * 
+     *
      * @param html
      *            the stream containing the design
      * @return the parsed jsoup document
@@ -396,12 +396,12 @@ public class Design implements Serializable {
     /**
      * Constructs a component hierarchy from the design specified as an html
      * tree.
-     * 
+     *
      * <p>
      * If a component root is given, the component instances created during
      * reading the design are assigned to its member fields based on their id,
      * local id, and caption
-     * 
+     *
      * @param doc
      *            the html tree
      * @param componentRoot
@@ -424,12 +424,12 @@ public class Design implements Serializable {
     /**
      * Constructs a component hierarchy from the design specified as an html
      * tree.
-     * 
+     *
      * <p>
      * If a component root is given, the component instances created during
      * reading the design are assigned to its member fields based on their id,
      * local id, and caption
-     * 
+     *
      * @param doc
      *            the html tree
      * @param componentRoot
@@ -504,8 +504,8 @@ public class Design implements Serializable {
      * the root designContext.getRootComponent(). The hierarchy is stored under
      * &lt;body&gt; in the tree. The generated tree represents a valid html
      * document.
-     * 
-     * 
+     *
+     *
      * @param designContext
      *            a DesignContext object specifying the root component
      *            (designContext.getRootComponent()) of the hierarchy
@@ -549,7 +549,7 @@ public class Design implements Serializable {
      * id/local id/caption in the design file.
      * <p>
      * The type of the root component must match the root element in the design
-     * 
+     *
      * @param rootComponent
      *            The root component of the layout
      * @return The design context used in the load operation
@@ -603,7 +603,7 @@ public class Design implements Serializable {
     /**
      * Find the first class with the given annotation, starting the search from
      * the given class and moving upwards in the class hierarchy.
-     * 
+     *
      * @param componentClass
      *            the class to check
      * @param annotationClass
@@ -640,7 +640,7 @@ public class Design implements Serializable {
      * id/local id/caption in the design file.
      * <p>
      * The type of the root component must match the root element in the design.
-     * 
+     *
      * @param filename
      *            The file name to load. Loaded from the same package as the
      *            root component
@@ -681,7 +681,7 @@ public class Design implements Serializable {
      * <p>
      * If rootComponent is not null, its type must match the type of the root
      * element in the design
-     * 
+     *
      * @param stream
      *            The stream to read the design from
      * @param rootComponent
@@ -703,7 +703,7 @@ public class Design implements Serializable {
 
     /**
      * Loads a design from the given input stream
-     * 
+     *
      * @param design
      *            The stream to read the design from
      * @return The root component of the design
@@ -716,7 +716,7 @@ public class Design implements Serializable {
     /**
      * Writes the given component tree in design format to the given output
      * stream.
-     * 
+     *
      * @param component
      *            the root component of the component tree, null can be used for
      *            generating an empty design
@@ -737,7 +737,7 @@ public class Design implements Serializable {
      * Writes the component, given in the design context, in design format to
      * the given output stream. The design context is used for writing local ids
      * and other information not available in the component tree.
-     * 
+     *
      * @param designContext
      *            The DesignContext object specifying the component hierarchy
      *            and the local id values of the objects. If
@@ -757,7 +757,7 @@ public class Design implements Serializable {
 
     /**
      * Writes the given jsoup document to the output stream (in UTF-8)
-     * 
+     *
      * @param doc
      *            the document to write
      * @param outputStream

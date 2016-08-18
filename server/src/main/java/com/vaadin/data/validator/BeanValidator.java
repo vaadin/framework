@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -39,10 +39,10 @@ import com.vaadin.data.Validator;
  * Note that a JSR-303 implementation (e.g. Hibernate Validator or Apache Bean
  * Validation - formerly agimatec validation) must be present on the project
  * classpath when using bean validation.
- * 
+ *
  * @author Petri Hakala
  * @author Vaadin Ltd.
- * 
+ *
  * @since 8.0
  */
 public class BeanValidator implements Validator<Object> {
@@ -58,7 +58,7 @@ public class BeanValidator implements Validator<Object> {
      * Creates a new JSR-303 {@code BeanValidator} that validates values of the
      * specified property. Localizes validation messages using the
      * {@linkplain Locale#getDefault() default locale}.
-     * 
+     *
      * @param beanType
      *            the bean type declaring the property, not null
      * @param propertyName
@@ -71,7 +71,7 @@ public class BeanValidator implements Validator<Object> {
     /**
      * Creates a new JSR-303 {@code BeanValidator} that validates values of the
      * specified property. Localizes validation messages using the given locale.
-     * 
+     *
      * @param beanType
      *            the bean class declaring the property, not null
      * @param propertyName
@@ -111,7 +111,7 @@ public class BeanValidator implements Validator<Object> {
 
     /**
      * Returns the locale used for validation error messages.
-     * 
+     *
      * @return the locale used for error messages
      */
     public Locale getLocale() {
@@ -127,7 +127,7 @@ public class BeanValidator implements Validator<Object> {
     /**
      * Returns the underlying JSR-303 bean validator factory used. A factory is
      * created using {@link Validation} if necessary.
-     * 
+     *
      * @return the validator factory to use
      */
     protected static ValidatorFactory getJavaxBeanValidatorFactory() {
@@ -139,7 +139,7 @@ public class BeanValidator implements Validator<Object> {
 
     /**
      * Returns a shared JSR-303 validator instance to use.
-     * 
+     *
      * @return the validator to use
      */
     protected javax.validation.Validator getJavaxBeanValidator() {
@@ -149,7 +149,7 @@ public class BeanValidator implements Validator<Object> {
     /**
      * Returns the interpolated error message for the given constraint violation
      * using the locale specified for this validator.
-     * 
+     *
      * @param v
      *            the constraint violation
      * @return the localized error message
@@ -162,7 +162,7 @@ public class BeanValidator implements Validator<Object> {
     /**
      * Creates a simple message interpolation context based on the given
      * constraint violation.
-     * 
+     *
      * @param v
      *            the constraint violation
      * @return the message interpolation context
@@ -184,7 +184,7 @@ public class BeanValidator implements Validator<Object> {
     /**
      * Sets the locale used for validation error messages. Revalidation is not
      * automatically triggered by setting the locale.
-     * 
+     *
      * @param locale
      *            the locale to use for error messages, not null
      */

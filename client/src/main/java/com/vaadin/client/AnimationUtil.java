@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -22,7 +22,7 @@ import com.google.gwt.dom.client.Style;
 
 /**
  * Utility methods for working with CSS transitions and animations.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.3
  */
@@ -30,9 +30,9 @@ public class AnimationUtil {
 
     /**
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * Set the animation-duration CSS property.
-     * 
+     *
      * @param elem
      *            the element whose animation-duration to set
      * @param duration
@@ -45,9 +45,9 @@ public class AnimationUtil {
 
     /**
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * Set the animation-delay CSS property.
-     * 
+     *
      * @param elem
      *            the element whose animation-delay to set
      * @param delay
@@ -65,15 +65,15 @@ public class AnimationUtil {
       var callbackFunc = $entry(function(e) {
         listener.@com.vaadin.client.AnimationUtil.AnimationEndListener::onAnimationEnd(Lcom/google/gwt/dom/client/NativeEvent;)(e);
       });
-    
+
       elem.addEventListener(@com.vaadin.client.AnimationUtil::ANIMATION_END_EVENT_NAME, callbackFunc, false);
-      
+
       // Store function reference for later removal
       if(!elem._vaadin_animationend_callbacks) {
         elem._vaadin_animationend_callbacks = [];
       }
       elem._vaadin_animationend_callbacks.push(callbackFunc);
-      
+
       return callbackFunc;
     }-*/;
 
@@ -111,7 +111,7 @@ public class AnimationUtil {
             return event.mozAnimationName;
         else if(event.oAnimationName)
             return event.oAnimationName;
-    
+
         return "";
     }-*/;
 
@@ -119,22 +119,22 @@ public class AnimationUtil {
     public static native String getAnimationName(ComputedStyle cstyle)
     /*-{
         var cs = cstyle.@com.vaadin.client.ComputedStyle::computedStyle;
-    
+
         if(!cs.getPropertyValue)
             return "";
-    
+
         if(cs.getPropertyValue("-webkit-animation-name"))
             return cs.getPropertyValue("-webkit-animation-name");
-    
+
         else if(cs.getPropertyValue("animation-name"))
             return cs.getPropertyValue("animation-name");
-    
+
         else if(cs.getPropertyValue("-moz-animation-name"))
             return cs.getPropertyValue("-moz-animation-name");
-    
+
         else if(cs.getPropertyValue("-o-animation-name"))
             return cs.getPropertyValue("-o-animation-name");
-    
+
         return "";
     }-*/;
 
@@ -149,7 +149,7 @@ public class AnimationUtil {
           'MozAnimation': 'animationend',
           'WebkitAnimation': 'webkitAnimationEnd'
         }
-    
+
         for(var a in anims){
             if( el.style[a] !== undefined ){
                 return anims[a];
@@ -168,7 +168,7 @@ public class AnimationUtil {
           'mozAnimation',
           'webkitAnimation'
         ]
-    
+
         for(var i=0; i < anims.length; i++) {
             if( el.style[anims[i]] !== undefined ){
                 return anims[i];

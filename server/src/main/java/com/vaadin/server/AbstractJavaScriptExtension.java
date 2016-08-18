@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -39,7 +39,7 @@ import elemental.json.JsonValue;
  * , then <code>com_example_SuperExtension</code> will also be attempted if
  * <code>com_example_MyExtension</code> has not been defined.
  * <p>
- * 
+ *
  * The initialization function will be called with <code>this</code> pointing to
  * a connector wrapper object providing integration to Vaadin. Please note that
  * in JavaScript, <code>this</code> is not necessarily defined inside callback
@@ -103,7 +103,7 @@ import elemental.json.JsonValue;
  * field.</li>
  * </ul>
  * <p>
- * 
+ *
  * Values in the Shared State and in RPC calls are converted between Java and
  * JavaScript using the following conventions:
  * <ul>
@@ -130,7 +130,7 @@ import elemental.json.JsonValue;
  * here. Please refer to the documentation for specific types for serialization
  * information.</li>
  * </ul>
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
@@ -148,9 +148,9 @@ public abstract class AbstractJavaScriptExtension extends AbstractExtension {
 
     /**
      * Creates a new JavaScript extension extending the provided connector.
-     * 
+     *
      * @since 7.4
-     * 
+     *
      * @param target
      *            the connector to extend
      */
@@ -173,7 +173,7 @@ public abstract class AbstractJavaScriptExtension extends AbstractExtension {
      * available as <code>this</code>). Calling that JavaScript function will
      * cause the call method in the registered {@link JavaScriptFunction} to be
      * invoked with the same arguments.
-     * 
+     *
      * @param functionName
      *            the name that should be used for client-side callback
      * @param function
@@ -194,7 +194,7 @@ public abstract class AbstractJavaScriptExtension extends AbstractExtension {
      * before sending. This can be done either with
      * {@link JsonCodec#encode(Object, JsonValue, java.lang.reflect.Type, com.vaadin.ui.ConnectorTracker)}
      * or using the factory methods in {@link Json}.
-     * 
+     *
      * @param name
      *            the name of the function
      * @param arguments

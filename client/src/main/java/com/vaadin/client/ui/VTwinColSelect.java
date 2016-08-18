@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -72,7 +72,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     /**
      * A ListBox which catches double clicks
-     * 
+     *
      */
     public class DoubleClickListBox extends ListBox
             implements HasDoubleClickHandlers {
@@ -439,7 +439,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     /**
      * Get the key that selects an item in the table. By default it is the Enter
      * key but by overriding this you can change the key to whatever you want.
-     * 
+     *
      * @return
      */
     protected int getNavigationSelectKey() {
@@ -448,7 +448,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
@@ -512,7 +512,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.MouseDownHandler#onMouseDown(com.google
      * .gwt.event.dom.client.MouseDownEvent)
@@ -535,7 +535,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.DoubleClickHandler#onDoubleClick(com.
      * google.gwt.event.dom.client.DoubleClickEvent)

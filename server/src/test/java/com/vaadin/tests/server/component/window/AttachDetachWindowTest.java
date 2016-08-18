@@ -301,7 +301,7 @@ public class AttachDetachWindowTest {
     /**
      * Asserts that win and its children are unattached and their detach()
      * methods have been been called.
-     * 
+     *
      * @param win
      */
     private void assertDetached(TestContainer win) {

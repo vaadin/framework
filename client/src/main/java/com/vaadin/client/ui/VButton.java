@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -138,14 +138,14 @@ public class VButton extends FocusWidget implements ClickHandler {
     @Override
     /*
      * Copy-pasted from GWT CustomButton, some minor modifications done:
-     * 
+     *
      * -for IE/Opera added CLASSNAME_PRESSED
-     * 
+     *
      * -event.preventDefault() removed from ONMOUSEDOWN (Firefox won't apply
      * :active styles if it is present)
-     * 
+     *
      * -Tooltip event handling added
-     * 
+     *
      * -onload event handler added (for icon handling)
      */
     public void onBrowserEvent(Event event) {
@@ -332,7 +332,7 @@ public class VButton extends FocusWidget implements ClickHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event
      * .dom.client.ClickEvent)
@@ -384,7 +384,7 @@ public class VButton extends FocusWidget implements ClickHandler {
 
     /**
      * Sets whether this button is enabled.
-     * 
+     *
      * @param enabled
      *            <code>true</code> to enable the button, <code>false</code> to
      *            disable it
@@ -437,24 +437,24 @@ public class VButton extends FocusWidget implements ClickHandler {
     	var convertToPixel = function(elem, value) {
     	    // From the awesome hack by Dean Edwards
             // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
-    
+
             // Remember the original values
             var left = elem.style.left, rsLeft = elem.runtimeStyle.left;
-    
+
             // Put in the new values to get a computed value out
             elem.runtimeStyle.left = elem.currentStyle.left;
             elem.style.left = value || 0;
             var ret = elem.style.pixelLeft;
-    
+
             // Revert the changed values
             elem.style.left = left;
             elem.runtimeStyle.left = rsLeft;
-            
+
             return ret;
     	}
     	
      	var ret = 0;
-    
+
         var sides = ["Right","Left"];
         for(var i=0; i<2; i++) {
             var side = sides[i];
@@ -468,7 +468,7 @@ public class VButton extends FocusWidget implements ClickHandler {
                     ret += parseInt(value.substr(0, value.length-2));
                 }
             }
-                    
+
             // Padding -------------------------------------------------------
             value = elem.currentStyle["padding"+side];
             if ( !/^\d+(px)?$/i.test( value ) && /^\d/.test( value ) ) {
@@ -477,7 +477,7 @@ public class VButton extends FocusWidget implements ClickHandler {
                 ret += parseInt(value.substr(0, value.length-2));
             }
         }
-    
+
     	return ret;
     }-*/;
 

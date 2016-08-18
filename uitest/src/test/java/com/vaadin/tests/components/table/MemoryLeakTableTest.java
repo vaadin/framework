@@ -31,10 +31,10 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Test case creating and deleting table component in a loop, testing memory
  * lead in Table component. This test should not be used in auto testing.
- * 
+ *
  * To test memory consuption. Run test in debug mode. Take memory snapshot in
  * Profiler in browser before and after the loop. Compare memory consuption.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */

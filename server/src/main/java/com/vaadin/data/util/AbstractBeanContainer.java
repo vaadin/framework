@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -39,25 +39,25 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
 
 /**
  * An abstract base class for in-memory containers for JavaBeans.
- * 
+ *
  * <p>
  * The properties of the container are determined automatically by introspecting
  * the used JavaBean class and explicitly adding or removing properties is not
  * supported. Only beans of the same type can be added to the container.
  * </p>
- * 
+ *
  * <p>
  * Subclasses should implement any public methods adding items to the container,
  * typically calling the protected methods {@link #addItem(Object, Object)},
  * {@link #addItemAfter(Object, Object, Object)} and
  * {@link #addItemAt(int, Object, Object)}.
  * </p>
- * 
+ *
  * @param <IDTYPE>
  *            The type of the item identifier
  * @param <BEANTYPE>
  *            The type of the Bean
- * 
+ *
  * @since 6.5
  */
 public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
@@ -69,20 +69,20 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
      * Resolver that maps beans to their (item) identifiers, removing the need
      * to explicitly specify item identifiers when there is no need to customize
      * this.
-     * 
+     *
      * Note that beans can also be added with an explicit id even if a resolver
      * has been set.
-     * 
+     *
      * @param <IDTYPE>
      * @param <BEANTYPE>
-     * 
+     *
      * @since 6.5
      */
     public static interface BeanIdResolver<IDTYPE, BEANTYPE>
             extends Serializable {
         /**
          * Return the item identifier for a bean.
-         * 
+         *
          * @param bean
          * @return
          */
@@ -91,7 +91,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /**
      * A item identifier resolver that returns the value of a bean property.
-     * 
+     *
      * The bean must have a getter for the property, and the getter must return
      * an object of type IDTYPE.
      */
@@ -131,7 +131,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
     /**
      * The resolver that finds the item ID for a bean, or null not to use
      * automatic resolving.
-     * 
+     *
      * Methods that add a bean without specifying an ID must not be called if no
      * resolver has been set.
      */
@@ -156,7 +156,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /**
      * Constructs a {@code AbstractBeanContainer} for beans of the given type.
-     * 
+     *
      * @param type
      *            the type of the beans that will be added to the container.
      * @throws IllegalArgumentException
@@ -173,7 +173,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#getType(java.lang.Object)
      */
     @Override
@@ -188,7 +188,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
     /**
      * Create a BeanItem for a bean using pre-parsed bean metadata (based on
      * {@link #getBeanType()}).
-     * 
+     *
      * @param bean
      * @return created {@link BeanItem} or null if bean is null
      */
@@ -198,10 +198,10 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /**
      * Returns the type of beans this Container can contain.
-     * 
+     *
      * This comes from the bean type constructor parameter, and bean metadata
      * (including container properties) is based on this.
-     * 
+     *
      * @return
      */
     public Class<? super BEANTYPE> getBeanType() {
@@ -210,7 +210,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#getContainerPropertyIds()
      */
     @Override
@@ -220,7 +220,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#removeAllItems()
      */
     @Override
@@ -247,7 +247,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#getItem(java.lang.Object)
      */
     @Override
@@ -263,7 +263,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#getItemIds()
      */
     @Override
@@ -274,7 +274,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object,
      * java.lang.Object)
      */
@@ -289,7 +289,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#removeItem(java.lang.Object)
      */
     @Override
@@ -329,7 +329,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.data.Container.Filterable#addContainerFilter(java.lang.Object,
      * java.lang.String, boolean, boolean)
@@ -348,7 +348,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Filterable#removeAllContainerFilters()
      */
     @Override
@@ -363,7 +363,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.data.Container.Filterable#removeContainerFilters(java.lang
      * .Object)
@@ -392,7 +392,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.util.AbstractInMemoryContainer#hasContainerFilters()
      */
     @Override
@@ -402,7 +402,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.util.AbstractInMemoryContainer#getContainerFilters()
      */
     @Override
@@ -413,7 +413,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
     /**
      * Make this container listen to the given property provided it notifies
      * when its value changes.
-     * 
+     *
      * @param item
      *            The {@link Item} that contains the property
      * @param propertyId
@@ -432,7 +432,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /**
      * Remove this container as a listener for the given property.
-     * 
+     *
      * @param item
      *            The {@link Item} that contains the property
      * @param propertyId
@@ -448,7 +448,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
     /**
      * Remove this contains as a listener for all the properties in the given
      * {@link Item}.
-     * 
+     *
      * @param item
      *            The {@link Item} that contains the properties
      */
@@ -460,7 +460,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
      */
     @Override
@@ -470,7 +470,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[],
      * boolean[])
      */
@@ -509,7 +509,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
     /**
      * Check that a bean can be added to the container (is of the correct type
      * for the container).
-     * 
+     *
      * @param bean
      * @return
      */
@@ -519,11 +519,11 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /**
      * Adds the bean to the Container.
-     * 
+     *
      * Note: the behavior of this method changed in Vaadin 6.6 - now items are
      * added at the very end of the unfiltered container and not after the last
      * visible item if filtering is used.
-     * 
+     *
      * @see com.vaadin.data.Container#addItem(Object)
      */
     protected BeanItem<BEANTYPE> addItem(IDTYPE itemId, BEANTYPE bean) {
@@ -535,7 +535,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /**
      * Adds the bean after the given bean.
-     * 
+     *
      * @see com.vaadin.data.Container.Ordered#addItemAfter(Object, Object)
      */
     protected BeanItem<BEANTYPE> addItemAfter(IDTYPE previousItemId,
@@ -549,16 +549,16 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /**
      * Adds a new bean at the given index.
-     * 
+     *
      * The bean is used both as the item contents and as the item identifier.
-     * 
+     *
      * @param index
      *            Index at which the bean should be added.
      * @param newItemId
      *            The item id for the bean to add to the container.
      * @param bean
      *            The bean to add to the container.
-     * 
+     *
      * @return Returns the new BeanItem or null if the operation fails.
      */
     protected BeanItem<BEANTYPE> addItemAt(int index, IDTYPE newItemId,
@@ -572,11 +572,11 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
     /**
      * Adds a bean to the container using the bean item id resolver to find its
      * identifier.
-     * 
+     *
      * A bean id resolver must be set before calling this method.
-     * 
+     *
      * @see #addItem(Object, Object)
-     * 
+     *
      * @param bean
      *            the bean to add
      * @return BeanItem<BEANTYPE> item added or null
@@ -601,11 +601,11 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
     /**
      * Adds a bean to the container after a specified item identifier, using the
      * bean item id resolver to find its identifier.
-     * 
+     *
      * A bean id resolver must be set before calling this method.
-     * 
+     *
      * @see #addItemAfter(Object, Object, Object)
-     * 
+     *
      * @param previousItemId
      *            the identifier of the bean after which this bean should be
      *            added, null to add to the beginning
@@ -634,11 +634,11 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
     /**
      * Adds a bean at a specified (filtered view) position in the container
      * using the bean item id resolver to find its identifier.
-     * 
+     *
      * A bean id resolver must be set before calling this method.
-     * 
+     *
      * @see #addItemAfter(Object, Object, Object)
-     * 
+     *
      * @param index
      *            the index (in the filtered view) at which to add the item
      * @param bean
@@ -666,13 +666,13 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
      * Adds all the beans from a {@link Collection} in one operation using the
      * bean item identifier resolver. More efficient than adding them one by
      * one.
-     * 
+     *
      * A bean id resolver must be set before calling this method.
-     * 
+     *
      * Note: the behavior of this method changed in Vaadin 6.6 - now items are
      * added at the very end of the unfiltered container and not after the last
      * visible item if filtering is used.
-     * 
+     *
      * @param collection
      *            The collection of beans to add. Must not be null.
      * @throws IllegalStateException
@@ -725,7 +725,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /**
      * Use the bean resolver to get the identifier for a bean.
-     * 
+     *
      * @param bean
      * @return resolved bean identifier, null if could not be resolved
      * @throws IllegalStateException
@@ -742,13 +742,13 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
     /**
      * Sets the resolver that finds the item id for a bean, or null not to use
      * automatic resolving.
-     * 
+     *
      * Methods that add a bean without specifying an id must not be called if no
      * resolver has been set.
-     * 
+     *
      * Note that methods taking an explicit id can be used whether a resolver
      * has been defined or not.
-     * 
+     *
      * @param beanIdResolver
      *            to use or null to disable automatic id resolution
      */
@@ -759,7 +759,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /**
      * Returns the resolver that finds the item ID for a bean.
-     * 
+     *
      * @return resolver used or null if automatic item id resolving is disabled
      */
     public BeanIdResolver<IDTYPE, BEANTYPE> getBeanIdResolver() {
@@ -768,7 +768,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /**
      * Create an item identifier resolver using a named bean property.
-     * 
+     *
      * @param propertyId
      *            property identifier, which must map to a getter in BEANTYPE
      * @return created resolver
@@ -819,9 +819,9 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /**
      * Adds a property for the container and all its items.
-     * 
+     *
      * Primarily for internal use, may change in future versions.
-     * 
+     *
      * @param propertyId
      * @param propertyDescriptor
      * @return true if the property was added
@@ -852,13 +852,13 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
     /**
      * Adds a nested container property for the container, e.g.
      * "manager.address.street".
-     * 
+     *
      * All intermediate getters must exist and should return non-null values
      * when the property value is accessed. If an intermediate getter returns
      * null, a null value will be returned.
-     * 
+     *
      * @see NestedMethodProperty
-     * 
+     *
      * @param propertyId
      * @return true if the property was added
      */
@@ -871,14 +871,14 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
      * Adds a nested container properties for all sub-properties of a named
      * property to the container. The named property itself is removed from the
      * model as its subproperties are added.
-     * 
+     *
      * All intermediate getters must exist and should return non-null values
      * when the property value is accessed. If an intermediate getter returns
      * null, a null value will be returned.
-     * 
+     *
      * @see NestedMethodProperty
      * @see #addNestedContainerProperty(String)
-     * 
+     *
      * @param propertyId
      */
     @SuppressWarnings("unchecked")

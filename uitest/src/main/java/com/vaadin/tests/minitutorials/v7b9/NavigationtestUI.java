@@ -29,23 +29,23 @@ public class NavigationtestUI extends UI {
         /*
          * Commented away from other example // no fragment for main view
          * navigator.addView(MainView.NAME, new MainView(navigator));
-         * 
+         *
          * navigator.addView(CountView.NAME, CountView.class);
-         * 
+         *
          * // #message adds a label with whatever it receives as a parameter
          * navigator.addView(MessageView.NAME, new MessageView());
-         * 
+         *
          * // #secret works as #message, but you need to be logged in
          * navigator.addView(SecretView.NAME, new SecretView());
-         * 
+         *
          * // #login will navigate to the main view if invoked via this
          * mechanism navigator.addView(LoginView.NAME, new LoginView(navigator,
          * MainView.NAME));
-         * 
+         *
          * // we'll handle permissions with a listener here, you could also do
          * // that in the View itself. navigator.addViewChangeListener(new
          * ViewChangeListener() {
-         * 
+         *
          * @Override public boolean beforeViewChange(ViewChangeEvent event) { if
          * (((NavigationtestUI)UI.getCurrent()).getLoggedInUser() == null) { //
          * Show to LoginView instead, pass intended view String
@@ -54,11 +54,11 @@ public class NavigationtestUI extends UI {
          * fragmentAndParameters += event.getParameters(); }
          * navigator.getDisplay().showView(new LoginView(navigator,
          * fragmentAndParameters)); return false;
-         * 
+         *
          * } else { return true; } }
-         * 
+         *
          * @Override public void afterViewChange(ViewChangeEvent event) {
-         * 
+         *
          * } });
          */
         // react to initial fragment, received before we created the Navigator

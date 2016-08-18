@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -425,7 +425,7 @@ public class VSlider extends SimpleFocusablePanel
     /**
      * TODO consider extracting touches support to an impl class specific for
      * webkit (only browser that really supports touches).
-     * 
+     *
      * @param event
      * @return
      */
@@ -463,7 +463,7 @@ public class VSlider extends SimpleFocusablePanel
 
     /**
      * Handles the keyboard events handled by the Slider
-     * 
+     *
      * @param event
      *            The keyboard event received
      * @return true iff the navigation event was handled
@@ -506,7 +506,7 @@ public class VSlider extends SimpleFocusablePanel
      * Get the key that increases the vertical slider. By default it is the up
      * arrow key but by overriding this you can change the key to whatever you
      * want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationUpKey() {
@@ -517,7 +517,7 @@ public class VSlider extends SimpleFocusablePanel
      * Get the key that decreases the vertical slider. By default it is the down
      * arrow key but by overriding this you can change the key to whatever you
      * want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationDownKey() {
@@ -528,7 +528,7 @@ public class VSlider extends SimpleFocusablePanel
      * Get the key that decreases the horizontal slider. By default it is the
      * left arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationLeftKey() {
@@ -539,7 +539,7 @@ public class VSlider extends SimpleFocusablePanel
      * Get the key that increases the horizontal slider. By default it is the
      * right arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationRightKey() {

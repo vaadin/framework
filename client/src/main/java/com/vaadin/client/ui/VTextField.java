@@ -22,9 +22,9 @@ import com.google.gwt.user.client.ui.TextBoxBase;
 
 /**
  * This class represents a basic text input field with one row.
- * 
+ *
  * @author Vaadin Ltd.
- * 
+ *
  */
 public class VTextField extends TextBoxBase implements Field {
 

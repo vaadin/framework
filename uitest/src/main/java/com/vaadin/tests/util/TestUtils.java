@@ -100,7 +100,7 @@ public class TestUtils {
     /**
      * Crossbrowser hack to dynamically add css current window. Can be used to
      * keep tests css in source files.
-     * 
+     *
      * @param cssString
      */
     public static void injectCSS(UI w, String cssString) {

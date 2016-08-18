@@ -19,7 +19,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * Marker interface for widgets that fires selection events.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.4
  */
@@ -31,7 +31,7 @@ public interface HasSelectionHandlers<T> {
      * This handler is called whenever a
      * {@link com.vaadin.ui.components.grid.selection.SelectionModel
      * SelectionModel} detects a change in selection state.
-     * 
+     *
      * @param handler
      *            a {@link SelectionHandler}
      * @return a handler registration object, which can be used to remove the

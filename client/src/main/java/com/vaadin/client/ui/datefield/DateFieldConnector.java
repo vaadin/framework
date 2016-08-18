@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -38,7 +38,7 @@ public class DateFieldConnector extends TextualDateConnector {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.AbstractConnector#init()
      */
     @Override
@@ -51,7 +51,7 @@ public class DateFieldConnector extends TextualDateConnector {
                  * FIXME This is a hack so we do not have to rewrite half of the
                  * datefield so values are not sent while selecting a date
                  * (#6252).
-                 * 
+                 *
                  * The datefield will now only set the date UIDL variables while
                  * the user is selecting year/month/date/time and not send them
                  * directly. Only when the user closes the popup (by clicking on
@@ -67,7 +67,7 @@ public class DateFieldConnector extends TextualDateConnector {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.VTextualDate#updateFromUIDL(com.vaadin
      * .client.UIDL, com.vaadin.client.ApplicationConnection)
      */

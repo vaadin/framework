@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,10 +33,10 @@ import com.vaadin.shared.ApplicationConstants;
 
 /**
  * Wrapper for {@link PortletRequest} and its subclasses.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 7.0
- * 
+ *
  * @see VaadinRequest
  * @see VaadinPortletResponse
  */
@@ -47,7 +47,7 @@ public class VaadinPortletRequest extends PortletRequestWrapper
 
     /**
      * Wraps a portlet request and an associated vaadin service
-     * 
+     *
      * @param request
      *            the portlet request to wrap
      * @param vaadinService
@@ -123,7 +123,7 @@ public class VaadinPortletRequest extends PortletRequestWrapper
 
     /**
      * Gets the original, unwrapped portlet request.
-     * 
+     *
      * @return the unwrapped portlet request
      */
     public PortletRequest getPortletRequest() {
@@ -182,7 +182,7 @@ public class VaadinPortletRequest extends PortletRequestWrapper
 
     /**
      * Reads a portal property from the portal context of the Vaadin request.
-     * 
+     *
      * @param name
      *            a string with the name of the portal property to get
      * @return a string with the value of the property, or <code>null</code> if
@@ -194,11 +194,11 @@ public class VaadinPortletRequest extends PortletRequestWrapper
 
     /**
      * Reads a portlet preference from the portlet of the request.
-     * 
+     *
      * @param name
      *            The name of the portlet preference. Cannot be
      *            <code>null</code>.
-     * 
+     *
      * @return The value of the portlet preference, <code>null</code> if the
      *         preference is not defined.
      */
@@ -244,7 +244,7 @@ public class VaadinPortletRequest extends PortletRequestWrapper
      * is automatically defined when the request is started. The current portlet
      * request can not be used in e.g. background threads because of the way
      * server implementations reuse request instances.
-     * 
+     *
      * @return the current portlet request instance if available, otherwise
      *         <code>null</code>
      * @since 7.3
@@ -259,7 +259,7 @@ public class VaadinPortletRequest extends PortletRequestWrapper
      * is automatically defined when the request is started. The current request
      * can not be used in e.g. background threads because of the way server
      * implementations reuse request instances.
-     * 
+     *
      * @return the current Vaadin portlet request instance if available,
      *         otherwise <code>null</code>
      * @since 7.3

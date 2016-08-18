@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
  * session to prevent locking the session during long file downloads. If your
  * DownloadStream uses anything from the session, you must handle the locking.
  * </p>
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -78,7 +78,7 @@ public class DownloadStream implements Serializable {
 
     /**
      * Gets downloadable stream.
-     * 
+     *
      * @return output stream.
      */
     public InputStream getStream() {
@@ -87,7 +87,7 @@ public class DownloadStream implements Serializable {
 
     /**
      * Sets the stream.
-     * 
+     *
      * @param stream
      *            The stream to set
      */
@@ -97,7 +97,7 @@ public class DownloadStream implements Serializable {
 
     /**
      * Gets stream content type.
-     * 
+     *
      * @return type of the stream content.
      */
     public String getContentType() {
@@ -106,7 +106,7 @@ public class DownloadStream implements Serializable {
 
     /**
      * Sets stream content type.
-     * 
+     *
      * @param contentType
      *            the contentType to set
      */
@@ -116,7 +116,7 @@ public class DownloadStream implements Serializable {
 
     /**
      * Returns the file name.
-     * 
+     *
      * @return the name of the file.
      */
     public String getFileName() {
@@ -125,7 +125,7 @@ public class DownloadStream implements Serializable {
 
     /**
      * Sets the file name.
-     * 
+     *
      * @param fileName
      *            the file name to set.
      */
@@ -138,9 +138,9 @@ public class DownloadStream implements Serializable {
      * about the downloadable stream and their meaning depends on the used
      * adapter. For example in WebAdapter they are interpreted as HTTP response
      * headers.
-     * 
+     *
      * If the parameters by this name exists, the old value is replaced.
-     * 
+     *
      * @param name
      *            the Name of the parameter to set.
      * @param value
@@ -158,7 +158,7 @@ public class DownloadStream implements Serializable {
      * about the downloadable stream and their meaning depends on the used
      * adapter. For example in WebAdapter they are interpreted as HTTP response
      * headers.
-     * 
+     *
      * @param name
      *            the Name of the parameter to set.
      * @return Value of the parameter or null if the parameter does not exist.
@@ -172,7 +172,7 @@ public class DownloadStream implements Serializable {
 
     /**
      * Gets the names of the parameters.
-     * 
+     *
      * @return Iterator of names or null if no parameters are set.
      */
     public Iterator<String> getParameterNames() {
@@ -187,7 +187,7 @@ public class DownloadStream implements Serializable {
      * possibility cache streams sent to the client. The caching may be made in
      * adapter or at the client if the client supports caching. Default is
      * <code>DEFAULT_CACHETIME</code>.
-     * 
+     *
      * @return Cache time in milliseconds
      */
     public long getCacheTime() {
@@ -199,7 +199,7 @@ public class DownloadStream implements Serializable {
      * possibility cache streams sent to the client. The caching may be made in
      * adapter or at the client if the client supports caching. Zero or negavive
      * value disbales the caching of this stream.
-     * 
+     *
      * @param cacheTime
      *            the cache time in milliseconds.
      */
@@ -209,7 +209,7 @@ public class DownloadStream implements Serializable {
 
     /**
      * Gets the size of the download buffer.
-     * 
+     *
      * @return int The size of the buffer in bytes.
      */
     public int getBufferSize() {
@@ -218,10 +218,10 @@ public class DownloadStream implements Serializable {
 
     /**
      * Sets the size of the download buffer.
-     * 
+     *
      * @param bufferSize
      *            the size of the buffer in bytes.
-     * 
+     *
      * @since 7.0
      */
     public void setBufferSize(int bufferSize) {
@@ -238,15 +238,15 @@ public class DownloadStream implements Serializable {
      * response. If there's is a parameter named <code>Location</code>, a
      * redirect (302 Moved temporarily) is sent instead of the contents of this
      * stream.
-     * 
+     *
      * @param request
      *            the request for which the response should be written
      * @param response
      *            the Vaadin response to write this download stream to
-     * 
+     *
      * @throws IOException
      *             passed through from the Vaadin response
-     * 
+     *
      * @since 7.0
      */
     public void writeResponse(VaadinRequest request, VaadinResponse response)
@@ -322,7 +322,7 @@ public class DownloadStream implements Serializable {
     /**
      * Returns the filename formatted for inclusion in a Content-Disposition
      * header. Includes both a plain version of the name and a UTF-8 version
-     * 
+     *
      * @since 7.4.8
      * @param filename
      *            The filename to include
@@ -341,7 +341,7 @@ public class DownloadStream implements Serializable {
     /**
      * Helper method that tries to close an output stream and ignores any
      * exceptions.
-     * 
+     *
      * @param out
      *            the output stream to close, <code>null</code> is also
      *            supported
@@ -360,7 +360,7 @@ public class DownloadStream implements Serializable {
     /**
      * Helper method that tries to close an input stream and ignores any
      * exceptions.
-     * 
+     *
      * @param in
      *            the input stream to close, <code>null</code> is also supported
      */

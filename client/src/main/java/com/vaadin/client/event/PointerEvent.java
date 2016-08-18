@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,10 +21,10 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Abstract class representing Pointer events.
- * 
+ *
  * @param <H>
  *            handler type
- * 
+ *
  * @since 7.2
  */
 public abstract class PointerEvent<H extends EventHandler>
@@ -46,7 +46,7 @@ public abstract class PointerEvent<H extends EventHandler>
     /**
      * Gets a unique identifier for the pointer that caused this event. The
      * identifiers of previously active but retired pointers may be recycled.
-     * 
+     *
      * @return unique pointer id
      */
     public final int getPointerId() {
@@ -55,7 +55,7 @@ public abstract class PointerEvent<H extends EventHandler>
 
     /**
      * Gets the width of the contact geometry of the pointer in CSS pixels.
-     * 
+     *
      * @return width in CSS pixels
      */
     public final int getWidth() {
@@ -64,7 +64,7 @@ public abstract class PointerEvent<H extends EventHandler>
 
     /**
      * Gets the height of the contact geometry of the pointer in CSS pixels.
-     * 
+     *
      * @return height in CSS pixels.
      */
     public final int getHeight() {
@@ -74,7 +74,7 @@ public abstract class PointerEvent<H extends EventHandler>
     /**
      * Gets the pressure of the pointer input as a value in the range of [0, 1]
      * where 0 and 1 represent the minimum and maximum, respectively.
-     * 
+     *
      * @return input pressure as a value between 0 and 1
      */
     public final double getPressure() {
@@ -84,7 +84,7 @@ public abstract class PointerEvent<H extends EventHandler>
     /**
      * Gets the angle between the Y-Z plane and the plane containing both the
      * transducer and the Y axis. A positive tilt is to the right.
-     * 
+     *
      * @return the tilt along the X axis as degrees in the range of [-90, 90],
      *         or 0 if the device does not support tilt
      */
@@ -95,7 +95,7 @@ public abstract class PointerEvent<H extends EventHandler>
     /**
      * Gets the angle between the X-Z plane and the plane containing both the
      * transducer and the X axis. A positive tilt is towards the user.
-     * 
+     *
      * @return the tilt along the Y axis as degrees in the range of [-90, 90],
      *         or 0 if the device does not support tilt
      */
@@ -105,12 +105,12 @@ public abstract class PointerEvent<H extends EventHandler>
 
     /**
      * Gets the type of the pointer device that caused this event.
-     * 
+     *
      * @see PointerEvent#TYPE_UNKNOWN
      * @see PointerEvent#TYPE_TOUCH
      * @see PointerEvent#TYPE_PEN
      * @see PointerEvent#TYPE_MOUSE
-     * 
+     *
      * @return a String indicating the type of the pointer device
      */
     public final String getPointerType() {
@@ -119,7 +119,7 @@ public abstract class PointerEvent<H extends EventHandler>
 
     /**
      * Indicates whether the pointer is the primary pointer of this type.
-     * 
+     *
      * @return true if the pointer is the primary pointer, otherwise false
      */
     public final boolean isPrimary() {

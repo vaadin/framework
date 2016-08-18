@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,10 +23,10 @@ import com.vaadin.ui.TabSheet.Tab;
 
 /**
  * In case a selected tab is removed the new selected one should be a neighbor.
- * 
+ *
  * In case an unselected tab is removed and the selected one is not visible, the
  * scroll should not jump to the selected one.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */

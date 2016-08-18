@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Client side implementation for ColorPickerArea.
- * 
+ *
  * @since 7.0.0
  */
 public class VColorPickerArea extends Widget
@@ -65,7 +65,7 @@ public class VColorPickerArea extends Widget
 
     /**
      * Adds a click handler to the widget and sinks the click event.
-     * 
+     *
      * @param handler
      * @return HandlerRegistration used to remove the handler
      */
@@ -96,7 +96,7 @@ public class VColorPickerArea extends Widget
 
     /**
      * Mark the popup opened/closed.
-     * 
+     *
      * @param open
      */
     public void setOpen(boolean open) {
@@ -105,7 +105,7 @@ public class VColorPickerArea extends Widget
 
     /**
      * Check the popup's marked state.
-     * 
+     *
      * @return true if the popup has been marked being open, false otherwise.
      */
     public boolean isOpen() {
@@ -114,9 +114,9 @@ public class VColorPickerArea extends Widget
 
     /**
      * Sets the caption's content to the given text.
-     * 
+     *
      * @param text
-     * 
+     *
      * @see Label#setText(String)
      */
     @Override
@@ -126,7 +126,7 @@ public class VColorPickerArea extends Widget
 
     /**
      * Gets the caption's contents as text.
-     * 
+     *
      * @return the caption's text
      */
     @Override
@@ -136,7 +136,7 @@ public class VColorPickerArea extends Widget
 
     /**
      * Sets the caption's content to the given HTML.
-     * 
+     *
      * @param html
      */
     @Override
@@ -146,7 +146,7 @@ public class VColorPickerArea extends Widget
 
     /**
      * Gets the caption's contents as HTML.
-     * 
+     *
      * @return the caption's HTML
      */
     @Override
@@ -156,7 +156,7 @@ public class VColorPickerArea extends Widget
 
     /**
      * Sets the color for the area.
-     * 
+     *
      * @param color
      */
     public void setColor(String color) {

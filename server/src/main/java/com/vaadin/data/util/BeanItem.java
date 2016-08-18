@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import java.util.Set;
 
 /**
  * A wrapper class for adding the Item interface to any Java Bean.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -46,16 +46,16 @@ public class BeanItem<BT> extends PropertysetItem {
      * of a Java Bean to it. The properties are identified by their respective
      * bean names.
      * </p>
-     * 
+     *
      * <p>
      * Note : This version only supports introspectable bean properties and
      * their getter and setter methods. Stand-alone <code>is</code> and
      * <code>are</code> methods are not supported.
      * </p>
-     * 
+     *
      * @param bean
      *            the Java Bean to copy properties from.
-     * 
+     *
      */
     public BeanItem(BT bean) {
         this(bean, (Class<BT>) bean.getClass());
@@ -67,20 +67,20 @@ public class BeanItem<BT> extends PropertysetItem {
      * of a Java Bean to it. The properties are identified by their respective
      * bean names.
      * </p>
-     * 
+     *
      * <p>
      * Note : This version only supports introspectable bean properties and
      * their getter and setter methods. Stand-alone <code>is</code> and
      * <code>are</code> methods are not supported.
      * </p>
-     * 
+     *
      * @since 7.4
-     * 
+     *
      * @param bean
      *            the Java Bean to copy properties from.
      * @param beanClass
      *            class of the {@code bean}
-     * 
+     *
      */
     public BeanItem(BT bean, Class<BT> beanClass) {
         this(bean, getPropertyDescriptors(beanClass));
@@ -92,7 +92,7 @@ public class BeanItem<BT> extends PropertysetItem {
      * of properties. The properties are identified by their respective bean
      * names.
      * </p>
-     * 
+     *
      * @param bean
      *            the Java Bean to copy properties from.
      * @param propertyDescriptors
@@ -114,13 +114,13 @@ public class BeanItem<BT> extends PropertysetItem {
      * properties of a Java Bean to it - in specified order. The properties are
      * identified by their respective bean names.
      * </p>
-     * 
+     *
      * <p>
      * Note : This version only supports introspectable bean properties and
      * their getter and setter methods. Stand-alone <code>is</code> and
      * <code>are</code> methods are not supported.
      * </p>
-     * 
+     *
      * @param bean
      *            the Java Bean to copy properties from.
      * @param propertyIds
@@ -150,13 +150,13 @@ public class BeanItem<BT> extends PropertysetItem {
      * properties of a Java Bean to it - in specified order. The properties are
      * identified by their respective bean names.
      * </p>
-     * 
+     *
      * <p>
      * Note : This version only supports introspectable bean properties and
      * their getter and setter methods. Stand-alone <code>is</code> and
      * <code>are</code> methods are not supported.
      * </p>
-     * 
+     *
      * @param bean
      *            the Java Bean to copy properties from.
      * @param propertyIds
@@ -170,13 +170,13 @@ public class BeanItem<BT> extends PropertysetItem {
      * <p>
      * Perform introspection on a Java Bean class to find its properties.
      * </p>
-     * 
+     *
      * <p>
      * Note : This version only supports introspectable bean properties and
      * their getter and setter methods. Stand-alone <code>is</code> and
      * <code>are</code> methods are not supported.
      * </p>
-     * 
+     *
      * @param beanClass
      *            the Java Bean class to get properties for.
      * @return an ordered map from property names to property descriptors
@@ -211,7 +211,7 @@ public class BeanItem<BT> extends PropertysetItem {
     /**
      * Expands nested bean properties by replacing a top-level property with
      * some or all of its sub-properties. The expansion is not recursive.
-     * 
+     *
      * @param propertyId
      *            property id for the property whose sub-properties are to be
      *            expanded,
@@ -243,7 +243,7 @@ public class BeanItem<BT> extends PropertysetItem {
      * item already and must of form "field1.field2" where field2 is a field in
      * the object referenced to by field1. If an intermediate property returns
      * null, the property will return a null value
-     * 
+     *
      * @param nestedPropertyId
      *            property id to add.
      */
@@ -254,7 +254,7 @@ public class BeanItem<BT> extends PropertysetItem {
 
     /**
      * Gets the underlying JavaBean object.
-     * 
+     *
      * @return the bean object.
      */
     public BT getBean() {

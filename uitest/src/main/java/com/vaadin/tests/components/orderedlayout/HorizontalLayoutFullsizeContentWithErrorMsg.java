@@ -24,7 +24,7 @@ public class HorizontalLayoutFullsizeContentWithErrorMsg
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#setup(com.vaadin.server.
      * VaadinRequest)
      */
@@ -56,7 +56,7 @@ public class HorizontalLayoutFullsizeContentWithErrorMsg
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override

@@ -44,9 +44,9 @@ import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * A date editor component with <code>java.util.Date</code> as an input value.
- * 
+ *
  * @author Vaadin Ltd
- * 
+ *
  * @since 8.0
  *
  */
@@ -123,7 +123,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
 
     /**
      * Constructs an empty <code>DateField</code> with caption.
-     * 
+     *
      * @param caption
      *            the caption of the datefield.
      */
@@ -134,7 +134,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
     /**
      * Constructs a new <code>DateField</code> with the given caption and
      * initial text contents.
-     * 
+     *
      * @param caption
      *            the caption <code>String</code> for the editor.
      * @param value
@@ -356,7 +356,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
      * date (taking the resolution into account), the component will not
      * validate. If <code>startDate</code> is set to <code>null</code>, any
      * value before <code>endDate</code> will be accepted by the range
-     * 
+     *
      * @param startDate
      *            - the allowed range's start date
      */
@@ -375,7 +375,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
 
     /**
      * Sets the current error message if the range validation fails.
-     * 
+     *
      * @param dateOutOfRangeMessage
      *            - Localizable message which is shown when value (the date) is
      *            set outside allowed range
@@ -386,7 +386,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
 
     /**
      * Returns current date-out-of-range error message.
-     * 
+     *
      * @see #setDateOutOfRangeMessage(String)
      * @return Current error message for dates out of range.
      */
@@ -396,7 +396,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
 
     /**
      * Gets the resolution.
-     * 
+     *
      * @return int
      */
     public Resolution getResolution() {
@@ -405,9 +405,9 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
 
     /**
      * Sets the resolution of the DateField.
-     * 
+     *
      * The default resolution is {@link Resolution#DAY} since Vaadin 7.0.
-     * 
+     *
      * @param resolution
      *            the resolution to set.
      */
@@ -421,7 +421,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
      * date (taking the resolution into account), the component will not
      * validate. If <code>endDate</code> is set to <code>null</code>, any value
      * after <code>startDate</code> will be accepted by the range.
-     * 
+     *
      * @param endDate
      *            - the allowed range's end date (inclusive, based on the
      *            current resolution)
@@ -441,7 +441,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
 
     /**
      * Returns the precise rangeStart used.
-     * 
+     *
      * @return the precise rangeStart used
      */
     public Date getRangeStart() {
@@ -450,7 +450,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
 
     /**
      * Returns the precise rangeEnd used.
-     * 
+     *
      * @return the precise rangeEnd used
      */
     public Date getRangeEnd() {
@@ -460,14 +460,14 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
     /**
      * Sets formatting used by some component implementations. See
      * {@link SimpleDateFormat} for format details.
-     * 
+     *
      * By default it is encouraged to used default formatting defined by Locale,
      * but due some JVM bugs it is sometimes necessary to use this method to
      * override formatting. See Vaadin issue #2200.
-     * 
+     *
      * @param dateFormat
      *            the dateFormat to set
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#setLocale(Locale))
      */
     public void setDateFormat(String dateFormat) {
@@ -478,7 +478,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
     /**
      * Returns a format string used to format date value on client side or null
      * if default formatting from {@link Component#getLocale()} is used.
-     * 
+     *
      * @return the dateFormat
      */
     public String getDateFormat() {
@@ -488,10 +488,10 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
     /**
      * Specifies whether or not date/time interpretation in component is to be
      * lenient.
-     * 
+     *
      * @see Calendar#setLenient(boolean)
      * @see #isLenient()
-     * 
+     *
      * @param lenient
      *            true if the lenient mode is to be turned on; false if it is to
      *            be turned off.
@@ -503,9 +503,9 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
 
     /**
      * Returns whether date/time interpretation is to be lenient.
-     * 
+     *
      * @see #setLenient(boolean)
-     * 
+     *
      * @return true if the interpretation mode of this calendar is lenient;
      *         false otherwise.
      */
@@ -541,7 +541,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
 
     /**
      * Checks whether ISO 8601 week numbers are shown in the date selector.
-     * 
+     *
      * @return true if week numbers are shown, false otherwise.
      */
     public boolean isShowISOWeekNumbers() {
@@ -552,7 +552,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
      * Sets the visibility of ISO 8601 week numbers in the date selector. ISO
      * 8601 defines that a week always starts with a Monday so the week numbers
      * are only shown if this is the case.
-     * 
+     *
      * @param showWeekNumbers
      *            true if week numbers should be shown, false otherwise.
      */
@@ -563,13 +563,13 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
 
     /**
      * Returns new instance calendar used in Date conversions.
-     * 
+     *
      * Returns new clone of the calendar object initialized using the the
      * current date (if available)
-     * 
+     *
      * If this is no calendar is assigned the <code>Calendar.getInstance</code>
      * is used.
-     * 
+     *
      * @return the Calendar.
      * @see #setCalendar(Calendar)
      */
@@ -609,10 +609,10 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
      * Gets the time zone used by this field. The time zone is used to convert
      * the absolute time in a Date object to a logical time displayed in the
      * selector and to convert the select time back to a Date object.
-     * 
+     *
      * If {@code null} is returned, the current default time zone returned by
      * {@code TimeZone.getDefault()} is used.
-     * 
+     *
      * @return the current time zone
      */
     public TimeZone getTimeZone() {
@@ -626,9 +626,9 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
      * custom exception, the message returned by
      * {@link Exception#getLocalizedMessage()} will be used instead of the value
      * returned by this method.
-     * 
+     *
      * @see #setParseErrorMessage(String)
-     * 
+     *
      * @return the error message that the DateField uses when it can't parse the
      *         textual input from user to a Date object
      */
@@ -641,7 +641,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
      * text input by user to a Date field. Note that if the
      * {@link #handleUnparsableDateString(String)} method is overridden, the
      * localized message from its exception is used.
-     * 
+     *
      * @see #getParseErrorMessage()
      * @see #handleUnparsableDateString(String)
      * @param parsingErrorMessage
@@ -654,10 +654,10 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
      * Sets the time zone used by this date field. The time zone is used to
      * convert the absolute time in a Date object to a logical time displayed in
      * the selector and to convert the select time back to a Date object.
-     * 
+     *
      * If no time zone has been set, the current default time zone returned by
      * {@code TimeZone.getDefault()} is used.
-     * 
+     *
      * @see #getTimeZone()
      * @param timeZone
      *            the time zone to use for time calculations.
@@ -670,7 +670,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
     /**
      * Adds a <code>FocusListener</code> to the Component which gets fired when
      * a <code>LegacyField</code> receives keyboard focus.
-     * 
+     *
      * @param listener
      * @see FocusListener
      */
@@ -681,7 +681,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
 
     /**
      * Removes a <code>FocusListener</code> from the Component.
-     * 
+     *
      * @param listener
      * @see FocusListener
      */
@@ -692,7 +692,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
     /**
      * Adds a <code>BlurListener</code> to the Component which gets fired when a
      * <code>LegacyField</code> loses keyboard focus.
-     * 
+     *
      * @param listener
      * @see BlurListener
      */
@@ -703,7 +703,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
 
     /**
      * Removes a <code>BlurListener</code> from the Component.
-     * 
+     *
      * @param listener
      * @see BlurListener
      */
@@ -749,14 +749,14 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
     /**
      * This method is called to handle a non-empty date string from the client
      * if the client could not parse it as a Date.
-     * 
+     *
      * By default, an error result is returned whose error message is
      * {@link #getParseErrorMessage()}.
-     * 
+     *
      * This can be overridden to handle conversions, to return a result with
      * {@code null} value (equivalent to empty input) or to return a custom
      * error.
-     * 
+     *
      * @param dateString
      *            date string to handle
      * @return result that contains parsed Date as a value or an error
@@ -806,7 +806,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
      * if <code>rangeStart</code> is set to one millisecond before year n and
      * resolution is set to YEAR, any date in year n - 1 will be accepted.
      * Lowest supported resolution is DAY.
-     * 
+     *
      * @param forResolution
      *            - the range conforms to the resolution
      * @return
@@ -839,7 +839,7 @@ public class DateField extends AbstractField<Date> implements LegacyComponent {
      * to YEAR, any date in year n will be accepted. Resolutions lower than DAY
      * will be interpreted on a DAY level. That is, everything below DATE is
      * cleared
-     * 
+     *
      * @param forResolution
      *            - the range conforms to the resolution
      * @return

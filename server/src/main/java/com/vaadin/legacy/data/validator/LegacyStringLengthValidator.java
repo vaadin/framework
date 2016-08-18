@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,7 +19,7 @@ package com.vaadin.legacy.data.validator;
 /**
  * This <code>StringLengthValidator</code> is used to validate the length of
  * strings.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -34,7 +34,7 @@ public class LegacyStringLengthValidator extends LegacyAbstractStringValidator {
 
     /**
      * Creates a new StringLengthValidator with a given error message.
-     * 
+     *
      * @param errorMessage
      *            the message to display in case the value does not validate.
      */
@@ -45,7 +45,7 @@ public class LegacyStringLengthValidator extends LegacyAbstractStringValidator {
     /**
      * Creates a new StringLengthValidator with a given error message and
      * minimum and maximum length limits.
-     * 
+     *
      * @param errorMessage
      *            the message to display in case the value does not validate.
      * @param minLength
@@ -70,7 +70,7 @@ public class LegacyStringLengthValidator extends LegacyAbstractStringValidator {
 
     /**
      * Checks if the given value is valid.
-     * 
+     *
      * @param value
      *            the value to validate.
      * @return <code>true</code> for valid value, otherwise <code>false</code>.
@@ -90,7 +90,7 @@ public class LegacyStringLengthValidator extends LegacyAbstractStringValidator {
 
     /**
      * Returns <code>true</code> if null strings are allowed.
-     * 
+     *
      * @return <code>true</code> if allows null string, otherwise
      *         <code>false</code>.
      */
@@ -101,7 +101,7 @@ public class LegacyStringLengthValidator extends LegacyAbstractStringValidator {
 
     /**
      * Gets the maximum permissible length of the string.
-     * 
+     *
      * @return the maximum length of the string or null if there is no limit
      */
     public Integer getMaxLength() {
@@ -110,7 +110,7 @@ public class LegacyStringLengthValidator extends LegacyAbstractStringValidator {
 
     /**
      * Gets the minimum permissible length of the string.
-     * 
+     *
      * @return the minimum length of the string or null if there is no limit
      */
     public Integer getMinLength() {
@@ -128,7 +128,7 @@ public class LegacyStringLengthValidator extends LegacyAbstractStringValidator {
 
     /**
      * Sets the maximum permissible length of the string.
-     * 
+     *
      * @param maxLength
      *            the maximum length to accept or null for no limit
      */
@@ -138,7 +138,7 @@ public class LegacyStringLengthValidator extends LegacyAbstractStringValidator {
 
     /**
      * Sets the minimum permissible length.
-     * 
+     *
      * @param minLength
      *            the minimum length to accept or null for no limit
      */

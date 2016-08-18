@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -22,7 +22,7 @@ import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
  * <p>
  * The updater is responsible for making sure all elements are properly
  * constructed and cleaned up.
- * 
+ *
  * @since 7.5.0
  * @author Vaadin Ltd
  * @see Spacer
@@ -45,7 +45,7 @@ public interface SpacerUpdater {
 
     /**
      * Called whenever a spacer should be initialized with content.
-     * 
+     *
      * @param spacer
      *            the spacer reference that should be initialized
      */
@@ -56,7 +56,7 @@ public interface SpacerUpdater {
      * <p>
      * The structure to clean up is the same that has been constructed by
      * {@link #init(Spacer)}.
-     * 
+     *
      * @param spacer
      *            the spacer reference that should be destroyed
      */

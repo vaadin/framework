@@ -12,7 +12,7 @@ import com.vaadin.tests.tb3.AffectedTB3Tests.AffectedTB3TestSuite;
  * similar package name compare the the changes files in the current workspace.
  * If there are no changes in the workspace, it will run the changes to test
  * classes introduced in the HEAD commit.
- * 
+ *
  * @author Vaadin Ltd
  */
 @RunWith(AffectedTB3TestSuite.class)

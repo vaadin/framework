@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -122,7 +122,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /**
      * Creates and initializes SQLContainer using the given QueryDelegate
-     * 
+     *
      * @param delegate
      *            QueryDelegate implementation
      * @throws SQLException
@@ -146,7 +146,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * temporary row ID assigned for the item. Implement
      * QueryDelegate.RowIdChangeListener to receive the actual Row ID value
      * after the addition has been committed.
-     * 
+     *
      * {@inheritDoc}
      */
 
@@ -207,7 +207,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#containsId(java.lang.Object)
      */
 
@@ -249,7 +249,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object,
      * java.lang.Object)
      */
@@ -265,7 +265,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#getContainerPropertyIds()
      */
 
@@ -276,7 +276,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#getItem(java.lang.Object)
      */
 
@@ -304,7 +304,7 @@ public class SQLContainer implements Container, Container.Filterable,
     /**
      * Bypasses in-memory filtering to return items that are cached in memory.
      * <em>NOTE</em>: This does not bypass database-level filtering.
-     * 
+     *
      * @param itemId
      *            the id of the item to retrieve.
      * @return the item represented by itemId.
@@ -324,7 +324,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * NOTE! Do not use this method if in any way avoidable. This method doesn't
      * (and cannot) use lazy loading, which means that all rows in the database
      * will be loaded into memory.
-     * 
+     *
      * {@inheritDoc}
      */
 
@@ -382,7 +382,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#getType(java.lang.Object)
      */
 
@@ -396,7 +396,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#size()
      */
 
@@ -408,7 +408,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#removeItem(java.lang.Object)
      */
 
@@ -477,7 +477,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#removeAllItems()
      */
 
@@ -605,7 +605,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /**
      * Returns true if any filters have been applied to the container.
-     * 
+     *
      * @return true if the container has filters applied, false otherwise
      * @since 7.1
      */
@@ -615,7 +615,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Filterable#getContainerFilters()
      */
     @Override
@@ -629,7 +629,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Indexed#indexOfId(java.lang.Object)
      */
 
@@ -688,7 +688,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Indexed#getIdByIndex(int)
      */
 
@@ -728,7 +728,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Ordered#nextItemId(java.lang.Object)
      */
 
@@ -744,7 +744,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Ordered#prevItemId(java.lang.Object)
      */
 
@@ -760,7 +760,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Ordered#firstItemId()
      */
 
@@ -789,7 +789,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Ordered#lastItemId()
      */
 
@@ -816,7 +816,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Ordered#isFirstId(java.lang.Object)
      */
 
@@ -827,7 +827,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Ordered#isLastId(java.lang.Object)
      */
 
@@ -842,7 +842,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[],
      * boolean[])
      */
@@ -873,7 +873,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
      */
 
@@ -899,7 +899,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * <code>false</code>, assumes that the current size is up to date. This is
      * used in {@link #updateCount()} to refresh the contents when we know the
      * size was just updated.
-     * 
+     *
      * @param setSizeDirty
      */
     private void refresh(boolean setSizeDirty) {
@@ -914,7 +914,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /**
      * Returns modify state of the container.
-     * 
+     *
      * @return true if contents of this container have been modified
      */
     public boolean isModified() {
@@ -926,7 +926,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * Set auto commit mode enabled or disabled. Auto commit mode means that all
      * changes made to items of this container will be immediately written to
      * the underlying data source.
-     * 
+     *
      * @param autoCommitEnabled
      *            true to enable auto commit mode
      */
@@ -936,7 +936,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /**
      * Returns status of the auto commit mode.
-     * 
+     *
      * @return true if auto commit mode is enabled
      */
     public boolean isAutoCommit() {
@@ -945,7 +945,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /**
      * Returns the currently set page length.
-     * 
+     *
      * @return current page length
      */
     public int getPageLength() {
@@ -955,9 +955,9 @@ public class SQLContainer implements Container, Container.Filterable,
     /**
      * Sets the page length used in lazy fetching of items from the data source.
      * Also resets the cache size to match the new page length.
-     * 
+     *
      * As a side effect the container will be refreshed.
-     * 
+     *
      * @param pageLength
      *            new page length
      */
@@ -968,7 +968,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /**
      * Sets the page length internally, without refreshing the container.
-     * 
+     *
      * @param pageLength
      *            the new page length
      */
@@ -981,10 +981,10 @@ public class SQLContainer implements Container, Container.Filterable,
     /**
      * Adds the given OrderBy to this container and refreshes the container
      * contents with the new sorting rules.
-     * 
+     *
      * Note that orderBy.getColumn() must return a column name that exists in
      * this container.
-     * 
+     *
      * @param orderBy
      *            OrderBy to be added to the container sorting rules
      */
@@ -1003,7 +1003,7 @@ public class SQLContainer implements Container, Container.Filterable,
     /**
      * Commits all the changes, additions and removals made to the items of this
      * container.
-     * 
+     *
      * @throws UnsupportedOperationException
      * @throws SQLException
      */
@@ -1068,7 +1068,7 @@ public class SQLContainer implements Container, Container.Filterable,
     /**
      * Rolls back all the changes, additions and removals made to the items of
      * this container.
-     * 
+     *
      * @throws UnsupportedOperationException
      * @throws SQLException
      */
@@ -1084,7 +1084,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * Notifies this container that a property in the given item has been
      * modified. The change will be buffered or made instantaneously depending
      * on auto commit mode.
-     * 
+     *
      * @param changedItem
      *            item that has a modified property
      */
@@ -1127,7 +1127,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * Determines a new offset for updating the row cache. The offset is
      * calculated from the given index, and will be fixed to match the start of
      * a page, based on the value of pageLength.
-     * 
+     *
      * @param index
      *            Index of the item that was requested, but not found in cache
      */
@@ -1187,7 +1187,7 @@ public class SQLContainer implements Container, Container.Filterable,
     /**
      * Fetches property id's (column names and their types) from the data
      * source.
-     * 
+     *
      * @throws SQLException
      */
     private void getPropertyIds() throws SQLException {
@@ -1410,7 +1410,7 @@ public class SQLContainer implements Container, Container.Filterable,
     /**
      * Returns the index of the item with the given itemId for the modified
      * cache.
-     * 
+     *
      * @param itemId
      * @return the index of the item with the itemId in the modified cache. Or
      *         -1 if not found.
@@ -1455,7 +1455,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * Currently the only non-valid identifier is "rownum" when MSSQL or Oracle
      * is used. This is due to the way the SELECT queries are constructed in
      * order to implement paging in these databases.
-     * 
+     *
      * @param identifier
      *            Column identifier
      * @return true if the identifier is valid
@@ -1474,7 +1474,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /**
      * Returns the QueryDelegate set for this SQLContainer.
-     * 
+     *
      * @return current querydelegate
      */
     protected QueryDelegate getQueryDelegate() {
@@ -1487,7 +1487,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#addContainerProperty(java.lang.Object,
      * java.lang.Class, java.lang.Object)
      */
@@ -1500,7 +1500,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#removeContainerProperty(java.lang.Object)
      */
 
@@ -1512,7 +1512,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#addItem(java.lang.Object)
      */
 
@@ -1523,7 +1523,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object,
      * java.lang.Object)
      */
@@ -1536,7 +1536,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Indexed#addItemAt(int, java.lang.Object)
      */
 
@@ -1548,7 +1548,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Indexed#addItemAt(int)
      */
 
@@ -1559,7 +1559,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
      */
 
@@ -1575,7 +1575,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.data.Container.ItemSetChangeNotifier#addListener(com.vaadin
      * .data.Container.ItemSetChangeListener)
@@ -1602,7 +1602,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.data.Container.ItemSetChangeNotifier#removeListener(com.vaadin
      * .data.Container.ItemSetChangeListener)
@@ -1661,7 +1661,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /**
      * Adds a RowIdChangeListener to the QueryDelegate
-     * 
+     *
      * @param listener
      */
     public void addRowIdChangeListener(RowIdChangeListener listener) {
@@ -1682,7 +1682,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /**
      * Removes a RowIdChangeListener from the QueryDelegate
-     * 
+     *
      * @param listener
      */
     public void removeRowIdChangeListener(RowIdChangeListener listener) {
@@ -1720,10 +1720,10 @@ public class SQLContainer implements Container, Container.Filterable,
      * Adds a new reference to the given SQLContainer. In addition to the
      * container you must provide the column (property) names used for the
      * reference in both this and the referenced SQLContainer.
-     * 
+     *
      * Note that multiple references pointing to the same SQLContainer are not
      * supported.
-     * 
+     *
      * @param refdCont
      *            Target SQLContainer of the new reference
      * @param refingCol
@@ -1760,7 +1760,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /**
      * Removes the reference pointing to the given SQLContainer.
-     * 
+     *
      * @param refdCont
      *            Target SQLContainer of the reference
      * @return true if successful, false if the reference did not exist
@@ -1776,7 +1776,7 @@ public class SQLContainer implements Container, Container.Filterable,
     /**
      * Sets the referenced item. The referencing column of the item in this
      * container is updated accordingly.
-     * 
+     *
      * @param itemId
      *            Item Id of the reference source (from this container)
      * @param refdItemId
@@ -1811,7 +1811,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /**
      * Fetches the Item Id of the referenced item from the target SQLContainer.
-     * 
+     *
      * @param itemId
      *            Item Id of the reference source (from this container)
      * @param refdCont
@@ -1840,7 +1840,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     /**
      * Fetches the referenced item from the target SQLContainer.
-     * 
+     *
      * @param itemId
      *            Item Id of the reference source (from this container)
      * @param refdCont

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,13 +18,13 @@ package com.vaadin.client.ui.menubar;
 
 /*
  * Copyright 2007 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -51,22 +51,22 @@ import com.vaadin.client.ui.VOverlay;
  * A standard menu bar widget. A menu bar can contain any number of menu items,
  * each of which can either fire a {@link com.google.gwt.user.client.Command} or
  * open a cascaded menu bar.
- * 
+ *
  * <p>
  * <img class='gallery' src='MenuBar.png'/>
  * </p>
- * 
+ *
  * <h3>CSS Style Rules</h3>
  * <ul class='css'>
  * <li>.gwt-MenuBar { the menu bar itself }</li>
  * <li>.gwt-MenuBar .gwt-MenuItem { menu items }</li>
  * <li>.gwt-MenuBar .gwt-MenuItem-selected { selected menu items }</li>
  * </ul>
- * 
+ *
  * <p>
  * <h3>Example</h3> {@example com.google.gwt.examples.MenuBarExample}
  * </p>
- * 
+ *
  * @deprecated
  */
 @Deprecated
@@ -93,7 +93,7 @@ public class MenuBar extends Widget implements PopupListener {
 
     /**
      * Creates an empty menu bar.
-     * 
+     *
      * @param vertical
      *            <code>true</code> to orient the menu bar vertically
      */
@@ -121,7 +121,7 @@ public class MenuBar extends Widget implements PopupListener {
 
     /**
      * Adds a menu item to the bar.
-     * 
+     *
      * @param item
      *            the item to be added
      */
@@ -144,7 +144,7 @@ public class MenuBar extends Widget implements PopupListener {
     /**
      * Adds a menu item to the bar, that will fire the given command when it is
      * selected.
-     * 
+     *
      * @param text
      *            the item's text
      * @param asHTML
@@ -162,7 +162,7 @@ public class MenuBar extends Widget implements PopupListener {
     /**
      * Adds a menu item to the bar, that will open the specified menu when it is
      * selected.
-     * 
+     *
      * @param text
      *            the item's text
      * @param asHTML
@@ -180,7 +180,7 @@ public class MenuBar extends Widget implements PopupListener {
     /**
      * Adds a menu item to the bar, that will fire the given command when it is
      * selected.
-     * 
+     *
      * @param text
      *            the item's text
      * @param cmd
@@ -196,7 +196,7 @@ public class MenuBar extends Widget implements PopupListener {
     /**
      * Adds a menu item to the bar, that will open the specified menu when it is
      * selected.
-     * 
+     *
      * @param text
      *            the item's text
      * @param popup
@@ -223,7 +223,7 @@ public class MenuBar extends Widget implements PopupListener {
     /**
      * Gets whether this menu bar's child menus will open when the mouse is
      * moved over it.
-     * 
+     *
      * @return <code>true</code> if child menus will auto-open
      */
     public boolean getAutoOpen() {
@@ -276,7 +276,7 @@ public class MenuBar extends Widget implements PopupListener {
 
     /**
      * Removes the specified menu item from the bar.
-     * 
+     *
      * @param item
      *            the item to be removed
      */
@@ -294,7 +294,7 @@ public class MenuBar extends Widget implements PopupListener {
     /**
      * Sets whether this menu bar's child menus will open when the mouse is
      * moved over it.
-     * 
+     *
      * @param autoOpen
      *            <code>true</code> to cause child menus to auto-open
      */
@@ -306,7 +306,7 @@ public class MenuBar extends Widget implements PopupListener {
      * Returns a list containing the <code>MenuItem</code> objects in the menu
      * bar. If there are no items in the menu bar, then an empty
      * <code>List</code> object will be returned.
-     * 
+     *
      * @return a list containing the <code>MenuItem</code> objects in the menu
      *         bar
      */
@@ -318,7 +318,7 @@ public class MenuBar extends Widget implements PopupListener {
      * Returns the <code>MenuItem</code> that is currently selected
      * (highlighted) by the user. If none of the items in the menu are currently
      * selected, then <code>null</code> will be returned.
-     * 
+     *
      * @return the <code>MenuItem</code> that is currently selected, or
      *         <code>null</code> if no items are currently selected
      */
@@ -328,7 +328,7 @@ public class MenuBar extends Widget implements PopupListener {
 
     /**
      * Gets the first item from the menu or null if no items.
-     * 
+     *
      * @since 7.2.6
      * @return the first item from the menu or null if no items.
      */
@@ -338,7 +338,7 @@ public class MenuBar extends Widget implements PopupListener {
 
     /**
      * Gest the last item from the menu or null if no items.
-     * 
+     *
      * @since 7.2.6
      * @return the last item from the menu or null if no items.
      */
@@ -349,7 +349,7 @@ public class MenuBar extends Widget implements PopupListener {
 
     /**
      * Gets the index of the selected item.
-     * 
+     *
      * @since 7.2.6
      * @return the index of the selected item.
      */
@@ -390,7 +390,7 @@ public class MenuBar extends Widget implements PopupListener {
      * a popup associated with it, the popup will be shown. If it has a command
      * associated with it, and 'fireCommand' is true, then the command will be
      * fired. Popups associated with other items will be hidden.
-     * 
+     *
      * @param item the item whose popup is to be shown. @param fireCommand
      * <code>true</code> if the item's command should be fired,
      * <code>false</code> otherwise.
@@ -530,7 +530,7 @@ public class MenuBar extends Widget implements PopupListener {
 
     /**
      * Scroll the selected item into view.
-     * 
+     *
      * @since 7.2.6
      */
     public void scrollSelectionIntoView() {
@@ -539,7 +539,7 @@ public class MenuBar extends Widget implements PopupListener {
 
     /**
      * Sets the menu scroll enabled or disabled.
-     * 
+     *
      * @since 7.2.6
      * @param enabled
      *            the enabled state of the scroll.
@@ -563,7 +563,7 @@ public class MenuBar extends Widget implements PopupListener {
 
     /**
      * Gets whether the scroll is activate for this menu.
-     * 
+     *
      * @since 7.2.6
      * @return true if the scroll is active, otherwise false.
      */
@@ -578,7 +578,7 @@ public class MenuBar extends Widget implements PopupListener {
 
     /**
      * Gets the preferred height of the menu.
-     * 
+     *
      * @since 7.2.6
      */
     protected int getPreferredHeight() {

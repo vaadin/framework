@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -38,24 +38,24 @@ import com.vaadin.shared.data.sort.SortDirection;
  * Container wrapper that adds support for generated properties. This container
  * only supports adding new generated properties. Adding new normal properties
  * should be done for the wrapped container.
- * 
+ *
  * <p>
  * Removing properties from this container does not remove anything from the
  * wrapped container but instead only hides them from the results. These
  * properties can be returned to this container by calling
  * {@link #addContainerProperty(Object, Class, Object)} with same property id
  * which was removed.
- * 
+ *
  * <p>
  * If wrapped container is Filterable and/or Sortable it should only be handled
  * through this container as generated properties need to be handled in a
  * specific way when sorting/filtering.
- * 
+ *
  * <p>
  * Items returned by this container do not support adding or removing
  * properties. Generated properties are always read-only. Trying to make them
  * editable throws an exception.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -171,7 +171,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
         /**
          * Tests if the given object is the same as the this object. Two Items
          * from the same container with the same ID are equal.
-         * 
+         *
          * @param obj
          *            an object to compare with this object
          * @return <code>true</code> if the given object is the same as this
@@ -203,7 +203,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
 
         /**
          * Returns the wrapped Item that belongs to the wrapped container
-         * 
+         *
          * @return wrapped item.
          * @since 7.6.8
          */
@@ -279,7 +279,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
 
     /**
      * Constructor for GeneratedPropertyContainer.
-     * 
+     *
      * @param container
      *            underlying indexed container
      */
@@ -342,7 +342,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
      * Add a new PropertyValueGenerator with given property id. This will
      * override any existing properties with the same property id. Fires a
      * PropertySetChangeEvent.
-     * 
+     *
      * @param propertyId
      *            property id
      * @param generator
@@ -357,7 +357,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
     /**
      * Removes any possible PropertyValueGenerator with given property id. Fires
      * a PropertySetChangeEvent.
-     * 
+     *
      * @param propertyId
      *            property id
      */
@@ -767,7 +767,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
 
     /**
      * Returns the original underlying container.
-     * 
+     *
      * @return the original underlying container
      */
     public Container.Indexed getWrappedContainer() {

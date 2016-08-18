@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,7 +31,7 @@ import com.vaadin.data.Property;
  * a </code>MapItem</code> can be referenced using locally unique identifiers.
  * The class supports listeners who are interested in changes to the Property
  * set managed by the class.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -62,7 +62,7 @@ public class PropertysetItem
      * Gets the Property corresponding to the given Property ID stored in the
      * Item. If the Item does not contain the Property, <code>null</code> is
      * returned.
-     * 
+     *
      * @param id
      *            the identifier of the Property to get.
      * @return the Property with the given ID or <code>null</code>
@@ -74,7 +74,7 @@ public class PropertysetItem
 
     /**
      * Gets the collection of IDs of all Properties stored in the Item.
-     * 
+     *
      * @return unmodifiable collection containing IDs of the Properties stored
      *         the Item
      */
@@ -89,7 +89,7 @@ public class PropertysetItem
      * Removes the Property identified by ID from the Item. This functionality
      * is optional. If the method is not implemented, the method always returns
      * <code>false</code>.
-     * 
+     *
      * @param id
      *            the ID of the Property to be removed.
      * @return <code>true</code> if the operation succeeded <code>false</code>
@@ -112,7 +112,7 @@ public class PropertysetItem
 
     /**
      * Tries to add a new Property into the Item.
-     * 
+     *
      * @param id
      *            the ID of the new Property.
      * @param property
@@ -148,7 +148,7 @@ public class PropertysetItem
      * The format of the string is a space separated catenation of the
      * <code>String</code> representations of the Properties contained by the
      * Item.
-     * 
+     *
      * @return <code>String</code> representation of the Item contents
      */
     @Override
@@ -172,7 +172,7 @@ public class PropertysetItem
     /**
      * An <code>event</code> object specifying an Item whose Property set has
      * changed.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -185,7 +185,7 @@ public class PropertysetItem
 
         /**
          * Gets the Item whose Property set has changed.
-         * 
+         *
          * @return source object of the event as an <code>Item</code>
          */
         @Override
@@ -196,7 +196,7 @@ public class PropertysetItem
 
     /**
      * Registers a new property set change listener for this Item.
-     * 
+     *
      * @param listener
      *            the new Listener to be registered.
      */
@@ -221,7 +221,7 @@ public class PropertysetItem
 
     /**
      * Removes a previously registered property set change listener.
-     * 
+     *
      * @param listener
      *            the Listener to be removed.
      */
@@ -285,11 +285,11 @@ public class PropertysetItem
      * the fields are not themselves cloned. Thus, this method performs a
      * "shallow copy" of this object, not a "deep copy" operation.
      * </p>
-     * 
+     *
      * @throws CloneNotSupportedException
      *             if the object's class does not support the Cloneable
      *             interface.
-     * 
+     *
      * @see java.lang.Object#clone()
      */
     @Override
@@ -309,7 +309,7 @@ public class PropertysetItem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -359,7 +359,7 @@ public class PropertysetItem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override

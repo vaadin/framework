@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,7 +19,7 @@ import java.io.Serializable;
 
 /**
  * Default implementation for color.
- * 
+ *
  * @since 7.0.0
  */
 public class Color implements Serializable {
@@ -43,7 +43,7 @@ public class Color implements Serializable {
     /**
      * Creates a color that has the specified red, green, blue, and alpha values
      * within the range [0 - 255].
-     * 
+     *
      * @throws IllegalArgumentException
      *             if <code>red</code>, <code>green</code>, <code>blue</code> or
      *             <code>alpha</code> fall outside of the inclusive range from 0
@@ -68,7 +68,7 @@ public class Color implements Serializable {
     /**
      * Creates a color that has the specified red, green, and blue values within
      * the range [0 - 255]. Alpha gets the default value of 255.
-     * 
+     *
      * @throws IllegalArgumentException
      *             if <code>red</code>, <code>green</code> or <code>blue</code>
      *             fall outside of the inclusive range from 0 to 255
@@ -85,12 +85,12 @@ public class Color implements Serializable {
 
     /**
      * Creates a color based on an RGB value.
-     * 
+     *
      * @throws IllegalArgumentException
      *             if converted values of <code>red</code>, <code>green</code>,
      *             <code>blue</code> or <code>alpha</code> fall outside of the
      *             inclusive range from 0 to 255
-     * 
+     *
      * @param rgb
      *            the RGB value
      */
@@ -111,10 +111,10 @@ public class Color implements Serializable {
 
     /**
      * Checks that all values are within the acceptable range of [0, 255].
-     * 
+     *
      * @throws IllegalArgumentException
      *             if any of the values fall outside of the range
-     * 
+     *
      * @param red
      * @param green
      * @param blue
@@ -133,7 +133,7 @@ public class Color implements Serializable {
 
     /**
      * Checks whether the value is within the acceptable range of [0, 255].
-     * 
+     *
      * @param value
      * @return true if the value falls within the range, false otherwise
      */
@@ -146,7 +146,7 @@ public class Color implements Serializable {
 
     /**
      * Returns the red value of the color.
-     * 
+     *
      */
     public int getRed() {
         return red;
@@ -154,7 +154,7 @@ public class Color implements Serializable {
 
     /**
      * Sets the red value of the color. Value must be within the range [0, 255].
-     * 
+     *
      * @param red
      *            new red value
      */
@@ -168,7 +168,7 @@ public class Color implements Serializable {
 
     /**
      * Returns the green value of the color.
-     * 
+     *
      */
     public int getGreen() {
         return green;
@@ -177,7 +177,7 @@ public class Color implements Serializable {
     /**
      * Sets the green value of the color. Value must be within the range [0,
      * 255].
-     * 
+     *
      * @param green
      *            new green value
      */
@@ -191,7 +191,7 @@ public class Color implements Serializable {
 
     /**
      * Returns the blue value of the color.
-     * 
+     *
      */
     public int getBlue() {
         return blue;
@@ -200,7 +200,7 @@ public class Color implements Serializable {
     /**
      * Sets the blue value of the color. Value must be within the range [0,
      * 255].
-     * 
+     *
      * @param blue
      *            new blue value
      */
@@ -214,7 +214,7 @@ public class Color implements Serializable {
 
     /**
      * Returns the alpha value of the color.
-     * 
+     *
      */
     public int getAlpha() {
         return alpha;
@@ -223,7 +223,7 @@ public class Color implements Serializable {
     /**
      * Sets the alpha value of the color. Value must be within the range [0,
      * 255].
-     * 
+     *
      * @param alpha
      *            new alpha value
      */
@@ -262,7 +262,7 @@ public class Color implements Serializable {
 
     /**
      * Returns converted HSV components of the color.
-     * 
+     *
      */
     public float[] getHSV() {
         float[] hsv = new float[3];
@@ -329,7 +329,7 @@ public class Color implements Serializable {
      * The <code>saturation</code> and <code>value</code> components should be
      * floating-point values within the range [0.0-1.0].
      * <p>
-     * 
+     *
      * @param hue
      *            the hue of the color
      * @param saturation
@@ -392,7 +392,7 @@ public class Color implements Serializable {
     /**
      * <p>
      * Converts HSL's hue, saturation and lightness into an RGB value.
-     * 
+     *
      * @param hue
      *            the hue of the color. The unit of the value is degrees and
      *            should be between 0-360.
@@ -402,7 +402,7 @@ public class Color implements Serializable {
      * @param lightness
      *            the lightness of the color. The unit of the value is
      *            percentages and should be between 0-100;
-     * 
+     *
      * @return the RGB value of corresponding color
      */
     public static int HSLtoRGB(int hue, int saturation, int lightness) {

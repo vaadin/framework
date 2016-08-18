@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -39,12 +39,12 @@ import elemental.json.JsonValue;
 /**
  * Encoder for converting RPC parameters and other values to JSON for transfer
  * between the client and the server.
- * 
+ *
  * Currently, basic data types as well as Map, String[] and Object[] are
  * supported, where maps and Object[] can contain other supported data types.
- * 
+ *
  * TODO extensible type support
- * 
+ *
  * @since 7.0
  */
 public class JsonEncoder {
@@ -52,7 +52,7 @@ public class JsonEncoder {
     /**
      * Encode a value to a JSON representation for transport from the client to
      * the server.
-     * 
+     *
      * @param value
      *            value to convert
      * @param connection
@@ -292,7 +292,7 @@ public class JsonEncoder {
     /**
      * Returns the transport type for the given value. Only returns a transport
      * type for internally handled values.
-     * 
+     *
      * @param value
      *            The value that should be transported
      * @return One of the JsonEncode.VTYPE_ constants or null if the value

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,7 +26,7 @@ public class CSSRule {
     private JavaScriptObject rules = null;
 
     /**
-     * 
+     *
      * @param selector
      *            the CSS selector to search for in the stylesheets
      * @param deep
@@ -63,11 +63,11 @@ public class CSSRule {
     /*-{
     if(!$doc.styleSheets)
     return null;
-    
+
     selector = selector.toLowerCase();
-    
+
     var allMatches = [];
-    
+
     // IE handles imported sheet differently
     if(deep && sheet.imports && sheet.imports.length > 0) {
     for(var i=0; i < sheet.imports.length; i++) {
@@ -76,13 +76,13 @@ public class CSSRule {
     allMatches.concat(imports);
     }
     }
-    
+
     var theRules = new Array();
     if (sheet.cssRules)
     theRules = sheet.cssRules
     else if (sheet.rules)
     theRules = sheet.rules
-    
+
     var j = theRules.length;
     for(var i=0; i<j; i++) {
     var r = theRules[i];
@@ -102,13 +102,13 @@ public class CSSRule {
     allMatches = allMatches.concat(imports);
     }
     }
-    
+
     return allMatches;
     }-*/;
 
     /**
      * Returns a specific property value from this CSS rule.
-     * 
+     *
      * @param propertyName
      *            camelCase CSS property name
      * @return the value of the property as a String

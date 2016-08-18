@@ -26,10 +26,10 @@ import com.vaadin.data.Binder.Binding;
  * Register an instance of this class using
  * {@link Binding#withStatusChangeHandler(StatusChangeHandler) to be able to
  * listen to validation status updates.
- * 
+ *
  * @see Binding#withStatusChangeHandler(StatusChangeHandler)
  * @see ValidationStatusChangeEvent
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  *

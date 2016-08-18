@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,7 @@ import java.util.Collection;
  * value is valid or not, and to add, remove and list registered validators of
  * the object.
  * </p>
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  * @see com.vaadin.legacy.data.Validator
@@ -39,7 +39,7 @@ public interface Validatable extends Serializable {
      * object's value needs to be verified, that is, when the {@link #isValid()}
      * method is called. This usually happens when the object's value changes.
      * </p>
-     * 
+     *
      * @param validator
      *            the new validator
      */
@@ -51,7 +51,7 @@ public interface Validatable extends Serializable {
      * validator is removed from the object and its <code>validate</code> method
      * is no longer called in {@link #isValid()}.
      * </p>
-     * 
+     *
      * @param validator
      *            the validator to remove
      */
@@ -72,7 +72,7 @@ public interface Validatable extends Serializable {
      * the collection may be unsafe (e.g. may throw
      * <code>ConcurrentModificationException</code>.)
      * </p>
-     * 
+     *
      * @return A collection of validators
      */
     public Collection<Validator> getValidators();
@@ -85,7 +85,7 @@ public interface Validatable extends Serializable {
      * throws the {@link Validator.InvalidValueException} this method returns
      * <code>false</code>.
      * </p>
-     * 
+     *
      * @return <code>true</code> if the registered validators concur that the
      *         value is valid, <code>false</code> otherwise
      */
@@ -97,7 +97,7 @@ public interface Validatable extends Serializable {
      * method should do nothing, and if it's not valid, it should throw
      * <code>Validator.InvalidValueException</code>
      * </p>
-     * 
+     *
      * @throws Validator.InvalidValueException
      *             if the value is not valid
      */
@@ -108,7 +108,7 @@ public interface Validatable extends Serializable {
      * Checks the validabtable object accept invalid values.The default value is
      * <code>true</code>.
      * </p>
-     * 
+     *
      */
     public boolean isInvalidAllowed();
 
@@ -118,9 +118,9 @@ public interface Validatable extends Serializable {
      * configuration possibility is optional. By default invalid values are
      * allowed.
      * </p>
-     * 
+     *
      * @param invalidValueAllowed
-     * 
+     *
      * @throws UnsupportedOperationException
      *             if the setInvalidAllowed is not supported.
      */

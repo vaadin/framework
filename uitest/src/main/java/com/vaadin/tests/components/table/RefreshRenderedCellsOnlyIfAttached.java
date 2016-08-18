@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,7 +27,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * There shouldn't be any attempts to refresh table's cells if the table isn't
  * attached.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -38,7 +38,7 @@ public class RefreshRenderedCellsOnlyIfAttached extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#setup(com.vaadin.server.
      * VaadinRequest)
      */
@@ -53,7 +53,7 @@ public class RefreshRenderedCellsOnlyIfAttached extends AbstractTestUI {
         final Table t = new Table() {
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see com.vaadin.ui.Table#refreshRenderedCells()
              */
             @Override
@@ -91,7 +91,7 @@ public class RefreshRenderedCellsOnlyIfAttached extends AbstractTestUI {
 
     /**
      * Remove Table's parent component.
-     * 
+     *
      * @since
      */
     protected void removeTableParent() {
@@ -100,7 +100,7 @@ public class RefreshRenderedCellsOnlyIfAttached extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -110,7 +110,7 @@ public class RefreshRenderedCellsOnlyIfAttached extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override

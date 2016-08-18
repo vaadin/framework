@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,7 @@ import com.vaadin.data.Result;
  * Both complete matches and substring matches are supported.
  * <p>
  * For the Java regular expression syntax, see {@link java.util.regex.Pattern}.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 8.0
  */
@@ -39,7 +39,7 @@ public class RegexpValidator extends AbstractValidator<String> {
     /**
      * Creates a validator for checking that the regular expression matches the
      * complete string to validate.
-     * 
+     *
      * @param errorMessage
      *            the message to display in case the value does not validate.
      * @param regexp
@@ -52,7 +52,7 @@ public class RegexpValidator extends AbstractValidator<String> {
     /**
      * Creates a validator for checking that the regular expression matches the
      * string to validate.
-     * 
+     *
      * @param errorMessage
      *            the message to display in case the value does not validate.
      * @param regexp
@@ -60,7 +60,7 @@ public class RegexpValidator extends AbstractValidator<String> {
      * @param complete
      *            true to use check for a complete match, false to look for a
      *            matching substring
-     * 
+     *
      */
     public RegexpValidator(String errorMessage, String regexp,
             boolean complete) {
@@ -81,7 +81,7 @@ public class RegexpValidator extends AbstractValidator<String> {
 
     /**
      * Returns whether the given string matches the regular expression.
-     * 
+     *
      * @param value
      *            the string to match
      * @return true if the string matched, false otherwise
@@ -99,7 +99,7 @@ public class RegexpValidator extends AbstractValidator<String> {
 
     /**
      * Returns a new or reused matcher for the pattern.
-     * 
+     *
      * @param value
      *            the string to find matches in
      * @return a matcher for the string

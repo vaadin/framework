@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,7 +26,7 @@ import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Abstract base for embedding components.
- * 
+ *
  * @author Vaadin Ltd.
  * @version @VERSION@
  * @since 7.0
@@ -47,7 +47,7 @@ public abstract class AbstractEmbedded extends AbstractComponent {
     /**
      * Sets the object source resource. The dimensions are assumed if possible.
      * The type is guessed from resource.
-     * 
+     *
      * @param source
      *            the source to set.
      */
@@ -57,7 +57,7 @@ public abstract class AbstractEmbedded extends AbstractComponent {
 
     /**
      * Get the object source resource.
-     * 
+     *
      * @return the source
      */
     public Resource getSource() {
@@ -67,7 +67,7 @@ public abstract class AbstractEmbedded extends AbstractComponent {
     /**
      * Sets this component's alternate text that can be presented instead of the
      * component's normal content for accessibility purposes.
-     * 
+     *
      * @param altText
      *            A short, human-readable description of this component's
      *            content.
@@ -79,7 +79,7 @@ public abstract class AbstractEmbedded extends AbstractComponent {
     /**
      * Gets this component's alternate text that can be presented instead of the
      * component's normal content for accessibility purposes.
-     * 
+     *
      * @returns Alternate text
      */
     public String getAlternateText() {

@@ -69,14 +69,14 @@ import com.vaadin.shared.util.SharedUtil;
  * This is the client side communication "engine", managing client-server
  * communication with its server side counterpart
  * com.vaadin.server.VaadinService.
- * 
+ *
  * Client-side connectors receive updates from the corresponding server-side
  * connector (typically component) as state updates or RPC calls. The connector
  * has the possibility to communicate back with its server side counter part
  * through RPC calls.
- * 
+ *
  * TODO document better
- * 
+ *
  * Entry point classes (widgetsets) define <code>onModuleLoad()</code>.
  */
 public class ApplicationConnection implements HasHandlers {
@@ -100,12 +100,12 @@ public class ApplicationConnection implements HasHandlers {
      * A string that, if found in a non-JSON response to a UIDL request, will
      * cause the browser to refresh the page. If followed by a colon, optional
      * whitespace, and a URI, causes the browser to synchronously load the URI.
-     * 
+     *
      * <p>
      * This allows, for instance, a servlet filter to redirect the application
      * to a custom login page when the session expires. For example:
      * </p>
-     * 
+     *
      * <pre>
      * if (sessionExpired) {
      *     response.setHeader(&quot;Content-Type&quot;, &quot;text/html&quot;);
@@ -233,12 +233,12 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * Event triggered when a application is stopped by calling
      * {@link ApplicationConnection#setApplicationRunning(false)}.
-     * 
+     *
      * To listen for the event add a {@link ApplicationStoppedHandler} by
      * invoking
      * {@link ApplicationConnection#addHandler(ApplicationConnection.ApplicationStoppedEvent.Type, ApplicationStoppedHandler)}
      * to the {@link ApplicationConnection}
-     * 
+     *
      * @since 7.1.8
      * @author Vaadin Ltd
      */
@@ -265,7 +265,7 @@ public class ApplicationConnection implements HasHandlers {
         /**
          * Called when a communication error has occurred. Returning
          * <code>true</code> from this method suppresses error handling.
-         * 
+         *
          * @param details
          *            A string describing the error.
          * @param statusCode
@@ -280,7 +280,7 @@ public class ApplicationConnection implements HasHandlers {
      * A listener for listening to application stopped events. The listener can
      * be added to a {@link ApplicationConnection} by invoking
      * {@link ApplicationConnection#addHandler(ApplicationStoppedEvent.Type, ApplicationStoppedHandler)}
-     * 
+     *
      * @since 7.1.8
      * @author Vaadin Ltd
      */
@@ -290,7 +290,7 @@ public class ApplicationConnection implements HasHandlers {
          * Triggered when the {@link ApplicationConnection} marks a previously
          * running application as stopped by invoking
          * {@link ApplicationConnection#setApplicationRunning(false)}
-         * 
+         *
          * @param event
          *            the event triggered by the {@link ApplicationConnection}
          */
@@ -427,7 +427,7 @@ public class ApplicationConnection implements HasHandlers {
      * called once this application has started (first response received) or
      * failed to start. This ensures that the applications are started in order,
      * to avoid session-id problems.
-     * 
+     *
      */
     public void start() {
         String jsonText = configuration.getUIDL();
@@ -459,7 +459,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Checks if there is some work to be done on the client side
-     * 
+     *
      * @return true if the client has some work to be done, false otherwise
      */
     private boolean isActive() {
@@ -482,7 +482,7 @@ public class ApplicationConnection implements HasHandlers {
                 return vi;
             }
         }
-    
+
         client.getProfilingData = $entry(function() {
             var smh = ap.@com.vaadin.client.ApplicationConnection::getMessageHandler()();
             var pd = [
@@ -497,7 +497,7 @@ public class ApplicationConnection implements HasHandlers {
             pd[pd.length] = smh.@com.vaadin.client.communication.MessageHandler::bootstrapTime;
             return pd;
         });
-    
+
         client.getElementByPath = $entry(function(id) {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
         });
@@ -514,7 +514,7 @@ public class ApplicationConnection implements HasHandlers {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getPathForElement(Lcom/google/gwt/dom/client/Element;)(element);
         });
         client.initializing = false;
-    
+
         $wnd.vaadin.clients[TTAppId] = client;
     }-*/;
 
@@ -534,7 +534,7 @@ public class ApplicationConnection implements HasHandlers {
      * <li><code>vaadin.postRequestHooks</code> is a map of functions which gets
      * called after each XHR made by vaadin application. Note, that it is
      * attaching js functions responsibility to create the variable like this:
-     * 
+     *
      * <code><pre>
      * if(!vaadin.postRequestHooks) {vaadin.postRequestHooks = new Object();}
      * postRequestHooks.myHook = function(appId) {
@@ -545,7 +545,7 @@ public class ApplicationConnection implements HasHandlers {
      * </pre></code> First parameter passed to these functions is the identifier
      * of Vaadin application that made the request.
      * </ul>
-     * 
+     *
      * TODO make this multi-app aware
      */
     private native void initializeClientHooks()
@@ -576,7 +576,7 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * Requests an analyze of layouts, to find inconsistencies. Exclusively used
      * for debugging during development.
-     * 
+     *
      * @deprecated as of 7.1. Replaced by {@link UIConnector#analyzeLayouts()}
      */
     @Deprecated
@@ -588,7 +588,7 @@ public class ApplicationConnection implements HasHandlers {
      * Sends a request to the server to print details to console that will help
      * the developer to locate the corresponding server-side connector in the
      * source code.
-     * 
+     *
      * @param serverConnector
      * @deprecated as of 7.1. Replaced by
      *             {@link UIConnector#showServerDebugInfo(ServerConnector)}
@@ -635,7 +635,7 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * Checks whether or not the CSS is loaded. By default checks the size of
      * the loading indicator element.
-     * 
+     *
      * @return
      */
     protected boolean isCSSLoaded() {
@@ -645,12 +645,12 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Shows the communication error notification.
-     * 
+     *
      * @param details
      *            Optional details.
      * @param statusCode
      *            The status code returned for the request
-     * 
+     *
      */
     public void showCommunicationError(String details, int statusCode) {
         getLogger().severe("Communication error: " + details);
@@ -659,7 +659,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Shows the authentication error notification.
-     * 
+     *
      * @param details
      *            Optional details.
      */
@@ -670,7 +670,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Shows the session expiration notification.
-     * 
+     *
      * @param details
      *            Optional details.
      */
@@ -681,7 +681,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Shows an error notification.
-     * 
+     *
      * @param details
      *            Optional details.
      * @param message
@@ -729,7 +729,7 @@ public class ApplicationConnection implements HasHandlers {
      * <p>
      * Used by the native "client.isActive" function.
      * </p>
-     * 
+     *
      * @return true if deferred commands are (potentially) being executed, false
      *         otherwise
      */
@@ -744,7 +744,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Returns the loading indicator used by this ApplicationConnection
-     * 
+     *
      * @return The loading indicator for this ApplicationConnection
      */
     public VLoadingIndicator getLoadingIndicator() {
@@ -753,7 +753,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Determines whether or not the loading indicator is showing.
-     * 
+     *
      * @return true if the loading indicator is visible
      * @deprecated As of 7.1. Use {@link #getLoadingIndicator()} and
      *             {@link VLoadingIndicator#isVisible()}.isVisible() instead.
@@ -862,7 +862,7 @@ public class ApplicationConnection implements HasHandlers {
      * is true, the update is sent as soon as possible. If immediate is false,
      * the update will be sent along with the next immediate update.
      * </p>
-     * 
+     *
      * @param paintableId
      *            the id of the paintable that owns the variable
      * @param variableName
@@ -884,7 +884,7 @@ public class ApplicationConnection implements HasHandlers {
      * is true, the update is sent as soon as possible. If immediate is false,
      * the update will be sent along with the next immediate update.
      * </p>
-     * 
+     *
      * @param paintableId
      *            the id of the paintable that owns the variable
      * @param variableName
@@ -907,7 +907,7 @@ public class ApplicationConnection implements HasHandlers {
      * is true, the update is sent as soon as possible. If immediate is false,
      * the update will be sent along with the next immediate update.
      * </p>
-     * 
+     *
      * @param paintableId
      *            the id of the paintable that owns the variable
      * @param variableName
@@ -930,7 +930,7 @@ public class ApplicationConnection implements HasHandlers {
      * is true, the update is sent as soon as possible. If immediate is false,
      * the update will be sent along with the next immediate update.
      * </p>
-     * 
+     *
      * @param paintableId
      *            the id of the paintable that owns the variable
      * @param variableName
@@ -953,7 +953,7 @@ public class ApplicationConnection implements HasHandlers {
      * is true, the update is sent as soon as possible. If immediate is false,
      * the update will be sent along with the next immediate update.
      * </p>
-     * 
+     *
      * @param paintableId
      *            the id of the paintable that owns the variable
      * @param variableName
@@ -976,7 +976,7 @@ public class ApplicationConnection implements HasHandlers {
      * is true, the update is sent as soon as possible. If immediate is false,
      * the update will be sent along with the next immediate update.
      * </p>
-     * 
+     *
      * @param paintableId
      *            the id of the paintable that owns the variable
      * @param variableName
@@ -999,7 +999,7 @@ public class ApplicationConnection implements HasHandlers {
      * is true, the update is sent as soon as possible. If immediate is false,
      * the update will be sent along with the next immediate update.
      * </p>
-     * 
+     *
      * @param paintableId
      *            the id of the paintable that owns the variable
      * @param variableName
@@ -1022,7 +1022,7 @@ public class ApplicationConnection implements HasHandlers {
      * is true, the update is sent as soon as possible. If immediate is false,
      * the update will be sent along with the next immediate update.
      * </p>
-     * 
+     *
      * @param paintableId
      *            the id of the paintable that owns the variable
      * @param variableName
@@ -1045,7 +1045,7 @@ public class ApplicationConnection implements HasHandlers {
      * the update will be sent along with the next immediate update.
      * <p>
      * A null array is sent as an empty array.
-     * 
+     *
      * @param paintableId
      *            the id of the paintable that owns the variable
      * @param variableName
@@ -1068,7 +1068,7 @@ public class ApplicationConnection implements HasHandlers {
      * the update will be sent along with the next immediate update.
      * <p>
      * A null array is sent as an empty array.
-     * 
+     *
      * @param paintableId
      *            the id of the paintable that owns the variable
      * @param variableName
@@ -1085,7 +1085,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Does absolutely nothing. Replaced by {@link LayoutManager}.
-     * 
+     *
      * @param container
      * @deprecated As of 7.0, serves no purpose
      */
@@ -1107,7 +1107,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Returns false
-     * 
+     *
      * @param paintable
      * @return false, always
      * @deprecated As of 7.0, serves no purpose
@@ -1119,7 +1119,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Returns false
-     * 
+     *
      * @param paintable
      * @return false, always
      * @deprecated As of 7.0, serves no purpose
@@ -1140,16 +1140,16 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * Get either an existing ComponentConnector or create a new
      * ComponentConnector with the given type and id.
-     * 
+     *
      * If a ComponentConnector with the given id already exists, returns it.
      * Otherwise creates and registers a new ComponentConnector of the given
      * type.
-     * 
+     *
      * @param connectorId
      *            Id of the paintable
      * @param connectorType
      *            Type of the connector, as passed from the server side
-     * 
+     *
      * @return Either an existing ComponentConnector or a new ComponentConnector
      *         of the given type
      */
@@ -1162,15 +1162,15 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Creates a new ServerConnector with the given type and id.
-     * 
+     *
      * Creates and registers a new ServerConnector of the given type. Should
      * never be called with the connector id of an existing connector.
-     * 
+     *
      * @param connectorId
      *            Id of the new connector
      * @param connectorType
      *            Type of the connector, as passed from the server side
-     * 
+     *
      * @return A new ServerConnector of the given type
      */
     private ServerConnector createAndRegisterConnector(String connectorId,
@@ -1190,7 +1190,7 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * Gets a resource that has been pre-loaded via UIDL, such as custom
      * layouts.
-     * 
+     *
      * @param name
      *            identifier of the resource to get
      * @return the resource
@@ -1202,7 +1202,7 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * Sets a resource that has been pre-loaded via UIDL, such as custom
      * layouts.
-     * 
+     *
      * @since 7.6
      * @param name
      *            identifier of the resource to Set
@@ -1215,7 +1215,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Singleton method to get instance of app's context menu.
-     * 
+     *
      * @return VContextMenu object
      */
     public VContextMenu getContextMenu() {
@@ -1230,7 +1230,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Gets an {@link Icon} instance corresponding to a URI.
-     * 
+     *
      * @since 7.2
      * @param uri
      * @return Icon object
@@ -1252,7 +1252,7 @@ public class ApplicationConnection implements HasHandlers {
      * Translates custom protocols in UIDL URI's to be recognizable by browser.
      * All uri's from UIDL should be routed via this method before giving them
      * to browser due URI's in UIDL may contain custom protocols like theme://.
-     * 
+     *
      * @param uidlUri
      *            Vaadin URI from uidl
      * @return translated URI ready for browser
@@ -1264,7 +1264,7 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * Gets the URI for the current theme. Can be used to reference theme
      * resources.
-     * 
+     *
      * @return URI to the current theme
      */
     public String getThemeUri() {
@@ -1281,7 +1281,7 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * Use to notify that the given component's caption has changed; layouts may
      * have to be recalculated.
-     * 
+     *
      * @param component
      *            the Paintable whose caption has changed
      * @deprecated As of 7.0.2, has not had any effect for a long time
@@ -1293,7 +1293,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Gets the main view
-     * 
+     *
      * @return the main view
      */
     public UIConnector getUIConnector() {
@@ -1302,7 +1302,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Gets the {@link ApplicationConfiguration} for the current application.
-     * 
+     *
      * @see ApplicationConfiguration
      * @return the configuration for this application
      */
@@ -1315,7 +1315,7 @@ public class ApplicationConnection implements HasHandlers {
      * list of events which has server side listeners is updated automatically
      * before the component is updated so the value is correct if called from
      * updatedFromUIDL.
-     * 
+     *
      * @param connector
      *            The connector to register event listeners for
      * @param eventIdentifier
@@ -1334,7 +1334,7 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * Adds the get parameters to the uri and returns the new uri that contains
      * the parameters.
-     * 
+     *
      * @param uri
      *            The uri to which the parameters should be added.
      * @param extraParams
@@ -1364,7 +1364,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Get VTooltip instance related to application connection
-     * 
+     *
      * @return VTooltip instance
      */
     public VTooltip getVTooltip() {
@@ -1376,7 +1376,7 @@ public class ApplicationConnection implements HasHandlers {
      * this method is now handled by the state change event handler in
      * AbstractComponentConnector. The only function this method has is to
      * return true if the UIDL is a "cached" update.
-     * 
+     *
      * @param component
      * @param uidl
      * @param manageCaption
@@ -1427,7 +1427,7 @@ public class ApplicationConnection implements HasHandlers {
      * Schedules a heartbeat request to occur after the configured heartbeat
      * interval elapses if the interval is a positive number. Otherwise, does
      * nothing.
-     * 
+     *
      * @deprecated as of 7.2, use {@link Heartbeat#schedule()} instead
      */
     @Deprecated
@@ -1441,7 +1441,7 @@ public class ApplicationConnection implements HasHandlers {
      * Heartbeat requests are used to inform the server that the client-side is
      * still alive. If the client page is closed or the connection lost, the
      * server will eventually close the inactive UI.
-     * 
+     *
      * @deprecated as of 7.2, use {@link Heartbeat#send()} instead
      */
     @Deprecated
@@ -1464,7 +1464,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Sets the delegate that is called whenever a communication error occurrs.
-     * 
+     *
      * @param delegate
      *            the delegate.
      */
@@ -1504,7 +1504,7 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * Checks if the application is in the {@link ApplicationState#RUNNING}
      * state.
-     * 
+     *
      * @since 7.6
      * @return true if the application is in the running state, false otherwise
      */
@@ -1536,7 +1536,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Gets the active connector for focused element in browser.
-     * 
+     *
      * @return Connector for focused element or null.
      */
     private ComponentConnector getActiveConnector() {
@@ -1564,7 +1564,7 @@ public class ApplicationConnection implements HasHandlers {
      * "initializing" to "running" to "stopped". There is no way for an
      * application to go back to a previous state, i.e. a stopped application
      * can never be re-started
-     * 
+     *
      * @since 7.6
      * @return the current state of this application
      */
@@ -1574,7 +1574,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Gets the server RPC queue for this application
-     * 
+     *
      * @since 7.6
      * @return the server RPC queue
      */
@@ -1584,7 +1584,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Gets the communication error handler for this application
-     * 
+     *
      * @since 7.6
      * @return the server RPC queue
      */
@@ -1594,7 +1594,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Gets the (server to client) message handler for this application
-     * 
+     *
      * @since 7.6
      * @return the message handler
      */
@@ -1604,7 +1604,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Gets the server rpc manager for this application
-     * 
+     *
      * @since 7.6
      * @return the server rpc manager
      */
@@ -1614,7 +1614,7 @@ public class ApplicationConnection implements HasHandlers {
 
     /**
      * Gets the (client to server) message sender for this application
-     * 
+     *
      * @since 7.6
      * @return the message sender
      */

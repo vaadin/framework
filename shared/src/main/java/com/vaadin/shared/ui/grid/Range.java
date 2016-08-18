@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,7 +26,7 @@ import java.io.Serializable;
  * <p>
  * The range is considered {@link #isEmpty() empty} if the start is the same as
  * the end.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -36,7 +36,7 @@ public final class Range implements Serializable {
 
     /**
      * Creates a range object representing a single integer.
-     * 
+     *
      * @param integer
      *            the number to represent as a range
      * @return the range represented by <code>integer</code>
@@ -51,7 +51,7 @@ public final class Range implements Serializable {
      * The range start is <em>inclusive</em> and the end is <em>exclusive</em>.
      * So, a range "between" 0 and 5 represents the numbers 0, 1, 2, 3 and 4,
      * but not 5.
-     * 
+     *
      * @param start
      *            the start of the the range, inclusive
      * @param end
@@ -67,7 +67,7 @@ public final class Range implements Serializable {
 
     /**
      * Creates a range from a start point, with a given length.
-     * 
+     *
      * @param start
      *            the first integer to include in the range
      * @param length
@@ -92,7 +92,7 @@ public final class Range implements Serializable {
 
     /**
      * Creates a new range between two numbers: <code>[start..end[</code>.
-     * 
+     *
      * @param start
      *            the start integer, inclusive
      * @param end
@@ -113,7 +113,7 @@ public final class Range implements Serializable {
 
     /**
      * Returns the <em>inclusive</em> start point of this range.
-     * 
+     *
      * @return the start point of this range
      */
     public int getStart() {
@@ -122,7 +122,7 @@ public final class Range implements Serializable {
 
     /**
      * Returns the <em>exclusive</em> end point of this range.
-     * 
+     *
      * @return the end point of this range
      */
     public int getEnd() {
@@ -131,7 +131,7 @@ public final class Range implements Serializable {
 
     /**
      * The number of integers contained in the range.
-     * 
+     *
      * @return the number of integers contained in the range
      */
     public int length() {
@@ -140,7 +140,7 @@ public final class Range implements Serializable {
 
     /**
      * Checks whether the range has no elements between the start and end.
-     * 
+     *
      * @return <code>true</code> iff the range contains no elements.
      */
     public boolean isEmpty() {
@@ -150,7 +150,7 @@ public final class Range implements Serializable {
     /**
      * Checks whether this range and another range are at least partially
      * covering the same values.
-     * 
+     *
      * @param other
      *            the other range to check against
      * @return <code>true</code> if this and <code>other</code> intersect
@@ -161,7 +161,7 @@ public final class Range implements Serializable {
 
     /**
      * Checks whether an integer is found within this range.
-     * 
+     *
      * @param integer
      *            an integer to test for presence in this range
      * @return <code>true</code> iff <code>integer</code> is in this range
@@ -172,7 +172,7 @@ public final class Range implements Serializable {
 
     /**
      * Checks whether this range is a subset of another range.
-     * 
+     *
      * @return <code>true</code> iff <code>other</code> completely wraps this
      *         range
      */
@@ -196,7 +196,7 @@ public final class Range implements Serializable {
      * <li>Elements in this range that occur after elements in
      * <code>other</code>.
      * </ul>
-     * 
+     *
      * @param other
      *            the other range to act as delimiters.
      * @return a three-element Range array of partitions depicting the elements
@@ -213,7 +213,7 @@ public final class Range implements Serializable {
 
     /**
      * Get a range that is based on this one, but offset by a number.
-     * 
+     *
      * @param offset
      *            the number to offset by
      * @return a copy of this range, offset by <code>offset</code>
@@ -264,7 +264,7 @@ public final class Range implements Serializable {
 
     /**
      * Checks whether this range starts before the start of another range.
-     * 
+     *
      * @param other
      *            the other range to compare against
      * @return <code>true</code> iff this range starts before the
@@ -276,7 +276,7 @@ public final class Range implements Serializable {
 
     /**
      * Checks whether this range ends before the start of another range.
-     * 
+     *
      * @param other
      *            the other range to compare against
      * @return <code>true</code> iff this range ends before the
@@ -288,7 +288,7 @@ public final class Range implements Serializable {
 
     /**
      * Checks whether this range ends after the end of another range.
-     * 
+     *
      * @param other
      *            the other range to compare against
      * @return <code>true</code> iff this range ends after the
@@ -300,7 +300,7 @@ public final class Range implements Serializable {
 
     /**
      * Checks whether this range starts after the end of another range.
-     * 
+     *
      * @param other
      *            the other range to compare against
      * @return <code>true</code> iff this range starts after the
@@ -314,7 +314,7 @@ public final class Range implements Serializable {
      * Split the range into two at a certain integer.
      * <p>
      * <em>Example:</em> <code>[5..10[.splitAt(7) == [5..7[, [7..10[</code>
-     * 
+     *
      * @param integer
      *            the integer at which to split the range into two
      * @return an array of two ranges, with <code>[start..integer[</code> in the
@@ -346,7 +346,7 @@ public final class Range implements Serializable {
      * <p>
      * <em>Example:</em>
      * <code>[5..10[.splitAtFromStart(2) == [5..7[, [7..10[</code>
-     * 
+     *
      * @param length
      *            the length at which to split this range into two
      * @return an array of two ranges, having the <code>length</code>-first
@@ -363,12 +363,12 @@ public final class Range implements Serializable {
     /**
      * Combines two ranges to create a range containing all values in both
      * ranges, provided there are no gaps between the ranges.
-     * 
+     *
      * @param other
      *            the range to combine with this range
-     * 
+     *
      * @return the combined range
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the two ranges aren't connected
      */
@@ -384,14 +384,14 @@ public final class Range implements Serializable {
 
     /**
      * Creates a range that is expanded the given amounts in both ends.
-     * 
+     *
      * @param startDelta
      *            the amount to expand by in the beginning of the range
      * @param endDelta
      *            the amount to expand by in the end of the range
-     * 
+     *
      * @return an expanded range
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the new range would have <code>start &gt; end</code>
      */
@@ -409,7 +409,7 @@ public final class Range implements Serializable {
      * <p>
      * If the two ranges do not intersect, an empty range is returned. There are
      * no guarantees about the position of that range.
-     * 
+     *
      * @param bounds
      *            the bounds that the returned range should be limited to
      * @return a bounded range

@@ -30,7 +30,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Validates button Widths for Buttons or Native Buttons, inside or outside
  * tables.
- * 
+ *
  * @since 7.2
  * @author Vaadin Ltd
  */

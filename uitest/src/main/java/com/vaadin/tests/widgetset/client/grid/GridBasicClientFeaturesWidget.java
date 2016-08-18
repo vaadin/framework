@@ -92,7 +92,7 @@ import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget.Data
 
 /**
  * Grid basic client features test application.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -260,7 +260,7 @@ public class GridBasicClientFeaturesWidget
     /**
      * Convenience method for creating a list of Data objects to be used as a
      * Row in the data source
-     * 
+     *
      * @param cols
      *            number of columns (items) to include in the row
      * @return

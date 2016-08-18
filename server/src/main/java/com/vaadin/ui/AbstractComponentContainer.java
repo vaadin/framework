@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import com.vaadin.server.ComponentSizeValidator;
  * implementation for the methods in {@link ComponentContainer}. Basic UI
  * components that need to contain other components inherit this class to easily
  * qualify as a component container.
- * 
+ *
  * @author Vaadin Ltd
  * @since 3.0
  */
@@ -45,7 +45,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.ui.ComponentContainer#addComponents(com.vaadin.ui.Component[])
      */
@@ -171,7 +171,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * Fires the component attached event. This should be called by the
      * addComponent methods after the component have been added to this
      * container.
-     * 
+     *
      * @param component
      *            the component that has been added to this container.
      */
@@ -183,7 +183,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * Fires the component detached event. This should be called by the
      * removeComponent methods after the component have been removed from this
      * container.
-     * 
+     *
      * @param component
      *            the component that has been removed from this container.
      */
@@ -195,7 +195,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * This only implements the events and component parent calls. The extending
      * classes must implement component list maintenance and call this method
      * after component list maintenance.
-     * 
+     *
      * @see com.vaadin.ui.ComponentContainer#addComponent(Component)
      */
     @Override
@@ -220,7 +220,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * This only implements the events and component parent calls. The extending
      * classes must implement component list maintenance and call this method
      * before component list maintenance.
-     * 
+     *
      * @see com.vaadin.ui.ComponentContainer#removeComponent(Component)
      */
     @Override
@@ -346,7 +346,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated As of 7.0, use {@link #iterator()} instead.
      */
     @Deprecated

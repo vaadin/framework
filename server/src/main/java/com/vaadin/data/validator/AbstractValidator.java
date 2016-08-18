@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,7 +23,7 @@ import com.vaadin.data.Validator;
 
 /**
  * An abstract base class for typed validators.
- * 
+ *
  * @param <T>
  *            The value type
  * @author Vaadin Ltd.
@@ -36,7 +36,7 @@ public abstract class AbstractValidator<T> implements Validator<T> {
     /**
      * Constructs a validator with the given error message. The substring "{0}"
      * is replaced by the value that failed validation.
-     * 
+     *
      * @param errorMessage
      *            the message to be included in a failed result, not null
      */
@@ -48,7 +48,7 @@ public abstract class AbstractValidator<T> implements Validator<T> {
 
     /**
      * Returns the error message for the given value.
-     * 
+     *
      * @param value
      *            an invalid value
      * @return the formatted error message
@@ -65,14 +65,14 @@ public abstract class AbstractValidator<T> implements Validator<T> {
      * <p>
      * For instance, the following {@code apply} method only accepts even
      * numbers:
-     * 
+     *
      * <pre>
      * &#64;Override
      * public Result&lt;T&gt; apply(Integer value) {
      *     return toResult(value, value % 2 == 0);
      * }
      * </pre>
-     * 
+     *
      * @param value
      *            the validated value
      * @param isValid

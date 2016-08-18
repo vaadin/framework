@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -38,7 +38,7 @@ import elemental.json.JsonObject;
  * currently implemented as an Extension hardcoded to support a specific
  * connector type. This will be changed once framework support for something
  * more flexible has been implemented.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -48,7 +48,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
     /**
      * A callback interface to let {@link GridConnector} know that detail
      * visibilities might have changed.
-     * 
+     *
      * @since 7.5.0
      * @author Vaadin Ltd
      */
@@ -57,7 +57,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
         /**
          * A request to verify (and correct) the visibility for a row, given
          * updated metadata.
-         * 
+         *
          * @param rowIndex
          *            the index of the row that should be checked
          * @param row
@@ -122,7 +122,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
             /*
              * If you're looking at this code because you want to learn how to
              * use AbstactRemoteDataSource, please look somewhere else instead.
-             * 
+             *
              * We're not doing things in the conventional way with the callback
              * here since Vaadin doesn't directly support RPC with return
              * values. We're instead asking the server to push us some data, and
@@ -141,7 +141,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
              * and some of the visible rows are being requested. The RPC in
              * itself will not trigger the indicator since it might just fetch
              * some rows in the background to fill the cache.
-             * 
+             *
              * The indicator will be hidden by the framework when the response
              * is received (unless another request is already on its way at that
              * point).
@@ -160,7 +160,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
              * We trigger the indicator already at this point since the actual
              * RPC will not be sent right away when waiting for the response to
              * a previous request.
-             * 
+             *
              * Only triggering here would not be enough since the check that
              * sets isWaitingForData is deferred. We don't want to trigger the
              * loading indicator here if we don't know that there is actually a
@@ -222,7 +222,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
         /**
          * Updates row data based on row key.
-         * 
+         *
          * @since 7.6
          * @param row
          *            new row object

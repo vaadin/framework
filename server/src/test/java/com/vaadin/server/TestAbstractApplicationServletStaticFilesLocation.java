@@ -121,7 +121,7 @@ public class TestAbstractApplicationServletStaticFilesLocation {
 
     /**
      * Creates a HttpServletRequest mock using the supplied parameters.
-     * 
+     *
      * @param base
      *            The base url, e.g. http://localhost:8080
      * @param contextPath

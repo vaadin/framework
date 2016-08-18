@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -87,7 +87,7 @@ public class LayoutManager {
 
     /**
      * Returns the application connection for this layout manager.
-     * 
+     *
      * @return connection
      */
     protected ApplicationConnection getConnection() {
@@ -97,7 +97,7 @@ public class LayoutManager {
     /**
      * Gets the layout manager associated with the given
      * {@link ApplicationConnection}.
-     * 
+     *
      * @param connection
      *            the application connection to get a layout manager for
      * @return the layout manager associated with the provided application
@@ -112,7 +112,7 @@ public class LayoutManager {
      * This causes this layout manager to measure the element in the beginning
      * of every layout phase and call the appropriate layout method of the
      * managed layout if the size of the element has changed.
-     * 
+     *
      * @param owner
      *            the ManagedLayout that depends on an element
      * @param element
@@ -164,7 +164,7 @@ public class LayoutManager {
     /**
      * Assigns a measured size to an element. Method defined as protected to
      * allow separate implementation for IE8.
-     * 
+     *
      * @param element
      *            the dom element to attach the measured size to
      * @param measuredSize
@@ -184,7 +184,7 @@ public class LayoutManager {
     /**
      * Gets the measured size for an element. Method defined as protected to
      * allow separate implementation for IE8.
-     * 
+     *
      * @param element
      *            The element to get measured size for
      * @param defaultSize
@@ -209,9 +209,9 @@ public class LayoutManager {
     /**
      * Registers that a ManagedLayout is no longer depending on the size of an
      * Element.
-     * 
+     *
      * @see #registerDependency(ManagedLayout, Element)
-     * 
+     *
      * @param owner
      *            the ManagedLayout no longer depends on an element
      * @param element
@@ -884,7 +884,7 @@ public class LayoutManager {
      * to explicitly cause some layout to be considered in an ongoing layout
      * phase, you should use {@link #setNeedsMeasure(ComponentConnector)}
      * instead.
-     * 
+     *
      * @param layout
      *            the managed layout that should be layouted
      */
@@ -906,7 +906,7 @@ public class LayoutManager {
      * to explicitly cause some layout to be considered in an ongoing layout
      * phase, you should use {@link #setNeedsMeasure(ComponentConnector)}
      * instead.
-     * 
+     *
      * @param layout
      *            the managed layout that should be layouted
      */
@@ -931,7 +931,7 @@ public class LayoutManager {
      * to explicitly cause some layout to be considered in an ongoing layout
      * phase, you should use {@link #setNeedsMeasure(ComponentConnector)}
      * instead.
-     * 
+     *
      * @param layout
      *            the managed layout that should be layouted
      */
@@ -953,13 +953,13 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * -1 is returned if the element has not been measured. If 0 is returned, it
      * might indicate that the element is not attached to the DOM.
      * <p>
      * The value returned by this method is always rounded up. To get the exact
      * outer width, use {@link #getOuterHeightDouble(Element)}
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured outer height (including margins, paddings and
@@ -982,10 +982,10 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * -1 is returned if the element has not been measured. If 0 is returned, it
      * might indicate that the element is not attached to the DOM.
-     * 
+     *
      * @since 7.5.1
      * @param element
      *            the element to get the measured size for
@@ -1008,13 +1008,13 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * -1 is returned if the element has not been measured. If 0 is returned, it
      * might indicate that the element is not attached to the DOM.
      * <p>
      * The value returned by this method is always rounded up. To get the exact
      * outer width, use {@link #getOuterWidthDouble(Element)}
-     * 
+     *
      * @since 7.5.1
      * @param element
      *            the element to get the measured size for
@@ -1038,10 +1038,10 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * -1 is returned if the element has not been measured. If 0 is returned, it
      * might indicate that the element is not attached to the DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured outer width (including margins, paddings and
@@ -1063,13 +1063,13 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * -1 is returned if the element has not been measured. If 0 is returned, it
      * might indicate that the element is not attached to the DOM.
      * <p>
      * The value returned by this method is always rounded up. To get the exact
      * outer width, use {@link #getInnerHeightDouble(Element)}
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured inner height (excluding margins, paddings and
@@ -1092,10 +1092,10 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * -1 is returned if the element has not been measured. If 0 is returned, it
      * might indicate that the element is not attached to the DOM.
-     * 
+     *
      * @since 7.5.1
      * @param element
      *            the element to get the measured size for
@@ -1118,13 +1118,13 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * -1 is returned if the element has not been measured. If 0 is returned, it
      * might indicate that the element is not attached to the DOM.
      * <p>
      * The value returned by this method is always rounded up. To get the exact
      * outer width, use {@link #getOuterHeightDouble(Element)}
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured inner width (excluding margins, paddings and
@@ -1147,10 +1147,10 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * -1 is returned if the element has not been measured. If 0 is returned, it
      * might indicate that the element is not attached to the DOM.
-     * 
+     *
      * @since 7.5.1
      * @param element
      *            the element to get the measured size for
@@ -1173,11 +1173,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured border height (top border + bottom border) of the
@@ -1199,11 +1199,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured padding height (top padding + bottom padding) of the
@@ -1225,11 +1225,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured border width (left border + right border) of the
@@ -1250,11 +1250,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured top border of the element in pixels.
@@ -1274,11 +1274,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured left border of the element in pixels.
@@ -1298,11 +1298,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured bottom border of the element in pixels.
@@ -1322,11 +1322,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured right border of the element in pixels.
@@ -1347,11 +1347,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured padding width (left padding + right padding) of the
@@ -1372,11 +1372,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured top padding of the element in pixels.
@@ -1396,11 +1396,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured left padding of the element in pixels.
@@ -1420,11 +1420,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured bottom padding of the element in pixels.
@@ -1444,11 +1444,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured right padding of the element in pixels.
@@ -1468,11 +1468,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured top margin of the element in pixels.
@@ -1492,11 +1492,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured right margin of the element in pixels.
@@ -1516,11 +1516,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured bottom margin of the element in pixels.
@@ -1540,11 +1540,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured size for
      * @return the measured left margin of the element in pixels.
@@ -1564,11 +1564,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured margin for
      * @return the measured top+bottom margin of the element in pixels.
@@ -1586,11 +1586,11 @@ public class LayoutManager {
      * <li>Elements for which at least one ManagedLayout has registered a
      * dependency
      * </ul>
-     * 
+     *
      * A negative number is returned if the element has not been measured. If 0
      * is returned, it might indicate that the element is not attached to the
      * DOM.
-     * 
+     *
      * @param element
      *            the element to get the measured margin for
      * @return the measured left+right margin of the element in pixels.
@@ -1605,7 +1605,7 @@ public class LayoutManager {
      * informing the LayoutManager about what size a component will have, the
      * layout propagation can continue directly without first measuring the
      * potentially resized elements.
-     * 
+     *
      * @param component
      *            the component for which the size is reported
      * @param outerHeight
@@ -1635,7 +1635,7 @@ public class LayoutManager {
      * LayoutManager about what size a component will have, the layout
      * propagation can continue directly without first measuring the potentially
      * resized elements.
-     * 
+     *
      * @param component
      *            the relatively sized component for which the size is reported
      * @param assignedHeight
@@ -1659,7 +1659,7 @@ public class LayoutManager {
      * LayoutManager about what size a component will have, the layout
      * propagation can continue directly without first measuring the potentially
      * resized elements.
-     * 
+     *
      * @param component
      *            the relatively sized component for which the size is reported
      * @param assignedWidth
@@ -1687,7 +1687,7 @@ public class LayoutManager {
      * informing the LayoutManager about what size a component will have, the
      * layout propagation can continue directly without first measuring the
      * potentially resized elements.
-     * 
+     *
      * @param component
      *            the component for which the size is reported
      * @param outerWidth
@@ -1715,7 +1715,7 @@ public class LayoutManager {
      * element changes. Adding a listener to an element also ensures that all
      * sizes for that element will be available starting from the next layout
      * phase.
-     * 
+     *
      * @param element
      *            the element that should be checked for size changes
      * @param listener
@@ -1738,7 +1738,7 @@ public class LayoutManager {
      * Removes an element resize listener from the provided element. This might
      * cause this LayoutManager to stop tracking the size of the element if no
      * other sources are interested in the size.
-     * 
+     *
      * @param element
      *            the element to which the element resize listener was
      *            previously added
@@ -1777,7 +1777,7 @@ public class LayoutManager {
      * {@link #setNeedsMeasureRecursively(ComponentConnector)} instead.
      * <p>
      * If there is no upcoming layout phase, a new layout phase is scheduled.
-     * 
+     *
      * @param component
      *            the component whose size might have changed.
      */
@@ -1800,7 +1800,7 @@ public class LayoutManager {
      * {@link #setNeedsMeasure(ComponentConnector)} instead.
      * <p>
      * If there is no upcoming layout phase, a new layout phase is scheduled.
-     * 
+     *
      * @since 7.2
      * @param component
      *            the component at the root of the component hierarchy to
@@ -1834,7 +1834,7 @@ public class LayoutManager {
 
     /**
      * Checks if there is something waiting for a layout to take place.
-     * 
+     *
      * @since 7.5.6
      * @return true if there are connectors waiting for measurement or layout,
      *         false otherwise

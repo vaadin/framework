@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -140,10 +140,10 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     /**
      * The new default behaviour is for long taps to fire a contextclick event
      * if there's a contextclick listener attached to the component.
-     * 
+     *
      * If you do not want this in your component, override this with a blank
      * method to get rid of said behaviour.
-     * 
+     *
      * @since 7.6
      */
     protected void unregisterTouchHandlers() {
@@ -164,13 +164,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     /**
      * The new default behaviour is for long taps to fire a contextclick event
      * if there's a contextclick listener attached to the component.
-     * 
+     *
      * If you do not want this in your component, override this with a blank
      * method to get rid of said behaviour.
-     * 
+     *
      * Some Vaadin Components already handle the long tap as a context menu.
      * This method is unnecessary for those.
-     * 
+     *
      * @since 7.6
      */
     protected void registerTouchHandlers() {
@@ -290,7 +290,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     /**
      * If a long touch event timer is running, cancel it.
-     * 
+     *
      * @since 7.6
      */
     private void cancelTouchTimer() {
@@ -304,7 +304,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     /**
      * Cancel the timer recursively for parent components that have timers
      * running
-     * 
+     *
      * @since 7.6
      */
     private void cancelParentTouchTimers() {
@@ -326,7 +326,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * This method sends the context menu event to the server-side. Can be
      * overridden to provide extra information through an alternative RPC
      * interface.
-     * 
+     *
      * @since 7.6
      * @param event
      */
@@ -351,7 +351,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * can't call <code>super.createWidget()</code> since the metadata needed
      * for that implementation is not generated if there's an override of the
      * method.
-     * 
+     *
      * @return a new widget instance to use for this component connector
      */
     protected Widget createWidget() {
@@ -374,7 +374,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     /**
      * Returns the widget associated with this paintable. The widget returned by
      * this method must not changed during the life time of the paintable.
-     * 
+     *
      * @return The widget associated with this paintable
      */
     @Override
@@ -517,7 +517,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     /**
      * Updates the component size, invoking the {@link LayoutManager layout
      * manager} if necessary.
-     * 
+     *
      * @param newWidth
      *            The new width as a CSS string. Cannot be null.
      * @param newHeight
@@ -568,7 +568,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     /**
      * Updates the DOM size of this connector's {@link #getWidget() widget}.
-     * 
+     *
      * @since 7.1.15
      * @param newWidth
      *            The new width as a CSS string. Cannot be null.
@@ -602,7 +602,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ComponentConnector#delegateCaptionHandling ()
      */
     @Override
@@ -679,7 +679,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * updated in another widget in addition to the one returned by the
      * {@link #getWidget()}.
      * </p>
-     * 
+     *
      * @param styleName
      *            the style name to be added or removed
      * @param add
@@ -700,7 +700,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * different. For example see
      * {@link com.vaadin.client.ui.datefield.DateFieldConnector#setWidgetStyleNameWithPrefix(String, String, boolean)}
      * </p>
-     * 
+     *
      * @param styleName
      *            the style name to be added or removed
      * @param add
@@ -726,7 +726,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ComponentConnector#isReadOnly()
      */
     @Override
@@ -783,7 +783,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     /**
      * Gets the URI of the icon set for this component.
-     * 
+     *
      * @return the URI of the icon, or <code>null</code> if no icon has been
      *         defined.
      */
@@ -793,7 +793,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     /**
      * Gets the icon set for this component.
-     * 
+     *
      * @return the icon, or <code>null</code> if no icon has been defined.
      */
     protected Icon getIcon() {
@@ -802,7 +802,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ComponentConnector#flush()
      */
     @Override

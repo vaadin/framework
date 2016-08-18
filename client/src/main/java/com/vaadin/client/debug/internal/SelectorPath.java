@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,7 +31,7 @@ import com.vaadin.client.componentlocator.SelectorPredicate;
  * This class should be considered internal to the framework and may change at
  * any time.
  * <p>
- * 
+ *
  * @since 7.1.x
  */
 public class SelectorPath {
@@ -67,7 +67,7 @@ public class SelectorPath {
     /**
      * Generate ElementQuery code for Java. Fallback to By.vaadin(path) if
      * dealing with LegacyLocator
-     * 
+     *
      * @return String containing Java code for finding the element described by
      *         path
      */
@@ -131,7 +131,7 @@ public class SelectorPath {
 
     /**
      * Finds out if the given query fragment has a defined id
-     * 
+     *
      * @param fragment
      *            Query fragment
      * @return true if has id
@@ -148,7 +148,7 @@ public class SelectorPath {
 
     /**
      * Generates a recursive ElementQuery for given path fragment
-     * 
+     *
      * @param fragment
      *            Query fragment
      * @return ElementQuery java code as a String
@@ -169,7 +169,7 @@ public class SelectorPath {
 
     /**
      * Returns the name of the component described by given query fragment
-     * 
+     *
      * @param fragment
      *            Query fragment
      * @return Class part of fragment
@@ -180,7 +180,7 @@ public class SelectorPath {
 
     /**
      * Generates a legacy locator for SelectorPath.
-     * 
+     *
      * @return String containing Java code for element search and assignment
      */
     private String getLegacyLocatorQuery() {
@@ -206,7 +206,7 @@ public class SelectorPath {
 
     /**
      * Get variable name with counter for given component name.
-     * 
+     *
      * @param name
      *            Component name
      * @return name followed by count
@@ -222,7 +222,7 @@ public class SelectorPath {
 
     /**
      * Generate Java variable assignment from given selector fragment
-     * 
+     *
      * @param pathFragment
      *            Selector fragment
      * @return piece of java code
@@ -248,7 +248,7 @@ public class SelectorPath {
 
     /**
      * Get variable name based on predicates. Fallback to elementType
-     * 
+     *
      * @param predicates
      *            Predicates related to element
      * @param elementType

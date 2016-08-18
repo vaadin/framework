@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -66,7 +66,7 @@ public class VaadinServletService extends VaadinService {
 
     /**
      * Retrieves a reference to the servlet associated with this service.
-     * 
+     *
      * @return A reference to the VaadinServlet this service is using
      */
     public VaadinServlet getServlet() {
@@ -99,7 +99,7 @@ public class VaadinServletService extends VaadinService {
     /**
      * Gets a relative path that cancels the provided path. This essentially
      * adds one .. for each part of the path to cancel.
-     * 
+     *
      * @param pathToCancel
      *            the path that should be canceled
      * @return a relative path that cancels out the provided path segment

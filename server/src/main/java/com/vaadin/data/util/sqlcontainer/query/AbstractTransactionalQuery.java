@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,7 +27,7 @@ import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 /**
  * Common base class for database query classes that handle connections and
  * transactions.
- * 
+ *
  * @author Vaadin Ltd
  * @since 6.8.9
  */
@@ -46,7 +46,7 @@ public abstract class AbstractTransactionalQuery implements Serializable {
     /**
      * Reserves a connection with auto-commit off if no transaction is in
      * progress.
-     * 
+     *
      * @throws IllegalStateException
      *             if a transaction is already open
      * @throws SQLException
@@ -63,7 +63,7 @@ public abstract class AbstractTransactionalQuery implements Serializable {
 
     /**
      * Commits (if not in auto-commit mode) and releases the active connection.
-     * 
+     *
      * @throws SQLException
      *             if not in a transaction managed by this query
      */
@@ -80,7 +80,7 @@ public abstract class AbstractTransactionalQuery implements Serializable {
 
     /**
      * Rolls back and releases the active connection.
-     * 
+     *
      * @throws SQLException
      *             if not in a transaction managed by this query
      */
@@ -95,7 +95,7 @@ public abstract class AbstractTransactionalQuery implements Serializable {
 
     /**
      * Check that a transaction is active.
-     * 
+     *
      * @throws SQLException
      *             if no active transaction
      */
@@ -109,17 +109,17 @@ public abstract class AbstractTransactionalQuery implements Serializable {
      * Closes a statement and a resultset, then releases the connection if it is
      * not part of an active transaction. A failure in closing one of the
      * parameters does not prevent closing the rest.
-     * 
+     *
      * If the statement is a {@link PreparedStatement}, its parameters are
      * cleared prior to closing the statement.
-     * 
+     *
      * Although JDBC specification does state that closing a statement closes
      * its result set and closing a connection closes statements and result
      * sets, this method does try to close the result set and statement
      * explicitly whenever not null. This can guard against bugs in certain JDBC
      * drivers and reduce leaks in case e.g. closing the result set succeeds but
      * closing the statement or connection fails.
-     * 
+     *
      * @param conn
      *            the connection to release
      * @param statement
@@ -156,7 +156,7 @@ public abstract class AbstractTransactionalQuery implements Serializable {
     /**
      * Returns the currently active connection, reserves and returns a new
      * connection if no active connection.
-     * 
+     *
      * @return previously active or newly reserved connection
      * @throws SQLException
      */
@@ -173,7 +173,7 @@ public abstract class AbstractTransactionalQuery implements Serializable {
 
     /**
      * Releases the connection if it is not part of an active transaction.
-     * 
+     *
      * @param conn
      *            the connection to release
      */

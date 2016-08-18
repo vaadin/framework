@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -52,7 +52,7 @@ import com.vaadin.shared.ui.dd.DragEventType;
  * <p>
  * Singleton. Only one drag and drop operation can be active anyways. Use
  * {@link #get()} to get instance.
- * 
+ *
  * TODO cancel drag and drop if more than one touches !?
  */
 public class VDragAndDropManager {
@@ -63,7 +63,7 @@ public class VDragAndDropManager {
      * Implementation if this interface is provided as a parameter to
      * DDEventHandleStrategy methods. The mediator instance allows to manage
      * DnD.
-     * 
+     *
      * @since 7.4.4
      */
     public interface DDManagerMediator {
@@ -199,7 +199,7 @@ public class VDragAndDropManager {
      * If drag and drop operation is not handled by {@link VDragAndDropManager}s
      * internal handler, this can be used to update current {@link VDropHandler}
      * .
-     * 
+     *
      * @param currentDropHandler
      */
     public void setCurrentDropHandler(VDropHandler currentDropHandler) {
@@ -242,7 +242,7 @@ public class VDragAndDropManager {
      * May also be used to control the drag and drop operation. If this option
      * is used, {@link VDropHandler} is searched on mouse events and appropriate
      * methods on it called automatically.
-     * 
+     *
      * @param transferable
      * @param nativeEvent
      * @param handleDragEvents
@@ -406,7 +406,7 @@ public class VDragAndDropManager {
     /**
      * First seeks the widget from this element, then iterates widgets until one
      * implement HasDropHandler. Returns DropHandler from that.
-     * 
+     *
      * @param element
      * @return
      */
@@ -561,11 +561,11 @@ public class VDragAndDropManager {
     /**
      * Visits server during drag and drop procedure. Transferable and event type
      * is given to server side counterpart of DropHandler.
-     * 
+     *
      * If another server visit is started before the current is received, the
      * current is just dropped. TODO consider if callback should have
      * interrupted() method for cleanup.
-     * 
+     *
      * @param acceptCallback
      */
     public void visitServer(VDragEventServerCallback acceptCallback) {
@@ -584,9 +584,9 @@ public class VDragAndDropManager {
          * For drag events we are using special id that are routed to
          * "drag service" which then again finds the corresponding DropHandler
          * on server side.
-         * 
+         *
          * TODO add rest of the data in Transferable
-         * 
+         *
          * TODO implement partial updates to Transferable (currently the whole
          * Transferable is sent on each request)
          */
@@ -649,10 +649,10 @@ public class VDragAndDropManager {
 
     /**
      * Returns DnD strategy to handle native preview events used by the manager.
-     * 
+     *
      * Subclasses can override this method to return custom strategy or use GWT
      * deferred binding.
-     * 
+     *
      * @return internal DnD native preview event handler
      */
     protected DDEventHandleStrategy getEventHandleStrategy() {
@@ -733,7 +733,7 @@ public class VDragAndDropManager {
 
     /**
      * Method to que tasks until all dd related server visits are done
-     * 
+     *
      * @param command
      */
     private void defer(Command command) {
@@ -749,7 +749,7 @@ public class VDragAndDropManager {
      * <p>
      * TODO Optimization: consider if we actually only need to keep the last
      * command in queue here.
-     * 
+     *
      * @param command
      */
     public void executeWhenReady(Command command) {

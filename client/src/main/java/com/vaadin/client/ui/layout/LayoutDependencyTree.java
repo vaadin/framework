@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,7 +37,7 @@ import com.vaadin.shared.AbstractComponentState;
 /**
  * Internal class used to keep track of layout dependencies during one layout
  * run. This class is not intended to be used directly by applications.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
@@ -315,7 +315,7 @@ public class LayoutDependencyTree {
          * Go up the hierarchy to find a component whose size might have changed
          * in the other direction because changes to this component causes
          * scrollbars to appear or disappear.
-         * 
+         *
          * @return
          */
         private LayoutDependency findPotentiallyChangedScrollbar() {
@@ -449,7 +449,7 @@ public class LayoutDependencyTree {
     /**
      * @param connectorId
      * @param needsMeasure
-     * 
+     *
      * @deprecated As of 7.4.2, use
      *             {@link #setNeedsMeasure(ComponentConnector, boolean)} for
      *             improved performance.
@@ -541,7 +541,7 @@ public class LayoutDependencyTree {
     /**
      * @param layout
      * @param needsLayout
-     * 
+     *
      * @deprecated As of 7.0.1, use
      *             {@link #setNeedsHorizontalLayout(String, boolean)} for
      *             improved performance.
@@ -566,7 +566,7 @@ public class LayoutDependencyTree {
     /**
      * @param layout
      * @param needsLayout
-     * 
+     *
      * @deprecated As of 7.0.1, use
      *             {@link #setNeedsVerticalLayout(String, boolean)} for improved
      *             performance.

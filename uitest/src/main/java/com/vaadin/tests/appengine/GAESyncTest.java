@@ -18,7 +18,7 @@ import com.vaadin.ui.Notification;
 public class GAESyncTest extends LegacyApplication {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -3724319151122707926l;
 

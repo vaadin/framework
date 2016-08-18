@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,7 +19,7 @@ package com.vaadin.server;
 /**
  * <code>UserError</code> is a controlled error occurred in application. User
  * errors are occur in normal usage of the application and guide the user.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -46,7 +46,7 @@ public class UserError extends AbstractErrorMessage {
 
     /**
      * Creates a textual error message of level ERROR.
-     * 
+     *
      * @param textErrorMessage
      *            the text of the error message.
      */
@@ -56,7 +56,7 @@ public class UserError extends AbstractErrorMessage {
 
     /**
      * Creates an error message with level and content mode.
-     * 
+     *
      * @param message
      *            the error message.
      * @param contentMode

@@ -31,7 +31,7 @@ import com.vaadin.shared.data.sort.SortDirection;
 /**
  * Provides sorting facility from Grid for the {@link ListDataSource} in-memory
  * data source.
- * 
+ *
  * @author Vaadin Ltd
  * @param <T>
  *            Grid row data type
@@ -75,7 +75,7 @@ public class ListSorter<T> {
      * which includes all standard data classes like String, Number derivatives
      * and Dates). Any existing comparator can be removed by passing in a
      * non-null GridColumn and a null Comparator.
-     * 
+     *
      * @param column
      *            a grid column. May not be null.
      * @param comparator
@@ -97,7 +97,7 @@ public class ListSorter<T> {
 
     /**
      * Retrieve the comparator assigned for a specific grid column.
-     * 
+     *
      * @param column
      *            a grid column. May not be null.
      * @return a comparator, or null if no comparator for the specified grid
@@ -122,7 +122,7 @@ public class ListSorter<T> {
 
     /**
      * Apply sorting to the current ListDataSource.
-     * 
+     *
      * @param order
      *            the sort order list provided by the grid sort event
      */

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,9 +26,9 @@ import java.util.EventObject;
  * event is not necessarily fired immediately when the session is created but
  * only when the first request for that session is handled by a specific
  * service.
- * 
+ *
  * @see SessionInitListener#sessionInit(SessionInitEvent)
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
@@ -39,7 +39,7 @@ public class SessionInitEvent extends EventObject {
 
     /**
      * Creates a new event.
-     * 
+     *
      * @param service
      *            the Vaadin service from which the event originates
      * @param session
@@ -61,7 +61,7 @@ public class SessionInitEvent extends EventObject {
 
     /**
      * Gets the Vaadin service from which this event originates
-     * 
+     *
      * @return the Vaadin service instance
      */
     public VaadinService getService() {
@@ -70,7 +70,7 @@ public class SessionInitEvent extends EventObject {
 
     /**
      * Gets the Vaadin service session that has been initialized.
-     * 
+     *
      * @return the Vaadin service session
      */
     public VaadinSession getSession() {
@@ -79,7 +79,7 @@ public class SessionInitEvent extends EventObject {
 
     /**
      * Gets the request that triggered the initialization.
-     * 
+     *
      * @return the request
      */
     public VaadinRequest getRequest() {

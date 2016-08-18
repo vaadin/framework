@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,7 +27,7 @@ import com.vaadin.shared.ApplicationConstants;
  * (identified by font-family, {@link #getFontFamily()},
  * {@link #setFontFamily(String)}).
  * </p>
- * 
+ *
  * @since 7.2
  * @author Vaadin Ltd
  */
@@ -53,7 +53,7 @@ public class FontIcon extends Icon {
 
     /**
      * Not implemeted for {@link FontIcon} yet.
-     * 
+     *
      * @see com.vaadin.client.ui.Icon#setAlternateText(java.lang.String)
      */
     @Override
@@ -67,7 +67,7 @@ public class FontIcon extends Icon {
      * Sets the font-family from which this icon comes. Use
      * {@link #setCodepoint(int)} to specify a particular icon (character)
      * within the font.
-     * 
+     *
      * @param fontFamily
      *            font-family name
      */
@@ -85,7 +85,7 @@ public class FontIcon extends Icon {
      * Gets the font-family from which this icon comes. Use
      * {@link #getCodepoint()} to find out which particular icon (character)
      * within the font this is.
-     * 
+     *
      * @return font-family name
      */
     public String getFontFamily() {
@@ -95,7 +95,7 @@ public class FontIcon extends Icon {
     /**
      * Sets the codepoint indicating which particular icon (character) within
      * the font-family this is.
-     * 
+     *
      * @param codepoint
      */
     protected void setCodepoint(int codepoint) {
@@ -106,7 +106,7 @@ public class FontIcon extends Icon {
     /**
      * Gets the codepoint indicating which particular icon (character) within
      * the font-family this is.
-     * 
+     *
      * @return
      */
     public int getCodepoint() {
@@ -115,7 +115,7 @@ public class FontIcon extends Icon {
 
     /**
      * Get the font-family based stylename used to apply the font-family.
-     * 
+     *
      * @since 7.2
      * @return stylename used to apply font-family
      */
@@ -129,7 +129,7 @@ public class FontIcon extends Icon {
     /**
      * Checks whether or not the given uri is a font icon uri. Does not check
      * whether or not the font icon is available and can be rendered.
-     * 
+     *
      * @since 7.2
      * @param uri
      * @return true if it's a fonticon uri

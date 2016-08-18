@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,20 +33,20 @@ import java.util.logging.Logger;
  * fires, and the optional argument list to pass to the method and the index of
  * the argument to replace with the event object.
  * </p>
- * 
+ *
  * <p>
  * This Class provides several constructors that allow omission of the optional
  * arguments, and giving the listener method directly, or having the constructor
  * to reflect it using merely the name of the method.
  * </p>
- * 
+ *
  * <p>
  * It should be pointed out that the method
  * {@link #receiveEvent(EventObject event)} is the one that filters out the
  * events that do not match with the given event type and thus do not result in
  * calling of the trigger method.
  * </p>
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -148,12 +148,12 @@ public class ListenerMethod implements EventListener, Serializable {
      * the argument index specifying which one is replaced with the event object
      * when the trigger method is called.
      * </p>
-     * 
+     *
      * <p>
      * This constructor gets the trigger method as a parameter so it does not
      * need to reflect to find it out.
      * </p>
-     * 
+     *
      * @param eventType
      *            the event type that is listener listens to. All events of this
      *            kind (or its subclasses) result in calling the trigger method.
@@ -217,7 +217,7 @@ public class ListenerMethod implements EventListener, Serializable {
      * <code>object</code>, and <code>java.lang.IllegalArgumentException</code>
      * is thrown unless exactly one match is found.
      * </p>
-     * 
+     *
      * @param eventType
      *            the event type that is listener listens to. All events of this
      *            kind (or its subclasses) result in calling the trigger method.
@@ -287,12 +287,12 @@ public class ListenerMethod implements EventListener, Serializable {
      * the event triggering this listener will not be passed to the trigger
      * method.
      * </p>
-     * 
+     *
      * <p>
      * This constructor gets the trigger method as a parameter so it does not
      * need to reflect to find it out.
      * </p>
-     * 
+     *
      * @param eventType
      *            the event type that is listener listens to. All events of this
      *            kind (or its subclasses) result in calling the trigger method.
@@ -331,13 +331,13 @@ public class ListenerMethod implements EventListener, Serializable {
      * the event triggering this listener will not be passed to the trigger
      * method.
      * </p>
-     * 
+     *
      * <p>
      * The actual trigger method is reflected from <code>target</code>, and
      * <code>java.lang.IllegalArgumentException</code> is thrown unless exactly
      * one match is found.
      * </p>
-     * 
+     *
      * @param eventType
      *            the event type that is listener listens to. All events of this
      *            kind (or its subclasses) result in calling the trigger method.
@@ -382,12 +382,12 @@ public class ListenerMethod implements EventListener, Serializable {
      * list is unspecified no parameters are passed to the trigger method when
      * the listener is triggered.
      * </p>
-     * 
+     *
      * <p>
      * This constructor gets the trigger method as a parameter so it does not
      * need to reflect to find it out.
      * </p>
-     * 
+     *
      * @param eventType
      *            the event type that is listener listens to. All events of this
      *            kind (or its subclasses) result in calling the trigger method.
@@ -435,13 +435,13 @@ public class ListenerMethod implements EventListener, Serializable {
      * argument list is unspecified no parameters are passed to the trigger
      * method when the listener is triggered.
      * </p>
-     * 
+     *
      * <p>
      * The actual trigger method is reflected from <code>object</code>, and
      * <code>java.lang.IllegalArgumentException</code> is thrown unless exactly
      * one match is found.
      * </p>
-     * 
+     *
      * @param eventType
      *            the event type that is listener listens to. All events of this
      *            kind (or its subclasses) result in calling the trigger method.
@@ -495,7 +495,7 @@ public class ListenerMethod implements EventListener, Serializable {
      * trigger method if it matches with the criteria defined for the listener.
      * Only the events of the same or subclass of the specified event class
      * result in the trigger method to be called.
-     * 
+     *
      * @param event
      *            the fired event. Unless the trigger method's argument list and
      *            the index to the to be replaced argument is specified, this
@@ -538,7 +538,7 @@ public class ListenerMethod implements EventListener, Serializable {
     /**
      * Checks if the given object and event match with the ones stored in this
      * listener.
-     * 
+     *
      * @param target
      *            the object to be matched against the object stored by this
      *            listener.
@@ -556,7 +556,7 @@ public class ListenerMethod implements EventListener, Serializable {
     /**
      * Checks if the given object, event and method match with the ones stored
      * in this listener.
-     * 
+     *
      * @param target
      *            the object to be matched against the object stored by this
      *            listener.
@@ -619,7 +619,7 @@ public class ListenerMethod implements EventListener, Serializable {
      * <code>ListenerMethod</code> invokes the target method, it may throw
      * arbitrary exception. The original exception is wrapped into
      * MethodException instance and rethrown by the <code>ListenerMethod</code>.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -634,7 +634,7 @@ public class ListenerMethod implements EventListener, Serializable {
 
     /**
      * Compares the type of this ListenerMethod to the given type
-     * 
+     *
      * @param eventType
      *            The type to compare with
      * @return true if this type of this ListenerMethod matches the given type,
@@ -646,7 +646,7 @@ public class ListenerMethod implements EventListener, Serializable {
 
     /**
      * Compares the type of this ListenerMethod to the given type
-     * 
+     *
      * @param eventType
      *            The type to compare with
      * @return true if this event type can be assigned to the given type, false
@@ -658,7 +658,7 @@ public class ListenerMethod implements EventListener, Serializable {
 
     /**
      * Returns the target object which contains the trigger method.
-     * 
+     *
      * @return The target object
      */
     public Object getTarget() {

@@ -18,7 +18,7 @@ import com.vaadin.ui.Label;
 
 /**
  * Test for interrupting drag-and-drop.
- * 
+ *
  * @author Vaadin Ltd
  */
 @Widgetset(TestingWidgetSet.NAME)

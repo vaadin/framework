@@ -51,7 +51,7 @@ public class MultipleSelectionTest {
 
     /**
      * Creates a testing container for the tests
-     * 
+     *
      * @return A new container with test items
      */
     private Container createTestContainer() {

@@ -39,7 +39,7 @@ public class ComboBoxElement
     /**
      * Use this method to simulate typing into an element, which may set its
      * value.
-     * 
+     *
      * @param delay
      *            delay after sending each individual key (mainly needed for
      *            PhantomJS)

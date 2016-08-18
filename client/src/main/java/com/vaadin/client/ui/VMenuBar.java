@@ -247,7 +247,7 @@ public class VMenuBar extends SimpleFocusablePanel
     /**
      * This is called by the items in the menu and it communicates the
      * information to the server
-     * 
+     *
      * @param clickedItemId
      *            id of the item that was clicked
      */
@@ -284,7 +284,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * Returns the containing element of the menu
-     * 
+     *
      * @return
      */
     @Override
@@ -294,7 +294,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * Add a new item to this menu
-     * 
+     *
      * @param html
      *            items text
      * @param cmd
@@ -311,7 +311,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * Add a new item to this menu
-     * 
+     *
      * @param item
      */
     public void addItem(CustomMenuItem item) {
@@ -336,7 +336,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * Remove the given item from this menu
-     * 
+     *
      * @param item
      */
     public void removeItem(CustomMenuItem item) {
@@ -433,7 +433,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * When an item is clicked
-     * 
+     *
      * @param item
      */
     public void itemClick(CustomMenuItem item) {
@@ -464,7 +464,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * When the user hovers the mouse over the item
-     * 
+     *
      * @param item
      */
     public void itemOver(CustomMenuItem item) {
@@ -491,7 +491,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * When the mouse is moved away from an item
-     * 
+     *
      * @param item
      */
     public void itemOut(CustomMenuItem item) {
@@ -549,7 +549,7 @@ public class VMenuBar extends SimpleFocusablePanel
     /**
      * Shows the child menu of an item. The caller must ensure that the item has
      * a submenu.
-     * 
+     *
      * @param item
      */
     public void showChildMenu(CustomMenuItem item) {
@@ -639,9 +639,9 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * Create an overlay for the menu bar.
-     * 
+     *
      * This method can be overridden to use a custom overlay.
-     * 
+     *
      * @since 7.6
      * @return overlay to use
      */
@@ -686,7 +686,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * Hides the submenu of an item
-     * 
+     *
      * @param item
      */
     public void hideChildMenu(CustomMenuItem item) {
@@ -730,9 +730,9 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * 
+     *
      * Recursively hide all child menus
-     * 
+     *
      * @param animateIn
      *            enable/disable animate-in animation when hide popup
      * @param animateOut
@@ -764,7 +764,7 @@ public class VMenuBar extends SimpleFocusablePanel
     /**
      * Returns the parent menu of this menu, or null if this is the top-level
      * menu
-     * 
+     *
      * @return
      */
     public VMenuBar getParentMenu() {
@@ -773,7 +773,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * Set the parent menu of this menu
-     * 
+     *
      * @param parent
      */
     public void setParentMenu(VMenuBar parent) {
@@ -783,7 +783,7 @@ public class VMenuBar extends SimpleFocusablePanel
     /**
      * Returns the currently selected item of this menu, or null if nothing is
      * selected
-     * 
+     *
      * @return
      */
     public CustomMenuItem getSelected() {
@@ -792,7 +792,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * Set the currently selected item of this menu
-     * 
+     *
      * @param item
      */
     public void setSelected(CustomMenuItem item) {
@@ -809,9 +809,9 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * 
+     *
      * A class to hold information on menu items
-     * 
+     *
      */
     public static class CustomMenuItem extends Widget implements HasHTML {
 
@@ -830,7 +830,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
         /**
          * Default menu item {@link Widget} constructor for GWT.create().
-         * 
+         *
          * Use {@link #setHTML(String)} and {@link #setCommand(Command)} after
          * constructing a menu item.
          */
@@ -840,7 +840,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
         /**
          * Creates a menu item {@link Widget}.
-         * 
+         *
          * @param html
          * @param cmd
          * @deprecated use the default constructor and {@link #setHTML(String)}
@@ -1087,7 +1087,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
         /**
          * Checks if the item can be selected.
-         * 
+         *
          * @return true if it is possible to select this item, false otherwise
          */
         public boolean isSelectable() {
@@ -1198,7 +1198,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google
      * .gwt.event.dom.client.KeyPressEvent)
@@ -1221,7 +1221,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
@@ -1246,7 +1246,7 @@ public class VMenuBar extends SimpleFocusablePanel
      * Get the key that moves the selection upwards. By default it is the up
      * arrow key but by overriding this you can change the key to whatever you
      * want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationUpKey() {
@@ -1257,7 +1257,7 @@ public class VMenuBar extends SimpleFocusablePanel
      * Get the key that moves the selection downwards. By default it is the down
      * arrow key but by overriding this you can change the key to whatever you
      * want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationDownKey() {
@@ -1268,7 +1268,7 @@ public class VMenuBar extends SimpleFocusablePanel
      * Get the key that moves the selection left. By default it is the left
      * arrow key but by overriding this you can change the key to whatever you
      * want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationLeftKey() {
@@ -1279,7 +1279,7 @@ public class VMenuBar extends SimpleFocusablePanel
      * Get the key that moves the selection right. By default it is the right
      * arrow key but by overriding this you can change the key to whatever you
      * want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationRightKey() {
@@ -1289,7 +1289,7 @@ public class VMenuBar extends SimpleFocusablePanel
     /**
      * Get the key that selects a menu item. By default it is the Enter key but
      * by overriding this you can change the key to whatever you want.
-     * 
+     *
      * @deprecated use {@link #isNavigationSelectKey(int)} instead
      * @return
      */
@@ -1302,7 +1302,7 @@ public class VMenuBar extends SimpleFocusablePanel
      * Checks whether key code selects a menu item. By default it is the Enter
      * and Space keys but by overriding this you can change the keys to whatever
      * you want.
-     * 
+     *
      * @since 7.2
      * @param keycode
      * @return true if key selects menu item
@@ -1315,7 +1315,7 @@ public class VMenuBar extends SimpleFocusablePanel
     /**
      * Get the key that closes the menu. By default it is the escape key but by
      * overriding this yoy can change the key to whatever you want.
-     * 
+     *
      * @return
      */
     protected int getCloseMenuKey() {
@@ -1324,7 +1324,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * Handles the keyboard events handled by the MenuBar
-     * 
+     *
      * @param event
      *            The keyboard event received
      * @return true iff the navigation event was handled
@@ -1577,7 +1577,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
@@ -1684,7 +1684,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * Get menu item with given DOM element
-     * 
+     *
      * @param element
      *            Element used in search
      * @return Menu item or null if not found
@@ -1713,11 +1713,11 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * Get menu item with given DOM element
-     * 
+     *
      * @param element
      *            Element used in search
      * @return Menu item or null if not found
-     * 
+     *
      * @since 7.2
      */
     public CustomMenuItem getMenuItemWithElement(Element element) {

@@ -178,7 +178,7 @@ public class TestSampler extends TabSheet {
 
     /**
      * Register a component to the TestSampler for style name changes/additions.
-     * 
+     *
      * @param component
      */
     public void registerComponent(Component component) {

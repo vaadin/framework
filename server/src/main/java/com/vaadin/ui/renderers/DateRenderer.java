@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,7 @@ import elemental.json.JsonValue;
 
 /**
  * A renderer for presenting date values.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -49,7 +49,7 @@ public class DateRenderer extends AbstractRenderer<Date> {
      * <p>
      * The renderer is configured to render with the {@link Date#toString()}
      * representation for the given locale.
-     * 
+     *
      * @param locale
      *            the locale in which to present dates
      * @throws IllegalArgumentException
@@ -82,7 +82,7 @@ public class DateRenderer extends AbstractRenderer<Date> {
      * <p>
      * The renderer is configured to render with the given string format, as
      * displayed in the default locale.
-     * 
+     *
      * @param formatString
      *            the format string with which to format the date
      * @throws IllegalArgumentException
@@ -121,7 +121,7 @@ public class DateRenderer extends AbstractRenderer<Date> {
      * <p>
      * The renderer is configured to render with the given string format, as
      * displayed in the given locale.
-     * 
+     *
      * @param formatString
      *            the format string to format the date with
      * @param locale
@@ -176,7 +176,7 @@ public class DateRenderer extends AbstractRenderer<Date> {
      * Creates a new date renderer.
      * <p>
      * The renderer is configured to render with he given date format.
-     * 
+     *
      * @param dateFormat
      *            the date format to use when rendering dates
      * @throws IllegalArgumentException

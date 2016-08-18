@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -58,7 +58,7 @@ public class VEmbedded extends HTML {
      * cross-browser.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param uidl
      *            The UIDL
      * @return Tags concatenated into a string
@@ -201,7 +201,7 @@ public class VEmbedded extends HTML {
      * Returns a map (name -> value) of all parameters in the UIDL.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param uidl
      * @return
      */
@@ -231,7 +231,7 @@ public class VEmbedded extends HTML {
      * Helper to return translated src-attribute from embedded's UIDL
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param uidl
      * @param client
      * @return

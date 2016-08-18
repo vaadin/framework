@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -30,7 +30,7 @@ import com.vaadin.shared.Connector;
  * With this annotation client side Vaadin connector is marked to have a server
  * side counterpart. The value of the annotation is the class of server side
  * implementation.
- * 
+ *
  * @since 7.0
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -76,9 +76,9 @@ public @interface Connect {
      * also includes
      * {@link com.vaadin.server.widgetsetutils.LazyWidgetMapGenerator} that
      * makes as many widgets lazily loaded as possible.
-     * 
+     *
      * @since 6.4
-     * 
+     *
      * @return the hint for the widget set generator how the client side
      *         implementation should be loaded to the browser
      */

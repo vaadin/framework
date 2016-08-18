@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,7 +32,7 @@ import com.vaadin.shared.ui.grid.Range;
  * user. An implementation of this class should override
  * {@link #requestRows(int, int, RequestRowsCallback)} to trigger asynchronously
  * loading of data and then pass the loaded data into the provided callback.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  * @param <T>
@@ -52,7 +52,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         /**
          * Creates a new callback
-         * 
+         *
          * @param source
          *            the data source for which the request is made
          * @param requestedRange
@@ -70,7 +70,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
          * Called by the
          * {@link AbstractRemoteDataSource#requestRows(int, int, RequestRowsCallback)}
          * implementation when data has been received.
-         * 
+         *
          * @param rowData
          *            a list of row objects starting at the requested offset
          * @param totalSize
@@ -85,7 +85,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         /**
          * Gets the range of rows that was requested.
-         * 
+         *
          * @return the requsted row range
          */
         public Range getRequestedRange() {
@@ -105,7 +105,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         /**
          * A method for the data source to update the row data.
-         * 
+         *
          * @param row
          *            the updated row object
          */
@@ -204,7 +204,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     /**
      * Pins a row with given handle. This function can be overridden to do
      * specific logic related to pinning rows.
-     * 
+     *
      * @param handle
      *            row handle to pin
      */
@@ -221,10 +221,10 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     /**
      * Unpins a previously pinned row with given handle. This function can be
      * overridden to do specific logic related to unpinning rows.
-     * 
+     *
      * @param handle
      *            row handle to unpin
-     * 
+     *
      * @throws IllegalStateException
      *             if given row handle has not been pinned before
      */
@@ -257,7 +257,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     /**
      * Gets the row index range that was requested by the previous call to
      * {@link #ensureAvailability(int, int)}.
-     * 
+     *
      * @return the requested availability range
      */
     public Range getRequestedAvailability() {
@@ -304,7 +304,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     /**
      * Checks whether this data source is currently waiting for more rows to
      * become available.
-     * 
+     *
      * @return <code>true</code> if waiting for data; otherwise
      *         <code>false</code>
      */
@@ -338,7 +338,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * <p>
      * NOTE: This method has been replaced. Override
      * {@link #onDropFromCache(int, Object)} instead of this method.
-     * 
+     *
      * @since 7.5.0
      * @param rowIndex
      *            the index of the dropped row
@@ -353,7 +353,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * A hook that can be overridden to do something whenever a row has been
      * dropped from the cache. DataSource no longer has anything in the given
      * index.
-     * 
+     *
      * @since 7.6
      * @param rowIndex
      *            the index of the dropped row
@@ -376,7 +376,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     /**
      * Triggers fetching rows from the remote data source. The provided callback
      * should be informed when the requested rows have been received.
-     * 
+     *
      * @param firstRowIndex
      *            the index of the first row to fetch
      * @param numberOfRows
@@ -397,7 +397,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * <p>
      * <em>Note:</em> This method does not verify that the given row object
      * exists at all in this DataSource.
-     * 
+     *
      * @param row
      *            the row object
      * @return index of the row; or <code>-1</code> if row is not available
@@ -423,7 +423,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     /**
      * Informs this data source that updated data has been sent from the server.
-     * 
+     *
      * @param firstRowIndex
      *            the index of the first received row
      * @param rowData
@@ -495,7 +495,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         if (!partition[0].isEmpty() || !partition[2].isEmpty()) {
             /*
              * FIXME
-             * 
+             *
              * Got data that we might need in a moment if the container is
              * updated before the widget settings. Support for this will be
              * implemented later on.
@@ -529,7 +529,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     /**
      * Informs this data source that the server has removed data.
-     * 
+     *
      * @param firstRowIndex
      *            the index of the first removed row
      * @param count
@@ -575,7 +575,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     /**
      * Informs this data source that new data has been inserted from the server.
-     * 
+     *
      * @param firstRowIndex
      *            the destination index of the new row data
      * @param count
@@ -601,7 +601,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
              * We need to invalidate the cache from the inserted row onwards,
              * since the cache wants to be a contiguous range. It doesn't
              * support holes.
-             * 
+             *
              * If holes were supported, we could shift the higher part of
              * "cached" and leave a hole the size of "count" in the middle.
              */
@@ -638,7 +638,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     /**
      * Gets the current range of cached rows
-     * 
+     *
      * @return the range of currently cached rows
      */
     public Range getCachedRange() {
@@ -651,7 +651,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * <p>
      * The new strategy is immediately used to evaluate whether currently cached
      * rows should be discarded or new rows should be fetched.
-     * 
+     *
      * @param cacheStrategy
      *            a cache strategy implementation, not <code>null</code>
      */
@@ -730,7 +730,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * <p>
      * A very usual and simple example what this could be, is an unique ID for
      * this object that would also be stored in a database.
-     * 
+     *
      * @param row
      *            the row object for which to get the key
      * @return a non-null object that uniquely and consistently represents the
@@ -752,7 +752,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * If you have information about the structure of the change, use
      * {@link #insertRowData(int, int)} or {@link #removeRowData(int, int)} to
      * indicate where the inserted or removed rows are located.
-     * 
+     *
      * @param newSize
      *            the new size of the container
      */

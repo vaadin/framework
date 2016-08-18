@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,7 +27,7 @@ public class LegacyConverterUtil implements Serializable {
      * the given model type and back. Uses the given application to find a
      * {@link LegacyConverterFactory} or, if application is null, uses the
      * {@link VaadinSession#getCurrent()}.
-     * 
+     *
      * @param <PRESENTATIONTYPE>
      *            the presentation type
      * @param <MODELTYPE>
@@ -60,7 +60,7 @@ public class LegacyConverterUtil implements Serializable {
 
     /**
      * Convert the given value from the data source type to the UI type.
-     * 
+     *
      * @param modelValue
      *            the model value to convert
      * @param presentationType
@@ -73,7 +73,7 @@ public class LegacyConverterUtil implements Serializable {
      *            the presentation type
      * @param <MODELTYPE>
      *            the model type
-     * 
+     *
      * @return the converted value, compatible with the presentation type, or
      *         the original value if its type is compatible and no converter is
      *         set.
@@ -124,7 +124,7 @@ public class LegacyConverterUtil implements Serializable {
     /**
      * Convert the given value from the presentation (UI) type to model (data
      * source) type.
-     * 
+     *
      * @param presentationValue
      *            the presentation value to convert
      * @param modelType
@@ -137,7 +137,7 @@ public class LegacyConverterUtil implements Serializable {
      *            the presentation type
      * @param <MODELTYPE>
      *            the model type
-     * 
+     *
      * @return the converted value, compatible with the model type, or the
      *         original value if its type is compatible and no converter is set.
      * @throws LegacyConverter.ConversionException
@@ -190,9 +190,9 @@ public class LegacyConverterUtil implements Serializable {
      * Checks if the given converter can handle conversion between the given
      * presentation and model type. Does strict type checking and only returns
      * true if the converter claims it can handle exactly the given types.
-     * 
+     *
      * @see #canConverterPossiblyHandle(LegacyConverter, Class, Class)
-     * 
+     *
      * @param converter
      *            The converter to check. If this is null the result is always
      *            false.
@@ -222,7 +222,7 @@ public class LegacyConverterUtil implements Serializable {
     /**
      * Checks if it possible that the given converter can handle conversion
      * between the given presentation and model type somehow.
-     * 
+     *
      * @param converter
      *            The converter to check. If this is null the result is always
      *            false.

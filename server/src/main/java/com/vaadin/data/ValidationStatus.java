@@ -22,11 +22,11 @@ import com.vaadin.data.Binder.Binding;
  * <p>
  * The status is the part of {@link ValidationStatusChangeEvent} which indicate
  * whether the validation failed or not.
- * 
+ *
  * @see ValidationStatusChangeEvent
  * @see Binding#withStatusChangeHandler(StatusChangeHandler)
  * @see StatusChangeHandler
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  */

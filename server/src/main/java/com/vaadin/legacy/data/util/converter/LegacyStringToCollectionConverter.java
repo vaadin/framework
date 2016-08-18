@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,9 +33,9 @@ import java.util.Locale;
  * Default constructor uses <code>", "</code> as delimiter string and
  * {@link String} for token types. Other constructors allow to configure
  * delimiter and token types.
- * 
+ *
  * @since 7.5.0
- * 
+ *
  * @author Vaadin Ltd
  */
 public class LegacyStringToCollectionConverter
@@ -57,7 +57,7 @@ public class LegacyStringToCollectionConverter
     /**
      * Creates converter with given {@code delimiter} and {@link String} as
      * token model type in collection.
-     * 
+     *
      * @param delimiter
      *            custom delimiter
      */
@@ -71,7 +71,7 @@ public class LegacyStringToCollectionConverter
      * <p>
      * If {@code tokenConverter} is null then no conversation is done and
      * {@link String} is used as token type in resulting model collection.
-     * 
+     *
      * @param tokenConverter
      *            converter for token
      * @param tokenType
@@ -88,7 +88,7 @@ public class LegacyStringToCollectionConverter
      * <p>
      * If {@code tokenConverter} is null then no conversation is done and
      * {@link String} is used as token type in resulting model collection.
-     * 
+     *
      * @param tokenConverter
      *            converter for token
      * @param tokenType
@@ -108,7 +108,7 @@ public class LegacyStringToCollectionConverter
      * <p>
      * If {@code tokenConverter} is null then no conversation is done and
      * {@link String} is used as token type in resulting model collection.
-     * 
+     *
      * @param tokenConverter
      *            converter for token
      * @param tokenType
@@ -199,7 +199,7 @@ public class LegacyStringToCollectionConverter
 
     /**
      * Default collection factory implementation.
-     * 
+     *
      * @author Vaadin Ltd
      */
     public static class DefaultCollectionFactory implements CollectionFactory {
@@ -227,14 +227,14 @@ public class LegacyStringToCollectionConverter
     /**
      * Collection factory. Defines a strategy to create collection by collection
      * class.
-     * 
+     *
      * @author Vaadin Ltd
      */
     public interface CollectionFactory extends Serializable {
 
         /**
          * Create collection by its {@code type}.
-         * 
+         *
          * @param type
          *            collection type
          * @return instantiated collection with given {@code type}

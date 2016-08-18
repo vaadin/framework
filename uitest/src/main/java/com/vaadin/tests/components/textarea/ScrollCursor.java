@@ -8,7 +8,7 @@ import com.vaadin.ui.TextArea;
 
 /**
  * @author denis
- * 
+ *
  */
 public class ScrollCursor extends TestBase {
 

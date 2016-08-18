@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 
 /**
  * Provides method for configuring the push channel.
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd
  */
@@ -36,7 +36,7 @@ public interface PushConfiguration extends Serializable {
 
     /**
      * Returns the mode of bidirectional ("push") communication that is used.
-     * 
+     *
      * @return The push mode.
      */
     public PushMode getPushMode();
@@ -49,10 +49,10 @@ public interface PushConfiguration extends Serializable {
      * application developer. An add-on should not set the push mode directly,
      * rather instruct the user to set it.
      * </p>
-     * 
+     *
      * @param pushMode
      *            The push mode to use.
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the argument is null.
      * @throws IllegalStateException
@@ -66,7 +66,7 @@ public interface PushConfiguration extends Serializable {
      * Note that if you set the transport type using
      * {@link #setParameter(String, String)} to an unsupported type this method
      * will return null. Supported types are defined by {@link Transport}.
-     * 
+     *
      * @return The primary transport type
      */
     public Transport getTransport();
@@ -76,7 +76,7 @@ public interface PushConfiguration extends Serializable {
      * <p>
      * Note that the new transport type will not be used until the push channel
      * is disconnected and reconnected if already active.
-     * 
+     *
      * @param transport
      *            The primary transport type
      */
@@ -88,7 +88,7 @@ public interface PushConfiguration extends Serializable {
      * Note that if you set the transport type using
      * {@link #setParameter(String, String)} to an unsupported type this method
      * will return null. Supported types are defined by {@link Transport}.
-     * 
+     *
      * @return The fallback transport type
      */
     public Transport getFallbackTransport();
@@ -98,7 +98,7 @@ public interface PushConfiguration extends Serializable {
      * <p>
      * Note that the new transport type will not be used until the push channel
      * is disconnected and reconnected if already active.
-     * 
+     *
      * @param fallbackTransport
      *            The fallback transport type
      */
@@ -109,7 +109,7 @@ public interface PushConfiguration extends Serializable {
      * <p>
      * This method provides low level access to push parameters and is typically
      * not needed for normal application development.
-     * 
+     *
      * @since 7.1
      * @param parameter
      *            The parameter name
@@ -119,7 +119,7 @@ public interface PushConfiguration extends Serializable {
 
     /**
      * Returns the parameters which have been defined.
-     * 
+     *
      * @since 7.1
      * @return A collection of parameter names
      */
@@ -130,7 +130,7 @@ public interface PushConfiguration extends Serializable {
      * <p>
      * This method provides low level access to push parameters and is typically
      * not needed for normal application development.
-     * 
+     *
      * @since 7.1
      * @param parameter
      *            The parameter name
@@ -144,7 +144,7 @@ public interface PushConfiguration extends Serializable {
      * <p>
      * This is only used when overriding the URL to use. Setting this to null
      * (the default) will use the default URL.
-     * 
+     *
      * @since 7.6
      * @param pushUrl
      *            The push URL to use
@@ -156,7 +156,7 @@ public interface PushConfiguration extends Serializable {
      * <p>
      * This is only used when overriding the URL to use. Returns null (the
      * default) when the default URL is used.
-     * 
+     *
      * @since 7.6
      * @return the URL to use for push requests, or null to use to default
      */
@@ -173,7 +173,7 @@ class PushConfigurationImpl implements PushConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.PushConfiguration#getPushMode()
      */
     @Override
@@ -183,7 +183,7 @@ class PushConfigurationImpl implements PushConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.PushConfiguration#setPushMode(com.vaadin.shared.
      * communication .PushMode)
      */
@@ -234,7 +234,7 @@ class PushConfigurationImpl implements PushConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.PushConfiguration#getTransport()
      */
     @Override
@@ -255,7 +255,7 @@ class PushConfigurationImpl implements PushConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.ui.PushConfiguration#setTransport(com.vaadin.shared.ui.ui.
      * Transport)
@@ -276,7 +276,7 @@ class PushConfigurationImpl implements PushConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.PushConfiguration#getFallbackTransport()
      */
     @Override
@@ -291,7 +291,7 @@ class PushConfigurationImpl implements PushConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.ui.PushConfiguration#setFallbackTransport(com.vaadin.shared
      * .ui.ui.Transport)
@@ -308,7 +308,7 @@ class PushConfigurationImpl implements PushConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.PushConfiguration#getParameter(java.lang.String)
      */
     @Override
@@ -318,7 +318,7 @@ class PushConfigurationImpl implements PushConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.PushConfiguration#setParameter(java.lang.String,
      * java.lang.String)
      */

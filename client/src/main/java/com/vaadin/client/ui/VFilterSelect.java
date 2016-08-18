@@ -86,7 +86,7 @@ import com.vaadin.shared.util.SharedUtil;
 
 /**
  * Client side implementation of the Select component.
- * 
+ *
  * TODO needs major refactoring (to be extensible etc)
  */
 @SuppressWarnings("deprecation")
@@ -107,7 +107,7 @@ public class VFilterSelect extends Composite
 
         /**
          * Constructor
-         * 
+         *
          * @param key
          *            item key, empty string for a special null item not in
          *            container
@@ -164,7 +164,7 @@ public class VFilterSelect extends Composite
 
         /**
          * Get the option key which represents the item on the server side.
-         * 
+         *
          * @return The key of the item
          */
         public String getOptionKey() {
@@ -173,7 +173,7 @@ public class VFilterSelect extends Composite
 
         /**
          * Get the URI of the icon. Used when constructing the displayed option.
-         * 
+         *
          * @return
          */
         public String getIconUri() {
@@ -185,7 +185,7 @@ public class VFilterSelect extends Composite
          * Gets the style set for this suggestion item. Styles are typically set
          * by a server-side {@link com.vaadin.ui.ComboBox.ItemStyleGenerator}.
          * The returned style is prefixed by <code>v-filterselect-item-</code>.
-         * 
+         *
          * @since 7.5.6
          * @return the style name to use, or <code>null</code> to not apply any
          *         custom style.
@@ -242,12 +242,12 @@ public class VFilterSelect extends Composite
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-                
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-        
+
                 @com.vaadin.client.ui.VFilterSelect.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;
@@ -394,7 +394,7 @@ public class VFilterSelect extends Composite
 
         /**
          * Shows the popup where the user can see the filtered options
-         * 
+         *
          * @param currentSuggestions
          *            The filtered suggestions
          * @param currentPage
@@ -415,7 +415,7 @@ public class VFilterSelect extends Composite
              * correctly. This issue manifests when a Combobox is placed in
              * another popupView which also needs to calculate the absoluteTop()
              * to position itself. #9768
-             * 
+             *
              * After deferring the showSuggestions method, a problem with
              * navigating in the combo box occurs. Because of that the method
              * navigateItemAfterPageChange in ComboBoxConnector class, which
@@ -484,7 +484,7 @@ public class VFilterSelect extends Composite
 
         /**
          * Should the next page button be visible to the user?
-         * 
+         *
          * @param active
          */
         private void setNextButtonActive(boolean active) {
@@ -504,7 +504,7 @@ public class VFilterSelect extends Composite
 
         /**
          * Should the previous page button be visible to the user
-         * 
+         *
          * @param active
          */
         private void setPrevButtonActive(boolean active) {
@@ -561,7 +561,7 @@ public class VFilterSelect extends Composite
 
         /**
          * Select the first item of the suggestions list popup.
-         * 
+         *
          * @since 7.2.6
          */
         public void selectFirstItem() {
@@ -571,7 +571,7 @@ public class VFilterSelect extends Composite
 
         /**
          * Select the last item of the suggestions list popup.
-         * 
+         *
          * @since 7.2.6
          */
         public void selectLastItem() {
@@ -614,7 +614,7 @@ public class VFilterSelect extends Composite
                          * because otherwise the waiting flag will be reset in
                          * the first response and the second response will be
                          * ignored, causing an empty popup...
-                         * 
+                         *
                          * As long as the scrolling delay is suitable
                          * double/triple clicks will work by scrolling two or
                          * three pages at a time and this should not be a
@@ -687,7 +687,7 @@ public class VFilterSelect extends Composite
          * amount of items are visible at a time and a scrollbar or buttons are
          * visible to change page. If paging is turned of then all options are
          * rendered into the popup menu.
-         * 
+         *
          * @param paging
          *            Should the paging be turned on?
          */
@@ -870,7 +870,7 @@ public class VFilterSelect extends Composite
         /**
          * Adds in-line CSS rules to the DOM according to the
          * suggestionPopupWidth field
-         * 
+         *
          * @param desiredWidth
          * @param naturalMenuWidth
          */
@@ -878,13 +878,13 @@ public class VFilterSelect extends Composite
                 int naturalMenuWidth) {
             /**
              * Three different width modes for the suggestion pop-up:
-             * 
+             *
              * 1. Legacy "null"-mode: width is determined by the longest item
              * caption for each page while still maintaining minimum width of
              * (desiredWidth - popupOuterPadding)
-             * 
+             *
              * 2. relative to the component itself
-             * 
+             *
              * 3. fixed width
              */
             String width = "auto";
@@ -928,7 +928,7 @@ public class VFilterSelect extends Composite
          * Descends to child elements until finds TD elements and sets their
          * width in pixels. Can be used to workaround IE8 & 9 TD element
          * display: block issues
-         * 
+         *
          * @param parent
          * @param width
          */
@@ -946,7 +946,7 @@ public class VFilterSelect extends Composite
 
         /**
          * Returns the percentage value as a fraction, e.g. 42% -> 0.42
-         * 
+         *
          * @param percentage
          */
         private float asFraction(String percentage) {
@@ -968,7 +968,7 @@ public class VFilterSelect extends Composite
 
         /**
          * Was the popup just closed?
-         * 
+         *
          * @return true if popup was just closed
          */
         public boolean isJustClosed() {
@@ -979,7 +979,7 @@ public class VFilterSelect extends Composite
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.event.logical.shared.CloseHandler#onClose(com.google
          * .gwt.event.logical.shared.CloseEvent)
@@ -997,7 +997,7 @@ public class VFilterSelect extends Composite
 
         /**
          * Updates style names in suggestion popup to help theme building.
-         * 
+         *
          * @param componentState
          *            shared state of the combo box
          */
@@ -1078,7 +1078,7 @@ public class VFilterSelect extends Composite
 
         /**
          * Sets the suggestions rendered in the menu
-         * 
+         *
          * @param suggestions
          *            The suggestions to be rendered in the menu
          */
@@ -1305,7 +1305,7 @@ public class VFilterSelect extends Composite
          * menu currently displays the last page with less items then the
          * maximum visibility (in which case the scroll is not active, but the
          * scroll is active for any other page in general).
-         * 
+         *
          * @since 7.2.6
          */
         @Override
@@ -1322,23 +1322,23 @@ public class VFilterSelect extends Composite
     /**
      * TextBox variant used as input element for filter selects, which prevents
      * selecting text when disabled.
-     * 
+     *
      * @since 7.1.5
      */
     public class FilterSelectTextBox extends TextBox {
 
         /**
          * Creates a new filter select text box.
-         * 
+         *
          * @since 7.6.4
          */
         public FilterSelectTextBox() {
             /*-
              * Stop the browser from showing its own suggestion popup.
-             * 
+             *
              * Using an invalid value instead of "off" as suggested by
              * https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
-             * 
+             *
              * Leaving the non-standard Safari options autocapitalize and
              * autocorrect untouched since those do not interfere in the same
              * way, and they might be useful in a combo box where new items are
@@ -1358,7 +1358,7 @@ public class VFilterSelect extends Composite
                  * back, focus at the front. This means that items that are too
                  * long to display will display from the start and not the end
                  * even on Firefox.
-                 * 
+                 *
                  * We need the JSNI function to set selection range so that we
                  * can use the optional direction attribute to set the anchor to
                  * the end and the focus to the start. This makes Firefox work
@@ -1373,7 +1373,7 @@ public class VFilterSelect extends Composite
                  * unwanted behaviour when the width of the textbox is narrower
                  * than the width of the entry: the end of the entry is shown
                  * instead of the beginning. (see #13477)
-                 * 
+                 *
                  * To avoid this, we set the caret to the beginning of the line.
                  */
 
@@ -1386,10 +1386,10 @@ public class VFilterSelect extends Composite
     /**
      * Handler receiving notifications from the connector and updating the
      * widget state accordingly.
-     * 
+     *
      * This class is still subject to change and should not be considered as
      * public stable API.
-     * 
+     *
      * @since
      */
     public class DataReceivedHandler {
@@ -1467,7 +1467,7 @@ public class VFilterSelect extends Composite
          * Set a callback that is invoked when a page change occurs if there
          * have not been intervening requests to the server. The callback is
          * reset when any additional request is made to the server.
-         * 
+         *
          * @param callback
          */
         public void setNavigationCallback(Runnable callback) {
@@ -1503,7 +1503,7 @@ public class VFilterSelect extends Composite
 
         /**
          * For internal use only - this method will be removed in the future.
-         * 
+         *
          * @return true if the combo box is waiting for a reply from the server
          *         with a new page of data, false otherwise
          */
@@ -1537,7 +1537,7 @@ public class VFilterSelect extends Composite
          * When this method is called, the suggestions have been reset if new
          * ones (different from the previous list) were received from the
          * server.
-         * 
+         *
          * @param selectedKey
          *            new selected key or null if none given by the server
          * @param selectedCaption
@@ -1608,7 +1608,7 @@ public class VFilterSelect extends Composite
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
          * .user.client.Event)
@@ -1761,7 +1761,7 @@ public class VFilterSelect extends Composite
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.user.client.ui.Composite#onBrowserEvent(com.google.gwt
      * .user.client.Event)
@@ -1788,7 +1788,7 @@ public class VFilterSelect extends Composite
      * It is invoked during the Constructor and should only be overridden if a
      * custom TextBox shall be used. The overriding method cannot use any
      * instance variables.
-     * 
+     *
      * @since 7.1.5
      * @return TextBox instance used by this VFilterSelect
      */
@@ -1801,7 +1801,7 @@ public class VFilterSelect extends Composite
      * instance. It is invoked during the Constructor and should only be
      * overridden if a custom SuggestionPopup shall be used. The overriding
      * method cannot use any instance variables.
-     * 
+     *
      * @since 7.1.5
      * @return SuggestionPopup instance used by this VFilterSelect
      */
@@ -1829,7 +1829,7 @@ public class VFilterSelect extends Composite
 
     /**
      * Does the Select have more pages?
-     * 
+     *
      * @return true if a next page exists, else false if the current page is the
      *         last page
      */
@@ -1844,7 +1844,7 @@ public class VFilterSelect extends Composite
     /**
      * Filters the options at a certain page. Uses the text box input as a
      * filter
-     * 
+     *
      * @param page
      *            The page which items are to be filtered
      */
@@ -1854,7 +1854,7 @@ public class VFilterSelect extends Composite
 
     /**
      * Filters the options at certain page using the given filter
-     * 
+     *
      * @param page
      *            The page to filter
      * @param filter
@@ -1917,7 +1917,7 @@ public class VFilterSelect extends Composite
 
     /**
      * Sets the text in the text box.
-     * 
+     *
      * @param text
      *            the text to set in the text box
      */
@@ -1957,7 +1957,7 @@ public class VFilterSelect extends Composite
      * shown in the text box if nothing has been entered.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param text
      *            The text the text box should contain.
      */
@@ -1972,7 +1972,7 @@ public class VFilterSelect extends Composite
 
     /**
      * Triggered when a suggestion is selected
-     * 
+     *
      * @param suggestion
      *            The suggestion that just got selected.
      */
@@ -2024,7 +2024,7 @@ public class VFilterSelect extends Composite
     /**
      * Sets the icon URI of the selected item. The icon is shown on the left
      * side of the item caption text. Set the URI to null to remove the icon.
-     * 
+     *
      * @param iconUri
      *            The URI of the icon
      */
@@ -2070,12 +2070,12 @@ public class VFilterSelect extends Composite
 
     /**
      * Perform selection based on a message from the server.
-     * 
+     *
      * This method is called when the server gave a non-empty selected item key,
      * whereas null selection is handled by {@link #resetSelection()} and the
      * special case where the selected item is not on the current page is
      * handled separately by the caller.
-     * 
+     *
      * @param selectedKey
      *            non-empty selected item key
      * @param oldSuggestionTextMatchTheOldSelection
@@ -2117,7 +2117,7 @@ public class VFilterSelect extends Composite
     /**
      * Reset the selection of the combo box to an empty string if focused, the
      * input prompt if not.
-     * 
+     *
      * This method also clears the current suggestion and the selected option
      * key.
      */
@@ -2180,7 +2180,7 @@ public class VFilterSelect extends Composite
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
@@ -2232,7 +2232,7 @@ public class VFilterSelect extends Composite
 
     /**
      * Triggered when a key is pressed in the text box
-     * 
+     *
      * @param event
      *            The KeyDownEvent
      */
@@ -2276,7 +2276,7 @@ public class VFilterSelect extends Composite
 
     /**
      * Triggered when a key was pressed in the suggestion popup.
-     * 
+     *
      * @param event
      *            The KeyDownEvent of the key
      */
@@ -2369,7 +2369,7 @@ public class VFilterSelect extends Composite
 
     /**
      * Triggered when a key was depressed
-     * 
+     *
      * @param event
      *            The KeyUpEvent of the key depressed
      */
@@ -2515,7 +2515,7 @@ public class VFilterSelect extends Composite
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
@@ -2557,7 +2557,7 @@ public class VFilterSelect extends Composite
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
      * .dom.client.BlurEvent)
@@ -2610,7 +2610,7 @@ public class VFilterSelect extends Composite
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.Focusable#focus()
      */
 
@@ -2692,7 +2692,7 @@ public class VFilterSelect extends Composite
     /**
      * Get the width of the select in pixels where the text area and icon has
      * been included.
-     * 
+     *
      * @return The width in pixels
      */
     private int getMainWidth() {
@@ -2709,7 +2709,7 @@ public class VFilterSelect extends Composite
 
     /**
      * Handles special behavior of the mouse down event
-     * 
+     *
      * @param event
      */
     private void handleMouseDownEvent(Event event) {
@@ -2796,7 +2796,7 @@ public class VFilterSelect extends Composite
     /**
      * Sets the caption of selected item, if "scroll to page" is disabled. This
      * method is meant for internal use and may change in future versions.
-     * 
+     *
      * @since 7.7
      * @param selectedCaption
      *            the caption of selected item
@@ -2810,7 +2810,7 @@ public class VFilterSelect extends Composite
 
     /**
      * This method is meant for internal use and may change in future versions.
-     * 
+     *
      * @since 7.7
      * @return the caption of selected item, if "scroll to page" is disabled
      */
@@ -2821,7 +2821,7 @@ public class VFilterSelect extends Composite
     /**
      * Returns a handler receiving notifications from the connector about
      * communications.
-     * 
+     *
      * @return the dataReceivedHandler
      */
     public DataReceivedHandler getDataReceivedHandler() {

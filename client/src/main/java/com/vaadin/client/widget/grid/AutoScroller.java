@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,7 +33,7 @@ import com.vaadin.client.widgets.Grid;
  * A class for handling automatic scrolling vertically / horizontally in the
  * Grid when the cursor is close enough the edge of the body of the grid,
  * depending on the scroll direction chosen.
- * 
+ *
  * @since 7.5.0
  * @author Vaadin Ltd
  */
@@ -50,7 +50,7 @@ public class AutoScroller {
          * <p>
          * Because the auto scroller currently only supports scrolling in one
          * axis, this method is used for both vertical and horizontal scrolling.
-         * 
+         *
          * @param scrollDiff
          *            the amount of pixels that have been auto scrolled since
          *            last call
@@ -106,7 +106,7 @@ public class AutoScroller {
                      * Something has dropped a touchend/touchcancel and the
                      * scroller is most probably running amok. Let's cancel it
                      * and pretend that everything's going as expected
-                     * 
+                     *
                      * Because this is a preview, this code is run before start
                      * event can be passed to the start(...) method.
                      */
@@ -448,7 +448,7 @@ public class AutoScroller {
 
     /**
      * Creates a new instance for scrolling the given grid.
-     * 
+     *
      * @param grid
      *            the grid to auto scroll
      */
@@ -458,7 +458,7 @@ public class AutoScroller {
 
     /**
      * Starts the automatic scrolling detection.
-     * 
+     *
      * @param startEvent
      *            the event that starts the automatic scroll
      * @param scrollAxis
@@ -499,7 +499,7 @@ public class AutoScroller {
      * triggered.
      * <p>
      * Defaults to 100px.
-     * 
+     *
      * @param px
      *            the pixel height/width for the auto scroll area depending on
      *            direction
@@ -512,7 +512,7 @@ public class AutoScroller {
      * Returns the size of the auto scroll area in pixels.
      * <p>
      * Defaults to 100px.
-     * 
+     *
      * @return size in pixels
      */
     public int getScrollArea() {

@@ -110,11 +110,11 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
 
     /**
      * Override to add items to the "settings" menu.
-     * 
+     *
      * NOTE, Call super class first to preserve current order. If you override
      * this in a class and another class overrides it you might break tests
      * because the wrong items will be selected.
-     * 
+     *
      * @param settingsMenu
      */
     protected void populateSettingsMenu(MenuItem settingsMenu) {
@@ -207,7 +207,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
     /**
      * Construct the component that is to be tested. This method uses a no-arg
      * constructor by default. Override to customize.
-     * 
+     *
      * @return Instance of the component that is to be tested.
      * @throws IllegalAccessException
      * @throws InstantiationException
@@ -457,7 +457,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
     /**
      * Creates category named "category" with id "categoryId" in parent category
      * "parentCategory". Each categoryId must be globally unique.
-     * 
+     *
      * @param category
      * @param categoryId
      * @param parentCategory
@@ -565,7 +565,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
 
     /**
      * Unselect all child menu items
-     * 
+     *
      * @param parent
      */
     protected void unselectChildren(MenuItem parent) {

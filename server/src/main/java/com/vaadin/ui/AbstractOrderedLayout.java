@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -84,7 +84,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
     /**
      * Add a component into this container. The component is added to the right
      * or under the previous component.
-     * 
+     *
      * @param c
      *            the component to be added.
      */
@@ -105,7 +105,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
     /**
      * Adds a component into this container. The component is added to the left
      * or on top of the other components.
-     * 
+     *
      * @param c
      *            the component to be added.
      */
@@ -128,7 +128,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     /**
      * Adds a component into indexed position in this container.
-     * 
+     *
      * @param c
      *            the component to be added.
      * @param index
@@ -168,7 +168,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     /**
      * Removes the component from this container.
-     * 
+     *
      * @param c
      *            the component to be removed.
      */
@@ -182,7 +182,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
     /**
      * Gets the component container iterator for going trough all the components
      * in the container.
-     * 
+     *
      * @return the Iterator of the components inside the container.
      */
     @Override
@@ -193,7 +193,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
     /**
      * Gets the number of contained components. Consistent with the iterator
      * returned by {@link #getComponentIterator()}.
-     * 
+     *
      * @return the number of contained components
      */
     @Override
@@ -267,7 +267,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Layout.AlignmentHandler#getComponentAlignment(com
      * .vaadin.ui.Component)
      */
@@ -284,7 +284,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Layout.SpacingHandler#setSpacing(boolean)
      */
     @Override
@@ -294,7 +294,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Layout.SpacingHandler#isSpacing()
      */
     @Override
@@ -307,26 +307,26 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
      * This method is used to control how excess space in layout is distributed
      * among components. Excess space may exist if layout is sized and contained
      * non relatively sized components don't consume all available space.
-     * 
+     *
      * <p>
      * Example how to distribute 1:3 (33%) for component1 and 2:3 (67%) for
      * component2 :
-     * 
+     *
      * <code>
      * layout.setExpandRatio(component1, 1);<br>
      * layout.setExpandRatio(component2, 2);
      * </code>
-     * 
+     *
      * <p>
      * If no ratios have been set, the excess space is distributed evenly among
      * all components.
-     * 
+     *
      * <p>
      * Note, that width or height (depending on orientation) needs to be defined
      * for this method to have any effect.
-     * 
+     *
      * @see Sizeable
-     * 
+     *
      * @param component
      *            the component in this layout which expand ratio is to be set
      * @param ratio
@@ -351,7 +351,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     /**
      * Returns the expand ratio of given component.
-     * 
+     *
      * @param component
      *            which expand ratios is requested
      * @return expand ratio of given component, 0.0f by default.
@@ -401,7 +401,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     /**
      * Returns the index of the given component.
-     * 
+     *
      * @param component
      *            The component to look up.
      * @return The index of the component or -1 if the component is not a child.
@@ -412,7 +412,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     /**
      * Returns the component at the given position.
-     * 
+     *
      * @param index
      *            The position of the component.
      * @return The component at the given index.
@@ -430,7 +430,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Layout.MarginHandler#getMargin()
      */
     @Override
@@ -440,7 +440,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Layout.MarginHandler#setMargin(MarginInfo)
      */
     @Override
@@ -450,7 +450,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Layout.AlignmentHandler#getDefaultComponentAlignment()
      */
     @Override
@@ -460,7 +460,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.ui.Layout.AlignmentHandler#setDefaultComponentAlignment(com
      * .vaadin.ui.Alignment)
@@ -478,7 +478,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
      * com.vaadin.ui.declarative.DesignContext)
      */
@@ -517,7 +517,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Element
      * , com.vaadin.ui.declarative.DesignContext)
      */
@@ -564,7 +564,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#getCustomAttributes()
      */
     @Override

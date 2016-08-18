@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -58,7 +58,7 @@ import com.vaadin.client.ui.VOverlay;
 
 /**
  * Debug window implementation.
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd
  */
@@ -235,7 +235,7 @@ public final class VDebugWindow extends VOverlay {
     /**
      * Adds dummy handle elements to the bottom corners that might have
      * scrollbars that interfere with resizing on some platforms.
-     * 
+     *
      * @since 7.1
      */
     private void addHandles() {
@@ -252,7 +252,7 @@ public final class VDebugWindow extends VOverlay {
 
     /**
      * Gets the {@link #VDebugWindow()} singleton instance.
-     * 
+     *
      * @return
      */
     public static VDebugWindow get() {
@@ -337,7 +337,7 @@ public final class VDebugWindow extends VOverlay {
     /**
      * Writes the given value to the given {@link Storage} using the given key
      * (automatically prefixed with {@value #STORAGE_PREFIX}).
-     * 
+     *
      * @param storage
      * @param key
      * @param value
@@ -351,7 +351,7 @@ public final class VDebugWindow extends VOverlay {
      * {@value #STORAGE_PREFIX}) as an int from the given {@link Storage},
      * returning the given default value instead if not successful (e.g missing
      * item).
-     * 
+     *
      * @param storage
      * @param key
      * @param def
@@ -370,7 +370,7 @@ public final class VDebugWindow extends VOverlay {
      * {@value #STORAGE_PREFIX}) as a boolean from the given {@link Storage},
      * returning the given default value instead if not successful (e.g missing
      * item).
-     * 
+     *
      * @param storage
      * @param key
      * @param def
@@ -389,7 +389,7 @@ public final class VDebugWindow extends VOverlay {
      * {@value #STORAGE_PREFIX}) as a String from the given {@link Storage},
      * returning the given default value instead if not successful (e.g missing
      * item).
-     * 
+     *
      * @param storage
      * @param key
      * @param def
@@ -422,7 +422,7 @@ public final class VDebugWindow extends VOverlay {
     /**
      * Removes the item with the given key (automatically prefixed with
      * {@value #STORAGE_PREFIX}) from the given {@link Storage}.
-     * 
+     *
      * @param storage
      * @param key
      */
@@ -433,10 +433,10 @@ public final class VDebugWindow extends VOverlay {
     /**
      * Applies the appropriate instance variables for width, height, x, y
      * depending on if the window is minimized or not.
-     * 
+     *
      * If the value is negative, the window is positioned that amount of pixels
      * from the right/bottom instead of left/top.
-     * 
+     *
      * Finally, the position is bounds-checked so that the window is not moved
      * off-screen (the adjusted values are not saved).
      */
@@ -528,7 +528,7 @@ public final class VDebugWindow extends VOverlay {
      * Adds the given {@link Section} as a tab in the {@link VDebugWindow} UI.
      * {@link Section#getTabButton()} is called to obtain a button which is used
      * tab.
-     * 
+     *
      * @param section
      */
     public void addSection(final Section section) {
@@ -551,7 +551,7 @@ public final class VDebugWindow extends VOverlay {
 
     /**
      * Activates the given {@link Section}
-     * 
+     *
      * @param section
      */
     void activateSection(Section section) {
@@ -597,7 +597,7 @@ public final class VDebugWindow extends VOverlay {
 
     /**
      * Sets whether or not the window is minimized.
-     * 
+     *
      * @param minimized
      */
     private void setMinimized(boolean minimized) {
@@ -613,7 +613,7 @@ public final class VDebugWindow extends VOverlay {
 
     /**
      * Sets the font size in use.
-     * 
+     *
      * @param size
      */
     private void setFontSize(int size) {
@@ -624,7 +624,7 @@ public final class VDebugWindow extends VOverlay {
 
     /**
      * Gets the font size currently in use.
-     * 
+     *
      * @return
      */
     private int getFontSize() {
@@ -633,7 +633,7 @@ public final class VDebugWindow extends VOverlay {
 
     /**
      * Gets the milliseconds since application start.
-     * 
+     *
      * @return
      */
     static int getMillisSinceStart() {
@@ -642,7 +642,7 @@ public final class VDebugWindow extends VOverlay {
 
     /**
      * Gets the milliseconds since last {@link #resetTimer()} call.
-     * 
+     *
      * @return
      */
     static int getMillisSinceReset() {
@@ -651,7 +651,7 @@ public final class VDebugWindow extends VOverlay {
 
     /**
      * Resets the timer.
-     * 
+     *
      * @return Milliseconds elapsed since the timer was last reset.
      */
     static int resetTimer() {
@@ -663,7 +663,7 @@ public final class VDebugWindow extends VOverlay {
     /**
      * Gets a nicely formatted string with timing information suitable for
      * display in tooltips.
-     * 
+     *
      * @param sinceStart
      * @param sinceReset
      * @return
@@ -679,7 +679,7 @@ public final class VDebugWindow extends VOverlay {
     /**
      * Formats the given milliseconds as hours, minutes, seconds and
      * milliseconds.
-     * 
+     *
      * @param ms
      * @return
      */
@@ -733,7 +733,7 @@ public final class VDebugWindow extends VOverlay {
 
     /**
      * Called when the result from analyzeLayouts is received.
-     * 
+     *
      * @param ac
      * @param meta
      */
@@ -748,7 +748,7 @@ public final class VDebugWindow extends VOverlay {
 
     /**
      * Called when a response is received
-     * 
+     *
      * @param ac
      * @param uidl
      */
@@ -765,7 +765,7 @@ public final class VDebugWindow extends VOverlay {
      * Gets the container element for this window. The debug window is always
      * global to the document and not related to any
      * {@link ApplicationConnection} in particular.
-     * 
+     *
      * @return The global overlay container element.
      */
     @Override
@@ -779,7 +779,7 @@ public final class VDebugWindow extends VOverlay {
 
     /**
      * Popup menu for {@link VDebugWindow}.
-     * 
+     *
      * @since 7.1
      * @author Vaadin Ltd
      */
@@ -909,7 +909,7 @@ public final class VDebugWindow extends VOverlay {
 
     /**
      * Handler for resizing and moving window, also updates cursor on mousemove.
-     * 
+     *
      * @since 7.1
      * @author Vaadin Ltd
      */

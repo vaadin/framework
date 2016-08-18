@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -52,7 +52,7 @@ import elemental.json.JsonObject;
 
 /**
  * Connector for server-side {@link MultiSelectionModel}.
- * 
+ *
  * @since 7.6
  * @author Vaadin Ltd
  */
@@ -139,7 +139,7 @@ public class MultiSelectionModelConnector extends
          * Creates a selection column renderer. This method can be overridden to
          * use a custom renderer or use {@code null} to disable the selection
          * column.
-         * 
+         *
          * @param grid
          *            the grid for this selection model
          * @return selection column renderer or {@code null} if not needed
@@ -176,7 +176,7 @@ public class MultiSelectionModelConnector extends
 
         /**
          * {@inheritDoc}
-         * 
+         *
          * @return {@code false} if rows is empty, else {@code true}
          */
         @Override
@@ -186,7 +186,7 @@ public class MultiSelectionModelConnector extends
 
         /**
          * {@inheritDoc}
-         * 
+         *
          * @return {@code false} if rows is empty, else {@code true}
          */
         @Override
@@ -196,7 +196,7 @@ public class MultiSelectionModelConnector extends
 
         /**
          * {@inheritDoc}
-         * 
+         *
          * @return always {@code true}
          */
         @Override
@@ -220,7 +220,7 @@ public class MultiSelectionModelConnector extends
 
         /**
          * {@inheritDoc}
-         * 
+         *
          * @return {@code false} if rows is empty, else {@code true}
          */
         @Override
@@ -248,7 +248,7 @@ public class MultiSelectionModelConnector extends
          * <p>
          * Note: If selection model is in batch select state, the row will be
          * pinned on select.
-         * 
+         *
          * @param row
          *            row handle
          * @param selected
@@ -276,7 +276,7 @@ public class MultiSelectionModelConnector extends
 
         /**
          * {@inheritDoc}
-         * 
+         *
          * @return {@code false} if rows is empty, else {@code true}
          */
         @Override

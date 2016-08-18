@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -251,7 +251,7 @@ public class TypeDataStore {
      * @param type
      * @return
      * @throws NoDataException
-     * 
+     *
      * @deprecated As of 7.0.1, use {@link #getPropertiesAsArray(Type)} instead
      *             for improved performance
      */
@@ -339,7 +339,7 @@ public class TypeDataStore {
      * This method sets up prototypes chain for <code>baseClassName</code>.
      * Precondition is : <code>superClassName</code> had to be handled before
      * its child <code>baseClassName</code>.
-     * 
+     *
      * It makes all properties defined in the <code>superClassName</code>
      * available for <code>baseClassName</code> as well.
      */
@@ -420,7 +420,7 @@ public class TypeDataStore {
     /**
      * Gets data for all methods annotated with {@link OnStateChange} in the
      * given connector type.
-     * 
+     *
      * @since 7.2
      * @param type
      *            the connector type
@@ -434,7 +434,7 @@ public class TypeDataStore {
     /**
      * Adds data about a method annotated with {@link OnStateChange} for the
      * given connector type.
-     * 
+     *
      * @since 7.2
      * @param clazz
      *            the connector type
@@ -464,12 +464,12 @@ public class TypeDataStore {
 
     /**
      * Checks whether the provided method is annotated with {@link NoLayout}.
-     * 
+     *
      * @param method
      *            the rpc method to check
-     * 
+     *
      * @since 7.4
-     * 
+     *
      * @return <code>true</code> if the method has a NoLayout annotation;
      *         otherwise <code>false</code>
      */
@@ -479,12 +479,12 @@ public class TypeDataStore {
 
     /**
      * Checks whether the provided property is annotated with {@link NoLayout}.
-     * 
+     *
      * @param property
      *            the property to check
-     * 
+     *
      * @since 7.4
-     * 
+     *
      * @return <code>true</code> if the property has a NoLayout annotation;
      *         otherwise <code>false</code>
      */

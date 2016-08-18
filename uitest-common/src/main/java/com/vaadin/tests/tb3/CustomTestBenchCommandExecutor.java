@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,10 +37,10 @@ import com.vaadin.testbench.screenshot.ImageFileUtil;
 
 /**
  * Internal hack to support capturing screenshots for elements.
- * 
+ *
  * Most parts are from TestBenchCommandExecutor and the feature should be
  * integrated into TB4.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class CustomTestBenchCommandExecutor {
@@ -54,7 +54,7 @@ public class CustomTestBenchCommandExecutor {
 
     /**
      * Compares the screenshot of the given element with the reference.
-     * 
+     *
      * Copied from TestBenchCommandExecutor
      */
     public boolean compareScreen(WebElement element, File reference,
@@ -71,7 +71,7 @@ public class CustomTestBenchCommandExecutor {
 
     /**
      * Compares the screenshot of the given element with the reference.
-     * 
+     *
      * Copied from TestBenchCommandExecutor and added cropToElement
      */
     public boolean compareScreen(WebElement element, BufferedImage reference,
@@ -107,7 +107,7 @@ public class CustomTestBenchCommandExecutor {
     /**
      * Crops the image to show only the element. If the element is partly off
      * screen, crops to show the part of the element which is in the screenshot
-     * 
+     *
      * @param element
      *            the element to retain in the screenshot
      * @param fullScreen

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,7 +32,7 @@ import java.util.Locale;
  * </ul>
  * Will not necessarily work correctly for other cases.
  * </p>
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.4
  */
@@ -53,7 +53,7 @@ public class LegacyStringToEnumConverter
      * Converts the given string to the given enum type using the given locale
      * <p>
      * Compatible with {@link #enumToString(Enum, Locale)}
-     * 
+     *
      * @param value
      *            The string value to convert
      * @param enumType
@@ -108,7 +108,7 @@ public class LegacyStringToEnumConverter
      * Converts the given enum to a human readable string using the given locale
      * <p>
      * Compatible with {@link #stringToEnum(String, Class, Locale)}
-     * 
+     *
      * @param value
      *            The enum value to convert
      * @param locale

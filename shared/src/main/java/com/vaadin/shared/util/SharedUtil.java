@@ -64,7 +64,7 @@ public class SharedUtil implements Serializable {
     /**
      * Splits a camelCaseString into an array of words with the casing
      * preserved.
-     * 
+     *
      * @since 7.4
      * @param camelCaseString
      *            The input string in camelCase format
@@ -109,7 +109,7 @@ public class SharedUtil implements Serializable {
      * {@literal MyBeanContainer} becomes {@literal My Bean Container}
      * {@literal AwesomeURLFactory} becomes {@literal Awesome URL Factory}
      * {@literal SomeUriAction} becomes {@literal Some Uri Action}
-     * 
+     *
      * @since 7.4
      * @param camelCaseString
      *            The input string in camelCase format
@@ -136,7 +136,7 @@ public class SharedUtil implements Serializable {
     /**
      * Joins the words in the input array together into a single string by
      * inserting the separator string between each word.
-     * 
+     *
      * @since 7.4
      * @param parts
      *            The array of words
@@ -156,7 +156,7 @@ public class SharedUtil implements Serializable {
     /**
      * Capitalizes the first character in the given string in a way suitable for
      * use in code (methods, properties etc)
-     * 
+     *
      * @since 7.4
      * @param string
      *            The string to capitalize
@@ -179,7 +179,7 @@ public class SharedUtil implements Serializable {
      * Converts a property id to a human friendly format. Handles nested
      * properties by only considering the last part, e.g. "address.streetName"
      * is equal to "streetName" for this method.
-     * 
+     *
      * @since 7.4
      * @param propertyId
      *            The propertyId to format
@@ -248,7 +248,7 @@ public class SharedUtil implements Serializable {
      * <p>
      * {@literal foo} becomes {@literal foo} {@literal foo-bar} becomes
      * {@literal fooBar} {@literal foo--bar} becomes {@literal fooBar}
-     * 
+     *
      * @since 7.5
      * @param dashSeparated
      *            The dash separated string to convert

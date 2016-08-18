@@ -24,7 +24,7 @@ import com.vaadin.ui.UI;
 
 /**
  * Initializer shell for GridClientBasicFeatures test application
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */

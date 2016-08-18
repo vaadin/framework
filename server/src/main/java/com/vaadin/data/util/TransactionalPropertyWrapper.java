@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -22,23 +22,23 @@ import com.vaadin.data.Property.ValueChangeNotifier;
 /**
  * Wrapper class that helps implement two-phase commit for a non-transactional
  * property.
- * 
+ *
  * When accessing the property through the wrapper, getting and setting the
  * property value take place immediately. However, the wrapper keeps track of
  * the old value of the property so that it can be set for the property in case
  * of a roll-back. This can result in the underlying property value changing
  * multiple times (first based on modifications made by the application, then
  * back upon roll-back).
- * 
+ *
  * Value change events on the {@link TransactionalPropertyWrapper} are only
  * fired at the end of a successful transaction, whereas listeners attached to
  * the underlying property may receive multiple value change events.
- * 
+ *
  * @see com.vaadin.data.Property.Transactional
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0
- * 
+ *
  * @param <T>
  */
 public class TransactionalPropertyWrapper<T> extends AbstractProperty<T>
@@ -67,7 +67,7 @@ public class TransactionalPropertyWrapper<T> extends AbstractProperty<T>
     /**
      * Removes the ValueChangeListener from wrapped Property that was added by
      * TransactionalPropertyWrapper.
-     * 
+     *
      * @since 7.1.15
      */
     public void detachFromProperty() {

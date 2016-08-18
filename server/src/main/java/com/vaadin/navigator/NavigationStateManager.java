@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import java.io.Serializable;
  * portlet URL navigation and other similar systems.
  * <p>
  * This interface is mostly for internal use by Navigator.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0
  */
@@ -36,7 +36,7 @@ public interface NavigationStateManager extends Serializable {
     /**
      * Returns the current navigation state including view name and any optional
      * parameters.
-     * 
+     *
      * @return current view and parameter string, not null
      */
     public String getState();
@@ -46,7 +46,7 @@ public interface NavigationStateManager extends Serializable {
      * location, including view name and any optional parameters.
      * <p>
      * This method should be only called by a Navigator.
-     * 
+     *
      * @param fragment
      *            new view and parameter string, not null
      */

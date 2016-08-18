@@ -9,7 +9,7 @@ public class BeanItemContainerTest {
 
     /**
      * Test class for BeanItemContainer
-     * 
+     *
      * @throws IllegalAccessException
      * @throws InstantiationException
      */

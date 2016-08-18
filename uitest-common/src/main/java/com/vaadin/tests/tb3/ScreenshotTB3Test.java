@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -42,7 +42,7 @@ import com.vaadin.testbench.screenshot.ImageFileUtil;
 /**
  * Base class which provides functionality for tests which use the automatic
  * screenshot comparison function.
- * 
+ *
  * @author Vaadin Ltd
  */
 public abstract class ScreenshotTB3Test extends AbstractTB3Test {
@@ -110,13 +110,13 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      * Grabs a screenshot and compares with the reference image with the given
      * identifier. Supports alternative references and will succeed if the
      * screenshot matches at least one of the references.
-     * 
+     *
      * In case of a failed comparison this method stores the grabbed screenshots
      * in the error directory as defined by
      * {@link #getScreenshotErrorDirectory()}. It will also generate a html file
      * in the same directory, comparing the screenshot with the first found
      * reference.
-     * 
+     *
      * @param identifier
      * @throws IOException
      */
@@ -234,7 +234,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     /**
      * Returns a new File which points to a .html file instead of the given .png
      * file
-     * 
+     *
      * @param png
      * @return
      */
@@ -244,7 +244,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     }
 
     /**
-     * 
+     *
      * @param referenceFile
      *            The reference image file (in the directory defined by
      *            {@link #getScreenshotReferenceDirectory()})
@@ -271,7 +271,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
     /**
      * Finds alternative references for the given files
-     * 
+     *
      * @param reference
      * @return all references which should be considered when comparing with the
      *         given files, including the given reference
@@ -366,7 +366,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     /**
      * Checks if any screenshot comparisons failures occurred during the test
      * and combines all comparison errors into one exception
-     * 
+     *
      * @throws IOException
      *             If there were failures during the test
      */
@@ -400,7 +400,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
     /**
      * Returns the name of the reference file based on the given parameters.
-     * 
+     *
      * @param testName
      * @param capabilities
      * @param identifier
@@ -414,7 +414,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      * Returns the name of the reference file based on the given parameters. The
      * version given in {@literal capabilities} is used unless it is overridden
      * by the {@literal versionOverride} parameter.
-     * 
+     *
      * @param testName
      * @param capabilities
      * @param identifier

@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -34,9 +34,9 @@ import com.vaadin.ui.VerticalLayout;
  * items hierarchically into <code>com.vaadin.ui.Component.Tree</code>, how to
  * receive ExpandEvent and implement
  * <code>com.vaadin.ui.Tree.ExpandListener</code>.
- * 
+ *
  * @since 4.0.0
- * 
+ *
  */
 public class TreeFilesystem extends com.vaadin.server.LegacyApplication
         implements Tree.ExpandListener {
@@ -91,7 +91,7 @@ public class TreeFilesystem extends com.vaadin.server.LegacyApplication
      * Populates files to tree as items. In this example items are of String
      * type that consist of file path. New items are added to tree and item's
      * parent and children properties are updated.
-     * 
+     *
      * @param file
      *            path which contents are added to tree
      * @param parent

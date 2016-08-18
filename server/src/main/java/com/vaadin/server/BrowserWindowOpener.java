@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,7 +27,7 @@ import com.vaadin.ui.UI;
 /**
  * Component extension that opens a browser popup window when the extended
  * component is clicked.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
@@ -70,7 +70,7 @@ public class BrowserWindowOpener extends AbstractExtension {
     /**
      * Creates a window opener that will open windows containing the provided UI
      * class
-     * 
+     *
      * @param uiClass
      *            the UI class that should be opened when the extended component
      *            is clicked
@@ -82,7 +82,7 @@ public class BrowserWindowOpener extends AbstractExtension {
     /**
      * Creates a window opener that will open windows containing the provided UI
      * using the provided path
-     * 
+     *
      * @param uiClass
      *            the UI class that should be opened when the extended component
      *            is clicked
@@ -98,7 +98,7 @@ public class BrowserWindowOpener extends AbstractExtension {
 
     /**
      * Creates a window opener that will open windows to the provided URL
-     * 
+     *
      * @param url
      *            the URL to open in the window
      */
@@ -108,7 +108,7 @@ public class BrowserWindowOpener extends AbstractExtension {
 
     /**
      * Creates a window opener that will open window to the provided resource
-     * 
+     *
      * @param resource
      *            the resource to open in the window
      */
@@ -130,9 +130,9 @@ public class BrowserWindowOpener extends AbstractExtension {
      * Sets the provided URL {@code url} for this instance. The {@code url} will
      * be opened in a new browser window/tab when the extended component is
      * clicked.
-     * 
+     *
      * @since 7.4
-     * 
+     *
      * @param url
      *            URL to open
      */
@@ -144,9 +144,9 @@ public class BrowserWindowOpener extends AbstractExtension {
      * Sets the provided {@code resource} for this instance. The
      * {@code resource} will be opened in a new browser window/tab when the
      * extended component is clicked.
-     * 
+     *
      * @since 7.4
-     * 
+     *
      * @param resource
      *            resource to open
      */
@@ -156,9 +156,9 @@ public class BrowserWindowOpener extends AbstractExtension {
 
     /**
      * Returns the resource for this instance.
-     * 
+     *
      * @since 7.4
-     * 
+     *
      * @return resource to open browser window
      */
     public Resource getResource() {
@@ -169,9 +169,9 @@ public class BrowserWindowOpener extends AbstractExtension {
      * Returns the URL for this BrowserWindowOpener instance. Returns
      * {@code null} if this instance is not URL resource based (a non URL based
      * resource has been set for it).
-     * 
+     *
      * @since 7.4
-     * 
+     *
      * @return URL to open in the new browser window/tab when the extended
      *         component is clicked
      */
@@ -189,7 +189,7 @@ public class BrowserWindowOpener extends AbstractExtension {
      * replaced instead of opening a new window. If the name is
      * <code>null</code> or <code>"_blank"</code>, a new window will always be
      * opened.
-     * 
+     *
      * @param windowName
      *            the target name for the window
      */
@@ -199,9 +199,9 @@ public class BrowserWindowOpener extends AbstractExtension {
 
     /**
      * Gets the target window name.
-     * 
+     *
      * @see #setWindowName(String)
-     * 
+     *
      * @return the window target string
      */
     public String getWindowName() {
@@ -214,7 +214,7 @@ public class BrowserWindowOpener extends AbstractExtension {
      * Sets the features for opening the window. See e.g.
      * {@link https://developer.mozilla.org/en-US/docs/DOM/window.open#Position_and_size_features}
      * for a description of the commonly supported features.
-     * 
+     *
      * @param features a string with window features, or <code>null</code> to use the default features.
      */
     // @formatter:on
@@ -224,7 +224,7 @@ public class BrowserWindowOpener extends AbstractExtension {
 
     /**
      * Gets the window features.
-     * 
+     *
      * @see #setFeatures(String)
      * @return
      */
@@ -270,7 +270,7 @@ public class BrowserWindowOpener extends AbstractExtension {
      * new UI.
      * <p>
      * The default value is <code>null</code>.
-     * 
+     *
      * @param uriFragment
      *            the URI fragment string that should be included in the opened
      *            URI, or <code>null</code> to preserve the original fragment of
@@ -282,10 +282,10 @@ public class BrowserWindowOpener extends AbstractExtension {
 
     /**
      * Gets that URI fragment configured for opened windows.
-     * 
+     *
      * @return the URI fragment string, or <code>null</code> if no fragment is
      *         configured.
-     * 
+     *
      * @see #setUriFragment(String)
      */
     public String getUriFragment() {
@@ -300,12 +300,12 @@ public class BrowserWindowOpener extends AbstractExtension {
      * <p>
      * Setting a parameter with the same name as a previously set parameter will
      * replace the previous value.
-     * 
+     *
      * @param name
      *            the name of the parameter to add, not <code>null</code>
      * @param value
      *            the value of the parameter to add, not <code>null</code>
-     * 
+     *
      * @see #removeParameter(String)
      * @see #getParameterNames()
      * @see #getParameter(String)
@@ -321,10 +321,10 @@ public class BrowserWindowOpener extends AbstractExtension {
      * Removes a parameter that has been set using
      * {@link #setParameter(String, String)}. Removing a parameter that has not
      * been set has no effect.
-     * 
+     *
      * @param name
      *            the name of the parameter to remove, not <code>null</code>
-     * 
+     *
      * @see #setParameter(String, String)
      */
     public void removeParameter(String name) {
@@ -337,9 +337,9 @@ public class BrowserWindowOpener extends AbstractExtension {
     /**
      * Gets the names of all parameters set using
      * {@link #setParameter(String, String)}.
-     * 
+     *
      * @return an unmodifiable set of parameter names
-     * 
+     *
      * @see #setParameter(String, String)
      * @see #getParameter(String)
      */
@@ -351,12 +351,12 @@ public class BrowserWindowOpener extends AbstractExtension {
      * Gets the value of a parameter set using
      * {@link #setParameter(String, String)}. If there is no parameter with the
      * given name, <code>null</code> is returned.
-     * 
+     *
      * @param name
      *            the name of the parameter to get, not <code>null</code>
      * @return the value of the parameter, or <code>null</code> there is no
      *         parameter
-     * 
+     *
      * @see #setParameter(String, String)
      * @see #getParameter(String)
      */

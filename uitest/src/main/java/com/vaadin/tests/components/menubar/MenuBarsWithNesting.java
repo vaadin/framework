@@ -30,7 +30,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
  * Some of the icons are textual (using FontAwesome) and should behave like
  * items with image icons: the icon should not be considered to be a part of the
  * item's caption.
- * 
+ *
  * @since
  * @author Vaadin
  */

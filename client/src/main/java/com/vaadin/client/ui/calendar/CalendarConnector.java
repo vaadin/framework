@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -77,7 +77,7 @@ import com.vaadin.ui.Calendar;
 /**
  * Handles communication between Calendar on the server side and
  * {@link VCalendar} on the client side.
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd.
  */
@@ -94,7 +94,7 @@ public class CalendarConnector extends AbstractComponentConnector
     private static final String DROPHANDLER_ACCEPT_CRITERIA_PAINT_TAG = "-ac";
 
     /**
-     * 
+     *
      */
     public CalendarConnector() {
 
@@ -378,7 +378,7 @@ public class CalendarConnector extends AbstractComponentConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.
      * terminal .gwt.client.UIDL,
      * com.vaadin.terminal.gwt.client.ApplicationConnection)
@@ -556,7 +556,7 @@ public class CalendarConnector extends AbstractComponentConnector
 
     /**
      * Get the original action ID that was passed in from the shared state
-     * 
+     *
      * @since 7.1.2
      * @param actionKey
      *            the unique action key
@@ -568,7 +568,7 @@ public class CalendarConnector extends AbstractComponentConnector
 
     /**
      * Get the text that is displayed for a context menu item
-     * 
+     *
      * @param actionKey
      *            The unique action key
      * @return
@@ -579,7 +579,7 @@ public class CalendarConnector extends AbstractComponentConnector
 
     /**
      * Get the icon url for a context menu item
-     * 
+     *
      * @param actionKey
      *            The unique action key
      * @return
@@ -590,7 +590,7 @@ public class CalendarConnector extends AbstractComponentConnector
 
     /**
      * Get the start date for an action item
-     * 
+     *
      * @param actionKey
      *            The unique action key
      * @return
@@ -605,7 +605,7 @@ public class CalendarConnector extends AbstractComponentConnector
 
     /**
      * Get the end date for an action item
-     * 
+     *
      * @param actionKey
      *            The unique action key
      * @return
@@ -645,7 +645,7 @@ public class CalendarConnector extends AbstractComponentConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.terminal.gwt.client.ui.ActionOwner#getPaintableId()
      */
     @Override

@@ -19,7 +19,7 @@ import java.io.Serializable;
 
 /**
  * Describes sorting direction.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -47,7 +47,7 @@ public enum SortDirection implements Serializable {
 
     /**
      * Get the sort direction that is the direct opposite to this one.
-     * 
+     *
      * @return a sort direction value
      */
     public abstract SortDirection getOpposite();

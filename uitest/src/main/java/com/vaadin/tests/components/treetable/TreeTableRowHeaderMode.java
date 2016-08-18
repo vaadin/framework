@@ -9,7 +9,7 @@ import com.vaadin.ui.TreeTable;
 
 /**
  * Test UI for RowHeaderMode.ICON_ONLY in TreeTable.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class TreeTableRowHeaderMode extends AbstractTestUI {

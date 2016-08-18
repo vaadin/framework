@@ -47,7 +47,7 @@ class MyDynamicResource implements RequestHandler {
     /**
      * Provides the dynamic resource if the URI matches the resource URI. The
      * matching URI is "/myresource" under the application URI context.
-     * 
+     *
      * Returns null if the URI does not match. Otherwise returns a download
      * stream that contains the response from the server.
      */

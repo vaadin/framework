@@ -59,7 +59,7 @@ public class DDTest1 extends TestBase {
                 "Pane2 (accept needs server side visit, check for \"Bar\")");
         final AcceptCriterion crit = new ServerSideCriterion() {
             /**
-             * 
+             *
              */
             private static final long serialVersionUID = 1L;
 
@@ -121,7 +121,7 @@ public class DDTest1 extends TestBase {
         /*
          * Moves items in tree (and could work in Table too). Also supports
          * "building" tree.
-         * 
+         *
          * TODO fix algorithm, broken in some cases.
          */
         DropHandler itemSorter = new DropHandler() {

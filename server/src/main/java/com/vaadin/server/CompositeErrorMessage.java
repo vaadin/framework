@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,7 +21,7 @@ import java.util.Iterator;
 
 /**
  * Class for combining multiple error messages together.
- * 
+ *
  * @author Vaadin Ltd
  * @since 3.0
  */
@@ -30,7 +30,7 @@ public class CompositeErrorMessage extends AbstractErrorMessage {
 
     /**
      * Constructor for CompositeErrorMessage.
-     * 
+     *
      * @param errorMessages
      *            the array of error messages that are listed together. Nulls
      *            are ignored, but at least one message is required.
@@ -52,7 +52,7 @@ public class CompositeErrorMessage extends AbstractErrorMessage {
 
     /**
      * Constructor for CompositeErrorMessage.
-     * 
+     *
      * @param errorMessages
      *            the Collection of error messages that are listed together. At
      *            least one message is required.
@@ -76,7 +76,7 @@ public class CompositeErrorMessage extends AbstractErrorMessage {
     /**
      * Adds a error message into this composite message. Updates the level
      * field.
-     * 
+     *
      * @param error
      *            the error message to be added. Duplicate errors are ignored.
      */
@@ -91,7 +91,7 @@ public class CompositeErrorMessage extends AbstractErrorMessage {
 
     /**
      * Gets Error Iterator.
-     * 
+     *
      * @return the error iterator.
      */
     public Iterator<ErrorMessage> iterator() {
@@ -100,7 +100,7 @@ public class CompositeErrorMessage extends AbstractErrorMessage {
 
     /**
      * Returns a comma separated list of the error messages.
-     * 
+     *
      * @return String, comma separated list of error messages.
      */
     @Override

@@ -73,7 +73,7 @@ import com.vaadin.shared.ui.window.WindowRole;
 
 /**
  * "Sub window" component.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
@@ -237,7 +237,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         /*
          * Stores the element that has focus in the application UI when the
          * window is opened, so it can be restored when the window closes.
-         * 
+         *
          * This is currently implemented for the case when one non-modal window
          * can be open at the same time, and the focus is not changed while the
          * window is open.
@@ -271,7 +271,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         /*
          * Restores the previously stored focused element.
-         * 
+         *
          * When the focus was changed outside the window while the window was
          * open, the originally stored element is restored.
          */
@@ -313,7 +313,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     /**
      * Returns true if this window is the topmost VWindow
-     * 
+     *
      * @return
      */
     private boolean isActive() {
@@ -465,7 +465,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * is prevented.
      * <p>
      * This message is not visible on the screen.
-     * 
+     *
      * @param topMessage
      *            String provided when the user navigates with Shift-Tab keys to
      *            the top of the window
@@ -480,7 +480,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * key is prevented.
      * <p>
      * This message is not visible on the screen.
-     * 
+     *
      * @param bottomMessage
      *            String provided when the user navigates with the Tab key to
      *            the bottom of the window
@@ -493,7 +493,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * Gets the message that is provided to users of assistive devices when the
      * user reaches the top of the window when leaving a window with the tab key
      * is prevented.
-     * 
+     *
      * @return the top message
      */
     public String getTabStopTopAssistiveText() {
@@ -504,7 +504,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * Gets the message that is provided to users of assistive devices when the
      * user reaches the bottom of the window when leaving a window with the tab
      * key is prevented.
-     * 
+     *
      * @return the bottom message
      */
     public String getTabStopBottomAssistiveText() {
@@ -623,7 +623,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     /**
      * Sets the closable state of the window. Additionally hides/shows the close
      * button according to the new state.
-     * 
+     *
      * @param closable
      *            true if the window can be closed by the user
      */
@@ -649,7 +649,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * Returns the closable state of the sub window. If the sub window is
      * closable a decoration (typically an X) is shown to the user. By clicking
      * on the X the user can close the window.
-     * 
+     *
      * @return true if the sub window is closable
      */
     protected boolean isClosable() {
@@ -681,7 +681,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
          * correctly if clicking on the "close" button in the window header but
          * closing the window from a button for example in the window will fail.
          * Symptom described in #10776
-         * 
+         *
          * The problematic part is that for the focus to be returned correctly
          * an input element needs to be focused in the root panel. Focusing some
          * other element apparently won't work.
@@ -919,7 +919,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     /**
      * Setter for the text for assistive devices the window caption is prefixed
      * with.
-     * 
+     *
      * @param assistivePrefix
      *            the assistivePrefix to set
      */
@@ -930,7 +930,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     /**
      * Getter for the text for assistive devices the window caption is prefixed
      * with.
-     * 
+     *
      * @return the assistivePrefix
      */
     public String getAssistivePrefix() {
@@ -940,7 +940,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     /**
      * Setter for the text for assistive devices the window caption is postfixed
      * with.
-     * 
+     *
      * @param assistivePostfix
      *            the assistivePostfix to set
      */
@@ -951,7 +951,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     /**
      * Getter for the text for assistive devices the window caption is postfixed
      * with.
-     * 
+     *
      * @return the assistivePostfix
      */
     public String getAssistivePostfix() {
@@ -1116,14 +1116,14 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     /**
      * TODO check if we need to support this with touch based devices.
-     * 
+     *
      * Checks if the cursor was inside the browser content area when the event
      * happened.
-     * 
+     *
      * @param event
      *            The event to be checked
      * @return true, if the cursor is inside the browser content area
-     * 
+     *
      *         false, otherwise
      */
     private boolean cursorInsideBrowserContentArea(Event event) {
@@ -1417,7 +1417,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * assistive devices when it is opened.
      * <p>
      * When the provided array is empty, an existing description is removed.
-     * 
+     *
      * @param connectors
      *            with the connectors of the widgets to use as description
      */
@@ -1455,7 +1455,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * Gets the connectors that are used as assistive description. Text
      * contained in these connectors will be read by assistive devices when the
      * window is opened.
-     * 
+     *
      * @return list of previously set connectors
      */
     public List<Connector> getAssistiveDescription() {
@@ -1464,14 +1464,14 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     /**
      * Sets the WAI-ARIA role the window.
-     * 
+     *
      * This role defines how an assistive device handles a window. Available
      * roles are alertdialog and dialog (@see
      * <a href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
      * Model</a>).
-     * 
+     *
      * The default role is dialog.
-     * 
+     *
      * @param role
      *            WAI-ARIA role to set for the window
      */
@@ -1490,7 +1490,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * The value of the parameter doTabStop is stored and used for non-modal
      * windows. For modal windows, the handlers are always registered, while
      * preserving the stored value.
-     * 
+     *
      * @param doTabStop
      *            true to prevent leaving the window, false to allow leaving the
      *            window for non modal windows
@@ -1507,9 +1507,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     /**
      * Adds a Handler for when user moves the window.
-     * 
+     *
      * @since 7.1.9
-     * 
+     *
      * @return {@link HandlerRegistration} used to remove the handler
      */
     public HandlerRegistration addMoveHandler(WindowMoveHandler handler) {

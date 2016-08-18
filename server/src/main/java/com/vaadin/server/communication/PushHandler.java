@@ -49,7 +49,7 @@ import elemental.json.JsonException;
 /**
  * Handles incoming push connections and messages and dispatches them to the
  * correct {@link UI}/ {@link AtmospherePushConnection}
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -170,7 +170,7 @@ public class PushHandler {
 
     /**
      * Suspends the given resource
-     * 
+     *
      * @since 7.6
      * @param resource
      *            the resource to suspend
@@ -185,7 +185,7 @@ public class PushHandler {
 
     /**
      * Find the UI for the atmosphere resource, lock it and invoke the callback.
-     * 
+     *
      * @param resource
      *            the atmosphere resource for the current request
      * @param callback
@@ -347,7 +347,7 @@ public class PushHandler {
                  * UI not found, could be because FF has asynchronously closed
                  * the websocket connection and Atmosphere has already done
                  * cleanup of the request attributes.
-                 * 
+                 *
                  * In that case, we still have a chance of finding the right UI
                  * by iterating through the UIs in the session looking for one
                  * using the same AtmosphereResource.
@@ -433,10 +433,10 @@ public class PushHandler {
      * two push connections which try to use the same UI. Using the
      * AtmosphereResource directly guarantees the message goes to the correct
      * recipient.
-     * 
+     *
      * @param resource
      *            The atmosphere resource to send refresh to
-     * 
+     *
      */
     private static void sendRefreshAndDisconnect(AtmosphereResource resource)
             throws IOException {
@@ -474,7 +474,7 @@ public class PushHandler {
 
     /**
      * Called when a new push connection is requested to be opened by the client
-     * 
+     *
      * @since 7.5.0
      * @param resource
      *            The related atmosphere resources
@@ -485,7 +485,7 @@ public class PushHandler {
 
     /**
      * Called when a message is received through the push connection
-     * 
+     *
      * @since 7.5.0
      * @param resource
      *            The related atmosphere resources
@@ -497,11 +497,11 @@ public class PushHandler {
 
     /**
      * Sets the timeout used for suspend calls when using long polling.
-     * 
+     *
      * If you are using a proxy with a defined idle timeout, set the suspend
      * timeout to a value smaller than the proxy timeout so that the server is
      * aware of a reconnect taking place.
-     * 
+     *
      * @since 7.6
      * @param suspendTimeout
      *            the timeout to use for suspended AtmosphereResources
@@ -512,7 +512,7 @@ public class PushHandler {
 
     /**
      * Gets the timeout used for suspend calls when using long polling.
-     * 
+     *
      * @since 7.6
      * @return the timeout to use for suspended AtmosphereResources
      */

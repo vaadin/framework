@@ -13,7 +13,7 @@ public class SimpleMultiPartInputStreamTest {
 
     /**
      * Check that the output for a given stream until boundary is as expected.
-     * 
+     *
      * @param input
      * @param boundary
      * @param expected
@@ -86,7 +86,7 @@ public class SimpleMultiPartInputStreamTest {
     /**
      * Note, the boundary in this test is invalid. Boundary strings don't
      * contain CR/LF.
-     * 
+     *
      */
     // public void testRepeatingNewlineBoundary() throws Exception {
     // checkBoundaryDetection("1234567890" + getFullBoundary("\n\n")

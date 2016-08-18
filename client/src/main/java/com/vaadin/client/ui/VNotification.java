@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -108,7 +108,7 @@ public class VNotification extends VOverlay {
     /**
      * @deprecated Use static {@link #createNotification(int)} instead to enable
      *             GWT deferred binding.
-     * 
+     *
      * @param delayMsec
      */
     @Deprecated
@@ -131,7 +131,7 @@ public class VNotification extends VOverlay {
     /**
      * @deprecated Use static {@link #createNotification(int, int, int)} instead
      *             to enable GWT deferred binding.
-     * 
+     *
      * @param delayMsec
      * @param fadeMsec
      * @param startOpacity
@@ -538,7 +538,7 @@ public class VNotification extends VOverlay {
 
     /**
      * Meant for internal usage only.
-     * 
+     *
      * @since 7.5.0
      * @param client
      *            application connection
@@ -593,7 +593,7 @@ public class VNotification extends VOverlay {
      * stack. Can be called when opening other overlays such as subwindows to
      * ensure the notifications receive the events they need and don't linger
      * indefinitely. See #7136.
-     * 
+     *
      * TODO Should this be a generic Overlay feature instead?
      */
     public static void bringNotificationsToFront() {
@@ -606,10 +606,10 @@ public class VNotification extends VOverlay {
     /**
      * Shows an error notification and redirects the user to the given URL when
      * she clicks on the notification.
-     * 
+     *
      * If both message and caption are null, redirects the user to the url
      * immediately
-     * 
+     *
      * @since 7.5.1
      * @param connection
      *            A reference to the ApplicationConnection
@@ -667,7 +667,7 @@ public class VNotification extends VOverlay {
     /**
      * Listens for Notification hide event, and redirects. Used for system
      * messages, such as session expired.
-     * 
+     *
      */
     private static class NotificationRedirect
             implements VNotification.EventListener {

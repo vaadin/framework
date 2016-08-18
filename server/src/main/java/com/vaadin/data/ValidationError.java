@@ -21,7 +21,7 @@ import java.util.Objects;
 /**
  * Represents a validation error. An error contains a reference to a field whose
  * value is invalid and a message describing a validation failure.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  *
@@ -36,7 +36,7 @@ public class ValidationError<V> implements Serializable {
     /**
      * Creates a new instance of ValidationError with provided validated field
      * and error message.
-     * 
+     *
      * @param field
      *            the validated field
      * @param message
@@ -50,7 +50,7 @@ public class ValidationError<V> implements Serializable {
 
     /**
      * Returns a reference to the validated field.
-     * 
+     *
      * @return the validated field
      */
     public HasValue<V> getField() {
@@ -59,7 +59,7 @@ public class ValidationError<V> implements Serializable {
 
     /**
      * Returns a validation error message.
-     * 
+     *
      * @return the validation error message
      */
     public String getMessage() {

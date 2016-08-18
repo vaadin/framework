@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,7 +40,7 @@ import com.vaadin.client.ui.VWindow;
  * disappear with the highlighted widget, and it is also fairly likely that
  * someone else calls {@link #hideAll()} eventually.
  * </p>
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd
  */
@@ -59,7 +59,7 @@ public class Highlight {
      * Pass the returned {@link Element} to {@link #hide(Element)} to remove
      * this particular highlight.
      * </p>
-     * 
+     *
      * @param connector
      *            ComponentConnector
      * @return Highlight element
@@ -75,9 +75,9 @@ public class Highlight {
      * Pass the returned {@link Element} to {@link #hide(Element)} to remove
      * this particular highlight.
      * </p>
-     * 
+     *
      * @since 7.1
-     * 
+     *
      * @param connector
      *            the server connector to highlight
      * @return Highlight element, or <code>null</code> if the connector isn't a
@@ -99,7 +99,7 @@ public class Highlight {
      * Pass the returned {@link Element} to {@link #hide(Element)} to remove
      * this particular highlight.
      * </p>
-     * 
+     *
      * @param connector
      *            ComponentConnector
      * @param color
@@ -120,7 +120,7 @@ public class Highlight {
      * Pass the returned {@link Element} to {@link #hide(Element)} to remove
      * this particular highlight.
      * </p>
-     * 
+     *
      * @param widget
      *            Widget to highlight
      * @return Highlight element
@@ -135,7 +135,7 @@ public class Highlight {
      * Pass the returned {@link Element} to {@link #hide(Element)} to remove
      * this particular highlight.
      * </p>
-     * 
+     *
      * @param widget
      *            Widget to highlight
      * @param color
@@ -155,7 +155,7 @@ public class Highlight {
      * Pass the returned {@link Element} to {@link #hide(Element)} to remove
      * this particular highlight.
      * </p>
-     * 
+     *
      * @param element
      *            Element to highlight
      * @return Highlight element
@@ -170,7 +170,7 @@ public class Highlight {
      * Pass the returned highlight {@link Element} to {@link #hide(Element)} to
      * remove this particular highlight.
      * </p>
-     * 
+     *
      * @param element
      *            Element to highlight
      * @param color
@@ -217,7 +217,7 @@ public class Highlight {
 
     /**
      * Hides the given highlight.
-     * 
+     *
      * @param highlight
      *            Highlight to hide
      */

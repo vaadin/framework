@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,7 +29,7 @@ import com.vaadin.client.widgets.Grid.EditorDomEvent;
 /**
  * The default handler for Grid editor events. Offers several overridable
  * protected methods for easier customization.
- * 
+ *
  * @since 7.6
  * @author Vaadin Ltd
  */
@@ -49,7 +49,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
     /**
      * Returns whether the given event is a touch event that should open the
      * editor.
-     * 
+     *
      * @param event
      *            the received event
      * @return whether the event is a touch open event
@@ -85,7 +85,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
      * Returns whether the given event should open the editor. The default
      * implementation returns true if and only if the event is a doubleclick or
      * if it is a keydown event and the keycode is {@link #KEYCODE_OPEN}.
-     * 
+     *
      * @param event
      *            the received event
      * @return true if the event is an open event, false otherwise
@@ -102,7 +102,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
      * Opens the editor on the appropriate row if the received event is an open
      * event. The default implementation uses
      * {@link #isOpenEvent(EditorDomEvent) isOpenEvent}.
-     * 
+     *
      * @param event
      *            the received event
      * @return true if this method handled the event and nothing else should be
@@ -129,7 +129,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
      * row up or down if the shift key is pressed or not, respectively. Keydown
      * event with keycode {@link #KEYCODE_MOVE_HORIZONTAL} moves the editor left
      * or right if shift key is pressed or not, respectively.
-     * 
+     *
      * @param event
      *            the received event
      * @return true if this method handled the event and nothing else should be
@@ -197,7 +197,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
      * By default the editor is moved on a keydown event with keycode
      * {@link #KEYCODE_MOVE_HORIZONTAL}. This moves the editor left or right if
      * shift key is pressed or not, respectively.
-     * 
+     *
      * @param event
      *            the received event
      * @return true if this method handled the event and nothing else should be
@@ -240,7 +240,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
      * Returns whether the given event should close the editor. The default
      * implementation returns true if and only if the event is a keydown event
      * and the keycode is {@link #KEYCODE_CLOSE}.
-     * 
+     *
      * @param event
      *            the received event
      * @return true if the event is a close event, false otherwise
@@ -254,7 +254,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
     /**
      * Closes the editor if the received event is a close event. The default
      * implementation uses {@link #isCloseEvent(EditorDomEvent) isCloseEvent}.
-     * 
+     *
      * @param event
      *            the received event
      * @return true if this method handled the event and nothing else should be
@@ -290,7 +290,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
      * Triggers a value change event from the editor field if it has focus. This
      * is based on the assumption that editor field will fire the value change
      * when a blur event occurs.
-     * 
+     *
      * @param event
      *            the editor DOM event
      */

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -67,9 +67,9 @@ public class VCaption extends HTML {
 
     /**
      * Creates a caption that is not linked to a {@link ComponentConnector}.
-     * 
+     *
      * When using this constructor, {@link #getOwner()} returns null.
-     * 
+     *
      * @param client
      *            ApplicationConnection
      * @deprecated all captions should be associated with a paintable widget and
@@ -88,7 +88,7 @@ public class VCaption extends HTML {
 
     /**
      * Creates a caption for a {@link ComponentConnector}.
-     * 
+     *
      * @param component
      *            owner of caption, not null
      * @param client
@@ -130,10 +130,10 @@ public class VCaption extends HTML {
 
     /**
      * Updates the caption from UIDL.
-     * 
+     *
      * This method may only be called when the caption has an owner - otherwise,
      * use {@link #updateCaptionWithoutOwner(UIDL, String, boolean, boolean)}.
-     * 
+     *
      * @return true if the position where the caption should be placed has
      *         changed
      */
@@ -477,7 +477,7 @@ public class VCaption extends HTML {
     /**
      * Checks whether anything in a given state change might cause the caption
      * to change.
-     * 
+     *
      * @param event
      *            the state change event to check
      * @return <code>true</code> if the caption might have changed; otherwise
@@ -499,7 +499,7 @@ public class VCaption extends HTML {
 
     /**
      * Returns Paintable for which this Caption belongs to.
-     * 
+     *
      * @return owner Widget
      */
     public ComponentConnector getOwner() {
@@ -664,7 +664,7 @@ public class VCaption extends HTML {
 
     /**
      * Sets the tooltip that should be shown for the caption
-     * 
+     *
      * @param tooltipInfo
      *            The tooltip that should be shown or null if no tooltip should
      *            be shown
@@ -675,7 +675,7 @@ public class VCaption extends HTML {
 
     /**
      * Returns the tooltip that should be shown for the caption
-     * 
+     *
      * @return The tooltip to show or null if no tooltip should be shown
      */
     public TooltipInfo getTooltipInfo() {
@@ -704,7 +704,7 @@ public class VCaption extends HTML {
      * Sets whether the caption is rendered as HTML.
      * <p>
      * Default is false
-     * 
+     *
      * @param captionAsHtml
      *            true if the captions are rendered as HTML, false if rendered
      *            as plain text
@@ -717,7 +717,7 @@ public class VCaption extends HTML {
      * Checks whether captions are rendered as HTML.
      * <p>
      * Default is false
-     * 
+     *
      * @return true if the captions are rendered as HTML, false if rendered as
      *         plain text
      */
@@ -731,7 +731,7 @@ public class VCaption extends HTML {
      * <p>
      * Uses {@link AbstractComponentState#captionAsHtml} to determine whether to
      * set the caption as html or plain text
-     * 
+     *
      * @since 7.4
      * @param captionElement
      *            the target element
@@ -753,7 +753,7 @@ public class VCaption extends HTML {
      * <p>
      * Uses {@link AbstractComponentState#captionAsHtml} to determine whether to
      * set the caption as html or plain text
-     * 
+     *
      * @since 7.4
      * @param widget
      *            the target widget

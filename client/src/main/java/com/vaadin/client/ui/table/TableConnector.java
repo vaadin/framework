@@ -73,7 +73,7 @@ public class TableConnector extends AbstractFieldConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.AbstractComponentConnector#onUnregister()
      */
     @Override
@@ -143,7 +143,7 @@ public class TableConnector extends AbstractFieldConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.Paintable#updateFromUIDL(com.vaadin.client.UIDL,
      * com.vaadin.client.ApplicationConnection)
      */
@@ -461,7 +461,7 @@ public class TableConnector extends AbstractFieldConnector
     /**
      * Shows a saved row context menu if the row for the context menu is still
      * visible. Does nothing if a context menu has not been saved.
-     * 
+     *
      * @param savedContextMenu
      */
     public void showSavedContextMenu(ContextMenuDetails savedContextMenu) {

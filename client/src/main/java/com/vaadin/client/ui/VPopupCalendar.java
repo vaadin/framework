@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -57,12 +57,12 @@ import com.vaadin.shared.ui.datefield.Resolution;
 /**
  * Represents a date selection component with a text field and a popup date
  * selector.
- * 
+ *
  * <b>Note:</b> To change the keyboard assignments used in the popup dialog you
  * should extend <code>com.vaadin.client.ui.VCalendarPanel</code> and then pass
  * set it by calling the <code>setCalendarPanel(VCalendarPanel panel)</code>
  * method.
- * 
+ *
  */
 public class VPopupCalendar extends VTextualDate
         implements Field, ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
@@ -255,7 +255,7 @@ public class VPopupCalendar extends VTextualDate
 
     /**
      * Checks whether the text field is enabled.
-     * 
+     *
      * @see VPopupCalendar#setTextFieldEnabled(boolean)
      * @return The current state of the text field.
      */
@@ -268,7 +268,7 @@ public class VPopupCalendar extends VTextualDate
      * field is enabled. Disabling it causes only the button for date selection
      * to be active, thus preventing the user from entering invalid dates. See
      * {@link http://dev.vaadin.com/ticket/6790}.
-     * 
+     *
      * @param state
      */
     public void setTextFieldEnabled(boolean textFieldEnabled) {
@@ -312,7 +312,7 @@ public class VPopupCalendar extends VTextualDate
      * Set correct tab index for disabled text field in IE as the value set in
      * setTextFieldEnabled(...) gets overridden in
      * TextualDateConnection.updateFromUIDL(...)
-     * 
+     *
      * @since 7.3.1
      */
     public void setTextFieldTabIndex() {
@@ -365,7 +365,7 @@ public class VPopupCalendar extends VTextualDate
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.user.client.ui.UIObject#setStyleName(java.lang.String)
      */
@@ -418,7 +418,7 @@ public class VPopupCalendar extends VTextualDate
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event
      * .dom.client.ClickEvent)
@@ -435,7 +435,7 @@ public class VPopupCalendar extends VTextualDate
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.logical.shared.CloseHandler#onClose(com.google.gwt
      * .event.logical.shared.CloseEvent)
@@ -465,7 +465,7 @@ public class VPopupCalendar extends VTextualDate
 
     /**
      * Sets focus to Calendar panel.
-     * 
+     *
      * @param focus
      */
     public void setFocus(boolean focus) {
@@ -485,7 +485,7 @@ public class VPopupCalendar extends VTextualDate
      * Sets the content of a special field for assistive devices, so that they
      * can recognize the change and inform the user (reading out in case of
      * screen reader)
-     * 
+     *
      * @param selectedDate
      *            Date that is currently selected
      */
@@ -496,7 +496,7 @@ public class VPopupCalendar extends VTextualDate
 
     /**
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @see com.vaadin.client.ui.VTextualDate#buildDate()
      */
     @Override
@@ -514,7 +514,7 @@ public class VPopupCalendar extends VTextualDate
 
     /**
      * Update the text field contents from the date. See {@link #buildDate()}.
-     * 
+     *
      * @param forceValid
      *            true to force the text field to be updated, false to only
      *            update if the parsable flag is true.
@@ -528,7 +528,7 @@ public class VPopupCalendar extends VTextualDate
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.VDateField#onBrowserEvent(com.google
      * .gwt.user.client.Event)
      */
@@ -545,7 +545,7 @@ public class VPopupCalendar extends VTextualDate
     /**
      * Get the key code that opens the calendar panel. By default it is the down
      * key but you can override this to be whatever you like
-     * 
+     *
      * @return
      */
     protected int getOpenCalenderPanelKey() {
@@ -587,7 +587,7 @@ public class VPopupCalendar extends VTextualDate
     /**
      * Set a description that explains the usage of the Widget for users of
      * assistive devices.
-     * 
+     *
      * @param descriptionForAssistiveDevices
      *            String with the description
      */
@@ -600,7 +600,7 @@ public class VPopupCalendar extends VTextualDate
     /**
      * Get the description that explains the usage of the Widget for users of
      * assistive devices.
-     * 
+     *
      * @return String with the description
      */
     public String getDescriptionForAssistiveDevices() {
@@ -611,7 +611,7 @@ public class VPopupCalendar extends VTextualDate
      * Sets the start range for this component. The start range is inclusive,
      * and it depends on the current resolution, what is considered inside the
      * range.
-     * 
+     *
      * @param startDate
      *            - the allowed range's start date
      */
@@ -622,7 +622,7 @@ public class VPopupCalendar extends VTextualDate
     /**
      * Sets the end range for this component. The end range is inclusive, and it
      * depends on the current resolution, what is considered inside the range.
-     * 
+     *
      * @param endDate
      *            - the allowed range's end date
      */

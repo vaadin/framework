@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -53,7 +53,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.user.client.ui.Panel#add(com.google.gwt.user.client.ui
      * .Widget)
@@ -67,7 +67,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.user.client.ui.ComplexPanel#remove(com.google.gwt.user
      * .client.ui.Widget)
@@ -84,7 +84,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     /**
      * Does this layout contain a widget
-     * 
+     *
      * @param widget
      *            The widget to check
      * @return Returns true if the widget is in this layout, false if not
@@ -95,7 +95,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.gwt.user.client.ui.ComplexPanel#getWidget(int)
      */
     @Override
@@ -115,7 +115,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.gwt.user.client.ui.ComplexPanel#getWidgetCount()
      */
     @Override
@@ -131,7 +131,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.user.client.ui.ComplexPanel#getWidgetIndex(com.google.
      * gwt.user.client.ui.Widget)
@@ -153,7 +153,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     /**
      * Sets a caption for a contained widget
-     * 
+     *
      * @param child
      *            The child widget to set the caption for
      * @param caption
@@ -178,7 +178,7 @@ public class VAbsoluteLayout extends ComplexPanel {
     /**
      * Set the position of the widget in the layout. The position is a CSS
      * property string using properties such as top,left,right,top
-     * 
+     *
      * @param child
      *            The child widget to set the position for
      * @param position
@@ -193,7 +193,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     /**
      * Get the caption for a widget
-     * 
+     *
      * @param child
      *            The child widget to get the caption of
      */
@@ -207,7 +207,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     /**
      * Get the pixel width of an slot in the layout
-     * 
+     *
      * @param child
      *            The widget in the layout.
      * @return Returns the size in pixels, or 0 if child is not in the layout
@@ -222,7 +222,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     /**
      * Get the pixel height of an slot in the layout
-     * 
+     *
      * @param child
      *            The widget in the layout
      * @return Returns the size in pixels, or 0 if the child is not in the
@@ -238,7 +238,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     /**
      * Get the wrapper for a widget
-     * 
+     *
      * @param child
      *            The child to get the wrapper for
      * @return
@@ -257,7 +257,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.user.client.ui.UIObject#setStylePrimaryName(java.lang.
      * String)
@@ -269,7 +269,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.user.client.ui.UIObject#setStyleName(java.lang.String)
      */
@@ -282,7 +282,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     /**
      * Updates all style names contained in the layout
-     * 
+     *
      * @param primaryStyleName
      *            The style name to use as primary
      */
@@ -347,7 +347,7 @@ public class VAbsoluteLayout extends ComplexPanel {
     /**
      * Sets style names for the wrapper wrapping the widget in the layout. The
      * style names will be prefixed with v-absolutelayout-wrapper.
-     * 
+     *
      * @param widget
      *            The widget which wrapper we want to add the stylenames to
      * @param stylenames
@@ -379,7 +379,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
         /**
          * Constructor
-         * 
+         *
          * @param child
          *            The child to wrap
          */
@@ -396,7 +396,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
         /**
          * Set the caption for the wrapper
-         * 
+         *
          * @param caption
          *            The caption for the wrapper
          */
@@ -421,7 +421,7 @@ public class VAbsoluteLayout extends ComplexPanel {
 
         /**
          * Set the position for the wrapper in the layout
-         * 
+         *
          * @param position
          *            The position string
          */
@@ -483,7 +483,7 @@ public class VAbsoluteLayout extends ComplexPanel {
         /**
          * Sets the style names of the wrapper. Will be prefixed with the
          * v-absolutelayout-wrapper prefix
-         * 
+         *
          * @param stylenames
          *            The wrapper style names
          */

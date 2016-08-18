@@ -47,7 +47,7 @@ public class Ticket2021 extends LegacyApplication {
         layout.addComponent(tf1);
 
         /*
-         * 
+         *
          * OrderedLayout
          */
 
@@ -68,7 +68,7 @@ public class Ticket2021 extends LegacyApplication {
         layout2.addComponent(tf2);
 
         /*
-         * 
+         *
          * GridLayout
          */
 

@@ -10,7 +10,7 @@ import com.vaadin.ui.VerticalLayout;
  * Mini tutorial code for
  * https://vaadin.com/wiki/-/wiki/Main/Using%20Components%
  * 20in%20the%20shared%20state
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */

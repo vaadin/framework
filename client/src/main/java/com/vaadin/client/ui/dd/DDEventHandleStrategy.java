@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,9 +27,9 @@ import com.vaadin.client.ui.dd.VDragAndDropManager.DDManagerMediator;
 
 /**
  * Strategy to handle native preview events for VDragAndDropManager.
- * 
+ *
  * The strategy could be overridden via GWT Deferred Binding mechanism.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.4.4
  */
@@ -37,7 +37,7 @@ public class DDEventHandleStrategy {
 
     /**
      * Returns {@code true} if {@code event} interrupts Drag and Drop.
-     * 
+     *
      * @param event
      *            GWT event to handle
      * @param mediator
@@ -58,9 +58,9 @@ public class DDEventHandleStrategy {
 
     /**
      * Handles key down {@code event}.
-     * 
+     *
      * Default implementation doesn't do anything.
-     * 
+     *
      * @param event
      *            key down GWT event
      * @param mediator
@@ -73,7 +73,7 @@ public class DDEventHandleStrategy {
 
     /**
      * Get target element for {@code event}.
-     * 
+     *
      * @param event
      *            GWT event to find target
      * @param mediator
@@ -113,7 +113,7 @@ public class DDEventHandleStrategy {
      * drag image. This value will be passed to the
      * {@link #restoreDragImage(String, DDManagerMediator, NativePreviewEvent)}
      * method.
-     * 
+     *
      * @param event
      *            GWT event for active DnD operation
      * @param mediator
@@ -139,7 +139,7 @@ public class DDEventHandleStrategy {
     /**
      * Restores drag image after temporary update by
      * {@link #updateDragImage(NativePreviewEvent, DDManagerMediator)}.
-     * 
+     *
      * @param originalImageDisplay
      *            original "display" CSS style property of drag image element
      * @param mediator
@@ -160,9 +160,9 @@ public class DDEventHandleStrategy {
      * Handles event when drag image element (
      * {@link VDragAndDropManager#getDragElement()} return value) is not null or
      * {@code event} is touch event.
-     * 
+     *
      * If method returns {@code true} then event processing will be stoped.
-     * 
+     *
      * @param target
      *            target element over which DnD event has happened
      * @param event
@@ -212,7 +212,7 @@ public class DDEventHandleStrategy {
 
     /**
      * Handles drag enter on new element.
-     * 
+     *
      * @param mediator
      *            VDragAndDropManager data accessor
      * @param target
@@ -228,7 +228,7 @@ public class DDEventHandleStrategy {
 
     /**
      * Handles drag over on element.
-     * 
+     *
      * @param mediator
      *            VDragAndDropManager data accessor
      * @param target
@@ -242,7 +242,7 @@ public class DDEventHandleStrategy {
 
     /**
      * Final phase of event handling.
-     * 
+     *
      * @param targetElement
      *            target element over which DnD event has happened
      * @param event
@@ -274,7 +274,7 @@ public class DDEventHandleStrategy {
 
     /**
      * Called to handle {@link Event#ONMOUSEMOVE} event.
-     * 
+     *
      * @param target
      *            target element over which DnD event has happened
      * @param event
@@ -293,7 +293,7 @@ public class DDEventHandleStrategy {
 
     /**
      * Called to handle {@link Event#ONTOUCHEND} event.
-     * 
+     *
      * @param target
      *            target element over which DnD event has happened
      * @param event
@@ -310,7 +310,7 @@ public class DDEventHandleStrategy {
 
     /**
      * Called to handle {@link Event#ONMOUSEUP} event.
-     * 
+     *
      * @param target
      *            target element over which DnD event has happened
      * @param event
@@ -325,7 +325,7 @@ public class DDEventHandleStrategy {
 
     /**
      * Called to handle {@link Event#ONMOUSEOUT} event.
-     * 
+     *
      * @param target
      *            target element over which DnD event has happened
      * @param event
@@ -354,7 +354,7 @@ public class DDEventHandleStrategy {
 
     /**
      * Handles drag leave on old element.
-     * 
+     *
      * @param mediator
      *            VDragAndDropManager data accessor
      */
@@ -372,7 +372,7 @@ public class DDEventHandleStrategy {
 
     /**
      * Called to handle {@link Event#ONMOUSEOVER} event.
-     * 
+     *
      * @param target
      *            target element over which DnD event has happened
      * @param event
@@ -404,7 +404,7 @@ public class DDEventHandleStrategy {
 
     /**
      * Find drag handler for the {@code target} element.
-     * 
+     *
      * @param target
      *            target element over which DnD event has happened
      * @param mediator

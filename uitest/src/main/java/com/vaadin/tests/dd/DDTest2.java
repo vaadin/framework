@@ -73,7 +73,7 @@ public class DDTest2 extends TestBase {
         /*
          * An example of lazy initializing drop criterion with component
          * specific api for easy rule writing.
-         * 
+         *
          * Example is pretty stupid (accepts drop on all nodes, but by
          * explicitly defining them here), but demonstrates lazy initialization
          * option if rules are heavy.

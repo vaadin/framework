@@ -50,7 +50,7 @@ public class CustomUIClassLoaderTest {
     /**
      * Tests that a UI class can be loaded even if no classloader has been
      * provided.
-     * 
+     *
      * @throws Exception
      *             if thrown
      */
@@ -96,7 +96,7 @@ public class CustomUIClassLoaderTest {
     /**
      * Tests that the ClassLoader passed in the ApplicationStartEvent is used to
      * load UI classes.
-     * 
+     *
      * @throws Exception
      *             if thrown
      */

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,7 +24,7 @@ import com.vaadin.client.widget.grid.RendererCellReference;
 
 /**
  * A renderer for rendering dates into cells
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -57,7 +57,7 @@ public class DateRenderer implements Renderer<Date> {
 
     /**
      * Gets the format of how the date is formatted.
-     * 
+     *
      * @return the format
      * @see <a href=
      *      "http://www.gwtproject.org/javadoc/latest/com/google/gwt/i18n/shared/DateTimeFormat.html">GWT
@@ -69,7 +69,7 @@ public class DateRenderer implements Renderer<Date> {
 
     /**
      * Sets the format used for formatting the dates.
-     * 
+     *
      * @param format
      *            the format to set
      * @see <a href=
@@ -85,7 +85,7 @@ public class DateRenderer implements Renderer<Date> {
 
     /**
      * Returns the time zone of the date.
-     * 
+     *
      * @return the time zone
      */
     public TimeZone getTimeZone() {
@@ -95,7 +95,7 @@ public class DateRenderer implements Renderer<Date> {
     /**
      * Sets the time zone of the the date. By default uses the time zone of the
      * browser.
-     * 
+     *
      * @param timeZone
      *            the timeZone to set
      */

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,7 +26,7 @@ package com.vaadin.client.widget.escalator;
  * <p>
  * This has a similar function to {@link Grid Grid's} {@link Renderer Renderers}
  * , although they operate on different abstraction levels.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  * @see RowContainer#setEscalatorUpdater(EscalatorUpdater)
@@ -84,7 +84,7 @@ public interface EscalatorUpdater {
      * <p>
      * For performance reasons, the escalator will never autonomously clear any
      * data in a cell.
-     * 
+     *
      * @param row
      *            Information about the row that is being updated.
      *            <em>Note:</em> You should not store nor reuse this reference.
@@ -97,7 +97,7 @@ public interface EscalatorUpdater {
 
     /**
      * Called before attaching new cells to the escalator.
-     * 
+     *
      * @param row
      *            Information about the row to which the cells will be added.
      *            <em>Note:</em> You should not store nor reuse this reference.
@@ -105,13 +105,13 @@ public interface EscalatorUpdater {
      *            A collection of cells that are about to be attached.
      *            <em>Note:</em> You should neither store nor reuse the
      *            reference to the iterable, nor to the individual cells.
-     * 
+     *
      */
     public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach);
 
     /**
      * Called after attaching new cells to the escalator.
-     * 
+     *
      * @param row
      *            Information about the row to which the cells were added.
      *            <em>Note:</em> You should not store nor reuse this reference.
@@ -119,13 +119,13 @@ public interface EscalatorUpdater {
      *            A collection of cells that were attached. <em>Note:</em> You
      *            should neither store nor reuse the reference to the iterable,
      *            nor to the individual cells.
-     * 
+     *
      */
     public void postAttach(Row row, Iterable<FlyweightCell> attachedCells);
 
     /**
      * Called before detaching cells from the escalator.
-     * 
+     *
      * @param row
      *            Information about the row from which the cells will be
      *            removed. <em>Note:</em> You should not store nor reuse this
@@ -134,13 +134,13 @@ public interface EscalatorUpdater {
      *            A collection of cells that are about to be detached.
      *            <em>Note:</em> You should neither store nor reuse the
      *            reference to the iterable, nor to the individual cells.
-     * 
+     *
      */
     public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach);
 
     /**
      * Called after detaching cells from the escalator.
-     * 
+     *
      * @param row
      *            Information about the row from which the cells were removed.
      *            <em>Note:</em> You should not store nor reuse this reference.
@@ -148,7 +148,7 @@ public interface EscalatorUpdater {
      *            A collection of cells that were detached. <em>Note:</em> You
      *            should neither store nor reuse the reference to the iterable,
      *            nor to the individual cells.
-     * 
+     *
      */
     public void postDetach(Row row, Iterable<FlyweightCell> detachedCells);
 

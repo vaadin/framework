@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -48,7 +48,7 @@ public interface HasValue<V> extends Serializable {
         /**
          * Creates a new {@code ValueChange} event containing the current value
          * of the given value-bearing source connector.
-         * 
+         *
          * @param <C>
          *            the type of the source connector
          * @param source
@@ -66,7 +66,7 @@ public interface HasValue<V> extends Serializable {
 
         /**
          * Returns the new value of the source connector.
-         * 
+         *
          * @return the new value
          */
         public V getValue() {
@@ -76,7 +76,7 @@ public interface HasValue<V> extends Serializable {
         /**
          * Returns whether this event was triggered by user interaction, on the
          * client side, or programmatically, on the server side.
-         * 
+         *
          * @return {@code true} if this event originates from the client,
          *         {@code false} otherwise.
          */
@@ -90,7 +90,7 @@ public interface HasValue<V> extends Serializable {
      *
      * @param <V>
      *            the value type
-     * 
+     *
      * @see ValueChange
      * @see Registration
      */
@@ -101,7 +101,7 @@ public interface HasValue<V> extends Serializable {
         /**
          * Invoked when this listener receives a value change event from an
          * event source to which it has been added.
-         * 
+         *
          * @param event
          *            the received event, not null
          */
@@ -121,7 +121,7 @@ public interface HasValue<V> extends Serializable {
      * <p>
      * <i>Implementation note:</i> the implementing class should document
      * whether null values are accepted or not.
-     * 
+     *
      * @param value
      *            the new value
      * @throws IllegalArgumentException
@@ -134,7 +134,7 @@ public interface HasValue<V> extends Serializable {
      * <p>
      * <i>Implementation note:</i> the implementing class should document
      * whether null values may be returned or not.
-     * 
+     *
      * @return the current value
      */
     public V getValue();
@@ -143,7 +143,7 @@ public interface HasValue<V> extends Serializable {
      * Adds an {@link ValueChangeListener}. The listener is called when the
      * value of this {@code hasValue} is changed either by the user or
      * programmatically.
-     * 
+     *
      * @param listener
      *            the value change listener, not null
      * @return a registration for the listener

@@ -38,7 +38,7 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
     }
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,7 +40,7 @@ import com.vaadin.client.ui.ui.UIConnector;
  * The VaadinFinder locator strategy implements an XPath-like syntax for
  * locating elements in Vaadin applications. This is used in the new
  * VaadinFinder API in TestBench 4.
- * 
+ *
  * Examples of the supported syntax:
  * <ul>
  * <li>Find the third text field in the DOM: {@code //VTextField[2]}</li>
@@ -49,7 +49,7 @@ import com.vaadin.client.ui.ui.UIConnector;
  * <li>Find the first column on the third row of the "Accounts" table:
  * {@code //VScrollTable[caption="Accounts"]#row[2]/col[0]}</li>
  * </ul>
- * 
+ *
  * @since 7.2
  * @author Vaadin Ltd
  */
@@ -130,7 +130,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * Search different queries for the best one. Use the fact that the lowest
      * possible index is with the last selector. Last selector is the full
      * search path containing the complete Component hierarchy.
-     * 
+     *
      * @param selectors
      *            List of selectors
      * @param target
@@ -175,7 +175,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * Function to generate all possible search paths for given component list.
      * Function strips out all the com.vaadin.ui. prefixes from elements as this
      * functionality makes generating a query later on easier.
-     * 
+     *
      * @param components
      *            List of components
      * @return List of Vaadin selectors
@@ -210,7 +210,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
     /**
      * Helper method to get the string-form value of a named property of a
      * component connector
-     * 
+     *
      * @since 7.2
      * @param c
      *            any ComponentConnector instance
@@ -233,7 +233,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * Generate a list representing the top-to-bottom connector hierarchy for
      * any given element. ConnectorPath element provides long- and short names,
      * as well as connector and widget root element references.
-     * 
+     *
      * @since 7.2
      * @param elem
      *            any Element that is part of a widget hierarchy
@@ -376,7 +376,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
     /**
      * Special case for finding notifications as they have no connectors and are
      * directly attached to {@link RootPanel}.
-     * 
+     *
      * @param path
      *            The path of the notification, should be
      *            {@code "//VNotification"} optionally followed by an index in
@@ -412,7 +412,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
     /**
      * Finds a list of elements by the specified path, starting traversal of the
      * connector hierarchy from the specified root.
-     * 
+     *
      * @param path
      *            the locator path
      * @param root
@@ -458,7 +458,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * Recursively finds connectors for the elements identified by the provided
      * path by traversing the connector hierarchy starting from {@code parents}
      * connectors.
-     * 
+     *
      * @param path
      *            The path identifying elements.
      * @param parents
@@ -492,7 +492,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * Go through a list of potentially matching components, modifying that list
      * until all elements that remain in that list match the complete list of
      * predicates.
-     * 
+     *
      * @param potentialMatches
      *            a list of component connectors. Will be changed.
      * @param predicates
@@ -539,10 +539,10 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * Collects all connectors that match the widget class name of the path
      * fragment. If the {@code collectRecursively} parameter is true, a
      * depth-first search of the connector hierarchy is performed.
-     * 
+     *
      * Searching depth-first ensure that we can return the matches in correct
      * order for selecting based on index predicates.
-     * 
+     *
      * @param parent
      *            The {@link ComponentConnector} to start the search from.
      * @param pathFragment
@@ -596,7 +596,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * Determines whether a connector matches a path fragment. This is done by
      * comparing the path fragment to the name of the widget type of the
      * connector.
-     * 
+     *
      * @param connector
      *            The connector to compare.
      * @param widgetName
@@ -657,7 +657,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
     /**
      * Extracts the name of the widget class from a path fragment
-     * 
+     *
      * @param pathFragment
      *            the path fragment
      * @return the name of the widget class.
@@ -676,7 +676,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * two elements, where the first element is the first path fragment and the
      * second element is the rest of the path (all remaining path fragments
      * untouched).
-     * 
+     *
      * @param path
      *            The path to split.
      * @return An array of two elements: The first path fragment and the rest of
@@ -708,7 +708,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.client.componentlocator.LocatorStrategy#validatePath(java.
      * lang.String)
@@ -725,9 +725,9 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * Go through a list, removing all duplicate elements from it. This method
      * is used to avoid accumulation of duplicate entries in result lists
      * resulting from low-context recursion.
-     * 
+     *
      * Preserves first entry in list, removes others. Preserves list order.
-     * 
+     *
      * @return list passed as parameter, after modification
      */
     private final <T> List<T> eliminateDuplicates(List<T> list) {

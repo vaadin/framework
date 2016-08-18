@@ -79,7 +79,7 @@ public final class CvalAddonsChecker {
 
     /**
      * Visit all MANIFEST.MF files in the classpath validating licenses.
-     * 
+     *
      * Return a list of Cval licensed products in order to have enough info to
      * generate nag messages in the UI.
      */
@@ -151,7 +151,7 @@ public final class CvalAddonsChecker {
 
     /**
      * Set the filter regexp of .jar names which we have to consider.
-     * 
+     *
      * default is '.*touchkit.*'
      */
     public CvalAddonsChecker setFilter(String regexp) {

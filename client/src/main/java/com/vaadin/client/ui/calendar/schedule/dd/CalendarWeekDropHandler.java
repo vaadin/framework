@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import com.vaadin.client.ui.dd.VDragEvent;
  * Handles DD when the weekly view is showing in the Calendar. In the weekly
  * view, drops are only allowed in the the time slots for each day. The slot
  * index and the day index are included in the drop details sent to the server.
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd.
  */
@@ -43,7 +43,7 @@ public class CalendarWeekDropHandler extends CalendarDropHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler#dragAccepted
      * (com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
@@ -76,7 +76,7 @@ public class CalendarWeekDropHandler extends CalendarDropHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler#dragOver(com
      * .vaadin.terminal.gwt.client.ui.dd.VDragEvent)
@@ -95,7 +95,7 @@ public class CalendarWeekDropHandler extends CalendarDropHandler {
 
     /**
      * Checks if the location is a valid drop location
-     * 
+     *
      * @param elementOver
      *            The element to check
      * @return
@@ -127,7 +127,7 @@ public class CalendarWeekDropHandler extends CalendarDropHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler#dragEnter(com
      * .vaadin.terminal.gwt.client.ui.dd.VDragEvent)
@@ -139,7 +139,7 @@ public class CalendarWeekDropHandler extends CalendarDropHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler#drop(com.vaadin
      * .terminal.gwt.client.ui.dd.VDragEvent)
@@ -159,7 +159,7 @@ public class CalendarWeekDropHandler extends CalendarDropHandler {
 
     /**
      * Update the drop details sent to the server
-     * 
+     *
      * @param drag
      *            The drag event
      */
@@ -174,7 +174,7 @@ public class CalendarWeekDropHandler extends CalendarDropHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler#dragLeave(com
      * .vaadin.terminal.gwt.client.ui.dd.VDragEvent)

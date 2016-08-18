@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,7 +40,7 @@ import elemental.json.JsonValue;
  * <p>
  * Internally uses {@link XhrConnection} and/or {@link PushConnection} for
  * delivering messages, depending on the application configuration.
- * 
+ *
  * @since 7.6
  * @author Vaadin Ltd
  */
@@ -94,7 +94,7 @@ public class MessageSender {
     /**
      * Sends all pending method invocations (server RPC and legacy variable
      * changes) to the server.
-     * 
+     *
      */
     private void doSendInvocationsToServer() {
 
@@ -137,7 +137,7 @@ public class MessageSender {
 
     /**
      * Makes an UIDL request to the server.
-     * 
+     *
      * @param reqInvocations
      *            Data containing RPC invocations and all related information.
      * @param extraParams
@@ -172,7 +172,7 @@ public class MessageSender {
     /**
      * Sends an asynchronous or synchronous UIDL request to the server using the
      * given URI.
-     * 
+     *
      * @param uri
      *            The URI to use for the request. May includes GET parameters
      * @param payload
@@ -188,7 +188,7 @@ public class MessageSender {
 
     /**
      * Sets the status for the push connection.
-     * 
+     *
      * @param enabled
      *            <code>true</code> to enable the push connection;
      *            <code>false</code> to disable the push connection.
@@ -275,7 +275,7 @@ public class MessageSender {
     /**
      * Runs possibly registered client side post request hooks. This is expected
      * to be run after each uidl request made by Vaadin application.
-     * 
+     *
      * @param appId
      */
     public static native void runPostRequestHooks(String appId)
@@ -295,7 +295,7 @@ public class MessageSender {
     /**
      * If on Liferay and logged in, ask the client side session management
      * JavaScript to extend the session duration.
-     * 
+     *
      * Otherwise, Liferay client side JavaScript will explicitly expire the
      * session even though the server side considers the session to be active.
      * See ticket #8305 for more information.
@@ -314,7 +314,7 @@ public class MessageSender {
     /**
      * Indicates whether or not there are currently active UIDL requests. Used
      * internally to sequence requests properly, seldom needed in Widgets.
-     * 
+     *
      * @return true if there are active requests
      */
     public boolean hasActiveRequest() {
@@ -324,7 +324,7 @@ public class MessageSender {
     /**
      * Returns a human readable string representation of the method used to
      * communicate with the server.
-     * 
+     *
      * @return A string representation of the current transport type
      */
     public String getCommunicationMethodName() {
@@ -366,7 +366,7 @@ public class MessageSender {
 
     /**
      * Used internally to update what the server expects
-     * 
+     *
      * @param clientToServerMessageId
      *            the new client id to set
      * @param force

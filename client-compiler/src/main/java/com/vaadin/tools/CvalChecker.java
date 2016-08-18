@@ -52,10 +52,10 @@ public final class CvalChecker {
 
     /*
      * Class used for binding the JSON gotten from server.
-     * 
+     *
      * It is not in a separate f le, so as it is easier to copy into any product
      * which does not depend on vaadin core.
-     * 
+     *
      * We are using elemental.json in order not to use additional dependency
      * like auto-beans, gson, etc.
      */

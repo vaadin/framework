@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,9 +29,9 @@ import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
  * data and the {@link #getAcceptCriterion()} method contains the (possibly
  * client side verifiable) criterion whether the dragged data will be handled at
  * all.
- * 
+ *
  * @since 6.3
- * 
+ *
  */
 public interface DropHandler extends Serializable {
 
@@ -41,7 +41,7 @@ public interface DropHandler extends Serializable {
      * {@link AcceptCriterion} defined by {@link #getAcceptCriterion()} method.
      * The actual business logic of drag and drop operation is implemented into
      * this method.
-     * 
+     *
      * @param event
      *            the event related to this drop
      */
@@ -65,7 +65,7 @@ public interface DropHandler extends Serializable {
      * If developer wants to handle everything in the
      * {@link #drop(DragAndDropEvent)} method, {@link AcceptAll} instance can be
      * returned.
-     * 
+     *
      * @return the {@link AcceptCriterion}
      */
     public AcceptCriterion getAcceptCriterion();

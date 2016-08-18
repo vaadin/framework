@@ -6,7 +6,7 @@ import com.vaadin.shared.ui.Connect;
 /**
  * Connects server-side <code>IdTestLabel</code> component to client-side
  * {@link VIdTestLabel} component (#10179).
- * 
+ *
  */
 @Connect(com.vaadin.tests.widgetset.server.IdTestLabel.class)
 public class IdTestLabelConnector extends LabelConnector {

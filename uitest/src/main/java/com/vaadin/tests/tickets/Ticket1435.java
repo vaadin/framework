@@ -38,7 +38,7 @@ public class Ticket1435 extends LegacyApplication {
     /**
      * A ButtonPanel is a Panel, which has context specific Buttons in its
      * header.
-     * 
+     *
      * ButtonPanel also provides buttons for controlling its visibility
      * (collapse/expand).
      */

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -51,7 +51,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
     /**
      * Creates a new freeform query delegate to be used with the
      * {@link SQLContainer}.
-     * 
+     *
      * @param queryString
      *            The actual query to perform.
      * @param primaryKeyColumns
@@ -88,7 +88,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
     /**
      * Creates a new freeform query delegate to be used with the
      * {@link SQLContainer}.
-     * 
+     *
      * @param queryString
      *            The actual query to perform.
      * @param connectionPool
@@ -107,7 +107,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
      * This implementation of getCount() actually fetches all records from the
      * database, which might be a performance issue. Override this method with a
      * SELECT COUNT(*) ... query if this is too slow for your needs.
-     * 
+     *
      * {@inheritDoc}
      */
     @Override
@@ -204,9 +204,9 @@ public class FreeformQuery extends AbstractTransactionalQuery
      * order to support lazy loading of records, you must supply a
      * FreeformQueryDelegate that implements the
      * FreeformQueryDelegate.getQueryString(int,int) method.
-     * 
+     *
      * @throws SQLException
-     * 
+     *
      * @see FreeformQueryDelegate#getQueryString(int, int)
      */
     @Override
@@ -280,7 +280,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#setFilters(java
      * .util.List)
@@ -298,7 +298,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#setOrderBy(java
      * .util.List)
@@ -316,7 +316,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#storeRow(com.vaadin
      * .data.util.sqlcontainer.RowItem)
@@ -339,7 +339,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.util.sqlcontainer.query.QueryDelegate#removeRow(com.
      * vaadin .data.util.sqlcontainer.RowItem)
      */
@@ -379,7 +379,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.util.sqlcontainer.query.QueryDelegate#
      * getPrimaryKeyColumns ()
      */
@@ -407,9 +407,9 @@ public class FreeformQuery extends AbstractTransactionalQuery
      * situations where this logic is not enough, you can implement the
      * getContainsRowQueryString method in FreeformQueryDelegate and this will
      * be used instead of the logic.
-     * 
+     *
      * @see FreeformQueryDelegate#getContainsRowQueryString(Object...)
-     * 
+     *
      */
     @Override
     @SuppressWarnings("deprecation")

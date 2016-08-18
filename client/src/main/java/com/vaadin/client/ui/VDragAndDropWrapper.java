@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -60,11 +60,11 @@ import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 
 /**
- * 
+ *
  * Must have features pending:
- * 
+ *
  * drop details: locations + sizes in document hierarchy up to wrapper
- * 
+ *
  */
 public class VDragAndDropWrapper extends VCustomComponent
         implements VHasDropHandler {
@@ -136,7 +136,7 @@ public class VDragAndDropWrapper extends VCustomComponent
     /**
      * Starts a drag and drop operation from mousedown or touchstart event if
      * required conditions are met.
-     * 
+     *
      * @param event
      * @return true if the event was handled as a drag start event
      */
@@ -466,11 +466,11 @@ public class VDragAndDropWrapper extends VCustomComponent
 
         public final native void postFile(VHtml5File file)
         /*-{
-        
+
             this.setRequestHeader('Content-Type', 'multipart/form-data');
             // Seems like IE10 will loose the file if we don't keep a reference to it...
             this.fileBeingUploaded = file;
-        
+
             this.send(file);
         }-*/;
 
@@ -617,7 +617,7 @@ public class VDragAndDropWrapper extends VCustomComponent
 
     /**
      * Prototype code, memory leak risk.
-     * 
+     *
      * @param el
      * @deprecated As of 7.2, call or override {@link #hookHtml5Events(Element)}
      *             instead
@@ -626,19 +626,19 @@ public class VDragAndDropWrapper extends VCustomComponent
     protected native void hookHtml5Events(com.google.gwt.user.client.Element el)
     /*-{
             var me = this;
-    
+
             el.addEventListener("dragenter",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-    
+
             el.addEventListener("dragleave",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-    
+
             el.addEventListener("dragover",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-    
+
             el.addEventListener("drop",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
@@ -646,9 +646,9 @@ public class VDragAndDropWrapper extends VCustomComponent
 
     /**
      * Prototype code, memory leak risk.
-     * 
+     *
      * @param el
-     * 
+     *
      * @since 7.2
      */
     protected void hookHtml5Events(Element el) {
@@ -712,7 +712,7 @@ public class VDragAndDropWrapper extends VCustomComponent
     /**
      * Set the widget that will be used as the drag image when using
      * DragStartMode {@link COMPONENT_OTHER} .
-     * 
+     *
      * @param widget
      */
     public void setDragAndDropWidget(Widget widget) {
@@ -731,7 +731,7 @@ public class VDragAndDropWrapper extends VCustomComponent
      * Internal client side interface used by the connector and the widget for
      * the drag and drop wrapper to signal the completion of an HTML5 file
      * upload.
-     * 
+     *
      * @since 7.6.4
      */
     public interface UploadHandler {

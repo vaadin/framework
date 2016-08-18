@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,7 +24,7 @@ import com.vaadin.ui.VerticalLayout;
 
 /**
  * A component that represents color selection swatches within a color picker.
- * 
+ *
  * @since 7.0.0
  */
 public class ColorPickerSelect extends CustomComponent
@@ -48,7 +48,7 @@ public class ColorPickerSelect extends CustomComponent
 
         /**
          * Instantiates a new color range property id.
-         * 
+         *
          * @param caption
          *            the caption
          */
@@ -64,7 +64,7 @@ public class ColorPickerSelect extends CustomComponent
 
     /**
      * Instantiates a new color picker select.
-     * 
+     *
      * @param rows
      *            the rows
      * @param columns
@@ -101,12 +101,12 @@ public class ColorPickerSelect extends CustomComponent
 
     /**
      * Creates the all colors.
-     * 
+     *
      * @param rows
      *            the rows
      * @param columns
      *            the columns
-     * 
+     *
      * @return the color[][]
      */
     private Color[][] createAllColors(int rows, int columns) {
@@ -151,14 +151,14 @@ public class ColorPickerSelect extends CustomComponent
 
     /**
      * Creates the color.
-     * 
+     *
      * @param color
      *            the color
      * @param rows
      *            the rows
      * @param columns
      *            the columns
-     * 
+     *
      * @return the color[][]
      */
     private Color[][] createColors(Color color, int rows, int columns) {

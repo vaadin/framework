@@ -125,11 +125,11 @@ import elemental.json.JsonValue;
  * Grid is always bound to a {@link Container.Indexed}, but is not a
  * {@code Container} of any kind in of itself. The contents of the given
  * Container is displayed with the help of {@link Renderer Renderers}.
- * 
+ *
  * <h3 id="grid-headers-and-footers">Headers and Footers</h3>
  * <p>
- * 
- * 
+ *
+ *
  * <h3 id="grid-converters-and-renderers">Converters and Renderers</h3>
  * <p>
  * Each column has its own {@link Renderer} that displays data into something
@@ -148,14 +148,14 @@ import elemental.json.JsonValue;
  * column.setConverter(new StringToDateConverter());
  * column.setRenderer(new MyColorfulDateRenderer());
  * </pre></code>
- * 
+ *
  * <h3 id="grid-lazyloading">Lazy Loading</h3>
  * <p>
  * The data is accessed as it is needed by Grid and not any sooner. In other
  * words, if the given Container is huge, but only the first few rows are
  * displayed to the user, only those (and a few more, for caching purposes) are
  * accessed.
- * 
+ *
  * <h3 id="grid-selection-modes-and-models">Selection Modes and Models</h3>
  * <p>
  * Grid supports three selection <em>{@link SelectionMode modes}</em> (single,
@@ -170,14 +170,14 @@ import elemental.json.JsonValue;
  * <p>
  * <code><pre>
  * Grid grid = new Grid(myContainer);
- * 
+ *
  * // uses the bundled SingleSelectionModel class
  * grid.setSelectionMode(SelectionMode.SINGLE);
- * 
+ *
  * // changes the behavior to a custom selection model
  * grid.setSelectionModel(new MyTwoSelectionModel());
  * </pre></code>
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -186,13 +186,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * An event listener for column visibility change events in the Grid.
-     * 
+     *
      * @since 7.5.0
      */
     public interface ColumnVisibilityChangeListener extends Serializable {
         /**
          * Called when a column has become hidden or unhidden.
-         * 
+         *
          * @param event
          */
         void columnVisibilityChanged(ColumnVisibilityChangeEvent event);
@@ -200,7 +200,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * An event that is fired when a column's visibility changes.
-     * 
+     *
      * @since 7.5.0
      */
     public static class ColumnVisibilityChangeEvent extends Component.Event {
@@ -211,7 +211,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Constructor for a column visibility change event.
-         * 
+         *
          * @param source
          *            the grid from which this event originates
          * @param column
@@ -233,7 +233,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets the column that became hidden or visible.
-         * 
+         *
          * @return the column that became hidden or visible.
          * @see Column#isHidden()
          */
@@ -243,7 +243,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Was the column set hidden or visible.
-         * 
+         *
          * @return <code>true</code> if the column was hidden <code>false</code>
          *         if it was set visible
          */
@@ -254,7 +254,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Returns <code>true</code> if the column reorder was done by the user,
          * <code>false</code> if not and it was triggered by server side code.
-         * 
+         *
          * @return <code>true</code> if event is a result of user interaction
          */
         public boolean isUserOriginated() {
@@ -264,7 +264,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * A callback interface for generating details for a particular row in Grid.
-     * 
+     *
      * @since 7.5.0
      * @author Vaadin Ltd
      * @see DetailsGenerator#NULL
@@ -288,7 +288,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * <em>Note:</em> If a component gets generated, it may not be manually
          * attached anywhere. The same details component can not be displayed
          * for multiple different rows.
-         * 
+         *
          * @param rowReference
          *            the reference for the row for which to generate details
          * @return the details for the given row, or <code>null</code> to leave
@@ -303,7 +303,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * this class when the {@link RpcDataProviderExtension} is sending data to
      * the client. Details components are detached and forgotten when client
      * informs that it has dropped the corresponding item.
-     * 
+     *
      * @since 7.6.1
      */
     public final static class DetailComponentManager
@@ -311,7 +311,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * The user-defined details generator.
-         * 
+         *
          * @see #setDetailsGenerator(DetailsGenerator)
          */
         private DetailsGenerator detailsGenerator;
@@ -350,7 +350,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * {@link DetailsGenerator}.
          * <p>
          * This method attaches created components to the parent {@link Grid}.
-         * 
+         *
          * @param itemId
          *            the item id for which to create the details component.
          * @throws IllegalStateException
@@ -398,7 +398,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * Destroys a details component correctly.
          * <p>
          * This method will detach the component from parent {@link Grid}.
-         * 
+         *
          * @param itemId
          *            the item id for which to destroy the details component
          */
@@ -429,7 +429,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Sets details visiblity status of given item id.
-         * 
+         *
          * @param itemId
          *            item id to set
          * @param visible
@@ -479,7 +479,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * Sets a new details generator for row details.
          * <p>
          * The currently opened row details will be re-rendered.
-         * 
+         *
          * @param detailsGenerator
          *            the details generator to set
          * @throws IllegalArgumentException
@@ -501,7 +501,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets the current details generator for row details.
-         * 
+         *
          * @return the detailsGenerator the current details generator
          */
         public DetailsGenerator getDetailsGenerator() {
@@ -510,7 +510,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Checks whether details are visible for the given item.
-         * 
+         *
          * @param itemId
          *            the id of the item for which to check details visibility
          * @return <code>true</code> iff the details are visible
@@ -553,7 +553,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Field factory used by default in the editor.
-     * 
+     *
      * Aims to fields of suitable type and with suitable size for use in the
      * editor row.
      */
@@ -566,7 +566,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Returns the singleton instance
-         * 
+         *
          * @return the singleton instance
          */
         public static EditorFieldFactory get() {
@@ -612,7 +612,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Called when an exception occurs while the editor row is being saved
-         * 
+         *
          * @param event
          *            An event providing more information about the error
          */
@@ -621,7 +621,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * ContextClickEvent for the Grid Component.
-     * 
+     *
      * @since 7.6
      */
     public static class GridContextClickEvent extends ContextClickEvent {
@@ -643,7 +643,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Returns the item id of context clicked row.
-         * 
+         *
          * @return item id of clicked row; <code>null</code> if header or footer
          */
         public Object getItemId() {
@@ -652,7 +652,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Returns property id of clicked column.
-         * 
+         *
          * @return property id
          */
         public Object getPropertyId() {
@@ -661,7 +661,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Return the clicked section of Grid.
-         * 
+         *
          * @return section of grid
          */
         public Section getSection() {
@@ -673,7 +673,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * of the Grid the index is the item index in the Container. Header and
          * Footer rows for index can be fetched with
          * {@link Grid#getHeaderRow(int)} and {@link Grid#getFooterRow(int)}.
-         * 
+         *
          * @return row index in section
          */
         public int getRowIndex() {
@@ -705,7 +705,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Retrieves the cause of the failure
-         * 
+         *
          * @return the cause of the failure
          */
         public CommitException getCause() {
@@ -719,7 +719,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Checks if validation exceptions caused this error
-         * 
+         *
          * @return true if the problem was caused by a validation error
          */
         public boolean isValidationFailure() {
@@ -729,7 +729,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Marks that an error indicator should be shown for the editor of a
          * column.
-         * 
+         *
          * @param column
          *            the column to show an error for
          */
@@ -739,7 +739,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets all the columns that have been marked as erroneous.
-         * 
+         *
          * @return an umodifiable collection of erroneous columns
          */
         public Collection<Column> getErrorColumns() {
@@ -748,7 +748,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets the error message to show to the user.
-         * 
+         *
          * @return error message to show
          */
         public String getUserErrorMessage() {
@@ -757,7 +757,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Sets the error message to show to the user.
-         * 
+         *
          * @param userErrorMessage
          *            the user error message to set
          */
@@ -769,14 +769,14 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * An event listener for column reorder events in the Grid.
-     * 
+     *
      * @since 7.5.0
      */
     public interface ColumnReorderListener extends Serializable {
 
         /**
          * Called when the columns of the grid have been reordered.
-         * 
+         *
          * @param event
          *            An event providing more information
          */
@@ -785,7 +785,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * An event that is fired when the columns are reordered.
-     * 
+     *
      * @since 7.5.0
      */
     public static class ColumnReorderEvent extends Component.Event {
@@ -793,7 +793,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         private final boolean userOriginated;
 
         /**
-         * 
+         *
          * @param source
          *            the grid where the event originated from
          * @param userOriginated
@@ -808,7 +808,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Returns <code>true</code> if the column reorder was done by the user,
          * <code>false</code> if not and it was triggered by server side code.
-         * 
+         *
          * @return <code>true</code> if event is a result of user interaction
          */
         public boolean isUserOriginated() {
@@ -819,14 +819,14 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * An event listener for column resize events in the Grid.
-     * 
+     *
      * @since 7.6
      */
     public interface ColumnResizeListener extends Serializable {
 
         /**
          * Called when the columns of the grid have been resized.
-         * 
+         *
          * @param event
          *            An event providing more information
          */
@@ -836,7 +836,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * An event that is fired when a column is resized, either programmatically
      * or by the user.
-     * 
+     *
      * @since 7.6
      */
     public static class ColumnResizeEvent extends Component.Event {
@@ -845,7 +845,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         private final boolean userOriginated;
 
         /**
-         * 
+         *
          * @param source
          *            the grid where the event originated from
          * @param userOriginated
@@ -861,7 +861,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Returns the column that was resized.
-         * 
+         *
          * @return the resized column.
          */
         public Column getColumn() {
@@ -871,7 +871,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Returns <code>true</code> if the column resize was done by the user,
          * <code>false</code> if not and it was triggered by server side code.
-         * 
+         *
          * @return <code>true</code> if event is a result of user interaction
          */
         public boolean isUserOriginated() {
@@ -895,7 +895,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Called when an editor is opened
-         * 
+         *
          * @param e
          *            an editor open event object
          */
@@ -903,7 +903,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Called when an editor is reopened without closing it first
-         * 
+         *
          * @param e
          *            an editor move event object
          */
@@ -911,7 +911,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Called when an editor is closed
-         * 
+         *
          * @param e
          *            an editor close event object
          */
@@ -974,7 +974,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Default error handler for the editor
-     * 
+     *
      */
     public class DefaultEditorErrorHandler implements EditorErrorHandler {
 
@@ -1038,7 +1038,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * {@link Grid#setSelectionMode(SelectionMode)} is equivalent to calling
      * {@link Grid#setSelectionModel(SelectionModel)} with one of the built-in
      * implementations of {@link SelectionModel}.
-     * 
+     *
      * @see Grid#setSelectionMode(SelectionMode)
      * @see Grid#setSelectionModel(SelectionModel)
      */
@@ -1078,7 +1078,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     public interface SelectionModel extends Serializable, Extension {
         /**
          * Checks whether an item is selected or not.
-         * 
+         *
          * @param itemId
          *            the item id to check for
          * @return <code>true</code> iff the item is selected
@@ -1087,7 +1087,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Returns a collection of all the currently selected itemIds.
-         * 
+         *
          * @return a collection of all the currently selected itemIds
          */
         Collection<Object> getSelectedRows();
@@ -1098,7 +1098,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * {@link AbstractExtension}.
          * <p>
          * <em>Note:</em> This method should not be called manually.
-         * 
+         *
          * @param grid
          *            the Grid in which the SelectionModel currently is, or
          *            <code>null</code> when a selection model is being detached
@@ -1131,7 +1131,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
              * <p>
              * This method does not clear any previous selection state, only
              * adds to it.
-             * 
+             *
              * @param itemIds
              *            the itemId(s) to mark as selected
              * @return <code>true</code> if the selection state changed.
@@ -1150,7 +1150,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
              * <p>
              * This method does not clear any previous selection state, only
              * adds to it.
-             * 
+             *
              * @param itemIds
              *            the itemIds to mark as selected
              * @return <code>true</code> if the selection state changed.
@@ -1166,7 +1166,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Marks items as deselected.
-             * 
+             *
              * @param itemIds
              *            the itemId(s) to remove from being selected
              * @return <code>true</code> if the selection state changed.
@@ -1181,7 +1181,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Marks items as deselected.
-             * 
+             *
              * @param itemIds
              *            the itemId(s) to remove from being selected
              * @return <code>true</code> if the selection state changed.
@@ -1196,7 +1196,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Marks all the items in the current Container as selected
-             * 
+             *
              * @return <code>true</code> iff some items were previously not
              *         selected
              * @see #deselectAll()
@@ -1205,7 +1205,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Marks all the items in the current Container as deselected
-             * 
+             *
              * @return <code>true</code> iff some items were previously selected
              * @see #selectAll()
              */
@@ -1214,7 +1214,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             /**
              * Marks items as selected while deselecting all items not in the
              * given Collection.
-             * 
+             *
              * @param itemIds
              *            the itemIds to mark as selected
              * @return <code>true</code> if the selection state changed.
@@ -1230,7 +1230,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             /**
              * Marks items as selected while deselecting all items not in the
              * varargs array.
-             * 
+             *
              * @param itemIds
              *            the itemIds to mark as selected
              * @return <code>true</code> if the selection state changed.
@@ -1258,7 +1258,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Marks an item as selected.
-             * 
+             *
              * @param itemId
              *            the itemId to mark as selected; <code>null</code> for
              *            deselect
@@ -1278,7 +1278,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Gets the item id of the currently selected item.
-             * 
+             *
              * @return the item id of the currently selected item, or
              *         <code>null</code> if nothing is selected
              */
@@ -1287,7 +1287,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             /**
              * Sets whether it's allowed to deselect the selected row through
              * the UI. Deselection is allowed by default.
-             * 
+             *
              * @param deselectAllowed
              *            <code>true</code> if the selected row can be
              *            deselected without selecting another row instead;
@@ -1298,7 +1298,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             /**
              * Sets whether it's allowed to deselect the selected row through
              * the UI.
-             * 
+             *
              * @return <code>true</code> if deselection is allowed; otherwise
              *         <code>false</code>
              */
@@ -1317,7 +1317,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * {@inheritDoc}
-             * 
+             *
              * @return always <code>false</code>.
              */
             @Override
@@ -1325,7 +1325,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * {@inheritDoc}
-             * 
+             *
              * @return always an empty collection.
              */
             @Override
@@ -1360,10 +1360,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Sanity check for existence of item id.
-         * 
+         *
          * @param itemId
          *            item id to be selected / deselected
-         * 
+         *
          * @throws IllegalArgumentException
          *             if item Id doesn't exist in the container of Grid
          */
@@ -1377,10 +1377,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Sanity check for existence of item ids in given collection.
-         * 
+         *
          * @param itemIds
          *            item id collection to be selected / deselected
-         * 
+         *
          * @throws IllegalArgumentException
          *             if at least one item id doesn't exist in the container of
          *             Grid
@@ -1400,7 +1400,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * Note that this is only a helper method, and routes the call all the
          * way to Grid. A {@link SelectionModel} is not a
          * {@link SelectionNotifier}
-         * 
+         *
          * @param oldSelection
          *            the complete {@link Collection} of the itemIds that were
          *            selected <em>before</em> this event happened
@@ -1571,7 +1571,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * The default selection size limit.
-         * 
+         *
          * @see #setSelectionLimit(int)
          */
         public static final int DEFAULT_MAX_SELECTIONS = 1000;
@@ -1683,7 +1683,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * row exceeds the new limit.
          * <p>
          * The default limit is {@value #DEFAULT_MAX_SELECTIONS} rows.
-         * 
+         *
          * @param selectionLimit
          *            the non-negative selection limit to set
          * @throws IllegalArgumentException
@@ -1699,9 +1699,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets the selection limit.
-         * 
+         *
          * @see #setSelectionLimit(int)
-         * 
+         *
          * @return the selection limit
          */
         public int getSelectionLimit() {
@@ -1850,7 +1850,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Compares two sets and returns a set containing all values that are
          * present in the first, but not in the second.
-         * 
+         *
          * @param set1
          *            first item set
          * @param set2
@@ -1905,7 +1905,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Creates a new row reference for the given grid.
-         * 
+         *
          * @param grid
          *            the grid that the row belongs to
          */
@@ -1915,7 +1915,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Sets the identifying information for this row
-         * 
+         *
          * @param itemId
          *            the item id of the row
          */
@@ -1925,7 +1925,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets the grid that contains the referenced row.
-         * 
+         *
          * @return the grid that contains referenced row
          */
         public Grid getGrid() {
@@ -1934,7 +1934,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets the item id of the row.
-         * 
+         *
          * @return the item id of the row
          */
         public Object getItemId() {
@@ -1943,7 +1943,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets the item for the row.
-         * 
+         *
          * @return the item for the row
          */
         public Item getItem() {
@@ -1971,7 +1971,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Sets the identifying information for this cell
-         * 
+         *
          * @param propertyId
          *            the property id of the column
          */
@@ -1981,7 +1981,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets the grid that contains the referenced cell.
-         * 
+         *
          * @return the grid that contains referenced cell
          */
         public Grid getGrid() {
@@ -2004,7 +2004,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets the item id of the row of the cell.
-         * 
+         *
          * @return the item id of the row
          */
         public Object getItemId() {
@@ -2013,7 +2013,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets the item for the row of the cell.
-         * 
+         *
          * @return the item for the row
          */
         public Item getItem() {
@@ -2022,7 +2022,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets the value of the cell.
-         * 
+         *
          * @return the value of the cell
          */
         public Object getValue() {
@@ -2032,14 +2032,14 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * A callback interface for generating custom style names for Grid rows.
-     * 
+     *
      * @see Grid#setRowStyleGenerator(RowStyleGenerator)
      */
     public interface RowStyleGenerator extends Serializable {
 
         /**
          * Called by Grid to generate a style name for a row.
-         * 
+         *
          * @param row
          *            the row to generate a style for
          * @return the style name to add to this row, or {@code null} to not set
@@ -2050,14 +2050,14 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * A callback interface for generating custom style names for Grid cells.
-     * 
+     *
      * @see Grid#setCellStyleGenerator(CellStyleGenerator)
      */
     public interface CellStyleGenerator extends Serializable {
 
         /**
          * Called by Grid to generate a style name for a column.
-         * 
+         *
          * @param cell
          *            the cell to generate a style for
          * @return the style name to add to this cell, or {@code null} to not
@@ -2071,9 +2071,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Grid rows. If a description is generated for a row, it is used for all
      * the cells in the row for which a {@link CellDescriptionGenerator cell
      * description} is not generated.
-     * 
+     *
      * @see Grid#setRowDescriptionGenerator
-     * 
+     *
      * @since 7.6
      */
     public interface RowDescriptionGenerator extends Serializable {
@@ -2083,7 +2083,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * description may contain HTML which is rendered directly; if this is
          * not desired the returned string must be escaped by the implementing
          * method.
-         * 
+         *
          * @param row
          *            the row to generate a description for
          * @return the row description or {@code null} for no description
@@ -2095,9 +2095,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * A callback interface for generating optional descriptions (tooltips) for
      * Grid cells. If a cell has both a {@link RowDescriptionGenerator row
      * description} and a cell description, the latter has precedence.
-     * 
+     *
      * @see Grid#setCellDescriptionGenerator(CellDescriptionGenerator)
-     * 
+     *
      * @since 7.6
      */
     public interface CellDescriptionGenerator extends Serializable {
@@ -2107,7 +2107,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * description may contain HTML which is rendered directly; if this is
          * not desired the returned string must be escaped by the implementing
          * method.
-         * 
+         *
          * @param cell
          *            the cell to generate a description for
          * @return the cell description or {@code null} for no description
@@ -2209,7 +2209,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Abstract base class for Grid header and footer sections.
-     * 
+     *
      * @since 7.6
      * @param <ROWTYPE>
      *            the type of the rows in the section
@@ -2219,7 +2219,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Abstract base class for Grid header and footer rows.
-         * 
+         *
          * @param <CELLTYPE>
          *            the type of the cells in the row
          */
@@ -2277,7 +2277,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Creates and returns a new instance of the cell type.
-             * 
+             *
              * @return the created cell
              */
             protected abstract CELLTYPE createCell();
@@ -2289,7 +2289,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             /**
              * Returns the cell for the given property id on this row. If the
              * column is merged returned cell is the cell for the whole group.
-             * 
+             *
              * @param propertyId
              *            the property id of the column
              * @return the cell for the given property, merged cell for merged
@@ -2306,7 +2306,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Merges columns cells in a row
-             * 
+             *
              * @param propertyIds
              *            The property ids of columns to merge
              * @return The remaining visible cell after the merge
@@ -2324,7 +2324,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Merges columns cells in a row
-             * 
+             *
              * @param cells
              *            The cells to merge. Must be from the same row.
              * @return The remaining visible cell after the merge
@@ -2369,7 +2369,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Returns the custom style name for this row.
-             * 
+             *
              * @return the style name or null if no style name has been set
              */
             public String getStyleName() {
@@ -2378,7 +2378,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Sets a custom style name for this row.
-             * 
+             *
              * @param styleName
              *            the style name to set or null to not use any style
              *            name
@@ -2389,7 +2389,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Writes the declarative design to the given table row element.
-             * 
+             *
              * @since 7.5.0
              * @param trElement
              *            Element to write design to
@@ -2423,7 +2423,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Reads the declarative design from the given table row element.
-             * 
+             *
              * @since 7.5.0
              * @param trElement
              *            Element to read design from
@@ -2497,7 +2497,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Gets the row where this cell is.
-             * 
+             *
              * @return row for this cell
              */
             public StaticRow<?> getRow() {
@@ -2510,7 +2510,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Sets the text displayed in this cell.
-             * 
+             *
              * @param text
              *            a plain text caption
              */
@@ -2523,7 +2523,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Returns the text displayed in this cell.
-             * 
+             *
              * @return the plain text caption
              */
             public String getText() {
@@ -2537,9 +2537,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Returns the HTML content displayed in this cell.
-             * 
+             *
              * @return the html
-             * 
+             *
              */
             public String getHtml() {
                 if (cellState.type != GridStaticCellType.HTML) {
@@ -2552,7 +2552,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Sets the HTML content displayed in this cell.
-             * 
+             *
              * @param html
              *            the html to set
              */
@@ -2565,7 +2565,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Returns the component displayed in this cell.
-             * 
+             *
              * @return the component
              */
             public Component getComponent() {
@@ -2579,7 +2579,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Sets the component displayed in this cell.
-             * 
+             *
              * @param component
              *            the component to set
              */
@@ -2593,7 +2593,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Returns the type of content stored in this cell.
-             * 
+             *
              * @return cell content type
              */
             public GridStaticCellType getCellType() {
@@ -2602,7 +2602,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Returns the custom style name for this cell.
-             * 
+             *
              * @return the style name or null if no style name has been set
              */
             public String getStyleName() {
@@ -2611,7 +2611,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Sets a custom style name for this cell.
-             * 
+             *
              * @param styleName
              *            the style name to set or null to not use any style
              *            name
@@ -2631,7 +2631,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Writes the declarative design to the given table cell element.
-             * 
+             *
              * @since 7.5.0
              * @param cellElement
              *            Element to write design to
@@ -2657,7 +2657,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             /**
              * Reads the declarative design from the given table cell element.
-             * 
+             *
              * @since 7.5.0
              * @param cellElement
              *            Element to read design from
@@ -2691,7 +2691,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Sets the visibility of the whole section.
-         * 
+         *
          * @param visible
          *            true to show this section, false to hide
          */
@@ -2704,7 +2704,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Returns the visibility of this section.
-         * 
+         *
          * @return true if visible, false otherwise.
          */
         public boolean isVisible() {
@@ -2713,10 +2713,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Removes the row at the given position.
-         * 
+         *
          * @param rowIndex
          *            the position of the row
-         * 
+         *
          * @throws IllegalArgumentException
          *             if no row exists at given index
          * @see #removeRow(StaticRow)
@@ -2739,10 +2739,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Removes the given row from the section.
-         * 
+         *
          * @param row
          *            the row to be removed
-         * 
+         *
          * @throws IllegalArgumentException
          *             if the row does not exist in this section
          * @see #removeRow(int)
@@ -2761,7 +2761,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets row at given index.
-         * 
+         *
          * @param rowIndex
          *            0 based index for row. Counted from top to bottom
          * @return row at given index
@@ -2776,7 +2776,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Adds a new row at the top of this section.
-         * 
+         *
          * @return the new row
          * @see #appendRow()
          * @see #addRowAt(int)
@@ -2789,7 +2789,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Adds a new row at the bottom of this section.
-         * 
+         *
          * @return the new row
          * @see #prependRow()
          * @see #addRowAt(int)
@@ -2802,11 +2802,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Inserts a new row at the given position.
-         * 
+         *
          * @param index
          *            the position at which to insert the row
          * @return the new row
-         * 
+         *
          * @throws IndexOutOfBoundsException
          *             if the index is out of bounds
          * @see #appendRow()
@@ -2833,7 +2833,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets the amount of rows in this section.
-         * 
+         *
          * @return row count
          */
         public int getRowCount() {
@@ -2853,7 +2853,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Removes a column for given property id from the section.
-         * 
+         *
          * @param propertyId
          *            property to be removed
          */
@@ -2865,7 +2865,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Adds a column for given property id to the section.
-         * 
+         *
          * @param propertyId
          *            property to be added
          */
@@ -2877,7 +2877,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Performs a sanity check that section is in correct state.
-         * 
+         *
          * @throws IllegalStateException
          *             if merged cells are not i n continuous range
          */
@@ -2917,7 +2917,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Writes the declarative design to the given table section element.
-         * 
+         *
          * @since 7.5.0
          * @param tableSectionElement
          *            Element to write design to
@@ -2934,7 +2934,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Writes the declarative design from the given table section element.
-         * 
+         *
          * @since 7.5.0
          * @param tableSectionElement
          *            Element to read design from
@@ -2980,10 +2980,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Sets the default row of this header. The default row is a special
          * header row providing a user interface for sorting columns.
-         * 
+         *
          * @param row
          *            the new default row, or null for no default row
-         * 
+         *
          * @throws IllegalArgumentException
          *             this header does not contain the row
          */
@@ -3012,7 +3012,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Returns the current default row of this header. The default row is a
          * special header row providing a user interface for sorting columns.
-         * 
+         *
          * @return the default row or null if no default row set
          */
         public HeaderRow getDefaultRow() {
@@ -3222,7 +3222,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Internally used constructor.
-         * 
+         *
          * @param grid
          *            The grid this column belongs to. Should not be null.
          * @param state
@@ -3240,7 +3240,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Returns the serializable state of this column that is sent to the
          * client side connector.
-         * 
+         *
          * @return the internal state of the column
          */
         GridColumnState getState() {
@@ -3249,7 +3249,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Returns the property id for the backing property of this Column
-         * 
+         *
          * @return property id
          */
         public Object getPropertyId() {
@@ -3259,9 +3259,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Returns the caption of the header. By default the header caption is
          * the property id of the column.
-         * 
+         *
          * @return the text in the default row of header.
-         * 
+         *
          * @throws IllegalStateException
          *             if the column no longer is attached to the grid
          */
@@ -3275,11 +3275,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * Sets the caption of the header. This caption is also used as the
          * hiding toggle caption, unless it is explicitly set via
          * {@link #setHidingToggleCaption(String)}.
-         * 
+         *
          * @param caption
          *            the text to show in the caption
          * @return the column itself
-         * 
+         *
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          */
@@ -3301,7 +3301,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets the caption of the hiding toggle for this column.
-         * 
+         *
          * @since 7.5.0
          * @see #setHidingToggleCaption(String)
          * @return the caption for the hiding toggle for this column
@@ -3323,7 +3323,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * <p>
          * <em>NOTE:</em> setting this to empty string might cause the hiding
          * toggle to not render correctly.
-         * 
+         *
          * @since 7.5.0
          * @param hidingToggleCaption
          *            the text to show in the column hiding toggle
@@ -3341,7 +3341,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Returns the width (in pixels). By default a column is 100px wide.
-         * 
+         *
          * @return the width in pixels of the column
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
@@ -3357,11 +3357,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * This overrides any configuration set by any of
          * {@link #setExpandRatio(int)}, {@link #setMinimumWidth(double)} or
          * {@link #setMaximumWidth(double)}.
-         * 
+         *
          * @param pixelWidth
          *            the new pixel width of the column
          * @return the column itself
-         * 
+         *
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          * @throws IllegalArgumentException
@@ -3385,7 +3385,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Returns whether this column has an undefined width.
-         * 
+         *
          * @since 7.6
          * @return whether the width is undefined
          * @throws IllegalStateException
@@ -3400,7 +3400,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * Marks the column width as undefined. An undefined width means the
          * grid is free to resize the column based on the cell contents and
          * available space in the grid.
-         * 
+         *
          * @return the column itself
          */
         public Column setWidthUndefined() {
@@ -3416,7 +3416,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Checks if column is attached and throws an
          * {@link IllegalStateException} if it is not
-         * 
+         *
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          */
@@ -3428,9 +3428,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Sets this column as the last frozen column in its grid.
-         * 
+         *
          * @return the column itself
-         * 
+         *
          * @throws IllegalArgumentException
          *             if the column is no longer attached to any grid
          * @see Grid#setFrozenColumnCount(int)
@@ -3448,14 +3448,14 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * <p>
          * If a suitable converter isn't defined explicitly, the session
          * converter factory is used to find a compatible converter.
-         * 
+         *
          * @param renderer
          *            the renderer to use
          * @return the column itself
-         * 
+         *
          * @throws IllegalArgumentException
          *             if no compatible converter could be found
-         * 
+         *
          * @see VaadinSession#getConverterFactory()
          * @see LegacyConverterUtil#getConverter(Class, Class, VaadinSession)
          * @see #setConverter(LegacyConverter)
@@ -3475,13 +3475,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Sets the renderer for this column and the converter used to convert
          * from the property value type to the renderer presentation type.
-         * 
+         *
          * @param renderer
          *            the renderer to use, cannot be null
          * @param converter
          *            the converter to use
          * @return the column itself
-         * 
+         *
          * @throws IllegalArgumentException
          *             if the renderer is already associated with a grid column
          */
@@ -3506,12 +3506,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Sets the converter used to convert from the property value type to
          * the renderer presentation type.
-         * 
+         *
          * @param converter
          *            the converter to use, or {@code null} to not use any
          *            converters
          * @return the column itself
-         * 
+         *
          * @throws IllegalArgumentException
          *             if the types are not compatible
          */
@@ -3542,7 +3542,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                  * Since the converter is null (i.e. will be removed), we need
                  * to know that the renderer and model are compatible. If not,
                  * we can't allow for this to happen.
-                 * 
+                 *
                  * The constructor is allowed to call this method with null
                  * without any compatibility checks, therefore we have a special
                  * case for it.
@@ -3574,7 +3574,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Returns the renderer instance used by this column.
-         * 
+         *
          * @return the renderer
          */
         public Renderer<?> getRenderer() {
@@ -3583,7 +3583,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Returns the converter instance used by this column.
-         * 
+         *
          * @return the converter
          */
         public LegacyConverter<?, ?> getConverter() {
@@ -3632,12 +3632,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * sorted by a sortable column by clicking or tapping the column's
          * default header. Programmatic sorting using the Grid#sort methods is
          * not affected by this setting.
-         * 
+         *
          * @param sortable
          *            {@code true} if the user should be able to sort the
          *            column, {@code false} otherwise
          * @return the column itself
-         * 
+         *
          * @throws IllegalStateException
          *             if the data source of the Grid does not implement
          *             {@link Sortable}
@@ -3673,7 +3673,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * <p>
          * <em>Note:</em> it is possible to sort by this column programmatically
          * using the Grid#sort methods regardless of the returned value.
-         * 
+         *
          * @return {@code true} if the column is sortable by the user,
          *         {@code false} otherwise
          */
@@ -3706,7 +3706,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * reserves only one of those. The column with a ratio of 2, is as wide
          * as it needs to be, <strong>plus two thirds</strong> of the excess
          * width.
-         * 
+         *
          * @param expandRatio
          *            the expand ratio of this column. {@code 0} to not have it
          *            expand at all. A negative number to clear the expand
@@ -3726,7 +3726,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Returns the column's expand ratio.
-         * 
+         *
          * @return the column's expand ratio
          * @see #setExpandRatio(int)
          */
@@ -3738,7 +3738,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * Clears the expand ratio for this column.
          * <p>
          * Equal to calling {@link #setExpandRatio(int) setExpandRatio(-1)}
-         * 
+         *
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          */
@@ -3751,7 +3751,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * <p>
          * This defines the minimum guaranteed pixel width of the column
          * <em>when it is set to expand</em>.
-         * 
+         *
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          * @see #setExpandRatio(int)
@@ -3773,7 +3773,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Return the minimum width for this column.
-         * 
+         *
          * @return the minimum width for this column
          * @see #setMinimumWidth(double)
          */
@@ -3786,7 +3786,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * <p>
          * This defines the maximum allowed pixel width of the column <em>when
          * it is set to expand</em>.
-         * 
+         *
          * @param pixels
          *            the maximum width
          * @throws IllegalStateException
@@ -3810,7 +3810,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Returns the maximum width for this column.
-         * 
+         *
          * @return the maximum width for this column
          * @see #setMaximumWidth(double)
          */
@@ -3828,15 +3828,15 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * are not automatically assigned an editor field and, if one is
          * manually assigned, it is not used. Columns that cannot (or should
          * not) be edited even in principle should be set non-editable.
-         * 
+         *
          * @param editable
          *            {@code true} if this column should be editable,
          *            {@code false} otherwise
          * @return this column
-         * 
+         *
          * @throws IllegalStateException
          *             if the editor is currently active
-         * 
+         *
          * @see Grid#editItem(Object)
          * @see Grid#isEditorActive()
          */
@@ -3854,10 +3854,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Returns whether the properties corresponding to this column should be
          * editable when the item editor is active.
-         * 
+         *
          * @return {@code true} if this column is editable, {@code false}
          *         otherwise
-         * 
+         *
          * @see Grid#editItem(Object)
          * @see #setEditable(boolean)
          */
@@ -3875,7 +3875,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * Setting the field to <code>null</code> clears any previously set
          * field, causing a new field to be created the next time the item
          * editor is opened.
-         * 
+         *
          * @param editor
          *            the editor field
          * @return this column
@@ -3898,10 +3898,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * user-provided <code>FieldGroup</code> might cause
          * {@link com.vaadin.data.fieldgroup.FieldGroup.BindException
          * BindException} to be thrown.
-         * 
+         *
          * @return the bound field; or <code>null</code> if the respective
          *         column is not editable
-         * 
+         *
          * @throws IllegalArgumentException
          *             if there is no column for the provided property id
          * @throws FieldGroup.BindException
@@ -3915,7 +3915,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Hides or shows the column. By default columns are visible before
          * explicitly hiding them.
-         * 
+         *
          * @since 7.5.0
          * @param hidden
          *            <code>true</code> to hide the column, <code>false</code>
@@ -3933,7 +3933,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Returns whether this column is hidden. Default is {@code false}.
-         * 
+         *
          * @since 7.5.0
          * @return <code>true</code> if the column is currently hidden,
          *         <code>false</code> otherwise
@@ -3945,7 +3945,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Sets whether this column can be hidden by the user. Hidable columns
          * can be hidden and shown via the sidebar menu.
-         * 
+         *
          * @since 7.5.0
          * @param hidable
          *            <code>true</code> iff the column may be hidable by the
@@ -3966,7 +3966,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * <p>
          * <em>Note:</em> the column can be programmatically hidden using
          * {@link #setHidden(boolean)} regardless of the returned value.
-         * 
+         *
          * @since 7.5.0
          * @return <code>true</code> if the user can hide the column,
          *         <code>false</code> if not
@@ -3977,7 +3977,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Sets whether this column can be resized by the user.
-         * 
+         *
          * @since 7.6
          * @param resizable
          *            {@code true} if this column should be resizable,
@@ -3998,7 +3998,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * <em>Note:</em> the column can be programmatically resized using
          * {@link #setWidth(double)} and {@link #setWidthUndefined()} regardless
          * of the returned value.
-         * 
+         *
          * @since 7.6
          * @return {@code true} if this column is resizable, {@code false}
          *         otherwise
@@ -4009,12 +4009,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Writes the design attributes for this column into given element.
-         * 
+         *
          * @since 7.5.0
-         * 
+         *
          * @param design
          *            Element to write attributes into
-         * 
+         *
          * @param designContext
          *            the design context
          */
@@ -4053,7 +4053,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Reads the design attributes for this column from given element.
-         * 
+         *
          * @since 7.5.0
          * @param design
          *            Element to read attributes from
@@ -4119,7 +4119,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * currently extends the AbstractExtension superclass, but this fact should
      * be regarded as an implementation detail and subject to change in a future
      * major or minor Vaadin revision.
-     * 
+     *
      * @param <T>
      *            the type this renderer knows how to present
      */
@@ -4176,7 +4176,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Null representation for the renderer
-         * 
+         *
          * @return a textual representation of {@code null}
          */
         protected String getNullRepresentation() {
@@ -4192,7 +4192,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * is desired. For instance, a {@code Renderer<Date>} could first turn a
          * date value into a formatted string and return
          * {@code encode(dateString, String.class)}.
-         * 
+         *
          * @param value
          *            the value to be encoded
          * @param type
@@ -4209,7 +4209,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * Converts and encodes the given data model property value using the
          * given converter and renderer. This method is public only for testing
          * purposes.
-         * 
+         *
          * @since 7.6
          * @param renderer
          *            the renderer to use
@@ -4278,7 +4278,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Note: If the extension is an instance of {@link DataGenerator} it will
      * automatically register itself to {@link RpcDataProviderExtension} of
      * extended Grid. On remove this registration is automatically removed.
-     * 
+     *
      * @since 7.5
      */
     public static abstract class AbstractGridExtension
@@ -4293,7 +4293,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Constructs a new Grid extension and extends given Grid.
-         * 
+         *
          * @param grid
          *            a grid instance
          */
@@ -4328,7 +4328,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * A key is used to identify a particular row on both a server and a
          * client. This method can be used to get the item id for the row key
          * that the client has sent.
-         * 
+         *
          * @param rowKey
          *            the row key for which to retrieve an item id
          * @return the item id corresponding to {@code key}
@@ -4343,7 +4343,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * An id is used to identify a particular column on both a server and a
          * client. This method can be used to get the column for the column id
          * that the client has sent.
-         * 
+         *
          * @param columnId
          *            the column id for which to retrieve a column
          * @return the column corresponding to {@code columnId}
@@ -4354,7 +4354,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Gets the parent Grid of the renderer.
-         * 
+         *
          * @return parent grid
          * @throws IllegalStateException
          *             if parent is not Grid
@@ -4376,7 +4376,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * Resends the row data for given item id to the client.
-         * 
+         *
          * @since 7.6
          * @param itemId
          *            row to refresh
@@ -4388,7 +4388,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Informs the parent Grid that this Extension wants to add a child
          * component to it.
-         * 
+         *
          * @since 7.6
          * @param c
          *            component
@@ -4400,7 +4400,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Informs the parent Grid that this Extension wants to remove a child
          * component from it.
-         * 
+         *
          * @since 7.6
          * @param c
          *            component
@@ -4523,7 +4523,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * <code>true</code> if Grid is using the internal IndexedContainer created
      * in Grid() constructor, or <code>false</code> if the user has set their
      * own Container.
-     * 
+     *
      * @see #setContainerDataSource(Indexed)
      * @see #Grid()
      */
@@ -4565,7 +4565,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Creates a new Grid using the given data source.
-     * 
+     *
      * @param dataSource
      *            the indexed container to use as a data source
      */
@@ -4576,7 +4576,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Creates a new Grid with the given caption and a new
      * {@link IndexedContainer} data source.
-     * 
+     *
      * @param caption
      *            the caption of the grid
      */
@@ -4587,7 +4587,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Creates a new Grid with the given caption and data source. If the data
      * source is null, a new {@link IndexedContainer} will be used.
-     * 
+     *
      * @param caption
      *            the caption of the grid
      * @param dataSource
@@ -5012,7 +5012,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Returns the grid data source.
-     * 
+     *
      * @return the container data source of the grid
      */
     public Container.Indexed getContainerDataSource() {
@@ -5021,7 +5021,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Returns a column based on the property id
-     * 
+     *
      * @param propertyId
      *            the property id of the column
      * @return the column or <code>null</code> if not found
@@ -5033,7 +5033,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Returns a copy of currently configures columns in their current visual
      * order in this Grid.
-     * 
+     *
      * @return unmodifiable copy of current columns in visual order
      */
     public List<Column> getColumns() {
@@ -5051,11 +5051,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * <p>
      * Note that adding a new property is only done for the default container
      * that Grid sets up with the default constructor.
-     * 
+     *
      * @param propertyId
      *            the property id of the new column
      * @return the new column
-     * 
+     *
      * @throws IllegalStateException
      *             if column for given property already exists in this grid
      */
@@ -5098,13 +5098,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * <p>
      * Note that adding a new property is only done for the default container
      * that Grid sets up with the default constructor.
-     * 
+     *
      * @param propertyId
      *            the property id of the new column
      * @param type
      *            the data type for the new property
      * @return the new column
-     * 
+     *
      * @throws IllegalStateException
      *             if column for given property already exists in this grid or
      *             property already exists in the container with wrong type
@@ -5157,7 +5157,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Used internally by the {@link Grid} to get a {@link Column} by
      * referencing its generated state id. Also used by {@link Column} to verify
      * if it has been detached from the {@link Grid}.
-     * 
+     *
      * @param columnId
      *            the client id generated for the column when the column is
      *            added to the grid
@@ -5171,7 +5171,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Used internally by the {@link Grid} to get a property id by referencing
      * the columns generated state id.
-     * 
+     *
      * @param columnId
      *            The state id of the column
      * @return The column instance or null if not found
@@ -5183,7 +5183,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Returns whether column reordering is allowed. Default value is
      * <code>false</code>.
-     * 
+     *
      * @since 7.5.0
      * @return true if reordering is allowed
      */
@@ -5194,7 +5194,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Sets whether or not column reordering is allowed. Default value is
      * <code>false</code>.
-     * 
+     *
      * @since 7.5.0
      * @param columnReorderingAllowed
      *            specifies whether column reordering is allowed
@@ -5218,7 +5218,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Creates a new column based on a property id and appends it as the last
      * column.
-     * 
+     *
      * @param datasourcePropertyId
      *            The property id of a property in the datasource
      */
@@ -5255,10 +5255,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Removes a column from Grid based on a property id.
-     * 
+     *
      * @param propertyId
      *            The property id of column to be removed
-     * 
+     *
      * @throws IllegalArgumentException
      *             if there is no column for given property id in this grid
      */
@@ -5290,9 +5290,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * property id is not in propertyIds are removed. Similarly, a column is
      * added for any property id in propertyIds that has no corresponding column
      * in this Grid.
-     * 
+     *
      * @since 7.5.0
-     * 
+     *
      * @param propertyIds
      *            properties in the desired column order
      */
@@ -5314,7 +5314,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Sets a new column order for the grid. All columns which are not ordered
      * here will remain in the order they were before as the last columns of
      * grid.
-     * 
+     *
      * @param propertyIds
      *            properties in the order columns should be
      */
@@ -5346,10 +5346,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * -1 will also disable the selection column.
      * <p>
      * The default value is 0.
-     * 
+     *
      * @param numberOfColumns
      *            the number of columns that should be frozen
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the column count is < 0 or > the number of visible columns
      */
@@ -5371,9 +5371,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * <p>
      * <em>NOTE:</em> this count includes {@link Column#isHidden() hidden
      * columns} in the count.
-     * 
+     *
      * @see #setFrozenColumnCount(int)
-     * 
+     *
      * @return the number of frozen columns
      */
     public int getFrozenColumnCount() {
@@ -5385,7 +5385,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * <p>
      * If the item has visible details, its size will also be taken into
      * account.
-     * 
+     *
      * @param itemId
      *            id of item to scroll to.
      * @throws IllegalArgumentException
@@ -5400,7 +5400,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * <p>
      * If the item has visible details, its size will also be taken into
      * account.
-     * 
+     *
      * @param itemId
      *            id of item to scroll to.
      * @param destination
@@ -5444,7 +5444,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * <p>
      * If Grid is currently not in {@link HeightMode#ROW}, the given value is
      * remembered, and applied once the mode is applied.
-     * 
+     *
      * @param rows
      *            The height in terms of number of rows displayed in Grid's
      *            body. If Grid doesn't contain enough rows, white space is
@@ -5474,7 +5474,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Gets the amount of rows in Grid's body that are shown, while
      * {@link #getHeightMode()} is {@link HeightMode#ROW}.
-     * 
+     *
      * @return the amount of rows that are being shown in Grid's body
      * @see #setHeightByRows(double)
      */
@@ -5487,7 +5487,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * <p>
      * <em>Note:</em> This method will change the widget's size in the browser
      * only if {@link #getHeightMode()} returns {@link HeightMode#CSS}.
-     * 
+     *
      * @see #setHeightMode(HeightMode)
      */
     @Override
@@ -5506,7 +5506,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * <em>Note:</em> If headers/footers are inserted or removed, the widget
      * will resize itself to still display the required amount of rows in its
      * body. It also takes the horizontal scrollbar into account.
-     * 
+     *
      * @param heightMode
      *            the mode in to which Grid should be set
      */
@@ -5516,7 +5516,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * widget dimensions (height/width) on each state change event. The
          * original design was to have setHeight and setHeightByRow be equals,
          * and whichever was called the latest was considered in effect.
-         * 
+         *
          * But, because of Vaadin always calling setHeight on the widget, this
          * approach doesn't work.
          */
@@ -5528,7 +5528,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Returns the current {@link HeightMode} the Grid is in.
      * <p>
      * Defaults to {@link HeightMode#CSS}.
-     * 
+     *
      * @return the current HeightMode
      */
     public HeightMode getHeightMode() {
@@ -5544,7 +5544,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * deselected.
      * <p>
      * If the given SelectionModel is already in use, this method does nothing.
-     * 
+     *
      * @param selectionModel
      *            the new SelectionModel to use
      * @throws IllegalArgumentException
@@ -5570,7 +5570,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Returns the currently used {@link SelectionModel}.
-     * 
+     *
      * @return the currently used SelectionModel
      */
     public SelectionModel getSelectionModel() {
@@ -5595,8 +5595,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * grid.setSelectionMode(SelectionMode.MULTI);
      * grid.setSelectionModel(new MultiSelectionMode());
      * </pre></code>
-     * 
-     * 
+     *
+     *
      * @param selectionMode
      *            the selection mode to switch to
      * @return The {@link SelectionModel} instance that was taken into use
@@ -5617,7 +5617,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Checks whether an item is selected or not.
-     * 
+     *
      * @param itemId
      *            the item id to check for
      * @return <code>true</code> iff the item is selected
@@ -5632,7 +5632,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * <p>
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}.
-     * 
+     *
      * @return a collection of all the currently selected itemIds
      */
     // keep this javadoc in sync with SelectionModel.getSelectedRows
@@ -5646,7 +5646,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
      * {@link SelectionModel.Single} is supported.
-     * 
+     *
      * @return the item id of the currently selected item, or <code>null</code>
      *         if nothing is selected
      * @throws IllegalStateException
@@ -5684,7 +5684,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * {@link #getSelectionModel() selection model}. Only
      * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
      * supported.
-     * 
+     *
      * @param itemId
      *            the itemId to mark as selected
      * @return <code>true</code> if the selection state changed,
@@ -5730,7 +5730,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * {@link #getSelectionModel() selection model}. Only
      * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
      * supported.
-     * 
+     *
      * @param itemId
      *            the itemId to remove from being selected
      * @return <code>true</code> if the selection state changed,
@@ -5777,7 +5777,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * {@link #getSelectionModel() selection model}. Only
      * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
      * supported.
-     * 
+     *
      * @return <code>true</code> if the selection state changed,
      *         <code>false</code> if the itemId was already selected
      * @throws IllegalStateException
@@ -5818,7 +5818,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * application logic. This method is publicly accessible only so that
      * {@link SelectionModel SelectionModels} would be able to inform Grid of
      * these events.
-     * 
+     *
      * @param newSelection
      *            the selection that was added by this event
      * @param oldSelection
@@ -5845,7 +5845,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Registers a new column reorder listener.
-     * 
+     *
      * @since 7.5.0
      * @param listener
      *            the listener to register
@@ -5856,7 +5856,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Removes a previously registered column reorder listener.
-     * 
+     *
      * @since 7.5.0
      * @param listener
      *            the listener to remove
@@ -5872,7 +5872,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Registers a new column resize listener.
-     * 
+     *
      * @param listener
      *            the listener to register
      */
@@ -5882,7 +5882,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Removes a previously registered column resize listener.
-     * 
+     *
      * @param listener
      *            the listener to remove
      */
@@ -5892,7 +5892,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Gets the {@link KeyMapper } being used by the data source.
-     * 
+     *
      * @return the key mapper being used by the data source
      */
     KeyMapper<Object> getKeyMapper() {
@@ -5901,7 +5901,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Adds a renderer to this grid's connector hierarchy.
-     * 
+     *
      * @param renderer
      *            the renderer to add
      */
@@ -5915,10 +5915,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * <p>
      * <em>Note:</em> Sorting by a property that has no column in Grid will hide
      * all possible sorting indicators.
-     * 
+     *
      * @param s
      *            a sort instance
-     * 
+     *
      * @throws IllegalStateException
      *             if container is not sortable (does not implement
      *             Container.Sortable)
@@ -5934,10 +5934,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * <p>
      * <em>Note:</em> Sorting by a property that has no column in Grid will hide
      * all possible sorting indicators.
-     * 
+     *
      * @param propertyId
      *            a property ID
-     * 
+     *
      * @throws IllegalStateException
      *             if container is not sortable (does not implement
      *             Container.Sortable)
@@ -5953,12 +5953,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * <p>
      * <em>Note:</em> Sorting by a property that has no column in Grid will hide
      * all possible sorting indicators.
-     * 
+     *
      * @param propertyId
      *            a property ID
      * @param direction
      *            a sort order value (ascending/descending)
-     * 
+     *
      * @throws IllegalStateException
      *             if container is not sortable (does not implement
      *             Container.Sortable)
@@ -5982,10 +5982,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * <p>
      * <em>Note:</em> Sorting by a property that has no column in Grid will hide
      * all possible sorting indicators.
-     * 
+     *
      * @param order
      *            a sort order list.
-     * 
+     *
      * @throws IllegalStateException
      *             if container is not sortable (does not implement
      *             Container.Sortable)
@@ -6026,7 +6026,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Get the current sort order list.
-     * 
+     *
      * @return a sort order list
      */
     public List<SortOrder> getSortOrder() {
@@ -6091,7 +6091,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Adds a sort order change listener that gets notified when the sort order
      * changes.
-     * 
+     *
      * @param listener
      *            the sort order change listener to add
      */
@@ -6103,7 +6103,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Removes a sort order change listener previously added using
      * {@link #addSortListener(SortListener)}.
-     * 
+     *
      * @param listener
      *            the sort order change listener to remove
      */
@@ -6117,7 +6117,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Returns the header section of this grid. The default header contains a
      * single row displaying the column captions.
-     * 
+     *
      * @return the header
      */
     protected Header getHeader() {
@@ -6126,7 +6126,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Gets the header row at given index.
-     * 
+     *
      * @param rowIndex
      *            0 based index for row. Counted from top to bottom
      * @return header row at given index
@@ -6141,11 +6141,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Inserts a new row at the given position to the header section. Shifts the
      * row currently at that position and any subsequent rows down (adds one to
      * their indices).
-     * 
+     *
      * @param index
      *            the position at which to insert the row
      * @return the new row
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the index is less than 0 or greater than row count
      * @see #appendHeaderRow()
@@ -6159,7 +6159,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Adds a new row at the bottom of the header section.
-     * 
+     *
      * @return the new row
      * @see #prependHeaderRow()
      * @see #addHeaderRowAt(int)
@@ -6174,7 +6174,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Returns the current default row of the header section. The default row is
      * a special header row providing a user interface for sorting columns.
      * Setting a header text for column updates cells in the default header.
-     * 
+     *
      * @return the default row or null if no default row set
      */
     public HeaderRow getDefaultHeaderRow() {
@@ -6183,7 +6183,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Gets the row count for the header section.
-     * 
+     *
      * @return row count
      */
     public int getHeaderRowCount() {
@@ -6192,7 +6192,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Adds a new row at the top of the header section.
-     * 
+     *
      * @return the new row
      * @see #appendHeaderRow()
      * @see #addHeaderRowAt(int)
@@ -6205,10 +6205,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Removes the given row from the header section.
-     * 
+     *
      * @param row
      *            the row to be removed
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the row does not exist in this section
      * @see #removeHeaderRow(int)
@@ -6222,10 +6222,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Removes the row at the given position from the header section.
-     * 
+     *
      * @param rowIndex
      *            the position of the row
-     * 
+     *
      * @throws IllegalArgumentException
      *             if no row exists at given index
      * @see #removeHeaderRow(HeaderRow)
@@ -6240,10 +6240,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Sets the default row of the header. The default row is a special header
      * row providing a user interface for sorting columns.
-     * 
+     *
      * @param row
      *            the new default row, or null for no default row
-     * 
+     *
      * @throws IllegalArgumentException
      *             header does not contain the row
      */
@@ -6253,7 +6253,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Sets the visibility of the header section.
-     * 
+     *
      * @param visible
      *            true to show header section, false to hide
      */
@@ -6263,7 +6263,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Returns the visibility of the header section.
-     * 
+     *
      * @return true if visible, false otherwise.
      */
     public boolean isHeaderVisible() {
@@ -6275,7 +6275,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Returns the footer section of this grid. The default header contains a
      * single row displaying the column captions.
-     * 
+     *
      * @return the footer
      */
     protected Footer getFooter() {
@@ -6284,7 +6284,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Gets the footer row at given index.
-     * 
+     *
      * @param rowIndex
      *            0 based index for row. Counted from top to bottom
      * @return footer row at given index
@@ -6299,11 +6299,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Inserts a new row at the given position to the footer section. Shifts the
      * row currently at that position and any subsequent rows down (adds one to
      * their indices).
-     * 
+     *
      * @param index
      *            the position at which to insert the row
      * @return the new row
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the index is less than 0 or greater than row count
      * @see #appendFooterRow()
@@ -6317,7 +6317,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Adds a new row at the bottom of the footer section.
-     * 
+     *
      * @return the new row
      * @see #prependFooterRow()
      * @see #addFooterRowAt(int)
@@ -6330,7 +6330,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Gets the row count for the footer.
-     * 
+     *
      * @return row count
      */
     public int getFooterRowCount() {
@@ -6339,7 +6339,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Adds a new row at the top of the footer section.
-     * 
+     *
      * @return the new row
      * @see #appendFooterRow()
      * @see #addFooterRowAt(int)
@@ -6352,10 +6352,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Removes the given row from the footer section.
-     * 
+     *
      * @param row
      *            the row to be removed
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the row does not exist in this section
      * @see #removeFooterRow(int)
@@ -6369,10 +6369,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Removes the row at the given position from the footer section.
-     * 
+     *
      * @param rowIndex
      *            the position of the row
-     * 
+     *
      * @throws IllegalArgumentException
      *             if no row exists at given index
      * @see #removeFooterRow(FooterRow)
@@ -6386,7 +6386,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Sets the visibility of the footer section.
-     * 
+     *
      * @param visible
      *            true to show footer section, false to hide
      */
@@ -6396,7 +6396,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Returns the visibility of the footer section.
-     * 
+     *
      * @return true if visible, false otherwise.
      */
     public boolean isFooterVisible() {
@@ -6472,13 +6472,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * {@link RowDescriptionGenerator} is also set, the row description it
      * generates is displayed for cells for which {@code generator} returns
      * null.
-     * 
+     *
      * @param generator
      *            the description generator to use or {@code null} to remove a
      *            previously set generator if any
-     * 
+     *
      * @see #setRowDescriptionGenerator(RowDescriptionGenerator)
-     * 
+     *
      * @since 7.6
      */
     public void setCellDescriptionGenerator(
@@ -6492,9 +6492,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Returns the {@code CellDescriptionGenerator} instance used to generate
      * descriptions (tooltips) for Grid cells.
-     * 
+     *
      * @return the description generator or {@code null} if no generator is set
-     * 
+     *
      * @since 7.6
      */
     public CellDescriptionGenerator getCellDescriptionGenerator() {
@@ -6507,14 +6507,14 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * {@link CellDescriptionGenerator} is also set, the row description
      * generated by {@code generator} is used for cells for which the cell
      * description generator returns null.
-     * 
-     * 
+     *
+     *
      * @param generator
      *            the description generator to use or {@code null} to remove a
      *            previously set generator if any
-     * 
+     *
      * @see #setCellDescriptionGenerator(CellDescriptionGenerator)
-     * 
+     *
      * @since 7.6
      */
     public void setRowDescriptionGenerator(RowDescriptionGenerator generator) {
@@ -6527,9 +6527,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Returns the {@code RowDescriptionGenerator} instance used to generate
      * descriptions (tooltips) for Grid rows
-     * 
+     *
      * @return the description generator or {@code} null if no generator is set
-     * 
+     *
      * @since 7.6
      */
     public RowDescriptionGenerator getRowDescriptionGenerator() {
@@ -6538,7 +6538,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Sets the style generator that is used for generating styles for cells
-     * 
+     *
      * @param cellStyleGenerator
      *            the cell style generator to set, or <code>null</code> to
      *            remove a previously set generator
@@ -6550,7 +6550,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Gets the style generator that is used for generating styles for cells
-     * 
+     *
      * @return the cell style generator, or <code>null</code> if no generator is
      *         set
      */
@@ -6560,7 +6560,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Sets the style generator that is used for generating styles for rows
-     * 
+     *
      * @param rowStyleGenerator
      *            the row style generator to set, or <code>null</code> to remove
      *            a previously set generator
@@ -6572,7 +6572,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Gets the style generator that is used for generating styles for rows
-     * 
+     *
      * @return the row style generator, or <code>null</code> if no generator is
      *         set
      */
@@ -6589,7 +6589,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * order might have been changed, it's better to instead add items directly
      * to the underlying container and use {@link Item#getItemProperty(Object)}
      * to make sure each value is assigned to the intended property.
-     * 
+     *
      * @param values
      *            the cell values of the new row, in the same order as the
      *            visible column order, not <code>null</code>.
@@ -6660,13 +6660,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * editor is enabled, the user can open it by double-clicking a row or
      * hitting enter when a row is focused. The editor can also be opened
      * programmatically using the {@link #editItem(Object)} method.
-     * 
+     *
      * @param isEnabled
      *            <code>true</code> to enable the feature, <code>false</code>
      *            otherwise
      * @throws IllegalStateException
      *             if an item is currently being edited
-     * 
+     *
      * @see #getEditedItemId()
      */
     public void setEditorEnabled(boolean isEnabled)
@@ -6683,9 +6683,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Checks whether the item editor UI is enabled for this grid.
-     * 
+     *
      * @return <code>true</code> iff the editor is enabled for this grid
-     * 
+     *
      * @see #setEditorEnabled(boolean)
      * @see #getEditedItemId()
      */
@@ -6695,7 +6695,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Gets the id of the item that is currently being edited.
-     * 
+     *
      * @return the id of the item that is currently being edited, or
      *         <code>null</code> if no item is being edited at the moment
      */
@@ -6705,7 +6705,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Gets the field group that is backing the item editor of this grid.
-     * 
+     *
      * @return the backing field group
      */
     public FieldGroup getEditorFieldGroup() {
@@ -6714,10 +6714,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Sets the field group that is backing the item editor of this grid.
-     * 
+     *
      * @param fieldGroup
      *            the backing field group
-     * 
+     *
      * @throws IllegalStateException
      *             if the editor is currently active
      */
@@ -6732,7 +6732,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Returns whether an item is currently being edited in the editor.
-     * 
+     *
      * @return true iff the editor is open
      */
     public boolean isEditorActive() {
@@ -6775,10 +6775,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Opens the editor interface for the provided item. Scrolls the Grid to
      * bring the item to view if it is not already visible.
-     * 
+     *
      * Note that any cell content rendered by a WidgetRenderer will not be
      * visible in the editor row.
-     * 
+     *
      * @param itemId
      *            the id of the item to edit
      * @throws IllegalStateException
@@ -6846,10 +6846,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Saves all changes done to the bound fields.
      * <p>
      * <em>Note:</em> This is a pass-through call to the backing field group.
-     * 
+     *
      * @throws CommitException
      *             If the commit was aborted
-     * 
+     *
      * @see FieldGroup#commit()
      */
     public void saveEditor() throws CommitException {
@@ -6906,7 +6906,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * <p>
      * When {@link #editItem(Object) editItem} is called, fields are
      * automatically created and bound to any unbound properties.
-     * 
+     *
      * @return a collection of all the fields bound to the item editor
      */
     Collection<LegacyField<?>> getEditorFields() {
@@ -6929,7 +6929,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * only used when {@link FieldGroup} creates a new field.
      * <p>
      * <em>Note:</em> This is a pass-through call to the backing field group.
-     * 
+     *
      * @param fieldFactory
      *            The field factory to use
      */
@@ -6939,9 +6939,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Sets the error handler for the editor.
-     * 
+     *
      * The error handler is called whenever there is an exception in the editor.
-     * 
+     *
      * @param editorErrorHandler
      *            The editor error handler to use
      * @throws IllegalArgumentException
@@ -6958,7 +6958,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Gets the error handler used for the editor
-     * 
+     *
      * @see #setErrorHandler(com.vaadin.server.ErrorHandler)
      * @return the editor error handler, never null
      */
@@ -6971,7 +6971,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * only used when {@link FieldGroup} creates a new field.
      * <p>
      * <em>Note:</em> This is a pass-through call to the backing field group.
-     * 
+     *
      * @return The field factory in use
      */
     public FieldGroupFieldFactory getEditorFieldFactory() {
@@ -6980,7 +6980,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Sets the caption on the save button in the Grid editor.
-     * 
+     *
      * @param saveCaption
      *            the caption to set
      * @throws IllegalArgumentException
@@ -6996,7 +6996,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Gets the current caption of the save button in the Grid editor.
-     * 
+     *
      * @return the current caption of the save button
      */
     public String getEditorSaveCaption() {
@@ -7005,7 +7005,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Sets the caption on the cancel button in the Grid editor.
-     * 
+     *
      * @param cancelCaption
      *            the caption to set
      * @throws IllegalArgumentException
@@ -7021,7 +7021,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Gets the current caption of the cancel button in the Grid editor.
-     * 
+     *
      * @return the current caption of the cancel button
      */
     public String getEditorCancelCaption() {
@@ -7031,7 +7031,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Sets the buffered editor mode. The default mode is buffered (
      * <code>true</code>).
-     * 
+     *
      * @since 7.6
      * @param editorBuffered
      *            <code>true</code> to enable buffered editor,
@@ -7052,7 +7052,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Gets the buffered editor mode.
-     * 
+     *
      * @since 7.6
      * @return <code>true</code> if buffered editor is enabled,
      *         <code>false</code> otherwise
@@ -7091,7 +7091,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * In most cases Grid will know when column widths need to be recalculated
      * but this method can be used to force recalculation in situations when
      * grid does not recalculate automatically.
-     * 
+     *
      * @since 7.4.1
      */
     public void recalculateColumnWidths() {
@@ -7100,7 +7100,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Registers a new column visibility change listener
-     * 
+     *
      * @since 7.5.0
      * @param listener
      *            the listener to register
@@ -7113,7 +7113,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Removes a previously registered column visibility change listener
-     * 
+     *
      * @since 7.5.0
      * @param listener
      *            the listener to remove
@@ -7134,7 +7134,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Sets a new details generator for row details.
      * <p>
      * The currently opened row details will be re-rendered.
-     * 
+     *
      * @since 7.5.0
      * @param detailsGenerator
      *            the details generator to set
@@ -7148,7 +7148,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Gets the current details generator for row details.
-     * 
+     *
      * @since 7.5.0
      * @return the detailsGenerator the current details generator
      */
@@ -7158,7 +7158,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Shows or hides the details for a specific item.
-     * 
+     *
      * @since 7.5.0
      * @param itemId
      *            the id of the item for which to set details visibility
@@ -7172,7 +7172,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Checks whether details are visible for the given item.
-     * 
+     *
      * @since 7.5.0
      * @param itemId
      *            the id of the item for which to check details visibility

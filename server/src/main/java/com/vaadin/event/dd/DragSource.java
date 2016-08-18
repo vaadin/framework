@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,16 +33,16 @@ import com.vaadin.ui.Tree;
  * implementation lets it create the {@link Transferable} instance from the raw
  * client side "seed data". This way server side implementation may translate or
  * extend the data that will be available for {@link DropHandler}.
- * 
+ *
  * @since 6.3
- * 
+ *
  */
 public interface DragSource extends Component {
 
     /**
      * DragSource may convert data added by client side component to meaningful
      * values for server side developer or add other data based on it.
-     * 
+     *
      * <p>
      * For example Tree converts item identifiers to generated string keys for
      * the client side. Vaadin developer don't and can't know anything about
@@ -51,7 +51,7 @@ public interface DragSource extends Component {
      * counterpart. In {@link Tree#getTransferable(Map)} the key is converted
      * back to item identifier that the server side developer can use.
      * <p>
-     * 
+     *
      * @since 6.3
      * @param rawVariables
      *            the data that client side initially included in

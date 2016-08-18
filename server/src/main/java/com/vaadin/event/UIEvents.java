@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,7 @@ import com.vaadin.util.ReflectTools;
 /**
  * A class that contains events, listeners and handlers specific to the
  * {@link UI} class.
- * 
+ *
  * @since 7.2
  * @author Vaadin Ltd
  */
@@ -34,7 +34,7 @@ public interface UIEvents {
     /**
      * A {@link PollListener} receives and handles {@link PollEvent PollEvents}
      * fired by {@link PollNotifier PollNotifiers}.
-     * 
+     *
      * @since 7.2
      * @author Vaadin Ltd
      */
@@ -44,7 +44,7 @@ public interface UIEvents {
 
         /**
          * A poll request has been received by the server.
-         * 
+         *
          * @param event
          *            poll event
          */
@@ -54,7 +54,7 @@ public interface UIEvents {
     /**
      * An event that is fired whenever a client polls the server for
      * asynchronous UI updates.
-     * 
+     *
      * @since 7.2
      * @author Vaadin Ltd
      */
@@ -65,7 +65,7 @@ public interface UIEvents {
 
         /**
          * Get the {@link UI} instance that received the poll request.
-         * 
+         *
          * @return the {@link UI} that received the poll request. Never
          *         <code>null</code>.
          */
@@ -85,7 +85,7 @@ public interface UIEvents {
      * able to send {@link PollEvent PollEvents} whenever the client sends a
      * periodic poll message to the client, to check for asynchronous
      * server-side modifications.
-     * 
+     *
      * @since 7.2
      * @see UI#setPollInterval(int)
      */
@@ -95,7 +95,7 @@ public interface UIEvents {
          * <p>
          * The listener is called whenever the client polls the server for
          * asynchronous UI updates.
-         * 
+         *
          * @see UI#setPollInterval(int)
          * @see #removePollListener(PollListener)
          * @param listener
@@ -105,7 +105,7 @@ public interface UIEvents {
 
         /**
          * Remove a poll listener.
-         * 
+         *
          * @see #addPollListener(PollListener)
          * @param listener
          *            the listener to be removed

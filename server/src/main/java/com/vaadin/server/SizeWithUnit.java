@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,7 @@ import com.vaadin.shared.util.SharedUtil;
 /**
  * A class for representing a value-unit pair. Also contains utility methods for
  * parsing such pairs from a string.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -37,7 +37,7 @@ public class SizeWithUnit implements Serializable {
 
     /**
      * Constructs a new SizeWithUnit object representing the pair (size, unit).
-     * 
+     *
      * @param size
      *            a numeric value
      * @param unit
@@ -50,7 +50,7 @@ public class SizeWithUnit implements Serializable {
 
     /**
      * Returns the numeric value stored in this object.
-     * 
+     *
      * @return the value of this (value, unit) pair
      */
     public float getSize() {
@@ -59,7 +59,7 @@ public class SizeWithUnit implements Serializable {
 
     /**
      * Returns the unit stored in this object.
-     * 
+     *
      * @return the unit of this (value, unit) pair
      */
     public Unit getUnit() {
@@ -72,7 +72,7 @@ public class SizeWithUnit implements Serializable {
      * is used as the unit. If defaultUnit is null and s is a nonempty string
      * representing a unitless number, an exception is thrown. Null or empty
      * string will produce {-1,Unit#PIXELS}.
-     * 
+     *
      * @param s
      *            the string to be parsed
      * @param defaultUnit
@@ -116,7 +116,7 @@ public class SizeWithUnit implements Serializable {
      * Returns an object whose numeric value and unit are taken from the string
      * s. Null or empty string will produce {-1,Unit#PIXELS}. An exception is
      * thrown if s specifies a number without a unit.
-     * 
+     *
      * @param s
      *            the string to be parsed
      * @return an object containing the parsed value and unit

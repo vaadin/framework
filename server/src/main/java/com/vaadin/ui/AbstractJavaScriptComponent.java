@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -117,7 +117,7 @@ import elemental.json.JsonValue;
  * field.</li>
  * </ul>
  * <p>
- * 
+ *
  * Values in the Shared State and in RPC calls are converted between Java and
  * JavaScript using the following conventions:
  * <ul>
@@ -144,7 +144,7 @@ import elemental.json.JsonValue;
  * here. Please refer to the documentation for specific types for serialization
  * information.</li>
  * </ul>
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
@@ -166,7 +166,7 @@ public abstract class AbstractJavaScriptComponent extends AbstractComponent {
      * available as <code>this</code>). Calling that JavaScript function will
      * cause the call method in the registered {@link JavaScriptFunction} to be
      * invoked with the same arguments.
-     * 
+     *
      * @param functionName
      *            the name that should be used for client-side function
      * @param function
@@ -187,7 +187,7 @@ public abstract class AbstractJavaScriptComponent extends AbstractComponent {
      * before sending. This can be done either with
      * {@link JsonCodec#encode(Object, JsonValue, java.lang.reflect.Type, com.vaadin.ui.ConnectorTracker)}
      * or using the factory methods in {@link Json}.
-     * 
+     *
      * @param name
      *            the name of the function
      * @param arguments

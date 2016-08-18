@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,7 +21,7 @@ import com.vaadin.legacy.data.Validator;
 /**
  * This validator is used for validating properties that do or do not allow null
  * values. By default, nulls are not allowed.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -34,7 +34,7 @@ public class LegacyNullValidator implements Validator {
 
     /**
      * Creates a new NullValidator.
-     * 
+     *
      * @param errorMessage
      *            the error message to display on invalidation.
      * @param onlyNullAllowed
@@ -47,7 +47,7 @@ public class LegacyNullValidator implements Validator {
 
     /**
      * Validates the data given in value.
-     * 
+     *
      * @param value
      *            the value to validate.
      * @throws Validator.InvalidValueException
@@ -71,7 +71,7 @@ public class LegacyNullValidator implements Validator {
 
     /**
      * Sets if nulls (and only nulls) are to be allowed.
-     * 
+     *
      * @param onlyNullAllowed
      *            If true, only nulls are allowed. If false only non-nulls are
      *            allowed. Do we allow nulls?
@@ -82,7 +82,7 @@ public class LegacyNullValidator implements Validator {
 
     /**
      * Gets the error message that is displayed in case the value is invalid.
-     * 
+     *
      * @return the Error Message.
      */
     public String getErrorMessage() {
@@ -91,7 +91,7 @@ public class LegacyNullValidator implements Validator {
 
     /**
      * Sets the error message to be displayed on invalid value.
-     * 
+     *
      * @param errorMessage
      *            the Error Message to set.
      */

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import com.google.gwt.user.client.Timer;
  * {@link #trigger()} is called the indicator moves to its "triggered" state and
  * then transitions from one state to the next when the timeouts specified using
  * the set*StateDelay methods occur.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -72,7 +72,7 @@ public class VLoadingIndicator {
     /**
      * Returns the delay (in ms) which must pass before the loading indicator
      * moves into the "first" state and is shown to the user
-     * 
+     *
      * @return The delay (in ms) until moving into the "first" state. Counted
      *         from when {@link #trigger()} is called.
      */
@@ -83,7 +83,7 @@ public class VLoadingIndicator {
     /**
      * Sets the delay (in ms) which must pass before the loading indicator moves
      * into the "first" state and is shown to the user
-     * 
+     *
      * @param firstDelay
      *            The delay (in ms) until moving into the "first" state. Counted
      *            from when {@link #trigger()} is called.
@@ -95,7 +95,7 @@ public class VLoadingIndicator {
     /**
      * Returns the delay (in ms) which must pass before the loading indicator
      * moves to its "second" state.
-     * 
+     *
      * @return The delay (in ms) until the loading indicator moves into its
      *         "second" state. Counted from when {@link #trigger()} is called.
      */
@@ -106,7 +106,7 @@ public class VLoadingIndicator {
     /**
      * Sets the delay (in ms) which must pass before the loading indicator moves
      * to its "second" state.
-     * 
+     *
      * @param secondDelay
      *            The delay (in ms) until the loading indicator moves into its
      *            "second" state. Counted from when {@link #trigger()} is
@@ -119,7 +119,7 @@ public class VLoadingIndicator {
     /**
      * Returns the delay (in ms) which must pass before the loading indicator
      * moves to its "third" state.
-     * 
+     *
      * @return The delay (in ms) until the loading indicator moves into its
      *         "third" state. Counted from when {@link #trigger()} is called.
      */
@@ -130,7 +130,7 @@ public class VLoadingIndicator {
     /**
      * Sets the delay (in ms) which must pass before the loading indicator moves
      * to its "third" state.
-     * 
+     *
      * @param thirdDelay
      *            The delay (in ms) from the event until changing the loading
      *            indicator into its "third" state. Counted from when
@@ -156,7 +156,7 @@ public class VLoadingIndicator {
     /**
      * Triggers displaying of this loading indicator unless it's already visible
      * or scheduled to be shown after a delay.
-     * 
+     *
      * @since 7.4
      */
     public void ensureTriggered() {
@@ -191,7 +191,7 @@ public class VLoadingIndicator {
     /**
      * Returns the {@link ApplicationConnection} which uses this loading
      * indicator
-     * 
+     *
      * @return The ApplicationConnection for this loading indicator
      */
     public ApplicationConnection getConnection() {
@@ -201,7 +201,7 @@ public class VLoadingIndicator {
     /**
      * Sets the {@link ApplicationConnection} which uses this loading indicator.
      * Only used internally.
-     * 
+     *
      * @param connection
      *            The ApplicationConnection for this loading indicator
      */
@@ -223,7 +223,7 @@ public class VLoadingIndicator {
 
     /**
      * Returns whether or not the loading indicator is showing.
-     * 
+     *
      * @return true if the loading indicator is visible, false otherwise
      */
     public boolean isVisible() {
@@ -237,7 +237,7 @@ public class VLoadingIndicator {
 
     /**
      * Returns the root element of the loading indicator
-     * 
+     *
      * @return The loading indicator DOM element
      */
     public com.google.gwt.user.client.Element getElement() {

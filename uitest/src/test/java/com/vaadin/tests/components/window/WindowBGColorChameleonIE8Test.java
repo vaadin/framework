@@ -14,7 +14,7 @@ public class WindowBGColorChameleonIE8Test extends SingleBrowserTest {
 
     /*
      * We care about IE8 here only (Or any very very old browsers)
-     * 
+     *
      * @see com.vaadin.tests.tb3.SingleBrowserTest#getBrowsersToTest()
      */
     @Override

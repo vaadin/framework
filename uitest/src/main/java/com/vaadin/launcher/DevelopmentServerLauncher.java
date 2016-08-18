@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -56,7 +56,7 @@ import com.vaadin.launcher.util.BrowserLauncher;
 
 /**
  * Class for running Jetty servlet container within Eclipse project.
- * 
+ *
  */
 public class DevelopmentServerLauncher {
 
@@ -65,10 +65,10 @@ public class DevelopmentServerLauncher {
 
     /**
      * Main function for running Jetty.
-     * 
+     *
      * Command line Arguments are passed through to Jetty, see runServer method
      * for options.
-     * 
+     *
      * @param args
      * @throws Exception
      */
@@ -131,7 +131,7 @@ public class DevelopmentServerLauncher {
 
     /**
      * Run the server with specified arguments.
-     * 
+     *
      * @param serverArgs
      * @return
      * @throws Exception
@@ -349,7 +349,7 @@ public class DevelopmentServerLauncher {
 
     /**
      * Assign default value for given key.
-     * 
+     *
      * @param map
      * @param key
      * @param value
@@ -363,9 +363,9 @@ public class DevelopmentServerLauncher {
 
     /**
      * Parse all command line arguments into a map.
-     * 
+     *
      * Arguments format "key=value" are put into map.
-     * 
+     *
      * @param args
      * @return map of arguments key value pairs.
      */

@@ -24,7 +24,7 @@ import com.vaadin.client.widgets.Grid;
 
 /**
  * No-row selection model.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.4
  */

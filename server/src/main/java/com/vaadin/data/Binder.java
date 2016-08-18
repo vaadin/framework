@@ -288,7 +288,7 @@ public class Binder<BEAN> implements Serializable {
          * {@link #withStatusChangeHandler(StatusChangeHandler)} method call or
          * {@link #withStatusChangeHandler(StatusChangeHandler)} after this
          * method call.
-         * 
+         *
          * @see #withStatusChangeHandler(StatusChangeHandler)
          * @see AbstractComponent#setComponentError(ErrorMessage)
          * @param label
@@ -327,7 +327,7 @@ public class Binder<BEAN> implements Serializable {
          * {@link #withConverter(Converter)}. Also it means that the shorthand
          * method {@link #withStatusLabel(Label)} also may not be called after
          * this method.
-         * 
+         *
          * @see #withStatusLabel(Label)
          * @see AbstractComponent#setComponentError(ErrorMessage)
          * @param handler
@@ -340,7 +340,7 @@ public class Binder<BEAN> implements Serializable {
         /**
          * Validates the field value and returns a {@code Result} instance
          * representing the outcome of the validation.
-         * 
+         *
          * @see Binder#validate()
          * @see Validator#apply(Object)
          *
@@ -815,7 +815,7 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Default {@link StatusChangeHandler} functional method implementation.
-     * 
+     *
      * @param event
      *            the validation event
      */

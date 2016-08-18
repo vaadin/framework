@@ -36,7 +36,7 @@ public class InputEvent extends DomEvent<InputHandler> {
 
     /**
      * Gets the event type associated with InputEvent.
-     * 
+     *
      * @return the handler type
      */
     public static Type<InputHandler> getType() {

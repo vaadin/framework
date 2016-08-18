@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -106,7 +106,7 @@ import elemental.json.JsonValue;
  * The Grid is typed to JSONObject. The structure of the JSONObject is described
  * at {@link com.vaadin.shared.data.DataProviderRpc#setRowData(int, List)
  * DataProviderRpc.setRowData(int, List)}.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -175,7 +175,7 @@ public class GridConnector extends AbstractHasComponentsConnector
 
         /**
          * Sets a new renderer for this column object
-         * 
+         *
          * @param rendererConnector
          *            a renderer connector object
          */
@@ -350,7 +350,7 @@ public class GridConnector extends AbstractHasComponentsConnector
          * Used to handle the case where the editor calls us because it was
          * invoked by the server via RPC and not by the client. In that case,
          * the request can be simply synchronously completed.
-         * 
+         *
          * @param request
          *            the request object
          * @return true if the request was originally triggered by the server,
@@ -526,7 +526,7 @@ public class GridConnector extends AbstractHasComponentsConnector
         /**
          * Fetches id from the row object that corresponds with the given
          * rowIndex.
-         * 
+         *
          * @since 7.6.1
          * @param rowIndex
          *            the index of the row for which to fetch the id
@@ -576,7 +576,7 @@ public class GridConnector extends AbstractHasComponentsConnector
 
     /**
      * Class for handling scrolling issues with open details.
-     * 
+     *
      * @since 7.5.2
      */
     private class LazyDetailsScroller implements DeferredWorker {
@@ -606,7 +606,7 @@ public class GridConnector extends AbstractHasComponentsConnector
 
         /**
          * Inform LazyDetailsScroller that a details row has opened on a row.
-         * 
+         *
          * @param rowIndex
          *            index of row with details now open
          */
@@ -1028,7 +1028,7 @@ public class GridConnector extends AbstractHasComponentsConnector
 
     /**
      * Updates a column from a state change event.
-     * 
+     *
      * @param columnIndex
      *            The index of the column to update
      */
@@ -1042,7 +1042,7 @@ public class GridConnector extends AbstractHasComponentsConnector
 
     /**
      * Adds a new column to the grid widget from a state change event
-     * 
+     *
      * @param columnIndex
      *            The index of the column, according to how it
      */
@@ -1061,7 +1061,7 @@ public class GridConnector extends AbstractHasComponentsConnector
 
     /**
      * Updates the column values from a state
-     * 
+     *
      * @param column
      *            The column to update
      * @param state
@@ -1145,7 +1145,7 @@ public class GridConnector extends AbstractHasComponentsConnector
 
     /**
      * Gets the row key for a row object.
-     * 
+     *
      * @param row
      *            the row object
      * @return the key for the given row
@@ -1159,7 +1159,7 @@ public class GridConnector extends AbstractHasComponentsConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.client.HasComponentsConnector#updateCaption(com.vaadin.client
      * .ComponentConnector)
@@ -1195,7 +1195,7 @@ public class GridConnector extends AbstractHasComponentsConnector
     /**
      * Gets the listener used by this connector for tracking when row detail
      * visibility changes.
-     * 
+     *
      * @since 7.5.0
      * @return the used details listener
      */
@@ -1278,7 +1278,7 @@ public class GridConnector extends AbstractHasComponentsConnector
 
     /**
      * Creates a concatenation of all columns errors for Editor.
-     * 
+     *
      * @since 7.6
      * @return displayed error string
      */

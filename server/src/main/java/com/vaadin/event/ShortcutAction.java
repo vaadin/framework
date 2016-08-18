@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -47,7 +47,7 @@ import com.vaadin.ui.Window;
  * very well supported yet, but it might still be a good idea to give a caption
  * to the shortcut.
  * </p>
- * 
+ *
  * @author Vaadin Ltd.
  * @since 4.0.1
  */
@@ -63,7 +63,7 @@ public class ShortcutAction extends Action {
      * (optionally) {@link ModifierKey}s. <br/>
      * The shortcut might be shown in the UI (e.g context menu), in which case
      * the caption will be used.
-     * 
+     *
      * @param caption
      *            used when displaying the shortcut visually
      * @param kc
@@ -82,7 +82,7 @@ public class ShortcutAction extends Action {
      * (optionally) {@link ModifierKey}s. <br/>
      * The shortcut might be shown in the UI (e.g context menu), in which case
      * the caption and icon will be used.
-     * 
+     *
      * @param caption
      *            used when displaying the shortcut visually
      * @param icon
@@ -151,7 +151,7 @@ public class ShortcutAction extends Action {
      * <code>"Save&&&close"</code> will respond to ALT-C, and the caption will
      * say "Save&close".
      * </p>
-     * 
+     *
      * @param shorthandCaption
      *            the caption in modifier shorthand
      */
@@ -171,7 +171,7 @@ public class ShortcutAction extends Action {
      * <code>new ShortcutAction("Do &stuff", new int[]{ShortcutAction.ModifierKey.CTRL}));</code>
      * will respond to CTRL-S.
      * </p>
-     * 
+     *
      * @param shorthandCaption
      * @param modifierKeys
      */
@@ -222,7 +222,7 @@ public class ShortcutAction extends Action {
     /**
      * When setting modifiers, make sure that modifiers is a valid array AND
      * that it's sorted.
-     * 
+     *
      * @param modifiers
      *            the modifier keys for this shortcut
      */
@@ -238,7 +238,7 @@ public class ShortcutAction extends Action {
     /**
      * Get the {@link KeyCode} that this shortcut reacts to (in combination with
      * the {@link ModifierKey}s).
-     * 
+     *
      * @return keycode for this shortcut
      */
     public int getKeyCode() {
@@ -247,7 +247,7 @@ public class ShortcutAction extends Action {
 
     /**
      * Get the {@link ModifierKey}s required for the shortcut to react.
-     * 
+     *
      * @return modifier keys for this shortcut
      */
     public int[] getModifiers() {
@@ -256,7 +256,7 @@ public class ShortcutAction extends Action {
 
     /**
      * Key codes that can be used for shortcuts
-     * 
+     *
      */
     public interface KeyCode extends Serializable {
         public static final int ENTER = 13;
@@ -388,7 +388,7 @@ public class ShortcutAction extends Action {
 
     /**
      * Modifier key constants
-     * 
+     *
      */
     public interface ModifierKey extends Serializable {
         public static final int SHIFT = 16;

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -22,7 +22,7 @@ import com.vaadin.data.Result;
 
 /**
  * Verifies that a value is within the given range.
- * 
+ *
  * @param <T>
  *            the type to validate
  * @author Vaadin Ltd.
@@ -42,7 +42,7 @@ public class RangeValidator<T> extends AbstractValidator<T> {
      * direction. Both limits may be null; this can be useful if the limits are
      * resolved programmatically. The result of passing null to {@code apply}
      * depends on the given comparator.
-     * 
+     *
      * @param errorMessage
      *            the error message to return if validation fails, not null
      * @param comparator
@@ -73,7 +73,7 @@ public class RangeValidator<T> extends AbstractValidator<T> {
      * <p>
      * Null is considered to be less than any non-null value. This means null
      * never passes validation if a minimum value is specified.
-     * 
+     *
      * @param <C>
      *            the {@code Comparable} value type
      * @param errorMessage
@@ -103,7 +103,7 @@ public class RangeValidator<T> extends AbstractValidator<T> {
 
     /**
      * Returns whether the minimum value is part of the accepted range.
-     * 
+     *
      * @return true if the minimum value is part of the range, false otherwise
      */
     public boolean isMinValueIncluded() {
@@ -112,7 +112,7 @@ public class RangeValidator<T> extends AbstractValidator<T> {
 
     /**
      * Sets whether the minimum value is part of the accepted range.
-     * 
+     *
      * @param minValueIncluded
      *            true if the minimum value should be part of the range, false
      *            otherwise
@@ -123,7 +123,7 @@ public class RangeValidator<T> extends AbstractValidator<T> {
 
     /**
      * Returns whether the maximum value is part of the accepted range.
-     * 
+     *
      * @return true if the maximum value is part of the range, false otherwise
      */
     public boolean isMaxValueIncluded() {
@@ -132,7 +132,7 @@ public class RangeValidator<T> extends AbstractValidator<T> {
 
     /**
      * Sets whether the maximum value is part of the accepted range.
-     * 
+     *
      * @param maxValueIncluded
      *            true if the maximum value should be part of the range, false
      *            otherwise
@@ -143,7 +143,7 @@ public class RangeValidator<T> extends AbstractValidator<T> {
 
     /**
      * Returns the minimum value of the range.
-     * 
+     *
      * @return the minimum value
      */
     public T getMinValue() {
@@ -154,7 +154,7 @@ public class RangeValidator<T> extends AbstractValidator<T> {
      * Sets the minimum value of the range. Use
      * {@link #setMinValueIncluded(boolean)} to control whether this value is
      * part of the range or not.
-     * 
+     *
      * @param minValue
      *            the minimum value
      */
@@ -164,7 +164,7 @@ public class RangeValidator<T> extends AbstractValidator<T> {
 
     /**
      * Gets the maximum value of the range.
-     * 
+     *
      * @return the maximum value
      */
     public T getMaxValue() {
@@ -175,7 +175,7 @@ public class RangeValidator<T> extends AbstractValidator<T> {
      * Sets the maximum value of the range. Use
      * {@link #setMaxValueIncluded(boolean)} to control whether this value is
      * part of the range or not.
-     * 
+     *
      * @param maxValue
      *            the maximum value
      */
@@ -194,7 +194,7 @@ public class RangeValidator<T> extends AbstractValidator<T> {
 
     /**
      * Returns whether the given value lies in the valid range.
-     * 
+     *
      * @param value
      *            the value to validate
      * @return true if the value is valid, false otherwise

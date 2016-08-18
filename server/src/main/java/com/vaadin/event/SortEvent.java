@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,9 +24,9 @@ import com.vaadin.ui.Component;
 /**
  * Event describing a change in sorting of a {@link Container}. Fired by
  * {@link SortNotifier SortNotifiers}.
- * 
+ *
  * @see SortListener
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -37,7 +37,7 @@ public class SortEvent extends Component.Event {
 
     /**
      * Creates a new sort order change event with a sort order list.
-     * 
+     *
      * @param source
      *            the component from which the event originates
      * @param sortOrder
@@ -55,7 +55,7 @@ public class SortEvent extends Component.Event {
 
     /**
      * Gets the sort order list.
-     * 
+     *
      * @return the sort order list
      */
     public List<SortOrder> getSortOrder() {
@@ -64,7 +64,7 @@ public class SortEvent extends Component.Event {
 
     /**
      * Returns whether this event originated from actions done by the user.
-     * 
+     *
      * @return true if sort event originated from user interaction
      */
     public boolean isUserOriginated() {
@@ -77,7 +77,7 @@ public class SortEvent extends Component.Event {
     public interface SortListener extends Serializable {
         /**
          * Called when the sort order has changed.
-         * 
+         *
          * @param event
          *            the sort order change event
          */
@@ -92,7 +92,7 @@ public class SortEvent extends Component.Event {
         /**
          * Adds a sort order change listener that gets notified when the sort
          * order changes.
-         * 
+         *
          * @param listener
          *            the sort order change listener to add
          */
@@ -101,7 +101,7 @@ public class SortEvent extends Component.Event {
         /**
          * Removes a sort order change listener previously added using
          * {@link #addSortListener(SortListener)}.
-         * 
+         *
          * @param listener
          *            the sort order change listener to remove
          */

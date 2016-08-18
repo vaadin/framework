@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,7 +26,7 @@ import com.vaadin.util.ReflectTools;
 /**
  * Context click event fired by a {@link Component}. ContextClickEvent happens
  * when context click happens on the client-side inside the Component.
- * 
+ *
  * @since 7.6
  * @author Vaadin Ltd
  */
@@ -48,7 +48,7 @@ public class ContextClickEvent extends ClickEvent {
 
         /**
          * Called when the context click happens.
-         * 
+         *
          * @param event
          *            the context click event
          */
@@ -63,7 +63,7 @@ public class ContextClickEvent extends ClickEvent {
         /**
          * Adds a context click listener that gets notified when a context click
          * happens.
-         * 
+         *
          * @param listener
          *            the context click listener to add
          */
@@ -72,7 +72,7 @@ public class ContextClickEvent extends ClickEvent {
         /**
          * Removes a context click listener that was previously added with
          * {@link #addContextClickListener(ContextClickListener)}.
-         * 
+         *
          * @param listener
          *            the context click listener to remove
          */

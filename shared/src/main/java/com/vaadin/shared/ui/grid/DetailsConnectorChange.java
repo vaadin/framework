@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,7 +23,7 @@ import com.vaadin.shared.Connector;
 /**
  * A description of an indexing modification for a connector. This is used by
  * Grid for internal bookkeeping updates.
- * 
+ *
  * @since 7.5.0
  * @author Vaadin Ltd
  */
@@ -58,7 +58,7 @@ public class DetailsConnectorChange implements Serializable {
      * <p>
      * Calling this constructor will also assert that the state of the pojo is
      * consistent by internal assumptions.
-     * 
+     *
      * @param connector
      *            the changed connector
      * @param oldIndex
@@ -101,7 +101,7 @@ public class DetailsConnectorChange implements Serializable {
      * <p>
      * If <code>null</code>, the connector is recently added. This means that
      * {@link #getConnector()} is expected not to return <code>null</code>.
-     * 
+     *
      * @return the old index for the connector
      */
     public Integer getOldIndex() {
@@ -114,7 +114,7 @@ public class DetailsConnectorChange implements Serializable {
      * <p>
      * If <code>null</code>, the connector should be removed. This means that
      * {@link #getConnector()} is expected to return <code>null</code> as well.
-     * 
+     *
      * @return the new index for the connector
      */
     public Integer getNewIndex() {
@@ -124,7 +124,7 @@ public class DetailsConnectorChange implements Serializable {
 
     /**
      * Gets the changed connector.
-     * 
+     *
      * @return the changed connector. Might be <code>null</code>
      */
     public Connector getConnector() {
@@ -134,7 +134,7 @@ public class DetailsConnectorChange implements Serializable {
 
     /**
      * Sets the changed connector.
-     * 
+     *
      * @param connector
      *            the changed connector. May be <code>null</code>
      */
@@ -144,7 +144,7 @@ public class DetailsConnectorChange implements Serializable {
 
     /**
      * Sets the old index
-     * 
+     *
      * @param oldIndex
      *            the old index. May be <code>null</code> if a new connector is
      *            being inserted
@@ -155,7 +155,7 @@ public class DetailsConnectorChange implements Serializable {
 
     /**
      * Sets the new index
-     * 
+     *
      * @param newIndex
      *            the new index. May be <code>null</code> if a connector is
      *            being removed
@@ -167,7 +167,7 @@ public class DetailsConnectorChange implements Serializable {
     /**
      * Checks whether whether the details should remain open, even if connector
      * might be <code>null</code>.
-     * 
+     *
      * @return <code>true</code> iff the details should remain open, even if
      *         connector might be <code>null</code>
      */
@@ -178,7 +178,7 @@ public class DetailsConnectorChange implements Serializable {
     /**
      * Sets whether the details should remain open, even if connector might be
      * <code>null</code>.
-     * 
+     *
      * @param shouldStillBeVisible
      *            <code>true</code> iff the details should remain open, even if
      *            connector might be <code>null</code>

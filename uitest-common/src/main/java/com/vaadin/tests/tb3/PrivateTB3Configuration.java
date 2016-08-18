@@ -40,14 +40,14 @@ import com.vaadin.testbench.parallel.BrowserUtil;
  * Provides values for parameters which depend on where the test is run.
  * Parameters should be configured in work/eclipse-run-selected-test.properties.
  * A template is available in uitest/.
- * 
+ *
  * @author Vaadin Ltd
  */
 @RunOnHub("tb3-hub.intra.itmill.com")
 @BrowserFactory(VaadinBrowserFactory.class)
 public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     /**
-     * 
+     *
      */
     public static final String SCREENSHOT_DIRECTORY = "com.vaadin.testbench.screenshot.directory";
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
@@ -205,7 +205,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     /**
      * Gets the hostname that tests are configured to use.
-     * 
+     *
      * @return the host name configuration value
      */
     public static String getConfiguredDeploymentHostname() {
@@ -225,7 +225,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     /**
      * Gets the port that tests are configured to use.
-     * 
+     *
      * @return the port configuration value
      */
     public static int getConfiguredDeploymentPort() {
@@ -242,7 +242,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     /**
      * Tries to automatically determine the IP address of the machine the test
      * is running on.
-     * 
+     *
      * @return An IP address of one of the network interfaces in the machine.
      * @throws RuntimeException
      *             if there was an error or no IP was found

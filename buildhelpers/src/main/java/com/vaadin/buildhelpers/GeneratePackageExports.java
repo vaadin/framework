@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * Export-Package attribute, and appends it to the jar's MANIFEST.MF.
  * <p>
  * See #3521 for details.
- * 
+ *
  * @author magi
  */
 public class GeneratePackageExports {
@@ -148,7 +148,7 @@ public class GeneratePackageExports {
      * version.<java package>. Searches for the packge and then its parents
      * recursively. Falls back to the "vaadin.version" system property if no
      * other properties are found.
-     * 
+     *
      * @param javaPackage
      *            The package to determine a version for
      * @return A version or null if no version has been defined

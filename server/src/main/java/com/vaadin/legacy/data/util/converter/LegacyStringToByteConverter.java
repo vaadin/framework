@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,7 +26,7 @@ import java.util.Locale;
  * <p>
  * Override and overwrite {@link #getFormat(Locale)} to use a different format.
  * </p>
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.4
  */
@@ -37,7 +37,7 @@ public class LegacyStringToByteConverter
      * Returns the format used by
      * {@link #convertToPresentation(Byte, Class, Locale)} and
      * {@link #convertToModel(String, Class, Locale)}
-     * 
+     *
      * @param locale
      *            The locale to use
      * @return A NumberFormat instance
@@ -52,7 +52,7 @@ public class LegacyStringToByteConverter
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
      * java.lang.Class, java.util.Locale)
@@ -78,7 +78,7 @@ public class LegacyStringToByteConverter
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.util.converter.Converter#getModelType()
      */
     @Override

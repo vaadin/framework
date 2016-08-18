@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -79,7 +79,7 @@ public class VTooltip extends VOverlay {
      * Used to show tooltips; usually used via the singleton in
      * {@link ApplicationConnection}. NOTE that #setOwner(Widget)} should be
      * called after instantiating.
-     * 
+     *
      * @see ApplicationConnection#getVTooltip()
      */
     public VTooltip() {
@@ -107,7 +107,7 @@ public class VTooltip extends VOverlay {
 
     /**
      * Show the tooltip with the provided info for assistive devices.
-     * 
+     *
      * @param info
      *            with the content of the tooltip
      */
@@ -119,7 +119,7 @@ public class VTooltip extends VOverlay {
 
     /**
      * Initialize the tooltip overlay for assistive devices.
-     * 
+     *
      * @param info
      *            with the content of the tooltip
      * @since 7.2.4
@@ -147,12 +147,12 @@ public class VTooltip extends VOverlay {
              * element we need to clear style width of its parent DIV from old
              * value (in some strange cases this width=[tooltip MAX_WIDTH] after
              * tooltip text has been already updated to new shortly value:
-             * 
+             *
              * <div class="popupContent"> <div style="width:500px;"> <div
              * class="v-errormessage" aria-hidden="true" style="display: none;">
              * <div class="gwt-HTML"> </div> </div> <div
              * class="v-tooltip-text">This is a short tooltip</div> </div>
-             * 
+             *
              * and it leads to error during calculation offsetWidth (it is
              * native GWT method getSubPixelOffsetWidth()) of description
              * element")
@@ -168,7 +168,7 @@ public class VTooltip extends VOverlay {
 
     /**
      * Show a popup containing the currentTooltipInfo
-     * 
+     *
      */
     private void showTooltip() {
         if (currentTooltipInfo.hasMessage()) {
@@ -212,7 +212,7 @@ public class VTooltip extends VOverlay {
                  * Return the final X-coordinate of the tooltip based on cursor
                  * position, size of the tooltip, size of the page and necessary
                  * margins.
-                 * 
+                 *
                  * @param offsetWidth
                  * @return The final X-coordinate
                  */
@@ -285,10 +285,10 @@ public class VTooltip extends VOverlay {
                  * Return the final Y-coordinate of the tooltip based on cursor
                  * position, size of the tooltip, size of the page and necessary
                  * margins.
-                 * 
+                 *
                  * @param offsetHeight
                  * @return The final y-coordinate
-                 * 
+                 *
                  */
                 private int getFinalY(int offsetHeight) {
                     int y = 0;
@@ -381,7 +381,7 @@ public class VTooltip extends VOverlay {
      * and attached to the DOM well in advance. For this reason both isShowing
      * and isVisible return false positives. We can't override either of them as
      * external code may depend on this behavior.
-     * 
+     *
      * @return boolean
      */
     public boolean isTooltipOpen() {
@@ -507,7 +507,7 @@ public class VTooltip extends VOverlay {
 
         /**
          * Locate the tooltip for given element
-         * 
+         *
          * @param element
          *            Element used in search
          * @return TooltipInfo if connector and tooltip found, null if not
@@ -547,7 +547,7 @@ public class VTooltip extends VOverlay {
 
         /**
          * Handle hide event
-         * 
+         *
          */
         private void handleHideEvent() {
             hideTooltip();
@@ -570,7 +570,7 @@ public class VTooltip extends VOverlay {
 
         /**
          * Displays Tooltip when page is navigated with the keyboard.
-         * 
+         *
          * Tooltip is not visible. This makes it possible for assistive devices
          * to recognize the tooltip.
          */
@@ -581,7 +581,7 @@ public class VTooltip extends VOverlay {
 
         /**
          * Hides Tooltip when the page is navigated with the keyboard.
-         * 
+         *
          * Removes the Tooltip from page to make sure assistive devices don't
          * recognize it by accident.
          */
@@ -685,7 +685,7 @@ public class VTooltip extends VOverlay {
 
     /**
      * Connects DOM handlers to widget that are needed for tooltip presentation.
-     * 
+     *
      * @param widget
      *            Widget which DOM handlers are connected
      */
@@ -702,7 +702,7 @@ public class VTooltip extends VOverlay {
 
     /**
      * Returns the unique id of the tooltip element.
-     * 
+     *
      * @return String containing the unique id of the tooltip, which always has
      *         a value
      */
@@ -723,7 +723,7 @@ public class VTooltip extends VOverlay {
      * Returns the time (in ms) the tooltip should be displayed after an event
      * that will cause it to be closed (e.g. mouse click outside the component,
      * key down).
-     * 
+     *
      * @return The close timeout (in ms)
      */
     public int getCloseTimeout() {
@@ -734,7 +734,7 @@ public class VTooltip extends VOverlay {
      * Sets the time (in ms) the tooltip should be displayed after an event that
      * will cause it to be closed (e.g. mouse click outside the component, key
      * down).
-     * 
+     *
      * @param closeTimeout
      *            The close timeout (in ms)
      */
@@ -747,7 +747,7 @@ public class VTooltip extends VOverlay {
      * be used instead of {@link #getOpenDelay()}. The quick open delay is used
      * when the tooltip has very recently been shown, is currently hidden but
      * about to be shown again.
-     * 
+     *
      * @return The quick open timeout (in ms)
      */
     public int getQuickOpenTimeout() {
@@ -759,7 +759,7 @@ public class VTooltip extends VOverlay {
      * should be used instead of {@link #getOpenDelay()}. The quick open delay
      * is used when the tooltip has very recently been shown, is currently
      * hidden but about to be shown again.
-     * 
+     *
      * @param quickOpenTimeout
      *            The quick open timeout (in ms)
      */
@@ -771,7 +771,7 @@ public class VTooltip extends VOverlay {
      * Returns the time (in ms) that should elapse before a tooltip will be
      * shown, in the situation when a tooltip has very recently been shown
      * (within {@link #getQuickOpenDelay()} ms).
-     * 
+     *
      * @return The quick open delay (in ms)
      */
     public int getQuickOpenDelay() {
@@ -782,7 +782,7 @@ public class VTooltip extends VOverlay {
      * Sets the time (in ms) that should elapse before a tooltip will be shown,
      * in the situation when a tooltip has very recently been shown (within
      * {@link #getQuickOpenDelay()} ms).
-     * 
+     *
      * @param quickOpenDelay
      *            The quick open delay (in ms)
      */
@@ -795,7 +795,7 @@ public class VTooltip extends VOverlay {
      * tooltip showing has occurred (e.g. mouse over) before the tooltip is
      * shown. If a tooltip has recently been shown, then
      * {@link #getQuickOpenDelay()} is used instead of this.
-     * 
+     *
      * @return The open delay (in ms)
      */
     public int getOpenDelay() {
@@ -807,7 +807,7 @@ public class VTooltip extends VOverlay {
      * tooltip showing has occurred (e.g. mouse over) before the tooltip is
      * shown. If a tooltip has recently been shown, then
      * {@link #getQuickOpenDelay()} is used instead of this.
-     * 
+     *
      * @param openDelay
      *            The open delay (in ms)
      */
@@ -817,7 +817,7 @@ public class VTooltip extends VOverlay {
 
     /**
      * Sets the maximum width of the tooltip popup.
-     * 
+     *
      * @param maxWidth
      *            The maximum width the tooltip popup (in pixels)
      */
@@ -827,7 +827,7 @@ public class VTooltip extends VOverlay {
 
     /**
      * Returns the maximum width of the tooltip popup.
-     * 
+     *
      * @return The maximum width the tooltip popup (in pixels)
      */
     public int getMaxWidth() {

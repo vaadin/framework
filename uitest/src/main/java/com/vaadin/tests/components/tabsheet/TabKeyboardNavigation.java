@@ -23,9 +23,9 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Test if the click and key tab selection in a tabsheet generate the correct
  * focus/blur events.
- * 
+ *
  * The solution was broken in ticket (#14304)
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */

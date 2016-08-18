@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,7 +26,7 @@ import com.vaadin.ui.Table;
 
 /**
  * Tests how AbsoluteLayout handles relative sized contents.
- * 
+ *
  * @author Vaadin Ltd
  */
 @Theme("tests-tickets")
@@ -60,7 +60,7 @@ public class AbsoluteLayoutRelativeSizeContent extends AbstractTestUI {
      * Creates an {@link AbsoluteLayout} of fixed size that contains a
      * full-sized {@link Table} that has been forced to full size with css.
      * Represents the workaround given for this ticket.
-     * 
+     *
      * @return the created layout
      */
     private Component createComparisonTableOnFixed() {
@@ -79,7 +79,7 @@ public class AbsoluteLayoutRelativeSizeContent extends AbstractTestUI {
     /**
      * Creates an {@link AbsoluteLayout} of fixed size that contains a
      * full-sized {@link Table}.
-     * 
+     *
      * @return the created layout
      */
     private Component createTableOnFixed() {
@@ -98,7 +98,7 @@ public class AbsoluteLayoutRelativeSizeContent extends AbstractTestUI {
     /**
      * Creates an {@link AbsoluteLayout} of fixed size that contains a
      * half-sized {@link Table}.
-     * 
+     *
      * @return the created layout
      */
     private Component createHalfTableOnFixed() {
@@ -163,7 +163,7 @@ public class AbsoluteLayoutRelativeSizeContent extends AbstractTestUI {
     /**
      * Creates an {@link AbsoluteLayout} of fixed size that contains a
      * fixed-sized {@link AbsoluteLayout}.
-     * 
+     *
      * @return the created layout
      */
     private Component createFullOnFixed() {
@@ -186,7 +186,7 @@ public class AbsoluteLayoutRelativeSizeContent extends AbstractTestUI {
     /**
      * Creates an {@link AbsoluteLayout} of full size that contains another
      * full-sized {@link AbsoluteLayout}.
-     * 
+     *
      * @return the created layout
      */
     private AbsoluteLayout createFullOnFull() {

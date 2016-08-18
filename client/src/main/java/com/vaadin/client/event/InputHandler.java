@@ -19,14 +19,14 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler interface for {@link InputEvent}s.
- * 
+ *
  * @since 8.0
  */
 public interface InputHandler extends EventHandler {
 
     /**
      * Called when an {@link InputEvent} is fired.
-     * 
+     *
      * @param event
      *            the {@link InputEvent} that was fired.
      */

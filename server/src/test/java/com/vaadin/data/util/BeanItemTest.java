@@ -16,9 +16,9 @@ import com.vaadin.data.Property;
 
 /**
  * Test BeanItem specific features.
- * 
+ *
  * Only public API is tested, not the methods with package visibility.
- * 
+ *
  * See also {@link PropertySetItemTest}, which tests the base class.
  */
 public class BeanItemTest {

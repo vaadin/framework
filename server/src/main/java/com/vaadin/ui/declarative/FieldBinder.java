@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,7 +31,7 @@ import com.vaadin.ui.Component;
 /**
  * Binder utility that binds member fields of a design class instance to given
  * component instances. Only fields of type {@link Component} are bound
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -44,7 +44,7 @@ public class FieldBinder implements Serializable {
 
     /**
      * Creates a new instance of LayoutFieldBinder.
-     * 
+     *
      * @param design
      *            the design class instance containing the fields to bind
      * @throws IntrospectionException
@@ -56,7 +56,7 @@ public class FieldBinder implements Serializable {
 
     /**
      * Creates a new instance of LayoutFieldBinder.
-     * 
+     *
      * @param design
      *            the instance containing the fields
      * @param classWithFields
@@ -75,7 +75,7 @@ public class FieldBinder implements Serializable {
 
     /**
      * Returns a collection of field names that are not bound.
-     * 
+     *
      * @return a collection of fields assignable to Component that are not bound
      */
     public Collection<String> getUnboundFields() throws FieldBindingException {
@@ -117,7 +117,7 @@ public class FieldBinder implements Serializable {
      * id or caption of the instance, depending on which one is defined. If a
      * field is already bound (not null), {@link FieldBindingException} is
      * thrown.
-     * 
+     *
      * @param instance
      *            the instance to be bound to a field
      * @return true on success, otherwise false
@@ -131,7 +131,7 @@ public class FieldBinder implements Serializable {
     /**
      * Tries to bind the given {@link Component} instance to a member field of
      * the bind target. The fields are matched based on localId, id and caption.
-     * 
+     *
      * @param instance
      *            the instance to be bound to a field
      * @param localId
@@ -163,7 +163,7 @@ public class FieldBinder implements Serializable {
      * the bind target. The field is matched based on the given identifier. If a
      * field is already bound (not null), {@link FieldBindingException} is
      * thrown.
-     * 
+     *
      * @param identifier
      *            the identifier for the field.
      * @param instance
@@ -218,7 +218,7 @@ public class FieldBinder implements Serializable {
     /**
      * Converts the given identifier to a valid field name by stripping away
      * illegal character and setting the first letter of the name to lower case.
-     * 
+     *
      * @param identifier
      *            the identifier to be converted to field name
      * @return the field name corresponding the identifier
@@ -245,7 +245,7 @@ public class FieldBinder implements Serializable {
      * Returns a list containing Field objects reflecting all the fields of the
      * class or interface represented by this Class object. The fields in
      * superclasses are excluded.
-     * 
+     *
      * @param searchClass
      *            the class to be scanned for fields
      * @return the list of fields in this class

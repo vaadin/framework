@@ -27,7 +27,7 @@ public class LoginFormTest extends TestBase {
         loginForm.addListener(new LoginListener() {
 
             /**
-             * 
+             *
              */
             private static final long serialVersionUID = 1L;
 

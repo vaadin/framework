@@ -14,7 +14,7 @@ import com.vaadin.ui.OptionGroup;
 
 /**
  * Simple test helper to test Focusable.focus() method.
- * 
+ *
  */
 public class FocusingComponents extends CustomComponent {
     GridLayout lo = new GridLayout(2, 1);

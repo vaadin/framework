@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -52,7 +52,7 @@ public final class UIDL extends JavaScriptObject {
      * Shorthand for getting the attribute named "id", which for Paintables is
      * the essential paintableId which binds the server side component to the
      * client side widget.
-     * 
+     *
      * @return the value of the id attribute, if available
      */
     public String getId() {
@@ -69,7 +69,7 @@ public final class UIDL extends JavaScriptObject {
      * internally and is not needed within
      * {@link ComponentConnector#updateFromUIDL(UIDL, ApplicationConnection)
      * updateFromUIDL()}.
-     * 
+     *
      * @return the name for this section
      */
     public native String getTag()
@@ -94,7 +94,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the named attribute as a String.
-     * 
+     *
      * @param name
      *            the name of the attribute to get
      * @return the attribute value
@@ -105,7 +105,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the names of the attributes available.
-     * 
+     *
      * @return the names of available attributes
      */
     public Set<String> getAttributeNames() {
@@ -116,7 +116,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the names of variables available.
-     * 
+     *
      * @return the names of available variables
      */
     public Set<String> getVariableNames() {
@@ -130,7 +130,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the named attribute as an int.
-     * 
+     *
      * @param name
      *            the name of the attribute to get
      * @return the attribute value
@@ -141,7 +141,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the named attribute as a long.
-     * 
+     *
      * @param name
      *            the name of the attribute to get
      * @return the attribute value
@@ -152,7 +152,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the named attribute as a float.
-     * 
+     *
      * @param name
      *            the name of the attribute to get
      * @return the attribute value
@@ -163,7 +163,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the named attribute as a double.
-     * 
+     *
      * @param name
      *            the name of the attribute to get
      * @return the attribute value
@@ -174,7 +174,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the named attribute as a boolean.
-     * 
+     *
      * @param name
      *            the name of the attribute to get
      * @return the attribute value
@@ -185,7 +185,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the named attribute as a Map of named values (key/value pairs).
-     * 
+     *
      * @param name
      *            the name of the attribute to get
      * @return the attribute Map
@@ -196,7 +196,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the named attribute as an array of Strings.
-     * 
+     *
      * @param name
      *            the name of the attribute to get
      * @return the attribute value
@@ -207,7 +207,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the named attribute as an int array.
-     * 
+     *
      * @param name
      *            the name of the attribute to get
      * @return the attribute value
@@ -218,7 +218,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Get attributes value as string whatever the type is
-     * 
+     *
      * @param name
      * @return string presentation of attribute
      */
@@ -234,7 +234,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Indicates whether or not the named attribute is available.
-     * 
+     *
      * @param name
      *            the name of the attribute to check
      * @return true if the attribute is available, false otherwise
@@ -245,7 +245,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the UIDL for the child at the given index.
-     * 
+     *
      * @param i
      *            the index of the child to get
      * @return the UIDL of the child if it exists
@@ -257,7 +257,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the child at the given index as a String.
-     * 
+     *
      * @param i
      *            the index of the child to get
      * @return the String representation of the child if it exists
@@ -286,7 +286,7 @@ public final class UIDL extends JavaScriptObject {
      * if <code>getTag()</code> returns "color", one would update the widgets
      * color to reflect the value of the "color" section.
      * </p>
-     * 
+     *
      * @return an iterator for iterating over UIDL children
      */
     public Iterator<Object> getChildIterator() {
@@ -359,7 +359,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Checks if the named variable is available.
-     * 
+     *
      * @param name
      *            the name of the variable desired
      * @return true if the variable exists, false otherwise
@@ -370,7 +370,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the value of the named variable.
-     * 
+     *
      * @param name
      *            the name of the variable
      * @return the value of the variable
@@ -381,7 +381,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the value of the named variable.
-     * 
+     *
      * @param name
      *            the name of the variable
      * @return the value of the variable
@@ -392,7 +392,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the value of the named variable.
-     * 
+     *
      * @param name
      *            the name of the variable
      * @return the value of the variable
@@ -403,7 +403,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the value of the named variable.
-     * 
+     *
      * @param name
      *            the name of the variable
      * @return the value of the variable
@@ -414,7 +414,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the value of the named variable.
-     * 
+     *
      * @param name
      *            the name of the variable
      * @return the value of the variable
@@ -425,7 +425,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the value of the named variable.
-     * 
+     *
      * @param name
      *            the name of the variable
      * @return the value of the variable
@@ -436,7 +436,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the value of the named variable.
-     * 
+     *
      * @param name
      *            the name of the variable
      * @return the value of the variable
@@ -447,7 +447,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the value of the named String[] variable as a Set of Strings.
-     * 
+     *
      * @param name
      *            the name of the variable
      * @return the value of the variable
@@ -463,7 +463,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the value of the named variable.
-     * 
+     *
      * @param name
      *            the name of the variable
      * @return the value of the variable
@@ -499,7 +499,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Returns the number of children.
-     * 
+     *
      * @return the number of children
      */
     public native int getChildCount()
@@ -514,7 +514,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the Paintable with the id found in the named attributes's value.
-     * 
+     *
      * @param name
      *            the name of the attribute
      * @return the Paintable referenced by the attribute, if it exists
@@ -527,7 +527,7 @@ public final class UIDL extends JavaScriptObject {
 
     /**
      * Gets the Paintable with the id found in the named variable's value.
-     * 
+     *
      * @param name
      *            the name of the variable
      * @return the Paintable referenced by the variable, if it exists
@@ -541,7 +541,7 @@ public final class UIDL extends JavaScriptObject {
     /**
      * Returns the child UIDL by its name. If several child nodes exist with the
      * given name, the first child UIDL will be returned.
-     * 
+     *
      * @param tagName
      * @return the child UIDL or null if child wit given name was not found
      */

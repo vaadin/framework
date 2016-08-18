@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,7 +19,7 @@ package com.vaadin.data.validator;
  * A string validator for e-mail addresses. The e-mail address syntax is not
  * complete according to RFC 822 but handles the vast majority of valid e-mail
  * addresses correctly.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 8.0
  */
@@ -34,7 +34,7 @@ public class EmailValidator extends RegexpValidator {
     /**
      * Creates a validator for checking that a string is a syntactically valid
      * e-mail address.
-     * 
+     *
      * @param errorMessage
      *            the message to display in case the value does not validate.
      */

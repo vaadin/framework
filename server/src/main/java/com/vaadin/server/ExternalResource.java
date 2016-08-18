@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,7 @@ import com.vaadin.util.FileTypeResolver;
  * <code>ExternalResource</code> implements source for resources fetched from
  * location specified by URL:s. The resources are fetched directly by the client
  * terminal and are not fetched trough the terminal adapter.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -44,7 +44,7 @@ public class ExternalResource implements Resource, Serializable {
 
     /**
      * Creates a new download component for downloading directly from given URL.
-     * 
+     *
      * @param sourceURL
      *            the source URL.
      */
@@ -58,7 +58,7 @@ public class ExternalResource implements Resource, Serializable {
 
     /**
      * Creates a new download component for downloading directly from given URL.
-     * 
+     *
      * @param sourceURL
      *            the source URL.
      * @param mimeType
@@ -71,7 +71,7 @@ public class ExternalResource implements Resource, Serializable {
 
     /**
      * Creates a new download component for downloading directly from given URL.
-     * 
+     *
      * @param sourceURL
      *            the source URL.
      */
@@ -85,7 +85,7 @@ public class ExternalResource implements Resource, Serializable {
 
     /**
      * Creates a new download component for downloading directly from given URL.
-     * 
+     *
      * @param sourceURL
      *            the source URL.
      * @param mimeType
@@ -98,7 +98,7 @@ public class ExternalResource implements Resource, Serializable {
 
     /**
      * Gets the URL of the external resource.
-     * 
+     *
      * @return the URL of the external resource.
      */
     public String getURL() {
@@ -107,7 +107,7 @@ public class ExternalResource implements Resource, Serializable {
 
     /**
      * Gets the MIME type of the resource.
-     * 
+     *
      * @see com.vaadin.server.Resource#getMIMEType()
      */
     @Override

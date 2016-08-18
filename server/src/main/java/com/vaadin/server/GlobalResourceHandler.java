@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,7 +36,7 @@ import com.vaadin.util.CurrentInstance;
 /**
  * A {@link RequestHandler} that takes care of {@link ConnectorResource}s that
  * should not be served by the connector.
- * 
+ *
  * @author Vaadin Ltd
  * @version @VERSION@
  * @since 7.0.0
@@ -130,7 +130,7 @@ public class GlobalResourceHandler implements RequestHandler {
      * A {@link ConnectorResource} registered for a {@link LegacyComponent} will
      * be set to be served with a global URL. Other resource types will be
      * ignored and thus not served by this handler.
-     * 
+     *
      * @param resource
      *            the resource to register
      * @param ownerConnector
@@ -181,7 +181,7 @@ public class GlobalResourceHandler implements RequestHandler {
 
     /**
      * Gets a global URI for a resource if it's registered with this handler.
-     * 
+     *
      * @param connector
      *            the connector for which the uri should be generated.
      * @param resource
@@ -206,7 +206,7 @@ public class GlobalResourceHandler implements RequestHandler {
     /**
      * Notifies this handler that resources registered for the given connector
      * can be released.
-     * 
+     *
      * @param connector
      *            the connector for which any registered resources can be
      *            released.

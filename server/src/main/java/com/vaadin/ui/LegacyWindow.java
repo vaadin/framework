@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -45,7 +45,7 @@ public class LegacyWindow extends UI {
 
     /**
      * Creates a new legacy window with the given caption
-     * 
+     *
      * @param caption
      *            the caption of the window
      */
@@ -57,7 +57,7 @@ public class LegacyWindow extends UI {
 
     /**
      * Creates a legacy window with the given caption and content layout
-     * 
+     *
      * @param caption
      * @param content
      */
@@ -92,7 +92,7 @@ public class LegacyWindow extends UI {
      * <p>
      * Note! Portlets do not support direct window access through URLs.
      * </p>
-     * 
+     *
      * @return the Name of the Window.
      */
     public String getName() {
@@ -115,7 +115,7 @@ public class LegacyWindow extends UI {
      * <p>
      * Note! Portlets do not support direct window access through URLs.
      * </p>
-     * 
+     *
      * @param name
      *            the new name for the window or null if the application should
      *            automatically assign a name to it
@@ -139,7 +139,7 @@ public class LegacyWindow extends UI {
      * <p>
      * Note! This method can not be used for portlets.
      * </p>
-     * 
+     *
      * @return the URL of the window or null if the window is not attached to an
      *         application
      */
@@ -160,10 +160,10 @@ public class LegacyWindow extends UI {
     /**
      * Opens the given resource in this UI. The contents of this UI is replaced
      * by the {@code Resource}.
-     * 
+     *
      * @param resource
      *            the resource to show in this UI
-     * 
+     *
      * @deprecated As of 7.0, use getPage().setLocation instead
      */
     @Deprecated
@@ -211,7 +211,7 @@ public class LegacyWindow extends UI {
      * with security features in some browsers. Is is recommended to instead use
      * {@link Link} for starting downloads.
      * </p>
-     * 
+     *
      * @param resource
      *            the resource.
      * @param windowName
@@ -270,7 +270,7 @@ public class LegacyWindow extends UI {
      * with security features in some browsers. Is is recommended to instead use
      * {@link Link} for starting downloads.
      * </p>
-     * 
+     *
      * @param resource
      *            the resource.
      * @param windowName
@@ -295,7 +295,7 @@ public class LegacyWindow extends UI {
      * with security features in some browsers. Is is recommended to instead use
      * {@link Link} for starting downloads.
      * </p>
-     * 
+     *
      * @param resource
      *            the resource.
      * @param windowName
@@ -318,13 +318,13 @@ public class LegacyWindow extends UI {
      * Adds a new {@link BrowserWindowResizeListener} to this UI. The listener
      * will be notified whenever the browser window within which this UI resides
      * is resized.
-     * 
+     *
      * @param resizeListener
      *            the listener to add
-     * 
+     *
      * @see BrowserWindowResizeListener#browserWindowResized(BrowserWindowResizeEvent)
      * @see #setResizeLazy(boolean)
-     * 
+     *
      * @deprecated As of 7.0, use the similarly named api in Page instead
      */
     @Deprecated
@@ -335,7 +335,7 @@ public class LegacyWindow extends UI {
     /**
      * Removes a {@link BrowserWindowResizeListener} from this UI. The listener
      * will no longer be notified when the browser window is resized.
-     * 
+     *
      * @param resizeListener
      *            the listener to remove
      * @deprecated As of 7.0, use the similarly named api in Page instead
@@ -348,7 +348,7 @@ public class LegacyWindow extends UI {
     /**
      * Gets the last known height of the browser window in which this UI
      * resides.
-     * 
+     *
      * @return the browser window height in pixels
      * @deprecated As of 7.0, use the similarly named api in Page instead
      */
@@ -359,9 +359,9 @@ public class LegacyWindow extends UI {
 
     /**
      * Gets the last known width of the browser window in which this UI resides.
-     * 
+     *
      * @return the browser window width in pixels
-     * 
+     *
      * @deprecated As of 7.0, use the similarly named api in Page instead
      */
     @Deprecated
@@ -371,13 +371,13 @@ public class LegacyWindow extends UI {
 
     /**
      * Executes JavaScript in this window.
-     * 
+     *
      * <p>
      * This method allows one to inject javascript from the server to client. A
      * client implementation is not required to implement this functionality,
      * but currently all web-based clients do implement this.
      * </p>
-     * 
+     *
      * <p>
      * Executing javascript this way often leads to cross-browser compatibility
      * issues and regressions that are hard to resolve. Use of this method
@@ -385,10 +385,10 @@ public class LegacyWindow extends UI {
      * with GWT. For more info on creating own, reusable client-side widgets in
      * Java, read the corresponding chapter in Book of Vaadin.
      * </p>
-     * 
+     *
      * @param script
      *            JavaScript snippet that will be executed.
-     * 
+     *
      * @deprecated As of 7.0, use JavaScript.getCurrent().execute(String)
      *             instead
      */
@@ -412,7 +412,7 @@ public class LegacyWindow extends UI {
     /**
      * Set the content of the window. For a {@link LegacyWindow}, the content
      * must be a {@link ComponentContainer}.
-     * 
+     *
      * @param content
      */
     @Override
@@ -427,7 +427,7 @@ public class LegacyWindow extends UI {
     /**
      * This implementation replaces a component in the content container (
      * {@link #getContent()}) instead of in the actual UI.
-     * 
+     *
      * This method should only be called when the content is a
      * {@link ComponentContainer} (default {@link VerticalLayout} or explicitly
      * set).
@@ -440,14 +440,14 @@ public class LegacyWindow extends UI {
     /**
      * Adds a component to this UI. The component is not added directly to the
      * UI, but instead to the content container ({@link #getContent()}).
-     * 
+     *
      * This method should only be called when the content is a
      * {@link ComponentContainer} (default {@link VerticalLayout} or explicitly
      * set).
-     * 
+     *
      * @param component
      *            the component to add to this UI
-     * 
+     *
      * @see #getContent()
      */
     public void addComponent(Component component) {
@@ -457,7 +457,7 @@ public class LegacyWindow extends UI {
     /**
      * This implementation removes the component from the content container (
      * {@link #getContent()}) instead of from the actual UI.
-     * 
+     *
      * This method should only be called when the content is a
      * {@link ComponentContainer} (default {@link VerticalLayout} or explicitly
      * set).
@@ -469,7 +469,7 @@ public class LegacyWindow extends UI {
     /**
      * This implementation removes the components from the content container (
      * {@link #getContent()}) instead of from the actual UI.
-     * 
+     *
      * This method should only be called when the content is a
      * {@link ComponentContainer} (default {@link VerticalLayout} or explicitly
      * set).

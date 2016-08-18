@@ -10,7 +10,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Test to see if the width of the tooltip element is updated if a narrower
  * tooltip is opened to replace a tooltip with wider content.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class TooltipWidthUpdating extends AbstractTestUI {

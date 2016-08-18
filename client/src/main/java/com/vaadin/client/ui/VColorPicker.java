@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.HTML;
 
 /**
  * Client side implementation for ColorPicker.
- * 
+ *
  * @since 7.0.0
  */
 public class VColorPicker extends VButton implements ClickHandler {
@@ -41,7 +41,7 @@ public class VColorPicker extends VButton implements ClickHandler {
 
     /**
      * Set the color of the component, e.g. #ffffff
-     * 
+     *
      * @param color
      */
     public void setColor(String color) {
@@ -50,7 +50,7 @@ public class VColorPicker extends VButton implements ClickHandler {
 
     /**
      * Mark the popup opened/closed.
-     * 
+     *
      * @param open
      */
     public void setOpen(boolean open) {
@@ -59,7 +59,7 @@ public class VColorPicker extends VButton implements ClickHandler {
 
     /**
      * Check the popup's marked state.
-     * 
+     *
      * @return true if the popup has been marked being open, false otherwise.
      */
     public boolean isOpen() {

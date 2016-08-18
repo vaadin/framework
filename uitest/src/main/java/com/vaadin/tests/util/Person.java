@@ -86,7 +86,7 @@ public class Person implements Serializable {
 
     /**
      * Returns the address where the person lives.
-     * 
+     *
      * @return address (not null)
      */
     public Address getAddress() {

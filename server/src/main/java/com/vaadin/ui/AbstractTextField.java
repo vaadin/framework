@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -34,7 +34,7 @@ import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Abstract base class for text input components.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 8.0
  */
@@ -78,7 +78,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
     /**
      * Returns the maximum number of characters in the field. Value -1 is
      * considered unlimited. Terminal may however have some technical limits.
-     * 
+     *
      * @return the maxLength
      */
     public int getMaxLength() {
@@ -88,7 +88,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
     /**
      * Sets the maximum number of characters in the field. Value -1 is
      * considered unlimited. Terminal may however have some technical limits.
-     * 
+     *
      * @param maxLength
      *            the maxLength to set
      */
@@ -98,7 +98,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
 
     /**
      * Returns the current placeholder text.
-     * 
+     *
      * @see #setPlaceholder(String)
      * @return the placeholder text
      */
@@ -109,7 +109,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
     /**
      * Sets the placeholder text. The placeholder is text that is displayed when
      * the field would otherwise be empty, to prompt the user for input.
-     * 
+     *
      * @param placeholder
      *            the placeholder text to set
      */
@@ -131,9 +131,9 @@ public abstract class AbstractTextField extends AbstractField<String> {
 
     /**
      * Sets the range of text to be selected.
-     * 
+     *
      * As a side effect the field will become focused.
-     * 
+     *
      * @param pos
      *            the position of the first character to be selected
      * @param length
@@ -148,7 +148,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
     /**
      * Sets the cursor position in the field. As a side effect the field will
      * become focused.
-     * 
+     *
      * @param pos
      *            the position for the cursor
      */
@@ -159,7 +159,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
 
     /**
      * Returns the last known cursor position of the field.
-     * 
+     *
      */
     public int getCursorPosition() {
         return getState(false).cursorPosition;
@@ -168,11 +168,11 @@ public abstract class AbstractTextField extends AbstractField<String> {
     /**
      * Adds a {@link FocusListener} to this component, which gets fired when
      * this component receives keyboard focus.
-     * 
+     *
      * @param listener
      *            the focus listener
      * @return a registration for the listener
-     * 
+     *
      * @see Registration
      */
     public Registration addFocusListener(FocusListener listener) {
@@ -185,11 +185,11 @@ public abstract class AbstractTextField extends AbstractField<String> {
     /**
      * Adds a {@link BlurListener} to this component, which gets fired when this
      * component loses keyboard focus.
-     * 
+     *
      * @param listener
      *            the blur listener
      * @return a registration for the listener
-     * 
+     *
      * @see Registration
      */
     public Registration addBlurListener(BlurListener listener) {
@@ -203,7 +203,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
      * Gets the number of columns in the editor. If the number of columns is set
      * 0, the actual number of displayed columns is determined implicitly by the
      * adapter.
-     * 
+     *
      * @return the number of columns in the editor.
      */
     public int getColumns() {
@@ -214,7 +214,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
      * Sets the number of columns in the editor. If the number of columns is set
      * 0, the actual number of displayed columns is determined implicitly by the
      * adapter.
-     * 
+     *
      * @param columns
      *            the number of columns to set.
      */
@@ -239,9 +239,9 @@ public abstract class AbstractTextField extends AbstractField<String> {
 
     /**
      * Returns the currently set {@link ValueChangeMode}.
-     * 
+     *
      * @return the mode used to trigger {@link ValueChange}s.
-     * 
+     *
      * @see ValueChangeMode
      */
     public ValueChangeMode getValueChangeMode() {
@@ -272,7 +272,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
      * {@link ValueChange}s are triggered if the current {@link ValueChangeMode}
      * is set to either {@link ValueChangeMode#LAZY} or
      * {@link ValueChangeMode#TIMEOUT}.
-     * 
+     *
      * @return the timeout in milliseconds of how often {@link ValueChange}s are
      *         triggered.
      */
@@ -314,7 +314,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
 
     /**
      * Checks if the field is empty.
-     * 
+     *
      * @return true if the field value is an empty string, false otherwise
      */
     public boolean isEmpty() {

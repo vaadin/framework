@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -92,7 +92,7 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
 
     /**
      * Returns true if the width of the widget is undefined, false otherwise.
-     * 
+     *
      * @since 7.2
      * @return true if width of the widget is determined by its content
      */
@@ -102,7 +102,7 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
 
     /**
      * Returns true if the height of the widget is undefined, false otherwise.
-     * 
+     *
      * @since 7.2
      * @return true if width of the height is determined by its content
      */
@@ -112,10 +112,10 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
 
     /**
      * Sets the connector that should be notified of events etc.
-     * 
+     *
      * For internal use only. This method may be removed or replaced in the
      * future.
-     * 
+     *
      * @since 7.2
      * @param connector
      */
@@ -175,7 +175,7 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
      * Sets whether the caption is rendered as HTML.
      * <p>
      * The default is false, i.e. render tab captions as plain text
-     * 
+     *
      * @since 7.4
      * @param captionAsHtml
      *            true if the captions are rendered as HTML, false if rendered
@@ -187,9 +187,9 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
 
     /**
      * Checks whether captions are rendered as HTML
-     * 
+     *
      * The default is false, i.e. render tab captions as plain text
-     * 
+     *
      * @since 7.4
      * @return true if the captions are rendered as HTML, false if rendered as
      *         plain text

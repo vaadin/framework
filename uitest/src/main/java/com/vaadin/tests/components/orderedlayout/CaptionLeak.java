@@ -13,7 +13,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * HorizontalLayout and VerticalLayout should not leak caption elements via
  * listeners when removing components from a layout.
- * 
+ *
  * @since 7.1.13
  * @author Vaadin Ltd
  */
@@ -21,7 +21,7 @@ public class CaptionLeak extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#setup(com.vaadin.server.
      * VaadinRequest)
      */
@@ -70,7 +70,7 @@ public class CaptionLeak extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -80,7 +80,7 @@ public class CaptionLeak extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -49,7 +49,7 @@ import java.util.jar.Manifest;
  * appropriate monkey code for gwt directly in annotation processor and get rid
  * of {@link WidgetMapGenerator}. Using annotation processor might be a good
  * idea when dropping Java 1.5 support (integrated to javac in 6).
- * 
+ *
  */
 public class ClassPathExplorer {
 
@@ -71,7 +71,7 @@ public class ClassPathExplorer {
 
     /**
      * Contains information about widgetsets and themes found on the classpath
-     * 
+     *
      * @since 7.1
      */
     public static class LocationInfo {
@@ -128,7 +128,7 @@ public class ClassPathExplorer {
 
     /**
      * Finds the names and locations of widgetsets available on the class path.
-     * 
+     *
      * @return map from widgetset classname to widgetset location URL
      * @deprecated Use {@link #getAvailableWidgetSetsAndStylesheets()} instead
      */
@@ -140,7 +140,7 @@ public class ClassPathExplorer {
     /**
      * Finds the names and locations of widgetsets and themes available on the
      * class path.
-     * 
+     *
      * @return
      */
     public static LocationInfo getAvailableWidgetSetsAndStylesheets() {
@@ -180,13 +180,13 @@ public class ClassPathExplorer {
     /**
      * Finds all GWT modules / Vaadin widgetsets and Addon styles in a valid
      * location.
-     * 
+     *
      * If the location is a directory, all GWT modules (files with the
      * ".gwt.xml" extension) are added to widgetsets.
-     * 
+     *
      * If the location is a JAR file, the comma-separated values of the
      * "Vaadin-Widgetsets" attribute in its manifest are added to widgetsets.
-     * 
+     *
      * @param locationString
      *            an entry in {@link #classpathLocations}
      * @param widgetsets
@@ -291,9 +291,9 @@ public class ClassPathExplorer {
     /**
      * Splits the current class path into entries, and filters them accepting
      * directories, Vaadin add-on JARs with widgetsets and Vaadin JARs.
-     * 
+     *
      * Some other non-JAR entries may also be included in the result.
-     * 
+     *
      * @return filtered list of class path entries
      */
     private final static List<String> getRawClasspathEntries() {
@@ -326,9 +326,9 @@ public class ClassPathExplorer {
     /**
      * Determine every URL location defined by the current classpath, and it's
      * associated package name.
-     * 
+     *
      * See {@link #classpathLocations} for information on output format.
-     * 
+     *
      * @param rawClasspathEntries
      *            raw class path entries as split from the Java class path
      *            string
@@ -353,14 +353,14 @@ public class ClassPathExplorer {
     /**
      * Checks a class path entry to see whether it can contain widgets and
      * widgetsets.
-     * 
+     *
      * All directories are automatically accepted. JARs are accepted if they
      * have the "Vaadin-Widgetsets" attribute in their manifest or the JAR file
      * name contains "vaadin-" or ".vaadin.".
-     * 
+     *
      * Also other non-JAR entries may be accepted, the caller should be prepared
      * to handle them.
-     * 
+     *
      * @param classpathEntry
      *            class path entry string as given in the Java class path
      * @return true if the entry should be considered when looking for widgets
@@ -418,7 +418,7 @@ public class ClassPathExplorer {
     /**
      * Recursively add subdirectories and jar files to locations - see
      * {@link #classpathLocations}.
-     * 
+     *
      * @param name
      * @param file
      * @param locations
@@ -465,7 +465,7 @@ public class ClassPathExplorer {
 
     /**
      * Add a jar file to locations - see {@link #classpathLocations}.
-     * 
+     *
      * @param name
      * @param locations
      */
@@ -489,12 +489,12 @@ public class ClassPathExplorer {
     /**
      * Find and return the default source directory where to create new
      * widgetsets.
-     * 
+     *
      * Return the first directory (not a JAR file etc.) on the classpath by
      * default.
-     * 
+     *
      * TODO this could be done better...
-     * 
+     *
      * @return URL
      */
     public static URL getDefaultSourceDirectory() {
@@ -504,17 +504,17 @@ public class ClassPathExplorer {
     /**
      * Find and return the source directory which contains the given widgetset
      * file.
-     * 
+     *
      * If not applicable or widgetsetFileName is null, return the first
      * directory (not a JAR file etc.) on the classpath.
-     * 
+     *
      * TODO this could be done better...
      *
      * @since 7.6.5
-     * 
+     *
      * @param widgetsetFileName
      *            relative path for the widgetset
-     * 
+     *
      * @return URL
      */
     public static URL getWidgetsetSourceDirectory(String widgetsetFileName) {

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -52,7 +52,7 @@ import com.vaadin.util.CurrentInstance;
 /**
  * Portlet 2.0 base class. This replaces the servlet in servlet/portlet 1.0
  * deployments and handles various portlet requests from the browser.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class VaadinPortlet extends GenericPortlet
@@ -67,7 +67,7 @@ public class VaadinPortlet extends GenericPortlet
 
         /**
          * Constructs a new {@link VaadinHttpAndPortletRequest}.
-         * 
+         *
          * @since 7.2
          * @param request
          *            {@link PortletRequest} to be wrapped
@@ -83,7 +83,7 @@ public class VaadinPortlet extends GenericPortlet
 
         /**
          * Returns the original HTTP servlet request for this portlet request.
-         * 
+         *
          * @since 7.2
          * @param request
          *            {@link PortletRequest} used to
@@ -203,15 +203,15 @@ public class VaadinPortlet extends GenericPortlet
          * Simplified version of what Liferay PortalClassInvoker did. This is
          * used because the API of PortalClassInvoker has changed in Liferay
          * 6.2.
-         * 
+         *
          * This simply uses reflection with Liferay class loader. Parameters are
          * Strings to avoid static dependencies and to load all classes with
          * Liferay's own class loader. Only static utility methods are
          * supported.
-         * 
+         *
          * This method is for internal use only and may change in future
          * versions.
-         * 
+         *
          * @param className
          *            name of the Liferay class to call
          * @param methodName
@@ -388,7 +388,7 @@ public class VaadinPortlet extends GenericPortlet
     /**
      * This portlet parameter is used to add styles to the main element. E.g
      * "height:500px" generates a style="height:500px" to the main element.
-     * 
+     *
      * @deprecated As of 7.0. Will likely change or be removed in a future
      *             version
      */
@@ -398,7 +398,7 @@ public class VaadinPortlet extends GenericPortlet
     /**
      * This portal parameter is used to define the name of the Vaadin theme that
      * is used for all Vaadin applications in the portal.
-     * 
+     *
      * @deprecated As of 7.0. Will likely change or be removed in a future
      *             version
      */
@@ -476,7 +476,7 @@ public class VaadinPortlet extends GenericPortlet
 
     /**
      * @author Vaadin Ltd
-     * 
+     *
      * @deprecated As of 7.0. This is no longer used and only provided for
      *             backwards compatibility. Each {@link RequestHandler} can
      *             individually decide whether it wants to handle a request or
@@ -490,7 +490,7 @@ public class VaadinPortlet extends GenericPortlet
     /**
      * @param vaadinRequest
      * @return
-     * 
+     *
      * @deprecated As of 7.0. This is no longer used and only provided for
      *             backwards compatibility. Each {@link RequestHandler} can
      *             individually decide whether it wants to handle a request or
@@ -535,7 +535,7 @@ public class VaadinPortlet extends GenericPortlet
      * @param response
      * @throws PortletException
      * @throws IOException
-     * 
+     *
      * @deprecated As of 7.0. Will likely change or be removed in a future
      *             version
      */
@@ -554,7 +554,7 @@ public class VaadinPortlet extends GenericPortlet
 
     /**
      * Wraps the request in a (possibly portal specific) Vaadin portlet request.
-     * 
+     *
      * @param request
      *            The original PortletRequest
      * @return A wrapped version of the PortletRequest
@@ -651,10 +651,10 @@ public class VaadinPortlet extends GenericPortlet
      * <p>
      * The current portlet is derived from the current service using
      * {@link VaadinService#getCurrent()}
-     * 
+     *
      * @return the current vaadin portlet instance if available, otherwise
      *         <code>null</code>
-     * 
+     *
      * @since 7.0
      */
     public static VaadinPortlet getCurrent() {

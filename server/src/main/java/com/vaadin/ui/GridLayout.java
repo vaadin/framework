@@ -50,12 +50,12 @@ import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * A layout where the components are laid out on a grid using cell coordinates.
- * 
+ *
  * <p>
  * The GridLayout also maintains a cursor for adding components in
  * left-to-right, top-to-bottom order.
  * </p>
- * 
+ *
  * <p>
  * Each component in a <code>GridLayout</code> uses a defined
  * {@link GridLayout.Area area} (column1,row1,column2,row2) from the grid. The
@@ -63,12 +63,12 @@ import com.vaadin.ui.declarative.DesignContext;
  * you will get an {@link OverlapsException}. Adding a component with cursor
  * automatically extends the grid by increasing the grid height.
  * </p>
- * 
+ *
  * <p>
  * The grid coordinates, which are specified by a row and column index, always
  * start from 0 for the topmost row and the leftmost column.
  * </p>
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -107,10 +107,10 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Constructor for a grid of given size (number of columns and rows).
-     * 
+     *
      * The grid may grow or shrink later. Grid grows automatically if you add
      * components outside its area.
-     * 
+     *
      * @param columns
      *            Number of columns in the grid.
      * @param rows
@@ -132,9 +132,9 @@ public class GridLayout extends AbstractLayout
     /**
      * Constructs a GridLayout of given size (number of columns and rows) and
      * adds the given components in order to the grid.
-     * 
+     *
      * @see #addComponents(Component...)
-     * 
+     *
      * @param columns
      *            Number of columns in the grid.
      * @param rows
@@ -163,13 +163,13 @@ public class GridLayout extends AbstractLayout
      * by specifying the upper left corner (column1, row1) and the lower right
      * corner (column2, row2) of the area. The coordinates are zero-based.
      * </p>
-     * 
+     *
      * <p>
      * If the area overlaps with any of the existing components already present
      * in the grid, the operation will fail and an {@link OverlapsException} is
      * thrown.
      * </p>
-     * 
+     *
      * @param component
      *            the component to be added, not <code>null</code>.
      * @param column1
@@ -271,7 +271,7 @@ public class GridLayout extends AbstractLayout
     /**
      * Tests if the given area overlaps with any of the items already on the
      * grid.
-     * 
+     *
      * @param area
      *            the Area to be checked for overlapping.
      * @throws OverlapsException
@@ -293,7 +293,7 @@ public class GridLayout extends AbstractLayout
      * the area.) End coordinates (SouthEast corner of the area) are the same as
      * column1,row1. The coordinates are zero-based. Component width and height
      * is 1.
-     * 
+     *
      * @param component
      *            the component to be added, not <code>null</code>.
      * @param column
@@ -313,16 +313,16 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Forces the next component to be added at the beginning of the next line.
-     * 
+     *
      * <p>
      * Sets the cursor column to 0 and increments the cursor row by one.
      * </p>
-     * 
+     *
      * <p>
      * By calling this function you can ensure that no more components are added
      * right of the previous component.
      * </p>
-     * 
+     *
      * @see #space()
      */
     public void newLine() {
@@ -333,7 +333,7 @@ public class GridLayout extends AbstractLayout
     /**
      * Moves the cursor forward by one. If the cursor goes out of the right grid
      * border, it is moved to the first column of the next row.
-     * 
+     *
      * @see #newLine()
      */
     public void space() {
@@ -349,7 +349,7 @@ public class GridLayout extends AbstractLayout
      * cursor position is already occupied, the cursor is moved forwards to find
      * free position. If the cursor goes out from the bottom of the grid, the
      * grid is automatically extended.
-     * 
+     *
      * @param component
      *            the component to be added, not <code>null</code>.
      */
@@ -385,7 +385,7 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Removes the specified component from the layout.
-     * 
+     *
      * @param component
      *            the component to be removed.
      */
@@ -404,7 +404,7 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Removes the component specified by its cell coordinates.
-     * 
+     *
      * @param column
      *            the component's column, starting from 0.
      * @param row
@@ -428,7 +428,7 @@ public class GridLayout extends AbstractLayout
     /**
      * Gets an Iterator for the components contained in the layout. By using the
      * Iterator it is possible to step through the contents of the layout.
-     * 
+     *
      * @return the Iterator of the components inside the layout.
      */
     @Override
@@ -439,7 +439,7 @@ public class GridLayout extends AbstractLayout
     /**
      * Gets the number of components contained in the layout. Consistent with
      * the iterator returned by {@link #getComponentIterator()}.
-     * 
+     *
      * @return the number of contained components
      */
     @Override
@@ -489,7 +489,7 @@ public class GridLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Layout.AlignmentHandler#getComponentAlignment(com
      * .vaadin.ui.Component)
      */
@@ -507,17 +507,17 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Defines a rectangular area of cells in a GridLayout.
-     * 
+     *
      * <p>
      * Also maintains a reference to the component contained in the area.
      * </p>
-     * 
+     *
      * <p>
      * The area is specified by the cell coordinates of its upper left corner
      * (column1,row1) and lower right corner (column2,row2). As otherwise with
      * GridLayout, the column and row coordinates start from zero.
      * </p>
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -529,7 +529,7 @@ public class GridLayout extends AbstractLayout
          * <p>
          * Construct a new area on a grid.
          * </p>
-         * 
+         *
          * @param component
          *            the component connected to the area.
          * @param column1
@@ -563,7 +563,7 @@ public class GridLayout extends AbstractLayout
 
         /**
          * Tests if this Area overlaps with another Area.
-         * 
+         *
          * @param other
          *            the other Area that is to be tested for overlap with this
          *            area
@@ -576,7 +576,7 @@ public class GridLayout extends AbstractLayout
 
         /**
          * Gets the component connected to the area.
-         * 
+         *
          * @return the Component.
          */
         public Component getComponent() {
@@ -585,7 +585,7 @@ public class GridLayout extends AbstractLayout
 
         /**
          * Gets the column of the top-left corner cell.
-         * 
+         *
          * @return the column of the top-left corner cell.
          */
         public int getColumn1() {
@@ -594,7 +594,7 @@ public class GridLayout extends AbstractLayout
 
         /**
          * Gets the column of the bottom-right corner cell.
-         * 
+         *
          * @return the column of the bottom-right corner cell.
          */
         public int getColumn2() {
@@ -603,7 +603,7 @@ public class GridLayout extends AbstractLayout
 
         /**
          * Gets the row of the top-left corner cell.
-         * 
+         *
          * @return the row of the top-left corner cell.
          */
         public int getRow1() {
@@ -612,7 +612,7 @@ public class GridLayout extends AbstractLayout
 
         /**
          * Gets the row of the bottom-right corner cell.
-         * 
+         *
          * @return the row of the bottom-right corner cell.
          */
         public int getRow2() {
@@ -631,7 +631,7 @@ public class GridLayout extends AbstractLayout
      * Gridlayout does not support laying components on top of each other. An
      * <code>OverlapsException</code> is thrown when a component already exists
      * (even partly) at the same space on a grid with the new component.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -641,7 +641,7 @@ public class GridLayout extends AbstractLayout
 
         /**
          * Constructs an <code>OverlapsException</code>.
-         * 
+         *
          * @param existingArea
          */
         public OverlapsException(Area existingArea) {
@@ -676,7 +676,7 @@ public class GridLayout extends AbstractLayout
 
         /**
          * Gets the area .
-         * 
+         *
          * @return the existing area.
          */
         public Area getArea() {
@@ -687,7 +687,7 @@ public class GridLayout extends AbstractLayout
     /**
      * An <code>Exception</code> object which is thrown when an area exceeds the
      * bounds of the grid.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -698,7 +698,7 @@ public class GridLayout extends AbstractLayout
         /**
          * Constructs an <code>OoutOfBoundsException</code> with the specified
          * detail message.
-         * 
+         *
          * @param areaOutOfBounds
          */
         public OutOfBoundsException(Area areaOutOfBounds) {
@@ -707,7 +707,7 @@ public class GridLayout extends AbstractLayout
 
         /**
          * Gets the area that is out of bounds.
-         * 
+         *
          * @return the area out of Bound.
          */
         public Area getArea() {
@@ -718,7 +718,7 @@ public class GridLayout extends AbstractLayout
     /**
      * Sets the number of columns in the grid. The column count can not be
      * reduced if there are any areas that would be outside of the shrunk grid.
-     * 
+     *
      * @param columns
      *            the new number of columns in the grid.
      */
@@ -759,7 +759,7 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Get the number of columns in the grid.
-     * 
+     *
      * @return the number of columns in the grid.
      */
     public int getColumns() {
@@ -769,7 +769,7 @@ public class GridLayout extends AbstractLayout
     /**
      * Sets the number of rows in the grid. The number of rows can not be
      * reduced if there are any areas that would be outside of the shrunk grid.
-     * 
+     *
      * @param rows
      *            the new number of rows in the grid.
      */
@@ -809,7 +809,7 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Get the number of rows in the grid.
-     * 
+     *
      * @return the number of rows in the grid.
      */
     public int getRows() {
@@ -818,14 +818,14 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Gets the current x-position (column) of the cursor.
-     * 
+     *
      * <p>
      * The cursor position points the position for the next component that is
      * added without specifying its coordinates (grid cell). When the cursor
      * position is occupied, the next component will be added to first free
      * position after the cursor.
      * </p>
-     * 
+     *
      * @return the grid column the cursor is on, starting from 0.
      */
     public int getCursorX() {
@@ -835,7 +835,7 @@ public class GridLayout extends AbstractLayout
     /**
      * Sets the current cursor x-position. This is usually handled automatically
      * by GridLayout.
-     * 
+     *
      * @param cursorX
      */
     public void setCursorX(int cursorX) {
@@ -844,14 +844,14 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Gets the current y-position (row) of the cursor.
-     * 
+     *
      * <p>
      * The cursor position points the position for the next component that is
      * added without specifying its coordinates (grid cell). When the cursor
      * position is occupied, the next component will be added to the first free
      * position after the cursor.
      * </p>
-     * 
+     *
      * @return the grid row the Cursor is on.
      */
     public int getCursorY() {
@@ -861,7 +861,7 @@ public class GridLayout extends AbstractLayout
     /**
      * Sets the current y-coordinate (row) of the cursor. This is usually
      * handled automatically by GridLayout.
-     * 
+     *
      * @param cursorY
      *            the row number, starting from 0 for the topmost row.
      */
@@ -896,7 +896,7 @@ public class GridLayout extends AbstractLayout
 
     /*
      * Removes all components from this container.
-     * 
+     *
      * @see com.vaadin.ui.ComponentContainer#removeAllComponents()
      */
     @Override
@@ -926,7 +926,7 @@ public class GridLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Layout.SpacingHandler#setSpacing(boolean)
      */
     @Override
@@ -936,7 +936,7 @@ public class GridLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Layout.SpacingHandler#isSpacing()
      */
     @Override
@@ -946,7 +946,7 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Inserts an empty row at the specified position in the grid.
-     * 
+     *
      * @param row
      *            Index of the row before which the new row will be inserted.
      *            The leftmost row has index 0.
@@ -980,18 +980,18 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Removes a row and all the components in the row.
-     * 
+     *
      * <p>
      * Components which span over several rows are removed if the selected row
      * is on the first row of such a component.
      * </p>
-     * 
+     *
      * <p>
      * If the last row is removed then all remaining components will be removed
      * and the grid will be reduced to one row. The cursor will be moved to the
      * upper left cell of the grid.
      * </p>
-     * 
+     *
      * @param row
      *            Index of the row to remove. The leftmost row has index 0.
      */
@@ -1038,13 +1038,13 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Sets the expand ratio of given column.
-     * 
+     *
      * <p>
      * The expand ratio defines how excess space is distributed among columns.
      * Excess space means space that is left over from components that are not
      * sized relatively. By default, the excess space is distributed evenly.
      * </p>
-     * 
+     *
      * <p>
      * Note, that width of this GridLayout needs to be defined (fixed or
      * relative, as opposed to undefined height) for this method to have any
@@ -1054,9 +1054,9 @@ public class GridLayout extends AbstractLayout
      * the server so you cannot set a child component to have undefined width on
      * the server and set it to <code>100%</code> in CSS. You must set it to
      * <code>100%</code> on the server.
-     * 
+     *
      * @see #setWidth(float, int)
-     * 
+     *
      * @param columnIndex
      * @param ratio
      */
@@ -1068,9 +1068,9 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Returns the expand ratio of given column
-     * 
+     *
      * @see #setColumnExpandRatio(int, float)
-     * 
+     *
      * @param columnIndex
      * @return the expand ratio, 0.0f by default
      */
@@ -1081,13 +1081,13 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Sets the expand ratio of given row.
-     * 
+     *
      * <p>
      * Expand ratio defines how excess space is distributed among rows. Excess
      * space means the space left over from components that are not sized
      * relatively. By default, the excess space is distributed evenly.
      * </p>
-     * 
+     *
      * <p>
      * Note, that height of this GridLayout needs to be defined (fixed or
      * relative, as opposed to undefined height) for this method to have any
@@ -1097,9 +1097,9 @@ public class GridLayout extends AbstractLayout
      * on the server so you cannot set a child component to have undefined
      * height on the server and set it to <code>100%</code> in CSS. You must set
      * it to <code>100%</code> on the server.
-     * 
+     *
      * @see #setHeight(float, int)
-     * 
+     *
      * @param rowIndex
      *            The row index, starting from 0 for the topmost row.
      * @param ratio
@@ -1112,9 +1112,9 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Returns the expand ratio of given row.
-     * 
+     *
      * @see #setRowExpandRatio(int, float)
-     * 
+     *
      * @param rowIndex
      *            The row index, starting from 0 for the topmost row.
      * @return the expand ratio, 0.0f by default
@@ -1126,7 +1126,7 @@ public class GridLayout extends AbstractLayout
 
     /**
      * Gets the Component at given index.
-     * 
+     *
      * @param x
      *            The column index, starting from 0 for the leftmost column.
      * @param y
@@ -1148,7 +1148,7 @@ public class GridLayout extends AbstractLayout
     /**
      * Returns information about the area where given component is laid in the
      * GridLayout.
-     * 
+     *
      * @param component
      *            the component whose area information is requested.
      * @return an Area object that contains information how component is laid in
@@ -1199,7 +1199,7 @@ public class GridLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Layout.MarginHandler#setMargin(boolean)
      */
     @Override
@@ -1209,7 +1209,7 @@ public class GridLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Layout.MarginHandler#setMargin(com.vaadin.shared.ui.
      * MarginInfo )
      */
@@ -1220,7 +1220,7 @@ public class GridLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Layout.MarginHandler#getMargin()
      */
     @Override
@@ -1230,7 +1230,7 @@ public class GridLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Layout.AlignmentHandler#getDefaultComponentAlignment()
      */
     @Override
@@ -1240,7 +1240,7 @@ public class GridLayout extends AbstractLayout
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.ui.Layout.AlignmentHandler#setDefaultComponentAlignment(com
      * .vaadin.ui.Alignment)
@@ -1254,12 +1254,12 @@ public class GridLayout extends AbstractLayout
      * Sets whether empty rows and columns should be considered as non-existent
      * when rendering or not. If this is set to true then the spacing between
      * multiple empty columns (or rows) will be collapsed.
-     * 
+     *
      * The default behavior is to consider all rows and columns as visible
-     * 
+     *
      * NOTE that this must be set before the initial rendering takes place.
      * Updating this on the fly is not supported.
-     * 
+     *
      * @since 7.3
      * @param hideEmptyRowsAndColumns
      *            true to hide empty rows and columns, false to leave them as-is
@@ -1271,7 +1271,7 @@ public class GridLayout extends AbstractLayout
     /**
      * Checks whether whether empty rows and columns should be considered as
      * non-existent when rendering or not.
-     * 
+     *
      * @see #setHideEmptyRowsAndColumns(boolean)
      * @since 7.3
      * @return true if empty rows and columns are hidden, false otherwise
@@ -1573,7 +1573,7 @@ public class GridLayout extends AbstractLayout
      * for empty {@link GridLayout}, because there's no other way to serialize
      * info about number of columns and rows if there are absolutely no
      * components in the {@link GridLayout}
-     * 
+     *
      * @param design
      * @param designContext
      */

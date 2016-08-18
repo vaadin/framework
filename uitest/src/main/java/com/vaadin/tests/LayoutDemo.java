@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,10 +32,10 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * This example demonstrates layouts. Layouts are populated with sample Vaadin
  * UI components.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 4.0.0
- * 
+ *
  */
 public class LayoutDemo extends com.vaadin.server.LegacyApplication {
 
@@ -147,7 +147,7 @@ public class LayoutDemo extends com.vaadin.server.LegacyApplication {
 
     /**
      * Add multiple demo component to given layout.
-     * 
+     *
      * @param layout
      *            where components are added
      * @param numberOfComponents

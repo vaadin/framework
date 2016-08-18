@@ -1466,7 +1466,7 @@ public class VTabsheet extends VTabsheetBase
     /*
      * Generate the correct focus/blur events for the main TabSheet component
      * (#14304).
-     * 
+     *
      * The TabSheet must fire one focus event when the user clicks on the tab
      * bar (i.e. inner TabBar class) containing the Tabs or when the focus is
      * provided to the TabSheet by any means. Also one blur event should be
@@ -1474,15 +1474,15 @@ public class VTabsheet extends VTabsheetBase
      * tab bar and before leaving it, no matter how many times he's pressing the
      * Tabs or the scroll buttons, the TabSheet component should not fire any of
      * those blur/focus events.
-     * 
+     *
      * The only focusable elements contained in the tab bar are the Tabs (see
      * inner class Tab). The reason is the accessibility support.
-     * 
+     *
      * Having this in mind, the chosen solution path for our problem is to match
      * a sequence of focus/blur events on the tabs, choose only the first focus
      * and last blur events and pass only those further to the main component.
      * Any consecutive blur/focus events on 2 Tabs must be ignored.
-     * 
+     *
      * Because in a blur event we don't know whether or not a focus will follow,
      * we just defer a command initiated on the blur event to wait and see if
      * any focus will appear. The command will be executed after the next focus,
@@ -1893,9 +1893,9 @@ public class VTabsheet extends VTabsheetBase
     /**
      * Gets the key to activate the selected tab when navigating using
      * previous/next (left/right) keys.
-     * 
+     *
      * @return the key to activate the selected tab.
-     * 
+     *
      * @see #getNextTabKey()
      * @see #getPreviousTabKey()
      */
@@ -1949,7 +1949,7 @@ public class VTabsheet extends VTabsheetBase
 
     /**
      * Makes tab bar visible.
-     * 
+     *
      * @since 7.2
      */
     public void showTabs() {

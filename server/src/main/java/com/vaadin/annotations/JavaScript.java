@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -49,7 +49,7 @@ import com.vaadin.server.ClientConnector;
  * http://host.com/file1.js as is and file2.js from /com/example/file2.js on the
  * server's classpath using the ClassLoader that was used to load
  * com.example.MyConnector.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
@@ -58,7 +58,7 @@ import com.vaadin.server.ClientConnector;
 public @interface JavaScript {
     /**
      * JavaScript files to load before initializing the client-side connector.
-     * 
+     *
      * @return an array of JavaScript file urls
      */
     public String[] value();

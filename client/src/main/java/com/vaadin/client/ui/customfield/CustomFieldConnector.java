@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -61,7 +61,7 @@ public class CustomFieldConnector extends AbstractFieldConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.HasComponentsConnector#getChildren()
      */
     @Override
@@ -75,7 +75,7 @@ public class CustomFieldConnector extends AbstractFieldConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.HasComponentsConnector#setChildren
      * (java.util.Collection)
      */
@@ -93,7 +93,7 @@ public class CustomFieldConnector extends AbstractFieldConnector
 
     /**
      * Returns the content (only/first child) of the container.
-     * 
+     *
      * @return child connector or null if none (e.g. invisible or not set on
      *         server)
      */
@@ -108,7 +108,7 @@ public class CustomFieldConnector extends AbstractFieldConnector
 
     /**
      * Returns the widget (if any) of the content of the container.
-     * 
+     *
      * @return widget of the only/first connector of the container, null if no
      *         content or if there is no widget for the connector
      */

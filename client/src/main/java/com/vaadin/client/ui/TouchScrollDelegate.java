@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -57,26 +57,26 @@ import com.vaadin.client.VConsole;
  * Scroll event should only happen when the "touch scrolling actually ends".
  * Later we might also tune this so that a scroll event happens if user stalls
  * her finger long enought.
- * 
+ *
  * TODO static getter for active touch scroll delegate. Components might need to
  * prevent scrolling in some cases. Consider Table with drag and drop, or drag
  * and drop in scrollable area. Optimal implementation might be to start the
  * drag and drop only if user keeps finger down for a moment, otherwise do the
  * scroll. In this case, the draggable component would need to cancel scrolling
  * in a timer after touchstart event and take over from there.
- * 
+ *
  * TODO support scrolling horizontally
- * 
+ *
  * TODO cancel if user add second finger to the screen (user expects a gesture).
- * 
+ *
  * TODO "scrollbars", see e.g. iscroll.js
- * 
+ *
  * TODO write an email to sjobs √§t apple dot com and beg for this feature to be
  * built into webkit. Seriously, we should try to lobbying this to webkit folks.
  * This sure ain't our business to implement this with javascript.
- * 
+ *
  * TODO collect all general touch related constant to better place.
- * 
+ *
  * @author Matti Tahvonen, Vaadin Ltd
  */
 public class TouchScrollDelegate implements NativePreviewHandler {
@@ -129,12 +129,12 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         /**
          * Attaches the scroll handler to the widget. This method must be called
          * before calling any other methods in this class.
-         * 
+         *
          * @param widget
          *            The widget that contains scrollable elements
          * @param scrollables
          *            The elements of the widget that should be scrollable.
-         * 
+         *
          * @deprecated Use {@link GWT#create(Class)} and
          *             {@link #init(Widget, Element...)} instead of this
          *             constructor to enable overriding.
@@ -148,7 +148,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         /**
          * Attaches the scroll handler to the widget. This method must be called
          * once before calling any other method in this class.
-         * 
+         *
          * @param widget
          *            The widget that contains scrollable elements
          * @param scrollables
@@ -202,7 +202,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         /**
          * Registers the given elements as scrollable, removing previously
          * registered scrollables from this handler.
-         * 
+         *
          * @param scrollables
          *            The elements that should be scrollable
          */
@@ -223,7 +223,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
          * scrolling of the device should be used. By default, relies on
          * {@link BrowserInfo#requiresTouchScrollDelegate()}, override to change
          * the behavior.
-         * 
+         *
          * @return true if a Javascript delegate should be used for scrolling,
          *         false to use the native scrolling of the device
          */
@@ -242,7 +242,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     /**
      * Makes the given elements scrollable, either natively or by using a
      * TouchScrollDelegate, depending on platform capabilities.
-     * 
+     *
      * @param widget
      *            The widget that contains scrollable elements
      * @param scrollables
@@ -270,7 +270,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
     /**
      * Has user moved the touch.
-     * 
+     *
      * @return
      */
     public boolean isMoved() {
@@ -399,7 +399,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     /**
      * Detects if a touch happens on a predefined element and the element has
      * something to scroll.
-     * 
+     *
      * @param touch
      * @return
      */
@@ -480,7 +480,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     private Animation momentum;
 
     /**
-     * 
+     *
      * @param event
      * @return
      */
@@ -610,7 +610,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     /**
      * Note positive scrolltop moves layer up, positive translate moves layer
      * down.
-     * 
+     *
      * @param duration
      */
     private void translateTo(int duration, final int fromY, final int finalY) {
@@ -713,7 +713,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     /**
      * long calcucation are not very efficient in GWT, so this helper method
      * returns timestamp in double.
-     * 
+     *
      * @return
      */
     public static double getTimeStamp() {

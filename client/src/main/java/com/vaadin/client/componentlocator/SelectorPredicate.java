@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,7 +23,7 @@ import java.util.List;
  * that VaadinFinderLocatorStrategy is finding. SelectorPredicates also provide
  * useful information of said components to debug window by giving means to
  * provide better variable naming.
- * 
+ *
  * @since 7.2
  * @author Vaadin Ltd
  */
@@ -43,7 +43,7 @@ public class SelectorPredicate {
 
     /**
      * Generate a list of predicates from a single predicate string
-     * 
+     *
      * @param str
      *            a comma separated string of predicates
      * @return a List of Predicate objects
@@ -108,7 +108,7 @@ public class SelectorPredicate {
 
     /**
      * Splits the predicate string to list of predicate strings.
-     * 
+     *
      * @param predicateStr
      *            Comma separated predicate strings
      * @return List of predicate strings
@@ -134,7 +134,7 @@ public class SelectorPredicate {
      * VTextField[0] => 0
      * VTextField[caption='foo'] => caption='foo'
      * </code>
-     * 
+     *
      * @param pathFragment
      *            The path fragment from which to extract the predicate string.
      * @return The predicate string for the path fragment or empty string if not
@@ -153,7 +153,7 @@ public class SelectorPredicate {
 
     /**
      * Removes the surrounding quotes from a string if it is quoted.
-     * 
+     *
      * @param str
      *            the possibly quoted string
      * @return an unquoted version of str

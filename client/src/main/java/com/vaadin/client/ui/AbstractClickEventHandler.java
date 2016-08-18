@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -128,7 +128,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
      * <p>
      * By default registers the handler with the connector root widget.
      * </p>
-     * 
+     *
      * @param <H>
      * @param handler
      *            The handler to register
@@ -143,7 +143,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
 
     /**
      * Checks if there is a server side event listener registered for clicks
-     * 
+     *
      * @return true if there is a server side event listener registered, false
      *         otherwise
      */
@@ -200,7 +200,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
 
     /**
      * Sends the click event based on the given native event.
-     * 
+     *
      * @param event
      *            The native event that caused this click event
      */
@@ -209,7 +209,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
     /**
      * Called before firing a click event. Allows sub classes to decide if this
      * in an event that should cause an event or not.
-     * 
+     *
      * @param event
      *            The user event
      * @return true if the event should be fired, false otherwise
@@ -235,7 +235,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
      * Click event calculates and returns coordinates relative to the element
      * returned by this method. Default implementation uses the root element of
      * the widget. Override to provide a different relative element.
-     * 
+     *
      * @return The Element used for calculating relative coordinates for a click
      *         or null if no relative coordinates can be calculated.
      */

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -67,10 +67,10 @@ public class VAbstractOrderedLayout extends FlowPanel {
 
     /**
      * See the method {@link #addOrMoveSlot(Slot, int, boolean)}.
-     * 
+     *
      * <p>
      * This method always adjusts spacings for the whole layout.
-     * 
+     *
      * @param slot
      *            The slot to move or add
      * @param index
@@ -93,7 +93,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * <p>
      * For instance when using spacing the index converts to DOM index in the
      * following way:
-     * 
+     *
      * <pre>
      * index : 0 -> DOM index: 0
      * index : 1 -> DOM index: 1
@@ -101,16 +101,16 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * index : 3 -> DOM index: 5
      * index : 4 -> DOM index: 7
      * </pre>
-     * 
+     *
      * When using this method never account for spacings.
      * <p>
      * The caller should remove all spacings before calling this method and
      * re-add them (if necessary) after this method. This can be done before and
      * after all slots have been added/moved.
      * </p>
-     * 
+     *
      * @since 7.1.4
-     * 
+     *
      * @param slot
      *            The slot to move or add
      * @param index
@@ -148,7 +148,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated As of 7.2, use or override
      *             {@link #insert(Widget, Element, int, boolean)} instead.
      */
@@ -177,11 +177,11 @@ public class VAbstractOrderedLayout extends FlowPanel {
                      * Since the spacing elements are located at the same DOM
                      * level as the slots we need to take them into account when
                      * calculating the slot position.
-                     * 
+                     *
                      * The spacing elements are always located before the actual
                      * slot except for the first slot which do not have a
                      * spacing element like this
-                     * 
+                     *
                      * |<slot1><spacing2><slot2><spacing3><slot3>...|
                      */
                     beforeIndex = beforeIndex * 2 - 1;
@@ -198,7 +198,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 7.2
      */
     @Override
@@ -209,7 +209,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
 
     /**
      * Remove a slot from the layout
-     * 
+     *
      * @param widget
      * @return
      */
@@ -222,11 +222,11 @@ public class VAbstractOrderedLayout extends FlowPanel {
 
     /**
      * Remove a slot from the layout.
-     * 
+     *
      * This method is called automatically by {@link #removeWidget(Widget)} and
      * should not be called directly by the user. When overridden, the super
      * method must be called.
-     * 
+     *
      * @since 7.6
      * @param Slot
      *            to remove
@@ -238,10 +238,10 @@ public class VAbstractOrderedLayout extends FlowPanel {
     /**
      * Get the containing slot for a widget. If no slot is found a new slot is
      * created and returned.
-     * 
+     *
      * @param widget
      *            The widget whose slot you want to get
-     * 
+     *
      * @return
      */
     public Slot getSlot(Widget widget) {
@@ -255,11 +255,11 @@ public class VAbstractOrderedLayout extends FlowPanel {
 
     /**
      * Create a slot to be added to the layout.
-     * 
+     *
      * This method is called automatically by {@link #getSlot(Widget)} when a
      * new slot is needed. It should not be called directly by the user, but can
      * be overridden to customize slot creation.
-     * 
+     *
      * @since 7.6
      * @param widget
      *            the widget for which a slot is being created
@@ -275,7 +275,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     /**
      * Gets a slot based on the widget element. If no slot is found then null is
      * returned.
-     * 
+     *
      * @param widgetElement
      *            The element of the widget ( Same as getWidget().getElement() )
      * @return
@@ -294,11 +294,11 @@ public class VAbstractOrderedLayout extends FlowPanel {
     /**
      * Gets a slot based on the widget element. If no slot is found then null is
      * returned.
-     * 
+     *
      * @param widgetElement
      *            The element of the widget ( Same as getWidget().getElement() )
      * @return
-     * 
+     *
      * @since 7.2
      */
     public Slot getSlot(Element widgetElement) {
@@ -307,7 +307,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
 
     /**
      * Set the layout manager for the layout
-     * 
+     *
      * @param manager
      *            The layout manager to use
      */
@@ -317,7 +317,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
 
     /**
      * Get the layout manager used by this layout
-     * 
+     *
      */
     public LayoutManager getLayoutManager() {
         return layoutManager;
@@ -327,10 +327,10 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * Deducts the caption position by examining the wrapping element.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param captionWrap
      *            The wrapping element
-     * 
+     *
      * @return The caption position
      * @deprecated As of 7.2, call or override
      *             {@link #getCaptionPositionFromElement(Element)} instead
@@ -356,10 +356,10 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * Deducts the caption position by examining the wrapping element.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param captionWrap
      *            The wrapping element
-     * 
+     *
      * @return The caption position
      * @since 7.2
      */
@@ -371,7 +371,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * Update the offset off the caption relative to the slot
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param caption
      *            The caption element
      * @deprecated As of 7.2, call or override
@@ -443,7 +443,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * Update the offset off the caption relative to the slot
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param caption
      *            The caption element
      * @since 7.2
@@ -454,7 +454,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
 
     /**
      * Set the margin of the layout
-     * 
+     *
      * @param marginInfo
      *            The margin information
      */
@@ -469,7 +469,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
 
     /**
      * Turn on or off spacing in the layout
-     * 
+     *
      * @param spacing
      *            True if spacing should be used, false if not
      */
@@ -634,7 +634,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
              * is not considered for relative sizes and a corresponding negative
              * margin for the unexpanded slots. We calculate the size by summing
              * the size of all non-expanded non-relative slots.
-             * 
+             *
              * Relatively sized slots without expansion are considered to get
              * 0px, but we still keep them visible (causing overflows) to help
              * the developer see what's happening. Forcing them to only get 0px
@@ -733,7 +733,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     /**
      * Sets the slots style names. The style names will be prefixed with the
      * v-slot prefix.
-     * 
+     *
      * @param stylenames
      *            The style names of the slot.
      */

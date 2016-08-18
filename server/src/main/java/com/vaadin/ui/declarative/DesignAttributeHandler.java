@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -45,7 +45,7 @@ import com.vaadin.ui.Alignment;
  * Default attribute handler implementation used when parsing designs to
  * component trees. Handles all the component attributes that do not require
  * custom handling.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -63,7 +63,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Returns the currently used formatter. All primitive types and all types
      * needed by Vaadin components are handled by that formatter.
-     * 
+     *
      * @return An instance of the formatter.
      */
     public static DesignFormatter getFormatter() {
@@ -72,7 +72,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Clears the children and attributes of the given element
-     * 
+     *
      * @param design
      *            the element to be cleared
      */
@@ -90,7 +90,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Assigns the specified design attribute to the given component.
-     * 
+     *
      * @param target
      *            the target to which the attribute should be set
      * @param attribute
@@ -133,7 +133,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Searches for supported setter and getter types from the specified class
      * and returns the list of corresponding design attributes
-     * 
+     *
      * @param clazz
      *            the class scanned for setters
      * @return the list of supported design attributes
@@ -147,7 +147,7 @@ public class DesignAttributeHandler implements Serializable {
      * Resolves the supported attributes and corresponding getters and setters
      * for the class using introspection. After resolving, the information is
      * cached internally by this class
-     * 
+     *
      * @param clazz
      *            the class to resolve the supported attributes for
      */
@@ -184,7 +184,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Writes the specified attribute to the design if it differs from the
      * default value got from the <code> defaultInstance <code>
-     * 
+     *
      * @param component
      *            the component used to get the attribute value
      * @param attribute
@@ -219,7 +219,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Writes the given attribute value to a set of attributes if it differs
      * from the default attribute value.
-     * 
+     *
      * @param attribute
      *            the attribute key
      * @param attributes
@@ -252,7 +252,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Reads the given attribute from a set of attributes. If attribute does not
      * exist return a given default value.
-     * 
+     *
      * @param attribute
      *            the attribute key
      * @param attributes
@@ -275,7 +275,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Reads the given attribute from a set of attributes.
-     * 
+     *
      * @param attribute
      *            the attribute key
      * @param attributes
@@ -307,7 +307,7 @@ public class DesignAttributeHandler implements Serializable {
      * Returns the design attribute name corresponding the given method name.
      * For example given a method name <code>setPrimaryStyleName</code> the
      * return value would be <code>primary-style-name</code>
-     * 
+     *
      * @param propertyName
      *            the property name returned by {@link IntroSpector}
      * @return the design attribute name corresponding the given method name
@@ -329,7 +329,7 @@ public class DesignAttributeHandler implements Serializable {
      * Replaces subsequent UPPERCASE strings of length 2 or more followed either
      * by another uppercase letter or an end of string. This is to generalise
      * handling of method names like <tt>showISOWeekNumbers</tt>.
-     * 
+     *
      * @param param
      *            Input string.
      * @return Input string with sequences of UPPERCASE turned into Normalcase.
@@ -366,7 +366,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Serializes the given value to valid design attribute representation
-     * 
+     *
      * @param sourceType
      *            the type of the value
      * @param value
@@ -391,7 +391,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Returns a setter that can be used for assigning the given design
      * attribute to the class
-     * 
+     *
      * @param clazz
      *            the class that is scanned for setters
      * @param attribute
@@ -407,7 +407,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Returns a getter that can be used for reading the given design attribute
      * value from the class
-     * 
+     *
      * @param clazz
      *            the class that is scanned for getters
      * @param attribute
@@ -423,7 +423,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Cache object for caching supported attributes and their getters and
      * setters
-     * 
+     *
      * @author Vaadin Ltd
      */
     private static class AttributeCacheEntry implements Serializable {
@@ -456,7 +456,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Read the alignment from the given child component attributes.
-     * 
+     *
      * @since 7.6.4
      * @param attr
      *            the child component attributes
@@ -484,7 +484,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Writes the alignment to the given child element attributes.
-     * 
+     *
      * @since 7.6.4
      * @param childElement
      *            the child element

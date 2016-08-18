@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -62,7 +62,7 @@ public class ApplicationConfiguration implements EntryPoint {
     /**
      * Helper class for reading configuration options from the bootstap
      * javascript
-     * 
+     *
      * @since 7.0
      */
     private static class JsoConfiguration extends JavaScriptObject {
@@ -74,7 +74,7 @@ public class ApplicationConfiguration implements EntryPoint {
          * Reads a configuration parameter as a string. Please note that the
          * javascript value of the parameter should also be a string, or else an
          * undefined exception may be thrown.
-         * 
+         *
          * @param name
          *            name of the configuration parameter
          * @return value of the configuration parameter, or <code>null</code> if
@@ -94,7 +94,7 @@ public class ApplicationConfiguration implements EntryPoint {
          * Reads a configuration parameter as a boolean object. Please note that
          * the javascript value of the parameter should also be a boolean, or
          * else an undefined exception may be thrown.
-         * 
+         *
          * @param name
          *            name of the configuration parameter
          * @return boolean value of the configuration paramter, or
@@ -115,7 +115,7 @@ public class ApplicationConfiguration implements EntryPoint {
          * Reads a configuration parameter as an integer object. Please note
          * that the javascript value of the parameter should also be an integer,
          * or else an undefined exception may be thrown.
-         * 
+         *
          * @param name
          *            name of the configuration parameter
          * @return integer value of the configuration paramter, or
@@ -138,7 +138,7 @@ public class ApplicationConfiguration implements EntryPoint {
          * an object with appropriate fields, or else an undefined exception may
          * be thrown when calling this method or when calling methods on the
          * returned object.
-         * 
+         *
          * @param name
          *            name of the configuration parameter
          * @return error message with the given name, or <code>null</code> if no
@@ -152,7 +152,7 @@ public class ApplicationConfiguration implements EntryPoint {
         /**
          * Returns a native javascript object containing version information
          * from the server.
-         * 
+         *
          * @return a javascript object with the version information
          */
         private native JavaScriptObject getVersionInfoJSObject()
@@ -162,9 +162,9 @@ public class ApplicationConfiguration implements EntryPoint {
 
         /**
          * Gets the version of the Vaadin framework used on the server.
-         * 
+         *
          * @return a string with the version
-         * 
+         *
          * @see com.vaadin.server.VaadinServlet#VERSION
          */
         private native String getVaadinVersion()
@@ -174,9 +174,9 @@ public class ApplicationConfiguration implements EntryPoint {
 
         /**
          * Gets the version of the Atmosphere framework.
-         * 
+         *
          * @return a string with the version
-         * 
+         *
          * @see org.atmosphere.util#getRawVersion()
          */
         private native String getAtmosphereVersion()
@@ -186,7 +186,7 @@ public class ApplicationConfiguration implements EntryPoint {
 
         /**
          * Gets the JS version used in the Atmosphere framework.
-         * 
+         *
          * @return a string with the version
          */
         private native String getAtmosphereJSVersion()
@@ -206,7 +206,7 @@ public class ApplicationConfiguration implements EntryPoint {
 
     /**
      * Wraps a native javascript object containing fields for an error message
-     * 
+     *
      * @since 7.0
      */
     public static final class ErrorMessage extends JavaScriptObject {
@@ -268,9 +268,9 @@ public class ApplicationConfiguration implements EntryPoint {
      * Checks whether path info in requests to the server-side service should be
      * in a request parameter (named <code>v-resourcePath</code>) or appended to
      * the end of the service URL.
-     * 
+     *
      * @see #getServiceUrl()
-     * 
+     *
      * @return <code>true</code> if path info should be a request parameter;
      *         <code>false</code> if the path info goes after the service URL
      */
@@ -282,7 +282,7 @@ public class ApplicationConfiguration implements EntryPoint {
      * Return the name of the parameter used to to send data to the service url.
      * This method should only be called if {@link #useServiceUrlPathParam()} is
      * true.
-     * 
+     *
      * @since 7.1.6
      * @return The parameter name, by default <code>v-resourcePath</code>
      */
@@ -300,9 +300,9 @@ public class ApplicationConfiguration implements EntryPoint {
      * {@link #useServiceUrlPathParam()} return <code>true</code>, the requested
      * path info should be in the <code>v-resourcePath</code> query parameter;
      * else the path info should be appended to the end of the URL.
-     * 
+     *
      * @see #useServiceUrlPathParam()
-     * 
+     *
      * @return the URL to the server-side service as a string
      */
     public String getServiceUrl() {
@@ -321,7 +321,7 @@ public class ApplicationConfiguration implements EntryPoint {
 
     /**
      * Gets the URL of the VAADIN directory on the server.
-     * 
+     *
      * @return the URL of the VAADIN directory
      */
     public String getVaadinDirUrl() {
@@ -335,7 +335,7 @@ public class ApplicationConfiguration implements EntryPoint {
     /**
      * Gets the initial UIDL from the DOM, if it was provided during the init
      * process.
-     * 
+     *
      * @return
      */
     public String getUIDL() {
@@ -355,7 +355,7 @@ public class ApplicationConfiguration implements EntryPoint {
      * instance. The UI id should be included in every request originating from
      * this instance in order to associate the request with the right UI
      * instance on the server.
-     * 
+     *
      * @return the UI id
      */
     public int getUIId() {
@@ -432,7 +432,7 @@ public class ApplicationConfiguration implements EntryPoint {
     /**
      * Starts the application with a given id by reading the configuration
      * options stored by the bootstrap javascript.
-     * 
+     *
      * @param applicationId
      *            id of the application to load, this is also the id of the html
      *            element into which the application should be rendered.
@@ -463,7 +463,7 @@ public class ApplicationConfiguration implements EntryPoint {
     /**
      * Gets the configuration object for a specific application from the
      * bootstrap javascript.
-     * 
+     *
      * @param appId
      *            the id of the application to get configuration data for
      * @return a native javascript object containing the configuration data
@@ -486,9 +486,9 @@ public class ApplicationConfiguration implements EntryPoint {
 
     /**
      * Return Atmosphere version.
-     * 
+     *
      * @since 7.4
-     * 
+     *
      * @return Atmosphere version.
      */
     public String getAtmosphereVersion() {
@@ -497,9 +497,9 @@ public class ApplicationConfiguration implements EntryPoint {
 
     /**
      * Return Atmosphere JS version.
-     * 
+     *
      * @since 7.4
-     * 
+     *
      * @return Atmosphere JS version.
      */
     public String getAtmosphereJSVersion() {
@@ -565,7 +565,7 @@ public class ApplicationConfiguration implements EntryPoint {
      * Returns all tags for given class. Tags are used in
      * {@link ApplicationConfiguration} to keep track of different classes and
      * their hierarchy
-     * 
+     *
      * @since 7.2
      * @param classname
      *            name of class which tags we want
@@ -796,7 +796,7 @@ public class ApplicationConfiguration implements EntryPoint {
      * Registers that callback that the bootstrap javascript uses to start
      * applications once the widgetset is loaded and all required information is
      * available
-     * 
+     *
      * @param widgetsetName
      *            the name of this widgetset
      */
@@ -811,9 +811,9 @@ public class ApplicationConfiguration implements EntryPoint {
      * adding ?debug parameter to URI. Please note that debug mode is always
      * disabled if production mode is enabled, but disabling production mode
      * does not automatically enable debug mode.
-     * 
+     *
      * @see #isProductionMode()
-     * 
+     *
      * @return true if client side is currently been debugged
      */
     public static boolean isDebugMode() {
@@ -825,7 +825,7 @@ public class ApplicationConfiguration implements EntryPoint {
      * Checks if production mode is enabled. When production mode is enabled,
      * client-side logging is disabled. There may also be other performance
      * optimizations.
-     * 
+     *
      * @since 7.1.2
      * @return <code>true</code> if production mode is enabled; otherwise
      *         <code>false</code>.
@@ -845,7 +845,7 @@ public class ApplicationConfiguration implements EntryPoint {
 
     /**
      * Checks whether debug logging should be quiet
-     * 
+     *
      * @return <code>true</code> if debug logging should be quiet
      */
     public static boolean isQuietDebugMode() {
@@ -857,7 +857,7 @@ public class ApplicationConfiguration implements EntryPoint {
     /**
      * Checks whether the widget set version has been sent to the server. It is
      * sent in the first UIDL request.
-     * 
+     *
      * @return <code>true</code> if browser information has already been sent
      */
     public boolean isWidgetsetVersionSent() {

@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -45,11 +45,11 @@ import com.vaadin.ui.VerticalLayout;
  * TestBench finds out testable classes within given java packages and adds them
  * to menu from where they can be executed. Class is considered testable if it
  * is of class Application or CustomComponent.
- * 
+ *
  * Note: edit TestBench.testablePackages array
- * 
+ *
  * @author Vaadin Ltd.
- * 
+ *
  */
 public class TestBench extends com.vaadin.server.LegacyApplication
         implements Property.ValueChangeListener {
@@ -271,7 +271,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
     /**
      * Return all testable classes within given package. Class is considered
      * testable if it's superclass is Application or CustomComponent.
-     * 
+     *
      * @param packageName
      * @return
      * @throws ClassNotFoundException

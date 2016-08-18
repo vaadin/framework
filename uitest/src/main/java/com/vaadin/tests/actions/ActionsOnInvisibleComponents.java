@@ -55,7 +55,7 @@ public class ActionsOnInvisibleComponents extends AbstractTestUIWithLog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -65,7 +65,7 @@ public class ActionsOnInvisibleComponents extends AbstractTestUIWithLog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override

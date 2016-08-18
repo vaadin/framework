@@ -115,7 +115,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
              * deadlocks unless implemented very carefully. get(long, TimeUnit)
              * does not have the same detection since a sensible timeout should
              * avoid completely locking up the application.
-             * 
+             *
              * Even though no deadlock could occur after the runnable has been
              * run, the check is always done as the deterministic behavior makes
              * it easier to detect potential problems.
@@ -1469,7 +1469,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * date.
      * <p>
      * Called internally by the framework.
-     * 
+     *
      * @since 7.6
      * @param wrappedSession
      *            the session this VaadinSession is stored in

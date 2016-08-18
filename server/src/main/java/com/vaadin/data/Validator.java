@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import java.util.function.Predicate;
  * failed the validation.
  * <p>
  * For instance, the following validator checks if a number is positive:
- * 
+ *
  * <pre>
  * Validator&lt;Integer&gt; v = num -> {
  *     if (num >= 0)
@@ -37,12 +37,12 @@ import java.util.function.Predicate;
  *         return Result.error("number must be positive");
  * };
  * </pre>
- * 
+ *
  * @author Vaadin Ltd.
  *
  * @param <T>
  *            the type of the value to validate
- * 
+ *
  * @see Result
  */
 @FunctionalInterface
@@ -56,16 +56,16 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
      * <p>
      * For instance, the following chained validator checks if a number is
      * between 0 and 10, inclusive:
-     * 
+     *
      * <pre>
      * Validator&lt;Integer&gt; v = Validator.from(num -> num >= 0, "number must be >= 0")
      *         .chain(Validator.from(num -> num <= 10, "number must be <= 10"));
      * </pre>
-     * 
+     *
      * @param next
      *            the validator to apply next, not null
      * @return a chained validator
-     * 
+     *
      * @see #from(Predicate, String)
      */
     public default Validator<T> chain(Function<T, Result<T>> next) {
@@ -76,7 +76,7 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
     /**
      * Validates the given value. Returns a {@code Result} instance representing
      * the outcome of the validation.
-     * 
+     *
      * @param value
      *            the input value to validate
      * @return the validation result
@@ -86,7 +86,7 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
 
     /**
      * Returns a validator that passes any value.
-     * 
+     *
      * @param <T>
      *            the value type
      * @return an always-passing validator
@@ -103,12 +103,12 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
      * <p>
      * For instance, the following validator checks if a number is between 0 and
      * 10, inclusive:
-     * 
+     *
      * <pre>
      * Validator&lt;Integer&gt; v = Validator.from(num -> num >= 0 && num <= 10,
      *         "number must be between 0 and 10");
      * </pre>
-     * 
+     *
      * @param <T>
      *            the value type
      * @param guard

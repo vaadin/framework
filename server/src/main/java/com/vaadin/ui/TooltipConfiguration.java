@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,7 +21,7 @@ import com.vaadin.shared.ui.ui.UIState.TooltipConfigurationState;
 
 /**
  * Provides method for configuring the tooltip.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -30,7 +30,7 @@ public interface TooltipConfiguration extends Serializable {
      * Returns the time (in ms) the tooltip should be displayed after an event
      * that will cause it to be closed (e.g. mouse click outside the component,
      * key down).
-     * 
+     *
      * @return The close timeout
      */
     public int getCloseTimeout();
@@ -39,7 +39,7 @@ public interface TooltipConfiguration extends Serializable {
      * Sets the time (in ms) the tooltip should be displayed after an event that
      * will cause it to be closed (e.g. mouse click outside the component, key
      * down).
-     * 
+     *
      * @param closeTimeout
      *            The close timeout
      */
@@ -50,7 +50,7 @@ public interface TooltipConfiguration extends Serializable {
      * be used instead of {@link #getOpenDelay()}. The quick open delay is used
      * when the tooltip has very recently been shown, is currently hidden but
      * about to be shown again.
-     * 
+     *
      * @return The quick open timeout
      */
     public int getQuickOpenTimeout();
@@ -60,7 +60,7 @@ public interface TooltipConfiguration extends Serializable {
      * should be used instead of {@link #getOpenDelay()}. The quick open delay
      * is used when the tooltip has very recently been shown, is currently
      * hidden but about to be shown again.
-     * 
+     *
      * @param quickOpenTimeout
      *            The quick open timeout
      */
@@ -70,7 +70,7 @@ public interface TooltipConfiguration extends Serializable {
      * Returns the time (in ms) that should elapse before a tooltip will be
      * shown, in the situation when a tooltip has very recently been shown
      * (within {@link #getQuickOpenDelay()} ms).
-     * 
+     *
      * @return The quick open delay
      */
     public int getQuickOpenDelay();
@@ -79,7 +79,7 @@ public interface TooltipConfiguration extends Serializable {
      * Sets the time (in ms) that should elapse before a tooltip will be shown,
      * in the situation when a tooltip has very recently been shown (within
      * {@link #getQuickOpenDelay()} ms).
-     * 
+     *
      * @param quickOpenDelay
      *            The quick open delay
      */
@@ -90,7 +90,7 @@ public interface TooltipConfiguration extends Serializable {
      * tooltip showing has occurred (e.g. mouse over) before the tooltip is
      * shown. If a tooltip has recently been shown, then
      * {@link #getQuickOpenDelay()} is used instead of this.
-     * 
+     *
      * @return The open delay
      */
     public int getOpenDelay();
@@ -100,7 +100,7 @@ public interface TooltipConfiguration extends Serializable {
      * tooltip showing has occurred (e.g. mouse over) before the tooltip is
      * shown. If a tooltip has recently been shown, then
      * {@link #getQuickOpenDelay()} is used instead of this.
-     * 
+     *
      * @param openDelay
      *            The open delay
      */
@@ -108,14 +108,14 @@ public interface TooltipConfiguration extends Serializable {
 
     /**
      * Returns the maximum width of the tooltip popup.
-     * 
+     *
      * @return The maximum width the tooltip popup
      */
     public int getMaxWidth();
 
     /**
      * Sets the maximum width of the tooltip popup.
-     * 
+     *
      * @param maxWidth
      *            The maximum width the tooltip popup
      */
@@ -131,7 +131,7 @@ class TooltipConfigurationImpl implements TooltipConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.UI.Tooltip#getCloseTimeout()
      */
     @Override
@@ -141,7 +141,7 @@ class TooltipConfigurationImpl implements TooltipConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Tooltip#setCloseTimeout(int)
      */
     @Override
@@ -151,7 +151,7 @@ class TooltipConfigurationImpl implements TooltipConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Tooltip#getQuickOpenTimeout()
      */
     @Override
@@ -161,7 +161,7 @@ class TooltipConfigurationImpl implements TooltipConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Tooltip#setQuickOpenTimeout(int)
      */
     @Override
@@ -171,7 +171,7 @@ class TooltipConfigurationImpl implements TooltipConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Tooltip#getQuickOpenDelay()
      */
     @Override
@@ -181,7 +181,7 @@ class TooltipConfigurationImpl implements TooltipConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Tooltip#setQuickOpenDelay(int)
      */
     @Override
@@ -191,7 +191,7 @@ class TooltipConfigurationImpl implements TooltipConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Tooltip#getOpenDelay()
      */
     @Override
@@ -201,7 +201,7 @@ class TooltipConfigurationImpl implements TooltipConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Tooltip#setOpenDelay(int)
      */
     @Override
@@ -211,7 +211,7 @@ class TooltipConfigurationImpl implements TooltipConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Tooltip#getMaxWidth()
      */
     @Override
@@ -221,7 +221,7 @@ class TooltipConfigurationImpl implements TooltipConfiguration {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Tooltip#setMaxWidth(int)
      */
     @Override

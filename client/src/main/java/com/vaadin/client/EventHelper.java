@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,9 +37,9 @@ import com.google.gwt.user.client.ui.Widget;
  * registration (possibly the same as given, should be store for next update.
  * <p>
  * Pseudocode what helpers do:
- * 
+ *
  * <pre>
- * 
+ *
  * if paintable has event listener in UIDL
  *      if registration is null
  *              register paintable as as handler for event
@@ -48,8 +48,8 @@ import com.google.gwt.user.client.ui.Widget;
  *      if registration is not null
  *              remove the handler from paintable
  *      return null
- * 
- * 
+ *
+ *
  * </pre>
  */
 public class EventHelper {
@@ -57,7 +57,7 @@ public class EventHelper {
     /**
      * Adds or removes a focus handler depending on if the connector has focus
      * listeners on the server side or not.
-     * 
+     *
      * @param connector
      *            The connector to update. Must implement focusHandler.
      * @param handlerRegistration
@@ -75,7 +75,7 @@ public class EventHelper {
     /**
      * Adds or removes a focus handler depending on if the connector has focus
      * listeners on the server side or not.
-     * 
+     *
      * @param connector
      *            The connector to update. Must implement focusHandler.
      * @param handlerRegistration
@@ -96,7 +96,7 @@ public class EventHelper {
     /**
      * Adds or removes a blur handler depending on if the connector has blur
      * listeners on the server side or not.
-     * 
+     *
      * @param connector
      *            The connector to update. Must implement BlurHandler.
      * @param handlerRegistration
@@ -114,7 +114,7 @@ public class EventHelper {
     /**
      * Adds or removes a blur handler depending on if the connector has blur
      * listeners on the server side or not.
-     * 
+     *
      * @param connector
      *            The connector to update. Must implement BlurHandler.
      * @param handlerRegistration
@@ -122,7 +122,7 @@ public class EventHelper {
      *            registered previously
      * @param widget
      *            The widget which emits blur events
-     * 
+     *
      * @return a new registration handler that can be used to unregister the
      *         handler later
      */

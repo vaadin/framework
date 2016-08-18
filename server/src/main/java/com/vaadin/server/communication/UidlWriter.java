@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -50,7 +50,7 @@ import elemental.json.impl.JsonUtil;
  * Serializes pending server-side changes to UI state to JSON. This includes
  * shared state, client RPC invocations, connector hierarchy changes, connector
  * type information among others.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -58,7 +58,7 @@ public class UidlWriter implements Serializable {
 
     /**
      * Writes a JSON object containing all pending changes to the given UI.
-     * 
+     *
      * @param ui
      *            The {@link UI} whose changes to write
      * @param writer
@@ -68,7 +68,7 @@ public class UidlWriter implements Serializable {
      * @param async
      *            True if this message is sent by the server asynchronously,
      *            false if it is a response to a client message.
-     * 
+     *
      * @throws IOException
      *             If the writing fails.
      */
@@ -265,7 +265,7 @@ public class UidlWriter implements Serializable {
             /*
              * Ensure super classes come before sub classes to get script
              * dependency order right. Sub class @JavaScript might assume that
-             * 
+             *
              * @JavaScript defined by super class is already loaded.
              */
             Collections.sort(newConnectorTypes, new Comparator<Class<?>>() {
@@ -347,7 +347,7 @@ public class UidlWriter implements Serializable {
     /**
      * Adds the performance timing data (used by TestBench 3) to the UIDL
      * response.
-     * 
+     *
      * @throws IOException
      */
     private void writePerformanceData(UI ui, Writer writer) throws IOException {

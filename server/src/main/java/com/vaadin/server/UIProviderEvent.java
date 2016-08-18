@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,9 +21,9 @@ import java.util.EventObject;
 
 /**
  * Base class for the events that are sent to various methods in UIProvider.
- * 
+ *
  * @see UIProvider
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
@@ -33,7 +33,7 @@ public class UIProviderEvent extends EventObject implements Serializable {
 
     /**
      * Creates a new UI provider event.
-     * 
+     *
      * @param request
      *            the request for which the event is UI provider is invoked
      */
@@ -44,7 +44,7 @@ public class UIProviderEvent extends EventObject implements Serializable {
 
     /**
      * Gets the Vaadin service from which the event originates.
-     * 
+     *
      * @return the Vaadin service
      */
     public VaadinService getService() {
@@ -53,7 +53,7 @@ public class UIProviderEvent extends EventObject implements Serializable {
 
     /**
      * Gets the request associated with this event.
-     * 
+     *
      * @return the Vaadin request
      */
     public VaadinRequest getRequest() {

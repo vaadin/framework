@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -38,7 +38,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Test to see if all items of the table can be selected by selecting first row,
  * press shift then select last (#13008)
- * 
+ *
  * @author Vaadin Ltd
  */
 public class SelectAllRowsTest extends MultiBrowserTest {

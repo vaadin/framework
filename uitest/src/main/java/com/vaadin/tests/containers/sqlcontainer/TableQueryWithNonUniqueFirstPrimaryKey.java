@@ -67,7 +67,7 @@ public class TableQueryWithNonUniqueFirstPrimaryKey extends AbstractTestUI {
 
     /**
      * (Re)creates the test table
-     * 
+     *
      * @param connectionPool
      */
     private void createTestTable(JDBCConnectionPool connectionPool) {
@@ -94,7 +94,7 @@ public class TableQueryWithNonUniqueFirstPrimaryKey extends AbstractTestUI {
 
     /**
      * Adds test data to the test table
-     * 
+     *
      * @param connectionPool
      * @throws SQLException
      */

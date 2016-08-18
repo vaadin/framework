@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,13 +31,13 @@ public class WidgetSet {
     /**
      * Create an uninitialized connector that best matches given UIDL. The
      * connector must implement {@link ServerConnector}.
-     * 
+     *
      * @param tag
      *            connector type tag for the connector to create
      * @param conf
      *            the application configuration to use when creating the
      *            connector
-     * 
+     *
      * @return New uninitialized and unregistered connector that can paint given
      *         UIDL.
      */
@@ -108,7 +108,7 @@ public class WidgetSet {
      * Due its nature, GWT does not support dynamic classloading. To bypass this
      * limitation, widgetset must have function that returns Class by its fully
      * qualified name.
-     * 
+     *
      * @param tag
      * @param applicationConfiguration
      * @return

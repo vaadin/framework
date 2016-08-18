@@ -22,8 +22,8 @@ import com.vaadin.ui.Window;
 /**
  * Same as with css layout but tests size change propagation on emphasis +
  * rules.
- * 
- * 
+ *
+ *
  */
 public class HorizontalLayoutSortableWithWrappers extends Window {
 

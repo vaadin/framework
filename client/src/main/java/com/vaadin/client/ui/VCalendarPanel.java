@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -132,7 +132,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private ClickHandler dayClickHandler = new ClickHandler() {
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt
          * .event.dom.client.ClickEvent)
@@ -231,7 +231,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     /**
      * Sets the focus to given date in the current view. Used when moving in the
      * calendar with the keyboard.
-     * 
+     *
      * @param date
      *            A Date representing the day of month to be focused. Must be
      *            one of the days currently visible.
@@ -267,11 +267,11 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Sets the selection highlight to a given day in the current view
-     * 
+     *
      * @param date
      *            A Date representing the day of month to be selected. Must be
      *            one of the days currently visible.
-     * 
+     *
      */
     private void selectDate(Date date) {
         if (selectedDay != null) {
@@ -397,7 +397,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Builds the top buttons and current month and year header.
-     * 
+     *
      * @param needsMonth
      *            Should the month buttons be visible?
      */
@@ -522,7 +522,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * Returns whether ISO 8601 week numbers should be shown in the value
      * selector or not. ISO 8601 defines that a week always starts with a Monday
      * so the week numbers are only shown if this is the case.
-     * 
+     *
      * @return true if week number should be shown, false otherwise
      */
     public boolean isShowISOWeekNumbers() {
@@ -535,7 +535,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Checks inclusively whether a date is inside a range of dates or not.
-     * 
+     *
      * @param date
      * @return
      */
@@ -552,7 +552,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * day-basis. If the resolution is set to YEAR, only years are compared. So
      * even if the range is set to one millisecond in next year, also next year
      * will be included.
-     * 
+     *
      * @param date
      * @param minResolution
      * @return
@@ -589,7 +589,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * day-basis. If the resolution is set to YEAR, only years are compared. So
      * even if the range is set to one millisecond in next year, also next year
      * will be included.
-     * 
+     *
      * @param date
      * @param minResolution
      * @return
@@ -773,7 +773,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Do we need the time selector
-     * 
+     *
      * @return True if it is required
      */
     private boolean isTimeSelectorNeeded() {
@@ -790,9 +790,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * Updates the calendar and text field with the selected dates.
-     * 
+     *
      * @param updateDate
      *            The value false prevents setting the selected date of the
      *            calendar based on focusedDate. That can be used when only the
@@ -1051,12 +1051,12 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Handles a user click on the component
-     * 
+     *
      * @param sender
      *            The component that was clicked
      * @param updateVariable
      *            Should the value field be updated
-     * 
+     *
      */
     private void processClickEvent(Widget sender) {
         if (!isEnabled() || isReadonly()) {
@@ -1075,7 +1075,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
@@ -1087,7 +1087,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google
      * .gwt.event.dom.client.KeyPressEvent)
@@ -1100,7 +1100,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     /**
      * Handles the keypress from both the onKeyPress event and the onKeyDown
      * event
-     * 
+     *
      * @param event
      *            The keydown/keypress event
      */
@@ -1161,7 +1161,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Handles the keyboard navigation when the resolution is set to years.
-     * 
+     *
      * @param keycode
      *            The keycode to process
      * @param ctrl
@@ -1219,7 +1219,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Handle the keyboard navigation when the resolution is set to MONTH
-     * 
+     *
      * @param keycode
      *            The keycode to handle
      * @param ctrl
@@ -1275,7 +1275,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Handle keyboard navigation what the resolution is set to DAY
-     * 
+     *
      * @param keycode
      *            The keycode to handle
      * @param ctrl
@@ -1381,7 +1381,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Handles the keyboard navigation
-     * 
+     *
      * @param keycode
      *            The key code that was pressed
      * @param ctrl
@@ -1419,7 +1419,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * Returns the reset key which will reset the calendar to the previous
      * selection. By default this is backspace but it can be overriden to change
      * the key to whatever you want.
-     * 
+     *
      * @return
      */
     protected int getResetKey() {
@@ -1430,7 +1430,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * Returns the select key which selects the value. By default this is the
      * enter key but it can be changed to whatever you like by overriding this
      * method.
-     * 
+     *
      * @return
      */
     protected int getSelectKey() {
@@ -1441,7 +1441,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * Returns the key that closes the popup window if this is a VPopopCalendar.
      * Else this does nothing. By default this is the Escape key but you can
      * change the key to whatever you want by overriding this method.
-     * 
+     *
      * @return
      */
     protected int getCloseKey() {
@@ -1452,7 +1452,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * The key that selects the next day in the calendar. By default this is the
      * right arrow key but by overriding this method it can be changed to
      * whatever you like.
-     * 
+     *
      * @return
      */
     protected int getForwardKey() {
@@ -1463,7 +1463,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * The key that selects the previous day in the calendar. By default this is
      * the left arrow key but by overriding this method it can be changed to
      * whatever you like.
-     * 
+     *
      * @return
      */
     protected int getBackwardKey() {
@@ -1474,7 +1474,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * The key that selects the next week in the calendar. By default this is
      * the down arrow key but by overriding this method it can be changed to
      * whatever you like.
-     * 
+     *
      * @return
      */
     protected int getNextKey() {
@@ -1485,7 +1485,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * The key that selects the previous week in the calendar. By default this
      * is the up arrow key but by overriding this method it can be changed to
      * whatever you like.
-     * 
+     *
      * @return
      */
     protected int getPreviousKey() {
@@ -1494,7 +1494,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.MouseOutHandler#onMouseOut(com.google
      * .gwt.event.dom.client.MouseOutEvent)
@@ -1508,7 +1508,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.MouseDownHandler#onMouseDown(com.google
      * .gwt.event.dom.client.MouseDownEvent)
@@ -1542,7 +1542,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.MouseUpHandler#onMouseUp(com.google.gwt
      * .event.dom.client.MouseUpEvent)
@@ -1556,7 +1556,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Adjusts a date to fit inside the range, only if outside
-     * 
+     *
      * @param date
      */
     private Date adjustDateToFitInsideRange(Date date) {
@@ -1570,7 +1570,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Sets the data of the Panel.
-     * 
+     *
      * @param currentDate
      *            The date to set
      */
@@ -1647,7 +1647,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     /**
      * TimeSelector is a widget consisting of list boxes that modifie the Date
      * object that is given for.
-     * 
+     *
      */
     public class VTime extends FlowPanel implements ChangeHandler {
 
@@ -1679,7 +1679,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
         /**
          * Constructs the ListBoxes and updates their value
-         * 
+         *
          * @param redraw
          *            Should new instances of the listboxes be created
          */
@@ -1860,7 +1860,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
         /*
          * (non-Javadoc) VT
-         * 
+         *
          * @see
          * com.google.gwt.event.dom.client.ChangeHandler#onChange(com.google.gwt
          * .event.dom.client.ChangeEvent)
@@ -1944,7 +1944,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     /**
      * If true should be returned if the panel will not be used after this
      * event.
-     * 
+     *
      * @param event
      * @return
      */
@@ -1958,7 +1958,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     /**
      * A focus out listener is triggered when the panel loosed focus. This can
      * happen either after a user clicks outside the panel or tabs out.
-     * 
+     *
      * @param listener
      *            The listener to trigger
      */
@@ -1969,7 +1969,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     /**
      * The submit listener is called when the user selects a value from the
      * calender either by clicking the day or selects it by keyboard.
-     * 
+     *
      * @param submitListener
      *            The listener to trigger
      */
@@ -1980,7 +1980,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     /**
      * The given FocusChangeListener is notified when the focused date changes
      * by user either clicking on a new date or by using the keyboard.
-     * 
+     *
      * @param listener
      *            The FocusChangeListener to be notified
      */
@@ -1990,7 +1990,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * The time change listener is triggered when the user changes the time.
-     * 
+     *
      * @param listener
      */
     public void setTimeChangeListener(TimeChangeListener listener) {
@@ -1999,7 +1999,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Returns the submit listener that listens to selection made from the panel
-     * 
+     *
      * @return The listener or NULL if no listener has been set
      */
     public SubmitListener getSubmitListener() {
@@ -2008,7 +2008,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
      * .dom.client.BlurEvent)
@@ -2023,7 +2023,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
@@ -2104,7 +2104,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Checks if subElement is inside the widget DOM hierarchy.
-     * 
+     *
      * @param w
      * @param subElement
      * @return true if {@code w} is a parent of subElement, false otherwise.
@@ -2228,7 +2228,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * Sets the start range for this component. The start range is inclusive,
      * and it depends on the current resolution, what is considered inside the
      * range.
-     * 
+     *
      * @param startDate
      *            - the allowed range's start date
      */
@@ -2247,7 +2247,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     /**
      * Sets the end range for this component. The end range is inclusive, and it
      * depends on the current resolution, what is considered inside the range.
-     * 
+     *
      * @param endDate
      *            - the allowed range's end date
      */

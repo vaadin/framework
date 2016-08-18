@@ -25,7 +25,7 @@ import com.vaadin.client.widgets.Grid;
  * <p>
  * Selection models perform tracking of selected rows in the Grid, as well as
  * dispatching events when the selection state changes.
- * 
+ *
  * @author Vaadin Ltd
  * @param <T>
  *            Grid's row type
@@ -36,7 +36,7 @@ public interface SelectionModel<T> {
     /**
      * Return true if the provided row is considered selected under the
      * implementing selection model.
-     * 
+     *
      * @param row
      *            row object instance
      * @return <code>true</code>, if the row given as argument is considered
@@ -47,7 +47,7 @@ public interface SelectionModel<T> {
     /**
      * Return the {@link Renderer} responsible for rendering the selection
      * column.
-     * 
+     *
      * @return a renderer instance. If null is returned, a selection column will
      *         not be drawn.
      */
@@ -58,7 +58,7 @@ public interface SelectionModel<T> {
      * <p>
      * Implementations are free to have this be a no-op. This method is called
      * internally by Grid.
-     * 
+     *
      * @param grid
      *            a {@link Grid} instance; <code>null</code> when removing from
      *            Grid
@@ -75,7 +75,7 @@ public interface SelectionModel<T> {
 
     /**
      * Returns a Collection containing all selected rows.
-     * 
+     *
      * @return a non-null collection.
      */
     public Collection<T> getSelectedRows();
@@ -83,7 +83,7 @@ public interface SelectionModel<T> {
     /**
      * Selection model that allows a maximum of one row to be selected at any
      * one time.
-     * 
+     *
      * @param <T>
      *            type parameter corresponding with Grid row type
      */
@@ -91,7 +91,7 @@ public interface SelectionModel<T> {
 
         /**
          * Selects a row.
-         * 
+         *
          * @param row
          *            a {@link Grid} row object
          * @return true, if this row as not previously selected.
@@ -102,7 +102,7 @@ public interface SelectionModel<T> {
          * Deselects a row.
          * <p>
          * This is a no-op unless {@link row} is the currently selected row.
-         * 
+         *
          * @param row
          *            a {@link Grid} row object
          * @return true, if the currently selected row was deselected.
@@ -111,7 +111,7 @@ public interface SelectionModel<T> {
 
         /**
          * Returns the currently selected row.
-         * 
+         *
          * @return a {@link Grid} row object or null, if nothing is selected.
          */
         public T getSelectedRow();
@@ -119,7 +119,7 @@ public interface SelectionModel<T> {
         /**
          * Sets whether it's allowed to deselect the selected row through the
          * UI. Deselection is allowed by default.
-         * 
+         *
          * @param deselectAllowed
          *            <code>true</code> if the selected row can be deselected
          *            without selecting another row instead; otherwise
@@ -130,7 +130,7 @@ public interface SelectionModel<T> {
         /**
          * Sets whether it's allowed to deselect the selected row through the
          * UI.
-         * 
+         *
          * @return <code>true</code> if deselection is allowed; otherwise
          *         <code>false</code>
          */
@@ -140,7 +140,7 @@ public interface SelectionModel<T> {
 
     /**
      * Selection model that allows for several rows to be selected at once.
-     * 
+     *
      * @param <T>
      *            type parameter corresponding with Grid row type
      */
@@ -149,7 +149,7 @@ public interface SelectionModel<T> {
         /**
          * A multi selection model that can send selections and deselections in
          * a batch, instead of committing them one-by-one.
-         * 
+         *
          * @param <T>
          *            type parameter corresponding with Grid row type
          */
@@ -179,21 +179,21 @@ public interface SelectionModel<T> {
 
             /**
              * Checks whether or not a batch has been started.
-             * 
+             *
              * @return <code>true</code> iff a batch has been started
              */
             public boolean isBeingBatchSelected();
 
             /**
              * Gets all the rows that would become selected in this batch.
-             * 
+             *
              * @return a collection of the rows that would become selected
              */
             public Collection<T> getSelectedRowsBatch();
 
             /**
              * Gets all the rows that would become deselected in this batch.
-             * 
+             *
              * @return a collection of the rows that would become deselected
              */
             public Collection<T> getDeselectedRowsBatch();
@@ -201,7 +201,7 @@ public interface SelectionModel<T> {
 
         /**
          * Selects one or more rows.
-         * 
+         *
          * @param rows
          *            {@link Grid} row objects
          * @return true, if the set of selected rows was changed.
@@ -210,7 +210,7 @@ public interface SelectionModel<T> {
 
         /**
          * Deselects one or more rows.
-         * 
+         *
          * @param rows
          *            Grid row objects
          * @return true, if the set of selected rows was changed.
@@ -219,14 +219,14 @@ public interface SelectionModel<T> {
 
         /**
          * De-selects all rows.
-         * 
+         *
          * @return true, if any row was previously selected.
          */
         public boolean deselectAll();
 
         /**
          * Select all rows in a {@link Collection}.
-         * 
+         *
          * @param rows
          *            a collection of Grid row objects
          * @return true, if the set of selected rows was changed.
@@ -235,7 +235,7 @@ public interface SelectionModel<T> {
 
         /**
          * Deselect all rows in a {@link Collection}.
-         * 
+         *
          * @param rows
          *            a collection of Grid row objects
          * @return true, if the set of selected rows was changed.
@@ -247,7 +247,7 @@ public interface SelectionModel<T> {
     /**
      * Interface for a selection model that does not allow anything to be
      * selected.
-     * 
+     *
      * @param <T>
      *            type parameter corresponding with Grid row type
      */

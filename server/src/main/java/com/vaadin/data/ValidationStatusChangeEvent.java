@@ -25,10 +25,10 @@ import com.vaadin.data.Binder.Binding;
  * Validation status change event which is fired each time when validation is
  * done. Use {@link Binding#withStatusChangeHandler(StatusChangeHandler)} method
  * to add your validation handler to listen to the event.
- * 
+ *
  * @see Binding#withStatusChangeHandler(StatusChangeHandler)
  * @see StatusChangeHandler
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  *
@@ -43,7 +43,7 @@ public class ValidationStatusChangeEvent extends EventObject {
      * <p>
      * The {@code message} must be null if the {@code status} is
      * {@link ValidationStatus#OK}.
-     * 
+     *
      * @param source
      *            field whose status has changed, not {@code null}
      * @param status
@@ -67,7 +67,7 @@ public class ValidationStatusChangeEvent extends EventObject {
 
     /**
      * Returns validation status of the event.
-     * 
+     *
      * @return validation status
      */
     public ValidationStatus getStatus() {
@@ -77,7 +77,7 @@ public class ValidationStatusChangeEvent extends EventObject {
     /**
      * Returns error validation message if status is
      * {@link ValidationStatus#ERROR}.
-     * 
+     *
      * @return an optional validation error status or an empty optional if
      *         status is not an error
      */

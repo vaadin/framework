@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -42,7 +42,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * adapter and theme are responsible for rendering the layout with a given style
  * by placing the items in the defined locations.
  * </p>
- * 
+ *
  * <p>
  * The placement of the locations is not fixed - different themes can define the
  * locations in a way that is suitable for them. One typical example would be to
@@ -50,12 +50,12 @@ import com.vaadin.ui.declarative.DesignContext;
  * would define locations for "menu", "body", and "title", for example. The
  * layout would then be implemented as an HTML template for each theme.
  * </p>
- * 
+ *
  * <p>
  * The default theme handles the styles that are not defined by drawing the
  * subcomponents just as in OrderedLayout.
  * </p>
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -74,7 +74,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
      * for setting the appropriate fields. Either
      * {@link #setTemplateName(String)}, that makes layout fetch the template
      * from theme, or {@link #setTemplateContents(String)}.
-     * 
+     *
      * @since 7.5.0
      */
     public CustomLayout() {
@@ -83,7 +83,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     /**
      * Constructs a custom layout with the template given in the stream.
-     * 
+     *
      * @param templateStream
      *            Stream containing template data. Must be using UTF-8 encoding.
      *            To use a String as a template use for instance new
@@ -137,7 +137,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
     /**
      * Adds the component into this container to given location. If the location
      * is already populated, the old component is removed.
-     * 
+     *
      * @param c
      *            the component to be added.
      * @param location
@@ -159,7 +159,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
      * specifying the location (empty string is then used as location). Only one
      * component can be added to the default "" location and adding more
      * components into that location overwrites the old components.
-     * 
+     *
      * @param c
      *            the component to be added.
      */
@@ -170,7 +170,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     /**
      * Removes the component from this container.
-     * 
+     *
      * @param c
      *            the component to be removed.
      */
@@ -186,7 +186,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     /**
      * Removes the component from this container from given location.
-     * 
+     *
      * @param location
      *            the Location identifier of the component.
      */
@@ -197,7 +197,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
     /**
      * Gets the component container iterator for going trough all the components
      * in the container.
-     * 
+     *
      * @return the Iterator of the components inside the container.
      */
     @Override
@@ -208,7 +208,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
     /**
      * Gets the number of contained components. Consistent with the iterator
      * returned by {@link #getComponentIterator()}.
-     * 
+     *
      * @return the number of contained components
      */
     @Override
@@ -218,7 +218,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     /**
      * Gets the child-component by its location.
-     * 
+     *
      * @param location
      *            the name of the location where the requested component
      *            resides.
@@ -273,11 +273,11 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     /**
      * Set the name of the template used to draw custom layout.
-     * 
+     *
      * With GWT-adapter, the template with name 'templatename' is loaded from
      * VAADIN/themes/themename/layouts/templatename.html. If the theme has not
      * been set (with Application.setTheme()), themename is 'default'.
-     * 
+     *
      * @param templateName
      */
     public void setTemplateName(String templateName) {
@@ -287,7 +287,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     /**
      * Set the contents of the template used to draw the custom layout.
-     * 
+     *
      * @param templateContents
      */
     public void setTemplateContents(String templateContents) {

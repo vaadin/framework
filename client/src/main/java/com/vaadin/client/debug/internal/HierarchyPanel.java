@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -39,7 +39,7 @@ import com.vaadin.client.Util;
 /**
  * Hierarchy view panel of the debug window. This class can be used in various
  * debug window sections to show the current connector hierarchy.
- * 
+ *
  * @since 7.1.4
  */
 public class HierarchyPanel extends FlowPanel {
@@ -73,7 +73,7 @@ public class HierarchyPanel extends FlowPanel {
     /**
      * Adds the captions of all open (non-leaf) nodes in the hierarchy tree
      * recursively.
-     * 
+     *
      * @param widget
      *            the widget in which to search for open nodes (if SimpleTree)
      * @param openNodes
@@ -163,7 +163,7 @@ public class HierarchyPanel extends FlowPanel {
     /**
      * Outputs debug information on the server - usually in the console of an
      * IDE, with a clickable reference to the relevant code location.
-     * 
+     *
      * @since 7.1
      * @param connector
      *            show debug info for this connector

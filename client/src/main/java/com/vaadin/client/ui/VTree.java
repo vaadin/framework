@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -79,7 +79,7 @@ import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.tree.TreeConstants;
 
 /**
- * 
+ *
  */
 public class VTree extends FocusElementPanel
         implements VHasDropHandler, FocusHandler, BlurHandler, KeyPressHandler,
@@ -237,7 +237,7 @@ public class VTree extends FocusElementPanel
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt.user
      * .client.Event)
@@ -289,7 +289,7 @@ public class VTree extends FocusElementPanel
     /**
      * Returns the first root node of the tree or null if there are no root
      * nodes.
-     * 
+     *
      * @return The first root {@link TreeNode}
      */
     protected TreeNode getFirstRootNode() {
@@ -302,7 +302,7 @@ public class VTree extends FocusElementPanel
     /**
      * Returns the last root node of the tree or null if there are no root
      * nodes.
-     * 
+     *
      * @return The last root {@link TreeNode}
      */
     protected TreeNode getLastRootNode() {
@@ -315,7 +315,7 @@ public class VTree extends FocusElementPanel
     /**
      * Returns a list of all root nodes in the Tree in the order they appear in
      * the tree.
-     * 
+     *
      * @return A list of all root {@link TreeNode}s.
      */
     protected List<TreeNode> getRootNodes() {
@@ -514,7 +514,7 @@ public class VTree extends FocusElementPanel
 
     /**
      * Is a node selected in the tree
-     * 
+     *
      * @param treeNode
      *            The node to check
      * @return
@@ -637,7 +637,7 @@ public class VTree extends FocusElementPanel
 
         /**
          * Handles mouse selection
-         * 
+         *
          * @param ctrl
          *            Was the ctrl-key pressed
          * @param shift
@@ -702,7 +702,7 @@ public class VTree extends FocusElementPanel
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
          * .user.client.Event)
@@ -811,7 +811,7 @@ public class VTree extends FocusElementPanel
 
         /**
          * Checks if the given element is the caption or the icon.
-         * 
+         *
          * @param target
          *            The element to check
          * @return true if the element is the caption or the icon
@@ -1000,7 +1000,7 @@ public class VTree extends FocusElementPanel
 
         /**
          * Returns the children of the node
-         * 
+         *
          * @return A set of tree nodes
          */
         public List<TreeNode> getChildren() {
@@ -1047,7 +1047,7 @@ public class VTree extends FocusElementPanel
          * Adds/removes Vaadin specific style name.
          * <p>
          * For internal use only. May be removed or replaced in the future.
-         * 
+         *
          * @param selected
          */
         public void setSelected(boolean selected) {
@@ -1061,7 +1061,7 @@ public class VTree extends FocusElementPanel
 
         /**
          * Travels up the hierarchy looking for this node
-         * 
+         *
          * @param child
          *            The child which grandparent this is or is not
          * @return True if this is a grandparent of the child node
@@ -1100,7 +1100,7 @@ public class VTree extends FocusElementPanel
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see com.google.gwt.user.client.ui.Widget#onDetach()
          */
         @Override
@@ -1111,7 +1111,7 @@ public class VTree extends FocusElementPanel
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see com.google.gwt.user.client.ui.UIObject#toString()
          */
         @Override
@@ -1121,7 +1121,7 @@ public class VTree extends FocusElementPanel
 
         /**
          * Is the node focused?
-         * 
+         *
          * @param focused
          *            True if focused, false if not
          */
@@ -1197,7 +1197,7 @@ public class VTree extends FocusElementPanel
 
     /**
      * Selects a range of nodes
-     * 
+     *
      * @param startNodeKey
      *            The start node key
      * @param endNodeKey
@@ -1227,7 +1227,7 @@ public class VTree extends FocusElementPanel
 
     /**
      * Selects a node and deselect all other nodes
-     * 
+     *
      * @param node
      *            The node to select
      */
@@ -1246,7 +1246,7 @@ public class VTree extends FocusElementPanel
 
     /**
      * Deselects a node
-     * 
+     *
      * @param node
      *            The node to deselect
      */
@@ -1258,7 +1258,7 @@ public class VTree extends FocusElementPanel
 
     /**
      * Selects all the open children to a node
-     * 
+     *
      * @param node
      *            The parent node
      */
@@ -1281,7 +1281,7 @@ public class VTree extends FocusElementPanel
 
     /**
      * Selects all children until a stop child is reached
-     * 
+     *
      * @param root
      *            The root not to start from
      * @param stopNode
@@ -1290,7 +1290,7 @@ public class VTree extends FocusElementPanel
      *            Should the root node be selected
      * @param includeStopNode
      *            Should the stop node be selected
-     * 
+     *
      * @return Returns false if the stop child was found, else true if all
      *         children was selected
      */
@@ -1326,7 +1326,7 @@ public class VTree extends FocusElementPanel
 
     /**
      * Select a range between two nodes which have no relation to each other
-     * 
+     *
      * @param startNode
      *            The start node to start the selection from
      * @param endNode
@@ -1396,7 +1396,7 @@ public class VTree extends FocusElementPanel
     /**
      * Examines the children of the branch node and returns true if a node is in
      * that branch
-     * 
+     *
      * @param node
      *            The node to search for
      * @param branch
@@ -1424,9 +1424,9 @@ public class VTree extends FocusElementPanel
      * Selects a range of items which are in direct relation with each
      * other.<br/>
      * NOTE: The start node <b>MUST</b> be before the end node!
-     * 
+     *
      * @param startNode
-     * 
+     *
      * @param endNode
      */
     private void doRelationSelection(TreeNode startNode, TreeNode endNode) {
@@ -1456,7 +1456,7 @@ public class VTree extends FocusElementPanel
 
     /**
      * Selects a range of items which have the same parent.
-     * 
+     *
      * @param startNode
      *            The start node
      * @param endNode
@@ -1506,7 +1506,7 @@ public class VTree extends FocusElementPanel
 
     /**
      * Returns the first common parent of two nodes
-     * 
+     *
      * @param node1
      *            The first node
      * @param node2
@@ -1556,7 +1556,7 @@ public class VTree extends FocusElementPanel
 
     /**
      * Sets the node currently in focus
-     * 
+     *
      * @param node
      *            The node to focus or null to remove the focus completely
      * @param scrollIntoView
@@ -1579,12 +1579,12 @@ public class VTree extends FocusElementPanel
             /*
              * FIXME: This code needs to be changed when the keyboard navigation
              * doesn't immediately trigger a selection change anymore.
-             * 
+             *
              * Right now this function is called before and after the Tree is
              * rebuilt when up/down arrow keys are pressed. This leads to the
              * problem, that the newly selected item is announced too often with
              * a screen reader.
-             * 
+             *
              * Behaviour is different when using the Tree with and without
              * screen reader.
              */
@@ -1618,7 +1618,7 @@ public class VTree extends FocusElementPanel
 
     /**
      * Focuses a node and scrolls it into view
-     * 
+     *
      * @param node
      *            The node to focus
      */
@@ -1628,7 +1628,7 @@ public class VTree extends FocusElementPanel
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
@@ -1648,7 +1648,7 @@ public class VTree extends FocusElementPanel
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
      * .dom.client.BlurEvent)
@@ -1663,7 +1663,7 @@ public class VTree extends FocusElementPanel
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google
      * .gwt.event.dom.client.KeyPressEvent)
@@ -1687,7 +1687,7 @@ public class VTree extends FocusElementPanel
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
@@ -1704,7 +1704,7 @@ public class VTree extends FocusElementPanel
 
     /**
      * Handles the keyboard navigation
-     * 
+     *
      * @param keycode
      *            The keycode of the pressed key
      * @param ctrl
@@ -1885,7 +1885,7 @@ public class VTree extends FocusElementPanel
          * be at least one selection. After this the newly focused node is
          * selected and we've ended up with two selected nodes even though we
          * only navigated with the arrow keys.
-         * 
+         *
          * Because of this, we first select the next node and later de-select
          * the old one.
          */
@@ -1897,7 +1897,7 @@ public class VTree extends FocusElementPanel
 
     /**
      * Traverses the tree to the bottom most child
-     * 
+     *
      * @param root
      *            The root of the tree
      * @return The bottom most child
@@ -1913,7 +1913,7 @@ public class VTree extends FocusElementPanel
 
     /**
      * Gets the next sibling in the tree
-     * 
+     *
      * @param node
      *            The node to get the sibling for
      * @return The sibling node or null if the node is the last sibling
@@ -1937,7 +1937,7 @@ public class VTree extends FocusElementPanel
 
     /**
      * Returns the previous sibling in the tree
-     * 
+     *
      * @param node
      *            The node to get the sibling for
      * @return The sibling node or null if the node is the first sibling
@@ -1963,7 +1963,7 @@ public class VTree extends FocusElementPanel
      * Add this to the element mouse down event by using element.setPropertyJSO
      * ("onselectstart",applyDisableTextSelectionIEHack()); Remove it then again
      * when the mouse is depressed in the mouse up event.
-     * 
+     *
      * @return Returns the JSO preventing text selection
      */
     private native JavaScriptObject applyDisableTextSelectionIEHack()
@@ -1975,7 +1975,7 @@ public class VTree extends FocusElementPanel
      * Get the key that moves the selection head upwards. By default it is the
      * up arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationUpKey() {
@@ -1986,7 +1986,7 @@ public class VTree extends FocusElementPanel
      * Get the key that moves the selection head downwards. By default it is the
      * down arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationDownKey() {
@@ -1997,7 +1997,7 @@ public class VTree extends FocusElementPanel
      * Get the key that scrolls to the left in the table. By default it is the
      * left arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationLeftKey() {
@@ -2008,7 +2008,7 @@ public class VTree extends FocusElementPanel
      * Get the key that scroll to the right on the table. By default it is the
      * right arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationRightKey() {
@@ -2019,7 +2019,7 @@ public class VTree extends FocusElementPanel
      * Get the key that selects an item in the table. By default it is the space
      * bar key but by overriding this you can change the key to whatever you
      * want.
-     * 
+     *
      * @return
      */
     protected int getNavigationSelectKey() {
@@ -2030,7 +2030,7 @@ public class VTree extends FocusElementPanel
      * Get the key the moves the selection one page up in the table. By default
      * this is the Page Up key but by overriding this you can change the key to
      * whatever you want.
-     * 
+     *
      * @return
      */
     protected int getNavigationPageUpKey() {
@@ -2041,7 +2041,7 @@ public class VTree extends FocusElementPanel
      * Get the key the moves the selection one page down in the table. By
      * default this is the Page Down key but by overriding this you can change
      * the key to whatever you want.
-     * 
+     *
      * @return
      */
     protected int getNavigationPageDownKey() {
@@ -2052,7 +2052,7 @@ public class VTree extends FocusElementPanel
      * Get the key the moves the selection to the beginning of the table. By
      * default this is the Home key but by overriding this you can change the
      * key to whatever you want.
-     * 
+     *
      * @return
      */
     protected int getNavigationStartKey() {
@@ -2063,7 +2063,7 @@ public class VTree extends FocusElementPanel
      * Get the key the moves the selection to the end of the table. By default
      * this is the End key but by overriding this you can change the key to
      * whatever you want.
-     * 
+     *
      * @return
      */
     protected int getNavigationEndKey() {
@@ -2082,7 +2082,7 @@ public class VTree extends FocusElementPanel
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.SubPartAware#getSubPartElement(java
      * .lang.String)
      */
@@ -2136,7 +2136,7 @@ public class VTree extends FocusElementPanel
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.SubPartAware#getSubPartName(com.google
      * .gwt.user.client.Element)
      */

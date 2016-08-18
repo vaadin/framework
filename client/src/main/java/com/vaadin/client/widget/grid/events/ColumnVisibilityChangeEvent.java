@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,7 +21,7 @@ import com.vaadin.client.widgets.Grid.Column;
 /**
  * An event for notifying that the columns in the Grid's have changed
  * visibility.
- * 
+ *
  * @param <T>
  *            The row type of the grid. The row type is the POJO type from where
  *            the data is retrieved into the column cells.
@@ -52,7 +52,7 @@ public class ColumnVisibilityChangeEvent<T>
 
     /**
      * Returns the column where the visibility change occurred.
-     * 
+     *
      * @return the column where the visibility change occurred.
      */
     public Column<?, T> getColumn() {
@@ -61,7 +61,7 @@ public class ColumnVisibilityChangeEvent<T>
 
     /**
      * Was the column set hidden or visible.
-     * 
+     *
      * @return <code>true</code> if the column was hidden <code>false</code> if
      *         it was set visible
      */
@@ -71,7 +71,7 @@ public class ColumnVisibilityChangeEvent<T>
 
     /**
      * Is the visibility change triggered by user.
-     * 
+     *
      * @return <code>true</code> if the change was triggered by user,
      *         <code>false</code> if not
      */

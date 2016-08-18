@@ -51,9 +51,9 @@ public class DDTest8 extends AbstractTestUI {
     /**
      * Moves items in tree (and could work in Table too). Also supports
      * "building" tree.
-     * 
+     *
      * TODO fix algorithm, broken in some cases.
-     * 
+     *
      * @param tree
      * @param container
      * @return drop handler

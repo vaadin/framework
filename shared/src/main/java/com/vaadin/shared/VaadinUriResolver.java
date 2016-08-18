@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,7 +24,7 @@ import com.vaadin.shared.util.SharedUtil;
  * URLs usable by the browser. This is an abstract class performing the main
  * logic in {@link #resolveVaadinUri(String)} and using abstract methods in the
  * class for accessing information specific to the current environment.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -116,7 +116,7 @@ public abstract class VaadinUriResolver implements Serializable {
 
     /**
      * Gets the URL pointing to the VAADIN directory.
-     * 
+     *
      * @return the VAADIN directory URL
      */
     protected abstract String getVaadinDirUrl();
@@ -126,7 +126,7 @@ public abstract class VaadinUriResolver implements Serializable {
      * the requested URL to the {@link #getServiceUrl() service URL}. If
      * <code>null</code> is returned, the requested URL will instead be appended
      * to the base service URL.
-     * 
+     *
      * @return the parameter name used for passing request URLs, or
      *         <code>null</code> to send the path as a part of the request path.
      */
@@ -135,21 +135,21 @@ public abstract class VaadinUriResolver implements Serializable {
     /**
      * Gets the URL handled by {@link com.vaadin.server.VaadinService
      * VaadinService} to handle application requests.
-     * 
+     *
      * @return the service URL
      */
     protected abstract String getServiceUrl();
 
     /**
      * Gets the URI of the directory of the current theme.
-     * 
+     *
      * @return the URI of the current theme directory
      */
     protected abstract String getThemeUri();
 
     /**
      * Encodes a value for safe inclusion as a parameter in the query string.
-     * 
+     *
      * @param parameterValue
      *            the value to encode
      * @return the encoded value

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,7 +21,7 @@ import com.vaadin.client.ValueMap;
 
 /**
  * A Section is displayed as a tab in the {@link VDebugWindow}.
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd
  */
@@ -38,7 +38,7 @@ public interface Section {
      * The button should preferably only have an icon (no caption), and should
      * have a longer description as title (tooltip).
      * </p>
-     * 
+     *
      * @return section id
      */
     public DebugButton getTabButton();
@@ -46,7 +46,7 @@ public interface Section {
     /**
      * Returns a widget that is placed on top of the Section content when the
      * Section (tab) is active in the {@link VDebugWindow}.
-     * 
+     *
      * @return section controls
      */
     public Widget getControls();
@@ -54,7 +54,7 @@ public interface Section {
     /**
      * Returns a widget that is the main content of the section, displayed when
      * the section is active in the {@link VDebugWindow}.
-     * 
+     *
      * @return
      */
     public Widget getContent();

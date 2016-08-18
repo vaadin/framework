@@ -52,7 +52,7 @@ public class CalendarActionsUI extends UI {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see
              * com.vaadin.event.Action.Handler#handleAction(com.vaadin.event
              * .Action, java.lang.Object, java.lang.Object)
@@ -70,7 +70,7 @@ public class CalendarActionsUI extends UI {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see com.vaadin.event.Action.Handler#getActions(java.lang.Object,
              * java.lang.Object)
              */

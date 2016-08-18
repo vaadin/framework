@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.vaadin.tests;
 
@@ -23,7 +23,7 @@ import com.vaadin.ui.themes.Reindeer;
 
 /**
  * @author marc
- * 
+ *
  */
 public class TestContainerChanges extends CustomComponent {
     Container cont = new IndexedContainer();

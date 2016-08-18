@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -313,9 +313,9 @@ public class ChameleonTheme extends BaseTheme {
      * segment, and add "<code>first</code>" and "<code>last</code>" style names
      * for the first and last button in the segment. Then use the
      * {@link #BUTTON_DOWN} style to indicate button states.
-     * 
+     *
      * E.g.
-     * 
+     *
      * <pre>
      * HorizontalLayout ("segment")
      *   + Button ("first down")
@@ -324,7 +324,7 @@ public class ChameleonTheme extends BaseTheme {
      *    ...
      *   + Button ("last")
      * </pre>
-     * 
+     *
      * You can also use most of the different button styles for the contained
      * buttons (e.g. {@link #BUTTON_BIG}, {@link #BUTTON_ICON_ONLY} etc.).
      */
@@ -335,9 +335,9 @@ public class ChameleonTheme extends BaseTheme {
      * {@link #COMPOUND_HORIZONTAL_LAYOUT_SEGMENT} style to make buttons with
      * the "down" style use the themes alternate color (e.g. blue instead of
      * gray).
-     * 
+     *
      * E.g.
-     * 
+     *
      * <pre>
      * HorizontalLayout ("segment segment-alternate")
      *   + Button ("first down")
@@ -352,9 +352,9 @@ public class ChameleonTheme extends BaseTheme {
     /**
      * Creates an iTunes-like menu from a CssLayout or a VerticalLayout. Place
      * plain Labels and NativeButtons inside the layout, and you're all set.
-     * 
+     *
      * E.g.
-     * 
+     *
      * <pre>
      * CssLayout ("sidebar-menu")
      *   + Label

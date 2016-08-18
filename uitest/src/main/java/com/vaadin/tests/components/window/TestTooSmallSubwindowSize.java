@@ -9,7 +9,7 @@ import com.vaadin.ui.Window;
 /**
  * Tests that the styles work correctly in tiny subwindows that have more
  * content than can fit.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class TestTooSmallSubwindowSize extends AbstractTestUI {

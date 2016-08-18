@@ -81,7 +81,7 @@ public class BeanItemContainerTestUI extends UI {
 
     /**
      * Creates a table with some actions
-     * 
+     *
      * @return
      */
     private Table createTable() {
@@ -122,7 +122,7 @@ public class BeanItemContainerTestUI extends UI {
 
     /**
      * Opens up a modal dialog window where an event can be modified
-     * 
+     *
      * @param event
      *            The event to modify
      */

@@ -32,7 +32,7 @@ import com.vaadin.testbench.parallel.ParallelRunner;
  * (http://tedyoung.me/2011/01/23/junit-runtime-tests-custom-runners/). The
  * generated test names give information about the parameters used (unlike
  * {@link Parameterized}).
- * 
+ *
  * @since 7.1
  */
 public class TB3Runner extends ParallelRunner {

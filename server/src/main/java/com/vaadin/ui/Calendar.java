@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -97,21 +97,21 @@ import com.vaadin.ui.declarative.DesignContext;
  * be visualized in the variable length view depending on the start and end
  * dates.
  * </p>
- * 
+ *
  * <li>You can set the viewable date range with the {@link #setStartDate(Date)}
  * and {@link #setEndDate(Date)} methods. Calendar has a default date range of
  * one week</li>
- * 
+ *
  * <li>Calendar has two kind of views: monthly and weekly view</li>
- * 
+ *
  * <li>If date range is seven days or shorter, the weekly view is used.</li>
- * 
+ *
  * <li>Calendar queries its events by using a
  * {@link com.vaadin.addon.calendar.event.CalendarEventProvider
  * CalendarEventProvider}. By default, a
  * {@link com.vaadin.addon.calendar.event.BasicEventProvider BasicEventProvider}
  * is used.</li>
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd.
  */
@@ -216,7 +216,7 @@ public class Calendar extends AbstractComponent
     private KeyMapper<Action> actionMapper = null;
 
     /**
-     * 
+     *
      */
     private CalendarServerRpcImpl rpc = new CalendarServerRpcImpl();
 
@@ -240,7 +240,7 @@ public class Calendar extends AbstractComponent
     /**
      * Construct a Vaadin Calendar with a BasicEventProvider and the provided
      * caption. Default date range is one week.
-     * 
+     *
      * @param caption
      */
     public Calendar(String caption) {
@@ -253,13 +253,13 @@ public class Calendar extends AbstractComponent
      * obligatory, because calendar component will query active events through
      * it.
      * </p>
-     * 
+     *
      * <p>
      * By default, Vaadin Calendar will show dates from the start of the current
      * week to the end of the current week. Use {@link #setStartDate(Date)} and
      * {@link #setEndDate(Date)} to change this.
      * </p>
-     * 
+     *
      * @param eventProvider
      *            Event provider, cannot be null.
      */
@@ -273,13 +273,13 @@ public class Calendar extends AbstractComponent
      * provider is obligatory, because calendar component will query active
      * events through it.
      * </p>
-     * 
+     *
      * <p>
      * By default, Vaadin Calendar will show dates from the start of the current
      * week to the end of the current week. Use {@link #setStartDate(Date)} and
      * {@link #setEndDate(Date)} to change this.
      * </p>
-     * 
+     *
      * @param eventProvider
      *            Event provider, cannot be null.
      */
@@ -337,7 +337,7 @@ public class Calendar extends AbstractComponent
 
     /**
      * Gets the calendar's start date.
-     * 
+     *
      * @return First visible date.
      */
     public Date getStartDate() {
@@ -357,7 +357,7 @@ public class Calendar extends AbstractComponent
      * Sets start date for the calendar. This and {@link #setEndDate(Date)}
      * control the range of dates visible on the component. The default range is
      * one week.
-     * 
+     *
      * @param date
      *            First visible date to show.
      */
@@ -370,7 +370,7 @@ public class Calendar extends AbstractComponent
 
     /**
      * Gets the calendar's end date.
-     * 
+     *
      * @return Last visible date.
      */
     public Date getEndDate() {
@@ -389,10 +389,10 @@ public class Calendar extends AbstractComponent
     /**
      * Sets end date for the calendar. Starting from startDate, only six weeks
      * will be shown if duration to endDate is longer than six weeks.
-     * 
+     *
      * This and {@link #setStartDate(Date)} control the range of dates visible
      * on the component. The default range is one week.
-     * 
+     *
      * @param date
      *            Last visible date to show.
      */
@@ -408,7 +408,7 @@ public class Calendar extends AbstractComponent
 
     /**
      * Sets the locale to be used in the Calendar component.
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#setLocale(java.util.Locale)
      */
     @Override
@@ -673,7 +673,7 @@ public class Calendar extends AbstractComponent
     /**
      * Gets currently active time format. Value is either TimeFormat.Format12H
      * or TimeFormat.Format24H.
-     * 
+     *
      * @return TimeFormat Format for the time.
      */
     public TimeFormat getTimeFormat() {
@@ -698,7 +698,7 @@ public class Calendar extends AbstractComponent
     /**
      * Example: <code>setTimeFormat(TimeFormat.Format12H);</code></br>
      * Set to null, if you want the format being defined by the locale.
-     * 
+     *
      * @param format
      *            Set 12h or 24h format. Default is defined by the locale.
      */
@@ -709,7 +709,7 @@ public class Calendar extends AbstractComponent
 
     /**
      * Returns a time zone that is currently used by this component.
-     * 
+     *
      * @return Component's Time zone
      */
     public TimeZone getTimeZone() {
@@ -722,7 +722,7 @@ public class Calendar extends AbstractComponent
     /**
      * Set time zone that this component will use. Null value sets the default
      * time zone.
-     * 
+     *
      * @param zone
      *            Time zone to use
      */
@@ -742,7 +742,7 @@ public class Calendar extends AbstractComponent
      * Get the internally used Calendar instance. This is the currently used
      * instance of {@link java.util.Calendar} but is bound to change during the
      * lifetime of the component.
-     * 
+     *
      * @return the currently used java calendar
      */
     public java.util.Calendar getInternalCalendar() {
@@ -755,13 +755,13 @@ public class Calendar extends AbstractComponent
      * monthly and the weekly view. The general contract is that <b>firstDay <
      * lastDay</b>.
      * </p>
-     * 
+     *
      * <p>
      * Note that this only affects the rendering process. Events are still
      * requested by the dates set by {@link #setStartDate(Date)} and
      * {@link #setEndDate(Date)}.
      * </p>
-     * 
+     *
      * @param firstDay
      *            the first day of the week to show, between 1 and 7
      */
@@ -776,7 +776,7 @@ public class Calendar extends AbstractComponent
     /**
      * Get the first visible day of the week. Returns the weekdays as integers
      * represented by {@link java.util.Calendar#DAY_OF_WEEK}
-     * 
+     *
      * @return An integer representing the week day according to
      *         {@link java.util.Calendar#DAY_OF_WEEK}
      */
@@ -790,13 +790,13 @@ public class Calendar extends AbstractComponent
      * monthly and the weekly view. The general contract is that <b>firstDay <
      * lastDay</b>.
      * </p>
-     * 
+     *
      * <p>
      * Note that this only affects the rendering process. Events are still
      * requested by the dates set by {@link #setStartDate(Date)} and
      * {@link #setEndDate(Date)}.
      * </p>
-     * 
+     *
      * @param lastDay
      *            the first day of the week to show, between 1 and 7
      */
@@ -811,7 +811,7 @@ public class Calendar extends AbstractComponent
     /**
      * Get the last visible day of the week. Returns the weekdays as integers
      * represented by {@link java.util.Calendar#DAY_OF_WEEK}
-     * 
+     *
      * @return An integer representing the week day according to
      *         {@link java.util.Calendar#DAY_OF_WEEK}
      */
@@ -824,13 +824,13 @@ public class Calendar extends AbstractComponent
      * This method restricts the hours that are shown per day. This affects the
      * weekly view. The general contract is that <b>firstHour < lastHour</b>.
      * </p>
-     * 
+     *
      * <p>
      * Note that this only affects the rendering process. Events are still
      * requested by the dates set by {@link #setStartDate(Date)} and
      * {@link #setEndDate(Date)}.
      * </p>
-     * 
+     *
      * @param firstHour
      *            the first hour of the day to show, between 0 and 23
      */
@@ -845,7 +845,7 @@ public class Calendar extends AbstractComponent
     /**
      * Returns the first visible hour in the week view. Returns the hour using a
      * 24h time format
-     * 
+     *
      */
     public int getFirstVisibleHourOfDay() {
         return firstHour;
@@ -856,13 +856,13 @@ public class Calendar extends AbstractComponent
      * This method restricts the hours that are shown per day. This affects the
      * weekly view. The general contract is that <b>firstHour < lastHour</b>.
      * </p>
-     * 
+     *
      * <p>
      * Note that this only affects the rendering process. Events are still
      * requested by the dates set by {@link #setStartDate(Date)} and
      * {@link #setEndDate(Date)}.
      * </p>
-     * 
+     *
      * @param lastHour
      *            the first hour of the day to show, between 0 and 23
      */
@@ -877,7 +877,7 @@ public class Calendar extends AbstractComponent
     /**
      * Returns the last visible hour in the week view. Returns the hour using a
      * 24h time format
-     * 
+     *
      */
     public int getLastVisibleHourOfDay() {
         return lastHour;
@@ -885,7 +885,7 @@ public class Calendar extends AbstractComponent
 
     /**
      * Gets the date caption format for the weekly view.
-     * 
+     *
      * @return The pattern used in caption of dates in weekly view.
      */
     public String getWeeklyCaptionFormat() {
@@ -895,7 +895,7 @@ public class Calendar extends AbstractComponent
     /**
      * Sets custom date format for the weekly view. This is the caption of the
      * date. Format could be like "mmm MM/dd".
-     * 
+     *
      * @param dateFormatPattern
      *            The date caption pattern.
      */
@@ -919,7 +919,7 @@ public class Calendar extends AbstractComponent
 
     /**
      * Get the day of week by the given calendar and its locale
-     * 
+     *
      * @param calendar
      *            The calendar to use
      * @return
@@ -937,7 +937,7 @@ public class Calendar extends AbstractComponent
 
     /**
      * Is the user allowed to trigger events which alters the events
-     * 
+     *
      * @return true if the client is allowed to send changes to server
      * @see #isEventClickAllowed()
      */
@@ -949,7 +949,7 @@ public class Calendar extends AbstractComponent
      * Is the user allowed to trigger click events. Returns {@code true} by
      * default. Subclass can override this method to disallow firing event
      * clicks got from the client side.
-     * 
+     *
      * @return true if the client is allowed to click events
      * @see #isClientChangeAllowed()
      * @deprecated As of 7.4, override {@link #fireEventClick(Integer)} instead.
@@ -962,7 +962,7 @@ public class Calendar extends AbstractComponent
     /**
      * Fires an event when the user selecing moving forward/backward in the
      * calendar.
-     * 
+     *
      * @param forward
      *            True if the calendar moved forward else backward is assumed.
      */
@@ -976,7 +976,7 @@ public class Calendar extends AbstractComponent
 
     /**
      * Fires an event move event to all server side move listerners
-     * 
+     *
      * @param index
      *            The index of the event in the events list
      * @param newFromDatetime
@@ -998,7 +998,7 @@ public class Calendar extends AbstractComponent
 
     /**
      * Fires event when a week was clicked in the calendar.
-     * 
+     *
      * @param week
      *            The week that was clicked
      * @param year
@@ -1011,7 +1011,7 @@ public class Calendar extends AbstractComponent
     /**
      * Fires event when a date was clicked in the calendar. Uses an existing
      * event from the event cache.
-     * 
+     *
      * @param index
      *            The index of the event in the event cache.
      */
@@ -1022,7 +1022,7 @@ public class Calendar extends AbstractComponent
     /**
      * Fires event when a date was clicked in the calendar. Creates a new event
      * for the date and passes it to the listener.
-     * 
+     *
      * @param date
      *            The date and time that was clicked
      */
@@ -1034,7 +1034,7 @@ public class Calendar extends AbstractComponent
      * Fires an event range selected event. The event is fired when a user
      * highlights an area in the calendar. The highlighted areas start and end
      * dates are returned as arguments.
-     * 
+     *
      * @param from
      *            The start date and time of the highlighted area
      * @param to
@@ -1051,7 +1051,7 @@ public class Calendar extends AbstractComponent
      * event in the calendar causing the time range of the event to increase or
      * decrease. The new start and end times are returned as arguments to this
      * method.
-     * 
+     *
      * @param index
      *            The index of the event in the event cache
      * @param startTime
@@ -1076,7 +1076,7 @@ public class Calendar extends AbstractComponent
     /**
      * Localized display names for week days starting from sunday. Returned
      * array's length is always 7.
-     * 
+     *
      * @return Array of localized weekday names.
      */
     protected String[] getDayNamesShort() {
@@ -1087,7 +1087,7 @@ public class Calendar extends AbstractComponent
     /**
      * Localized display names for months starting from January. Returned
      * array's length is always 12.
-     * 
+     *
      * @return Array of localized month names.
      */
     protected String[] getMonthNamesShort() {
@@ -1098,7 +1098,7 @@ public class Calendar extends AbstractComponent
     /**
      * Gets a date that is first day in the week that target given date belongs
      * to.
-     * 
+     *
      * @param date
      *            Target date
      * @return Date that is first date in same week that given date is.
@@ -1116,7 +1116,7 @@ public class Calendar extends AbstractComponent
     /**
      * Gets a date that is last day in the week that target given date belongs
      * to.
-     * 
+     *
      * @param date
      *            Target date
      * @return Date that is last date in same week that given date is.
@@ -1137,7 +1137,7 @@ public class Calendar extends AbstractComponent
 
     /**
      * Calculates the end time of the day using the given calendar and date
-     * 
+     *
      * @param date
      * @param calendar
      *            the calendar instance to be used in the calculation. The given
@@ -1165,7 +1165,7 @@ public class Calendar extends AbstractComponent
 
     /**
      * Calculates the end time of the day using the given calendar and date
-     * 
+     *
      * @param date
      * @param calendar
      *            the calendar instance to be used in the calculation. The given
@@ -1189,7 +1189,7 @@ public class Calendar extends AbstractComponent
     /**
      * Finds the first day of the week and returns a day representing the start
      * of that day
-     * 
+     *
      * @param start
      *            The actual date
      * @param expandToFullWeek
@@ -1220,7 +1220,7 @@ public class Calendar extends AbstractComponent
     /**
      * Finds the last day of the week and returns a day representing the end of
      * that day
-     * 
+     *
      * @param end
      *            The actual date
      * @param expandToFullWeek
@@ -1254,7 +1254,7 @@ public class Calendar extends AbstractComponent
      * is used to query for events to show, and must be non-null. By default a
      * {@link com.vaadin.addon.calendar.event.BasicEventProvider
      * BasicEventProvider} is used.
-     * 
+     *
      * @param calendarEventProvider
      *            the calendarEventProvider to set. Cannot be null.
      */
@@ -1289,7 +1289,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.calendar.ui.CalendarEvents.EventChangeListener#
      * eventChange (com.vaadin.addon.calendar.ui.CalendarEvents.EventChange)
      */
@@ -1305,7 +1305,7 @@ public class Calendar extends AbstractComponent
      * Set the handler for the given type information. Mirrors
      * {@link #addListener(String, Class, Object, Method) addListener} from
      * AbstractComponent
-     * 
+     *
      * @param eventId
      *            A unique id for the event. Usually one of
      *            {@link CalendarEventId}
@@ -1332,7 +1332,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.ui.CalendarComponentEvents.NavigationNotifier
      * #addListener
@@ -1346,7 +1346,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.ui.CalendarComponentEvents.NavigationNotifier
      * #addListener
@@ -1360,7 +1360,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.ui.CalendarComponentEvents.NavigationNotifier
      * #addListener
@@ -1374,7 +1374,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.ui.CalendarComponentEvents.NavigationNotifier
      * #addListener
@@ -1388,7 +1388,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.ui.CalendarComponentEvents.NavigationNotifier
      * #addListener
@@ -1402,7 +1402,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventResizeNotifier
      * #addListener
@@ -1417,7 +1417,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.ui.CalendarComponentEvents.RangeSelectNotifier
      * #addListener
@@ -1433,7 +1433,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventMoveNotifier
      * #addListener
@@ -1447,7 +1447,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.calendar.ui.CalendarComponentEvents.
      * CalendarEventNotifier #getHandler(java.lang.String)
      */
@@ -1467,7 +1467,7 @@ public class Calendar extends AbstractComponent
     /**
      * Set the drop handler for the calendar See {@link DropHandler} for
      * implementation details.
-     * 
+     *
      * @param dropHandler
      *            The drop handler to set
      */
@@ -1477,7 +1477,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.event.dd.DropTarget#translateDropTargetDetails(java.util.Map)
      */
@@ -1517,14 +1517,14 @@ public class Calendar extends AbstractComponent
      * Sets a container as a data source for the events in the calendar.
      * Equivalent for doing
      * <code>Calendar.setEventProvider(new ContainerEventProvider(container))</code>
-     * 
+     *
      * Use this method if you are adding a container which uses the default
      * property ids like {@link BeanItemContainer} for instance. If you are
      * using custom properties instead use
      * {@link Calendar#setContainerDataSource(com.vaadin.data.Container.Indexed, Object, Object, Object, Object, Object)}
-     * 
+     *
      * Please note that the container must be sorted by date!
-     * 
+     *
      * @param container
      *            The container to use as a datasource
      */
@@ -1553,9 +1553,9 @@ public class Calendar extends AbstractComponent
      * Sets a container as a data source for the events in the calendar.
      * Equivalent for doing
      * <code>Calendar.setEventProvider(new ContainerEventProvider(container))</code>
-     * 
+     *
      * Please note that the container must be sorted by date!
-     * 
+     *
      * @param container
      *            The container to use as a data source
      * @param captionProperty
@@ -1603,7 +1603,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.event.CalendarEventProvider#getEvents(java.
      * util.Date, java.util.Date)
@@ -1615,7 +1615,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#addEvent
      * (com.vaadin.addon.calendar.event.CalendarEvent)
@@ -1634,7 +1634,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#removeEvent
      * (com.vaadin.addon.calendar.event.CalendarEvent)
@@ -1654,7 +1654,7 @@ public class Calendar extends AbstractComponent
     /**
      * Adds an action handler to the calender that handles event produced by the
      * context menu.
-     * 
+     *
      * <p>
      * The {@link Handler#getActions(Object, Object)} parameters depend on what
      * view the Calendar is in:
@@ -1671,7 +1671,7 @@ public class Calendar extends AbstractComponent
      * The Dates passed into the {@link CalendarDateRange} are in the same
      * timezone as the calendar is.
      * </p>
-     * 
+     *
      * <p>
      * The {@link Handler#handleAction(Action, Object, Object)} parameters
      * depend on what the context menu is called upon:
@@ -1699,7 +1699,7 @@ public class Calendar extends AbstractComponent
 
     /**
      * Is the calendar in a mode where all days of the month is shown
-     * 
+     *
      * @return Returns true if calendar is in monthly mode and false if it is in
      *         weekly mode
      */
@@ -1715,7 +1715,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.event.Action.Container#removeActionHandler(com.vaadin.event
      * .Action.Handler)
@@ -1902,7 +1902,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.VariableOwner#changeVariables(java.lang.Object,
      * java.util.Map)
      */
@@ -1916,7 +1916,7 @@ public class Calendar extends AbstractComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.ui.LegacyComponent#paintContent(com.vaadin.server.PaintTarget)
      */
@@ -1935,7 +1935,7 @@ public class Calendar extends AbstractComponent
      * false, the caption is rendered in the browser as plain text.
      * <p>
      * The default is false, i.e. to render that caption as plain text.
-     * 
+     *
      * @param captionAsHtml
      *            true if the captions are rendered as HTML, false if rendered
      *            as plain text
@@ -1948,7 +1948,7 @@ public class Calendar extends AbstractComponent
      * Checks whether event captions are rendered as HTML
      * <p>
      * The default is false, i.e. to render that caption as plain text.
-     * 
+     *
      * @return true if the captions are rendered as HTML, false if rendered as
      *         plain text
      */
@@ -2008,7 +2008,7 @@ public class Calendar extends AbstractComponent
     /**
      * Allow setting first day of week independent of Locale. Set to null if you
      * want first day of week being defined by the locale
-     * 
+     *
      * @since 7.6
      * @param dayOfWeek
      *            any of java.util.Calendar.SUNDAY..java.util.Calendar.SATURDAY

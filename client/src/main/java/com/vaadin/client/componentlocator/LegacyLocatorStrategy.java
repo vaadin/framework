@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -51,7 +51,7 @@ import com.vaadin.shared.communication.SharedState;
  * The LegacyLocatorStrategy class handles the legacy locator syntax that was
  * introduced in version 5.4 of the framework. The legacy locator strategy is
  * always used if no other strategy claims responsibility for a locator string.
- * 
+ *
  * @since 7.2
  * @author Vaadin Ltd
  */
@@ -269,7 +269,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * Finds the first widget in the hierarchy (moving upwards) that implements
      * SubPartAware. Returns the SubPartAware implementor or null if none is
      * found.
-     * 
+     *
      * @param w
      *            The widget to start from. This is returned if it implements
      *            SubPartAware.
@@ -291,7 +291,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * Returns the first widget found when going from {@code targetElement}
      * upwards in the DOM hierarchy, assuming that {@code ancestorWidget} is a
      * parent of {@code targetElement}.
-     * 
+     *
      * @param targetElement
      * @param ancestorWidget
      * @return The widget whose root element is a parent of
@@ -318,7 +318,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
     /**
      * Locates an element based on a DOM path and a base element.
-     * 
+     *
      * @param baseElement
      *            The base element which the path is relative to
      * @param path
@@ -377,7 +377,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
     /**
      * Generates a String locator using domChild[x] parts for the element
      * relative to the baseElement.
-     * 
+     *
      * @param element
      *            The target element
      * @param baseElement
@@ -424,7 +424,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * <p/>
      * Returns null if no path can be determined for the widget or if the widget
      * is null.
-     * 
+     *
      * @param w
      *            The target widget
      * @return A String locator for the widget
@@ -489,7 +489,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
     /**
      * Locates the widget based on a String locator.
-     * 
+     *
      * @param path
      *            The String locator that identifies the widget.
      * @param baseWidget

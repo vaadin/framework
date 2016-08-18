@@ -58,7 +58,7 @@ public class CSSInjectWithColorpicker extends UI {
 
     /**
      * Creates a text editor for visually editing text
-     * 
+     *
      * @param text
      *            The text editor
      * @return

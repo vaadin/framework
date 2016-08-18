@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -580,35 +580,35 @@ public class VTreeTable extends VScrollTable {
 
         /**
          * Animates row expansion using the GWT animation framework.
-         * 
+         *
          * The idea is as follows:
-         * 
+         *
          * 1. Insert all rows normally
-         * 
+         *
          * 2. Insert a newly created DIV containing a new TABLE element below
          * the DIV containing the actual scroll table body.
-         * 
+         *
          * 3. Clone the rows that were inserted in step 1 and attach the clones
          * to the new TABLE element created in step 2.
-         * 
+         *
          * 4. The new DIV from step 2 is absolutely positioned so that the last
          * inserted row is just behind the row that was expanded.
-         * 
+         *
          * 5. Hide the contents of the originally inserted rows by setting the
          * DIV.v-table-cell-wrapper to display:none;.
-         * 
+         *
          * 6. Set the height of the originally inserted rows to 0.
-         * 
+         *
          * 7. The animation loop slides the DIV from step 2 downwards, while at
          * the same pace growing the height of each of the inserted rows from 0
          * to full height. The first inserted row grows from 0 to full and after
          * this the second row grows from 0 to full, etc until all rows are full
          * height.
-         * 
+         *
          * 8. Remove the DIV from step 2
-         * 
+         *
          * 9. Restore display:block; to the DIV.v-table-cell-wrapper elements.
-         * 
+         *
          * 10. DONE
          */
         private class RowExpandAnimation extends Animation {

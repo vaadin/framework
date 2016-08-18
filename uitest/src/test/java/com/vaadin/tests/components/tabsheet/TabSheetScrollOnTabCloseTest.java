@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,7 +32,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Tests removing tabs that have been scrolled out of view. This should cause no
  * change to the scroll position.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -73,7 +73,7 @@ public class TabSheetScrollOnTabCloseTest extends MultiBrowserTest {
      * and only if shouldBeVisible is true. Used for checking that the leftmost
      * visible tab is the expected one when there should be tabs (hidden because
      * of scroll position) to the left of tabId.
-     * 
+     *
      * If there is no tab with the specified id, the tab is considered not to be
      * visible.
      */
@@ -102,7 +102,7 @@ public class TabSheetScrollOnTabCloseTest extends MultiBrowserTest {
      * element is correct. If the element does not exist in the DOM, it is
      * considered not to be visible. If several elements match the locator, only
      * the visibility of the first matching element is considered.
-     * 
+     *
      * @param locator
      *            used to find the element
      * @param expectedVisibility
@@ -140,7 +140,7 @@ public class TabSheetScrollOnTabCloseTest extends MultiBrowserTest {
 
     /**
      * An expectation for checking that the leftmost tab has id equal to tabId.
-     * 
+     *
      * @param tabSheet
      *            the tab sheet containing the tab
      * @param tabId

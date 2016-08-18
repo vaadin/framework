@@ -23,7 +23,7 @@ import com.vaadin.client.widgets.Grid;
 /**
  * A sort event, fired by the Grid when it needs its data source to provide data
  * sorted in a specific manner.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -38,7 +38,7 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
     /**
      * Creates a new Sort Event. All provided parameters are final, and passed
      * on as-is.
-     * 
+     *
      * @param grid
      *            a grid reference
      * @param order
@@ -61,7 +61,7 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
     /**
      * Static access to the GWT event type identifier associated with this Event
      * class
-     * 
+     *
      * @return a type object, uniquely describing this event type.
      */
     public static Type<SortHandler<?>> getType() {
@@ -70,7 +70,7 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
 
     /**
      * Get access to the Grid that fired this event
-     * 
+     *
      * @return the grid instance
      */
     @Override
@@ -80,7 +80,7 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
 
     /**
      * Get access to the Grid that fired this event
-     * 
+     *
      * @return the grid instance
      */
     public Grid<T> getGrid() {
@@ -89,7 +89,7 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
 
     /**
      * Get the sort ordering that is to be applied to the Grid
-     * 
+     *
      * @return a list of sort order objects
      */
     public List<SortOrder> getOrder() {
@@ -98,7 +98,7 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
 
     /**
      * Returns whether this event originated from actions done by the user.
-     * 
+     *
      * @return true if sort event originated from user interaction
      */
     public boolean isUserOriginated() {

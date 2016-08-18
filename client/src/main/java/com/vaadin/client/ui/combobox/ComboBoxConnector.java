@@ -81,7 +81,7 @@ public class ComboBoxConnector extends AbstractFieldConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.Paintable#updateFromUIDL(com.vaadin.client.UIDL,
      * com.vaadin.client.ApplicationConnection)
      */
@@ -270,10 +270,10 @@ public class ComboBoxConnector extends AbstractFieldConnector
 
     /**
      * Send a message about a newly created item to the server.
-     * 
+     *
      * This method is for internal use only and may be removed in future
      * versions.
-     * 
+     *
      * @since
      * @param itemValue
      *            user entered string value for the new item
@@ -286,10 +286,10 @@ public class ComboBoxConnector extends AbstractFieldConnector
     /**
      * Send a message to the server to request the first page of items without
      * filtering or selection.
-     * 
+     *
      * This method is for internal use only and may be removed in future
      * versions.
-     * 
+     *
      * @since
      */
     public void requestFirstPage() {
@@ -300,10 +300,10 @@ public class ComboBoxConnector extends AbstractFieldConnector
     /**
      * Send a message to the server to request a page of items with a given
      * filter.
-     * 
+     *
      * This method is for internal use only and may be removed in future
      * versions.
-     * 
+     *
      * @since
      * @param filter
      *            the current filter string
@@ -317,10 +317,10 @@ public class ComboBoxConnector extends AbstractFieldConnector
 
     /**
      * Send a message to the server updating the current selection.
-     * 
+     *
      * This method is for internal use only and may be removed in future
      * versions.
-     * 
+     *
      * @since
      * @param selection
      *            the current selection
@@ -332,13 +332,13 @@ public class ComboBoxConnector extends AbstractFieldConnector
 
     /**
      * Notify the server that the combo box received focus.
-     * 
+     *
      * For timing reasons, ConnectorFocusAndBlurHandler is not used at the
      * moment.
-     * 
+     *
      * This method is for internal use only and may be removed in future
      * versions.
-     * 
+     *
      * @since
      */
     public void sendFocusEvent() {
@@ -351,13 +351,13 @@ public class ComboBoxConnector extends AbstractFieldConnector
 
     /**
      * Notify the server that the combo box lost focus.
-     * 
+     *
      * For timing reasons, ConnectorFocusAndBlurHandler is not used at the
      * moment.
-     * 
+     *
      * This method is for internal use only and may be removed in future
      * versions.
-     * 
+     *
      * @since
      */
     public void sendBlurEvent() {

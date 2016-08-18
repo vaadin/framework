@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,10 +24,10 @@ import com.vaadin.client.widgets.Grid;
  * An interface for binding widgets and data to the grid row editor. Used by the
  * editor to support different row types, data sources and custom data binding
  * mechanisms.
- * 
+ *
  * @param <T>
  *            the row data type
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -41,35 +41,35 @@ public interface EditorHandler<T> {
      * An implementation must call either {@link #success()} or {@link #fail()},
      * according to whether the operation was a success or failed during
      * execution, respectively.
-     * 
+     *
      * @param <T>
      *            the row data type
      */
     public interface EditorRequest<T> {
         /**
          * Returns the index of the row being requested.
-         * 
+         *
          * @return the row index
          */
         public int getRowIndex();
 
         /**
          * Returns the index of the column being focused.
-         * 
+         *
          * @return the column index
          */
         public int getColumnIndex();
 
         /**
          * Returns the row data related to the row being requested.
-         * 
+         *
          * @return the row data
          */
         public T getRow();
 
         /**
          * Returns the grid instance related to this editor request.
-         * 
+         *
          * @return the grid instance
          */
         public Grid<T> getGrid();
@@ -77,7 +77,7 @@ public interface EditorHandler<T> {
         /**
          * Returns the editor widget used to edit the values of the given
          * column.
-         * 
+         *
          * @param column
          *            the column whose widget to get
          * @return the widget related to the column
@@ -92,7 +92,7 @@ public interface EditorHandler<T> {
         /**
          * Informs Grid that an error occurred while trying to process the
          * request.
-         * 
+         *
          * @param errorMessage
          *            and error message to show to the user, or
          *            <code>null</code> to not show any message.
@@ -106,7 +106,7 @@ public interface EditorHandler<T> {
 
         /**
          * Checks whether the request is completed or not.
-         * 
+         *
          * @return <code>true</code> iff the request is completed
          */
         public boolean isCompleted();
@@ -120,10 +120,10 @@ public interface EditorHandler<T> {
      * {@link EditorRequest#success()} or
      * {@link EditorRequest#failure(String, Collection)} to signal a successful
      * or a failed (respectively) bind action.
-     * 
+     *
      * @param request
      *            the data binding request
-     * 
+     *
      * @see Grid#editRow(int)
      */
     public void bind(EditorRequest<T> request);
@@ -138,10 +138,10 @@ public interface EditorHandler<T> {
      * {@link EditorRequest#failure(String, Collection)} have no effect on the
      * outcome of the cancel action. The editor is already closed when this
      * method is called.
-     * 
+     *
      * @param request
      *            the cancel request
-     * 
+     *
      * @see Grid#cancelEditor()
      */
     public void cancel(EditorRequest<T> request);
@@ -153,10 +153,10 @@ public interface EditorHandler<T> {
      * The implementation <em>must</em> call either
      * {@link EditorRequest#success()} or {@link EditorRequest#fail()} to signal
      * a successful or a failed (respectively) save action.
-     * 
+     *
      * @param request
      *            the save request
-     * 
+     *
      * @see Grid#saveEditor()
      */
     public void save(EditorRequest<T> request);
@@ -164,7 +164,7 @@ public interface EditorHandler<T> {
     /**
      * Returns a widget instance that is used to edit the values in the given
      * column. A null return value means the column is not editable.
-     * 
+     *
      * @param column
      *            the column whose values should be edited
      * @return the editor widget for the column or null if the column is not
