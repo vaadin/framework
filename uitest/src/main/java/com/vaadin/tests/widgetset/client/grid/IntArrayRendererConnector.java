@@ -15,14 +15,14 @@
  */
 package com.vaadin.tests.widgetset.client.grid;
 
-import com.vaadin.client.connectors.AbstractRendererConnector;
+import com.vaadin.client.connectors.AbstractGridRendererConnector;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.ui.Connect;
 
 @Connect(com.vaadin.tests.components.grid.IntArrayRenderer.class)
 public class IntArrayRendererConnector
-        extends AbstractRendererConnector<int[]> {
+        extends AbstractGridRendererConnector<int[]> {
 
     public static class IntArrayRenderer implements Renderer<int[]> {
         private static final String JOINER = " :: ";

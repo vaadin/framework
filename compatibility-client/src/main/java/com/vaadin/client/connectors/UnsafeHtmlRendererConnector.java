@@ -15,20 +15,29 @@
  */
 package com.vaadin.client.connectors;
 
-import com.vaadin.client.renderers.TextRenderer;
+import com.vaadin.client.renderers.Renderer;
+import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.ui.Connect;
 
 /**
- * A connector for {@link TextRenderer}.
+ * A connector for {@link UnsafeHtmlRenderer}
  *
  * @since 7.4
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.renderers.TextRenderer.class)
-public class TextRendererConnector extends AbstractRendererConnector<String> {
+@Connect(com.vaadin.ui.renderers.HtmlRenderer.class)
+public class UnsafeHtmlRendererConnector
+        extends AbstractGridRendererConnector<String> {
+
+    public static class UnsafeHtmlRenderer implements Renderer<String> {
+        @Override
+        public void render(RendererCellReference cell, String data) {
+            cell.getElement().setInnerHTML(data);
+        }
+    }
 
     @Override
-    public TextRenderer getRenderer() {
-        return (TextRenderer) super.getRenderer();
+    public UnsafeHtmlRenderer getRenderer() {
+        return (UnsafeHtmlRenderer) super.getRenderer();
     }
 }

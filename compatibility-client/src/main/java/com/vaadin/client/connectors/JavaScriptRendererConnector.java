@@ -45,7 +45,7 @@ import elemental.json.JsonValue;
 // are not always instanceof JsonValue, we need to accept Object
 @Connect(AbstractJavaScriptRenderer.class)
 public class JavaScriptRendererConnector
-        extends AbstractRendererConnector<Object>
+        extends AbstractGridRendererConnector<Object>
         implements HasJavaScriptConnectorHelper {
     private final JavaScriptConnectorHelper helper = new JavaScriptConnectorHelper(
             this);

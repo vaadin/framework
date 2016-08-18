@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.widgetset.client.grid;
 
-import com.vaadin.client.connectors.AbstractRendererConnector;
+import com.vaadin.client.connectors.AbstractGridRendererConnector;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.ui.Connect;
@@ -23,7 +23,7 @@ import com.vaadin.tests.widgetset.client.SimpleTestBean;
 
 @Connect(com.vaadin.tests.components.grid.BeanRenderer.class)
 public class PojoRendererConnector
-        extends AbstractRendererConnector<SimpleTestBean> {
+        extends AbstractGridRendererConnector<SimpleTestBean> {
 
     public static class BeanRenderer implements Renderer<SimpleTestBean> {
         @Override

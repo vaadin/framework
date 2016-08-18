@@ -31,10 +31,10 @@ import elemental.json.JsonValue;
  * Generates type data for renderer connectors.
  * <ul>
  * <li>Stores the return type of the overridden
- * {@link AbstractRendererConnector#getRenderer() getRenderer} method to enable
- * automatic creation of an instance of the proper renderer type.
+ * {@link AbstractGridRendererConnector#getRenderer() getRenderer} method to
+ * enable automatic creation of an instance of the proper renderer type.
  * <li>Stores the presentation type of the connector to enable the
- * {@link AbstractRendererConnector#decode(elemental.json.JsonValue) decode}
+ * {@link AbstractGridRendererConnector#decode(elemental.json.JsonValue) decode}
  * method to work without having to implement a "getPresentationType" method.
  * </ul>
  *
@@ -63,11 +63,12 @@ public class RendererVisitor extends TypeVisitor {
         // Needs GWT constructor if createRenderer is not overridden
         if (createRendererClass.getQualifiedSourceName()
                 .equals(AbstractRendererConnector.class.getCanonicalName())) {
-
+            // createRenderer not overridden
             JMethod getRenderer = ConnectorBundle.findInheritedMethod(type,
                     "getRenderer");
             if (getRenderer.getEnclosingType().getQualifiedSourceName().equals(
                     AbstractRendererConnector.class.getCanonicalName())) {
+                // getRenderer not overridden
                 logger.log(Type.ERROR, type.getQualifiedSourceName()
                         + " must override either createRenderer or getRenderer");
                 throw new UnableToCompleteException();
@@ -84,7 +85,7 @@ public class RendererVisitor extends TypeVisitor {
         }
     }
 
-    private void doPresentationType(TreeLogger logger, JClassType type,
+    private static void doPresentationType(TreeLogger logger, JClassType type,
             ConnectorBundle bundle) throws UnableToCompleteException {
         JType presentationType = getPresentationType(type, logger);
         bundle.setPresentationType(type, presentationType);

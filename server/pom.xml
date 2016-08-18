@@ -222,6 +222,15 @@
 						</manifest>
 					</archive>
 				</configuration>
+				<!-- Package src/test into a jar so that compatbility-server can use
+					the same test classes, e.g. test beans -->
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>

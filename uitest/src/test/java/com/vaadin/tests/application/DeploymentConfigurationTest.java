@@ -24,15 +24,15 @@ import java.util.List;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class DeploymentConfigurationTest extends MultiBrowserTest {
+public class DeploymentConfigurationTest extends SingleBrowserTest {
 
     @Test
     public void testParameters() {
         openTestURL();
         List<String> texts = new ArrayList<String>(Arrays.asList(
-                "Init parameters:", "legacyPropertyToString: false",
+                "Init parameters:", "widgetset: com.vaadin.Vaadin7WidgetSet",
                 "closeIdleSessions: true", "productionMode: false",
                 "testParam: 42", "heartbeatInterval: 301",
                 "resourceCacheTime: 3601"));

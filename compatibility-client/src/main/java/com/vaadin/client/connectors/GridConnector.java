@@ -95,8 +95,8 @@ import com.vaadin.shared.ui.grid.GridStaticSectionState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.CellState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
 import com.vaadin.shared.ui.grid.ScrollDestination;
-
 import com.vaadin.ui.LegacyGrid;
+
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
 
@@ -161,14 +161,14 @@ public class GridConnector extends AbstractHasComponentsConnector
 
         private final String id;
 
-        private AbstractRendererConnector<Object> rendererConnector;
+        private AbstractGridRendererConnector<Object> rendererConnector;
 
         private AbstractComponentConnector editorConnector;
 
         private HandlerRegistration errorStateHandler;
 
         public CustomGridColumn(String id,
-                AbstractRendererConnector<Object> rendererConnector) {
+                AbstractGridRendererConnector<Object> rendererConnector) {
             super(rendererConnector.getRenderer());
             this.rendererConnector = rendererConnector;
             this.id = id;
@@ -181,7 +181,7 @@ public class GridConnector extends AbstractHasComponentsConnector
          *            a renderer connector object
          */
         public void setRenderer(
-                AbstractRendererConnector<Object> rendererConnector) {
+                AbstractGridRendererConnector<Object> rendererConnector) {
             setRenderer(rendererConnector.getRenderer());
             this.rendererConnector = rendererConnector;
         }
@@ -1050,7 +1050,7 @@ public class GridConnector extends AbstractHasComponentsConnector
     private void addColumnFromStateChangeEvent(GridColumnState state) {
         @SuppressWarnings("unchecked")
         CustomGridColumn column = new CustomGridColumn(state.id,
-                ((AbstractRendererConnector<Object>) state.rendererConnector));
+                ((AbstractGridRendererConnector<Object>) state.rendererConnector));
         columnIdToColumn.put(state.id, column);
 
         /*
@@ -1076,9 +1076,9 @@ public class GridConnector extends AbstractHasComponentsConnector
         column.setMaximumWidth(state.maxWidth);
         column.setExpandRatio(state.expandRatio);
 
-        assert state.rendererConnector instanceof AbstractRendererConnector : "GridColumnState.rendererConnector is invalid (not subclass of AbstractRendererConnector)";
+        assert state.rendererConnector instanceof AbstractGridRendererConnector : "GridColumnState.rendererConnector is invalid (not subclass of AbstractGridRendererConnector)";
         column.setRenderer(
-                (AbstractRendererConnector<Object>) state.rendererConnector);
+                (AbstractGridRendererConnector<Object>) state.rendererConnector);
 
         column.setSortable(state.sortable);
 

@@ -41,13 +41,21 @@
             resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-shared"
             resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-compatibility-shared"
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-server"
             resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-compatibility-server"
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-client"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-compatibility-client"
             resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-client-compiler"
             resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-client-compiled"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-compatibility-client-compiled"
             resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-themes"
             resolver="vaadin-maven" />

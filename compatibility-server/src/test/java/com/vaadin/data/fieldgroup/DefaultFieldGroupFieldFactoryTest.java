@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data;
+package com.vaadin.data.fieldgroup;
 
 import java.lang.reflect.Constructor;
 import java.util.Date;

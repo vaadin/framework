@@ -1,9 +1,11 @@
 package com.vaadin.tests.components.ui;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.widgetset.server.MissingFromDefaultWidgetsetComponent;
 
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class ComponentMissingFromDefaultWidgetset extends AbstractTestUI {
 
     @Override

@@ -15,29 +15,21 @@
  */
 package com.vaadin.client.connectors;
 
-import com.vaadin.client.renderers.Renderer;
-import com.vaadin.client.widget.grid.RendererCellReference;
+import com.vaadin.client.renderers.ProgressBarRenderer;
 import com.vaadin.shared.ui.Connect;
 
 /**
- * A connector for {@link UnsafeHtmlRenderer}
+ * A connector for {@link ProgressBarRenderer}.
  *
  * @since 7.4
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.renderers.HtmlRenderer.class)
-public class UnsafeHtmlRendererConnector
-        extends AbstractRendererConnector<String> {
-
-    public static class UnsafeHtmlRenderer implements Renderer<String> {
-        @Override
-        public void render(RendererCellReference cell, String data) {
-            cell.getElement().setInnerHTML(data);
-        }
-    }
+@Connect(com.vaadin.ui.renderers.ProgressBarRenderer.class)
+public class ProgressBarRendererConnector
+        extends AbstractGridRendererConnector<Double> {
 
     @Override
-    public UnsafeHtmlRenderer getRenderer() {
-        return (UnsafeHtmlRenderer) super.getRenderer();
+    public ProgressBarRenderer getRenderer() {
+        return (ProgressBarRenderer) super.getRenderer();
     }
 }

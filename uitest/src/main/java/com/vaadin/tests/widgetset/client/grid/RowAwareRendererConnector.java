@@ -22,7 +22,7 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.DOM;
-import com.vaadin.client.connectors.AbstractRendererConnector;
+import com.vaadin.client.connectors.AbstractGridRendererConnector;
 import com.vaadin.client.renderers.ComplexRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.widget.grid.CellReference;
@@ -33,7 +33,7 @@ import com.vaadin.shared.ui.Connect;
 import elemental.json.JsonObject;
 
 @Connect(com.vaadin.tests.components.grid.RowAwareRenderer.class)
-public class RowAwareRendererConnector extends AbstractRendererConnector<Void> {
+public class RowAwareRendererConnector extends AbstractGridRendererConnector<Void> {
     public interface RowAwareRendererRpc extends ServerRpc {
         void clicky(String key);
     }

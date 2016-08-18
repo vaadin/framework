@@ -34,7 +34,7 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd
  */
 public abstract class ClickableRendererConnector<T>
-        extends AbstractRendererConnector<T> {
+        extends AbstractGridRendererConnector<T> {
 
     HandlerRegistration clickRegistration;
 

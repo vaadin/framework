@@ -12,6 +12,10 @@
         <param-name>productionMode</param-name>
         <param-value>false</param-value>
     </context-param>
+    <context-param>
+        <param-name>widgetset</param-name>
+        <param-value>com.vaadin.Vaadin7WidgetSet</param-value>
+    </context-param>
 
     <context-param>
         <param-name>resourceCacheTime</param-name>
@@ -63,10 +67,6 @@
         <servlet-name>VaadinApplicationRunner</servlet-name>
         <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
         <!-- Non-default values for testing purposes -->
-        <init-param>
-            <param-name>legacyPropertyToString</param-name>
-            <param-value>false</param-value>
-        </init-param>
         <init-param>
             <param-name>heartbeatInterval</param-name>
             <param-value>301</param-value>

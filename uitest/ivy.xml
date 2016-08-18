@@ -39,12 +39,26 @@
             <exclude org="javax.servlet"></exclude>
             <exclude type="pom" />
         </dependency>
+        <dependency org="com.vaadin" name="vaadin-compatibility-server"
+            rev="${vaadin.version}" conf="build->default">
+            <exclude org="javax.servlet"></exclude>
+            <exclude type="pom" />
+        </dependency>
         <dependency org="com.vaadin" name="vaadin-client"
             rev="${vaadin.version}" conf="build->default">
             <exclude org="javax.validation"></exclude>
             <exclude type="pom" />
         </dependency>
+        <dependency org="com.vaadin" name="vaadin-compatibility-client"
+            rev="${vaadin.version}" conf="build->default">
+            <exclude org="javax.validation"></exclude>
+            <exclude type="pom" />
+        </dependency>
         <dependency org="com.vaadin" name="vaadin-client-compiled"
+            rev="${vaadin.version}" conf="build->default">
+            <exclude type="pom" />
+        </dependency>
+        <dependency org="com.vaadin" name="vaadin-compatibility-client-compiled"
             rev="${vaadin.version}" conf="build->default">
             <exclude type="pom" />
         </dependency>
