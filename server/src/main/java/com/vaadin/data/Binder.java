@@ -485,6 +485,7 @@ public class Binder<BEAN> implements Serializable {
             FIELDVALUE fieldValue = field.getValue();
             Result<TARGET> dataValue = converterValidatorChain.convertToModel(
                     fieldValue, ((AbstractComponent) field).getLocale());
+            fireStatusChangeEvent(dataValue);
             return dataValue;
         }
 
@@ -554,7 +555,7 @@ public class Binder<BEAN> implements Serializable {
             return newBinding;
         }
 
-        private void fireStatusChangeEvent(Result<?> result) {
+        private void fireStatusChangeEvent(Result<TARGET> result) {
             ValidationStatusChangeEvent event = new ValidationStatusChangeEvent(
                     getField(),
                     result.isError() ? ValidationStatus.ERROR
@@ -716,7 +717,6 @@ public class Binder<BEAN> implements Serializable {
         List<ValidationError<?>> resultErrors = new ArrayList<>();
         for (BindingImpl<BEAN, ?, ?> binding : bindings) {
             Result<?> result = binding.validate();
-            binding.fireStatusChangeEvent(result);
             result.ifError(errorMessage -> resultErrors
                     .add(new ValidationError<>(binding.field, errorMessage)));
         }

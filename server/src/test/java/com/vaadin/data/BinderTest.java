@@ -461,6 +461,25 @@ public class BinderTest {
     }
 
     @Test
+    public void bindingWithStatusChangeHandler_defaultStatusChangeHandlerIsReplaced() {
+        Binding<Person, String, String> binding = binder.forField(nameField)
+                .withValidator(notEmpty).withStatusChangeHandler(evt -> {
+                });
+        binding.bind(Person::getFirstName, Person::setLastName);
+
+        Assert.assertNull(nameField.getComponentError());
+
+        nameField.setValue("");
+
+        // First validation fails => should be event with ERROR status and
+        // message
+        binding.validate();
+
+        // default behavior should update component error for the nameField
+        Assert.assertNull(nameField.getComponentError());
+    }
+
+    @Test
     public void withStatusLabel_labelIsUpdatedAccordingStatus() {
         Label label = new Label();
 
@@ -488,6 +507,33 @@ public class BinderTest {
     }
 
     @Test
+    public void bindingWithStatusLabel_labelIsUpdatedAccordingStatus() {
+        Label label = new Label();
+
+        Binding<Person, String, String> binding = binder.forField(nameField)
+                .withValidator(notEmpty).withStatusLabel(label);
+        binding.bind(Person::getFirstName, Person::setLastName);
+
+        nameField.setValue("");
+
+        // First validation fails => should be event with ERROR status and
+        // message
+        binding.validate();
+
+        Assert.assertTrue(label.isVisible());
+        Assert.assertEquals("Value cannot be empty", label.getValue());
+
+        nameField.setValue("foo");
+
+        // Second validation succeeds => should be event with OK status and
+        // no message
+        binding.validate();
+
+        Assert.assertFalse(label.isVisible());
+        Assert.assertEquals("", label.getValue());
+    }
+
+    @Test
     public void withStatusLabel_defaultStatusChangeHandlerIsReplaced() {
         Label label = new Label();
 
@@ -502,6 +548,26 @@ public class BinderTest {
         // First validation fails => should be event with ERROR status and
         // message
         binder.validate();
+
+        // default behavior should update component error for the nameField
+        Assert.assertNull(nameField.getComponentError());
+    }
+
+    @Test
+    public void bindingWithStatusLabel_defaultStatusChangeHandlerIsReplaced() {
+        Label label = new Label();
+
+        Binding<Person, String, String> binding = binder.forField(nameField)
+                .withValidator(notEmpty).withStatusLabel(label);
+        binding.bind(Person::getFirstName, Person::setLastName);
+
+        Assert.assertNull(nameField.getComponentError());
+
+        nameField.setValue("");
+
+        // First validation fails => should be event with ERROR status and
+        // message
+        binding.validate();
 
         // default behavior should update component error for the nameField
         Assert.assertNull(nameField.getComponentError());

@@ -256,7 +256,7 @@ public class BinderBookOfVaadinTest {
     }
 
     @Test
-    public void crossFieldValidation() {
+    public void crossFieldValidation_validateUsingBinder() {
         Binder<Trip> binder = new Binder<>();
         PopupDateField departing = new PopupDateField("Departing");
         PopupDateField returning = new PopupDateField("Returning");
@@ -308,6 +308,56 @@ public class BinderBookOfVaadinTest {
         Assert.assertNotNull(returning.getComponentError());
         Assert.assertNull(departing.getComponentError());
 
+    }
+
+    @Test
+    public void crossFieldValidation_validateUsingBinding() {
+        Binder<Trip> binder = new Binder<>();
+        PopupDateField departing = new PopupDateField("Departing");
+        PopupDateField returning = new PopupDateField("Returning");
+
+        Binding<Trip, Date, Date> returnBinding = binder.forField(returning)
+                .withValidator(
+                        returnDate -> !returnDate.before(departing.getValue()),
+                        "Cannot return before departing");
+
+        returnBinding.bind(Trip::getReturnDate, Trip::setReturnDate);
+        departing.addValueChangeListener(event -> returnBinding.validate());
+
+        Calendar calendar = Calendar.getInstance();
+        Date past = calendar.getTime();
+        calendar.add(1, Calendar.DAY_OF_YEAR);
+        Date before = calendar.getTime();
+        calendar.add(1, Calendar.DAY_OF_YEAR);
+        Date after = calendar.getTime();
+
+        departing.setValue(before);
+        returning.setValue(after);
+
+        Result<Date> result = returnBinding.validate();
+        Assert.assertFalse(result.isError());
+        Assert.assertNull(departing.getComponentError());
+
+        // update returning => validation is done against this field
+        returning.setValue(past);
+        result = returnBinding.validate();
+
+        Assert.assertTrue(result.isError());
+        Assert.assertNotNull(returning.getComponentError());
+
+        // set correct value back
+        returning.setValue(before);
+        result = returnBinding.validate();
+
+        Assert.assertFalse(result.isError());
+        Assert.assertNull(departing.getComponentError());
+
+        // update departing => validation is done because of listener added
+        departing.setValue(after);
+        result = returnBinding.validate();
+
+        Assert.assertTrue(result.isError());
+        Assert.assertNotNull(returning.getComponentError());
     }
 
     @Test
