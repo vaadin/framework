@@ -17,7 +17,6 @@ package com.vaadin.ui.themes;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.Table.ColumnHeaderMode;
 
 /**
  * <p>
@@ -625,7 +624,7 @@ public class ValoTheme {
 
     /**
      * Hide the table column headers (effectively the same as
-     * {@link ColumnHeaderMode#HIDDEN}). Can be combined with any other
+     * {@code ColumnHeaderMode.HIDDEN}). Can be combined with any other
      * Table/TreeTable style.
      */
     public static final String TABLE_NO_HEADER = "no-header";

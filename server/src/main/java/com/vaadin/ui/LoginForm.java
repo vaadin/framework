@@ -28,7 +28,6 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.loginform.LoginFormConstants;
 import com.vaadin.shared.ui.loginform.LoginFormRpc;
 import com.vaadin.shared.ui.loginform.LoginFormState;
-import com.vaadin.v7.ui.LegacyTextField;
 
 /**
  * Login form with auto-completion and auto-fill for all major browsers. You can

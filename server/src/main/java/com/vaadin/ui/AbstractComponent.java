@@ -62,7 +62,6 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.util.ReflectTools;
-import com.vaadin.v7.ui.LegacyField;
 
 /**
  * An abstract class that defines default implementation for the
@@ -1334,7 +1333,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Gets the {@link ActionManager} used to manage the
-     * {@link ShortcutListener}s added to this {@link LegacyField}.
+     * {@link ShortcutListener}s added to this component.
      *
      * @return the ActionManager in use
      */

@@ -36,7 +36,7 @@ import org.junit.Test;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextArea;
+import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
@@ -195,7 +195,7 @@ public class ParseLayoutTest {
 
         // Check the remaining two components of the vertical layout
         assertTextField(vlayout);
-        assertTextArea(vlayout);
+        assertPasswordField(vlayout);
     }
 
     private void assertComponentHierarchy() {
@@ -209,11 +209,11 @@ public class ParseLayoutTest {
         assertThat(tf.getCaption(), is("Text input"));
     }
 
-    private void assertTextArea(VerticalLayout layout) {
-        TextArea ta = (TextArea) layout.getComponent(2);
+    private void assertPasswordField(VerticalLayout layout) {
+        PasswordField pf = (PasswordField) layout.getComponent(2);
 
-        assertThat(ta.getCaption(), is("Text area"));
-        assertThat(ta.getWidth(), is(300f));
-        assertThat(ta.getHeight(), is(200f));
+        assertThat(pf.getCaption(), is("Password field"));
+        assertThat(pf.getWidth(), is(300f));
+        assertThat(pf.getHeight(), is(200f));
     }
 }

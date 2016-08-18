@@ -19,17 +19,15 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.ui.AbstractComponent;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.Design.ComponentFactory;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
 

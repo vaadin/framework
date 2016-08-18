@@ -17,8 +17,8 @@ package com.vaadin.tests.design;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.NativeButton;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyTextField;
 
 /**
  *
@@ -30,7 +30,7 @@ public class InvalidLayoutTemplate extends VerticalLayout {
     private NativeButton secondButton;
     private NativeButton yetanotherbutton; // generated based on caption
     private Button clickme; // generated based on caption
-    private LegacyTextField shouldNotBeMapped;
+    private TextField shouldNotBeMapped;
 
     public NativeButton getFirstButton() {
         return firstButton;
@@ -48,7 +48,7 @@ public class InvalidLayoutTemplate extends VerticalLayout {
         return clickme;
     }
 
-    public LegacyTextField getShouldNotBeMapped() {
+    public TextField getShouldNotBeMapped() {
         return shouldNotBeMapped;
     }
 

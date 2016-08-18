@@ -17,17 +17,17 @@ package com.vaadin.tests.design.designroot;
 
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.TextField;
 
 public class ExtendedDesignWithEmptyAnnotation
         extends DesignWithEmptyAnnotation {
 
-    private LegacyTextField customField = new LegacyTextField();
+    private TextField customField = new TextField();
 
     public ExtendedDesignWithEmptyAnnotation() {
         super();
-        customField.setInputPrompt("Something");
+        customField.setPlaceholder("Something");
         addComponent(customField);
 
         ok.addClickListener(new ClickListener() {
