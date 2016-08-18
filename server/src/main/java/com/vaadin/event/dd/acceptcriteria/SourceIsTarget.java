@@ -23,13 +23,11 @@ import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Tree;
 
 /**
  *
  * A criterion that ensures the drag source is the same as drop target. Eg.
- * {@link Tree} or {@link Table} could support only re-ordering of items, but no
+ * {code Tree} or {@code Table} could support only re-ordering of items, but no
  * {@link Transferable}s coming outside.
  * <p>
  * Note! Class is singleton, use {@link #get()} method to get the instance.
