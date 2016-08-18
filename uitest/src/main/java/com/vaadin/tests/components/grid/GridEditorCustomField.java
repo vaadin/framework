@@ -19,15 +19,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.legacy.ui.LegacyCustomField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomField;
-import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.LegacyGrid;
 
 @Theme("valo")
 public class GridEditorCustomField extends AbstractTestUIWithLog {
@@ -38,7 +38,7 @@ public class GridEditorCustomField extends AbstractTestUIWithLog {
         grid.setWidth("800px");
         grid.setColumns("firstName", "lastName", "address.city");
         grid.setEditorEnabled(true);
-        Set<String> cities = new HashSet<String>();
+        Set<String> cities = new HashSet<>();
         for (Object o : grid.getContainerDataSource().getItemIds()) {
             ComplexPerson p = (ComplexPerson) o;
             cities.add(p.getAddress().getCity());
@@ -49,7 +49,7 @@ public class GridEditorCustomField extends AbstractTestUIWithLog {
         addComponent(grid);
     }
 
-    public static class CustomCitySelect extends CustomField<String> {
+    public static class CustomCitySelect extends LegacyCustomField<String> {
         private HorizontalLayout fieldLayout;
         private String[] values;
         private ComboBox cityComboBox;

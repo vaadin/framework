@@ -19,6 +19,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomField;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.LegacyTextField;
 
@@ -35,21 +36,9 @@ public class CustomFieldSize extends AbstractTestUI {
         setContent(layout);
         layout.setWidth("50px");
 
-        layout.addComponent(new LegacyTextField());
+        layout.addComponent(new TextField());
 
-        layout.addComponent(new CustomField<String>() {
-
-            @Override
-            protected Component initContent() {
-                return new LegacyTextField();
-            }
-
-            @Override
-            public Class<? extends String> getType() {
-                return String.class;
-            }
-
-        });
+        layout.addComponent(new TestCustomField());
     }
 
     @Override
@@ -60,6 +49,26 @@ public class CustomFieldSize extends AbstractTestUI {
     @Override
     protected Integer getTicketNumber() {
         return 12482;
+    }
+
+    private static class TestCustomField extends CustomField<String> {
+
+        private TextField field = new TextField();
+
+        @Override
+        protected Component initContent() {
+            return field;
+        }
+
+        @Override
+        public String getValue() {
+            return field.getValue();
+        }
+
+        @Override
+        protected void doSetValue(String value) {
+            field.setValue(value);
+        }
     }
 
 }

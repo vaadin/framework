@@ -14,30 +14,41 @@
  * the License.
  */
 
-package com.vaadin.ui;
+package com.vaadin.legacy.ui;
 
 import java.io.Serializable;
 import java.util.Iterator;
 
-import com.vaadin.data.HasValue;
+import com.vaadin.data.Property;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.HasComponents;
+import com.vaadin.v7.ui.LegacyAbstractField;
+import com.vaadin.v7.ui.LegacyField;
 
 /**
- * A {@link HasValue} whose UI content can be constructed by the user, enabling
- * the creation of e.g. form fields by composing Vaadin components.
+ * A {@link LegacyField} whose UI content can be constructed by the user,
+ * enabling the creation of e.g. form fields by composing Vaadin components.
  * Customization of both the visual presentation and the logic of the field is
  * possible.
- * <p>
+ *
  * Subclasses must implement {@link #getType()} and {@link #initContent()}.
- * <p>
+ *
  * Most custom fields can simply compose a user interface that calls the methods
- * {@link #doSetValue(Object)} and {@link #getValue()} when necessary.
+ * {@link #setInternalValue(Object)} and {@link #getInternalValue()} when
+ * necessary.
+ *
+ * It is also possible to override {@link #validate()},
+ * {@link #setInternalValue(Object)}, {@link #commit()},
+ * {@link #setPropertyDataSource(Property)}, {@link #isEmpty()} and other logic
+ * of the field. Methods overriding {@link #setInternalValue(Object)} should
+ * also call the corresponding superclass method.
  *
  * @param <T>
  *            field value type
  *
- * @since 8.0
+ * @since 7.0
  */
-public abstract class CustomField<T> extends AbstractField<T>
+public abstract class LegacyCustomField<T> extends LegacyAbstractField<T>
         implements HasComponents {
 
     /**
@@ -54,14 +65,14 @@ public abstract class CustomField<T> extends AbstractField<T>
      * before the component can be used.
      * </p>
      */
-    public CustomField() {
+    public LegacyCustomField() {
         // expand horizontally by default
         setWidth(100, Unit.PERCENTAGE);
     }
 
     /**
-     * Constructs the content and notifies it that the {@link CustomField} is
-     * attached to a window.
+     * Constructs the content and notifies it that the {@link LegacyCustomField}
+     * is attached to a window.
      *
      * @see com.vaadin.ui.Component#attach()
      */
@@ -91,11 +102,11 @@ public abstract class CustomField<T> extends AbstractField<T>
 
     /**
      * Create the content component or layout for the field. Subclasses of
-     * {@link CustomField} should implement this method.
+     * {@link LegacyCustomField} should implement this method.
      *
      * Note that this method is called when the CustomField is attached to a
      * layout or when {@link #getContent()} is called explicitly for the first
-     * time. It is only called once for a {@link CustomField}.
+     * time. It is only called once for a {@link LegacyCustomField}.
      *
      * @return {@link Component} representing the UI of the CustomField
      */
