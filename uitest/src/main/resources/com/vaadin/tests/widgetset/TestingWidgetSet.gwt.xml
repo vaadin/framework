@@ -1,7 +1,7 @@
 <module>
     <!-- WS Compiler: manually edited -->
 
-    <inherits name="com.vaadin.Vaadin7WidgetSet" />
+    <inherits name="com.vaadin.v7.Vaadin7WidgetSet" />
 
     <inherits name="com.google.gwt.user.theme.standard.Standard" />
 

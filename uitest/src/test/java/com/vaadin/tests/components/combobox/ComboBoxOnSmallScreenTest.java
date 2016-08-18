@@ -24,9 +24,9 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver.Window;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.client.ui.VFilterSelect;
-import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.client.ui.VFilterSelect;
+import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 
 /**
  * ComboBox suggestion popup should not obscure the text input box.

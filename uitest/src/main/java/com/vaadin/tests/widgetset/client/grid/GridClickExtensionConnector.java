@@ -17,7 +17,6 @@ package com.vaadin.tests.widgetset.client.grid;
 
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.connectors.GridConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
@@ -27,6 +26,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.components.grid.GridExtensionCommunication.GridClickExtension;
+import com.vaadin.v7.client.connectors.GridConnector;
 
 import elemental.json.JsonObject;
 

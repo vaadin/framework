@@ -32,7 +32,7 @@ public class DeploymentConfigurationTest extends SingleBrowserTest {
     public void testParameters() {
         openTestURL();
         List<String> texts = new ArrayList<String>(Arrays.asList(
-                "Init parameters:", "widgetset: com.vaadin.Vaadin7WidgetSet",
+                "Init parameters:", "widgetset: com.vaadin.v7.Vaadin7WidgetSet",
                 "closeIdleSessions: true", "productionMode: false",
                 "testParam: 42", "heartbeatInterval: 301",
                 "resourceCacheTime: 3601"));

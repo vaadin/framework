@@ -14,7 +14,7 @@
     </context-param>
     <context-param>
         <param-name>widgetset</param-name>
-        <param-value>com.vaadin.Vaadin7WidgetSet</param-value>
+        <param-value>com.vaadin.v7.Vaadin7WidgetSet</param-value>
     </context-param>
 
     <context-param>
