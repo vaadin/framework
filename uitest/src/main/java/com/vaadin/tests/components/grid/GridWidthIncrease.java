@@ -19,7 +19,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
 public class GridWidthIncrease extends AbstractTestUI {
 
@@ -27,7 +27,7 @@ public class GridWidthIncrease extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final Grid grid = new Grid();
+        final LegacyGrid grid = new LegacyGrid();
         Object[] rowData = new String[COLUMN_COUNT];
         for (int i = 0; i < COLUMN_COUNT; ++i) {
             grid.addColumn("Column " + i, String.class);

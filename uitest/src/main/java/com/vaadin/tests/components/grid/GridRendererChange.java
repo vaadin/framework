@@ -19,7 +19,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
@@ -30,7 +30,7 @@ public class GridRendererChange extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
 
-        final Grid grid = new Grid();
+        final LegacyGrid grid = new LegacyGrid();
         grid.setColumns("num", "foo");
         grid.getColumn("num").setRenderer(new ButtonRenderer());
 

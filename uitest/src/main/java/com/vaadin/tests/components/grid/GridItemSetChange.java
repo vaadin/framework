@@ -22,7 +22,7 @@ import com.vaadin.tests.util.Person;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
 public class GridItemSetChange extends AbstractTestUI {
 
@@ -46,7 +46,7 @@ public class GridItemSetChange extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         final SneakyBeanContainer c = new SneakyBeanContainer();
-        Grid g = new Grid(c);
+        LegacyGrid g = new LegacyGrid(c);
         g.setColumns("firstName", "lastName");
         addComponent(g);
         addComponent(new Button("Reset", new ClickListener() {

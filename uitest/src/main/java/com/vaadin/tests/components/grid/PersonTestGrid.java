@@ -17,9 +17,9 @@ package com.vaadin.tests.components.grid;
 
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
-public class PersonTestGrid extends Grid {
+public class PersonTestGrid extends LegacyGrid {
 
     public PersonTestGrid(int size) {
         BeanItemContainer<ComplexPerson> container = ComplexPerson

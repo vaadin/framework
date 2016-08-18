@@ -29,7 +29,7 @@ public class GridColumnAutoExpandTest extends MultiBrowserTest {
     public void testSecondColumnHasExpanded() {
         openTestURL();
 
-        GridCellElement headerCell = $(GridElement.class).first()
+        GridCellElement headerCell = $(LegacyGridElement.class).first()
                 .getHeaderCell(0, 1);
 
         assertTrue("Column did not expand as expected",

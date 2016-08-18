@@ -41,7 +41,7 @@ public class GridHeaderFooterComponentsTest extends SingleBrowserTest {
 
     @Test
     public void hideAndShowComponentsInHeader() {
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         int filterRow = 2;
         Assert.assertNull(getHeaderElement(grid, filterRow, 1));
@@ -79,7 +79,7 @@ public class GridHeaderFooterComponentsTest extends SingleBrowserTest {
 
     @Test
     public void hideAndShowComponentsInFooter() {
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         int filterRow = 0;
         Assert.assertNull(getFooterElement(grid, filterRow, 1));
@@ -121,17 +121,17 @@ public class GridHeaderFooterComponentsTest extends SingleBrowserTest {
 
         for (int i = 2; i >= 0; --i) {
             // Remove Header
-            $(GridElement.class).first().getHeaderCell(i, 0)
+            $(LegacyGridElement.class).first().getHeaderCell(i, 0)
                     .$(ButtonElement.class).first().click();
             assertFalse("Header " + i + " should not be present.",
-                    $(GridElement.class).first()
+                    $(LegacyGridElement.class).first()
                             .isElementPresent(By.vaadin("#header[" + i + "]")));
 
             // Remove Footer
-            $(GridElement.class).first().getFooterCell(i, 0)
+            $(LegacyGridElement.class).first().getFooterCell(i, 0)
                     .$(ButtonElement.class).first().click();
             assertFalse("Footer " + i + " should not be present.",
-                    $(GridElement.class).first()
+                    $(LegacyGridElement.class).first()
                             .isElementPresent(By.vaadin("#footer[" + i + "]")));
         }
 

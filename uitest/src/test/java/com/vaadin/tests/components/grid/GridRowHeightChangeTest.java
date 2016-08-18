@@ -28,7 +28,7 @@ public class GridRowHeightChangeTest extends MultiBrowserTest {
             // select theme
             $(NativeSelectElement.class).first().selectByText(theme);
 
-            GridElement grid = $(GridElement.class).first();
+            GridElement grid = $(LegacyGridElement.class).first();
 
             int gridHeight = grid.getSize().getHeight();
             int tabsheetHeight = findElements(

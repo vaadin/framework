@@ -39,7 +39,7 @@ public class GridResizeHiddenColumnTest extends MultiBrowserTest {
 
     @Test
     public void testDragResizeHiddenColumnSize() {
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         Actions action = new Actions(getDriver());
 
         // Check if column 'Gender' hidden

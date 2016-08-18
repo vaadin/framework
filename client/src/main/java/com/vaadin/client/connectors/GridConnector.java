@@ -96,6 +96,7 @@ import com.vaadin.shared.ui.grid.GridStaticSectionState.CellState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 
+import com.vaadin.ui.LegacyGrid;
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
 
@@ -110,7 +111,7 @@ import elemental.json.JsonValue;
  * @since 7.4
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.Grid.class)
+@Connect(LegacyGrid.class)
 public class GridConnector extends AbstractHasComponentsConnector
         implements SimpleManagedLayout, DeferredWorker {
 

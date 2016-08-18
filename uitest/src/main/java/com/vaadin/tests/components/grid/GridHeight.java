@@ -28,9 +28,9 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.DetailsGenerator;
-import com.vaadin.ui.Grid.RowReference;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.DetailsGenerator;
+import com.vaadin.ui.LegacyGrid.RowReference;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
@@ -53,14 +53,14 @@ public class GridHeight extends AbstractTestUI {
     static final String[] gridWidths = { FULL, UNDEFINED };
     static final String[] detailsRowHeights = { FULL, UNDEFINED, PX100 };
 
-    private Grid grid;
+    private LegacyGrid grid;
     private Map<Object, VerticalLayout> detailsLayouts = new HashMap<Object, VerticalLayout>();
     private OptionGroup detailsHeightSelector;
 
     @Override
     protected void setup(VaadinRequest request) {
 
-        grid = new Grid();
+        grid = new LegacyGrid();
         grid.addColumn("name", String.class);
         grid.addColumn("born", Integer.class);
 

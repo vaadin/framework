@@ -33,7 +33,7 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
     @Test
     public void testMilesColumnExists() {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         assertEquals("Miles header wasn't present.", "miles",
                 grid.getHeaderCell(0, 2).getText().toLowerCase());
     }
@@ -41,7 +41,7 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
     @Test
     public void testUnsortableGeneratedProperty() {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         // Overwritten foo property should not be sortable
         GridCellElement fooHeader = grid.getHeaderCell(0, 0);
@@ -59,7 +59,7 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
     @Test
     public void testSortableGeneratedProperty() {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         // Generated property baz is sortable
         GridCellElement bazHeader = grid.getHeaderCell(0, 3);
@@ -78,7 +78,7 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         GridCellElement kmHeader = grid.getHeaderCell(0, 1);
         assertFalse("Column km was unexpectedly sorted",

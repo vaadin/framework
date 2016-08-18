@@ -45,7 +45,7 @@ public class SortableHeaderStylesTest extends SingleBrowserTest {
     }
 
     private boolean hasSortableStyle(int column) {
-        return $(GridElement.class).first().getHeaderCell(0, column)
+        return $(LegacyGridElement.class).first().getHeaderCell(0, column)
                 .getAttribute("class").contains("sortable");
     }
 }

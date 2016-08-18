@@ -23,8 +23,8 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.client.SimpleTestBean;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.Label;
 
 @Widgetset(TestingWidgetSet.NAME)
@@ -64,7 +64,7 @@ public class CustomRenderer extends AbstractTestUI {
         Label debugLabel = new Label(INIT_DEBUG_LABEL_CAPTION);
         debugLabel.setId(DEBUG_LABEL_ID);
 
-        Grid grid = new Grid(container);
+        LegacyGrid grid = new LegacyGrid(container);
 
         grid.getColumn(INT_ARRAY_PROPERTY).setRenderer(new IntArrayRenderer());
         grid.getColumn(VOID_PROPERTY)

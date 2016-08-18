@@ -23,9 +23,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.FooterRow;
-import com.vaadin.ui.Grid.HeaderRow;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.FooterRow;
+import com.vaadin.ui.LegacyGrid.HeaderRow;
 import com.vaadin.ui.TextField;
 
 @Theme("valo")
@@ -33,13 +33,13 @@ public class GridHeaderFooterComponents extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final Grid grid = new Grid();
+        final LegacyGrid grid = new LegacyGrid();
         grid.setWidth("800px");
         grid.setContainerDataSource(createContainer());
         grid.setFooterVisible(true);
         final HeaderRow defaultRow = grid.getDefaultHeaderRow();
         final HeaderRow toggleVisibilityRow = grid.appendHeaderRow();
-        final Grid.HeaderRow filterRow = grid.appendHeaderRow();
+        final LegacyGrid.HeaderRow filterRow = grid.appendHeaderRow();
 
         final FooterRow footerRow = grid.addFooterRowAt(0);
         final FooterRow toggleVisibilityFooterRow = grid.addFooterRowAt(0);
@@ -48,8 +48,8 @@ public class GridHeaderFooterComponents extends AbstractTestUIWithLog {
         // Set up a filter for all columns
         for (final Object pid : grid.getContainerDataSource()
                 .getContainerPropertyIds()) {
-            final Grid.HeaderCell headerCell = filterRow.getCell(pid);
-            final Grid.FooterCell footerCell = filterFooterRow.getCell(pid);
+            final LegacyGrid.HeaderCell headerCell = filterRow.getCell(pid);
+            final LegacyGrid.FooterCell footerCell = filterFooterRow.getCell(pid);
 
             headerCell.setComponent(createTextField(pid));
             footerCell.setComponent(createTextField(pid));
@@ -86,7 +86,7 @@ public class GridHeaderFooterComponents extends AbstractTestUIWithLog {
         filterFooterRow.getCell("string").getComponent().setVisible(false);
     }
 
-    private void addRemoveHeaderRow(final Grid grid, final HeaderRow row) {
+    private void addRemoveHeaderRow(final LegacyGrid grid, final HeaderRow row) {
         row.getCell("action")
                 .setComponent(new Button("Remove row", new ClickListener() {
                     @Override
@@ -97,7 +97,7 @@ public class GridHeaderFooterComponents extends AbstractTestUIWithLog {
 
     }
 
-    private void addRemoveFooterRow(final Grid grid, final FooterRow row) {
+    private void addRemoveFooterRow(final LegacyGrid grid, final FooterRow row) {
         row.getCell("action")
                 .setComponent(new Button("Remove row", new ClickListener() {
                     @Override

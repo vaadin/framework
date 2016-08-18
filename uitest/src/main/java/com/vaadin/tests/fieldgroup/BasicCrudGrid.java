@@ -20,16 +20,16 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
 public class BasicCrudGrid extends AbstractBasicCrud {
 
-    private Grid grid;
+    private LegacyGrid grid;
 
     @Override
     protected void setup(VaadinRequest request) {
         super.setup(request);
-        grid = new Grid();
+        grid = new LegacyGrid();
 
         grid.setContainerDataSource(container);
 

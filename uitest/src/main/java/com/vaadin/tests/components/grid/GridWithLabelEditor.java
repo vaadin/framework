@@ -22,7 +22,7 @@ import com.vaadin.legacy.data.Validator.InvalidValueException;
 import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.Label;
 
 public class GridWithLabelEditor extends AbstractTestUI {
@@ -141,7 +141,7 @@ public class GridWithLabelEditor extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         addComponent(grid);
 
         grid.setEditorEnabled(true);

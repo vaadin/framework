@@ -34,7 +34,7 @@ public class GridEditorConverterNotFoundTest extends GridBasicFeaturesTest {
     public void testConverterNotFound() {
         openTestURL();
 
-        $(GridElement.class).first().getCell(0, 0).doubleClick();
+        $(LegacyGridElement.class).first().getCell(0, 0).doubleClick();
 
         assertEquals("1. com.vaadin.data.Buffered$SourceException",
                 getLogRow(0));

@@ -18,15 +18,15 @@ package com.vaadin.tests.components.grid;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.Column;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 
 public class GridEditingWithNoScrollBars extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.addColumn("foo", String.class);
         grid.addColumn("bar", String.class);
         for (int i = 0; i < 10; ++i) {

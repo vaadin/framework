@@ -37,7 +37,7 @@ public class GridWidthIncreaseTest extends MultiBrowserTest {
     public void testColumnsExpandWithGrid() throws IOException {
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         double accuracy = 1.0d;
         DesiredCapabilities cap = getDesiredCapabilities();

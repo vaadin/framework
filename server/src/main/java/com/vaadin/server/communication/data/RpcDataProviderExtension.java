@@ -45,8 +45,8 @@ import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.Column;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
@@ -151,7 +151,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     /**
      * A class to listen to changes in property values in the Container added
-     * with {@link Grid#setContainerDatasource(Container.Indexed)}, and notifies
+     * with {@link LegacyGrid#setContainerDatasource(Container.Indexed)}, and notifies
      * the data source to update the client-side representation of the modified
      * item.
      * <p>
@@ -164,8 +164,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * value changes, an instance of this class needs to be attached to each and
      * every Item's Property in the container.
      *
-     * @see Grid#addValueChangeListener(Container, Object, Object)
-     * @see Grid#valueChangeListeners
+     * @see LegacyGrid#addValueChangeListener(Container, Object, Object)
+     * @see LegacyGrid#valueChangeListeners
      */
     private class GridValueChangeListener implements ValueChangeListener {
         private final Object itemId;
@@ -408,14 +408,14 @@ public class RpcDataProviderExtension extends AbstractExtension {
     }
 
     /**
-     * Makes the data source available to the given {@link Grid} component.
+     * Makes the data source available to the given {@link LegacyGrid} component.
      *
      * @param component
      *            the remote data grid component to extend
      * @param columnKeys
      *            the key mapper for columns
      */
-    public void extend(Grid component) {
+    public void extend(LegacyGrid component) {
         super.extend(component);
     }
 
@@ -568,7 +568,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
                         .removeItemSetChangeListener(itemListener);
             }
 
-        } else if (!(parent instanceof Grid)) {
+        } else if (!(parent instanceof LegacyGrid)) {
             throw new IllegalStateException(
                     "Grid is the only accepted parent type");
         }
@@ -626,7 +626,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
         return activeItemHandler.keyMapper;
     }
 
-    protected Grid getGrid() {
-        return (Grid) getParent();
+    protected LegacyGrid getGrid() {
+        return (LegacyGrid) getParent();
     }
 }

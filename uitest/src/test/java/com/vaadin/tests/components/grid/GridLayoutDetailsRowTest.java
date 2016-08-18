@@ -40,7 +40,7 @@ public class GridLayoutDetailsRowTest extends MultiBrowserTest {
         openTestURL();
         waitForElementPresent(By.className("v-grid"));
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         grid.getRow(2).click(5, 5);
         waitForElementPresent(By.id("lbl2"));

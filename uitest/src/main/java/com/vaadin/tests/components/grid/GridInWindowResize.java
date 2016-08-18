@@ -23,7 +23,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -32,7 +32,7 @@ public class GridInWindowResize extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid g = new Grid();
+        LegacyGrid g = new LegacyGrid();
         IndexedContainer cont = new IndexedContainer();
         for (int j = 0; j < 3; j++) {
             cont.addContainerProperty("" + j, String.class, "");

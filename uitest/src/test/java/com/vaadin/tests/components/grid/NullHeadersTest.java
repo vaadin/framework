@@ -27,7 +27,7 @@ public class NullHeadersTest extends SingleBrowserTest {
     public void gridWithNullHeadersShouldBeRendered() {
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         Assert.assertEquals(1, grid.getHeaderCount());
         Assert.assertEquals(3, grid.getHeaderCells(0).size());

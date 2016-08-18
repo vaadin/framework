@@ -21,13 +21,13 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.vaadin.ui.LegacyGrid;
 import org.junit.Test;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.AbstractInMemoryContainer;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.LegacyGrid.Column;
 
 public class GridContainerNotSortableTest {
 
@@ -88,12 +88,12 @@ public class GridContainerNotSortableTest {
 
     @Test
     public void testGridWithNotSortableContainer() {
-        new Grid(notSortableDataSource);
+        new LegacyGrid(notSortableDataSource);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testNotSortableGridSetColumnSortable() {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.setContainerDataSource(notSortableDataSource);
         Column column = grid.getColumn("Foo");
         assertFalse("Column should not be sortable initially.",

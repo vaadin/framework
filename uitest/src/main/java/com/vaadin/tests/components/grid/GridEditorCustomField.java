@@ -26,7 +26,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomField;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.HorizontalLayout;
 
 @Theme("valo")
@@ -34,7 +34,7 @@ public class GridEditorCustomField extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid grid = new PersonTestGrid(100);
+        LegacyGrid grid = new PersonTestGrid(100);
         grid.setWidth("800px");
         grid.setColumns("firstName", "lastName", "address.city");
         grid.setEditorEnabled(true);

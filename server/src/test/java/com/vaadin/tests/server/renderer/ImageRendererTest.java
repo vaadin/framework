@@ -28,7 +28,7 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.renderers.ImageRenderer;
 
@@ -44,7 +44,7 @@ public class ImageRendererTest {
         UI mockUI = EasyMock.createNiceMock(UI.class);
         EasyMock.replay(mockUI);
 
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.setParent(mockUI);
 
         renderer = new ImageRenderer();

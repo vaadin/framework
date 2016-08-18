@@ -18,21 +18,16 @@ package com.vaadin.tests.server.component.grid;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 
+import com.vaadin.ui.LegacyGrid;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.communication.data.RpcDataProviderExtension;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ConnectorTracker;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.DetailsGenerator;
-import com.vaadin.ui.Grid.RowReference;
+import com.vaadin.ui.LegacyGrid.DetailsGenerator;
+import com.vaadin.ui.LegacyGrid.RowReference;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI;
 
 public class GridContainerTest {
 
@@ -47,7 +42,7 @@ public class GridContainerTest {
 
     @Test
     public void testDetailsGeneratorDoesNotResetOnContainerChange() {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         DetailsGenerator detGen = new DetailsGenerator() {
 
             @Override
@@ -88,7 +83,7 @@ public class GridContainerTest {
 
     @Test
     public void setColumnsOrder() {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         IndexedContainer ic = new IndexedContainer();
         ic.addContainerProperty("foo", String.class, "");
         ic.addContainerProperty("baz", String.class, "");
@@ -103,7 +98,7 @@ public class GridContainerTest {
 
     @Test
     public void addColumnNotInContainer() {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.setContainerDataSource(new IndexedContainer());
         try {
             grid.addColumn("notInContainer");
@@ -118,7 +113,7 @@ public class GridContainerTest {
 
     @Test
     public void setColumnsForPropertyIdNotInContainer() {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.setContainerDataSource(new IndexedContainer());
         try {
             grid.setColumns("notInContainer", "notThereEither");
@@ -135,7 +130,7 @@ public class GridContainerTest {
 
     @Test(expected = IllegalStateException.class)
     public void multipleAddColumnsForDefaultContainer() {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.addColumn("foo");
         grid.addColumn("foo");
     }
@@ -143,7 +138,7 @@ public class GridContainerTest {
     @Test
     public void testSerializeRpcDataProviderWithRowChanges()
             throws IOException {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         IndexedContainer container = new IndexedContainer();
         grid.setContainerDataSource(container);
         container.addItem();

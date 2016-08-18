@@ -21,8 +21,8 @@ import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.VerticalSplitPanel;
 
 public class GridScrollToLineWhileResizing extends AbstractTestUI {
@@ -44,7 +44,7 @@ public class GridScrollToLineWhileResizing extends AbstractTestUI {
             addItem.getItemProperty("column1").setValue("cell" + i);
         }
 
-        final Grid grid = new Grid(indexedContainer);
+        final LegacyGrid grid = new LegacyGrid(indexedContainer);
         grid.setSizeFull();
 
         grid.setSelectionMode(SelectionMode.SINGLE);

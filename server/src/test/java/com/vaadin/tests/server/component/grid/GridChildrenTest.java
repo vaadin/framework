@@ -17,20 +17,20 @@ package com.vaadin.tests.server.component.grid;
 
 import java.util.Iterator;
 
+import com.vaadin.ui.LegacyGrid;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.FooterCell;
-import com.vaadin.ui.Grid.HeaderCell;
+import com.vaadin.ui.LegacyGrid.FooterCell;
+import com.vaadin.ui.LegacyGrid.HeaderCell;
 import com.vaadin.ui.Label;
 
 public class GridChildrenTest {
 
     @Test
     public void componentsInMergedHeader() {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.addColumn("foo");
         grid.addColumn("bar");
         grid.addColumn("baz");
@@ -45,7 +45,7 @@ public class GridChildrenTest {
 
     @Test
     public void componentsInMergedFooter() {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.addColumn("foo");
         grid.addColumn("bar");
         grid.addColumn("baz");

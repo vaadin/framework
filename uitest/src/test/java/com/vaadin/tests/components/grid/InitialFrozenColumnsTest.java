@@ -36,7 +36,7 @@ public class InitialFrozenColumnsTest extends MultiBrowserTest {
         Assert.assertFalse("Notification was present",
                 isElementPresent(NotificationElement.class));
 
-        WebElement cell = $(GridElement.class).first().getCell(0, 0);
+        WebElement cell = $(LegacyGridElement.class).first().getCell(0, 0);
         assertTrue(cell.getAttribute("class").contains("frozen"));
     }
 }

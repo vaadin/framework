@@ -30,7 +30,7 @@ public class GridDataSourceResetTest extends SingleBrowserTest {
     public void testRemoveWithSelectUpdatesRowsCorrectly() {
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         assertTrue("First row was not selected", grid.getRow(0).isSelected());
         for (int i = 1; i < 10; ++i) {

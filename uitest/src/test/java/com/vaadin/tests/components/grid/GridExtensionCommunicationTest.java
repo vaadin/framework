@@ -31,7 +31,7 @@ public class GridExtensionCommunicationTest extends SingleBrowserTest {
     public void testMouseClickIsSentToExtension() {
         openTestURL();
 
-        GridCellElement cell = $(GridElement.class).first().getCell(0, 4);
+        GridCellElement cell = $(LegacyGridElement.class).first().getCell(0, 4);
         cell.click(5, 5);
 
         int expectedX = cell.getLocation().getX() + 5;

@@ -19,10 +19,10 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.CellReference;
-import com.vaadin.ui.Grid.CellStyleGenerator;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.CellReference;
+import com.vaadin.ui.LegacyGrid.CellStyleGenerator;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 
@@ -31,7 +31,7 @@ public class GridInTabSheet extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         TabSheet sheet = new TabSheet();
-        final Grid grid = new Grid();
+        final LegacyGrid grid = new LegacyGrid();
         grid.setSelectionMode(SelectionMode.MULTI);
         grid.addColumn("count", Integer.class);
         for (Integer i = 0; i < 3; ++i) {

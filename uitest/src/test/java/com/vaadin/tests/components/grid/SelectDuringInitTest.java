@@ -29,7 +29,7 @@ public class SelectDuringInitTest extends SingleBrowserTest {
     public void testSelectDuringInit() {
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         Assert.assertTrue(grid.getRow(1).isSelected());
     }

@@ -23,8 +23,8 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.ImageRenderer;
@@ -57,7 +57,7 @@ public class WidgetRenderers extends AbstractTestUI {
                 .setValue(new ThemeResource("window/img/close.png"));
         item.getItemProperty(PROPERTY_ID).setValue("Click");
 
-        final Grid grid = new Grid(container);
+        final LegacyGrid grid = new LegacyGrid(container);
 
         grid.setId("test-grid");
         grid.setSelectionMode(SelectionMode.NONE);

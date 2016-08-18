@@ -24,8 +24,8 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 
 @Theme("valo")
 public class GridSubPixelProblemWrapping extends AbstractTestUI {
@@ -79,7 +79,7 @@ public class GridSubPixelProblemWrapping extends AbstractTestUI {
         addComponent(button);
         container = new BeanItemContainer<DataObject>(DataObject.class);
         container.addBean(new DataObject("Foo", "Bar"));
-        Grid grid = new Grid(container);
+        LegacyGrid grid = new LegacyGrid(container);
         grid.getColumn("foo").setWidth(248.525);
         grid.setSelectionMode(SelectionMode.SINGLE);
         grid.setEditorEnabled(true);

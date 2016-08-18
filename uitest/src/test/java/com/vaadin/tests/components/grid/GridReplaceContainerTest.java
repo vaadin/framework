@@ -27,7 +27,7 @@ public class GridReplaceContainerTest extends SingleBrowserTest {
     @Test
     public void selectAfterContainerChange() {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         grid.getCell(0, 0).click();
         Assert.assertTrue(grid.getRow(0).isSelected());
 

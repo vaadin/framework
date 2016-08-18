@@ -20,7 +20,7 @@ import com.vaadin.annotations.Title;
 import com.vaadin.data.Container;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.grid.HeightMode;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -32,7 +32,7 @@ public class GridHeightByRowOnInit extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        final Grid grid = new Grid();
+        final LegacyGrid grid = new LegacyGrid();
         Container.Indexed container = grid.getContainerDataSource();
         container.addContainerProperty(PROPERTY, String.class, "");
 

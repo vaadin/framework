@@ -40,7 +40,7 @@ public class GridColspansTest extends MultiBrowserTest {
     public void testHeaderColSpans() {
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         assertEquals("5", grid.getHeaderCell(0, 1).getAttribute("colspan"));
         assertEquals("2", grid.getHeaderCell(1, 1).getAttribute("colspan"));
         assertEquals("3", grid.getHeaderCell(1, 3).getAttribute("colspan"));
@@ -50,7 +50,7 @@ public class GridColspansTest extends MultiBrowserTest {
     public void testFooterColSpans() {
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         assertEquals("5", grid.getFooterCell(1, 1).getAttribute("colspan"));
         assertEquals("2", grid.getFooterCell(0, 1).getAttribute("colspan"));
         assertEquals("3", grid.getFooterCell(0, 3).getAttribute("colspan"));
@@ -60,7 +60,7 @@ public class GridColspansTest extends MultiBrowserTest {
     public void testHideFirstColumnOfColspan() {
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         assertEquals("Failed initial condition.", "all the stuff",
                 grid.getHeaderCell(0, 1).getText().toLowerCase());
         assertEquals("Failed initial condition.", "first name",
@@ -76,7 +76,7 @@ public class GridColspansTest extends MultiBrowserTest {
     public void testSplittingMergedHeaders() {
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         GridCellElement headerCell = grid.getHeaderCell(1, 1);
         assertEquals("Failed initial condition.", "full name",
                 headerCell.getText().toLowerCase());

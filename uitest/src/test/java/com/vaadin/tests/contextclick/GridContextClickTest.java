@@ -17,6 +17,7 @@ package com.vaadin.tests.contextclick;
 
 import static org.junit.Assert.assertEquals;
 
+import com.vaadin.tests.components.grid.LegacyGridElement;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -29,13 +30,13 @@ public class GridContextClickTest extends AbstractContextClickTest {
     public void testBodyContextClickWithTypedListener() {
         addOrRemoveTypedListener();
 
-        contextClick($(GridElement.class).first().getCell(0, 0));
+        contextClick($(LegacyGridElement.class).first().getCell(0, 0));
 
         assertEquals(
                 "1. ContextClickEvent value: Lisa Schneider, propertyId: address, section: BODY",
                 getLogRow(0));
 
-        contextClick($(GridElement.class).first().getCell(0, 3));
+        contextClick($(LegacyGridElement.class).first().getCell(0, 3));
 
         assertEquals(
                 "2. ContextClickEvent value: Lisa Schneider, propertyId: lastName, section: BODY",
@@ -46,13 +47,13 @@ public class GridContextClickTest extends AbstractContextClickTest {
     public void testHeaderContextClickWithTypedListener() {
         addOrRemoveTypedListener();
 
-        contextClick($(GridElement.class).first().getHeaderCell(0, 0));
+        contextClick($(LegacyGridElement.class).first().getHeaderCell(0, 0));
 
         assertEquals(
                 "1. ContextClickEvent value: Address, propertyId: address, section: HEADER",
                 getLogRow(0));
 
-        contextClick($(GridElement.class).first().getHeaderCell(0, 3));
+        contextClick($(LegacyGridElement.class).first().getHeaderCell(0, 3));
 
         assertEquals(
                 "2. ContextClickEvent value: Last Name, propertyId: lastName, section: HEADER",
@@ -63,13 +64,13 @@ public class GridContextClickTest extends AbstractContextClickTest {
     public void testFooterContextClickWithTypedListener() {
         addOrRemoveTypedListener();
 
-        contextClick($(GridElement.class).first().getFooterCell(0, 0));
+        contextClick($(LegacyGridElement.class).first().getFooterCell(0, 0));
 
         assertEquals(
                 "1. ContextClickEvent value: , propertyId: address, section: FOOTER",
                 getLogRow(0));
 
-        contextClick($(GridElement.class).first().getFooterCell(0, 3));
+        contextClick($(LegacyGridElement.class).first().getFooterCell(0, 3));
 
         assertEquals(
                 "2. ContextClickEvent value: , propertyId: lastName, section: FOOTER",
@@ -82,7 +83,7 @@ public class GridContextClickTest extends AbstractContextClickTest {
 
         $(ButtonElement.class).caption("Remove all content").first().click();
 
-        contextClick($(GridElement.class).first(), 100, 100);
+        contextClick($(LegacyGridElement.class).first(), 100, 100);
 
         assertEquals(
                 "1. ContextClickEvent value: , propertyId: null, section: BODY",

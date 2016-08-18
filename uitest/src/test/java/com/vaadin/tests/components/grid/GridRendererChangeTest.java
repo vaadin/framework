@@ -36,7 +36,7 @@ public class GridRendererChangeTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        GridCellElement cell = $(GridElement.class).first().getCell(0, 0);
+        GridCellElement cell = $(LegacyGridElement.class).first().getCell(0, 0);
         assertTrue("No button in the first cell.",
                 cell.isElementPresent(By.tagName("button")));
         int width = cell.getSize().getWidth();
@@ -48,7 +48,7 @@ public class GridRendererChangeTest extends MultiBrowserTest {
         for (ButtonElement button : buttons) {
             button.click();
             assertNoErrorNotifications();
-            cell = $(GridElement.class).first().getCell(0, 0);
+            cell = $(LegacyGridElement.class).first().getCell(0, 0);
             assertEquals("Cell size changed", width, cell.getSize().getWidth());
         }
 

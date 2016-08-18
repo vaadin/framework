@@ -52,11 +52,11 @@ public class NullRenderersTest extends MultiBrowserTest {
     }
 
     private GridElement findGridWithDefaults() {
-        return $(GridElement.class).id("test-grid-defaults");
+        return $(LegacyGridElement.class).id("test-grid-defaults");
     }
 
     private GridElement findGridNoDefaults() {
-        return $(GridElement.class).id("test-grid");
+        return $(LegacyGridElement.class).id("test-grid");
     }
 
     private LabelElement findDebugLabel() {

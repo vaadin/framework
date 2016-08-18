@@ -18,6 +18,7 @@ package com.vaadin.tests.components.grid.basicfeatures.server;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.vaadin.tests.components.grid.LegacyGridElement;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement;
@@ -39,17 +40,17 @@ public class GridScrollTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Size", "HeightMode Row");
 
         selectMenuPath("Settings", "Clear log");
-        $(GridElement.class).first().scrollToRow(40);
+        $(LegacyGridElement.class).first().scrollToRow(40);
         assertEquals("Log row did not contain expected item request",
                 "0. Requested items 0 - 86", getLogRow(0));
         assertEquals("There should be only one log row", " ", getLogRow(1));
         selectMenuPath("Settings", "Clear log");
-        $(GridElement.class).first().scrollToRow(100);
+        $(LegacyGridElement.class).first().scrollToRow(100);
         assertEquals("Log row did not contain expected item request",
                 "0. Requested items 47 - 146", getLogRow(0));
         assertEquals("There should be only one log row", " ", getLogRow(1));
         selectMenuPath("Settings", "Clear log");
-        $(GridElement.class).first().scrollToRow(300);
+        $(LegacyGridElement.class).first().scrollToRow(300);
         assertEquals("Log row did not contain expected item request",
                 "0. Requested items 247 - 346", getLogRow(0));
         assertEquals("There should be only one log row", " ", getLogRow(1));

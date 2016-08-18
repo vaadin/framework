@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.grid;
 
 import com.vaadin.tests.widgetset.client.grid.RowAwareRendererConnector.RowAwareRendererRpc;
-import com.vaadin.ui.Grid.AbstractRenderer;
+import com.vaadin.ui.LegacyGrid.AbstractRenderer;
 import com.vaadin.ui.Label;
 
 public class RowAwareRenderer extends AbstractRenderer<Void> {

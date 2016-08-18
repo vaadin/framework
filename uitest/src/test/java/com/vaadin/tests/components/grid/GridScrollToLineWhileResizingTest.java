@@ -34,7 +34,7 @@ public class GridScrollToLineWhileResizingTest extends MultiBrowserTest {
     public void testScrollToLineWorksWhileMovingSplitProgrammatically() {
         openTestURL();
 
-        $(GridElement.class).first().getCell(21, 0).click();
+        $(LegacyGridElement.class).first().getCell(21, 0).click();
 
         List<WebElement> cells = findElements(By.className("v-grid-cell"));
         boolean foundCell21 = false;

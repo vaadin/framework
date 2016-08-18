@@ -24,7 +24,7 @@ public class GridSelectAllCellTest extends MultiBrowserTest {
 
     @Test
     public void selectAllCellCanBeClicked() throws IOException {
-        GridElement.GridCellElement selectAllCell = $(GridElement.class).first()
+        GridElement.GridCellElement selectAllCell = $(LegacyGridElement.class).first()
                 .getHeaderCell(0, 0);
 
         new Actions(getDriver()).moveToElement(selectAllCell, 2, 2).click()

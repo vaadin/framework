@@ -34,7 +34,7 @@ public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
     @Test
     public void testWidthsWhenAddingDataBack() {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         int[] baseWidths = getColWidths(grid);
         Assert.assertEquals("Sanity check", 2, baseWidths.length);
@@ -57,7 +57,7 @@ public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
         openTestURL();
         $(ButtonElement.class).caption("Recreate without data").first().click();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         int[] baseWidths = getColWidths(grid);
         Assert.assertEquals("Sanity check", 2, baseWidths.length);
@@ -84,7 +84,7 @@ public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
         $(NativeSelectElement.class).caption("Selection mode").first()
                 .selectByText("Multi");
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         int sum = sumUsedWidths(grid);
 
@@ -93,7 +93,7 @@ public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
 
         $(ButtonElement.class).caption("Recreate without data").first().click();
 
-        grid = $(GridElement.class).first();
+        grid = $(LegacyGridElement.class).first();
         sum = sumUsedWidths(grid);
 
         // 295 instead of 300 to avoid rounding issues

@@ -22,10 +22,10 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.HeaderRow;
-import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.Grid.SelectionModel;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.HeaderRow;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
+import com.vaadin.ui.LegacyGrid.SelectionModel;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.renderers.NumberRenderer;
 
@@ -99,12 +99,12 @@ public class GridHeaderFormatChange extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         BeanItemContainer<Person> datasource = new BeanItemContainer<Person>(
                 Person.class);
-        final Grid grid;
+        final LegacyGrid grid;
 
         datasource.addItem(new Person("Rudolph", "Reindeer", "Ruukinkatu 2-4",
                 20540, "Turku"));
 
-        grid = new Grid(datasource);
+        grid = new LegacyGrid(datasource);
         grid.setWidth("600px");
         grid.getColumn("zipCode").setRenderer(new NumberRenderer());
         grid.setColumnOrder("firstName", "lastName", "streetAddress", "zipCode",

@@ -19,7 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
 /**
  * Tests for Grid State.
@@ -29,7 +29,7 @@ public class GridStateTest {
 
     @Test
     public void getPrimaryStyleName_gridHasCustomPrimaryStyleName() {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         GridState state = new GridState();
         Assert.assertEquals("Unexpected primary style name",
                 state.primaryStyleName, grid.getPrimaryStyleName());

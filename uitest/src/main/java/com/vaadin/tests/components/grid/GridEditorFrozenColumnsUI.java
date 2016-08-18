@@ -16,13 +16,13 @@
 package com.vaadin.tests.components.grid;
 
 import com.vaadin.tests.util.PersonContainer;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
 public class GridEditorFrozenColumnsUI extends GridEditorUI {
 
     @Override
-    protected Grid createGrid(PersonContainer container) {
-        Grid grid = super.createGrid(container);
+    protected LegacyGrid createGrid(PersonContainer container) {
+        LegacyGrid grid = super.createGrid(container);
 
         grid.setFrozenColumnCount(2);
 

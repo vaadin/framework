@@ -9,9 +9,9 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.Column;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.TextRenderer;
 
@@ -54,7 +54,7 @@ public class GridSwitchRenderers extends AbstractTestUIWithLog {
             item.getItemProperty(getColumnProperty(1)).setReadOnly(true);
         }
 
-        final Grid grid = new Grid(ds);
+        final LegacyGrid grid = new LegacyGrid(ds);
         grid.setWidth("100%");
 
         grid.getColumn(EXPANSION_COLUMN_ID).setWidth(50);

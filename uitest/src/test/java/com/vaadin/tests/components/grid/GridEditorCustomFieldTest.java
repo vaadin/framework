@@ -31,7 +31,7 @@ public class GridEditorCustomFieldTest extends MultiBrowserTest {
     @Test
     public void testCustomFieldWorksInEditorRow() {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         Assert.assertEquals("Stockholm", grid.getCell(0, 2).getText());
         grid.getCell(0, 1).doubleClick();
         GridEditorElement editor = grid.getEditor();

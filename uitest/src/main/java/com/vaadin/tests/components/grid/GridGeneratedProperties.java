@@ -32,7 +32,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
 public class GridGeneratedProperties extends AbstractTestUI {
 
@@ -43,7 +43,7 @@ public class GridGeneratedProperties extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         container = new GeneratedPropertyContainer(createContainer());
-        Grid grid = new Grid(container);
+        LegacyGrid grid = new LegacyGrid(container);
         addComponent(grid);
 
         container.addGeneratedProperty("miles",

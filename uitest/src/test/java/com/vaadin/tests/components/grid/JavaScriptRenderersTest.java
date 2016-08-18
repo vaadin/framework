@@ -31,7 +31,7 @@ public class JavaScriptRenderersTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         GridCellElement cell_1_1 = grid.getCell(1, 1);
 
         GridCellElement cell_2_2 = grid.getCell(2, 2);

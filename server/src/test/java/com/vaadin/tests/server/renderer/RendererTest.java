@@ -32,9 +32,9 @@ import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.server.component.grid.TestGrid;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.AbstractRenderer;
-import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.AbstractRenderer;
+import com.vaadin.ui.LegacyGrid.Column;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
@@ -98,7 +98,7 @@ public class RendererTest {
         }
     }
 
-    private Grid grid;
+    private LegacyGrid grid;
 
     private Column intColumn;
     private Column textColumn;

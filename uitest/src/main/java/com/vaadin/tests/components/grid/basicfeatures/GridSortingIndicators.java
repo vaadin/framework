@@ -24,7 +24,7 @@ import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
 public class GridSortingIndicators extends AbstractTestUI {
 
@@ -34,7 +34,7 @@ public class GridSortingIndicators extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final Grid grid = new Grid(createContainer());
+        final LegacyGrid grid = new LegacyGrid(createContainer());
         addComponent(grid);
         grid.sort(Sort.by("foo").then("bar", SortDirection.DESCENDING)
                 .then("baz"));

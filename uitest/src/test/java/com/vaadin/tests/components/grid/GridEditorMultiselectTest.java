@@ -38,7 +38,7 @@ public class GridEditorMultiselectTest extends MultiBrowserTest {
     }
 
     private GridElement openEditor() {
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         grid.getRow(0).doubleClick();
         Assert.assertTrue("Grid editor should be displayed.",
                 grid.getEditor().isDisplayed());

@@ -17,14 +17,14 @@ package com.vaadin.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 
 public class InitialFrozenColumns extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.setSelectionMode(SelectionMode.NONE);
 
         grid.addColumn("foo").setWidth(200);

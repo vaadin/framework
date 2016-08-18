@@ -31,7 +31,7 @@ public class GridSubPixelProblemWrappingTest extends MultiBrowserTest {
     public void addedRowShouldNotWrap() {
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         // Cells in first row should be at the same y coordinate as the row
         assertRowAndCellTops(grid, 0);

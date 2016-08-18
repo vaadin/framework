@@ -46,7 +46,7 @@ public class GridEditorFrozenColumnsUITest extends MultiBrowserTest {
     }
 
     private void openEditor(int rowIndex) {
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         GridCellElement cell = grid.getCell(rowIndex, 1);
 

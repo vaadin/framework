@@ -35,8 +35,8 @@ public class GridDetailsDetachTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        $(GridElement.class).first().getCell(3, 0).click();
-        $(GridElement.class).first().getCell(5, 0).click();
+        $(LegacyGridElement.class).first().getCell(3, 0).click();
+        $(LegacyGridElement.class).first().getCell(5, 0).click();
 
         assertNoErrorNotifications();
 
@@ -50,8 +50,8 @@ public class GridDetailsDetachTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        $(GridElement.class).first().getCell(3, 0).click();
-        $(GridElement.class).first().getCell(5, 0).click();
+        $(LegacyGridElement.class).first().getCell(3, 0).click();
+        $(LegacyGridElement.class).first().getCell(5, 0).click();
 
         assertNoErrorNotifications();
 
@@ -76,8 +76,8 @@ public class GridDetailsDetachTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        $(GridElement.class).first().getCell(3, 0).click();
-        $(GridElement.class).first().getCell(5, 0).click();
+        $(LegacyGridElement.class).first().getCell(3, 0).click();
+        $(LegacyGridElement.class).first().getCell(5, 0).click();
 
         assertNoErrorNotifications();
 

@@ -97,6 +97,6 @@ public class GridInTabSheetTest extends MultiBrowserTest {
     }
 
     private GridElement getGridElement() {
-        return $(GridElement.class).first();
+        return $(LegacyGridElement.class).first();
     }
 }

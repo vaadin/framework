@@ -17,13 +17,13 @@ package com.vaadin.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
 public class NullHeaders extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final Grid grid = new Grid();
+        final LegacyGrid grid = new LegacyGrid();
         grid.addColumn("country", String.class);
         grid.addColumn("foo", String.class);
         grid.addColumn("bar", Integer.class);

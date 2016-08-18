@@ -23,8 +23,8 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.PersonContainer;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.Column;
 import com.vaadin.ui.OptionGroup;
 
 @Theme("valo")
@@ -45,7 +45,7 @@ public class SortableHeaderStyles extends AbstractTestUI {
         sortableSelector.setMultiSelect(true);
         sortableSelector.setValue(sortableContainerPropertyIds);
 
-        final Grid grid = new Grid(container);
+        final LegacyGrid grid = new LegacyGrid(container);
 
         sortableSelector.addValueChangeListener(new ValueChangeListener() {
             @Override

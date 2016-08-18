@@ -29,7 +29,7 @@ public class GridItemSetChangeTest extends SingleBrowserTest {
     public void testValueChangeListenersWorkAfterItemSetChange() {
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         assertEquals("Last name initially wrong", "Bar",
                 grid.getCell(0, 1).getText());
 

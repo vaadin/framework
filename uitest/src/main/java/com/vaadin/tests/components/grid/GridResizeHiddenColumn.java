@@ -18,16 +18,16 @@ package com.vaadin.tests.components.grid;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.ColumnResizeEvent;
-import com.vaadin.ui.Grid.ColumnResizeListener;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.ColumnResizeEvent;
+import com.vaadin.ui.LegacyGrid.ColumnResizeListener;
 
 @SuppressWarnings("serial")
 public class GridResizeHiddenColumn extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.setContainerDataSource(ComplexPerson.createContainer(100));
         grid.setColumns("firstName", "lastName", "gender", "birthDate");
         grid.getColumn("firstName").setHidable(true);

@@ -107,7 +107,7 @@ public class GridThemeUITest extends MultiBrowserThemeTest {
      */
     private void selectPage(String string) {
         $(NativeSelectElement.class).id("page").selectByText(string);
-        grid = $(GridElement.class).first();
+        grid = $(LegacyGridElement.class).first();
 
     }
 

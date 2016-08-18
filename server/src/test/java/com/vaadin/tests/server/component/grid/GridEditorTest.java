@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
 
+import com.vaadin.ui.LegacyGrid;
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Assert;
@@ -40,7 +41,6 @@ import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.MockVaadinSession;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.ui.Grid;
 
 public class GridEditorTest {
 
@@ -53,7 +53,7 @@ public class GridEditorTest {
     // Explicit field for the test session to save it from GC
     private VaadinSession session;
 
-    private final Grid grid = new Grid();
+    private final LegacyGrid grid = new LegacyGrid();
     private Method doEditMethod;
 
     @Before
@@ -77,7 +77,7 @@ public class GridEditorTest {
         session.lock();
 
         // Access to method for actual editing.
-        doEditMethod = Grid.class.getDeclaredMethod("doEditItem");
+        doEditMethod = LegacyGrid.class.getDeclaredMethod("doEditItem");
         doEditMethod.setAccessible(true);
     }
 

@@ -45,7 +45,7 @@ public class GridSpacerDecoClipTest extends MultiBrowserTest {
     public void testNewSpacerClip() {
         openTestURL();
 
-        GridElement gridElement = $(GridElement.class).first();
+        GridElement gridElement = $(LegacyGridElement.class).first();
         gridElement.scrollToRow(999);
         GridElement.GridRowElement nextToLastRow = gridElement.getRow(998);
         nextToLastRow.doubleClick();
@@ -65,7 +65,7 @@ public class GridSpacerDecoClipTest extends MultiBrowserTest {
     public void testRemovedSpacerClip() throws InterruptedException {
         openTestURL();
 
-        GridElement gridElement = $(GridElement.class).first();
+        GridElement gridElement = $(LegacyGridElement.class).first();
         gridElement.scrollToRow(999);
         GridElement.GridRowElement lastRow = gridElement.getRow(999);
         lastRow.doubleClick(); // Open lowest Row Details

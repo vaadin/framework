@@ -30,7 +30,7 @@ public class ProgrammaticEditorControlTest extends SingleBrowserTest {
     @Test
     public void multipleOpenFromServerSide() {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         ButtonElement editButton = $(ButtonElement.class).caption("Edit")
                 .first();
         ButtonElement cancelButton = $(ButtonElement.class).caption("Cancel")

@@ -33,7 +33,7 @@ public class GridDetailsWidthTest extends SingleBrowserTest {
     @Test
     public void testSpacerTDsHaveNoWidth() {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         // Open all details rows
         grid.getCell(0, 0).click();
@@ -70,7 +70,7 @@ public class GridDetailsWidthTest extends SingleBrowserTest {
     @Test
     public void testDetailsOnSort() {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         // Open a details rows
         grid.getCell(0, 0).click();

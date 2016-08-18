@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.grid.basicfeatures;
 
+import com.vaadin.tests.components.grid.LegacyGridElement;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement;
@@ -13,7 +14,7 @@ public class GridHeightByRowOnInitTest extends MultiBrowserTest {
     @Test
     public void gridHeightIsMoreThanACoupleOfRows() {
         openTestURL();
-        int height = $(GridElement.class).first().getSize().getHeight();
+        int height = $(LegacyGridElement.class).first().getSize().getHeight();
         assertGreater(
                 "Grid should be much taller than 150px (was " + height + "px)",
                 height, 150);

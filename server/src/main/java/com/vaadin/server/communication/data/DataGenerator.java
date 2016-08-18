@@ -18,7 +18,7 @@ package com.vaadin.server.communication.data;
 import java.io.Serializable;
 
 import com.vaadin.data.Item;
-import com.vaadin.ui.Grid.AbstractGridExtension;
+import com.vaadin.ui.LegacyGrid.AbstractGridExtension;
 
 import elemental.json.JsonObject;
 

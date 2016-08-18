@@ -34,7 +34,7 @@ public class GridColumnWidthRecalculationTest extends SingleBrowserTest {
     @Before
     public void open() {
         openTestURL();
-        grid = $(GridElement.class).first();
+        grid = $(LegacyGridElement.class).first();
     }
 
     @Test

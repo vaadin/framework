@@ -24,9 +24,9 @@ import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.Grid.SingleSelectionModel;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
+import com.vaadin.ui.LegacyGrid.SingleSelectionModel;
 
 public class SingleSelectionModelTest {
 
@@ -36,14 +36,14 @@ public class SingleSelectionModelTest {
     private Object itemIdNotPresent = "itemIdNotPresent";
     private Container.Indexed dataSource;
     private SingleSelectionModel model;
-    private Grid grid;
+    private LegacyGrid grid;
 
     private boolean expectingEvent = false;
 
     @Before
     public void setUp() {
         dataSource = createDataSource();
-        grid = new Grid(dataSource);
+        grid = new LegacyGrid(dataSource);
         grid.setSelectionMode(SelectionMode.SINGLE);
         model = (SingleSelectionModel) grid.getSelectionModel();
     }

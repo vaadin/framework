@@ -24,7 +24,7 @@ import org.junit.Test;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.ContextClickEvent.ContextClickListener;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.Grid.GridContextClickEvent;
+import com.vaadin.ui.LegacyGrid.GridContextClickEvent;
 import com.vaadin.ui.Table.TableContextClickEvent;
 
 /**

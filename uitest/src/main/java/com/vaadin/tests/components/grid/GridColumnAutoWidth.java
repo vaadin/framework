@@ -19,15 +19,15 @@ import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.Column;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.renderers.HtmlRenderer;
 
 public class GridColumnAutoWidth extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
-        Grid grid = new Grid(createContainer());
+        LegacyGrid grid = new LegacyGrid(createContainer());
         grid.getColumn("fixed width narrow").setWidth(50);
         grid.getColumn("fixed width wide").setWidth(200);
 

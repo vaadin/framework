@@ -18,7 +18,7 @@ package com.vaadin.client.connectors;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.ui.Grid.DetailComponentManager;
+import com.vaadin.ui.LegacyGrid.DetailComponentManager;
 
 /**
  * Client-side connector for the DetailComponentManager of Grid.

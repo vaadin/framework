@@ -18,7 +18,7 @@ package com.vaadin.tests.minitutorials.v7_4;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.grid.HeightMode;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.UI;
 
 @Theme("valo")
@@ -26,7 +26,7 @@ public class ShowingInlineDataInGrid extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        final Grid grid = new Grid();
+        final LegacyGrid grid = new LegacyGrid();
 
         grid.addColumn("Name").setSortable(true);
         grid.addColumn("Score", Integer.class);

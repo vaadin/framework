@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures.server;
 
+import com.vaadin.tests.components.grid.LegacyGridElement;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -39,7 +40,7 @@ public class GridClearContainerTest extends MultiBrowserTest {
         openTestURL();
         ButtonElement button = $(ButtonElement.class)
                 .caption("Clear and re-add").first();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         Assert.assertEquals(ERRORNOTE, "default", grid.getCell(0, 0).getText());
         Assert.assertEquals(ERRORNOTE, "default", grid.getCell(1, 0).getText());
         button.click();

@@ -23,7 +23,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.VerticalLayout;
 
 public class GridDefaultSelectionMode extends AbstractTestUI {
@@ -45,7 +45,7 @@ public class GridDefaultSelectionMode extends AbstractTestUI {
         final BeanItemContainer<Person> container = new BeanItemContainer<Person>(
                 Person.class, items);
 
-        final Grid grid = new Grid();
+        final LegacyGrid grid = new LegacyGrid();
         grid.setContainerDataSource(container);
 
         VerticalLayout v = new VerticalLayout();

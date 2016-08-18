@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.vaadin.ui.LegacyGrid;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -45,14 +46,13 @@ import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.Grid.ColumnResizeEvent;
-import com.vaadin.ui.Grid.ColumnResizeListener;
+import com.vaadin.ui.LegacyGrid.Column;
+import com.vaadin.ui.LegacyGrid.ColumnResizeEvent;
+import com.vaadin.ui.LegacyGrid.ColumnResizeListener;
 
 public class GridColumnsTest {
 
-    private Grid grid;
+    private LegacyGrid grid;
 
     private GridState state;
 
@@ -70,14 +70,14 @@ public class GridColumnsTest {
             ds.addContainerProperty("column" + c, String.class, "");
         }
         ds.addContainerProperty("noSort", Object.class, null);
-        grid = new Grid(ds);
+        grid = new LegacyGrid(ds);
 
-        getStateMethod = Grid.class.getDeclaredMethod("getState");
+        getStateMethod = LegacyGrid.class.getDeclaredMethod("getState");
         getStateMethod.setAccessible(true);
 
         state = (GridState) getStateMethod.invoke(grid);
 
-        columnIdGeneratorField = Grid.class.getDeclaredField("columnKeys");
+        columnIdGeneratorField = LegacyGrid.class.getDeclaredField("columnKeys");
         columnIdGeneratorField.setAccessible(true);
 
         columnIdMapper = (KeyMapper<Object>) columnIdGeneratorField.get(grid);
@@ -333,7 +333,7 @@ public class GridColumnsTest {
 
     @Test
     public void testAddingColumnsWithSetColumns() {
-        Grid g = new Grid();
+        LegacyGrid g = new LegacyGrid();
         g.setColumns("c1", "c2", "c3");
         Iterator<Column> it = g.getColumns().iterator();
         assertEquals(it.next().getPropertyId(), "c1");

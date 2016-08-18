@@ -31,7 +31,7 @@ public class GridSingleColumnTest extends MultiBrowserTest {
     public void testHeaderIsVisible() {
         openTestURL();
 
-        GridCellElement cell = $(GridElement.class).first().getHeaderCell(0, 0);
+        GridCellElement cell = $(LegacyGridElement.class).first().getHeaderCell(0, 0);
         Assert.assertTrue("No header available",
                 cell.getText().equalsIgnoreCase("header"));
     }

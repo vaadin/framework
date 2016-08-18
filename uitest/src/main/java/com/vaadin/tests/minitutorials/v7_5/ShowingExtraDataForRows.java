@@ -24,9 +24,9 @@ import com.vaadin.tests.minitutorials.v7_4.GridExampleHelper;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.DetailsGenerator;
-import com.vaadin.ui.Grid.RowReference;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.DetailsGenerator;
+import com.vaadin.ui.LegacyGrid.RowReference;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -36,7 +36,7 @@ import com.vaadin.ui.VerticalLayout;
 public class ShowingExtraDataForRows extends UI {
     @Override
     protected void init(VaadinRequest request) {
-        final Grid grid = new Grid();
+        final LegacyGrid grid = new LegacyGrid();
         grid.setContainerDataSource(GridExampleHelper.createContainer());
 
         grid.setDetailsGenerator(new DetailsGenerator() {

@@ -22,8 +22,8 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.ClickableRenderer.RendererClickEvent;
 import com.vaadin.ui.renderers.ClickableRenderer.RendererClickListener;
@@ -56,7 +56,7 @@ public class NullRenderers extends AbstractTestUI {
 
         container.addItem();
 
-        final Grid gridDefaults = new Grid(container);
+        final LegacyGrid gridDefaults = new LegacyGrid(container);
 
         gridDefaults.setId("test-grid-defaults");
         gridDefaults.setSelectionMode(SelectionMode.NONE);
@@ -91,7 +91,7 @@ public class NullRenderers extends AbstractTestUI {
 
         addComponent(gridDefaults);
 
-        final Grid gridNoDefaults = new Grid(container);
+        final LegacyGrid gridNoDefaults = new LegacyGrid(container);
 
         gridNoDefaults.setId("test-grid");
         gridNoDefaults.setSelectionMode(SelectionMode.NONE);

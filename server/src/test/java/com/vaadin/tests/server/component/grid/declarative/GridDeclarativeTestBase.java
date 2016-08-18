@@ -17,30 +17,30 @@ package com.vaadin.tests.server.component.grid.declarative;
 
 import java.util.List;
 
+import com.vaadin.ui.LegacyGrid;
 import org.junit.Assert;
 
 import com.vaadin.tests.design.DeclarativeTestBase;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.Grid.FooterCell;
-import com.vaadin.ui.Grid.FooterRow;
-import com.vaadin.ui.Grid.HeaderCell;
-import com.vaadin.ui.Grid.HeaderRow;
+import com.vaadin.ui.LegacyGrid.Column;
+import com.vaadin.ui.LegacyGrid.FooterCell;
+import com.vaadin.ui.LegacyGrid.FooterRow;
+import com.vaadin.ui.LegacyGrid.HeaderCell;
+import com.vaadin.ui.LegacyGrid.HeaderRow;
 
-public class GridDeclarativeTestBase extends DeclarativeTestBase<Grid> {
+public class GridDeclarativeTestBase extends DeclarativeTestBase<LegacyGrid> {
 
     @Override
-    public Grid testRead(String design, Grid expected) {
+    public LegacyGrid testRead(String design, LegacyGrid expected) {
         return testRead(design, expected, false);
     }
 
-    public Grid testRead(String design, Grid expected, boolean retestWrite) {
+    public LegacyGrid testRead(String design, LegacyGrid expected, boolean retestWrite) {
         return testRead(design, expected, retestWrite, false);
     }
 
-    public Grid testRead(String design, Grid expected, boolean retestWrite,
+    public LegacyGrid testRead(String design, LegacyGrid expected, boolean retestWrite,
             boolean writeData) {
-        Grid actual = super.testRead(design, expected);
+        LegacyGrid actual = super.testRead(design, expected);
 
         compareGridColumns(expected, actual);
         compareHeaders(expected, actual);
@@ -53,7 +53,7 @@ public class GridDeclarativeTestBase extends DeclarativeTestBase<Grid> {
         return actual;
     }
 
-    private void compareHeaders(Grid expected, Grid actual) {
+    private void compareHeaders(LegacyGrid expected, LegacyGrid actual) {
         Assert.assertEquals("Different header row count",
                 expected.getHeaderRowCount(), actual.getHeaderRowCount());
         for (int i = 0; i < expected.getHeaderRowCount(); ++i) {
@@ -91,7 +91,7 @@ public class GridDeclarativeTestBase extends DeclarativeTestBase<Grid> {
         }
     }
 
-    private void compareFooters(Grid expected, Grid actual) {
+    private void compareFooters(LegacyGrid expected, LegacyGrid actual) {
         Assert.assertEquals("Different footer row count",
                 expected.getFooterRowCount(), actual.getFooterRowCount());
         for (int i = 0; i < expected.getFooterRowCount(); ++i) {
@@ -124,7 +124,7 @@ public class GridDeclarativeTestBase extends DeclarativeTestBase<Grid> {
         }
     }
 
-    private void compareGridColumns(Grid expected, Grid actual) {
+    private void compareGridColumns(LegacyGrid expected, LegacyGrid actual) {
         List<Column> columns = expected.getColumns();
         List<Column> actualColumns = actual.getColumns();
         Assert.assertEquals("Different amount of columns", columns.size(),

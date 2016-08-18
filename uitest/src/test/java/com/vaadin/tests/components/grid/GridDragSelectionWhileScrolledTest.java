@@ -41,7 +41,7 @@ public class GridDragSelectionWhileScrolledTest extends MultiBrowserTest {
         openTestURL();
 
         // Scroll grid to view
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         ((JavascriptExecutor) getDriver())
                 .executeScript("arguments[0].scrollIntoView(true);", grid);
 

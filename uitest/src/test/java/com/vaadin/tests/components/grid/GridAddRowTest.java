@@ -29,7 +29,7 @@ public class GridAddRowTest extends MultiBrowserTest {
     public void testAddRow() {
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         Assert.assertEquals("Lorem", grid.getCell(0, 1).getText());
         Assert.assertEquals("2", grid.getCell(1, 2).getText());

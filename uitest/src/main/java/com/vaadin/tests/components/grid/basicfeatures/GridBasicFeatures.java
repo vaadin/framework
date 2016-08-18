@@ -53,27 +53,27 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.CellDescriptionGenerator;
-import com.vaadin.ui.Grid.CellReference;
-import com.vaadin.ui.Grid.CellStyleGenerator;
-import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.Grid.ColumnReorderEvent;
-import com.vaadin.ui.Grid.ColumnReorderListener;
-import com.vaadin.ui.Grid.ColumnResizeEvent;
-import com.vaadin.ui.Grid.ColumnResizeListener;
-import com.vaadin.ui.Grid.ColumnVisibilityChangeEvent;
-import com.vaadin.ui.Grid.ColumnVisibilityChangeListener;
-import com.vaadin.ui.Grid.DetailsGenerator;
-import com.vaadin.ui.Grid.FooterCell;
-import com.vaadin.ui.Grid.HeaderCell;
-import com.vaadin.ui.Grid.HeaderRow;
-import com.vaadin.ui.Grid.MultiSelectionModel;
-import com.vaadin.ui.Grid.RowDescriptionGenerator;
-import com.vaadin.ui.Grid.RowReference;
-import com.vaadin.ui.Grid.RowStyleGenerator;
-import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.Grid.SelectionModel;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.CellDescriptionGenerator;
+import com.vaadin.ui.LegacyGrid.CellReference;
+import com.vaadin.ui.LegacyGrid.CellStyleGenerator;
+import com.vaadin.ui.LegacyGrid.Column;
+import com.vaadin.ui.LegacyGrid.ColumnReorderEvent;
+import com.vaadin.ui.LegacyGrid.ColumnReorderListener;
+import com.vaadin.ui.LegacyGrid.ColumnResizeEvent;
+import com.vaadin.ui.LegacyGrid.ColumnResizeListener;
+import com.vaadin.ui.LegacyGrid.ColumnVisibilityChangeEvent;
+import com.vaadin.ui.LegacyGrid.ColumnVisibilityChangeListener;
+import com.vaadin.ui.LegacyGrid.DetailsGenerator;
+import com.vaadin.ui.LegacyGrid.FooterCell;
+import com.vaadin.ui.LegacyGrid.HeaderCell;
+import com.vaadin.ui.LegacyGrid.HeaderRow;
+import com.vaadin.ui.LegacyGrid.MultiSelectionModel;
+import com.vaadin.ui.LegacyGrid.RowDescriptionGenerator;
+import com.vaadin.ui.LegacyGrid.RowReference;
+import com.vaadin.ui.LegacyGrid.RowStyleGenerator;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
+import com.vaadin.ui.LegacyGrid.SelectionModel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
@@ -87,7 +87,7 @@ import com.vaadin.ui.renderers.NumberRenderer;
  * @since
  * @author Vaadin Ltd
  */
-public class GridBasicFeatures extends AbstractComponentTest<Grid> {
+public class GridBasicFeatures extends AbstractComponentTest<LegacyGrid> {
 
     public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4 = "Row numbers for 3/4";
     public static final String ROW_STYLE_GENERATOR_NONE = "None";
@@ -109,7 +109,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     private boolean singleSelectAllowDeselect = true;
 
     private IndexedContainer ds;
-    private Grid grid;
+    private LegacyGrid grid;
     private SelectionListener selectionListener = new SelectionListener() {
 
         @Override
@@ -247,7 +247,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected Grid constructComponent() {
+    protected LegacyGrid constructComponent() {
 
         // Build data source
         ds = new IndexedContainer() {
@@ -317,7 +317,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         }
 
         // Create grid
-        Grid grid = new Grid(ds);
+        LegacyGrid grid = new LegacyGrid(ds);
 
         {
             int col = grid.getContainerDataSource().getContainerPropertyIds()
@@ -410,9 +410,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
     private void addInternalActions() {
         createClickAction("Update column order without updating client",
-                "Internals", new Command<Grid, Void>() {
+                "Internals", new Command<LegacyGrid, Void>() {
                     @Override
-                    public void execute(Grid grid, Void value, Object data) {
+                    public void execute(LegacyGrid grid, Void value, Object data) {
                         List<Column> columns = grid.getColumns();
                         grid.setColumnOrder(columns.get(1).getPropertyId(),
                                 columns.get(0).getPropertyId());
@@ -423,7 +423,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
     private void addFilterActions() {
         createBooleanAction("Column 1 starts with \"(23\"", "Filter", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
                     Filter filter = new Filter() {
                         @Override
                         public boolean passesFilter(Object itemId, Item item) {
@@ -438,7 +438,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     };
 
                     @Override
-                    public void execute(Grid grid, Boolean value, Object data) {
+                    public void execute(LegacyGrid grid, Boolean value, Object data) {
                         if (value) {
                             ds.addContainerFilter(filter);
                         } else {
@@ -448,7 +448,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 });
 
         createBooleanAction("Impassable filter", "Filter", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
                     Filter filter = new Filter() {
                         @Override
                         public boolean passesFilter(Object itemId, Item item) {
@@ -462,7 +462,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     };
 
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
+                    public void execute(LegacyGrid c, Boolean value, Object data) {
                         if (value) {
                             ds.addContainerFilter(filter);
                         } else {
@@ -480,23 +480,23 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         primaryStyleNames.put("my-grid", "my-grid");
 
         createMultiClickAction("Primary style name", "State", primaryStyleNames,
-                new Command<Grid, String>() {
+                new Command<LegacyGrid, String>() {
 
                     @Override
-                    public void execute(Grid grid, String value, Object data) {
+                    public void execute(LegacyGrid grid, String value, Object data) {
                         grid.setPrimaryStyleName(value);
 
                     }
                 }, primaryStyleNames.get("v-grid"));
 
-        LinkedHashMap<String, SelectionMode> selectionModes = new LinkedHashMap<String, Grid.SelectionMode>();
+        LinkedHashMap<String, SelectionMode> selectionModes = new LinkedHashMap<String, LegacyGrid.SelectionMode>();
         selectionModes.put("single", SelectionMode.SINGLE);
         selectionModes.put("multi", SelectionMode.MULTI);
         selectionModes.put("none", SelectionMode.NONE);
         createSelectAction("Selection mode", "State", selectionModes, "none",
-                new Command<Grid, Grid.SelectionMode>() {
+                new Command<LegacyGrid, LegacyGrid.SelectionMode>() {
                     @Override
-                    public void execute(Grid grid, SelectionMode selectionMode,
+                    public void execute(LegacyGrid grid, SelectionMode selectionMode,
                             Object data) {
                         grid.setSelectionMode(selectionMode);
                         if (selectionMode == SelectionMode.SINGLE) {
@@ -517,9 +517,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         selectionLimits.put("Integer.MAX_VALUE",
                 Integer.valueOf(Integer.MAX_VALUE));
         createSelectAction("Selection limit", "State", selectionLimits, "1000",
-                new Command<Grid, Integer>() {
+                new Command<LegacyGrid, Integer>() {
                     @Override
-                    public void execute(Grid grid, Integer limit, Object data) {
+                    public void execute(LegacyGrid grid, Integer limit, Object data) {
                         if (!(grid
                                 .getSelectionModel() instanceof MultiSelectionModel)) {
                             grid.setSelectionMode(SelectionMode.MULTI);
@@ -538,19 +538,19 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     Sort.by(propertyId, SortDirection.DESCENDING).build());
         }
         createSelectAction("Sort by column", "State", sortableProperties,
-                "Column 9, ascending", new Command<Grid, List<SortOrder>>() {
+                "Column 9, ascending", new Command<LegacyGrid, List<SortOrder>>() {
                     @Override
-                    public void execute(Grid grid, List<SortOrder> sortOrder,
+                    public void execute(LegacyGrid grid, List<SortOrder> sortOrder,
                             Object data) {
                         grid.setSortOrder(sortOrder);
                     }
                 });
 
         createBooleanAction("Reverse Grid Columns", "State", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
 
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
+                    public void execute(LegacyGrid c, Boolean value, Object data) {
                         List<Object> ids = new ArrayList<Object>();
                         ids.addAll(ds.getContainerPropertyIds());
                         if (!value) {
@@ -647,9 +647,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         createSelectAction("Row style generator", "State", rowStyleGenerators,
                 CELL_STYLE_GENERATOR_NONE,
-                new Command<Grid, RowStyleGenerator>() {
+                new Command<LegacyGrid, RowStyleGenerator>() {
                     @Override
-                    public void execute(Grid grid, RowStyleGenerator generator,
+                    public void execute(LegacyGrid grid, RowStyleGenerator generator,
                             Object data) {
                         grid.setRowStyleGenerator(generator);
                     }
@@ -657,28 +657,28 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         createSelectAction("Cell style generator", "State", cellStyleGenerators,
                 CELL_STYLE_GENERATOR_NONE,
-                new Command<Grid, CellStyleGenerator>() {
+                new Command<LegacyGrid, CellStyleGenerator>() {
                     @Override
-                    public void execute(Grid grid, CellStyleGenerator generator,
+                    public void execute(LegacyGrid grid, CellStyleGenerator generator,
                             Object data) {
                         grid.setCellStyleGenerator(generator);
                     }
                 });
 
         createBooleanAction("Row description generator", "State", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
 
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
+                    public void execute(LegacyGrid c, Boolean value, Object data) {
                         c.setRowDescriptionGenerator(
                                 value ? rowDescriptionGenerator : null);
                     }
                 });
 
         createBooleanAction("Cell description generator", "State", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
+                    public void execute(LegacyGrid c, Boolean value, Object data) {
                         c.setCellDescriptionGenerator(
                                 value ? cellDescriptionGenerator : null);
                     }
@@ -694,9 +694,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
          */
         frozenOptions.put("-1 for unfreezing selection column", -1);
         createSelectAction("Frozen column count", "State", frozenOptions, "0",
-                new Command<Grid, Integer>() {
+                new Command<LegacyGrid, Integer>() {
                     @Override
-                    public void execute(Grid c, Integer value, Object data) {
+                    public void execute(LegacyGrid c, Integer value, Object data) {
                         c.setFrozenColumnCount(value.intValue());
                     }
                 });
@@ -708,18 +708,18 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         }
 
         createSelectAction("Container delay", "State", containerDelayValues,
-                "0", new Command<Grid, Integer>() {
+                "0", new Command<LegacyGrid, Integer>() {
                     @Override
-                    public void execute(Grid grid, Integer delay, Object data) {
+                    public void execute(LegacyGrid grid, Integer delay, Object data) {
                         containerDelay = delay.intValue();
                     }
                 });
 
         createBooleanAction("ItemClickListener", "State", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
 
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
+                    public void execute(LegacyGrid c, Boolean value, Object data) {
                         if (!value) {
                             c.removeItemClickListener(itemClickListener);
                         } else {
@@ -730,10 +730,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 });
 
         createBooleanAction("EditorOpeningItemClickListener", "State", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
 
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
+                    public void execute(LegacyGrid c, Boolean value, Object data) {
                         if (!value) {
                             c.removeItemClickListener(
                                     editorOpeningItemClickListener);
@@ -745,10 +745,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                 });
         createBooleanAction("ReactiveValueChanger", "State", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
 
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
+                    public void execute(LegacyGrid c, Boolean value, Object data) {
                         LegacyField<?> targetField = grid.getEditorFieldGroup()
                                 .getField("Column 0");
                         if (targetField != null) {
@@ -764,10 +764,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                 });
         createBooleanAction("ColumnReorderListener", "State", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
 
                     @Override
-                    public void execute(Grid grid, Boolean value, Object data) {
+                    public void execute(LegacyGrid grid, Boolean value, Object data) {
                         if (value) {
                             grid.addColumnReorderListener(
                                     columnReorderListener);
@@ -778,9 +778,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
         createBooleanAction("ColumnVisibilityChangeListener", "State", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
                     @Override
-                    public void execute(Grid grid, Boolean value, Object data) {
+                    public void execute(LegacyGrid grid, Boolean value, Object data) {
                         if (value) {
                             grid.addColumnVisibilityChangeListener(
                                     columnVisibilityListener);
@@ -791,9 +791,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
         createBooleanAction("Single select allow deselect", "State",
-                singleSelectAllowDeselect, new Command<Grid, Boolean>() {
+                singleSelectAllowDeselect, new Command<LegacyGrid, Boolean>() {
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
+                    public void execute(LegacyGrid c, Boolean value, Object data) {
                         singleSelectAllowDeselect = value.booleanValue();
 
                         SelectionModel model = c.getSelectionModel();
@@ -804,17 +804,17 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
         createBooleanAction("Column Reordering Allowed", "State", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
 
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
+                    public void execute(LegacyGrid c, Boolean value, Object data) {
                         c.setColumnReorderingAllowed(value);
                     }
                 });
 
-        createClickAction("Select all", "State", new Command<Grid, String>() {
+        createClickAction("Select all", "State", new Command<LegacyGrid, String>() {
             @Override
-            public void execute(Grid c, String value, Object data) {
+            public void execute(LegacyGrid c, String value, Object data) {
                 SelectionModel selectionModel = c.getSelectionModel();
                 if (selectionModel instanceof SelectionModel.Multi) {
                     ((SelectionModel.Multi) selectionModel).selectAll();
@@ -822,9 +822,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             }
         }, null);
 
-        createClickAction("Select none", "State", new Command<Grid, String>() {
+        createClickAction("Select none", "State", new Command<LegacyGrid, String>() {
             @Override
-            public void execute(Grid c, String value, Object data) {
+            public void execute(LegacyGrid c, String value, Object data) {
                 SelectionModel selectionModel = c.getSelectionModel();
                 if (selectionModel instanceof SelectionModel.Multi) {
                     ((SelectionModel.Multi) selectionModel).deselectAll();
@@ -837,10 +837,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         createCategory("Header", null);
 
         createBooleanAction("Visible", "Header", true,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
 
                     @Override
-                    public void execute(Grid grid, Boolean value, Object data) {
+                    public void execute(LegacyGrid grid, Boolean value, Object data) {
                         grid.setHeaderVisible(value);
                     }
                 });
@@ -851,10 +851,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         defaultRows.put("Unset", "Unset");
 
         createMultiClickAction("Default row", "Header", defaultRows,
-                new Command<Grid, String>() {
+                new Command<LegacyGrid, String>() {
 
                     @Override
-                    public void execute(Grid grid, String value, Object data) {
+                    public void execute(LegacyGrid grid, String value, Object data) {
                         HeaderRow defaultRow = null;
                         if (value.equals("Top")) {
                             defaultRow = grid.getHeaderRow(0);
@@ -867,37 +867,37 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                 }, defaultRows.get("Top"));
 
-        createClickAction("Prepend row", "Header", new Command<Grid, Object>() {
+        createClickAction("Prepend row", "Header", new Command<LegacyGrid, Object>() {
 
             @Override
-            public void execute(Grid grid, Object value, Object data) {
+            public void execute(LegacyGrid grid, Object value, Object data) {
                 grid.prependHeaderRow();
             }
 
         }, null);
-        createClickAction("Append row", "Header", new Command<Grid, Object>() {
+        createClickAction("Append row", "Header", new Command<LegacyGrid, Object>() {
 
             @Override
-            public void execute(Grid grid, Object value, Object data) {
+            public void execute(LegacyGrid grid, Object value, Object data) {
                 grid.appendHeaderRow();
             }
 
         }, null);
 
         createClickAction("Remove top row", "Header",
-                new Command<Grid, Object>() {
+                new Command<LegacyGrid, Object>() {
 
                     @Override
-                    public void execute(Grid grid, Object value, Object data) {
+                    public void execute(LegacyGrid grid, Object value, Object data) {
                         grid.removeHeaderRow(0);
                     }
 
                 }, null);
         createClickAction("Remove bottom row", "Header",
-                new Command<Grid, Object>() {
+                new Command<LegacyGrid, Object>() {
 
                     @Override
-                    public void execute(Grid grid, Object value, Object data) {
+                    public void execute(LegacyGrid grid, Object value, Object data) {
                         grid.removeHeaderRow(grid.getHeaderRowCount() - 1);
                     }
 
@@ -908,45 +908,45 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         createCategory("Footer", null);
 
         createBooleanAction("Visible", "Footer", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
 
                     @Override
-                    public void execute(Grid grid, Boolean value, Object data) {
+                    public void execute(LegacyGrid grid, Boolean value, Object data) {
                         grid.setFooterVisible(value);
                     }
                 });
 
-        createClickAction("Prepend row", "Footer", new Command<Grid, Object>() {
+        createClickAction("Prepend row", "Footer", new Command<LegacyGrid, Object>() {
 
             @Override
-            public void execute(Grid grid, Object value, Object data) {
+            public void execute(LegacyGrid grid, Object value, Object data) {
                 grid.prependFooterRow();
             }
 
         }, null);
-        createClickAction("Append row", "Footer", new Command<Grid, Object>() {
+        createClickAction("Append row", "Footer", new Command<LegacyGrid, Object>() {
 
             @Override
-            public void execute(Grid grid, Object value, Object data) {
+            public void execute(LegacyGrid grid, Object value, Object data) {
                 grid.appendFooterRow();
             }
 
         }, null);
 
         createClickAction("Remove top row", "Footer",
-                new Command<Grid, Object>() {
+                new Command<LegacyGrid, Object>() {
 
                     @Override
-                    public void execute(Grid grid, Object value, Object data) {
+                    public void execute(LegacyGrid grid, Object value, Object data) {
                         grid.removeFooterRow(0);
                     }
 
                 }, null);
         createClickAction("Remove bottom row", "Footer",
-                new Command<Grid, Object>() {
+                new Command<LegacyGrid, Object>() {
 
                     @Override
-                    public void execute(Grid grid, Object value, Object data) {
+                    public void execute(LegacyGrid grid, Object value, Object data) {
                         grid.removeFooterRow(grid.getFooterRowCount() - 1);
                     }
 
@@ -961,14 +961,14 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             createCategory(getColumnProperty(c), "Columns");
 
             createClickAction("Add / Remove", getColumnProperty(c),
-                    new Command<Grid, String>() {
+                    new Command<LegacyGrid, String>() {
 
                         boolean wasHidable;
                         boolean wasHidden;
                         String wasColumnHidingToggleCaption;
 
                         @Override
-                        public void execute(Grid grid, String value,
+                        public void execute(LegacyGrid grid, String value,
                                 Object data) {
                             String columnProperty = getColumnProperty(
                                     (Integer) data);
@@ -989,10 +989,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }
                     }, null, c);
             createClickAction("Move left", getColumnProperty(c),
-                    new Command<Grid, String>() {
+                    new Command<LegacyGrid, String>() {
 
                         @Override
-                        public void execute(Grid grid, String value,
+                        public void execute(LegacyGrid grid, String value,
                                 Object data) {
                             final String columnProperty = getColumnProperty(
                                     (Integer) data);
@@ -1020,10 +1020,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }, null, c);
 
             createBooleanAction("Sortable", getColumnProperty(c), true,
-                    new Command<Grid, Boolean>() {
+                    new Command<LegacyGrid, Boolean>() {
 
                         @Override
-                        public void execute(Grid grid, Boolean value,
+                        public void execute(LegacyGrid grid, Boolean value,
                                 Object columnIndex) {
                             Object propertyId = getColumnProperty(
                                     (Integer) columnIndex);
@@ -1033,10 +1033,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }, c);
 
             createBooleanAction("Resizable", getColumnProperty(c), true,
-                    new Command<Grid, Boolean>() {
+                    new Command<LegacyGrid, Boolean>() {
 
                         @Override
-                        public void execute(Grid grid, Boolean value,
+                        public void execute(LegacyGrid grid, Boolean value,
                                 Object columnIndex) {
                             Object propertyId = getColumnProperty(
                                     (Integer) columnIndex);
@@ -1046,28 +1046,28 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }, c);
 
             createBooleanAction("Hidable", getColumnProperty(c),
-                    isColumnHidableByDefault(c), new Command<Grid, Boolean>() {
+                    isColumnHidableByDefault(c), new Command<LegacyGrid, Boolean>() {
                         @Override
-                        public void execute(Grid c, Boolean hidable,
+                        public void execute(LegacyGrid c, Boolean hidable,
                                 Object propertyId) {
                             grid.getColumn(propertyId).setHidable(hidable);
                         }
                     }, getColumnProperty(c));
 
             createBooleanAction("Hidden", getColumnProperty(c),
-                    isColumnHiddenByDefault(c), new Command<Grid, Boolean>() {
+                    isColumnHiddenByDefault(c), new Command<LegacyGrid, Boolean>() {
                         @Override
-                        public void execute(Grid c, Boolean hidden,
+                        public void execute(LegacyGrid c, Boolean hidden,
                                 Object propertyId) {
                             grid.getColumn(propertyId).setHidden(hidden);
                         }
                     }, getColumnProperty(c));
             createClickAction("Change hiding toggle caption",
-                    getColumnProperty(c), new Command<Grid, String>() {
+                    getColumnProperty(c), new Command<LegacyGrid, String>() {
                         int count = 0;
 
                         @Override
-                        public void execute(Grid grid, String value,
+                        public void execute(LegacyGrid grid, String value,
                                 Object data) {
                             final String columnProperty = getColumnProperty(
                                     (Integer) data);
@@ -1078,11 +1078,11 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }, null, c);
 
             createClickAction("Change header caption", getColumnProperty(c),
-                    new Command<Grid, String>() {
+                    new Command<LegacyGrid, String>() {
                         int count = 0;
 
                         @Override
-                        public void execute(Grid grid, String value,
+                        public void execute(LegacyGrid grid, String value,
                                 Object data) {
                             final String columnProperty = getColumnProperty(
                                     (Integer) data);
@@ -1094,10 +1094,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             createCategory("Column " + c + " Width", getColumnProperty(c));
 
             createClickAction("Auto", "Column " + c + " Width",
-                    new Command<Grid, Integer>() {
+                    new Command<LegacyGrid, Integer>() {
 
                         @Override
-                        public void execute(Grid grid, Integer value,
+                        public void execute(LegacyGrid grid, Integer value,
                                 Object columnIndex) {
                             Object propertyId = getColumnProperty(
                                     (Integer) columnIndex);
@@ -1107,9 +1107,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }, -1, c);
 
             createClickAction("25.5px", "Column " + c + " Width",
-                    new Command<Grid, Void>() {
+                    new Command<LegacyGrid, Void>() {
                         @Override
-                        public void execute(Grid grid, Void value,
+                        public void execute(LegacyGrid grid, Void value,
                                 Object columnIndex) {
                             grid.getColumns().get((Integer) columnIndex)
                                     .setWidth(25.5);
@@ -1118,10 +1118,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
             for (int w = 50; w < 300; w += 50) {
                 createClickAction(w + "px", "Column " + c + " Width",
-                        new Command<Grid, Integer>() {
+                        new Command<LegacyGrid, Integer>() {
 
                             @Override
-                            public void execute(Grid grid, Integer value,
+                            public void execute(LegacyGrid grid, Integer value,
                                     Object columnIndex) {
                                 Object propertyId = getColumnProperty(
                                         (Integer) columnIndex);
@@ -1137,10 +1137,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             defaultRows.put("Widget Header", GridStaticCellType.WIDGET);
 
             createMultiClickAction("Header Type", getColumnProperty(c),
-                    defaultRows, new Command<Grid, GridStaticCellType>() {
+                    defaultRows, new Command<LegacyGrid, GridStaticCellType>() {
 
                         @Override
-                        public void execute(Grid grid, GridStaticCellType value,
+                        public void execute(LegacyGrid grid, GridStaticCellType value,
                                 Object columnIndex) {
                             final Object propertyId = getColumnProperty(
                                     (Integer) columnIndex);
@@ -1176,10 +1176,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             defaultRows.put("Widget Footer", GridStaticCellType.WIDGET);
 
             createMultiClickAction("Footer Type", getColumnProperty(c),
-                    defaultRows, new Command<Grid, GridStaticCellType>() {
+                    defaultRows, new Command<LegacyGrid, GridStaticCellType>() {
 
                         @Override
-                        public void execute(Grid grid, GridStaticCellType value,
+                        public void execute(LegacyGrid grid, GridStaticCellType value,
                                 Object columnIndex) {
                             final Object propertyId = getColumnProperty(
                                     (Integer) columnIndex);
@@ -1211,10 +1211,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         }
 
         createClickAction("All columns auto width", "Columns",
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
 
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
+                    public void execute(LegacyGrid c, Boolean value, Object data) {
                         for (Column col : grid.getColumns()) {
                             col.setWidthUndefined();
                         }
@@ -1223,10 +1223,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 }, null);
 
         createBooleanAction("All columns hidable", "Columns", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
 
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
+                    public void execute(LegacyGrid c, Boolean value, Object data) {
                         for (Column col : grid.getColumns()) {
                             col.setHidable(value);
                         }
@@ -1234,10 +1234,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
         createBooleanAction("All columns resizable", "Columns", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
 
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
+                    public void execute(LegacyGrid c, Boolean value, Object data) {
                         for (Column col : grid.getColumns()) {
                             col.setResizable(value);
                         }
@@ -1246,10 +1246,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 });
 
         createClickAction("All columns expanding, Col 0 has max width of 30px",
-                "Columns", new Command<Grid, Boolean>() {
+                "Columns", new Command<LegacyGrid, Boolean>() {
 
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
+                    public void execute(LegacyGrid c, Boolean value, Object data) {
                         for (Column col : grid.getColumns()) {
                             col.setWidthUndefined();
                         }
@@ -1266,11 +1266,11 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         createCategory("Properties", null);
 
         createBooleanAction("Prepend property", "Properties", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
                     private final Object propertyId = new Object();
 
                     @Override
-                    public void execute(Grid c, Boolean enable, Object data) {
+                    public void execute(LegacyGrid c, Boolean enable, Object data) {
                         if (enable.booleanValue()) {
                             ds.addContainerProperty(propertyId, String.class,
                                     "property value");
@@ -1287,7 +1287,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     protected void createRowActions() {
         createCategory("Body rows", null);
 
-        class NewRowCommand implements Command<Grid, String> {
+        class NewRowCommand implements Command<LegacyGrid, String> {
             private final int index;
 
             public NewRowCommand() {
@@ -1299,7 +1299,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             }
 
             @Override
-            public void execute(Grid c, String value, Object data) {
+            public void execute(LegacyGrid c, String value, Object data) {
                 Item item = ds.addItemAt(index, new Object());
                 for (int i = 0; i < COLUMNS; i++) {
                     Class<?> type = ds.getType(getColumnProperty(i));
@@ -1326,9 +1326,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         final NewRowCommand newRowCommand = new NewRowCommand();
 
         createClickAction("Add 18 rows", "Body rows",
-                new Command<Grid, String>() {
+                new Command<LegacyGrid, String>() {
                     @Override
-                    public void execute(Grid c, String value, Object data) {
+                    public void execute(LegacyGrid c, String value, Object data) {
                         for (int i = 0; i < 18; i++) {
                             newRowCommand.execute(c, value, data);
                         }
@@ -1341,18 +1341,18 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 null);
 
         createClickAction("Remove first row", "Body rows",
-                new Command<Grid, String>() {
+                new Command<LegacyGrid, String>() {
                     @Override
-                    public void execute(Grid c, String value, Object data) {
+                    public void execute(LegacyGrid c, String value, Object data) {
                         Object firstItemId = ds.getIdByIndex(0);
                         ds.removeItem(firstItemId);
                     }
                 }, null);
 
         createClickAction("Remove 18 first rows", "Body rows",
-                new Command<Grid, String>() {
+                new Command<LegacyGrid, String>() {
                     @Override
-                    public void execute(Grid c, String value, Object data) {
+                    public void execute(LegacyGrid c, String value, Object data) {
                         for (int i = 0; i < 18; i++) {
                             Object firstItemId = ds.getIdByIndex(0);
                             ds.removeItem(firstItemId);
@@ -1361,10 +1361,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 }, null);
 
         createClickAction("Modify first row (getItemProperty)", "Body rows",
-                new Command<Grid, String>() {
+                new Command<LegacyGrid, String>() {
                     @SuppressWarnings("unchecked")
                     @Override
-                    public void execute(Grid c, String value, Object data) {
+                    public void execute(LegacyGrid c, String value, Object data) {
                         Object firstItemId = ds.getIdByIndex(0);
                         Item item = ds.getItem(firstItemId);
                         for (int i = 0; i < COLUMNS; i++) {
@@ -1379,10 +1379,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 }, null);
 
         createClickAction("Modify first row (getContainerProperty)",
-                "Body rows", new Command<Grid, String>() {
+                "Body rows", new Command<LegacyGrid, String>() {
                     @SuppressWarnings("unchecked")
                     @Override
-                    public void execute(Grid c, String value, Object data) {
+                    public void execute(LegacyGrid c, String value, Object data) {
                         Object firstItemId = ds.getIdByIndex(0);
                         for (Object containerPropertyId : ds
                                 .getContainerPropertyIds()) {
@@ -1397,9 +1397,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 }, null);
 
         createBooleanAction("Select first row", "Body rows", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
                     @Override
-                    public void execute(Grid grid, Boolean select,
+                    public void execute(LegacyGrid grid, Boolean select,
                             Object data) {
                         final Object firstItemId = grid.getContainerDataSource()
                                 .firstItemId();
@@ -1412,18 +1412,18 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 });
 
         createClickAction("Remove all rows", "Body rows",
-                new Command<Grid, String>() {
+                new Command<LegacyGrid, String>() {
                     @SuppressWarnings("unchecked")
                     @Override
-                    public void execute(Grid c, String value, Object data) {
+                    public void execute(LegacyGrid c, String value, Object data) {
                         ds.removeAllItems();
                     }
                 }, null);
 
         createClickAction("Remove selected rows", "Body rows",
-                new Command<Grid, String>() {
+                new Command<LegacyGrid, String>() {
                     @Override
-                    public void execute(Grid c, String value, Object data) {
+                    public void execute(LegacyGrid c, String value, Object data) {
                         // Usually you'd deselect all the rows before removing
                         // them. It is done this way to test for #19152
                         for (Object itemId : c.getSelectedRows()) {
@@ -1436,38 +1436,38 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
     protected void createEditorActions() {
         createBooleanAction("Enabled", "Editor", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
+                    public void execute(LegacyGrid c, Boolean value, Object data) {
                         c.setEditorEnabled(value);
                     }
                 });
 
         createBooleanAction("Buffered mode", "Editor", true,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
+                    public void execute(LegacyGrid c, Boolean value, Object data) {
                         c.setEditorBuffered(value);
                     }
                 });
 
-        createClickAction("Edit item 5", "Editor", new Command<Grid, String>() {
+        createClickAction("Edit item 5", "Editor", new Command<LegacyGrid, String>() {
             @Override
-            public void execute(Grid c, String value, Object data) {
+            public void execute(LegacyGrid c, String value, Object data) {
                 c.editItem(5);
             }
         }, null);
 
         createClickAction("Edit item 100", "Editor",
-                new Command<Grid, String>() {
+                new Command<LegacyGrid, String>() {
                     @Override
-                    public void execute(Grid c, String value, Object data) {
+                    public void execute(LegacyGrid c, String value, Object data) {
                         c.editItem(100);
                     }
                 }, null);
-        createClickAction("Save", "Editor", new Command<Grid, String>() {
+        createClickAction("Save", "Editor", new Command<LegacyGrid, String>() {
             @Override
-            public void execute(Grid c, String value, Object data) {
+            public void execute(LegacyGrid c, String value, Object data) {
                 try {
                     c.saveEditor();
                 } catch (CommitException e) {
@@ -1476,25 +1476,25 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 }
             }
         }, null);
-        createClickAction("Cancel edit", "Editor", new Command<Grid, String>() {
+        createClickAction("Cancel edit", "Editor", new Command<LegacyGrid, String>() {
             @Override
-            public void execute(Grid c, String value, Object data) {
+            public void execute(LegacyGrid c, String value, Object data) {
                 c.cancelEditor();
             }
         }, null);
 
         createClickAction("Change save caption", "Editor",
-                new Command<Grid, String>() {
+                new Command<LegacyGrid, String>() {
                     @Override
-                    public void execute(Grid c, String value, Object data) {
+                    public void execute(LegacyGrid c, String value, Object data) {
                         c.setEditorSaveCaption("ǝʌɐS");
                     }
                 }, null);
 
         createClickAction("Change cancel caption", "Editor",
-                new Command<Grid, String>() {
+                new Command<LegacyGrid, String>() {
                     @Override
-                    public void execute(Grid c, String value, Object data) {
+                    public void execute(LegacyGrid c, String value, Object data) {
                         c.setEditorCancelCaption("ʃǝɔuɐↃ");
                     }
                 }, null);
@@ -1506,9 +1506,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         createCategory("Height by Rows", "Size");
 
         createBooleanAction("HeightMode Row", "Size", false,
-                new Command<Grid, Boolean>() {
+                new Command<LegacyGrid, Boolean>() {
                     @Override
-                    public void execute(Grid c, Boolean heightModeByRows,
+                    public void execute(LegacyGrid c, Boolean heightModeByRows,
                             Object data) {
                         c.setHeightMode(heightModeByRows ? HeightMode.ROW
                                 : HeightMode.CSS);
@@ -1524,9 +1524,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             addActionForHeightByRows(i + 2d / 3d);
         }
 
-        Command<Grid, String> sizeCommand = new Command<Grid, String>() {
+        Command<LegacyGrid, String> sizeCommand = new Command<LegacyGrid, String>() {
             @Override
-            public void execute(Grid grid, String height, Object data) {
+            public void execute(LegacyGrid grid, String height, Object data) {
                 grid.setHeight(height);
             }
         };
@@ -1544,27 +1544,27 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     private void addActionForHeightByRows(final Double i) {
         DecimalFormat df = new DecimalFormat("0.00");
         createClickAction(df.format(i) + " rows", "Height by Rows",
-                new Command<Grid, String>() {
+                new Command<LegacyGrid, String>() {
                     @Override
-                    public void execute(Grid c, String value, Object data) {
+                    public void execute(LegacyGrid c, String value, Object data) {
                         c.setHeightByRows(i);
                     }
                 }, null);
     }
 
     private void createDetailsActions() {
-        Command<Grid, DetailsGenerator> swapDetailsGenerator = new Command<Grid, DetailsGenerator>() {
+        Command<LegacyGrid, DetailsGenerator> swapDetailsGenerator = new Command<LegacyGrid, DetailsGenerator>() {
             @Override
-            public void execute(Grid c, DetailsGenerator generator,
+            public void execute(LegacyGrid c, DetailsGenerator generator,
                     Object data) {
                 grid.setDetailsGenerator(generator);
             }
         };
 
-        Command<Grid, Boolean> openOrCloseItemId = new Command<Grid, Boolean>() {
+        Command<LegacyGrid, Boolean> openOrCloseItemId = new Command<LegacyGrid, Boolean>() {
             @Override
             @SuppressWarnings("boxing")
-            public void execute(Grid g, Boolean visible, Object itemId) {
+            public void execute(LegacyGrid g, Boolean visible, Object itemId) {
                 g.setDetailsVisible(itemId, visible);
             }
         };
@@ -1580,9 +1580,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 persistingDetailsGenerator);
 
         createClickAction("- Change Component", "Generators",
-                new Command<Grid, Void>() {
+                new Command<LegacyGrid, Void>() {
                     @Override
-                    public void execute(Grid c, Void value, Object data) {
+                    public void execute(LegacyGrid c, Void value, Object data) {
                         for (Object id : detailsMap.keySet()) {
                             Panel panel = detailsMap.get(id);
                             Label label = (Label) panel.getContent();
@@ -1596,9 +1596,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 }, null);
 
         createClickAction("Toggle firstItemId", "Details",
-                new Command<Grid, Void>() {
+                new Command<LegacyGrid, Void>() {
                     @Override
-                    public void execute(Grid g, Void value, Object data) {
+                    public void execute(LegacyGrid g, Void value, Object data) {
                         Object firstItemId = g.getContainerDataSource()
                                 .firstItemId();
                         boolean toggle = g.isDetailsVisible(firstItemId);
@@ -1623,8 +1623,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     }
 
     @Override
-    protected Class<Grid> getTestClass() {
-        return Grid.class;
+    protected Class<LegacyGrid> getTestClass() {
+        return LegacyGrid.class;
     }
 
 }

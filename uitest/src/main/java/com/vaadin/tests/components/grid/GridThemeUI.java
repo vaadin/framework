@@ -33,14 +33,14 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.renderers.DateRenderer;
 
 @Theme("valo")
 public class GridThemeUI extends AbstractTestUIWithLog {
 
-    private Grid grid;
+    private LegacyGrid grid;
 
     protected static String[] columns = new String[] { "firstName", "lastName",
             "gender", "birthDate", "age", "alive", "address.streetAddress",
@@ -82,7 +82,7 @@ public class GridThemeUI extends AbstractTestUIWithLog {
 
     }
 
-    public class Editor extends Grid {
+    public class Editor extends LegacyGrid {
         @Override
         public String toString() {
             return "Editor";
@@ -103,7 +103,7 @@ public class GridThemeUI extends AbstractTestUIWithLog {
         }
     }
 
-    public class HeaderFooter extends Grid {
+    public class HeaderFooter extends LegacyGrid {
         @Override
         public String toString() {
             return getClass().getSimpleName();

@@ -22,7 +22,7 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
-@ServerClass("com.vaadin.ui.Grid")
+@ServerClass("com.vaadin.ui.LegacyGrid")
 public class CustomGridElement extends GridElement {
     /**
      * Gets the element that contains the details of a row.

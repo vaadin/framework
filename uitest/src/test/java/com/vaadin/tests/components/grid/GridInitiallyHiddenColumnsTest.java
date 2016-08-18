@@ -32,7 +32,7 @@ public class GridInitiallyHiddenColumnsTest extends SingleBrowserTest {
     @Test
     public void ensureCorrectlyRendered() {
         openTestURL("debug");
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         Assert.assertEquals("Rowling", grid.getCell(0, 0).getText());
         Assert.assertEquals("Scott", grid.getCell(1, 0).getText());
 

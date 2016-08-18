@@ -56,7 +56,7 @@ public class GridDetailsLayoutExpandTest extends MultiBrowserTest {
         openTestURL();
         waitForElementPresent(By.className("v-grid"));
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         int gridWidth = grid.getSize().width;
 
         grid.getRow(2).click();

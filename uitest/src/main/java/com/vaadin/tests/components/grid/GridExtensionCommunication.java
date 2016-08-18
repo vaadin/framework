@@ -22,17 +22,17 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.client.grid.GridClickExtensionConnector.GridClickServerRpc;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.AbstractGridExtension;
-import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.AbstractGridExtension;
+import com.vaadin.ui.LegacyGrid.Column;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 
 @Widgetset(TestingWidgetSet.NAME)
 public class GridExtensionCommunication extends AbstractTestUIWithLog {
 
     public class GridClickExtension extends AbstractGridExtension {
 
-        public GridClickExtension(Grid grid) {
+        public GridClickExtension(LegacyGrid grid) {
             super(grid);
             registerRpc(new GridClickServerRpc() {
 
@@ -60,7 +60,7 @@ public class GridExtensionCommunication extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid grid = new PersonTestGrid(50);
+        LegacyGrid grid = new PersonTestGrid(50);
         grid.setSelectionMode(SelectionMode.NONE);
         new GridClickExtension(grid);
         addComponent(grid);

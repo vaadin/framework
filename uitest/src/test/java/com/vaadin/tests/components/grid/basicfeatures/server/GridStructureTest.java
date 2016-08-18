@@ -25,6 +25,7 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
+import com.vaadin.tests.components.grid.LegacyGridElement;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -493,7 +494,7 @@ public class GridStructureTest extends GridBasicFeaturesTest {
 
         // Wait until page is loaded completely.
         int count = 0;
-        while (!$(GridElement.class).exists()) {
+        while (!$(LegacyGridElement.class).exists()) {
             if (count == 100) {
                 fail("Reloading page failed");
             }

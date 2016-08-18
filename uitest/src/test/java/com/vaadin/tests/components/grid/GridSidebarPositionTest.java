@@ -33,7 +33,7 @@ public class GridSidebarPositionTest extends MultiBrowserTest {
     @Test
     public void heightRestrictedToBrowserWindow() {
         openTestURL();
-        GridElement gridWithVeryManyColumns = $(GridElement.class)
+        GridElement gridWithVeryManyColumns = $(LegacyGridElement.class)
                 .id(GridSidebarPosition.POPUP_WINDOW_HEIGHT);
         getSidebarOpenButton(gridWithVeryManyColumns).click();
         Dimension popupSize = getSidebarPopup().getSize();
@@ -46,7 +46,7 @@ public class GridSidebarPositionTest extends MultiBrowserTest {
     @Test
     public void popupNotBelowBrowserWindow() {
         openTestURL();
-        GridElement gridAtBottom = $(GridElement.class)
+        GridElement gridAtBottom = $(LegacyGridElement.class)
                 .id(GridSidebarPosition.POPUP_WINDOW_MOVED_UP);
         getSidebarOpenButton(gridAtBottom).click();
         WebElement sidebarPopup = getSidebarPopup();
@@ -61,7 +61,7 @@ public class GridSidebarPositionTest extends MultiBrowserTest {
     @Test
     public void popupAbove() {
         openTestURL();
-        GridElement gridPopupAbove = $(GridElement.class)
+        GridElement gridPopupAbove = $(LegacyGridElement.class)
                 .id(GridSidebarPosition.POPUP_ABOVE);
         WebElement sidebarOpenButton = getSidebarOpenButton(gridPopupAbove);
         sidebarOpenButton.click();

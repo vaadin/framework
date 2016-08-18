@@ -33,7 +33,7 @@ public class GridMultiSelectionOnInitTest extends MultiBrowserTest {
     public void testSelectAllCheckBoxExists() {
         openTestURL();
         assertTrue("The select all checkbox was missing.",
-                $(GridElement.class).first().getHeaderCell(0, 0)
+                $(LegacyGridElement.class).first().getHeaderCell(0, 0)
                         .isElementPresent(By.tagName("input")));
     }
 
@@ -41,9 +41,9 @@ public class GridMultiSelectionOnInitTest extends MultiBrowserTest {
     public void testSetSelectedUpdatesClient() {
         openTestURL();
         assertFalse("Rows should not be selected initially.",
-                $(GridElement.class).first().getRow(0).isSelected());
+                $(LegacyGridElement.class).first().getRow(0).isSelected());
         $(ButtonElement.class).first().click();
         assertTrue("Rows should be selected after button click.",
-                $(GridElement.class).first().getRow(0).isSelected());
+                $(LegacyGridElement.class).first().getRow(0).isSelected());
     }
 }

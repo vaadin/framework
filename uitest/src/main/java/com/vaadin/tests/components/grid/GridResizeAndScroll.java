@@ -21,8 +21,8 @@ import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.VerticalLayout;
 
 public class GridResizeAndScroll extends AbstractTestUI {
@@ -32,7 +32,7 @@ public class GridResizeAndScroll extends AbstractTestUI {
         VerticalLayout content = new VerticalLayout();
         addComponent(content);
 
-        final Grid g = new Grid();
+        final LegacyGrid g = new LegacyGrid();
         content.setHeight("500px");
         content.addComponent(g);
 

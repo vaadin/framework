@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.vaadin.ui.LegacyGrid;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,9 +29,8 @@ import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.MultiSelectionModel;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid.MultiSelectionModel;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 
 public class MultiSelectionModelTest {
 
@@ -41,7 +41,7 @@ public class MultiSelectionModelTest {
     private Object itemIdNotPresent = "itemIdNotPresent";
     private Container.Indexed dataSource;
     private MultiSelectionModel model;
-    private Grid grid;
+    private LegacyGrid grid;
 
     private boolean expectingEvent = false;
     private boolean expectingDeselectEvent;
@@ -51,7 +51,7 @@ public class MultiSelectionModelTest {
     @Before
     public void setUp() {
         dataSource = createDataSource();
-        grid = new Grid(dataSource);
+        grid = new LegacyGrid(dataSource);
         grid.setSelectionMode(SelectionMode.MULTI);
         model = (MultiSelectionModel) grid.getSelectionModel();
     }

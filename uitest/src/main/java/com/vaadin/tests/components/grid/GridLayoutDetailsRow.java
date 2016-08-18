@@ -20,9 +20,9 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.DetailsGenerator;
-import com.vaadin.ui.Grid.RowReference;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.DetailsGenerator;
+import com.vaadin.ui.LegacyGrid.RowReference;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 
@@ -35,7 +35,7 @@ public class GridLayoutDetailsRow extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final Grid grid = new Grid();
+        final LegacyGrid grid = new LegacyGrid();
         grid.setSizeFull();
         grid.addColumn("name", String.class);
         grid.addColumn("born", Integer.class);

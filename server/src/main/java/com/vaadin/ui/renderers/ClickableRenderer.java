@@ -21,9 +21,9 @@ import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.AbstractRenderer;
-import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.AbstractRenderer;
+import com.vaadin.ui.LegacyGrid.Column;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -67,7 +67,7 @@ public class ClickableRenderer<T> extends AbstractRenderer<T> {
         private Object itemId;
         private Column column;
 
-        protected RendererClickEvent(Grid source, Object itemId, Column column,
+        protected RendererClickEvent(LegacyGrid source, Object itemId, Column column,
                 MouseEventDetails mouseEventDetails) {
             super(source, mouseEventDetails);
             this.itemId = itemId;

@@ -181,7 +181,7 @@ import elemental.json.JsonValue;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class Grid extends AbstractFocusable implements SelectionNotifier,
+public class LegacyGrid extends AbstractFocusable implements SelectionNotifier,
         SortNotifier, SelectiveRenderer, ItemClickNotifier {
 
     /**
@@ -223,7 +223,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          *            <code>true</code> iff the event was triggered by an UI
          *            interaction
          */
-        public ColumnVisibilityChangeEvent(Grid source, Column column,
+        public ColumnVisibilityChangeEvent(LegacyGrid source, Column column,
                 boolean hidden, boolean isUserOriginated) {
             super(source);
             this.column = column;
@@ -335,11 +335,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          */
         private final Set<Object> openDetails = new HashSet<>();
 
-        public DetailComponentManager(Grid grid) {
+        public DetailComponentManager(LegacyGrid grid) {
             this(grid, DetailsGenerator.NULL);
         }
 
-        public DetailComponentManager(Grid grid,
+        public DetailComponentManager(LegacyGrid grid,
                 DetailsGenerator detailsGenerator) {
             super(grid);
             setDetailsGenerator(detailsGenerator);
@@ -349,7 +349,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * Creates a details component with the help of the user-defined
          * {@link DetailsGenerator}.
          * <p>
-         * This method attaches created components to the parent {@link Grid}.
+         * This method attaches created components to the parent {@link LegacyGrid}.
          *
          * @param itemId
          *            the item id for which to create the details component.
@@ -397,7 +397,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * Destroys a details component correctly.
          * <p>
-         * This method will detach the component from parent {@link Grid}.
+         * This method will detach the component from parent {@link LegacyGrid}.
          *
          * @param itemId
          *            the item id for which to destroy the details component
@@ -631,7 +631,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         private final Object propertyId;
         private final Section section;
 
-        public GridContextClickEvent(Grid source,
+        public GridContextClickEvent(LegacyGrid source,
                 MouseEventDetails mouseEventDetails, Section section,
                 int rowIndex, Object itemId, Object propertyId) {
             super(source, mouseEventDetails);
@@ -672,7 +672,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * Returns the clicked row index relative to Grid section. In the body
          * of the Grid the index is the item index in the Container. Header and
          * Footer rows for index can be fetched with
-         * {@link Grid#getHeaderRow(int)} and {@link Grid#getFooterRow(int)}.
+         * {@link LegacyGrid#getHeaderRow(int)} and {@link LegacyGrid#getFooterRow(int)}.
          *
          * @return row index in section
          */
@@ -681,8 +681,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         @Override
-        public Grid getComponent() {
-            return (Grid) super.getComponent();
+        public LegacyGrid getComponent() {
+            return (LegacyGrid) super.getComponent();
         }
     }
 
@@ -697,7 +697,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         private String userErrorMessage;
 
-        public CommitErrorEvent(Grid grid, CommitException cause) {
+        public CommitErrorEvent(LegacyGrid grid, CommitException cause) {
             super(grid);
             this.cause = cause;
             userErrorMessage = cause.getLocalizedMessage();
@@ -713,8 +713,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         @Override
-        public Grid getComponent() {
-            return (Grid) super.getComponent();
+        public LegacyGrid getComponent() {
+            return (LegacyGrid) super.getComponent();
         }
 
         /**
@@ -800,7 +800,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          *            <code>true</code> if event is a result of user
          *            interaction, <code>false</code> if from API call
          */
-        public ColumnReorderEvent(Grid source, boolean userOriginated) {
+        public ColumnReorderEvent(LegacyGrid source, boolean userOriginated) {
             super(source);
             this.userOriginated = userOriginated;
         }
@@ -852,7 +852,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          *            <code>true</code> if event is a result of user
          *            interaction, <code>false</code> if from API call
          */
-        public ColumnResizeEvent(Grid source, Column column,
+        public ColumnResizeEvent(LegacyGrid source, Column column,
                 boolean userOriginated) {
             super(source);
             this.column = column;
@@ -926,7 +926,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         private Object itemID;
 
-        protected EditorEvent(Grid source, Object itemID) {
+        protected EditorEvent(LegacyGrid source, Object itemID) {
             super(source);
             this.itemID = itemID;
         }
@@ -945,7 +945,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      */
     public static class EditorOpenEvent extends EditorEvent {
 
-        public EditorOpenEvent(Grid source, Object itemID) {
+        public EditorOpenEvent(LegacyGrid source, Object itemID) {
             super(source, itemID);
         }
     }
@@ -956,7 +956,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      */
     public static class EditorMoveEvent extends EditorEvent {
 
-        public EditorMoveEvent(Grid source, Object itemID) {
+        public EditorMoveEvent(LegacyGrid source, Object itemID) {
             super(source, itemID);
         }
     }
@@ -967,7 +967,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      */
     public static class EditorCloseEvent extends EditorEvent {
 
-        public EditorCloseEvent(Grid source, Object itemID) {
+        public EditorCloseEvent(LegacyGrid source, Object itemID) {
             super(source, itemID);
         }
     }
@@ -1012,8 +1012,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
                 event.setUserErrorMessage(caption + ": " + message);
             } else {
-                com.vaadin.server.ErrorEvent.findErrorHandler(Grid.this).error(
-                        new ConnectorErrorEvent(Grid.this, event.getCause()));
+                com.vaadin.server.ErrorEvent.findErrorHandler(LegacyGrid.this).error(
+                        new ConnectorErrorEvent(LegacyGrid.this, event.getCause()));
             }
         }
 
@@ -1032,15 +1032,15 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Selection modes representing built-in {@link SelectionModel
-     * SelectionModels} that come bundled with {@link Grid}.
+     * SelectionModels} that come bundled with {@link LegacyGrid}.
      * <p>
      * Passing one of these enums into
-     * {@link Grid#setSelectionMode(SelectionMode)} is equivalent to calling
-     * {@link Grid#setSelectionModel(SelectionModel)} with one of the built-in
+     * {@link LegacyGrid#setSelectionMode(SelectionMode)} is equivalent to calling
+     * {@link LegacyGrid#setSelectionModel(SelectionModel)} with one of the built-in
      * implementations of {@link SelectionModel}.
      *
-     * @see Grid#setSelectionMode(SelectionMode)
-     * @see Grid#setSelectionModel(SelectionModel)
+     * @see LegacyGrid#setSelectionMode(SelectionMode)
+     * @see LegacyGrid#setSelectionModel(SelectionModel)
      */
     public enum SelectionMode {
         /** A SelectionMode that maps to {@link SingleSelectionModel} */
@@ -1093,7 +1093,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         Collection<Object> getSelectedRows();
 
         /**
-         * Injects the current {@link Grid} instance into the SelectionModel.
+         * Injects the current {@link LegacyGrid} instance into the SelectionModel.
          * This method should usually call the extend method of
          * {@link AbstractExtension}.
          * <p>
@@ -1104,7 +1104,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          *            <code>null</code> when a selection model is being detached
          *            from a Grid.
          */
-        void setGrid(Grid grid);
+        void setGrid(LegacyGrid grid);
 
         /**
          * Resets the SelectiomModel to an initial state.
@@ -1352,7 +1352,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         @Override
-        public void setGrid(final Grid grid) {
+        public void setGrid(final LegacyGrid grid) {
             if (grid != null) {
                 extend(grid);
             }
@@ -1891,7 +1891,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * A data class which contains information which identifies a row in a
-     * {@link Grid}.
+     * {@link LegacyGrid}.
      * <p>
      * Since this class follows the <code>Flyweight</code>-pattern any instance
      * of this object is subject to change without the user knowing it and so
@@ -1899,7 +1899,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * instances.
      */
     public static class RowReference implements Serializable {
-        private final Grid grid;
+        private final LegacyGrid grid;
 
         private Object itemId;
 
@@ -1909,7 +1909,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * @param grid
          *            the grid that the row belongs to
          */
-        public RowReference(Grid grid) {
+        public RowReference(LegacyGrid grid) {
             this.grid = grid;
         }
 
@@ -1928,7 +1928,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          *
          * @return the grid that contains referenced row
          */
-        public Grid getGrid() {
+        public LegacyGrid getGrid() {
             return grid;
         }
 
@@ -1953,7 +1953,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * A data class which contains information which identifies a cell in a
-     * {@link Grid}.
+     * {@link LegacyGrid}.
      * <p>
      * Since this class follows the <code>Flyweight</code>-pattern any instance
      * of this object is subject to change without the user knowing it and so
@@ -1984,7 +1984,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          *
          * @return the grid that contains referenced cell
          */
-        public Grid getGrid() {
+        public LegacyGrid getGrid() {
             return rowReference.getGrid();
         }
 
@@ -2033,7 +2033,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * A callback interface for generating custom style names for Grid rows.
      *
-     * @see Grid#setRowStyleGenerator(RowStyleGenerator)
+     * @see LegacyGrid#setRowStyleGenerator(RowStyleGenerator)
      */
     public interface RowStyleGenerator extends Serializable {
 
@@ -2051,7 +2051,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * A callback interface for generating custom style names for Grid cells.
      *
-     * @see Grid#setCellStyleGenerator(CellStyleGenerator)
+     * @see LegacyGrid#setCellStyleGenerator(CellStyleGenerator)
      */
     public interface CellStyleGenerator extends Serializable {
 
@@ -2072,7 +2072,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * the cells in the row for which a {@link CellDescriptionGenerator cell
      * description} is not generated.
      *
-     * @see Grid#setRowDescriptionGenerator
+     * @see LegacyGrid#setRowDescriptionGenerator
      *
      * @since 7.6
      */
@@ -2096,7 +2096,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Grid cells. If a cell has both a {@link RowDescriptionGenerator row
      * description} and a cell description, the latter has precedence.
      *
-     * @see Grid#setCellDescriptionGenerator(CellDescriptionGenerator)
+     * @see LegacyGrid#setCellDescriptionGenerator(CellDescriptionGenerator)
      *
      * @since 7.6
      */
@@ -2129,7 +2129,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         @Override
         public void generateData(Object itemId, Item item, JsonObject rowData) {
-            RowReference row = new RowReference(Grid.this);
+            RowReference row = new RowReference(LegacyGrid.this);
             row.set(itemId);
 
             if (rowStyleGenerator != null) {
@@ -2399,7 +2399,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             protected void writeDesign(Element trElement,
                     DesignContext designContext) {
                 Set<CELLTYPE> visited = new HashSet<>();
-                for (Grid.Column column : section.grid.getColumns()) {
+                for (LegacyGrid.Column column : section.grid.getColumns()) {
                     CELLTYPE cell = getCell(column.getPropertyId());
                     if (visited.contains(cell)) {
                         continue;
@@ -2686,7 +2686,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             }
         }
 
-        protected Grid grid;
+        protected LegacyGrid grid;
         protected List<ROWTYPE> rows = new ArrayList<>();
 
         /**
@@ -2968,7 +2968,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         private HeaderRow defaultRow = null;
         private final GridStaticSectionState headerState = new GridStaticSectionState();
 
-        protected Header(Grid grid) {
+        protected Header(LegacyGrid grid) {
             this.grid = grid;
             grid.getState(true).header = headerState;
             HeaderRow row = createRow();
@@ -3137,7 +3137,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         private final GridStaticSectionState footerState = new GridStaticSectionState();
 
-        protected Footer(Grid grid) {
+        protected Footer(LegacyGrid grid) {
             this.grid = grid;
             grid.getState(true).footer = footerState;
         }
@@ -3191,7 +3191,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * A column in the grid. Can be obtained by calling
-     * {@link Grid#getColumn(Object propertyId)}.
+     * {@link LegacyGrid#getColumn(Object propertyId)}.
      */
     public static class Column implements Serializable {
 
@@ -3203,7 +3203,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * The grid this column is associated with
          */
-        private final Grid grid;
+        private final LegacyGrid grid;
 
         /**
          * Backing property for column
@@ -3214,7 +3214,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         /**
          * A check for allowing the
-         * {@link #Column(Grid, GridColumnState, Object) constructor} to call
+         * {@link #Column(LegacyGrid, GridColumnState, Object) constructor} to call
          * {@link #setConverter(LegacyConverter)} with a <code>null</code>, even
          * if model and renderer aren't compatible.
          */
@@ -3230,7 +3230,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * @param propertyId
          *            the backing property id for this column
          */
-        Column(Grid grid, GridColumnState state, Object propertyId) {
+        Column(LegacyGrid grid, GridColumnState state, Object propertyId) {
             this.grid = grid;
             this.state = state;
             this.propertyId = propertyId;
@@ -3433,7 +3433,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          *
          * @throws IllegalArgumentException
          *             if the column is no longer attached to any grid
-         * @see Grid#setFrozenColumnCount(int)
+         * @see LegacyGrid#setFrozenColumnCount(int)
          */
         public Column setLastFrozenColumn() {
             checkColumnIsAttached();
@@ -3837,8 +3837,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * @throws IllegalStateException
          *             if the editor is currently active
          *
-         * @see Grid#editItem(Object)
-         * @see Grid#isEditorActive()
+         * @see LegacyGrid#editItem(Object)
+         * @see LegacyGrid#isEditorActive()
          */
         public Column setEditable(boolean editable) {
             checkColumnIsAttached();
@@ -3858,7 +3858,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * @return {@code true} if this column is editable, {@code false}
          *         otherwise
          *
-         * @see Grid#editItem(Object)
+         * @see LegacyGrid#editItem(Object)
          * @see #setEditable(boolean)
          */
 
@@ -4146,8 +4146,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          */
         @Deprecated
         @Override
-        protected Class<Grid> getSupportedParentType() {
-            return Grid.class;
+        protected Class<LegacyGrid> getSupportedParentType() {
+            return LegacyGrid.class;
         }
 
         /**
@@ -4297,7 +4297,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * @param grid
          *            a grid instance
          */
-        public AbstractGridExtension(Grid grid) {
+        public AbstractGridExtension(LegacyGrid grid) {
             super();
             extend(grid);
         }
@@ -4359,9 +4359,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * @throws IllegalStateException
          *             if parent is not Grid
          */
-        protected Grid getParentGrid() {
-            if (getParent() instanceof Grid) {
-                Grid grid = (Grid) getParent();
+        protected LegacyGrid getParentGrid() {
+            if (getParent() instanceof LegacyGrid) {
+                LegacyGrid grid = (LegacyGrid) getParent();
                 return grid;
             } else if (getParent() == null) {
                 throw new IllegalStateException(
@@ -4525,7 +4525,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * own Container.
      *
      * @see #setContainerDataSource(Indexed)
-     * @see #Grid()
+     * @see #LegacyGrid()
      */
     private boolean defaultContainer = true;
 
@@ -4559,7 +4559,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Creates a new Grid with a new {@link IndexedContainer} as the data
      * source.
      */
-    public Grid() {
+    public LegacyGrid() {
         this(null, null);
     }
 
@@ -4569,7 +4569,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @param dataSource
      *            the indexed container to use as a data source
      */
-    public Grid(final Container.Indexed dataSource) {
+    public LegacyGrid(final Container.Indexed dataSource) {
         this(null, dataSource);
     }
 
@@ -4580,7 +4580,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @param caption
      *            the caption of the grid
      */
-    public Grid(String caption) {
+    public LegacyGrid(String caption) {
         this(caption, null);
     }
 
@@ -4593,7 +4593,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @param dataSource
      *            the indexed container to use as a data source
      */
-    public Grid(String caption, Container.Indexed dataSource) {
+    public LegacyGrid(String caption, Container.Indexed dataSource) {
         if (dataSource == null) {
             internalSetContainerDataSource(new IndexedContainer());
         } else {
@@ -4631,7 +4631,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     ConnectorTracker connectorTracker = getUI()
                             .getConnectorTracker();
                     JsonObject diffState = connectorTracker
-                            .getDiffState(Grid.this);
+                            .getDiffState(LegacyGrid.this);
                     diffState.remove("sortColumns");
                     diffState.remove("sortDirs");
                     markAsDirty();
@@ -4644,7 +4644,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 Object itemId = getKeyMapper().get(rowKey);
                 Item item = datasource.getItem(itemId);
                 Object propertyId = getPropertyIdByColumnId(columnId);
-                fireEvent(new ItemClickEvent(Grid.this, item, itemId,
+                fireEvent(new ItemClickEvent(LegacyGrid.this, item, itemId,
                         propertyId, details));
             }
 
@@ -4654,7 +4654,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 final String diffStateKey = "columnOrder";
                 ConnectorTracker connectorTracker = getUI()
                         .getConnectorTracker();
-                JsonObject diffState = connectorTracker.getDiffState(Grid.this);
+                JsonObject diffState = connectorTracker.getDiffState(LegacyGrid.this);
                 // discard the change if the columns have been reordered from
                 // the server side, as the server side is always right
                 if (getState(false).columnOrder.equals(oldColumnOrder)) {
@@ -4701,7 +4701,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     ConnectorTracker connectorTracker = getUI()
                             .getConnectorTracker();
                     JsonObject diffState = connectorTracker
-                            .getDiffState(Grid.this);
+                            .getDiffState(LegacyGrid.this);
 
                     assert diffState
                             .hasKey(diffStateKey) : "Field name has changed";
@@ -4734,7 +4734,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 if (rowKey != null) {
                     itemId = getKeyMapper().get(rowKey);
                 }
-                fireEvent(new GridContextClickEvent(Grid.this, details, section,
+                fireEvent(new GridContextClickEvent(LegacyGrid.this, details, section,
                         rowIndex, itemId, getPropertyIdByColumnId(columnId)));
             }
 
@@ -4806,7 +4806,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     success = true;
                 } catch (CommitException e) {
                     try {
-                        CommitErrorEvent event = new CommitErrorEvent(Grid.this,
+                        CommitErrorEvent event = new CommitErrorEvent(LegacyGrid.this,
                                 e);
                         getEditorErrorHandler().commitError(event);
 
@@ -4829,8 +4829,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             }
 
             private void handleError(Exception e) {
-                com.vaadin.server.ErrorEvent.findErrorHandler(Grid.this)
-                        .error(new ConnectorErrorEvent(Grid.this, e));
+                com.vaadin.server.ErrorEvent.findErrorHandler(LegacyGrid.this)
+                        .error(new ConnectorErrorEvent(LegacyGrid.this, e));
             }
         });
     }
@@ -5154,9 +5154,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     }
 
     /**
-     * Used internally by the {@link Grid} to get a {@link Column} by
+     * Used internally by the {@link LegacyGrid} to get a {@link Column} by
      * referencing its generated state id. Also used by {@link Column} to verify
-     * if it has been detached from the {@link Grid}.
+     * if it has been detached from the {@link LegacyGrid}.
      *
      * @param columnId
      *            the client id generated for the column when the column is
@@ -5169,7 +5169,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     }
 
     /**
-     * Used internally by the {@link Grid} to get a property id by referencing
+     * Used internally by the {@link LegacyGrid} to get a property id by referencing
      * the columns generated state id.
      *
      * @param columnId
@@ -6652,7 +6652,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(Grid.class.getName());
+        return Logger.getLogger(LegacyGrid.class.getName());
     }
 
     /**
@@ -6764,7 +6764,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 editor = editorFieldGroup.getField(propertyId);
             }
 
-            if (editor != null && editor.getParent() != Grid.this) {
+            if (editor != null && editor.getParent() != LegacyGrid.this) {
                 assert editor.getParent() == null;
                 editor.setParent(this);
             }
@@ -7264,7 +7264,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         super.writeDesign(design, context);
 
         Attributes attrs = design.attributes();
-        Grid def = context.getDefaultInstance(this);
+        LegacyGrid def = context.getDefaultInstance(this);
 
         DesignAttributeHandler.writeAttribute("editable", attrs,
                 isEditorEnabled(), def.isEditorEnabled(), boolean.class);

@@ -22,7 +22,7 @@ import org.easymock.EasyMock;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.communication.data.RpcDataProviderExtension;
 import com.vaadin.ui.ConnectorTracker;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.UI;
 
 /**
@@ -31,7 +31,7 @@ import com.vaadin.ui.UI;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class TestGrid extends Grid {
+public class TestGrid extends LegacyGrid {
 
     public TestGrid() {
         super();
@@ -44,7 +44,7 @@ public class TestGrid extends Grid {
     }
 
     public RpcDataProviderExtension getDataProvider() throws Exception {
-        Field dseField = Grid.class.getDeclaredField("datasourceExtension");
+        Field dseField = LegacyGrid.class.getDeclaredField("datasourceExtension");
         dseField.setAccessible(true);
         return (RpcDataProviderExtension) dseField.get(this);
     }

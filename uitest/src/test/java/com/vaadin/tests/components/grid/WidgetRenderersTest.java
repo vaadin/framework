@@ -143,7 +143,7 @@ public class WidgetRenderersTest extends MultiBrowserTest {
     }
 
     GridCellElement getGridCell(int row, int col) {
-        return $(GridElement.class).first().getCell(row, col);
+        return $(LegacyGridElement.class).first().getCell(row, col);
     }
 
     private void waitUntilTextUpdated(final WebElement button,

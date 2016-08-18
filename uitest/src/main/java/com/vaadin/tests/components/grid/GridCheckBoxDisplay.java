@@ -20,7 +20,7 @@ import java.io.Serializable;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
 public class GridCheckBoxDisplay extends AbstractTestUI {
 
@@ -33,14 +33,14 @@ public class GridCheckBoxDisplay extends AbstractTestUI {
         todoContainer.addBean(new Todo("Done task", true));
         todoContainer.addBean(new Todo("Not done", false));
 
-        Grid grid = new Grid(todoContainer);
+        LegacyGrid grid = new LegacyGrid(todoContainer);
         grid.setSizeFull();
 
         grid.setColumnOrder("done", "task");
         grid.getColumn("done").setWidth(75);
         grid.getColumn("task").setExpandRatio(1);
 
-        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        grid.setSelectionMode(LegacyGrid.SelectionMode.SINGLE);
 
         grid.setEditorEnabled(true);
         grid.setImmediate(true);

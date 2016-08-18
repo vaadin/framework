@@ -23,14 +23,14 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 
 public class GridReplaceContainer extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final Grid grid = new Grid();
+        final LegacyGrid grid = new LegacyGrid();
         grid.setSelectionMode(SelectionMode.SINGLE);
         grid.setContainerDataSource(createContainer());
         grid.addSelectionListener(new SelectionListener() {

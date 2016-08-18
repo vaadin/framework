@@ -27,7 +27,7 @@ public class GridResizeAndScrollTest extends MultiBrowserTest {
     @Test
     public void scrollAndClick() {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         grid.scrollToRow(49);
         // select a row (click on checkbox)
         grid.getCell(49, 0).click();

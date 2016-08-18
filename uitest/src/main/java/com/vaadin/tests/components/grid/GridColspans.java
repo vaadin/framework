@@ -22,10 +22,10 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.FooterRow;
-import com.vaadin.ui.Grid.HeaderRow;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.FooterRow;
+import com.vaadin.ui.LegacyGrid.HeaderRow;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.renderers.NumberRenderer;
 
 public class GridColspans extends AbstractTestUI {
@@ -33,7 +33,7 @@ public class GridColspans extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         Indexed dataSource = new IndexedContainer();
-        final Grid grid;
+        final LegacyGrid grid;
 
         dataSource.addContainerProperty("firstName", String.class, "");
         dataSource.addContainerProperty("lastName", String.class, "");
@@ -46,7 +46,7 @@ public class GridColspans extends AbstractTestUI {
         i.getItemProperty("streetAddress").setValue("Ruukinkatu 2-4");
         i.getItemProperty("zipCode").setValue(20540);
         i.getItemProperty("city").setValue("Turku");
-        grid = new Grid(dataSource);
+        grid = new LegacyGrid(dataSource);
         grid.setWidth("600px");
         grid.getColumn("zipCode").setRenderer(new NumberRenderer());
         grid.setSelectionMode(SelectionMode.MULTI);

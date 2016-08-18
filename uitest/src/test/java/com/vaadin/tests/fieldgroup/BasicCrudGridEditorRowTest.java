@@ -17,6 +17,7 @@ package com.vaadin.tests.fieldgroup;
 
 import static org.junit.Assert.assertFalse;
 
+import com.vaadin.tests.components.grid.LegacyGridElement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
     @Before
     public void openTest() {
         openTestURL();
-        grid = $(GridElement.class).first();
+        grid = $(LegacyGridElement.class).first();
 
     }
 

@@ -38,7 +38,7 @@ public class GridInWindowResizeTest extends MultiBrowserTest {
     @Test
     public void resizeWindow() {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         int col1WidthBefore = grid.getCell(0, 0).getSize().getWidth();
         $(ButtonElement.class).caption("resize").first().click();
         int col1WidthAfter = grid.getCell(0, 0).getSize().getWidth();

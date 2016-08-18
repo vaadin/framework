@@ -19,7 +19,7 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widget.grid.selection.SelectionModelNone;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.ui.Grid.NoSelectionModel;
+import com.vaadin.ui.LegacyGrid.NoSelectionModel;
 
 import elemental.json.JsonObject;
 

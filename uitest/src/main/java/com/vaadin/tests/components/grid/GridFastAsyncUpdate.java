@@ -16,8 +16,8 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
@@ -65,7 +65,7 @@ public class GridFastAsyncUpdate extends AbstractTestUI {
 
     private int counter;
 
-    private Grid grid;
+    private LegacyGrid grid;
     private IndexedContainer container;
     private long loggingStart;
     private volatile boolean scrollLock = false;
@@ -126,7 +126,7 @@ public class GridFastAsyncUpdate extends AbstractTestUI {
         container.addContainerProperty("level", String.class, null);
         container.addContainerProperty("message", String.class, null);
 
-        grid = new Grid(container);
+        grid = new LegacyGrid(container);
         grid.setWidth("100%");
         grid.setImmediate(true);
         grid.setSelectionMode(SelectionMode.SINGLE);

@@ -19,17 +19,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import com.vaadin.ui.LegacyGrid;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.ui.Grid;
 
 public class GridColumnAddingAndRemovingTest {
 
-    Grid grid = new Grid();
+    LegacyGrid grid = new LegacyGrid();
     Container.Indexed container;
 
     @Before
@@ -104,7 +104,7 @@ public class GridColumnAddingAndRemovingTest {
                 grid.getColumn("foo"));
         assertNotNull("Grid did should have a column for property bar",
                 grid.getColumn("bar"));
-        for (Grid.Column column : grid.getColumns()) {
+        for (LegacyGrid.Column column : grid.getColumns()) {
             assertNotNull("Grid getColumns returned a null value", column);
         }
 

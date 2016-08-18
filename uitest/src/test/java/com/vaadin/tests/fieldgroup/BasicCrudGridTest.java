@@ -17,6 +17,7 @@ package com.vaadin.tests.fieldgroup;
 
 import java.util.List;
 
+import com.vaadin.tests.components.grid.LegacyGridElement;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -48,7 +49,7 @@ public class BasicCrudGridTest extends SingleBrowserTestPhantomJS2 {
         openTestURL();
 
         // Select row
-        $(GridElement.class).first().getCell(2, 2).click();
+        $(LegacyGridElement.class).first().getCell(2, 2).click();
 
         List<TextFieldElement> textFields = getFieldsLayout()
                 .$(TextFieldElement.class).all();
@@ -59,7 +60,7 @@ public class BasicCrudGridTest extends SingleBrowserTestPhantomJS2 {
         }
 
         // Deselect row
-        $(GridElement.class).first().getCell(2, 2).click();
+        $(LegacyGridElement.class).first().getCell(2, 2).click();
 
         for (TextFieldElement e : textFields) {
             Assert.assertEquals("TextField should be empty", "", e.getValue());

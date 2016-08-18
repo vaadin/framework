@@ -21,15 +21,15 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
+import com.vaadin.ui.LegacyGrid;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.Grid.SelectionModel;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
+import com.vaadin.ui.LegacyGrid.SelectionModel;
 
 public class GridSelectionTest {
 
@@ -64,7 +64,7 @@ public class GridSelectionTest {
         }
     }
 
-    private Grid grid;
+    private LegacyGrid grid;
     private MockSelectionChangeListener mockListener;
 
     private final Object itemId1Present = "itemId1Present";
@@ -90,7 +90,7 @@ public class GridSelectionTest {
         assertFalse("itemId2NotPresent",
                 container.containsId(itemId2NotPresent));
 
-        grid = new Grid(container);
+        grid = new LegacyGrid(container);
 
         mockListener = new MockSelectionChangeListener();
         grid.addSelectionListener(mockListener);

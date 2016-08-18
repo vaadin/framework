@@ -15,17 +15,17 @@
  */
 package com.vaadin.tests.server.component.grid.declarative;
 
+import com.vaadin.ui.LegacyGrid;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Container;
-import com.vaadin.ui.Grid;
 
 public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testSimpleInlineData() {
-        String design = "<vaadin-grid><table>"//
+        String design = "<vaadin-legacy-grid><table>"//
                 + "<colgroup>" + "   <col sortable property-id='Col1' />"
                 + "</colgroup>" //
                 + "<thead />" // No headers read or written
@@ -34,9 +34,9 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
                 + "<tr><td>Bar</tr>" //
                 + "<tr><td>Baz</tr>" //
                 + "</tbody>" //
-                + "</table></vaadin-grid>";
+                + "</table></vaadin-legacy-grid>";
 
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.addColumn("Col1", String.class);
         grid.addRow("Foo");
         grid.addRow("Bar");
@@ -51,7 +51,7 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testMultipleColumnsInlineData() {
-        String design = "<vaadin-grid><table>"//
+        String design = "<vaadin-legacy-grid><table>"//
                 + "<colgroup>" + "   <col sortable property-id='Col1' />"
                 + "   <col sortable property-id='Col2' />"
                 + "   <col sortable property-id='Col3' />" //
@@ -61,9 +61,9 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
                 + "<tr><td>Foo<td>Bar<td>Baz</tr>" //
                 + "<tr><td>My<td>Summer<td>Car</tr>" //
                 + "</tbody>" //
-                + "</table></vaadin-grid>";
+                + "</table></vaadin-legacy-grid>";
 
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.addColumn("Col1", String.class);
         grid.addColumn("Col2", String.class);
         grid.addColumn("Col3", String.class);
@@ -79,7 +79,7 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testMultipleColumnsInlineDataReordered() {
-        String design = "<vaadin-grid><table>"//
+        String design = "<vaadin-legacy-grid><table>"//
                 + "<colgroup>" + "   <col sortable property-id='Col2' />"
                 + "   <col sortable property-id='Col3' />"
                 + "   <col sortable property-id='Col1' />" //
@@ -89,9 +89,9 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
                 + "<tr><td>Bar<td>Baz<td>Foo</tr>" //
                 + "<tr><td>Summer<td>Car<td>My</tr>" //
                 + "</tbody>" //
-                + "</table></vaadin-grid>";
+                + "</table></vaadin-legacy-grid>";
 
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.addColumn("Col1", String.class);
         grid.addColumn("Col2", String.class);
         grid.addColumn("Col3", String.class);
@@ -108,14 +108,14 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
 
     @Test
     public void testHtmlEntities() {
-        String design = "<vaadin-grid><table>"//
+        String design = "<vaadin-legacy-grid><table>"//
                 + "<colgroup>" + "   <col property-id='test' />" + "</colgroup>" //
                 + "<thead />" // No headers read or written
                 + "<tbody>" //
                 + "  <tr><td>&amp;Test</tr></td>" + "</tbody>"
-                + "</table></vaadin-grid>";
+                + "</table></vaadin-legacy-grid>";
 
-        Grid read = read(design);
+        LegacyGrid read = read(design);
         Container cds = read.getContainerDataSource();
         Assert.assertEquals("&amp;Test",
                 cds.getItem(cds.getItemIds().iterator().next())

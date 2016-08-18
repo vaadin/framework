@@ -25,10 +25,10 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.MethodProperty.MethodException;
 import com.vaadin.tests.data.bean.Person;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
 public class GridAddRowBuiltinContainerTest {
-    Grid grid = new Grid();
+    LegacyGrid grid = new LegacyGrid();
     Container.Indexed container;
 
     @Before

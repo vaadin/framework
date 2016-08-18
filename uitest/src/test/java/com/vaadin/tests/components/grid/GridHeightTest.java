@@ -93,7 +93,7 @@ public class GridHeightTest extends MultiBrowserTest {
                         .selectByText(detailsRowHeight);
                 sleep(500);
 
-                GridElement grid = $(GridElement.class).first();
+                GridElement grid = $(LegacyGridElement.class).first();
                 int initialHeight = grid.getSize().getHeight();
                 try {
                     // check default height

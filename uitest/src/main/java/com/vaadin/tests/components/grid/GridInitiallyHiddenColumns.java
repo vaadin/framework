@@ -18,13 +18,13 @@ package com.vaadin.tests.components.grid;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
 public class GridInitiallyHiddenColumns extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.setContainerDataSource(ComplexPerson.createContainer(100));
         grid.setColumns("firstName", "lastName", "age");
         grid.getColumn("firstName").setHidden(true).setHidable(true);

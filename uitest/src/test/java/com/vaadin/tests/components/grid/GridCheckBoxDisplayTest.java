@@ -31,7 +31,7 @@ public class GridCheckBoxDisplayTest extends SingleBrowserTest {
     public void testAddRow() {
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         Assert.assertEquals("First item had wrong value", "true",
                 grid.getCell(0, 0).getText());

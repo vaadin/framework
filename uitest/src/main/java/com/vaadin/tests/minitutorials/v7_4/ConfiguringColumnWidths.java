@@ -17,8 +17,8 @@ package com.vaadin.tests.minitutorials.v7_4;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.UI;
 
 @Theme("valo")
@@ -26,7 +26,7 @@ public class ConfiguringColumnWidths extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        Grid grid = new Grid(GridExampleHelper.createContainer());
+        LegacyGrid grid = new LegacyGrid(GridExampleHelper.createContainer());
         grid.setSelectionMode(SelectionMode.NONE);
         grid.setColumnOrder("name", "amount", "count");
 
@@ -35,31 +35,31 @@ public class ConfiguringColumnWidths extends UI {
         setContent(grid);
     }
 
-    private void setupCase1(Grid grid) {
+    private void setupCase1(LegacyGrid grid) {
         grid.getColumn("name").setExpandRatio(1);
     }
 
-    private void setupCase2(Grid grid) {
+    private void setupCase2(LegacyGrid grid) {
         grid.getColumn("name").setExpandRatio(1);
         grid.getColumn("amount").setWidth(100);
         grid.getColumn("count").setWidth(100);
     }
 
-    private void setupCase3(Grid grid) {
+    private void setupCase3(LegacyGrid grid) {
         grid.setWidth("400px");
         grid.getColumn("name").setExpandRatio(1);
         grid.getColumn("amount").setWidth(100);
         grid.getColumn("count").setWidth(100);
     }
 
-    private void setupCase4(Grid grid) {
+    private void setupCase4(LegacyGrid grid) {
         grid.setWidth("400px");
         grid.getColumn("name").setMinimumWidth(250);
         grid.getColumn("amount").setWidth(100);
         grid.getColumn("count").setWidth(100);
     }
 
-    private void setupCase5(Grid grid) {
+    private void setupCase5(LegacyGrid grid) {
         grid.setWidth("400px");
         grid.setFrozenColumnCount(1);
         grid.getColumn("name").setMinimumWidth(250);
@@ -67,7 +67,7 @@ public class ConfiguringColumnWidths extends UI {
         grid.getColumn("count").setWidth(100);
     }
 
-    private void setupCase6(Grid grid) {
+    private void setupCase6(LegacyGrid grid) {
         grid.setWidth("700px");
         grid.setFrozenColumnCount(1);
         grid.getColumn("name").setMinimumWidth(250);
@@ -75,12 +75,12 @@ public class ConfiguringColumnWidths extends UI {
         grid.getColumn("count").setWidth(100);
     }
 
-    private void setupCase(Grid grid, int number) {
+    private void setupCase(LegacyGrid grid, int number) {
         if (number == 0) {
             return;
         }
         try {
-            getClass().getDeclaredMethod("setupCase" + number, Grid.class)
+            getClass().getDeclaredMethod("setupCase" + number, LegacyGrid.class)
                     .invoke(this, grid);
         } catch (Exception e) {
             throw new RuntimeException(e);

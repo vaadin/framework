@@ -32,6 +32,6 @@ public class GridWithLabelEditorTest extends SingleBrowserTest {
         assertNoErrorNotifications();
 
         assertEquals("LabelEditor content not correct.", "FooFoo",
-                $(GridElement.class).first().getEditor().getField(0).getText());
+                $(LegacyGridElement.class).first().getEditor().getField(0).getText());
     }
 }

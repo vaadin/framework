@@ -19,7 +19,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
 public class JavaScriptRenderers extends AbstractTestUI {
 
@@ -66,7 +66,7 @@ public class JavaScriptRenderers extends AbstractTestUI {
             item.getItemProperty("string").setValue("string" + i);
         }
 
-        Grid grid = new Grid(container);
+        LegacyGrid grid = new LegacyGrid(container);
 
         grid.getColumn("bean").setRenderer(new MyBeanJSRenderer());
         grid.getColumn("bean").setWidth(250);

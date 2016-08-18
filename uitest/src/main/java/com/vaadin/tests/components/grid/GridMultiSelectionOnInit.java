@@ -19,15 +19,15 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.MultiSelectionModel;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.MultiSelectionModel;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 
 public class GridMultiSelectionOnInit extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final Grid grid = new Grid();
+        final LegacyGrid grid = new LegacyGrid();
         grid.addColumn("foo", String.class);
         grid.addRow("Foo 1");
         grid.addRow("Foo 2");

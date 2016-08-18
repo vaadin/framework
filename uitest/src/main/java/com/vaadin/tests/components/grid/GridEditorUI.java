@@ -19,7 +19,7 @@ import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.PersonContainer;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.PasswordField;
 
 public class GridEditorUI extends AbstractTestUI {
@@ -31,8 +31,8 @@ public class GridEditorUI extends AbstractTestUI {
         addComponent(createGrid(container));
     }
 
-    protected Grid createGrid(PersonContainer container) {
-        Grid grid = new Grid(container);
+    protected LegacyGrid createGrid(PersonContainer container) {
+        LegacyGrid grid = new LegacyGrid(container);
 
         // Don't use address since there's no converter
         grid.removeColumn("address");

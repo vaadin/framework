@@ -35,7 +35,7 @@ public class GridSwitchRenderersTest extends MultiBrowserTest {
 
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         Assert.assertTrue(
                 "Initial rendering of column 1 is not unformatted text",

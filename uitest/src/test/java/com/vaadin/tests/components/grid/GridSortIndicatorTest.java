@@ -29,7 +29,7 @@ public class GridSortIndicatorTest extends MultiBrowserTest {
     @Test
     public void testIndicators() throws InterruptedException {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         // Clicking the left header cell should set ascending sort order for
         // both columns.
         grid.getHeaderCell(0, 0).click();

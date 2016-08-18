@@ -32,7 +32,7 @@ public class GridMultiSelectionScrollBarTest extends MultiBrowserTest {
         openTestURL();
 
         assertTrue("Horizontal scrollbar should not be visible.",
-                $(GridElement.class).first().getHorizontalScroller()
+                $(LegacyGridElement.class).first().getHorizontalScroller()
                         .getAttribute("style").toLowerCase()
                         .contains("display: none;"));
 

@@ -35,7 +35,7 @@ public class GridCustomSelectionModelTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         GridCellElement cell = grid.getCell(0, 0);
         assertTrue("First column of Grid should not have an input element",
                 cell.findElements(By.className("input")).isEmpty());

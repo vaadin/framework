@@ -45,7 +45,7 @@ public class GridEditorUITest extends MultiBrowserTest {
     }
 
     private void openEditor(int rowIndex) {
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         GridCellElement cell = grid.getCell(rowIndex, 1);
 
@@ -57,7 +57,7 @@ public class GridEditorUITest extends MultiBrowserTest {
     }
 
     private GridCellElement getHeaderCell(int rowIndex, int colIndex) {
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         GridCellElement headerCell = grid.getHeaderCell(rowIndex, colIndex);
 

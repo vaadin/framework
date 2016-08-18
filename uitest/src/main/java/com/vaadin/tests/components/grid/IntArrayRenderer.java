@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.ui.Grid.AbstractRenderer;
+import com.vaadin.ui.LegacyGrid.AbstractRenderer;
 
 public class IntArrayRenderer extends AbstractRenderer<int[]> {
     public IntArrayRenderer() {

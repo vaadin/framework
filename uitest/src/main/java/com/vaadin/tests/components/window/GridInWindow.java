@@ -18,14 +18,14 @@ package com.vaadin.tests.components.window;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.Window;
 
 public class GridInWindow extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final Grid grid = new Grid();
+        final LegacyGrid grid = new LegacyGrid();
 
         grid.addColumn("Hidable column").setHidable(true);
         grid.addRow("Close and reopen and it vanishes");

@@ -35,7 +35,7 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
     @Before
     public void findGridCells() {
         openTestURL();
-        grid = $(GridElement.class).first();
+        grid = $(LegacyGridElement.class).first();
     }
 
     private GridCellElement getMergedHeaderCell() {

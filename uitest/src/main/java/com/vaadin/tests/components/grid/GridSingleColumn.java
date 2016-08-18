@@ -19,9 +19,9 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.Column;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 
 public class GridSingleColumn extends AbstractTestUI {
 
@@ -36,7 +36,7 @@ public class GridSingleColumn extends AbstractTestUI {
             addItem.getItemProperty("column1").setValue("cell");
         }
 
-        Grid grid = new Grid(indexedContainer);
+        LegacyGrid grid = new LegacyGrid(indexedContainer);
         grid.setSelectionMode(SelectionMode.NONE);
 
         Column column = grid.getColumn("column1");

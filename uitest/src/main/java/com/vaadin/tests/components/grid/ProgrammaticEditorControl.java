@@ -6,20 +6,20 @@ import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
 @SuppressWarnings("serial")
 // @Push
 public class ProgrammaticEditorControl extends AbstractTestUIWithLog {
 
-    private Grid grid;
+    private LegacyGrid grid;
     private IndexedContainer container = new IndexedContainer();
 
     @Override
     protected void setup(VaadinRequest request) {
         container.addContainerProperty("name", String.class, null);
         container.addItem("test").getItemProperty("name").setValue("test");
-        grid = new Grid();
+        grid = new LegacyGrid();
         grid.setContainerDataSource(container);
         grid.setEditorEnabled(true);
         addComponent(grid);

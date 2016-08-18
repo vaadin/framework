@@ -60,7 +60,7 @@ public class CustomRendererTest extends MultiBrowserTest {
     }
 
     private GridElement findGrid() {
-        List<GridElement> elements = $(GridElement.class).all();
+        List<LegacyGridElement> elements = $(LegacyGridElement.class).all();
         return elements.get(0);
     }
 

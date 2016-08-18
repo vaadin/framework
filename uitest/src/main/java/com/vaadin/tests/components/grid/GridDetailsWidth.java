@@ -20,10 +20,10 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.Grid.DetailsGenerator;
-import com.vaadin.ui.Grid.RowReference;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.Column;
+import com.vaadin.ui.LegacyGrid.DetailsGenerator;
+import com.vaadin.ui.LegacyGrid.RowReference;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
@@ -35,7 +35,7 @@ public class GridDetailsWidth extends AbstractTestUI {
         final VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
 
-        final Grid grid = new Grid();
+        final LegacyGrid grid = new LegacyGrid();
 
         Column column = grid.addColumn("Hello", String.class);
         for (int i = 0; i < 3; i++) {

@@ -20,14 +20,14 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.integration.FlagSeResource;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.renderers.ImageRenderer;
 
 public class GridWithBrokenRenderer extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final Grid grid = new Grid();
+        final LegacyGrid grid = new LegacyGrid();
         grid.addColumn("short", String.class);
         grid.addColumn("icon", Resource.class);
         grid.addColumn("country", String.class);

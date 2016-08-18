@@ -26,7 +26,7 @@ public class GridWithBrokenRendererTest extends SingleBrowserTest {
     @Test
     public void ensureRendered() {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
         assertRow(grid, 0, "FI", "", "Finland");
         assertRow(grid, 1, "SE", "", "Sweden");
     }

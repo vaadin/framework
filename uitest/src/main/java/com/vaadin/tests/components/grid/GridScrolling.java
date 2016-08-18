@@ -23,14 +23,14 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 public class GridScrolling extends AbstractTestUI {
 
-    private Grid grid;
+    private LegacyGrid grid;
 
     private IndexedContainer ds;
 
@@ -52,7 +52,7 @@ public class GridScrolling extends AbstractTestUI {
             }
         }
 
-        grid = new Grid(ds);
+        grid = new LegacyGrid(ds);
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.addComponent(grid);

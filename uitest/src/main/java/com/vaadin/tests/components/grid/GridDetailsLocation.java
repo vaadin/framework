@@ -23,10 +23,10 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.DetailsGenerator;
-import com.vaadin.ui.Grid.RowReference;
-import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.ui.LegacyGrid.DetailsGenerator;
+import com.vaadin.ui.LegacyGrid.RowReference;
+import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TextField;
@@ -51,14 +51,14 @@ public class GridDetailsLocation extends UI {
     };
 
     private TextField numberTextField;
-    private Grid grid;
+    private LegacyGrid grid;
 
     @Override
     protected void init(VaadinRequest request) {
 
         Layout layout = new VerticalLayout();
 
-        grid = new Grid(PersonContainer.createWithTestData(1000));
+        grid = new LegacyGrid(PersonContainer.createWithTestData(1000));
         grid.setSelectionMode(SelectionMode.NONE);
         layout.addComponent(grid);
 

@@ -24,18 +24,18 @@ import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.legacy.data.validator.LegacyIntegerRangeValidator;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.renderers.DateRenderer;
 
 public class BasicCrudGridEditorRow extends AbstractBasicCrud {
 
-    private Grid grid;
+    private LegacyGrid grid;
 
     @Override
     protected void setup(VaadinRequest request) {
         super.setup(request);
         formType.setVisible(false);
-        grid = new Grid();
+        grid = new LegacyGrid();
 
         grid.setContainerDataSource(container);
 

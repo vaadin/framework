@@ -29,7 +29,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.SortEvent;
 import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.shared.data.sort.SortDirection;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
 public class SortTest {
 
@@ -93,7 +93,7 @@ public class SortTest {
 
     private DummySortingIndexedContainer container;
     private RegisteringSortChangeListener listener;
-    private Grid grid;
+    private LegacyGrid grid;
 
     @Before
     public void setUp() {
@@ -102,7 +102,7 @@ public class SortTest {
 
         listener = new RegisteringSortChangeListener();
 
-        grid = new Grid(container);
+        grid = new LegacyGrid(container);
         grid.addSortListener(listener);
     }
 

@@ -21,14 +21,14 @@ import static org.junit.Assert.assertNull;
 
 import java.lang.reflect.Method;
 
+import com.vaadin.ui.LegacyGrid;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.ui.Grid;
 
-public class GridStaticSectionTest extends Grid {
+public class GridStaticSectionTest extends LegacyGrid {
 
     private Indexed dataSource = new IndexedContainer();
 
@@ -117,10 +117,10 @@ public class GridStaticSectionTest extends Grid {
     private void sanityCheck() throws Throwable {
         Method sanityCheckHeader;
         try {
-            sanityCheckHeader = Grid.Header.class
+            sanityCheckHeader = LegacyGrid.Header.class
                     .getDeclaredMethod("sanityCheck");
             sanityCheckHeader.setAccessible(true);
-            Method sanityCheckFooter = Grid.Footer.class
+            Method sanityCheckFooter = LegacyGrid.Footer.class
                     .getDeclaredMethod("sanityCheck");
             sanityCheckFooter.setAccessible(true);
             sanityCheckHeader.invoke(getHeader());

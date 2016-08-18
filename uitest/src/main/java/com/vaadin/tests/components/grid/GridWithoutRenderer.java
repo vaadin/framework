@@ -19,14 +19,14 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.PersonContainer;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.LegacyGrid;
 
 @Theme("valo")
 public class GridWithoutRenderer extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.setContainerDataSource(PersonContainer.createWithTestData());
         addComponent(grid);
 

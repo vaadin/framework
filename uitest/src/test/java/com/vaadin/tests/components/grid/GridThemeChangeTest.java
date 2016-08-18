@@ -38,13 +38,13 @@ public class GridThemeChangeTest extends MultiBrowserTest {
     public void testThemeChange() {
         openTestURL("debug");
 
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         int reindeerHeight = grid.getRow(0).getSize().getHeight();
 
         grid.getCell(0, 0).click();
 
-        grid = $(GridElement.class).first();
+        grid = $(LegacyGridElement.class).first();
         int valoHeight = grid.getRow(0).getSize().getHeight();
 
         Assert.assertTrue(

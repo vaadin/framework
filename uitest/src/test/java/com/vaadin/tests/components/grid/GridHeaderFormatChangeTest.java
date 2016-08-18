@@ -30,7 +30,7 @@ public class GridHeaderFormatChangeTest extends MultiBrowserTest {
     @Test
     public void testHeaderRetainsSelectAllForColumnRemoval() {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         // Assert that we do not have the select all checkbox
         Assert.assertTrue(
@@ -63,7 +63,7 @@ public class GridHeaderFormatChangeTest extends MultiBrowserTest {
     @Test
     public void testHeaderRetainsSelectAllForJoinColumnAdd() {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         // Assert that we do not have the select all checkbox
         Assert.assertTrue(
@@ -96,7 +96,7 @@ public class GridHeaderFormatChangeTest extends MultiBrowserTest {
     @Test
     public void selectAllShouldKeepState() {
         openTestURL();
-        GridElement grid = $(GridElement.class).first();
+        GridElement grid = $(LegacyGridElement.class).first();
 
         // Assert that we do not have the select all checkbox
         Assert.assertTrue(

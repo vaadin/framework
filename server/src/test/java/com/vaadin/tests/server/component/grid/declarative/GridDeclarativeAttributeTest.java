@@ -17,14 +17,14 @@ package com.vaadin.tests.server.component.grid.declarative;
 
 import static org.junit.Assert.assertSame;
 
+import com.vaadin.ui.LegacyGrid;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.design.DeclarativeTestBase;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.MultiSelectionModel;
-import com.vaadin.ui.Grid.NoSelectionModel;
-import com.vaadin.ui.Grid.SingleSelectionModel;
+import com.vaadin.ui.LegacyGrid.MultiSelectionModel;
+import com.vaadin.ui.LegacyGrid.NoSelectionModel;
+import com.vaadin.ui.LegacyGrid.SingleSelectionModel;
 
 /**
  * Tests declarative support for {@link Grid} properties.
@@ -32,15 +32,15 @@ import com.vaadin.ui.Grid.SingleSelectionModel;
  * @since
  * @author Vaadin Ltd
  */
-public class GridDeclarativeAttributeTest extends DeclarativeTestBase<Grid> {
+public class GridDeclarativeAttributeTest extends DeclarativeTestBase<LegacyGrid> {
 
     @Test
     public void testBasicAttributes() {
 
-        String design = "<vaadin-grid editable rows=20 frozen-columns=-1 "
+        String design = "<vaadin-legacy-grid editable rows=20 frozen-columns=-1 "
                 + "editor-save-caption='Tallenna' editor-cancel-caption='Peruuta' column-reordering-allowed>";
 
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.setEditorEnabled(true);
         grid.setHeightMode(HeightMode.ROW);
         grid.setHeightByRows(20);
@@ -55,10 +55,10 @@ public class GridDeclarativeAttributeTest extends DeclarativeTestBase<Grid> {
 
     @Test
     public void testFrozenColumnsAttributes() {
-        String design = "<vaadin-grid frozen-columns='2'><table>" //
-                + "<colgroup><col><col><col></colgroup></table></vaadin-grid>";
+        String design = "<vaadin-legacy-grid frozen-columns='2'><table>" //
+                + "<colgroup><col><col><col></colgroup></table></vaadin-legacy-grid>";
 
-        Grid grid = new Grid();
+        LegacyGrid grid = new LegacyGrid();
         grid.addColumn("property-0", String.class);
         grid.addColumn("property-1", String.class);
         grid.addColumn("property-2", String.class);
@@ -69,15 +69,15 @@ public class GridDeclarativeAttributeTest extends DeclarativeTestBase<Grid> {
 
     @Test
     public void testSelectionMode() {
-        String design = "<vaadin-grid selection-mode='none'>";
+        String design = "<vaadin-legacy-grid selection-mode='none'>";
         assertSame(NoSelectionModel.class,
                 read(design).getSelectionModel().getClass());
 
-        design = "<vaadin-grid selection-mode='single'>";
+        design = "<vaadin-legacy-grid selection-mode='single'>";
         assertSame(SingleSelectionModel.class,
                 read(design).getSelectionModel().getClass());
 
-        design = "<vaadin-grid selection-mode='multi'>";
+        design = "<vaadin-legacy-grid selection-mode='multi'>";
         assertSame(MultiSelectionModel.class,
                 read(design).getSelectionModel().getClass());
     }
