@@ -17,14 +17,14 @@ package com.vaadin.tests.server.component.grid;
 
 import java.util.Iterator;
 
-import com.vaadin.ui.LegacyGrid;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.FooterCell;
 import com.vaadin.ui.LegacyGrid.HeaderCell;
-import com.vaadin.ui.Label;
 
 public class GridChildrenTest {
 

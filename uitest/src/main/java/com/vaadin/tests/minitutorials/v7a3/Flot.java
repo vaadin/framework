@@ -24,6 +24,7 @@ import com.vaadin.annotations.JavaScript;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptFunction;
 import com.vaadin.ui.Notification;
+
 import elemental.json.JsonArray;
 
 @JavaScript({

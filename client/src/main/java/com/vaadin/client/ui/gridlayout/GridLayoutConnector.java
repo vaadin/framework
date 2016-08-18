@@ -18,12 +18,9 @@ package com.vaadin.client.ui.gridlayout;
 import java.util.Map.Entry;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.DirectionalManagedLayout;
-import com.vaadin.client.Paintable;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;

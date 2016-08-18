@@ -23,8 +23,8 @@ import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.CustomLayout;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class CustomLayoutWithMissingSlot extends AbstractTestUIWithLog {
 

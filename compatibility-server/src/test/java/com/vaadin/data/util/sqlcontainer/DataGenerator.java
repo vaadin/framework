@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.junit.Assert;
-import org.junit.Test;
 
 import com.vaadin.data.util.sqlcontainer.SQLTestsConstants.DB;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;

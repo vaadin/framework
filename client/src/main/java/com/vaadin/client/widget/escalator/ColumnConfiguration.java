@@ -18,6 +18,8 @@ package com.vaadin.client.widget.escalator;
 
 import java.util.Map;
 
+import com.vaadin.client.widgets.Escalator;
+
 /**
  * A representation of the columns in an instance of {@link Escalator}.
  *

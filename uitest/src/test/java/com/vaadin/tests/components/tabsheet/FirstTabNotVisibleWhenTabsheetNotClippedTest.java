@@ -1,12 +1,13 @@
 package com.vaadin.tests.components.tabsheet;
 
+import org.junit.Assert;
+import org.junit.Test;
+import org.openqa.selenium.WebElement;
+
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TabSheetElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import org.junit.Assert;
-import org.junit.Test;
-import org.openqa.selenium.WebElement;
 
 public class FirstTabNotVisibleWhenTabsheetNotClippedTest
         extends MultiBrowserTest {

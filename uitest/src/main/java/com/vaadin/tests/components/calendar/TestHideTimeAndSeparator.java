@@ -1,16 +1,13 @@
 package com.vaadin.tests.components.calendar;
 
+import java.util.Date;
+import java.util.Locale;
+
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
-import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 @Theme("tests-calendar")
 public class TestHideTimeAndSeparator extends AbstractTestUI {

@@ -24,10 +24,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
 
-import com.vaadin.ui.LegacyGrid;
-import com.vaadin.v7.ui.LegacyField;
-import com.vaadin.v7.ui.LegacyTextField;
-
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Assert;
@@ -42,6 +38,9 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.MockVaadinSession;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class GridEditorTest {
 

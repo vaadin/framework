@@ -25,7 +25,6 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import com.vaadin.tests.components.grid.LegacyGridElement;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -35,6 +34,7 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.tests.components.grid.LegacyGridElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 

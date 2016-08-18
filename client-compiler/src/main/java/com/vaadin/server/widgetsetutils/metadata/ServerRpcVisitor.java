@@ -24,8 +24,8 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.vaadin.client.metadata.TypeDataStore.MethodAttribute;
-import com.vaadin.shared.annotations.NoLoadingIndicator;
 import com.vaadin.shared.annotations.Delayed;
+import com.vaadin.shared.annotations.NoLoadingIndicator;
 
 public class ServerRpcVisitor extends TypeVisitor {
     @Override

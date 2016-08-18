@@ -1,14 +1,15 @@
 package com.vaadin.tests.extensions;
 
-import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import java.util.List;
+import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class IframeIsOpenedInNonIOSTest extends MultiBrowserTest {
 

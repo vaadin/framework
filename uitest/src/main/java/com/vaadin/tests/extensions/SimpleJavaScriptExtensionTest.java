@@ -28,6 +28,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.JavaScriptFunction;
 import com.vaadin.ui.Notification;
+
 import elemental.json.JsonArray;
 
 public class SimpleJavaScriptExtensionTest extends AbstractTestUI {

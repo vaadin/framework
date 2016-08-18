@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.window;
 
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import static org.junit.Assert.assertNotEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
@@ -10,7 +11,7 @@ import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import static org.junit.Assert.assertNotEquals;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class WindowMoveListenerTest extends MultiBrowserTest {
 

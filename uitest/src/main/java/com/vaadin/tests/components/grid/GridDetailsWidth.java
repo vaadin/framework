@@ -20,11 +20,11 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.Column;
 import com.vaadin.ui.LegacyGrid.DetailsGenerator;
 import com.vaadin.ui.LegacyGrid.RowReference;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 

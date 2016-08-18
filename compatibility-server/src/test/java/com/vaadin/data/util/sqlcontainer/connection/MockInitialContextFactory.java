@@ -4,8 +4,6 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 
-import org.junit.Test;
-
 /**
  * Provides a JNDI initial context factory for the MockContext.
  */

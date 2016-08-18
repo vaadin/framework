@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures.server;
 
-import com.vaadin.tests.components.grid.LegacyGridElement;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -24,6 +23,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.tests.components.grid.LegacyGridElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 public class LoadingIndicatorTest extends GridBasicFeaturesTest {

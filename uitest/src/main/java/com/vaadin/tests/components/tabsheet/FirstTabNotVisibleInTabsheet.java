@@ -1,12 +1,11 @@
 package com.vaadin.tests.components.tabsheet;
 
-import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServlet;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.*;
-
-import javax.servlet.annotation.WebServlet;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 public class FirstTabNotVisibleInTabsheet extends AbstractTestUI {

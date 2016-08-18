@@ -24,12 +24,12 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
-import com.vaadin.v7.ui.LegacyField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.LegacyField;
 
 /**
  * Browsable file explorer using Vaadin Tree component. Demonstrates: how to use

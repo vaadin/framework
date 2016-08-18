@@ -15,13 +15,14 @@
  */
 package com.vaadin.tests.components.notification;
 
-import com.vaadin.tests.tb3.MultiBrowserTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Test to check notification delay.

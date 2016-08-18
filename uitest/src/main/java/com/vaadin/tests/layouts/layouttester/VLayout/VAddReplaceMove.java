@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.layouts.layouttester.VLayout;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.tests.layouts.layouttester.BaseAddReplaceMove;
 import com.vaadin.ui.VerticalLayout;
 

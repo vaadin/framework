@@ -6,11 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
-
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.openqa.selenium.NoSuchElementException;
 
 import com.vaadin.testbench.By;

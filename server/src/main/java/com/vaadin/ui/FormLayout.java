@@ -20,8 +20,7 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.orderedlayout.FormLayoutState;
 
 /**
- * FormLayout is used by {@link Form} to layout fields. It may also be used
- * separately without {@link Form}.
+ * FormLayout is used to layout fields.
  *
  * FormLayout is a close relative of {@link VerticalLayout}, but in FormLayout
  * captions are rendered to the left of their respective components. Required

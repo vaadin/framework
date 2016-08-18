@@ -1,12 +1,12 @@
 package com.vaadin.data.util.filter;
 
-import junit.framework.TestCase;
-
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;
+
+import junit.framework.TestCase;
 
 public abstract class AbstractFilterTestBase<FILTERTYPE extends Filter>
         extends TestCase {

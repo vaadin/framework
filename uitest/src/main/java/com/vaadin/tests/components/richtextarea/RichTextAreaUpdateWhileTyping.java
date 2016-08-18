@@ -1,11 +1,7 @@
 package com.vaadin.tests.components.richtextarea;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorServerRpc;
-import com.vaadin.tests.components.AbstractComponentTest;
-import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.RichTextArea;

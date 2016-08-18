@@ -17,10 +17,10 @@ package com.vaadin.tests.server.component.grid.declarative;
 
 import java.util.List;
 
-import com.vaadin.ui.LegacyGrid;
 import org.junit.Assert;
 
 import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.Column;
 import com.vaadin.ui.LegacyGrid.FooterCell;
 import com.vaadin.ui.LegacyGrid.FooterRow;

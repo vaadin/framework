@@ -1,10 +1,11 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.testbench.elements.TableElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import java.io.IOException;
+
 import org.junit.Test;
 
-import java.io.IOException;
+import com.vaadin.testbench.elements.TableElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TableScrollsOnSelectionTest extends MultiBrowserTest {
 

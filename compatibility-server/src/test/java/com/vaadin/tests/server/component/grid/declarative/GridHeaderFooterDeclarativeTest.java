@@ -15,17 +15,17 @@
  */
 package com.vaadin.tests.server.component.grid.declarative;
 
-import com.vaadin.ui.LegacyGrid;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.Column;
 import com.vaadin.ui.LegacyGrid.FooterRow;
 import com.vaadin.ui.LegacyGrid.HeaderRow;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.declarative.DesignContext;
 
 public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {

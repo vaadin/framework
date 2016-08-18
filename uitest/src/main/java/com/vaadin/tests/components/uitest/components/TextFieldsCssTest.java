@@ -9,7 +9,6 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ChameleonTheme;
 import com.vaadin.ui.themes.Reindeer;
-import com.vaadin.v7.ui.LegacyTextField;
 
 public class TextFieldsCssTest extends GridLayout {
 

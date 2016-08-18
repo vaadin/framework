@@ -17,7 +17,6 @@ package com.vaadin.tests.components.table;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import junit.framework.Assert;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,6 +26,8 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import junit.framework.Assert;
 
 /**
  *

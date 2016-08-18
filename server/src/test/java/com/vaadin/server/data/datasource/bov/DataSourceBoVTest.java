@@ -15,19 +15,20 @@
  */
 package com.vaadin.server.data.datasource.bov;
 
-import com.vaadin.server.data.BackEndDataSource;
-import com.vaadin.server.data.DataSource;
-import com.vaadin.server.data.SortOrder;
-import com.vaadin.shared.data.sort.SortDirection;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.vaadin.server.data.BackEndDataSource;
+import com.vaadin.server.data.DataSource;
+import com.vaadin.server.data.SortOrder;
+import com.vaadin.shared.data.sort.SortDirection;
 
 /**
  * Vaadin 8 Example from Book of Vaadin

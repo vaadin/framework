@@ -11,8 +11,8 @@ import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.v7.ui.LegacyAbstractTextField.TextChangeEventMode;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TextChangeEvents2 extends TestBase {
     @Override

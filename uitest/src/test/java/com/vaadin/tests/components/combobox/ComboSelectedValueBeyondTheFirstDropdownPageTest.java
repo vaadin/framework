@@ -15,13 +15,14 @@
  */
 package com.vaadin.tests.components.combobox;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+import org.junit.Test;
+
 import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import org.junit.Test;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 @SuppressWarnings("serial")
 public class ComboSelectedValueBeyondTheFirstDropdownPageTest

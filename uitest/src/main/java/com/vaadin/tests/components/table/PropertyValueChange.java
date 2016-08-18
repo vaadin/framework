@@ -14,8 +14,8 @@ import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.v7.ui.LegacyField;
 import com.vaadin.ui.TableFieldFactory;
+import com.vaadin.v7.ui.LegacyField;
 
 public class PropertyValueChange extends TestBase {
 

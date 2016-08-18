@@ -16,7 +16,6 @@
 package com.vaadin.ui.renderers;
 
 import com.vaadin.ui.LegacyGrid.AbstractRenderer;
-import elemental.json.JsonValue;
 
 /**
  * A renderer for presenting simple plain-text string values.

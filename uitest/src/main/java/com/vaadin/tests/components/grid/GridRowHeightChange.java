@@ -1,5 +1,8 @@
 package com.vaadin.tests.components.grid;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.vaadin.data.Property;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -8,9 +11,6 @@ import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class GridRowHeightChange extends AbstractTestUI {
 

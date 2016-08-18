@@ -19,11 +19,11 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.CellReference;
 import com.vaadin.ui.LegacyGrid.CellStyleGenerator;
 import com.vaadin.ui.LegacyGrid.SelectionMode;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 
 public class GridInTabSheet extends AbstractTestUI {

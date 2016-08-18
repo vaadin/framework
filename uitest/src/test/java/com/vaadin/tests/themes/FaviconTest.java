@@ -1,14 +1,15 @@
 package com.vaadin.tests.themes;
 
-import com.vaadin.tests.tb3.SingleBrowserTest;
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.fail;
+import org.junit.Test;
+
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
 //Extending SingleBrowserTest just to include the test into our test suites.
 public class FaviconTest extends SingleBrowserTest {

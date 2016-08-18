@@ -18,6 +18,7 @@ package com.vaadin.server.communication;
 import java.lang.reflect.Type;
 
 import com.vaadin.ui.ConnectorTracker;
+
 import elemental.json.JsonValue;
 
 /**

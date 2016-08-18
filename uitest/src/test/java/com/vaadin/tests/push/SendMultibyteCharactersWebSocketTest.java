@@ -1,8 +1,8 @@
 package com.vaadin.tests.push;
 
-import org.openqa.selenium.remote.DesiredCapabilities;
-
 import java.util.List;
+
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class SendMultibyteCharactersWebSocketTest
         extends SendMultibyteCharactersTest {

@@ -34,7 +34,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.vaadin.ui.LegacyGrid;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -45,6 +44,7 @@ import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.Column;
 import com.vaadin.ui.LegacyGrid.ColumnResizeEvent;
 import com.vaadin.ui.LegacyGrid.ColumnResizeListener;

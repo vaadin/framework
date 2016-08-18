@@ -15,8 +15,9 @@
  */
 package com.vaadin.tests.server.component.grid.declarative;
 
-import com.vaadin.ui.LegacyGrid;
 import org.junit.Test;
+
+import com.vaadin.ui.LegacyGrid;
 
 public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
 

@@ -30,7 +30,6 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.server.FileDownloader;
-import com.vaadin.shared.VBrowserDetails;
 import com.vaadin.shared.ui.Connect;
 
 @Connect(FileDownloader.class)

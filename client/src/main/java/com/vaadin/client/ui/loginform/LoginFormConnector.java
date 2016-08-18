@@ -16,6 +16,7 @@
 
 package com.vaadin.client.ui.loginform;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -38,7 +39,6 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.loginform.LoginFormConstants;
 import com.vaadin.shared.ui.loginform.LoginFormRpc;
 import com.vaadin.shared.ui.loginform.LoginFormState;
-import com.google.gwt.core.client.Scheduler;
 
 @Connect(com.vaadin.ui.LoginForm.class)
 public class LoginFormConnector

@@ -32,8 +32,8 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 
 public abstract class AbstractClickEventHandler implements MouseDownHandler,
         MouseUpHandler, DoubleClickHandler, ContextMenuHandler {

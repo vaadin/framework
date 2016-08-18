@@ -20,8 +20,8 @@ import com.vaadin.server.JavaScriptCallbackHelper;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.shared.JavaScriptExtensionState;
 import com.vaadin.shared.communication.ServerRpc;
-import com.vaadin.ui.LegacyGrid.AbstractRenderer;
 import com.vaadin.ui.JavaScriptFunction;
+import com.vaadin.ui.LegacyGrid.AbstractRenderer;
 
 import elemental.json.Json;
 import elemental.json.JsonValue;

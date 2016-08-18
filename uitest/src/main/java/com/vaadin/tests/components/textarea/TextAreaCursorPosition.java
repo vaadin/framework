@@ -8,8 +8,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextArea;
 import com.vaadin.v7.ui.LegacyAbstractField;
 import com.vaadin.v7.ui.LegacyAbstractTextField;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.v7.ui.LegacyAbstractTextField.TextChangeEventMode;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TextAreaCursorPosition extends TestBase {
 

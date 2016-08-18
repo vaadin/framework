@@ -19,8 +19,6 @@ import java.util.List;
 
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.tests.tb3.WebsocketTest;
-
 public class BasicPushWebsocketXhrTest extends BasicPushTest {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {

@@ -22,8 +22,8 @@ import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.v7.ui.LegacyTextField;
 
 /**
  * Test to verify fields become implicitly "immediate" when adding value change

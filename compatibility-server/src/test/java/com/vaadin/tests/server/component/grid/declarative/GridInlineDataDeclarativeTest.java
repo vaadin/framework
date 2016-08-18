@@ -15,11 +15,11 @@
  */
 package com.vaadin.tests.server.component.grid.declarative;
 
-import com.vaadin.ui.LegacyGrid;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Container;
+import com.vaadin.ui.LegacyGrid;
 
 public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
 

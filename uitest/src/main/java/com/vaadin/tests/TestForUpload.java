@@ -46,9 +46,9 @@ import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.StartedEvent;
 import com.vaadin.ui.Upload.StartedListener;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.LegacyAbstractField;
 import com.vaadin.v7.ui.LegacyTextField;
-import com.vaadin.ui.VerticalLayout;
 
 public class TestForUpload extends CustomComponent
         implements Upload.ProgressListener {

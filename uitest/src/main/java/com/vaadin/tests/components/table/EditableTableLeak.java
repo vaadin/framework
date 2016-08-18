@@ -13,12 +13,12 @@ import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.ui.LegacyField;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.LegacyField;
 
 public class EditableTableLeak extends TestBase {
     private final Table table = new Table("ISO-3166 Country Codes and flags");

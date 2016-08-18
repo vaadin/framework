@@ -27,11 +27,9 @@ import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.vaadin.server.VaadinPortlet.VaadinHttpAndPortletRequest;
-import com.vaadin.server.VaadinPortletService;
 
 public abstract class VaadinHttpAndPortletRequestTestBase<T extends VaadinHttpAndPortletRequest> {
 

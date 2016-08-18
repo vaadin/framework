@@ -22,6 +22,7 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.communication.JSONSerializer;
+
 import elemental.json.JsonValue;
 
 public abstract class JsonSerializer implements GeneratedSerializer {

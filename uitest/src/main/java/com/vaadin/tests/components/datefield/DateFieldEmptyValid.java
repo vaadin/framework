@@ -14,8 +14,8 @@ import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.ui.LegacyPopupDateField;
 import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.LegacyPopupDateField;
 
 @SuppressWarnings("serial")
 public class DateFieldEmptyValid extends TestBase {

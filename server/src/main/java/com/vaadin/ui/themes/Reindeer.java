@@ -15,6 +15,11 @@
  */
 package com.vaadin.ui.themes;
 
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.VerticalLayout;
+
 public class Reindeer extends BaseTheme {
 
     public static final String THEME_NAME = "reindeer";

@@ -19,6 +19,7 @@ import java.lang.reflect.Type;
 import java.util.Date;
 
 import com.vaadin.ui.ConnectorTracker;
+
 import elemental.json.Json;
 import elemental.json.JsonValue;
 

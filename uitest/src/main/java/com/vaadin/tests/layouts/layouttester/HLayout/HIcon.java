@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.layouts.layouttester.HLayout;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.tests.layouts.layouttester.BaseIcon;
 import com.vaadin.ui.HorizontalLayout;
 

@@ -1,11 +1,12 @@
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.testbench.By;
-import com.vaadin.tests.tb3.*;
-import org.junit.*;
-import org.openqa.selenium.*;
+import java.io.IOException;
 
-import java.io.*;
+import org.junit.Test;
+import org.openqa.selenium.WebElement;
+
+import com.vaadin.testbench.By;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TableSortIndicatorTest extends MultiBrowserTest {
 

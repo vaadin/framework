@@ -16,6 +16,8 @@
 
 package com.vaadin.client.widget.escalator;
 
+import com.vaadin.client.widgets.Escalator;
+
 /**
  * An interface that allows client code to define how a certain row in Escalator
  * will be displayed. The contents of an escalator's header, body and footer are

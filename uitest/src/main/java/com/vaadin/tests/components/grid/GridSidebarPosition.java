@@ -19,8 +19,8 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.LegacyGrid;
 
 @Theme("valo")
 public class GridSidebarPosition extends AbstractTestUI {

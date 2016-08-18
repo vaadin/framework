@@ -1,13 +1,14 @@
 package com.vaadin.tests.components.formlayout;
 
-import com.vaadin.testbench.elements.TableElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import java.io.IOException;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
-import java.io.IOException;
+import com.vaadin.testbench.elements.TableElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TableInFormLayoutCausesScrollingTest extends MultiBrowserTest {
 

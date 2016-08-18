@@ -15,9 +15,9 @@
  */
 package com.vaadin.tests.server.component.grid.declarative;
 
-import com.vaadin.ui.LegacyGrid;
 import org.junit.Test;
 
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.declarative.DesignException;
 
 public class GridStructureDeclarativeTest extends GridDeclarativeTestBase {

@@ -1,14 +1,15 @@
 package com.vaadin.tests.themes.chameleon;
 
-import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.NotificationElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertThat;
+import org.junit.Test;
+
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ChameleonNotificationTest extends MultiBrowserTest {
     @Test

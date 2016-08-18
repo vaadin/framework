@@ -7,10 +7,10 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Notification;
 import com.vaadin.v7.data.util.converter.LegacyConverter;
 import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
 import com.vaadin.v7.ui.LegacyTextField;
-import com.vaadin.ui.Notification;
 
 public class StringMyTypeConverter extends AbstractTestUI {
 

@@ -8,12 +8,12 @@ import com.vaadin.server.DownloadStream;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Notification;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class GAESyncTest extends LegacyApplication {
 

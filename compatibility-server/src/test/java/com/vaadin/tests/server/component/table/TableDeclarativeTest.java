@@ -25,7 +25,6 @@ import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.Table.ColumnHeaderMode;
 import com.vaadin.ui.Table.RowHeaderMode;
 import com.vaadin.ui.Table.TableDragMode;
-import com.vaadin.ui.declarative.Design;
 
 /**
  * Test declarative support for {@link Table}.

@@ -11,7 +11,6 @@ import com.vaadin.ui.HasComponents.ComponentAttachEvent;
 import com.vaadin.ui.HasComponents.ComponentAttachListener;
 import com.vaadin.ui.HasComponents.ComponentDetachEvent;
 import com.vaadin.ui.HasComponents.ComponentDetachListener;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.NativeButton;
@@ -21,6 +20,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalSplitPanel;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public abstract class AbstractComponentContainerTest<T extends AbstractComponentContainer>
         extends AbstractComponentTest<T>

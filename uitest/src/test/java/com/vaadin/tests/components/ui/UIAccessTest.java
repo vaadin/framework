@@ -15,13 +15,14 @@
  */
 package com.vaadin.tests.components.ui;
 
-import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import static org.junit.Assert.assertTrue;
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class UIAccessTest extends MultiBrowserTest {
 

@@ -18,6 +18,7 @@ package com.vaadin.client.communication;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.metadata.Type;
+
 import elemental.json.JsonValue;
 
 /**

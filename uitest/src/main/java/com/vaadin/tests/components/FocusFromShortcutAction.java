@@ -6,8 +6,8 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.Select;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class FocusFromShortcutAction extends TestBase {
 

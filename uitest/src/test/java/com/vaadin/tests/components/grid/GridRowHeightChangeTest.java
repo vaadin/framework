@@ -1,15 +1,16 @@
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.Test;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public class GridRowHeightChangeTest extends MultiBrowserTest {
 

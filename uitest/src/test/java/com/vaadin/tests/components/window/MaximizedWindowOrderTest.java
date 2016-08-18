@@ -1,14 +1,14 @@
 package com.vaadin.tests.components.window;
 
-import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.tests.tb3.AbstractTB3Test;
-import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.newelements.WindowElement;
-import org.junit.Test;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
+
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.newelements.WindowElement;
 
 public class MaximizedWindowOrderTest extends MultiBrowserTest {
 

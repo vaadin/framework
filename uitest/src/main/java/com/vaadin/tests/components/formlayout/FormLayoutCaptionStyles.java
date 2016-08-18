@@ -3,8 +3,8 @@ package com.vaadin.tests.components.formlayout;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class FormLayoutCaptionStyles extends TestBase {
 

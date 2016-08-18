@@ -27,10 +27,10 @@ import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.renderers.ButtonRenderer;
-import com.vaadin.ui.renderers.ImageRenderer;
-import com.vaadin.ui.renderers.ProgressBarRenderer;
 import com.vaadin.ui.renderers.ClickableRenderer.RendererClickEvent;
 import com.vaadin.ui.renderers.ClickableRenderer.RendererClickListener;
+import com.vaadin.ui.renderers.ImageRenderer;
+import com.vaadin.ui.renderers.ProgressBarRenderer;
 
 @SuppressWarnings("all")
 public class WidgetRenderers extends AbstractTestUI {

@@ -21,12 +21,12 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.vaadin.ui.LegacyGrid;
 import org.junit.Test;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.AbstractInMemoryContainer;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.Column;
 
 public class GridContainerNotSortableTest {

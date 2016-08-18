@@ -19,15 +19,15 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
-import com.vaadin.ui.LegacyGrid;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.DetailsGenerator;
 import com.vaadin.ui.LegacyGrid.RowReference;
-import com.vaadin.ui.Label;
 
 public class GridContainerTest {
 

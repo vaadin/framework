@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.vaadin.v7.ui.LegacyField;
+
 /**
  * Defines the custom property name to be bound to a {@link LegacyField} using
  * {@link FieldGroup} or {@link BeanFieldGroup}.

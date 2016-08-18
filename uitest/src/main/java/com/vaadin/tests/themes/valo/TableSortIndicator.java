@@ -1,9 +1,9 @@
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.annotations.*;
-import com.vaadin.server.*;
-import com.vaadin.tests.components.*;
-import com.vaadin.ui.*;
+import com.vaadin.annotations.Theme;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.Table;
 
 @Theme("valo")
 public class TableSortIndicator extends AbstractTestUI {

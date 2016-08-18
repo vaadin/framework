@@ -6,11 +6,11 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractSelect.ItemDescriptionGenerator;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TableItemDescriptionGeneratorUI extends AbstractTestUI {
 

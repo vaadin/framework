@@ -17,8 +17,8 @@ import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.v7.data.util.converter.LegacyConverter;
-import com.vaadin.v7.data.util.converter.LegacyStringToIntegerConverter;
 import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
+import com.vaadin.v7.data.util.converter.LegacyStringToIntegerConverter;
 import com.vaadin.v7.ui.LegacyTextField;
 
 public class AbsFieldValueConversionsTest {

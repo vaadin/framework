@@ -19,13 +19,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import com.vaadin.ui.LegacyGrid;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.ui.LegacyGrid;
 
 public class GridColumnAddingAndRemovingTest {
 

@@ -15,15 +15,16 @@
  */
 package com.vaadin.ui;
 
-import com.vaadin.server.VaadinRequest;
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.vaadin.server.VaadinRequest;
 
 public class UIThemeEscapingTest {
 

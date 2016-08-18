@@ -17,15 +17,14 @@ package com.vaadin.tests.components.abstractcomponent;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import com.vaadin.testbench.elements.ButtonElement;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class PrimaryStyleTest extends MultiBrowserTest {

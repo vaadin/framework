@@ -21,12 +21,12 @@ import static org.junit.Assert.assertNull;
 
 import java.lang.reflect.Method;
 
-import com.vaadin.ui.LegacyGrid;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.ui.LegacyGrid;
 
 public class GridStaticSectionTest extends LegacyGrid {
 

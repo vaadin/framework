@@ -2,8 +2,6 @@ package com.vaadin.data.util.sqlcontainer;
 
 import java.util.List;
 
-import org.junit.Test;
-
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.sqlcontainer.SQLTestsConstants.DB;
 import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;

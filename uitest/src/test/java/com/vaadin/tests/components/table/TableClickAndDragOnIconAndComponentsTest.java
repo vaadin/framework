@@ -17,20 +17,16 @@ package com.vaadin.tests.components.table;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.SingleBrowserTest;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.TableElement;
-import org.openqa.selenium.interactions.Actions;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Tests that clicking on active fields doesn't change Table selection, nor does

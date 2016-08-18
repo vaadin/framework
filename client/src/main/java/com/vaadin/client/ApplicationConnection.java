@@ -53,6 +53,7 @@ import com.vaadin.client.communication.ServerRpcQueue;
 import com.vaadin.client.componentlocator.ComponentLocator;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.FontIcon;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;

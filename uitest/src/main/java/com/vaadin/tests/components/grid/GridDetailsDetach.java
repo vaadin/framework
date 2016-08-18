@@ -23,11 +23,11 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.DetailsGenerator;
 import com.vaadin.ui.LegacyGrid.RowReference;
 import com.vaadin.ui.LegacyGrid.SelectionMode;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 public class GridDetailsDetach extends AbstractTestUI {

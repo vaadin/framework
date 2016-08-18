@@ -36,8 +36,8 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.LegacyTextField;
 
 /**
  * Adapted from old PortletDemo to support integration testing.

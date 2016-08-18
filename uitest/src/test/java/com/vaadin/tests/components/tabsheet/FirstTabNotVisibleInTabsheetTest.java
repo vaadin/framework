@@ -1,10 +1,12 @@
 package com.vaadin.tests.components.tabsheet;
 
+import org.junit.Test;
+
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TabSheetElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
 import junit.framework.Assert;
-import org.junit.Test;
 
 public class FirstTabNotVisibleInTabsheetTest extends MultiBrowserTest {
     @Test

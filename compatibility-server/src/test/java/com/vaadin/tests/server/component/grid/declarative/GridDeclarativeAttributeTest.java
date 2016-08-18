@@ -17,22 +17,23 @@ package com.vaadin.tests.server.component.grid.declarative;
 
 import static org.junit.Assert.assertSame;
 
-import com.vaadin.ui.LegacyGrid;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.MultiSelectionModel;
 import com.vaadin.ui.LegacyGrid.NoSelectionModel;
 import com.vaadin.ui.LegacyGrid.SingleSelectionModel;
 
 /**
- * Tests declarative support for {@link Grid} properties.
+ * Tests declarative support for Grid properties.
  *
  * @since
  * @author Vaadin Ltd
  */
-public class GridDeclarativeAttributeTest extends DeclarativeTestBase<LegacyGrid> {
+public class GridDeclarativeAttributeTest
+        extends DeclarativeTestBase<LegacyGrid> {
 
     @Test
     public void testBasicAttributes() {

@@ -15,8 +15,6 @@
  */
 package com.vaadin.ui.renderers;
 
-import elemental.json.JsonValue;
-
 /**
  * A Renderer that displays a button with a textual caption. The value of the
  * corresponding property is used as the caption. Click listeners can be added

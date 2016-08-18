@@ -1,10 +1,9 @@
 package com.vaadin.tests.components.grid.basicfeatures;
 
-import com.vaadin.tests.components.grid.LegacyGridElement;
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
+import com.vaadin.tests.components.grid.LegacyGridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @SuppressWarnings("all")

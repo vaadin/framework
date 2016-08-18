@@ -18,10 +18,9 @@ package com.vaadin.tests.components.grid.basicfeatures.server;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.vaadin.tests.components.grid.LegacyGridElement;
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.tests.components.grid.LegacyGridElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 public class GridScrollTest extends GridBasicFeaturesTest {

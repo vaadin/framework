@@ -54,8 +54,8 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DateTimeService;
-import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.util.SharedUtil;
 

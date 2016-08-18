@@ -17,9 +17,9 @@ package com.vaadin.tests.server.component.grid;
 
 import static org.junit.Assert.assertTrue;
 
-import com.vaadin.ui.LegacyGrid;
 import org.junit.Test;
 
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.AbstractGridExtension;
 
 public class GridExtensionTest {

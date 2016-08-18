@@ -14,11 +14,6 @@ import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.v7.data.util.converter.LegacyStringToBooleanConverter;
-import com.vaadin.v7.data.validator.LegacyEmailValidator;
-import com.vaadin.v7.data.validator.LegacyIntegerRangeValidator;
-import com.vaadin.v7.data.validator.LegacyStringLengthValidator;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Notification;
@@ -26,6 +21,11 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.util.converter.LegacyStringToBooleanConverter;
+import com.vaadin.v7.data.validator.LegacyEmailValidator;
+import com.vaadin.v7.data.validator.LegacyIntegerRangeValidator;
+import com.vaadin.v7.data.validator.LegacyStringLengthValidator;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class BasicPersonForm extends AbstractTestUIWithLog {
 

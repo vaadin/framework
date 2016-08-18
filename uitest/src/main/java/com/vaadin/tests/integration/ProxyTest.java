@@ -18,12 +18,12 @@ package com.vaadin.tests.integration;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.eclipse.jetty.proxy.ProxyServlet;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.proxy.ProxyServlet;
 
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.server.ExternalResource;

@@ -20,9 +20,9 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.GridContextClickEvent;
-import com.vaadin.ui.HorizontalLayout;
 
 public class GridContextClick
         extends AbstractContextClickUI<LegacyGrid, GridContextClickEvent> {

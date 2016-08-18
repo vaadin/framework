@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.vaadin.ui.LegacyGrid;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,6 +28,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.MultiSelectionModel;
 import com.vaadin.ui.LegacyGrid.SelectionMode;
 

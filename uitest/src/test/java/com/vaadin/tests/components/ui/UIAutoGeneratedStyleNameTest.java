@@ -15,13 +15,14 @@
  */
 package com.vaadin.tests.components.ui;
 
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import java.util.Locale;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import java.util.Locale;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Test to check auto-generated style name for UI div and overlays div.

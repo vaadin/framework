@@ -25,8 +25,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.util.ReflectTools;
 import com.vaadin.v7.ui.LegacyField;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.v7.ui.LegacyField.ValueChangeEvent;
+import com.vaadin.v7.ui.LegacyTextField;
 
 /**
  * Interface that serves as a wrapper for {@link LegacyField} related events.

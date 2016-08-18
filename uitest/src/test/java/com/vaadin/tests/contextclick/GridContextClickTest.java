@@ -17,12 +17,11 @@ package com.vaadin.tests.contextclick;
 
 import static org.junit.Assert.assertEquals;
 
-import com.vaadin.tests.components.grid.LegacyGridElement;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.tests.components.grid.LegacyGridElement;
 
 public class GridContextClickTest extends AbstractContextClickTest {
 

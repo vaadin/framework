@@ -7,9 +7,9 @@ import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeButton;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class LoadingIndicatorConfigurationTest extends AbstractTestUIWithLog {
 

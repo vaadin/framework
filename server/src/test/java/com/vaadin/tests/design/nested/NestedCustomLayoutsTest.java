@@ -15,20 +15,31 @@
  */
 package com.vaadin.tests.design.nested;
 
-import com.vaadin.tests.design.nested.customlayouts.*;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.declarative.Design;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
+import com.vaadin.tests.design.nested.customlayouts.CustomAbsoluteLayout;
+import com.vaadin.tests.design.nested.customlayouts.CustomAccordion;
+import com.vaadin.tests.design.nested.customlayouts.CustomCssLayout;
+import com.vaadin.tests.design.nested.customlayouts.CustomFormLayout;
+import com.vaadin.tests.design.nested.customlayouts.CustomGridLayout;
+import com.vaadin.tests.design.nested.customlayouts.CustomHorizontalLayout;
+import com.vaadin.tests.design.nested.customlayouts.CustomHorizontalSplitPanel;
+import com.vaadin.tests.design.nested.customlayouts.CustomPanel;
+import com.vaadin.tests.design.nested.customlayouts.CustomTabSheet;
+import com.vaadin.tests.design.nested.customlayouts.CustomVerticalLayout;
+import com.vaadin.tests.design.nested.customlayouts.CustomVerticalSplitPanel;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.declarative.Design;
 
 /**
  * Test case for nested custom layouts. The children of the custom layouts must

@@ -15,17 +15,15 @@
  */
 package com.vaadin.tests.components.checkbox;
 
-import static org.junit.Assert.assertEquals;
-
-import com.vaadin.testbench.elements.CheckBoxElement;
-import com.vaadin.testbench.elements.LabelElement;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
-import com.vaadin.tests.tb3.MultiBrowserTest;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+
+import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class CheckBoxRpcCountTest extends MultiBrowserTest {
 

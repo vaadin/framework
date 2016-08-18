@@ -21,13 +21,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
-import com.vaadin.ui.LegacyGrid;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.SelectionMode;
 import com.vaadin.ui.LegacyGrid.SelectionModel;
 
