@@ -9,26 +9,61 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.Listing;
 import com.vaadin.server.data.BackEndDataSource;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.server.data.ListDataSource;
 import com.vaadin.server.data.Query;
+import com.vaadin.server.data.TypedDataGenerator;
 import com.vaadin.ui.AbstractListing;
 
+import elemental.json.JsonObject;
+
 public class AbstractListingTest {
+
+    private final class TestListing extends AbstractListing<String> {
+
+        @Override
+        public void addDataGenerator(TypedDataGenerator<String> generator) {
+            super.addDataGenerator(generator);
+        }
+
+        @Override
+        public void removeDataGenerator(TypedDataGenerator<String> generator) {
+            super.removeDataGenerator(generator);
+        }
+
+        /**
+         * Used to execute data generation
+         */
+        public void runDataGeneration() {
+            super.getDataCommunicator().beforeClientResponse(true);
+        }
+    }
+
+    private final class CountGenerator implements TypedDataGenerator<String> {
+
+        int callCount = 0;
+
+        @Override
+        public void generateData(String data, JsonObject jsonObject) {
+            ++callCount;
+        }
+
+        @Override
+        public void destroyData(String data) {
+        }
+    }
 
     private static final String[] ITEM_ARRAY = new String[] { "Foo", "Bar",
             "Baz" };
 
-    private Listing<String> listing;
+    private TestListing listing;
     private List<String> items;
 
     @Before
     public void setUp() {
         items = new ArrayList<>(Arrays.asList(ITEM_ARRAY));
-        listing = new AbstractListing<String>() {
-        };
+        listing = new TestListing();
     }
 
     @Test
@@ -62,5 +97,36 @@ public class AbstractListingTest {
                 q -> ITEM_ARRAY.length));
         Assert.assertNotEquals("setDataSource did not replace data source",
                 dataSource, listing.getDataSource());
+    }
+
+    @Test
+    public void testAddDataGeneartorBeforeDataSource() {
+        CountGenerator generator = new CountGenerator();
+        listing.addDataGenerator(generator);
+        listing.setItems("Foo");
+        listing.runDataGeneration();
+        Assert.assertEquals("Generator should have been called once", 1,
+                generator.callCount);
+    }
+
+    @Test
+    public void testAddDataGeneartorAfterDataSource() {
+        CountGenerator generator = new CountGenerator();
+        listing.setItems("Foo");
+        listing.addDataGenerator(generator);
+        listing.runDataGeneration();
+        Assert.assertEquals("Generator should have been called once", 1,
+                generator.callCount);
+    }
+
+    @Test
+    public void testRemoveDataGeneartor() {
+        listing.setItems("Foo");
+        CountGenerator generator = new CountGenerator();
+        listing.addDataGenerator(generator);
+        listing.removeDataGenerator(generator);
+        listing.runDataGeneration();
+        Assert.assertEquals("Generator should not have been called", 0,
+                generator.callCount);
     }
 }
