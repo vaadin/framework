@@ -21,12 +21,12 @@ import java.util.Map;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
-import com.vaadin.legacy.ui.LegacyAbstractField;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.textarea.RichTextAreaState;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.v7.ui.LegacyAbstractField;
+import com.vaadin.v7.ui.LegacyTextField;
 
 /**
  * A simple RichTextArea to edit HTML format text.

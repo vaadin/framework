@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.legacy.data.validator.LegacyFloatRangeValidator;
+import com.vaadin.v7.data.validator.LegacyFloatRangeValidator;
 
 public class FloatRangeValidatorTest {
 

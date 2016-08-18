@@ -19,10 +19,10 @@ package com.vaadin.ui;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
-import com.vaadin.legacy.ui.LegacyAbstractTextField;
 import com.vaadin.shared.ui.textarea.TextAreaState;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
+import com.vaadin.v7.ui.LegacyAbstractTextField;
 
 /**
  * A text field that supports multi line editing.

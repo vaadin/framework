@@ -4,12 +4,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.vaadin.data.util.MethodProperty;
-import com.vaadin.legacy.data.Validator;
-import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.SystemError;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.ui.LegacyAbstractField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Select;

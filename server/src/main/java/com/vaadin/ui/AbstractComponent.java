@@ -40,7 +40,6 @@ import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.ContextClickEvent.ContextClickListener;
 import com.vaadin.event.ContextClickEvent.ContextClickNotifier;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ComponentSizeValidator;
@@ -63,6 +62,7 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.util.ReflectTools;
+import com.vaadin.v7.ui.LegacyField;
 
 /**
  * An abstract class that defines default implementation for the

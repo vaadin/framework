@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.legacy.ui.LegacyInlineDateField;
+import com.vaadin.v7.ui.LegacyInlineDateField;
 
 public class LegacyInlineDateFieldTest
         extends LegacyDateFieldTest<LegacyInlineDateField> {

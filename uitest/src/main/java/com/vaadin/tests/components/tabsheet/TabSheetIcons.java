@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.tabsheet;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TabSheetIcons extends TestBase {
 

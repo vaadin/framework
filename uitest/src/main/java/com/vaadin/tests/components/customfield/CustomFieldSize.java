@@ -15,12 +15,12 @@
  */
 package com.vaadin.tests.components.customfield;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.LegacyTextField;
 
 /**
  *

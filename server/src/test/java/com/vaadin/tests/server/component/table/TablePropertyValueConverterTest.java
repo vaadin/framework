@@ -34,8 +34,8 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.ui.Table;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
 
 public class TablePropertyValueConverterTest {
     protected TestableTable table;
@@ -90,14 +90,14 @@ public class TablePropertyValueConverterTest {
             @Override
             public String convertToModel(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                    throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                 return "model";
             }
 
             @Override
             public String convertToPresentation(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                    throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                 return "presentation";
             }
 
@@ -120,7 +120,7 @@ public class TablePropertyValueConverterTest {
                     public BaseClass convertToModel(String value,
                             Class<? extends BaseClass> targetType,
                             Locale locale)
-                            throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                            throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                         return new BaseClass("model");
                     }
 
@@ -137,7 +137,7 @@ public class TablePropertyValueConverterTest {
                     @Override
                     public String convertToPresentation(BaseClass value,
                             Class<? extends String> targetType, Locale locale)
-                            throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                            throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                         return null;
                     }
                 });
@@ -149,7 +149,7 @@ public class TablePropertyValueConverterTest {
                     public DerivedClass convertToModel(String value,
                             Class<? extends DerivedClass> targetType,
                             Locale locale)
-                            throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                            throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                         return new DerivedClass("derived" + 1001);
                     }
 
@@ -166,7 +166,7 @@ public class TablePropertyValueConverterTest {
                     @Override
                     public String convertToPresentation(DerivedClass value,
                             Class<? extends String> targetType, Locale locale)
-                            throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                            throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                         return null;
                     }
                 });
@@ -198,14 +198,14 @@ public class TablePropertyValueConverterTest {
                     @Override
                     public Integer convertToModel(String value,
                             Class<? extends Integer> targetType, Locale locale)
-                            throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                            throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                         return 11;
                     }
 
                     @Override
                     public String convertToPresentation(Integer value,
                             Class<? extends String> targetType, Locale locale)
-                            throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                            throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                         return "presentation";
                     }
 
@@ -241,14 +241,14 @@ public class TablePropertyValueConverterTest {
             @Override
             public String convertToModel(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                    throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                 return "model";
             }
 
             @Override
             public String convertToPresentation(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                    throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                 return "presentation";
             }
 
@@ -270,14 +270,14 @@ public class TablePropertyValueConverterTest {
             @Override
             public String convertToModel(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                    throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                 return "model2";
             }
 
             @Override
             public String convertToPresentation(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                    throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                 return "presentation2";
             }
 

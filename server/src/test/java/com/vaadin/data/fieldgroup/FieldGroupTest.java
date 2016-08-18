@@ -13,8 +13,8 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.Transactional;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.TransactionalPropertyWrapper;
-import com.vaadin.legacy.ui.LegacyField;
-import com.vaadin.legacy.ui.LegacyTextField;
+import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class FieldGroupTest {
 

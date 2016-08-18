@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.popupview;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.PopupView.Content;
+import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")

@@ -8,12 +8,12 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.v7.ui.LegacyAbstractField;
 
 public abstract class AbstractComponentDataBindingTest extends TestBase
         implements ValueChangeListener {

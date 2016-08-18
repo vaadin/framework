@@ -6,12 +6,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.legacy.data.Validator;
-import com.vaadin.legacy.data.Validator.InvalidValueException;
-import com.vaadin.legacy.data.validator.LegacyEmailValidator;
-import com.vaadin.legacy.data.validator.LegacyRegexpValidator;
-import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
-import com.vaadin.legacy.ui.LegacyTextField;
+import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.data.Validator.InvalidValueException;
+import com.vaadin.v7.data.validator.LegacyEmailValidator;
+import com.vaadin.v7.data.validator.LegacyRegexpValidator;
+import com.vaadin.v7.data.validator.LegacyStringLengthValidator;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TextFieldWithValidatorTest {
 

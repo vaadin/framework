@@ -4,11 +4,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import com.vaadin.annotations.Viewport;
-import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
-import com.vaadin.legacy.data.validator.LegacyIntegerRangeValidator;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
+import com.vaadin.v7.data.util.converter.LegacyStringToIntegerConverter;
+import com.vaadin.v7.data.validator.LegacyIntegerRangeValidator;
+import com.vaadin.v7.ui.LegacyTextField;
 
 @Viewport(value = "width=device-width,height=device-height")
 public class TouchDevicesTooltip extends AbstractTestUI {

@@ -28,8 +28,8 @@ import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.testbench.parallel.TestCategory;
-import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserThemeTest;
+import com.vaadin.v7.tests.elements.LegacyDateFieldElement;
 
 @TestCategory("grid")
 public class GridThemeUITest extends MultiBrowserThemeTest {

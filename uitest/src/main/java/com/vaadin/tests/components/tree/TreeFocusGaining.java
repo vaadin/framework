@@ -3,10 +3,10 @@ package com.vaadin.tests.components.tree;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.ItemClickEvent;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Tree;
+import com.vaadin.v7.ui.LegacyTextField;
 
 @SuppressWarnings("serial")
 public class TreeFocusGaining extends TestBase {

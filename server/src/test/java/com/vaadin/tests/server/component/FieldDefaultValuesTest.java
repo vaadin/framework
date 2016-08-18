@@ -21,9 +21,9 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.ui.Slider;
+import com.vaadin.v7.ui.LegacyField;
 
 public class FieldDefaultValuesTest {
 

@@ -19,10 +19,10 @@ package com.vaadin.ui;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
-import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.shared.ui.progressindicator.ProgressBarState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.v7.ui.LegacyAbstractField;
 
 /**
  * Shows the current progress of a long running task.

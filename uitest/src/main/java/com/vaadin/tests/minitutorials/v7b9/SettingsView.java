@@ -5,8 +5,6 @@ import java.util.Date;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.legacy.ui.LegacyDateField;
-import com.vaadin.legacy.ui.LegacyInlineDateField;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -19,6 +17,8 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.v7.ui.LegacyDateField;
+import com.vaadin.v7.ui.LegacyInlineDateField;
 
 public class SettingsView extends Panel implements View {
 

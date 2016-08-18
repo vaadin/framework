@@ -4,10 +4,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.legacy.data.Validator.InvalidValueException;
-import com.vaadin.legacy.data.validator.LegacyBeanValidator;
-import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.tests.data.bean.BeanToValidate;
+import com.vaadin.v7.data.Validator.InvalidValueException;
+import com.vaadin.v7.data.validator.LegacyBeanValidator;
+import com.vaadin.v7.ui.LegacyField;
 
 public class BeanValidationTest {
     @Test(expected = InvalidValueException.class)

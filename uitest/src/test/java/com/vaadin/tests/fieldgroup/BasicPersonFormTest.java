@@ -25,9 +25,9 @@ import com.vaadin.testbench.elements.TableRowElement;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.data.bean.Sex;
-import com.vaadin.tests.legacyelements.LegacyTextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.tb3.newelements.FixedNotificationElement;
+import com.vaadin.v7.tests.elements.LegacyTextFieldElement;
 
 public abstract class BasicPersonFormTest extends MultiBrowserTest {
 

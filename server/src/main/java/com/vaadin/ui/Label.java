@@ -23,13 +23,13 @@ import java.util.Locale;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.data.util.converter.LegacyConverterUtil;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.ui.label.LabelState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.LegacyConverterUtil;
 
 /**
  * Label component for showing non-editable short texts.

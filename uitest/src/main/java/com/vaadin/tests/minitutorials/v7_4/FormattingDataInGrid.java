@@ -19,8 +19,6 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.LegacyGrid.CellReference;
@@ -28,6 +26,8 @@ import com.vaadin.ui.LegacyGrid.CellStyleGenerator;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.NumberRenderer;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.LegacyStringToIntegerConverter;
 
 @Theme("valo")
 public class FormattingDataInGrid extends UI {

@@ -10,9 +10,9 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.legacy.ui.LegacyField;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.RichTextArea;
+import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class BeanFieldGroupTest {
 
@@ -132,7 +132,7 @@ public class BeanFieldGroupTest {
         BeanFieldGroup<MyBean> bfg = new BeanFieldGroup<MyBean>(MyBean.class);
         bfg.setItemDataSource(bean);
 
-        com.vaadin.legacy.ui.LegacyField<?> helloField = bfg
+        com.vaadin.v7.ui.LegacyField<?> helloField = bfg
                 .buildAndBind("Hello string", "nestedBean.hello");
         assertEquals(bean.nestedBean.hello, helloField.getValue().toString());
     }

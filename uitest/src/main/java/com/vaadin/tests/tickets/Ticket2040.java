@@ -1,9 +1,9 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout.MarginHandler;
+import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextArea;
 

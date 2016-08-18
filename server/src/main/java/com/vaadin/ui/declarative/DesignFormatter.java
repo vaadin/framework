@@ -31,10 +31,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.jsoup.parser.Parser;
 
 import com.vaadin.event.ShortcutAction;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.data.util.converter.LegacyStringToBigDecimalConverter;
-import com.vaadin.legacy.data.util.converter.LegacyStringToDoubleConverter;
-import com.vaadin.legacy.data.util.converter.LegacyStringToFloatConverter;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.declarative.converters.DesignDateConverter;
@@ -44,6 +40,10 @@ import com.vaadin.ui.declarative.converters.DesignResourceConverter;
 import com.vaadin.ui.declarative.converters.DesignShortcutActionConverter;
 import com.vaadin.ui.declarative.converters.DesignTimeZoneConverter;
 import com.vaadin.ui.declarative.converters.DesignToStringConverter;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.LegacyStringToBigDecimalConverter;
+import com.vaadin.v7.data.util.converter.LegacyStringToDoubleConverter;
+import com.vaadin.v7.data.util.converter.LegacyStringToFloatConverter;
 
 /**
  * Class focused on flexible and consistent formatting and parsing of different

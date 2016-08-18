@@ -27,8 +27,6 @@ import org.junit.Test;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.server.component.grid.TestGrid;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
@@ -40,6 +38,8 @@ import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.NumberRenderer;
 import com.vaadin.ui.renderers.TextRenderer;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.LegacyStringToIntegerConverter;
 
 import elemental.json.JsonValue;
 

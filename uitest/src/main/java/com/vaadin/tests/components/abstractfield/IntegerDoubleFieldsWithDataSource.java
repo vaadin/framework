@@ -3,11 +3,11 @@ package com.vaadin.tests.components.abstractfield;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.legacy.data.validator.LegacyDoubleValidator;
-import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
+import com.vaadin.v7.data.validator.LegacyDoubleValidator;
+import com.vaadin.v7.data.validator.LegacyIntegerValidator;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class IntegerDoubleFieldsWithDataSource extends TestBase {
 

@@ -43,7 +43,6 @@ import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.event.SortEvent;
 import com.vaadin.event.SortEvent.SortListener;
-import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -80,6 +79,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.NumberRenderer;
+import com.vaadin.v7.ui.LegacyField;
 
 /**
  * Tests the basic features like columns, footers and headers

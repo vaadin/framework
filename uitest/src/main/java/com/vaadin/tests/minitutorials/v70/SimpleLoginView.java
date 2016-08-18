@@ -1,8 +1,5 @@
 package com.vaadin.tests.minitutorials.v70;
 
-import com.vaadin.legacy.data.validator.LegacyAbstractValidator;
-import com.vaadin.legacy.data.validator.LegacyEmailValidator;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.MarginInfo;
@@ -13,6 +10,9 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.v7.data.validator.LegacyAbstractValidator;
+import com.vaadin.v7.data.validator.LegacyEmailValidator;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class SimpleLoginView extends CustomComponent
         implements View, Button.ClickListener {

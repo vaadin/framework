@@ -18,8 +18,8 @@ package com.vaadin.tests.tooltip;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.tests.legacyelements.LegacyTextFieldElement;
 import com.vaadin.tests.tb3.TooltipTest;
+import com.vaadin.v7.tests.elements.LegacyTextFieldElement;
 
 /**
  * Test to see if validators create error tooltips correctly.

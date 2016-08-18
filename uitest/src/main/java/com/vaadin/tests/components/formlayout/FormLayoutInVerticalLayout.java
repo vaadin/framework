@@ -16,13 +16,13 @@
 package com.vaadin.tests.components.formlayout;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.ui.LegacyTextField;
 
 /**
  * Test UI for H2 label inside FormLayout.

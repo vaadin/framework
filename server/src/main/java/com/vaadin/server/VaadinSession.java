@@ -48,15 +48,15 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
 import com.vaadin.event.EventRouter;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.data.util.converter.LegacyConverterFactory;
-import com.vaadin.legacy.data.util.converter.LegacyDefaultConverterFactory;
-import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.LegacyConverterFactory;
+import com.vaadin.v7.data.util.converter.LegacyDefaultConverterFactory;
+import com.vaadin.v7.ui.LegacyAbstractField;
 
 /**
  * Contains everything that Vaadin needs to store for a specific user. This is

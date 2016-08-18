@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.tabsheet;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.LegacyTextField;
 
 @SuppressWarnings("serial")
 public class ScrollbarsInNestedTabsheets extends TestBase {

@@ -6,12 +6,12 @@ import org.junit.Test;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.AbstractProperty;
-import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
-import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.UI;
+import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
+import com.vaadin.v7.ui.LegacyAbstractField;
 
 public class RemoveListenersOnDetachTest {
 

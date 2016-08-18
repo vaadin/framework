@@ -21,7 +21,6 @@ import javax.portlet.ResourceResponse;
 import javax.portlet.WindowState;
 
 import com.vaadin.annotations.StyleSheet;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinPortletRequest;
 import com.vaadin.server.VaadinPortletService;
@@ -37,6 +36,7 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
+import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.VerticalLayout;
 
 /**

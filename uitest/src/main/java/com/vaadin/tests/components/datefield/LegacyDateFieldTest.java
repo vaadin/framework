@@ -7,9 +7,9 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
+import com.vaadin.v7.ui.LegacyDateField;
 
 public class LegacyDateFieldTest<T extends LegacyDateField>
         extends LegacyAbstractFieldTest<T> {

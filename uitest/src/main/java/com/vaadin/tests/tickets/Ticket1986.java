@@ -1,6 +1,5 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -11,6 +10,7 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TwinColSelect;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class Ticket1986 extends LegacyApplication {
 

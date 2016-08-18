@@ -19,9 +19,9 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.v7.ui.LegacyPopupDateField;
 
 /**
  * Tests the declarative support for implementations of
@@ -33,8 +33,11 @@ import com.vaadin.tests.design.DeclarativeTestBase;
 public class LegacyPopupDateFieldDeclarativeTest
         extends DeclarativeTestBase<LegacyPopupDateField> {
 
+    private static final String TAG_NAME = "com_vaadin_v7_ui-legacy-popup-date-field";
+
     private String getBasicDesign() {
-        return "<com_vaadin_legacy_ui-legacy-popup-date-field assistive-text='at' text-field-enabled='false' show-iso-week-numbers resolution=\"MINUTE\" range-end=\"2019-01-15\" input-prompt=\"Pick a day\" value=\"2003-02-27 07:15\"></vaadin-popup-date-field>";
+        return "<" + TAG_NAME
+                + " assistive-text='at' text-field-enabled='false' show-iso-week-numbers resolution=\"MINUTE\" range-end=\"2019-01-15\" input-prompt=\"Pick a day\" value=\"2003-02-27 07:15\"></vaadin-popup-date-field>";
     }
 
     private LegacyPopupDateField getBasicExpected() {
@@ -63,7 +66,7 @@ public class LegacyPopupDateFieldDeclarativeTest
     public LegacyPopupDateField testRead(String design,
             LegacyPopupDateField expected) {
         return super.testRead(
-                "<html><head><meta charset='UTF-8' name='package-mapping' content='com_vaadin_legacy_ui:com.vaadin.legacy.ui'></head> "
+                "<html><head><meta charset='UTF-8' name='package-mapping' content='com_vaadin_v7_ui:com.vaadin.v7.ui'></head> "
                         + design + "</html>",
                 expected);
     }

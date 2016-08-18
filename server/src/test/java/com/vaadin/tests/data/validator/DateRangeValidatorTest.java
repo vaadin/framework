@@ -11,8 +11,8 @@ import java.util.TimeZone;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.legacy.data.validator.LegacyDateRangeValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.v7.data.validator.LegacyDateRangeValidator;
 
 public class DateRangeValidatorTest {
     Calendar startDate = new GregorianCalendar(TimeZone.getTimeZone("GMT"),

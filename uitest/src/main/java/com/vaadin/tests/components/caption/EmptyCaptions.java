@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.caption;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class EmptyCaptions extends TestBase {
 

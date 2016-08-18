@@ -4,7 +4,6 @@ import java.util.Random;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Alignment;
@@ -15,6 +14,7 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class Ticket2029 extends LegacyApplication {
 

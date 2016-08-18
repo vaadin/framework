@@ -15,12 +15,12 @@
  */
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.PasswordField;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class GridEditorUI extends AbstractTestUI {
 

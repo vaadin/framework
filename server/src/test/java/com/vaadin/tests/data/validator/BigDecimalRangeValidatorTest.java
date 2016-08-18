@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.legacy.data.validator.LegacyBigDecimalRangeValidator;
+import com.vaadin.v7.data.validator.LegacyBigDecimalRangeValidator;
 
 public class BigDecimalRangeValidatorTest {
 

@@ -43,11 +43,6 @@ import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.ClientSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.ContainsDataFlavor;
 import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
-import com.vaadin.legacy.data.Validator.InvalidValueException;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.data.util.converter.LegacyConverterUtil;
-import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
-import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
@@ -60,6 +55,11 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.ui.declarative.DesignFormatter;
+import com.vaadin.v7.data.Validator.InvalidValueException;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.LegacyConverterUtil;
+import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
+import com.vaadin.v7.ui.LegacyAbstractField;
 
 /**
  * <p>
@@ -643,7 +643,7 @@ public abstract class AbstractSelect extends LegacyAbstractField<Object>
     /**
      * Gets the selected item id or in multiselect mode a set of selected ids.
      *
-     * @see com.vaadin.legacy.ui.LegacyAbstractField#getValue()
+     * @see com.vaadin.v7.ui.LegacyAbstractField#getValue()
      */
     @Override
     public Object getValue() {
@@ -683,7 +683,7 @@ public abstract class AbstractSelect extends LegacyAbstractField<Object>
      *
      * @param newValue
      *            the New selected item or collection of selected items.
-     * @see com.vaadin.legacy.ui.LegacyAbstractField#setValue(java.lang.Object)
+     * @see com.vaadin.v7.ui.LegacyAbstractField#setValue(java.lang.Object)
      */
     @Override
     public void setValue(Object newValue) throws Property.ReadOnlyException {
@@ -710,7 +710,7 @@ public abstract class AbstractSelect extends LegacyAbstractField<Object>
      *            True if caller is sure that repaint is not needed.
      * @param ignoreReadOnly
      *            True if read-only check should be omitted.
-     * @see com.vaadin.legacy.ui.LegacyAbstractField#setValue(java.lang.Object,
+     * @see com.vaadin.v7.ui.LegacyAbstractField#setValue(java.lang.Object,
      *      java.lang.Boolean)
      */
     @Override
@@ -1874,7 +1874,7 @@ public abstract class AbstractSelect extends LegacyAbstractField<Object>
     /**
      * Notifies the component that it is connected to an application.
      *
-     * @see com.vaadin.legacy.ui.LegacyAbstractField#attach()
+     * @see com.vaadin.v7.ui.LegacyAbstractField#attach()
      */
     @Override
     public void attach() {

@@ -3,11 +3,11 @@ package com.vaadin.tests.tickets;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class Ticket6002 extends TestBase {
 

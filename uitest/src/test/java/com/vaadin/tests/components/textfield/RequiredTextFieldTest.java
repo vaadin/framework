@@ -19,8 +19,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.tests.legacyelements.LegacyTextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.tests.elements.LegacyTextFieldElement;
 
 /**
  * Test for .v-required style

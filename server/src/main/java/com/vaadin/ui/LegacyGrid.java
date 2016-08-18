@@ -70,11 +70,6 @@ import com.vaadin.event.SelectionEvent.SelectionNotifier;
 import com.vaadin.event.SortEvent;
 import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.event.SortEvent.SortNotifier;
-import com.vaadin.legacy.data.Validator.InvalidValueException;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.data.util.converter.LegacyConverterUtil;
-import com.vaadin.legacy.ui.LegacyCheckBox;
-import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.EncodeResult;
@@ -114,6 +109,11 @@ import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.Renderer;
 import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.util.ReflectTools;
+import com.vaadin.v7.data.Validator.InvalidValueException;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.LegacyConverterUtil;
+import com.vaadin.v7.ui.LegacyCheckBox;
+import com.vaadin.v7.ui.LegacyField;
 
 import elemental.json.Json;
 import elemental.json.JsonObject;
@@ -134,7 +134,7 @@ import elemental.json.JsonValue;
  * <p>
  * Each column has its own {@link Renderer} that displays data into something
  * that can be displayed in the browser. That data is first converted with a
- * {@link com.vaadin.legacy.data.util.converter.LegacyConverter Converter} into
+ * {@link com.vaadin.v7.data.util.converter.LegacyConverter Converter} into
  * something that the Renderer can process. This can also be an implicit step -
  * if a column has a simple data type, like a String, no explicit assignment is
  * needed.

@@ -23,8 +23,8 @@ import java.util.Map;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanUtil;
-import com.vaadin.legacy.data.validator.LegacyBeanValidator;
-import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.v7.data.validator.LegacyBeanValidator;
+import com.vaadin.v7.ui.LegacyField;
 
 public class BeanFieldGroup<T> extends FieldGroup {
 

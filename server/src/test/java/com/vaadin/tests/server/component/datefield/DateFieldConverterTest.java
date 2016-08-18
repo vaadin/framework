@@ -24,9 +24,9 @@ import org.junit.Test;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.ui.LegacyDateField;
 
 public class DateFieldConverterTest {
 

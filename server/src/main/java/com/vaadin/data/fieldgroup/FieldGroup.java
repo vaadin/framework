@@ -28,11 +28,11 @@ import java.util.Map;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.TransactionalPropertyWrapper;
-import com.vaadin.legacy.data.Validator.InvalidValueException;
-import com.vaadin.legacy.ui.LegacyAbstractField;
-import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.util.ReflectTools;
+import com.vaadin.v7.data.Validator.InvalidValueException;
+import com.vaadin.v7.ui.LegacyAbstractField;
+import com.vaadin.v7.ui.LegacyField;
 
 /**
  * FieldGroup provides an easy way of binding fields to data and handling

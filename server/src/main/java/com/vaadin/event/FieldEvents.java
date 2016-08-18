@@ -19,14 +19,14 @@ package com.vaadin.event;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
-import com.vaadin.legacy.ui.LegacyField;
-import com.vaadin.legacy.ui.LegacyTextField;
-import com.vaadin.legacy.ui.LegacyField.ValueChangeEvent;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.util.ReflectTools;
+import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.LegacyField.ValueChangeEvent;
 
 /**
  * Interface that serves as a wrapper for {@link LegacyField} related events.

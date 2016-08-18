@@ -15,8 +15,8 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.MethodProperty;
-import com.vaadin.legacy.data.validator.LegacyRegexpValidator;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.v7.data.validator.LegacyRegexpValidator;
 
 public class SerializationTest {
 

@@ -3,11 +3,11 @@ package com.vaadin.tests.components.customlayout;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
 

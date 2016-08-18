@@ -10,13 +10,13 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ProgressIndicator;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class ComboPushTiming extends TestBase {
 

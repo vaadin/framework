@@ -2,13 +2,13 @@ package com.vaadin.tests.components.uitest;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 

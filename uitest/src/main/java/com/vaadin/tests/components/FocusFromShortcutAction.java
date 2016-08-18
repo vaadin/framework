@@ -4,9 +4,9 @@ import java.util.Arrays;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.Select;
 
 public class FocusFromShortcutAction extends TestBase {

@@ -39,7 +39,7 @@ import com.vaadin.util.ReflectTools;
  * <p>
  * This class replaces the Vaadin 7 {@code com.vaadin.ui.AbstractField} class.
  * The old {@code AbstractField} is retained, under the new name
- * {@link com.vaadin.legacy.ui.LegacyAbstractField}, for compatibility and
+ * {@link com.vaadin.v7.ui.LegacyAbstractField}, for compatibility and
  * migration purposes.
  *
  * @author Vaadin Ltd.

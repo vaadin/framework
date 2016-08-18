@@ -2,13 +2,13 @@ package com.vaadin.tests.validation;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.legacy.data.Validator;
-import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
-import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.data.validator.LegacyIntegerValidator;
+import com.vaadin.v7.data.validator.LegacyStringLengthValidator;
+import com.vaadin.v7.ui.LegacyTextField;
 
 @SuppressWarnings("deprecation")
 public class ValidationOfRequiredEmptyFields extends AbstractTestUI {

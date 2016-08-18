@@ -17,7 +17,7 @@ package com.vaadin.shared.ui.textarea;
 
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.annotations.NoLayout;
-import com.vaadin.shared.legacy.ui.textfield.LegacyAbstractTextFieldState;
+import com.vaadin.shared.v7.ui.textfield.LegacyAbstractTextFieldState;
 
 public class TextAreaState extends LegacyAbstractTextFieldState {
     {

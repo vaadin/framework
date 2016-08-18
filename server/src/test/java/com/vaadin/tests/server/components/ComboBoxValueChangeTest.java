@@ -2,11 +2,11 @@ package com.vaadin.tests.server.components;
 
 import org.junit.Before;
 
-import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.server.ServerRpcManager;
 import com.vaadin.server.ServerRpcMethodInvocation;
 import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.ui.LegacyAbstractField;
 
 /**
  * Check that the value change listener for a combo box is triggered exactly

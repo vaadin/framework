@@ -41,7 +41,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.ui.grid.GridColumnState;
 import com.vaadin.shared.ui.grid.GridState;
@@ -49,6 +48,7 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.LegacyGrid.Column;
 import com.vaadin.ui.LegacyGrid.ColumnResizeEvent;
 import com.vaadin.ui.LegacyGrid.ColumnResizeListener;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class GridColumnsTest {
 

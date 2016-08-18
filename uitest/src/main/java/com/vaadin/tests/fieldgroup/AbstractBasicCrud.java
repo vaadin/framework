@@ -26,10 +26,6 @@ import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.legacy.data.Validator.InvalidValueException;
-import com.vaadin.legacy.data.validator.LegacyIntegerRangeValidator;
-import com.vaadin.legacy.ui.LegacyField;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.util.SharedUtil;
@@ -47,6 +43,10 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.data.Validator.InvalidValueException;
+import com.vaadin.v7.data.validator.LegacyIntegerRangeValidator;
+import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.ui.LegacyTextField;
 
 @Theme("valo")
 public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
@@ -202,7 +202,7 @@ public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
                 ComplexPerson.class) {
             @Override
             protected void configureField(
-                    com.vaadin.legacy.ui.LegacyField<?> field) {
+                    com.vaadin.v7.ui.LegacyField<?> field) {
                 super.configureField(field);
                 if (field.getCaption().equals("Postal code")) {
                     // Last name editing is disabled through property.

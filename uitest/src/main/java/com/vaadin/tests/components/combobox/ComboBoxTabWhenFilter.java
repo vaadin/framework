@@ -17,11 +17,11 @@ package com.vaadin.tests.components.combobox;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.LegacyTextField;
 
 /**
  * A test case for typing in combo box input field fast plus then press TAB.

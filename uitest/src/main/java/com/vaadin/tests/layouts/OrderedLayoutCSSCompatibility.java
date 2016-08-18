@@ -1,8 +1,8 @@
 package com.vaadin.tests.layouts;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class OrderedLayoutCSSCompatibility extends TestBase {
 

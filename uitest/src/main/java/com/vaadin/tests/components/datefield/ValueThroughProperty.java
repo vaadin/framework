@@ -6,13 +6,13 @@ import java.util.Locale;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.legacy.ui.LegacyDateField;
-import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.v7.ui.LegacyDateField;
+import com.vaadin.v7.ui.LegacyPopupDateField;
 import com.vaadin.ui.Label;
 
 public class ValueThroughProperty extends TestBase {

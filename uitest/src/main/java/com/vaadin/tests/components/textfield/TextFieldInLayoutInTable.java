@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.textfield;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TextFieldInLayoutInTable extends LegacyApplication {
 

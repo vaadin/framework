@@ -21,8 +21,8 @@ import java.util.Locale;
 import java.util.function.Function;
 
 import com.vaadin.data.Binder.Binding;
+import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
 import com.vaadin.data.Result;
-import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
 
 /**
  * Interface that implements conversion between a model and a presentation type.

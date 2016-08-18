@@ -22,8 +22,8 @@ import org.openqa.selenium.By;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
-import com.vaadin.tests.legacyelements.LegacyCheckBoxElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.tests.elements.LegacyCheckBoxElement;
 
 @TestCategory("grid")
 public class GridCheckBoxDisplayTest extends SingleBrowserTest {

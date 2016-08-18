@@ -5,11 +5,11 @@ import java.util.Date;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.ErrorEvent;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TextFieldConversions extends AbstractComponentDataBindingTest {
 

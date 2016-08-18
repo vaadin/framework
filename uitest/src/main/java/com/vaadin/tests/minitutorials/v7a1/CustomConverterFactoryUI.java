@@ -1,8 +1,8 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class CustomConverterFactoryUI extends AbstractTestUI {
     @Override

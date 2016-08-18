@@ -1,10 +1,10 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.data.util.MethodProperty;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.LegacyWindow;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class Ticket2002 extends LegacyApplication {
     private Long long1 = new Long(1L);

@@ -1,11 +1,11 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class Ticket2240 extends LegacyApplication {
 

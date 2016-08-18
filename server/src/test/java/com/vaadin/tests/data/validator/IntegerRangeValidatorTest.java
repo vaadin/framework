@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.legacy.data.validator.LegacyIntegerRangeValidator;
+import com.vaadin.v7.data.validator.LegacyIntegerRangeValidator;
 
 public class IntegerRangeValidatorTest {
 

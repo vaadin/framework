@@ -2,9 +2,9 @@ package com.vaadin.tests.components.abstractfield;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class IntegerFieldWithoutDataSource extends TestBase {
 

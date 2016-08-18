@@ -2,11 +2,11 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Notification;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class Ticket2038 extends LegacyApplication {
 

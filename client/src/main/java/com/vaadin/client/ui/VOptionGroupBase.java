@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.legacy.ui.VLegacyTextField;
+import com.vaadin.client.v7.ui.VLegacyTextField;
 
 public abstract class VOptionGroupBase extends Composite implements Field,
         ClickHandler, ChangeHandler, KeyPressHandler, Focusable, HasEnabled {

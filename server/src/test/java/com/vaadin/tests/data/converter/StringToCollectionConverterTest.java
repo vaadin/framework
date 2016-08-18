@@ -29,10 +29,10 @@ import java.util.Vector;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.legacy.data.util.converter.LegacyStringToCollectionConverter;
-import com.vaadin.legacy.data.util.converter.LegacyStringToEnumConverter;
-import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
-import com.vaadin.legacy.data.util.converter.LegacyStringToCollectionConverter.CollectionFactory;
+import com.vaadin.v7.data.util.converter.LegacyStringToCollectionConverter;
+import com.vaadin.v7.data.util.converter.LegacyStringToEnumConverter;
+import com.vaadin.v7.data.util.converter.LegacyStringToIntegerConverter;
+import com.vaadin.v7.data.util.converter.LegacyStringToCollectionConverter.CollectionFactory;
 
 /**
  * Tests for {@link LegacyStringToCollectionConverter}.

@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.uitest.components;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.uitest.TestSampler;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
@@ -9,6 +8,7 @@ import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.themes.ChameleonTheme;
 import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TextFieldsCssTest extends GridLayout {
 

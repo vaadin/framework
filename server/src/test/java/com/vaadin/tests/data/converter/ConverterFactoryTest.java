@@ -20,11 +20,11 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.data.util.converter.LegacyDefaultConverterFactory;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.LegacyDefaultConverterFactory;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class ConverterFactoryTest {
 
@@ -34,14 +34,14 @@ public class ConverterFactoryTest {
         @Override
         public Integer convertToModel(String value,
                 Class<? extends Integer> targetType, Locale locale)
-                throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
             return 42;
         }
 
         @Override
         public String convertToPresentation(Integer value,
                 Class<? extends String> targetType, Locale locale)
-                throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
             return "42";
         }
 

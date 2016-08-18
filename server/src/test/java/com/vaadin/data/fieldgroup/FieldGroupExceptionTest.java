@@ -18,7 +18,7 @@ package com.vaadin.data.fieldgroup;
 import org.junit.Test;
 
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.legacy.ui.LegacyPopupDateField;
+import com.vaadin.v7.ui.LegacyPopupDateField;
 
 public class FieldGroupExceptionTest {
 

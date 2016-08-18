@@ -17,7 +17,6 @@ import java.util.jar.JarEntry;
 
 import org.junit.Test;
 
-import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -30,6 +29,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
+import com.vaadin.v7.ui.LegacyField;
 
 @SuppressWarnings("deprecation")
 public class VaadinClasses {

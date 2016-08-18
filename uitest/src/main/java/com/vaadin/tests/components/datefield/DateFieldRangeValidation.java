@@ -5,12 +5,12 @@ import java.util.Locale;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.legacy.data.validator.LegacyRangeValidator;
-import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.CheckBoxWithPropertyDataSource;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.v7.data.validator.LegacyRangeValidator;
+import com.vaadin.v7.ui.LegacyPopupDateField;
 
 public class DateFieldRangeValidation extends TestBase {
 

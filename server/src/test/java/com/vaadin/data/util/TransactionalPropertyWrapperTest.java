@@ -23,7 +23,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.legacy.ui.LegacyTextField;
+import com.vaadin.v7.ui.LegacyTextField;
 
 /**
  * Test verifying that TransactionalPropertyWrapper removes it's listener from

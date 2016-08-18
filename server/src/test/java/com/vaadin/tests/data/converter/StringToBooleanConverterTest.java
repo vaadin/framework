@@ -7,7 +7,7 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.legacy.data.util.converter.LegacyStringToBooleanConverter;
+import com.vaadin.v7.data.util.converter.LegacyStringToBooleanConverter;
 
 public class StringToBooleanConverterTest {
 

@@ -4,9 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.legacy.data.validator.LegacyRangeValidator;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.data.converter.ConverterFactoryTest.ConvertTo42;
+import com.vaadin.v7.data.validator.LegacyRangeValidator;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TextFieldWithConverterAndValidatorTest {
 

@@ -32,7 +32,6 @@ import org.junit.Test;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
-import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
@@ -43,6 +42,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignFormatter;
+import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
 
 /**
  * Various tests related to formatter.

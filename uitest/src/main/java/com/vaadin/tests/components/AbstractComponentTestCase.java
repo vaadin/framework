@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Locale;
 
 import com.vaadin.data.HasRequired;
-import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Layout.SpacingHandler;
+import com.vaadin.v7.ui.LegacyField;
 
 public abstract class AbstractComponentTestCase<T extends AbstractComponent>
         extends TestBase {

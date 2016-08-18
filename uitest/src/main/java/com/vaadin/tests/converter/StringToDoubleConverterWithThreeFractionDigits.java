@@ -3,7 +3,7 @@ package com.vaadin.tests.converter;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import com.vaadin.legacy.data.util.converter.LegacyStringToDoubleConverter;
+import com.vaadin.v7.data.util.converter.LegacyStringToDoubleConverter;
 
 public class StringToDoubleConverterWithThreeFractionDigits
         extends LegacyStringToDoubleConverter {

@@ -1,11 +1,11 @@
 package com.vaadin.tests.tooltip;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.LegacyTextField;
 
 /**
  * Test to see if the width of the tooltip element is updated if a narrower

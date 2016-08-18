@@ -24,7 +24,6 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.legacy.data.validator.LegacyIntegerRangeValidator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
@@ -36,6 +35,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.renderers.DateRenderer;
+import com.vaadin.v7.data.validator.LegacyIntegerRangeValidator;
 
 @Theme("valo")
 public class GridThemeUI extends AbstractTestUIWithLog {

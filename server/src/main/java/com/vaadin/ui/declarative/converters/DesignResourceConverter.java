@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
@@ -31,6 +30,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
 
 /**
  * A converter for {@link Resource} implementations supported by

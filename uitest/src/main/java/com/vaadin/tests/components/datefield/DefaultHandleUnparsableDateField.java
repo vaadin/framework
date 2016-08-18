@@ -2,9 +2,9 @@ package com.vaadin.tests.components.datefield;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.legacy.data.validator.LegacyNullValidator;
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.v7.data.validator.LegacyNullValidator;
+import com.vaadin.v7.ui.LegacyDateField;
 
 @SuppressWarnings("serial")
 public class DefaultHandleUnparsableDateField extends TestBase {

@@ -16,7 +16,7 @@
 package com.vaadin.data.util;
 
 import com.vaadin.data.Property;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
 
 /**
  * Formatting proxy for a {@link Property}.

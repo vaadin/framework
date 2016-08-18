@@ -21,7 +21,7 @@ import java.sql.Timestamp;
 import java.util.logging.Logger;
 
 import com.vaadin.data.Property;
-import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
+import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
 
 /**
  * ColumnProperty represents the value of one column in a RowItem. In addition

@@ -7,11 +7,11 @@ import java.util.Locale;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.PropertyFormatter;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TextFieldWithPropertyFormatter extends TestBase {
 

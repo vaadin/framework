@@ -2,12 +2,12 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout.MarginHandler;
+import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.LegacyWindow;
 
 public class Ticket1805 extends com.vaadin.server.LegacyApplication {

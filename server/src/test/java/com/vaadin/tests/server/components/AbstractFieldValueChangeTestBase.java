@@ -7,7 +7,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Property.ValueChangeNotifier;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.legacy.ui.LegacyAbstractField;
+import com.vaadin.v7.ui.LegacyAbstractField;
 
 /**
  * Base class for tests for checking that value change listeners for fields are

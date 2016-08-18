@@ -17,11 +17,6 @@ package com.vaadin.tests.validation;
 
 import java.util.Set;
 
-import com.vaadin.legacy.data.Validator;
-import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
-import com.vaadin.legacy.ui.LegacyAbstractField;
-import com.vaadin.legacy.ui.LegacyField;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -35,6 +30,11 @@ import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.data.validator.LegacyStringLengthValidator;
+import com.vaadin.v7.ui.LegacyAbstractField;
+import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class FieldErrorIndication extends AbstractTestUI {
 

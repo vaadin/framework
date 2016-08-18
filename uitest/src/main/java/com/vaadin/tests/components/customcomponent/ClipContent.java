@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.customcomponent;
 
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class ClipContent extends TestBase {
 

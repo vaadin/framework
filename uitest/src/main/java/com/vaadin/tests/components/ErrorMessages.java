@@ -3,11 +3,11 @@ package com.vaadin.tests.components;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.CompositeErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class ErrorMessages extends TestBase {
 

@@ -5,10 +5,10 @@ import java.util.Locale;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.legacy.data.Validator;
-import com.vaadin.legacy.data.validator.LegacyAbstractValidator;
-import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.data.validator.LegacyAbstractValidator;
+import com.vaadin.v7.ui.LegacyDateField;
 
 public class RequiredInvalidDateField extends TestBase {
 

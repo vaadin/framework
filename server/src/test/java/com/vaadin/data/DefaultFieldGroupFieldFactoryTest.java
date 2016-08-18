@@ -23,14 +23,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
-import com.vaadin.legacy.ui.LegacyDateField;
-import com.vaadin.legacy.ui.LegacyField;
-import com.vaadin.legacy.ui.LegacyInlineDateField;
-import com.vaadin.legacy.ui.LegacyPopupDateField;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ListSelect;
+import com.vaadin.v7.ui.LegacyDateField;
+import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.ui.LegacyInlineDateField;
+import com.vaadin.v7.ui.LegacyPopupDateField;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class DefaultFieldGroupFieldFactoryTest {
 

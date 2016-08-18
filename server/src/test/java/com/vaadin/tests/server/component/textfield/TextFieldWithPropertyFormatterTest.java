@@ -13,7 +13,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertyFormatter;
-import com.vaadin.legacy.ui.LegacyTextField;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TextFieldWithPropertyFormatterTest {
 

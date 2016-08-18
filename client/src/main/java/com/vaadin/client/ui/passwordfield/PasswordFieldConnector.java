@@ -16,8 +16,8 @@
 
 package com.vaadin.client.ui.passwordfield;
 
-import com.vaadin.client.legacy.ui.textfield.LegacyTextFieldConnector;
 import com.vaadin.client.ui.VPasswordField;
+import com.vaadin.client.v7.ui.textfield.LegacyTextFieldConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.ui.PasswordField;
 

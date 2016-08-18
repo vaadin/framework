@@ -1,6 +1,5 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Alignment;
@@ -10,6 +9,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout.MarginHandler;
+import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 

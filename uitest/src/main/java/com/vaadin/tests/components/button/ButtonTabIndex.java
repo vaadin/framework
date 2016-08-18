@@ -15,10 +15,10 @@
  */
 package com.vaadin.tests.components.button;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.NativeButton;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class ButtonTabIndex extends TestBase {
 

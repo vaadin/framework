@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.legacy.data.validator.LegacyByteRangeValidator;
+import com.vaadin.v7.data.validator.LegacyByteRangeValidator;
 
 public class ByteRangeValidatorTest {
 

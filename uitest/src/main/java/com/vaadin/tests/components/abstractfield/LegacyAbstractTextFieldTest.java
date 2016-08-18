@@ -6,8 +6,8 @@ import java.util.List;
 
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
-import com.vaadin.legacy.ui.LegacyAbstractTextField;
-import com.vaadin.legacy.ui.LegacyAbstractTextField.TextChangeEventMode;
+import com.vaadin.v7.ui.LegacyAbstractTextField;
+import com.vaadin.v7.ui.LegacyAbstractTextField.TextChangeEventMode;
 
 public abstract class LegacyAbstractTextFieldTest<T extends LegacyAbstractTextField>
         extends LegacyAbstractFieldTest<T> implements TextChangeListener {

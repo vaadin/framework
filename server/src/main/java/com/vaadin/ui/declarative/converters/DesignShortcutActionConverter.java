@@ -24,7 +24,7 @@ import java.util.Map.Entry;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
 
 /**
  * Converter for {@link ShortcutActions}.

@@ -1,9 +1,9 @@
 package com.vaadin.tests.actions;
 
 import com.vaadin.event.Action;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.v7.ui.LegacyTextField;
 
 @SuppressWarnings("serial")
 public class ActionsWithoutKeyCode extends AbstractTestUIWithLog {

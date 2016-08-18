@@ -20,8 +20,8 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 import com.vaadin.data.Property;
-import com.vaadin.legacy.ui.LegacyField;
-import com.vaadin.legacy.ui.LegacyAbstractField;
+import com.vaadin.v7.ui.LegacyAbstractField;
+import com.vaadin.v7.ui.LegacyField;
 
 /**
  * A {@link LegacyField} whose UI content can be constructed by the user,

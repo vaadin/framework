@@ -8,8 +8,6 @@ import java.util.Locale;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.data.util.converter.LegacyStringToDoubleConverter;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
@@ -19,6 +17,8 @@ import com.vaadin.tests.util.Log;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Table;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.LegacyStringToDoubleConverter;
 
 public class DoublesInTable extends TestBase {
     BeanItemContainer<Person> personBeanItemContainer = new BeanItemContainer<Person>(
@@ -140,7 +140,7 @@ public class DoublesInTable extends TestBase {
             @Override
             public Sex convertToModel(String value,
                     Class<? extends Sex> targetType, Locale locale)
-                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                    throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                 // not used in this test - Table only converts to presentation
                 return null;
             }
@@ -148,7 +148,7 @@ public class DoublesInTable extends TestBase {
             @Override
             public String convertToPresentation(Sex value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                    throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                 if (value == null) {
                     value = Sex.UNKNOWN;
                 }
@@ -200,7 +200,7 @@ public class DoublesInTable extends TestBase {
             @Override
             public Integer convertToModel(String value,
                     Class<? extends Integer> targetType, Locale locale)
-                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                    throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                 // not used in this test - Table only converts from source to
                 // target
                 return null;
@@ -209,7 +209,7 @@ public class DoublesInTable extends TestBase {
             @Override
             public String convertToPresentation(Integer value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                    throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
                 if (value == null) {
                     return null;
                 }

@@ -4,14 +4,14 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.legacy.data.Validator;
-import com.vaadin.legacy.data.validator.LegacyBeanValidator;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
+import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.data.validator.LegacyBeanValidator;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class MultipleValidationErrors extends AbstractTestUI {
 

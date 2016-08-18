@@ -17,7 +17,7 @@ package com.vaadin.data.fieldgroup;
 
 import java.io.Serializable;
 
-import com.vaadin.legacy.ui.LegacyField;
+import com.vaadin.v7.ui.LegacyField;
 
 /**
  * Factory interface for creating new LegacyField-instances based on the data

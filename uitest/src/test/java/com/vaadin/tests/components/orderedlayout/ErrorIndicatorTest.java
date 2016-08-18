@@ -25,8 +25,8 @@ import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
 
-import com.vaadin.tests.legacyelements.LegacyTextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.tests.elements.LegacyTextFieldElement;
 
 public class ErrorIndicatorTest extends MultiBrowserTest {
 

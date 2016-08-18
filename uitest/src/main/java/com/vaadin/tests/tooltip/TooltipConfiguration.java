@@ -2,11 +2,11 @@ package com.vaadin.tests.tooltip;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.NativeButton;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TooltipConfiguration extends AbstractTestUIWithLog {
 

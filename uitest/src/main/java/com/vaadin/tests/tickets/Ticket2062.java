@@ -1,11 +1,11 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class Ticket2062 extends LegacyApplication {
     private static final Object P1 = new Object();

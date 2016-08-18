@@ -1,8 +1,8 @@
 package com.vaadin.tests.components;
 
-import com.vaadin.legacy.ui.LegacyPopupDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.v7.ui.LegacyPopupDateField;
 
 public class AddRemoveSetStyleNamesTest extends TestBase {
 

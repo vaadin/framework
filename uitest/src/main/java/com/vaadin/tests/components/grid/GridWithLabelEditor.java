@@ -17,12 +17,12 @@ package com.vaadin.tests.components.grid;
 
 import java.util.Collection;
 
-import com.vaadin.legacy.data.Validator;
-import com.vaadin.legacy.data.Validator.InvalidValueException;
-import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.LegacyGrid;
+import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.data.Validator.InvalidValueException;
+import com.vaadin.v7.ui.LegacyField;
 import com.vaadin.ui.Label;
 
 public class GridWithLabelEditor extends AbstractTestUI {

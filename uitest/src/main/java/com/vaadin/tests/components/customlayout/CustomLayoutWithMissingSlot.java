@@ -18,12 +18,12 @@ package com.vaadin.tests.components.customlayout;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.CustomLayout;
 
 public class CustomLayoutWithMissingSlot extends AbstractTestUIWithLog {

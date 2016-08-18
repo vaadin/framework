@@ -19,9 +19,9 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Property;
-import com.vaadin.legacy.ui.LegacyAbstractTextField;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.v7.ui.LegacyAbstractTextField;
 
 /**
  * A field that is used to enter secret text information like passwords. The

@@ -31,8 +31,8 @@ import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.parallel.TestCategory;
-import com.vaadin.tests.legacyelements.LegacyDateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.tests.elements.LegacyDateFieldElement;
 
 @TestCategory("grid")
 public class BasicCrudGridEditorRowTest extends MultiBrowserTest {

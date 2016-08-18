@@ -3,10 +3,10 @@ package com.vaadin.tests.minitutorials.v7a1;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import com.vaadin.legacy.data.util.converter.LegacyStringToDoubleConverter;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Table;
+import com.vaadin.v7.data.util.converter.LegacyStringToDoubleConverter;
 
 public class FormatTableValue extends AbstractTestUI {
 

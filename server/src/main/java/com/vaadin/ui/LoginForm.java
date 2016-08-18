@@ -24,16 +24,16 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.loginform.LoginFormConstants;
 import com.vaadin.shared.ui.loginform.LoginFormRpc;
 import com.vaadin.shared.ui.loginform.LoginFormState;
+import com.vaadin.v7.ui.LegacyTextField;
 
 /**
  * Login form with auto-completion and auto-fill for all major browsers. You can
  * derive from this class and implement the
- * {@link #createContent(com.vaadin.legacy.ui.LegacyTextField, com.vaadin.ui.PasswordField, com.vaadin.ui.Button)}
+ * {@link #createContent(com.vaadin.v7.ui.LegacyTextField, com.vaadin.ui.PasswordField, com.vaadin.ui.Button)}
  * method to build the layout using the text fields and login button that are
  * passed to that method. The supplied components are specially treated so that
  * they work with password managers.
@@ -41,7 +41,7 @@ import com.vaadin.shared.ui.loginform.LoginFormState;
  * If you need to change the URL as part of the login procedure, call
  * {@link #setLoginMode(LoginMode)} with the argument {@link LoginMode#DEFERRED}
  * in your implementation of
- * {@link #createContent(com.vaadin.legacy.ui.LegacyTextField, com.vaadin.ui.PasswordField, com.vaadin.ui.Button)
+ * {@link #createContent(com.vaadin.v7.ui.LegacyTextField, com.vaadin.ui.PasswordField, com.vaadin.ui.Button)
  * createContent}.
  * <p>
  * To customize the fields or to replace them with your own implementations, you

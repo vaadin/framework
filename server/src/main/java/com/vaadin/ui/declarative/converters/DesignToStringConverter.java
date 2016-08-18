@@ -18,8 +18,8 @@ package com.vaadin.ui.declarative.converters;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
 
 /**
  * Utility class for {@link DesignAttributeHandler} that deals with converting

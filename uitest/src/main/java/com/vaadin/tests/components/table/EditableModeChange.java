@@ -7,13 +7,13 @@ import java.util.Locale;
 
 import com.vaadin.data.Container;
 import com.vaadin.event.ItemClickEvent;
-import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TableFieldFactory;
+import com.vaadin.v7.ui.LegacyField;
 
 public class EditableModeChange extends AbstractTestUI {
 

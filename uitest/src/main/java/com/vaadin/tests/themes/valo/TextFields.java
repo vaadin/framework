@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
@@ -29,6 +28,7 @@ import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TextFields extends VerticalLayout implements View {
     private TestIcon testIcon = new TestIcon(140);

@@ -2,7 +2,6 @@ package com.vaadin.tests.components.richtextarea;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
-import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Page;
 import com.vaadin.tests.components.TestBase;
@@ -12,6 +11,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.ui.LegacyAbstractField;
 
 @SuppressWarnings("serial")
 public class RichTextAreaWithKeyboardShortcuts extends TestBase {

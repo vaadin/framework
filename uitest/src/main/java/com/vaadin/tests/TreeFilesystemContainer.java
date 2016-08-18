@@ -20,11 +20,11 @@ import java.io.File;
 
 import com.vaadin.data.util.FilesystemContainer;
 import com.vaadin.data.util.FilesystemContainer.FileItem;
-import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
+import com.vaadin.v7.ui.LegacyField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;

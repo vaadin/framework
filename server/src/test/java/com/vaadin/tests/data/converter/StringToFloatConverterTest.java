@@ -3,7 +3,7 @@ package com.vaadin.tests.data.converter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.legacy.data.util.converter.LegacyStringToFloatConverter;
+import com.vaadin.v7.data.util.converter.LegacyStringToFloatConverter;
 
 public class StringToFloatConverterTest {
 

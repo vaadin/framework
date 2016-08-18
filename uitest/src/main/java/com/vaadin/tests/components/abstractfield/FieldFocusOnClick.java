@@ -2,12 +2,12 @@ package com.vaadin.tests.components.abstractfield;
 
 import java.util.Arrays;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.OptionGroup;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class FieldFocusOnClick extends AbstractTestUI {
 

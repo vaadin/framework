@@ -8,11 +8,11 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
-import com.vaadin.legacy.ui.LegacyTextField;
-import com.vaadin.legacy.ui.LegacyAbstractTextField.TextChangeEventMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.LegacyTextField;
+import com.vaadin.v7.ui.LegacyAbstractTextField.TextChangeEventMode;
 
 public class TextChangeEvents2 extends TestBase {
     @Override

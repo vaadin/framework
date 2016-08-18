@@ -19,7 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.legacy.ui.LegacyTextField;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TextFieldTest {
 

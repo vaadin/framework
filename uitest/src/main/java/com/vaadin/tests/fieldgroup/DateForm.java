@@ -8,15 +8,15 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.legacy.ui.LegacyDateField;
-import com.vaadin.legacy.ui.LegacyInlineDateField;
-import com.vaadin.legacy.ui.LegacyPopupDateField;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.v7.ui.LegacyDateField;
+import com.vaadin.v7.ui.LegacyInlineDateField;
+import com.vaadin.v7.ui.LegacyPopupDateField;
+import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.Notification;
 
 public class DateForm extends AbstractTestUIWithLog {

@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -11,6 +10,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HasChildMeasurementHint.ChildMeasurementHint;
+import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;

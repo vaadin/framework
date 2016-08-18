@@ -36,10 +36,10 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Alignment;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
 
 /**
  * Default attribute handler implementation used when parsing designs to

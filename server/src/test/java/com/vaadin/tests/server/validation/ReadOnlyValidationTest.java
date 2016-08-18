@@ -2,8 +2,8 @@ package com.vaadin.tests.server.validation;
 
 import org.junit.Test;
 
-import com.vaadin.legacy.data.validator.LegacyIntegerValidator;
-import com.vaadin.legacy.ui.LegacyTextField;
+import com.vaadin.v7.data.validator.LegacyIntegerValidator;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class ReadOnlyValidationTest {
 

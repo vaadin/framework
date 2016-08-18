@@ -10,16 +10,16 @@ import org.junit.Test;
 
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
-import com.vaadin.legacy.data.util.converter.LegacyStringToIntegerConverter;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.LegacyStringToIntegerConverter;
+import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class AbsFieldValueConversionsTest {
 

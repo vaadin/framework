@@ -13,10 +13,10 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ReadOnlyStatusChangeEvent;
 import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.legacy.ui.LegacyAbstractField;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.v7.ui.LegacyAbstractField;
 
 public abstract class LegacyAbstractFieldTest<T extends LegacyAbstractField>
         extends AbstractComponentTest<T>

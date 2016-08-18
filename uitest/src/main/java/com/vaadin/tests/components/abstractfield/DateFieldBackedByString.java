@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.abstractfield;
 
-import com.vaadin.legacy.ui.LegacyDateField;
+import com.vaadin.v7.ui.LegacyDateField;
 
 public class DateFieldBackedByString extends AbstractComponentDataBindingTest {
 

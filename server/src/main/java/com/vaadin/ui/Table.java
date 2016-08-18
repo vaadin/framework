@@ -55,9 +55,6 @@ import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.data.util.converter.LegacyConverterUtil;
-import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.LegacyPaint;
@@ -77,6 +74,9 @@ import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.util.ReflectTools;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.LegacyConverterUtil;
+import com.vaadin.v7.ui.LegacyField;
 
 /**
  * <p>

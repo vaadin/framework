@@ -22,10 +22,10 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
-import com.vaadin.legacy.data.validator.LegacyIntegerRangeValidator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.LegacyGrid;
 import com.vaadin.ui.renderers.DateRenderer;
+import com.vaadin.v7.data.validator.LegacyIntegerRangeValidator;
 
 public class BasicCrudGridEditorRow extends AbstractBasicCrud {
 

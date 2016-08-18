@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.orderedlayout;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -8,6 +7,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.HorizontalLayout;
 
 public class HorizontalLayoutFullsizeContentWithErrorMsg

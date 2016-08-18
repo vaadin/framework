@@ -22,8 +22,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.legacy.ui.LegacyField;
-import com.vaadin.legacy.ui.LegacyPopupDateField;
+import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.ui.LegacyPopupDateField;
 
 public class FieldGroupDateTest {
 

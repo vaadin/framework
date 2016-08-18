@@ -3,9 +3,9 @@ package com.vaadin.tests.components.datefield;
 import java.util.Date;
 
 import com.vaadin.data.Result;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.DateField;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
 
 public class DateFieldUnparsableDate extends TestBase {
 

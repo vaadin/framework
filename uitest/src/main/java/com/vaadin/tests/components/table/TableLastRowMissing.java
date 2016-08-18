@@ -1,9 +1,9 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.data.Item;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TableLastRowMissing extends TestBase {
 

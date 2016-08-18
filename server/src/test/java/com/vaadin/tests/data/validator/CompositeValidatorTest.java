@@ -8,11 +8,11 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.legacy.data.Validator;
-import com.vaadin.legacy.data.validator.LegacyCompositeValidator;
-import com.vaadin.legacy.data.validator.LegacyEmailValidator;
-import com.vaadin.legacy.data.validator.LegacyRegexpValidator;
-import com.vaadin.legacy.data.validator.LegacyCompositeValidator.CombinationMode;
+import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.data.validator.LegacyCompositeValidator;
+import com.vaadin.v7.data.validator.LegacyEmailValidator;
+import com.vaadin.v7.data.validator.LegacyRegexpValidator;
+import com.vaadin.v7.data.validator.LegacyCompositeValidator.CombinationMode;
 
 public class CompositeValidatorTest {
 

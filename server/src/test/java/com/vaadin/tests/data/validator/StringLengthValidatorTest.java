@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
+import com.vaadin.v7.data.validator.LegacyStringLengthValidator;
 
 public class StringLengthValidatorTest {
 

@@ -3,8 +3,6 @@ package com.vaadin.tests.components.abstractfield;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.vaadin.legacy.ui.LegacyField;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbsoluteLayout;
@@ -16,6 +14,8 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.LegacyField;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class RequiredIndicatorForFieldsWithoutCaption extends AbstractTestUI {
     private Set<LegacyField> fields = new HashSet<LegacyField>();

@@ -21,10 +21,10 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.legacy.data.validator.LegacyBeanValidator;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
+import com.vaadin.v7.data.validator.LegacyBeanValidator;
+import com.vaadin.v7.ui.LegacyTextField;
 
 /**
  * Mini tutorial code for

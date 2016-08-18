@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.layouts.layouttester;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Button;
@@ -23,6 +22,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.v7.ui.LegacyTextField;
 
 /**
  *

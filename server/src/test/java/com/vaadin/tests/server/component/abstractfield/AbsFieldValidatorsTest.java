@@ -8,8 +8,8 @@ import static org.junit.Assert.assertTrue;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import com.vaadin.legacy.data.Validator;
-import com.vaadin.legacy.ui.LegacyAbstractField;
+import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.ui.LegacyAbstractField;
 
 public class AbsFieldValidatorsTest {
 

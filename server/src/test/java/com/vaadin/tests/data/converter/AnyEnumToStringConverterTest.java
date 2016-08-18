@@ -23,11 +23,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.data.util.converter.LegacyReverseConverter;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.tests.data.bean.AnotherTestEnum;
 import com.vaadin.tests.data.bean.TestEnum;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.LegacyReverseConverter;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class AnyEnumToStringConverterTest {
 
@@ -40,7 +40,7 @@ public class AnyEnumToStringConverterTest {
         @Override
         public String convertToModel(Enum value,
                 Class<? extends String> targetType, Locale locale)
-                throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
             if (value == null) {
                 return null;
             }
@@ -51,7 +51,7 @@ public class AnyEnumToStringConverterTest {
         @Override
         public Enum convertToPresentation(String value,
                 Class<? extends Enum> targetType, Locale locale)
-                throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
+                throws com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException {
             if (value == null) {
                 return null;
             }

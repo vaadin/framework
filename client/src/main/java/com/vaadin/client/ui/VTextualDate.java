@@ -34,11 +34,11 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.LocaleService;
 import com.vaadin.client.VConsole;
-import com.vaadin.client.legacy.ui.VLegacyTextField;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
 import com.vaadin.client.ui.aria.HandlesAriaRequired;
+import com.vaadin.client.v7.ui.VLegacyTextField;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.datefield.Resolution;
 

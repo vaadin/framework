@@ -1,6 +1,6 @@
 package com.vaadin.tests.util;
 
-import com.vaadin.legacy.data.validator.LegacyAbstractValidator;
+import com.vaadin.v7.data.validator.LegacyAbstractValidator;
 
 public class AlwaysFailValidator extends LegacyAbstractValidator<Object> {
     public AlwaysFailValidator() {

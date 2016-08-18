@@ -24,13 +24,13 @@ import org.jsoup.nodes.Element;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.FieldEvents;
-import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.VariableOwner;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.v7.ui.LegacyField;
 
 /**
  * {@code Component} is the top-level interface that is and must be implemented

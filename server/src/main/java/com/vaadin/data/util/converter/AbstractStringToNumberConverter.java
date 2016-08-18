@@ -20,7 +20,7 @@ import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.util.Locale;
 
-import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
+import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
 
 /**
  * A converter that converts from the number type T to {@link String} and back.

@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -12,6 +11,7 @@ import com.vaadin.ui.HasComponents.ComponentAttachEvent;
 import com.vaadin.ui.HasComponents.ComponentAttachListener;
 import com.vaadin.ui.HasComponents.ComponentDetachEvent;
 import com.vaadin.ui.HasComponents.ComponentDetachListener;
+import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.NativeButton;

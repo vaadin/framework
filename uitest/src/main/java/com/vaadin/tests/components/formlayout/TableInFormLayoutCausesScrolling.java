@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.formlayout;
 
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.LegacyTextField;
 
 public class TableInFormLayoutCausesScrolling extends AbstractTestUI {
 

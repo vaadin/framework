@@ -2,14 +2,14 @@ package com.vaadin.tests.minitutorials.v7a1;
 
 import java.util.Locale;
 
-import com.vaadin.legacy.data.util.converter.LegacyConverter;
-import com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException;
-import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.v7.data.util.converter.LegacyConverter;
+import com.vaadin.v7.data.util.converter.LegacyConverter.ConversionException;
+import com.vaadin.v7.ui.LegacyTextField;
 import com.vaadin.ui.Notification;
 
 public class StringMyTypeConverter extends AbstractTestUI {
