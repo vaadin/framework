@@ -17,15 +17,13 @@ package com.vaadin.event.dd;
 
 import java.io.Serializable;
 
-import com.vaadin.ui.Tree.TreeTargetDetails;
-
 /**
  * TargetDetails wraps drop target related information about
  * {@link DragAndDropEvent}.
  * <p>
  * When a TargetDetails object is used in {@link DropHandler} it is often
  * preferable to cast the TargetDetails to an implementation provided by
- * DropTarget like {@link TreeTargetDetails}. They often provide a better typed,
+ * DropTarget like {@code TreeTargetDetails}. They often provide a better typed,
  * drop target specific API.
  *
  * @since 6.3

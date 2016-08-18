@@ -32,7 +32,6 @@ import org.jsoup.parser.Parser;
 
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Resource;
-import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.declarative.converters.DesignDateConverter;
 import com.vaadin.ui.declarative.converters.DesignEnumConverter;
 import com.vaadin.ui.declarative.converters.DesignObjectConverter;
@@ -379,7 +378,7 @@ public class DesignFormatter implements Serializable {
      * </p>
      * <p>
      * Typically, this method will be used by components to encode data (like
-     * option items in {@link AbstractSelect}) when dumping to HTML format
+     * option items in {@code AbstractSelect}) when dumping to HTML format
      * </p>
      *
      * @since 7.5.7
@@ -403,7 +402,7 @@ public class DesignFormatter implements Serializable {
      *
      * <p>
      * Typically this method will be used by components to read back data (like
-     * option items in {@link AbstractSelect}) from HTML. Note that this method
+     * option items in {@code AbstractSelect}) from HTML. Note that this method
      * unencodes more characters than {@link #encodeForTextNode(String)} encodes
      * </p>
      *

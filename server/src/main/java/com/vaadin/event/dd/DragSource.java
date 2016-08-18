@@ -20,7 +20,6 @@ import java.util.Map;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Tree;
 
 /**
  * DragSource is a {@link Component} that builds a {@link Transferable} for a
@@ -48,7 +47,7 @@ public interface DragSource extends Component {
      * the client side. Vaadin developer don't and can't know anything about
      * these generated keys, only about item identifiers. When tree node is
      * dragged client puts that key to {@link Transferable}s client side
-     * counterpart. In {@link Tree#getTransferable(Map)} the key is converted
+     * counterpart. In {@code Tree.getTransferable(Map)} the key is converted
      * back to item identifier that the server side developer can use.
      * <p>
      *
