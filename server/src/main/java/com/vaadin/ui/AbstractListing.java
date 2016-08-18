@@ -16,12 +16,13 @@
 package com.vaadin.ui;
 
 import com.vaadin.data.Listing;
+import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.DataSource;
+import com.vaadin.server.data.TypedDataGenerator;
 
 /**
  * Base class for Listing components. Provides common handling for
- * {@link DataCommunicator}, {@link SelectionModel} and
- * {@link TypedDataGenerator}s.
+ * {@link DataCommunicator} and {@link TypedDataGenerator}s.
  *
  * @param <T>
  *            listing data type
@@ -29,15 +30,47 @@ import com.vaadin.server.data.DataSource;
 public abstract class AbstractListing<T> extends AbstractComponent
         implements Listing<T> {
 
-    private DataSource<T> dataSource;
+    /* DataCommunicator for this Listing component */
+    private final DataCommunicator<T> dataCommunicator = new DataCommunicator<>();
 
     @Override
     public void setDataSource(DataSource<T> dataSource) {
-        this.dataSource = dataSource;
+        getDataCommunicator().setDataSource(dataSource);
     }
 
     @Override
     public DataSource<T> getDataSource() {
-        return dataSource;
+        return getDataCommunicator().getDataSource();
+    }
+
+    /**
+     * Adds a {@link TypedDataGenerator} for the {@link DataCommunicator} of
+     * this Listing component.
+     *
+     * @param generator
+     *            typed data generator
+     */
+    protected void addDataGenerator(TypedDataGenerator<T> generator) {
+        dataCommunicator.addDataGenerator(generator);
+    }
+
+    /**
+     * Removed a {@link TypedDataGenerator} from the {@link DataCommunicator} of
+     * this Listing component.
+     *
+     * @param generator
+     *            typed data generator
+     */
+    protected void removeDataGenerator(TypedDataGenerator<T> generator) {
+        dataCommunicator.removeDataGenerator(generator);
+    }
+
+    /**
+     * Get the {@link DataCommunicator} of this Listing component.
+     *
+     * @return data provider
+     */
+    public DataCommunicator<T> getDataCommunicator() {
+        return dataCommunicator;
     }
 }

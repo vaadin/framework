@@ -13,32 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.connectors;
+package com.vaadin.client.connectors.data;
 
-import com.vaadin.client.connectors.data.HasDataSource;
 import com.vaadin.client.data.DataSource;
-import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.ui.AbstractListing;
 
 import elemental.json.JsonObject;
 
 /**
- * Base connector class for {@link AbstractListing}.
- *
- * @since
+ * Marker interface for Connectors that have a {@link DataSource}.
  */
-public abstract class AbstractListingConnector
-        extends AbstractComponentConnector implements HasDataSource {
+public interface HasDataSource {
 
-    private DataSource<JsonObject> dataSource = null;
+    /**
+     * Sets the data source for this Connector.
+     *
+     * @param dataSource
+     *            new data source
+     */
+    void setDataSource(DataSource<JsonObject> dataSource);
 
-    @Override
-    public void setDataSource(DataSource<JsonObject> dataSource) {
-        this.dataSource = dataSource;
-    }
-
-    @Override
-    public DataSource<JsonObject> getDataSource() {
-        return dataSource;
-    }
+    /**
+     * Gets the current data source for this Connector.
+     *
+     * @return data source
+     */
+    DataSource<JsonObject> getDataSource();
 }

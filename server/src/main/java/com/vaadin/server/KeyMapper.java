@@ -19,6 +19,8 @@ package com.vaadin.server;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import com.vaadin.server.data.DataKeyMapper;
+
 /**
  * <code>KeyMapper</code> is the simple two-way map for generating textual keys
  * for objects and retrieving the objects later with the key.
@@ -26,7 +28,7 @@ import java.util.HashMap;
  * @author Vaadin Ltd.
  * @since 3.0
  */
-public class KeyMapper<V> implements Serializable {
+public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
 
     private int lastKey = 0;
 
