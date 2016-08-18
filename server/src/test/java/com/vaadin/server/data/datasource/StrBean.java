@@ -36,8 +36,8 @@ class StrBean implements Serializable {
         Random r = new Random(13337);
         data.add(new StrBean("Xyz", 10, max));
         for (int i = 0; i < max - 1; ++i) {
-            data.add(new StrBean(values[r.nextInt(values.length)], i, r
-                    .nextInt(10)));
+            data.add(new StrBean(values[r.nextInt(values.length)], i,
+                    r.nextInt(10)));
         }
         return data;
     }

@@ -116,8 +116,8 @@ public class TableNavigationPageDownTest extends MultiBrowserTest {
         // page downs.
         // Can't use v-table-body height because lower rows haven't been
         // fetched yet.
-        testBenchElement(wrapper).scroll(
-                ROW_NUMBER * rowHeight - (int) (2.8 * pageHeight));
+        testBenchElement(wrapper)
+                .scroll(ROW_NUMBER * rowHeight - (int) (2.8 * pageHeight));
         waitForScrollToFinish();
 
         getLastVisibleRow().click();
@@ -166,8 +166,8 @@ public class TableNavigationPageDownTest extends MultiBrowserTest {
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver input) {
-                List<WebElement> elements = findElements(By
-                        .className("v-table-scrollposition"));
+                List<WebElement> elements = findElements(
+                        By.className("v-table-scrollposition"));
                 return elements.isEmpty() || !elements.get(0).isDisplayed();
             }
 
@@ -183,8 +183,8 @@ public class TableNavigationPageDownTest extends MultiBrowserTest {
      * Returns row number from its first cell
      */
     private int getRowNumber(WebElement row) {
-        return Integer.valueOf(row.findElement(
-                By.className("v-table-cell-wrapper")).getText());
+        return Integer.valueOf(row
+                .findElement(By.className("v-table-cell-wrapper")).getText());
     }
 
     /**

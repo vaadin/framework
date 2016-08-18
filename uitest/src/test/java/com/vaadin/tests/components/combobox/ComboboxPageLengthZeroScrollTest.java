@@ -40,7 +40,8 @@ public class ComboboxPageLengthZeroScrollTest extends MultiBrowserTest {
     public void testComboboxPageLength() {
         openTestURL();
 
-        WebElement comboBox = vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VFilterSelect[0]#textbox");
+        WebElement comboBox = vaadinElement(
+                "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VFilterSelect[0]#textbox");
 
         // navigate to the next page. keyboard navigation is the preferred
         // method here since it's much easier to implement.

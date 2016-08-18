@@ -29,8 +29,8 @@ public class TestDataGenerator {
             "Olivia", "Nina", "Alex", "Rita", "Dan", "Umberto", "Henrik",
             "Rene", "Lisa", "Marge" };
     final static String[] lnames = { "Smith", "Gordon", "Simpson", "Brown",
-            "Clavel", "Simons", "Verne", "Scott", "Allison", "Gates",
-            "Rowling", "Barks", "Ross", "Schneider", "Tate" };
+            "Clavel", "Simons", "Verne", "Scott", "Allison", "Gates", "Rowling",
+            "Barks", "Ross", "Schneider", "Tate" };
     final static String cities[] = { "Amsterdam", "Berlin", "Helsinki",
             "Hong Kong", "London", "Luxemburg", "New York", "Oslo", "Paris",
             "Rome", "Stockholm", "Tokyo", "Turku" };

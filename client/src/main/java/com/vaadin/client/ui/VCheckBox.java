@@ -29,8 +29,8 @@ import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
 import com.vaadin.client.ui.aria.HandlesAriaRequired;
 
-public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
-        Field, HandlesAriaInvalid, HandlesAriaRequired {
+public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
+        implements Field, HandlesAriaInvalid, HandlesAriaRequired {
 
     public static final String CLASSNAME = "v-checkbox";
 

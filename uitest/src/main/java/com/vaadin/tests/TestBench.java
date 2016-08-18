@@ -51,8 +51,8 @@ import com.vaadin.ui.VerticalLayout;
  * @author Vaadin Ltd.
  * 
  */
-public class TestBench extends com.vaadin.server.LegacyApplication implements
-        Property.ValueChangeListener {
+public class TestBench extends com.vaadin.server.LegacyApplication
+        implements Property.ValueChangeListener {
 
     // Add here packages which are used for finding testable classes
     String[] testablePackages = { "com.vaadin.tests",
@@ -79,9 +79,10 @@ public class TestBench extends com.vaadin.server.LegacyApplication implements
         for (int p = 0; p < testablePackages.length; p++) {
             testables.addItem(testablePackages[p]);
             try {
-                final List<Class<?>> testableClasses = getTestableClassesForPackage(testablePackages[p]);
-                for (final Iterator<Class<?>> it = testableClasses.iterator(); it
-                        .hasNext();) {
+                final List<Class<?>> testableClasses = getTestableClassesForPackage(
+                        testablePackages[p]);
+                for (final Iterator<Class<?>> it = testableClasses
+                        .iterator(); it.hasNext();) {
                     final Class<?> t = it.next();
                     // ignore TestBench itself
                     if (t.equals(TestBench.class)) {
@@ -116,12 +117,13 @@ public class TestBench extends com.vaadin.server.LegacyApplication implements
                 .hasNext();) {
             final Class<?> testable = i.next();
             // simplify captions
-            final String name = testable.getName().substring(
-                    testable.getName().lastIndexOf('.') + 1);
+            final String name = testable.getName()
+                    .substring(testable.getName().lastIndexOf('.') + 1);
             menu.setItemCaption(testable, name);
         }
         // expand all root items
-        for (final Iterator<?> i = menu.rootItemIds().iterator(); i.hasNext();) {
+        for (final Iterator<?> i = menu.rootItemIds().iterator(); i
+                .hasNext();) {
             menu.expandItemsRecursively(i.next());
         }
 
@@ -189,8 +191,8 @@ public class TestBench extends com.vaadin.server.LegacyApplication implements
                         if (next instanceof Class) {
                             Class<?> c = (Class<?>) next;
                             String string = c.getSimpleName();
-                            if (string.toLowerCase().contains(
-                                    fragment.toLowerCase())) {
+                            if (string.toLowerCase()
+                                    .contains(fragment.toLowerCase())) {
                                 menu.setValue(c);
                                 mainLayout.setSplitPosition(0);
                                 return;
@@ -274,8 +276,8 @@ public class TestBench extends com.vaadin.server.LegacyApplication implements
      * @return
      * @throws ClassNotFoundException
      */
-    public static List<Class<?>> getTestableClassesForPackage(String packageName)
-            throws Exception {
+    public static List<Class<?>> getTestableClassesForPackage(
+            String packageName) throws Exception {
         final ArrayList<File> directories = new ArrayList<File>();
         try {
             final ClassLoader cld = Thread.currentThread()
@@ -291,8 +293,8 @@ public class TestBench extends com.vaadin.server.LegacyApplication implements
                 directories.add(new File(url.getFile()));
             }
         } catch (final Exception x) {
-            throw new Exception(packageName
-                    + " does not appear to be a valid package.");
+            throw new Exception(
+                    packageName + " does not appear to be a valid package.");
         }
 
         final ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
@@ -310,11 +312,11 @@ public class TestBench extends com.vaadin.server.LegacyApplication implements
                                 + files[j].substring(0, files[j].length() - 6);
                         final Class<?> c = Class.forName(p);
                         if (c.getSuperclass() != null) {
-                            if ((c.getSuperclass()
-                                    .equals(com.vaadin.server.VaadinSession.class))) {
+                            if ((c.getSuperclass().equals(
+                                    com.vaadin.server.VaadinSession.class))) {
                                 classes.add(c);
-                            } else if ((c.getSuperclass()
-                                    .equals(com.vaadin.ui.CustomComponent.class))) {
+                            } else if ((c.getSuperclass().equals(
+                                    com.vaadin.ui.CustomComponent.class))) {
                                 classes.add(c);
                             }
                         }
@@ -329,9 +331,9 @@ public class TestBench extends com.vaadin.server.LegacyApplication implements
                     }
                 }
             } else {
-                throw new ClassNotFoundException(packageName + " ("
-                        + directory.getPath()
-                        + ") does not appear to be a valid package");
+                throw new ClassNotFoundException(
+                        packageName + " (" + directory.getPath()
+                                + ") does not appear to be a valid package");
             }
         }
 

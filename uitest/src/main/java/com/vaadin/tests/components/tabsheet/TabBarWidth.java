@@ -82,9 +82,8 @@ public class TabBarWidth extends AbstractTestUI {
                     String originalWidth = (String) ((TabSheet) component)
                             .getData();
                     component.setWidth(originalWidth);
-                    component.setCaption("Width: "
-                            + (originalWidth == null ? "undefined"
-                                    : originalWidth));
+                    component.setCaption("Width: " + (originalWidth == null
+                            ? "undefined" : originalWidth));
                 }
             }
         }

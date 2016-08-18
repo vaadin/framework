@@ -169,8 +169,8 @@ public class FlyweightCell {
     }
 
     private void adjustCellWidthForSpan(final int numberOfCells) {
-        final int cellsToTheRight = currentIterator.rawPeekNext(
-                numberOfCells - 1).size();
+        final int cellsToTheRight = currentIterator
+                .rawPeekNext(numberOfCells - 1).size();
 
         final double selfWidth = row.getColumnWidth(column);
         double widthsOfColumnsToTheRight = 0;
@@ -193,8 +193,8 @@ public class FlyweightCell {
             }
         } else if (prevColSpan > numberOfCells) {
             for (int i = 0; i < affectedCells.size(); i++) {
-                affectedCells.get(numberOfCells + i - 1).getElement()
-                        .getStyle().clearDisplay();
+                affectedCells.get(numberOfCells + i - 1).getElement().getStyle()
+                        .clearDisplay();
             }
         }
     }

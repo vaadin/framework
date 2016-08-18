@@ -52,8 +52,8 @@ import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 /**
  * Base class for vertical and horizontal ordered layouts
  */
-public abstract class AbstractOrderedLayoutConnector extends
-        AbstractLayoutConnector {
+public abstract class AbstractOrderedLayoutConnector
+        extends AbstractLayoutConnector {
 
     /*
      * Handlers & Listeners
@@ -132,11 +132,11 @@ public abstract class AbstractOrderedLayoutConnector extends
             String widgetWidth = widgetElement.getStyle().getWidth();
             String widgetHeight = widgetElement.getStyle().getHeight();
 
-            if (widgetHeight.endsWith("%")
-                    && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
+            if (widgetHeight.endsWith("%") && (pos == CaptionPosition.TOP
+                    || pos == CaptionPosition.BOTTOM)) {
                 getWidget().updateCaptionOffset(captionElement);
-            } else if (widgetWidth.endsWith("%")
-                    && (pos == CaptionPosition.LEFT || pos == CaptionPosition.RIGHT)) {
+            } else if (widgetWidth.endsWith("%") && (pos == CaptionPosition.LEFT
+                    || pos == CaptionPosition.RIGHT)) {
                 getWidget().updateCaptionOffset(captionElement);
             }
 
@@ -226,8 +226,8 @@ public abstract class AbstractOrderedLayoutConnector extends
     /**
      * The id of the previous response for which state changes have been
      * processed. If this is the same as the
-     * {@link ApplicationConnection#getLastSeenServerSyncId()}, it means that we can
-     * skip some quite expensive calculations because we know that the state
+     * {@link ApplicationConnection#getLastSeenServerSyncId()}, it means that we
+     * can skip some quite expensive calculations because we know that the state
      * hasn't changed since the last time the values were calculated.
      */
     private int processedResponseId = -1;
@@ -286,11 +286,11 @@ public abstract class AbstractOrderedLayoutConnector extends
         if (slot.hasCaption()) {
             CaptionPosition pos = slot.getCaptionPosition();
             slot.setCaptionResizeListener(slotCaptionResizeListener);
-            if (child.isRelativeHeight()
-                    && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
+            if (child.isRelativeHeight() && (pos == CaptionPosition.TOP
+                    || pos == CaptionPosition.BOTTOM)) {
                 getWidget().updateCaptionOffset(slot.getCaptionElement());
-            } else if (child.isRelativeWidth()
-                    && (pos == CaptionPosition.LEFT || pos == CaptionPosition.RIGHT)) {
+            } else if (child.isRelativeWidth() && (pos == CaptionPosition.LEFT
+                    || pos == CaptionPosition.RIGHT)) {
                 getWidget().updateCaptionOffset(slot.getCaptionElement());
             }
         }
@@ -305,7 +305,8 @@ public abstract class AbstractOrderedLayoutConnector extends
      * (com.vaadin.client.ConnectorHierarchyChangeEvent)
      */
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         Profiler.enter("AOLC.onConnectorHierarchyChange");
 
         List<ComponentConnector> previousChildren = event.getOldChildren();
@@ -314,17 +315,21 @@ public abstract class AbstractOrderedLayoutConnector extends
 
         // remove spacing as it is exists as separate elements that cannot be
         // removed easily after reordering the contents
-        Profiler.enter("AOLC.onConnectorHierarchyChange temporarily remove spacing");
+        Profiler.enter(
+                "AOLC.onConnectorHierarchyChange temporarily remove spacing");
         layout.setSpacing(false);
-        Profiler.leave("AOLC.onConnectorHierarchyChange temporarily remove spacing");
+        Profiler.leave(
+                "AOLC.onConnectorHierarchyChange temporarily remove spacing");
 
         for (ComponentConnector child : getChildComponents()) {
             Profiler.enter("AOLC.onConnectorHierarchyChange add children");
             Slot slot = layout.getSlot(child.getWidget());
             if (slot.getParent() != layout) {
-                Profiler.enter("AOLC.onConnectorHierarchyChange add state change handler");
+                Profiler.enter(
+                        "AOLC.onConnectorHierarchyChange add state change handler");
                 child.addStateChangeHandler(childStateChangeHandler);
-                Profiler.leave("AOLC.onConnectorHierarchyChange add state change handler");
+                Profiler.leave(
+                        "AOLC.onConnectorHierarchyChange add state change handler");
             }
             Profiler.enter("AOLC.onConnectorHierarchyChange addOrMoveSlot");
             layout.addOrMoveSlot(slot, currentIndex++, false);
@@ -386,14 +391,15 @@ public abstract class AbstractOrderedLayoutConnector extends
      * .gwt.dom.client.Element)
      */
     @Override
-    public TooltipInfo getTooltipInfo(com.google.gwt.dom.client.Element element) {
+    public TooltipInfo getTooltipInfo(
+            com.google.gwt.dom.client.Element element) {
         if (element != getWidget().getElement()) {
             Slot slot = WidgetUtil.findWidget(element, Slot.class);
             if (slot != null && slot.getCaptionElement() != null
                     && slot.getParent() == getWidget()
                     && slot.getCaptionElement().isOrHasChild(element)) {
-                ComponentConnector connector = Util.findConnectorFor(slot
-                        .getWidget());
+                ComponentConnector connector = Util
+                        .findConnectorFor(slot.getWidget());
                 if (connector != null) {
                     return connector.getTooltipInfo(element);
                 }
@@ -441,7 +447,8 @@ public abstract class AbstractOrderedLayoutConnector extends
         boolean onlyZeroExpands = true;
         if (needsExpand) {
             for (ComponentConnector child : getChildComponents()) {
-                double expandRatio = getState().childData.get(child).expandRatio;
+                double expandRatio = getState().childData
+                        .get(child).expandRatio;
                 if (expandRatio != 0) {
                     onlyZeroExpands = false;
                     break;
@@ -478,8 +485,8 @@ public abstract class AbstractOrderedLayoutConnector extends
                 hasChildrenWithMiddleAlignment = true;
             }
 
-            double expandRatio = onlyZeroExpands ? 1 : getState().childData
-                    .get(child).expandRatio;
+            double expandRatio = onlyZeroExpands ? 1
+                    : getState().childData.get(child).expandRatio;
 
             slot.setExpandRatio(expandRatio);
 
@@ -588,8 +595,8 @@ public abstract class AbstractOrderedLayoutConnector extends
             if (slot.hasCaption()) {
                 slot.setCaptionResizeListener(slotCaptionResizeListener);
             }
-        } else if ((hasChildrenWithRelativeHeight || hasChildrenWithRelativeWidth)
-                && slot.hasCaption()) {
+        } else if ((hasChildrenWithRelativeHeight
+                || hasChildrenWithRelativeWidth) && slot.hasCaption()) {
             /*
              * If the slot has caption, we need to listen for its size changes
              * in order to update the padding/margin offset for relative sized
@@ -622,8 +629,8 @@ public abstract class AbstractOrderedLayoutConnector extends
                 return;
             }
             h += getLayoutManager().getBorderHeight(getWidget().getElement())
-                    + getLayoutManager().getPaddingHeight(
-                            getWidget().getElement());
+                    + getLayoutManager()
+                            .getPaddingHeight(getWidget().getElement());
             getWidget().getElement().getStyle().setHeight(h, Unit.PX);
             getLayoutManager().setNeedsMeasure(this);
         }
@@ -644,8 +651,8 @@ public abstract class AbstractOrderedLayoutConnector extends
             Element captionElement = slot.getCaptionElement();
             CaptionPosition captionPosition = slot.getCaptionPosition();
 
-            int pixelHeight = layoutManager.getOuterHeight(childWidget
-                    .getElement());
+            int pixelHeight = layoutManager
+                    .getOuterHeight(childWidget.getElement());
             if (pixelHeight == -1) {
                 // Height has not yet been measured -> postpone actions that
                 // depend on the max height
@@ -660,8 +667,7 @@ public abstract class AbstractOrderedLayoutConnector extends
                     && captionSizeShouldBeAddedtoComponentHeight;
 
             if (includeCaptionHeight) {
-                int captionHeight = layoutManager
-                        .getOuterHeight(captionElement)
+                int captionHeight = layoutManager.getOuterHeight(captionElement)
                         - getLayoutManager().getMarginHeight(captionElement);
                 if (captionHeight == -1) {
                     // Height has not yet been measured -> postpone actions that

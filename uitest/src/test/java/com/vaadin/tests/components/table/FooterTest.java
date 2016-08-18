@@ -204,8 +204,8 @@ public class FooterTest extends MultiBrowserTest {
             @Override
             public String toString() {
                 // Timed out after 10 seconds waiting for ...
-                return String.format("footer cell %s's text was'%s'",
-                        "" + cell, footerCell.getText());
+                return String.format("footer cell %s's text was'%s'", "" + cell,
+                        footerCell.getText());
             }
         });
     }

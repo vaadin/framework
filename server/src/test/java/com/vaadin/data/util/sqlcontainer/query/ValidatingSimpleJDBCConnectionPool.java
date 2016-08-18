@@ -60,9 +60,8 @@ public class ValidatingSimpleJDBCConnectionPool implements JDBCConnectionPool {
     public void releaseConnection(Connection conn) {
         if (conn != null && !reserved.remove(conn)) {
             if (alreadyReleased.contains(conn)) {
-                getLogger().severe(
-                        "Tried to release connection (" + conn
-                                + ") which has already been released");
+                getLogger().severe("Tried to release connection (" + conn
+                        + ") which has already been released");
             } else {
                 throw new RuntimeException("Tried to release connection ("
                         + conn + ") not reserved using reserveConnection");
@@ -77,13 +76,13 @@ public class ValidatingSimpleJDBCConnectionPool implements JDBCConnectionPool {
     public void destroy() {
         realPool.destroy();
         if (!reserved.isEmpty()) {
-            throw new RuntimeException(reserved.size()
-                    + " connections never released");
+            throw new RuntimeException(
+                    reserved.size() + " connections never released");
         }
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(ValidatingSimpleJDBCConnectionPool.class
-                .getName());
+        return Logger
+                .getLogger(ValidatingSimpleJDBCConnectionPool.class.getName());
     }
 }

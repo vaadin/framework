@@ -205,7 +205,8 @@ public class MeasuredSize {
             heightChanged = true;
         }
         if (!widthChanged && hasWidthChanged(this.paddings, paddings)) {
-            debugSizeChange(element, "Width (padding)", this.paddings, paddings);
+            debugSizeChange(element, "Width (padding)", this.paddings,
+                    paddings);
             widthChanged = true;
         }
         this.paddings = paddings;
@@ -278,9 +279,8 @@ public class MeasuredSize {
     private void debugSizeChange(Element element, String sizeChangeType,
             String changedFrom, String changedTo) {
         if (debugSizeChanges) {
-            getLogger()
-                    .info(sizeChangeType + " has changed from " + changedFrom
-                            + " to " + changedTo + " for " + element.toString());
+            getLogger().info(sizeChangeType + " has changed from " + changedFrom
+                    + " to " + changedTo + " for " + element.toString());
         }
     }
 

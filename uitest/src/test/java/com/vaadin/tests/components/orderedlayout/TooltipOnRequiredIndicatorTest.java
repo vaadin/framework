@@ -32,8 +32,8 @@ public class TooltipOnRequiredIndicatorTest extends TooltipTest {
 
         // caption
         checkTooltip(
-                $(VerticalLayoutElement.class).get(1).findElement(
-                        By.className("v-captiontext")),
+                $(VerticalLayoutElement.class).get(1)
+                        .findElement(By.className("v-captiontext")),
                 "Vertical layout tooltip");
         // required indicator
         checkTooltip(By.className("v-required-field-indicator"),
@@ -41,8 +41,8 @@ public class TooltipOnRequiredIndicatorTest extends TooltipTest {
 
         // caption
         checkTooltip(
-                $(HorizontalLayoutElement.class).first().findElement(
-                        By.className("v-captiontext")),
+                $(HorizontalLayoutElement.class).first()
+                        .findElement(By.className("v-captiontext")),
                 "Horizontal layout tooltip");
         // required indicator
         checkTooltip(

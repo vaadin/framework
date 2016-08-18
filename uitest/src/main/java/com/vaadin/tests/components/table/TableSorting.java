@@ -34,8 +34,8 @@ public class TableSorting extends TestBase {
         testTable.addListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                System.out.println("ValueChanged: "
-                        + testTable.getValue().toString());
+                System.out.println(
+                        "ValueChanged: " + testTable.getValue().toString());
                 showID.setCaption("ID: " + testTable.getValue().toString());
             }
         });

@@ -35,7 +35,8 @@ public class HorizontalSplitPanelHeight extends AbstractTestUI {
         getLayout().setMargin(new MarginInfo(true, false, false, false));
 
         HorizontalSplitPanel panel = new HorizontalSplitPanel();
-        panel.setCaption("Horizontal 1 - no first component, label as second component");
+        panel.setCaption(
+                "Horizontal 1 - no first component, label as second component");
         panel.setId("Horizontal 1");
         Label label = new Label("Label");
         label.addStyleName("target");
@@ -44,7 +45,8 @@ public class HorizontalSplitPanelHeight extends AbstractTestUI {
         addComponent(panel);
 
         panel = new HorizontalSplitPanel();
-        panel.setCaption("Horizontal 2 - button as first component, label as second component");
+        panel.setCaption(
+                "Horizontal 2 - button as first component, label as second component");
         panel.setId("Horizontal 2");
         label = new Label("Label");
         label.addStyleName("target");
@@ -54,7 +56,8 @@ public class HorizontalSplitPanelHeight extends AbstractTestUI {
         addComponent(panel);
 
         panel = new HorizontalSplitPanel();
-        panel.setCaption("Horizontal 3 - fixed height, no first component, label as second component");
+        panel.setCaption(
+                "Horizontal 3 - fixed height, no first component, label as second component");
         panel.setId("Horizontal 3");
         label = new Label("Label");
         label.addStyleName("target");
@@ -64,7 +67,8 @@ public class HorizontalSplitPanelHeight extends AbstractTestUI {
         addComponent(panel);
 
         VerticalSplitPanel vPanel = new VerticalSplitPanel();
-        vPanel.setCaption("Vertical 1 - no first component, label as second component");
+        vPanel.setCaption(
+                "Vertical 1 - no first component, label as second component");
         vPanel.setId("Vertical 1");
         vPanel.setHeight(100, Unit.PIXELS);
         Label vLabel = new Label("Label");

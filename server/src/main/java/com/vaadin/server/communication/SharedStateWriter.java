@@ -74,7 +74,8 @@ public class SharedStateWriter implements Serializable {
                 throw new PaintException(
                         "Failed to serialize shared state for connector "
                                 + connector.getClass().getName() + " ("
-                                + connectorId + "): " + e.getMessage(), e);
+                                + connectorId + "): " + e.getMessage(),
+                        e);
             }
         }
         writer.write(JsonUtil.stringify(sharedStates));

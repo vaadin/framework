@@ -19,8 +19,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class FlashIsVisibleTest extends
-        com.vaadin.tests.components.flash.FlashIsVisibleTest {
+public class FlashIsVisibleTest
+        extends com.vaadin.tests.components.flash.FlashIsVisibleTest {
 
     @Override
     @Test

@@ -98,14 +98,12 @@ public class ProxyTest extends AbstractTestUI {
         ServletContextHandler contextHandler = new ServletContextHandler();
         server.setHandler(contextHandler);
         contextHandler.setContextPath("/");
-        ServletHolder servletHolder = contextHandler.addServlet(
-                ProxyServlet.Transparent.class, "/*");
+        ServletHolder servletHolder = contextHandler
+                .addServlet(ProxyServlet.Transparent.class, "/*");
 
         // Configure servlet to forward to the root of the original server
-        servletHolder.setInitParameter(
-                "ProxyTo",
-                "http://" + request.getLocalAddr() + ":"
-                        + request.getLocalPort() + "/");
+        servletHolder.setInitParameter("ProxyTo", "http://"
+                + request.getLocalAddr() + ":" + request.getLocalPort() + "/");
         // Configure servlet to strip beginning of paths
         servletHolder.setInitParameter("Prefix", "/proxypath/");
 
@@ -125,8 +123,8 @@ public class ProxyTest extends AbstractTestUI {
                 new ExternalResource(linkBase + "embed1")));
         linkHolder.addComponent(new Link("Open embed1/ in proxy",
                 new ExternalResource(linkBase + "embed1/")));
-        linkHolder.addComponent(new Link("Open Buttons in proxy",
-                new ExternalResource(linkBase
+        linkHolder.addComponent(
+                new Link("Open Buttons in proxy", new ExternalResource(linkBase
                         + "run/com.vaadin.tests.components.button.Buttons")));
 
     }

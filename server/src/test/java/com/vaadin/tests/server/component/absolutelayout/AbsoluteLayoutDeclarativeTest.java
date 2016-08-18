@@ -27,8 +27,8 @@ import com.vaadin.ui.Button;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class AbsoluteLayoutDeclarativeTest extends
-        DeclarativeTestBase<AbsoluteLayout> {
+public class AbsoluteLayoutDeclarativeTest
+        extends DeclarativeTestBase<AbsoluteLayout> {
 
     @Test
     public void testAbsoluteLayoutFeatures() {

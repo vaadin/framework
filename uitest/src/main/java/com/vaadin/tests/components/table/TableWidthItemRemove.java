@@ -55,8 +55,7 @@ public class TableWidthItemRemove extends AbstractTestUI {
         addButton("Populate", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                table.addItem(
-                        new Object[] { "John", "Doe", new Integer(1980) },
+                table.addItem(new Object[] { "John", "Doe", new Integer(1980) },
                         Math.random() * 1000);
             }
         });

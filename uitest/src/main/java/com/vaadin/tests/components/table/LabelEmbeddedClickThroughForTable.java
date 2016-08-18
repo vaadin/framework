@@ -38,23 +38,21 @@ public class LabelEmbeddedClickThroughForTable extends AbstractTestUI {
         Item item = table.addItem("Item 1 (row 1)");
         item.getItemProperty("Column 1").setValue("String A");
         item.getItemProperty("Column 2").setValue(new Label("Label A"));
-        item.getItemProperty("Column 3").setValue(
-                new Label("<b>Label A</b>", ContentMode.HTML));
-        item.getItemProperty("Column 4").setValue(
-                new Embedded("An embedded image", new ThemeResource(
-                        "../runo/icons/32/ok.png")));
+        item.getItemProperty("Column 3")
+                .setValue(new Label("<b>Label A</b>", ContentMode.HTML));
+        item.getItemProperty("Column 4")
+                .setValue(new Embedded("An embedded image",
+                        new ThemeResource("../runo/icons/32/ok.png")));
 
         item = table.addItem("Item 2 (row 2)");
         item.getItemProperty("Column 1").setValue("String B");
         item.getItemProperty("Column 2").setValue(new Label("Label B"));
         item.getItemProperty("Column 3")
-                .setValue(
-                        new Label(
-                                "<a style=\"color: blue\" href=\"javascript:false\">Label B</a>",
-                                ContentMode.HTML));
-        item.getItemProperty("Column 4").setValue(
-                new Embedded("", new ThemeResource(
-                        "../runo/icons/32/cancel.png")));
+                .setValue(new Label(
+                        "<a style=\"color: blue\" href=\"javascript:false\">Label B</a>",
+                        ContentMode.HTML));
+        item.getItemProperty("Column 4").setValue(new Embedded("",
+                new ThemeResource("../runo/icons/32/cancel.png")));
 
         table.addItemClickListener(new ItemClickListener() {
 

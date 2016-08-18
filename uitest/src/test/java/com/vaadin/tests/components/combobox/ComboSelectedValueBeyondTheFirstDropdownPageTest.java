@@ -24,8 +24,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 @SuppressWarnings("serial")
-public class ComboSelectedValueBeyondTheFirstDropdownPageTest extends
-        MultiBrowserTest {
+public class ComboSelectedValueBeyondTheFirstDropdownPageTest
+        extends MultiBrowserTest {
 
     @Test
     public void valueOnSecondPageIsSelected() {

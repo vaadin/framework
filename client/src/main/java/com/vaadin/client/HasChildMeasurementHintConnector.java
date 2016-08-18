@@ -25,8 +25,8 @@ import com.vaadin.client.ui.layout.ElementResizeListener;
  * @since 7.6
  * @author Vaadin Ltd
  */
-public interface HasChildMeasurementHintConnector extends
-        HasComponentsConnector {
+public interface HasChildMeasurementHintConnector
+        extends HasComponentsConnector {
 
     /**
      * Specifies how you would like child components measurements to be handled.

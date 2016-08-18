@@ -30,12 +30,12 @@ public class GridItemSetChangeTest extends SingleBrowserTest {
         openTestURL();
 
         GridElement grid = $(GridElement.class).first();
-        assertEquals("Last name initially wrong", "Bar", grid.getCell(0, 1)
-                .getText());
+        assertEquals("Last name initially wrong", "Bar",
+                grid.getCell(0, 1).getText());
 
         $(ButtonElement.class).caption("Modify").first().click();
-        assertEquals("Last name was not updated", "Spam", grid.getCell(0, 1)
-                .getText());
+        assertEquals("Last name was not updated", "Spam",
+                grid.getCell(0, 1).getText());
 
         $(ButtonElement.class).caption("Reset").first().click();
         assertEquals("Last name was not updated on reset", "Baz",

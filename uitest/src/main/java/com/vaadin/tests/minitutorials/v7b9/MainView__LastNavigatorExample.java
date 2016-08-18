@@ -14,8 +14,8 @@ public class MainView__LastNavigatorExample extends Panel implements View {
 
     public MainView__LastNavigatorExample(final Navigator navigator) {
 
-        Link lnk = new Link("Settings", new ExternalResource("#!"
-                + SettingsView.NAME));
+        Link lnk = new Link("Settings",
+                new ExternalResource("#!" + SettingsView.NAME));
         VerticalLayout vl = new VerticalLayout();
         vl.addComponent(lnk);
         setContent(vl);

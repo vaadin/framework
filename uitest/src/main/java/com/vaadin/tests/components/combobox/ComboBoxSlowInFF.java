@@ -30,8 +30,8 @@ public class ComboBoxSlowInFF extends TestBase {
                 for (int i = 0; i < 200; i++) {
                     Item item = t.addItem(i);
                     for (int j = 0; j < 5; j++) {
-                        item.getItemProperty("test" + j).setValue(
-                                createComponent(i, j));
+                        item.getItemProperty("test" + j)
+                                .setValue(createComponent(i, j));
                     }
                 }
             }

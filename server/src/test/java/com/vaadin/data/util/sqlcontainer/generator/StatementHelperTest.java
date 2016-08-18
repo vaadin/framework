@@ -44,8 +44,8 @@ public class StatementHelperTest {
             // Exception should contain info about which parameter and the type
             // which was unsupported
             Assert.assertTrue(e.getMessage().contains("parameter 0"));
-            Assert.assertTrue(e.getMessage().contains(
-                    StatementHelper.class.getName()));
+            Assert.assertTrue(
+                    e.getMessage().contains(StatementHelper.class.getName()));
         }
     }
 

@@ -31,8 +31,10 @@ public class GridCellStyleGeneratorTest extends GridBasicFeaturesTest {
     public void testStyleNameGeneratorScrolling() throws Exception {
         openTestURL();
 
-        selectRowStyleNameGenerator(GridBasicFeatures.ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4);
-        selectCellStyleNameGenerator(GridBasicFeatures.CELL_STYLE_GENERATOR_SPECIAL);
+        selectRowStyleNameGenerator(
+                GridBasicFeatures.ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4);
+        selectCellStyleNameGenerator(
+                GridBasicFeatures.CELL_STYLE_GENERATOR_SPECIAL);
 
         GridRowElement row = getGridElement().getRow(2);
         GridCellElement cell = getGridElement().getCell(3, 2);
@@ -55,8 +57,10 @@ public class GridCellStyleGeneratorTest extends GridBasicFeaturesTest {
     public void testDisableStyleNameGenerator() throws Exception {
         openTestURL();
 
-        selectRowStyleNameGenerator(GridBasicFeatures.ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4);
-        selectCellStyleNameGenerator(GridBasicFeatures.CELL_STYLE_GENERATOR_SPECIAL);
+        selectRowStyleNameGenerator(
+                GridBasicFeatures.ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4);
+        selectCellStyleNameGenerator(
+                GridBasicFeatures.CELL_STYLE_GENERATOR_SPECIAL);
 
         // Just verify that change was effective
         GridRowElement row2 = getGridElement().getRow(2);
@@ -67,7 +71,8 @@ public class GridCellStyleGeneratorTest extends GridBasicFeaturesTest {
 
         // Disable the generator and check again
         selectRowStyleNameGenerator(GridBasicFeatures.ROW_STYLE_GENERATOR_NONE);
-        selectCellStyleNameGenerator(GridBasicFeatures.CELL_STYLE_GENERATOR_NONE);
+        selectCellStyleNameGenerator(
+                GridBasicFeatures.CELL_STYLE_GENERATOR_NONE);
 
         Assert.assertFalse(hasCssClass(row2, "row2"));
         Assert.assertFalse(hasCssClass(cell3_2, "Column_2"));
@@ -77,8 +82,10 @@ public class GridCellStyleGeneratorTest extends GridBasicFeaturesTest {
     public void testChangeStyleNameGenerator() throws Exception {
         openTestURL();
 
-        selectRowStyleNameGenerator(GridBasicFeatures.ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4);
-        selectCellStyleNameGenerator(GridBasicFeatures.CELL_STYLE_GENERATOR_SPECIAL);
+        selectRowStyleNameGenerator(
+                GridBasicFeatures.ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4);
+        selectCellStyleNameGenerator(
+                GridBasicFeatures.CELL_STYLE_GENERATOR_SPECIAL);
 
         // Just verify that change was effective
         GridRowElement row2 = getGridElement().getRow(2);
@@ -89,7 +96,8 @@ public class GridCellStyleGeneratorTest extends GridBasicFeaturesTest {
 
         // Change the generator and check again
         selectRowStyleNameGenerator(GridBasicFeatures.ROW_STYLE_GENERATOR_NONE);
-        selectCellStyleNameGenerator(GridBasicFeatures.CELL_STYLE_GENERATOR_PROPERTY_TO_STRING);
+        selectCellStyleNameGenerator(
+                GridBasicFeatures.CELL_STYLE_GENERATOR_PROPERTY_TO_STRING);
 
         // Old styles removed?
         Assert.assertFalse(hasCssClass(row2, "row2"));
@@ -105,7 +113,8 @@ public class GridCellStyleGeneratorTest extends GridBasicFeaturesTest {
         openTestURL();
         selectMenuPath("Component", "State", "Selection mode", "multi");
 
-        selectCellStyleNameGenerator(GridBasicFeatures.CELL_STYLE_GENERATOR_SPECIAL);
+        selectCellStyleNameGenerator(
+                GridBasicFeatures.CELL_STYLE_GENERATOR_SPECIAL);
 
         assertFalse("Error notification was present",
                 isElementPresent(NotificationElement.class));
@@ -123,8 +132,10 @@ public class GridCellStyleGeneratorTest extends GridBasicFeaturesTest {
     public void testEmptyStringStyleGenerator() {
         setDebug(true);
         openTestURL();
-        selectCellStyleNameGenerator(GridBasicFeatures.CELL_STYLE_GENERATOR_EMPTY);
-        selectRowStyleNameGenerator(GridBasicFeatures.ROW_STYLE_GENERATOR_EMPTY);
+        selectCellStyleNameGenerator(
+                GridBasicFeatures.CELL_STYLE_GENERATOR_EMPTY);
+        selectRowStyleNameGenerator(
+                GridBasicFeatures.ROW_STYLE_GENERATOR_EMPTY);
 
         assertFalse("Error notification was present",
                 isElementPresent(NotificationElement.class));
@@ -134,7 +145,8 @@ public class GridCellStyleGeneratorTest extends GridBasicFeaturesTest {
     public void testNullStringStyleGenerator() {
         setDebug(true);
         openTestURL();
-        selectCellStyleNameGenerator(GridBasicFeatures.CELL_STYLE_GENERATOR_NULL);
+        selectCellStyleNameGenerator(
+                GridBasicFeatures.CELL_STYLE_GENERATOR_NULL);
         selectRowStyleNameGenerator(GridBasicFeatures.ROW_STYLE_GENERATOR_NULL);
 
         assertFalse("Error notification was present",

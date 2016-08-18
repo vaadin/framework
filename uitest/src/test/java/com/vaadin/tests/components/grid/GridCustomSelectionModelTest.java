@@ -40,8 +40,8 @@ public class GridCustomSelectionModelTest extends MultiBrowserTest {
         assertTrue("First column of Grid should not have an input element",
                 cell.findElements(By.className("input")).isEmpty());
 
-        assertFalse("Row should not be selected initially", grid.getRow(0)
-                .isSelected());
+        assertFalse("Row should not be selected initially",
+                grid.getRow(0).isSelected());
 
         cell.click(5, 5);
         assertTrue("Click should select row", grid.getRow(0).isSelected());

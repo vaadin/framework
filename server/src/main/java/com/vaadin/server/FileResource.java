@@ -66,16 +66,17 @@ public class FileResource implements ConnectorResource {
     @Override
     public DownloadStream getStream() {
         try {
-            final DownloadStream ds = new DownloadStream(new FileInputStream(
-                    sourceFile), getMIMEType(), getFilename());
+            final DownloadStream ds = new DownloadStream(
+                    new FileInputStream(sourceFile), getMIMEType(),
+                    getFilename());
             ds.setParameter("Content-Length",
                     String.valueOf(sourceFile.length()));
 
             ds.setCacheTime(cacheTime);
             return ds;
         } catch (final FileNotFoundException e) {
-            throw new RuntimeException("File not found: "
-                    + sourceFile.getName(), e);
+            throw new RuntimeException(
+                    "File not found: " + sourceFile.getName(), e);
         }
     }
 

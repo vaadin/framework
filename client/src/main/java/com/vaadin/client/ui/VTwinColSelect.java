@@ -74,8 +74,8 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
      * A ListBox which catches double clicks
      * 
      */
-    public class DoubleClickListBox extends ListBox implements
-            HasDoubleClickHandlers {
+    public class DoubleClickListBox extends ListBox
+            implements HasDoubleClickHandlers {
         public DoubleClickListBox(boolean isMultipleSelect) {
             super(isMultipleSelect);
         }
@@ -170,13 +170,15 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public void updateCaptions(UIDL uidl) {
         String leftCaption = (uidl
-                .hasAttribute(TwinColSelectConstants.ATTRIBUTE_LEFT_CAPTION) ? uidl
-                .getStringAttribute(TwinColSelectConstants.ATTRIBUTE_LEFT_CAPTION)
-                : null);
+                .hasAttribute(TwinColSelectConstants.ATTRIBUTE_LEFT_CAPTION)
+                        ? uidl.getStringAttribute(
+                                TwinColSelectConstants.ATTRIBUTE_LEFT_CAPTION)
+                        : null);
         String rightCaption = (uidl
-                .hasAttribute(TwinColSelectConstants.ATTRIBUTE_RIGHT_CAPTION) ? uidl
-                .getStringAttribute(TwinColSelectConstants.ATTRIBUTE_RIGHT_CAPTION)
-                : null);
+                .hasAttribute(TwinColSelectConstants.ATTRIBUTE_RIGHT_CAPTION)
+                        ? uidl.getStringAttribute(
+                                TwinColSelectConstants.ATTRIBUTE_RIGHT_CAPTION)
+                        : null);
 
         boolean hasCaptions = (leftCaption != null || rightCaption != null);
 
@@ -389,13 +391,14 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public void setInternalWidths() {
         getElement().getStyle().setPosition(Position.RELATIVE);
-        int bordersAndPaddings = WidgetUtil.measureHorizontalPaddingAndBorder(
-                buttons.getElement(), 0);
+        int bordersAndPaddings = WidgetUtil
+                .measureHorizontalPaddingAndBorder(buttons.getElement(), 0);
 
         int buttonWidth = WidgetUtil.getRequiredWidth(buttons);
         int totalWidth = getOffsetWidth();
 
-        int spaceForSelect = (totalWidth - buttonWidth - bordersAndPaddings) / 2;
+        int spaceForSelect = (totalWidth - buttonWidth - bordersAndPaddings)
+                / 2;
 
         options.setWidth(spaceForSelect + "px");
         if (optionsCaption != null) {
@@ -563,7 +566,8 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     private static final String SUBPART_REMOVE_BUTTON = "remove";
 
     @Override
-    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(
+            String subPart) {
         if (SUBPART_OPTION_SELECT.equals(subPart)) {
             return options.getElement();
         } else if (subPart.startsWith(SUBPART_OPTION_SELECT_ITEM)) {
@@ -573,8 +577,8 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         } else if (SUBPART_SELECTION_SELECT.equals(subPart)) {
             return selections.getElement();
         } else if (subPart.startsWith(SUBPART_SELECTION_SELECT_ITEM)) {
-            String idx = subPart.substring(SUBPART_SELECTION_SELECT_ITEM
-                    .length());
+            String idx = subPart
+                    .substring(SUBPART_SELECTION_SELECT_ITEM.length());
             return (com.google.gwt.user.client.Element) selections.getElement()
                     .getChild(Integer.parseInt(idx));
         } else if (optionsCaption != null
@@ -593,7 +597,8 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     }
 
     @Override
-    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+    public String getSubPartName(
+            com.google.gwt.user.client.Element subElement) {
         if (optionsCaption != null
                 && optionsCaption.getElement().isOrHasChild(subElement)) {
             return SUBPART_LEFT_CAPTION;

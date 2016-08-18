@@ -39,8 +39,8 @@ public class TreeTableScrollOnExpandTest extends MultiBrowserTest {
         // Need to wait a bit to avoid accepting the case where the TreeTable is
         // in the desired state only for a short while.
         sleep(1000);
-        WebElement focusedRow = getDriver().findElement(
-                By.className("v-table-focus"));
+        WebElement focusedRow = getDriver()
+                .findElement(By.className("v-table-focus"));
         assertEquals("Item 21", focusedRow.getText());
     }
 }

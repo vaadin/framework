@@ -56,8 +56,8 @@ public abstract class JsonSerializer implements GeneratedSerializer {
                 + ApplicationConnection.class.getName() + " connection) {");
         w.indent();
         // MouseEventDetails castedValue = (MouseEventDetails) value;
-        w.println(qualifiedSourceName + " castedValue = ("
-                + qualifiedSourceName + ") value;");
+        w.println(qualifiedSourceName + " castedValue = (" + qualifiedSourceName
+                + ") value;");
 
         printSerializerBody(logger, w, "castedValue", "connection");
 

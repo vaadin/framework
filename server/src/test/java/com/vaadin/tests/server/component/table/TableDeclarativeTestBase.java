@@ -20,8 +20,8 @@ import static org.junit.Assert.assertTrue;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.Table;
 
-public abstract class TableDeclarativeTestBase extends
-        DeclarativeTestBase<Table> {
+public abstract class TableDeclarativeTestBase
+        extends DeclarativeTestBase<Table> {
 
     @Override
     public Table testRead(String design, Table expected) {
@@ -40,8 +40,8 @@ public abstract class TableDeclarativeTestBase extends
     }
 
     protected void compareBody(Table read, Table expected) {
-        assertEquals("number of items", expected.getItemIds().size(), read
-                .getItemIds().size());
+        assertEquals("number of items", expected.getItemIds().size(),
+                read.getItemIds().size());
         for (Object rowId : expected.getItemIds()) {
             assertTrue(read.containsId(rowId));
             for (Object propertyId : read.getVisibleColumns()) {

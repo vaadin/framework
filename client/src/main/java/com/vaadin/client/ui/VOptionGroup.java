@@ -48,8 +48,8 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.optiongroup.OptionGroupConstants;
 
-public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
-        BlurHandler {
+public class VOptionGroup extends VOptionGroupBase
+        implements FocusHandler, BlurHandler {
 
     public static final String CLASSNAME = "v-select-optiongroup";
 
@@ -150,7 +150,8 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
             // Need to recreate object if isMultiselect is changed (#10451)
             // OR if htmlContentAllowed changed due to Safari 5 issue
-            if ((op == null) || (isHtmlContentAllowed() != wasHtmlContentAllowed)
+            if ((op == null)
+                    || (isHtmlContentAllowed() != wasHtmlContentAllowed)
                     || (isMultiselect() != wasMultiselect)) {
                 // Create a new element
                 if (isMultiselect()) {
@@ -172,8 +173,8 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
             op.setHTML(itemHtml);
             op.setValue(opUidl.getBooleanAttribute("selected"));
-            boolean optionEnabled = !opUidl
-                    .getBooleanAttribute(OptionGroupConstants.ATTRIBUTE_OPTION_DISABLED);
+            boolean optionEnabled = !opUidl.getBooleanAttribute(
+                    OptionGroupConstants.ATTRIBUTE_OPTION_DISABLED);
             boolean enabled = optionEnabled && !isReadonly() && isEnabled();
             op.setEnabled(enabled);
             optionsEnabled.put(op, optionEnabled);
@@ -234,7 +235,8 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
     @Override
     public void setTabIndex(int tabIndex) {
-        for (Iterator<Widget> iterator = panel.iterator(); iterator.hasNext();) {
+        for (Iterator<Widget> iterator = panel.iterator(); iterator
+                .hasNext();) {
             FocusWidget widget = (FocusWidget) iterator.next();
             widget.setTabIndex(tabIndex);
         }

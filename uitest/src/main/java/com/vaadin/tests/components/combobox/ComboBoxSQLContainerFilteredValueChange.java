@@ -55,8 +55,8 @@ public class ComboBoxSQLContainerFilteredValueChange extends TestBase {
         myCombo.addListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                selectedLabel.setValue("Selected: "
-                        + event.getProperty().getValue());
+                selectedLabel.setValue(
+                        "Selected: " + event.getProperty().getValue());
             }
         });
     }

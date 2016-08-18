@@ -52,7 +52,8 @@ public class SliderDisableTest extends MultiBrowserTest {
     }
 
     private void moveSlider(int offset) {
-        WebElement element = vaadinElement("/VVerticalLayout[0]/Slot[0]/VSlider[0]/domChild[2]/domChild[0]");
+        WebElement element = vaadinElement(
+                "/VVerticalLayout[0]/Slot[0]/VSlider[0]/domChild[2]/domChild[0]");
         new Actions(driver).dragAndDropBy(element, offset, 0).perform();
         testBench().waitForVaadin();
     }

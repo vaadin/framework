@@ -67,7 +67,8 @@ public class ConnectorTypeWriter implements Serializable {
                 throw new PaintException(
                         "Failed to send connector type for connector "
                                 + connector.getConnectorId() + ": "
-                                + e.getMessage(), e);
+                                + e.getMessage(),
+                        e);
             }
         }
         writer.write(JsonUtil.stringify(connectorTypes));

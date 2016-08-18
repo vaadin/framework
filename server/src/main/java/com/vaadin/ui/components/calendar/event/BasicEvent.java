@@ -22,9 +22,9 @@ import java.util.List;
 import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeNotifier;
 
 /**
- * Simple implementation of
- * {@link com.vaadin.addon.calendar.event.CalendarEvent CalendarEvent}. Has
- * setters for all required fields and fires events when this event is changed.
+ * Simple implementation of {@link com.vaadin.addon.calendar.event.CalendarEvent
+ * CalendarEvent}. Has setters for all required fields and fires events when
+ * this event is changed.
  * 
  * @since 7.1.0
  * @author Vaadin Ltd.

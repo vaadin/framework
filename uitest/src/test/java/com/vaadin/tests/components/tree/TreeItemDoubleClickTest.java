@@ -47,8 +47,8 @@ public class TreeItemDoubleClickTest extends MultiBrowserTest {
     }
 
     private WebElement getTreeNodeByCaption(String caption) {
-        return getDriver().findElement(
-                By.xpath("//span[text() = '" + caption + "']"));
+        return getDriver()
+                .findElement(By.xpath("//span[text() = '" + caption + "']"));
     }
 
     private void doubleClick(WebElement element) {
@@ -57,8 +57,7 @@ public class TreeItemDoubleClickTest extends MultiBrowserTest {
     }
 
     private void assertLogText(String text) {
-        assertThat(
-                String.format("Couldn't find text '%s' from the log.", text),
+        assertThat(String.format("Couldn't find text '%s' from the log.", text),
                 logContainsText(text));
     }
 

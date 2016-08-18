@@ -7,8 +7,8 @@ import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 
-public class AndOrFilterTest extends
-        AbstractFilterTestBase<AbstractJunctionFilter> {
+public class AndOrFilterTest
+        extends AbstractFilterTestBase<AbstractJunctionFilter> {
 
     protected Item item1 = new BeanItem<Integer>(1);
     protected Item item2 = new BeanItem<Integer>(2);
@@ -30,10 +30,10 @@ public class AndOrFilterTest extends
 
     @Test
     public void testTwoFilterAnd() {
-        Filter filter1 = new And(new SameItemFilter(item1), new SameItemFilter(
-                item1));
-        Filter filter2 = new And(new SameItemFilter(item1), new SameItemFilter(
-                item2));
+        Filter filter1 = new And(new SameItemFilter(item1),
+                new SameItemFilter(item1));
+        Filter filter2 = new And(new SameItemFilter(item1),
+                new SameItemFilter(item2));
 
         Assert.assertTrue(filter1.passesFilter(null, item1));
         Assert.assertFalse(filter1.passesFilter(null, item2));
@@ -44,10 +44,10 @@ public class AndOrFilterTest extends
 
     @Test
     public void testThreeFilterAnd() {
-        Filter filter1 = new And(new SameItemFilter(item1), new SameItemFilter(
-                item1), new SameItemFilter(item1));
-        Filter filter2 = new And(new SameItemFilter(item1), new SameItemFilter(
-                item1), new SameItemFilter(item2));
+        Filter filter1 = new And(new SameItemFilter(item1),
+                new SameItemFilter(item1), new SameItemFilter(item1));
+        Filter filter2 = new And(new SameItemFilter(item1),
+                new SameItemFilter(item1), new SameItemFilter(item2));
 
         Assert.assertTrue(filter1.passesFilter(null, item1));
         Assert.assertFalse(filter1.passesFilter(null, item2));
@@ -73,10 +73,10 @@ public class AndOrFilterTest extends
 
     @Test
     public void testTwoFilterOr() {
-        Filter filter1 = new Or(new SameItemFilter(item1), new SameItemFilter(
-                item1));
-        Filter filter2 = new Or(new SameItemFilter(item1), new SameItemFilter(
-                item2));
+        Filter filter1 = new Or(new SameItemFilter(item1),
+                new SameItemFilter(item1));
+        Filter filter2 = new Or(new SameItemFilter(item1),
+                new SameItemFilter(item2));
 
         Assert.assertTrue(filter1.passesFilter(null, item1));
         Assert.assertFalse(filter1.passesFilter(null, item2));
@@ -87,10 +87,10 @@ public class AndOrFilterTest extends
 
     @Test
     public void testThreeFilterOr() {
-        Filter filter1 = new Or(new SameItemFilter(item1), new SameItemFilter(
-                item1), new SameItemFilter(item1));
-        Filter filter2 = new Or(new SameItemFilter(item1), new SameItemFilter(
-                item1), new SameItemFilter(item2));
+        Filter filter1 = new Or(new SameItemFilter(item1),
+                new SameItemFilter(item1), new SameItemFilter(item1));
+        Filter filter2 = new Or(new SameItemFilter(item1),
+                new SameItemFilter(item1), new SameItemFilter(item2));
 
         Assert.assertTrue(filter1.passesFilter(null, item1));
         Assert.assertFalse(filter1.passesFilter(null, item2));
@@ -146,10 +146,10 @@ public class AndOrFilterTest extends
         Filter filter1a = new Or(new SameItemFilter(item1));
         Filter filter1a2 = new Or(new SameItemFilter(item1));
         Filter filter1b = new Or(new SameItemFilter(item2));
-        Filter filter2a = new Or(new SameItemFilter(item1), new SameItemFilter(
-                item1));
-        Filter filter2b = new Or(new SameItemFilter(item1), new SameItemFilter(
-                item2));
+        Filter filter2a = new Or(new SameItemFilter(item1),
+                new SameItemFilter(item1));
+        Filter filter2b = new Or(new SameItemFilter(item1),
+                new SameItemFilter(item2));
         Filter filter2b2 = new Or(new SameItemFilter(item1),
                 new SameItemFilter(item2));
         Filter other0 = new And();

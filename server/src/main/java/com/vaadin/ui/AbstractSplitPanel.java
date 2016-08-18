@@ -79,8 +79,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * Modifiable and Serializable Iterator for the components, used by
      * {@link AbstractSplitPanel#getComponentIterator()}.
      */
-    private class ComponentIterator implements Iterator<Component>,
-            Serializable {
+    private class ComponentIterator
+            implements Iterator<Component>, Serializable {
 
         int i = 0;
 
@@ -258,7 +258,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /* Documented in superclass */
 
     @Override
-    public void replaceComponent(Component oldComponent, Component newComponent) {
+    public void replaceComponent(Component oldComponent,
+            Component newComponent) {
         if (oldComponent == getFirstComponent()) {
             setFirstComponent(newComponent);
         } else if (oldComponent == getSecondComponent()) {
@@ -456,7 +457,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     private void setSplitPositionLimits(float minPos, Unit minPosUnit,
             float maxPos, Unit maxPosUnit) {
         if ((minPosUnit != Unit.PERCENTAGE && minPosUnit != Unit.PIXELS)
-                || (maxPosUnit != Unit.PERCENTAGE && maxPosUnit != Unit.PIXELS)) {
+                || (maxPosUnit != Unit.PERCENTAGE
+                        && maxPosUnit != Unit.PIXELS)) {
             throw new IllegalArgumentException(
                     "Only percentage and pixel units are allowed");
         }
@@ -530,7 +532,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * 
      * @since 7.5.0
      */
-    public interface SplitPositionChangeListener extends ConnectorEventListener {
+    public interface SplitPositionChangeListener
+            extends ConnectorEventListener {
 
         public static final Method moveMethod = ReflectTools.findMethod(
                 SplitPositionChangeListener.class, "onSplitPositionChanged",
@@ -587,8 +590,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     }
 
     public void removeSplitterClickListener(SplitterClickListener listener) {
-        removeListener(EventId.CLICK_EVENT_IDENTIFIER,
-                SplitterClickEvent.class, listener);
+        removeListener(EventId.CLICK_EVENT_IDENTIFIER, SplitterClickEvent.class,
+                listener);
     }
 
     /**
@@ -640,7 +643,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     }
 
     private SplitterState getSplitterState(boolean markAsDirty) {
-        return ((AbstractSplitPanelState) super.getState(markAsDirty)).splitterState;
+        return ((AbstractSplitPanelState) super.getState(
+                markAsDirty)).splitterState;
     }
 
     /*
@@ -722,15 +726,13 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
                     + getSplitPositionUnit();
             design.attr("split-position", splitPositionString);
         }
-        if (getMinSplitPosition() != def.getMinSplitPosition()
-                || !def.getMinSplitPositionUnit().equals(
-                        getMinSplitPositionUnit())) {
+        if (getMinSplitPosition() != def.getMinSplitPosition() || !def
+                .getMinSplitPositionUnit().equals(getMinSplitPositionUnit())) {
             design.attr("min-split-position", asString(getMinSplitPosition())
                     + getMinSplitPositionUnit());
         }
-        if (getMaxSplitPosition() != def.getMaxSplitPosition()
-                || !def.getMaxSplitPositionUnit().equals(
-                        getMaxSplitPositionUnit())) {
+        if (getMaxSplitPosition() != def.getMaxSplitPosition() || !def
+                .getMaxSplitPositionUnit().equals(getMaxSplitPositionUnit())) {
             design.attr("max-split-position", asString(getMaxSplitPosition())
                     + getMaxSplitPositionUnit());
         }

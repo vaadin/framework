@@ -41,14 +41,22 @@ import com.vaadin.ui.UI;
 public class FileUploadHandlerTest {
 
     private FileUploadHandler handler;
-    @Mock private VaadinResponse response;
-    @Mock private StreamVariable streamVariable;
-    @Mock private ClientConnector clientConnector;
-    @Mock private VaadinRequest request;
-    @Mock private UI ui;
-    @Mock private ConnectorTracker connectorTracker;
-    @Mock private VaadinSession session;
-    @Mock private OutputStream responseOutput;
+    @Mock
+    private VaadinResponse response;
+    @Mock
+    private StreamVariable streamVariable;
+    @Mock
+    private ClientConnector clientConnector;
+    @Mock
+    private VaadinRequest request;
+    @Mock
+    private UI ui;
+    @Mock
+    private ConnectorTracker connectorTracker;
+    @Mock
+    private VaadinSession session;
+    @Mock
+    private OutputStream responseOutput;
 
     private int uiId = 123;
     private final String connectorId = "connectorId";
@@ -66,18 +74,24 @@ public class FileUploadHandlerTest {
         mockUi();
 
         when(clientConnector.isConnectorEnabled()).thenReturn(true);
-        when(streamVariable.getOutputStream()).thenReturn(mock(OutputStream.class));
+        when(streamVariable.getOutputStream())
+                .thenReturn(mock(OutputStream.class));
         when(response.getOutputStream()).thenReturn(responseOutput);
     }
 
     private void mockConnectorTracker() {
-        when(connectorTracker.getSeckey(streamVariable)).thenReturn(expectedSecurityKey);
-        when(connectorTracker.getStreamVariable(connectorId, variableName)).thenReturn(streamVariable);
-        when(connectorTracker.getConnector(connectorId)).thenReturn(clientConnector);
+        when(connectorTracker.getSeckey(streamVariable))
+                .thenReturn(expectedSecurityKey);
+        when(connectorTracker.getStreamVariable(connectorId, variableName))
+                .thenReturn(streamVariable);
+        when(connectorTracker.getConnector(connectorId))
+                .thenReturn(clientConnector);
     }
 
     private void mockRequest() throws IOException {
-        when(request.getPathInfo()).thenReturn("/" + ServletPortletHelper.UPLOAD_URL_PREFIX + uiId + "/"+ connectorId + "/" + variableName + "/" + expectedSecurityKey);
+        when(request.getPathInfo()).thenReturn("/"
+                + ServletPortletHelper.UPLOAD_URL_PREFIX + uiId + "/"
+                + connectorId + "/" + variableName + "/" + expectedSecurityKey);
         when(request.getInputStream()).thenReturn(createInputStream("foobar"));
         when(request.getHeader("Content-Length")).thenReturn("6");
         when(request.getContentType()).thenReturn("foobar");
@@ -90,11 +104,12 @@ public class FileUploadHandlerTest {
 
             @Override
             public int read() throws IOException {
-                if(counter > msg.length + 1) {
-                    throw new AssertionError("-1 was ignored by FileUploadHandler.");
+                if (counter > msg.length + 1) {
+                    throw new AssertionError(
+                            "-1 was ignored by FileUploadHandler.");
                 }
 
-                if(counter >= msg.length) {
+                if (counter >= msg.length) {
                     counter++;
                     return -1;
                 }
@@ -110,7 +125,8 @@ public class FileUploadHandlerTest {
     }
 
     /**
-     * Tests whether we get infinite loop if InputStream is already read (#10096)
+     * Tests whether we get infinite loop if InputStream is already read
+     * (#10096)
      */
     @Test(expected = IOException.class)
     public void exceptionIsThrownOnUnexpectedEnd() throws IOException {
@@ -123,7 +139,8 @@ public class FileUploadHandlerTest {
 
     @Test
     public void responseIsSentOnCorrectSecurityKey() throws IOException {
-        when(connectorTracker.getSeckey(streamVariable)).thenReturn(expectedSecurityKey);
+        when(connectorTracker.getSeckey(streamVariable))
+                .thenReturn(expectedSecurityKey);
 
         handler.handleRequest(session, request, response);
 
@@ -132,7 +149,8 @@ public class FileUploadHandlerTest {
 
     @Test
     public void responseIsNotSentOnIncorrectSecurityKey() throws IOException {
-        when(connectorTracker.getSeckey(streamVariable)).thenReturn("another key expected");
+        when(connectorTracker.getSeckey(streamVariable))
+                .thenReturn("another key expected");
 
         handler.handleRequest(session, request, response);
 

@@ -49,8 +49,8 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public abstract class ClickableRenderer<T, W extends Widget> extends
-        WidgetRenderer<T, W> implements ClickHandler {
+public abstract class ClickableRenderer<T, W extends Widget>
+        extends WidgetRenderer<T, W> implements ClickHandler {
 
     /**
      * A handler for {@link RendererClickEvent renderer click events}.
@@ -79,8 +79,8 @@ public abstract class ClickableRenderer<T, W extends Widget> extends
      *            the row type of the containing Grid
      */
     @SuppressWarnings("rawtypes")
-    public static class RendererClickEvent<R> extends
-            MouseEvent<RendererClickHandler> {
+    public static class RendererClickEvent<R>
+            extends MouseEvent<RendererClickHandler> {
 
         @SuppressWarnings("unchecked")
         static final Type<RendererClickHandler> TYPE = new Type<RendererClickHandler>(
@@ -213,7 +213,8 @@ public abstract class ClickableRenderer<T, W extends Widget> extends
      * @param handler
      *            the click handler to be added
      */
-    public HandlerRegistration addClickHandler(RendererClickHandler<?> handler) {
+    public HandlerRegistration addClickHandler(
+            RendererClickHandler<?> handler) {
         if (handlerManager == null) {
             handlerManager = new HandlerManager(this);
         }

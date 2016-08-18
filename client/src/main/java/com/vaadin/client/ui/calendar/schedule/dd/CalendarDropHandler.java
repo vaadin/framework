@@ -54,9 +54,8 @@ public abstract class CalendarDropHandler extends VAbstractDropHandler {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#getApplicationConnection
-     * ()
+     * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
+     * getApplicationConnection ()
      */
     @Override
     public ApplicationConnection getApplicationConnection() {

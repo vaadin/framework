@@ -43,8 +43,8 @@ import com.vaadin.ui.declarative.DesignContext;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Panel extends AbstractSingleComponentContainer implements
-        Scrollable, Action.Notifier, Focusable, LegacyComponent {
+public class Panel extends AbstractSingleComponentContainer
+        implements Scrollable, Action.Notifier, Focusable, LegacyComponent {
 
     /**
      * Keeps track of the Actions added to this component, and manages the

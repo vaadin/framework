@@ -58,7 +58,8 @@ public class GridLayoutDetailsRowTest extends MultiBrowserTest {
 
     private void assertLabelHeight(String id, double expectedHeight) {
         // 1px leeway for calculations
-        assertThat("Unexpected label height.", (double) $(LabelElement.class)
-                .id(id).getSize().height, closeTo(expectedHeight, 1d));
+        assertThat("Unexpected label height.",
+                (double) $(LabelElement.class).id(id).getSize().height,
+                closeTo(expectedHeight, 1d));
     }
 }

@@ -156,10 +156,11 @@ public class VFlash extends HTML {
          * this by setting his own classid.
          */
         if (classId != null) {
-            html.append("classid=\"" + WidgetUtil.escapeAttribute(classId)
-                    + "\" ");
+            html.append(
+                    "classid=\"" + WidgetUtil.escapeAttribute(classId) + "\" ");
         } else {
-            html.append("classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" ");
+            html.append(
+                    "classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" ");
         }
 
         /*
@@ -174,7 +175,8 @@ public class VFlash extends HTML {
             html.append("codebase=\"" + WidgetUtil.escapeAttribute(codebase)
                     + "\" ");
         } else {
-            html.append("codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ");
+            html.append(
+                    "codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ");
         }
 
         // Add width and height
@@ -190,14 +192,14 @@ public class VFlash extends HTML {
 
         // Standby
         if (standby != null) {
-            html.append("standby=\"" + WidgetUtil.escapeAttribute(standby)
-                    + "\" ");
+            html.append(
+                    "standby=\"" + WidgetUtil.escapeAttribute(standby) + "\" ");
         }
 
         // Archive
         if (archive != null) {
-            html.append("archive=\"" + WidgetUtil.escapeAttribute(archive)
-                    + "\" ");
+            html.append(
+                    "archive=\"" + WidgetUtil.escapeAttribute(archive) + "\" ");
         }
 
         // End object tag
@@ -213,7 +215,8 @@ public class VFlash extends HTML {
             html.append("<param ");
             html.append("name=\"" + WidgetUtil.escapeAttribute(name) + "\" ");
             html.append("value=\""
-                    + WidgetUtil.escapeAttribute(embedParams.get(name)) + "\" ");
+                    + WidgetUtil.escapeAttribute(embedParams.get(name))
+                    + "\" ");
             html.append("/>");
         }
 
@@ -228,8 +231,8 @@ public class VFlash extends HTML {
         for (String name : embedParams.keySet()) {
             html.append(WidgetUtil.escapeAttribute(name));
             html.append("=");
-            html.append("\""
-                    + WidgetUtil.escapeAttribute(embedParams.get(name)) + "\"");
+            html.append("\"" + WidgetUtil.escapeAttribute(embedParams.get(name))
+                    + "\"");
         }
 
         // End embed tag

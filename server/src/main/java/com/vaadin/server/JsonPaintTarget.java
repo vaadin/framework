@@ -87,8 +87,8 @@ public class JsonPaintTarget implements PaintTarget {
      * @throws PaintException
      *             if the paint operation failed.
      */
-    public JsonPaintTarget(LegacyCommunicationManager manager,
-            Writer outWriter, boolean cachingRequired) throws PaintException {
+    public JsonPaintTarget(LegacyCommunicationManager manager, Writer outWriter,
+            boolean cachingRequired) throws PaintException {
 
         this.manager = manager;
 
@@ -341,7 +341,8 @@ public class JsonPaintTarget implements PaintTarget {
     }
 
     @Override
-    public void addAttribute(String name, Resource value) throws PaintException {
+    public void addAttribute(String name, Resource value)
+            throws PaintException {
         if (value == null) {
             throw new NullPointerException();
         }
@@ -417,8 +418,7 @@ public class JsonPaintTarget implements PaintTarget {
             }
             sb.append("\":");
             if (mapValue instanceof Float || mapValue instanceof Integer
-                    || mapValue instanceof Double
-                    || mapValue instanceof Boolean
+                    || mapValue instanceof Double || mapValue instanceof Boolean
                     || mapValue instanceof Alignment) {
                 sb.append(mapValue);
             } else {
@@ -465,7 +465,8 @@ public class JsonPaintTarget implements PaintTarget {
     @Override
     public void addVariable(VariableOwner owner, String name, Component value)
             throws PaintException {
-        tag.addVariable(new StringVariable(owner, name, value.getConnectorId()));
+        tag.addVariable(
+                new StringVariable(owner, name, value.getConnectorId()));
     }
 
     @Override
@@ -661,9 +662,7 @@ public class JsonPaintTarget implements PaintTarget {
         boolean topLevelPaintable = openPaintables.isEmpty();
 
         if (getLogger().isLoggable(Level.FINE)) {
-            getLogger().log(
-                    Level.FINE,
-                    "startPaintable for {0}@{1}",
+            getLogger().log(Level.FINE, "startPaintable for {0}@{1}",
                     new Object[] { connector.getClass().getName(),
                             Integer.toHexString(connector.hashCode()) });
         }
@@ -689,9 +688,7 @@ public class JsonPaintTarget implements PaintTarget {
     @Override
     public void endPaintable(Component paintable) throws PaintException {
         if (getLogger().isLoggable(Level.FINE)) {
-            getLogger().log(
-                    Level.FINE,
-                    "endPaintable for {0}@{1}",
+            getLogger().log(Level.FINE, "endPaintable for {0}@{1}",
                     new Object[] { paintable.getClass().getName(),
                             Integer.toHexString(paintable.hashCode()) });
         }
@@ -823,7 +820,8 @@ public class JsonPaintTarget implements PaintTarget {
             final StringBuilder buf = new StringBuilder();
             buf.append(startField());
             buf.append("{");
-            for (final Iterator<Object> iter = attr.iterator(); iter.hasNext();) {
+            for (final Iterator<Object> iter = attr.iterator(); iter
+                    .hasNext();) {
                 final String element = (String) iter.next();
                 buf.append(element);
                 if (iter.hasNext()) {
@@ -1010,8 +1008,8 @@ public class JsonPaintTarget implements PaintTarget {
     @Override
     public void addVariable(VariableOwner owner, String name,
             StreamVariable value) throws PaintException {
-        String url = manager.getStreamVariableTargetUrl(
-                (ClientConnector) owner, name, value);
+        String url = manager.getStreamVariableTargetUrl((ClientConnector) owner,
+                name, value);
         if (url != null) {
             addVariable(owner, name, url);
         } // else { //NOP this was just a cleanup by component }

@@ -126,8 +126,8 @@ public class VCustomLayout extends ComplexPanel {
         // If no given location is found in the layout, and exception is throws
         Element elem = locationToElement.get(location);
         if (elem == null && hasTemplate()) {
-            throw new IllegalArgumentException("No location " + location
-                    + " found");
+            throw new IllegalArgumentException(
+                    "No location " + location + " found");
         }
 
         // Get previous widget
@@ -168,15 +168,13 @@ public class VCustomLayout extends ComplexPanel {
                 "<((?:img)|(?:IMG))\\s([^>]*)src=\"((?![a-z]+:)[^/][^\"]+)\"",
                 "<$1 $2src=\"" + relImgPrefix + "$3\"");
         // also support src attributes without quotes
-        template = template
-                .replaceAll(
-                        "<((?:img)|(?:IMG))\\s([^>]*)src=[^\"]((?![a-z]+:)[^/][^ />]+)[ />]",
-                        "<$1 $2src=\"" + relImgPrefix + "$3\"");
+        template = template.replaceAll(
+                "<((?:img)|(?:IMG))\\s([^>]*)src=[^\"]((?![a-z]+:)[^/][^ />]+)[ />]",
+                "<$1 $2src=\"" + relImgPrefix + "$3\"");
         // also prefix relative style="...url(...)..."
-        template = template
-                .replaceAll(
-                        "(<[^>]+style=\"[^\"]*url\\()((?![a-z]+:)[^/][^\"]+)(\\)[^>]*>)",
-                        "$1 " + relImgPrefix + "$2 $3");
+        template = template.replaceAll(
+                "(<[^>]+style=\"[^\"]*url\\()((?![a-z]+:)[^/][^\"]+)(\\)[^>]*>)",
+                "$1 " + relImgPrefix + "$2 $3");
 
         getElement().setInnerHTML(template);
 

@@ -40,8 +40,8 @@ public class GridLayoutExtraSpacingTest extends MultiBrowserTest {
         // There should be 3 * 6px spacing (red) above the csslayout
         verifySpacingAbove(3 * 6, gridLayout, component);
 
-        CheckBoxElement spacingCheckbox = $(CheckBoxElement.class).caption(
-                "spacing").first();
+        CheckBoxElement spacingCheckbox = $(CheckBoxElement.class)
+                .caption("spacing").first();
         check(spacingCheckbox);
 
         // Spacing off, not hiding empty rows/columns
@@ -100,6 +100,7 @@ public class GridLayoutExtraSpacingTest extends MultiBrowserTest {
     }
 
     private void assertHeight(WebElement component, int height, int tolerance) {
-        Assert.assertTrue(Math.abs(height - component.getSize().getHeight()) <= tolerance);
+        Assert.assertTrue(Math
+                .abs(height - component.getSize().getHeight()) <= tolerance);
     }
 }

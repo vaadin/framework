@@ -46,8 +46,8 @@ import com.vaadin.shared.legacy.ui.textfield.LegacyTextFieldConstants;
  * 
  */
 @Deprecated
-public class VLegacyTextField extends TextBoxBase implements Field, ChangeHandler,
-        FocusHandler, BlurHandler, KeyDownHandler {
+public class VLegacyTextField extends TextBoxBase implements Field,
+        ChangeHandler, FocusHandler, BlurHandler, KeyDownHandler {
 
     /**
      * The input node CSS classname.

@@ -296,8 +296,8 @@ public class TreeTable extends Table implements Hierarchical {
 
         private void addVisibleChildTree(Object id) {
             if (isNodeOpen(id)) {
-                Collection<?> children = getContainerDataSource().getChildren(
-                        id);
+                Collection<?> children = getContainerDataSource()
+                        .getChildren(id);
                 if (children != null) {
                     for (Object childId : children) {
                         preOrder.add(childId);
@@ -408,7 +408,8 @@ public class TreeTable extends Table implements Hierarchical {
             int indexInRowbuffer) throws PaintException {
         // always paint if present (in parent only if row headers visible)
         if (getRowHeaderMode() == ROW_HEADER_MODE_HIDDEN) {
-            Resource itemIcon = getItemIcon(cells[CELL_ITEMID][indexInRowbuffer]);
+            Resource itemIcon = getItemIcon(
+                    cells[CELL_ITEMID][indexInRowbuffer]);
             if (itemIcon != null) {
                 target.addAttribute("icon", itemIcon);
             }
@@ -531,7 +532,8 @@ public class TreeTable extends Table implements Hierarchical {
 
     @Override
     protected int getAddedRowCount() {
-        return countSubNodesRecursively(getContainerDataSource(), toggledItemId);
+        return countSubNodesRecursively(getContainerDataSource(),
+                toggledItemId);
     }
 
     private int countSubNodesRecursively(Hierarchical hc, Object itemId) {
@@ -567,7 +569,8 @@ public class TreeTable extends Table implements Hierarchical {
         return !getContainerStrategy().isNodeOpen(toggledItemId);
     }
 
-    private void toggleChildVisibility(Object itemId, boolean forceFullRefresh) {
+    private void toggleChildVisibility(Object itemId,
+            boolean forceFullRefresh) {
         getContainerStrategy().toggleChildVisibility(itemId);
         // ensure that page still has first item in page, DON'T clear the
         // caches.
@@ -604,7 +607,8 @@ public class TreeTable extends Table implements Hierarchical {
 
         // FIXME: This disables partial updates until TreeTable is fixed so it
         // does not change component hierarchy during paint
-        containerSupportsPartialUpdates = (newDataSource instanceof ItemSetChangeNotifier) && false;
+        containerSupportsPartialUpdates = (newDataSource instanceof ItemSetChangeNotifier)
+                && false;
 
         if (newDataSource != null && !(newDataSource instanceof Hierarchical)) {
             newDataSource = new ContainerHierarchicalWrapper(newDataSource);
@@ -935,8 +939,8 @@ public class TreeTable extends Table implements Hierarchical {
         Object itemId = super.readItem(tr, selected, context);
 
         if (tr.hasAttr("collapsed")) {
-            boolean collapsed = DesignAttributeHandler.readAttribute(
-                    "collapsed", tr.attributes(), boolean.class);
+            boolean collapsed = DesignAttributeHandler
+                    .readAttribute("collapsed", tr.attributes(), boolean.class);
             setCollapsed(itemId, collapsed);
         }
 

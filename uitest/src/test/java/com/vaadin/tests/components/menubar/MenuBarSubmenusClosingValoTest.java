@@ -55,8 +55,8 @@ public class MenuBarSubmenusClosingValoTest extends MultiBrowserTest {
 
         Mouse mouse = ((HasInputDevices) getDriver()).getMouse();
 
-        List<WebElement> menuItemList = driver.findElements(By
-                .className("v-menubar-menuitem"));
+        List<WebElement> menuItemList = driver
+                .findElements(By.className("v-menubar-menuitem"));
 
         mouse.click(((Locatable) menuItemList.get(0)).getCoordinates());
         waitForElementPresent(By.className("v-menubar-popup"));

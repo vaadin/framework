@@ -21,8 +21,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.tests.tb3.WebsocketTest;
 
-public class ExtremelyLongPushTimeWebsocketTest extends
-        ExtremelyLongPushTimeTest {
+public class ExtremelyLongPushTimeWebsocketTest
+        extends ExtremelyLongPushTimeTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {

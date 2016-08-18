@@ -79,10 +79,10 @@ public class CalendarActionsMenuTest extends AbstractTestUI {
 
         });
         try {
-            calendar.setStartDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2013-01-01"));
-            calendar.setEndDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2013-01-31"));
+            calendar.setStartDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2013-01-01"));
+            calendar.setEndDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2013-01-31"));
         } catch (ParseException e) {
             // Nothing to do
         }
@@ -95,7 +95,8 @@ public class CalendarActionsMenuTest extends AbstractTestUI {
         setEnabled(true);
         calendar.addActionHandler(new Handler() {
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 Notification.show("ACTION CLICKED");
 
             }

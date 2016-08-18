@@ -114,8 +114,8 @@ public class TableScrollAfterAddRow extends AbstractTestUI {
                 new NativeButton.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        label.setValue(Integer.toString(table
-                                .getCurrentPageFirstItemIndex()));
+                        label.setValue(Integer.toString(
+                                table.getCurrentPageFirstItemIndex()));
                     }
                 });
         layout.addComponent(addRowButton);

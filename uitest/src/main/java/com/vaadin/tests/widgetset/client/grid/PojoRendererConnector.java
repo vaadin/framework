@@ -22,8 +22,8 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.widgetset.client.SimpleTestBean;
 
 @Connect(com.vaadin.tests.components.grid.BeanRenderer.class)
-public class PojoRendererConnector extends
-        AbstractRendererConnector<SimpleTestBean> {
+public class PojoRendererConnector
+        extends AbstractRendererConnector<SimpleTestBean> {
 
     public static class BeanRenderer implements Renderer<SimpleTestBean> {
         @Override

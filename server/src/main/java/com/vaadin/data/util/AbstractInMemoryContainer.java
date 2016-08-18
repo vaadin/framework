@@ -53,11 +53,11 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
  * 
  * Features:
  * <ul>
- * <li> {@link Container.Ordered}
- * <li> {@link Container.Indexed}
- * <li> {@link Filterable} and {@link SimpleFilterable} (internal implementation,
+ * <li>{@link Container.Ordered}
+ * <li>{@link Container.Indexed}
+ * <li>{@link Filterable} and {@link SimpleFilterable} (internal implementation,
  * does not implement the interface directly)
- * <li> {@link Sortable} (internal implementation, does not implement the
+ * <li>{@link Sortable} (internal implementation, does not implement the
  * interface directly)
  * </ul>
  * 
@@ -94,8 +94,8 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
  * @since 6.6
  */
 public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITEMCLASS extends Item>
-        extends AbstractContainer implements ItemSetChangeNotifier,
-        Container.Indexed {
+        extends AbstractContainer
+        implements ItemSetChangeNotifier, Container.Indexed {
 
     /**
      * An ordered {@link List} of all item identifiers in the container,
@@ -363,8 +363,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
             endIndex = getVisibleItemIds().size();
         }
 
-        return Collections.unmodifiableList(getVisibleItemIds().subList(
-                startIndex, endIndex));
+        return Collections.unmodifiableList(
+                getVisibleItemIds().subList(startIndex, endIndex));
 
     }
 
@@ -913,9 +913,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (previousItemId == null) {
             newItem = internalAddAt(0, newItemId, item);
         } else if (containsId(previousItemId)) {
-            newItem = internalAddAt(
-                    getAllItemIds().indexOf(previousItemId) + 1, newItemId,
-                    item);
+            newItem = internalAddAt(getAllItemIds().indexOf(previousItemId) + 1,
+                    newItemId, item);
         }
         if (newItem != null && filter) {
             // TODO filter only this item, use fireItemAdded()
@@ -990,7 +989,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * @param item
      *            the added item
      */
-    protected void fireItemAdded(int position, ITEMIDTYPE itemId, ITEMCLASS item) {
+    protected void fireItemAdded(int position, ITEMIDTYPE itemId,
+            ITEMCLASS item) {
         fireItemsAdded(position, itemId, 1);
     }
 

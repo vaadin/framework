@@ -55,8 +55,8 @@ public class NavigatorViewBlocksBackButtonAction extends AbstractTestUI {
 
     }
 
-    class ViewWithPromptedLeave extends VerticalLayout implements View,
-            ViewChangeListener {
+    class ViewWithPromptedLeave extends VerticalLayout
+            implements View, ViewChangeListener {
 
         public static final String NAME = "prompted";
 
@@ -89,17 +89,17 @@ public class NavigatorViewBlocksBackButtonAction extends AbstractTestUI {
                 confirmationWindow.setContent(confirmationWindowLayout);
                 confirmationWindowLayout.setMargin(true);
                 confirmationWindowLayout.setSpacing(true);
-                confirmationWindowLayout.addComponent(new Label(
-                        "Really exit this view?"));
-                confirmationWindowLayout.addComponent(new Button("Yeah, sure!",
-                        new Button.ClickListener() {
+                confirmationWindowLayout
+                        .addComponent(new Label("Really exit this view?"));
+                confirmationWindowLayout.addComponent(
+                        new Button("Yeah, sure!", new Button.ClickListener() {
 
                             @Override
                             public void buttonClick(ClickEvent buttonEvent) {
                                 okToLeave = true;
                                 getUI().removeWindow(confirmationWindow);
-                                event.getNavigator().navigateTo(
-                                        event.getViewName() + "/"
+                                event.getNavigator()
+                                        .navigateTo(event.getViewName() + "/"
                                                 + event.getParameters());
                             }
                         }));

@@ -70,15 +70,15 @@ public class GridDeclarativeAttributeTest extends DeclarativeTestBase<Grid> {
     @Test
     public void testSelectionMode() {
         String design = "<vaadin-grid selection-mode='none'>";
-        assertSame(NoSelectionModel.class, read(design).getSelectionModel()
-                .getClass());
+        assertSame(NoSelectionModel.class,
+                read(design).getSelectionModel().getClass());
 
         design = "<vaadin-grid selection-mode='single'>";
-        assertSame(SingleSelectionModel.class, read(design).getSelectionModel()
-                .getClass());
+        assertSame(SingleSelectionModel.class,
+                read(design).getSelectionModel().getClass());
 
         design = "<vaadin-grid selection-mode='multi'>";
-        assertSame(MultiSelectionModel.class, read(design).getSelectionModel()
-                .getClass());
+        assertSame(MultiSelectionModel.class,
+                read(design).getSelectionModel().getClass());
     }
 }

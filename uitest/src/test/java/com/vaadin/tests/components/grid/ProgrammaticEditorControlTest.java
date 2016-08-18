@@ -47,8 +47,8 @@ public class ProgrammaticEditorControlTest extends SingleBrowserTest {
     }
 
     private void assertEditorFieldContents(GridElement grid, String text) {
-        TextFieldElement editorField = wrap(TextFieldElement.class, grid
-                .getEditor().getField(0));
+        TextFieldElement editorField = wrap(TextFieldElement.class,
+                grid.getEditor().getField(0));
         Assert.assertEquals(text, editorField.getValue());
     }
 

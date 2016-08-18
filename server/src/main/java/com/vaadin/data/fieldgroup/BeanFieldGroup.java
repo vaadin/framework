@@ -54,15 +54,15 @@ public class BeanFieldGroup<T> extends FieldGroup {
                         propertyId.toString());
                 if (type == null) {
                     throw new BindException(
-                            "Cannot determine type of propertyId '"
-                                    + propertyId
+                            "Cannot determine type of propertyId '" + propertyId
                                     + "'. The propertyId was not found in "
                                     + beanType.getName());
                 }
                 return type;
             } catch (IntrospectionException e) {
                 throw new BindException("Cannot determine type of propertyId '"
-                        + propertyId + "'. Unable to introspect " + beanType, e);
+                        + propertyId + "'. Unable to introspect " + beanType,
+                        e);
             }
         }
     }
@@ -71,7 +71,8 @@ public class BeanFieldGroup<T> extends FieldGroup {
     protected Object findPropertyId(java.lang.reflect.Field memberField) {
         String fieldName = memberField.getName();
         Item dataSource = getItemDataSource();
-        if (dataSource != null && dataSource.getItemProperty(fieldName) != null) {
+        if (dataSource != null
+                && dataSource.getItemProperty(fieldName) != null) {
             return fieldName;
         } else {
             String minifiedFieldName = minifyFieldName(fieldName);
@@ -155,8 +156,8 @@ public class BeanFieldGroup<T> extends FieldGroup {
     }
 
     @Override
-    public <T extends LegacyField> T buildAndBind(String caption, Object propertyId,
-            Class<T> fieldType) throws BindException {
+    public <T extends LegacyField> T buildAndBind(String caption,
+            Object propertyId, Class<T> fieldType) throws BindException {
         ensureNestedPropertyAdded(propertyId);
         return super.buildAndBind(caption, propertyId, fieldType);
     }
@@ -226,7 +227,8 @@ public class BeanFieldGroup<T> extends FieldGroup {
      * @param bean
      *            the bean to be bound
      * @param objectWithMemberFields
-     *            the class that contains {@link LegacyField}s for bean properties
+     *            the class that contains {@link LegacyField}s for bean
+     *            properties
      * @return the bean field group used to make binding
      */
     public static <T> BeanFieldGroup<T> bindFieldsUnbuffered(T bean,
@@ -247,7 +249,8 @@ public class BeanFieldGroup<T> extends FieldGroup {
      * @param bean
      *            the bean to be bound
      * @param objectWithMemberFields
-     *            the class that contains {@link LegacyField}s for bean properties
+     *            the class that contains {@link LegacyField}s for bean
+     *            properties
      * @return the bean field group used to make binding
      */
     public static <T> BeanFieldGroup<T> bindFieldsBuffered(T bean,

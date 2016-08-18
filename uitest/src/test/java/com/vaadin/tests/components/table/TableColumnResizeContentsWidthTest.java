@@ -50,8 +50,8 @@ public class TableColumnResizeContentsWidthTest extends MultiBrowserTest {
 
         List<ButtonElement> buttons = $(ButtonElement.class).all();
 
-        WebElement resizer = getTable().findElement(
-                By.className("v-table-resizer"));
+        WebElement resizer = getTable()
+                .findElement(By.className("v-table-resizer"));
 
         assertEquals(100, getTextFieldWidth());
 
@@ -81,8 +81,8 @@ public class TableColumnResizeContentsWidthTest extends MultiBrowserTest {
 
     private int getTextFieldWidth() {
         TableElement table = getTable();
-        final WebElement textField = table.findElement(By
-                .className("v-textfield"));
+        final WebElement textField = table
+                .findElement(By.className("v-textfield"));
 
         return textField.getSize().width;
     }

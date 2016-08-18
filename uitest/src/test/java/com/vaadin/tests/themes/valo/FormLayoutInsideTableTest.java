@@ -16,7 +16,8 @@ public class FormLayoutInsideTableTest extends MultiBrowserTest {
     public void nestedItemHasBorderTop() {
         openTestURL();
 
-        List<WebElement> formLayoutRows = findElements(By.cssSelector("tr.v-formlayout-row"));
+        List<WebElement> formLayoutRows = findElements(
+                By.cssSelector("tr.v-formlayout-row"));
         WebElement secondNestedRow = formLayoutRows.get(1);
 
         WebElement td = secondNestedRow.findElement(By.tagName("td"));

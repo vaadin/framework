@@ -19,8 +19,8 @@ import com.vaadin.client.widget.escalator.SpacerUpdater;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 
-public class EscalatorBasicClientFeaturesWidget extends
-        PureGWTTestApplication<Escalator> {
+public class EscalatorBasicClientFeaturesWidget
+        extends PureGWTTestApplication<Escalator> {
 
     public static class LogWidget extends Composite {
 
@@ -66,12 +66,13 @@ public class EscalatorBasicClientFeaturesWidget extends
         }
     }
 
-    public static class UpdaterLifetimeWidget extends
-            EscalatorBasicClientFeaturesWidget {
+    public static class UpdaterLifetimeWidget
+            extends EscalatorBasicClientFeaturesWidget {
 
         private final EscalatorUpdater debugUpdater = new EscalatorUpdater() {
             @Override
-            public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
+            public void preAttach(Row row,
+                    Iterable<FlyweightCell> cellsToAttach) {
                 log("preAttach", cellsToAttach);
             }
 
@@ -87,7 +88,8 @@ public class EscalatorBasicClientFeaturesWidget extends
             }
 
             @Override
-            public void preDetach(Row row, Iterable<FlyweightCell> cellsToDetach) {
+            public void preDetach(Row row,
+                    Iterable<FlyweightCell> cellsToDetach) {
                 log("preDetach", cellsToDetach);
             }
 
@@ -105,9 +107,10 @@ public class EscalatorBasicClientFeaturesWidget extends
                 TableCellElement cellElement = cells.iterator().next()
                         .getElement();
                 boolean isAttached = cellElement.getParentElement() != null
-                        && cellElement.getParentElement().getParentElement() != null;
-                logWidget.log(methodName + ": elementIsAttached == "
-                        + isAttached);
+                        && cellElement.getParentElement()
+                                .getParentElement() != null;
+                logWidget.log(
+                        methodName + ": elementIsAttached == " + isAttached);
             }
         };
 
@@ -123,8 +126,8 @@ public class EscalatorBasicClientFeaturesWidget extends
     private static final String GENERAL_MENU = "General";
     private static final String FEATURES_MENU = "Features";
 
-    private static abstract class TestEscalatorUpdater implements
-            EscalatorUpdater {
+    private static abstract class TestEscalatorUpdater
+            implements EscalatorUpdater {
 
         @Override
         public void preAttach(Row row, Iterable<FlyweightCell> cellsToAttach) {
@@ -466,8 +469,8 @@ public class EscalatorBasicClientFeaturesWidget extends
         addMenuCommand("Add one column to end", new ScheduledCommand() {
             @Override
             public void execute() {
-                insertColumns(escalator.getColumnConfiguration()
-                        .getColumnCount(), 1);
+                insertColumns(
+                        escalator.getColumnConfiguration().getColumnCount(), 1);
             }
         }, menupath);
         addMenuCommand("Add ten columns", new ScheduledCommand() {
@@ -486,8 +489,9 @@ public class EscalatorBasicClientFeaturesWidget extends
         addMenuCommand("Remove one column from end", new ScheduledCommand() {
             @Override
             public void execute() {
-                removeColumns(escalator.getColumnConfiguration()
-                        .getColumnCount() - 1, 1);
+                removeColumns(
+                        escalator.getColumnConfiguration().getColumnCount() - 1,
+                        1);
             }
         }, menupath);
 
@@ -502,8 +506,8 @@ public class EscalatorBasicClientFeaturesWidget extends
                 new ScheduledCommand() {
                     @Override
                     public void execute() {
-                        escalator.getColumnConfiguration()
-                                .setColumnWidth(0, -1);
+                        escalator.getColumnConfiguration().setColumnWidth(0,
+                                -1);
                     }
                 }, menupath);
 
@@ -544,31 +548,31 @@ public class EscalatorBasicClientFeaturesWidget extends
         addMenuCommand("Remove 5 rows from bottom", new ScheduledCommand() {
             @Override
             public void execute() {
-                removeRows(escalator.getBody(), escalator.getBody()
-                        .getRowCount() - 5, 5);
+                removeRows(escalator.getBody(),
+                        escalator.getBody().getRowCount() - 5, 5);
             }
         }, menupath);
         addMenuCommand("Remove 50 rows from bottom", new ScheduledCommand() {
             @Override
             public void execute() {
-                removeRows(escalator.getBody(), escalator.getBody()
-                        .getRowCount() - 50, 50);
+                removeRows(escalator.getBody(),
+                        escalator.getBody().getRowCount() - 50, 50);
             }
         }, menupath);
         addMenuCommand("Remove 50 rows from almost bottom",
                 new ScheduledCommand() {
                     @Override
                     public void execute() {
-                        removeRows(escalator.getBody(), escalator.getBody()
-                                .getRowCount() - 60, 50);
+                        removeRows(escalator.getBody(),
+                                escalator.getBody().getRowCount() - 60, 50);
                     }
                 }, menupath);
         addMenuCommand("Remove all, insert 30 and scroll 40px",
                 new ScheduledCommand() {
                     @Override
                     public void execute() {
-                        removeRows(escalator.getBody(), 0, escalator.getBody()
-                                .getRowCount());
+                        removeRows(escalator.getBody(), 0,
+                                escalator.getBody().getRowCount());
                         insertRows(escalator.getBody(), 0, 30);
                         escalator.setScrollTop(40);
                     }
@@ -595,7 +599,8 @@ public class EscalatorBasicClientFeaturesWidget extends
         }, menupath);
     }
 
-    private void createRowsMenu(final RowContainer container, String[] menupath) {
+    private void createRowsMenu(final RowContainer container,
+            String[] menupath) {
         addMenuCommand("Add one row to beginning", new ScheduledCommand() {
             @Override
             public void execute() {
@@ -650,8 +655,8 @@ public class EscalatorBasicClientFeaturesWidget extends
 
                 @Override
                 public void init(Spacer spacer) {
-                    spacer.getElement().setInnerText(
-                            "Spacer for row " + spacer.getRow());
+                    spacer.getElement()
+                            .setInnerText("Spacer for row " + spacer.getRow());
                 }
             };
 
@@ -690,7 +695,8 @@ public class EscalatorBasicClientFeaturesWidget extends
         createSpacersMenuForRow(99, menupath);
     }
 
-    private void createSpacersMenuForRow(final int rowIndex, String[] menupath) {
+    private void createSpacersMenuForRow(final int rowIndex,
+            String[] menupath) {
         menupath = new String[] { menupath[0], menupath[1], "Row " + rowIndex };
         addMenuCommand("Set 100px", new ScheduledCommand() {
             @Override
@@ -726,7 +732,8 @@ public class EscalatorBasicClientFeaturesWidget extends
                 }, menupath);
     }
 
-    private void insertRows(final RowContainer container, int offset, int number) {
+    private void insertRows(final RowContainer container, int offset,
+            int number) {
         if (container == escalator.getBody()) {
             data.insertRows(offset, number);
             escalator.getBody().insertRows(offset, number);
@@ -735,7 +742,8 @@ public class EscalatorBasicClientFeaturesWidget extends
         }
     }
 
-    private void removeRows(final RowContainer container, int offset, int number) {
+    private void removeRows(final RowContainer container, int offset,
+            int number) {
         if (container == escalator.getBody()) {
             data.removeRows(offset, number);
             escalator.getBody().removeRows(offset, number);
@@ -756,44 +764,44 @@ public class EscalatorBasicClientFeaturesWidget extends
 
     private void resetColRow() {
         if (escalator.getColumnConfiguration().getColumnCount() > 0) {
-            removeColumns(0, escalator.getColumnConfiguration()
-                    .getColumnCount());
+            removeColumns(0,
+                    escalator.getColumnConfiguration().getColumnCount());
         }
         if (escalator.getFooter().getRowCount() > 0) {
-            removeRows(escalator.getFooter(), 0, escalator.getFooter()
-                    .getRowCount());
+            removeRows(escalator.getFooter(), 0,
+                    escalator.getFooter().getRowCount());
         }
 
         if (escalator.getBody().getRowCount() > 0) {
-            removeRows(escalator.getBody(), 0, escalator.getBody()
-                    .getRowCount());
+            removeRows(escalator.getBody(), 0,
+                    escalator.getBody().getRowCount());
         }
 
         if (escalator.getHeader().getRowCount() > 0) {
-            removeRows(escalator.getHeader(), 0, escalator.getHeader()
-                    .getRowCount());
+            removeRows(escalator.getHeader(), 0,
+                    escalator.getHeader().getRowCount());
         }
     }
 
     private void resetRowCol() {
         if (escalator.getFooter().getRowCount() > 0) {
-            removeRows(escalator.getFooter(), 0, escalator.getFooter()
-                    .getRowCount());
+            removeRows(escalator.getFooter(), 0,
+                    escalator.getFooter().getRowCount());
         }
 
         if (escalator.getBody().getRowCount() > 0) {
-            removeRows(escalator.getBody(), 0, escalator.getBody()
-                    .getRowCount());
+            removeRows(escalator.getBody(), 0,
+                    escalator.getBody().getRowCount());
         }
 
         if (escalator.getHeader().getRowCount() > 0) {
-            removeRows(escalator.getHeader(), 0, escalator.getHeader()
-                    .getRowCount());
+            removeRows(escalator.getHeader(), 0,
+                    escalator.getHeader().getRowCount());
         }
 
         if (escalator.getColumnConfiguration().getColumnCount() > 0) {
-            removeColumns(0, escalator.getColumnConfiguration()
-                    .getColumnCount());
+            removeColumns(0,
+                    escalator.getColumnConfiguration().getColumnCount());
         }
     }
 

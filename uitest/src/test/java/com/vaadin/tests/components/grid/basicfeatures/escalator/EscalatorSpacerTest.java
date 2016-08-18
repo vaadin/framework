@@ -96,8 +96,8 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
 
     private final static Pattern TRANSLATE_VALUE_PATTERN = Pattern
             .compile(TRANSLATE_VALUE_REGEX);
-    private final static Pattern PIXEL_VALUE_PATTERN = Pattern.compile(
-            PIXEL_VALUE_REGEX, Pattern.CASE_INSENSITIVE);
+    private final static Pattern PIXEL_VALUE_PATTERN = Pattern
+            .compile(PIXEL_VALUE_REGEX, Pattern.CASE_INSENSITIVE);
 
     @Before
     public void before() {
@@ -191,8 +191,10 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         long oldBottomScrollTop = getScrollTop();
         selectMenuPath(FEATURES, SPACERS, ROW_99, SET_100PX);
 
-        assertEquals("Adding a spacer underneath the current viewport should "
-                + "not scroll anywhere", oldBottomScrollTop, getScrollTop());
+        assertEquals(
+                "Adding a spacer underneath the current viewport should "
+                        + "not scroll anywhere",
+                oldBottomScrollTop, getScrollTop());
         assertFalse("Got an unexpected notification",
                 $(NotificationElement.class).exists());
 
@@ -238,15 +240,17 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     public void spacersAreFixedInViewport_firstFreezeThenScroll() {
         selectMenuPath(FEATURES, FROZEN_COLUMNS, FREEZE_1_COLUMN);
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
-        assertEquals("Spacer's left position should've been 0 at the "
-                + "beginning", 0d, getElementLeft(getSpacer(1)),
-                WidgetUtil.PIXEL_EPSILON);
+        assertEquals(
+                "Spacer's left position should've been 0 at the " + "beginning",
+                0d, getElementLeft(getSpacer(1)), WidgetUtil.PIXEL_EPSILON);
 
         int scrollTo = 10;
         scrollHorizontallyTo(scrollTo);
-        assertEquals("Spacer's left position should've been " + scrollTo
-                + " after scrolling " + scrollTo + "px", scrollTo,
-                getElementLeft(getSpacer(1)), WidgetUtil.PIXEL_EPSILON);
+        assertEquals(
+                "Spacer's left position should've been " + scrollTo
+                        + " after scrolling " + scrollTo + "px",
+                scrollTo, getElementLeft(getSpacer(1)),
+                WidgetUtil.PIXEL_EPSILON);
     }
 
     @Test
@@ -255,9 +259,11 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         int scrollTo = 10;
         scrollHorizontallyTo(scrollTo);
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
-        assertEquals("Spacer's left position should've been " + scrollTo
-                + " after scrolling " + scrollTo + "px", scrollTo,
-                getElementLeft(getSpacer(1)), WidgetUtil.PIXEL_EPSILON);
+        assertEquals(
+                "Spacer's left position should've been " + scrollTo
+                        + " after scrolling " + scrollTo + "px",
+                scrollTo, getElementLeft(getSpacer(1)),
+                WidgetUtil.PIXEL_EPSILON);
     }
 
     @Test
@@ -389,8 +395,8 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         selectMenuPath(FEATURES, SPACERS, FOCUSABLE_UPDATER);
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
 
-        WebElement inputElement = getEscalator().findElement(
-                By.tagName("input"));
+        WebElement inputElement = getEscalator()
+                .findElement(By.tagName("input"));
         inputElement.click();
         scrollVerticallyTo(30);
 
@@ -398,8 +404,8 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         // the DOM reordering to take place.
         Thread.sleep(500);
 
-        assertFalse("Error message detected", $(NotificationElement.class)
-                .exists());
+        assertFalse("Error message detected",
+                $(NotificationElement.class).exists());
     }
 
     @Test
@@ -409,8 +415,9 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         WebElement tbody = getEscalator().findElement(By.tagName("tbody"));
         WebElement spacer = getChild(tbody, 2);
         String cssClass = spacer.getAttribute("class");
-        assertTrue("element index 2 was not a spacer (class=\"" + cssClass
-                + "\")", cssClass.contains("-spacer"));
+        assertTrue(
+                "element index 2 was not a spacer (class=\"" + cssClass + "\")",
+                cssClass.contains("-spacer"));
     }
 
     @Test
@@ -422,8 +429,9 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         WebElement tbody = getEscalator().findElement(By.tagName("tbody"));
         WebElement spacer = getChild(tbody, 1);
         String cssClass = spacer.getAttribute("class");
-        assertTrue("element index 1 was not a spacer (class=\"" + cssClass
-                + "\")", cssClass.contains("-spacer"));
+        assertTrue(
+                "element index 1 was not a spacer (class=\"" + cssClass + "\")",
+                cssClass.contains("-spacer"));
     }
 
     @Test
@@ -493,8 +501,8 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     }
 
     private WebElement getChild(WebElement parent, int childIndex) {
-        return (WebElement) executeScript("return arguments[0].children["
-                + childIndex + "];", parent);
+        return (WebElement) executeScript(
+                "return arguments[0].children[" + childIndex + "];", parent);
     }
 
     private static double[] getElementDimensions(WebElement element) {
@@ -574,8 +582,9 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
 
     private static double getPixelValue(String top) {
         Matcher matcher = PIXEL_VALUE_PATTERN.matcher(top);
-        assertTrue("no matches for \"" + top + "\" against "
-                + PIXEL_VALUE_PATTERN, matcher.find());
+        assertTrue(
+                "no matches for \"" + top + "\" against " + PIXEL_VALUE_PATTERN,
+                matcher.find());
         assertEquals("wrong amount of groups matched in " + top, 1,
                 matcher.groupCount());
         return Double.parseDouble(matcher.group(1));

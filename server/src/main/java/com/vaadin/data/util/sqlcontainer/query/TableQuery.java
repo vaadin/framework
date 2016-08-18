@@ -47,8 +47,8 @@ import com.vaadin.data.util.sqlcontainer.query.generator.SQLGenerator;
 import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 
 @SuppressWarnings("serial")
-public class TableQuery extends AbstractTransactionalQuery implements
-        QueryDelegate, QueryDelegate.RowIdChangeNotifier {
+public class TableQuery extends AbstractTransactionalQuery
+        implements QueryDelegate, QueryDelegate.RowIdChangeNotifier {
 
     /**
      * Table name (without catalog or schema information).
@@ -232,7 +232,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
      * int)
      */
     @Override
-    public ResultSet getResults(int offset, int pagelength) throws SQLException {
+    public ResultSet getResults(int offset, int pagelength)
+            throws SQLException {
         StatementHelper sh;
         /*
          * If no ordering is explicitly set, results will be ordered by the
@@ -271,10 +272,11 @@ public class TableQuery extends AbstractTransactionalQuery implements
      * .addon.sqlcontainer.RowItem)
      */
     @Override
-    public int storeRow(RowItem row) throws UnsupportedOperationException,
-            SQLException {
+    public int storeRow(RowItem row)
+            throws UnsupportedOperationException, SQLException {
         if (row == null) {
-            throw new IllegalArgumentException("Row argument must be non-null.");
+            throw new IllegalArgumentException(
+                    "Row argument must be non-null.");
         }
         StatementHelper sh;
         int result = 0;
@@ -320,8 +322,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
         /* Set version column, if one is provided */
         setVersionColumnFlagInProperty(row);
         /* Generate query */
-        StatementHelper sh = sqlGenerator.generateInsertQuery(
-                getFullTableName(), row);
+        StatementHelper sh = sqlGenerator
+                .generateInsertQuery(getFullTableName(), row);
         Connection connection = null;
         PreparedStatement pstmt = null;
         ResultSet generatedKeys = null;
@@ -389,8 +391,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#beginTransaction()
      */
     @Override
-    public void beginTransaction() throws UnsupportedOperationException,
-            SQLException {
+    public void beginTransaction()
+            throws UnsupportedOperationException, SQLException {
         getLogger().log(Level.FINE, "DB -> begin transaction");
         super.beginTransaction();
     }
@@ -611,16 +613,15 @@ public class TableQuery extends AbstractTransactionalQuery implements
                 tables = dbmd.getTables(catalogName, schemaName, tableName,
                         null);
                 if (!tables.next()) {
-                    String catalog = (catalogName != null) ? catalogName
-                            .toUpperCase() : null;
-                    String schema = (schemaName != null) ? schemaName
-                            .toUpperCase() : null;
+                    String catalog = (catalogName != null)
+                            ? catalogName.toUpperCase() : null;
+                    String schema = (schemaName != null)
+                            ? schemaName.toUpperCase() : null;
                     tables = dbmd.getTables(catalog, schema,
                             tableName.toUpperCase(), null);
                     if (!tables.next()) {
                         throw new IllegalArgumentException(
-                                "Table with the name \""
-                                        + getFullTableName()
+                                "Table with the name \"" + getFullTableName()
                                         + "\" was not found. Check your database contents.");
                     } else {
                         catalogName = catalog;
@@ -692,8 +693,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
                     for (String s : primaryKeyColumns) {
                         if (!((ColumnProperty) row.getItemProperty(s))
                                 .isReadOnlyChangeAllowed()) {
-                            newRowId.add(values.get(values.keySet().iterator()
-                                    .next()));
+                            newRowId.add(values
+                                    .get(values.keySet().iterator().next()));
                         } else {
                             newRowId.add(values.get(s));
                         }
@@ -706,10 +707,9 @@ public class TableQuery extends AbstractTransactionalQuery implements
             }
             return new RowId(newRowId.toArray());
         } catch (Exception e) {
-            getLogger()
-                    .log(Level.FINE,
-                            "Failed to fetch key values on insert: {0}",
-                            e.getMessage());
+            getLogger().log(Level.FINE,
+                    "Failed to fetch key values on insert: {0}",
+                    e.getMessage());
             return null;
         }
     }
@@ -722,8 +722,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
      * .addon.sqlcontainer.RowItem)
      */
     @Override
-    public boolean removeRow(RowItem row) throws UnsupportedOperationException,
-            SQLException {
+    public boolean removeRow(RowItem row)
+            throws UnsupportedOperationException, SQLException {
         if (getLogger().isLoggable(Level.FINE)) {
             getLogger().log(Level.FINE, "Removing row with id: {0}",
                     row.getId().getId()[0]);
@@ -788,7 +788,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
     /**
      * Custom writeObject to call rollback() if object is serialized.
      */
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+    private void writeObject(java.io.ObjectOutputStream out)
+            throws IOException {
         try {
             rollback();
         } catch (SQLException ignored) {
@@ -799,8 +800,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
     /**
      * Simple RowIdChangeEvent implementation.
      */
-    public static class RowIdChangeEvent extends EventObject implements
-            QueryDelegate.RowIdChangeEvent {
+    public static class RowIdChangeEvent extends EventObject
+            implements QueryDelegate.RowIdChangeEvent {
         private final RowId oldId;
         private final RowId newId;
 

@@ -69,8 +69,8 @@ public class ResourceWriter implements Serializable {
             final String resource = (String) i.next();
             InputStream is = null;
             try {
-                is = ui.getSession().getService()
-                        .getThemeResourceAsStream(ui, ui.getTheme(), resource);
+                is = ui.getSession().getService().getThemeResourceAsStream(ui,
+                        ui.getTheme(), resource);
             } catch (final Exception e) {
                 // FIXME: Handle exception
                 getLogger().log(Level.FINER,
@@ -78,8 +78,8 @@ public class ResourceWriter implements Serializable {
             }
             if (is != null) {
 
-                writer.write((resourceIndex++ > 0 ? ", " : "") + "\""
-                        + resource + "\" : ");
+                writer.write((resourceIndex++ > 0 ? ", " : "") + "\"" + resource
+                        + "\" : ");
                 final StringBuffer layout = new StringBuffer();
 
                 try {

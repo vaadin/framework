@@ -27,8 +27,8 @@ import com.vaadin.shared.ui.colorpicker.ColorPickerState;
  * 
  * @since 7.0.0
  */
-public abstract class AbstractColorPickerConnector extends
-        AbstractComponentConnector implements ClickHandler {
+public abstract class AbstractColorPickerConnector
+        extends AbstractComponentConnector implements ClickHandler {
 
     private static final String DEFAULT_WIDTH_STYLE = "v-default-caption-width";
 
@@ -49,9 +49,8 @@ public abstract class AbstractColorPickerConnector extends
         if (stateChangeEvent.hasPropertyChanged("color")) {
             refreshColor();
 
-            if (getState().showDefaultCaption
-                    && (getState().caption == null || ""
-                            .equals(getState().caption))) {
+            if (getState().showDefaultCaption && (getState().caption == null
+                    || "".equals(getState().caption))) {
 
                 setCaption(getState().color);
             }
@@ -79,8 +78,8 @@ public abstract class AbstractColorPickerConnector extends
      * @return
      */
     protected String getCaption() {
-        if (getState().showDefaultCaption
-                && (getState().caption == null || "".equals(getState().caption))) {
+        if (getState().showDefaultCaption && (getState().caption == null
+                || "".equals(getState().caption))) {
             return getState().color;
         }
         return getState().caption;

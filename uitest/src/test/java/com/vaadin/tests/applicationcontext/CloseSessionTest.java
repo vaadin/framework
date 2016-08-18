@@ -45,8 +45,8 @@ public class CloseSessionTest extends MultiBrowserTest {
     public void testCloseVaadinServiceAndRedirect() {
         clickButton("Close VaadinServiceSession and redirect elsewhere");
         Assert.assertEquals("Unexpected page contents,",
-                "This is a static file", findElement(By.xpath("//h1"))
-                        .getText());
+                "This is a static file",
+                findElement(By.xpath("//h1")).getText());
     }
 
     /**

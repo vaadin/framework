@@ -78,8 +78,8 @@ public class LegacyComponentThemeChangeTest extends MultiBrowserTest {
             return;
         }
         EmbeddedElement e = $(EmbeddedElement.class).first();
-        WebElement movieParam = e.findElement(By
-                .xpath(".//param[@name='movie']"));
+        WebElement movieParam = e
+                .findElement(By.xpath(".//param[@name='movie']"));
         WebElement embed = e.findElement(By.xpath(".//embed"));
         assertAttributePrefix(movieParam, "value", theme);
         assertAttributePrefix(embed, "src", theme);
@@ -101,16 +101,16 @@ public class LegacyComponentThemeChangeTest extends MultiBrowserTest {
         assertAttributePrefix(selectedImage, "src", theme);
 
         cb.openPopup();
-        WebElement popup = findElement(By
-                .className("v-filterselect-suggestpopup"));
+        WebElement popup = findElement(
+                By.className("v-filterselect-suggestpopup"));
         WebElement itemImage = popup.findElement(By.xpath(".//img"));
         assertAttributePrefix(itemImage, "src", theme);
     }
 
     private void assertMenubarTheme(String theme) {
         // The runoImage must always come from Runo
-        WebElement runoImage = $(MenuBarElement.class).first().findElement(
-                By.xpath(".//span[text()='runo']/img"));
+        WebElement runoImage = $(MenuBarElement.class).first()
+                .findElement(By.xpath(".//span[text()='runo']/img"));
         String runoImageSrc = runoImage.getAttribute("src");
 
         // Something in Selenium normalizes the image so it becomes
@@ -120,22 +120,22 @@ public class LegacyComponentThemeChangeTest extends MultiBrowserTest {
                 runoImageSrc);
 
         // The other image should change with the theme
-        WebElement themeImage = $(MenuBarElement.class).first().findElement(
-                By.xpath(".//span[text()='selectedtheme']/img"));
+        WebElement themeImage = $(MenuBarElement.class).first()
+                .findElement(By.xpath(".//span[text()='selectedtheme']/img"));
         assertAttributePrefix(themeImage, "src", theme);
 
-        WebElement subMenuItem = $(MenuBarElement.class).first().findElement(
-                By.xpath(".//span[text()='sub menu']"));
+        WebElement subMenuItem = $(MenuBarElement.class).first()
+                .findElement(By.xpath(".//span[text()='sub menu']"));
         subMenuItem.click();
 
         WebElement subMenu = findElement(By.className("v-menubar-popup"));
-        WebElement subMenuRuno = subMenu.findElement(By
-                .xpath(".//span[text()='runo']/img"));
+        WebElement subMenuRuno = subMenu
+                .findElement(By.xpath(".//span[text()='runo']/img"));
         String subMenuRunoImageSrc = subMenuRuno.getAttribute("src");
         Assert.assertEquals(getThemeURL("runo") + "icons/16/ok.png",
                 subMenuRunoImageSrc);
-        WebElement subMenuThemeImage = subMenu.findElement(By
-                .xpath(".//span[text()='selectedtheme']/img"));
+        WebElement subMenuThemeImage = subMenu
+                .findElement(By.xpath(".//span[text()='selectedtheme']/img"));
         assertAttributePrefix(subMenuThemeImage, "src", theme);
     }
 
@@ -143,8 +143,9 @@ public class LegacyComponentThemeChangeTest extends MultiBrowserTest {
             String theme) {
         String value = element.getAttribute(attribute);
         String expectedPrefix = getThemeURL(theme);
-        Assert.assertTrue("Attribute " + attribute + "='" + value
-                + "' does not start with " + expectedPrefix,
+        Assert.assertTrue(
+                "Attribute " + attribute + "='" + value
+                        + "' does not start with " + expectedPrefix,
                 value.startsWith(expectedPrefix));
 
     }

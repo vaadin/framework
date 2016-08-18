@@ -75,7 +75,8 @@ public class MenuBarClickOpenedMenuTest extends MultiBrowserTest {
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver input) {
-                return isElementPresent(By.className(menuItemClassName)) == present;
+                return isElementPresent(
+                        By.className(menuItemClassName)) == present;
             }
 
             @Override

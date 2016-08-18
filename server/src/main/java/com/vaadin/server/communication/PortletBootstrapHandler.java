@@ -74,7 +74,8 @@ public class PortletBootstrapHandler extends BootstrapHandler {
         // applications will load this exactly once
         String portalTheme = ((VaadinPortletRequest) context.getRequest())
                 .getPortalProperty(VaadinPortlet.PORTAL_PARAMETER_VAADIN_THEME);
-        if (portalTheme != null && !portalTheme.equals(context.getThemeName())) {
+        if (portalTheme != null
+                && !portalTheme.equals(context.getThemeName())) {
             String portalThemeUri = getThemeUri(context, portalTheme);
             // XSS safe - originates from portal properties
             builder.append("vaadin.loadTheme('" + portalThemeUri + "');");

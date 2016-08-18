@@ -35,16 +35,16 @@ public class DisabledParentLayoutTest extends MultiBrowserTest {
         WebElement button = driver.findElement(By.className("v-button"));
         button.click();
 
-        WebElement textField = driver.findElement(By
-                .className("v-datefield-textfield"));
+        WebElement textField = driver
+                .findElement(By.className("v-datefield-textfield"));
         textField.click();
 
         Assert.assertFalse(
                 "Date input text field shoud be disabled for disabled DateField",
                 textField.isEnabled());
 
-        WebElement dataFieldButton = driver.findElement(By
-                .className("v-datefield-button"));
+        WebElement dataFieldButton = driver
+                .findElement(By.className("v-datefield-button"));
         dataFieldButton.click();
 
         Assert.assertFalse(

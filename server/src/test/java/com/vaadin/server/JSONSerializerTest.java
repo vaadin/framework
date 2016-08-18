@@ -58,8 +58,9 @@ public class JSONSerializerTest {
         stringToStateMap.put("string - state 1", s);
         stringToStateMap.put("String - state 2", s2);
 
-        JsonValue encodedMap = JsonCodec.encode(stringToStateMap, null,
-                mapType, null).getEncodedValue();
+        JsonValue encodedMap = JsonCodec
+                .encode(stringToStateMap, null, mapType, null)
+                .getEncodedValue();
 
         ensureDecodedCorrectly(stringToStateMap, encodedMap, mapType);
     }
@@ -76,8 +77,9 @@ public class JSONSerializerTest {
         stateToStringMap.put(s, "string - state 1");
         stateToStringMap.put(s2, "String - state 2");
 
-        JsonValue encodedMap = JsonCodec.encode(stateToStringMap, null,
-                mapType, null).getEncodedValue();
+        JsonValue encodedMap = JsonCodec
+                .encode(stateToStringMap, null, mapType, null)
+                .getEncodedValue();
 
         ensureDecodedCorrectly(stateToStringMap, encodedMap, mapType);
     }
@@ -87,8 +89,8 @@ public class JSONSerializerTest {
         JsonArray inputArray = Json.createArray();
         inputArray.set(0, "n");
         inputArray.set(1, Json.createNull());
-        UidlValue decodedObject = (UidlValue) JsonCodec.decodeInternalType(
-                UidlValue.class, true, inputArray, null);
+        UidlValue decodedObject = (UidlValue) JsonCodec
+                .decodeInternalType(UidlValue.class, true, inputArray, null);
         Assert.assertNull(decodedObject.getValue());
     }
 
@@ -97,15 +99,16 @@ public class JSONSerializerTest {
         JsonArray inputArray = Json.createArray();
         inputArray.set(0, "n");
         inputArray.set(1, "a");
-        UidlValue decodedObject = (UidlValue) JsonCodec.decodeInternalType(
-                UidlValue.class, true, inputArray, null);
+        UidlValue decodedObject = (UidlValue) JsonCodec
+                .decodeInternalType(UidlValue.class, true, inputArray, null);
     }
 
     private void ensureDecodedCorrectly(Object original, JsonValue encoded,
             Type type) throws Exception {
         Object serverSideDecoded = JsonCodec.decodeInternalOrCustomType(type,
                 encoded, null);
-        Assert.assertTrue("Server decoded", equals(original, serverSideDecoded));
+        Assert.assertTrue("Server decoded",
+                equals(original, serverSideDecoded));
 
     }
 

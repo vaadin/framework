@@ -36,8 +36,8 @@ public class PopupClosingWithEscTest extends MultiBrowserTest {
 
         // Send ESC to the select element to simulate user being
         // focused on the select while hitting the ESC key.
-        WebElement select = driver.findElement(By
-                .cssSelector(".v-datefield-popup select:first-child"));
+        WebElement select = driver.findElement(
+                By.cssSelector(".v-datefield-popup select:first-child"));
         select.sendKeys(Keys.ESCAPE);
         assertFalse(isPopupVisible());
     }

@@ -34,8 +34,8 @@ public class EmptyTabSheetTest extends MultiBrowserTest {
     public void emptyTabSheetValo() {
         openTestURL("theme=valo");
 
-        WebElement deco = getDriver().findElement(
-                By.className("v-tabsheet-deco"));
+        WebElement deco = getDriver()
+                .findElement(By.className("v-tabsheet-deco"));
 
         Assert.assertEquals("none", deco.getCssValue("display"));
     }

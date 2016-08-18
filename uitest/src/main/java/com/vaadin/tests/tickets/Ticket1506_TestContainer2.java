@@ -25,10 +25,10 @@ public class Ticket1506_TestContainer2 implements Container {
     private void loadItems() {
         for (int i = 1; i < 15; i++) {
             final PropertysetItem item = new PropertysetItem();
-            item.addItemProperty(PROPERTY_1_ID, new ObjectProperty<String>(
-                    "value " + i, String.class));
-            item.addItemProperty(PROPERTY_2_ID, new ObjectProperty<String>(
-                    "name " + i, String.class));
+            item.addItemProperty(PROPERTY_1_ID,
+                    new ObjectProperty<String>("value " + i, String.class));
+            item.addItemProperty(PROPERTY_2_ID,
+                    new ObjectProperty<String>("name " + i, String.class));
             items.put(String.valueOf(i), item);
         }
     }

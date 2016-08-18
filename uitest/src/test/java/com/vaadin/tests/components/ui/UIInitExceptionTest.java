@@ -9,7 +9,7 @@ public class UIInitExceptionTest extends MultiBrowserTest {
     @Test
     public void testExceptionOnUIInit() throws Exception {
         openTestURL();
-        Assert.assertTrue("Page does not contain the given text", driver
-                .getPageSource().contains("Catch me if you can"));
+        Assert.assertTrue("Page does not contain the given text",
+                driver.getPageSource().contains("Catch me if you can"));
     }
 }

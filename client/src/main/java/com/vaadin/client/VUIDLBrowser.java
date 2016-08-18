@@ -74,8 +74,8 @@ public class VUIDLBrowser extends SimpleTree {
                 SimpleTree stateChanges = new SimpleTree("shared state");
 
                 for (String connectorId : stateJson.getKeySet()) {
-                    stateChanges.add(new SharedStateItem(connectorId, stateJson
-                            .getValueMap(connectorId)));
+                    stateChanges.add(new SharedStateItem(connectorId,
+                            stateJson.getValueMap(connectorId)));
                 }
                 add(stateChanges);
 
@@ -239,9 +239,8 @@ public class VUIDLBrowser extends SimpleTree {
 
         @Override
         public void open(boolean recursive) {
-            if (getWidgetCount() == 1
-                    && getWidget(0).getElement().getInnerText()
-                            .equals("LOADING")) {
+            if (getWidgetCount() == 1 && getWidget(0).getElement()
+                    .getInnerText().equals("LOADING")) {
                 dir();
             }
             super.open(recursive);

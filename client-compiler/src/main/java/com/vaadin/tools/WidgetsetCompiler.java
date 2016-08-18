@@ -71,8 +71,8 @@ public class WidgetsetCompiler {
 
                         // TODO expecting this is launched via eclipse WTP
                         // project
-                        System.out
-                                .println("Updating GWT module description file...");
+                        System.out.println(
+                                "Updating GWT module description file...");
                         WidgetSetBuilder.updateWidgetSet(wsname);
                         System.out.println("Done.");
 

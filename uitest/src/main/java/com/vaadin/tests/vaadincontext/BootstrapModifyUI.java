@@ -47,7 +47,8 @@ public class BootstrapModifyUI extends AbstractTestUI {
                     }
                 });
         addComponent(c);
-        c.setEnabled(getSession().getAttribute(INSTALLED_ATRIBUTE_NAME) == null);
+        c.setEnabled(
+                getSession().getAttribute(INSTALLED_ATRIBUTE_NAME) == null);
     }
 
     private static BootstrapListener createBootstrapListener() {

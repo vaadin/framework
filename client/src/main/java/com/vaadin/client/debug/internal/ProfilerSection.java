@@ -69,13 +69,13 @@ public class ProfilerSection implements Section {
                 SimpleTree offendersTree = new SimpleTree("Longest events");
                 for (int i = 0; i < totals.size() && i < 20; i++) {
                     Node node = totals.get(i);
-                    offendersTree.add(new Label(node
-                            .getStringRepresentation("")));
+                    offendersTree
+                            .add(new Label(node.getStringRepresentation("")));
                 }
 
-                SimpleTree root = new SimpleTree(eventCount
-                        + " profiler events using " + Util.round(totalTime, 3)
-                        + " ms");
+                SimpleTree root = new SimpleTree(
+                        eventCount + " profiler events using "
+                                + Util.round(totalTime, 3) + " ms");
                 root.add(drillDownTree);
                 root.add(offendersTree);
                 root.open(false);
@@ -85,12 +85,14 @@ public class ProfilerSection implements Section {
             }
 
             @Override
-            public void addBootstrapData(LinkedHashMap<String, Double> timings) {
+            public void addBootstrapData(
+                    LinkedHashMap<String, Double> timings) {
                 SimpleTree tree = new SimpleTree(
                         "Time since window.performance.timing events");
                 Set<Entry<String, Double>> entrySet = timings.entrySet();
                 for (Entry<String, Double> entry : entrySet) {
-                    tree.add(new Label(entry.getValue() + " " + entry.getKey()));
+                    tree.add(
+                            new Label(entry.getValue() + " " + entry.getKey()));
                 }
 
                 tree.open(false);

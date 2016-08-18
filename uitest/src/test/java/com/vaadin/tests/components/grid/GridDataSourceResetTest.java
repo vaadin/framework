@@ -34,17 +34,17 @@ public class GridDataSourceResetTest extends SingleBrowserTest {
 
         assertTrue("First row was not selected", grid.getRow(0).isSelected());
         for (int i = 1; i < 10; ++i) {
-            assertFalse("Only first row should be selected", grid.getRow(i)
-                    .isSelected());
+            assertFalse("Only first row should be selected",
+                    grid.getRow(i).isSelected());
         }
 
         $(ButtonElement.class).first().click();
 
-        assertTrue("First row was not selected after remove", grid.getRow(0)
-                .isSelected());
+        assertTrue("First row was not selected after remove",
+                grid.getRow(0).isSelected());
         for (int i = 1; i < 9; ++i) {
-            assertFalse("Only first row should be selected after remove", grid
-                    .getRow(i).isSelected());
+            assertFalse("Only first row should be selected after remove",
+                    grid.getRow(i).isSelected());
         }
     }
 }

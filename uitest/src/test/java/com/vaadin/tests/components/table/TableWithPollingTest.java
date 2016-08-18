@@ -62,8 +62,8 @@ public class TableWithPollingTest extends MultiBrowserTest {
     }
 
     private WebElement getColumnResizer(int column) {
-        return getHeaderCell(column).findElement(
-                By.className("v-table-resizer"));
+        return getHeaderCell(column)
+                .findElement(By.className("v-table-resizer"));
     }
 
     private void resizeColumn(int column, int by) throws InterruptedException {

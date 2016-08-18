@@ -74,8 +74,8 @@ public class TypeDataStore {
     public static Class<?> getClass(String identifier) throws NoDataException {
         Class<?> class1 = get().identifiers.get(identifier);
         if (class1 == null) {
-            throw new NoDataException("There is not class for identifier "
-                    + identifier);
+            throw new NoDataException(
+                    "There is not class for identifier " + identifier);
         }
         return class1;
     }
@@ -103,8 +103,8 @@ public class TypeDataStore {
     public static Type getReturnType(Method method) throws NoDataException {
         Type type = get().returnTypes.get(method.getLookupKey());
         if (type == null) {
-            throw new NoDataException("There is no return type for "
-                    + method.getSignature());
+            throw new NoDataException(
+                    "There is no return type for " + method.getSignature());
         }
         return type;
     }
@@ -112,26 +112,27 @@ public class TypeDataStore {
     public static Invoker getInvoker(Method method) throws NoDataException {
         Invoker invoker = get().invokers.get(method.getLookupKey());
         if (invoker == null) {
-            throw new NoDataException("There is no invoker for "
-                    + method.getSignature());
+            throw new NoDataException(
+                    "There is no invoker for " + method.getSignature());
         }
         return invoker;
     }
 
     public static Invoker getConstructor(Type type) throws NoDataException {
-        Invoker invoker = get().invokers.get(new Method(type, CONSTRUCTOR_NAME)
-                .getLookupKey());
+        Invoker invoker = get().invokers
+                .get(new Method(type, CONSTRUCTOR_NAME).getLookupKey());
         if (invoker == null) {
-            throw new NoDataException("There is no constructor for "
-                    + type.getSignature());
+            throw new NoDataException(
+                    "There is no constructor for " + type.getSignature());
         }
         return invoker;
     }
 
     public static Object getValue(Property property, Object target)
             throws NoDataException {
-        return getJsPropertyValue(get().jsTypeData, property.getBeanType()
-                .getBaseTypeName(), property.getName(), target);
+        return getJsPropertyValue(get().jsTypeData,
+                property.getBeanType().getBaseTypeName(), property.getName(),
+                target);
     }
 
     public static String getDelegateToWidget(Property property) {
@@ -151,8 +152,8 @@ public class TypeDataStore {
         Type type = getType(clazz);
         delegateToWidget.put(new Property(type, propertyName).getLookupKey(),
                 delegateValue);
-        JsArrayString typeProperties = delegateToWidgetProperties.get(type
-                .getBaseTypeName());
+        JsArrayString typeProperties = delegateToWidgetProperties
+                .get(type.getBaseTypeName());
         if (typeProperties == null) {
             typeProperties = JavaScriptObject.createArray().cast();
             delegateToWidgetProperties.put(type.getBaseTypeName(),
@@ -166,7 +167,8 @@ public class TypeDataStore {
                 getType(presentationType));
     }
 
-    public void setReturnType(Class<?> type, String methodName, Type returnType) {
+    public void setReturnType(Class<?> type, String methodName,
+            Type returnType) {
         returnTypes.put(new Method(getType(type), methodName).getLookupKey(),
                 returnType);
     }
@@ -202,11 +204,11 @@ public class TypeDataStore {
 
     public static ProxyHandler getProxyHandler(Type type)
             throws NoDataException {
-        ProxyHandler proxyHandler = get().proxyHandlers.get(type
-                .getBaseTypeName());
+        ProxyHandler proxyHandler = get().proxyHandlers
+                .get(type.getBaseTypeName());
         if (proxyHandler == null) {
-            throw new NoDataException("No proxy handler for "
-                    + type.getSignature());
+            throw new NoDataException(
+                    "No proxy handler for " + type.getSignature());
         }
         return proxyHandler;
     }
@@ -225,8 +227,8 @@ public class TypeDataStore {
 
     private static boolean hasMethodAttribute(Method method,
             MethodAttribute attribute) {
-        FastStringSet attributes = get().methodAttributes.get(method
-                .getLookupKey());
+        FastStringSet attributes = get().methodAttributes
+                .get(method.getLookupKey());
         return attributes != null && attributes.contains(attribute.name());
     }
 
@@ -282,17 +284,20 @@ public class TypeDataStore {
     }
 
     public static Type getType(Property property) throws NoDataException {
-        return getJsPropertyType(get().jsTypeData, property.getBeanType()
-                .getBaseTypeName(), property.getName());
+        return getJsPropertyType(get().jsTypeData,
+                property.getBeanType().getBaseTypeName(), property.getName());
     }
 
-    public void setPropertyType(Class<?> clazz, String propertyName, Type type) {
+    public void setPropertyType(Class<?> clazz, String propertyName,
+            Type type) {
         setJsPropertyType(jsTypeData, clazz.getName(), propertyName, type);
     }
 
-    public static void setValue(Property property, Object target, Object value) {
-        setJsPropertyValue(get().jsTypeData, property.getBeanType()
-                .getBaseTypeName(), property.getName(), target, value);
+    public static void setValue(Property property, Object target,
+            Object value) {
+        setJsPropertyValue(get().jsTypeData,
+                property.getBeanType().getBaseTypeName(), property.getName(),
+                target, value);
     }
 
     public void setSerializerFactory(Class<?> clazz, Invoker factory) {
@@ -300,8 +305,8 @@ public class TypeDataStore {
     }
 
     public static JSONSerializer<?> findSerializer(Type type) {
-        Invoker factoryCreator = get().serializerFactories.get(type
-                .getBaseTypeName());
+        Invoker factoryCreator = get().serializerFactories
+                .get(type.getBaseTypeName());
         if (factoryCreator == null) {
             return null;
         }
@@ -313,8 +318,8 @@ public class TypeDataStore {
     }
 
     public void setSuperClass(Class<?> baseClass, Class<?> superClass) {
-        String superClassName = superClass == null ? null : superClass
-                .getName();
+        String superClassName = superClass == null ? null
+                : superClass.getName();
         setSuperClass(jsTypeData, baseClass.getName(), superClassName);
     }
 
@@ -324,7 +329,8 @@ public class TypeDataStore {
     }
 
     private static native void setPropertyData(JavaScriptObject typeData,
-            String className, String propertyName, JavaScriptObject propertyData)
+            String className, String propertyName,
+            JavaScriptObject propertyData)
     /*-{
         typeData[className][propertyName] = propertyData;
     }-*/;
@@ -437,7 +443,8 @@ public class TypeDataStore {
      */
     public void addOnStateChangeMethod(Class<?> clazz,
             OnStateChangeMethod method) {
-        FastStringMap<JsArrayObject<OnStateChangeMethod>> handlers = getOnStateChangeMethods(clazz);
+        FastStringMap<JsArrayObject<OnStateChangeMethod>> handlers = getOnStateChangeMethods(
+                clazz);
         if (handlers == null) {
             handlers = FastStringMap.create();
             onStateChangeMethods.put(getType(clazz).getSignature(), handlers);
@@ -482,7 +489,7 @@ public class TypeDataStore {
      *         otherwise <code>false</code>
      */
     public static boolean isNoLayoutProperty(Property property) {
-        return hasNoLayout(get().jsTypeData, property.getBeanType()
-                .getSignature(), property.getName());
+        return hasNoLayout(get().jsTypeData,
+                property.getBeanType().getSignature(), property.getName());
     }
 }

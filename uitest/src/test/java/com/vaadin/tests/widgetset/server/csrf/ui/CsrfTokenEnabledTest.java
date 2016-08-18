@@ -34,8 +34,7 @@ public class CsrfTokenEnabledTest extends AbstractCsrfTokenUITest {
                 // No token sent yet to the server.
                 && isUndefined(tokenGroup1.tokenSentToServer)
                 // Token is sent to the server.
-                && tokenGroup2.clientToken
-                        .equals(tokenGroup2.tokenSentToServer)
+                && tokenGroup2.clientToken.equals(tokenGroup2.tokenSentToServer)
                 // And no more token received from the server.
                 && isUndefined(tokenGroup2.tokenReceivedFromServer);
     }

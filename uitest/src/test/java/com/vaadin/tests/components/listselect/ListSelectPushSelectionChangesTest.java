@@ -28,15 +28,15 @@ import com.vaadin.testbench.elements.ListSelectElement;
 import com.vaadin.testbench.elements.OptionGroupElement;
 import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
 
-public class ListSelectPushSelectionChangesTest extends
-        SingleBrowserTestPhantomJS2 {
+public class ListSelectPushSelectionChangesTest
+        extends SingleBrowserTestPhantomJS2 {
     @Test
     public void testMultiSelectBehavior() {
         openTestURL();
 
         Assert.assertEquals(
-                "Should have null item + 3 options in single selection mode",
-                4, getListSelect().getOptions().size());
+                "Should have null item + 3 options in single selection mode", 4,
+                getListSelect().getOptions().size());
 
         $(OptionGroupElement.class).caption("Mode").first()
                 .selectByText("Multi");
@@ -124,7 +124,8 @@ public class ListSelectPushSelectionChangesTest extends
 
     private List<WebElement> getSelectedOptions() {
         ListSelectElement listSelect = getListSelect();
-        Select select = new Select(listSelect.findElement(By.tagName("select")));
+        Select select = new Select(
+                listSelect.findElement(By.tagName("select")));
         return select.getAllSelectedOptions();
     }
 

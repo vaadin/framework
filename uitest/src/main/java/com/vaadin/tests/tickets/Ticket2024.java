@@ -21,9 +21,10 @@ public class Ticket2024 extends LegacyApplication {
         w.getContent().setHeight("2000");
         w.addComponent(layout);
 
-        layout.addComponent(new Label(
-                "This should NOT get stuck when scrolling down"));
-        layout.addComponent(new LegacyTextField("This should not get stuck either..."));
+        layout.addComponent(
+                new Label("This should NOT get stuck when scrolling down"));
+        layout.addComponent(
+                new LegacyTextField("This should not get stuck either..."));
 
         VerticalLayout ol = new VerticalLayout();
         ol.setHeight("1000");

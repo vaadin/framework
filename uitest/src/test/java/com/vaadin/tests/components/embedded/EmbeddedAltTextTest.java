@@ -54,7 +54,7 @@ public class EmbeddedAltTextTest extends MultiBrowserTest {
     }
 
     private String getAltText(EmbeddedElement embedded) {
-        return embedded.findElement(By.vaadin("/domChild[0]")).getAttribute(
-                "alt");
+        return embedded.findElement(By.vaadin("/domChild[0]"))
+                .getAttribute("alt");
     }
 }

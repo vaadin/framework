@@ -62,15 +62,15 @@ public abstract class AbstractSplitPanelConnector extends
                     // Send % values as a fraction to avoid that the splitter
                     // "jumps" when server responds with the integer pct value
                     // (e.g. dragged 16.6% -> should not jump to 17%)
-                    pos = Float.valueOf(position.substring(0,
-                            position.length() - 1));
+                    pos = Float.valueOf(
+                            position.substring(0, position.length() - 1));
                 } else {
-                    pos = Integer.parseInt(position.substring(0,
-                            position.length() - 2));
+                    pos = Integer.parseInt(
+                            position.substring(0, position.length() - 2));
                 }
 
-                getRpcProxy(AbstractSplitPanelRpc.class).setSplitterPosition(
-                        pos);
+                getRpcProxy(AbstractSplitPanelRpc.class)
+                        .setSplitterPosition(pos);
             }
 
         }, SplitterMoveEvent.TYPE);
@@ -86,8 +86,8 @@ public abstract class AbstractSplitPanelConnector extends
         @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
                 H handler, Type<H> type) {
-            if ((Event.getEventsSunk(getWidget().splitter) & Event
-                    .getTypeInt(type.getName())) != 0) {
+            if ((Event.getEventsSunk(getWidget().splitter)
+                    & Event.getTypeInt(type.getName())) != 0) {
                 // If we are already sinking the event for the splitter we do
                 // not want to additionally sink it for the root element
                 return getWidget().addHandler(handler, type);
@@ -208,14 +208,14 @@ public abstract class AbstractSplitPanelConnector extends
         LayoutManager layoutManager = getLayoutManager();
         if (this instanceof HorizontalSplitPanelConnector) {
             if (child.isRelativeHeight()) {
-                int height = layoutManager.getInnerHeight(getWidget()
-                        .getElement());
+                int height = layoutManager
+                        .getInnerHeight(getWidget().getElement());
                 layoutManager.reportHeightAssignedToRelative(child, height);
             }
         } else {
             if (child.isRelativeWidth()) {
-                int width = layoutManager.getInnerWidth(getWidget()
-                        .getElement());
+                int width = layoutManager
+                        .getInnerWidth(getWidget().getElement());
                 layoutManager.reportWidthAssignedToRelative(child, width);
             }
         }
@@ -240,7 +240,8 @@ public abstract class AbstractSplitPanelConnector extends
     }
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         handleHierarchyChange();
     }
 

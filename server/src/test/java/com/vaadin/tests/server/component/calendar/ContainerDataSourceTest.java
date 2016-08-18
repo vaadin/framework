@@ -64,8 +64,8 @@ public class ContainerDataSourceTest {
         Date end = cal.getTime();
 
         // Test the all events are returned
-        List<CalendarEvent> events = calendar.getEventProvider().getEvents(
-                start, end);
+        List<CalendarEvent> events = calendar.getEventProvider()
+                .getEvents(start, end);
         assertEquals(container.size(), events.size());
 
         // Test that a certain range is returned
@@ -102,8 +102,8 @@ public class ContainerDataSourceTest {
         Date end = cal.getTime();
 
         // Test the all events are returned
-        List<CalendarEvent> events = calendar.getEventProvider().getEvents(
-                start, end);
+        List<CalendarEvent> events = calendar.getEventProvider()
+                .getEvents(start, end);
         assertEquals(container.size(), events.size());
 
         // Test that a certain range is returned
@@ -137,8 +137,8 @@ public class ContainerDataSourceTest {
         Date end = cal.getTime();
 
         // Test the all events are returned
-        List<CalendarEvent> events = calendar.getEventProvider().getEvents(
-                start, end);
+        List<CalendarEvent> events = calendar.getEventProvider()
+                .getEvents(start, end);
         assertEquals(container.size(), events.size());
 
         // Check that event values are present
@@ -171,8 +171,8 @@ public class ContainerDataSourceTest {
         calendar.setContainerDataSource(container);
 
         // Test null start time
-        List<CalendarEvent> events = calendar.getEventProvider().getEvents(
-                null, end);
+        List<CalendarEvent> events = calendar.getEventProvider().getEvents(null,
+                end);
         assertEquals(container.size(), events.size());
 
         // Test null end time
@@ -202,8 +202,8 @@ public class ContainerDataSourceTest {
                 "testDescription", "testStartDate", "testEndDate", null);
 
         // Test null start time
-        List<CalendarEvent> events = calendar.getEventProvider().getEvents(
-                null, end);
+        List<CalendarEvent> events = calendar.getEventProvider().getEvents(null,
+                end);
         assertEquals(container.size(), events.size());
 
         // Test null end time
@@ -366,8 +366,8 @@ public class ContainerDataSourceTest {
                 CalendarEvent.class);
         java.util.Calendar cal = java.util.Calendar.getInstance();
         for (int i = 1; i <= 10; i++) {
-            eventContainer.addBean(new BasicEvent("Test " + i, "Description "
-                    + i, cal.getTime()));
+            eventContainer.addBean(new BasicEvent("Test " + i,
+                    "Description " + i, cal.getTime()));
             cal.add(java.util.Calendar.DAY_OF_MONTH, 2);
         }
         return eventContainer;

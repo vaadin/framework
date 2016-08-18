@@ -9,8 +9,8 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket1834PanelScrolling extends
-        com.vaadin.server.LegacyApplication {
+public class Ticket1834PanelScrolling
+        extends com.vaadin.server.LegacyApplication {
 
     private static final int ROWS = 50;
 
@@ -79,10 +79,8 @@ public class Ticket1834PanelScrolling extends
         p = new Panel("TestPanel", pl);
 
         for (int i = 0; i < ROWS; i++) {
-            pl.addComponent(new Label(
-                    "Label"
-                            + i
-                            + "................................................................................................................."));
+            pl.addComponent(new Label("Label" + i
+                    + "................................................................................................................."));
         }
 
         p.setHeight("300px");

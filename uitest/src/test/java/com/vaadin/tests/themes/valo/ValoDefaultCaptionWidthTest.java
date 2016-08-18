@@ -50,7 +50,9 @@ public class ValoDefaultCaptionWidthTest extends DefaultCaptionWidthTest {
         int width = $(ColorPickerElement.class).first().getSize().getWidth();
         // Width should be 150px but let's just check that it's not which is
         // used when default caption is used and at least >= 150-1
-        assertThat("Width of color picker is overriden by "
-                + "default caption feature", width, is(greaterThan(149)));
+        assertThat(
+                "Width of color picker is overriden by "
+                        + "default caption feature",
+                width, is(greaterThan(149)));
     }
 }

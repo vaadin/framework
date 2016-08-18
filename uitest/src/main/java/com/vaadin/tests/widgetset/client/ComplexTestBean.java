@@ -31,8 +31,7 @@ public class ComplexTestBean extends SharedState {
         // Default
     }
 
-    public ComplexTestBean(SimpleTestBean innerBean1,
-            SimpleTestBean innerBean2,
+    public ComplexTestBean(SimpleTestBean innerBean1, SimpleTestBean innerBean2,
             List<SimpleTestBean> innerBeanCollection, int privimite) {
         this.innerBean1 = innerBean1;
         this.innerBean2 = innerBean2;
@@ -60,7 +59,8 @@ public class ComplexTestBean extends SharedState {
         return innerBeanCollection;
     }
 
-    public void setInnerBeanCollection(List<SimpleTestBean> innerBeanCollection) {
+    public void setInnerBeanCollection(
+            List<SimpleTestBean> innerBeanCollection) {
         this.innerBeanCollection = innerBeanCollection;
     }
 

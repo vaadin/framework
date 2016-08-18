@@ -197,7 +197,8 @@ public class Profiler {
             return Collections.unmodifiableCollection(children.values());
         }
 
-        private void buildRecursiveString(StringBuilder builder, String prefix) {
+        private void buildRecursiveString(StringBuilder builder,
+                String prefix) {
             if (getName() != null) {
                 String msg = getStringRepresentation(prefix);
                 builder.append(msg + '\n');
@@ -220,9 +221,7 @@ public class Profiler {
             String msg = prefix + " " + getName() + " in "
                     + roundToSignificantFigures(getTimeSpent()) + " ms.";
             if (getCount() > 1) {
-                msg += " Invoked "
-                        + getCount()
-                        + " times ("
+                msg += " Invoked " + getCount() + " times ("
                         + roundToSignificantFigures(getTimeSpent() / getCount())
                         + " ms per time, min "
                         + roundToSignificantFigures(getMinTimeSpent())
@@ -270,10 +269,10 @@ public class Profiler {
 
                 totalNode.time += getOwnTime();
                 totalNode.count += getCount();
-                totalNode.minTime = roundToSignificantFigures(Math.min(
-                        totalNode.minTime, getMinTimeSpent()));
-                totalNode.maxTime = roundToSignificantFigures(Math.max(
-                        totalNode.maxTime, getMaxTimeSpent()));
+                totalNode.minTime = roundToSignificantFigures(
+                        Math.min(totalNode.minTime, getMinTimeSpent()));
+                totalNode.maxTime = roundToSignificantFigures(
+                        Math.max(totalNode.maxTime, getMaxTimeSpent()));
             }
             for (Node node : children.values()) {
                 node.sumUpTotals(totals);
@@ -468,9 +467,8 @@ public class Profiler {
         stack.add(rootNode);
         JsArray<GwtStatsEvent> gwtStatsEvents = getGwtStatsEvents();
         if (gwtStatsEvents.length() == 0) {
-            getLogger()
-                    .warning(
-                            "No profiling events recorded, this might happen if another __gwtStatsEvent handler is installed.");
+            getLogger().warning(
+                    "No profiling events recorded, this might happen if another __gwtStatsEvent handler is installed.");
             return;
         }
 
@@ -503,10 +501,8 @@ public class Profiler {
 
             if (type.equals("end")) {
                 if (!inEvent) {
-                    getLogger().severe(
-                            "Got end event for " + eventName
-                                    + " but is currently in "
-                                    + stackTop.getName());
+                    getLogger().severe("Got end event for " + eventName
+                            + " but is currently in " + stackTop.getName());
                     return;
                 }
                 Node previousStackTop = stack.removeLast();
@@ -516,8 +512,9 @@ public class Profiler {
                     previousStackTop.leave(gwtStatsEvent.getMillis());
                 }
             } else {
-                double millis = isExtendedEvent ? gwtStatsEvent
-                        .getRelativeMillis() : gwtStatsEvent.getMillis();
+                double millis = isExtendedEvent
+                        ? gwtStatsEvent.getRelativeMillis()
+                        : gwtStatsEvent.getMillis();
                 if (!inEvent) {
                     stackTop = stackTop.enterChild(eventName, millis);
                     stack.add(stackTop);
@@ -538,9 +535,8 @@ public class Profiler {
         }
 
         if (stack.size() != 1) {
-            getLogger().warning(
-                    "Not all nodes are left, the last node is "
-                            + stack.getLast().getName());
+            getLogger().warning("Not all nodes are left, the last node is "
+                    + stack.getLast().getName());
             return;
         }
 
@@ -600,8 +596,8 @@ public class Profiler {
             }
 
             if (timings.isEmpty()) {
-                getLogger()
-                        .info("Bootstrap timings not supported, please ensure your browser supports performance.timing");
+                getLogger().info(
+                        "Bootstrap timings not supported, please ensure your browser supports performance.timing");
                 return;
             }
 
@@ -675,7 +671,8 @@ public class Profiler {
     public static void setProfilerResultConsumer(
             ProfilerResultConsumer profilerResultConsumer) {
         if (consumer != null) {
-            throw new IllegalStateException("The consumer has already been set");
+            throw new IllegalStateException(
+                    "The consumer has already been set");
         }
         consumer = profilerResultConsumer;
     }
@@ -697,8 +694,8 @@ public class Profiler {
         double getRelativeTime();
     }
 
-    private static class DefaultRelativeTimeSupplier implements
-            RelativeTimeSupplier {
+    private static class DefaultRelativeTimeSupplier
+            implements RelativeTimeSupplier {
 
         @Override
         public native double getRelativeTime()
@@ -707,8 +704,8 @@ public class Profiler {
         }-*/;
     }
 
-    private static class HighResolutionTimeSupplier implements
-            RelativeTimeSupplier {
+    private static class HighResolutionTimeSupplier
+            implements RelativeTimeSupplier {
 
         @Override
         public native double getRelativeTime()

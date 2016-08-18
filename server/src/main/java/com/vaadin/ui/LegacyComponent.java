@@ -33,8 +33,8 @@ import com.vaadin.server.VariableOwner;
  * @since 7.0.0
  */
 @Deprecated
-public interface LegacyComponent extends VariableOwner, Component,
-        ConnectorEventListener {
+public interface LegacyComponent
+        extends VariableOwner, Component, ConnectorEventListener {
 
     /**
      * <p>

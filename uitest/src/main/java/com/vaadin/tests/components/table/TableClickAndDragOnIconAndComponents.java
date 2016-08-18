@@ -61,8 +61,8 @@ public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
                     Object columnId) {
                 Item item = source.getItem(itemId);
                 LegacyTextField textfield = new LegacyTextField();
-                textfield.setValue(String.valueOf(item.getItemProperty("foo")
-                        .getValue()));
+                textfield.setValue(
+                        String.valueOf(item.getItemProperty("foo").getValue()));
                 return textfield;
             }
         });
@@ -75,8 +75,8 @@ public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
                     Object columnId) {
                 Item item = source.getItem(itemId);
                 LegacyTextField textfield = new LegacyTextField();
-                textfield.setValue(String.valueOf(item.getItemProperty("foo")
-                        .getValue()));
+                textfield.setValue(
+                        String.valueOf(item.getItemProperty("foo").getValue()));
                 textfield.setReadOnly(true);
                 return textfield;
             }
@@ -88,8 +88,8 @@ public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
             @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
-                Embedded embedded = new Embedded(null, new ThemeResource(
-                        "../runo/icons/16/ok.png"));
+                Embedded embedded = new Embedded(null,
+                        new ThemeResource("../runo/icons/16/ok.png"));
                 return embedded;
             }
         });
@@ -134,8 +134,8 @@ public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
         }
         item.getItemProperty("foo").setValue("foo " + itemId);
         item.getItemProperty("red").setValue("red " + itemId);
-        item.getItemProperty("icon").setValue(
-                new ThemeResource("../runo/icons/16/ok.png"));
+        item.getItemProperty("icon")
+                .setValue(new ThemeResource("../runo/icons/16/ok.png"));
     }
 
     @Override

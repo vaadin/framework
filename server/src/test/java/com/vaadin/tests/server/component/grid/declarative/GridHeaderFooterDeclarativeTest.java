@@ -332,10 +332,10 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         Element root = new Element(Tag.valueOf("vaadin-grid"), "");
         grid.writeDesign(root, new DesignContext());
 
-        Assert.assertEquals("&amp;amp; Test", root.getElementsByTag("th")
-                .get(0).html());
-        Assert.assertEquals("&amp;amp; Test", root.getElementsByTag("td")
-                .get(0).html());
+        Assert.assertEquals("&amp;amp; Test",
+                root.getElementsByTag("th").get(0).html());
+        Assert.assertEquals("&amp;amp; Test",
+                root.getElementsByTag("td").get(0).html());
 
         header = grid.addHeaderRowAt(0);
         footer = grid.addFooterRowAt(0);
@@ -347,10 +347,10 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         root = new Element(Tag.valueOf("vaadin-grid"), "");
         grid.writeDesign(root, new DesignContext());
 
-        Assert.assertEquals("&amp; Test", root.getElementsByTag("th").get(0)
-                .html());
-        Assert.assertEquals("&amp; Test", root.getElementsByTag("td").get(0)
-                .html());
+        Assert.assertEquals("&amp; Test",
+                root.getElementsByTag("th").get(0).html());
+        Assert.assertEquals("&amp; Test",
+                root.getElementsByTag("td").get(0).html());
 
     }
 }

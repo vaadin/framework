@@ -40,8 +40,8 @@ public class LongMultiselect extends AbstractTestUI {
                 // Set ItemProperty.COLUMN2 for all selected values of table
                 Collection selectedIds = (Collection) table.getValue();
                 for (final Object itemId : selectedIds) {
-                    final Property p = table.getItem(itemId).getItemProperty(
-                            ItemProperty.COLUMN2);
+                    final Property p = table.getItem(itemId)
+                            .getItemProperty(ItemProperty.COLUMN2);
                     if (p.getValue() instanceof String) {
                         p.setValue(null);
                     } else {

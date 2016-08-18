@@ -40,8 +40,8 @@ public class TableScrollUpOnSelectTest extends MultiBrowserTest {
 
         // WebElement table = driver.findElement(By.vaadin("//Table"));
         WebElement row = $(TableElement.class).first().getCell(49, 0);
-        final WebElement scrollPositionDisplay = getDriver().findElement(
-                By.className("v-table-scrollposition"));
+        final WebElement scrollPositionDisplay = getDriver()
+                .findElement(By.className("v-table-scrollposition"));
         waitUntilNot(new ExpectedCondition<Boolean>() {
 
             @Override

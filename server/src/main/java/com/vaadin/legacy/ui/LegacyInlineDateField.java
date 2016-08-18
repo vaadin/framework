@@ -37,7 +37,8 @@ public class LegacyInlineDateField extends LegacyDateField {
         super();
     }
 
-    public LegacyInlineDateField(Property dataSource) throws IllegalArgumentException {
+    public LegacyInlineDateField(Property dataSource)
+            throws IllegalArgumentException {
         super(dataSource);
     }
 

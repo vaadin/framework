@@ -62,15 +62,16 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
     private Class<? extends T> type;
 
     /* Special serialization to handle method references */
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+    private void writeObject(java.io.ObjectOutputStream out)
+            throws IOException {
         out.defaultWriteObject();
         // getMethods and setMethod are reconstructed on read based on
         // propertyName
     }
 
     /* Special serialization to handle method references */
-    private void readObject(java.io.ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 
         initialize(instance.getClass(), propertyName);
@@ -132,8 +133,8 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
         Class<?> propertyClass = beanClass;
         String[] simplePropertyNames = propertyName.split("\\.");
         if (propertyName.endsWith(".") || 0 == simplePropertyNames.length) {
-            throw new IllegalArgumentException("Invalid property name '"
-                    + propertyName + "'");
+            throw new IllegalArgumentException(
+                    "Invalid property name '" + propertyName + "'");
         }
         for (int i = 0; i < simplePropertyNames.length; i++) {
             String simplePropertyName = simplePropertyNames[i].trim();
@@ -217,8 +218,8 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
      * 
      * @param newValue
      *            the New value of the property.
-     * @throws <code>Property.ReadOnlyException</code> if the object is in
-     *         read-only mode.
+     * @throws <code>Property.ReadOnlyException</code>
+     *             if the object is in read-only mode.
      * @see #invokeSetMethod(Object)
      */
     @Override

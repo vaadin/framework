@@ -73,8 +73,8 @@ public class ComboBoxOnSmallScreenTest extends MultiBrowserTest {
         final int popupBottom = popupTop + popup.getSize().getHeight();
         final int rootHeight = findElement(By.tagName("body")).getSize().height;
 
-        assertThat("Popup overlay out of the screen", popupTop < 0
-                || popupBottom > rootHeight, is(false));
+        assertThat("Popup overlay out of the screen",
+                popupTop < 0 || popupBottom > rootHeight, is(false));
     }
 
     private Window getWindow() {

@@ -155,8 +155,8 @@ public class DeclarativeTestUI extends AbstractTestUI {
         try {
             return (T) component;
         } catch (ClassCastException ex) {
-            getLogger().log(Level.SEVERE,
-                    "Component code/design type mismatch", ex);
+            getLogger().log(Level.SEVERE, "Component code/design type mismatch",
+                    ex);
         }
         return null;
     }

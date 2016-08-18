@@ -31,7 +31,8 @@ import com.vaadin.ui.TabSheet;
 public class GridIcon extends GridBaseLayoutTestUI {
     @Override
     protected void setup(VaadinRequest request) {
-        layout.addComponent(createLabelsFields(LegacyTextField.class, true, ""));
+        layout.addComponent(
+                createLabelsFields(LegacyTextField.class, true, ""));
         layout.addComponent(createLabelsFields(Label.class, true, ""));
         layout.addComponent(createLabelsFields(Button.class, true, ""));
         layout.addComponent(createLabelsFields(ComboBox.class, true, ""));

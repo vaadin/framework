@@ -32,8 +32,8 @@ public class GridColumnAutoExpandTest extends MultiBrowserTest {
         GridCellElement headerCell = $(GridElement.class).first()
                 .getHeaderCell(0, 1);
 
-        assertTrue("Column did not expand as expected", headerCell.getSize()
-                .getWidth() > 400);
+        assertTrue("Column did not expand as expected",
+                headerCell.getSize().getWidth() > 400);
     }
 
 }

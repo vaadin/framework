@@ -787,8 +787,8 @@ public enum FontAwesome implements FontIcon {
                 return f;
             }
         }
-        throw new IllegalArgumentException("Codepoint " + codepoint
-                + " not found in FontAwesome");
+        throw new IllegalArgumentException(
+                "Codepoint " + codepoint + " not found in FontAwesome");
     }
 
 }

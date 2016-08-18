@@ -25,8 +25,8 @@ import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.Receiver;
 
-public class UploadNoSelection extends AbstractTestUIWithLog implements
-        Receiver {
+public class UploadNoSelection extends AbstractTestUIWithLog
+        implements Receiver {
 
     static final String LOG_ID_PREFIX = "Log_row_";
     static final String UPLOAD_ID = "u";

@@ -41,7 +41,8 @@ public class TabsheetScrollingTest extends MultiBrowserTest {
     }
 
     private WebElement getTab(int index) {
-        return getDriver().findElement(By.vaadin("//TabSheet#tab["+index+"]"));
+        return getDriver()
+                .findElement(By.vaadin("//TabSheet#tab[" + index + "]"));
     }
 
     private String getHideButtonText() {
@@ -55,7 +56,9 @@ public class TabsheetScrollingTest extends MultiBrowserTest {
 
     private WebElement getTabByCaption(TabSheetElement ts, String caption) {
         WebElement tabBar = ts.findElement(By.className("v-tabsheet-tabs"));
-        return tabBar.findElement(By.xpath("./tbody/tr/td[./div/div/div[contains(., normalize-space('"+caption+"'))]]"));
+        return tabBar.findElement(By
+                .xpath("./tbody/tr/td[./div/div/div[contains(., normalize-space('"
+                        + caption + "'))]]"));
     }
 
     private boolean isTabVisible(TabSheetElement ts, String tabCaption) {

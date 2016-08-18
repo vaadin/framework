@@ -41,8 +41,7 @@ public class TB3TestSuite extends ParallelTestSuite {
             Class<? extends AbstractTB3Test> baseClass, String basePackage,
             String[] ignorePackages, TB3TestLocator locator)
             throws InitializationError, IOException {
-        super(klass, locator
-                .findClasses(baseClass, basePackage, ignorePackages).toArray(
-                        new Class<?>[] {}));
+        super(klass, locator.findClasses(baseClass, basePackage, ignorePackages)
+                .toArray(new Class<?>[] {}));
     }
 }

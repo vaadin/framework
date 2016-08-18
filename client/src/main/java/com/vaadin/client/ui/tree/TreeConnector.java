@@ -43,8 +43,8 @@ import com.vaadin.shared.ui.tree.TreeState;
 import com.vaadin.ui.Tree;
 
 @Connect(Tree.class)
-public class TreeConnector extends AbstractComponentConnector implements
-        Paintable {
+public class TreeConnector extends AbstractComponentConnector
+        implements Paintable {
 
     protected final Map<TreeNode, TooltipInfo> tooltipMap = new HashMap<TreeNode, TooltipInfo>();
 
@@ -80,8 +80,8 @@ public class TreeConnector extends AbstractComponentConnector implements
         getWidget().disabled = !isEnabled();
         getWidget().readonly = isReadOnly();
 
-        getWidget().dragMode = uidl.hasAttribute("dragMode") ? uidl
-                .getIntAttribute("dragMode") : 0;
+        getWidget().dragMode = uidl.hasAttribute("dragMode")
+                ? uidl.getIntAttribute("dragMode") : 0;
 
         getWidget().isNullSelectionAllowed = uidl
                 .getBooleanAttribute("nullselect");
@@ -133,8 +133,8 @@ public class TreeConnector extends AbstractComponentConnector implements
                 // shift/ctrl keys (#8595)
                 getWidget().multiSelectMode = MultiSelectMode.SIMPLE;
             } else {
-                getWidget().multiSelectMode = MultiSelectMode.valueOf(uidl
-                        .getStringAttribute("multiselectmode"));
+                getWidget().multiSelectMode = MultiSelectMode
+                        .valueOf(uidl.getStringAttribute("multiselectmode"));
             }
         } else {
             Roles.getTreeRole().setAriaMultiselectableProperty(
@@ -148,8 +148,8 @@ public class TreeConnector extends AbstractComponentConnector implements
         // and keyboard navigation issues as described in #7057 and other
         // tickets.
         if (getWidget().lastSelection != null) {
-            getWidget().lastSelection = getWidget().getNodeByKey(
-                    getWidget().lastSelection.key);
+            getWidget().lastSelection = getWidget()
+                    .getNodeByKey(getWidget().lastSelection.key);
         }
 
         if (getWidget().focusedNode != null) {
@@ -171,12 +171,10 @@ public class TreeConnector extends AbstractComponentConnector implements
             }
         }
 
-        if (getWidget().lastSelection == null
-                && getWidget().focusedNode == null
+        if (getWidget().lastSelection == null && getWidget().focusedNode == null
                 && !getWidget().selectedIds.isEmpty()) {
-            getWidget().setFocusedNode(
-                    getWidget().getNodeByKey(
-                            getWidget().selectedIds.iterator().next()));
+            getWidget().setFocusedNode(getWidget()
+                    .getNodeByKey(getWidget().selectedIds.iterator().next()));
             getWidget().focusedNode.setFocused(false);
         }
 
@@ -200,8 +198,8 @@ public class TreeConnector extends AbstractComponentConnector implements
     }
 
     private void handleUpdate(UIDL uidl) {
-        final TreeNode rootNode = getWidget().getNodeByKey(
-                uidl.getStringAttribute("rootKey"));
+        final TreeNode rootNode = getWidget()
+                .getNodeByKey(uidl.getStringAttribute("rootKey"));
         if (rootNode != null) {
             if (!rootNode.getState()) {
                 // expanding node happened server side
@@ -237,8 +235,8 @@ public class TreeConnector extends AbstractComponentConnector implements
             String iconUrl = null;
             if (action.hasAttribute(TreeConstants.ATTRIBUTE_ACTION_ICON)) {
                 iconUrl = getConnection()
-                        .translateVaadinUri(
-                                action.getStringAttribute(TreeConstants.ATTRIBUTE_ACTION_ICON));
+                        .translateVaadinUri(action.getStringAttribute(
+                                TreeConstants.ATTRIBUTE_ACTION_ICON));
             }
             getWidget().registerAction(key, caption, iconUrl);
         }
@@ -283,8 +281,8 @@ public class TreeConnector extends AbstractComponentConnector implements
 
         String description = uidl.getStringAttribute("descr");
         if (description != null) {
-            tooltipMap.put(treeNode, new TooltipInfo(description, null,
-                    treeNode));
+            tooltipMap.put(treeNode,
+                    new TooltipInfo(description, null, treeNode));
         }
 
         if (uidl.getBooleanAttribute("expanded") && !treeNode.getState()) {
@@ -321,9 +319,8 @@ public class TreeConnector extends AbstractComponentConnector implements
             updateNodeFromUIDL(childTree, childUidl, level);
             containerNode.childNodeContainer.add(childTree);
             if (!i.hasNext()) {
-                childTree
-                        .addStyleDependentName(childTree.isLeaf() ? "leaf-last"
-                                : "last");
+                childTree.addStyleDependentName(
+                        childTree.isLeaf() ? "leaf-last" : "last");
                 childTree.childNodeContainer.addStyleDependentName("last");
             }
         }

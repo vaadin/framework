@@ -48,9 +48,9 @@ public class ListDataSource<T> implements DataSource<T> {
     }
 
     /**
-     * Chaining constructor for making modified {@link ListDataSource}s.
-     * This Constructor is used internally for making sorted and filtered
-     * variants of a base data source with actual data.
+     * Chaining constructor for making modified {@link ListDataSource}s. This
+     * Constructor is used internally for making sorted and filtered variants of
+     * a base data source with actual data.
      *
      * @param request
      *            request for the new data source
@@ -72,8 +72,7 @@ public class ListDataSource<T> implements DataSource<T> {
      * @return new data source with modified sorting
      */
     public ListDataSource<T> sortingBy(Comparator<T> sortOrder) {
-        return new ListDataSource<>(q -> request.apply(q)
-                .sorted(sortOrder));
+        return new ListDataSource<>(q -> request.apply(q).sorted(sortOrder));
     }
 
     /**

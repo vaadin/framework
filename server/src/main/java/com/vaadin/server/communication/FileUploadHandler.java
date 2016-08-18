@@ -192,7 +192,8 @@ public class FileUploadHandler implements RequestHandler {
                 }
             }
             if (b == -1) {
-                throw new IOException("The multipart stream ended unexpectedly");
+                throw new IOException(
+                        "The multipart stream ended unexpectedly");
             }
             return b;
         }
@@ -227,7 +228,9 @@ public class FileUploadHandler implements RequestHandler {
 
     private static final String DASHDASH = "--";
 
-    /* Same as in apache commons file upload library that was previously used. */
+    /*
+     * Same as in apache commons file upload library that was previously used.
+     */
     private static final int MAX_UPLOAD_BUFFER_SIZE = 4 * 1024;
 
     /* Minimum interval which will be used for streaming progress events. */
@@ -266,8 +269,8 @@ public class FileUploadHandler implements RequestHandler {
             UI uI = session.getUIById(Integer.parseInt(uiId));
             UI.setCurrent(uI);
 
-            streamVariable = uI.getConnectorTracker().getStreamVariable(
-                    connectorId, variableName);
+            streamVariable = uI.getConnectorTracker()
+                    .getStreamVariable(connectorId, variableName);
             String secKey = uI.getConnectorTracker().getSeckey(streamVariable);
             if (secKey == null || !secKey.equals(parts[3])) {
                 // TODO Should rethink error handling
@@ -299,7 +302,8 @@ public class FileUploadHandler implements RequestHandler {
         int readByte = stream.read();
         while (readByte != LF) {
             if (readByte == -1) {
-                throw new IOException("The multipart stream ended unexpectedly");
+                throw new IOException(
+                        "The multipart stream ended unexpectedly");
             }
             bout.write(readByte);
             readByte = stream.read();
@@ -374,8 +378,8 @@ public class FileUploadHandler implements RequestHandler {
             }
         }
 
-        contentLength -= (boundary.length() + CRLF.length() + 2
-                * DASHDASH.length() + CRLF.length());
+        contentLength -= (boundary.length() + CRLF.length()
+                + 2 * DASHDASH.length() + CRLF.length());
 
         /*
          * Reads bytes from the underlying stream. Compares the read bytes to
@@ -404,8 +408,8 @@ public class FileUploadHandler implements RequestHandler {
                     streamVariable, filename, mimeType, contentLength, owner,
                     variableName);
         } catch (UploadException e) {
-            session.getCommunicationManager().handleConnectorRelatedException(
-                    owner, e);
+            session.getCommunicationManager()
+                    .handleConnectorRelatedException(owner, e);
         }
         sendUploadResponse(request, response);
 
@@ -510,8 +514,8 @@ public class FileUploadHandler implements RequestHandler {
             handleFileUploadValidationAndData(session, stream, streamVariable,
                     filename, mimeType, contentLength, owner, variableName);
         } catch (UploadException e) {
-            session.getCommunicationManager().handleConnectorRelatedException(
-                    owner, e);
+            session.getCommunicationManager()
+                    .handleConnectorRelatedException(owner, e);
         }
         sendUploadResponse(request, response);
     }
@@ -680,8 +684,8 @@ public class FileUploadHandler implements RequestHandler {
             VaadinResponse response) throws IOException {
         response.setContentType("text/html");
         final OutputStream out = response.getOutputStream();
-        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
-                new OutputStreamWriter(out, "UTF-8")));
+        final PrintWriter outWriter = new PrintWriter(
+                new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));
         outWriter.print("<html><body>download handled</body></html>");
         outWriter.flush();
         out.close();

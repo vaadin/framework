@@ -42,8 +42,8 @@ public class UsingUriFragments extends UI {
         layout.setMargin(true);
         setContent(layout);
 
-        Label label = new Label("Hello, your fragment is "
-                + getPage().getUriFragment());
+        Label label = new Label(
+                "Hello, your fragment is " + getPage().getUriFragment());
         layout.addComponent(label);
 
         // React to fragment changes
@@ -57,8 +57,8 @@ public class UsingUriFragments extends UI {
         // Handle the fragment received in the initial request
         handleFragment(getPage().getUriFragment());
 
-        layout.addComponent(new Button("Show and set fragment",
-                new Button.ClickListener() {
+        layout.addComponent(
+                new Button("Show and set fragment", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         handleFragment(getPage().getUriFragment());

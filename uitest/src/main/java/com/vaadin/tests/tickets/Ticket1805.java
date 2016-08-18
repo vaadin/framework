@@ -28,7 +28,8 @@ public class Ticket1805 extends com.vaadin.server.LegacyApplication {
 
         final GridLayout grid = new GridLayout(4, 1);
 
-        final LegacyTextField size = new LegacyTextField("Grid width in css unit");
+        final LegacyTextField size = new LegacyTextField(
+                "Grid width in css unit");
         size.addListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {

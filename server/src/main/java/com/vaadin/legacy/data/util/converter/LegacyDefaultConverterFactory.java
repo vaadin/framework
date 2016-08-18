@@ -24,8 +24,9 @@ import java.util.logging.Logger;
 import com.vaadin.server.VaadinSession;
 
 /**
- * Default implementation of {@link LegacyConverterFactory}. Provides converters for
- * standard types like {@link String}, {@link Double} and {@link Date}. </p>
+ * Default implementation of {@link LegacyConverterFactory}. Provides converters
+ * for standard types like {@link String}, {@link Double} and {@link Date}.
+ * </p>
  * <p>
  * Custom converters can be provided by extending this class and using
  * {@link VaadinSession#setConverterFactory(LegacyConverterFactory)}.
@@ -56,7 +57,8 @@ public class LegacyDefaultConverterFactory implements LegacyConverterFactory {
         if (reverseConverter != null) {
             log.finest(getClass().getName() + " created a reverse "
                     + reverseConverter.getClass());
-            return new LegacyReverseConverter<PRESENTATION, MODEL>(reverseConverter);
+            return new LegacyReverseConverter<PRESENTATION, MODEL>(
+                    reverseConverter);
         }
 
         log.finest(getClass().getName() + " could not find a converter for "
@@ -70,13 +72,15 @@ public class LegacyDefaultConverterFactory implements LegacyConverterFactory {
             Class<PRESENTATION> presentationType, Class<MODEL> modelType) {
         if (presentationType == String.class) {
             // TextField converters and more
-            LegacyConverter<PRESENTATION, MODEL> converter = (LegacyConverter<PRESENTATION, MODEL>) createStringConverter(modelType);
+            LegacyConverter<PRESENTATION, MODEL> converter = (LegacyConverter<PRESENTATION, MODEL>) createStringConverter(
+                    modelType);
             if (converter != null) {
                 return converter;
             }
         } else if (presentationType == Date.class) {
             // DateField converters and more
-            LegacyConverter<PRESENTATION, MODEL> converter = (LegacyConverter<PRESENTATION, MODEL>) createDateConverter(modelType);
+            LegacyConverter<PRESENTATION, MODEL> converter = (LegacyConverter<PRESENTATION, MODEL>) createDateConverter(
+                    modelType);
             if (converter != null) {
                 return converter;
             }
@@ -86,7 +90,8 @@ public class LegacyDefaultConverterFactory implements LegacyConverterFactory {
 
     }
 
-    protected LegacyConverter<Date, ?> createDateConverter(Class<?> sourceType) {
+    protected LegacyConverter<Date, ?> createDateConverter(
+            Class<?> sourceType) {
         if (Long.class.isAssignableFrom(sourceType)) {
             return new LegacyDateToLongConverter();
         } else if (java.sql.Date.class.isAssignableFrom(sourceType)) {
@@ -96,7 +101,8 @@ public class LegacyDefaultConverterFactory implements LegacyConverterFactory {
         }
     }
 
-    protected LegacyConverter<String, ?> createStringConverter(Class<?> sourceType) {
+    protected LegacyConverter<String, ?> createStringConverter(
+            Class<?> sourceType) {
         if (Double.class.isAssignableFrom(sourceType)) {
             return new LegacyStringToDoubleConverter();
         } else if (Float.class.isAssignableFrom(sourceType)) {

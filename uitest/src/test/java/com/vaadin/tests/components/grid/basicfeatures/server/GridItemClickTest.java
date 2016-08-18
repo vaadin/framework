@@ -34,7 +34,8 @@ public class GridItemClickTest extends GridBasicFeaturesTest {
         GridCellElement cell = getGridElement().getCell(3, 2);
         new Actions(getDriver()).moveToElement(cell).click().perform();
 
-        assertTrue("No click in log", logContainsText(itemClickOn(3, 2, false)));
+        assertTrue("No click in log",
+                logContainsText(itemClickOn(3, 2, false)));
     }
 
     @Test

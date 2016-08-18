@@ -30,8 +30,8 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.4
  */
-public class LegacyStringToShortConverter extends
-        LegacyAbstractStringToNumberConverter<Short> {
+public class LegacyStringToShortConverter
+        extends LegacyAbstractStringToNumberConverter<Short> {
 
     /**
      * Returns the format used by
@@ -58,9 +58,8 @@ public class LegacyStringToShortConverter extends
      * java.lang.Class, java.util.Locale)
      */
     @Override
-    public Short convertToModel(String value,
-            Class<? extends Short> targetType, Locale locale)
-            throws ConversionException {
+    public Short convertToModel(String value, Class<? extends Short> targetType,
+            Locale locale) throws ConversionException {
         Number n = convertToNumber(value, targetType, locale);
 
         if (n == null) {

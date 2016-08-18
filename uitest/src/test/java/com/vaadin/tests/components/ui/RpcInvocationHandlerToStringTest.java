@@ -20,8 +20,8 @@ public class RpcInvocationHandlerToStringTest extends MultiBrowserTest {
         $(ButtonElement.class)
                 .caption("Exec " + method + " for an invocation proxy").first()
                 .click();
-        Assert.assertFalse(method
-                + " for invocation proxy caused a notification",
+        Assert.assertFalse(
+                method + " for invocation proxy caused a notification",
                 $(NotificationElement.class).exists());
     }
 }

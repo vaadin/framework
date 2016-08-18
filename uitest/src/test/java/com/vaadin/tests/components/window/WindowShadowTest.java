@@ -34,8 +34,8 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class WindowShadowTest extends MultiBrowserTest {
 
     @Test
-    public void dragBackgroundWindow() throws AWTException, IOException,
-            InterruptedException {
+    public void dragBackgroundWindow()
+            throws AWTException, IOException, InterruptedException {
         openTestURL();
         WebElement wnd = getDriver().findElement(By.id("topwindow"));
         // There is some bug in Selenium. Can't move window using header

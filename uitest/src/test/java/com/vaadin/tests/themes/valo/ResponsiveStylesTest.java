@@ -46,8 +46,8 @@ public class ResponsiveStylesTest extends MultiBrowserTest {
     public void testValoMenuResponsiveParentSize() throws Exception {
         openTestURL();
 
-        List<WebElement> menus = findElements(com.vaadin.testbench.By
-                .className(MENU_STYLENAME));
+        List<WebElement> menus = findElements(
+                com.vaadin.testbench.By.className(MENU_STYLENAME));
 
         WebElement narrowMenu = menus.get(NARROW_ELEMENT_INDEX);
         int narrowWidth = narrowMenu.getSize().width;

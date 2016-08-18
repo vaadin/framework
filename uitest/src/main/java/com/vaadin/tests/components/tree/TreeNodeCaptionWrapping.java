@@ -29,8 +29,8 @@ public class TreeNodeCaptionWrapping extends TestBase {
         String subItem = "Subitem - also long";
 
         tree.addItem(mainItem);
-        tree.setItemIcon(mainItem, new ThemeResource(
-                "../runo/icons/16/error.png"));
+        tree.setItemIcon(mainItem,
+                new ThemeResource("../runo/icons/16/error.png"));
 
         tree.addItem(subItem);
         tree.setParent(subItem, mainItem);

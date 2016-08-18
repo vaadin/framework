@@ -25,8 +25,8 @@ import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class EmbeddedClickListenerRelativeCoordinatesTest extends
-        MultiBrowserTest {
+public class EmbeddedClickListenerRelativeCoordinatesTest
+        extends MultiBrowserTest {
 
     @Before
     @Override

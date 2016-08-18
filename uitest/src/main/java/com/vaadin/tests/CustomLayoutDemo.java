@@ -113,8 +113,8 @@ public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication
         setBody("Welcome");
 
         // Add heading label and custom layout panel to main window
-        mainWindow.addComponent(new Label("<h3>Custom layout demo</h3>",
-                ContentMode.HTML));
+        mainWindow.addComponent(
+                new Label("<h3>Custom layout demo</h3>", ContentMode.HTML));
         mainWindow.addComponent(customLayoutPanel);
     }
 
@@ -129,8 +129,9 @@ public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication
         if (username.getValue().toString().length() < 1) {
             username.setValue("Anonymous");
         }
-        mainLayout.replaceComponent(loginButton, new Label("Welcome user <em>"
-                + username.getValue() + "</em>", ContentMode.HTML));
+        mainLayout.replaceComponent(loginButton,
+                new Label("Welcome user <em>" + username.getValue() + "</em>",
+                        ContentMode.HTML));
     }
 
     /**

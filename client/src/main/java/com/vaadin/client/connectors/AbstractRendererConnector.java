@@ -34,9 +34,8 @@ import elemental.json.JsonValue;
  * {@link com.vaadin.ui.components.grid.Renderer Renderer}. As a connector, it
  * can use the regular Vaadin RPC and shared state mechanism to pass additional
  * state and information between the client and the server. This base class
- * itself only uses the basic
- * {@link com.vaadin.shared.communication.SharedState SharedState} and no RPC
- * interfaces.
+ * itself only uses the basic {@link com.vaadin.shared.communication.SharedState
+ * SharedState} and no RPC interfaces.
  * 
  * @param <T>
  *            the presentation type of the renderer
@@ -44,8 +43,8 @@ import elemental.json.JsonValue;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public abstract class AbstractRendererConnector<T> extends
-        AbstractExtensionConnector {
+public abstract class AbstractRendererConnector<T>
+        extends AbstractExtensionConnector {
 
     private Renderer<T> renderer = null;
 
@@ -54,10 +53,9 @@ public abstract class AbstractRendererConnector<T> extends
 
     protected AbstractRendererConnector() {
         if (presentationType == null) {
-            throw new IllegalStateException(
-                    "No presentation type found for "
-                            + getClass().getSimpleName()
-                            + ". This may be caused by some unspecified problem in widgetset compilation.");
+            throw new IllegalStateException("No presentation type found for "
+                    + getClass().getSimpleName()
+                    + ". This may be caused by some unspecified problem in widgetset compilation.");
         }
     }
 
@@ -112,7 +110,8 @@ public abstract class AbstractRendererConnector<T> extends
                             + getClass().getSimpleName()
                             + ". This might be caused by explicitely using "
                             + "super.createRenderer() or some unspecified "
-                            + "problem with the widgetset compilation.", e);
+                            + "problem with the widgetset compilation.",
+                    e);
         }
     }
 
@@ -153,8 +152,8 @@ public abstract class AbstractRendererConnector<T> extends
         if (parent instanceof GridConnector) {
             return ((GridConnector) parent).getRowKey(row);
         } else {
-            throw new IllegalStateException("Renderers can only be used "
-                    + "with a Grid.");
+            throw new IllegalStateException(
+                    "Renderers can only be used " + "with a Grid.");
         }
     }
 
@@ -174,8 +173,8 @@ public abstract class AbstractRendererConnector<T> extends
         if (parent instanceof GridConnector) {
             return ((GridConnector) parent).getColumnId(column);
         } else {
-            throw new IllegalStateException("Renderers can only be used "
-                    + "with a Grid.");
+            throw new IllegalStateException(
+                    "Renderers can only be used " + "with a Grid.");
         }
     }
 

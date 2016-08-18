@@ -34,8 +34,8 @@ public class TreeContextClickTest extends AbstractContextClickTest {
 
         addOrRemoveTypedListener();
 
-        List<WebElement> nodes = $(TreeElement.class).first().findElements(
-                By.className("v-tree-node"));
+        List<WebElement> nodes = $(TreeElement.class).first()
+                .findElements(By.className("v-tree-node"));
 
         contextClick(nodes.get(1));
 
@@ -52,14 +52,14 @@ public class TreeContextClickTest extends AbstractContextClickTest {
 
         addOrRemoveTypedListener();
 
-        List<WebElement> nodes = $(TreeElement.class).first().findElements(
-                By.className("v-tree-node"));
+        List<WebElement> nodes = $(TreeElement.class).first()
+                .findElements(By.className("v-tree-node"));
 
         new Actions(getDriver()).moveToElement(nodes.get(1), 10, 10).click()
                 .perform();
 
-        nodes = $(TreeElement.class).first().findElements(
-                By.className("v-tree-node"));
+        nodes = $(TreeElement.class).first()
+                .findElements(By.className("v-tree-node"));
         contextClick(nodes.get(2));
 
         assertEquals("1. ContextClickEvent: Baz", getLogRow(0));

@@ -24,8 +24,8 @@ public class StateInitVisitor extends TypeVisitor {
     @Override
     public void visitConnector(TreeLogger logger, JClassType type,
             ConnectorBundle bundle) {
-        JMethod getState = ConnectorBundle
-                .findInheritedMethod(type, "getState");
+        JMethod getState = ConnectorBundle.findInheritedMethod(type,
+                "getState");
         bundle.setNeedsReturnType(type, getState);
 
         bundle.setNeedsSerialize(getState.getReturnType());

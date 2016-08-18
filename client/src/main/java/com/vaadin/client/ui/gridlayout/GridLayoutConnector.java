@@ -111,7 +111,8 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         layout.colExpandRatioArray = getState().colExpand;
         layout.rowExpandRatioArray = getState().rowExpand;
 
-        layout.updateMarginStyleNames(new MarginInfo(getState().marginsBitmask));
+        layout.updateMarginStyleNames(
+                new MarginInfo(getState().marginsBitmask));
         layout.updateSpacingStyleName(getState().spacing);
         getLayoutManager().setNeedsLayout(this);
     }
@@ -132,7 +133,8 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
     }
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         VGridLayout layout = getWidget();
 
         // clean non rendered components

@@ -36,13 +36,12 @@ public class TogglePush extends AbstractTestUI {
         addComponent(counterLabel);
 
         getPushConfiguration()
-                .setPushMode(
-                        "disabled".equals(request.getParameter("push")) ? PushMode.DISABLED
-                                : PushMode.AUTOMATIC);
+                .setPushMode("disabled".equals(request.getParameter("push"))
+                        ? PushMode.DISABLED : PushMode.AUTOMATIC);
 
         CheckBox pushSetting = new CheckBox("Push enabled");
-        pushSetting.setValue(Boolean.valueOf(getPushConfiguration()
-                .getPushMode().isEnabled()));
+        pushSetting.setValue(Boolean
+                .valueOf(getPushConfiguration().getPushMode().isEnabled()));
         pushSetting.setImmediate(true);
         pushSetting.addValueChangeListener(event -> {
             if (event.getValue()) {
@@ -53,8 +52,8 @@ public class TogglePush extends AbstractTestUI {
         });
         addComponent(pushSetting);
 
-        addComponent(new Button("Update counter now",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Update counter now", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         updateCounter();
@@ -81,8 +80,8 @@ public class TogglePush extends AbstractTestUI {
     }
 
     public void updateCounter() {
-        counterLabel.setValue("Counter has been updated " + counter++
-                + " times");
+        counterLabel
+                .setValue("Counter has been updated " + counter++ + " times");
     }
 
     @Override

@@ -28,8 +28,8 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class GridKeyPressEvent extends
-        AbstractGridKeyEvent<GridKeyPressHandler> {
+public class GridKeyPressEvent
+        extends AbstractGridKeyEvent<GridKeyPressHandler> {
 
     public GridKeyPressEvent(Grid<?> grid, CellReference<?> targetCell) {
         super(grid, targetCell);
@@ -38,8 +38,10 @@ public class GridKeyPressEvent extends
     @Override
     protected void doDispatch(GridKeyPressHandler handler, Section section) {
         if ((section == Section.BODY && handler instanceof BodyKeyPressHandler)
-                || (section == Section.HEADER && handler instanceof HeaderKeyPressHandler)
-                || (section == Section.FOOTER && handler instanceof FooterKeyPressHandler)) {
+                || (section == Section.HEADER
+                        && handler instanceof HeaderKeyPressHandler)
+                || (section == Section.FOOTER
+                        && handler instanceof FooterKeyPressHandler)) {
             handler.onKeyPress(this);
         }
     }

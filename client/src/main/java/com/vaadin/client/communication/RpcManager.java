@@ -58,9 +58,10 @@ public class RpcManager {
                 method.invoke(clientRpc, invocation.getParameters());
             }
         } catch (NoDataException e) {
-            throw new IllegalStateException("There is no information about "
-                    + method.getSignature()
-                    + ". Did you remember to compile the right widgetset?", e);
+            throw new IllegalStateException(
+                    "There is no information about " + method.getSignature()
+                            + ". Did you remember to compile the right widgetset?",
+                    e);
         }
     }
 
@@ -91,9 +92,10 @@ public class RpcManager {
             Type[] parameterTypes = method.getParameterTypes();
             return parameterTypes;
         } catch (NoDataException e) {
-            throw new IllegalStateException("There is no information about "
-                    + method.getSignature()
-                    + ". Did you remember to compile the right widgetset?", e);
+            throw new IllegalStateException(
+                    "There is no information about " + method.getSignature()
+                            + ". Did you remember to compile the right widgetset?",
+                    e);
         }
     }
 
@@ -112,13 +114,12 @@ public class RpcManager {
                 interfaceName, methodName);
         if (connector instanceof HasJavaScriptConnectorHelper) {
             ((HasJavaScriptConnectorHelper) connector)
-                    .getJavascriptConnectorHelper().invokeJsRpc(invocation,
-                            parametersJson);
+                    .getJavascriptConnectorHelper()
+                    .invokeJsRpc(invocation, parametersJson);
         } else {
             if (connector == null) {
-                throw new IllegalStateException("Target connector ("
-                        + connector + ") not found for RCC to "
-                        + getSignature(invocation));
+                throw new IllegalStateException("Target connector (" + connector
+                        + ") not found for RCC to " + getSignature(invocation));
             }
 
             parseMethodParameters(invocation, parametersJson, connection);

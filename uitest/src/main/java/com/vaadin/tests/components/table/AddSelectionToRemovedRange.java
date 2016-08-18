@@ -64,8 +64,7 @@ public class AddSelectionToRemovedRange extends AbstractTestUI {
 
                 for (Integer item : selected) {
                     if (null == item) {
-                        new Notification(
-                                "ERROR",
+                        new Notification("ERROR",
                                 "Table value has null in Set of selected items!",
                                 Type.ERROR_MESSAGE).show(getPage());
                     }

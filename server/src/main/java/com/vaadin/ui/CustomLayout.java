@@ -108,8 +108,8 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     protected void initTemplateContentsFromInputStream(
             InputStream templateStream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(
-                templateStream, "UTF-8"));
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(templateStream, "UTF-8"));
         StringBuilder builder = new StringBuilder(BUFFER_SIZE);
         try {
             char[] cbuf = new char[BUFFER_SIZE];
@@ -230,12 +230,14 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     /* Documented in superclass */
     @Override
-    public void replaceComponent(Component oldComponent, Component newComponent) {
+    public void replaceComponent(Component oldComponent,
+            Component newComponent) {
 
         // Gets the locations
         String oldLocation = null;
         String newLocation = null;
-        for (final Iterator<String> i = slots.keySet().iterator(); i.hasNext();) {
+        for (final Iterator<String> i = slots.keySet().iterator(); i
+                .hasNext();) {
             final String location = i.next();
             final Component component = slots.get(location);
             if (component == oldComponent) {

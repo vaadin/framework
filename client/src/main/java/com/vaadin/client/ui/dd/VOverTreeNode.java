@@ -24,8 +24,8 @@ final public class VOverTreeNode extends VAcceptCriterion {
 
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {
-        Boolean containsKey = (Boolean) drag.getDropDetails().get(
-                "itemIdOverIsNode");
+        Boolean containsKey = (Boolean) drag.getDropDetails()
+                .get("itemIdOverIsNode");
         return containsKey != null && containsKey.booleanValue();
     }
 }

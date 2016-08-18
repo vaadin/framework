@@ -33,8 +33,8 @@ import com.vaadin.util.SerializerHelper;
  * 
  * @since 6.6
  */
-public class MethodPropertyDescriptor<BT> implements
-        VaadinPropertyDescriptor<BT> {
+public class MethodPropertyDescriptor<BT>
+        implements VaadinPropertyDescriptor<BT> {
 
     private final String name;
     private Class<?> propertyType;
@@ -64,7 +64,8 @@ public class MethodPropertyDescriptor<BT> implements
     }
 
     /* Special serialization to handle method references */
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+    private void writeObject(java.io.ObjectOutputStream out)
+            throws IOException {
         out.defaultWriteObject();
         SerializerHelper.writeClass(out, propertyType);
 
@@ -92,8 +93,8 @@ public class MethodPropertyDescriptor<BT> implements
     }
 
     /* Special serialization to handle method references */
-    private void readObject(java.io.ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         try {
             @SuppressWarnings("unchecked")

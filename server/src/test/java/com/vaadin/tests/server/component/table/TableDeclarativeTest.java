@@ -38,8 +38,7 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
     @Test
     public void testBasicAttributes() {
 
-        String design = "<"
-                + getTag()
+        String design = "<" + getTag()
                 + " page-length=30 cache-rate=3 selectable editable "
                 + "sortable=false sort-ascending=false sort-container-property-id=foo "
                 + "drag-mode=row multi-select-mode=simple column-header-mode=id row-header-mode=id "
@@ -69,12 +68,9 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
 
     @Test
     public void testColumns() {
-        String design = "<"
-                + getTag()
-                + " column-collapsing-allowed>" //
+        String design = "<" + getTag() + " column-collapsing-allowed>" //
                 + "  <table>" //
-                + "    <colgroup>"
-                + "      <col property-id='foo' width=300>"
+                + "    <colgroup>" + "      <col property-id='foo' width=300>"
                 + "      <col property-id='bar' center expand=1 collapsible=false>"
                 + "      <col property-id='baz' right expand=2 collapsed>"
                 + "    </colgroup>" //
@@ -103,8 +99,7 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
 
     @Test
     public void testHeadersFooters() {
-        String design = "<" + getTag()
-                + ">" //
+        String design = "<" + getTag() + ">" //
                 + "  <table>" //
                 + "    <colgroup><col property-id=foo><col property-id=bar></colgroup>" //
                 + "    <thead>" //
@@ -120,8 +115,8 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
 
         table.addContainerProperty("foo", String.class, null);
         table.setColumnHeader("foo", "FOO");
-        table.setColumnIcon("foo", new ExternalResource(
-                "http://example.com/icon.png"));
+        table.setColumnIcon("foo",
+                new ExternalResource("http://example.com/icon.png"));
         table.setColumnFooter("foo", "foo");
 
         table.addContainerProperty("bar", String.class, null);
@@ -134,12 +129,9 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
 
     @Test
     public void testInlineData() {
-        String design = "<"
-                + getTag()
-                + ">" //
+        String design = "<" + getTag() + ">" //
                 + "  <table>" //
-                + "    <colgroup>"
-                + "      <col property-id='foo' />"
+                + "    <colgroup>" + "      <col property-id='foo' />"
                 + "      <col property-id='bar' />"
                 + "      <col property-id='baz' />" //
                 + "    </colgroup>" + "    <thead>"
@@ -168,27 +160,18 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
         testRead(design, table);
         testWrite(design, table, true);
     }
-    
+
     @Test
     public void testHtmlEntities() {
-        String design = "<v-table>"
-                + "<table>"
-                + "  <colgroup>"
-                + "    <col property-id=\"test\""
-                + "  </colgroup>"
-                + "  <thead>"
-                + "    <tr><th>&amp; Test</th></tr>"
-                + "  </thead>"
-                + "  <tbody>"
-                + "    <tr item-id=\"test\"><td>&amp; Test</tr>"
-                + "  </tbody>"
-                + "  <tfoot>"
-                + "    <tr><td>&amp; Test</td></tr>"
-                + "  </tfoot>"
-                + "</table>"
-                + "</v-table>";
+        String design = "<v-table>" + "<table>" + "  <colgroup>"
+                + "    <col property-id=\"test\"" + "  </colgroup>"
+                + "  <thead>" + "    <tr><th>&amp; Test</th></tr>"
+                + "  </thead>" + "  <tbody>"
+                + "    <tr item-id=\"test\"><td>&amp; Test</tr>" + "  </tbody>"
+                + "  <tfoot>" + "    <tr><td>&amp; Test</td></tr>"
+                + "  </tfoot>" + "</table>" + "</v-table>";
         Table read = read(design);
-        
+
         Assert.assertEquals("& Test",
                 read.getContainerProperty("test", "test").getValue());
         Assert.assertEquals("& Test", read.getColumnHeader("test"));

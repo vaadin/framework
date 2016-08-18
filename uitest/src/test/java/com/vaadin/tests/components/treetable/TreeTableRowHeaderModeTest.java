@@ -34,6 +34,7 @@ public class TreeTableRowHeaderModeTest extends MultiBrowserTest {
 
         Assert.assertFalse(
                 "Unexpected row header for icons is found in TreeTable",
-                isElementPresent(By.className("v-table-header-cell-rowheader")));
+                isElementPresent(
+                        By.className("v-table-header-cell-rowheader")));
     }
 }

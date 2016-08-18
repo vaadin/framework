@@ -26,10 +26,10 @@ public class SelectWithIntegersTest extends SingleBrowserTest {
     public void testSelectWithIntegers() {
         openTestURL();
 
-        ListSelectElement defaultSelect = $(ListSelectElement.class).caption(
-                "Default").first();
-        ListSelectElement toStringSelect = $(ListSelectElement.class).caption(
-                "ID_TOSTRING").first();
+        ListSelectElement defaultSelect = $(ListSelectElement.class)
+                .caption("Default").first();
+        ListSelectElement toStringSelect = $(ListSelectElement.class)
+                .caption("ID_TOSTRING").first();
 
         Assert.assertEquals("2,014", defaultSelect.getOptions().get(0));
         Assert.assertEquals("2014", toStringSelect.getOptions().get(0));

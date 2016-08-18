@@ -64,11 +64,11 @@ public class CompileTheme {
         // Regular theme
         try {
             processSassTheme(themeFolder, themeName, "styles", version);
-            System.out.println("Compiling theme " + themeName
-                    + " styles successful");
+            System.out.println(
+                    "Compiling theme " + themeName + " styles successful");
         } catch (Exception e) {
-            System.err.println("Compiling theme " + themeName
-                    + " styles failed");
+            System.err
+                    .println("Compiling theme " + themeName + " styles failed");
             e.printStackTrace();
         }
         // Legacy theme w/o .themename{} wrapping
@@ -82,8 +82,8 @@ public class CompileTheme {
                         + " legacy-styles successful");
             }
         } catch (Exception e) {
-            System.err.println("Compiling theme " + themeName
-                    + " legacy-styles failed");
+            System.err.println(
+                    "Compiling theme " + themeName + " legacy-styles failed");
             e.printStackTrace();
         }
     }
@@ -103,8 +103,8 @@ public class CompileTheme {
 
         ScssStylesheet scss = ScssStylesheet.get(sassFile);
         if (scss == null) {
-            throw new IllegalArgumentException("SASS file: " + sassFile
-                    + " not found");
+            throw new IllegalArgumentException(
+                    "SASS file: " + sassFile + " not found");
         }
         scss.compile();
         String filteredScss = scss.printState().replace("@version@", version);
@@ -128,8 +128,8 @@ public class CompileTheme {
 
             boolean ok = newCss.renameTo(oldCss);
             if (!ok) {
-                throw new RuntimeException("Rename " + newCss + " -> " + oldCss
-                        + " failed");
+                throw new RuntimeException(
+                        "Rename " + newCss + " -> " + oldCss + " failed");
             }
         }
 
@@ -142,8 +142,8 @@ public class CompileTheme {
             // hiding other classpath issues
             Class<?> smartSpritesClass = org.carrot2.labs.smartsprites.SmartSprites.class;
         } catch (NoClassDefFoundError e) {
-            System.err
-                    .println("Could not find smartsprites. No sprites were generated. The theme should still work.");
+            System.err.println(
+                    "Could not find smartsprites. No sprites were generated. The theme should still work.");
             return;
         }
 

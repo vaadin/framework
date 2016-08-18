@@ -89,9 +89,9 @@ public abstract class AbstractContextClickUI<T extends AbstractComponent, E exte
 
     protected HorizontalLayout createContextClickControls() {
         HorizontalLayout contextClickControls = new HorizontalLayout();
-        contextClickControls.addComponent(new Button(
-                "Add/Remove default listener", new ListenerHandler(
-                        defaultListener)));
+        contextClickControls
+                .addComponent(new Button("Add/Remove default listener",
+                        new ListenerHandler(defaultListener)));
         contextClickControls
                 .addComponent(new Button("Add/Remove typed listener",
                         new ListenerHandler(typedListener)));

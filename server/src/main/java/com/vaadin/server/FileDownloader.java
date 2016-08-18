@@ -144,9 +144,8 @@ public class FileDownloader extends AbstractExtension {
             String contentDisposition = stream
                     .getParameter(DownloadStream.CONTENT_DISPOSITION);
             if (contentDisposition == null) {
-                contentDisposition = "attachment; "
-                        + DownloadStream.getContentDispositionFilename(stream
-                                .getFileName());
+                contentDisposition = "attachment; " + DownloadStream
+                        .getContentDispositionFilename(stream.getFileName());
             }
 
             stream.setParameter(DownloadStream.CONTENT_DISPOSITION,

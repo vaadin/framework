@@ -23,8 +23,8 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.widgetset.server.LayoutDuringStateUpdateComponent;
 
 @Connect(LayoutDuringStateUpdateComponent.class)
-public class LayoutDuringStateUpdateConnector extends
-        AbstractComponentConnector implements PostLayoutListener {
+public class LayoutDuringStateUpdateConnector extends AbstractComponentConnector
+        implements PostLayoutListener {
     private int layoutCount = 0;
 
     @Override

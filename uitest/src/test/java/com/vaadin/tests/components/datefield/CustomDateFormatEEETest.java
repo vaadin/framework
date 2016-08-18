@@ -28,8 +28,9 @@ public class CustomDateFormatEEETest extends MultiBrowserTest {
     public void verifyDatePattern() {
         openTestURL();
 
-        String dateValue = driver.findElement(
-                By.className("v-datefield-textfield")).getAttribute("value");
+        String dateValue = driver
+                .findElement(By.className("v-datefield-textfield"))
+                .getAttribute("value");
         assertEquals("14/03/2014 Fri", dateValue);
     }
 

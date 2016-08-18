@@ -49,7 +49,8 @@ public class CalendarHtmlInEventsTest extends SingleBrowserTest {
         click(htmlAllowed);
         Assert.assertEquals("1. HTML in event caption: true", getLogRow(0));
 
-        Assert.assertEquals(getMonthEvent(0).getText(), "12:00 AM Hello world!");
+        Assert.assertEquals(getMonthEvent(0).getText(),
+                "12:00 AM Hello world!");
     }
 
     @Test
@@ -78,22 +79,22 @@ public class CalendarHtmlInEventsTest extends SingleBrowserTest {
     }
 
     private WebElement getMonthEvent(int dayInCalendar) {
-        return getMonthDay(dayInCalendar).findElement(
-                By.className("v-calendar-event"));
+        return getMonthDay(dayInCalendar)
+                .findElement(By.className("v-calendar-event"));
     }
 
     private WebElement getWeekEvent(int dayInCalendar) {
-        return getWeekDay(dayInCalendar).findElement(
-                By.className("v-calendar-event"));
+        return getWeekDay(dayInCalendar)
+                .findElement(By.className("v-calendar-event"));
     }
 
     private WebElement getMonthDay(int i) {
-        return calendar.findElements(By.className("v-calendar-month-day")).get(
-                i);
+        return calendar.findElements(By.className("v-calendar-month-day"))
+                .get(i);
     }
 
     private WebElement getWeekDay(int i) {
-        return calendar.findElements(By.className("v-calendar-day-times")).get(
-                i);
+        return calendar.findElements(By.className("v-calendar-day-times"))
+                .get(i);
     }
 }

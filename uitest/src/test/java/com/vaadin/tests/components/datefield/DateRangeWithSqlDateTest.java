@@ -32,8 +32,8 @@ public class DateRangeWithSqlDateTest extends MultiBrowserTest {
         openTestURL();
 
         // Get all cells of the inline datefield.
-        List<WebElement> cells = driver.findElements(By
-                .className("v-inline-datefield-calendarpanel-day"));
+        List<WebElement> cells = driver.findElements(
+                By.className("v-inline-datefield-calendarpanel-day"));
 
         // Verify the range is rendered correctly.
         assertCell(cells.get(0), "30", true);
@@ -42,7 +42,8 @@ public class DateRangeWithSqlDateTest extends MultiBrowserTest {
         assertCell(cells.get(3), "3", true);
     }
 
-    private void assertCell(WebElement cell, String text, boolean outsideRange) {
+    private void assertCell(WebElement cell, String text,
+            boolean outsideRange) {
         assertEquals(text, cell.getText());
         assertEquals(outsideRange,
                 cell.getAttribute("class").contains("outside-range"));

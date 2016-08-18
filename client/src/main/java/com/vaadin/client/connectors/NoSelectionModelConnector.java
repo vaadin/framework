@@ -30,8 +30,8 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd
  */
 @Connect(NoSelectionModel.class)
-public class NoSelectionModelConnector extends
-        AbstractSelectionModelConnector<SelectionModel<JsonObject>> {
+public class NoSelectionModelConnector
+        extends AbstractSelectionModelConnector<SelectionModel<JsonObject>> {
 
     @Override
     protected void extend(ServerConnector target) {

@@ -70,8 +70,8 @@ public class OnStateChangeMethod {
 
         this.methodName = methodName;
 
-        this.properties = Collections.unmodifiableList(Arrays
-                .asList(properties));
+        this.properties = Collections
+                .unmodifiableList(Arrays.asList(properties));
 
         this.declaringClass = declaringClass;
     }
@@ -95,8 +95,10 @@ public class OnStateChangeMethod {
         try {
             declaringType.getMethod(methodName).invoke(connector);
         } catch (NoDataException e) {
-            throw new RuntimeException("Couldn't invoke @OnStateChange method "
-                    + declaringType.getSignature() + "." + methodName, e);
+            throw new RuntimeException(
+                    "Couldn't invoke @OnStateChange method "
+                            + declaringType.getSignature() + "." + methodName,
+                    e);
         }
     }
 

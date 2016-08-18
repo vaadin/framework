@@ -112,21 +112,21 @@ public class ShortcutAction extends Action {
     public static final char SHORTHAND_CHAR_CTRL = '^';
 
     // regex-quote (escape) the characters
-    private static final String SHORTHAND_ALT = Pattern.quote(Character
-            .toString(SHORTHAND_CHAR_ALT));
-    private static final String SHORTHAND_SHIFT = Pattern.quote(Character
-            .toString(SHORTHAND_CHAR_SHIFT));
-    private static final String SHORTHAND_CTRL = Pattern.quote(Character
-            .toString(SHORTHAND_CHAR_CTRL));
+    private static final String SHORTHAND_ALT = Pattern
+            .quote(Character.toString(SHORTHAND_CHAR_ALT));
+    private static final String SHORTHAND_SHIFT = Pattern
+            .quote(Character.toString(SHORTHAND_CHAR_SHIFT));
+    private static final String SHORTHAND_CTRL = Pattern
+            .quote(Character.toString(SHORTHAND_CHAR_CTRL));
     // Used for replacing escaped chars, e.g && with &
-    private static final Pattern SHORTHAND_ESCAPE = Pattern.compile("("
-            + SHORTHAND_ALT + "?)" + SHORTHAND_ALT + "|(" + SHORTHAND_SHIFT
-            + "?)" + SHORTHAND_SHIFT + "|(" + SHORTHAND_CTRL + "?)"
-            + SHORTHAND_CTRL);
+    private static final Pattern SHORTHAND_ESCAPE = Pattern
+            .compile("(" + SHORTHAND_ALT + "?)" + SHORTHAND_ALT + "|("
+                    + SHORTHAND_SHIFT + "?)" + SHORTHAND_SHIFT + "|("
+                    + SHORTHAND_CTRL + "?)" + SHORTHAND_CTRL);
     // Used for removing escaped chars, only leaving real shorthands
-    private static final Pattern SHORTHAND_REMOVE = Pattern.compile("(["
-            + SHORTHAND_ALT + "|" + SHORTHAND_SHIFT + "|" + SHORTHAND_CTRL
-            + "])\\1");
+    private static final Pattern SHORTHAND_REMOVE = Pattern
+            .compile("([" + SHORTHAND_ALT + "|" + SHORTHAND_SHIFT + "|"
+                    + SHORTHAND_CTRL + "])\\1");
     // Mnemonic char, optionally followed by another, and optionally a third
     private static final Pattern SHORTHANDS = Pattern.compile("("
             + SHORTHAND_ALT + "|" + SHORTHAND_SHIFT + "|" + SHORTHAND_CTRL
@@ -186,8 +186,8 @@ public class ShortcutAction extends Action {
             String match = matcher.group();
 
             // KeyCode from last char in match, uppercase
-            keyCode = Character.toUpperCase(matcher.group().charAt(
-                    match.length() - 1));
+            keyCode = Character
+                    .toUpperCase(matcher.group().charAt(match.length() - 1));
 
             // Given modifiers override this indicated in the caption
             if (modifierKeys != null) {

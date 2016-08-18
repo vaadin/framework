@@ -29,15 +29,15 @@ public class Ticket1806 extends com.vaadin.server.LegacyApplication {
                         tf1.commit();
                     }
                 }));
-        main.addComponent(new Button("Show property value",
-                new Button.ClickListener() {
+        main.addComponent(
+                new Button("Show property value", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         main.showNotification("'" + prop.getValue() + "'");
                     }
                 }));
-        main.addComponent(new Button("Show field value",
-                new Button.ClickListener() {
+        main.addComponent(
+                new Button("Show field value", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         main.showNotification("'" + tf1.getValue() + "'");

@@ -122,8 +122,8 @@ public class GridColumnResizeTest extends GridBasicFeaturesTest {
         Dimension size = headerCell.getSize();
         new Actions(getDriver())
                 .moveToElement(headerCell, size.getWidth() + posX,
-                        size.getHeight() / 2).clickAndHold()
-                .moveByOffset(offset, 0).release().perform();
+                        size.getHeight() / 2)
+                .clickAndHold().moveByOffset(offset, 0).release().perform();
     }
 
     private void assertResizable(int columnIndex, boolean resizable) {
@@ -133,8 +133,8 @@ public class GridColumnResizeTest extends GridBasicFeaturesTest {
 
     private void assertResizable(GridCellElement cell, boolean resizable) {
         assertEquals("Header resize handle present", resizable,
-                cell.isElementPresent(By
-                        .cssSelector("div.v-grid-column-resize-handle")));
+                cell.isElementPresent(
+                        By.cssSelector("div.v-grid-column-resize-handle")));
     }
 
     @Test

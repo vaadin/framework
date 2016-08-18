@@ -25,8 +25,8 @@ import com.vaadin.ui.ProgressBar;
  * 
  * @author Vaadin Ltd
  */
-public class ProgressBarDeclarativeTest extends
-        DeclarativeTestBase<ProgressBar> {
+public class ProgressBarDeclarativeTest
+        extends DeclarativeTestBase<ProgressBar> {
 
     public String getBasicDesign() {
         return "<vaadin-progress-bar value=0.5 indeterminate>";

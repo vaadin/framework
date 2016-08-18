@@ -227,7 +227,8 @@ public class AttachDetachWindowTest {
         ui.addComponentAttachListener(new ComponentAttachListener() {
 
             @Override
-            public void componentAttachedToContainer(ComponentAttachEvent event) {
+            public void componentAttachedToContainer(
+                    ComponentAttachEvent event) {
                 eventFired[0] = event.getAttachedComponent().equals(window);
             }
         });
@@ -271,10 +272,10 @@ public class AttachDetachWindowTest {
                 testContent.childAttachCalled);
 
         assertSame("window not attached", win.getSession(), testApp);
-        assertSame("window content not attached", testContent.getUI()
-                .getSession(), testApp);
-        assertSame("window children not attached", testContent.child.getUI()
-                .getSession(), testApp);
+        assertSame("window content not attached",
+                testContent.getUI().getSession(), testApp);
+        assertSame("window children not attached",
+                testContent.child.getUI().getSession(), testApp);
     }
 
     /**

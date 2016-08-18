@@ -50,10 +50,10 @@ import com.vaadin.ui.components.calendar.event.CalendarEventProvider.EventSetCha
  * @author Vaadin Ltd.
  */
 @SuppressWarnings("serial")
-public class ContainerEventProvider implements CalendarEditableEventProvider,
-        EventSetChangeNotifier, EventChangeNotifier, EventMoveHandler,
-        EventResizeHandler, Container.ItemSetChangeListener,
-        Property.ValueChangeListener {
+public class ContainerEventProvider
+        implements CalendarEditableEventProvider, EventSetChangeNotifier,
+        EventChangeNotifier, EventMoveHandler, EventResizeHandler,
+        Container.ItemSetChangeListener, Property.ValueChangeListener {
 
     // Default property ids
     public static final String CAPTION_PROPERTY = "caption";
@@ -180,7 +180,8 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
         // Check the event cache first
         for (CalendarEvent e : eventCache) {
             if (e instanceof ContainerCalendarEvent
-                    && ((ContainerCalendarEvent) e).getContainerIndex() == index) {
+                    && ((ContainerCalendarEvent) e)
+                            .getContainerIndex() == index) {
                 return e;
             } else if (container.getIdByIndex(index) == e) {
                 return e;
@@ -206,18 +207,18 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
             // Set values from property values
             if (captionProperty != null
                     && item.getItemPropertyIds().contains(captionProperty)) {
-                basicEvent.setCaption(String.valueOf(item.getItemProperty(
-                        captionProperty).getValue()));
+                basicEvent.setCaption(String.valueOf(
+                        item.getItemProperty(captionProperty).getValue()));
             }
-            if (descriptionProperty != null
-                    && item.getItemPropertyIds().contains(descriptionProperty)) {
-                basicEvent.setDescription(String.valueOf(item.getItemProperty(
-                        descriptionProperty).getValue()));
+            if (descriptionProperty != null && item.getItemPropertyIds()
+                    .contains(descriptionProperty)) {
+                basicEvent.setDescription(String.valueOf(
+                        item.getItemProperty(descriptionProperty).getValue()));
             }
             if (startDateProperty != null
                     && item.getItemPropertyIds().contains(startDateProperty)) {
-                basicEvent.setStart((Date) item.getItemProperty(
-                        startDateProperty).getValue());
+                basicEvent.setStart((Date) item
+                        .getItemProperty(startDateProperty).getValue());
             }
             if (endDateProperty != null
                     && item.getItemPropertyIds().contains(endDateProperty)) {
@@ -226,13 +227,13 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
             }
             if (styleNameProperty != null
                     && item.getItemPropertyIds().contains(styleNameProperty)) {
-                basicEvent.setStyleName(String.valueOf(item.getItemProperty(
-                        styleNameProperty).getValue()));
+                basicEvent.setStyleName(String.valueOf(
+                        item.getItemProperty(styleNameProperty).getValue()));
             }
             if (allDayProperty != null
                     && item.getItemPropertyIds().contains(allDayProperty)) {
-                basicEvent.setAllDay((Boolean) item.getItemProperty(
-                        allDayProperty).getValue());
+                basicEvent.setAllDay((Boolean) item
+                        .getItemProperty(allDayProperty).getValue());
             }
             event = basicEvent;
         }
@@ -264,8 +265,8 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
                 }
             }
             if (add && endDate != null) {
-                Date eventStart = (Date) item
-                        .getItemProperty(startDateProperty).getValue();
+                Date eventStart = (Date) item.getItemProperty(startDateProperty)
+                        .getValue();
                 if (eventStart.compareTo(endDate) >= 0) {
                     break; // because container is sorted, all further events
                     // will be even later
@@ -281,8 +282,8 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.addon.calendar.event.CalendarEventProvider.EventSetChangeNotifier
+     * @see com.vaadin.addon.calendar.event.CalendarEventProvider.
+     * EventSetChangeNotifier
      * #addListener(com.vaadin.addon.calendar.event.CalendarEventProvider.
      * EventSetChangeListener)
      */
@@ -296,8 +297,8 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.addon.calendar.event.CalendarEventProvider.EventSetChangeNotifier
+     * @see com.vaadin.addon.calendar.event.CalendarEventProvider.
+     * EventSetChangeNotifier
      * #removeListener(com.vaadin.addon.calendar.event.CalendarEventProvider.
      * EventSetChangeListener)
      */
@@ -309,8 +310,8 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.addon.calendar.event.CalendarEvent.EventChangeNotifier#addListener
+     * @see com.vaadin.addon.calendar.event.CalendarEvent.EventChangeNotifier#
+     * addListener
      * (com.vaadin.addon.calendar.event.CalendarEvent.EventChangeListener)
      */
     @Override
@@ -477,8 +478,8 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
 
             ignoreContainerEvents();
             Item item = container.getItem(container.getIdByIndex(index));
-            item.getItemProperty(startDateProperty).setValue(
-                    event.getNewStart());
+            item.getItemProperty(startDateProperty)
+                    .setValue(event.getNewStart());
             item.getItemProperty(endDateProperty).setValue(newEnd);
             listenToContainerEvents();
         }
@@ -504,8 +505,8 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
             }
             ignoreContainerEvents();
             Item item = container.getItem(container.getIdByIndex(index));
-            item.getItemProperty(startDateProperty).setValue(
-                    event.getNewStart());
+            item.getItemProperty(startDateProperty)
+                    .setValue(event.getNewStart());
             item.getItemProperty(endDateProperty).setValue(event.getNewEnd());
             listenToContainerEvents();
         }
@@ -539,15 +540,15 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
             item = container.getItem(container.addItem());
         }
         if (item != null) {
-            item.getItemProperty(getCaptionProperty()).setValue(
-                    event.getCaption());
-            item.getItemProperty(getStartDateProperty()).setValue(
-                    event.getStart());
+            item.getItemProperty(getCaptionProperty())
+                    .setValue(event.getCaption());
+            item.getItemProperty(getStartDateProperty())
+                    .setValue(event.getStart());
             item.getItemProperty(getEndDateProperty()).setValue(event.getEnd());
-            item.getItemProperty(getStyleNameProperty()).setValue(
-                    event.getStyleName());
-            item.getItemProperty(getDescriptionProperty()).setValue(
-                    event.getDescription());
+            item.getItemProperty(getStyleNameProperty())
+                    .setValue(event.getStyleName());
+            item.getItemProperty(getDescriptionProperty())
+                    .setValue(event.getDescription());
         }
     }
 

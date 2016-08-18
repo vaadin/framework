@@ -45,8 +45,10 @@ public class FloatRangeValidatorTest {
     @Test
     public void testMinMaxValue() {
         assertTrue("Didn't accept valid value", minMaxValidator.isValid(10.5f));
-        assertTrue("Didn't accept valid value", minMaxValidator.isValid(100.5f));
+        assertTrue("Didn't accept valid value",
+                minMaxValidator.isValid(100.5f));
         assertFalse("Accepted too small value", minMaxValidator.isValid(10.4f));
-        assertFalse("Accepted too large value", minMaxValidator.isValid(100.6f));
+        assertFalse("Accepted too large value",
+                minMaxValidator.isValid(100.6f));
     }
 }

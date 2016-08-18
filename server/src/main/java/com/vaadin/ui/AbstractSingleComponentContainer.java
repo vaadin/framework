@@ -36,8 +36,8 @@ import com.vaadin.ui.declarative.DesignException;
  * 
  * @since 7.0
  */
-public abstract class AbstractSingleComponentContainer extends
-        AbstractComponent implements SingleComponentContainer {
+public abstract class AbstractSingleComponentContainer extends AbstractComponent
+        implements SingleComponentContainer {
 
     private Component content;
 
@@ -65,7 +65,8 @@ public abstract class AbstractSingleComponentContainer extends
 
     /* documented in interface */
     @Override
-    public void removeComponentAttachListener(ComponentAttachListener listener) {
+    public void removeComponentAttachListener(
+            ComponentAttachListener listener) {
         removeListener(ComponentAttachEvent.class, listener,
                 ComponentAttachListener.attachMethod);
     }
@@ -79,7 +80,8 @@ public abstract class AbstractSingleComponentContainer extends
 
     /* documented in interface */
     @Override
-    public void removeComponentDetachListener(ComponentDetachListener listener) {
+    public void removeComponentDetachListener(
+            ComponentDetachListener listener) {
         removeListener(ComponentDetachEvent.class, listener,
                 ComponentDetachListener.detachMethod);
     }
@@ -208,8 +210,9 @@ public abstract class AbstractSingleComponentContainer extends
             dirtyChild = getInvalidSizedChild(false);
         } else if ((width == SIZE_UNDEFINED && getWidth() != SIZE_UNDEFINED)
                 || (unit == Unit.PERCENTAGE
-                        && getWidthUnits() != Unit.PERCENTAGE && !ComponentSizeValidator
-                            .parentCanDefineWidth(this))) {
+                        && getWidthUnits() != Unit.PERCENTAGE
+                        && !ComponentSizeValidator
+                                .parentCanDefineWidth(this))) {
             /*
              * relative width children may get to invalid state if width becomes
              * invalid. Width may also become invalid if units become percentage
@@ -265,8 +268,9 @@ public abstract class AbstractSingleComponentContainer extends
             dirtyChild = getInvalidSizedChild(true);
         } else if ((height == SIZE_UNDEFINED && getHeight() != SIZE_UNDEFINED)
                 || (unit == Unit.PERCENTAGE
-                        && getHeightUnits() != Unit.PERCENTAGE && !ComponentSizeValidator
-                            .parentCanDefineHeight(this))) {
+                        && getHeightUnits() != Unit.PERCENTAGE
+                        && !ComponentSizeValidator
+                                .parentCanDefineHeight(this))) {
             /*
              * relative height children may get to invalid state if height
              * becomes invalid. Height may also become invalid if units become
@@ -311,11 +315,12 @@ public abstract class AbstractSingleComponentContainer extends
      * @throws DesignException
      *             if a child element could not be parsed as a Component
      */
-    protected void readDesignChildren(Elements children, DesignContext context) {
+    protected void readDesignChildren(Elements children,
+            DesignContext context) {
         if (children.size() > 1) {
-            throw new DesignException("The container of type "
-                    + getClass().toString()
-                    + " can have only one child component.");
+            throw new DesignException(
+                    "The container of type " + getClass().toString()
+                            + " can have only one child component.");
         } else if (children.size() == 1) {
             setContent(context.readDesign(children.first()));
         }

@@ -33,23 +33,24 @@ import elemental.json.JsonObject;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public abstract class ClickableRendererConnector<T> extends
-        AbstractRendererConnector<T> {
+public abstract class ClickableRendererConnector<T>
+        extends AbstractRendererConnector<T> {
 
     HandlerRegistration clickRegistration;
 
     @Override
     protected void init() {
-        clickRegistration = addClickHandler(new RendererClickHandler<JsonObject>() {
-            @Override
-            public void onClick(RendererClickEvent<JsonObject> event) {
-                getRpcProxy(RendererClickRpc.class).click(
-                        getRowKey(event.getCell().getRow()),
-                        getColumnId(event.getCell().getColumn()),
-                        MouseEventDetailsBuilder.buildMouseEventDetails(event
-                                .getNativeEvent()));
-            }
-        });
+        clickRegistration = addClickHandler(
+                new RendererClickHandler<JsonObject>() {
+                    @Override
+                    public void onClick(RendererClickEvent<JsonObject> event) {
+                        getRpcProxy(RendererClickRpc.class).click(
+                                getRowKey(event.getCell().getRow()),
+                                getColumnId(event.getCell().getColumn()),
+                                MouseEventDetailsBuilder.buildMouseEventDetails(
+                                        event.getNativeEvent()));
+                    }
+                });
     }
 
     @Override

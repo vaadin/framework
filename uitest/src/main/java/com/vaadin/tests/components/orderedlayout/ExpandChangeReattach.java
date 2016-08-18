@@ -33,8 +33,8 @@ public class ExpandChangeReattach extends AbstractTestUI {
 
         Table table = new Table("Table", TestUtils.getISO3166Container());
         verticalLayout.addComponent(table);
-        verticalLayout.addComponent(new Button("Toggle expand logic",
-                new Button.ClickListener() {
+        verticalLayout.addComponent(
+                new Button("Toggle expand logic", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         if (verticalLayout.getHeight() == -1) {

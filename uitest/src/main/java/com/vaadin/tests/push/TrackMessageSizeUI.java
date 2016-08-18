@@ -64,8 +64,8 @@ public class TrackMessageSizeUI extends AbstractTestUIWithLog {
                     }
                 });
 
-        getPage().getJavaScript().execute(
-                methodImplementation + testMethod + buildTestCase());
+        getPage().getJavaScript()
+                .execute(methodImplementation + testMethod + buildTestCase());
     }
 
     private String buildTestCase() {

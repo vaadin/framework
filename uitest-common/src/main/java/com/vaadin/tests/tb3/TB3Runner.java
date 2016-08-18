@@ -57,7 +57,8 @@ public class TB3Runner extends ParallelRunner {
                 public HttpClient getGridHttpClient(int connection_timeout,
                         int socket_timeout) {
 
-                    if (socket_timeout == 0 || socket_timeout > SOCKET_TIMEOUT) {
+                    if (socket_timeout == 0
+                            || socket_timeout > SOCKET_TIMEOUT) {
                         return super.getGridHttpClient(connection_timeout,
                                 SOCKET_TIMEOUT);
                     }

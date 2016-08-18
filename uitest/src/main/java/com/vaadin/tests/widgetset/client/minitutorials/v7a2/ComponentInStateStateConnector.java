@@ -29,9 +29,8 @@ public class ComponentInStateStateConnector extends AbstractComponentConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        getWidget().setText(
-                "Client-side type of other component: "
-                        + getOtherComponent().getClass().getName());
+        getWidget().setText("Client-side type of other component: "
+                + getOtherComponent().getClass().getName());
     }
 
     public ComponentConnector getOtherComponent() {

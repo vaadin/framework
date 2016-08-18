@@ -62,7 +62,8 @@ public interface MouseEvents {
         public static final MouseButton BUTTON_RIGHT = MouseButton.RIGHT;
         private MouseEventDetails details;
 
-        public ClickEvent(Component source, MouseEventDetails mouseEventDetails) {
+        public ClickEvent(Component source,
+                MouseEventDetails mouseEventDetails) {
             super(source);
             details = mouseEventDetails;
         }
@@ -193,8 +194,8 @@ public interface MouseEvents {
      */
     public interface ClickListener extends ConnectorEventListener {
 
-        public static final Method clickMethod = ReflectTools.findMethod(
-                ClickListener.class, "click", ClickEvent.class);
+        public static final Method clickMethod = ReflectTools
+                .findMethod(ClickListener.class, "click", ClickEvent.class);
 
         /**
          * Called when a {@link Component} has been clicked. A reference to the

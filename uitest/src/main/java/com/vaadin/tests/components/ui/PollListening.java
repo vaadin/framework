@@ -34,8 +34,8 @@ public class PollListening extends AbstractTestUI {
             @Override
             public void poll(PollEvent event) {
                 setPollInterval(-1);
-                statusLabel.setValue(event.getClass().getSimpleName()
-                        + " received");
+                statusLabel.setValue(
+                        event.getClass().getSimpleName() + " received");
                 removePollListener(this);
             }
         });

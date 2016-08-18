@@ -41,8 +41,8 @@ public class GridEditorUI extends AbstractTestUI {
 
         grid.getColumn("firstName").setEditorField(new PasswordField());
 
-        LegacyTextField lastNameField = (LegacyTextField) grid.getColumn("lastName")
-                .getEditorField();
+        LegacyTextField lastNameField = (LegacyTextField) grid
+                .getColumn("lastName").getEditorField();
         lastNameField.setMaxLength(50);
 
         grid.getColumn("phoneNumber").getEditorField().setReadOnly(true);

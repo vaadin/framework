@@ -45,8 +45,8 @@ public class DragAndDropRelativeWidthTest extends MultiBrowserTest {
         actions.moveByOffset(100, 100);
         actions.build().perform();
 
-        WebElement dragImage = getDriver().findElement(
-                By.className("v-drag-element"));
+        WebElement dragImage = getDriver()
+                .findElement(By.className("v-drag-element"));
 
         Assert.assertEquals("Drag image element height is unexpected", height,
                 dragImage.getSize().getHeight());

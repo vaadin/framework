@@ -35,7 +35,8 @@ public abstract class DeclarativeMarginTestBase<L extends Layout & MarginHandler
 
             MarginInfo m = new MarginInfo(top, right, bottom, left);
 
-            String design = getMarginTag(componentTag, top, right, bottom, left);
+            String design = getMarginTag(componentTag, top, right, bottom,
+                    left);
 
             // The assertEquals machinery in DeclarativeTestBase uses bean
             // introspection and MarginInfo is not a proper bean. It ends up
@@ -47,8 +48,8 @@ public abstract class DeclarativeMarginTestBase<L extends Layout & MarginHandler
         }
     }
 
-    private String getMarginTag(String componentTag, boolean top,
-            boolean right, boolean bottom, boolean left) {
+    private String getMarginTag(String componentTag, boolean top, boolean right,
+            boolean bottom, boolean left) {
         String s = "<" + componentTag + " ";
 
         if (left && right && top && bottom) {

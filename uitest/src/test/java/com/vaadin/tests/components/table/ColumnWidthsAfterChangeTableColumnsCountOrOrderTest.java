@@ -26,8 +26,8 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class ColumnWidthsAfterChangeTableColumnsCountOrOrderTest extends
-        MultiBrowserTest {
+public class ColumnWidthsAfterChangeTableColumnsCountOrOrderTest
+        extends MultiBrowserTest {
 
     @Test
     public void testColumnWidthAfterChangeTableColumnsOrder() {
@@ -62,11 +62,8 @@ public class ColumnWidthsAfterChangeTableColumnsCountOrOrderTest extends
     }
 
     private int getDescriptionColumnWidth() {
-        return driver
-                .findElement(
-                        By.xpath("//div[@class='v-table-cell-wrapper'"
-                                + " and text() = 'descr1']")).getSize()
-                .getWidth();
+        return driver.findElement(By.xpath("//div[@class='v-table-cell-wrapper'"
+                + " and text() = 'descr1']")).getSize().getWidth();
     }
 
 }

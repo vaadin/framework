@@ -35,8 +35,8 @@ import com.vaadin.legacy.ui.LegacyTextField;
 public class TransactionalPropertyWrapperTest {
 
     @SuppressWarnings("serial")
-    public class TestingProperty<T extends Object> extends
-            ObjectProperty<Object> {
+    public class TestingProperty<T extends Object>
+            extends ObjectProperty<Object> {
 
         private List<ValueChangeListener> listeners = new ArrayList<ValueChangeListener>();
 
@@ -65,15 +65,16 @@ public class TransactionalPropertyWrapperTest {
 
     private final LegacyTextField nameField = new LegacyTextField("Name");
     private final LegacyTextField ageField = new LegacyTextField("Age");
-    private final LegacyTextField unboundField = new LegacyTextField("No FieldGroup");
+    private final LegacyTextField unboundField = new LegacyTextField(
+            "No FieldGroup");
     private final TestingProperty<String> unboundProp = new TestingProperty<String>(
             "Hello World");
     private final PropertysetItem item = new PropertysetItem();
 
     @Test
     public void fieldGroupBindAndUnbind() {
-        item.addItemProperty("name", new TestingProperty<String>(
-                "Just some text"));
+        item.addItemProperty("name",
+                new TestingProperty<String>("Just some text"));
         item.addItemProperty("age", new TestingProperty<String>("42"));
 
         final FieldGroup binder = new FieldGroup(item);

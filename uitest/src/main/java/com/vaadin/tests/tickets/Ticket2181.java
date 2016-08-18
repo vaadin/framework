@@ -16,16 +16,18 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2181 extends LegacyApplication implements
-        Button.ClickListener {
+public class Ticket2181 extends LegacyApplication
+        implements Button.ClickListener {
 
     // private static final Object PROPERTY_VALUE = new Object();
     // private static final Object PROPERTY_CAPTION = new Object();
 
     private static final String caption = "This is a caption which is very long and nice and perhaps sometimes should be clipped";
     LegacyWindow main = new LegacyWindow("#2181 test");
-    LegacyTextField tf1 = new LegacyTextField(caption, "Test field - undefined width");
-    LegacyTextField tf2 = new LegacyTextField(caption, "Test field - 150px wide");
+    LegacyTextField tf1 = new LegacyTextField(caption,
+            "Test field - undefined width");
+    LegacyTextField tf2 = new LegacyTextField(caption,
+            "Test field - 150px wide");
     Button setButton = new Button("Set", this);
     private Random random = new Random(123);
     private OptionGroup options;
@@ -93,8 +95,9 @@ public class Ticket2181 extends LegacyApplication implements
                     tf.setCaption(caption);
                 } else if (value.equals("Icon")) {
                     String timestamp = String.valueOf(new Date().getTime());
-                    tf.setIcon(new ThemeResource(icons.get(random.nextInt(icons
-                            .size())) + "?" + timestamp));
+                    tf.setIcon(new ThemeResource(
+                            icons.get(random.nextInt(icons.size())) + "?"
+                                    + timestamp));
                 } else if (value.equals("Required")) {
                     tf.setRequired(true);
                 } else if (value.equals("Error")) {

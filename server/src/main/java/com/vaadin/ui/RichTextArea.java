@@ -35,8 +35,8 @@ import com.vaadin.ui.declarative.DesignContext;
  * {@link RichTextArea} may produce unexpected results as formatting is counted
  * into length of field.
  */
-public class RichTextArea extends LegacyAbstractField<String> implements
-        LegacyComponent {
+public class RichTextArea extends LegacyAbstractField<String>
+        implements LegacyComponent {
 
     /**
      * Null representation.
@@ -175,8 +175,7 @@ public class RichTextArea extends LegacyAbstractField<String> implements
             String newValue = (String) variables.get("text");
 
             final String oldValue = getValue();
-            if (newValue != null
-                    && (oldValue == null || isNullSettingAllowed())
+            if (newValue != null && (oldValue == null || isNullSettingAllowed())
                     && newValue.equals(getNullRepresentation())) {
                 newValue = null;
             }

@@ -14,9 +14,8 @@ public class DragStartModes extends TestBase {
     @Override
     protected void setup() {
 
-        TestUtils
-                .injectCSS(getMainWindow(),
-                        ".v-ddwrapper { background: #ACF; } .extra{ background: #FFA500; }");
+        TestUtils.injectCSS(getMainWindow(),
+                ".v-ddwrapper { background: #ACF; } .extra{ background: #FFA500; }");
 
         addComponent(makeWrapper(DragStartMode.NONE));
         addComponent(makeWrapper(DragStartMode.COMPONENT));

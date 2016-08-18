@@ -35,8 +35,8 @@ public class CriticalNotifications extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        systemMessages = VaadinService.getCurrent().getSystemMessages(
-                getLocale(), request);
+        systemMessages = VaadinService.getCurrent()
+                .getSystemMessages(getLocale(), request);
 
         includeDetails = new CheckBox("Include details");
         addComponent(includeDetails);
@@ -137,9 +137,9 @@ public class CriticalNotifications extends AbstractTestUI {
 
         try {
             service.writeStringResponse(response,
-                    JsonConstants.JSON_CONTENT_TYPE, VaadinService
-                            .createCriticalNotificationJSON(caption, message,
-                                    details, url));
+                    JsonConstants.JSON_CONTENT_TYPE,
+                    VaadinService.createCriticalNotificationJSON(caption,
+                            message, details, url));
         } catch (IOException e) {
             e.printStackTrace();
         }

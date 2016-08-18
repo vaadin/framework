@@ -69,9 +69,8 @@ public class AsyncPushUpdates extends AbstractTestUI {
                             for (int i = 0; i < 11; i++) {
                                 container.getContainerProperty(
                                         container.addItem(), VALUE_PROPERTY_ID)
-                                        .setValue(
-                                                clickCount + " - " + id + " - "
-                                                        + i);
+                                        .setValue(clickCount + " - " + id
+                                                + " - " + i);
                             }
 
                         } catch (InterruptedException e) {

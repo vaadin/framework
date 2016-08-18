@@ -41,8 +41,8 @@ public class WidgetUtilTest extends MultiBrowserTest {
     @Test
     public void testBlockElementRequiredSizeComputedStyle() {
         openTestURL();
-        WebElement testComponent = findElement(By
-                .className("v-widget-util-test"));
+        WebElement testComponent = findElement(
+                By.className("v-widget-util-test"));
         testComponent.click();
 
         int padding = (int) Math.ceil(2.4 + 3.5);
@@ -60,14 +60,14 @@ public class WidgetUtilTest extends MultiBrowserTest {
             border = 1 * 2;
         }
 
-        assertExpectedSize(testComponent, "noBorderPadding", baseWidth + "x"
-                + baseHeight);
+        assertExpectedSize(testComponent, "noBorderPadding",
+                baseWidth + "x" + baseHeight);
 
-        assertExpectedSize(testComponent, "border", (baseWidth + border) + "x"
-                + (baseHeight + border));
+        assertExpectedSize(testComponent, "border",
+                (baseWidth + border) + "x" + (baseHeight + border));
 
-        assertExpectedSize(testComponent, "padding", (baseWidth + padding)
-                + "x" + (baseHeight + padding));
+        assertExpectedSize(testComponent, "padding",
+                (baseWidth + padding) + "x" + (baseHeight + padding));
 
         assertExpectedSize(testComponent, "borderPadding",
                 (baseWidth + border + padding) + "x"
@@ -86,8 +86,8 @@ public class WidgetUtilTest extends MultiBrowserTest {
         // Note that this is how the Windows browsers in the test cluster work.
         // On Mac, Firefox works slightly differently (rounds border to 1.5px).
         return (BrowserUtil.isChrome(capabilities)
-                || BrowserUtil.isPhantomJS(capabilities) || BrowserUtil
-                    .isFirefox(capabilities));
+                || BrowserUtil.isPhantomJS(capabilities)
+                || BrowserUtil.isFirefox(capabilities));
     }
 
     @Override

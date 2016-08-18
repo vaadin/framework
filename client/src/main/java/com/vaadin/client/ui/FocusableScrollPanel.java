@@ -39,8 +39,8 @@ import com.vaadin.client.BrowserInfo;
  * A scrollhandlers similar to {@link ScrollPanel}.
  * 
  */
-public class FocusableScrollPanel extends SimpleFocusablePanel implements
-        HasScrollHandlers, ScrollHandler {
+public class FocusableScrollPanel extends SimpleFocusablePanel
+        implements HasScrollHandlers, ScrollHandler {
 
     public FocusableScrollPanel() {
         // Prevent IE standard mode bug when a AbsolutePanel is contained.
@@ -174,8 +174,8 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
                     .getElements(getElement());
             for (com.google.gwt.dom.client.Element el : elements) {
                 final Style style = el.getStyle();
-                style.setProperty("webkitTransform", "translate3d(0px,"
-                        + -position + "px,0px)");
+                style.setProperty("webkitTransform",
+                        "translate3d(0px," + -position + "px,0px)");
             }
             getElement().setPropertyInt("_vScrollTop", position);
         } else {

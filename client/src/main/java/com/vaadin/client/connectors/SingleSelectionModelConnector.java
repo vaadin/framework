@@ -78,8 +78,8 @@ public class SingleSelectionModelConnector extends
     /**
      * SingleSelectionModel without a selection column renderer.
      */
-    public class SingleSelectionModel extends AbstractSelectionModel implements
-            SelectionModel.Single<JsonObject> {
+    public class SingleSelectionModel extends AbstractSelectionModel
+            implements SelectionModel.Single<JsonObject> {
 
         private RowHandle<JsonObject> selectedRow;
         private boolean deselectAllowed;
@@ -110,8 +110,8 @@ public class SingleSelectionModelConnector extends
                     // Check if currently re-selected row was deselected from
                     // the server.
                     if (row != null && getRowHandle(row).equals(selectedRow)) {
-                        if (selectedRow.getRow().hasKey(
-                                GridState.JSONKEY_SELECTED)) {
+                        if (selectedRow.getRow()
+                                .hasKey(GridState.JSONKEY_SELECTED)) {
                             // Everything is OK, no need to do anything.
                             return false;
                         }
@@ -130,8 +130,8 @@ public class SingleSelectionModelConnector extends
             }
 
             if (changed) {
-                getRpcProxy(SingleSelectionModelServerRpc.class).select(
-                        getRowKey(row));
+                getRpcProxy(SingleSelectionModelServerRpc.class)
+                        .select(getRowKey(row));
             }
 
             return changed;

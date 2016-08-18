@@ -24,8 +24,8 @@ package com.vaadin.legacy.data.validator;
  * {@link LegacyIntegerRangeValidator}, {@link LegacyDoubleRangeValidator} or
  * {@link LegacyDateRangeValidator} in applications.
  * <p>
- * Note that {@link LegacyRangeValidator} always accept null values. Make a field
- * required to ensure that no empty values are accepted or override
+ * Note that {@link LegacyRangeValidator} always accept null values. Make a
+ * field required to ensure that no empty values are accepted or override
  * {@link #isValidValue(Comparable)}.
  * </p>
  * 
@@ -35,7 +35,8 @@ package com.vaadin.legacy.data.validator;
  * @author Vaadin Ltd.
  * @since 7.0
  */
-public class LegacyRangeValidator<T extends Comparable> extends LegacyAbstractValidator<T> {
+public class LegacyRangeValidator<T extends Comparable>
+        extends LegacyAbstractValidator<T> {
 
     private T minValue = null;
     private boolean minValueIncluded = true;

@@ -26,8 +26,8 @@ public class ComboBoxSelectingWithNewItemsAllowed extends ComboBoxSelecting {
         super.setup(request);
         comboBox.setNewItemsAllowed(true);
 
-        final Label label = new Label(String.valueOf(comboBox.getItemIds()
-                .size()));
+        final Label label = new Label(
+                String.valueOf(comboBox.getItemIds().size()));
         label.setCaption("Item count:");
         label.setId("count");
         comboBox.addValueChangeListener(new Property.ValueChangeListener() {

@@ -51,8 +51,9 @@ public class HorizontalLayoutSortableWithWrappers extends Window {
     }
 
     private DropHandler dh = new DropHandler() {
-        AcceptCriterion crit = new And(new TargetDetailIs("horizontalLocation",
-                "LEFT"), new Not(SourceIsTarget.get()));
+        AcceptCriterion crit = new And(
+                new TargetDetailIs("horizontalLocation", "LEFT"),
+                new Not(SourceIsTarget.get()));
 
         @Override
         public AcceptCriterion getAcceptCriterion() {
@@ -78,8 +79,8 @@ public class HorizontalLayoutSortableWithWrappers extends Window {
                         }
                         next = componentIterator.next();
                     }
-                    if (dropTargetData.getData("horizontalLocation").equals(
-                            "LEFT")) {
+                    if (dropTargetData.getData("horizontalLocation")
+                            .equals("LEFT")) {
                         index--;
                         if (index < 0) {
                             index = 0;
@@ -96,7 +97,8 @@ public class HorizontalLayoutSortableWithWrappers extends Window {
     };
 
     public HorizontalLayoutSortableWithWrappers() {
-        setCaption("Horizontally sortable layout via (ddwrappers): Try sorting blocks by dragging them");
+        setCaption(
+                "Horizontally sortable layout via (ddwrappers): Try sorting blocks by dragging them");
         DragAndDropWrapper pane = new DragAndDropWrapper(layout);
         setContent(pane);
         pane.setSizeFull();

@@ -26,7 +26,8 @@ import com.vaadin.tests.widgetset.client.EncoderResultDisplayConnector.ReportRpc
 @Widgetset(TestingWidgetSet.NAME)
 public class EncodeResultDisplay extends AbstractTestUIWithLog {
 
-    public static class EncoderResultDisplayExtension extends AbstractExtension {
+    public static class EncoderResultDisplayExtension
+            extends AbstractExtension {
         public EncoderResultDisplayExtension(
                 EncoderResultDisplayConnector.ReportRpc rpc) {
             registerRpc(rpc);

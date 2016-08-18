@@ -163,7 +163,8 @@ public class TestSampler extends TabSheet {
         createComponentLayout(caption, hl);
     }
 
-    private void createComponentLayout(String caption, ComponentContainer layout) {
+    private void createComponentLayout(String caption,
+            ComponentContainer layout) {
         addTab(layout, caption);
         currentTab = layout;
     }

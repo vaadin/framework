@@ -42,7 +42,8 @@ public class LegacyPopupDateField extends LegacyDateField {
         super();
     }
 
-    public LegacyPopupDateField(Property dataSource) throws IllegalArgumentException {
+    public LegacyPopupDateField(Property dataSource)
+            throws IllegalArgumentException {
         super(dataSource);
     }
 

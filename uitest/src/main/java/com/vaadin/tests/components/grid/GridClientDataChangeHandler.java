@@ -27,6 +27,7 @@ public class GridClientDataChangeHandler extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(new TestWidgetComponent(GridDataChangeHandlerWidget.class));
+        addComponent(
+                new TestWidgetComponent(GridDataChangeHandlerWidget.class));
     }
 }

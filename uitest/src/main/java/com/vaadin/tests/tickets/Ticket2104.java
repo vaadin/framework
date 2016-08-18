@@ -84,9 +84,8 @@ public class Ticket2104 extends LegacyApplication {
         tree.addListener(new ItemClickListener() {
             @Override
             public void itemClick(ItemClickEvent event) {
-                getMainWindow().addComponent(
-                        new Label(event.toString() + " // " + event.getItemId()
-                                + "//" + event.getSource()));
+                getMainWindow().addComponent(new Label(event.toString() + " // "
+                        + event.getItemId() + "//" + event.getSource()));
 
             }
         });
@@ -95,7 +94,8 @@ public class Ticket2104 extends LegacyApplication {
         main.addComponent(ol);
         cb = new CheckBox("immediate");
         cb.setValue(table.isImmediate());
-        cb.addValueChangeListener(event -> table.setImmediate(event.getValue()));
+        cb.addValueChangeListener(
+                event -> table.setImmediate(event.getValue()));
         cb.setImmediate(true);
         ol.addComponent(cb);
         cb = new CheckBox("selectable");
@@ -127,9 +127,8 @@ public class Ticket2104 extends LegacyApplication {
         table.addListener(new ItemClickListener() {
             @Override
             public void itemClick(ItemClickEvent event) {
-                getMainWindow().addComponent(
-                        new Label(event.toString() + " // " + event.getItemId()
-                                + "//" + event.getSource()));
+                getMainWindow().addComponent(new Label(event.toString() + " // "
+                        + event.getItemId() + "//" + event.getSource()));
 
             }
         });

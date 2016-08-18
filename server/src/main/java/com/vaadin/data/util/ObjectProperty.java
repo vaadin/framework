@@ -124,8 +124,8 @@ public class ObjectProperty<T> extends AbstractProperty<T> {
      * 
      * @param newValue
      *            the New value of the property.
-     * @throws <code>Property.ReadOnlyException</code> if the object is in
-     *         read-only mode
+     * @throws <code>Property.ReadOnlyException</code>
+     *             if the object is in read-only mode
      */
     @Override
     public void setValue(T newValue) throws Property.ReadOnlyException {

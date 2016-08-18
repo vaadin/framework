@@ -10,7 +10,8 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 
-public class NotificationsHtmlAllowed extends TestBase implements ClickListener {
+public class NotificationsHtmlAllowed extends TestBase
+        implements ClickListener {
 
     private TextArea messageField;
     private CheckBox htmlAllowedBox;

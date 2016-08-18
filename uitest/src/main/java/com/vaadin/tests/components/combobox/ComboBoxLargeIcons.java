@@ -34,9 +34,9 @@ public class ComboBoxLargeIcons extends TestBase {
                 "document-ppt", "document-txt", "document-web", "document" };
         for (String icon : icons) {
             Item item = cb.addItem(icon);
-            item.getItemProperty("icon").setValue(
-                    new ThemeResource("../runo/icons/32/" + icon + ".png?"
-                            + new Date().getTime()));
+            item.getItemProperty("icon")
+                    .setValue(new ThemeResource("../runo/icons/32/" + icon
+                            + ".png?" + new Date().getTime()));
         }
 
     }

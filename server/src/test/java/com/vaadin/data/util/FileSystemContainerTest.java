@@ -9,8 +9,8 @@ public class FileSystemContainerTest {
 
     @Test
     public void nonExistingDirectory() {
-        FilesystemContainer fsc = new FilesystemContainer(new File(
-                "/non/existing"));
+        FilesystemContainer fsc = new FilesystemContainer(
+                new File("/non/existing"));
         Assert.assertTrue(fsc.getItemIds().isEmpty());
     }
 }

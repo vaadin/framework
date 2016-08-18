@@ -66,15 +66,15 @@ public class ContainerSortingTest {
                 ITEM_STRING_1, ITEM_STRING_2, ITEM_STRING_NULL2 });
 
         ic.sort(new Object[] { PROPERTY_INTEGER_NOT_NULL,
-                PROPERTY_INTEGER_NULL2, PROPERTY_STRING_ID }, new boolean[] {
-                true, false, true });
+                PROPERTY_INTEGER_NULL2, PROPERTY_STRING_ID },
+                new boolean[] { true, false, true });
         verifyOrder(ic, new String[] { ITEM_DATA_MINUS2, ITEM_DATA_MINUS2_NULL,
                 ITEM_DATA_MINUS1, ITEM_DATA_MINUS1_NULL, ITEM_ANOTHER_NULL,
                 ITEM_STRING_NULL2, ITEM_STRING_1, ITEM_STRING_2 });
 
         ic.sort(new Object[] { PROPERTY_INTEGER_NOT_NULL,
-                PROPERTY_INTEGER_NULL2, PROPERTY_STRING_ID }, new boolean[] {
-                true, true, true });
+                PROPERTY_INTEGER_NULL2, PROPERTY_STRING_ID },
+                new boolean[] { true, true, true });
         verifyOrder(ic, new String[] { ITEM_DATA_MINUS2_NULL, ITEM_DATA_MINUS2,
                 ITEM_DATA_MINUS1_NULL, ITEM_DATA_MINUS1, ITEM_ANOTHER_NULL,
                 ITEM_STRING_NULL2, ITEM_STRING_1, ITEM_STRING_2 });
@@ -86,18 +86,17 @@ public class ContainerSortingTest {
         HierarchicalContainer hc = new HierarchicalContainer();
         populateContainer(hc);
         hc.sort(new Object[] { "name" }, new boolean[] { true });
-        verifyOrder(hc, new String[] { "Audi", "C++", "Call of Duty", "Cars",
-                "English", "Fallout", "Finnish", "Ford", "Games", "Java",
-                "Might and Magic", "Natural languages", "PHP",
-                "Programming languages", "Python", "Red Alert", "Swedish",
-                "Toyota", "Volvo" });
-        TestUtil.assertArrays(
-                hc.rootItemIds().toArray(),
+        verifyOrder(hc,
+                new String[] { "Audi", "C++", "Call of Duty", "Cars", "English",
+                        "Fallout", "Finnish", "Ford", "Games", "Java",
+                        "Might and Magic", "Natural languages", "PHP",
+                        "Programming languages", "Python", "Red Alert",
+                        "Swedish", "Toyota", "Volvo" });
+        TestUtil.assertArrays(hc.rootItemIds().toArray(),
                 new Integer[] { nameToId.get("Cars"), nameToId.get("Games"),
                         nameToId.get("Natural languages"),
                         nameToId.get("Programming languages") });
-        TestUtil.assertArrays(
-                hc.getChildren(nameToId.get("Games")).toArray(),
+        TestUtil.assertArrays(hc.getChildren(nameToId.get("Games")).toArray(),
                 new Integer[] { nameToId.get("Call of Duty"),
                         nameToId.get("Fallout"),
                         nameToId.get("Might and Magic"),

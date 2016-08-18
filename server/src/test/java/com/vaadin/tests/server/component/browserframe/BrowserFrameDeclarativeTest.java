@@ -27,8 +27,8 @@ import com.vaadin.ui.BrowserFrame;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class BrowserFrameDeclarativeTest extends
-        DeclarativeTestBase<BrowserFrame> {
+public class BrowserFrameDeclarativeTest
+        extends DeclarativeTestBase<BrowserFrame> {
 
     protected String getDesign() {
         return "<vaadin-browser-frame source='http://foo.bar/some.html' />";

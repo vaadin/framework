@@ -99,15 +99,16 @@ public class GridFooterTest extends GridStaticSectionTest {
 
         selectMenuPath("Component", "Footer", "Append row");
 
-        selectMenuPath("Component", "Footer", "Row 1", "Join column cells 0, 1");
+        selectMenuPath("Component", "Footer", "Row 1",
+                "Join column cells 0, 1");
 
         GridCellElement spannedCell = getGridElement().getFooterCell(0, 0);
         assertTrue(spannedCell.isDisplayed());
         assertEquals("2", spannedCell.getAttribute("colspan"));
 
         // TestBench returns the spanned cell for all columns
-        assertEquals(spannedCell.getText(), getGridElement()
-                .getFooterCell(0, 1).getText());
+        assertEquals(spannedCell.getText(),
+                getGridElement().getFooterCell(0, 1).getText());
     }
 
     @Test
@@ -123,8 +124,8 @@ public class GridFooterTest extends GridStaticSectionTest {
         assertEquals("2", spannedCell.getAttribute("colspan"));
 
         // TestBench returns the spanned cell for all columns
-        assertEquals(spannedCell.getText(), getGridElement()
-                .getFooterCell(0, 2).getText());
+        assertEquals(spannedCell.getText(),
+                getGridElement().getFooterCell(0, 2).getText());
     }
 
     @Test

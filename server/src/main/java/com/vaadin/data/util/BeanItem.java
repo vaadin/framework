@@ -131,8 +131,8 @@ public class BeanItem<BT> extends PropertysetItem {
         this.bean = bean;
 
         // Create bean information
-        LinkedHashMap<String, VaadinPropertyDescriptor<BT>> pds = getPropertyDescriptors((Class<BT>) bean
-                .getClass());
+        LinkedHashMap<String, VaadinPropertyDescriptor<BT>> pds = getPropertyDescriptors(
+                (Class<BT>) bean.getClass());
 
         // Add all the bean properties as MethodProperties to this Item
         for (Object id : propertyIds) {
@@ -248,8 +248,8 @@ public class BeanItem<BT> extends PropertysetItem {
      *            property id to add.
      */
     public void addNestedProperty(String nestedPropertyId) {
-        addItemProperty(nestedPropertyId, new NestedMethodProperty<Object>(
-                getBean(), nestedPropertyId));
+        addItemProperty(nestedPropertyId,
+                new NestedMethodProperty<Object>(getBean(), nestedPropertyId));
     }
 
     /**

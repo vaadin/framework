@@ -60,9 +60,9 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
  * 
  * @since 6.5
  */
-public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
-        AbstractInMemoryContainer<IDTYPE, String, BeanItem<BEANTYPE>> implements
-        Filterable, SimpleFilterable, Sortable, ValueChangeListener,
+public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
+        extends AbstractInMemoryContainer<IDTYPE, String, BeanItem<BEANTYPE>>
+        implements Filterable, SimpleFilterable, Sortable, ValueChangeListener,
         PropertySetChangeNotifier {
 
     /**
@@ -78,8 +78,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * 
      * @since 6.5
      */
-    public static interface BeanIdResolver<IDTYPE, BEANTYPE> extends
-            Serializable {
+    public static interface BeanIdResolver<IDTYPE, BEANTYPE>
+            extends Serializable {
         /**
          * Return the item identifier for a bean.
          * 
@@ -95,8 +95,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * The bean must have a getter for the property, and the getter must return
      * an object of type IDTYPE.
      */
-    protected class PropertyBasedBeanIdResolver implements
-            BeanIdResolver<IDTYPE, BEANTYPE> {
+    protected class PropertyBasedBeanIdResolver
+            implements BeanIdResolver<IDTYPE, BEANTYPE> {
 
         private final Object propertyId;
 
@@ -114,8 +114,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
                 throws IllegalArgumentException {
             VaadinPropertyDescriptor<BEANTYPE> pd = model.get(propertyId);
             if (null == pd) {
-                throw new IllegalStateException("Property " + propertyId
-                        + " not found");
+                throw new IllegalStateException(
+                        "Property " + propertyId + " not found");
             }
             try {
                 Property<IDTYPE> property = (Property<IDTYPE>) pd
@@ -618,8 +618,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      *             if an identifier cannot be resolved for the bean
      */
     protected BeanItem<BEANTYPE> addBeanAfter(IDTYPE previousItemId,
-            BEANTYPE bean) throws IllegalStateException,
-            IllegalArgumentException {
+            BEANTYPE bean)
+            throws IllegalStateException, IllegalArgumentException {
         if (bean == null) {
             return null;
         }
@@ -698,7 +698,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
                         "Resolved identifier for a bean must not be null");
             }
 
-            if (internalAddItemAtEnd(itemId, createBeanItem(bean), false) != null) {
+            if (internalAddItemAtEnd(itemId, createBeanItem(bean),
+                    false) != null) {
                 modified = true;
             }
         }
@@ -862,8 +863,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @return true if the property was added
      */
     public boolean addNestedContainerProperty(String propertyId) {
-        return addContainerProperty(propertyId, new NestedPropertyDescriptor(
-                propertyId, type));
+        return addContainerProperty(propertyId,
+                new NestedPropertyDescriptor(propertyId, type));
     }
 
     /**
@@ -914,7 +915,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         model.remove(propertyId);
 
         // If remove the Property from all Items
-        for (final Iterator<IDTYPE> i = getAllItemIds().iterator(); i.hasNext();) {
+        for (final Iterator<IDTYPE> i = getAllItemIds().iterator(); i
+                .hasNext();) {
             getUnfilteredItem(i.next()).removeItemProperty(propertyId);
         }
 

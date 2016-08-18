@@ -38,8 +38,8 @@ public class TabSpaceNotScrollTest extends MultiBrowserTest {
     public void testScroll() throws InterruptedException, IOException {
         openTestURL();
 
-        TestBenchElement tab = (TestBenchElement) getDriver().findElement(
-                By.className("v-tabsheet-tabitemcell"));
+        TestBenchElement tab = (TestBenchElement) getDriver()
+                .findElement(By.className("v-tabsheet-tabitemcell"));
         tab.click(10, 10);
 
         Point oldLocation = tab.getLocation();

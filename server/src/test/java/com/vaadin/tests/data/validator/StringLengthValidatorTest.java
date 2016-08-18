@@ -9,7 +9,8 @@ import com.vaadin.legacy.data.validator.LegacyStringLengthValidator;
 
 public class StringLengthValidatorTest {
 
-    private LegacyStringLengthValidator validator = new LegacyStringLengthValidator("Error");
+    private LegacyStringLengthValidator validator = new LegacyStringLengthValidator(
+            "Error");
     private LegacyStringLengthValidator validatorNoNull = new LegacyStringLengthValidator(
             "Error", 1, 5, false);
     private LegacyStringLengthValidator validatorMinValue = new LegacyStringLengthValidator(
@@ -48,16 +49,16 @@ public class StringLengthValidatorTest {
 
     @Test
     public void testNoUpperBound() {
-        assertTrue(
-                "String not accepted even though no upper bound",
-                validatorMinValue
-                        .isValid("This is a really long string to test that no upper bound exists"));
+        assertTrue("String not accepted even though no upper bound",
+                validatorMinValue.isValid(
+                        "This is a really long string to test that no upper bound exists"));
     }
 
     @Test
     public void testNoLowerBound() {
         assertTrue("Didn't accept short string", validatorMaxValue.isValid(""));
-        assertTrue("Didn't accept short string", validatorMaxValue.isValid("1"));
+        assertTrue("Didn't accept short string",
+                validatorMaxValue.isValid("1"));
     }
 
     @Test

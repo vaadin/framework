@@ -65,7 +65,8 @@ public class CheckBox extends AbstractField<Boolean> {
         }
     };
 
-    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
+    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(
+            this) {
         @Override
         protected void fireEvent(Event event) {
             CheckBox.this.fireEvent(event);
@@ -123,7 +124,8 @@ public class CheckBox extends AbstractField<Boolean> {
     @Override
     public void setValue(Boolean value) {
         if (value == null) {
-            throw new IllegalArgumentException("CheckBox value must not be null");
+            throw new IllegalArgumentException(
+                    "CheckBox value must not be null");
         }
         super.setValue(value);
     }
@@ -171,9 +173,8 @@ public class CheckBox extends AbstractField<Boolean> {
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         if (design.hasAttr("checked")) {
-            this.setValue(
-                    DesignAttributeHandler.readAttribute("checked",
-                            design.attributes(), Boolean.class), false);
+            this.setValue(DesignAttributeHandler.readAttribute("checked",
+                    design.attributes(), Boolean.class), false);
         }
     }
 

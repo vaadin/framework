@@ -18,8 +18,8 @@ public class TreeTableRowIcons extends AbstractTestUI {
         layout.setSpacing(true);
         addComponent(layout);
 
-        layout.addComponent(createTreeTableAndPopulate(new ThemeResource(
-                "../runo/icons/16/ok.png")));
+        layout.addComponent(createTreeTableAndPopulate(
+                new ThemeResource("../runo/icons/16/ok.png")));
         layout.addComponent(createTreeTableAndPopulate(FontAwesome.ANDROID));
     }
 

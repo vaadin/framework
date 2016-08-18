@@ -52,9 +52,9 @@ public class CalendarDragAndDrop extends AbstractTestUI {
             TableTransferable transferable = (TableTransferable) event
                     .getTransferable();
 
-            calendar.addEvent(new BasicEvent(transferable.getItemId()
-                    .toString(), "This event was dragged here", details
-                    .getDropTime()));
+            calendar.addEvent(new BasicEvent(
+                    transferable.getItemId().toString(),
+                    "This event was dragged here", details.getDropTime()));
 
             table.removeItem(transferable.getItemId());
         }

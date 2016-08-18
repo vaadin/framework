@@ -28,10 +28,12 @@ public class TableRowScrolledBottom extends AbstractTestUI {
             public void buttonClick(Button.ClickEvent event) {
                 for (int j = 0; j < 100; j++) {
                     ++i;
-                    table.addItem(new Object[] { new Label(part1 + "<b>" + i
-                            + "</b>" + part2, ContentMode.HTML) }, i);
-                    table.setCurrentPageFirstItemIndex(table
-                            .getContainerDataSource().size() - 1);
+                    table.addItem(new Object[] {
+                            new Label(part1 + "<b>" + i + "</b>" + part2,
+                                    ContentMode.HTML) },
+                            i);
+                    table.setCurrentPageFirstItemIndex(
+                            table.getContainerDataSource().size() - 1);
                 }
             }
         });

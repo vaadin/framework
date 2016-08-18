@@ -32,7 +32,7 @@ public class GridEditingWithNoScrollBarsTest extends MultiBrowserTest {
 
         GridElement grid = $(GridElement.class).first();
         grid.getCell(1, 1).doubleClick();
-        assertEquals(grid.getEditor().getSize().width, grid.getTableWrapper()
-                .getSize().width);
+        assertEquals(grid.getEditor().getSize().width,
+                grid.getTableWrapper().getSize().width);
     }
 }

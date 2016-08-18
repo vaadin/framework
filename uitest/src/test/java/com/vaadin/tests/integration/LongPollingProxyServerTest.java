@@ -101,7 +101,7 @@ public class LongPollingProxyServerTest extends AbstractIntegrationTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singletonList(Browser.PHANTOMJS
-                .getDesiredCapabilities());
+        return Collections
+                .singletonList(Browser.PHANTOMJS.getDesiredCapabilities());
     }
 }

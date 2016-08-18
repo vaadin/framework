@@ -20,8 +20,8 @@ import java.io.Serializable;
 import com.vaadin.legacy.ui.LegacyField;
 
 /**
- * Factory interface for creating new LegacyField-instances based on the data type
- * that should be edited.
+ * Factory interface for creating new LegacyField-instances based on the data
+ * type that should be edited.
  * 
  * @author Vaadin Ltd.
  * @since 7.0
@@ -33,10 +33,11 @@ public interface FieldGroupFieldFactory extends Serializable {
      * @param dataType
      *            The type that we want to edit using the field
      * @param fieldType
-     *            The type of field we want to create. If set to {@link LegacyField}
-     *            then any type of field is accepted
+     *            The type of field we want to create. If set to
+     *            {@link LegacyField} then any type of field is accepted
      * @return A field that can be assigned to the given fieldType and that is
      *         capable of editing the given type of data
      */
-    <T extends LegacyField> T createField(Class<?> dataType, Class<T> fieldType);
+    <T extends LegacyField> T createField(Class<?> dataType,
+            Class<T> fieldType);
 }

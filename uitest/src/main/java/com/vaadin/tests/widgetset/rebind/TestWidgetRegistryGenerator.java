@@ -89,7 +89,8 @@ public class TestWidgetRegistryGenerator extends Generator {
                     Invoker.class.getCanonicalName());
             w.indent();
 
-            w.println("public Object invoke(Object target, Object... params) {");
+            w.println(
+                    "public Object invoke(Object target, Object... params) {");
             w.indent();
 
             w.println("return new %s();",

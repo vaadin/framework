@@ -39,9 +39,9 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
 @SuppressWarnings("serial")
-public abstract class AbstractOrderedLayout extends AbstractLayout implements
-        Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier,
-        Layout.MarginHandler {
+public abstract class AbstractOrderedLayout extends AbstractLayout
+        implements Layout.AlignmentHandler, Layout.SpacingHandler,
+        LayoutClickNotifier, Layout.MarginHandler {
 
     private AbstractOrderedLayoutServerRpc rpc = new AbstractOrderedLayoutServerRpc() {
 
@@ -203,13 +203,15 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
 
     /* Documented in superclass */
     @Override
-    public void replaceComponent(Component oldComponent, Component newComponent) {
+    public void replaceComponent(Component oldComponent,
+            Component newComponent) {
 
         // Gets the locations
         int oldLocation = -1;
         int newLocation = -1;
         int location = 0;
-        for (final Iterator<Component> i = components.iterator(); i.hasNext();) {
+        for (final Iterator<Component> i = components.iterator(); i
+                .hasNext();) {
             final Component component = i.next();
 
             if (component == oldComponent) {
@@ -503,8 +505,8 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
                         float ratio = Float.valueOf(value);
                         setExpandRatio(newChild, ratio);
                     } catch (NumberFormatException nfe) {
-                        getLogger().info(
-                                "Failed to parse expand ratio " + value);
+                        getLogger()
+                                .info("Failed to parse expand ratio " + value);
                     }
                 } else {
                     setExpandRatio(newChild, 1.0f);

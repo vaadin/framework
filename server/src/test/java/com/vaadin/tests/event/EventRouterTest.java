@@ -65,8 +65,8 @@ public class EventRouterTest {
     @Test
     public void fireEvent_exceptionFromListenerAndNoHandler_exceptionPropagated() {
         listener.componentEvent(EasyMock.<Component.Event> anyObject());
-        EasyMock.expectLastCall().andThrow(
-                new RuntimeException("listener failed"));
+        EasyMock.expectLastCall()
+                .andThrow(new RuntimeException("listener failed"));
 
         EasyMock.replay(component, listener);
         try {
@@ -82,8 +82,8 @@ public class EventRouterTest {
     @Test
     public void fireEvent_exceptionFromListener_errorHandlerCalled() {
         listener.componentEvent(EasyMock.<Component.Event> anyObject());
-        EasyMock.expectLastCall().andThrow(
-                new RuntimeException("listener failed"));
+        EasyMock.expectLastCall()
+                .andThrow(new RuntimeException("listener failed"));
         errorHandler.error(EasyMock.<ErrorEvent> anyObject());
 
         EasyMock.replay(component, listener, errorHandler);
@@ -98,8 +98,8 @@ public class EventRouterTest {
                 COMPONENT_EVENT_METHOD);
 
         listener.componentEvent(EasyMock.<Component.Event> anyObject());
-        EasyMock.expectLastCall().andThrow(
-                new RuntimeException("listener failed"));
+        EasyMock.expectLastCall()
+                .andThrow(new RuntimeException("listener failed"));
         errorHandler.error(EasyMock.<ErrorEvent> anyObject());
         // second listener should be called despite an error in the first
         listener2.componentEvent(EasyMock.<Component.Event> anyObject());

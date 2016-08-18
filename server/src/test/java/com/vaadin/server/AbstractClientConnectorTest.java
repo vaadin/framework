@@ -45,8 +45,7 @@ public class AbstractClientConnectorTest {
             mock.registerRpc(implementation);
             Assert.fail("expected exception");
         } catch (Exception expected) {
-            Assert.assertEquals(
-                    expected.getMessage(),
+            Assert.assertEquals(expected.getMessage(),
                     "Use registerRpc(T implementation, Class<T> rpcInterfaceType) if the Rpc implementation implements more than one interface");
         }
     }
@@ -69,8 +68,8 @@ public class AbstractClientConnectorTest {
         verify(mock, times(1)).registerRpc(implementation, ClickRpc.class);
     }
 
-    private class ServerRpcLastMock implements Comparable<ServerRpcLastMock>,
-            ClickRpc {
+    private class ServerRpcLastMock
+            implements Comparable<ServerRpcLastMock>, ClickRpc {
         private static final long serialVersionUID = -2822356895755286180L;
 
         @Override

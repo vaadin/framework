@@ -59,10 +59,10 @@ public class TestForContainerFilterable extends CustomComponent {
         filterLayout.addComponent(fooFilter);
         filterLayout.addComponent(barFilter);
         filterLayout.addComponent(filterButton);
-        fooFilter
-                .setDescription("Filters foo column in case-sensitive contains manner.");
-        barFilter
-                .setDescription("Filters bar column in case-insensitive prefix manner.");
+        fooFilter.setDescription(
+                "Filters foo column in case-sensitive contains manner.");
+        barFilter.setDescription(
+                "Filters bar column in case-insensitive prefix manner.");
         filterLayout.addComponent(count);
 
         // Table

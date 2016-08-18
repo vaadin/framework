@@ -29,14 +29,13 @@ import java.util.List;
 public interface PersonService extends Serializable {
     List<Person> fetchPersons(int offset, int limit);
 
-    List<Person> fetchPersons(int offset, int limit, Collection<PersonSort> personSorts);
+    List<Person> fetchPersons(int offset, int limit,
+            Collection<PersonSort> personSorts);
 
     int getPersonCount();
 
     public interface PersonSort extends Comparator<Person>, Serializable {
     }
 
-    PersonSort createSort(
-            String propertyName,
-            boolean descending);
+    PersonSort createSort(String propertyName, boolean descending);
 }

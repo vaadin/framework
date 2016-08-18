@@ -178,7 +178,8 @@ public class Tables extends VerticalLayout implements View {
         table.removeGeneratedColumn("progress");
 
         if (componentsInRows) {
-            table.addContainerProperty("textfield", LegacyTextField.class, null);
+            table.addContainerProperty("textfield", LegacyTextField.class,
+                    null);
             table.addGeneratedColumn("textfield", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
@@ -193,7 +194,8 @@ public class Tables extends VerticalLayout implements View {
                 }
             });
 
-            table.addContainerProperty("datefield", LegacyTextField.class, null);
+            table.addContainerProperty("datefield", LegacyTextField.class,
+                    null);
             table.addGeneratedColumn("datefield", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
@@ -255,7 +257,8 @@ public class Tables extends VerticalLayout implements View {
                 }
             });
 
-            table.addContainerProperty("optiongroup", LegacyTextField.class, null);
+            table.addContainerProperty("optiongroup", LegacyTextField.class,
+                    null);
             table.addGeneratedColumn("optiongroup", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,

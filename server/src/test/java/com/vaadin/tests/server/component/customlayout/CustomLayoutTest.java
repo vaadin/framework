@@ -40,9 +40,8 @@ import com.vaadin.ui.CustomLayout;
 public class CustomLayoutTest {
 
     @Test
-    public void ctor_inputStreamProvided_inputStreamIsRead()
-            throws IOException, IllegalArgumentException,
-            IllegalAccessException {
+    public void ctor_inputStreamProvided_inputStreamIsRead() throws IOException,
+            IllegalArgumentException, IllegalAccessException {
         Integer buffer = getBufferSize();
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < buffer; i++) {

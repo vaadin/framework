@@ -120,9 +120,10 @@ public class CloseUI extends AbstractTestUIWithLog {
         log("Detach of " + this + " (" + getUIId() + ")");
         boolean correctUI = (UI.getCurrent() == this);
         boolean correctPage = (Page.getCurrent() == getPage());
-        boolean correctVaadinSession = (VaadinSession.getCurrent() == getSession());
-        boolean correctVaadinService = (VaadinService.getCurrent() == getSession()
-                .getService());
+        boolean correctVaadinSession = (VaadinSession
+                .getCurrent() == getSession());
+        boolean correctVaadinService = (VaadinService
+                .getCurrent() == getSession().getService());
         log("UI.current correct in detach: " + correctUI);
         log("Page.current correct in detach: " + correctPage);
         log("VaadinSession.current correct in detach: " + correctVaadinSession);

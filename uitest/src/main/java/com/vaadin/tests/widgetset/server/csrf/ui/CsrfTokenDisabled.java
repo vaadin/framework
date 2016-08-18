@@ -29,7 +29,8 @@ import com.vaadin.launcher.CustomDeploymentConfiguration.Conf;
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")
-@CustomDeploymentConfiguration({ @Conf(name = "disable-xsrf-protection", value = "true") })
+@CustomDeploymentConfiguration({
+        @Conf(name = "disable-xsrf-protection", value = "true") })
 public class CsrfTokenDisabled extends AbstractCsrfTokenUI {
 
 }

@@ -24,7 +24,8 @@ import java.math.BigInteger;
  * @since 7.4
  */
 @SuppressWarnings("serial")
-public class LegacyBigIntegerRangeValidator extends LegacyRangeValidator<BigInteger> {
+public class LegacyBigIntegerRangeValidator
+        extends LegacyRangeValidator<BigInteger> {
 
     /**
      * Creates a validator for checking that an BigInteger is within a given
@@ -42,8 +43,8 @@ public class LegacyBigIntegerRangeValidator extends LegacyRangeValidator<BigInte
      * @param maxValue
      *            The maximum value to accept or null for no limit
      */
-    public LegacyBigIntegerRangeValidator(String errorMessage, BigInteger minValue,
-            BigInteger maxValue) {
+    public LegacyBigIntegerRangeValidator(String errorMessage,
+            BigInteger minValue, BigInteger maxValue) {
         super(errorMessage, BigInteger.class, minValue, maxValue);
     }
 

@@ -68,10 +68,9 @@ public class TabSheetFocusedTabTest extends MultiBrowserTest {
     }
 
     private WebElement getTab(int index) {
-        return getDriver()
-                .findElement(
-                        By.xpath("(//table[contains(@class, 'v-tabsheet-tabs')])[1]/tbody/tr/td["
-                                + (index + 1) + "]/div"));
+        return getDriver().findElement(By
+                .xpath("(//table[contains(@class, 'v-tabsheet-tabs')])[1]/tbody/tr/td["
+                        + (index + 1) + "]/div"));
     }
 
     private boolean isFocused(WebElement tab) {

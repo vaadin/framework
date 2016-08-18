@@ -168,8 +168,8 @@ public class VButton extends FocusWidget implements ClickHandler {
             boolean isPhantomClickPossible = BrowserInfo.get().isSafari()
                     && BrowserInfo.get().isTouchDevice()
                     && BrowserInfo.get().getBrowserMajorVersion() == 8;
-            long clickTime = isPhantomClickPossible ? System
-                    .currentTimeMillis() : 0;
+            long clickTime = isPhantomClickPossible ? System.currentTimeMillis()
+                    : 0;
             // If clicks are currently disallowed or phantom, keep it from
             // bubbling or being passed to the superclass.
             if (disallowNextClick || isPhantomClickPossible
@@ -251,8 +251,10 @@ public class VButton extends FocusWidget implements ClickHandler {
         case Event.ONMOUSEOUT:
             if (isTargetInsideButton(event)) {
                 if (clickPending
-                        && Math.abs(mousedownX - event.getClientX()) < MOVE_THRESHOLD
-                        && Math.abs(mousedownY - event.getClientY()) < MOVE_THRESHOLD) {
+                        && Math.abs(mousedownX
+                                - event.getClientX()) < MOVE_THRESHOLD
+                        && Math.abs(mousedownY
+                                - event.getClientY()) < MOVE_THRESHOLD) {
                     onClick();
                     break;
                 }
@@ -435,15 +437,15 @@ public class VButton extends FocusWidget implements ClickHandler {
     	var convertToPixel = function(elem, value) {
     	    // From the awesome hack by Dean Edwards
             // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
-
+    
             // Remember the original values
             var left = elem.style.left, rsLeft = elem.runtimeStyle.left;
-
+    
             // Put in the new values to get a computed value out
             elem.runtimeStyle.left = elem.currentStyle.left;
             elem.style.left = value || 0;
             var ret = elem.style.pixelLeft;
-
+    
             // Revert the changed values
             elem.style.left = left;
             elem.runtimeStyle.left = rsLeft;
@@ -452,7 +454,7 @@ public class VButton extends FocusWidget implements ClickHandler {
     	}
     	
      	var ret = 0;
-
+    
         var sides = ["Right","Left"];
         for(var i=0; i<2; i++) {
             var side = sides[i];
@@ -475,7 +477,7 @@ public class VButton extends FocusWidget implements ClickHandler {
                 ret += parseInt(value.substr(0, value.length-2));
             }
         }
-
+    
     	return ret;
     }-*/;
 

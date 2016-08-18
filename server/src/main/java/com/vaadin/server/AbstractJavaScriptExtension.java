@@ -92,13 +92,15 @@ import elemental.json.JsonValue;
  * the field, that function is called whenever the contents of the shared state
  * is changed.</li>
  * <li><code>onUnregister</code> - If the JavaScript code assigns a function to
- * the field, that function is called when the connector has been unregistered.</li>
+ * the field, that function is called when the connector has been
+ * unregistered.</li>
  * <li>Any field name corresponding to a call to
  * {@link #addFunction(String, JavaScriptFunction)} on the server will
  * automatically be present as a function that triggers the registered function
  * on the server.</li>
  * <li>Any field name referred to using {@link #callFunction(String, Object...)}
- * on the server will be called if a function has been assigned to the field.</li>
+ * on the server will be called if a function has been assigned to the
+ * field.</li>
  * </ul>
  * <p>
  * 
@@ -113,7 +115,8 @@ import elemental.json.JsonValue;
  * <li>Java Strings are represented by JavaScript strings.</li>
  * <li>Java Dates are represented by JavaScript numbers containing the timestamp
  * </li>
- * <li>List, Set and all arrays in Java are represented by JavaScript arrays.</li>
+ * <li>List, Set and all arrays in Java are represented by JavaScript
+ * arrays.</li>
  * <li>Map&lt;String, ?&gt; in Java is represented by JavaScript object with
  * fields corresponding to the map keys.</li>
  * <li>Any other Java Map is represented by a JavaScript array containing two
@@ -177,7 +180,8 @@ public abstract class AbstractJavaScriptExtension extends AbstractExtension {
      *            the {@link JavaScriptFunction} object that will be invoked
      *            when the JavaScript function is called
      */
-    protected void addFunction(String functionName, JavaScriptFunction function) {
+    protected void addFunction(String functionName,
+            JavaScriptFunction function) {
         callbackHelper.registerCallback(functionName, function);
     }
 

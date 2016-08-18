@@ -87,8 +87,8 @@ public class SASSAddonImportFileCreator {
                 .getAvailableWidgetSetsAndStylesheets();
 
         try {
-            PrintStream printStream = new PrintStream(new FileOutputStream(
-                    addonImports));
+            PrintStream printStream = new PrintStream(
+                    new FileOutputStream(addonImports));
 
             printStream.println("/* " + ADDON_IMPORTS_FILE_TEXT + " */");
 
@@ -119,8 +119,8 @@ public class SASSAddonImportFileCreator {
 
             List<String> mixins = new ArrayList<String>();
             for (String path : paths) {
-                mixins.addAll(addImport(printStream, path,
-                        addonThemes.get(path)));
+                mixins.addAll(
+                        addImport(printStream, path, addonThemes.get(path)));
                 printStream.println();
             }
 
@@ -187,7 +187,8 @@ public class SASSAddonImportFileCreator {
     private static void createAddonsMixin(PrintStream stream,
             List<String> mixins) {
 
-        stream.println("/* Import and include this mixin into your project theme to include the addon themes */");
+        stream.println(
+                "/* Import and include this mixin into your project theme to include the addon themes */");
         stream.println("@mixin addons {");
         for (String addon : mixins) {
             stream.println("\t@include " + addon + ";");

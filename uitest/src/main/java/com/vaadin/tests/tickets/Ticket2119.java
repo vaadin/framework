@@ -50,13 +50,12 @@ public class Ticket2119 extends LegacyApplication {
 
     private Layout testLayout() {
         final Layout layout = new VerticalLayout();
-        final Label label = new Label(
-                "Instructions to reproduce:\n"
-                        + "  - Open this application in two browser windows\n"
-                        + "  - Click the Button in first Window\n"
-                        + "  - Go to the second Window\n"
-                        + "     - Click the arrow in the Select\n"
-                        + "  --> The opened list correctly shows the new value but the old one is shown in the \"input\" part");
+        final Label label = new Label("Instructions to reproduce:\n"
+                + "  - Open this application in two browser windows\n"
+                + "  - Click the Button in first Window\n"
+                + "  - Go to the second Window\n"
+                + "     - Click the arrow in the Select\n"
+                + "  --> The opened list correctly shows the new value but the old one is shown in the \"input\" part");
         label.setContentMode(ContentMode.PREFORMATTED);
         layout.addComponent(label);
 
@@ -77,8 +76,8 @@ public class Ticket2119 extends LegacyApplication {
             @Override
             public void valueChange(Property.ValueChangeEvent event) {
                 Object value = event.getProperty().getValue();
-                valueProperty.setValue((null != value) ? value.toString()
-                        : null);
+                valueProperty
+                        .setValue((null != value) ? value.toString() : null);
             }
         });
 

@@ -30,8 +30,8 @@ public class TabSheetInSplitPanelTest extends MultiBrowserTest {
     public void ensureNoScrollbars() {
         openTestURL();
         TabSheetElement ts = $(TabSheetElement.class).first();
-        List<WebElement> scrollables = ts.findElements(By
-                .xpath("//*[contains(@class,'v-scrollable')]"));
+        List<WebElement> scrollables = ts
+                .findElements(By.xpath("//*[contains(@class,'v-scrollable')]"));
         for (WebElement scrollable : scrollables) {
             assertNoHorizontalScrollbar(scrollable,
                     "Element should not have a horizontal scrollbar");

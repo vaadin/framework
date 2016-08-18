@@ -54,7 +54,7 @@ public class MenuBarTooltipsNearEdgeTest extends MultiBrowserTest {
         mouse.click(menuLocation);
         mouse.mouseMove(menuLocation, 5, -40);
         WebElement tooltip = getTooltipElement();
-        assertThat(tooltip.getLocation().x, is(lessThan(menuLocation.onPage().x
-                - tooltip.getSize().getWidth())));
+        assertThat(tooltip.getLocation().x, is(lessThan(
+                menuLocation.onPage().x - tooltip.getSize().getWidth())));
     }
 }

@@ -56,12 +56,12 @@ public class UsingXyzWhenInitializing extends UI {
         String resolution = "Your browser window on startup was "
                 + browser.getScreenWidth() + "x" + browser.getScreenHeight();
         if (browser.getScreenWidth() > 1024) {
-            layout.addComponent(new Label(
-                    "The is the large version of the application. "
+            layout.addComponent(
+                    new Label("The is the large version of the application. "
                             + resolution));
         } else {
-            layout.addComponent(new Label(
-                    "This is the small version of the application. "
+            layout.addComponent(
+                    new Label("This is the small version of the application. "
                             + resolution));
         }
     }

@@ -27,8 +27,8 @@ import com.vaadin.ui.VerticalLayout;
  * 
  * @since 7.0.0
  */
-public class ColorPickerSelect extends CustomComponent implements
-        ColorSelector, ValueChangeListener {
+public class ColorPickerSelect extends CustomComponent
+        implements ColorSelector, ValueChangeListener {
 
     /** The range. */
     private final ComboBox range;
@@ -130,8 +130,8 @@ public class ColorPickerSelect extends CustomComponent implements
                         value = 1f - ((row - (rows / 2f)) / (rows / 2f));
                     }
 
-                    colors[row][col] = new Color(Color.HSVtoRGB(hue,
-                            saturation, value));
+                    colors[row][col] = new Color(
+                            Color.HSVtoRGB(hue, saturation, value));
                 }
 
                 // The last row should have the black&white gradient
@@ -140,8 +140,8 @@ public class ColorPickerSelect extends CustomComponent implements
                     float saturation = 0f;
                     float value = 1f - ((float) col / (float) columns);
 
-                    colors[row][col] = new Color(Color.HSVtoRGB(hue,
-                            saturation, value));
+                    colors[row][col] = new Color(
+                            Color.HSVtoRGB(hue, saturation, value));
                 }
             }
         }
@@ -182,12 +182,12 @@ public class ColorPickerSelect extends CustomComponent implements
                             / (((float) rows * (float) columns) / 2f);
                 } else {
                     index -= ((rows * columns) / 2);
-                    value = 1f - index
-                            / (((float) rows * (float) columns) / 2f);
+                    value = 1f
+                            - index / (((float) rows * (float) columns) / 2f);
                 }
 
-                colors[row][col] = new Color(Color.HSVtoRGB(hue, saturation,
-                        value));
+                colors[row][col] = new Color(
+                        Color.HSVtoRGB(hue, saturation, value));
             }
         }
 
@@ -224,9 +224,11 @@ public class ColorPickerSelect extends CustomComponent implements
             grid.setColorGrid(createAllColors(14, 10));
         } else if (event.getProperty().getValue() == ColorRangePropertyId.RED) {
             grid.setColorGrid(createColors(new Color(0xFF, 0, 0), 14, 10));
-        } else if (event.getProperty().getValue() == ColorRangePropertyId.GREEN) {
+        } else if (event.getProperty()
+                .getValue() == ColorRangePropertyId.GREEN) {
             grid.setColorGrid(createColors(new Color(0, 0xFF, 0), 14, 10));
-        } else if (event.getProperty().getValue() == ColorRangePropertyId.BLUE) {
+        } else if (event.getProperty()
+                .getValue() == ColorRangePropertyId.BLUE) {
             grid.setColorGrid(createColors(new Color(0, 0, 0xFF), 14, 10));
         }
     }

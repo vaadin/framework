@@ -29,7 +29,8 @@ import com.vaadin.tests.components.grid.basicfeatures.element.CustomGridElement;
  * @since
  * @author Vaadin Ltd
  */
-public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest {
+public abstract class GridBasicClientFeaturesTest
+        extends GridBasicFeaturesTest {
 
     private boolean composite = false;
 
@@ -59,17 +60,17 @@ public abstract class GridBasicClientFeaturesTest extends GridBasicFeaturesTest 
 
     @Override
     protected WebElement getMenuElement(String menuCaption) {
-        return getDriver().findElement(
-                By.xpath("//td[text() = '" + menuCaption + "']"));
+        return getDriver()
+                .findElement(By.xpath("//td[text() = '" + menuCaption + "']"));
     }
 
     @Override
     protected CustomGridElement getGridElement() {
         if (composite) {
             // Composite requires the basic client features widget for subparts
-            return ((TestBenchElement) findElement(By
-                    .vaadin("//TestWidgetComponent")))
-                    .wrap(CustomGridElement.class);
+            return ((TestBenchElement) findElement(
+                    By.vaadin("//TestWidgetComponent")))
+                            .wrap(CustomGridElement.class);
         } else {
             return super.getGridElement();
         }

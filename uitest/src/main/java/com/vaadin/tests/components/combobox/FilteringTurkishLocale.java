@@ -30,12 +30,12 @@ public class FilteringTurkishLocale extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
 
-        final ComboBox comboBox = new ComboBox("Box", Arrays.asList(
-                "I without dot", "İ with dot"));
+        final ComboBox comboBox = new ComboBox("Box",
+                Arrays.asList("I without dot", "İ with dot"));
         comboBox.setNullSelectionAllowed(false);
 
-        NativeSelect localeSelect = new NativeSelect("Locale", Arrays.asList(
-                Locale.ENGLISH, new Locale("tr")));
+        NativeSelect localeSelect = new NativeSelect("Locale",
+                Arrays.asList(Locale.ENGLISH, new Locale("tr")));
         localeSelect.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {

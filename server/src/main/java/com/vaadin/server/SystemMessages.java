@@ -31,13 +31,13 @@ import java.io.Serializable;
  * <li><b>sessionExpiredURL</b> = null</li>
  * <li><b>sessionExpiredNotificationEnabled</b> = true</li>
  * <li><b>sessionExpiredCaption</b> = ""</li>
- * <li><b>sessionExpiredMessage</b> =
- * "Take note of any unsaved data, and <u>click here</u> to continue."</li>
+ * <li><b>sessionExpiredMessage</b> = "Take note of any unsaved data, and
+ * <u>click here</u> to continue."</li>
  * <li><b>communicationErrorURL</b> = null</li>
  * <li><b>communicationErrorNotificationEnabled</b> = true</li>
  * <li><b>communicationErrorCaption</b> = "Communication problem"</li>
- * <li><b>communicationErrorMessage</b> =
- * "Take note of any unsaved data, and <u>click here</u> to continue."</li>
+ * <li><b>communicationErrorMessage</b> = "Take note of any unsaved data, and
+ * <u>click here</u> to continue."</li>
  * <li><b>internalErrorURL</b> = null</li>
  * <li><b>internalErrorNotificationEnabled</b> = true</li>
  * <li><b>internalErrorCaption</b> = "Internal error"</li>
@@ -48,7 +48,8 @@ import java.io.Serializable;
  * <li><b>cookiesDisabledCaption</b> = "Cookies disabled"</li>
  * <li><b>cookiesDisabledMessage</b> = "This application requires cookies to
  * function.<br/>
- * Please enable cookies in your browser and <u>click here</u> to try again.</li>
+ * Please enable cookies in your browser and <u>click here</u> to try
+ * again.</li>
  * </ul>
  * </p>
  * 
@@ -110,8 +111,8 @@ public class SystemMessages implements Serializable {
     }
 
     /**
-     * @return 
-     *         "Take note of any unsaved data, and <u>click here</u> to continue."
+     * @return "Take note of any unsaved data, and <u>click here</u> to
+     *         continue."
      */
     public String getSessionExpiredMessage() {
         return (sessionExpiredNotificationEnabled ? sessionExpiredMessage
@@ -136,17 +137,17 @@ public class SystemMessages implements Serializable {
      * @return "Communication problem"
      */
     public String getCommunicationErrorCaption() {
-        return (communicationErrorNotificationEnabled ? communicationErrorCaption
-                : null);
+        return (communicationErrorNotificationEnabled
+                ? communicationErrorCaption : null);
     }
 
     /**
-     * @return 
-     *         "Take note of any unsaved data, and <u>click here</u> to continue."
+     * @return "Take note of any unsaved data, and <u>click here</u> to
+     *         continue."
      */
     public String getCommunicationErrorMessage() {
-        return (communicationErrorNotificationEnabled ? communicationErrorMessage
-                : null);
+        return (communicationErrorNotificationEnabled
+                ? communicationErrorMessage : null);
     }
 
     /**
@@ -168,17 +169,17 @@ public class SystemMessages implements Serializable {
      * @return "Authentication problem"
      */
     public String getAuthenticationErrorCaption() {
-        return (authenticationErrorNotificationEnabled ? authenticationErrorCaption
-                : null);
+        return (authenticationErrorNotificationEnabled
+                ? authenticationErrorCaption : null);
     }
 
     /**
-     * @return 
-     *         "Take note of any unsaved data, and <u>click here</u> to continue."
+     * @return "Take note of any unsaved data, and <u>click here</u> to
+     *         continue."
      */
     public String getAuthenticationErrorMessage() {
-        return (authenticationErrorNotificationEnabled ? authenticationErrorMessage
-                : null);
+        return (authenticationErrorNotificationEnabled
+                ? authenticationErrorMessage : null);
     }
 
     /**

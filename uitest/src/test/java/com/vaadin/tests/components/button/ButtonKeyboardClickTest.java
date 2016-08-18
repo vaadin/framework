@@ -72,37 +72,45 @@ public class ButtonKeyboardClickTest extends MultiBrowserTest {
                 getValue("x") > button.getLocation().getX());
         Assert.assertTrue(
                 "Client X click cooridnate is greater than right button "
-                        + "border coordinate", getValue("x") < button
-                        .getLocation().getX() + button.getSize().getWidth());
+                        + "border coordinate",
+                getValue("x") < button.getLocation().getX()
+                        + button.getSize().getWidth());
 
         Assert.assertTrue(
                 "Client Y click cooridnate is lower than Y button coordinate",
                 getValue("y") > button.getLocation().getY());
         Assert.assertTrue(
                 "Client Y click cooridnate is greater than bottom button "
-                        + "border coordinate", getValue("y") < button
-                        .getLocation().getY() + button.getSize().getHeight());
+                        + "border coordinate",
+                getValue("y") < button.getLocation().getY()
+                        + button.getSize().getHeight());
 
         Assert.assertTrue(
                 "Client X click cooridnate is greater than X middle button "
-                        + "coordinate", button.getLocation().getX()
+                        + "coordinate",
+                button.getLocation().getX()
                         + button.getSize().getWidth() / 2 >= getValue("x") - 1);
         Assert.assertTrue(
                 "Client Y click cooridnate is greater than Y middle button coordinate",
-                button.getLocation().getY() + button.getSize().getHeight() / 2 >= getValue("y") - 1);
+                button.getLocation().getY()
+                        + button.getSize().getHeight() / 2 >= getValue("y")
+                                - 1);
 
         Assert.assertTrue(
                 "Client X click cooridnate is lower than X middle button "
-                        + "coordinate", button.getLocation().getX()
+                        + "coordinate",
+                button.getLocation().getX()
                         + button.getSize().getWidth() / 2 <= getValue("x") + 1);
         Assert.assertTrue(
                 "Client Y click cooridnate is lower than Y middle button coordinate",
-                button.getLocation().getY() + button.getSize().getHeight() / 2 <= getValue("y") + 1);
+                button.getLocation().getY()
+                        + button.getSize().getHeight() / 2 <= getValue("y")
+                                + 1);
     }
 
     private int getValue(String style) {
-        return Integer.parseInt(getDriver().findElement(
-                By.className("v-label-" + style)).getText());
+        return Integer.parseInt(getDriver()
+                .findElement(By.className("v-label-" + style)).getText());
     }
 
 }

@@ -90,9 +90,9 @@ public class GridLayoutCellSizesUITest extends MultiBrowserTest {
 
     private void assertNotMatchesSmallHeight(int firstSlotHeight, int i,
             String id) {
-        Assert.assertNotEquals("Big slot '" + id
-                + "' matched small slots in height", firstSlotHeight,
-                getSlotHeight(i));
+        Assert.assertNotEquals(
+                "Big slot '" + id + "' matched small slots in height",
+                firstSlotHeight, getSlotHeight(i));
     }
 
     private int getSlotHeight(int slot) {

@@ -85,7 +85,8 @@ public class ConnectorHierarchyWriter implements Serializable {
                     throw new PaintException(
                             "Failed to send hierarchy information about "
                                     + connectorId + " to the client: "
-                                    + e.getMessage(), e);
+                                    + e.getMessage(),
+                            e);
                 }
             }
         }
@@ -100,8 +101,9 @@ public class ConnectorHierarchyWriter implements Serializable {
             Set<String> stateUpdateConnectors) {
         VaadinRequest request = VaadinService.getCurrentRequest();
         if (request != null) {
-            request.setAttribute(ConnectorHierarchyWriter.class.getName()
-                    + ".hierarchyInfo", hierarchyInfo);
+            request.setAttribute(
+                    ConnectorHierarchyWriter.class.getName() + ".hierarchyInfo",
+                    hierarchyInfo);
             request.setAttribute(ConnectorHierarchyWriter.class.getName()
                     + ".stateUpdateConnectors", stateUpdateConnectors);
         }

@@ -43,8 +43,8 @@ public class TableSizeInTabsheetTest extends MultiBrowserTest {
     }
 
     private int getTableSheetContentHeight() {
-        WebElement tabsheetContent = vaadinElementById(TABSHEET).findElement(
-                By.className(TABSHEET_CONTENT_STYLENAME));
+        WebElement tabsheetContent = vaadinElementById(TABSHEET)
+                .findElement(By.className(TABSHEET_CONTENT_STYLENAME));
         return tabsheetContent.getSize().getHeight();
     }
 }

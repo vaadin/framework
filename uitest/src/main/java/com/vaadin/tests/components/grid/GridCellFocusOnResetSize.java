@@ -27,8 +27,8 @@ public class GridCellFocusOnResetSize extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(new TestWidgetComponent(
-                GridCellFocusOnResetSizeWidget.class));
+        addComponent(
+                new TestWidgetComponent(GridCellFocusOnResetSizeWidget.class));
     }
 
 }

@@ -42,8 +42,8 @@ public class DragAndDropServiceTest {
     @Test
     public void changeVariables_isSourceConnectorEnabledCalled() {
         final List<Level> levels = new ArrayList<Level>();
-        Logger.getLogger(DragAndDropService.class.getName()).addHandler(
-                new StreamHandler() {
+        Logger.getLogger(DragAndDropService.class.getName())
+                .addHandler(new StreamHandler() {
                     @Override
                     public synchronized void publish(LogRecord record) {
                         levels.add(record.getLevel());
@@ -74,8 +74,8 @@ public class DragAndDropServiceTest {
     @Test
     public void changeVariables_isTargetConnectorEnabledCalled() {
         final List<Level> levels = new ArrayList<Level>();
-        Logger.getLogger(DragAndDropService.class.getName()).addHandler(
-                new StreamHandler() {
+        Logger.getLogger(DragAndDropService.class.getName())
+                .addHandler(new StreamHandler() {
                     @Override
                     public void publish(LogRecord record) {
                         levels.add(record.getLevel());
@@ -96,8 +96,8 @@ public class DragAndDropServiceTest {
 
     }
 
-    private static class TestDropTarget extends AbstractComponent implements
-            com.vaadin.event.dd.DropTarget {
+    private static class TestDropTarget extends AbstractComponent
+            implements com.vaadin.event.dd.DropTarget {
         @Override
         public boolean isConnectorEnabled() {
             isConnectorEnabledCalled = true;

@@ -18,7 +18,8 @@ public class FormLayoutInsideTable extends AbstractTestUI {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public Object generateCell(Table source, Object itemId, Object columnId) {
+            public Object generateCell(Table source, Object itemId,
+                    Object columnId) {
                 FormLayout layout = new FormLayout();
                 layout.addComponent(new Label("Line 1 " + itemId));
                 layout.addComponent(new Label("Line 2 " + itemId));
@@ -30,4 +31,5 @@ public class FormLayoutInsideTable extends AbstractTestUI {
         table.setSizeFull();
         table.addItem("abc0");
         addComponent(table);
-    }}
+    }
+}

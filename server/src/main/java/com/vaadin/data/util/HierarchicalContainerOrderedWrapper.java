@@ -27,8 +27,8 @@ import com.vaadin.data.Container.Hierarchical;
  * @see ContainerOrderedWrapper
  */
 @SuppressWarnings({ "serial" })
-public class HierarchicalContainerOrderedWrapper extends
-        ContainerOrderedWrapper implements Hierarchical {
+public class HierarchicalContainerOrderedWrapper extends ContainerOrderedWrapper
+        implements Hierarchical {
 
     private Hierarchical hierarchical;
 

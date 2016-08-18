@@ -72,7 +72,8 @@ public class VaadinPortletService extends VaadinService {
         return portlet;
     }
 
-    private String getPortalProperty(VaadinRequest request, String propertyName) {
+    private String getPortalProperty(VaadinRequest request,
+            String propertyName) {
         return ((VaadinPortletRequest) request).getPortalProperty(propertyName);
     }
 
@@ -179,11 +180,10 @@ public class VaadinPortletService extends VaadinService {
                 return new File(url.getFile());
             } catch (final Exception e) {
                 // FIXME: Handle exception
-                getLogger()
-                        .log(Level.INFO,
-                                "Cannot access base directory, possible security issue "
-                                        + "with Application Server or Servlet Container",
-                                e);
+                getLogger().log(Level.INFO,
+                        "Cannot access base directory, possible security issue "
+                                + "with Application Server or Servlet Container",
+                        e);
             }
         }
         return null;
@@ -232,8 +232,8 @@ public class VaadinPortletService extends VaadinService {
      */
     @Deprecated
     protected RequestType getRequestType(VaadinRequest request) {
-        RequestType type = (RequestType) request.getAttribute(RequestType.class
-                .getName());
+        RequestType type = (RequestType) request
+                .getAttribute(RequestType.class.getName());
         if (type == null) {
             type = getPortlet().getRequestType((VaadinPortletRequest) request);
             request.setAttribute(RequestType.class.getName(), type);
@@ -303,7 +303,8 @@ public class VaadinPortletService extends VaadinService {
      * Always preserve UIs in portlets to make portlet actions work.
      */
     @Override
-    public boolean preserveUIOnRefresh(UIProvider provider, UICreateEvent event) {
+    public boolean preserveUIOnRefresh(UIProvider provider,
+            UICreateEvent event) {
         return true;
     }
 
@@ -313,9 +314,9 @@ public class VaadinPortletService extends VaadinService {
         VaadinPortletSession session = (VaadinPortletSession) uI.getSession();
         PortletContext portletContext = session.getPortletSession()
                 .getPortletContext();
-        return portletContext.getResourceAsStream("/"
-                + VaadinPortlet.THEME_DIR_PATH + '/' + themeName + "/"
-                + resource);
+        return portletContext
+                .getResourceAsStream("/" + VaadinPortlet.THEME_DIR_PATH + '/'
+                        + themeName + "/" + resource);
     }
 
     @Override

@@ -23,8 +23,9 @@ public class Ticket2038 extends LegacyApplication {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                w.showNotification("TextField is " + (tf.isValid() ? "" : "in")
-                        + "valid, with error: " + tf.getErrorMessage(),
+                w.showNotification(
+                        "TextField is " + (tf.isValid() ? "" : "in")
+                                + "valid, with error: " + tf.getErrorMessage(),
                         Notification.TYPE_WARNING_MESSAGE);
             }
         });

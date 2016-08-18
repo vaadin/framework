@@ -33,8 +33,8 @@ import com.vaadin.client.ui.AbstractConnector;
 
 import elemental.json.JsonObject;
 
-public class StateChangeEvent extends
-        AbstractServerConnectorEvent<StateChangeHandler> {
+public class StateChangeEvent
+        extends AbstractServerConnectorEvent<StateChangeHandler> {
     /**
      * Type of this event, used by the event bus.
      */
@@ -176,7 +176,8 @@ public class StateChangeEvent extends
     @Deprecated
     public FastStringSet getChangedPropertiesFastSet() {
         if (changedProperties == null) {
-            Profiler.enter("StateChangeEvent.getChangedPropertiesFastSet populate");
+            Profiler.enter(
+                    "StateChangeEvent.getChangedPropertiesFastSet populate");
             changedProperties = FastStringSet.create();
 
             addJsonFields(stateJson, changedProperties, "");
@@ -186,7 +187,8 @@ public class StateChangeEvent extends
                         changedProperties, "");
             }
 
-            Profiler.leave("StateChangeEvent.getChangedPropertiesFastSet populate");
+            Profiler.leave(
+                    "StateChangeEvent.getChangedPropertiesFastSet populate");
         }
         return changedProperties;
     }
@@ -282,8 +284,10 @@ public class StateChangeEvent extends
                 }
             }
         } catch (NoDataException e) {
-            throw new IllegalStateException("No property info for " + type
-                    + ". Did you remember to compile the right widgetset?", e);
+            throw new IllegalStateException(
+                    "No property info for " + type
+                            + ". Did you remember to compile the right widgetset?",
+                    e);
         }
     }
 

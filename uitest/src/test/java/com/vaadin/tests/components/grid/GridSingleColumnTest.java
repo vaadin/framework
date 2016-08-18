@@ -32,8 +32,8 @@ public class GridSingleColumnTest extends MultiBrowserTest {
         openTestURL();
 
         GridCellElement cell = $(GridElement.class).first().getHeaderCell(0, 0);
-        Assert.assertTrue("No header available", cell.getText()
-                .equalsIgnoreCase("header"));
+        Assert.assertTrue("No header available",
+                cell.getText().equalsIgnoreCase("header"));
     }
 
     @Test

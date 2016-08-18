@@ -65,8 +65,8 @@ public class TableScrollAfterAddRowTest extends MultiBrowserTest {
     }
 
     private void scrollUp() {
-        WebElement actualElement = getDriver().findElement(
-                By.className("v-table-body-wrapper"));
+        WebElement actualElement = getDriver()
+                .findElement(By.className("v-table-body-wrapper"));
         JavascriptExecutor js = new TestBenchCommandExecutor(getDriver(),
                 new ImageComparison(), new ReferenceNameGenerator());
         js.executeScript("arguments[0].scrollTop = " + 30, actualElement);

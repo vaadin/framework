@@ -38,8 +38,8 @@ public class TreeScrollingOnRightClickTest extends MultiBrowserTest {
         openTestURL();
 
         // Focus tree
-        WebElement tree = getDriver().findElement(
-                By.id(TreeScrollingOnRightClick.TREE_ID));
+        WebElement tree = getDriver()
+                .findElement(By.id(TreeScrollingOnRightClick.TREE_ID));
         tree.click();
 
         // Move selection down 50 items
@@ -63,7 +63,7 @@ public class TreeScrollingOnRightClickTest extends MultiBrowserTest {
     }
 
     private WebElement getTreeNode(String caption) {
-        return getDriver().findElement(
-                By.xpath("//span[text() = '" + caption + "']"));
+        return getDriver()
+                .findElement(By.xpath("//span[text() = '" + caption + "']"));
     }
 }

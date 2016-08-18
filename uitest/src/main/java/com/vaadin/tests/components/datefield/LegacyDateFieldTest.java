@@ -11,7 +11,8 @@ import com.vaadin.legacy.ui.LegacyDateField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
 
-public class LegacyDateFieldTest<T extends LegacyDateField> extends LegacyAbstractFieldTest<T> {
+public class LegacyDateFieldTest<T extends LegacyDateField>
+        extends LegacyAbstractFieldTest<T> {
 
     @SuppressWarnings("unchecked")
     @Override
@@ -31,7 +32,8 @@ public class LegacyDateFieldTest<T extends LegacyDateField> extends LegacyAbstra
     protected void createActions() {
         super.createActions();
         createResolutionSelectAction(CATEGORY_FEATURES);
-        createBooleanAction("Lenient", CATEGORY_FEATURES, false, lenientCommand);
+        createBooleanAction("Lenient", CATEGORY_FEATURES, false,
+                lenientCommand);
         createBooleanAction("Show week numbers", CATEGORY_FEATURES, false,
                 weekNumberCommand);
         createDateFormatSelectAction(CATEGORY_FEATURES);

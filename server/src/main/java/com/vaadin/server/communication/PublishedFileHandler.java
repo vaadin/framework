@@ -62,16 +62,16 @@ public class PublishedFileHandler implements RequestHandler {
 
         String pathInfo = request.getPathInfo();
         // + 2 to also remove beginning and ending slashes
-        String fileName = pathInfo
-                .substring(ApplicationConstants.PUBLISHED_FILE_PATH.length() + 2);
+        String fileName = pathInfo.substring(
+                ApplicationConstants.PUBLISHED_FILE_PATH.length() + 2);
 
         final String mimetype = response.getService().getMimeType(fileName);
 
         // Security check: avoid accidentally serving from the UI of the
         // classpath instead of relative to the context class
         if (fileName.startsWith("/")) {
-            getLogger().warning(
-                    "Published file request starting with / rejected: "
+            getLogger()
+                    .warning("Published file request starting with / rejected: "
                             + fileName);
             response.sendError(HttpServletResponse.SC_NOT_FOUND, fileName);
             return true;
@@ -100,12 +100,10 @@ public class PublishedFileHandler implements RequestHandler {
         // Resolve file relative to the location of the context class
         InputStream in = context.getResourceAsStream(fileName);
         if (in == null) {
-            getLogger().warning(
-                    fileName + " published by " + context.getName()
-                            + " not found. Verify that the file "
-                            + context.getPackage().getName().replace('.', '/')
-                            + '/' + fileName
-                            + " is available on the classpath.");
+            getLogger().warning(fileName + " published by " + context.getName()
+                    + " not found. Verify that the file "
+                    + context.getPackage().getName().replace('.', '/') + '/'
+                    + fileName + " is available on the classpath.");
             response.sendError(HttpServletResponse.SC_NOT_FOUND, fileName);
             return true;
         }

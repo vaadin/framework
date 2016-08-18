@@ -288,8 +288,8 @@ public class PopupView extends AbstractComponent implements HasComponents {
         super.writeDesign(design, designContext);
 
         Element popupContent = new Element(Tag.valueOf("popup-content"), "");
-        popupContent.appendChild(designContext.createElement(content
-                .getPopupComponent()));
+        popupContent.appendChild(
+                designContext.createElement(content.getPopupComponent()));
 
         String minimizedHTML = content.getMinimizedValueAsHTML();
         if (minimizedHTML != null && !minimizedHTML.isEmpty()) {
@@ -364,7 +364,8 @@ public class PopupView extends AbstractComponent implements HasComponents {
      * @see PopupVisibilityListener
      * @see #addListener(PopupVisibilityListener)
      */
-    public void removePopupVisibilityListener(PopupVisibilityListener listener) {
+    public void removePopupVisibilityListener(
+            PopupVisibilityListener listener) {
         removeListener(PopupVisibilityEvent.class, listener,
                 POPUP_VISIBILITY_METHOD);
     }

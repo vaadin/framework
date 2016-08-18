@@ -27,8 +27,8 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class TreeItemClickListeningTest extends MultiBrowserTest {
 
     private WebElement getTreeNode(String caption) {
-        return getDriver().findElement(
-                By.xpath("//span[text() = '" + caption + "']"));
+        return getDriver()
+                .findElement(By.xpath("//span[text() = '" + caption + "']"));
     }
 
     @Test
@@ -43,8 +43,7 @@ public class TreeItemClickListeningTest extends MultiBrowserTest {
     }
 
     private void assertEventFired(String text) {
-        assertThat(
-                String.format("Couldn't find text '%s' from the log.", text),
+        assertThat(String.format("Couldn't find text '%s' from the log.", text),
                 logContainsText(text));
     }
 

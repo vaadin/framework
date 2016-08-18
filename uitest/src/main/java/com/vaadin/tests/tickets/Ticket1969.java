@@ -43,8 +43,7 @@ public class Ticket1969 extends com.vaadin.server.LegacyApplication {
 
         Button b;
 
-        b = new Button(
-                "change introduction caption (should add * to tab name)",
+        b = new Button("change introduction caption (should add * to tab name)",
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {

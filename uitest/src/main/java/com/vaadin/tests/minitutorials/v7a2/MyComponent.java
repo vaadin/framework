@@ -32,8 +32,8 @@ public class MyComponent extends AbstractComponent {
 
             // nag every 5:th click
             if (clickCount % 5 == 0) {
-                getRpcProxy(MyComponentClientRpc.class).alert(
-                        "Ok, that's enough!");
+                getRpcProxy(MyComponentClientRpc.class)
+                        .alert("Ok, that's enough!");
             }
 
             setText("You have clicked " + clickCount + " times");

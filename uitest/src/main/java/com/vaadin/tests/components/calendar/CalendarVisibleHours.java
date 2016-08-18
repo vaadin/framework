@@ -52,32 +52,35 @@ public class CalendarVisibleHours extends AbstractTestUI {
 
         try {
 
-            BasicEvent event = new BasicEvent("EVENT NAME 1",
-                    "EVENT TOOLTIP 1",
+            BasicEvent event = new BasicEvent("EVENT NAME 1", "EVENT TOOLTIP 1",
                     new SimpleDateFormat("yyyy-MM-dd HH:mm")
-                            .parse("2013-09-05 15:30"), new SimpleDateFormat(
-                            "yyyy-MM-dd HH:mm").parse("2013-09-07 22:20"));
+                            .parse("2013-09-05 15:30"),
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm")
+                            .parse("2013-09-07 22:20"));
             event.setStyleName("color1");
             calendar.addEvent(event);
 
             event = new BasicEvent("EVENT NAME 2", "EVENT TOOLTIP 2",
                     new SimpleDateFormat("yyyy-MM-dd HH:mm")
-                            .parse("2013-09-05 12:10"), new SimpleDateFormat(
-                            "yyyy-MM-dd HH:mm").parse("2013-09-05 13:20"));
+                            .parse("2013-09-05 12:10"),
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm")
+                            .parse("2013-09-05 13:20"));
             event.setStyleName("color2");
             calendar.addEvent(event);
 
             event = new BasicEvent("EVENT NAME 3", "EVENT TOOLTIP 3",
                     new SimpleDateFormat("yyyy-MM-dd HH:mm")
-                            .parse("2013-09-01 11:30"), new SimpleDateFormat(
-                            "yyyy-MM-dd HH:mm").parse("2013-09-29 15:20"));
+                            .parse("2013-09-01 11:30"),
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm")
+                            .parse("2013-09-29 15:20"));
             event.setStyleName("color3");
             calendar.addEvent(event);
 
             event = new BasicEvent("EVENT NAME 4", "EVENT TOOLTIP 4",
                     new SimpleDateFormat("yyyy-MM-dd HH:mm")
-                            .parse("2013-09-01 11:30"), new SimpleDateFormat(
-                            "yyyy-MM-dd HH:mm").parse("2013-09-01 15:20"));
+                            .parse("2013-09-01 11:30"),
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm")
+                            .parse("2013-09-01 15:20"));
             event.setStyleName("color4");
             event.setAllDay(true);
             calendar.addEvent(event);
@@ -86,10 +89,10 @@ public class CalendarVisibleHours extends AbstractTestUI {
         }
 
         try {
-            calendar.setStartDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2013-09-01"));
-            calendar.setEndDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2013-09-30"));
+            calendar.setStartDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2013-09-01"));
+            calendar.setEndDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2013-09-30"));
         } catch (ParseException e) { // Nothing to do
 
         }

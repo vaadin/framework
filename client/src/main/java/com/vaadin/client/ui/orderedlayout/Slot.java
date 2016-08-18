@@ -410,8 +410,8 @@ public class Slot extends SimplePanel {
         if (caption == null) {
             return;
         }
-        captionWrap.removeClassName("v-caption-on-"
-                + this.captionPosition.name().toLowerCase());
+        captionWrap.removeClassName(
+                "v-caption-on-" + this.captionPosition.name().toLowerCase());
 
         this.captionPosition = captionPosition;
         if (captionPosition == CaptionPosition.BOTTOM
@@ -421,8 +421,8 @@ public class Slot extends SimplePanel {
             captionWrap.insertFirst(caption);
         }
 
-        captionWrap.addClassName("v-caption-on-"
-                + captionPosition.name().toLowerCase());
+        captionWrap.addClassName(
+                "v-caption-on-" + captionPosition.name().toLowerCase());
     }
 
     /**
@@ -489,7 +489,8 @@ public class Slot extends SimplePanel {
      *            Is the component enabled
      */
     public void setCaption(String captionText, Icon icon, List<String> styles,
-            String error, boolean showError, boolean required, boolean enabled) {
+            String error, boolean showError, boolean required,
+            boolean enabled) {
         setCaption(captionText, icon, styles, error, showError, required,
                 enabled, false);
     }
@@ -540,8 +541,8 @@ public class Slot extends SimplePanel {
 
                 // Made changes to DOM. Focus can be lost if it was in the
                 // widget.
-                focusLost = (focusedElement == null ? false : widget
-                        .getElement().isOrHasChild(focusedElement));
+                focusLost = (focusedElement == null ? false
+                        : widget.getElement().isOrHasChild(focusedElement));
             }
         } else if (caption != null) {
             orphan(widget);
@@ -552,8 +553,8 @@ public class Slot extends SimplePanel {
             captionWrap = null;
 
             // Made changes to DOM. Focus can be lost if it was in the widget.
-            focusLost = (focusedElement == null ? false : widget.getElement()
-                    .isOrHasChild(focusedElement));
+            focusLost = (focusedElement == null ? false
+                    : widget.getElement().isOrHasChild(focusedElement));
         }
 
         // Caption text
@@ -663,8 +664,8 @@ public class Slot extends SimplePanel {
                             // even if it does it will be stopped once something
                             // is done with the browser.
                             schedule(25);
-                        } else if (WidgetUtil.getFocusedElement().equals(
-                                Document.get().getBody())) {
+                        } else if (WidgetUtil.getFocusedElement()
+                                .equals(Document.get().getBody())) {
                             // Focus found it's way to BodyElement. Now it can
                             // be restored
                             focusedElement.focus();

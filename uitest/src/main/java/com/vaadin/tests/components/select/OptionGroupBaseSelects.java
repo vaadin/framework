@@ -10,7 +10,8 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TwinColSelect;
 
-public class OptionGroupBaseSelects extends ComponentTestCase<HorizontalLayout> {
+public class OptionGroupBaseSelects
+        extends ComponentTestCase<HorizontalLayout> {
 
     private HorizontalLayout layout;
 
@@ -50,31 +51,32 @@ public class OptionGroupBaseSelects extends ComponentTestCase<HorizontalLayout> 
 
         layout = new HorizontalLayout();
         layout.setSpacing(true);
+        layout.addComponent(
+                createSelect(new ListSelect("List Select, enabled"), true));
+        layout.addComponent(
+                createSelect(new ListSelect("List Select, disabled"), false));
+
+        layout.addComponent(
+                createSelect(new NativeSelect("Native Select, enabled"), true));
         layout.addComponent(createSelect(
-                new ListSelect("List Select, enabled"), true));
+                new NativeSelect("Native Select, disabled"), false));
+
+        layout.addComponent(
+                createSelect(new OptionGroup("Option Group, enabled"), true));
+        layout.addComponent(
+                createSelect(new OptionGroup("Option Group, disabled"), false));
+
         layout.addComponent(createSelect(
-                new ListSelect("List Select, disabled"), false));
-
-        layout.addComponent(createSelect(new NativeSelect(
-                "Native Select, enabled"), true));
-        layout.addComponent(createSelect(new NativeSelect(
-                "Native Select, disabled"), false));
-
-        layout.addComponent(createSelect(new OptionGroup(
-                "Option Group, enabled"), true));
-        layout.addComponent(createSelect(new OptionGroup(
-                "Option Group, disabled"), false));
-
-        layout.addComponent(createSelect(new TwinColSelect(
-                "Twin Column Select, enabled"), true));
-        layout.addComponent(createSelect(new TwinColSelect(
-                "Twin Column Select, disabled"), false));
+                new TwinColSelect("Twin Column Select, enabled"), true));
+        layout.addComponent(createSelect(
+                new TwinColSelect("Twin Column Select, disabled"), false));
 
         addTestComponent(layout);
 
     }
 
-    private AbstractSelect createSelect(AbstractSelect select, boolean enabled) {
+    private AbstractSelect createSelect(AbstractSelect select,
+            boolean enabled) {
         select.addContainerProperty(CAPTION, String.class, null);
         for (int i = 0; i < 10; i++) {
             select.addItem("" + i).getItemProperty(CAPTION)

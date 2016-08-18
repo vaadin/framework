@@ -24,11 +24,10 @@ public class ComboBoxPopupWhenBodyScrolls extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
+        getPage().getStyles()
+                .add("body.v-generated-body { overflow: auto;height:auto;}");
         getPage().getStyles().add(
-                "body.v-generated-body { overflow: auto;height:auto;}");
-        getPage()
-                .getStyles()
-                .add("body.v-generated-body .v-ui.v-scrollable{ overflow: visible;height:auto !important;}");
+                "body.v-generated-body .v-ui.v-scrollable{ overflow: visible;height:auto !important;}");
         ComboBox cb = new ComboBox();
         for (int i = 0; i < 10; i++) {
             cb.addItem("Item " + i);
@@ -43,9 +42,7 @@ public class ComboBoxPopupWhenBodyScrolls extends AbstractTestUI {
         addComponent(spacer);
         // Chrome requires document.scrollTop (<body>)
         // Firefox + IE wants document.documentElement.scrollTop (<html>)
-        getPage()
-                .getJavaScript()
-                .execute(
-                        "document.body.scrollTop=1800;document.documentElement.scrollTop=1800;");
+        getPage().getJavaScript().execute(
+                "document.body.scrollTop=1800;document.documentElement.scrollTop=1800;");
     }
 }

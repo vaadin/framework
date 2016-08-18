@@ -50,8 +50,7 @@ public class NavigatorViewBlocksBackButtonActionTest extends MultiBrowserTest {
             waitForElementPresent(By
                     .id(NavigatorViewBlocksBackButtonAction.LABEL_MAINVIEW_ID));
             String currentUrl = driver.getCurrentUrl();
-            assertEquals(
-                    "Current URL should be equal to initial main view URL",
+            assertEquals("Current URL should be equal to initial main view URL",
                     initialUrl, currentUrl);
         }
     }
@@ -74,12 +73,11 @@ public class NavigatorViewBlocksBackButtonActionTest extends MultiBrowserTest {
         waitForElementPresent(By
                 .id(NavigatorViewBlocksBackButtonAction.LABEL_PROMPTEDVIEW_ID));
         String currentUrl = driver.getCurrentUrl();
-        assertEquals(
-                "Current URL should be equal to initial prompted view URL",
+        assertEquals("Current URL should be equal to initial prompted view URL",
                 initialPromptedUrl, currentUrl);
 
-        WebElement cancelButton = driver.findElement(By
-                .className("v-window-closebox"));
+        WebElement cancelButton = driver
+                .findElement(By.className("v-window-closebox"));
 
         // click cancel button
         cancelButton.click();
@@ -88,8 +86,7 @@ public class NavigatorViewBlocksBackButtonActionTest extends MultiBrowserTest {
         waitForElementPresent(By
                 .id(NavigatorViewBlocksBackButtonAction.LABEL_PROMPTEDVIEW_ID));
         currentUrl = driver.getCurrentUrl();
-        assertEquals(
-                "Current URL should be equal to initial prompted view URL",
+        assertEquals("Current URL should be equal to initial prompted view URL",
                 initialPromptedUrl, currentUrl);
     }
 }

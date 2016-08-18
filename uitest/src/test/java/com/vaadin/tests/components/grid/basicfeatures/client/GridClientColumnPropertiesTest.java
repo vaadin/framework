@@ -30,7 +30,8 @@ import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget;
 
-public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest {
+public class GridClientColumnPropertiesTest
+        extends GridBasicClientFeaturesTest {
 
     @Test
     public void initialColumnWidths() {
@@ -72,7 +73,8 @@ public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest 
         assertFalse(cellIsFrozen(0, 0));
         assertFalse(cellIsFrozen(0, 1));
 
-        selectMenuPath("Component", "State", "Frozen column count", "1 columns");
+        selectMenuPath("Component", "State", "Frozen column count",
+                "1 columns");
 
         assertTrue(cellIsFrozen(1, 0));
         assertFalse(cellIsFrozen(1, 1));
@@ -82,7 +84,8 @@ public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest 
         assertTrue(cellIsFrozen(1, 1));
         assertFalse(cellIsFrozen(1, 2));
 
-        selectMenuPath("Component", "State", "Frozen column count", "0 columns");
+        selectMenuPath("Component", "State", "Frozen column count",
+                "0 columns");
 
         assertTrue(cellIsFrozen(1, 0));
         assertFalse(cellIsFrozen(1, 1));
@@ -97,7 +100,8 @@ public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest 
     public void testFrozenColumns_columnsReordered_frozenColumnsKept() {
         openTestURL();
 
-        selectMenuPath("Component", "State", "Frozen column count", "2 columns");
+        selectMenuPath("Component", "State", "Frozen column count",
+                "2 columns");
 
         assertTrue(cellIsFrozen(1, 0));
         assertTrue(cellIsFrozen(1, 1));
@@ -136,11 +140,11 @@ public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest 
         assertFalse("Text in broken cell should have old value",
                 "(0, 0)".equals(gridElement.getCell(0, 0).getText()));
 
-        assertEquals("Neighbour cell should be updated", "(0, 1)", gridElement
-                .getCell(0, 1).getText());
+        assertEquals("Neighbour cell should be updated", "(0, 1)",
+                gridElement.getCell(0, 1).getText());
 
-        assertEquals("Neighbour cell should be updated", "(1, 0)", gridElement
-                .getCell(1, 0).getText());
+        assertEquals("Neighbour cell should be updated", "(1, 0)",
+                gridElement.getCell(1, 0).getText());
     }
 
     @Test
@@ -166,7 +170,8 @@ public class GridClientColumnPropertiesTest extends GridBasicClientFeaturesTest 
             // Avoid issues with inaccuracies regarding subpixels.
             assertEquals(
                     "Column widths don't match after reset, index after flip "
-                            + i, columnWidths.get(i),
+                            + i,
+                    columnWidths.get(i),
                     headerCells.get(size - 1 - i).getSize().getWidth(), 1.0d);
         }
 

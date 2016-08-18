@@ -304,7 +304,8 @@ public interface Property<T> extends Serializable {
          * @param listener
          *            the new Listener to be registered
          */
-        public void addValueChangeListener(Property.ValueChangeListener listener);
+        public void addValueChangeListener(
+                Property.ValueChangeListener listener);
 
         /**
          * @deprecated As of 7.0, replaced by

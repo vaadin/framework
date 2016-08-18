@@ -40,8 +40,9 @@ public class TableWithPolling extends AbstractTestUI {
         table.addContainerProperty("Last Name", String.class, null);
         table.addContainerProperty("Year", Integer.class, null);
 
-        table.addItem(new Object[] { "Nicolaus", "Copernicus",
-                new Integer(1473) }, new Integer(1));
+        table.addItem(
+                new Object[] { "Nicolaus", "Copernicus", new Integer(1473) },
+                new Integer(1));
         table.addItem(new Object[] { "Tycho", "Brahe", new Integer(1546) },
                 new Integer(2));
         table.addItem(new Object[] { "Giordano", "Bruno", new Integer(1548) },

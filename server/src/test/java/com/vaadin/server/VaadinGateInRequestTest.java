@@ -20,8 +20,8 @@ import static org.mockito.Mockito.spy;
 
 import com.vaadin.server.VaadinPortlet.VaadinGateInRequest;
 
-public class VaadinGateInRequestTest extends
-        VaadinHttpAndPortletRequestTestBase<VaadinGateInRequest> {
+public class VaadinGateInRequestTest
+        extends VaadinHttpAndPortletRequestTestBase<VaadinGateInRequest> {
 
     @Override
     protected VaadinGateInRequest createSut() {

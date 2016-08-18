@@ -21,7 +21,8 @@ public class FormWithNestedProperties extends AbstractBeanFieldGroupTest {
     private LegacyTextField age = new LegacyTextField("Age");
 
     @PropertyId("address.streetAddress")
-    private LegacyTextField streetAddress = new LegacyTextField("Street address");
+    private LegacyTextField streetAddress = new LegacyTextField(
+            "Street address");
     private NativeSelect country;
 
     private CheckBox deceased = new CheckBox("Deceased");
@@ -45,10 +46,9 @@ public class FormWithNestedProperties extends AbstractBeanFieldGroupTest {
         addComponent(getDiscardButton());
         addComponent(getShowBeanButton());
 
-        getFieldBinder().setItemDataSource(
-                new Person("First", "Last", "Email", 52, Sex.FEMALE,
-                        new Address("street address", 01234, "City",
-                                Country.FINLAND)));
+        getFieldBinder().setItemDataSource(new Person("First", "Last", "Email",
+                52, Sex.FEMALE,
+                new Address("street address", 01234, "City", Country.FINLAND)));
 
     }
 

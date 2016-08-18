@@ -15,14 +15,15 @@ public class MarginsInLabels extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         AbstractLayout layout = new VerticalLayout();
-        layout.addComponent(new Label("<h1>Vertical layout</h1>",
-                ContentMode.HTML));
+        layout.addComponent(
+                new Label("<h1>Vertical layout</h1>", ContentMode.HTML));
         layout.addComponent(new Label("Next row"));
         addComponent(layout);
 
         layout = new GridLayout(1, 2);
         layout.setWidth("100%");
-        layout.addComponent(new Label("<h1>Grid layout</h1>", ContentMode.HTML));
+        layout.addComponent(
+                new Label("<h1>Grid layout</h1>", ContentMode.HTML));
         layout.addComponent(new Label("Next row"));
         addComponent(layout);
 

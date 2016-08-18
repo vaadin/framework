@@ -38,9 +38,8 @@ public class DefaultErrorHandler implements ErrorHandler {
         Throwable t = event.getThrowable();
         if (t instanceof SocketException) {
             // Most likely client browser closed socket
-            getLogger().info(
-                    "SocketException in CommunicationManager."
-                            + " Most likely client (browser) closed socket.");
+            getLogger().info("SocketException in CommunicationManager."
+                    + " Most likely client (browser) closed socket.");
             return;
         }
 
@@ -110,8 +109,8 @@ public class DefaultErrorHandler implements ErrorHandler {
     public static AbstractComponent findAbstractComponent(
             com.vaadin.server.ErrorEvent event) {
         if (event instanceof ConnectorErrorEvent) {
-            Component c = findComponent(((ConnectorErrorEvent) event)
-                    .getConnector());
+            Component c = findComponent(
+                    ((ConnectorErrorEvent) event).getConnector());
             if (c instanceof AbstractComponent) {
                 return (AbstractComponent) c;
             }

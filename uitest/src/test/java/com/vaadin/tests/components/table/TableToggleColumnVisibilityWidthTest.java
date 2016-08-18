@@ -36,7 +36,7 @@ public class TableToggleColumnVisibilityWidthTest extends MultiBrowserTest {
 
         int secondColumnWidthInitial = findElements(
                 By.className("v-table-header-cell")).get(1).getSize()
-                .getWidth();
+                        .getWidth();
         ButtonElement toggleButton = $(ButtonElement.class).id("toggler");
 
         toggleButton.click();
@@ -48,7 +48,7 @@ public class TableToggleColumnVisibilityWidthTest extends MultiBrowserTest {
                 findElements(By.className("v-table-header-cell")).size(), 2);
         int secondColumnWidthRestored = findElements(
                 By.className("v-table-header-cell")).get(1).getSize()
-                .getWidth();
+                        .getWidth();
         Assert.assertEquals(
                 "Column width should be the same as it was before hiding",
                 secondColumnWidthInitial, secondColumnWidthRestored);

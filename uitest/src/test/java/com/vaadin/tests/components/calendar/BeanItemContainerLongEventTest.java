@@ -40,8 +40,8 @@ public class BeanItemContainerLongEventTest extends MultiBrowserTest {
     @Test
     public void testEventDisplayedInWeekView() {
         openTestURL();
-        WebElement target = driver.findElements(
-                By.className("v-calendar-week-number")).get(1);
+        WebElement target = driver
+                .findElements(By.className("v-calendar-week-number")).get(1);
         target.click();
         target = driver.findElement(By.className("v-calendar-event"));
         Assert.assertEquals("Wrong event name", "Long event", target.getText());
@@ -50,8 +50,8 @@ public class BeanItemContainerLongEventTest extends MultiBrowserTest {
     @Test
     public void testEventDisplayedInDayView() {
         openTestURL();
-        WebElement target = driver.findElements(
-                By.className("v-calendar-day-number")).get(5);
+        WebElement target = driver
+                .findElements(By.className("v-calendar-day-number")).get(5);
         target.click();
         target = driver.findElement(By.className("v-calendar-event"));
         Assert.assertEquals("Wrong event name", "Long event", target.getText());

@@ -68,8 +68,8 @@ public class DesignReadInConstructorTest {
                     actual.attr(attributeKey));
         }
 
-        Assert.assertEquals(expected.children().size(), actual.children()
-                .size());
+        Assert.assertEquals(expected.children().size(),
+                actual.children().size());
         for (int i = 0; i < expected.children().size(); i++) {
             assertJsoupTreeEquals(expected.child(i), actual.child(i));
         }

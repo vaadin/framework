@@ -50,19 +50,19 @@ public class GridDefaultTextRendererTest extends MultiBrowserTest {
 
     @Test
     public void testNullIsRenderedAsEmptyStringByDefaultTextRenderer() {
-        assertTrue("First cell should've been empty", grid.getCell(0, 0)
-                .getText().isEmpty());
+        assertTrue("First cell should've been empty",
+                grid.getCell(0, 0).getText().isEmpty());
     }
 
     @Test
     public void testStringIsRenderedAsStringByDefaultTextRenderer() {
-        assertEquals("Second cell should've been populated ", "string", grid
-                .getCell(1, 0).getText());
+        assertEquals("Second cell should've been populated ", "string",
+                grid.getCell(1, 0).getText());
     }
 
     @Test
     public void testWarningShouldNotBeInDebugLog() {
-        assertFalse("Warning visible with string content.",
-                isElementPresent(By.xpath("//span[contains(.,'attached:#1')]")));
+        assertFalse("Warning visible with string content.", isElementPresent(
+                By.xpath("//span[contains(.,'attached:#1')]")));
     }
 }

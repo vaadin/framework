@@ -95,10 +95,11 @@ public class Like implements Filter {
         final Like o = (Like) obj;
 
         // Checks the properties one by one
-        boolean propertyIdEqual = (null != getPropertyId()) ? getPropertyId()
-                .equals(o.getPropertyId()) : null == o.getPropertyId();
-        boolean valueEqual = (null != getValue()) ? getValue().equals(
-                o.getValue()) : null == o.getValue();
+        boolean propertyIdEqual = (null != getPropertyId())
+                ? getPropertyId().equals(o.getPropertyId())
+                : null == o.getPropertyId();
+        boolean valueEqual = (null != getValue())
+                ? getValue().equals(o.getValue()) : null == o.getValue();
         return propertyIdEqual && valueEqual;
     }
 }

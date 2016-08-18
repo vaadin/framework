@@ -29,16 +29,16 @@ public class SortableHeaderStyles extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        getPage().getStyles().add(
-                ".v-table-header-sortable { font-weight: bold;}");
+        getPage().getStyles()
+                .add(".v-table-header-sortable { font-weight: bold;}");
 
         PersonContainer container = PersonContainer.createWithTestData();
 
         Collection<?> sortableContainerPropertyIds = container
                 .getSortableContainerPropertyIds();
 
-        final OptionGroup sortableSelector = new OptionGroup(
-                "Sortable columns", sortableContainerPropertyIds);
+        final OptionGroup sortableSelector = new OptionGroup("Sortable columns",
+                sortableContainerPropertyIds);
         sortableSelector.setMultiSelect(true);
         sortableSelector.setValue(sortableContainerPropertyIds);
 

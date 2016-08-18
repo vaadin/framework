@@ -73,18 +73,19 @@ public class TabSheetErrorTooltipTest extends MultiBrowserTest {
     }
 
     private WebElement getTab(int index) {
-        return vaadinElement("/VTabsheet[0]/domChild[0]/domChild[0]/domChild[0]/domChild[0]/domChild["
-                + index + "]/domChild[0]");
+        return vaadinElement(
+                "/VTabsheet[0]/domChild[0]/domChild[0]/domChild[0]/domChild[0]/domChild["
+                        + index + "]/domChild[0]");
     }
 
     private WebElement getCurrentTooltip() {
-        return getDriver().findElement(
-                By.xpath("//div[@class='v-tooltip-text']"));
+        return getDriver()
+                .findElement(By.xpath("//div[@class='v-tooltip-text']"));
     }
 
     private WebElement getCurrentErrorMessage() {
-        return getDriver().findElement(
-                By.xpath("//div[@class='v-errormessage']"));
+        return getDriver()
+                .findElement(By.xpath("//div[@class='v-errormessage']"));
     }
 
     private void assertTooltip(String tooltip) {

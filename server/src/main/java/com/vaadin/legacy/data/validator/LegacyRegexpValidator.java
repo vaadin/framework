@@ -27,8 +27,8 @@ import java.util.regex.Pattern;
  * {@link java.util.regex.Pattern#sum}
  * </p>
  * <p>
- * See {@link com.vaadin.legacy.data.validator.LegacyAbstractStringValidator} for more
- * information.
+ * See {@link com.vaadin.legacy.data.validator.LegacyAbstractStringValidator}
+ * for more information.
  * </p>
  * <p>
  * An empty string or a null is always accepted - use the required flag on
@@ -71,7 +71,8 @@ public class LegacyRegexpValidator extends LegacyAbstractStringValidator {
      * @param errorMessage
      *            the message to display in case the value does not validate.
      */
-    public LegacyRegexpValidator(String regexp, boolean complete, String errorMessage) {
+    public LegacyRegexpValidator(String regexp, boolean complete,
+            String errorMessage) {
         super(errorMessage);
         pattern = Pattern.compile(regexp);
         this.complete = complete;

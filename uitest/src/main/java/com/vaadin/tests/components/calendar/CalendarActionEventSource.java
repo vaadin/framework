@@ -49,8 +49,9 @@ public class CalendarActionEventSource extends AbstractTestUI {
 
                 CalendarEvent event = null;
                 try {
-                    event = new BasicEvent("NAME", null, new SimpleDateFormat(
-                            "yyyy-MM-dd hh:mm").parse("2013-01-01 07:00"),
+                    event = new BasicEvent("NAME", null,
+                            new SimpleDateFormat("yyyy-MM-dd hh:mm")
+                                    .parse("2013-01-01 07:00"),
                             new SimpleDateFormat("yyyy-MM-dd hh:mm")
                                     .parse("2013-01-01 11:00"));
                 } catch (ParseException e) {
@@ -63,10 +64,10 @@ public class CalendarActionEventSource extends AbstractTestUI {
 
         });
         try {
-            calendar.setStartDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2013-01-01"));
-            calendar.setEndDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2013-01-31"));
+            calendar.setStartDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2013-01-01"));
+            calendar.setEndDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2013-01-31"));
         } catch (ParseException e) {
             // Nothing to do
         }
@@ -79,7 +80,8 @@ public class CalendarActionEventSource extends AbstractTestUI {
         setEnabled(true);
         calendar.addActionHandler(new Handler() {
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 Label label1 = new Label(calendar.toString());
                 label1.setId("calendarlabel");
                 addComponent(label1);

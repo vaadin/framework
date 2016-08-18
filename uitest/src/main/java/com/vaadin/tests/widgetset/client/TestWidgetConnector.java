@@ -33,8 +33,8 @@ import com.vaadin.tests.widgetset.server.TestWidgetComponent;
 
 @Connect(TestWidgetComponent.class)
 public class TestWidgetConnector extends AbstractComponentConnector {
-    public static class SubPartAwareSimplePanel extends SimplePanel implements
-            SubPartAware {
+    public static class SubPartAwareSimplePanel extends SimplePanel
+            implements SubPartAware {
         @Override
         public Element getSubPartElement(String subPart) {
             Widget target = getWidget();

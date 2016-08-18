@@ -151,8 +151,8 @@ public class DDEventHandleStrategy {
             DDManagerMediator mediator, NativePreviewEvent event) {
         VDragAndDropManager manager = mediator.getManager();
         if (manager.getDragElement() != null) {
-            manager.getDragElement().getStyle()
-                    .setProperty("display", originalImageDisplay);
+            manager.getDragElement().getStyle().setProperty("display",
+                    originalImageDisplay);
         }
     }
 
@@ -187,7 +187,8 @@ public class DDEventHandleStrategy {
             // ApplicationConnection
             // .getConsole()
             // .log(
-            // "IGNORING proxy image event, fired because of hack or not significant");
+            // "IGNORING proxy image event, fired because of hack or not
+            // significant");
             return true;
         case Event.ONMOUSEMOVE:
         case Event.ONTOUCHMOVE:
@@ -335,8 +336,8 @@ public class DDEventHandleStrategy {
     protected void handleMouseOut(Element target, NativePreviewEvent event,
             DDManagerMediator mediator) {
         VDragAndDropManager manager = mediator.getManager();
-        Element relatedTarget = Element.as(event.getNativeEvent()
-                .getRelatedEventTarget());
+        Element relatedTarget = Element
+                .as(event.getNativeEvent().getRelatedEventTarget());
         VDropHandler newDragHanler = findDragTarget(relatedTarget, mediator);
         if (manager.getDragElement() != null
                 && manager.getDragElement().isOrHasChild(relatedTarget)) {

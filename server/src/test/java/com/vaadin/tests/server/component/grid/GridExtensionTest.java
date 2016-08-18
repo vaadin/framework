@@ -35,7 +35,7 @@ public class GridExtensionTest {
     public void testCreateExtension() {
         Grid grid = new Grid();
         DummyGridExtension dummy = new DummyGridExtension(grid);
-        assertTrue("DummyGridExtension never made it to Grid", grid
-                .getExtensions().contains(dummy));
+        assertTrue("DummyGridExtension never made it to Grid",
+                grid.getExtensions().contains(dummy));
     }
 }

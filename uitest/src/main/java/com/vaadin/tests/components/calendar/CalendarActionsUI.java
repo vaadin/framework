@@ -58,7 +58,8 @@ public class CalendarActionsUI extends UI {
              * .Action, java.lang.Object, java.lang.Object)
              */
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 Date date = (Date) target;
                 if (action == NEW_EVENT) {
                     BasicEvent event = new BasicEvent("New event",
@@ -96,8 +97,8 @@ public class CalendarActionsUI extends UI {
 
         content.addComponent(calendar);
 
-        content.addComponent(new Button("Set week view",
-                new Button.ClickListener() {
+        content.addComponent(
+                new Button("Set week view", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         calendar.setEndDate(new Date(100, 1, 7));

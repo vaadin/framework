@@ -374,8 +374,8 @@ public final class Range implements Serializable {
      */
     public Range combineWith(Range other) throws IllegalArgumentException {
         if (getStart() > other.getEnd() || other.getStart() > getEnd()) {
-            throw new IllegalArgumentException("There is a gap between " + this
-                    + " and " + other);
+            throw new IllegalArgumentException(
+                    "There is a gap between " + this + " and " + other);
         }
 
         return Range.between(Math.min(getStart(), other.getStart()),

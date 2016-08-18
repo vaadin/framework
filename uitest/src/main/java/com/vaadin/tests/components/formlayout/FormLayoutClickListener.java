@@ -45,12 +45,10 @@ public class FormLayoutClickListener extends AbstractTestUIWithLog {
 
             @Override
             public void layoutClick(LayoutClickEvent event) {
-                log("Child component: "
-                        + (event.getChildComponent() == null ? null : event
-                                .getChildComponent().getId()));
-                log("Clicked component: "
-                        + (event.getClickedComponent() == null ? null : event
-                                .getClickedComponent().getId()));
+                log("Child component: " + (event.getChildComponent() == null
+                        ? null : event.getChildComponent().getId()));
+                log("Clicked component: " + (event.getClickedComponent() == null
+                        ? null : event.getClickedComponent().getId()));
                 log("Source component: " + event.getComponent().getId());
             }
         });

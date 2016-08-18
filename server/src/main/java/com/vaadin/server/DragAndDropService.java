@@ -67,17 +67,15 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
                 .get("component");
         if (sourceComponent != null && !sourceComponent.isConnectorEnabled()) {
             // source component not supposed to be enabled
-            getLogger().warning(
-                    "Client dropped from " + sourceComponent
-                            + " even though it's disabled");
+            getLogger().warning("Client dropped from " + sourceComponent
+                    + " even though it's disabled");
             return;
         }
 
         // Validate drop handler owner
         if (!(owner instanceof DropTarget)) {
-            getLogger()
-                    .severe("DropHandler owner " + owner
-                            + " must implement DropTarget");
+            getLogger().severe("DropHandler owner " + owner
+                    + " must implement DropTarget");
             return;
         }
         // owner cannot be null here
@@ -85,10 +83,8 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         DropTarget dropTarget = (DropTarget) owner;
 
         if (!dropTarget.isConnectorEnabled()) {
-            getLogger()
-                    .warning(
-                            "Client dropped on " + owner
-                                    + " even though it's disabled");
+            getLogger().warning("Client dropped on " + owner
+                    + " even though it's disabled");
             return;
         }
 
@@ -127,8 +123,10 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
          * operation based on the info passed from the client widgets (drag
          * source for Transferable, drop target for DragDropDetails).
          */
-        Transferable transferable = constructTransferable(dropTarget, variables);
-        TargetDetails dropData = constructDragDropDetails(dropTarget, variables);
+        Transferable transferable = constructTransferable(dropTarget,
+                variables);
+        TargetDetails dropData = constructDragDropDetails(dropTarget,
+                variables);
         DragAndDropEvent dropEvent = new DragAndDropEvent(transferable,
                 dropData);
         if (dropHandler.getAcceptCriterion().accept(dropEvent)) {
@@ -153,7 +151,8 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
          * operation based on the info passed from the client widgets (drag
          * source for Transferable, current target for DragDropDetails).
          */
-        Transferable transferable = constructTransferable(dropTarget, variables);
+        Transferable transferable = constructTransferable(dropTarget,
+                variables);
         TargetDetails dragDropDetails = constructDragDropDetails(dropTarget,
                 variables);
 

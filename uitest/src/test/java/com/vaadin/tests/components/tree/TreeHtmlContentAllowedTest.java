@@ -54,8 +54,8 @@ public class TreeHtmlContentAllowedTest extends SingleBrowserTest {
 
     private void assertTreeCaptionTexts(String... captions) {
         TreeElement tree = $(TreeElement.class).first();
-        List<WebElement> nodes = tree.findElements(By
-                .className("v-tree-node-caption"));
+        List<WebElement> nodes = tree
+                .findElements(By.className("v-tree-node-caption"));
 
         Assert.assertEquals(captions.length, nodes.size());
         for (int i = 0; i < captions.length; i++) {

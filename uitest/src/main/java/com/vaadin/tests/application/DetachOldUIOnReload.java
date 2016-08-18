@@ -51,8 +51,8 @@ public class DetachOldUIOnReload extends AbstractTestUIWithLog {
 
     private List<String> getSessionMessages(boolean storeIfNeeded) {
         @SuppressWarnings("unchecked")
-        List<String> messages = (List<String>) getSession().getAttribute(
-                PERSISTENT_MESSAGES_ATTRIBUTE);
+        List<String> messages = (List<String>) getSession()
+                .getAttribute(PERSISTENT_MESSAGES_ATTRIBUTE);
         if (messages == null) {
             messages = new ArrayList<String>();
             if (storeIfNeeded) {

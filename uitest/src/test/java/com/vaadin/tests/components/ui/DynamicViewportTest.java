@@ -28,10 +28,10 @@ public class DynamicViewportTest extends SingleBrowserTest {
     public void testGeneratedViewport() {
         openTestURL();
 
-        WebElement viewportElement = findElement(By
-                .cssSelector("meta[name=viewport]"));
+        WebElement viewportElement = findElement(
+                By.cssSelector("meta[name=viewport]"));
 
-        Assert.assertTrue(viewportElement.getAttribute("content").contains(
-                "PhantomJS"));
+        Assert.assertTrue(
+                viewportElement.getAttribute("content").contains("PhantomJS"));
     }
 }

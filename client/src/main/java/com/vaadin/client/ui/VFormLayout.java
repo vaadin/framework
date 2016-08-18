@@ -111,7 +111,8 @@ public class VFormLayout extends SimplePanel {
             if (caption.getOwner() != null) {
                 if (caption.getOwner() instanceof Focusable) {
                     ((Focusable) caption.getOwner()).focus();
-                } else if (caption.getOwner() instanceof com.google.gwt.user.client.ui.Focusable) {
+                } else if (caption
+                        .getOwner() instanceof com.google.gwt.user.client.ui.Focusable) {
                     ((com.google.gwt.user.client.ui.Focusable) caption
                             .getOwner()).setFocus(true);
                 }
@@ -124,8 +125,7 @@ public class VFormLayout extends SimplePanel {
                     margins.hasTop());
             setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
                     margins.hasRight());
-            setStyleName(margin,
-                    CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM,
+            setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM,
                     margins.hasBottom());
             setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT,
                     margins.hasLeft());
@@ -253,7 +253,8 @@ public class VFormLayout extends SimplePanel {
             setStyleName(styleName);
         }
 
-        public void updateCaption(AbstractComponentState state, boolean enabled) {
+        public void updateCaption(AbstractComponentState state,
+                boolean enabled) {
             // Update styles as they might have changed when the caption changed
             setStyles(getStylesFromState(state, enabled));
 
@@ -264,9 +265,8 @@ public class VFormLayout extends SimplePanel {
                 icon = null;
             }
             if (state.resources.containsKey(ComponentConstants.ICON_RESOURCE)) {
-                icon = owner.getConnection().getIcon(
-                        state.resources.get(ComponentConstants.ICON_RESOURCE)
-                                .getURL());
+                icon = owner.getConnection().getIcon(state.resources
+                        .get(ComponentConstants.ICON_RESOURCE).getURL());
                 DOM.insertChild(getElement(), icon.getElement(), 0);
 
                 isEmpty = false;
@@ -317,8 +317,8 @@ public class VFormLayout extends SimplePanel {
 
                     // Hide the required indicator from screen reader, as this
                     // information is set directly at the input field
-                    Roles.getTextboxRole().setAriaHiddenState(
-                            requiredFieldIndicator, true);
+                    Roles.getTextboxRole()
+                            .setAriaHiddenState(requiredFieldIndicator, true);
                 }
             } else {
                 if (requiredFieldIndicator != null) {
@@ -378,8 +378,8 @@ public class VFormLayout extends SimplePanel {
 
                     // Hide the error indicator from screen reader, as this
                     // information is set directly at the input field
-                    Roles.getFormRole().setAriaHiddenState(
-                            errorIndicatorElement, true);
+                    Roles.getFormRole()
+                            .setAriaHiddenState(errorIndicatorElement, true);
                 }
 
             } else if (errorIndicatorElement != null) {

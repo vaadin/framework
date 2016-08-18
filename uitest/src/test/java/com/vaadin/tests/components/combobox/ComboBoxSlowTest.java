@@ -60,15 +60,15 @@ public class ComboBoxSlowTest extends MultiBrowserTest {
         sleep(250);
         typeString("Item 12");
 
-        final WebElement popup = driver.findElement(By
-                .className("v-filterselect-suggestpopup"));
+        final WebElement popup = driver
+                .findElement(By.className("v-filterselect-suggestpopup"));
         List<WebElement> filteredItems = getFilteredItems(popup);
-        assertEquals("unexpected amount of suggestions found on first page",
-                10, filteredItems.size());
-        assertEquals("wrong filtering result", "Item 12", filteredItems.get(0)
-                .getText());
-        assertEquals("wrong filtering result", "Item 128", filteredItems.get(9)
-                .getText());
+        assertEquals("unexpected amount of suggestions found on first page", 10,
+                filteredItems.size());
+        assertEquals("wrong filtering result", "Item 12",
+                filteredItems.get(0).getText());
+        assertEquals("wrong filtering result", "Item 128",
+                filteredItems.get(9).getText());
 
         assertTrue(isPagingActive());
         goToNextPage();
@@ -89,20 +89,20 @@ public class ComboBoxSlowTest extends MultiBrowserTest {
         typeString("Item 100");
         assertFalse(isPagingActive());
 
-        WebElement popup = driver.findElement(By
-                .className("v-filterselect-suggestpopup"));
+        WebElement popup = driver
+                .findElement(By.className("v-filterselect-suggestpopup"));
         List<WebElement> filteredItems = getFilteredItems(popup);
         assertEquals("unexpected amount of suggestions found", 2,
                 filteredItems.size());
-        assertEquals("wrong filtering result", "Item 100", filteredItems.get(0)
-                .getText());
-        assertEquals("wrong filtering result", "Item 1000", filteredItems
-                .get(1).getText());
+        assertEquals("wrong filtering result", "Item 100",
+                filteredItems.get(0).getText());
+        assertEquals("wrong filtering result", "Item 1000",
+                filteredItems.get(1).getText());
     }
 
     private void clickComboBoxTextArea() {
-        WebElement cb = getDriver().findElement(
-                By.className("v-filterselect-input"));
+        WebElement cb = getDriver()
+                .findElement(By.className("v-filterselect-input"));
         cb.click();
     }
 
@@ -114,20 +114,20 @@ public class ComboBoxSlowTest extends MultiBrowserTest {
 
     private int getNumberOfSuggestions() {
 
-        List<WebElement> elements = getDriver().findElements(
-                By.className("gwt-MenuItem"));
+        List<WebElement> elements = getDriver()
+                .findElements(By.className("gwt-MenuItem"));
         return elements.size();
     }
 
     private boolean isPagingActive() {
-        List<WebElement> elements = getDriver().findElements(
-                By.className("v-filterselect-nextpage"));
+        List<WebElement> elements = getDriver()
+                .findElements(By.className("v-filterselect-nextpage"));
         return elements.size() == 1;
     }
 
     private void goToNextPage() {
-        WebElement nextPage = getDriver().findElement(
-                By.className("v-filterselect-nextpage"));
+        WebElement nextPage = getDriver()
+                .findElement(By.className("v-filterselect-nextpage"));
         nextPage.click();
     }
 

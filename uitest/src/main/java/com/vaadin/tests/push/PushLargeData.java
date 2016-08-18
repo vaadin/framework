@@ -88,7 +88,8 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
                         pushDuration);
                 executor.execute(r);
                 log.log("Starting push, size: " + pushSize + ", interval: "
-                        + pushInterval + "ms, duration: " + pushDuration + "ms");
+                        + pushInterval + "ms, duration: " + pushDuration
+                        + "ms");
             }
         });
         addComponent(b);

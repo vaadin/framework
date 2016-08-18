@@ -14,15 +14,9 @@ public class Ticket5952 extends LegacyApplication {
         setMainWindow(mainWindow);
 
         String mathml = "<math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'>"
-                + "<mrow>"
-                + "    <msup>"
-                + "      <mi>x</mi>"
-                + "      <mn>2</mn>"
-                + "    </msup>"
-                + "    <msup>"
-                + "      <mi>c</mi>"
-                + "      <mn>2</mn>"
-                + "    </msup>"
+                + "<mrow>" + "    <msup>" + "      <mi>x</mi>"
+                + "      <mn>2</mn>" + "    </msup>" + "    <msup>"
+                + "      <mi>c</mi>" + "      <mn>2</mn>" + "    </msup>"
                 + "  </mrow>" + "</math>";
         Label mathLabel = new Label(mathml, ContentMode.XML);
         mainWindow.addComponent(mathLabel);

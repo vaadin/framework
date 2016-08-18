@@ -35,7 +35,7 @@ public class HtmlRenderer implements Renderer<String> {
 
     @Override
     public void render(RendererCellReference cell, String htmlString) {
-        cell.getElement().setInnerSafeHtml(
-                SafeHtmlUtils.fromSafeConstant(htmlString));
+        cell.getElement()
+                .setInnerSafeHtml(SafeHtmlUtils.fromSafeConstant(htmlString));
     }
 }

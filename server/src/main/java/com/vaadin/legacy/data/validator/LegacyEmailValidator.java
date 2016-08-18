@@ -20,8 +20,8 @@ package com.vaadin.legacy.data.validator;
  * complete according to RFC 822 but handles the vast majority of valid e-mail
  * addresses correctly.
  * 
- * See {@link com.vaadin.legacy.data.validator.LegacyAbstractStringValidator} for more
- * information.
+ * See {@link com.vaadin.legacy.data.validator.LegacyAbstractStringValidator}
+ * for more information.
  * 
  * <p>
  * An empty string or a null is always accepted - use the required flag on
@@ -43,8 +43,7 @@ public class LegacyEmailValidator extends LegacyRegexpValidator {
      *            the message to display in case the value does not validate.
      */
     public LegacyEmailValidator(String errorMessage) {
-        super(
-                "^([a-zA-Z0-9_\\.\\-+])+@(([a-zA-Z0-9-])+\\.)+([a-zA-Z0-9]{2,4})+$",
+        super("^([a-zA-Z0-9_\\.\\-+])+@(([a-zA-Z0-9-])+\\.)+([a-zA-Z0-9]{2,4})+$",
                 true, errorMessage);
     }
 }

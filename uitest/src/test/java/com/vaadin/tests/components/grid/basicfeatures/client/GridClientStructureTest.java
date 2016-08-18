@@ -28,8 +28,8 @@ public class GridClientStructureTest extends GridBasicClientFeaturesTest {
         // it's easier to notice with valo
         openTestURL("theme=valo");
 
-        WebElement topDeco = getGridElement().findElement(
-                By.className("v-grid-header-deco"));
+        WebElement topDeco = getGridElement()
+                .findElement(By.className("v-grid-header-deco"));
         assertGreater(
                 "The header deco in Valo hasn't been recalculated after initial rendering",
                 topDeco.getSize().getHeight(), 20);

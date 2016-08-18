@@ -78,17 +78,17 @@ public abstract class AbstractMedia extends AbstractComponent {
     /**
      * Adds an alternative media file to the sources list. Which of the sources
      * is used is selected by the browser depending on which file formats it
-     * supports. See <a
-     * href="http://en.wikipedia.org/wiki/HTML5_video#Table">wikipedia</a> for a
-     * table of formats supported by different browsers.
+     * supports. See
+     * <a href="http://en.wikipedia.org/wiki/HTML5_video#Table">wikipedia</a>
+     * for a table of formats supported by different browsers.
      * 
      * @param source
      */
     public void addSource(Resource source) {
         if (source != null) {
             List<URLReference> sources = getState().sources;
-            sources.add(new ResourceReference(source, this, Integer
-                    .toString(sources.size())));
+            sources.add(new ResourceReference(source, this,
+                    Integer.toString(sources.size())));
             getState().sourceTypes.add(source.getMIMEType());
         }
     }
@@ -135,9 +135,9 @@ public abstract class AbstractMedia extends AbstractComponent {
 
     /**
      * Set multiple sources at once. Which of the sources is used is selected by
-     * the browser depending on which file formats it supports. See <a
-     * href="http://en.wikipedia.org/wiki/HTML5_video#Table">wikipedia</a> for a
-     * table of formats supported by different browsers.
+     * the browser depending on which file formats it supports. See
+     * <a href="http://en.wikipedia.org/wiki/HTML5_video#Table">wikipedia</a>
+     * for a table of formats supported by different browsers.
      * 
      * @param sources
      */

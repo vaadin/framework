@@ -5,7 +5,8 @@ import java.util.LinkedHashMap;
 import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
 import com.vaadin.ui.ProgressBar;
 
-public class ProgressBarGenericTest extends LegacyAbstractFieldTest<ProgressBar> {
+public class ProgressBarGenericTest
+        extends LegacyAbstractFieldTest<ProgressBar> {
 
     private Command<ProgressBar, Boolean> indeterminate = new Command<ProgressBar, Boolean>() {
 

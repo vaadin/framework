@@ -38,8 +38,8 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
 
         getSidebarOpenButton().click();
 
-        WebElement toggle = getSidebarPopup().findElement(
-                By.className("column-hiding-toggle"));
+        WebElement toggle = getSidebarPopup()
+                .findElement(By.className("column-hiding-toggle"));
 
         Assert.assertEquals("Column 0 should be togglable", "Header (0,0)",
                 toggle.getText());
@@ -64,8 +64,8 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
 
         sidebarItem.click();
 
-        Assert.assertEquals("Sidebar should be closed after clicking item 0",
-                0, countBySelector(".v-grid-sidebar-content"));
+        Assert.assertEquals("Sidebar should be closed after clicking item 0", 0,
+                countBySelector(".v-grid-sidebar-content"));
     }
 
     @Test
@@ -122,8 +122,8 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
     }
 
     private void assertSidebarMenuItems(String... items) {
-        List<WebElement> menuItems = getSidebarPopup().findElements(
-                By.cssSelector(".v-grid-sidebar-content td"));
+        List<WebElement> menuItems = getSidebarPopup()
+                .findElements(By.cssSelector(".v-grid-sidebar-content td"));
 
         Assert.assertEquals("Expected " + items.length + " menu items",
                 items.length, menuItems.size());

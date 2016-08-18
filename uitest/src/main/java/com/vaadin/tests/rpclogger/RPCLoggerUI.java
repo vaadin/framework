@@ -151,18 +151,11 @@ public class RPCLoggerUI extends AbstractTestUIWithLog implements ErrorHandler {
         for (int i = 0; i < lastActions.size(); i++) {
             Action action = lastActions.get(i);
             if (action.invocation instanceof ServerRpcMethodInvocation) {
-                msg += "\n"
-                        + (i + 1)
-                        + " "
-                        + formatAction(action.target,
-                                (ServerRpcMethodInvocation) action.invocation);
+                msg += "\n" + (i + 1) + " " + formatAction(action.target,
+                        (ServerRpcMethodInvocation) action.invocation);
             } else {
-                msg += "\n"
-                        + (i + 1)
-                        + " "
-                        + formatAction(
-                                action.target,
-                                (LegacyChangeVariablesInvocation) action.invocation);
+                msg += "\n" + (i + 1) + " " + formatAction(action.target,
+                        (LegacyChangeVariablesInvocation) action.invocation);
             }
         }
 

@@ -24,8 +24,8 @@ import com.vaadin.client.widget.grid.datasources.ListDataSource;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
 
-public class GridRendererChangeWidget extends
-        PureGWTTestApplication<Grid<String[]>> {
+public class GridRendererChangeWidget
+        extends PureGWTTestApplication<Grid<String[]>> {
 
     public class MyButtonRenderer extends ButtonRenderer {
 

@@ -31,7 +31,8 @@ public class TextFieldTest {
 
     @Test
     public void emptyAfterClearUsingPDS() {
-        LegacyTextField tf = new LegacyTextField(new ObjectProperty<String>("foo"));
+        LegacyTextField tf = new LegacyTextField(
+                new ObjectProperty<String>("foo"));
         Assert.assertFalse(tf.isEmpty());
         tf.clear();
         Assert.assertTrue(tf.isEmpty());

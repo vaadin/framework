@@ -38,8 +38,8 @@ public class ServletBootstrapHandler extends BootstrapHandler {
 
     @Override
     public String getThemeName(BootstrapContext context) {
-        String themeName = context.getRequest().getParameter(
-                VaadinServlet.URL_PARAMETER_THEME);
+        String themeName = context.getRequest()
+                .getParameter(VaadinServlet.URL_PARAMETER_THEME);
         if (themeName == null) {
             themeName = super.getThemeName(context);
         }

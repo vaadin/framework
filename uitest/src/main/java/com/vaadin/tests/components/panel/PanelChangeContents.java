@@ -25,8 +25,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
-public class PanelChangeContents extends AbstractTestUI implements
-        ClickListener {
+public class PanelChangeContents extends AbstractTestUI
+        implements ClickListener {
 
     VerticalLayout stats = new VerticalLayout();
     VerticalLayout companies = new VerticalLayout();

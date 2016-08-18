@@ -29,8 +29,8 @@ import com.vaadin.ui.CssLayout;
  * 
  * @since 7.0.0
  */
-public class ColorPickerPreview extends CssLayout implements ColorSelector,
-        ValueChangeListener {
+public class ColorPickerPreview extends CssLayout
+        implements ColorSelector, ValueChangeListener {
 
     private static final String STYLE_DARK_COLOR = "v-textfield-dark";
     private static final String STYLE_LIGHT_COLOR = "v-textfield-light";
@@ -98,7 +98,8 @@ public class ColorPickerPreview extends CssLayout implements ColorSelector,
         // Set the text color
         field.removeStyleName(STYLE_DARK_COLOR);
         field.removeStyleName(STYLE_LIGHT_COLOR);
-        if (this.color.getRed() + this.color.getGreen() + this.color.getBlue() < 3 * 128) {
+        if (this.color.getRed() + this.color.getGreen()
+                + this.color.getBlue() < 3 * 128) {
             field.addStyleName(STYLE_DARK_COLOR);
         } else {
             field.addStyleName(STYLE_LIGHT_COLOR);
@@ -147,7 +148,8 @@ public class ColorPickerPreview extends CssLayout implements ColorSelector,
                     int green = Integer.parseInt(colors[1]);
                     int blue = Integer.parseInt(colors[2]);
                     if (colors.length > 3) {
-                        int alpha = (int) (Double.parseDouble(colors[3]) * 255d);
+                        int alpha = (int) (Double.parseDouble(colors[3])
+                                * 255d);
                         color = new Color(red, green, blue, alpha);
                     } else {
                         color = new Color(red, green, blue);
@@ -159,14 +161,15 @@ public class ColorPickerPreview extends CssLayout implements ColorSelector,
                             value.length() - 1).split(",");
 
                     int hue = Integer.parseInt(colors[0]);
-                    int saturation = Integer.parseInt(colors[1]
-                            .replace("%", ""));
+                    int saturation = Integer
+                            .parseInt(colors[1].replace("%", ""));
                     int lightness = Integer
                             .parseInt(colors[2].replace("%", ""));
                     int rgb = Color.HSLtoRGB(hue, saturation, lightness);
 
                     if (colors.length > 3) {
-                        int alpha = (int) (Double.parseDouble(colors[3]) * 255d);
+                        int alpha = (int) (Double.parseDouble(colors[3])
+                                * 255d);
                         color = new Color(rgb);
                         color.setAlpha(alpha);
                     } else {

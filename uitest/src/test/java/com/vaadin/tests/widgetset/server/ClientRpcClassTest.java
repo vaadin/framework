@@ -28,8 +28,8 @@ public class ClientRpcClassTest extends MultiBrowserTest {
     public void pauseDisplayed() {
         openTestURL();
 
-        WebElement element = getDriver().findElement(
-                By.id(ClientRpcClass.TEST_COMPONENT_ID));
+        WebElement element = getDriver()
+                .findElement(By.id(ClientRpcClass.TEST_COMPONENT_ID));
         Assert.assertEquals("pause", element.getText());
     }
 }

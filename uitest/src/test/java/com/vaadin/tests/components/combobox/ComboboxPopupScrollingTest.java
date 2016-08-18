@@ -50,8 +50,8 @@ public class ComboboxPopupScrollingTest extends MultiBrowserTest {
             String caption = cb.getCaption();
             cb.openPopup();
             WebElement popup = cb.getSuggestionPopup();
-            WebElement scrollable = popup.findElement(By
-                    .className("v-filterselect-suggestmenu"));
+            WebElement scrollable = popup
+                    .findElement(By.className("v-filterselect-suggestmenu"));
             assertNoHorizontalScrollbar(scrollable, caption);
             assertNoVerticalScrollbar(scrollable, caption);
         }

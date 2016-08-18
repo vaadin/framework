@@ -19,8 +19,8 @@ import com.vaadin.legacy.ui.LegacyTextField;
  * 
  * See <a href="http://dev.vaadin.com/ticket/4394">Ticket 4394</a>.
  */
-public class TextFieldValueChangeTest extends
-        AbstractFieldValueChangeTestBase<String> {
+public class TextFieldValueChangeTest
+        extends AbstractFieldValueChangeTestBase<String> {
 
     @Before
     public void setUp() {

@@ -17,7 +17,8 @@ public class TableContextMenu extends TestBase {
 
         table.addActionHandler(new Action.Handler() {
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 Notification.show("Done that :-)");
             }
 

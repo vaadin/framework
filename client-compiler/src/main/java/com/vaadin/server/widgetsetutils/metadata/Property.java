@@ -103,20 +103,20 @@ public abstract class Property implements Comparable<Property> {
 
     @Override
     public int hashCode() {
-        return getClass().hashCode() * 31 ^ 2 + getBeanType().hashCode() * 31
-                + getName().hashCode();
+        return getClass().hashCode() * 31
+                ^ 2 + getBeanType().hashCode() * 31 + getName().hashCode();
     }
 
     @Override
     public int compareTo(Property o) {
         int comp = getName().compareTo(o.getName());
         if (comp == 0) {
-            comp = getBeanType().getQualifiedSourceName().compareTo(
-                    o.getBeanType().getQualifiedSourceName());
+            comp = getBeanType().getQualifiedSourceName()
+                    .compareTo(o.getBeanType().getQualifiedSourceName());
         }
         if (comp == 0) {
-            comp = getClass().getCanonicalName().compareTo(
-                    o.getClass().getCanonicalName());
+            comp = getClass().getCanonicalName()
+                    .compareTo(o.getClass().getCanonicalName());
         }
         return comp;
     }

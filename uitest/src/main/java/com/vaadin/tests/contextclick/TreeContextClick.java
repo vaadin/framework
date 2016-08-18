@@ -18,8 +18,8 @@ package com.vaadin.tests.contextclick;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.TreeContextClickEvent;
 
-public class TreeContextClick extends
-        AbstractContextClickUI<Tree, TreeContextClickEvent> {
+public class TreeContextClick
+        extends AbstractContextClickUI<Tree, TreeContextClickEvent> {
 
     @Override
     protected Tree createTestComponent() {

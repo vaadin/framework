@@ -55,9 +55,9 @@ public class LegacyDateToLongConverter implements LegacyConverter<Date, Long> {
     public Date convertToPresentation(Long value,
             Class<? extends Date> targetType, Locale locale) {
         if (targetType != getPresentationType()) {
-            throw new ConversionException("Converter only supports "
-                    + getPresentationType().getName() + " (targetType was "
-                    + targetType.getName() + ")");
+            throw new ConversionException(
+                    "Converter only supports " + getPresentationType().getName()
+                            + " (targetType was " + targetType.getName() + ")");
         }
         if (value == null) {
             return null;

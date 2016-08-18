@@ -66,16 +66,15 @@ public abstract class AbstractLayout extends AbstractComponentContainer
             boolean left = DesignAttributeHandler.readAttribute("margin-left",
                     design.attributes(), defMargin.hasLeft(), boolean.class);
 
-            boolean right = DesignAttributeHandler.readAttribute(
-                    "margin-right", design.attributes(), defMargin.hasRight(),
-                    boolean.class);
+            boolean right = DesignAttributeHandler.readAttribute("margin-right",
+                    design.attributes(), defMargin.hasRight(), boolean.class);
 
             boolean top = DesignAttributeHandler.readAttribute("margin-top",
                     design.attributes(), defMargin.hasTop(), boolean.class);
 
             boolean bottom = DesignAttributeHandler.readAttribute(
-                    "margin-bottom", design.attributes(),
-                    defMargin.hasBottom(), boolean.class);
+                    "margin-bottom", design.attributes(), defMargin.hasBottom(),
+                    boolean.class);
 
             return new MarginInfo(top, right, bottom, left);
         }
@@ -102,9 +101,8 @@ public abstract class AbstractLayout extends AbstractComponentContainer
     protected void writeMargin(Element design, MarginInfo margin,
             MarginInfo defMargin, DesignContext context) {
         if (margin.hasAll()) {
-            DesignAttributeHandler.writeAttribute("margin",
-                    design.attributes(), margin.hasAll(), defMargin.hasAll(),
-                    boolean.class);
+            DesignAttributeHandler.writeAttribute("margin", design.attributes(),
+                    margin.hasAll(), defMargin.hasAll(), boolean.class);
         } else {
 
             DesignAttributeHandler.writeAttribute("margin-left",

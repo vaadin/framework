@@ -17,7 +17,9 @@ package com.vaadin.client;
 
 import com.google.gwt.core.client.RunAsyncCallback;
 
-/** A helper class used by WidgetMap implementation. Used by the generated code. */
+/**
+ * A helper class used by WidgetMap implementation. Used by the generated code.
+ */
 abstract class WidgetLoader implements RunAsyncCallback {
 
     @Override

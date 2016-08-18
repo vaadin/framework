@@ -39,15 +39,15 @@ public class ComponentConnectorLayoutSlot extends VLayoutSlot {
     @Override
     protected int getCaptionHeight() {
         VCaption caption = getCaption();
-        return caption != null ? getLayoutManager().getOuterHeight(
-                caption.getElement()) : 0;
+        return caption != null
+                ? getLayoutManager().getOuterHeight(caption.getElement()) : 0;
     }
 
     @Override
     protected int getCaptionWidth() {
         VCaption caption = getCaption();
-        return caption != null ? getLayoutManager().getOuterWidth(
-                caption.getElement()) : 0;
+        return caption != null
+                ? getLayoutManager().getOuterWidth(caption.getElement()) : 0;
     }
 
     public LayoutManager getLayoutManager() {

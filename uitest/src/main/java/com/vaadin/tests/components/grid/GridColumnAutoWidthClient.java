@@ -27,7 +27,7 @@ public class GridColumnAutoWidthClient extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(new TestWidgetComponent(
-                GridColumnAutoWidthClientWidget.class));
+        addComponent(
+                new TestWidgetComponent(GridColumnAutoWidthClientWidget.class));
     }
 }

@@ -142,8 +142,8 @@ public class CurrentInstanceTest {
         assertCleared();
     }
 
-    private void assertCleared() throws SecurityException,
-            NoSuchFieldException, IllegalAccessException {
+    private void assertCleared() throws SecurityException, NoSuchFieldException,
+            IllegalAccessException {
         Assert.assertNull(getInternalCurrentInstanceVariable().get());
     }
 
@@ -193,8 +193,8 @@ public class CurrentInstanceTest {
 
         // Then store a new session in there
         Map<Class<?>, CurrentInstance> old = CurrentInstance
-                .setCurrent(new SessionStoredInCurrentInstance(EasyMock
-                        .createNiceMock(VaadinService.class)));
+                .setCurrent(new SessionStoredInCurrentInstance(
+                        EasyMock.createNiceMock(VaadinService.class)));
 
         // Restore the old values and assert that the session is null again
         CurrentInstance.restoreInstances(old);

@@ -23,8 +23,8 @@ import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.declarative.DesignContext;
 
-public class DragAndDropWrapperDeclarativeTest extends
-        DeclarativeTestBase<DragAndDropWrapper> {
+public class DragAndDropWrapperDeclarativeTest
+        extends DeclarativeTestBase<DragAndDropWrapper> {
 
     @Test
     public void testDefaultDnDWrapper() {
@@ -55,8 +55,8 @@ public class DragAndDropWrapperDeclarativeTest extends
         Button okButton = new Button("OK");
         String input = "<vaadin-drag-and-drop-wrapper drag-start-mode='component_other'>"
                 + new DesignContext().createElement(okButton)
-                + new DesignContext().createElement(dragImage).attr(
-                        ":drag-image", true)
+                + new DesignContext().createElement(dragImage)
+                        .attr(":drag-image", true)
                 + "</vaadin-drag-and-drop-wrapper>";
         DragAndDropWrapper wrapper = new DragAndDropWrapper(okButton);
         wrapper.setDragStartMode(DragStartMode.COMPONENT_OTHER);

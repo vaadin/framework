@@ -9,7 +9,8 @@ public class DisabledPopupView extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        PopupView popupView = new PopupView("Disabled Popup", new Button("Hi!"));
+        PopupView popupView = new PopupView("Disabled Popup",
+                new Button("Hi!"));
 
         popupView.setEnabled(false);
 

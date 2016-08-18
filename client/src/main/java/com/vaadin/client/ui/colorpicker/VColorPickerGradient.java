@@ -190,7 +190,8 @@ public class VColorPickerGradient extends FocusPanel implements
     }
 
     @Override
-    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(
+            String subPart) {
         if (subPart.equals(CLICKLAYER_ID)) {
             return clicklayer.getElement();
         }
@@ -199,7 +200,8 @@ public class VColorPickerGradient extends FocusPanel implements
     }
 
     @Override
-    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+    public String getSubPartName(
+            com.google.gwt.user.client.Element subElement) {
         if (clicklayer.getElement().isOrHasChild(subElement)) {
             return CLICKLAYER_ID;
         }

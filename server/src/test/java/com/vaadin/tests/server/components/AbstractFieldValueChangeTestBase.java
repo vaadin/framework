@@ -17,9 +17,9 @@ import com.vaadin.legacy.ui.LegacyAbstractField;
  * {@link ValueChangeNotifier}).
  * 
  * Subclasses should implement {@link #setValue()} and call
- * <code>super.setValue(LegacyAbstractField)</code>. Also, subclasses should typically
- * override {@link #setValue(LegacyAbstractField)} to set the field value via
- * <code>changeVariables()</code>.
+ * <code>super.setValue(LegacyAbstractField)</code>. Also, subclasses should
+ * typically override {@link #setValue(LegacyAbstractField)} to set the field
+ * value via <code>changeVariables()</code>.
  */
 public abstract class AbstractFieldValueChangeTestBase<T> {
 
@@ -72,8 +72,8 @@ public abstract class AbstractFieldValueChangeTestBase<T> {
      * be seen in some cases also when there is no notification of value change
      * from the property.
      * 
-     * LegacyField value change notifications closely mirror value changes of the data
-     * source behind the field.
+     * LegacyField value change notifications closely mirror value changes of
+     * the data source behind the field.
      */
     @Test
     public void testNonBuffered() {
@@ -87,8 +87,8 @@ public abstract class AbstractFieldValueChangeTestBase<T> {
      * Fully buffered use where the data source is neither read nor modified
      * during editing, and is updated at commit().
      * 
-     * LegacyField value change notifications reflect the buffered value in the field,
-     * not the original data source value changes.
+     * LegacyField value change notifications reflect the buffered value in the
+     * field, not the original data source value changes.
      */
     public void testBuffered() {
         getField().setPropertyDataSource(new ObjectProperty<String>(""));

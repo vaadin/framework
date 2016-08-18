@@ -60,8 +60,8 @@ public class TableRowScrolledBottomTest extends MultiBrowserTest {
         button.click();
         sleep(500);
 
-        rows = table.findElement(By.className("v-table-body")).findElements(
-                By.tagName("tr"));
+        rows = table.findElement(By.className("v-table-body"))
+                .findElements(By.tagName("tr"));
 
         // check that the final row is the one intended
         finalRow = rows.get(rows.size() - 1);

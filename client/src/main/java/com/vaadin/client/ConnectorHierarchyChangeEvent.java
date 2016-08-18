@@ -34,8 +34,8 @@ import com.vaadin.client.ui.AbstractHasComponentsConnector;
  * @since 7.0.0
  * 
  */
-public class ConnectorHierarchyChangeEvent extends
-        AbstractServerConnectorEvent<ConnectorHierarchyChangeHandler> {
+public class ConnectorHierarchyChangeEvent
+        extends AbstractServerConnectorEvent<ConnectorHierarchyChangeHandler> {
     /**
      * Type of this event, used by the event bus.
      */
@@ -90,8 +90,8 @@ public class ConnectorHierarchyChangeEvent extends
      * implement this interface, but instead make your connector class extend
      * {@link AbstractHasComponentsConnector} or an appropriate subclass.
      */
-    public interface ConnectorHierarchyChangeHandler extends Serializable,
-            EventHandler {
+    public interface ConnectorHierarchyChangeHandler
+            extends Serializable, EventHandler {
         /**
          * Called by the framework when the list of child components of the
          * connector implementing this interface has changed. The implementation

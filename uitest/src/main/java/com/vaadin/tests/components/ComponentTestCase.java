@@ -17,8 +17,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
 
-public abstract class ComponentTestCase<T extends AbstractComponent> extends
-        AbstractComponentTestCase<T> {
+public abstract class ComponentTestCase<T extends AbstractComponent>
+        extends AbstractComponentTestCase<T> {
 
     protected static final Object CAPTION = "caption";
 

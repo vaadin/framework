@@ -25,8 +25,8 @@ import com.vaadin.client.ComponentConnector;
  * 
  * @since 7.0
  */
-public abstract class AbstractSingleComponentContainerConnector extends
-        AbstractHasComponentsConnector {
+public abstract class AbstractSingleComponentContainerConnector
+        extends AbstractHasComponentsConnector {
 
     /**
      * Returns the content (only/first child) of the container.

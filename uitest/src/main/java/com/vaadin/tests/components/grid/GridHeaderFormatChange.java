@@ -107,8 +107,8 @@ public class GridHeaderFormatChange extends AbstractTestUI {
         grid = new Grid(datasource);
         grid.setWidth("600px");
         grid.getColumn("zipCode").setRenderer(new NumberRenderer());
-        grid.setColumnOrder("firstName", "lastName", "streetAddress",
-                "zipCode", "city");
+        grid.setColumnOrder("firstName", "lastName", "streetAddress", "zipCode",
+                "city");
         grid.setSelectionMode(SelectionMode.SINGLE);
         addComponent(grid);
 
@@ -156,8 +156,8 @@ public class GridHeaderFormatChange extends AbstractTestUI {
                         if (row == null) {
                             row = grid.prependHeaderRow();
                             if (grid.getColumn("firstName") != null) {
-                                row.join("firstName", "lastName").setText(
-                                        "Full Name");
+                                row.join("firstName", "lastName")
+                                        .setText("Full Name");
                             }
                             row.join("streetAddress", "zipCode", "city")
                                     .setText("Address");

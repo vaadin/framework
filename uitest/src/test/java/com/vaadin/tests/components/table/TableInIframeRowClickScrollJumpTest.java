@@ -76,8 +76,9 @@ public class TableInIframeRowClickScrollJumpTest extends MultiBrowserTest {
 
         Long scrollPosition2 = getWindowsScrollPosition();
 
-        assertThat("Scroll position should stay about the same. Old was "
-                + scrollPosition + " and new one " + scrollPosition2,
+        assertThat(
+                "Scroll position should stay about the same. Old was "
+                        + scrollPosition + " and new one " + scrollPosition2,
                 Math.abs(scrollPosition - scrollPosition2) < 10);
     }
 
@@ -104,8 +105,8 @@ public class TableInIframeRowClickScrollJumpTest extends MultiBrowserTest {
         driver.switchTo().defaultContent();
 
         JavascriptExecutor executor = (JavascriptExecutor) driver;
-        Long value = (Long) executor
-                .executeScript("if (window.pageYOffset) return window.pageYOffset;else if (window.document.documentElement.scrollTop) return window.document.documentElement.scrollTop;else return window.document.body.scrollTop;");
+        Long value = (Long) executor.executeScript(
+                "if (window.pageYOffset) return window.pageYOffset;else if (window.document.documentElement.scrollTop) return window.document.documentElement.scrollTop;else return window.document.body.scrollTop;");
 
         // back to the iframe
         switchIntoIframe();

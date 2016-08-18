@@ -40,8 +40,8 @@ public class TableSelectableTest {
     @Test
     public void addValueChangeListener_explicitSelectable_tableIsSelectable() {
         TestTable table = new TestTable();
-        table.addValueChangeListener(EasyMock
-                .createMock(ValueChangeListener.class));
+        table.addValueChangeListener(
+                EasyMock.createMock(ValueChangeListener.class));
 
         Assert.assertTrue(table.isSelectable());
         Assert.assertTrue(table.markAsDirtyCalled);
@@ -58,8 +58,8 @@ public class TableSelectableTest {
     public void setSelectable_explicitNotSelectable_tableIsNotSelectable() {
         Table table = new Table();
         table.setSelectable(false);
-        table.addValueChangeListener(EasyMock
-                .createMock(ValueChangeListener.class));
+        table.addValueChangeListener(
+                EasyMock.createMock(ValueChangeListener.class));
 
         Assert.assertFalse(table.isSelectable());
     }

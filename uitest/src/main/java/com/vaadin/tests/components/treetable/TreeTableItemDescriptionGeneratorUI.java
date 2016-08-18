@@ -19,8 +19,8 @@ import com.vaadin.tests.components.table.TableItemDescriptionGeneratorUI;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TreeTable;
 
-public class TreeTableItemDescriptionGeneratorUI extends
-        TableItemDescriptionGeneratorUI {
+public class TreeTableItemDescriptionGeneratorUI
+        extends TableItemDescriptionGeneratorUI {
 
     @Override
     protected Table createTable() {

@@ -39,9 +39,10 @@ public class ComboboxScrollableWindowTest extends MultiBrowserTest {
         openTestURL();
 
         WindowElement window = $(WindowElement.class).id(WINDOW_ID);
-        WebElement scrollableElement = window.findElement(By
-                .className("v-scrollable"));
-        TestBenchElementCommands scrollable = testBenchElement(scrollableElement);
+        WebElement scrollableElement = window
+                .findElement(By.className("v-scrollable"));
+        TestBenchElementCommands scrollable = testBenchElement(
+                scrollableElement);
         scrollable.scroll(1000);
         ComboBoxElement comboBox = $(ComboBoxElement.class).id(COMBOBOX_ID);
         comboBox.openPopup();

@@ -33,7 +33,8 @@ public class EscalatorProxy extends Escalator {
     private class ColumnConfigurationProxy implements ColumnConfiguration {
         private ColumnConfiguration columnConfiguration;
 
-        public ColumnConfigurationProxy(ColumnConfiguration columnConfiguration) {
+        public ColumnConfigurationProxy(
+                ColumnConfiguration columnConfiguration) {
             this.columnConfiguration = columnConfiguration;
         }
 
@@ -76,7 +77,8 @@ public class EscalatorProxy extends Escalator {
         }
 
         @Override
-        public double getColumnWidth(int index) throws IllegalArgumentException {
+        public double getColumnWidth(int index)
+                throws IllegalArgumentException {
             return columnConfiguration.getColumnWidth(index);
         }
 
@@ -99,8 +101,8 @@ public class EscalatorProxy extends Escalator {
         }
     }
 
-    private class BodyRowContainerProxy extends RowContainerProxy implements
-            BodyRowContainer {
+    private class BodyRowContainerProxy extends RowContainerProxy
+            implements BodyRowContainer {
         private BodyRowContainer rowContainer;
 
         public BodyRowContainerProxy(BodyRowContainer rowContainer) {

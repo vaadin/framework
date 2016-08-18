@@ -26,8 +26,8 @@ import com.vaadin.shared.ui.Connect;
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.renderers.HtmlRenderer.class)
-public class UnsafeHtmlRendererConnector extends
-        AbstractRendererConnector<String> {
+public class UnsafeHtmlRendererConnector
+        extends AbstractRendererConnector<String> {
 
     public static class UnsafeHtmlRenderer implements Renderer<String> {
         @Override

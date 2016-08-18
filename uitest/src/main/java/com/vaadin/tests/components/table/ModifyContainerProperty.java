@@ -27,14 +27,16 @@ public class ModifyContainerProperty extends TestBase {
         addComponent(new Button("Remove container property",
                 new Button.ClickListener() {
                     @Override
-                    public void buttonClick(com.vaadin.ui.Button.ClickEvent arg0) {
+                    public void buttonClick(
+                            com.vaadin.ui.Button.ClickEvent arg0) {
                         ic.removeContainerProperty("one");
                     }
                 }));
         addComponent(new Button("Add container property",
                 new Button.ClickListener() {
                     @Override
-                    public void buttonClick(com.vaadin.ui.Button.ClickEvent arg0) {
+                    public void buttonClick(
+                            com.vaadin.ui.Button.ClickEvent arg0) {
                         boolean added = ic.addContainerProperty("three",
                                 String.class, "three");
                         if (added) {

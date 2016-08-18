@@ -64,8 +64,8 @@ import com.vaadin.shared.ui.datefield.Resolution;
  * method.
  * 
  */
-public class VPopupCalendar extends VTextualDate implements Field,
-        ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
+public class VPopupCalendar extends VTextualDate
+        implements Field, ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
 
     /** For internal use only. May be removed or replaced in the future. */
     public final Button calendarToggle = new Button();
@@ -129,8 +129,8 @@ public class VPopupCalendar extends VTextualDate implements Field,
 
         // Description of the usage of the widget for assisitve device users
         descriptionForAssisitveDevicesElement = DOM.createDiv();
-        descriptionForAssisitveDevicesElement
-                .setInnerText(PopupDateFieldState.DESCRIPTION_FOR_ASSISTIVE_DEVICES);
+        descriptionForAssisitveDevicesElement.setInnerText(
+                PopupDateFieldState.DESCRIPTION_FOR_ASSISTIVE_DEVICES);
         AriaHelper.ensureHasId(descriptionForAssisitveDevicesElement);
         Roles.getTextboxRole().setAriaDescribedbyProperty(text.getElement(),
                 Id.of(descriptionForAssisitveDevicesElement));
@@ -230,16 +230,19 @@ public class VPopupCalendar extends VTextualDate implements Field,
                         .getCalendarField()) {
                     getClient().updateVariable(getId(), "day",
                             newDate.getDate(), false);
-                    if (getCurrentResolution().getCalendarField() > Resolution.DAY
-                            .getCalendarField()) {
+                    if (getCurrentResolution()
+                            .getCalendarField() > Resolution.DAY
+                                    .getCalendarField()) {
                         getClient().updateVariable(getId(), "hour",
                                 newDate.getHours(), false);
-                        if (getCurrentResolution().getCalendarField() > Resolution.HOUR
-                                .getCalendarField()) {
+                        if (getCurrentResolution()
+                                .getCalendarField() > Resolution.HOUR
+                                        .getCalendarField()) {
                             getClient().updateVariable(getId(), "min",
                                     newDate.getMinutes(), false);
-                            if (getCurrentResolution().getCalendarField() > Resolution.MINUTE
-                                    .getCalendarField()) {
+                            if (getCurrentResolution()
+                                    .getCalendarField() > Resolution.MINUTE
+                                            .getCalendarField()) {
                                 getClient().updateVariable(getId(), "sec",
                                         newDate.getSeconds(), false);
                             }
@@ -294,12 +297,12 @@ public class VPopupCalendar extends VTextualDate implements Field,
 
         if (reallyEnabled) {
             calendarToggle.setTabIndex(-1);
-            Roles.getButtonRole().setAriaHiddenState(
-                    calendarToggle.getElement(), true);
+            Roles.getButtonRole()
+                    .setAriaHiddenState(calendarToggle.getElement(), true);
         } else {
             calendarToggle.setTabIndex(0);
-            Roles.getButtonRole().setAriaHiddenState(
-                    calendarToggle.getElement(), false);
+            Roles.getButtonRole()
+                    .setAriaHiddenState(calendarToggle.getElement(), false);
         }
 
         handleAriaAttributes();
@@ -349,11 +352,11 @@ public class VPopupCalendar extends VTextualDate implements Field,
             removeFromWidget = text;
         }
 
-        Roles.getFormRole().removeAriaLabelledbyProperty(
-                removeFromWidget.getElement());
+        Roles.getFormRole()
+                .removeAriaLabelledbyProperty(removeFromWidget.getElement());
         if (captionId == null) {
-            Roles.getFormRole().removeAriaLabelledbyProperty(
-                    setForWidget.getElement());
+            Roles.getFormRole()
+                    .removeAriaLabelledbyProperty(setForWidget.getElement());
         } else {
             Roles.getFormRole().setAriaLabelledbyProperty(
                     setForWidget.getElement(), Id.of(captionId));
@@ -562,7 +565,8 @@ public class VPopupCalendar extends VTextualDate implements Field,
     private final String CALENDAR_TOGGLE_ID = "popupButton";
 
     @Override
-    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(
+            String subPart) {
         if (subPart.equals(CALENDAR_TOGGLE_ID)) {
             return calendarToggle.getElement();
         }
@@ -571,7 +575,8 @@ public class VPopupCalendar extends VTextualDate implements Field,
     }
 
     @Override
-    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+    public String getSubPartName(
+            com.google.gwt.user.client.Element subElement) {
         if (calendarToggle.getElement().isOrHasChild(subElement)) {
             return CALENDAR_TOGGLE_ID;
         }

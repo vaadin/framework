@@ -66,8 +66,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
      *            the identifier (character) denoting the end of a quoted string
      */
     public DefaultSQLGenerator(String quoteStart, String quoteEnd) {
-        QueryBuilder.setStringDecorator(new StringDecorator(quoteStart,
-                quoteEnd));
+        QueryBuilder
+                .setStringDecorator(new StringDecorator(quoteStart, quoteEnd));
     }
 
     /**
@@ -101,8 +101,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
         toSelect = toSelect == null ? "*" : toSelect;
         StatementHelper sh = getStatementHelper();
         StringBuffer query = new StringBuffer();
-        query.append("SELECT " + toSelect + " FROM ").append(
-                SQLUtil.escapeSQL(tableName));
+        query.append("SELECT " + toSelect + " FROM ")
+                .append(SQLUtil.escapeSQL(tableName));
         if (filters != null) {
             query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
         }
@@ -148,8 +148,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
             } else {
                 query.append(", " + QueryBuilder.quote(column) + " = ?");
             }
-            sh.addParameterValue(columnToValueMap.get(column), item
-                    .getItemProperty(column).getType());
+            sh.addParameterValue(columnToValueMap.get(column),
+                    item.getItemProperty(column).getType());
             first = false;
         }
         /* Generate identifiers for the row to be updated */
@@ -160,8 +160,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
             } else {
                 query.append(" AND " + QueryBuilder.quote(column) + " = ?");
             }
-            sh.addParameterValue(rowIdentifiers.get(column), item
-                    .getItemProperty(column).getType());
+            sh.addParameterValue(rowIdentifiers.get(column),
+                    item.getItemProperty(column).getType());
             first = false;
         }
         sh.setQueryString(query.toString());
@@ -211,8 +211,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
                 query.append(", ");
             }
             query.append("?");
-            sh.addParameterValue(columnToValueMap.get(column), item
-                    .getItemProperty(column).getType());
+            sh.addParameterValue(columnToValueMap.get(column),
+                    item.getItemProperty(column).getType());
             first = false;
         }
         query.append(")");
@@ -229,7 +229,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
      */
     @Override
     public StatementHelper generateDeleteQuery(String tableName,
-            List<String> primaryKeyColumns, String versionColumn, RowItem item) {
+            List<String> primaryKeyColumns, String versionColumn,
+            RowItem item) {
         if (tableName == null || tableName.trim().equals("")) {
             throw new IllegalArgumentException("Table name must be given.");
         }
@@ -246,7 +247,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
         query.append("DELETE FROM ").append(tableName).append(" WHERE ");
         int count = 1;
         for (String keyColName : primaryKeyColumns) {
-            if ((this instanceof MSSQLGenerator || this instanceof OracleGenerator)
+            if ((this instanceof MSSQLGenerator
+                    || this instanceof OracleGenerator)
                     && keyColName.equalsIgnoreCase("rownum")) {
                 count++;
                 continue;
@@ -256,8 +258,9 @@ public class DefaultSQLGenerator implements SQLGenerator {
             }
             if (item.getItemProperty(keyColName).getValue() != null) {
                 query.append(QueryBuilder.quote(keyColName) + " = ?");
-                sh.addParameterValue(item.getItemProperty(keyColName)
-                        .getValue(), item.getItemProperty(keyColName).getType());
+                sh.addParameterValue(
+                        item.getItemProperty(keyColName).getValue(),
+                        item.getItemProperty(keyColName).getType());
             }
             count++;
         }
@@ -270,9 +273,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
 
             query.append(String.format(" AND %s = ?",
                     QueryBuilder.quote(versionColumn)));
-            sh.addParameterValue(
-                    item.getItemProperty(versionColumn).getValue(), item
-                            .getItemProperty(versionColumn).getType());
+            sh.addParameterValue(item.getItemProperty(versionColumn).getValue(),
+                    item.getItemProperty(versionColumn).getType());
         }
 
         sh.setQueryString(query.toString());
@@ -329,7 +331,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
         for (Object id : item.getItemPropertyIds()) {
             ColumnProperty cp = (ColumnProperty) item.getItemProperty(id);
             /* Prevent "rownum" usage as a column name if MSSQL or ORACLE */
-            if ((this instanceof MSSQLGenerator || this instanceof OracleGenerator)
+            if ((this instanceof MSSQLGenerator
+                    || this instanceof OracleGenerator)
                     && cp.getPropertyId().equalsIgnoreCase("rownum")) {
                 continue;
             }
@@ -345,7 +348,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
         for (Object id : item.getItemPropertyIds()) {
             ColumnProperty cp = (ColumnProperty) item.getItemProperty(id);
             /* Prevent "rownum" usage as a column name if MSSQL or ORACLE */
-            if ((this instanceof MSSQLGenerator || this instanceof OracleGenerator)
+            if ((this instanceof MSSQLGenerator
+                    || this instanceof OracleGenerator)
                     && cp.getPropertyId().equalsIgnoreCase("rownum")) {
                 continue;
             }

@@ -21,8 +21,8 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.widgetset.server.MissingFromDefaultWidgetsetComponent;
 
 @Connect(MissingFromDefaultWidgetsetComponent.class)
-public class MissingFromDefaultWidgetsetConnector extends
-        AbstractComponentConnector {
+public class MissingFromDefaultWidgetsetConnector
+        extends AbstractComponentConnector {
     @Override
     public VLabel getWidget() {
         return (VLabel) super.getWidget();
@@ -30,9 +30,8 @@ public class MissingFromDefaultWidgetsetConnector extends
 
     @Override
     protected void init() {
-        getWidget()
-                .setText(
-                        "This component is available in TestingWidgetset, but not in DefaultWidgetset");
+        getWidget().setText(
+                "This component is available in TestingWidgetset, but not in DefaultWidgetset");
         super.init();
     }
 }

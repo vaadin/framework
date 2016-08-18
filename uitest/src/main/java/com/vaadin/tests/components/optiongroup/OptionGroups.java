@@ -37,8 +37,8 @@ public class OptionGroups extends AbstractSelectTestCase<OptionGroup> {
         options.put("32x32", ICON_32_ATTENTION_PNG_CACHEABLE);
         options.put("64x64", ICON_64_EMAIL_REPLY_PNG_CACHEABLE);
 
-        createSelectAction(string, CATEGORY_DECORATIONS, options, options
-                .keySet().iterator().next(),
+        createSelectAction(string, CATEGORY_DECORATIONS, options,
+                options.keySet().iterator().next(),
                 new Command<OptionGroup, ThemeResource>() {
                     @Override
                     public void execute(OptionGroup c, ThemeResource icon,

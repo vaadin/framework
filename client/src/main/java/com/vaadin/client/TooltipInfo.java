@@ -82,6 +82,7 @@ public class TooltipInfo {
 
     public boolean equals(TooltipInfo other) {
         return (other != null && SharedUtil.equals(other.title, title)
-                && SharedUtil.equals(other.errorMessageHtml, errorMessageHtml) && other.identifier == identifier);
+                && SharedUtil.equals(other.errorMessageHtml, errorMessageHtml)
+                && other.identifier == identifier);
     }
 }

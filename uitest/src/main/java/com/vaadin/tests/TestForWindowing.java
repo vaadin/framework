@@ -40,8 +40,8 @@ public class TestForWindowing extends CustomComponent {
 
         final VerticalLayout main = new VerticalLayout();
 
-        main.addComponent(new Label(
-                "Click the button to create a new inline window."));
+        main.addComponent(
+                new Label("Click the button to create a new inline window."));
 
         final CheckBox asModal = new CheckBox("As modal");
         main.addComponent(asModal);

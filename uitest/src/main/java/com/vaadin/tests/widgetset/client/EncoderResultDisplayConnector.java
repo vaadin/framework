@@ -51,11 +51,9 @@ public class EncoderResultDisplayConnector extends AbstractExtensionConnector {
         reportEncode(Double.valueOf("2.2"));
 
         reportEncode(new String[] { "One", "Two" });
-        reportEncode(
-                "List",
-                Arrays.asList("Three", "Four"),
-                new Type(List.class.getName(), new Type[] { TypeData
-                        .getType(String.class) }));
+        reportEncode("List", Arrays.asList("Three", "Four"),
+                new Type(List.class.getName(),
+                        new Type[] { TypeData.getType(String.class) }));
         reportEncode(new SimpleTestBean(5));
 
         reportEncode(Void.class.getSimpleName(), null,

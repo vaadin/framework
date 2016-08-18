@@ -6,11 +6,9 @@ public class FlagSeResource extends ClassResource {
 
     public FlagSeResource() {
         super("/"
-                + FlagSeResource.class
-                        .getName()
-                        .replace('.', '/')
-                        .replaceAll(FlagSeResource.class.getSimpleName() + "$",
-                                "") + "se.gif");
+                + FlagSeResource.class.getName().replace('.', '/').replaceAll(
+                        FlagSeResource.class.getSimpleName() + "$", "")
+                + "se.gif");
 
     }
 }

@@ -31,24 +31,23 @@ public class KeyboardNavigationWithChangingContent extends TestBase {
         t.setMultiSelect(true);
 
         getLayout().addComponent(t);
-        getLayout().addComponent(
-                new Button("Change elements and selection",
-                        new ClickListener() {
+        getLayout().addComponent(new Button("Change elements and selection",
+                new ClickListener() {
 
-                            @Override
-                            public void buttonClick(ClickEvent event) {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
 
-                                bic.removeAllItems();
-                                ValueHolder<String> v4 = null;
-                                for (int i = 4; i < 30; i++) {
-                                    v4 = new ValueHolder<String>("test" + i);
-                                    bic.addBean(v4);
+                        bic.removeAllItems();
+                        ValueHolder<String> v4 = null;
+                        for (int i = 4; i < 30; i++) {
+                            v4 = new ValueHolder<String>("test" + i);
+                            bic.addBean(v4);
 
-                                }
-                                t.select(t.firstItemId());
-                                t.focus();
-                            }
-                        }));
+                        }
+                        t.select(t.firstItemId());
+                        t.focus();
+                    }
+                }));
     }
 
     @Override

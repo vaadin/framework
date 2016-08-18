@@ -47,8 +47,8 @@ public class GridScrolling extends AbstractTestUI {
         for (int row = 0; row < 65536; row++) {
             Item item = ds.addItem(Integer.valueOf(row));
             for (int col = 0; col < 5; col++) {
-                item.getItemProperty("col" + col).setValue(
-                        "(" + row + ", " + col + ")");
+                item.getItemProperty("col" + col)
+                        .setValue("(" + row + ", " + col + ")");
             }
         }
 

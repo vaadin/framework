@@ -36,8 +36,8 @@ public class ResynchronizeUITest extends SingleBrowserTest {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         // PhantomJS does not send onload events for styles
-        return Collections.singletonList(Browser.FIREFOX
-                .getDesiredCapabilities());
+        return Collections
+                .singletonList(Browser.FIREFOX.getDesiredCapabilities());
     }
 
     @Test
@@ -51,7 +51,8 @@ public class ResynchronizeUITest extends SingleBrowserTest {
         waitForThemeToChange("runo");
         try {
             button.click();
-            Assert.fail("The old button element should have been removed by the click and replaced by a new one.");
+            Assert.fail(
+                    "The old button element should have been removed by the click and replaced by a new one.");
         } catch (StaleElementReferenceException e) {
             // This is what should happen
         }

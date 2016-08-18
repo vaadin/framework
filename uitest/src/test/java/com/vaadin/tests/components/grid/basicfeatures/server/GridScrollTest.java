@@ -33,8 +33,8 @@ public class GridScrollTest extends GridBasicFeaturesTest {
                 getLogRow(1).equals("0. Requested items 0 - 40"));
         // Client response varies a bit between browsers as different amount of
         // rows is cached.
-        assertTrue("First row request from client not found", getLogRow(0)
-                .startsWith("1. Requested items 0 - "));
+        assertTrue("First row request from client not found",
+                getLogRow(0).startsWith("1. Requested items 0 - "));
 
         selectMenuPath("Component", "Size", "HeightMode Row");
 

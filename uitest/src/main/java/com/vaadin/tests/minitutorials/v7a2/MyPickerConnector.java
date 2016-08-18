@@ -32,8 +32,8 @@ import com.vaadin.client.ui.layout.ElementResizeListener;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class MyPickerConnector extends AbstractComponentConnector implements
-        SimpleManagedLayout {
+public class MyPickerConnector extends AbstractComponentConnector
+        implements SimpleManagedLayout {
     @Override
     public MyPickerWidget getWidget() {
         return (MyPickerWidget) super.getWidget();

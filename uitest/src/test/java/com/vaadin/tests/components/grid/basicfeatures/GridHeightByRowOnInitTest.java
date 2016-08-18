@@ -14,7 +14,8 @@ public class GridHeightByRowOnInitTest extends MultiBrowserTest {
     public void gridHeightIsMoreThanACoupleOfRows() {
         openTestURL();
         int height = $(GridElement.class).first().getSize().getHeight();
-        assertGreater("Grid should be much taller than 150px (was " + height
-                + "px)", height, 150);
+        assertGreater(
+                "Grid should be much taller than 150px (was " + height + "px)",
+                height, 150);
     }
 }

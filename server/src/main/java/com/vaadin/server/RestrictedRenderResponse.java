@@ -149,7 +149,8 @@ class RestrictedRenderResponse implements RenderResponse, Serializable {
     }
 
     @Override
-    public void setNextPossiblePortletModes(Collection<PortletMode> portletModes) {
+    public void setNextPossiblePortletModes(
+            Collection<PortletMode> portletModes) {
         // NOP
         // TODO throw?
     }

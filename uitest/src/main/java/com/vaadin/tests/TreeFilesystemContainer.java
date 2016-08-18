@@ -41,8 +41,8 @@ import com.vaadin.ui.VerticalLayout;
  * @since 4.0.0
  * 
  */
-public class TreeFilesystemContainer extends
-        com.vaadin.server.LegacyApplication implements Listener {
+public class TreeFilesystemContainer extends com.vaadin.server.LegacyApplication
+        implements Listener {
 
     // Filesystem explorer panel and it's components
     private final Panel explorerPanel = new Panel("Filesystem explorer");
@@ -56,7 +56,8 @@ public class TreeFilesystemContainer extends
 
     @Override
     public void init() {
-        final LegacyWindow w = new LegacyWindow("Tree FilesystemContainer demo");
+        final LegacyWindow w = new LegacyWindow(
+                "Tree FilesystemContainer demo");
         setMainWindow(w);
         final VerticalLayout main = new VerticalLayout();
         w.setContent(main);
@@ -84,10 +85,11 @@ public class TreeFilesystemContainer extends
         propertyPanel.setEnabled(false);
 
         // Get sample directory
-        final File sampleDir = SampleDirectory.getDirectory(
-                VaadinSession.getCurrent(), w);
+        final File sampleDir = SampleDirectory
+                .getDirectory(VaadinSession.getCurrent(), w);
         // Populate tree with FilesystemContainer
-        final FilesystemContainer fsc = new FilesystemContainer(sampleDir, true);
+        final FilesystemContainer fsc = new FilesystemContainer(sampleDir,
+                true);
         filesystem.setContainerDataSource(fsc);
         // "this" handles all filesystem events
         // e.g. node clicked, expanded etc.

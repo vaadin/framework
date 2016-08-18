@@ -267,8 +267,8 @@ public class TestSizeableIncomponents extends LegacyApplication {
          * @throws InstantiationException
          * @throws IllegalAccessException
          */
-        public Component getComponent() throws InstantiationException,
-                IllegalAccessException {
+        public Component getComponent()
+                throws InstantiationException, IllegalAccessException {
             Component c = (Component) classToTest.newInstance();
 
             if (c instanceof Button) {
@@ -277,21 +277,24 @@ public class TestSizeableIncomponents extends LegacyApplication {
             if (AbstractSelect.class.isAssignableFrom(c.getClass())) {
                 if (c instanceof Table) {
                     Table new_name = (Table) c;
-                    new_name.setContainerDataSource(TestForTablesInitialColumnWidthLogicRendering
-                            .getTestTable(5, 100).getContainerDataSource());
+                    new_name.setContainerDataSource(
+                            TestForTablesInitialColumnWidthLogicRendering
+                                    .getTestTable(5, 100)
+                                    .getContainerDataSource());
 
                 } else {
                     AbstractSelect new_name = (AbstractSelect) c;
                     Container cont = TestForTablesInitialColumnWidthLogicRendering
                             .getTestTable(2, 8).getContainerDataSource();
                     new_name.setContainerDataSource(cont);
-                    new_name.setItemCaptionPropertyId(cont
-                            .getContainerPropertyIds().iterator().next());
+                    new_name.setItemCaptionPropertyId(
+                            cont.getContainerPropertyIds().iterator().next());
 
                 }
             } else if (c instanceof ComponentContainer) {
                 ComponentContainer new_name = (ComponentContainer) c;
-                new_name.addComponent(new Label("component 1 in test container"));
+                new_name.addComponent(
+                        new Label("component 1 in test container"));
                 new_name.addComponent(new Button("component 2"));
             } else if (c instanceof Embedded) {
                 Embedded em = (Embedded) c;

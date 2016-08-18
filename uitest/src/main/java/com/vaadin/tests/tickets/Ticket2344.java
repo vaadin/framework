@@ -43,7 +43,8 @@ public class Ticket2344 extends LegacyApplication {
             vl.addComponent(b);
             t.addItem(new Object[] { vl, "String 2", "String 3", "String 4",
 
-            new Button("String 5") }, new Integer(new Random().nextInt()));
+                    new Button("String 5") },
+                    new Integer(new Random().nextInt()));
 
         }
 

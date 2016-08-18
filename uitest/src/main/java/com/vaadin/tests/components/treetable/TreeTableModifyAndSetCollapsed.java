@@ -33,8 +33,8 @@ public class TreeTableModifyAndSetCollapsed extends TestBase {
                 int parentId = counter++;
                 Item parent = container.addItem(parentId);
                 tt.setCollapsed(parentId, false);
-                parent.getItemProperty("value").setValue(
-                        "parent " + (counter++) + "");
+                parent.getItemProperty("value")
+                        .setValue("parent " + (counter++) + "");
                 for (int i = 0; i < 4; i++) {
                     int childId = counter++;
                     Item child = container.addItem(childId);

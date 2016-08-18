@@ -92,8 +92,8 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
 
             // Restore default stylenames
             getWidget().contentNode.setClassName(VPanel.CLASSNAME + "-content");
-            getWidget().bottomDecoration.setClassName(VPanel.CLASSNAME
-                    + "-deco");
+            getWidget().bottomDecoration
+                    .setClassName(VPanel.CLASSNAME + "-deco");
             getWidget().captionNode.setClassName(VPanel.CLASSNAME + "-caption");
             boolean hasCaption = false;
             if (getState().caption != null && !"".equals(getState().caption)) {
@@ -101,8 +101,8 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
                 hasCaption = true;
             } else {
                 getWidget().setCaption("");
-                getWidget().captionNode.setClassName(VPanel.CLASSNAME
-                        + "-nocaption");
+                getWidget().captionNode
+                        .setClassName(VPanel.CLASSNAME + "-nocaption");
             }
 
             // Add proper stylenames for all elements. This way we can prevent
@@ -202,8 +202,8 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
 
         Profiler.enter("PanelConnector.layout modify style");
         Style style = panel.getElement().getStyle();
-        panel.captionNode.getParentElement().getStyle()
-                .setMarginTop(-top, Unit.PX);
+        panel.captionNode.getParentElement().getStyle().setMarginTop(-top,
+                Unit.PX);
         panel.bottomDecoration.getStyle().setMarginBottom(-bottom, Unit.PX);
         style.setPaddingTop(top, Unit.PX);
         style.setPaddingBottom(bottom, Unit.PX);
@@ -248,7 +248,8 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
     }
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         // We always have 1 child, unless the child is hidden
         getWidget().setWidget(getContentWidget());
     }

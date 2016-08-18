@@ -82,8 +82,8 @@ public abstract class AbstractContainerTestBase {
     // current containers
     protected void validateContainer(Container container,
             Object expectedFirstItemId, Object expectedLastItemId,
-            Object itemIdInSet, Object itemIdNotInSet,
-            boolean checkGetItemNull, int expectedSize) {
+            Object itemIdInSet, Object itemIdNotInSet, boolean checkGetItemNull,
+            int expectedSize) {
         Container.Indexed indexed = null;
         if (container instanceof Container.Indexed) {
             indexed = (Container.Indexed) container;
@@ -115,8 +115,8 @@ public abstract class AbstractContainerTestBase {
         // getContainerProperty
         for (Object propId : container.getContainerPropertyIds()) {
             if (checkGetItemNull) {
-                assertNull(container.getContainerProperty(itemIdNotInSet,
-                        propId));
+                assertNull(
+                        container.getContainerProperty(itemIdNotInSet, propId));
             }
             assertNotNull(container.getContainerProperty(itemIdInSet, propId));
         }
@@ -154,8 +154,8 @@ public abstract class AbstractContainerTestBase {
         }
 
         // getItemProperty
-        Assert.assertNull(container.getItem(itemIdInSet).getItemProperty(
-                "notinset"));
+        Assert.assertNull(
+                container.getItem(itemIdInSet).getItemProperty("notinset"));
 
     }
 
@@ -271,7 +271,8 @@ public abstract class AbstractContainerTestBase {
             Assert.assertNotNull(item);
             Assert.assertTrue(container.containsId("foo"));
             Assert.assertEquals(item, container.getItem("foo"));
-            Assert.assertEquals("foo", container.getItemIds().iterator().next());
+            Assert.assertEquals("foo",
+                    container.getItemIds().iterator().next());
 
             Item itemAtEnd = container.addItemAfter(0, "atend");
             Assert.assertNotNull(itemAtEnd);
@@ -466,7 +467,8 @@ public abstract class AbstractContainerTestBase {
             container.addItemAt(itemPosition, newItemId);
             Assert.assertEquals(itemPosition, container.indexOfId(newItemId));
             Assert.assertEquals(itemPosition + 1, container.indexOfId(itemId));
-            Assert.assertEquals(newItemId, container.getIdByIndex(itemPosition));
+            Assert.assertEquals(newItemId,
+                    container.getIdByIndex(itemPosition));
             Assert.assertEquals(itemId,
                     container.getIdByIndex(itemPosition + 1));
             Assert.assertTrue(container.removeItem(newItemId));
@@ -504,7 +506,8 @@ public abstract class AbstractContainerTestBase {
         container.addContainerFilter(filter1);
 
         assertTrue(container.getContainerFilters().size() == 1);
-        assertEquals(filter1, container.getContainerFilters().iterator().next());
+        assertEquals(filter1,
+                container.getContainerFilters().iterator().next());
 
         validateContainer(container, "com.vaadin.data.BufferedValidatable",
                 "com.vaadin.ui.TabSheet",
@@ -521,7 +524,8 @@ public abstract class AbstractContainerTestBase {
         container.addContainerFilter(filter2);
 
         assertTrue(container.getContainerFilters().size() == 1);
-        assertEquals(filter2, container.getContainerFilters().iterator().next());
+        assertEquals(filter2,
+                container.getContainerFilters().iterator().next());
 
         validateContainer(container, "com.vaadin.data.Buffered",
                 "com.vaadin.server.ComponentSizeValidator",
@@ -540,7 +544,8 @@ public abstract class AbstractContainerTestBase {
         return true;
     }
 
-    protected void testContainerSortingAndFiltering(Container.Sortable sortable) {
+    protected void testContainerSortingAndFiltering(
+            Container.Sortable sortable) {
         Filterable filterable = (Filterable) sortable;
 
         initializeContainer(sortable);
@@ -550,8 +555,8 @@ public abstract class AbstractContainerTestBase {
                 FULLY_QUALIFIED_NAME, "ab", false, false));
 
         // Must be able to sort based on PROP1 for this test
-        assertTrue(sortable.getSortableContainerPropertyIds().contains(
-                FULLY_QUALIFIED_NAME));
+        assertTrue(sortable.getSortableContainerPropertyIds()
+                .contains(FULLY_QUALIFIED_NAME));
 
         sortable.sort(new Object[] { FULLY_QUALIFIED_NAME },
                 new boolean[] { true });
@@ -568,10 +573,10 @@ public abstract class AbstractContainerTestBase {
         initializeContainer(container);
 
         // Must be able to sort based on PROP1 for this test
-        assertTrue(sortable.getSortableContainerPropertyIds().contains(
-                FULLY_QUALIFIED_NAME));
-        assertTrue(sortable.getSortableContainerPropertyIds().contains(
-                REVERSE_FULLY_QUALIFIED_NAME));
+        assertTrue(sortable.getSortableContainerPropertyIds()
+                .contains(FULLY_QUALIFIED_NAME));
+        assertTrue(sortable.getSortableContainerPropertyIds()
+                .contains(REVERSE_FULLY_QUALIFIED_NAME));
 
         sortable.sort(new Object[] { FULLY_QUALIFIED_NAME },
                 new boolean[] { true });
@@ -609,10 +614,10 @@ public abstract class AbstractContainerTestBase {
             Item item = container.addItem(id);
 
             item.getItemProperty(FULLY_QUALIFIED_NAME).setValue(sampleData[i]);
-            item.getItemProperty(SIMPLE_NAME).setValue(
-                    getSimpleName(sampleData[i]));
-            item.getItemProperty(REVERSE_FULLY_QUALIFIED_NAME).setValue(
-                    reverse(sampleData[i]));
+            item.getItemProperty(SIMPLE_NAME)
+                    .setValue(getSimpleName(sampleData[i]));
+            item.getItemProperty(REVERSE_FULLY_QUALIFIED_NAME)
+                    .setValue(reverse(sampleData[i]));
             item.getItemProperty(ID_NUMBER).setValue(i);
         }
     }
@@ -817,13 +822,11 @@ public abstract class AbstractContainerTestBase {
             "com.vaadin.server.widgetsetutils.WidgetMapGenerator",
             "com.vaadin.server.widgetsetutils.WidgetSetBuilder",
             "com.vaadin.server.KeyMapper", "com.vaadin.server.Paintable",
-            "com.vaadin.server.PaintException",
-            "com.vaadin.server.PaintTarget",
+            "com.vaadin.server.PaintException", "com.vaadin.server.PaintTarget",
             "com.vaadin.server.ParameterHandler", "com.vaadin.server.Resource",
             "com.vaadin.server.Scrollable", "com.vaadin.server.Sizeable",
-            "com.vaadin.server.StreamResource",
-            "com.vaadin.server.SystemError", "com.vaadin.server.Terminal",
-            "com.vaadin.server.ThemeResource",
+            "com.vaadin.server.StreamResource", "com.vaadin.server.SystemError",
+            "com.vaadin.server.Terminal", "com.vaadin.server.ThemeResource",
             "com.vaadin.server.UploadStream", "com.vaadin.server.URIHandler",
             "com.vaadin.server.UserError", "com.vaadin.server.VariableOwner",
             "com.vaadin.tools.ReflectTools",
@@ -845,19 +848,19 @@ public abstract class AbstractContainerTestBase {
             "com.vaadin.ui.Form", "com.vaadin.ui.FormFieldFactory",
             "com.vaadin.ui.FormLayout", "com.vaadin.ui.GridLayout",
             "com.vaadin.ui.HorizontalLayout", "com.vaadin.ui.InlineDateField",
-            "com.vaadin.ui.Label", "com.vaadin.ui.Layout",
-            "com.vaadin.ui.Link", "com.vaadin.ui.ListSelect",
-            "com.vaadin.ui.LoginForm", "com.vaadin.ui.MenuBar",
-            "com.vaadin.ui.NativeButton", "com.vaadin.ui.NativeSelect",
-            "com.vaadin.ui.OptionGroup", "com.vaadin.ui.OrderedLayout",
-            "com.vaadin.ui.Panel", "com.vaadin.ui.PopupDateField",
-            "com.vaadin.ui.PopupView", "com.vaadin.ui.ProgressIndicator",
-            "com.vaadin.ui.RichTextArea", "com.vaadin.ui.Select",
-            "com.vaadin.ui.Slider", "com.vaadin.ui.SplitPanel",
-            "com.vaadin.ui.Table", "com.vaadin.ui.TableFieldFactory",
-            "com.vaadin.ui.TabSheet", "com.vaadin.ui.TextField",
-            "com.vaadin.ui.Tree", "com.vaadin.ui.TwinColSelect",
-            "com.vaadin.ui.Upload", "com.vaadin.ui.UriFragmentUtility",
-            "com.vaadin.ui.VerticalLayout", "com.vaadin.ui.Window",
-            "com.vaadin.util.SerializerHelper", "org.vaadin.test.LastClass" };
+            "com.vaadin.ui.Label", "com.vaadin.ui.Layout", "com.vaadin.ui.Link",
+            "com.vaadin.ui.ListSelect", "com.vaadin.ui.LoginForm",
+            "com.vaadin.ui.MenuBar", "com.vaadin.ui.NativeButton",
+            "com.vaadin.ui.NativeSelect", "com.vaadin.ui.OptionGroup",
+            "com.vaadin.ui.OrderedLayout", "com.vaadin.ui.Panel",
+            "com.vaadin.ui.PopupDateField", "com.vaadin.ui.PopupView",
+            "com.vaadin.ui.ProgressIndicator", "com.vaadin.ui.RichTextArea",
+            "com.vaadin.ui.Select", "com.vaadin.ui.Slider",
+            "com.vaadin.ui.SplitPanel", "com.vaadin.ui.Table",
+            "com.vaadin.ui.TableFieldFactory", "com.vaadin.ui.TabSheet",
+            "com.vaadin.ui.TextField", "com.vaadin.ui.Tree",
+            "com.vaadin.ui.TwinColSelect", "com.vaadin.ui.Upload",
+            "com.vaadin.ui.UriFragmentUtility", "com.vaadin.ui.VerticalLayout",
+            "com.vaadin.ui.Window", "com.vaadin.util.SerializerHelper",
+            "org.vaadin.test.LastClass" };
 }

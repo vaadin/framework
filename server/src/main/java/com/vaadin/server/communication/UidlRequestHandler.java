@@ -46,8 +46,8 @@ import elemental.json.JsonException;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class UidlRequestHandler extends SynchronizedRequestHandler implements
-        SessionExpiredHandler {
+public class UidlRequestHandler extends SynchronizedRequestHandler
+        implements SessionExpiredHandler {
 
     public static final String UIDL_PATH = "UIDL/";
 
@@ -186,8 +186,8 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
      */
     static String getUINotFoundErrorJSON(VaadinService service,
             VaadinRequest vaadinRequest) {
-        SystemMessages ci = service.getSystemMessages(
-                vaadinRequest.getLocale(), vaadinRequest);
+        SystemMessages ci = service.getSystemMessages(vaadinRequest.getLocale(),
+                vaadinRequest);
         // Session Expired is not really the correct message as the
         // session exists but the requested UI does not.
         // Using Communication Error for now.

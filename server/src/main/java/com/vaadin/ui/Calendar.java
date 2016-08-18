@@ -116,8 +116,8 @@ import com.vaadin.ui.declarative.DesignContext;
  * @author Vaadin Ltd.
  */
 @SuppressWarnings("serial")
-public class Calendar extends AbstractComponent implements
-        CalendarComponentEvents.NavigationNotifier,
+public class Calendar extends AbstractComponent
+        implements CalendarComponentEvents.NavigationNotifier,
         CalendarComponentEvents.EventMoveNotifier,
         CalendarComponentEvents.RangeSelectNotifier,
         CalendarComponentEvents.EventResizeNotifier,
@@ -436,11 +436,12 @@ public class Calendar extends AbstractComponent implements
     }
 
     private void setupCalendarEvents() {
-        int durationInDays = (int) (((endDate.getTime()) - startDate.getTime()) / DateConstants.DAYINMILLIS);
+        int durationInDays = (int) (((endDate.getTime()) - startDate.getTime())
+                / DateConstants.DAYINMILLIS);
         durationInDays++;
         if (durationInDays > 60) {
-            throw new RuntimeException("Daterange is too big (max 60) = "
-                    + durationInDays);
+            throw new RuntimeException(
+                    "Daterange is too big (max 60) = " + durationInDays);
         }
 
         Date firstDateToShow = expandStartDate(startDate, durationInDays > 7);
@@ -460,10 +461,10 @@ public class Calendar extends AbstractComponent implements
                 event.dateTo = df_date.format(e.getEnd());
                 event.timeFrom = df_time.format(e.getStart());
                 event.timeTo = df_time.format(e.getEnd());
-                event.description = e.getDescription() == null ? "" : e
-                        .getDescription();
-                event.styleName = e.getStyleName() == null ? "" : e
-                        .getStyleName();
+                event.description = e.getDescription() == null ? ""
+                        : e.getDescription();
+                event.styleName = e.getStyleName() == null ? ""
+                        : e.getStyleName();
                 event.allDay = e.isAllDay();
                 calendarStateEvents.add(event);
             }
@@ -498,11 +499,12 @@ public class Calendar extends AbstractComponent implements
             endDate = getEndDate();
         }
 
-        int durationInDays = (int) (((endDate.getTime()) - startDate.getTime()) / DateConstants.DAYINMILLIS);
+        int durationInDays = (int) (((endDate.getTime()) - startDate.getTime())
+                / DateConstants.DAYINMILLIS);
         durationInDays++;
         if (durationInDays > 60) {
-            throw new RuntimeException("Daterange is too big (max 60) = "
-                    + durationInDays);
+            throw new RuntimeException(
+                    "Daterange is too big (max 60) = " + durationInDays);
         }
 
         state.dayNames = getDayNamesShort();
@@ -551,8 +553,8 @@ public class Calendar extends AbstractComponent implements
                 for (Action.Handler actionHandler : actionHandlers) {
 
                     // Create calendar which omits time
-                    GregorianCalendar cal = new GregorianCalendar(
-                            getTimeZone(), getLocale());
+                    GregorianCalendar cal = new GregorianCalendar(getTimeZone(),
+                            getLocale());
                     cal.clear();
                     cal.set(currentCalendar.get(java.util.Calendar.YEAR),
                             currentCalendar.get(java.util.Calendar.MONTH),
@@ -604,8 +606,8 @@ public class Calendar extends AbstractComponent implements
     }
 
     private void setActionsForEachHalfHour(
-            Map<CalendarDateRange, Set<Action>> actionMap, Date start,
-            Date end, Action.Handler actionHandler) {
+            Map<CalendarDateRange, Set<Action>> actionMap, Date start, Date end,
+            Action.Handler actionHandler) {
         GregorianCalendar cal = new GregorianCalendar(getTimeZone(),
                 getLocale());
         cal.setTime(start);
@@ -613,7 +615,8 @@ public class Calendar extends AbstractComponent implements
             Date s = cal.getTime();
             cal.add(java.util.Calendar.MINUTE, 30);
             Date e = cal.getTime();
-            CalendarDateRange range = new CalendarDateRange(s, e, getTimeZone());
+            CalendarDateRange range = new CalendarDateRange(s, e,
+                    getTimeZone());
             Action[] actions = actionHandler.getActions(range, this);
             if (actions != null) {
                 Set<Action> actionSet = new LinkedHashSet<Action>(
@@ -623,9 +626,8 @@ public class Calendar extends AbstractComponent implements
         }
     }
 
-    private void setActionsForDay(
-            Map<CalendarDateRange, Set<Action>> actionMap, Date start,
-            Date end, Action.Handler actionHandler) {
+    private void setActionsForDay(Map<CalendarDateRange, Set<Action>> actionMap,
+            Date start, Date end, Action.Handler actionHandler) {
         CalendarDateRange range = new CalendarDateRange(start, end,
                 getTimeZone());
         Action[] actions = actionHandler.getActions(range, this);
@@ -648,7 +650,8 @@ public class Calendar extends AbstractComponent implements
                 DateConstants.ACTION_DATE_FORMAT_PATTERN);
         formatter.setTimeZone(getTimeZone());
 
-        for (Entry<CalendarDateRange, Set<Action>> entry : actionMap.entrySet()) {
+        for (Entry<CalendarDateRange, Set<Action>> entry : actionMap
+                .entrySet()) {
             CalendarDateRange range = entry.getKey();
             Set<Action> actions = entry.getValue();
             for (Action action : actions) {
@@ -680,8 +683,8 @@ public class Calendar extends AbstractComponent implements
                 f = (SimpleDateFormat) SimpleDateFormat
                         .getTimeInstance(SimpleDateFormat.SHORT);
             } else {
-                f = (SimpleDateFormat) SimpleDateFormat.getTimeInstance(
-                        SimpleDateFormat.SHORT, getLocale());
+                f = (SimpleDateFormat) SimpleDateFormat
+                        .getTimeInstance(SimpleDateFormat.SHORT, getLocale());
             }
             String p = f.toPattern();
             if (p.indexOf("HH") != -1 || p.indexOf("H") != -1) {
@@ -693,8 +696,8 @@ public class Calendar extends AbstractComponent implements
     }
 
     /**
-     * Example: <code>setTimeFormat(TimeFormat.Format12H);</code></br> Set to
-     * null, if you want the format being defined by the locale.
+     * Example: <code>setTimeFormat(TimeFormat.Format12H);</code></br>
+     * Set to null, if you want the format being defined by the locale.
      * 
      * @param format
      *            Set 12h or 24h format. Default is defined by the locale.
@@ -898,8 +901,8 @@ public class Calendar extends AbstractComponent implements
      */
     public void setWeeklyCaptionFormat(String dateFormatPattern) {
         if ((weeklyCaptionFormat == null && dateFormatPattern != null)
-                || (weeklyCaptionFormat != null && !weeklyCaptionFormat
-                        .equals(dateFormatPattern))) {
+                || (weeklyCaptionFormat != null
+                        && !weeklyCaptionFormat.equals(dateFormatPattern))) {
             weeklyCaptionFormat = dateFormatPattern;
             markAsDirty();
         }
@@ -1527,13 +1530,15 @@ public class Calendar extends AbstractComponent implements
      */
     public void setContainerDataSource(Container.Indexed container) {
         ContainerEventProvider provider = new ContainerEventProvider(container);
-        provider.addEventSetChangeListener(new CalendarEventProvider.EventSetChangeListener() {
-            @Override
-            public void eventSetChange(EventSetChangeEvent changeEvent) {
-                // Repaint if events change
-                markAsDirty();
-            }
-        });
+        provider.addEventSetChangeListener(
+                new CalendarEventProvider.EventSetChangeListener() {
+                    @Override
+                    public void eventSetChange(
+                            EventSetChangeEvent changeEvent) {
+                        // Repaint if events change
+                        markAsDirty();
+                    }
+                });
         provider.addEventChangeListener(new EventChangeListener() {
             @Override
             public void eventChange(EventChangeEvent changeEvent) {
@@ -1577,13 +1582,15 @@ public class Calendar extends AbstractComponent implements
         provider.setStartDateProperty(startDateProperty);
         provider.setEndDateProperty(endDateProperty);
         provider.setStyleNameProperty(styleNameProperty);
-        provider.addEventSetChangeListener(new CalendarEventProvider.EventSetChangeListener() {
-            @Override
-            public void eventSetChange(EventSetChangeEvent changeEvent) {
-                // Repaint if events change
-                markAsDirty();
-            }
-        });
+        provider.addEventSetChangeListener(
+                new CalendarEventProvider.EventSetChangeListener() {
+                    @Override
+                    public void eventSetChange(
+                            EventSetChangeEvent changeEvent) {
+                        // Repaint if events change
+                        markAsDirty();
+                    }
+                });
         provider.addEventChangeListener(new EventChangeListener() {
             @Override
             public void eventChange(EventChangeEvent changeEvent) {
@@ -1955,8 +1962,8 @@ public class Calendar extends AbstractComponent implements
 
         Attributes attr = design.attributes();
         if (design.hasAttr("time-format")) {
-            setTimeFormat(TimeFormat.valueOf("Format"
-                    + design.attr("time-format").toUpperCase()));
+            setTimeFormat(TimeFormat.valueOf(
+                    "Format" + design.attr("time-format").toUpperCase()));
         }
 
         if (design.hasAttr("start-date")) {
@@ -1975,7 +1982,8 @@ public class Calendar extends AbstractComponent implements
 
         if (currentTimeFormat != null) {
             design.attr("time-format",
-                    (currentTimeFormat == TimeFormat.Format12H ? "12h" : "24h"));
+                    (currentTimeFormat == TimeFormat.Format12H ? "12h"
+                            : "24h"));
         }
         if (startDate != null) {
             design.attr("start-date", df_date.format(getStartDate()));
@@ -2009,12 +2017,11 @@ public class Calendar extends AbstractComponent implements
     public void setFirstDayOfWeek(Integer dayOfWeek) {
         int minimalSupported = java.util.Calendar.SUNDAY;
         int maximalSupported = java.util.Calendar.SATURDAY;
-        if (dayOfWeek != null
-                && (dayOfWeek < minimalSupported || dayOfWeek > maximalSupported)) {
-            throw new IllegalArgumentException(
-                    String.format(
-                            "Day of week must be between %s and %s. Actually received: %s",
-                            minimalSupported, maximalSupported, dayOfWeek));
+        if (dayOfWeek != null && (dayOfWeek < minimalSupported
+                || dayOfWeek > maximalSupported)) {
+            throw new IllegalArgumentException(String.format(
+                    "Day of week must be between %s and %s. Actually received: %s",
+                    minimalSupported, maximalSupported, dayOfWeek));
         }
         customFirstDayOfWeek = dayOfWeek;
         markAsDirty();

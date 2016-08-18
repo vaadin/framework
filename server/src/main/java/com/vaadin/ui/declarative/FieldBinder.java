@@ -152,9 +152,8 @@ public class FieldBinder implements Serializable {
         if (!success) {
             String idInfo = "localId: " + localId + " id: " + instance.getId()
                     + " caption: " + instance.getCaption();
-            getLogger().finest(
-                    "Could not bind component to a field "
-                            + instance.getClass().getName() + " " + idInfo);
+            getLogger().finest("Could not bind component to a field "
+                    + instance.getClass().getName() + " " + idInfo);
         }
         return success;
     }
@@ -173,7 +172,8 @@ public class FieldBinder implements Serializable {
      * @throws FieldBindingException
      *             if error occurs when trying to bind the instance to a field
      */
-    private boolean bindFieldByIdentifier(String identifier, Component instance) {
+    private boolean bindFieldByIdentifier(String identifier,
+            Component instance) {
         try {
             // create and validate field name
             String fieldName = asFieldName(identifier);
@@ -183,27 +183,26 @@ public class FieldBinder implements Serializable {
             // validate that the field can be found
             Field field = fieldMap.get(fieldName.toLowerCase(Locale.ENGLISH));
             if (field == null) {
-                getLogger().fine(
-                        "No field was found by identifier " + identifier);
+                getLogger()
+                        .fine("No field was found by identifier " + identifier);
                 return false;
             }
             // validate that the field is not set
             Object fieldValue = getFieldValue(bindTarget, field);
             if (fieldValue != null) {
-                getLogger().fine(
-                        "The field \"" + fieldName
-                                + "\" was already mapped. Ignoring.");
+                getLogger().fine("The field \"" + fieldName
+                        + "\" was already mapped. Ignoring.");
             } else {
                 // set the field value
                 field.set(bindTarget, instance);
             }
             return true;
         } catch (IllegalAccessException e) {
-            throw new FieldBindingException("Field binding failed for "
-                    + identifier, e);
+            throw new FieldBindingException(
+                    "Field binding failed for " + identifier, e);
         } catch (IllegalArgumentException e) {
-            throw new FieldBindingException("Field binding failed for "
-                    + identifier, e);
+            throw new FieldBindingException(
+                    "Field binding failed for " + identifier, e);
         }
     }
 

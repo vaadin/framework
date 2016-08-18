@@ -58,16 +58,16 @@ public class TreeConnectors extends TestBase {
 
         });
 
-        tree.setItemIcon("Item 1", new ThemeResource(
-                "../runo/icons/32/folder.png"));
-        tree.setItemIcon("Item 3", new ThemeResource(
-                "../runo/icons/32/document.png"));
-        tree.setItemIcon("Item 13", new ThemeResource(
-                "../runo/icons/64/user.png"));
-        tree.setItemIcon("Item 72", new ThemeResource(
-                "../runo/icons/64/users.png"));
-        tree.setItemIcon("Item 17", new ThemeResource(
-                "../runo/icons/16/document-pdf.png"));
+        tree.setItemIcon("Item 1",
+                new ThemeResource("../runo/icons/32/folder.png"));
+        tree.setItemIcon("Item 3",
+                new ThemeResource("../runo/icons/32/document.png"));
+        tree.setItemIcon("Item 13",
+                new ThemeResource("../runo/icons/64/user.png"));
+        tree.setItemIcon("Item 72",
+                new ThemeResource("../runo/icons/64/users.png"));
+        tree.setItemIcon("Item 17",
+                new ThemeResource("../runo/icons/16/document-pdf.png"));
 
         return tree;
     }

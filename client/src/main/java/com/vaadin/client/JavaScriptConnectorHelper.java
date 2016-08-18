@@ -64,8 +64,8 @@ public class JavaScriptConnectorHelper {
     /**
      * The id of the previous response for which state changes have been
      * processed. If this is the same as the
-     * {@link ApplicationConnection#getLastSeenServerSyncId()}, it means that the
-     * state change has already been handled and should not be done again.
+     * {@link ApplicationConnection#getLastSeenServerSyncId()}, it means that
+     * the state change has already been handled and should not be done again.
      */
     private int processedResponseId = -1;
 
@@ -93,7 +93,8 @@ public class JavaScriptConnectorHelper {
     }
 
     private void processStateChanges() {
-        int lastResponseId = connector.getConnection().getLastSeenServerSyncId();
+        int lastResponseId = connector.getConnection()
+                .getLastSeenServerSyncId();
         if (processedResponseId == lastResponseId) {
             return;
         }
@@ -140,7 +141,8 @@ public class JavaScriptConnectorHelper {
         return rpcName.replace('$', '.');
     }
 
-    protected JavaScriptObject createRpcObject(String iface, Set<String> methods) {
+    protected JavaScriptObject createRpcObject(String iface,
+            Set<String> methods) {
         JavaScriptObject object = JavaScriptObject.createObject();
 
         for (String method : methods) {
@@ -157,19 +159,16 @@ public class JavaScriptConnectorHelper {
         Integer tag = Integer.valueOf(this.tag);
         while (tag != null) {
             String serverSideClassName = conf.getServerSideClassNameForTag(tag);
-            String initFunctionName = serverSideClassName
-                    .replaceAll("\\.", "_");
+            String initFunctionName = serverSideClassName.replaceAll("\\.",
+                    "_");
             if (tryInitJs(initFunctionName, getConnectorWrapper())) {
-                getLogger().info(
-                        "JavaScript connector initialized using "
-                                + initFunctionName);
+                getLogger().info("JavaScript connector initialized using "
+                        + initFunctionName);
                 this.initFunctionName = initFunctionName;
                 return true;
             } else {
-                getLogger()
-                        .warning(
-                                "No JavaScript function " + initFunctionName
-                                        + " found");
+                getLogger().warning("No JavaScript function " + initFunctionName
+                        + " found");
                 attemptedNames.add(initFunctionName);
                 tag = conf.getParentTag(tag.intValue());
             }
@@ -267,8 +266,8 @@ public class JavaScriptConnectorHelper {
 
         ElementResizeListener listener = elementListeners.get(callbackFunction);
         if (listener == null) {
-            LayoutManager layoutManager = LayoutManager.get(connector
-                    .getConnection());
+            LayoutManager layoutManager = LayoutManager
+                    .get(connector.getConnection());
             listener = new ElementResizeListener() {
                 @Override
                 public void onElementResize(ElementResizeEvent e) {
@@ -343,8 +342,8 @@ public class JavaScriptConnectorHelper {
             return connector;
         }
 
-        return ConnectorMap.get(connector.getConnection()).getConnector(
-                connectorId);
+        return ConnectorMap.get(connector.getConnection())
+                .getConnector(connectorId);
     }
 
     private void fireRpc(String iface, String method,
@@ -378,16 +377,15 @@ public class JavaScriptConnectorHelper {
                 interfaceList += getJsInterfaceName(iface);
             }
 
-            throw new IllegalStateException(
-                    "Can not call method "
-                            + method
-                            + " for wildcard rpc proxy because the function is defined for multiple rpc interfaces: "
-                            + interfaceList
-                            + ". Retrieve a rpc proxy for a specific interface using getRpcProxy(interfaceName) to use the function.");
+            throw new IllegalStateException("Can not call method " + method
+                    + " for wildcard rpc proxy because the function is defined for multiple rpc interfaces: "
+                    + interfaceList
+                    + ". Retrieve a rpc proxy for a specific interface using getRpcProxy(interfaceName) to use the function.");
         }
     }
 
-    private void fireCallback(String name, JsArray<JavaScriptObject> arguments) {
+    private void fireCallback(String name,
+            JsArray<JavaScriptObject> arguments) {
         MethodInvocation invocation = new JavaScriptMethodInvocation(
                 connector.getConnectorId(),
                 "com.vaadin.ui.JavaScript$JavaScriptCallbackRpc", "call",
@@ -450,7 +448,8 @@ public class JavaScriptConnectorHelper {
     }-*/;
 
     private static native void invokeJsRpc(JavaScriptObject rpcMap,
-            String interfaceName, String methodName, JavaScriptObject parameters)
+            String interfaceName, String methodName,
+            JavaScriptObject parameters)
     /*-{
         var targets = rpcMap[interfaceName];
         if (!targets) {
@@ -479,14 +478,15 @@ public class JavaScriptConnectorHelper {
         invokeIfPresent(connectorWrapper, "onUnregister");
 
         if (!resizeListeners.isEmpty()) {
-            LayoutManager layoutManager = LayoutManager.get(connector
-                    .getConnection());
+            LayoutManager layoutManager = LayoutManager
+                    .get(connector.getConnection());
             for (Entry<Element, Map<JavaScriptObject, ElementResizeListener>> entry : resizeListeners
                     .entrySet()) {
                 Element element = entry.getKey();
-                for (ElementResizeListener listener : entry.getValue().values()) {
-                    layoutManager
-                            .removeElementResizeListener(element, listener);
+                for (ElementResizeListener listener : entry.getValue()
+                        .values()) {
+                    layoutManager.removeElementResizeListener(element,
+                            listener);
                 }
             }
             resizeListeners.clear();

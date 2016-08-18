@@ -39,8 +39,8 @@ public class DisabledDateFieldPopupTest extends MultiBrowserTest {
     public void testPopup() throws IOException {
         openTestURL();
 
-        WebElement button = driver.findElement(By
-                .className("v-datefield-button"));
+        WebElement button = driver
+                .findElement(By.className("v-datefield-button"));
         new Actions(driver).moveToElement(button).click()
                 .sendKeys(Keys.ARROW_DOWN).perform();
 

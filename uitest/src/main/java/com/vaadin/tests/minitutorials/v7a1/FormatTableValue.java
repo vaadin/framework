@@ -30,19 +30,21 @@ public class FormatTableValue extends AbstractTestUI {
         table.getItem(itemId).getItemProperty(DEFAULT_PROPERTY)
                 .setValue(3.1415);
 
-        table.setConverter(PERCENT_PROPERTY, new LegacyStringToDoubleConverter() {
-            @Override
-            protected NumberFormat getFormat(Locale locale) {
-                return NumberFormat.getPercentInstance(locale);
-            }
-        });
+        table.setConverter(PERCENT_PROPERTY,
+                new LegacyStringToDoubleConverter() {
+                    @Override
+                    protected NumberFormat getFormat(Locale locale) {
+                        return NumberFormat.getPercentInstance(locale);
+                    }
+                });
 
-        table.setConverter(CURRENCY_PROPERTY, new LegacyStringToDoubleConverter() {
-            @Override
-            protected NumberFormat getFormat(Locale locale) {
-                return NumberFormat.getCurrencyInstance(locale);
-            }
-        });
+        table.setConverter(CURRENCY_PROPERTY,
+                new LegacyStringToDoubleConverter() {
+                    @Override
+                    protected NumberFormat getFormat(Locale locale) {
+                        return NumberFormat.getCurrencyInstance(locale);
+                    }
+                });
 
         addComponent(table);
     }

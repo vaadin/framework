@@ -37,15 +37,15 @@ public class DragAndDropTextAreaTest extends MultiBrowserTest {
     public void testTextAreaDndImage() {
         openTestURL();
 
-        WebElement wrapper = driver.findElement(By
-                .className("v-verticallayout"));
+        WebElement wrapper = driver
+                .findElement(By.className("v-verticallayout"));
         Actions actions = new Actions(driver);
         actions.clickAndHold(wrapper);
         actions.moveByOffset(50, 50);
         actions.perform();
 
-        WebElement dragElement = driver.findElement(By
-                .className("v-drag-element"));
+        WebElement dragElement = driver
+                .findElement(By.className("v-drag-element"));
         List<WebElement> children = dragElement.findElements(By.xpath(".//*"));
         boolean found = false;
         for (WebElement child : children) {

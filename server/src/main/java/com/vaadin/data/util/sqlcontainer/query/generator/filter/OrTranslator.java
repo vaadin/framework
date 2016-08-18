@@ -28,8 +28,8 @@ public class OrTranslator implements FilterTranslator {
 
     @Override
     public String getWhereStringForFilter(Filter filter, StatementHelper sh) {
-        return QueryBuilder.group(QueryBuilder.getJoinedFilterString(
-                ((Or) filter).getFilters(), "OR", sh));
+        return QueryBuilder.group(QueryBuilder
+                .getJoinedFilterString(((Or) filter).getFilters(), "OR", sh));
     }
 
 }

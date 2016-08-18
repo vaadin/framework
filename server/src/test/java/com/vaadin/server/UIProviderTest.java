@@ -48,8 +48,8 @@ public class UIProviderTest {
     @Test
     public void getAnnotationFor_themeAnnotationForSubclass_annotationOverridden() {
         Assert.assertEquals(
-                "Theme annotation is not overridden correctly in subclass",
-                "c", UIProvider.getAnnotationFor(TestClass.class, Theme.class)
+                "Theme annotation is not overridden correctly in subclass", "c",
+                UIProvider.getAnnotationFor(TestClass.class, Theme.class)
                         .value());
     }
 
@@ -71,10 +71,9 @@ public class UIProviderTest {
 
     @Test
     public void getAnnotationFor_annotationInheritedFromInterface_annotationFound() {
-        Assert.assertNotNull(
-                "Theme annotation is not inherited from interface", UIProvider
-                        .getAnnotationFor(ClassImplementingInterface.class,
-                                Theme.class));
+        Assert.assertNotNull("Theme annotation is not inherited from interface",
+                UIProvider.getAnnotationFor(ClassImplementingInterface.class,
+                        Theme.class));
     }
 
     @Retention(RetentionPolicy.RUNTIME)
@@ -106,8 +105,8 @@ public class UIProviderTest {
     public interface InterfaceWithAnnotation {
     }
 
-    public static class ClassImplementingInterface implements
-            InterfaceWithAnnotation {
+    public static class ClassImplementingInterface
+            implements InterfaceWithAnnotation {
     }
 
 }

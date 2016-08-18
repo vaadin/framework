@@ -47,12 +47,12 @@ public class PushAtmosphereHandler extends AbstractReflectorAtmosphereHandler
     }
 
     @Override
-    public void onStateChange(AtmosphereResourceEvent event) throws IOException {
+    public void onStateChange(AtmosphereResourceEvent event)
+            throws IOException {
         super.onStateChange(event);
         if (pushHandler == null) {
-            getLogger()
-                    .warning(
-                            "AtmosphereHandler.onStateChange called before PushHandler has been set. This should really not happen");
+            getLogger().warning(
+                    "AtmosphereHandler.onStateChange called before PushHandler has been set. This should really not happen");
             return;
         }
 
@@ -64,9 +64,8 @@ public class PushAtmosphereHandler extends AbstractReflectorAtmosphereHandler
     @Override
     public void onRequest(AtmosphereResource resource) {
         if (pushHandler == null) {
-            getLogger()
-                    .warning(
-                            "AtmosphereHandler.onRequest called before PushHandler has been set. This should really not happen");
+            getLogger().warning(
+                    "AtmosphereHandler.onRequest called before PushHandler has been set. This should really not happen");
             return;
         }
 

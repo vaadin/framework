@@ -53,9 +53,8 @@ public class SuperDevMode {
 
     private static void recompileWidgetsetAndStartInDevMode(
             final String serverUrl) {
-        getLogger().info(
-                "Recompiling widgetset using<br/>" + serverUrl
-                        + "<br/>and then reloading in super dev mode");
+        getLogger().info("Recompiling widgetset using<br/>" + serverUrl
+                + "<br/>and then reloading in super dev mode");
         VNotification n = new VNotification();
         n.show("<b>Recompiling widgetset, please wait</b>",
                 VNotification.CENTERED, VNotification.STYLE_SYSTEM);
@@ -63,8 +62,9 @@ public class SuperDevMode {
         JsonpRequestBuilder b = new JsonpRequestBuilder();
         b.setCallbackParam("_callback");
         b.setTimeout(COMPILE_TIMEOUT_IN_SECONDS * 1000);
-        b.requestObject(serverUrl + "recompile/" + GWT.getModuleName() + "?"
-                + getRecompileParameters(GWT.getModuleName()),
+        b.requestObject(
+                serverUrl + "recompile/" + GWT.getModuleName() + "?"
+                        + getRecompileParameters(GWT.getModuleName()),
                 new AsyncCallback<RecompileResult>() {
 
                     @Override
@@ -77,8 +77,7 @@ public class SuperDevMode {
                             return;
                         }
 
-                        setSession(
-                                getSuperDevModeHookKey(),
+                        setSession(getSuperDevModeHookKey(),
                                 getSuperDevWidgetSetUrl(GWT.getModuleName(),
                                         serverUrl));
                         setSession(SKIP_RECOMPILE, "1");
@@ -92,9 +91,8 @@ public class SuperDevMode {
                         getLogger().severe("JSONP compile call failed");
                         // Don't log exception as they are shown as
                         // notifications
-                        getLogger().severe(
-                                caught.getClass().getSimpleName() + ": "
-                                        + caught.getMessage());
+                        getLogger().severe(caught.getClass().getSimpleName()
+                                + ": " + caught.getMessage());
                         failed();
 
                     }
@@ -227,12 +225,12 @@ public class SuperDevMode {
         var mod = $wnd.__gwt_activeModules[moduleName];
         if (!mod)
             return false;
-
+    
         if (mod.superdevmode) {
            // Running in super dev mode already, it is supported
            return true;
         }
-
+    
         return !!mod.canRedirect;
     }-*/;
 
@@ -254,9 +252,10 @@ public class SuperDevMode {
             // in super dev mode, as a result of the recompile, the enabled
             // check will fail...
             if (!isSuperDevModeEnabledInModule()) {
-                showError("SuperDevMode is disabled for this module/widgetset.<br/>"
-                        + "Ensure that your module definition (.gwt.xml) does not contain <br/>"
-                        + "&lt;set-configuration-property name=&quot;devModeRedirectEnabled&quot; value=&quot;false&quot; /&gt;<br/>");
+                showError(
+                        "SuperDevMode is disabled for this module/widgetset.<br/>"
+                                + "Ensure that your module definition (.gwt.xml) does not contain <br/>"
+                                + "&lt;set-configuration-property name=&quot;devModeRedirectEnabled&quot; value=&quot;false&quot; /&gt;<br/>");
                 return false;
             }
             return SuperDevMode.recompileIfNeeded(superDevModeParameter);

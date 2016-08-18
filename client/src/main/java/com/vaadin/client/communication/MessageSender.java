@@ -78,9 +78,8 @@ public class MessageSender {
 
     public void sendInvocationsToServer() {
         if (!connection.isApplicationRunning()) {
-            getLogger()
-                    .warning(
-                            "Trying to send RPC from not yet started or stopped application");
+            getLogger().warning(
+                    "Trying to send RPC from not yet started or stopped application");
             return;
         }
 
@@ -115,9 +114,8 @@ public class MessageSender {
         if (reqJson.length() == 0) {
             // Nothing to send, all invocations were filtered out (for
             // non-existing connectors)
-            getLogger()
-                    .warning(
-                            "All RPCs filtered out, not sending anything to the server");
+            getLogger().warning(
+                    "All RPCs filtered out, not sending anything to the server");
             return;
         }
 
@@ -155,8 +153,8 @@ public class MessageSender {
             payload.put(ApplicationConstants.CSRF_TOKEN, csrfToken);
         }
         payload.put(ApplicationConstants.RPC_INVOCATIONS, reqInvocations);
-        payload.put(ApplicationConstants.SERVER_SYNC_ID, getMessageHandler()
-                .getLastSeenServerSyncId());
+        payload.put(ApplicationConstants.SERVER_SYNC_ID,
+                getMessageHandler().getLastSeenServerSyncId());
         payload.put(ApplicationConstants.CLIENT_TO_SERVER_ID,
                 clientToServerMessageId++);
 
@@ -257,9 +255,8 @@ public class MessageSender {
         Scheduler.get().scheduleDeferred(new Command() {
             @Override
             public void execute() {
-                if (!connection.isApplicationRunning()
-                        || !(hasActiveRequest() || getServerRpcQueue()
-                                .isFlushPending())) {
+                if (!connection.isApplicationRunning() || !(hasActiveRequest()
+                        || getServerRpcQueue().isFlushPending())) {
                     getLoadingIndicator().hide();
 
                     // If on Liferay and session expiration management is in
@@ -392,9 +389,8 @@ public class MessageSender {
                 // We have never sent a message to the server, so likely the
                 // server knows better (typical case is that we refreshed a
                 // @PreserveOnRefresh UI)
-                getLogger().info(
-                        "Updating client-to-server id to " + nextExpectedId
-                                + " based on server");
+                getLogger().info("Updating client-to-server id to "
+                        + nextExpectedId + " based on server");
             } else {
                 getLogger().warning(
                         "Server expects next client-to-server id to be "

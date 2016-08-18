@@ -12,8 +12,8 @@ import com.vaadin.ui.Tree.ExpandEvent;
 import com.vaadin.ui.Tree.ExpandListener;
 import com.vaadin.ui.TreeTable;
 
-public class KeepAllItemsVisible extends TestBase implements ExpandListener,
-        CollapseListener {
+public class KeepAllItemsVisible extends TestBase
+        implements ExpandListener, CollapseListener {
 
     private static final String CAPTION = "caption";
 

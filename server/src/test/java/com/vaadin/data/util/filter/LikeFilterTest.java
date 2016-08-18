@@ -36,8 +36,8 @@ public class LikeFilterTest extends AbstractFilterTestBase<Like> {
 
         item1.addItemProperty("value", new ObjectProperty<String>("a"));
         item2.addItemProperty("value", new ObjectProperty<String>("b"));
-        item3.addItemProperty("value", new ObjectProperty<String>(null,
-                String.class));
+        item3.addItemProperty("value",
+                new ObjectProperty<String>(null, String.class));
 
         Assert.assertTrue(filter.passesFilter(null, item1));
         Assert.assertFalse(filter.passesFilter(null, item2));

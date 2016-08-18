@@ -39,17 +39,17 @@ public class LeftColumnAlignmentTest extends MultiBrowserTest {
         webElement.click();
 
         Assert.assertTrue("Table caption is not aligned to the left",
-                isElementPresent(By
-                        .className("v-table-caption-container-align-left")));
+                isElementPresent(
+                        By.className("v-table-caption-container-align-left")));
 
-        WebElement footer = driver.findElement(By
-                .className("v-table-footer-container"));
+        WebElement footer = driver
+                .findElement(By.className("v-table-footer-container"));
 
         Assert.assertEquals("Table footer is not aligned to the left", "left",
                 footer.getCssValue("text-align"));
 
-        WebElement cell = driver.findElement(By
-                .className("v-table-cell-wrapper"));
+        WebElement cell = driver
+                .findElement(By.className("v-table-cell-wrapper"));
 
         Assert.assertEquals("Table cell is not aligned to the left", "left",
                 cell.getCssValue("text-align"));

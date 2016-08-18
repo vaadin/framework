@@ -42,8 +42,8 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.util.ResizeTerrorizer;
 
 @Connect(ResizeTerrorizer.ResizeTerrorizerControl.class)
-public class ResizeTerrorizerControlConnector extends
-        AbstractComponentConnector implements PostLayoutListener {
+public class ResizeTerrorizerControlConnector extends AbstractComponentConnector
+        implements PostLayoutListener {
 
     public static class ResizeTerorrizerState extends AbstractComponentState {
         public Connector target;
@@ -131,8 +131,8 @@ public class ResizeTerrorizerControlConnector extends
                 updateFromHistoryToken(History.getToken());
 
                 // Then add history change listener
-                historyHandlerRegistration = History
-                        .addValueChangeHandler(new ValueChangeHandler<String>() {
+                historyHandlerRegistration = History.addValueChangeHandler(
+                        new ValueChangeHandler<String>() {
                             @Override
                             public void onValueChange(
                                     ValueChangeEvent<String> event) {
@@ -202,11 +202,11 @@ public class ResizeTerrorizerControlConnector extends
 
                 double progress = time / duration;
 
-                double widthToSet = startWidth + (endWidth - startWidth)
-                        * progress;
+                double widthToSet = startWidth
+                        + (endWidth - startWidth) * progress;
 
-                double heightToSet = startHeight + (endHeight - startHeight)
-                        * progress;
+                double heightToSet = startHeight
+                        + (endHeight - startHeight) * progress;
 
                 if (widthToSet != startWidth) {
                     target.getWidget().setWidth(widthToSet + "px");
@@ -264,8 +264,8 @@ public class ResizeTerrorizerControlConnector extends
         if (getWidget().startHeight.getValue() == null) {
             int height = getTarget().getWidget().getElement().getOffsetHeight();
             getWidget().startHeight.setValue(height);
-            getWidget().endHeight.setValue(height
-                    + getState().defaultHeightOffset);
+            getWidget().endHeight
+                    .setValue(height + getState().defaultHeightOffset);
         }
     }
 

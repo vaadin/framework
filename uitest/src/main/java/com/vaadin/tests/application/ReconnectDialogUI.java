@@ -26,10 +26,8 @@ public class ReconnectDialogUI extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         if (request.getParameter("reconnectAttempts") != null) {
-            getReconnectDialogConfiguration()
-                    .setReconnectAttempts(
-                            Integer.parseInt(request
-                                    .getParameter("reconnectAttempts")));
+            getReconnectDialogConfiguration().setReconnectAttempts(Integer
+                    .parseInt(request.getParameter("reconnectAttempts")));
         }
         Button b = new Button("Say hello");
         b.addClickListener(new ClickListener() {

@@ -20,8 +20,8 @@ public class AffectedTB3Tests {
 
     public static class AffectedTB3TestSuite extends TB3TestSuite {
 
-        public AffectedTB3TestSuite(Class<?> klass) throws InitializationError,
-                IOException {
+        public AffectedTB3TestSuite(Class<?> klass)
+                throws InitializationError, IOException {
             super(klass, AbstractTB3Test.class, "com.vaadin.tests",
                     new String[] { "com.vaadin.tests.integration" },
                     new AffectedTB3TestLocator());

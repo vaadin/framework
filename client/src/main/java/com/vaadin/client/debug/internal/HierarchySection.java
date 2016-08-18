@@ -121,8 +121,8 @@ public class HierarchySection implements Section {
             stopFind();
             connector.getConnection().getUIConnector()
                     .showServerDesign(connector);
-            content.setWidget(new HTML(
-                    "Design file for component sent to server log"));
+            content.setWidget(
+                    new HTML("Design file for component sent to server log"));
         }
 
     };
@@ -334,17 +334,17 @@ public class HierarchySection implements Section {
         @Override
         public void onPreviewNativeEvent(NativePreviewEvent event) {
 
-            if (event.getTypeInt() == Event.ONKEYDOWN
-                    && event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
+            if (event.getTypeInt() == Event.ONKEYDOWN && event.getNativeEvent()
+                    .getKeyCode() == KeyCodes.KEY_ESCAPE) {
                 stopFind();
                 Highlight.hideAll();
                 return;
             }
             if (event.getTypeInt() == Event.ONMOUSEMOVE) {
                 Highlight.hideAll();
-                Element eventTarget = WidgetUtil.getElementFromPoint(event
-                        .getNativeEvent().getClientX(), event.getNativeEvent()
-                        .getClientY());
+                Element eventTarget = WidgetUtil.getElementFromPoint(
+                        event.getNativeEvent().getClientX(),
+                        event.getNativeEvent().getClientY());
 
                 if (VDebugWindow.get().getElement().isOrHasChild(eventTarget)) {
                     // Do not prevent using debug window controls
@@ -376,9 +376,9 @@ public class HierarchySection implements Section {
                 event.cancel();
                 event.consume();
                 event.getNativeEvent().stopPropagation();
-                Element eventTarget = WidgetUtil.getElementFromPoint(event
-                        .getNativeEvent().getClientX(), event.getNativeEvent()
-                        .getClientY());
+                Element eventTarget = WidgetUtil.getElementFromPoint(
+                        event.getNativeEvent().getClientX(),
+                        event.getNativeEvent().getClientY());
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
                     ComponentConnector connector = Util.getConnectorForElement(

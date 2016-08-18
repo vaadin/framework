@@ -59,8 +59,8 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     private Command<T, Boolean> columnVisibleCommand = new Command<T, Boolean>() {
         @Override
         public void execute(Table c, Boolean visible, Object propertyId) {
-            List<Object> visibleColumns = new ArrayList<Object>(Arrays.asList(c
-                    .getVisibleColumns()));
+            List<Object> visibleColumns = new ArrayList<Object>(
+                    Arrays.asList(c.getVisibleColumns()));
             if (visible) {
                 // Table should really check this... Completely fails without
                 // the check (#
@@ -205,7 +205,8 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     private Command<T, ColumnHeaderMode> columnHeaderModeCommand = new Command<T, ColumnHeaderMode>() {
 
         @Override
-        public void execute(T c, ColumnHeaderMode columnHeaderMode, Object data) {
+        public void execute(T c, ColumnHeaderMode columnHeaderMode,
+                Object data) {
             c.setColumnHeaderMode(columnHeaderMode);
 
         }
@@ -246,8 +247,8 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
         @Override
         public void execute(T c, final GeneratedColumn col, Object data) {
-            while (c.getColumnGenerator(generatedColumnId
-                    + generatedColumnNextNr) != null) {
+            while (c.getColumnGenerator(
+                    generatedColumnId + generatedColumnNextNr) != null) {
                 generatedColumnNextNr++;
             }
 
@@ -314,7 +315,8 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         private final Object itemId;
         private final Object propertyId;
 
-        public CellStyleInfo(String styleName, Object itemId, Object propertyId) {
+        public CellStyleInfo(String styleName, Object itemId,
+                Object propertyId) {
             this.styleName = styleName;
             this.itemId = itemId;
             this.propertyId = propertyId;
@@ -322,15 +324,17 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
         public boolean appliesTo(Object itemId, Object propertyId) {
             return (this.itemId != null && this.itemId.equals(itemId))
-                    && (this.propertyId == propertyId || (this.propertyId != null && this.propertyId
-                            .equals(propertyId)));
+                    && (this.propertyId == propertyId
+                            || (this.propertyId != null
+                                    && this.propertyId.equals(propertyId)));
         }
     }
 
     private Command<T, CellStyleInfo> cellStyleCommand = new Command<T, CellStyleInfo>() {
 
         @Override
-        public void execute(T c, final CellStyleInfo cellStyleInfo, Object data) {
+        public void execute(T c, final CellStyleInfo cellStyleInfo,
+                Object data) {
             if (cellStyleInfo == null) {
                 c.setCellStyleGenerator(null);
             } else {
@@ -384,12 +388,13 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                 c.setRowGenerator(new RowGenerator() {
 
                     @Override
-                    public GeneratedRow generateRow(Table table, Object itemId) {
+                    public GeneratedRow generateRow(Table table,
+                            Object itemId) {
                         if (generatedRowInfo.appliesTo(itemId)) {
                             GeneratedRow generatedRow = new GeneratedRow(
                                     generatedRowInfo.text);
-                            generatedRow
-                                    .setHtmlContentAllowed(generatedRowInfo.isHtml);
+                            generatedRow.setHtmlContentAllowed(
+                                    generatedRowInfo.isHtml);
                             return generatedRow;
                         }
                         return null;
@@ -455,34 +460,34 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         createClickAction("Add Button", category, addGeneratedColumnCommand,
                 new GeneratedColumn(Button.class, null, false));
         createClickAction("Add 200px wide Button", category,
-                addGeneratedColumnCommand, new GeneratedColumn(Button.class,
-                        "200px", false));
+                addGeneratedColumnCommand,
+                new GeneratedColumn(Button.class, "200px", false));
         createClickAction("Add 100% wide Button", category,
-                addGeneratedColumnCommand, new GeneratedColumn(Button.class,
-                        "100%", false));
+                addGeneratedColumnCommand,
+                new GeneratedColumn(Button.class, "100%", false));
         createClickAction("Add Label", category, addGeneratedColumnCommand,
                 new GeneratedColumn(Label.class, null, false));
         createClickAction("Add 100px Label", category,
-                addGeneratedColumnCommand, new GeneratedColumn(Label.class,
-                        "100px", false));
+                addGeneratedColumnCommand,
+                new GeneratedColumn(Label.class, "100px", false));
         createClickAction("Add 100% wide Label", category,
-                addGeneratedColumnCommand, new GeneratedColumn(Label.class,
-                        "100%", false));
+                addGeneratedColumnCommand,
+                new GeneratedColumn(Label.class, "100%", false));
 
         createClickAction("Remove generated columns", category,
                 removeGeneratedColumnsCommand, null);
         createClickAction("Add string as generated column", category,
-                addGeneratedColumnCommand, new GeneratedColumn(String.class,
-                        "", false));
+                addGeneratedColumnCommand,
+                new GeneratedColumn(String.class, "", false));
         createClickAction("Add HTML string as generated column", category,
-                addGeneratedColumnCommand, new GeneratedColumn(String.class,
-                        "", true));
+                addGeneratedColumnCommand,
+                new GeneratedColumn(String.class, "", true));
         createClickAction("Add 100px HTML Label", category,
-                addGeneratedColumnCommand, new GeneratedColumn(Label.class,
-                        "100px", true));
+                addGeneratedColumnCommand,
+                new GeneratedColumn(Label.class, "100px", true));
         createClickAction("Add Object as generated column", category,
-                addGeneratedColumnCommand, new GeneratedColumn(Object.class,
-                        "", false));
+                addGeneratedColumnCommand,
+                new GeneratedColumn(Object.class, "", false));
     }
 
     private void createCellStyleAction(String categoryFeatures) {
@@ -506,14 +511,13 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         for (int ix = 0; ix < props; ix++) {
             text[ix] = "foo" + ix;
         }
-        options.put("Every tenth row, no spanning", new GeneratedRowInfo(10,
-                false, text));
-        options.put(
-                "Every eight row, spanned, html formatted",
+        options.put("Every tenth row, no spanning",
+                new GeneratedRowInfo(10, false, text));
+        options.put("Every eight row, spanned, html formatted",
                 new GeneratedRowInfo(8, true,
                         "<b>foo</b> <i>bar</i> <span style='color:red;text-size:0.5em;'>baz</span>"));
-        options.put("Every row, spanned", new GeneratedRowInfo(1, false,
-                "spanned"));
+        options.put("Every row, spanned",
+                new GeneratedRowInfo(1, false, "spanned"));
         createSelectAction("Row generator", categoryFeatures, options, "None",
                 rowGeneratorCommand, true);
     }
@@ -549,8 +553,8 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         cm.addItem("Caption only", null);
         cm.addItem("Has icon", ICON_16_USER_PNG_UNCACHEABLE);
         options.put("With and without icon", cm);
-        options.put("Only one large icon", new ContextMenu("Icon",
-                ICON_64_EMAIL_REPLY_PNG_UNCACHEABLE));
+        options.put("Only one large icon",
+                new ContextMenu("Icon", ICON_64_EMAIL_REPLY_PNG_UNCACHEABLE));
         options.put("Empty", new ContextMenu() {
             @Override
             public Action[] getActions(Object target, Object sender) {
@@ -752,10 +756,8 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                                     && nr % 2 == 0) {
                                 c.setColumnHeader(propertyId, null);
                             } else if (value != null) {
-                                c.setColumnHeader(
-                                        propertyId,
-                                        value.replace("{id}",
-                                                propertyId.toString()));
+                                c.setColumnHeader(propertyId, value.replace(
+                                        "{id}", propertyId.toString()));
                             } else {
                                 c.setColumnHeader(propertyId, null);
                             }
@@ -812,7 +814,8 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                 "Explicit defaults id", new Command<T, ColumnHeaderMode>() {
 
                     @Override
-                    public void execute(T c, ColumnHeaderMode value, Object data) {
+                    public void execute(T c, ColumnHeaderMode value,
+                            Object data) {
                         c.setColumnHeaderMode(value);
 
                     }
@@ -852,7 +855,8 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                 "Multi - ctrl/shift", new Command<T, SelectMode>() {
 
                     @Override
-                    public void execute(Table t, SelectMode value, Object data) {
+                    public void execute(Table t, SelectMode value,
+                            Object data) {
                         switch (value) {
                         case NONE:
                             t.setSelectable(false);

@@ -35,13 +35,13 @@ public class ComboBoxItemAddingWithFocusListenerTest extends MultiBrowserTest {
         cBox.openPopup();
         int i = 0;
         while (i < 3) {
-            assertTrue("No item added on focus", cBox.getPopupSuggestions()
-                    .contains("Focus" + i++));
+            assertTrue("No item added on focus",
+                    cBox.getPopupSuggestions().contains("Focus" + i++));
             focusTarget.focus();
             ((TestBenchElement) cBox.findElement(By.vaadin("#textbox")))
                     .focus();
         }
-        assertTrue("No item added on focus", cBox.getPopupSuggestions()
-                .contains("Focus" + i));
+        assertTrue("No item added on focus",
+                cBox.getPopupSuggestions().contains("Focus" + i));
     }
 }

@@ -508,8 +508,7 @@ public class WebBrowser implements Serializable {
 
         if (request.getParameter("v-sw") != null) {
             updateClientSideDetails(request.getParameter("v-sw"),
-                    request.getParameter("v-sh"),
-                    request.getParameter("v-tzo"),
+                    request.getParameter("v-sh"), request.getParameter("v-tzo"),
                     request.getParameter("v-rtzo"),
                     request.getParameter("v-dstd"),
                     request.getParameter("v-dston"),

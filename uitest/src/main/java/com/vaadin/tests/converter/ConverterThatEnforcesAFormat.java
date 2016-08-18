@@ -21,15 +21,14 @@ public class ConverterThatEnforcesAFormat extends AbstractTestUIWithLog {
         tf.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                log("Value changed to "
-                        + event.getProperty().getValue()
-                        + "(converted value is "
-                        + tf.getConvertedValue()
+                log("Value changed to " + event.getProperty().getValue()
+                        + "(converted value is " + tf.getConvertedValue()
                         + "). Two-way conversion gives: "
                         + tf.getConverter().convertToPresentation(
                                 tf.getConverter().convertToModel(tf.getValue(),
                                         Double.class, tf.getLocale()),
-                                String.class, tf.getLocale()) + ")");
+                                String.class, tf.getLocale())
+                        + ")");
             }
         });
         tf.setImmediate(true);

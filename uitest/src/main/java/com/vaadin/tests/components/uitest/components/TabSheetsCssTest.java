@@ -31,8 +31,8 @@ public class TabSheetsCssTest {
                 Reindeer.TABSHEET_MINIMAL);
         parent.addComponent(minimal);
 
-        TabSheet hoverClosable = createTabSheetWith(
-                "A hover-closable TabSheet", Reindeer.TABSHEET_HOVER_CLOSABLE);
+        TabSheet hoverClosable = createTabSheetWith("A hover-closable TabSheet",
+                Reindeer.TABSHEET_HOVER_CLOSABLE);
         parent.addComponent(hoverClosable);
 
         TabSheet selectedClosable = createTabSheetWith(

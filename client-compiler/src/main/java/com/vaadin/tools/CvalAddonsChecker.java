@@ -108,14 +108,14 @@ public final class CvalAddonsChecker {
                     Attributes attribs = manifest.getMainAttributes();
                     String license = attribs.getValue(VAADIN_ADDON_LICENSE);
                     String name = attribs.getValue(VAADIN_ADDON_NAME);
-                    String vers = attribs.getValue(VAADIN_ADDON_VERSION) == null ? ""
-                            : attribs.getValue(VAADIN_ADDON_VERSION);
-                    String title = attribs.getValue(VAADIN_ADDON_TITLE) == null ? name
-                            : attribs.getValue(VAADIN_ADDON_TITLE);
+                    String vers = attribs.getValue(VAADIN_ADDON_VERSION) == null
+                            ? "" : attribs.getValue(VAADIN_ADDON_VERSION);
+                    String title = attribs.getValue(VAADIN_ADDON_TITLE) == null
+                            ? name : attribs.getValue(VAADIN_ADDON_TITLE);
 
                     String widgetsets = attribs
                             .getValue(VAADIN_ADDON_WIDGETSET) == null ? name
-                            : attribs.getValue(VAADIN_ADDON_WIDGETSET);
+                                    : attribs.getValue(VAADIN_ADDON_WIDGETSET);
 
                     if (name == null || license == null) {
                         continue;
@@ -131,14 +131,14 @@ public final class CvalAddonsChecker {
                                     title);
                             printValidLicense(info, title, vers);
                         } catch (UnreachableCvalServerException e) {
-                            info = CvalChecker.parseJson("{'product':{'name':'"
-                                    + name + "'}}");
+                            info = CvalChecker.parseJson(
+                                    "{'product':{'name':'" + name + "'}}");
                             printServerUnreachable(title, vers);
                         }
                         for (String w : widgetsets.split("[, ]+")) {
-                            ret.add(new CValUiInfo(title, String
-                                    .valueOf(computeMajorVersion(vers)), w,
-                                    info.getType()));
+                            ret.add(new CValUiInfo(title,
+                                    String.valueOf(computeMajorVersion(vers)),
+                                    w, info.getType()));
                         }
                     }
                 } catch (IOException ignored) {
@@ -174,13 +174,12 @@ public final class CvalAddonsChecker {
     }
 
     private void printServerUnreachable(String name, String version) {
-        System.out.println(LINE
-                + "\n"
-                + getErrorMessage("unreachable", name,
-                        computeMajorVersion(version)) + "\n" + LINE);
+        System.out.println(LINE + "\n" + getErrorMessage("unreachable", name,
+                computeMajorVersion(version)) + "\n" + LINE);
     }
 
-    private void printValidLicense(CvalInfo info, String title, String version) {
+    private void printValidLicense(CvalInfo info, String title,
+            String version) {
         String msg = info.getMessage();
         if (msg == null) {
             String key = "evaluation".equals(info.getType()) ? "evaluation"

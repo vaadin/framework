@@ -37,8 +37,8 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 
-public class VSlider extends SimpleFocusablePanel implements Field,
-        HasValue<Double>, SubPartAware {
+public class VSlider extends SimpleFocusablePanel
+        implements Field, HasValue<Double>, SubPartAware {
 
     public static final String CLASSNAME = "v-slider";
 
@@ -137,7 +137,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         updateStyleNames(style, true);
     }
 
-    protected void updateStyleNames(String styleName, boolean isPrimaryStyleName) {
+    protected void updateStyleNames(String styleName,
+            boolean isPrimaryStyleName) {
 
         feedbackPopup.removeStyleName(getStylePrimaryName() + "-feedback");
         removeStyleName(getStylePrimaryName() + "-vertical");
@@ -282,8 +283,10 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             increaseValue(true);
         } else if (DOM.eventGetType(event) == Event.MOUSEEVENTS) {
             processBaseEvent(event);
-        } else if ((BrowserInfo.get().isGecko() && DOM.eventGetType(event) == Event.ONKEYPRESS)
-                || (!BrowserInfo.get().isGecko() && DOM.eventGetType(event) == Event.ONKEYDOWN)) {
+        } else if ((BrowserInfo.get().isGecko()
+                && DOM.eventGetType(event) == Event.ONKEYPRESS)
+                || (!BrowserInfo.get().isGecko()
+                        && DOM.eventGetType(event) == Event.ONKEYDOWN)) {
 
             if (handleNavigation(event.getKeyCode(), event.getCtrlKey(),
                     event.getShiftKey())) {
@@ -403,8 +406,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         }
 
         if (isVertical()) {
-            v = ((baseSize - (coord - baseOffset)) / (double) (baseSize - handleSize))
-                    * (max - min) + min;
+            v = ((baseSize - (coord - baseOffset))
+                    / (double) (baseSize - handleSize)) * (max - min) + min;
         } else {
             v = ((coord - baseOffset) / (double) (baseSize - handleSize))
                     * (max - min) + min;
@@ -657,7 +660,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     }
 
     @Override
-    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(
+            String subPart) {
         if (subPart.equals("popup")) {
             feedbackPopup.show();
             return feedbackPopup.getElement();
@@ -666,7 +670,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     }
 
     @Override
-    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+    public String getSubPartName(
+            com.google.gwt.user.client.Element subElement) {
         if (feedbackPopup.getElement().isOrHasChild(subElement)) {
             return "popup";
         }

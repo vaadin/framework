@@ -105,8 +105,9 @@ public class BeanItemContainerFilteringTest extends TestBase {
                     new Button.ClickListener() {
                         @Override
                         public void buttonClick(ClickEvent event) {
-                            container.addItem(new TestBean("addItem() "
-                                    + nextToAdd, "value " + nextToAdd));
+                            container.addItem(
+                                    new TestBean("addItem() " + nextToAdd,
+                                            "value " + nextToAdd));
                             nextToAdd++;
                             nextLabel.setCaption("Next id: " + nextToAdd);
                         }
@@ -122,13 +123,14 @@ public class BeanItemContainerFilteringTest extends TestBase {
                             if (selection == null) {
                                 return;
                             }
-                            TestBean bean = new TestBean("addItemAfter() "
-                                    + nextToAdd, "value " + nextToAdd);
+                            TestBean bean = new TestBean(
+                                    "addItemAfter() " + nextToAdd,
+                                    "value " + nextToAdd);
                             Item item = container.addItemAfter(selection, bean);
                             if (item == null) {
-                                getMainWindow().showNotification(
-                                        "Adding item after " + selection
-                                                + " failed");
+                                getMainWindow()
+                                        .showNotification("Adding item after "
+                                                + selection + " failed");
                             }
                             nextToAdd++;
                             nextLabel.setCaption("Next id: " + nextToAdd);
@@ -144,10 +146,11 @@ public class BeanItemContainerFilteringTest extends TestBase {
                     new Button.ClickListener() {
                         @Override
                         public void buttonClick(ClickEvent event) {
-                            int index = Integer.parseInt(position.getValue()
-                                    .toString());
-                            TestBean bean = new TestBean("addItemAt() "
-                                    + nextToAdd, "value " + nextToAdd);
+                            int index = Integer
+                                    .parseInt(position.getValue().toString());
+                            TestBean bean = new TestBean(
+                                    "addItemAt() " + nextToAdd,
+                                    "value " + nextToAdd);
                             Item item = container.addItemAt(index, bean);
                             if (item == null) {
                                 getMainWindow().showNotification(

@@ -122,8 +122,8 @@ public interface LegacyConverter<PRESENTATION, MODEL> extends Serializable {
     /**
      * An exception that signals that the value passed to
      * {@link LegacyConverter#convertToPresentation(Object, Class, Locale)} or
-     * {@link LegacyConverter#convertToModel(Object, Class, Locale)} could not be
-     * converted.
+     * {@link LegacyConverter#convertToModel(Object, Class, Locale)} could not
+     * be converted.
      * 
      * @author Vaadin Ltd
      * @since 7.0

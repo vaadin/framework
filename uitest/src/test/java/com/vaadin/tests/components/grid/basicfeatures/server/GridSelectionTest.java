@@ -40,8 +40,8 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
         setSelectionModelMulti();
 
-        assertFalse("row shouldn't start out as selected", getRow(0)
-                .isSelected());
+        assertFalse("row shouldn't start out as selected",
+                getRow(0).isSelected());
         toggleFirstRowSelection();
         assertTrue("row should become selected", getRow(0).isSelected());
         toggleFirstRowSelection();
@@ -54,8 +54,8 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
         setSelectionModelMulti();
 
-        assertFalse("row shouldn't start out as selected", getRow(0)
-                .isSelected());
+        assertFalse("row shouldn't start out as selected",
+                getRow(0).isSelected());
         toggleFirstRowSelection();
         assertTrue("row should become selected", getRow(0).isSelected());
 
@@ -72,8 +72,8 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
         setSelectionModelMulti();
 
-        assertFalse("row shouldn't start out as selected", getRow(0)
-                .isSelected());
+        assertFalse("row shouldn't start out as selected",
+                getRow(0).isSelected());
 
         scrollGridVerticallyTo(10000); // make sure the row is out of cache
         toggleFirstRowSelection();
@@ -92,16 +92,17 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
         setSelectionModelMulti();
 
-        assertFalse("row shouldn't start out as selected", getRow(0)
-                .isSelected());
+        assertFalse("row shouldn't start out as selected",
+                getRow(0).isSelected());
 
         scrollGridVerticallyTo(10000); // make sure the row is out of cache
         toggleFirstRowSelection();
         toggleFirstRowSelection();
 
         scrollGridVerticallyTo(0); // make sure the row is out of cache
-        assertFalse("row shouldn't be selected when scrolling "
-                + "back into view", getRow(0).isSelected());
+        assertFalse(
+                "row shouldn't be selected when scrolling " + "back into view",
+                getRow(0).isSelected());
     }
 
     @Test
@@ -110,8 +111,8 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         setSelectionModelSingle();
 
         GridElement grid = getGridElement();
-        assertFalse("First row was selected from start", grid.getRow(0)
-                .isSelected());
+        assertFalse("First row was selected from start",
+                grid.getRow(0).isSelected());
         toggleFirstRowSelection();
         assertTrue("First row was not selected.", getRow(0).isSelected());
         assertTrue("Selection event was not correct",
@@ -151,20 +152,20 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         grid.getCell(3, 1).click();
         new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
 
-        assertTrue("Grid row 3 was not selected with space key.", grid
-                .getRow(3).isSelected());
+        assertTrue("Grid row 3 was not selected with space key.",
+                grid.getRow(3).isSelected());
 
         new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
 
-        assertTrue("Grid row 3 was not deselected with space key.", !grid
-                .getRow(3).isSelected());
+        assertTrue("Grid row 3 was not deselected with space key.",
+                !grid.getRow(3).isSelected());
 
         grid.scrollToRow(500);
 
         new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
 
-        assertTrue("Grid row 3 was not selected with space key.", grid
-                .getRow(3).isSelected());
+        assertTrue("Grid row 3 was not selected with space key.",
+                grid.getRow(3).isSelected());
     }
 
     @Test
@@ -175,25 +176,25 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         GridElement grid = getGridElement();
         grid.getCell(3, 1).click();
 
-        assertTrue("Grid row 3 was not selected with clicking.", grid.getRow(3)
-                .isSelected());
+        assertTrue("Grid row 3 was not selected with clicking.",
+                grid.getRow(3).isSelected());
 
         new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
 
-        assertTrue("Grid row 3 was not deselected with space key.", !grid
-                .getRow(3).isSelected());
+        assertTrue("Grid row 3 was not deselected with space key.",
+                !grid.getRow(3).isSelected());
 
         new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
 
-        assertTrue("Grid row 3 was not selected with space key.", grid
-                .getRow(3).isSelected());
+        assertTrue("Grid row 3 was not selected with space key.",
+                grid.getRow(3).isSelected());
 
         grid.scrollToRow(500);
 
         new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
 
-        assertTrue("Grid row 3 was not deselected with space key.", !grid
-                .getRow(3).isSelected());
+        assertTrue("Grid row 3 was not deselected with space key.",
+                !grid.getRow(3).isSelected());
     }
 
     @Test
@@ -207,13 +208,13 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         header.findElement(By.tagName("input")).click();
 
         for (int i = 0; i < GridBasicFeatures.ROWS; i += 100) {
-            assertTrue("Row " + i + " was not selected.", getGridElement()
-                    .getRow(i).isSelected());
+            assertTrue("Row " + i + " was not selected.",
+                    getGridElement().getRow(i).isSelected());
         }
 
         header.findElement(By.tagName("input")).click();
-        assertFalse("Row 100 was still selected", getGridElement().getRow(100)
-                .isSelected());
+        assertFalse("Row 100 was still selected",
+                getGridElement().getRow(100).isSelected());
     }
 
     @Test
@@ -227,14 +228,13 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
         getGridElement().getHeaderCell(0, 1).click();
 
-        WebElement selectionBox = getGridElement().getCell(4, 0).findElement(
-                By.tagName("input"));
+        WebElement selectionBox = getGridElement().getCell(4, 0)
+                .findElement(By.tagName("input"));
         selectionBox.click();
         selectionBox.click();
 
-        assertFalse(
-                "Exception occured on row reselection.",
-                logContainsText("Exception occured, java.lang.IllegalStateException: No item id for key 101 found."));
+        assertFalse("Exception occured on row reselection.", logContainsText(
+                "Exception occured, java.lang.IllegalStateException: No item id for key 101 found."));
     }
 
     @Test
@@ -261,8 +261,8 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         // Single selection model shouldn't have selection column to begin with
         assertFalse(
                 "Selection columnn shouldn't have been in grid for Single Selection Model",
-                getGridElement().getCell(0, 1).isElementPresent(
-                        By.tagName("input")));
+                getGridElement().getCell(0, 1)
+                        .isElementPresent(By.tagName("input")));
 
         setSelectionModelNone();
         header = getGridElement().getHeaderCell(0, 0);
@@ -295,19 +295,19 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
         getGridElement().getCell(5, 1).click();
         getGridElement().getCell(5, 1).click();
-        assertFalse("Row should be not selected after two clicks", getRow(5)
-                .isSelected());
+        assertFalse("Row should be not selected after two clicks",
+                getRow(5).isSelected());
 
         selectMenuPath("Component", "State", "Single select allow deselect");
         getGridElement().getCell(5, 1).click();
         getGridElement().getCell(5, 1).click();
-        assertTrue("Row should be selected after two clicks", getRow(5)
-                .isSelected());
+        assertTrue("Row should be selected after two clicks",
+                getRow(5).isSelected());
 
         selectMenuPath("Component", "State", "Single select allow deselect");
         getGridElement().getCell(5, 1).click();
-        assertFalse("Row should be not selected after another click", getRow(5)
-                .isSelected());
+        assertFalse("Row should be not selected after another click",
+                getRow(5).isSelected());
 
         // Also verify that state is updated together with the model
         setSelectionModelNone();
@@ -317,8 +317,8 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         getGridElement().getCell(5, 1).click();
         getGridElement().getCell(5, 1).click();
 
-        assertTrue("Row should stay selected after two clicks", getRow(5)
-                .isSelected());
+        assertTrue("Row should stay selected after two clicks",
+                getRow(5).isSelected());
     }
 
     @Test
@@ -328,12 +328,11 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         setSelectionModelSingle();
 
         getGridElement().getCell(5, 1).click();
-        assertTrue("Row should be selected after clicking", getRow(5)
-                .isSelected());
+        assertTrue("Row should be selected after clicking",
+                getRow(5).isSelected());
 
         setSelectionModelNone();
-        assertFalse(
-                "Row should not be selected after changing selection model",
+        assertFalse("Row should not be selected after changing selection model",
                 getRow(5).isSelected());
     }
 
@@ -393,7 +392,8 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
 
         assertFalse(
                 "Unexpected NullPointerException when removing selected rows",
-                logContainsText("Exception occured, java.lang.NullPointerException: null"));
+                logContainsText(
+                        "Exception occured, java.lang.NullPointerException: null"));
     }
 
     private void waitUntilCheckBoxValue(final WebElement checkBoxElememnt,

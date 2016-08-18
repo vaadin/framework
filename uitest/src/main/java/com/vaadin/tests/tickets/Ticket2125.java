@@ -56,7 +56,8 @@ public class Ticket2125 extends LegacyApplication {
             });
             CheckBox b = new CheckBox("editmode");
             b.setValue(table.isEditable());
-            b.addValueChangeListener(event -> table.setEditable(event.getValue()));
+            b.addValueChangeListener(
+                    event -> table.setEditable(event.getValue()));
             b.setImmediate(true);
             addComponent(b);
         }

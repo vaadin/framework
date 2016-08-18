@@ -58,8 +58,8 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
 
     @Test
     public void cellStyleNamesCanBeAddedAndRemoved() {
-        ButtonElement toggleStyles = $(ButtonElement.class).caption(
-                "Toggle styles").first();
+        ButtonElement toggleStyles = $(ButtonElement.class)
+                .caption("Toggle styles").first();
 
         assertStylesSet(true);
         toggleStyles.click();
@@ -70,8 +70,8 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
 
     @Test
     public void rowStyleNamesCanBeAddedAndRemoved() {
-        ButtonElement toggleStyles = $(ButtonElement.class).caption(
-                "Toggle styles").first();
+        ButtonElement toggleStyles = $(ButtonElement.class)
+                .caption("Toggle styles").first();
 
         assertRowStylesSet(true);
         toggleStyles.click();

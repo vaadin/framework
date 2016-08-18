@@ -51,8 +51,9 @@ public class ComponentLocator {
      */
     public ComponentLocator(ApplicationConnection client) {
         this.client = client;
-        locatorStrategies = Arrays.asList(new VaadinFinderLocatorStrategy(
-                client), new LegacyLocatorStrategy(client));
+        locatorStrategies = Arrays.asList(
+                new VaadinFinderLocatorStrategy(client),
+                new LegacyLocatorStrategy(client));
     }
 
     /**
@@ -181,8 +182,8 @@ public class ComponentLocator {
         JsArray<Element> jsElements = JavaScriptObject.createArray().cast();
         for (LocatorStrategy strategy : locatorStrategies) {
             if (strategy.validatePath(path)) {
-                List<Element> elements = strategy.getElementsByPathStartingAt(
-                        path, root);
+                List<Element> elements = strategy
+                        .getElementsByPathStartingAt(path, root);
                 if (elements.size() > 0) {
                     for (Element e : elements) {
                         jsElements.push(e);

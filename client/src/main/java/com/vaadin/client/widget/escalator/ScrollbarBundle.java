@@ -137,8 +137,8 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         void visibilityChanged(VisibilityChangeEvent event);
     }
 
-    public static class VisibilityChangeEvent extends
-            GwtEvent<VisibilityHandler> {
+    public static class VisibilityChangeEvent
+            extends GwtEvent<VisibilityHandler> {
         public static final Type<VisibilityHandler> TYPE = new Type<ScrollbarBundle.VisibilityHandler>() {
             @Override
             public String toString() {
@@ -259,7 +259,8 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * 
      * @see HorizontalScrollbarBundle#getElement()
      */
-    public final static class HorizontalScrollbarBundle extends ScrollbarBundle {
+    public final static class HorizontalScrollbarBundle
+            extends ScrollbarBundle {
 
         @Override
         public void setStylePrimaryName(String primaryStyleName) {
@@ -419,12 +420,13 @@ public abstract class ScrollbarBundle implements DeferredWorker {
                 && newOffsetSizeIsGreaterThanScrollSize;
         if (offsetSizeBecomesGreaterThanScrollSize && getScrollPos() != 0) {
             // must be a field because Java insists.
-            offsetSizeTemporaryScrollHandler = addScrollHandler(new ScrollHandler() {
-                @Override
-                public void onScroll(ScrollEvent event) {
-                    setOffsetSizeNow(px);
-                }
-            });
+            offsetSizeTemporaryScrollHandler = addScrollHandler(
+                    new ScrollHandler() {
+                        @Override
+                        public void onScroll(ScrollEvent event) {
+                            setOffsetSizeNow(px);
+                        }
+                    });
             setScrollPos(0);
         } else {
             setOffsetSizeNow(px);
@@ -557,10 +559,10 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * @return the new scroll position in pixels
      */
     public final double getScrollPos() {
-        assert internalGetScrollPos() == toInt32(scrollPos) : "calculated scroll position ("
-                + scrollPos
-                + ") did not match the DOM element scroll position ("
-                + internalGetScrollPos() + ")";
+        assert internalGetScrollPos() == toInt32(
+                scrollPos) : "calculated scroll position (" + scrollPos
+                        + ") did not match the DOM element scroll position ("
+                        + internalGetScrollPos() + ")";
         return scrollPos;
     }
 
@@ -608,12 +610,13 @@ public abstract class ScrollbarBundle implements DeferredWorker {
                 && newScrollSizeIsSmallerThanOffsetSize;
         if (scrollSizeBecomesSmallerThanOffsetSize && getScrollPos() != 0) {
             // must be a field because Java insists.
-            scrollSizeTemporaryScrollHandler = addScrollHandler(new ScrollHandler() {
-                @Override
-                public void onScroll(ScrollEvent event) {
-                    setScrollSizeNow(px);
-                }
-            });
+            scrollSizeTemporaryScrollHandler = addScrollHandler(
+                    new ScrollHandler() {
+                        @Override
+                        public void onScroll(ScrollEvent event) {
+                            setScrollSizeNow(px);
+                        }
+                    });
             setScrollPos(0);
         } else {
             setScrollSizeNow(px);

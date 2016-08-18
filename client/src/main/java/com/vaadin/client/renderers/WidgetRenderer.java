@@ -30,8 +30,8 @@ import com.vaadin.client.widget.grid.RendererCellReference;
  * @param <W>
  *            the Widget type
  */
-public abstract class WidgetRenderer<T, W extends Widget> extends
-        ComplexRenderer<T> {
+public abstract class WidgetRenderer<T, W extends Widget>
+        extends ComplexRenderer<T> {
 
     @Override
     public void init(RendererCellReference cell) {
@@ -50,8 +50,8 @@ public abstract class WidgetRenderer<T, W extends Widget> extends
     @Override
     public void render(RendererCellReference cell, T data) {
         W w = getWidget(cell.getElement());
-        assert w != null : "Widget not found in cell (" + cell.getColumn()
-                + "," + cell.getRow() + ")";
+        assert w != null : "Widget not found in cell (" + cell.getColumn() + ","
+                + cell.getRow() + ")";
         render(cell, data, w);
     }
 
@@ -105,7 +105,8 @@ public abstract class WidgetRenderer<T, W extends Widget> extends
     protected static <W extends Widget> W getWidget(TableCellElement e,
             Class<W> klass) {
         W w = WidgetUtil.findWidget(e.getFirstChildElement(), klass);
-        assert w == null || w.getElement() == e.getFirstChildElement() : "Widget not found inside cell";
+        assert w == null || w.getElement() == e
+                .getFirstChildElement() : "Widget not found inside cell";
         return w;
     }
 }

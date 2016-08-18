@@ -45,8 +45,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.colorpicker.ColorChangeEvent;
 import com.vaadin.ui.components.colorpicker.ColorChangeListener;
 
-public class ColorPickerTestUI extends AbstractTestUI implements
-        ColorChangeListener {
+public class ColorPickerTestUI extends AbstractTestUI
+        implements ColorChangeListener {
 
     @Override
     public String getTestDescription() {
@@ -129,14 +129,12 @@ public class ColorPickerTestUI extends AbstractTestUI implements
             drawable.setColor(java.awt.Color.blue);
             drawable.drawRect(0, 0, 269, 269);
             drawable.setColor(java.awt.Color.black);
-            drawable.drawString(
-                    "r=" + String.valueOf(fgColor.getRed()) + ",g="
-                            + String.valueOf(fgColor.getGreen()) + ",b="
-                            + String.valueOf(fgColor.getBlue()), 50, 100);
-            drawable.drawString(
-                    "r=" + String.valueOf(bgColor.getRed()) + ",g="
-                            + String.valueOf(bgColor.getGreen()) + ",b="
-                            + String.valueOf(bgColor.getBlue()), 5, 15);
+            drawable.drawString("r=" + String.valueOf(fgColor.getRed()) + ",g="
+                    + String.valueOf(fgColor.getGreen()) + ",b="
+                    + String.valueOf(fgColor.getBlue()), 50, 100);
+            drawable.drawString("r=" + String.valueOf(bgColor.getRed()) + ",g="
+                    + String.valueOf(bgColor.getGreen()) + ",b="
+                    + String.valueOf(bgColor.getBlue()), 5, 15);
 
             try {
                 /* Write the image to a buffer. */
@@ -333,7 +331,8 @@ public class ColorPickerTestUI extends AbstractTestUI implements
         layout3.addComponent(colorpicker6);
         layout3.setComponentAlignment(colorpicker6, Alignment.MIDDLE_CENTER);
 
-        Panel panel3 = new Panel("Color area colorpicker with caption", layout3);
+        Panel panel3 = new Panel("Color area colorpicker with caption",
+                layout3);
         panel3.setWidth("100%");
         panel3.setHeight(null);
         layoutLeft.addComponent(panel3);

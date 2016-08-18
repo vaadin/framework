@@ -43,7 +43,8 @@ public class GridLayoutRegError extends GridBaseLayoutTestUI {
         layout.addComponent(createLabelsFields(Label.class, true, ""));
         layout.addComponent(createLabelsFields(Button.class, true, ""));
         layout.addComponent(createLabelsFields(TabSheet.class, true, ""));
-        layout.addComponent(createLabelsFields(LegacyTextField.class, true, ""));
+        layout.addComponent(
+                createLabelsFields(LegacyTextField.class, true, ""));
 
         layout.addComponent(createLabelsFields(ComboBox.class, true, ""));
         layout.addComponent(createLabelsFields(DateField.class, true, ""));

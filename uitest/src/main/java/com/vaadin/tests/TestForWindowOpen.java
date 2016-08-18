@@ -29,8 +29,8 @@ public class TestForWindowOpen extends CustomComponent {
         final VerticalLayout main = new VerticalLayout();
         setCompositionRoot(main);
 
-        main.addComponent(new Button("Open in this window",
-                new Button.ClickListener() {
+        main.addComponent(
+                new Button("Open in this window", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
@@ -46,8 +46,8 @@ public class TestForWindowOpen extends CustomComponent {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        UI.getCurrent().getPage()
-                                .open("http://www.google.com", "mytarget");
+                        UI.getCurrent().getPage().open("http://www.google.com",
+                                "mytarget");
 
                     }
 
@@ -58,8 +58,8 @@ public class TestForWindowOpen extends CustomComponent {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        UI.getCurrent().getPage()
-                                .open("http://www.google.com", "secondtarget");
+                        UI.getCurrent().getPage().open("http://www.google.com",
+                                "secondtarget");
 
                     }
 

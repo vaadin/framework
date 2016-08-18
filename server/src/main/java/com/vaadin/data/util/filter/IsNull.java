@@ -73,8 +73,9 @@ public final class IsNull implements Filter {
         final IsNull o = (IsNull) obj;
 
         // Checks the properties one by one
-        return (null != getPropertyId()) ? getPropertyId().equals(
-                o.getPropertyId()) : null == o.getPropertyId();
+        return (null != getPropertyId())
+                ? getPropertyId().equals(o.getPropertyId())
+                : null == o.getPropertyId();
     }
 
     @Override

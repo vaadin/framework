@@ -65,8 +65,8 @@ public class SpaceSelectHandler<T> {
                         @Override
                         public void onDataAvailable(
                                 DataAvailableEvent dataAvailableEvent) {
-                            if (dataAvailableEvent.getAvailableRows().contains(
-                                    rowIndex)) {
+                            if (dataAvailableEvent.getAvailableRows()
+                                    .contains(rowIndex)) {
                                 setSelected(grid, rowIndex);
                                 scrollHandler.removeHandler();
                                 scrollHandler = null;

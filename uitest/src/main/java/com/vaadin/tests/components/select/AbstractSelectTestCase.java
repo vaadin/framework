@@ -15,8 +15,8 @@ import com.vaadin.server.Resource;
 import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
 import com.vaadin.ui.AbstractSelect;
 
-public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
-        LegacyAbstractFieldTest<T> implements ItemClickListener {
+public abstract class AbstractSelectTestCase<T extends AbstractSelect>
+        extends LegacyAbstractFieldTest<T> implements ItemClickListener {
 
     public static final String CATEGORY_DATA_SOURCE = "Data source";
 
@@ -67,7 +67,8 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
     }
 
     protected void createMultiSelectCheckbox(String category) {
-        createBooleanAction("Multi select", category, false, multiselectCommand);
+        createBooleanAction("Multi select", category, false,
+                multiselectCommand);
 
     }
 
@@ -101,8 +102,8 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
         for (int i = 1; i <= items; i++) {
             Item item = c.addItem("Item " + i);
             for (int j = 1; j <= properties; j++) {
-                item.getItemProperty("Property " + j).setValue(
-                        "Item " + i + "," + j);
+                item.getItemProperty("Property " + j)
+                        .setValue("Item " + i + "," + j);
             }
         }
 

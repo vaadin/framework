@@ -314,9 +314,8 @@ public final class UIDL extends JavaScriptObject {
                     case CHILD_TYPE_XML:
                         return getChildXML(index);
                     default:
-                        throw new IllegalStateException(
-                                "Illegal child  in tag " + getTag()
-                                        + " at index " + index);
+                        throw new IllegalStateException("Illegal child  in tag "
+                                + getTag() + " at index " + index);
                     }
                 }
                 return null;
@@ -522,8 +521,8 @@ public final class UIDL extends JavaScriptObject {
      */
     public ServerConnector getPaintableAttribute(String name,
             ApplicationConnection connection) {
-        return ConnectorMap.get(connection).getConnector(
-                getStringAttribute(name));
+        return ConnectorMap.get(connection)
+                .getConnector(getStringAttribute(name));
     }
 
     /**
@@ -535,8 +534,8 @@ public final class UIDL extends JavaScriptObject {
      */
     public ServerConnector getPaintableVariable(String name,
             ApplicationConnection connection) {
-        return ConnectorMap.get(connection).getConnector(
-                getStringVariable(name));
+        return ConnectorMap.get(connection)
+                .getConnector(getStringVariable(name));
     }
 
     /**

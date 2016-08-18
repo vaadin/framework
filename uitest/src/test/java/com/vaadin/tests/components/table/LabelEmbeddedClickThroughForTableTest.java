@@ -89,9 +89,9 @@ public class LabelEmbeddedClickThroughForTableTest extends MultiBrowserTest {
     }
 
     private void checkRowSelected(TableElement table, int rowIndex) {
-        List<WebElement> selectedRows = table.findElement(
-                By.className("v-table-body")).findElements(
-                By.className("v-selected"));
+        List<WebElement> selectedRows = table
+                .findElement(By.className("v-table-body"))
+                .findElements(By.className("v-selected"));
         assertEquals("unexpected table selection size", 1, selectedRows.size());
         assertEquals(
                 "contents of the selected row don't match contents of the row #"

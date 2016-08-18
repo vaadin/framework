@@ -27,8 +27,8 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @since 7.2
  */
-public abstract class PointerEvent<H extends EventHandler> extends
-        MouseEvent<H> {
+public abstract class PointerEvent<H extends EventHandler>
+        extends MouseEvent<H> {
 
     enum EventType {
         PointerDown, PointerMove, PointerOut, PointerOver, PointerUp, PointerCancel;

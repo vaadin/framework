@@ -30,7 +30,8 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
  * @param <TYPE>
  *            Type of the data being converted.
  */
-public class DesignToStringConverter<TYPE> implements LegacyConverter<String, TYPE> {
+public class DesignToStringConverter<TYPE>
+        implements LegacyConverter<String, TYPE> {
 
     private final Class<? extends TYPE> type;
 
@@ -74,9 +75,8 @@ public class DesignToStringConverter<TYPE> implements LegacyConverter<String, TY
     public TYPE convertToModel(String value, Class<? extends TYPE> targetType,
             Locale locale) throws LegacyConverter.ConversionException {
         try {
-            return type.cast(type
-                    .getMethod(this.staticMethodName, String.class).invoke(
-                            null, value));
+            return type.cast(type.getMethod(this.staticMethodName, String.class)
+                    .invoke(null, value));
         } catch (IllegalAccessException e) {
             throw new LegacyConverter.ConversionException(e);
         } catch (IllegalArgumentException e) {

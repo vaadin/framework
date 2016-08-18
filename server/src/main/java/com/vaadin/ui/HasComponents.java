@@ -53,7 +53,8 @@ public interface HasComponents extends Component, Iterable<Component> {
          * @param listener
          *            the listener to add.
          */
-        public void addComponentAttachListener(ComponentAttachListener listener);
+        public void addComponentAttachListener(
+                ComponentAttachListener listener);
 
         /**
          * Stops the listening component attach events.
@@ -67,7 +68,8 @@ public interface HasComponents extends Component, Iterable<Component> {
         /**
          * Listens the component detach events.
          */
-        public void addComponentDetachListener(ComponentDetachListener listener);
+        public void addComponentDetachListener(
+                ComponentDetachListener listener);
 
         /**
          * Stops the listening component detach events.
@@ -100,8 +102,8 @@ public interface HasComponents extends Component, Iterable<Component> {
     public interface ComponentDetachListener extends Serializable {
 
         public static final Method detachMethod = ReflectTools.findMethod(
-                ComponentDetachListener.class,
-                "componentDetachedFromContainer", ComponentDetachEvent.class);
+                ComponentDetachListener.class, "componentDetachedFromContainer",
+                ComponentDetachEvent.class);
 
         /**
          * A component has been detached from container.

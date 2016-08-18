@@ -38,8 +38,8 @@ public class BasicCrudTable extends AbstractBasicCrud {
         table.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                form.edit((BeanItem<ComplexPerson>) table.getItem(table
-                        .getValue()));
+                form.edit((BeanItem<ComplexPerson>) table
+                        .getItem(table.getValue()));
             }
         });
 

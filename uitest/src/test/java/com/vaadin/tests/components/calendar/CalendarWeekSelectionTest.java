@@ -31,7 +31,8 @@ public class CalendarWeekSelectionTest extends MultiBrowserTest {
     }
 
     private void clickOnWeek(String week) {
-        for (WebElement e : findElements(By.className("v-calendar-week-number"))) {
+        for (WebElement e : findElements(
+                By.className("v-calendar-week-number"))) {
             if (e.getText().equals(week)) {
                 e.click();
                 break;

@@ -28,8 +28,8 @@ public class CustomComponentChildVisibility extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         Label label = new Label("In panel");
         label.setId("label");
-        final CustomComponent cc = new CustomComponent(new Panel(
-                "In CustomComponent", label));
+        final CustomComponent cc = new CustomComponent(
+                new Panel("In CustomComponent", label));
 
         Button hideButton = new Button("Hide CustomComponent");
         hideButton.addClickListener(new Button.ClickListener() {

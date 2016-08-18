@@ -71,7 +71,8 @@ public class MSSQLGenerator extends DefaultSQLGenerator {
                     "SELECT COUNT(*) AS %s FROM (SELECT * FROM %s",
                     QueryBuilder.quote("rowcount"), tableName));
             if (filters != null && !filters.isEmpty()) {
-                query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
+                query.append(
+                        QueryBuilder.getWhereStringForFilters(filters, sh));
             }
             query.append(") AS t");
             sh.setQueryString(query.toString());
@@ -83,7 +84,8 @@ public class MSSQLGenerator extends DefaultSQLGenerator {
             query.append("SELECT ").append(toSelect).append(" FROM ")
                     .append(tableName);
             if (filters != null) {
-                query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
+                query.append(
+                        QueryBuilder.getWhereStringForFilters(filters, sh));
             }
             if (orderBys != null) {
                 for (OrderBy o : orderBys) {

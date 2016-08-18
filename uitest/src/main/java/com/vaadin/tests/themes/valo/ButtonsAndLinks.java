@@ -34,8 +34,8 @@ import com.vaadin.ui.themes.ValoTheme;
  */
 public class ButtonsAndLinks extends VerticalLayout implements View {
     /**
- * 
- */
+    * 
+    */
     public ButtonsAndLinks() {
         setMargin(true);
 
@@ -157,12 +157,12 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
         row.setSpacing(true);
         addComponent(row);
 
-        Link link = new Link("vaadin.com", new ExternalResource(
-                "https://vaadin.com"));
+        Link link = new Link("vaadin.com",
+                new ExternalResource("https://vaadin.com"));
         row.addComponent(link);
 
-        link = new Link("Link with icon", new ExternalResource(
-                "https://vaadin.com"));
+        link = new Link("Link with icon",
+                new ExternalResource("https://vaadin.com"));
         link.addStyleName("color3");
         link.setIcon(testIcon.get());
         row.addComponent(link);

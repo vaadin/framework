@@ -86,11 +86,11 @@ public class DndTableTargetDetails extends AbstractTestUI {
                     .getTargetDetails();
             MouseEventDetails mouseDetails = details.getMouseEvent();
 
-            VerticalLayout layout = (VerticalLayout) details.getTarget()
-                    .getUI().getContent();
+            VerticalLayout layout = (VerticalLayout) details.getTarget().getUI()
+                    .getContent();
 
-            Label name = new Label("Button name="
-                    + mouseDetails.getButtonName());
+            Label name = new Label(
+                    "Button name=" + mouseDetails.getButtonName());
             name.addStyleName("dnd-button-name");
             layout.addComponent(name);
             if (mouseDetails.isCtrlKey()) {

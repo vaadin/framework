@@ -53,7 +53,7 @@ public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
             com.google.gwt.user.client.Element el)
     /*-{
         var me = this;
-
+    
         el.attachEvent("ondragstart",  $entry(function(ev) {
             return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragStart(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
         }));
@@ -69,19 +69,19 @@ public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
     protected native void hookHtml5Events(com.google.gwt.user.client.Element el)
     /*-{
         var me = this;
-
+    
         el.attachEvent("ondragenter",  $entry(function(ev) {
             return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
         }));
-
+    
         el.attachEvent("ondragleave",  $entry(function(ev) {
             return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
         }));
-
+    
         el.attachEvent("ondragover",  $entry(function(ev) {
             return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
         }));
-
+    
         el.attachEvent("ondrop",  $entry(function(ev) {
             return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
         }));

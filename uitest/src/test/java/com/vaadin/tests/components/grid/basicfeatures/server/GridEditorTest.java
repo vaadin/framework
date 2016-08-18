@@ -70,7 +70,8 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
         selectMenuPath(TOGGLE_EDIT_ENABLED);
         selectMenuPath(EDIT_ITEM_5);
         assertEditorClosed();
-        boolean thrown = logContainsText("Exception occured, java.lang.IllegalStateException");
+        boolean thrown = logContainsText(
+                "Exception occured, java.lang.IllegalStateException");
         assertTrue("IllegalStateException thrown", thrown);
     }
 
@@ -79,7 +80,8 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
         selectMenuPath(EDIT_ITEM_5);
         selectMenuPath(TOGGLE_EDIT_ENABLED);
         assertEditorOpen();
-        boolean thrown = logContainsText("Exception occured, java.lang.IllegalStateException");
+        boolean thrown = logContainsText(
+                "Exception occured, java.lang.IllegalStateException");
         assertTrue("IllegalStateException thrown", thrown);
     }
 

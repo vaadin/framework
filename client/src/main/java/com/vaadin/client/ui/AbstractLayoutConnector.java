@@ -17,8 +17,8 @@ package com.vaadin.client.ui;
 
 import com.vaadin.shared.ui.AbstractLayoutState;
 
-public abstract class AbstractLayoutConnector extends
-        AbstractComponentContainerConnector {
+public abstract class AbstractLayoutConnector
+        extends AbstractComponentContainerConnector {
 
     @Override
     public AbstractLayoutState getState() {

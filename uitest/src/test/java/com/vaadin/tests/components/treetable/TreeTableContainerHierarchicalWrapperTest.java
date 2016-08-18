@@ -31,20 +31,21 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * 
  * @author Vaadin Ltd
  */
-public class TreeTableContainerHierarchicalWrapperTest extends MultiBrowserTest {
+public class TreeTableContainerHierarchicalWrapperTest
+        extends MultiBrowserTest {
 
     @Test
     public void testStructure() throws InterruptedException {
         openTestURL();
 
         TreeTableElement treeTable = $(TreeTableElement.class).first();
-        WebElement findElement = treeTable.getCell(0, 0).findElement(
-                By.className("v-treetable-treespacer"));
+        WebElement findElement = treeTable.getCell(0, 0)
+                .findElement(By.className("v-treetable-treespacer"));
         findElement.click();
 
         TestBenchElement cell = treeTable.getCell(5, 0);
-        WebElement findElement2 = cell.findElement(By
-                .className("v-treetable-treespacer"));
+        WebElement findElement2 = cell
+                .findElement(By.className("v-treetable-treespacer"));
         assertEquals("Item 0-5", cell.getText());
         findElement2.click();
 

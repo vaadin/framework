@@ -109,7 +109,8 @@ import elemental.json.JsonValue;
  * @author Vaadin Ltd
  * @since 7.4
  */
-public abstract class AbstractJavaScriptRenderer<T> extends AbstractRenderer<T> {
+public abstract class AbstractJavaScriptRenderer<T>
+        extends AbstractRenderer<T> {
     private JavaScriptCallbackHelper callbackHelper = new JavaScriptCallbackHelper(
             this);
 
@@ -143,7 +144,8 @@ public abstract class AbstractJavaScriptRenderer<T> extends AbstractRenderer<T> 
      *            the {@link JavaScriptFunction} object that will be invoked
      *            when the JavaScript function is called
      */
-    protected void addFunction(String functionName, JavaScriptFunction function) {
+    protected void addFunction(String functionName,
+            JavaScriptFunction function) {
         callbackHelper.registerCallback(functionName, function);
     }
 

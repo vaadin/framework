@@ -27,8 +27,8 @@ import com.vaadin.client.renderers.HtmlRenderer;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.SelectionMode;
 
-public class GridCellFocusOnResetSizeWidget extends
-        PureGWTTestApplication<Grid<String[]>> {
+public class GridCellFocusOnResetSizeWidget
+        extends PureGWTTestApplication<Grid<String[]>> {
 
     private Grid<String[]> grid;
 

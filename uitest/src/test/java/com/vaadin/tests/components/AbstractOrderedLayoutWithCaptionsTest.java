@@ -40,13 +40,13 @@ public class AbstractOrderedLayoutWithCaptionsTest extends MultiBrowserTest {
     public void CaptionHeightMeasuredCorrectly() {
         openTestURL();
 
-        WebElement div = getDriver().findElement(
-                By.cssSelector(".v-panel-content > div > div"));
+        WebElement div = getDriver()
+                .findElement(By.cssSelector(".v-panel-content > div > div"));
         String paddingTop = div.getCssValue("padding-top");
-        Integer paddingHeight = Integer.parseInt(paddingTop.substring(0,
-                paddingTop.length() - 2));
-        List<WebElement> children = getDriver().findElements(
-                By.cssSelector(".v-panel-content .v-slot"));
+        Integer paddingHeight = Integer
+                .parseInt(paddingTop.substring(0, paddingTop.length() - 2));
+        List<WebElement> children = getDriver()
+                .findElements(By.cssSelector(".v-panel-content .v-slot"));
         assertThat(children.size(), is(3));
 
         Integer neededHeight = children.get(0).getSize().getHeight()

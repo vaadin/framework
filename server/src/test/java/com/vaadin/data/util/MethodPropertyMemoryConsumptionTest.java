@@ -35,8 +35,9 @@ import org.junit.Test;
 public class MethodPropertyMemoryConsumptionTest {
 
     @Test
-    public void testSetArguments() throws NoSuchFieldException,
-            SecurityException, IllegalArgumentException, IllegalAccessException {
+    public void testSetArguments()
+            throws NoSuchFieldException, SecurityException,
+            IllegalArgumentException, IllegalAccessException {
         TestBean bean = new TestBean();
         TestMethodProperty<String> property = new TestMethodProperty<String>(
                 bean, "name");
@@ -51,12 +52,14 @@ public class MethodPropertyMemoryConsumptionTest {
                 .getDeclaredField("setArgs");
         setArgsField.setAccessible(true);
 
-        Assert.assertSame("setArguments method sets non-default instance"
-                + " of empty Object array for getArgs",
+        Assert.assertSame(
+                "setArguments method sets non-default instance"
+                        + " of empty Object array for getArgs",
                 getArgsField.get(property), getArgs);
 
-        Assert.assertSame("setArguments method sets non-default instance"
-                + " of empty Object array for setArgs",
+        Assert.assertSame(
+                "setArguments method sets non-default instance"
+                        + " of empty Object array for setArgs",
                 setArgsField.get(property), setArgs);
     }
 
@@ -72,17 +75,19 @@ public class MethodPropertyMemoryConsumptionTest {
         TestBean otherBean = new TestBean();
         TestMethodProperty<String> otherProperty = new TestMethodProperty<String>(
                 otherBean, "name");
-        Assert.assertSame("setArguments method uses different instance"
-                + " of empty Object array for getArgs", getArgs,
-                otherProperty.getGetArgs());
-        Assert.assertSame("setArguments method uses different instance"
-                + " of empty Object array for setArgs", setArgs,
-                otherProperty.getSetArgs());
+        Assert.assertSame(
+                "setArguments method uses different instance"
+                        + " of empty Object array for getArgs",
+                getArgs, otherProperty.getGetArgs());
+        Assert.assertSame(
+                "setArguments method uses different instance"
+                        + " of empty Object array for setArgs",
+                setArgs, otherProperty.getSetArgs());
     }
 
     @Test
-    public void testDefaultArgsSerialization() throws IOException,
-            ClassNotFoundException {
+    public void testDefaultArgsSerialization()
+            throws IOException, ClassNotFoundException {
         TestBean bean = new TestBean();
         TestMethodProperty<String> property = new TestMethodProperty<String>(
                 bean, "name");

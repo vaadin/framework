@@ -74,7 +74,8 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
                     .findGitDir() // scan up the file system tree
                     .build();
 
-            List<DiffEntry> diffsInWorkingTree = getDiffsInWorkingTree(repository);
+            List<DiffEntry> diffsInWorkingTree = getDiffsInWorkingTree(
+                    repository);
 
             if (diffsInWorkingTree.isEmpty()) {
                 return getDiffsInHead(repository);

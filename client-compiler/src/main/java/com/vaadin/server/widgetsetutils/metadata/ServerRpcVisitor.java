@@ -52,7 +52,8 @@ public class ServerRpcVisitor extends TypeVisitor {
                         }
                     }
 
-                    if (method.getAnnotation(NoLoadingIndicator.class) != null) {
+                    if (method
+                            .getAnnotation(NoLoadingIndicator.class) != null) {
                         bundle.setMethodAttribute(type, method,
                                 MethodAttribute.NO_LOADING_INDICATOR);
                     }

@@ -107,8 +107,8 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
             styleBuf.append(primaryName);
 
             // Add "animate-in" class back if already present
-            boolean isAnimatingIn = getWidget().popup.getStyleName().contains(
-                    VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN);
+            boolean isAnimatingIn = getWidget().popup.getStyleName()
+                    .contains(VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN);
 
             if (isAnimatingIn) {
                 styleBuf.append(" ");
@@ -138,8 +138,8 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
 
     @Override
     public void onVisibilityChange(VisibilityChangeEvent event) {
-        getRpcProxy(PopupViewServerRpc.class).setPopupVisibility(
-                event.isVisible());
+        getRpcProxy(PopupViewServerRpc.class)
+                .setPopupVisibility(event.isVisible());
     }
 
 }

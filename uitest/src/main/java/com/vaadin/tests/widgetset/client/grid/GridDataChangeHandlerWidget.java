@@ -57,8 +57,8 @@ public class GridDataChangeHandlerWidget extends Composite {
         }
     }
 
-    public static class RemoteDelayedDataSource extends
-            AbstractRemoteDataSource<String> {
+    public static class RemoteDelayedDataSource
+            extends AbstractRemoteDataSource<String> {
 
         private List<String> rows;
 
@@ -93,8 +93,8 @@ public class GridDataChangeHandlerWidget extends Composite {
         initWidget(panel);
 
         panel.setWidget(grid);
-        grid.setDataSource(new RemoteDelayedDataSource(Arrays.asList("A", "B",
-                "C", "D", "E")));
+        grid.setDataSource(new RemoteDelayedDataSource(
+                Arrays.asList("A", "B", "C", "D", "E")));
         grid.addColumn(new Column<String, String>("letter") {
             @Override
             public String getValue(String row) {
@@ -107,8 +107,8 @@ public class GridDataChangeHandlerWidget extends Composite {
 
             @Override
             public boolean execute() {
-                grid.setDataSource(new DelayedDataSource(Arrays.asList("X",
-                        "Y", "Z")));
+                grid.setDataSource(
+                        new DelayedDataSource(Arrays.asList("X", "Y", "Z")));
                 if (run) {
                     return false;
                 }

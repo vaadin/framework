@@ -33,8 +33,8 @@ import com.vaadin.shared.ui.customlayout.CustomLayoutState;
 import com.vaadin.ui.CustomLayout;
 
 @Connect(CustomLayout.class)
-public class CustomLayoutConnector extends AbstractLayoutConnector implements
-        SimpleManagedLayout, Paintable {
+public class CustomLayoutConnector extends AbstractLayoutConnector
+        implements SimpleManagedLayout, Paintable {
 
     private boolean templateUpdated;
 
@@ -77,8 +77,8 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
         if (templateName != null) {
             // Get the HTML-template from client. Overrides templateContents
             // (even though both can never be given at the same time)
-            templateContents = getConnection().getResource(
-                    "layouts/" + templateName + ".html");
+            templateContents = getConnection()
+                    .getResource("layouts/" + templateName + ".html");
         }
 
         if (templateContents != null) {
@@ -88,21 +88,19 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
         } else {
             // Template missing -> show debug notice and render components in
             // order.
-            String warning = templateName != null ? "Layout file layouts/"
-                    + templateName + ".html is missing."
+            String warning = templateName != null
+                    ? "Layout file layouts/" + templateName
+                            + ".html is missing."
                     : "Layout file not specified.";
-            getWidget()
-                    .getElement()
-                    .setInnerHTML(
-                            "<em>"
-                                    + warning
-                                    + " Components will be drawn for debug purposes.</em>");
+            getWidget().getElement().setInnerHTML("<em>" + warning
+                    + " Components will be drawn for debug purposes.</em>");
         }
         templateUpdated = true;
     }
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         // Must call here in addition to onStateChanged because
         // onConnectorHierarchyChange is invoked before onStateChanged
         updateHtmlTemplate();
@@ -113,9 +111,8 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
                 getWidget().setWidget(child.getWidget(), location);
             } catch (final IllegalArgumentException e) {
                 // If no location is found, this component is not visible
-                getLogger().warning(
-                        "Child not rendered as no slot with id '" + location
-                                + "' has been defined");
+                getLogger().warning("Child not rendered as no slot with id '"
+                        + location + "' has been defined");
             }
         }
         for (ComponentConnector oldChild : event.getOldChildren()) {

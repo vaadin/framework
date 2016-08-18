@@ -49,8 +49,8 @@ public class VideoDeclarativeTest extends DeclarativeTestBase<Video> {
         video.setMuted(true);
         video.setShowControls(false);
         video.setSources(new ExternalResource("http://foo.pl"),
-                new ExternalResource("https://bar.pl"), new FileResource(
-                        new File("ohai")));
+                new ExternalResource("https://bar.pl"),
+                new FileResource(new File("ohai")));
         video.setPoster(new ExternalResource("http://foo.pl/poster"));
         testRead(design, video);
         testWrite(design, video);

@@ -120,24 +120,29 @@ public class VAbstractOrderedLayout extends FlowPanel {
      *            operation
      */
     public void addOrMoveSlot(Slot slot, int index, boolean adjustSpacing) {
-        Profiler.enter("VAOL.onConnectorHierarchyChange addOrMoveSlot find index");
+        Profiler.enter(
+                "VAOL.onConnectorHierarchyChange addOrMoveSlot find index");
         if (slot.getParent() == this) {
             int currentIndex = getWidgetIndex(slot);
             if (index == currentIndex) {
-                Profiler.leave("VAOL.onConnectorHierarchyChange addOrMoveSlot find index");
+                Profiler.leave(
+                        "VAOL.onConnectorHierarchyChange addOrMoveSlot find index");
                 return;
             }
         }
-        Profiler.leave("VAOL.onConnectorHierarchyChange addOrMoveSlot find index");
+        Profiler.leave(
+                "VAOL.onConnectorHierarchyChange addOrMoveSlot find index");
 
         Profiler.enter("VAOL.onConnectorHierarchyChange addOrMoveSlot insert");
         insert(slot, index);
         Profiler.leave("VAOL.onConnectorHierarchyChange addOrMoveSlot insert");
 
         if (adjustSpacing) {
-            Profiler.enter("VAOL.onConnectorHierarchyChange addOrMoveSlot setSpacing");
+            Profiler.enter(
+                    "VAOL.onConnectorHierarchyChange addOrMoveSlot setSpacing");
             setSpacing(spacing);
-            Profiler.leave("VAOL.onConnectorHierarchyChange addOrMoveSlot setSpacing");
+            Profiler.leave(
+                    "VAOL.onConnectorHierarchyChange addOrMoveSlot setSpacing");
         }
     }
 
@@ -336,14 +341,14 @@ public class VAbstractOrderedLayout extends FlowPanel {
         RegExp captionPositionRegexp = RegExp.compile("v-caption-on-(\\S+)");
 
         // Get caption position from the classname
-        MatchResult matcher = captionPositionRegexp.exec(captionWrap
-                .getClassName());
+        MatchResult matcher = captionPositionRegexp
+                .exec(captionWrap.getClassName());
         if (matcher == null || matcher.getGroupCount() < 2) {
             return CaptionPosition.TOP;
         }
         String captionClass = matcher.getGroup(1);
-        CaptionPosition captionPosition = CaptionPosition.valueOf(
-                CaptionPosition.class, captionClass.toUpperCase());
+        CaptionPosition captionPosition = CaptionPosition
+                .valueOf(CaptionPosition.class, captionClass.toUpperCase());
         return captionPosition;
     }
 
@@ -373,7 +378,8 @@ public class VAbstractOrderedLayout extends FlowPanel {
      *             {@link #updateCaptionOffset(Element)} instead
      */
     @Deprecated
-    public void updateCaptionOffset(com.google.gwt.user.client.Element caption) {
+    public void updateCaptionOffset(
+            com.google.gwt.user.client.Element caption) {
 
         Element captionWrap = caption.getParentElement();
 
@@ -390,7 +396,8 @@ public class VAbstractOrderedLayout extends FlowPanel {
         captionStyle.clearMarginLeft();
 
         // Get caption position from the classname
-        CaptionPosition captionPosition = getCaptionPositionFromElement(captionWrap);
+        CaptionPosition captionPosition = getCaptionPositionFromElement(
+                captionWrap);
 
         if (captionPosition == CaptionPosition.LEFT
                 || captionPosition == CaptionPosition.RIGHT) {
@@ -644,22 +651,22 @@ public class VAbstractOrderedLayout extends FlowPanel {
                     if (layoutManager != null) {
                         // TODO check caption position
                         if (vertical) {
-                            int size = layoutManager.getOuterHeight(slot
-                                    .getWidget().getElement());
+                            int size = layoutManager.getOuterHeight(
+                                    slot.getWidget().getElement());
                             if (slot.hasCaption()) {
-                                size += layoutManager.getOuterHeight(slot
-                                        .getCaptionElement());
+                                size += layoutManager.getOuterHeight(
+                                        slot.getCaptionElement());
                             }
                             if (size > 0) {
                                 totalSize += size;
                             }
                         } else {
                             int max = -1;
-                            max = layoutManager.getOuterWidth(slot.getWidget()
-                                    .getElement());
+                            max = layoutManager.getOuterWidth(
+                                    slot.getWidget().getElement());
                             if (slot.hasCaption()) {
-                                int max2 = layoutManager.getOuterWidth(slot
-                                        .getCaptionElement());
+                                int max2 = layoutManager.getOuterWidth(
+                                        slot.getCaptionElement());
                                 max = Math.max(max, max2);
                             }
                             if (max > 0) {
@@ -668,13 +675,13 @@ public class VAbstractOrderedLayout extends FlowPanel {
                         }
                     } else {
                         // FIXME expandRatio might be <0
-                        totalSize += vertical ? slot.getOffsetHeight() : slot
-                                .getOffsetWidth();
+                        totalSize += vertical ? slot.getOffsetHeight()
+                                : slot.getOffsetWidth();
                     }
                 }
                 // TODO fails in Opera, always returns 0
-                int spacingSize = vertical ? slot.getVerticalSpacing() : slot
-                        .getHorizontalSpacing();
+                int spacingSize = vertical ? slot.getVerticalSpacing()
+                        : slot.getHorizontalSpacing();
                 if (spacingSize > 0) {
                     totalSize += spacingSize;
                 }
@@ -702,8 +709,8 @@ public class VAbstractOrderedLayout extends FlowPanel {
                     // FIXME expandRatio might be <0
                     if (slot.getExpandRatio() != 0) {
                         if (layoutManager != null) {
-                            layoutManager.setNeedsMeasure(Util
-                                    .findConnectorFor(slot.getWidget()));
+                            layoutManager.setNeedsMeasure(
+                                    Util.findConnectorFor(slot.getWidget()));
                         } else if (slot.getWidget() instanceof RequiresResize) {
                             ((RequiresResize) slot.getWidget()).onResize();
                         }

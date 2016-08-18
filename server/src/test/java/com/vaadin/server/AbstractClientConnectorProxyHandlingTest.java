@@ -33,12 +33,13 @@ public class AbstractClientConnectorProxyHandlingTest {
     @Test
     public void abstractClientConnectorTest() {
         try {
-            Method method = AbstractClientConnector.class.getDeclaredMethod(
-                    "isThis", Object.class);
+            Method method = AbstractClientConnector.class
+                    .getDeclaredMethod("isThis", Object.class);
             int modifiers = method.getModifiers();
             if (Modifier.isFinal(modifiers) || !Modifier.isProtected(modifiers)
                     || Modifier.isStatic(modifiers)) {
-                Assert.fail("isThis has invalid modifiers, CDI proxies will not work.");
+                Assert.fail(
+                        "isThis has invalid modifiers, CDI proxies will not work.");
             }
         } catch (SecurityException e) {
             // Ignore, no can do

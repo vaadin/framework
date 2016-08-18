@@ -114,7 +114,7 @@ public class ExpandingContainer extends AbstractContainer implements
 
     @Override
     @SuppressWarnings("rawtypes")
-    public Property/* <?> */getContainerProperty(Object itemId,
+    public Property/* <?> */ getContainerProperty(Object itemId,
             Object propertyId) {
         BeanItem<MyBean> item = getItem(itemId);
         return item != null ? item.getItemProperty(propertyId) : null;
@@ -222,8 +222,8 @@ public class ExpandingContainer extends AbstractContainer implements
         }
         final int size = currentSize;
         if (index >= size) {
-            throw new IndexOutOfBoundsException("index=" + index + " but size="
-                    + size);
+            throw new IndexOutOfBoundsException(
+                    "index=" + index + " but size=" + size);
         }
         checkExpand(index);
         return index;
@@ -237,8 +237,8 @@ public class ExpandingContainer extends AbstractContainer implements
         final int size = currentSize;
         checkExpand(startIndex);
         if (startIndex < 0 || startIndex > size) {
-            throw new IndexOutOfBoundsException("startIndex=" + startIndex
-                    + " but size=" + size);
+            throw new IndexOutOfBoundsException(
+                    "startIndex=" + startIndex + " but size=" + size);
         }
         if (startIndex + numberOfItems > size) {
             numberOfItems = size - startIndex;

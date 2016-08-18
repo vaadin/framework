@@ -34,10 +34,10 @@ public class MultiTabApplication extends UI {
 
     private class MainView extends VerticalLayout {
         public MainView() {
-            addComponent(new Link("Edit person 1", new ExternalResource(
-                    "?editPerson=person1")));
-            addComponent(new Link("Edit person 2", new ExternalResource(
-                    "?editPerson=person2")));
+            addComponent(new Link("Edit person 1",
+                    new ExternalResource("?editPerson=person1")));
+            addComponent(new Link("Edit person 2",
+                    new ExternalResource("?editPerson=person2")));
         }
     }
 

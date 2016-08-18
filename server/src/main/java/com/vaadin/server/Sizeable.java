@@ -199,8 +199,8 @@ public interface Sizeable extends Serializable {
      * The empty string ("") or null will unset the height and set the units to
      * pixels.
      * 
-     * See <a
-     * href="http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-length">CSS
+     * See
+     * <a href="http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-length">CSS
      * specification</a> for more details.
      * 
      * @param height
@@ -239,8 +239,8 @@ public interface Sizeable extends Serializable {
      * The empty string ("") or null will unset the width and set the units to
      * pixels.
      * 
-     * See <a
-     * href="http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-length">CSS
+     * See
+     * <a href="http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-length">CSS
      * specification</a> for more details.
      * 
      * @param width

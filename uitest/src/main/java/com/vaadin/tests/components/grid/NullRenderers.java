@@ -44,13 +44,13 @@ public class NullRenderers extends AbstractTestUI {
         container.addContainerProperty(TextRenderer.class, String.class, null);
         container.addContainerProperty(HtmlRenderer.class, String.class, null);
         container.addContainerProperty(DateRenderer.class, Date.class, null);
-        container
-                .addContainerProperty(NumberRenderer.class, Number.class, null);
+        container.addContainerProperty(NumberRenderer.class, Number.class,
+                null);
 
         container.addContainerProperty(ProgressBarRenderer.class, Double.class,
                 null);
-        container
-                .addContainerProperty(ButtonRenderer.class, String.class, null);
+        container.addContainerProperty(ButtonRenderer.class, String.class,
+                null);
         container.addContainerProperty(ImageRenderer.class, Resource.class,
                 null);
 
@@ -62,27 +62,27 @@ public class NullRenderers extends AbstractTestUI {
         gridDefaults.setSelectionMode(SelectionMode.NONE);
         gridDefaults.setWidth("100%");
 
-        gridDefaults.getColumn(TextRenderer.class).setRenderer(
-                new TextRenderer("-- No Text --"));
-        gridDefaults.getColumn(HtmlRenderer.class).setRenderer(
-                new HtmlRenderer("-- No Jokes --"));
+        gridDefaults.getColumn(TextRenderer.class)
+                .setRenderer(new TextRenderer("-- No Text --"));
+        gridDefaults.getColumn(HtmlRenderer.class)
+                .setRenderer(new HtmlRenderer("-- No Jokes --"));
         gridDefaults.getColumn(DateRenderer.class).setRenderer(
                 new DateRenderer("%s", Locale.getDefault(), "-- Never --"));
         gridDefaults.getColumn(NumberRenderer.class).setRenderer(
                 new NumberRenderer("%s", Locale.getDefault(), "-- Nothing --"));
 
-        gridDefaults.getColumn(ProgressBarRenderer.class).setRenderer(
-                new ProgressBarRenderer());
+        gridDefaults.getColumn(ProgressBarRenderer.class)
+                .setRenderer(new ProgressBarRenderer());
 
-        gridDefaults.getColumn(ButtonRenderer.class).setRenderer(
-                new ButtonRenderer(new RendererClickListener() {
+        gridDefaults.getColumn(ButtonRenderer.class)
+                .setRenderer(new ButtonRenderer(new RendererClickListener() {
                     @Override
                     public void click(RendererClickEvent event) {
                     }
                 }, "-- No Control --"));
 
-        gridDefaults.getColumn(ImageRenderer.class).setRenderer(
-                new ImageRenderer(new RendererClickListener() {
+        gridDefaults.getColumn(ImageRenderer.class)
+                .setRenderer(new ImageRenderer(new RendererClickListener() {
 
                     @Override
                     public void click(RendererClickEvent event) {
@@ -97,27 +97,27 @@ public class NullRenderers extends AbstractTestUI {
         gridNoDefaults.setSelectionMode(SelectionMode.NONE);
         gridNoDefaults.setWidth("100%");
 
-        gridNoDefaults.getColumn(TextRenderer.class).setRenderer(
-                new TextRenderer());
-        gridNoDefaults.getColumn(HtmlRenderer.class).setRenderer(
-                new HtmlRenderer());
-        gridNoDefaults.getColumn(DateRenderer.class).setRenderer(
-                new DateRenderer());
-        gridNoDefaults.getColumn(NumberRenderer.class).setRenderer(
-                new NumberRenderer());
+        gridNoDefaults.getColumn(TextRenderer.class)
+                .setRenderer(new TextRenderer());
+        gridNoDefaults.getColumn(HtmlRenderer.class)
+                .setRenderer(new HtmlRenderer());
+        gridNoDefaults.getColumn(DateRenderer.class)
+                .setRenderer(new DateRenderer());
+        gridNoDefaults.getColumn(NumberRenderer.class)
+                .setRenderer(new NumberRenderer());
 
-        gridNoDefaults.getColumn(ProgressBarRenderer.class).setRenderer(
-                new ProgressBarRenderer());
+        gridNoDefaults.getColumn(ProgressBarRenderer.class)
+                .setRenderer(new ProgressBarRenderer());
 
-        gridNoDefaults.getColumn(ButtonRenderer.class).setRenderer(
-                new ButtonRenderer(new RendererClickListener() {
+        gridNoDefaults.getColumn(ButtonRenderer.class)
+                .setRenderer(new ButtonRenderer(new RendererClickListener() {
                     @Override
                     public void click(RendererClickEvent event) {
                     }
                 }));
 
-        gridNoDefaults.getColumn(ImageRenderer.class).setRenderer(
-                new ImageRenderer(new RendererClickListener() {
+        gridNoDefaults.getColumn(ImageRenderer.class)
+                .setRenderer(new ImageRenderer(new RendererClickListener() {
 
                     @Override
                     public void click(RendererClickEvent event) {

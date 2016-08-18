@@ -30,7 +30,8 @@ import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("grid")
-public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest {
+public abstract class EscalatorBasicClientFeaturesTest
+        extends MultiBrowserTest {
 
     private static final String LOGICAL_ROW_ATTRIBUTE_NAME = "vLogicalRow";
     private static final String SPACER_CSS_CLASS = "v-escalator-spacer";
@@ -217,8 +218,8 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
 
     @Override
     protected WebElement getMenuElement(String menuCaption) {
-        return getDriver().findElement(
-                By.xpath("//td[text() = '" + menuCaption + "']"));
+        return getDriver()
+                .findElement(By.xpath("//td[text() = '" + menuCaption + "']"));
     }
 
     protected void assertLogContains(String substring) {
@@ -261,8 +262,8 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     }
 
     private TestBenchElement getVerticalScrollbar() {
-        return (TestBenchElement) getEscalator().findElement(
-                By.className("v-escalator-scroller-vertical"));
+        return (TestBenchElement) getEscalator()
+                .findElement(By.className("v-escalator-scroller-vertical"));
     }
 
     protected void scrollHorizontallyTo(int px) {
@@ -275,8 +276,8 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     }
 
     protected TestBenchElement getHorizontalScrollbar() {
-        return (TestBenchElement) getEscalator().findElement(
-                By.className("v-escalator-scroller-horizontal"));
+        return (TestBenchElement) getEscalator()
+                .findElement(By.className("v-escalator-scroller-horizontal"));
     }
 
     @Override

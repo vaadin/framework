@@ -101,8 +101,7 @@ public class SQLTestsConstants {
             versionStatements = new String[] {
                     "create table VERSIONED (\"ID\" serial primary key, \"TEXT\" VARCHAR(255), \"VERSION\" INTEGER DEFAULT 0)",
                     "CREATE OR REPLACE FUNCTION zz_row_version() RETURNS TRIGGER AS $$"
-                            + "BEGIN"
-                            + "   IF TG_OP = 'UPDATE'"
+                            + "BEGIN" + "   IF TG_OP = 'UPDATE'"
                             + "       AND NEW.\"VERSION\" = old.\"VERSION\""
                             + "       AND ROW(NEW.*) IS DISTINCT FROM ROW (old.*)"
                             + "   THEN"
@@ -125,7 +124,8 @@ public class SQLTestsConstants {
             dbPwd = "sa";
             peopleFirst = "create table PEOPLE (\"ID\" int identity(1,1) primary key, \"NAME\" VARCHAR(32), \"AGE\" INTEGER)";
             peopleSecond = null;
-            versionStatements = new String[] { "create table VERSIONED (\"ID\" int identity(1,1) primary key, \"TEXT\" VARCHAR(255), \"VERSION\" rowversion not null)" };
+            versionStatements = new String[] {
+                    "create table VERSIONED (\"ID\" int identity(1,1) primary key, \"TEXT\" VARCHAR(255), \"VERSION\" rowversion not null)" };
             sqlGen = new MSSQLGenerator();
             break;
         case ORACLE:

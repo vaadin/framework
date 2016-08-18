@@ -26,7 +26,8 @@ public class ButtonTabIndex extends TestBase {
     protected void setup() {
         LegacyTextField tf1 = new LegacyTextField("Tab index 0");
         tf1.setTabIndex(0);
-        LegacyTextField tf2 = new LegacyTextField("Tab index -1, focused initially");
+        LegacyTextField tf2 = new LegacyTextField(
+                "Tab index -1, focused initially");
         tf2.setTabIndex(-1);
         tf2.focus();
         addComponent(tf1);

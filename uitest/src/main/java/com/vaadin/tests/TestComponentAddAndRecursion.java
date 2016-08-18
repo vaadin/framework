@@ -108,12 +108,12 @@ public class TestComponentAddAndRecursion extends CustomComponent {
                 try {
                     p3l.addComponent(p2);
                     new Notification("ERROR", "This should have failed",
-                            Notification.TYPE_ERROR_MESSAGE).show(Page
-                            .getCurrent());
+                            Notification.TYPE_ERROR_MESSAGE)
+                                    .show(Page.getCurrent());
                 } catch (Exception e) {
                     new Notification("OK", "threw, as expected",
-                            Notification.TYPE_ERROR_MESSAGE).show(Page
-                            .getCurrent());
+                            Notification.TYPE_ERROR_MESSAGE)
+                                    .show(Page.getCurrent());
                 }
             }
 
@@ -129,12 +129,12 @@ public class TestComponentAddAndRecursion extends CustomComponent {
                 try {
                     p3l.addComponent(p);
                     new Notification("ERROR", "This should have failed",
-                            Notification.TYPE_ERROR_MESSAGE).show(Page
-                            .getCurrent());
+                            Notification.TYPE_ERROR_MESSAGE)
+                                    .show(Page.getCurrent());
                 } catch (Exception e) {
                     new Notification("OK", "threw, as expected",
-                            Notification.TYPE_ERROR_MESSAGE).show(Page
-                            .getCurrent());
+                            Notification.TYPE_ERROR_MESSAGE)
+                                    .show(Page.getCurrent());
                 }
             }
 

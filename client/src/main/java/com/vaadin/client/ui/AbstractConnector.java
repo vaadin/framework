@@ -54,8 +54,8 @@ import com.vaadin.shared.communication.URLReference;
  * @since 7.0.0
  * 
  */
-public abstract class AbstractConnector implements ServerConnector,
-        StateChangeHandler {
+public abstract class AbstractConnector
+        implements ServerConnector, StateChangeHandler {
 
     private ApplicationConnection connection;
     private String id;
@@ -120,13 +120,13 @@ public abstract class AbstractConnector implements ServerConnector,
 
         addStateChangeHandler(this);
         if (Profiler.isEnabled()) {
-            Profiler.enter("AbstractConnector.init "
-                    + getClass().getSimpleName());
+            Profiler.enter(
+                    "AbstractConnector.init " + getClass().getSimpleName());
         }
         init();
         if (Profiler.isEnabled()) {
-            Profiler.leave("AbstractConnector.init "
-                    + getClass().getSimpleName());
+            Profiler.leave(
+                    "AbstractConnector.init " + getClass().getSimpleName());
         }
         Profiler.leave("AbstractConnector.doInit");
     }
@@ -225,7 +225,8 @@ public abstract class AbstractConnector implements ServerConnector,
         }
         if (statePropertyHandlerManagers != null
                 && event instanceof StateChangeEvent) {
-            Profiler.enter("AbstractConnector.fireEvent statePropertyHandlerManagers");
+            Profiler.enter(
+                    "AbstractConnector.fireEvent statePropertyHandlerManagers");
             StateChangeEvent stateChangeEvent = (StateChangeEvent) event;
             JsArrayString keys = statePropertyHandlerManagers.getKeys();
             for (int i = 0; i < keys.length(); i++) {
@@ -234,7 +235,8 @@ public abstract class AbstractConnector implements ServerConnector,
                     statePropertyHandlerManagers.get(property).fireEvent(event);
                 }
             }
-            Profiler.leave("AbstractConnector.fireEvent statePropertyHandlerManagers");
+            Profiler.leave(
+                    "AbstractConnector.fireEvent statePropertyHandlerManagers");
         }
         if (Profiler.isEnabled()) {
             Profiler.leave(profilerKey);
@@ -251,9 +253,10 @@ public abstract class AbstractConnector implements ServerConnector,
     }
 
     @Override
-    public HandlerRegistration addStateChangeHandler(StateChangeHandler handler) {
-        return ensureHandlerManager()
-                .addHandler(StateChangeEvent.TYPE, handler);
+    public HandlerRegistration addStateChangeHandler(
+            StateChangeHandler handler) {
+        return ensureHandlerManager().addHandler(StateChangeEvent.TYPE,
+                handler);
     }
 
     @Override
@@ -264,8 +267,8 @@ public abstract class AbstractConnector implements ServerConnector,
     @Override
     public HandlerRegistration addStateChangeHandler(String propertyName,
             StateChangeHandler handler) {
-        return ensureHandlerManager(propertyName).addHandler(
-                StateChangeEvent.TYPE, handler);
+        return ensureHandlerManager(propertyName)
+                .addHandler(StateChangeEvent.TYPE, handler);
     }
 
     @Override
@@ -339,8 +342,8 @@ public abstract class AbstractConnector implements ServerConnector,
     @Override
     public void onUnregister() {
         if (debugLogging) {
-            VConsole.log("Unregistered connector "
-                    + Util.getConnectorString(this));
+            VConsole.log(
+                    "Unregistered connector " + Util.getConnectorString(this));
         }
 
     }

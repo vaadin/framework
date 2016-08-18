@@ -277,9 +277,8 @@ public abstract class Compare implements Filter {
             return (otherValue == value);
         } else if (value == otherValue) {
             return true;
-        } else if (value instanceof Comparable
-                && otherValue.getClass()
-                        .isAssignableFrom(getValue().getClass())) {
+        } else if (value instanceof Comparable && otherValue.getClass()
+                .isAssignableFrom(getValue().getClass())) {
             return ((Comparable) value).compareTo(otherValue) == 0;
         } else {
             return value.equals(otherValue);
@@ -331,8 +330,8 @@ public abstract class Compare implements Filter {
         if (getOperation() != o.getOperation()) {
             return false;
         }
-        return (null == getValue()) ? null == o.getValue() : getValue().equals(
-                o.getValue());
+        return (null == getValue()) ? null == o.getValue()
+                : getValue().equals(o.getValue());
     }
 
     @Override

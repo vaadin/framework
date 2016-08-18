@@ -13,10 +13,12 @@ public class MenuBarTooltip extends AbstractTestUI {
         MenuBar.MenuItem menuitem = menubar.addItem("Menu item", null, null);
         menuitem.setDescription("Menu item description");
 
-        MenuBar.MenuItem submenuitem1 = menuitem.addItem("Submenu item 1", null, null);
+        MenuBar.MenuItem submenuitem1 = menuitem.addItem("Submenu item 1", null,
+                null);
         submenuitem1.setDescription("Submenu item 1 description");
 
-        MenuBar.MenuItem submenuitem2 = menuitem.addItem("Submenu item 2", null, null);
+        MenuBar.MenuItem submenuitem2 = menuitem.addItem("Submenu item 2", null,
+                null);
         submenuitem2.setDescription("Submenu item 2 description");
 
         addComponent(menubar);

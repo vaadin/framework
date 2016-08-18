@@ -28,8 +28,8 @@ import com.vaadin.ui.AbstractComponent;
  * 
  * @since 7.0.0
  */
-public class ColorPickerGradient extends AbstractComponent implements
-        ColorSelector {
+public class ColorPickerGradient extends AbstractComponent
+        implements ColorSelector {
 
     private static final Method COLOR_CHANGE_METHOD;
     static {

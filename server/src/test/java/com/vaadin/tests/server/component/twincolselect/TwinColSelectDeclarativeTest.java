@@ -27,8 +27,8 @@ import com.vaadin.ui.TwinColSelect;
  * 
  * @author Vaadin Ltd
  */
-public class TwinColSelectDeclarativeTest extends
-        DeclarativeTestBase<TwinColSelect> {
+public class TwinColSelectDeclarativeTest
+        extends DeclarativeTestBase<TwinColSelect> {
 
     public String getBasicDesign() {
         return "<vaadin-twin-col-select rows=5 right-column-caption='Selected values' left-column-caption='Unselected values'>\n"

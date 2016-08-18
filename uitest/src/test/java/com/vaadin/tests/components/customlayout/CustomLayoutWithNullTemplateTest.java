@@ -31,13 +31,14 @@ public class CustomLayoutWithNullTemplateTest extends SingleBrowserTest {
     public void testChildComponents() {
         openTestURL();
 
-        ElementQuery<CustomLayoutElement> customLayout = $(CustomLayoutElement.class);
+        ElementQuery<CustomLayoutElement> customLayout = $(
+                CustomLayoutElement.class);
 
         // Verify the Button and Label are rendered inside the CustomLayout.
         assertTrue("Button was not rendered.",
                 customLayout.$(ButtonElement.class).exists());
-        assertTrue("Label was not rendered.", customLayout
-                .$(LabelElement.class).exists());
+        assertTrue("Label was not rendered.",
+                customLayout.$(LabelElement.class).exists());
     }
 
 }

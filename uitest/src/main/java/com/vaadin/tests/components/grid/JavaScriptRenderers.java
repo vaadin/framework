@@ -61,8 +61,8 @@ public class JavaScriptRenderers extends AbstractTestUI {
             Integer itemId = Integer.valueOf(i);
             Item item = container.addItem(itemId);
             item.getItemProperty("id").setValue(itemId);
-            item.getItemProperty("bean").setValue(
-                    new MyBean(i + 1, Integer.toString(i - 1)));
+            item.getItemProperty("bean")
+                    .setValue(new MyBean(i + 1, Integer.toString(i - 1)));
             item.getItemProperty("string").setValue("string" + i);
         }
 

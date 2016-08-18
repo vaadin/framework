@@ -85,10 +85,10 @@ public class NavigateWithOngoingXHR extends AbstractTestUI {
         });
 
         // Hacky URLs that are might not work in all deployment scenarios
-        addComponent(new Link("Navigate away", new ExternalResource(
-                "slowRequestHandler")));
-        addComponent(new Link("Start download", new ExternalResource(
-                "slowRequestHandler?download")));
+        addComponent(new Link("Navigate away",
+                new ExternalResource("slowRequestHandler")));
+        addComponent(new Link("Start download",
+                new ExternalResource("slowRequestHandler?download")));
     }
 
     @Override

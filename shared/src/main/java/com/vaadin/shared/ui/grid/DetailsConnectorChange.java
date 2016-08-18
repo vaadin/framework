@@ -84,12 +84,11 @@ public class DetailsConnectorChange implements Serializable {
         boolean connectorAndNewIndexIsNullThenOldIndexIsSet = connector == null
                 && newIndex == null && oldIndex != null;
 
-        assert (connectorAndNewIndexIsNotNull || connectorAndNewIndexIsNullThenOldIndexIsSet) : "connector: "
-                + nullityString(connector)
-                + ", oldIndex: "
-                + nullityString(oldIndex)
-                + ", newIndex: "
-                + nullityString(newIndex);
+        assert (connectorAndNewIndexIsNotNull
+                || connectorAndNewIndexIsNullThenOldIndexIsSet) : "connector: "
+                        + nullityString(connector) + ", oldIndex: "
+                        + nullityString(oldIndex) + ", newIndex: "
+                        + nullityString(newIndex);
         return true;
     }
 

@@ -26,12 +26,12 @@ import com.vaadin.shared.ui.AlignmentInfo.Bits;
 @SuppressWarnings("serial")
 public final class Alignment implements Serializable {
 
-    public static final Alignment TOP_RIGHT = new Alignment(Bits.ALIGNMENT_TOP
-            + Bits.ALIGNMENT_RIGHT);
-    public static final Alignment TOP_LEFT = new Alignment(Bits.ALIGNMENT_TOP
-            + Bits.ALIGNMENT_LEFT);
-    public static final Alignment TOP_CENTER = new Alignment(Bits.ALIGNMENT_TOP
-            + Bits.ALIGNMENT_HORIZONTAL_CENTER);
+    public static final Alignment TOP_RIGHT = new Alignment(
+            Bits.ALIGNMENT_TOP + Bits.ALIGNMENT_RIGHT);
+    public static final Alignment TOP_LEFT = new Alignment(
+            Bits.ALIGNMENT_TOP + Bits.ALIGNMENT_LEFT);
+    public static final Alignment TOP_CENTER = new Alignment(
+            Bits.ALIGNMENT_TOP + Bits.ALIGNMENT_HORIZONTAL_CENTER);
     public static final Alignment MIDDLE_RIGHT = new Alignment(
             Bits.ALIGNMENT_VERTICAL_CENTER + Bits.ALIGNMENT_RIGHT);
     public static final Alignment MIDDLE_LEFT = new Alignment(
@@ -104,7 +104,8 @@ public final class Alignment implements Serializable {
      * @return true if aligned bottom
      */
     public boolean isMiddle() {
-        return (bitMask & Bits.ALIGNMENT_VERTICAL_CENTER) == Bits.ALIGNMENT_VERTICAL_CENTER;
+        return (bitMask
+                & Bits.ALIGNMENT_VERTICAL_CENTER) == Bits.ALIGNMENT_VERTICAL_CENTER;
     }
 
     /**
@@ -114,7 +115,8 @@ public final class Alignment implements Serializable {
      * @return true if aligned center
      */
     public boolean isCenter() {
-        return (bitMask & Bits.ALIGNMENT_HORIZONTAL_CENTER) == Bits.ALIGNMENT_HORIZONTAL_CENTER;
+        return (bitMask
+                & Bits.ALIGNMENT_HORIZONTAL_CENTER) == Bits.ALIGNMENT_HORIZONTAL_CENTER;
     }
 
     /**

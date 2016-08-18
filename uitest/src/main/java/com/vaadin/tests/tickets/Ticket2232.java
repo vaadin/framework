@@ -16,10 +16,8 @@ public class Ticket2232 extends LegacyApplication {
         setMainWindow(new LegacyWindow());
         setTheme("tests-tickets");
 
-        getMainWindow()
-                .addComponent(
-                        new Label(
-                                "Defining spacing must be possible also with pure CSS"));
+        getMainWindow().addComponent(new Label(
+                "Defining spacing must be possible also with pure CSS"));
 
         Layout gl;
         gl = new VerticalLayout();

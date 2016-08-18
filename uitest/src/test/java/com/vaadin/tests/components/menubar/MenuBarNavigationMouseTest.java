@@ -10,8 +10,8 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class MenuBarNavigationMouseTest extends MultiBrowserTest {
 
     @ServerClass("com.vaadin.ui.MenuBar")
-    public static class MenuBarElement extends
-            com.vaadin.testbench.elements.MenuBarElement {
+    public static class MenuBarElement
+            extends com.vaadin.testbench.elements.MenuBarElement {
 
         public void openMenuPath(String... captions) {
             for (String c : captions) {

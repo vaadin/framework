@@ -67,13 +67,14 @@ public class FieldGroupTest {
         group.bind(field, "name");
 
         Property propertyDataSource = field.getPropertyDataSource();
-        Assert.assertTrue("Custom implementation of transactional property "
-                + "has not been used",
+        Assert.assertTrue(
+                "Custom implementation of transactional property "
+                        + "has not been used",
                 propertyDataSource instanceof TransactionalPropertyImpl);
     }
 
-    public static class TransactionalPropertyImpl<T> extends
-            TransactionalPropertyWrapper<T> {
+    public static class TransactionalPropertyImpl<T>
+            extends TransactionalPropertyWrapper<T> {
 
         public TransactionalPropertyImpl(Property<T> wrappedProperty) {
             super(wrappedProperty);

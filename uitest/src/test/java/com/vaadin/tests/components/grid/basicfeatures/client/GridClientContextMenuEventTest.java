@@ -26,7 +26,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 
-public class GridClientContextMenuEventTest extends GridBasicClientFeaturesTest {
+public class GridClientContextMenuEventTest
+        extends GridBasicClientFeaturesTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
@@ -49,19 +50,15 @@ public class GridClientContextMenuEventTest extends GridBasicClientFeaturesTest 
                 .moveToElement(getGridElement().getCell(0, 0), 5, 5)
                 .contextClick().perform();
 
-        assertTrue(
-                "Debug log was not visible",
-                isElementPresent(By
-                        .xpath("//span[text() = 'Prevented opening a context menu in grid body']")));
+        assertTrue("Debug log was not visible", isElementPresent(By.xpath(
+                "//span[text() = 'Prevented opening a context menu in grid body']")));
 
         new Actions(getDriver())
                 .moveToElement(getGridElement().getHeaderCell(0, 0), 5, 5)
                 .contextClick().perform();
 
-        assertTrue(
-                "Debug log was not visible",
-                isElementPresent(By
-                        .xpath("//span[text() = 'Prevented opening a context menu in grid header']")));
+        assertTrue("Debug log was not visible", isElementPresent(By.xpath(
+                "//span[text() = 'Prevented opening a context menu in grid header']")));
 
     }
 }

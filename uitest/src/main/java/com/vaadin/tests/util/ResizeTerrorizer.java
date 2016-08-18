@@ -23,8 +23,8 @@ import com.vaadin.ui.VerticalLayout;
 public class ResizeTerrorizer extends VerticalLayout {
     private final ResizeTerrorizerControl control;
 
-    public class ResizeTerrorizerControl extends AbstractComponent implements
-            Component {
+    public class ResizeTerrorizerControl extends AbstractComponent
+            implements Component {
 
         public ResizeTerrorizerControl(Component target) {
             getState().target = target;

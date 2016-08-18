@@ -52,23 +52,28 @@ public class EnableDisablePushTest extends MultiBrowserTest {
     }
 
     private WebElement getDisablePushButton() {
-        return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VButton[0]");
+        return vaadinElement(
+                "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VButton[0]");
     }
 
     private WebElement getEnablePushButton() {
-        return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VButton[0]");
+        return vaadinElement(
+                "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VButton[0]");
     }
 
     private WebElement getDisablePollButton() {
-        return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[2]/VButton[0]");
+        return vaadinElement(
+                "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[2]/VButton[0]");
     }
 
     private WebElement getEnablePollButton() {
-        return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[3]/VButton[0]");
+        return vaadinElement(
+                "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[3]/VButton[0]");
     }
 
     private WebElement getDisablePushButtonAndReenableFromBackground() {
-        return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[4]/VButton[0]");
+        return vaadinElement(
+                "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[4]/VButton[0]");
     }
 
 }

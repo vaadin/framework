@@ -29,8 +29,8 @@ import com.vaadin.shared.ui.accordion.AccordionState;
 import com.vaadin.ui.Accordion;
 
 @Connect(Accordion.class)
-public class AccordionConnector extends TabsheetBaseConnector implements
-        SimpleManagedLayout, MayScrollChildren {
+public class AccordionConnector extends TabsheetBaseConnector
+        implements SimpleManagedLayout, MayScrollChildren {
 
     @Override
     protected void init() {
@@ -47,8 +47,8 @@ public class AccordionConnector extends TabsheetBaseConnector implements
          * the content area is
          */
         if (getWidget().selectedItemIndex >= 0) {
-            StackItem selectedItem = getWidget().getStackItem(
-                    getWidget().selectedItemIndex);
+            StackItem selectedItem = getWidget()
+                    .getStackItem(getWidget().selectedItemIndex);
 
             ComponentConnector contentConnector = getChildComponents().get(0);
             if (contentConnector != null) {
@@ -106,12 +106,12 @@ public class AccordionConnector extends TabsheetBaseConnector implements
                     usedPixels += item.getCaptionHeight();
                 } else {
                     // This includes the captionNode borders
-                    usedPixels += WidgetUtil.getRequiredHeight(item
-                            .getElement());
+                    usedPixels += WidgetUtil
+                            .getRequiredHeight(item.getElement());
                 }
             }
-            int rootElementInnerHeight = getLayoutManager().getInnerHeight(
-                    getWidget().getElement());
+            int rootElementInnerHeight = getLayoutManager()
+                    .getInnerHeight(getWidget().getElement());
             int spaceForOpenItem = rootElementInnerHeight - usedPixels;
 
             if (spaceForOpenItem < 0) {

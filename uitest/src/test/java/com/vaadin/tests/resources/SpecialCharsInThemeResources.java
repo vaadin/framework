@@ -36,7 +36,8 @@ public class SpecialCharsInThemeResources extends SingleBrowserTest {
 
     @Test
     public void loadThemeResourceWithSpecialChars() {
-        loadResource("/VAADIN/themes/tests-tickets/folder%20with%20space/resource%20with%20special%20$chars@.txt");
+        loadResource(
+                "/VAADIN/themes/tests-tickets/folder%20with%20space/resource%20with%20special%20$chars@.txt");
         checkSource();
     }
 

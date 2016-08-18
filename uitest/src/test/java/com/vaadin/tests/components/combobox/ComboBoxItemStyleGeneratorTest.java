@@ -37,8 +37,8 @@ public class ComboBoxItemStyleGeneratorTest extends SingleBrowserTest {
 
         comboBox.openPopup();
 
-        List<WebElement> boldItems = findElements(By
-                .className("v-filterselect-item-bold"));
+        List<WebElement> boldItems = findElements(
+                By.className("v-filterselect-item-bold"));
 
         Assert.assertEquals(1, boldItems.size());
         Assert.assertEquals("Item 5", boldItems.get(0).getText());

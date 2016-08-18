@@ -41,8 +41,8 @@ public class JavaScriptResizeListener extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
 
-        addComponent(new Button("Change holder size",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Change holder size", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         updateHolderSize();

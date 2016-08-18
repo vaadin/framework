@@ -18,8 +18,8 @@ package com.vaadin.event;
 import com.vaadin.event.Action.Listener;
 import com.vaadin.server.Resource;
 
-public abstract class ShortcutListener extends ShortcutAction implements
-        Listener {
+public abstract class ShortcutListener extends ShortcutAction
+        implements Listener {
 
     private static final long serialVersionUID = 1L;
 

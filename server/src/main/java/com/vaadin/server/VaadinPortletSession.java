@@ -145,8 +145,8 @@ public class VaadinPortletSession extends VaadinSession {
             RenderResponse response) {
         for (PortletListener l : new ArrayList<PortletListener>(
                 portletListeners)) {
-            l.handleRenderRequest(request, new RestrictedRenderResponse(
-                    response), uI);
+            l.handleRenderRequest(request,
+                    new RestrictedRenderResponse(response), uI);
         }
     }
 

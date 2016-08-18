@@ -30,8 +30,8 @@ public class MissingHierarchyDetectionTest extends SingleBrowserTest {
 
         Assert.assertTrue(isElementPresent(By.id("label")));
 
-        ButtonElement toggleProperly = $(ButtonElement.class).caption(
-                "Toggle properly").first();
+        ButtonElement toggleProperly = $(ButtonElement.class)
+                .caption("Toggle properly").first();
 
         toggleProperly.click();
         assertNoSystemNotifications();
@@ -41,8 +41,8 @@ public class MissingHierarchyDetectionTest extends SingleBrowserTest {
         assertNoSystemNotifications();
         Assert.assertTrue(isElementPresent(LabelElement.class));
 
-        ButtonElement toggleInproperly = $(ButtonElement.class).caption(
-                "Toggle improperly").first();
+        ButtonElement toggleInproperly = $(ButtonElement.class)
+                .caption("Toggle improperly").first();
         toggleInproperly.click();
 
         assertSystemNotification();

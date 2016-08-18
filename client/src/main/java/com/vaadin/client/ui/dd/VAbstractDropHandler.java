@@ -122,7 +122,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
     boolean validated = false;
 
     /**
-     * The default implemmentation visits server if {@link AcceptCriterion} 
+     * The default implemmentation visits server if {@link AcceptCriterion}
      * can't be verified on client or if {@link AcceptCriterion} are met on
      * client.
      */

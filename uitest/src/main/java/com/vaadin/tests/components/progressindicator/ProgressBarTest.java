@@ -65,8 +65,8 @@ public class ProgressBarTest extends AbstractTestUI {
             }
         }));
 
-        addComponent(new Button("Use ProgressIndicator",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Use ProgressIndicator", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         useComponent(new ProgressIndicator());

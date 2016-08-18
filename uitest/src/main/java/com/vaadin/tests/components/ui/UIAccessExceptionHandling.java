@@ -30,8 +30,8 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
-public class UIAccessExceptionHandling extends AbstractTestUIWithLog implements
-        ErrorHandler {
+public class UIAccessExceptionHandling extends AbstractTestUIWithLog
+        implements ErrorHandler {
 
     private Future<Void> future;
 
@@ -81,35 +81,36 @@ public class UIAccessExceptionHandling extends AbstractTestUIWithLog implements
                     }
                 }));
 
-        addComponent(new Button(
-                "Throw RuntimeException after removing instances",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Throw RuntimeException after removing instances",
+                        new Button.ClickListener() {
 
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        log.clear();
-
-                        // Ensure beforeClientResponse is invoked
-                        markAsDirty();
-
-                        assert UI.getCurrent() == UIAccessExceptionHandling.this;
-
-                        Map<Class<?>, CurrentInstance> instances = CurrentInstance
-                                .getInstances(false);
-                        CurrentInstance.clearAll();
-
-                        assert UI.getCurrent() == null;
-
-                        future = access(new Runnable() {
                             @Override
-                            public void run() {
-                                throw new RuntimeException();
-                            }
-                        });
+                            public void buttonClick(ClickEvent event) {
+                                log.clear();
 
-                        CurrentInstance.restoreInstances(instances);
-                    }
-                }));
+                                // Ensure beforeClientResponse is invoked
+                                markAsDirty();
+
+                                assert UI
+                                        .getCurrent() == UIAccessExceptionHandling.this;
+
+                                Map<Class<?>, CurrentInstance> instances = CurrentInstance
+                                        .getInstances(false);
+                                CurrentInstance.clearAll();
+
+                                assert UI.getCurrent() == null;
+
+                                future = access(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        throw new RuntimeException();
+                                    }
+                                });
+
+                                CurrentInstance.restoreInstances(instances);
+                            }
+                        }));
 
         addComponent(new Button("Clear", new Button.ClickListener() {
 

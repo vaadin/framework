@@ -26,7 +26,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ConnectorMap {
 
-    public static ConnectorMap get(ApplicationConnection applicationConnection) {
+    public static ConnectorMap get(
+            ApplicationConnection applicationConnection) {
         return applicationConnection.getConnectorMap();
     }
 

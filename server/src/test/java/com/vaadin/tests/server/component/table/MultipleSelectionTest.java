@@ -55,8 +55,8 @@ public class MultipleSelectionTest {
      * @return A new container with test items
      */
     private Container createTestContainer() {
-        IndexedContainer container = new IndexedContainer(Arrays.asList("1",
-                new String[] { "2", "3", "4" }));
+        IndexedContainer container = new IndexedContainer(
+                Arrays.asList("1", new String[] { "2", "3", "4" }));
         return container;
     }
 }

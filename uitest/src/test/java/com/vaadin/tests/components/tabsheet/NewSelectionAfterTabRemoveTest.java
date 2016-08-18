@@ -69,18 +69,18 @@ public class NewSelectionAfterTabRemoveTest extends MultiBrowserTest {
      * Gets the selected state of the specified tab.
      */
     private boolean isTabSelected(TestBenchElement tab) {
-        return tab.getAttribute("class").contains(
-                "v-tabsheet-tabitemcell-selected")
-                && tab.getAttribute("class").contains(
-                        "v-tabsheet-tabitemcell-focus");
+        return tab.getAttribute("class")
+                .contains("v-tabsheet-tabitemcell-selected")
+                && tab.getAttribute("class")
+                        .contains("v-tabsheet-tabitemcell-focus");
     }
 
     /*
      * Scroll the tabsheet bar to the right.
      */
     private boolean scrollRight() {
-        List<WebElement> scrollElements = getDriver().findElements(
-                By.className("v-tabsheet-scrollerNext"));
+        List<WebElement> scrollElements = getDriver()
+                .findElements(By.className("v-tabsheet-scrollerNext"));
         if (!scrollElements.isEmpty()) {
             TestBenchElement rightScrollElement = (TestBenchElement) scrollElements
                     .get(0);
@@ -95,8 +95,8 @@ public class NewSelectionAfterTabRemoveTest extends MultiBrowserTest {
      * Provide the tab close button for the specified tab.
      */
     private TestBenchElement tabClose(TestBenchElement tab) {
-        return (TestBenchElement) tab.findElement(By
-                .className("v-tabsheet-caption-close"));
+        return (TestBenchElement) tab
+                .findElement(By.className("v-tabsheet-caption-close"));
     }
 
     /*

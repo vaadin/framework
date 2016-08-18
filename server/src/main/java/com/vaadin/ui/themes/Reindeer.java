@@ -165,7 +165,7 @@ public class Reindeer extends BaseTheme {
      * {@link FormLayout}, {@link CssLayout}, {@link VerticalSplitPanel} and
      * {@link HorizontalSplitPanel}.
      * <p>
-     * <em>Does not revert any contained components back to normal if some 
+     * <em>Does not revert any contained components back to normal if some
      * parent layout has style {@link #LAYOUT_BLACK} applied.</em>
      */
     public static final String LAYOUT_WHITE = "white";
@@ -176,7 +176,7 @@ public class Reindeer extends BaseTheme {
      * {@link FormLayout}, {@link CssLayout}, {@link VerticalSplitPanel} and
      * {@link HorizontalSplitPanel}.
      * <p>
-     * <em>Does not revert any contained components back to normal if some 
+     * <em>Does not revert any contained components back to normal if some
      * parent layout has style {@link #LAYOUT_BLACK} applied.</em>
      */
     public static final String LAYOUT_BLUE = "blue";

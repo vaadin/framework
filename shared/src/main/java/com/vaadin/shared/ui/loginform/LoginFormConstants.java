@@ -28,4 +28,3 @@ public class LoginFormConstants implements Serializable {
     public static final String LOGIN_RESOURCE_NAME = "loginForm";
 
 }
-

@@ -62,13 +62,14 @@ public class ShowingExtraDataForRows extends UI {
                         new Button.ClickListener() {
                             @Override
                             public void buttonClick(ClickEvent event) {
-                                Notification.show("Button clicked for "
-                                        + bean.getName());
+                                Notification.show(
+                                        "Button clicked for " + bean.getName());
                             }
                         });
 
                 // Wrap up all the parts into a vertical layout
-                VerticalLayout layout = new VerticalLayout(label, image, button);
+                VerticalLayout layout = new VerticalLayout(label, image,
+                        button);
                 layout.setSpacing(true);
                 layout.setMargin(true);
                 return layout;

@@ -14,8 +14,8 @@ import com.vaadin.ui.ComboBox;
  * 
  * See <a href="http://dev.vaadin.com/ticket/4394">Ticket 4394</a>.
  */
-public class ComboBoxValueChangeTest extends
-        AbstractFieldValueChangeTestBase<Object> {
+public class ComboBoxValueChangeTest
+        extends AbstractFieldValueChangeTestBase<Object> {
 
     @Before
     public void setUp() {

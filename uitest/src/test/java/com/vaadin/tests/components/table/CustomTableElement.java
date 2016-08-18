@@ -27,8 +27,8 @@ public class CustomTableElement extends TableElement {
 
     public CollapseMenu openCollapseMenu() {
         getCollapseMenuToggle().click();
-        WebElement cm = getDriver().findElement(
-                By.xpath("//*[@id='PID_VAADIN_CM']"));
+        WebElement cm = getDriver()
+                .findElement(By.xpath("//*[@id='PID_VAADIN_CM']"));
         return wrapElement(cm, getCommandExecutor()).wrap(CollapseMenu.class);
     }
 
@@ -42,16 +42,16 @@ public class CustomTableElement extends TableElement {
     public static class ContextMenuElement extends AbstractElement {
 
         public WebElement getItem(int index) {
-            return findElement(By.xpath(".//table//tr[" + (index + 1)
-                    + "]//td/*"));
+            return findElement(
+                    By.xpath(".//table//tr[" + (index + 1) + "]//td/*"));
         }
 
     }
 
     public ContextMenuElement getContextMenu() {
         WebElement cm = getDriver().findElement(By.className("v-contextmenu"));
-        return wrapElement(cm, getCommandExecutor()).wrap(
-                ContextMenuElement.class);
+        return wrapElement(cm, getCommandExecutor())
+                .wrap(ContextMenuElement.class);
     }
 
 }

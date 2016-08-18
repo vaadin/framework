@@ -35,7 +35,8 @@ public class ShowLastItem extends AbstractTestUI {
                 table.addItem(itemId).getItemProperty("Col")
                         .setValue(String.valueOf(itemId));
 
-                table.setCurrentPageFirstItemIndex(table.getItemIds().size() - 1);
+                table.setCurrentPageFirstItemIndex(
+                        table.getItemIds().size() - 1);
             }
         });
 

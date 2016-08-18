@@ -44,8 +44,8 @@ public class PushErrorHandlingTest extends MultiBrowserTest {
                 $(LabelElement.class).get(idx).getText());
 
         WebElement table = vaadinElementById("testtable");
-        WebElement row = table.findElement(By
-                .xpath("//div[text()='Click for NPE']"));
+        WebElement row = table
+                .findElement(By.xpath("//div[text()='Click for NPE']"));
         row.click();
 
         Assert.assertEquals("Internal error",

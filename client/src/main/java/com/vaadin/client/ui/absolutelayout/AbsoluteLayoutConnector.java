@@ -40,8 +40,8 @@ import com.vaadin.ui.AbsoluteLayout;
  * counterpart {@link VAbsoluteLayout}
  */
 @Connect(AbsoluteLayout.class)
-public class AbsoluteLayoutConnector extends
-        AbstractComponentContainerConnector implements DirectionalManagedLayout {
+public class AbsoluteLayoutConnector extends AbstractComponentContainerConnector
+        implements DirectionalManagedLayout {
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
@@ -120,8 +120,8 @@ public class AbsoluteLayoutConnector extends
         VAbsoluteLayout absoluteLayoutWidget = getWidget();
         boolean captionIsNeeded = VCaption.isNeeded(component.getState());
 
-        VCaption caption = absoluteLayoutWidget.getWidgetCaption(component
-                .getWidget());
+        VCaption caption = absoluteLayoutWidget
+                .getWidgetCaption(component.getWidget());
         if (captionIsNeeded) {
             if (caption == null) {
                 caption = new VCaption(component, getConnection());
@@ -173,8 +173,8 @@ public class AbsoluteLayoutConnector extends
     }
 
     private void setChildWidgetPosition(ComponentConnector child) {
-        String position = getState().connectorToCssPosition.get(child
-                .getConnectorId());
+        String position = getState().connectorToCssPosition
+                .get(child.getConnectorId());
         if (position == null) {
             position = "";
         }
@@ -204,7 +204,8 @@ public class AbsoluteLayoutConnector extends
      * @return updated position, or the original string if no updates were
      *         needed
      */
-    private String addDefaultPositionIfMissing(String position, String property) {
+    private String addDefaultPositionIfMissing(String position,
+            String property) {
         if (!position.contains(property)) {
             position = position + property + ":0.0px;";
         }
@@ -219,7 +220,8 @@ public class AbsoluteLayoutConnector extends
      * (com.vaadin.client.ConnectorHierarchyChangeEvent)
      */
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         for (ComponentConnector child : getChildComponents()) {
             if (!getWidget().contains(child.getWidget())) {
                 getWidget().add(child.getWidget());

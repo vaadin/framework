@@ -102,8 +102,8 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
         screenshotFailures = new ArrayList<String>();
 
         Parameters.setScreenshotErrorDirectory(getScreenshotErrorDirectory());
-        Parameters
-                .setScreenshotReferenceDirectory(getScreenshotReferenceDirectory());
+        Parameters.setScreenshotReferenceDirectory(
+                getScreenshotReferenceDirectory());
     }
 
     /**
@@ -127,7 +127,8 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     protected void compareScreen(WebElement element, String identifier)
             throws IOException {
         if (identifier == null || identifier.isEmpty()) {
-            throw new IllegalArgumentException("Empty identifier not supported");
+            throw new IllegalArgumentException(
+                    "Empty identifier not supported");
         }
 
         File mainReference = getScreenshotReferenceFile(identifier);
@@ -207,8 +208,8 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
         return customTestBench;
     }
 
-    private void enableAutoswitch(File htmlFile) throws FileNotFoundException,
-            IOException {
+    private void enableAutoswitch(File htmlFile)
+            throws FileNotFoundException, IOException {
         if (htmlFile == null || !htmlFile.exists()) {
             return;
         }
@@ -238,8 +239,8 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      * @return
      */
     private static File htmlFromPng(File png) {
-        return new File(png.getParentFile(), png.getName().replaceAll(
-                "\\.png$", ".png.html"));
+        return new File(png.getParentFile(),
+                png.getName().replaceAll("\\.png$", ".png.html"));
     }
 
     /**
@@ -444,9 +445,9 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
         if (versionOverride != null) {
             // Windows_Firefox_17_bufferingdemo_valo
-            parameters = parameters.replaceFirst("_"
-                    + getDesiredCapabilities().getVersion(), "_"
-                    + versionOverride);
+            parameters = parameters.replaceFirst(
+                    "_" + getDesiredCapabilities().getVersion(),
+                    "_" + versionOverride);
         }
         return parameters;
     }
@@ -459,9 +460,10 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      * running this test.
      */
     private String getScreenshotErrorBaseName() {
-        return getScreenshotReferenceName("dummy", null).replace(
-                getScreenshotReferenceDirectory(),
-                getScreenshotErrorDirectory()).replace("_dummy.png", "");
+        return getScreenshotReferenceName("dummy", null)
+                .replace(getScreenshotReferenceDirectory(),
+                        getScreenshotErrorDirectory())
+                .replace("_dummy.png", "");
     }
 
     /**

@@ -64,8 +64,8 @@ public class GridStaticSectionComponentTest extends GridBasicFeaturesTest {
         assertTrue("No notifications should've been shown",
                 !$(NotificationElement.class).exists());
         assertEquals("Header should've been reverted back to text header",
-                "text header", getGridElement().getHeaderCell(0, 1).getText()
-                        .toLowerCase());
+                "text header",
+                getGridElement().getHeaderCell(0, 1).getText().toLowerCase());
     }
 
 }

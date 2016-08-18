@@ -37,8 +37,7 @@ public class TabSheetFocusingTest extends MultiBrowserTest {
     }
 
     private WebElement getButton(String caption) {
-        return driver.findElement(By
-                .xpath("//span[@class='v-button-caption'][text()='" + caption
-                        + "']"));
+        return driver.findElement(By.xpath(
+                "//span[@class='v-button-caption'][text()='" + caption + "']"));
     }
 }

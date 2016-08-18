@@ -50,9 +50,9 @@ public class SetThemeAndResponsiveLayoutTest extends MultiBrowserTest {
     public void testWidthAndHeightRanges() throws Exception {
         openTestURL();
         // IE sometimes has trouble waiting long enough.
-        new WebDriverWait(getDriver(), 30).until(ExpectedConditions
-                .presenceOfElementLocated(By
-                        .cssSelector(".v-csslayout-width-and-height")));
+        new WebDriverWait(getDriver(), 30)
+                .until(ExpectedConditions.presenceOfElementLocated(
+                        By.cssSelector(".v-csslayout-width-and-height")));
         // set the theme programmatically
         $(ButtonElement.class).caption("Set theme").first().click();
         new WebDriverWait(getDriver(), 30).until(ExpectedConditions

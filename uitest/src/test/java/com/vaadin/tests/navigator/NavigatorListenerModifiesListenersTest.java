@@ -40,15 +40,13 @@ public class NavigatorListenerModifiesListenersTest extends SingleBrowserTest {
             button.click();
 
             // verify we are in another view and url is correct
-            waitForElementPresent(By
-                    .id(NavigatorListenerModifiesListeners.LABEL_ANOTHERVIEW_ID));
+            waitForElementPresent(By.id(
+                    NavigatorListenerModifiesListeners.LABEL_ANOTHERVIEW_ID));
             String currentUrl = driver.getCurrentUrl();
-            assertEquals(
-                    "Current URL should be equal to another view URL",
-                    initialUrl
-                            .replace(
-                                    NavigatorListenerModifiesListeners.MainView.NAME,
-                                    NavigatorListenerModifiesListeners.AnotherView.NAME),
+            assertEquals("Current URL should be equal to another view URL",
+                    initialUrl.replace(
+                            NavigatorListenerModifiesListeners.MainView.NAME,
+                            NavigatorListenerModifiesListeners.AnotherView.NAME),
                     currentUrl);
 
             // click back button

@@ -9,8 +9,8 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.Label;
 
-public class LabelTest extends AbstractComponentTest<Label> implements
-        ValueChangeListener {
+public class LabelTest extends AbstractComponentTest<Label>
+        implements ValueChangeListener {
 
     private Command<Label, String> setValueCommand = new Command<Label, String>() {
 
@@ -59,9 +59,11 @@ public class LabelTest extends AbstractComponentTest<Label> implements
         List<String> values = new ArrayList<String>();
         values.add("Test");
         values.add("A little longer value");
-        values.add("A very long value with very much text. All in all it is 74 characters long");
+        values.add(
+                "A very long value with very much text. All in all it is 74 characters long");
         values.add("<b>Bold</b>");
-        values.add("<div style=\"height: 70px; width: 15px; border: 1px dashed red\">With border</div>");
+        values.add(
+                "<div style=\"height: 70px; width: 15px; border: 1px dashed red\">With border</div>");
 
         createClickAction("(empty string)", subCategory, setValueCommand, "");
         createClickAction("(null)", subCategory, setValueCommand, null);

@@ -92,8 +92,8 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
             client.updateVariable(paintableId, "selected", getSelectedItems(),
                     isImmediate());
         } else {
-            client.updateVariable(paintableId, "selected", new String[] { ""
-                    + getSelectedItem() }, isImmediate());
+            client.updateVariable(paintableId, "selected",
+                    new String[] { "" + getSelectedItem() }, isImmediate());
         }
         if (firstValueIsTemporaryNullItem) {
             // remove temporary empty item

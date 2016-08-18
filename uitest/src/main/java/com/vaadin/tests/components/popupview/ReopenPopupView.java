@@ -28,8 +28,8 @@ public class ReopenPopupView extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         addComponent(log);
-        addComponent(new PopupView("PopupView", new Button("Button",
-                new Button.ClickListener() {
+        addComponent(new PopupView("PopupView",
+                new Button("Button", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         log.log("Button clicked");

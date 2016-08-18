@@ -209,20 +209,20 @@ public class DesignFormatterTest {
         // note the space here - it separates key combination from caption
         assertEquals("ctrl-alt-d d", formatted);
 
-        ShortcutAction result = formatter
-                .parse(formatted, ShortcutAction.class);
+        ShortcutAction result = formatter.parse(formatted,
+                ShortcutAction.class);
         assertTrue(equals(action, result));
     }
 
     @Test
     public void testShortcutActionNoCaption() {
-        ShortcutAction action = new ShortcutAction(null, KeyCode.D, new int[] {
-                ModifierKey.ALT, ModifierKey.CTRL });
+        ShortcutAction action = new ShortcutAction(null, KeyCode.D,
+                new int[] { ModifierKey.ALT, ModifierKey.CTRL });
         String formatted = formatter.format(action);
         assertEquals("ctrl-alt-d", formatted);
 
-        ShortcutAction result = formatter
-                .parse(formatted, ShortcutAction.class);
+        ShortcutAction result = formatter.parse(formatted,
+                ShortcutAction.class);
         assertTrue(equals(action, result));
     }
 
@@ -267,8 +267,8 @@ public class DesignFormatterTest {
             assertEquals("parsed ExternalResource", scheme + url,
                     ((ExternalResource) resource).getURL());
 
-            String formatted = formatter.format(new ExternalResource(scheme
-                    + url));
+            String formatted = formatter
+                    .format(new ExternalResource(scheme + url));
 
             assertEquals("formatted ExternalResource", scheme + url, formatted);
         }
@@ -284,7 +284,8 @@ public class DesignFormatterTest {
         String fileSystemPath = "c:/app/resources/icon.png";
 
         assertEquals(httpUrl, formatter.format(new ExternalResource(httpUrl)));
-        assertEquals(httpsUrl, formatter.format(new ExternalResource(httpsUrl)));
+        assertEquals(httpsUrl,
+                formatter.format(new ExternalResource(httpsUrl)));
         assertEquals(ApplicationConstants.THEME_PROTOCOL_PREFIX + themePath,
                 formatter.format(new ThemeResource(themePath)));
 
@@ -306,12 +307,12 @@ public class DesignFormatterTest {
     @Test(expected = ConversionException.class)
     public void testResourceFormatException() {
         formatter.format(new Resource() { // must use unknown resource type
-                    @Override
-                    public String getMIMEType() {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-                });
+            @Override
+            public String getMIMEType() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+        });
     }
 
     @Test
@@ -328,10 +329,10 @@ public class DesignFormatterTest {
                 formatter.parse(httpUrl, ExternalResource.class).getURL());
         assertEquals(new ExternalResource(httpsUrl).getURL(),
                 formatter.parse(httpsUrl, ExternalResource.class).getURL());
-        assertEquals(
-                new ThemeResource(themePath),
-                formatter.parse(ApplicationConstants.THEME_PROTOCOL_PREFIX
-                        + themePath, ThemeResource.class));
+        assertEquals(new ThemeResource(themePath),
+                formatter.parse(
+                        ApplicationConstants.THEME_PROTOCOL_PREFIX + themePath,
+                        ThemeResource.class));
         assertEquals(FontAwesome.AMBULANCE,
                 formatter.parse(fontAwesomeUrlOld, FontAwesome.class));
         assertEquals(FontAwesome.AMBULANCE,
@@ -339,8 +340,7 @@ public class DesignFormatterTest {
         assertEquals(new GenericFontIcon("SomeOther", 0xF0F9),
                 formatter.parse(someOtherFont, FontIcon.class));
 
-        assertEquals(
-                new FileResource(new File(fileSystemPath)).getSourceFile(),
+        assertEquals(new FileResource(new File(fileSystemPath)).getSourceFile(),
                 formatter.parse(fileSystemPath, FileResource.class)
                         .getSourceFile());
 
@@ -356,7 +356,8 @@ public class DesignFormatterTest {
      * @return <b>true</b> when both actions are the same (caption, icon, and
      *         key combination).
      */
-    public static final boolean equals(ShortcutAction act, ShortcutAction other) {
+    public static final boolean equals(ShortcutAction act,
+            ShortcutAction other) {
         if (SharedUtil.equals(other.getCaption(), act.getCaption())
                 && SharedUtil.equals(other.getIcon(), act.getIcon())
                 && act.getKeyCode() == other.getKeyCode()

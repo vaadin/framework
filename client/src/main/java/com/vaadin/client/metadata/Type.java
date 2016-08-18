@@ -80,7 +80,8 @@ public class Type {
         return new Property(this, propertyName);
     }
 
-    private static String calculateSignature(String name, Type[] parameterTypes) {
+    private static String calculateSignature(String name,
+            Type[] parameterTypes) {
         String string = name;
         if (parameterTypes != null && parameterTypes.length != 0) {
             string += '<';

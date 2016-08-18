@@ -27,8 +27,8 @@ import com.vaadin.tests.components.grid.basicfeatures.EscalatorBasicClientFeatur
 /**
  * Test class to test the escalator level issue for ticket #16832
  */
-public class EscalatorRemoveAndAddRowsTest extends
-        EscalatorBasicClientFeaturesTest {
+public class EscalatorRemoveAndAddRowsTest
+        extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testRemoveAllRowsAndAddThirtyThenScroll() throws IOException {

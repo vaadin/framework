@@ -29,11 +29,12 @@ import com.vaadin.ui.LegacyComponent;
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
 public class LegacySerializerUI extends AbstractTestUIWithLog {
 
-    public class LegacySerializerComponent extends AbstractComponent implements
-            LegacyComponent {
+    public class LegacySerializerComponent extends AbstractComponent
+            implements LegacyComponent {
 
         @Override
-        public void changeVariables(Object source, Map<String, Object> variables) {
+        public void changeVariables(Object source,
+                Map<String, Object> variables) {
             log("doubleInfinity: " + variables.get("doubleInfinity"));
         }
 

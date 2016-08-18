@@ -94,7 +94,8 @@ public class VCaption extends HTML {
      * @param client
      *            ApplicationConnection
      */
-    public VCaption(ComponentConnector component, ApplicationConnection client) {
+    public VCaption(ComponentConnector component,
+            ApplicationConnection client) {
         super();
         this.client = client;
         owner = component;
@@ -172,8 +173,8 @@ public class VCaption extends HTML {
             icon = null;
         }
         if (hasIcon) {
-            String uri = owner.getState().resources.get(
-                    ComponentConstants.ICON_RESOURCE).getURL();
+            String uri = owner.getState().resources
+                    .get(ComponentConstants.ICON_RESOURCE).getURL();
 
             icon = client.getIcon(uri);
 
@@ -247,8 +248,8 @@ public class VCaption extends HTML {
                         getInsertPosition(InsertPosition.REQUIRED));
 
                 // Hide the required indicator from assistive device
-                Roles.getTextboxRole().setAriaHiddenState(
-                        requiredFieldIndicator, true);
+                Roles.getTextboxRole()
+                        .setAriaHiddenState(requiredFieldIndicator, true);
             }
         } else if (requiredFieldIndicator != null) {
             // Remove existing
@@ -269,8 +270,8 @@ public class VCaption extends HTML {
                         getInsertPosition(InsertPosition.ERROR));
 
                 // Hide error indicator from assistive devices
-                Roles.getTextboxRole().setAriaHiddenState(
-                        errorIndicatorElement, true);
+                Roles.getTextboxRole().setAriaHiddenState(errorIndicatorElement,
+                        true);
             }
         } else if (errorIndicatorElement != null) {
             // Remove existing
@@ -447,9 +448,8 @@ public class VCaption extends HTML {
             if (owner != null) {
                 Util.notifyParentOfSizeChange(owner.getWidget(), true);
             } else {
-                getLogger()
-                        .warning(
-                                "Warning: Icon load event was not propagated because VCaption owner is unknown.");
+                getLogger().warning(
+                        "Warning: Icon load event was not propagated because VCaption owner is unknown.");
             }
         }
     }
@@ -637,13 +637,13 @@ public class VCaption extends HTML {
             }
 
             if (icon != null) {
-                int iconRequiredWidth = WidgetUtil.getRequiredWidth(icon
-                        .getElement());
+                int iconRequiredWidth = WidgetUtil
+                        .getRequiredWidth(icon.getElement());
                 if (availableWidth > iconRequiredWidth) {
                     availableWidth -= iconRequiredWidth;
                 } else {
-                    icon.getElement().getStyle()
-                            .setWidth(availableWidth, Unit.PX);
+                    icon.getElement().getStyle().setWidth(availableWidth,
+                            Unit.PX);
                     availableWidth = 0;
                 }
             }

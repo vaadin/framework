@@ -49,16 +49,14 @@ public class TouchScrollables extends TestBase {
         addTest(getAccordionTest());
         addTest(getSubWindowTest());
 
-        TestUtils
-                .injectCSS(
-                        getLayout().getUI(),
-                        "body * {-webkit-user-select: none;} .v-table-row-drag-middle .v-table-cell-content {"
-                                + "        background-color: inherit ; border-bottom: 1px solid cyan;"
-                                + "}"
-                                + ".v-table-row-drag-middle .v-table-cell-wrapper {"
-                                + "        margin-bottom: -1px;" + "}" + ""
+        TestUtils.injectCSS(getLayout().getUI(),
+                "body * {-webkit-user-select: none;} .v-table-row-drag-middle .v-table-cell-content {"
+                        + "        background-color: inherit ; border-bottom: 1px solid cyan;"
+                        + "}"
+                        + ".v-table-row-drag-middle .v-table-cell-wrapper {"
+                        + "        margin-bottom: -1px;" + "}" + ""
 
-                );
+        );
     }
 
     private Component getPanelTest() {
@@ -200,7 +198,8 @@ public class TouchScrollables extends TestBase {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 Notification.show(action.getCaption());
 
             }
@@ -239,7 +238,8 @@ public class TouchScrollables extends TestBase {
                 IndexedContainer containerDataSource = (IndexedContainer) table
                         .getContainerDataSource();
                 int newIndex = containerDataSource.indexOfId(itemIdOver) - 1;
-                if (dropTargetData.getDropLocation() != VerticalDropLocation.TOP) {
+                if (dropTargetData
+                        .getDropLocation() != VerticalDropLocation.TOP) {
                     newIndex++;
                 }
                 if (newIndex < 0) {
@@ -296,8 +296,8 @@ public class TouchScrollables extends TestBase {
         for (int i = 0; i < 40; i++) {
             Item addItem = table.addItem("Item" + i);
             Person p = testData.getIdByIndex(i);
-            addItem.getItemProperty("Name").setValue(
-                    p.getFirstName() + " " + p.getLastName());
+            addItem.getItemProperty("Name")
+                    .setValue(p.getFirstName() + " " + p.getLastName());
             addItem.getItemProperty("Weight").setValue(50 + r.nextInt(60));
         }
 

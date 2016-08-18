@@ -72,9 +72,8 @@ public class ConnectorActionManager extends ActionManager {
     @Override
     public void handleAction(Action action, Object sender, Object target) {
         if (!connector.isConnectorEnabled()) {
-            getLogger().warning(
-                    ServerRpcHandler.getIgnoredDisabledError("action",
-                            connector));
+            getLogger().warning(ServerRpcHandler
+                    .getIgnoredDisabledError("action", connector));
             return;
         }
 

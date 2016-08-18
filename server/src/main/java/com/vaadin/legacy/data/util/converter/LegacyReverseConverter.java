@@ -19,8 +19,8 @@ package com.vaadin.legacy.data.util.converter;
 import java.util.Locale;
 
 /**
- * A converter that wraps another {@link LegacyConverter} and reverses source and
- * target types.
+ * A converter that wraps another {@link LegacyConverter} and reverses source
+ * and target types.
  * 
  * @param <MODEL>
  *            The source type
@@ -30,8 +30,8 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.0
  */
-public class LegacyReverseConverter<PRESENTATION, MODEL> implements
-        LegacyConverter<PRESENTATION, MODEL> {
+public class LegacyReverseConverter<PRESENTATION, MODEL>
+        implements LegacyConverter<PRESENTATION, MODEL> {
 
     private LegacyConverter<MODEL, PRESENTATION> realConverter;
 
@@ -42,7 +42,8 @@ public class LegacyReverseConverter<PRESENTATION, MODEL> implements
      * @param converter
      *            The converter to use in a reverse fashion
      */
-    public LegacyReverseConverter(LegacyConverter<MODEL, PRESENTATION> converter) {
+    public LegacyReverseConverter(
+            LegacyConverter<MODEL, PRESENTATION> converter) {
         this.realConverter = converter;
     }
 

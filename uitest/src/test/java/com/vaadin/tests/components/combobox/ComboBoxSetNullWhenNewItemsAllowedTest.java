@@ -39,8 +39,8 @@ public class ComboBoxSetNullWhenNewItemsAllowedTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        WebElement element = $(ComboBoxElement.class).first().findElement(
-                By.vaadin("#textbox"));
+        WebElement element = $(ComboBoxElement.class).first()
+                .findElement(By.vaadin("#textbox"));
         ((TestBenchElementCommands) element).click(8, 7);
         element.clear();
         element.sendKeys("New value");

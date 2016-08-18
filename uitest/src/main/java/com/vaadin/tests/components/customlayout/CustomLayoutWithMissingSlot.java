@@ -32,11 +32,11 @@ public class CustomLayoutWithMissingSlot extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         CustomLayout cl;
         try {
-            cl = new CustomLayout(
-                    new ByteArrayInputStream(
-                            "<div>First: <div location='first'></div><p>Second: <div location='second'></div><p>"
-                                    .getBytes("UTF-8")));
-            cl.addComponent(new LegacyTextField("This should be visible"), "first");
+            cl = new CustomLayout(new ByteArrayInputStream(
+                    "<div>First: <div location='first'></div><p>Second: <div location='second'></div><p>"
+                            .getBytes("UTF-8")));
+            cl.addComponent(new LegacyTextField("This should be visible"),
+                    "first");
             Button button = new Button(
                     "This button is visible, together with one label");
             button.addClickListener(new ClickListener() {
@@ -47,8 +47,9 @@ public class CustomLayoutWithMissingSlot extends AbstractTestUIWithLog {
                 }
             });
             cl.addComponent(button, "second");
-            cl.addComponent(new LegacyTextField(
-                    "This won't be as the slot is missing"), "third");
+            cl.addComponent(
+                    new LegacyTextField("This won't be as the slot is missing"),
+                    "third");
 
             addComponent(cl);
         } catch (IOException e) {

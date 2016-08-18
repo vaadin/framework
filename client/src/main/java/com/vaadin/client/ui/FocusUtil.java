@@ -38,7 +38,8 @@ public class FocusUtil {
      *            The access key to set
      */
     public static void setAccessKey(Widget focusable, char key) {
-        assert (focusable != null && focusable.getElement() != null) : "Can't setAccessKey for a widget without an element";
+        assert (focusable != null && focusable
+                .getElement() != null) : "Can't setAccessKey for a widget without an element";
         focusable.getElement().setPropertyString("accessKey", "" + key);
     }
 
@@ -52,7 +53,8 @@ public class FocusUtil {
      *            whether this widget should take focus or release it
      */
     public static void setFocus(Widget focusable, boolean focus) {
-        assert (focusable != null && focusable.getElement() != null) : "Can't setFocus for a widget without an element";
+        assert (focusable != null && focusable
+                .getElement() != null) : "Can't setFocus for a widget without an element";
 
         if (focus) {
             focusable.getElement().focus();
@@ -73,7 +75,8 @@ public class FocusUtil {
      *            the widget's tab index
      */
     public static void setTabIndex(Widget focusable, int tabIndex) {
-        assert (focusable != null && focusable.getElement() != null) : "Can't setTabIndex for a widget without an element";
+        assert (focusable != null && focusable
+                .getElement() != null) : "Can't setTabIndex for a widget without an element";
 
         focusable.getElement().setTabIndex(tabIndex);
     }
@@ -87,7 +90,8 @@ public class FocusUtil {
      * @return the widget's tab index
      */
     public static int getTabIndex(Widget focusable) {
-        assert (focusable != null && focusable.getElement() != null) : "Can't getTabIndex for a widget without an element";
+        assert (focusable != null && focusable
+                .getElement() != null) : "Can't getTabIndex for a widget without an element";
 
         return focusable.getElement().getTabIndex();
     }

@@ -84,8 +84,8 @@ public class LegacyConverterUtil implements Serializable {
     public static <PRESENTATIONTYPE, MODELTYPE> PRESENTATIONTYPE convertFromModel(
             MODELTYPE modelValue,
             Class<? extends PRESENTATIONTYPE> presentationType,
-            LegacyConverter<PRESENTATIONTYPE, MODELTYPE> converter, Locale locale)
-            throws LegacyConverter.ConversionException {
+            LegacyConverter<PRESENTATIONTYPE, MODELTYPE> converter,
+            Locale locale) throws LegacyConverter.ConversionException {
         if (converter != null) {
             /*
              * If there is a converter, always use it. It must convert or throw
@@ -116,8 +116,7 @@ public class LegacyConverterUtil implements Serializable {
             throw new LegacyConverter.ConversionException(
                     "Unable to convert value of type "
                             + modelValue.getClass().getName()
-                            + " to presentation type "
-                            + presentationType
+                            + " to presentation type " + presentationType
                             + ". No converter is set and the types are not compatible.");
         }
     }
@@ -146,8 +145,8 @@ public class LegacyConverterUtil implements Serializable {
      */
     public static <MODELTYPE, PRESENTATIONTYPE> MODELTYPE convertToModel(
             PRESENTATIONTYPE presentationValue, Class<MODELTYPE> modelType,
-            LegacyConverter<PRESENTATIONTYPE, MODELTYPE> converter, Locale locale)
-            throws LegacyConverter.ConversionException {
+            LegacyConverter<PRESENTATIONTYPE, MODELTYPE> converter,
+            Locale locale) throws LegacyConverter.ConversionException {
         if (converter != null) {
             /*
              * If there is a converter, always use it. It must convert or throw
@@ -181,8 +180,7 @@ public class LegacyConverterUtil implements Serializable {
             throw new LegacyConverter.ConversionException(
                     "Unable to convert value of type "
                             + presentationValue.getClass().getName()
-                            + " to model type "
-                            + modelType
+                            + " to model type " + modelType
                             + ". No converter is set and the types are not compatible.");
         }
 
@@ -235,8 +233,9 @@ public class LegacyConverterUtil implements Serializable {
      * @return true if the converter possibly support conversion between the
      *         given presentation and model type, false otherwise
      */
-    public static boolean canConverterPossiblyHandle(LegacyConverter<?, ?> converter,
-            Class<?> presentationType, Class<?> modelType) {
+    public static boolean canConverterPossiblyHandle(
+            LegacyConverter<?, ?> converter, Class<?> presentationType,
+            Class<?> modelType) {
         if (converter == null) {
             return false;
         }

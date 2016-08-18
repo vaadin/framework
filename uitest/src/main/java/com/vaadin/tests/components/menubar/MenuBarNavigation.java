@@ -6,7 +6,8 @@ import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 
-public class MenuBarNavigation extends AbstractTestUIWithLog implements Command {
+public class MenuBarNavigation extends AbstractTestUIWithLog
+        implements Command {
 
     private MenuItem edit;
     private MenuItem file;

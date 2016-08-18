@@ -353,7 +353,8 @@ public class VAbsoluteLayout extends ComplexPanel {
      * @param stylenames
      *            The style names that should be added to the wrapper
      */
-    public void setWidgetWrapperStyleNames(Widget widget, String... stylenames) {
+    public void setWidgetWrapperStyleNames(Widget widget,
+            String... stylenames) {
         AbsoluteWrapper wrapper = getChildWrapper(widget);
         if (wrapper == null) {
             throw new IllegalArgumentException(
@@ -474,8 +475,8 @@ public class VAbsoluteLayout extends ComplexPanel {
                 Style style = caption.getElement().getStyle();
                 style.setProperty("position", "absolute");
                 style.setPropertyPx("left", getElement().getOffsetLeft());
-                style.setPropertyPx("top", getElement().getOffsetTop()
-                        - caption.getHeight());
+                style.setPropertyPx("top",
+                        getElement().getOffsetTop() - caption.getHeight());
             }
         }
 
@@ -495,8 +496,8 @@ public class VAbsoluteLayout extends ComplexPanel {
          * Updates the style names using the primary style name as prefix
          */
         protected void updateStyleNames() {
-            setStyleName(VAbsoluteLayout.this.getStylePrimaryName()
-                    + "-wrapper");
+            setStyleName(
+                    VAbsoluteLayout.this.getStylePrimaryName() + "-wrapper");
             if (extraStyleNames != null) {
                 for (String stylename : extraStyleNames) {
                     addStyleDependentName(stylename);

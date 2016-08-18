@@ -43,8 +43,8 @@ public class AutoGeneratingForm extends UI {
 
         // We need an item data source before we create the fields to be able to
         // find the properties, otherwise we have to specify them by hand
-        fieldGroup.setItemDataSource(new BeanItem<Person>(new Person("John",
-                "Doe", 34)));
+        fieldGroup.setItemDataSource(
+                new BeanItem<Person>(new Person("John", "Doe", 34)));
 
         // Loop through the properties, build fields for them and add the fields
         // to this root

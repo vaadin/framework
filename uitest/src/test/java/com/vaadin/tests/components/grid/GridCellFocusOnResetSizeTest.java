@@ -41,19 +41,19 @@ public class GridCellFocusOnResetSizeTest extends MultiBrowserTest {
         GridElement grid = $(MyGridElement.class).first();
         int rowIndex = 9;
         grid.getCell(rowIndex, 0).click();
-        assertTrue("Row was not focused after click.", grid.getRow(rowIndex)
-                .isFocused());
+        assertTrue("Row was not focused after click.",
+                grid.getRow(rowIndex).isFocused());
 
         // Clicking the button decreases size until it is down to 5 rows.
         while (rowIndex > 4) {
             findElement(By.tagName("button")).click();
-            assertTrue("Row focus was not moved when size decreased", grid
-                    .getRow(--rowIndex).isFocused());
+            assertTrue("Row focus was not moved when size decreased",
+                    grid.getRow(--rowIndex).isFocused());
         }
 
         // Next click increases size back to 10, this should not move focus.
         findElement(By.tagName("button")).click();
-        assertTrue("Row focus should not have moved when size increased", grid
-                .getRow(4).isFocused());
+        assertTrue("Row focus should not have moved when size increased",
+                grid.getRow(4).isFocused());
     }
 }

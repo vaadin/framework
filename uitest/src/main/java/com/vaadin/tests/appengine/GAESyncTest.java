@@ -34,8 +34,8 @@ public class GAESyncTest extends LegacyApplication {
         // Was this caused by a GAE timeout?
         while (t != null) {
             if (t instanceof DeadlineExceededException) {
-                getMainWindow().showNotification("Bugger!",
-                        "Deadline Exceeded", Notification.TYPE_ERROR_MESSAGE);
+                getMainWindow().showNotification("Bugger!", "Deadline Exceeded",
+                        Notification.TYPE_ERROR_MESSAGE);
                 return;
             }
             t = t.getCause();
@@ -61,8 +61,8 @@ public class GAESyncTest extends LegacyApplication {
             tf.addListener(new Property.ValueChangeListener() {
                 @Override
                 public void valueChange(ValueChangeEvent event) {
-                    IntrWindow.this.showNotification((String) event
-                            .getProperty().getValue());
+                    IntrWindow.this.showNotification(
+                            (String) event.getProperty().getValue());
 
                 }
 
@@ -94,8 +94,8 @@ public class GAESyncTest extends LegacyApplication {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         if (getUI() == getMainWindow()) {
-                            getUI().getPage().showNotification(
-                                    new Notification("main"));
+                            getUI().getPage()
+                                    .showNotification(new Notification("main"));
                             try {
                                 Thread.sleep((5000));
                             } catch (InterruptedException e) {

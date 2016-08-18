@@ -31,9 +31,9 @@ public class SimpleMultiPartInputStreamTest {
                 resultStream.write(outbyte);
             }
         } catch (IOException e) {
-            throw new IOException(e.getMessage() + "; expected "
-                    + new String(expected) + " but got "
-                    + resultStream.toString());
+            throw new IOException(
+                    e.getMessage() + "; expected " + new String(expected)
+                            + " but got " + resultStream.toString());
         }
         if (!Arrays.equals(expected, resultStream.toByteArray())) {
             throw new Exception("Mismatch: expected " + new String(expected)
@@ -53,7 +53,8 @@ public class SimpleMultiPartInputStreamTest {
 
     @Test
     public void testSingleByteBoundaryInMiddle() throws Exception {
-        checkBoundaryDetection("xyz" + getFullBoundary("a") + "123", "a", "xyz");
+        checkBoundaryDetection("xyz" + getFullBoundary("a") + "123", "a",
+                "xyz");
     }
 
     @Test
@@ -78,7 +79,8 @@ public class SimpleMultiPartInputStreamTest {
         checkBoundaryDetection(getFullBoundary("aa") + "xyz123", "aa", "");
         checkBoundaryDetection("axyz" + getFullBoundary("aa") + "123", "aa",
                 "axyz");
-        checkBoundaryDetection("xyz123" + getFullBoundary("aa"), "aa", "xyz123");
+        checkBoundaryDetection("xyz123" + getFullBoundary("aa"), "aa",
+                "xyz123");
     }
 
     /**

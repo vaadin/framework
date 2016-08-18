@@ -39,8 +39,8 @@ public interface UIEvents {
      * @author Vaadin Ltd
      */
     public interface PollListener extends Serializable {
-        public static final Method POLL_METHOD = ReflectTools.findMethod(
-                PollListener.class, "poll", PollEvent.class);
+        public static final Method POLL_METHOD = ReflectTools
+                .findMethod(PollListener.class, "poll", PollEvent.class);
 
         /**
          * A poll request has been received by the server.

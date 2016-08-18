@@ -164,10 +164,10 @@ public class TooltipPositionTest extends MultiBrowserTest {
         int yTop = topLeft.getY();
         int xRight = xLeft + tooltipSize.getWidth() - 1;
         int yBottom = yTop + tooltipSize.getHeight() - 1;
-        boolean overlapHorizontally = !(xRight < 0 || xLeft >= windowSize
-                .getWidth());
-        boolean overlapVertically = !(yBottom < 0 || yTop >= windowSize
-                .getHeight());
+        boolean overlapHorizontally = !(xRight < 0
+                || xLeft >= windowSize.getWidth());
+        boolean overlapVertically = !(yBottom < 0
+                || yTop >= windowSize.getHeight());
         return !(overlapHorizontally && overlapVertically);
     }
 }

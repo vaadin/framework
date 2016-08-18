@@ -48,8 +48,9 @@ public class CollapsibleTableColumnTest extends MultiBrowserTest {
         String nonCollapsibleColumnOpacity = items.get(1)
                 .getCssValue("opacity");
 
-        Assert.assertNotEquals("Opacity value is the same for collapsible "
-                + "and non-collapsible column item", collapsibleColumnOpacity,
-                nonCollapsibleColumnOpacity);
+        Assert.assertNotEquals(
+                "Opacity value is the same for collapsible "
+                        + "and non-collapsible column item",
+                collapsibleColumnOpacity, nonCollapsibleColumnOpacity);
     }
 }

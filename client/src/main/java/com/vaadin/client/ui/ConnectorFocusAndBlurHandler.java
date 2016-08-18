@@ -35,8 +35,8 @@ import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
  * @since 7.6
  * @author Vaadin Ltd
  */
-public class ConnectorFocusAndBlurHandler implements StateChangeHandler,
-        FocusHandler, BlurHandler {
+public class ConnectorFocusAndBlurHandler
+        implements StateChangeHandler, FocusHandler, BlurHandler {
 
     private final AbstractComponentConnector connector;
     private final Widget widget;

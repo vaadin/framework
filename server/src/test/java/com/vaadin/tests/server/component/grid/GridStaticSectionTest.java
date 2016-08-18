@@ -110,8 +110,8 @@ public class GridStaticSectionTest extends Grid {
     @Test
     public void testJoinAllFooterCells() {
         FooterRow mergeRow = prependFooterRow();
-        mergeRow.join(dataSource.getContainerPropertyIds().toArray()).setText(
-                "All the stuff.");
+        mergeRow.join(dataSource.getContainerPropertyIds().toArray())
+                .setText("All the stuff.");
     }
 
     private void sanityCheck() throws Throwable {

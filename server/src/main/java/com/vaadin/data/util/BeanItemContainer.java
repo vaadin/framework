@@ -52,8 +52,8 @@ import java.util.Collection;
  * @since 5.4
  */
 @SuppressWarnings("serial")
-public class BeanItemContainer<BEANTYPE> extends
-        AbstractBeanContainer<BEANTYPE, BEANTYPE> {
+public class BeanItemContainer<BEANTYPE>
+        extends AbstractBeanContainer<BEANTYPE, BEANTYPE> {
 
     /**
      * Bean identity resolver that returns the bean itself as its item
@@ -67,8 +67,8 @@ public class BeanItemContainer<BEANTYPE> extends
      * 
      * @since 6.5
      */
-    private static class IdentityBeanIdResolver<BT> implements
-            BeanIdResolver<BT, BT> {
+    private static class IdentityBeanIdResolver<BT>
+            implements BeanIdResolver<BT, BT> {
 
         @Override
         public BT getIdForBean(BT bean) {

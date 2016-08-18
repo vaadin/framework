@@ -111,8 +111,8 @@ public class ContainerSizeChangeDuringTablePaint extends AbstractTestUI {
                         addItem(container, "A", "New", "Row");
                         container.sabotageNextPaint();
 
-                        event.getButton().setCaption(
-                                "Event was fired successfully.");
+                        event.getButton()
+                                .setCaption("Event was fired successfully.");
                     }
                 });
         button.setId("addRow");

@@ -156,9 +156,8 @@ public class DefaultItemSorter implements ItemSorter {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.util.ItemSorter#setSortProperties(com.vaadin.data.Container
-     * .Sortable, java.lang.Object[], boolean[])
+     * @see com.vaadin.data.util.ItemSorter#setSortProperties(com.vaadin.data.
+     * Container .Sortable, java.lang.Object[], boolean[])
      */
     @Override
     public void setSortProperties(Container.Sortable container,
@@ -173,8 +172,8 @@ public class DefaultItemSorter implements ItemSorter {
         for (int i = 0; i < propertyId.length; i++) {
             if (sortable.contains(propertyId[i])) {
                 ids.add(propertyId[i]);
-                orders.add(Boolean.valueOf(i < ascending.length ? ascending[i]
-                        : true));
+                orders.add(Boolean
+                        .valueOf(i < ascending.length ? ascending[i] : true));
             }
         }
 
@@ -192,8 +191,8 @@ public class DefaultItemSorter implements ItemSorter {
      * compares can be cast to Comparable.
      * 
      */
-    public static class DefaultPropertyValueComparator implements
-            Comparator<Object>, Serializable {
+    public static class DefaultPropertyValueComparator
+            implements Comparator<Object>, Serializable {
 
         @Override
         @SuppressWarnings("unchecked")

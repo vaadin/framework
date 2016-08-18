@@ -100,7 +100,9 @@ public class SQLContainer implements Container, Container.Filterable,
     /** ItemSetChangeListeners */
     private LinkedList<Container.ItemSetChangeListener> itemSetChangeListeners;
 
-    /** Temporary storage for modified items and items to be removed and added */
+    /**
+     * Temporary storage for modified items and items to be removed and added
+     */
     private final Map<RowId, RowItem> removedItems = new HashMap<RowId, RowItem>();
     private final List<RowItem> addedItems = new ArrayList<RowItem>();
     private final List<RowItem> modifiedItems = new ArrayList<RowItem>();
@@ -235,8 +237,8 @@ public class SQLContainer implements Container, Container.Filterable,
 
         if (itemId instanceof RowId && !(itemId instanceof TemporaryRowId)) {
             try {
-                return queryDelegate.containsRowWithKey(((RowId) itemId)
-                        .getId());
+                return queryDelegate
+                        .containsRowWithKey(((RowId) itemId).getId());
             } catch (Exception e) {
                 /* Query failed, just return false. */
                 getLogger().log(Level.WARNING, "containsId query failed", e);
@@ -357,8 +359,8 @@ public class SQLContainer implements Container, Container.Filterable,
             rs.close();
             queryDelegate.commit();
         } catch (SQLException e) {
-            getLogger().log(Level.WARNING,
-                    "getItemIds() failed, rolling back.", e);
+            getLogger().log(Level.WARNING, "getItemIds() failed, rolling back.",
+                    e);
             try {
                 queryDelegate.rollback();
             } catch (SQLException e1) {
@@ -570,8 +572,8 @@ public class SQLContainer implements Container, Container.Filterable,
         }
 
         /* Generate Filter -object */
-        String likeStr = onlyMatchPrefix ? filterString + "%" : "%"
-                + filterString + "%";
+        String likeStr = onlyMatchPrefix ? filterString + "%"
+                : "%" + filterString + "%";
         Like like = new Like(propertyId.toString(), likeStr);
         like.setCaseSensitive(!ignoreCase);
         filters.add(like);
@@ -693,8 +695,8 @@ public class SQLContainer implements Container, Container.Filterable,
     @Override
     public Object getIdByIndex(int index) {
         if (index < 0) {
-            throw new IndexOutOfBoundsException("Index is negative! index="
-                    + index);
+            throw new IndexOutOfBoundsException(
+                    "Index is negative! index=" + index);
         }
         // make sure the size field is valid
         updateCount();
@@ -716,8 +718,8 @@ public class SQLContainer implements Container, Container.Filterable,
     @Override
     public List<Object> getItemIds(int startIndex, int numberOfIds) {
         // TODO create a better implementation
-        return (List<Object>) ContainerHelpers.getItemIdsUsingGetIdByIndex(
-                startIndex, numberOfIds, this);
+        return (List<Object>) ContainerHelpers
+                .getItemIdsUsingGetIdByIndex(startIndex, numberOfIds, this);
     }
 
     /**********************************************/
@@ -1019,8 +1021,9 @@ public class SQLContainer implements Container, Container.Filterable,
                                         + item.getId());
                     }
                 } catch (IllegalArgumentException e) {
-                    throw new SQLException("Removal failed for row with ID: "
-                            + item.getId(), e);
+                    throw new SQLException(
+                            "Removal failed for row with ID: " + item.getId(),
+                            e);
                 }
             }
             /* Perform buffered modifications */
@@ -1149,9 +1152,8 @@ public class SQLContainer implements Container, Container.Filterable,
      * Fetches new count of rows from the data source, if needed.
      */
     private void updateCount() {
-        if (!sizeDirty
-                && new Date().getTime() < sizeUpdated.getTime()
-                        + sizeValidMilliSeconds) {
+        if (!sizeDirty && new Date().getTime() < sizeUpdated.getTime()
+                + sizeValidMilliSeconds) {
             return;
         }
         try {
@@ -1175,8 +1177,8 @@ public class SQLContainer implements Container, Container.Filterable,
                 // Size is up to date so don't set it back to dirty in refresh()
                 refresh(false);
             }
-            getLogger().log(Level.FINER,
-                    "Updated row count. New count is: {0}", size);
+            getLogger().log(Level.FINER, "Updated row count. New count is: {0}",
+                    size);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to update item set size.", e);
         }
@@ -1247,9 +1249,9 @@ public class SQLContainer implements Container, Container.Filterable,
                 propertyPersistable.put(colName, persistable);
                 propertyNullable.put(colName,
                         rsmd.isNullable(i) == ResultSetMetaData.columnNullable);
-                propertyPrimaryKey.put(colName, queryDelegate
-                        .getPrimaryKeyColumns()
-                        .contains(rsmd.getColumnLabel(i)));
+                propertyPrimaryKey.put(colName,
+                        queryDelegate.getPrimaryKeyColumns()
+                                .contains(rsmd.getColumnLabel(i)));
                 propertyTypes.put(colName, type);
             }
             rs.getStatement().close();
@@ -1371,8 +1373,8 @@ public class SQLContainer implements Container, Container.Filterable,
                     if (modifiedIndex != -1) {
                         cachedItems.put(id, modifiedItems.get(modifiedIndex));
                     } else {
-                        cachedItems.put(id, new RowItem(this, id,
-                                itemProperties));
+                        cachedItems.put(id,
+                                new RowItem(this, id, itemProperties));
                     }
 
                     rowCount++;
@@ -1384,8 +1386,8 @@ public class SQLContainer implements Container, Container.Filterable,
             getLogger().log(Level.FINER, "Fetched {0} rows starting from {1}",
                     new Object[] { fetchedRows, currentOffset });
         } catch (SQLException e) {
-            getLogger().log(Level.WARNING,
-                    "Failed to fetch rows, rolling back", e);
+            getLogger().log(Level.WARNING, "Failed to fetch rows, rolling back",
+                    e);
             try {
                 queryDelegate.rollback();
             } catch (SQLException e1) {
@@ -1640,8 +1642,8 @@ public class SQLContainer implements Container, Container.Filterable,
      * Simple ItemSetChangeEvent implementation.
      */
     @SuppressWarnings("serial")
-    public static class ItemSetChangeEvent extends EventObject implements
-            Container.ItemSetChangeEvent {
+    public static class ItemSetChangeEvent extends EventObject
+            implements Container.ItemSetChangeEvent {
 
         private ItemSetChangeEvent(SQLContainer source) {
             super(source);
@@ -1796,13 +1798,13 @@ public class SQLContainer implements Container, Container.Filterable,
                     "Reference to the given SQLContainer not defined.");
         }
         try {
-            getContainerProperty(itemId, r.getReferencingColumn()).setValue(
-                    refdCont.getContainerProperty(refdItemId,
+            getContainerProperty(itemId, r.getReferencingColumn())
+                    .setValue(refdCont.getContainerProperty(refdItemId,
                             r.getReferencedColumn()));
             return true;
         } catch (Exception e) {
-            getLogger()
-                    .log(Level.WARNING, "Setting referenced item failed.", e);
+            getLogger().log(Level.WARNING, "Setting referenced item failed.",
+                    e);
             return false;
         }
     }
@@ -1849,12 +1851,13 @@ public class SQLContainer implements Container, Container.Filterable,
         return refdCont.getItem(getReferencedItemId(itemId, refdCont));
     }
 
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+    private void writeObject(java.io.ObjectOutputStream out)
+            throws IOException {
         out.defaultWriteObject();
     }
 
-    private void readObject(java.io.ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         if (notificationsEnabled) {
             /*

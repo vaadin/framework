@@ -71,8 +71,8 @@ public class TextFieldsCssTest extends GridLayout {
 
     @Override
     public void addComponent(Component component, int column1, int row1,
-            int column2, int row2) throws OverlapsException,
-            OutOfBoundsException {
+            int column2, int row2)
+            throws OverlapsException, OutOfBoundsException {
 
         parent.registerComponent(component);
         super.addComponent(component, column1, row1, column2, row2);

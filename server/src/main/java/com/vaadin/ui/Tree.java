@@ -637,8 +637,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
             // Paint tree attributes
             if (isSelectable()) {
-                target.addAttribute("selectmode", (isMultiSelect() ? "multi"
-                        : "single"));
+                target.addAttribute("selectmode",
+                        (isMultiSelect() ? "multi" : "single"));
                 if (isMultiSelect()) {
                     target.addAttribute("multiselectmode",
                             multiSelectMode.toString());
@@ -737,8 +737,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 }
 
                 if (itemStyleGenerator != null) {
-                    String stylename = itemStyleGenerator
-                            .getStyle(this, itemId);
+                    String stylename = itemStyleGenerator.getStyle(this,
+                            itemId);
                     if (stylename != null) {
                         target.addAttribute(TreeConstants.ATTRIBUTE_NODE_STYLE,
                                 stylename);
@@ -921,7 +921,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *      boolean)
      */
     @Override
-    public boolean setChildrenAllowed(Object itemId, boolean areChildrenAllowed) {
+    public boolean setChildrenAllowed(Object itemId,
+            boolean areChildrenAllowed) {
         final boolean success = ((Container.Hierarchical) items)
                 .setChildrenAllowed(itemId, areChildrenAllowed);
         if (success) {
@@ -938,8 +939,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     @Override
     public boolean setParent(Object itemId, Object newParentId) {
-        final boolean success = ((Container.Hierarchical) items).setParent(
-                itemId, newParentId);
+        final boolean success = ((Container.Hierarchical) items)
+                .setParent(itemId, newParentId);
         if (success) {
             markAsDirty();
         }
@@ -961,12 +962,12 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
         // Assure that the data source is ordered by making unordered
         // containers ordered by wrapping them
-        if (Container.Hierarchical.class.isAssignableFrom(newDataSource
-                .getClass())) {
+        if (Container.Hierarchical.class
+                .isAssignableFrom(newDataSource.getClass())) {
             super.setContainerDataSource(newDataSource);
         } else {
-            super.setContainerDataSource(new ContainerHierarchicalWrapper(
-                    newDataSource));
+            super.setContainerDataSource(
+                    new ContainerHierarchicalWrapper(newDataSource));
         }
 
         /*
@@ -1729,7 +1730,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                     return false;
                 }
                 // return true if directly over
-                return eventDetails.getDropLocation() == VerticalDropLocation.MIDDLE;
+                return eventDetails
+                        .getDropLocation() == VerticalDropLocation.MIDDLE;
             } catch (Exception e) {
                 return false;
             }
@@ -1816,7 +1818,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @param generator
      *            The generator to use or null to disable
      */
-    public void setItemDescriptionGenerator(ItemDescriptionGenerator generator) {
+    public void setItemDescriptionGenerator(
+            ItemDescriptionGenerator generator) {
         if (generator != itemDescriptionGenerator) {
             itemDescriptionGenerator = generator;
             markAsDirty();

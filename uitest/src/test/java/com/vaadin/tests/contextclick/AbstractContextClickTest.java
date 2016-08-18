@@ -88,7 +88,8 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
         Matcher matcher = defaultLog.matcher(getLogRow(0));
         Assert.assertTrue(
                 "Log row content did not match default listener output: "
-                        + getLogRow(0), matcher.find());
+                        + getLogRow(0),
+                matcher.find());
 
         int xCoord = Integer.parseInt(matcher.group(1));
         int yCoord = Integer.parseInt(matcher.group(2));
@@ -141,8 +142,8 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
      *            y coordinate
      */
     protected void contextClick(WebElement e, int xCoord, int yCoord) {
-        new Actions(getDriver()).moveToElement(e, xCoord, yCoord)
-                .contextClick().moveByOffset(-5, -5).click().perform();
+        new Actions(getDriver()).moveToElement(e, xCoord, yCoord).contextClick()
+                .moveByOffset(-5, -5).click().perform();
     }
 
 }

@@ -94,7 +94,8 @@ public class GridClientKeyEventsTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "State", "Selection mode", "multi");
 
         // IE8 does not handle 1k rows well with assertions enabled. Less rows!
-        selectMenuPath("Component", "DataSource", "Reset with 100 rows of Data");
+        selectMenuPath("Component", "DataSource",
+                "Reset with 100 rows of Data");
 
         // Focus cell above select all checkbox
         getGridElement().getHeaderCell(0, 0).click();

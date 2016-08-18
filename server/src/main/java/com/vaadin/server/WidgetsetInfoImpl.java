@@ -24,8 +24,8 @@ package com.vaadin.server;
  * BootstrapHandler.
  * <p>
  * This class is intended primarily for internal use. It is recommended to
- * implement WidgetsetInfo directly rather than extending or using this
- * class outside the framework, and this class is subject to changes.
+ * implement WidgetsetInfo directly rather than extending or using this class
+ * outside the framework, and this class is subject to changes.
  *
  * @since 7.7
  */

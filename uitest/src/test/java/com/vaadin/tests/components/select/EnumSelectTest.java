@@ -55,7 +55,7 @@ public class EnumSelectTest extends SingleBrowserTest {
         List<String> options = cb.getPopupSuggestions();
         Assert.assertEquals("Only one item should match filter", 1,
                 options.size());
-        Assert.assertEquals("Invalid option matched filter",
-                "Some other value", options.get(0));
+        Assert.assertEquals("Invalid option matched filter", "Some other value",
+                options.get(0));
     }
 }

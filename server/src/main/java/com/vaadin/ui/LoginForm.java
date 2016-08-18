@@ -102,19 +102,19 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * Internal stream source for the login URL - always returns "Success" and
      * ignores the values received.
      */
-    private static class LoginStreamSource implements StreamResource.StreamSource {
+    private static class LoginStreamSource
+            implements StreamResource.StreamSource {
         @Override
         public InputStream getStream() {
             try {
-                return new ByteArrayInputStream("<html>Success</html>".toString().getBytes(
-                        "UTF-8"));
+                return new ByteArrayInputStream(
+                        "<html>Success</html>".toString().getBytes("UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 return null;
             }
 
         }
     }
-
 
     static {
         try {
@@ -204,7 +204,8 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * As an alternative to calling this method, the method
      * {@link #createPasswordField()} can be overridden.
      * 
-     * @param cap new caption
+     * @param cap
+     *            new caption
      */
     public void setPasswordCaption(String cap) {
         passwordCaption = cap;
@@ -241,7 +242,8 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * As an alternative to calling this method, the method
      * {@link #createLoginButton()} can be overridden.
      * 
-     * @param cap new caption
+     * @param cap
+     *            new caption
      */
     public void setLoginButtonCaption(String cap) {
         loginButtonCaption = cap;

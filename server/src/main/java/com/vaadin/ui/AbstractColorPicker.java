@@ -40,8 +40,8 @@ import com.vaadin.ui.declarative.DesignContext;
  * 
  * @since 7.0.0
  */
-public abstract class AbstractColorPicker extends AbstractComponent implements
-        CloseListener, ColorSelector {
+public abstract class AbstractColorPicker extends AbstractComponent
+        implements CloseListener, ColorSelector {
     private static final Method COLOR_CHANGE_METHOD;
     static {
         try {
@@ -547,13 +547,14 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
         Attributes attributes = design.attributes();
         if (design.hasAttr("color")) {
             // Ignore the # character
-            String hexColor = DesignAttributeHandler.readAttribute("color",
-                    attributes, String.class).substring(1);
+            String hexColor = DesignAttributeHandler
+                    .readAttribute("color", attributes, String.class)
+                    .substring(1);
             setColor(new Color(Integer.parseInt(hexColor, 16)));
         }
         if (design.hasAttr("popup-style")) {
-            setPopupStyle(PopupStyle.valueOf("POPUP_"
-                    + attributes.get("popup-style").toUpperCase()));
+            setPopupStyle(PopupStyle.valueOf(
+                    "POPUP_" + attributes.get("popup-style").toUpperCase()));
         }
         if (design.hasAttr("position")) {
             String[] position = attributes.get("position").split(",");
@@ -572,8 +573,8 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
         DesignAttributeHandler.writeAttribute("popup-style", attribute,
                 (popupStyle == PopupStyle.POPUP_NORMAL ? "normal" : "simple"),
                 "normal", String.class);
-        DesignAttributeHandler.writeAttribute("position", attribute, positionX
-                + "," + positionY, "0,0", String.class);
+        DesignAttributeHandler.writeAttribute("position", attribute,
+                positionX + "," + positionY, "0,0", String.class);
     }
 
     @Override

@@ -40,8 +40,8 @@ import com.vaadin.shared.ApplicationConstants;
  * @see VaadinRequest
  * @see VaadinPortletResponse
  */
-public class VaadinPortletRequest extends PortletRequestWrapper implements
-        VaadinRequest {
+public class VaadinPortletRequest extends PortletRequestWrapper
+        implements VaadinRequest {
 
     private final VaadinPortletService vaadinService;
 

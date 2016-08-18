@@ -22,9 +22,12 @@ public class SQLUtil implements Serializable {
      * Escapes different special characters in strings that are passed to SQL.
      * Replaces the following:
      * 
-     * <list> <li>' is replaced with ''</li> <li>\x00 is removed</li> <li>\ is
-     * replaced with \\</li> <li>" is replaced with \"</li> <li>
-     * \x1a is removed</li> </list>
+     * <list>
+     * <li>' is replaced with ''</li>
+     * <li>\x00 is removed</li>
+     * <li>\ is replaced with \\</li>
+     * <li>" is replaced with \"</li>
+     * <li>\x1a is removed</li> </list>
      * 
      * Also note! The escaping done here may or may not be enough to prevent any
      * and all SQL injections so it is recommended to check user input before

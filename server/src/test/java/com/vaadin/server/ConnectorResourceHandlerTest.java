@@ -57,8 +57,8 @@ public class ConnectorResourceHandlerTest {
 
         session.lock();
         try {
-            session.setCommunicationManager(new LegacyCommunicationManager(
-                    session));
+            session.setCommunicationManager(
+                    new LegacyCommunicationManager(session));
             ui.setSession(session);
             session.addUI(ui);
         } finally {

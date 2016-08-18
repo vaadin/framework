@@ -34,7 +34,8 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.0
  */
-public class LegacyStringToDateConverter implements LegacyConverter<String, Date> {
+public class LegacyStringToDateConverter
+        implements LegacyConverter<String, Date> {
 
     /**
      * Returns the format used by
@@ -68,9 +69,9 @@ public class LegacyStringToDateConverter implements LegacyConverter<String, Date
             Locale locale)
             throws com.vaadin.legacy.data.util.converter.LegacyConverter.ConversionException {
         if (targetType != getModelType()) {
-            throw new ConversionException("Converter only supports "
-                    + getModelType().getName() + " (targetType was "
-                    + targetType.getName() + ")");
+            throw new ConversionException(
+                    "Converter only supports " + getModelType().getName()
+                            + " (targetType was " + targetType.getName() + ")");
         }
 
         if (value == null) {

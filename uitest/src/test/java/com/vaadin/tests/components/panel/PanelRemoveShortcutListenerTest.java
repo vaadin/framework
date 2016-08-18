@@ -63,8 +63,9 @@ public class PanelRemoveShortcutListenerTest extends MultiBrowserTest {
 
     @Test
     public void testToggleWithShortcut() {
-        assertThat(panel.findElement(By.className("v-panel-caption"))
-                .findElement(By.tagName("span")).getText(),
+        assertThat(
+                panel.findElement(By.className("v-panel-caption"))
+                        .findElement(By.tagName("span")).getText(),
                 is("No shortcut effects (press 'A')"));
 
         attemptShortcut("A on");

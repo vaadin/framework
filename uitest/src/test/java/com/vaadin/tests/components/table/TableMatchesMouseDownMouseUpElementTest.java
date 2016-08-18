@@ -140,8 +140,8 @@ public class TableMatchesMouseDownMouseUpElementTest extends MultiBrowserTest {
     }
 
     private List<WebElement> getSelectedRows() {
-        return table.findElement(By.className("v-table-body")).findElements(
-                By.className("v-selected"));
+        return table.findElement(By.className("v-table-body"))
+                .findElements(By.className("v-selected"));
     }
 
 }

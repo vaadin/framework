@@ -26,8 +26,8 @@ import com.vaadin.shared.communication.ServerRpc;
  * Invoking a method in a {@link ServerRpc} interface marked with this
  * annotation will only add the invocation to a queue of outgoing RPC
  * invocations, but it will not cause the queue to be purged and sent to the
- * server. The queue will instead be sent when any RPC method not marked as @Delayed
- * has been invoked.
+ * server. The queue will instead be sent when any RPC method not marked
+ * as @Delayed has been invoked.
  * 
  * @author Vaadin Ltd
  * @version @VERSION@

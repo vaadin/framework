@@ -43,19 +43,20 @@ public class TreeItemSelectionWithoutImmediateTest extends MultiBrowserTest {
             new Actions(getDriver()).moveToElement(treeItem).click().perform();
             Thread.sleep(100);
 
-            WebElement selectedElement = driver.findElement(By
-                    .className("v-tree-node-selected"));
+            WebElement selectedElement = driver
+                    .findElement(By.className("v-tree-node-selected"));
 
             treeItem = getTreeNode(String.format(
                     TreeItemSelectionWithoutImmediate.MENU_ITEM_TEMPLATE, i));
 
-            assertThat("Clicked element should be selected", selectedElement
-                    .getText().equals(treeItem.getText()), is(true));
+            assertThat("Clicked element should be selected",
+                    selectedElement.getText().equals(treeItem.getText()),
+                    is(true));
         }
     }
 
     private WebElement getTreeNode(String caption) {
-        return getDriver().findElement(
-                By.xpath("//span[text() = '" + caption + "']"));
+        return getDriver()
+                .findElement(By.xpath("//span[text() = '" + caption + "']"));
     }
 }

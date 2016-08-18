@@ -21,12 +21,12 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class ContainerSizeChangeTest extends MultiBrowserTest {
 
     @Test
-    public void tableShouldLoadCorrectItems() throws IOException,
-            InterruptedException {
+    public void tableShouldLoadCorrectItems()
+            throws IOException, InterruptedException {
         openTestURL();
 
-        ButtonElement decreaseSize = $(ButtonElement.class).caption(
-                "Decrease size").first();
+        ButtonElement decreaseSize = $(ButtonElement.class)
+                .caption("Decrease size").first();
         decreaseSize.click(); // decreasing container size from 50 to 40
         decreaseSize.click(); // decreasing container size from 40 to 30
 

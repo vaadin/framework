@@ -24,8 +24,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table.TableContextClickEvent;
 import com.vaadin.ui.TreeTable;
 
-public class TreeTableContextClick extends
-        AbstractContextClickUI<TreeTable, TableContextClickEvent> {
+public class TreeTableContextClick
+        extends AbstractContextClickUI<TreeTable, TableContextClickEvent> {
 
     @Override
     protected TreeTable createTestComponent() {
@@ -58,8 +58,8 @@ public class TreeTableContextClick extends
     @Override
     protected HorizontalLayout createContextClickControls() {
         HorizontalLayout controls = super.createContextClickControls();
-        controls.addComponent(new Button("Remove all content",
-                new Button.ClickListener() {
+        controls.addComponent(
+                new Button("Remove all content", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {

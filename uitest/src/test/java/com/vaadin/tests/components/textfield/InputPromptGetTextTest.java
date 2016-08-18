@@ -30,11 +30,11 @@ public class InputPromptGetTextTest extends MultiBrowserTest {
     public void test() {
         openTestURL();
 
-        WebElement field = getDriver().findElement(
-                By.id(InputPromptGetText.FIELD));
+        WebElement field = getDriver()
+                .findElement(By.id(InputPromptGetText.FIELD));
 
-        WebElement button = getDriver().findElement(
-                By.id(InputPromptGetText.BUTTON));
+        WebElement button = getDriver()
+                .findElement(By.id(InputPromptGetText.BUTTON));
 
         String string = getRandomString();
         field.sendKeys(string + "\n");
@@ -45,8 +45,8 @@ public class InputPromptGetTextTest extends MultiBrowserTest {
 
         button.click();
 
-        WebElement label = getDriver().findElement(
-                By.id(InputPromptGetText.LABEL2));
+        WebElement label = getDriver()
+                .findElement(By.id(InputPromptGetText.LABEL2));
 
         Assert.assertEquals("Your input was:", label.getText().trim());
     }

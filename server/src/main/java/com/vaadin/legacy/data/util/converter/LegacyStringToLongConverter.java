@@ -30,8 +30,8 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.2
  */
-public class LegacyStringToLongConverter extends
-        LegacyAbstractStringToNumberConverter<Long> {
+public class LegacyStringToLongConverter
+        extends LegacyAbstractStringToNumberConverter<Long> {
 
     /**
      * Returns the format used by

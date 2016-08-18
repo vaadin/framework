@@ -25,8 +25,8 @@ import com.vaadin.shared.ui.grid.Range;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class RowVisibilityChangeEvent extends
-        GwtEvent<RowVisibilityChangeHandler> {
+public class RowVisibilityChangeEvent
+        extends GwtEvent<RowVisibilityChangeHandler> {
     /**
      * The type of this event.
      */

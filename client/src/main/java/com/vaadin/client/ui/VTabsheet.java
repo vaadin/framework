@@ -77,7 +77,8 @@ import com.vaadin.shared.ui.tabsheet.TabState;
 import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
 import com.vaadin.shared.ui.tabsheet.TabsheetState;
 
-public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware {
+public class VTabsheet extends VTabsheetBase
+        implements Focusable, SubPartAware {
 
     private static final String PREV_SCROLLER_DISABLED_CLASSNAME = "Prev-disabled";
 
@@ -284,7 +285,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         }
 
         @Override
-        public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
+        public HandlerRegistration addMouseDownHandler(
+                MouseDownHandler handler) {
             return addDomHandler(handler, MouseDownEvent.getType());
         }
 
@@ -334,7 +336,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         }
 
         private boolean update(TabState tabState) {
-            if (tabState.description != null || tabState.componentError != null) {
+            if (tabState.description != null
+                    || tabState.componentError != null) {
                 setTooltipInfo(new TooltipInfo(tabState.description,
                         tabState.componentError, this));
             } else {
@@ -348,9 +351,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             boolean ret = updateCaptionWithoutOwner(captionString,
                     !tabState.enabled, hasAttribute(tabState.description),
                     hasAttribute(tabState.componentError),
-                    tab.getTabsheet().connector
-                            .getResourceUrl(ComponentConstants.ICON_RESOURCE
-                                    + tabState.key), tabState.iconAltText);
+                    tab.getTabsheet().connector.getResourceUrl(
+                            ComponentConstants.ICON_RESOURCE + tabState.key),
+                    tabState.iconAltText);
 
             setClosable(tabState.closable);
 
@@ -602,7 +605,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             }
             // FIXME: Shouldn't something be selected instead?
 
-            int scrollerIndexCandidate = getTabIndex(getTabsheet().scrollerPositionTabId);
+            int scrollerIndexCandidate = getTabIndex(
+                    getTabsheet().scrollerPositionTabId);
             if (scrollerIndexCandidate < 0) {
                 // The tab with id scrollerPositionTabId has been removed
                 scrollerIndexCandidate = getTabsheet().scrollerIndex;
@@ -901,15 +905,15 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
 
         scrollerPrev = DOM.createButton();
         scrollerPrev.setTabIndex(-1);
-        DOM.setElementProperty(scrollerPrev, "className", SCROLLER_CLASSNAME
-                + "Prev");
+        DOM.setElementProperty(scrollerPrev, "className",
+                SCROLLER_CLASSNAME + "Prev");
         Roles.getTablistRole().setAriaHiddenState(scrollerPrev, true);
         DOM.sinkEvents(scrollerPrev, Event.ONCLICK | Event.ONMOUSEDOWN);
 
         scrollerNext = DOM.createButton();
         scrollerNext.setTabIndex(-1);
-        DOM.setElementProperty(scrollerNext, "className", SCROLLER_CLASSNAME
-                + "Next");
+        DOM.setElementProperty(scrollerNext, "className",
+                SCROLLER_CLASSNAME + "Next");
         Roles.getTablistRole().setAriaHiddenState(scrollerNext, true);
         DOM.sinkEvents(scrollerNext, Event.ONCLICK | Event.ONMOUSEDOWN);
 
@@ -923,7 +927,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         deco = DOM.createDiv();
 
         tb.setStyleName(CLASSNAME + "-tabs");
-        DOM.setElementProperty(contentNode, "className", CLASSNAME + "-content");
+        DOM.setElementProperty(contentNode, "className",
+                CLASSNAME + "-content");
         DOM.setElementProperty(deco, "className", CLASSNAME + "-deco");
 
         add(tb, tabs);
@@ -1020,7 +1025,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         // style inheritance)
         if (ComponentStateUtil.hasStyles(state)) {
             final List<String> styles = state.styles;
-            if (currentStyle == null || !currentStyle.equals(styles.toString())) {
+            if (currentStyle == null
+                    || !currentStyle.equals(styles.toString())) {
                 currentStyle = styles.toString();
                 final String tabsBaseClass = TABS_CLASSNAME;
                 String tabsClass = tabsBaseClass;
@@ -1041,8 +1047,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         } else {
             tb.setStyleName(CLASSNAME + "-tabs");
             DOM.setElementProperty(tabs, "className", TABS_CLASSNAME);
-            DOM.setElementProperty(contentNode, "className", CLASSNAME
-                    + "-content");
+            DOM.setElementProperty(contentNode, "className",
+                    CLASSNAME + "-content");
             DOM.setElementProperty(deco, "className", CLASSNAME + "-deco");
         }
     }
@@ -1109,8 +1115,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
     }
 
     private boolean isScrollerPrevDisabled() {
-        return scrollerPrev.getClassName().contains(
-                PREV_SCROLLER_DISABLED_CLASSNAME);
+        return scrollerPrev.getClassName()
+                .contains(PREV_SCROLLER_DISABLED_CLASSNAME);
     }
 
     private boolean isScrollerHidden() {
@@ -1319,18 +1325,16 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
         boolean clipped = isClippedTabs();
         if (tb.getTabCount() > 0 && tb.isVisible() && (scrolled || clipped)) {
             scroller.getStyle().clearDisplay();
-            DOM.setElementProperty(scrollerPrev, "className",
-                    SCROLLER_CLASSNAME
-                            + (scrolled ? "Prev"
-                                    : PREV_SCROLLER_DISABLED_CLASSNAME));
+            DOM.setElementProperty(scrollerPrev, "className", SCROLLER_CLASSNAME
+                    + (scrolled ? "Prev" : PREV_SCROLLER_DISABLED_CLASSNAME));
             DOM.setElementProperty(scrollerNext, "className",
                     SCROLLER_CLASSNAME + (clipped ? "Next" : "Next-disabled"));
 
             // the active tab should be focusable if and only if it is visible
             boolean isActiveTabVisible = scrollerIndex <= activeTabIndex
                     && !isClipped(tb.selected);
-            tb.selected.setTabulatorIndex(isActiveTabVisible ? tabulatorIndex
-                    : -1);
+            tb.selected.setTabulatorIndex(
+                    isActiveTabVisible ? tabulatorIndex : -1);
 
         } else {
             scroller.getStyle().setDisplay(Display.NONE);
@@ -1358,8 +1362,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
     /** For internal use only. May be removed or replaced in the future. */
     public void showAllTabs() {
         scrollerIndex = tb.getFirstVisibleTab();
-        scrollerPositionTabId = scrollerIndex < 0 ? null : tb
-                .getTab(scrollerIndex).id;
+        scrollerPositionTabId = scrollerIndex < 0 ? null
+                : tb.getTab(scrollerIndex).id;
         for (int i = 0; i < tb.getTabCount(); i++) {
             Tab t = tb.getTab(i);
             if (!t.isHiddenOnServer()) {
@@ -1373,9 +1377,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
     }
 
     private boolean isClippedTabs() {
-        return (tb.getOffsetWidth() - DOM.getElementPropertyInt((Element) tb
-                .getContainerElement().getLastChild().cast(), "offsetWidth")) > getOffsetWidth()
-                - (isScrolledTabs() ? scroller.getOffsetWidth() : 0);
+        return (tb.getOffsetWidth() - DOM.getElementPropertyInt(
+                (Element) tb.getContainerElement().getLastChild().cast(),
+                "offsetWidth")) > getOffsetWidth()
+                        - (isScrolledTabs() ? scroller.getOffsetWidth() : 0);
     }
 
     private boolean isClipped(Tab tab) {
@@ -1733,8 +1738,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
                 focusBlurManager.onFocus(focusSource);
 
                 if (focusSource.hasTooltip()) {
-                    focusSource.setAssistiveDescription(getVTooltip()
-                            .getUniqueId());
+                    focusSource.setAssistiveDescription(
+                            getVTooltip().getUniqueId());
                     getVTooltip().showAssistive(focusSource.getTooltipInfo());
                 }
 
@@ -1968,7 +1973,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
             .compile("tab\\[(\\d+)](.*)");
 
     @Override
-    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(
+            String subPart) {
         if ("tabpanel".equals(subPart)) {
             return DOM.asOld(tabPanel.getElement().getFirstChildElement());
         } else if (SUBPART_TAB_REGEXP.test(subPart)) {
@@ -1989,16 +1995,16 @@ public class VTabsheet extends VTabsheetBase implements Focusable, SubPartAware 
     }
 
     @Override
-    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+    public String getSubPartName(
+            com.google.gwt.user.client.Element subElement) {
         if (tabPanel.getElement().equals(subElement.getParentElement())
                 || tabPanel.getElement().equals(subElement)) {
             return "tabpanel";
         } else {
             for (int i = 0; i < tb.getTabCount(); ++i) {
                 Tab tab = tb.getTab(i);
-                if (tab.isClosable()
-                        && tab.tabCaption.getCloseButton().isOrHasChild(
-                                subElement)) {
+                if (tab.isClosable() && tab.tabCaption.getCloseButton()
+                        .isOrHasChild(subElement)) {
                     return "tab[" + i + "]/close";
                 } else if (tab.getElement().isOrHasChild(subElement)) {
                     return "tab[" + i + "]";

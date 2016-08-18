@@ -237,12 +237,13 @@ public class FlyweightRow implements Row {
     public Iterable<FlyweightCell> getCells(final int offset,
             final int numberOfCells) {
         assertSetup();
-        assert offset >= 0 && offset + numberOfCells <= cells.size() : "Invalid range of cells";
+        assert offset >= 0 && offset + numberOfCells <= cells
+                .size() : "Invalid range of cells";
         return new Iterable<FlyweightCell>() {
             @Override
             public Iterator<FlyweightCell> iterator() {
-                return CellIterator.attached(cells.subList(offset, offset
-                        + numberOfCells));
+                return CellIterator.attached(
+                        cells.subList(offset, offset + numberOfCells));
             }
         };
     }
@@ -265,12 +266,13 @@ public class FlyweightRow implements Row {
     public Iterable<FlyweightCell> getUnattachedCells(final int offset,
             final int numberOfCells) {
         assertSetup();
-        assert offset >= 0 && offset + numberOfCells <= cells.size() : "Invalid range of cells";
+        assert offset >= 0 && offset + numberOfCells <= cells
+                .size() : "Invalid range of cells";
         return new Iterable<FlyweightCell>() {
             @Override
             public Iterator<FlyweightCell> iterator() {
-                return CellIterator.unattached(cells.subList(offset, offset
-                        + numberOfCells));
+                return CellIterator.unattached(
+                        cells.subList(offset, offset + numberOfCells));
             }
         };
     }
@@ -280,11 +282,12 @@ public class FlyweightRow implements Row {
      * access any of its data.
      */
     private void assertSetup() {
-        assert element != null && row != BLANK && columnWidths != null : "Flyweight row was not "
-                + "properly initialized. Make sure the setup-method is "
-                + "called before retrieving data. This is either a bug "
-                + "in Escalator, or the instance of the flyweight row "
-                + "has been stored and accessed.";
+        assert element != null && row != BLANK
+                && columnWidths != null : "Flyweight row was not "
+                        + "properly initialized. Make sure the setup-method is "
+                        + "called before retrieving data. This is either a bug "
+                        + "in Escalator, or the instance of the flyweight row "
+                        + "has been stored and accessed.";
     }
 
     double getColumnWidth(int column) {

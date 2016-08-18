@@ -64,8 +64,8 @@ public class TestFileUploadTest extends MultiBrowserTest {
     }
 
     private String md5(String string) throws NoSuchAlgorithmException {
-        byte[] digest = MessageDigest.getInstance("MD5").digest(
-                string.getBytes());
+        byte[] digest = MessageDigest.getInstance("MD5")
+                .digest(string.getBytes());
         BigInteger bigInt = new BigInteger(1, digest);
         String hashtext = bigInt.toString(16);
         return hashtext;

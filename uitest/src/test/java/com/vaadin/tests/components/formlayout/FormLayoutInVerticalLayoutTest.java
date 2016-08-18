@@ -37,8 +37,8 @@ public class FormLayoutInVerticalLayoutTest extends MultiBrowserTest {
 
         List<WebElement> labels = findElements(By.className("v-label-h2"));
         String formLabelMargin = labels.get(0).getCssValue("margin-top");
-        String verticalLayoutLabelMargin = labels.get(1).getCssValue(
-                "margin-top");
+        String verticalLayoutLabelMargin = labels.get(1)
+                .getCssValue("margin-top");
         Assert.assertNotEquals(
                 "'margin-top' values for header label in vertical layout "
                         + "and form layout are the same",

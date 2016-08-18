@@ -34,8 +34,8 @@ public abstract class AbstractJunctionFilter implements Filter {
     protected final Collection<Filter> filters;
 
     public AbstractJunctionFilter(Filter... filters) {
-        this.filters = Collections.unmodifiableCollection(Arrays
-                .asList(filters));
+        this.filters = Collections
+                .unmodifiableCollection(Arrays.asList(filters));
     }
 
     /**

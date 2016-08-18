@@ -36,8 +36,8 @@ public class GridLayoutRequiredIndicatorLocation extends AbstractTestUI {
                 .add(".colored { background: lime; overflow: visible; }");
         getPage().getCurrent().getStyles()
                 .add(".pink { background: pink; overflow: visible; }");
-        getPage().getCurrent().getStyles().add(
-                ".v-gridlayout-slot { border: 1px solid red; }");
+        getPage().getCurrent().getStyles()
+                .add(".v-gridlayout-slot { border: 1px solid red; }");
 
         GridLayout rootLayout = new GridLayout(2, 2);
         rootLayout.addStyleName("allow-overflow");
@@ -110,7 +110,8 @@ public class GridLayoutRequiredIndicatorLocation extends AbstractTestUI {
         layout.addComponent(label);
 
         // TODO also test with captions
-        LegacyTextField field = new LegacyTextField(useCaption ? "caption" : null);
+        LegacyTextField field = new LegacyTextField(
+                useCaption ? "caption" : null);
         field.setRequired(true);
         field.setWidth(width);
         layout.addComponent(field);
@@ -119,7 +120,8 @@ public class GridLayoutRequiredIndicatorLocation extends AbstractTestUI {
 
     private void addLabel(VerticalLayout layout, String width,
             Alignment alignment, boolean useCaption) {
-        LegacyTextField field = new LegacyTextField(useCaption ? "caption" : null);
+        LegacyTextField field = new LegacyTextField(
+                useCaption ? "caption" : null);
         field.setRequired(true);
         field.setWidth(width);
         layout.addComponent(field);

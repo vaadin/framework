@@ -100,8 +100,8 @@ public class Navigator implements Serializable {
      * This class is mostly for internal use by Navigator, and is only public
      * and static to enable testing.
      */
-    public static class UriFragmentManager implements NavigationStateManager,
-            UriFragmentChangedListener {
+    public static class UriFragmentManager
+            implements NavigationStateManager, UriFragmentChangedListener {
         private final Page page;
         private Navigator navigator;
 
@@ -195,8 +195,8 @@ public class Navigator implements Serializable {
                 container.removeAllComponents();
                 container.addComponent((Component) view);
             } else {
-                throw new IllegalArgumentException("View is not a component: "
-                        + view);
+                throw new IllegalArgumentException(
+                        "View is not a component: " + view);
             }
         }
     }
@@ -209,8 +209,8 @@ public class Navigator implements Serializable {
      * Attempting to display a view that is not a component causes an exception
      * to be thrown.
      */
-    public static class SingleComponentContainerViewDisplay implements
-            ViewDisplay {
+    public static class SingleComponentContainerViewDisplay
+            implements ViewDisplay {
 
         private final SingleComponentContainer container;
 
@@ -228,8 +228,8 @@ public class Navigator implements Serializable {
             if (view instanceof Component) {
                 container.setContent((Component) view);
             } else {
-                throw new IllegalArgumentException("View is not a component: "
-                        + view);
+                throw new IllegalArgumentException(
+                        "View is not a component: " + view);
             }
         }
     }
@@ -561,8 +561,7 @@ public class Navigator implements Serializable {
 
         if (viewWithLongestName == null) {
             throw new IllegalArgumentException(
-                    "Trying to navigate to an unknown state '"
-                            + navigationState
+                    "Trying to navigate to an unknown state '" + navigationState
                             + "' and an error view provider not present");
         }
 
@@ -576,7 +575,8 @@ public class Navigator implements Serializable {
         }
         if (getCurrentView() == null
                 || !SharedUtil.equals(getCurrentView(), viewWithLongestName)
-                || !SharedUtil.equals(currentNavigationState, navigationState)) {
+                || !SharedUtil.equals(currentNavigationState,
+                        navigationState)) {
             navigateTo(viewWithLongestName, longestViewName, parameters);
         } else {
             updateNavigationState(new ViewChangeEvent(this, getCurrentView(),
@@ -722,7 +722,8 @@ public class Navigator implements Serializable {
         // a copy of the listener list is needed to avoid
         // ConcurrentModificationException as a listener can add/remove
         // listeners
-        for (ViewChangeListener l : new ArrayList<ViewChangeListener>(listeners)) {
+        for (ViewChangeListener l : new ArrayList<ViewChangeListener>(
+                listeners)) {
             if (!l.beforeViewChange(event)) {
                 return false;
             }
@@ -785,7 +786,8 @@ public class Navigator implements Serializable {
         // a copy of the listener list is needed to avoid
         // ConcurrentModificationException as a listener can add/remove
         // listeners
-        for (ViewChangeListener l : new ArrayList<ViewChangeListener>(listeners)) {
+        for (ViewChangeListener l : new ArrayList<ViewChangeListener>(
+                listeners)) {
             l.afterViewChange(event);
         }
     }
@@ -1002,9 +1004,8 @@ public class Navigator implements Serializable {
         ViewProvider longestViewNameProvider = null;
         for (ViewProvider provider : providers) {
             String viewName = provider.getViewName(state);
-            if (null != viewName
-                    && (longestViewName == null || viewName.length() > longestViewName
-                            .length())) {
+            if (null != viewName && (longestViewName == null
+                    || viewName.length() > longestViewName.length())) {
                 longestViewName = viewName;
                 longestViewNameProvider = provider;
             }

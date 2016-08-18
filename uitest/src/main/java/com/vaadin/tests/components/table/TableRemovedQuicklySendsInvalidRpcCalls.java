@@ -129,7 +129,8 @@ public class TableRemovedQuicklySendsInvalidRpcCalls extends AbstractTestUI {
         }
 
         @Override
-        public void setDiffState(ClientConnector connector, JsonObject diffState) {
+        public void setDiffState(ClientConnector connector,
+                JsonObject diffState) {
             tracker.setDiffState(connector, diffState);
         }
 
@@ -161,7 +162,8 @@ public class TableRemovedQuicklySendsInvalidRpcCalls extends AbstractTestUI {
         }
 
         @Override
-        public void cleanStreamVariable(String connectorId, String variableName) {
+        public void cleanStreamVariable(String connectorId,
+                String variableName) {
             tracker.cleanStreamVariable(connectorId, variableName);
         }
 
@@ -185,7 +187,8 @@ public class TableRemovedQuicklySendsInvalidRpcCalls extends AbstractTestUI {
         @Override
         public void cleanConcurrentlyRemovedConnectorIds(
                 int lastSyncIdSeenByClient) {
-            tracker.cleanConcurrentlyRemovedConnectorIds(lastSyncIdSeenByClient);
+            tracker.cleanConcurrentlyRemovedConnectorIds(
+                    lastSyncIdSeenByClient);
         }
 
         @Override

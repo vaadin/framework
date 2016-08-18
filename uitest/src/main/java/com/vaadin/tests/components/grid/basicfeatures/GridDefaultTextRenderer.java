@@ -27,6 +27,7 @@ public class GridDefaultTextRenderer extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        setContent(new TestWidgetComponent(GridDefaultTextRendererWidget.class));
+        setContent(
+                new TestWidgetComponent(GridDefaultTextRendererWidget.class));
     }
 }

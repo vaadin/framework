@@ -41,8 +41,8 @@ public class ListSelectPushSelectionChanges extends AbstractTestUI {
         // Option group changes propagate to the list select
         listSelect.setPropertyDataSource(optionGroup);
 
-        final OptionGroup modeSelect = new OptionGroup("Mode", Arrays.asList(
-                "Single", "Multi"));
+        final OptionGroup modeSelect = new OptionGroup("Mode",
+                Arrays.asList("Single", "Multi"));
         modeSelect.setValue("Single");
         modeSelect.addValueChangeListener(new ValueChangeListener() {
             @Override

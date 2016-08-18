@@ -50,37 +50,39 @@ public class ServletPortletHelper implements Serializable {
         }
 
         try {
-            return classLoader.loadClass(applicationParameter).asSubclass(
-                    LegacyApplication.class);
+            return classLoader.loadClass(applicationParameter)
+                    .asSubclass(LegacyApplication.class);
         } catch (final ClassNotFoundException e) {
-            throw new ServiceException("Failed to load application class: "
-                    + applicationParameter, e);
+            throw new ServiceException(
+                    "Failed to load application class: " + applicationParameter,
+                    e);
         }
     }
 
     private static void verifyUIClass(String className, ClassLoader classLoader)
             throws ServiceException {
         if (className == null) {
-            throw new ServiceException(VaadinSession.UI_PARAMETER
-                    + " init parameter not defined");
+            throw new ServiceException(
+                    VaadinSession.UI_PARAMETER + " init parameter not defined");
         }
 
         // Check that the UI layout class can be found
         try {
             Class<?> uiClass = classLoader.loadClass(className);
             if (!UI.class.isAssignableFrom(uiClass)) {
-                throw new ServiceException(className + " does not implement UI");
+                throw new ServiceException(
+                        className + " does not implement UI");
             }
             // Try finding a default constructor, else throw exception
             uiClass.getConstructor();
         } catch (ClassNotFoundException e) {
             throw new ServiceException(className + " could not be loaded", e);
         } catch (SecurityException e) {
-            throw new ServiceException("Could not access " + className
-                    + " class", e);
+            throw new ServiceException(
+                    "Could not access " + className + " class", e);
         } catch (NoSuchMethodException e) {
-            throw new ServiceException(className
-                    + " doesn't have a public no-args constructor");
+            throw new ServiceException(
+                    className + " doesn't have a public no-args constructor");
         }
     }
 
@@ -125,8 +127,8 @@ public class ServletPortletHelper implements Serializable {
     }
 
     public static boolean isPublishedFileRequest(VaadinRequest request) {
-        return hasPathPrefix(request, ApplicationConstants.PUBLISHED_FILE_PATH
-                + "/");
+        return hasPathPrefix(request,
+                ApplicationConstants.PUBLISHED_FILE_PATH + "/");
     }
 
     public static boolean isUIDLRequest(VaadinRequest request) {
@@ -138,7 +140,8 @@ public class ServletPortletHelper implements Serializable {
     }
 
     public static boolean isHeartbeatRequest(VaadinRequest request) {
-        return hasPathPrefix(request, ApplicationConstants.HEARTBEAT_PATH + '/');
+        return hasPathPrefix(request,
+                ApplicationConstants.HEARTBEAT_PATH + '/');
     }
 
     public static boolean isPushRequest(VaadinRequest request) {
@@ -175,17 +178,19 @@ public class ServletPortletHelper implements Serializable {
                     .asSubclass(UIProvider.class);
             return subclass.newInstance();
         } catch (ClassNotFoundException e) {
-            throw new ServiceException("Could not load UIProvider class "
-                    + uiProviderProperty, e);
+            throw new ServiceException(
+                    "Could not load UIProvider class " + uiProviderProperty, e);
         } catch (ClassCastException e) {
             throw new ServiceException("UIProvider class " + uiProviderProperty
                     + " does not extend UIProvider", e);
         } catch (InstantiationException e) {
-            throw new ServiceException("Could not instantiate UIProvider "
-                    + uiProviderProperty, e);
+            throw new ServiceException(
+                    "Could not instantiate UIProvider " + uiProviderProperty,
+                    e);
         } catch (IllegalAccessException e) {
-            throw new ServiceException("Could not instantiate UIProvider "
-                    + uiProviderProperty, e);
+            throw new ServiceException(
+                    "Could not instantiate UIProvider " + uiProviderProperty,
+                    e);
         }
     }
 
@@ -194,7 +199,8 @@ public class ServletPortletHelper implements Serializable {
         if (session.getUIProviders().isEmpty()) {
             throw new ServiceException(
                     "No UIProvider has been added and there is no \""
-                            + VaadinSession.UI_PARAMETER + "\" init parameter.");
+                            + VaadinSession.UI_PARAMETER
+                            + "\" init parameter.");
         }
     }
 

@@ -59,20 +59,21 @@ public class ClientRpcWriter implements Serializable {
      */
     public void write(UI ui, Writer writer) throws IOException {
 
-        Collection<ClientMethodInvocation> pendingInvocations = collectPendingRpcCalls(ui
-                .getConnectorTracker().getDirtyVisibleConnectors());
+        Collection<ClientMethodInvocation> pendingInvocations = collectPendingRpcCalls(
+                ui.getConnectorTracker().getDirtyVisibleConnectors());
 
         JsonArray rpcCalls = Json.createArray();
         for (ClientMethodInvocation invocation : pendingInvocations) {
             // add invocation to rpcCalls
             try {
                 JsonArray invocationJson = Json.createArray();
-                invocationJson.set(0, invocation.getConnector()
-                        .getConnectorId());
+                invocationJson.set(0,
+                        invocation.getConnector().getConnectorId());
                 invocationJson.set(1, invocation.getInterfaceName());
                 invocationJson.set(2, invocation.getMethodName());
                 JsonArray paramJson = Json.createArray();
-                for (int i = 0; i < invocation.getParameterTypes().length; ++i) {
+                for (int i = 0; i < invocation
+                        .getParameterTypes().length; ++i) {
                     Type parameterType = invocation.getParameterTypes()[i];
                     JsonValue referenceParameter = null;
                     // TODO Use default values for RPC parameter types
@@ -98,7 +99,8 @@ public class ClientRpcWriter implements Serializable {
                                 + invocation.getConnector().getConnectorId()
                                 + " method " + invocation.getInterfaceName()
                                 + "." + invocation.getMethodName() + ": "
-                                + e.getMessage(), e);
+                                + e.getMessage(),
+                        e);
             }
         }
         writer.write(JsonUtil.stringify(rpcCalls));
@@ -128,14 +130,15 @@ public class ClientRpcWriter implements Serializable {
                 // merge two ordered comparable lists
                 for (int destIndex = 0, oldIndex = 0, paintableIndex = 0; destIndex < totalCalls; destIndex++) {
                     if (paintableIndex >= paintablePendingRpc.size()
-                            || (oldIndex < oldPendingRpc.size() && ((Comparable<ClientMethodInvocation>) oldPendingRpc
-                                    .get(oldIndex))
-                                    .compareTo(paintablePendingRpc
-                                            .get(paintableIndex)) <= 0)) {
+                            || (oldIndex < oldPendingRpc.size()
+                                    && ((Comparable<ClientMethodInvocation>) oldPendingRpc
+                                            .get(oldIndex)).compareTo(
+                                                    paintablePendingRpc.get(
+                                                            paintableIndex)) <= 0)) {
                         pendingInvocations.add(oldPendingRpc.get(oldIndex++));
                     } else {
-                        pendingInvocations.add(paintablePendingRpc
-                                .get(paintableIndex++));
+                        pendingInvocations
+                                .add(paintablePendingRpc.get(paintableIndex++));
                     }
                 }
             }

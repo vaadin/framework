@@ -25,7 +25,8 @@ public class TreeCssTest {
         tree.addActionHandler(new Action.Handler() {
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 // We don't care about functionality, we just want the UI for
                 // testing..
 

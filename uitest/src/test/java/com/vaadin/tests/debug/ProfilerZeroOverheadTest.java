@@ -40,8 +40,8 @@ public class ProfilerZeroOverheadTest extends SingleBrowserTest {
         int bodyStart = canaryMethodString.indexOf('{');
         int bodyEnd = canaryMethodString.lastIndexOf('}');
 
-        String methodBody = canaryMethodString
-                .substring(bodyStart + 1, bodyEnd);
+        String methodBody = canaryMethodString.substring(bodyStart + 1,
+                bodyEnd);
 
         // Method body shouldn't contain anything else than whitespace
         if (!methodBody.replaceAll("\\s", "").isEmpty()) {

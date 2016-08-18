@@ -38,8 +38,8 @@ public class UnnecessaryPaddingInResponsiveUITest extends SingleBrowserTest {
 
         String paddingTop = ui.getCssValue("padding-top");
 
-        Integer paddingHeight = Integer.parseInt(paddingTop.substring(0,
-                paddingTop.length() - 2));
+        Integer paddingHeight = Integer
+                .parseInt(paddingTop.substring(0, paddingTop.length() - 2));
 
         assertThat(paddingHeight, equalTo(0));
 

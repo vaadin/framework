@@ -27,8 +27,8 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
 
-public class EscalatorColumnFreezingTest extends
-        EscalatorBasicClientFeaturesTest {
+public class EscalatorColumnFreezingTest
+        extends EscalatorBasicClientFeaturesTest {
 
     private final static Pattern TRANSFORM_PATTERN = Pattern.compile(// @formatter:off
             // any start of the string
@@ -48,8 +48,8 @@ public class EscalatorColumnFreezingTest extends
 
             // @formatter:on
 
-    private final static Pattern LEFT_PATTERN = Pattern.compile(
-            ".*left: (\\d+)px.*", Pattern.CASE_INSENSITIVE);
+    private final static Pattern LEFT_PATTERN = Pattern
+            .compile(".*left: (\\d+)px.*", Pattern.CASE_INSENSITIVE);
 
     private static final int NO_FREEZE = -1;
 

@@ -35,8 +35,8 @@ public class EnableDisablePush extends AbstractTestUI {
                             log.log("Counter = " + c++);
                             if (c == 3) {
                                 log.log("Disabling polling, enabling push");
-                                getPushConfiguration().setPushMode(
-                                        PushMode.AUTOMATIC);
+                                getPushConfiguration()
+                                        .setPushMode(PushMode.AUTOMATIC);
                                 setPollInterval(-1);
                                 log.log("Polling disabled, push enabled");
                             }
@@ -94,18 +94,19 @@ public class EnableDisablePush extends AbstractTestUI {
             }
         }));
 
-        addComponent(new Button(
-                "Disable push, re-enable from background thread",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        log.log("Disabling push, enabling polling");
-                        getPushConfiguration().setPushMode(PushMode.DISABLED);
-                        setPollInterval(1000);
-                        timer.schedule(new CounterTask(), new Date());
-                        log.log("Push disabled, polling enabled");
-                    }
-                }));
+        addComponent(
+                new Button("Disable push, re-enable from background thread",
+                        new Button.ClickListener() {
+                            @Override
+                            public void buttonClick(Button.ClickEvent event) {
+                                log.log("Disabling push, enabling polling");
+                                getPushConfiguration()
+                                        .setPushMode(PushMode.DISABLED);
+                                setPollInterval(1000);
+                                timer.schedule(new CounterTask(), new Date());
+                                log.log("Push disabled, polling enabled");
+                            }
+                        }));
 
         addComponent(log);
     }

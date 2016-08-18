@@ -39,8 +39,8 @@ public class TableTest {
 
     @Test
     public void emptyAfterClearSingleSelect() {
-        table.setContainerDataSource(BeanItemContainerGenerator
-                .createContainer(100));
+        table.setContainerDataSource(
+                BeanItemContainerGenerator.createContainer(100));
         Assert.assertTrue(table.isEmpty());
         Object first = table.getContainerDataSource().getItemIds().iterator()
                 .next();
@@ -55,8 +55,8 @@ public class TableTest {
     @Test
     public void emptyAfterClearMultiSelect() {
         table.setMultiSelect(true);
-        table.setContainerDataSource(BeanItemContainerGenerator
-                .createContainer(100));
+        table.setContainerDataSource(
+                BeanItemContainerGenerator.createContainer(100));
 
         Assert.assertTrue(table.isEmpty());
         Assert.assertArrayEquals(new Object[] {},

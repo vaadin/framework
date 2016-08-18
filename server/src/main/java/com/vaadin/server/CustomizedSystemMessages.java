@@ -49,8 +49,8 @@ import java.io.Serializable;
  * </p>
  */
 
-public class CustomizedSystemMessages extends SystemMessages implements
-        Serializable {
+public class CustomizedSystemMessages extends SystemMessages
+        implements Serializable {
 
     /**
      * Sets the URL to go to when the session has expired.
@@ -130,7 +130,8 @@ public class CustomizedSystemMessages extends SystemMessages implements
      * @param authenticationErrorCaption
      *            the caption
      */
-    public void setAuthenticationErrorCaption(String authenticationErrorCaption) {
+    public void setAuthenticationErrorCaption(
+            String authenticationErrorCaption) {
         this.authenticationErrorCaption = authenticationErrorCaption;
     }
 
@@ -141,7 +142,8 @@ public class CustomizedSystemMessages extends SystemMessages implements
      * @param authenticationErrorMessage
      *            the message
      */
-    public void setAuthenticationErrorMessage(String authenticationErrorMessage) {
+    public void setAuthenticationErrorMessage(
+            String authenticationErrorMessage) {
         this.authenticationErrorMessage = authenticationErrorMessage;
     }
 

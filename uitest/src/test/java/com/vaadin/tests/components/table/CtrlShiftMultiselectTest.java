@@ -65,7 +65,8 @@ public class CtrlShiftMultiselectTest extends MultiBrowserTest {
     }
 
     private List<WebElement> getAllRows() {
-        WebElement table = vaadinElement("/VVerticalLayout[0]/VVerticalLayout[0]/VScrollTable[0]");
+        WebElement table = vaadinElement(
+                "/VVerticalLayout[0]/VVerticalLayout[0]/VScrollTable[0]");
         return table.findElements(By.cssSelector(".v-table-table tr"));
 
     }

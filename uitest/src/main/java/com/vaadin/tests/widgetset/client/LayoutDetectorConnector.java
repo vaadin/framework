@@ -53,9 +53,8 @@ public class LayoutDetectorConnector extends AbstractComponentConnector
     }
 
     private void updateText() {
-        getWidget().setHTML(
-                "Layout count: <span id='layoutCount'>" + layoutCount
-                        + "</span><br />RPC count: <span id='rpcCount'>"
-                        + rpcCount + "</span>");
+        getWidget().setHTML("Layout count: <span id='layoutCount'>"
+                + layoutCount + "</span><br />RPC count: <span id='rpcCount'>"
+                + rpcCount + "</span>");
     }
 }

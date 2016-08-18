@@ -75,7 +75,8 @@ public class TreeTableExtraScrollbarWithChildren extends TestBase {
 
     private class HierarchyColumnGenerator implements Table.ColumnGenerator {
         @Override
-        public Object generateCell(Table table, Object itemId, Object columnId) {
+        public Object generateCell(Table table, Object itemId,
+                Object columnId) {
             Label label = new Label("this should be mostly hidden");
             label.setSizeUndefined();
             return label;
@@ -84,7 +85,8 @@ public class TreeTableExtraScrollbarWithChildren extends TestBase {
 
     private class TypeColumnGenerator implements Table.ColumnGenerator {
         @Override
-        public Object generateCell(Table table, Object itemId, Object columnId) {
+        public Object generateCell(Table table, Object itemId,
+                Object columnId) {
             if (itemId instanceof TestObject) {
                 return new Label(((TestObject) itemId).getValue());
             }

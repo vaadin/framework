@@ -49,20 +49,20 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
 
     @Test
     public void columnIsNotShownWhenHidden() {
-        assertEquals("column 0", getGridElement().getHeaderCell(0, 0).getText()
-                .toLowerCase());
+        assertEquals("column 0",
+                getGridElement().getHeaderCell(0, 0).getText().toLowerCase());
 
         selectMenuPath(TOGGLE_HIDE_COLUMN_0);
-        assertEquals("column 1", getGridElement().getHeaderCell(0, 0).getText()
-                .toLowerCase());
+        assertEquals("column 1",
+                getGridElement().getHeaderCell(0, 0).getText().toLowerCase());
     }
 
     @Test
     public void columnIsShownWhenUnhidden() {
         selectMenuPath(TOGGLE_HIDE_COLUMN_0);
         selectMenuPath(TOGGLE_HIDE_COLUMN_0);
-        assertEquals("column 0", getGridElement().getHeaderCell(0, 0).getText()
-                .toLowerCase());
+        assertEquals("column 0",
+                getGridElement().getHeaderCell(0, 0).getText().toLowerCase());
     }
 
     @Test
@@ -168,15 +168,15 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
     public void testColumnHidingToggleCaption_settingToggleCaption_updatesToggle() {
         toggleColumnHidable(1);
         getSidebarOpenButton().click();
-        assertEquals("column 1", getGridElement().getHeaderCell(0, 1).getText()
-                .toLowerCase());
+        assertEquals("column 1",
+                getGridElement().getHeaderCell(0, 1).getText().toLowerCase());
         assertEquals("Column 1", getColumnHidingToggle(1).getText());
 
         toggleColumnHidingToggleCaptionChange(1);
 
         getSidebarOpenButton().click();
-        assertEquals("column 1", getGridElement().getHeaderCell(0, 1).getText()
-                .toLowerCase());
+        assertEquals("column 1",
+                getGridElement().getHeaderCell(0, 1).getText().toLowerCase());
         assertEquals("Column 1 caption 0", getColumnHidingToggle(1).getText());
 
         toggleColumnHidingToggleCaptionChange(1);
@@ -188,8 +188,8 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
     public void testColumnHidingToggleCaption_settingWidgetToHeader_toggleCaptionStays() {
         toggleColumnHidable(1);
         getSidebarOpenButton().click();
-        assertEquals("column 1", getGridElement().getHeaderCell(0, 1).getText()
-                .toLowerCase());
+        assertEquals("column 1",
+                getGridElement().getHeaderCell(0, 1).getText().toLowerCase());
         assertEquals("Column 1", getColumnHidingToggle(1).getText());
 
         selectMenuPath("Component", "Columns", "Column 1", "Header Type",
@@ -207,8 +207,8 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
                 "Change header caption");
 
         getSidebarOpenButton().click();
-        assertEquals("column 1 header 0", getGridElement().getHeaderCell(0, 1)
-                .getText().toLowerCase());
+        assertEquals("column 1 header 0",
+                getGridElement().getHeaderCell(0, 1).getText().toLowerCase());
         assertEquals("Column 1 header 0", getColumnHidingToggle(1).getText());
     }
 
@@ -222,8 +222,8 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
                 "Change header caption");
 
         getSidebarOpenButton().click();
-        assertEquals("column 1 header 0", getGridElement().getHeaderCell(0, 1)
-                .getText().toLowerCase());
+        assertEquals("column 1 header 0",
+                getGridElement().getHeaderCell(0, 1).getText().toLowerCase());
         assertEquals("Column 1 caption 0", getColumnHidingToggle(1).getText());
     }
 

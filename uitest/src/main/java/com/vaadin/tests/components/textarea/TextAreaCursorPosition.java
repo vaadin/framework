@@ -13,7 +13,8 @@ import com.vaadin.ui.TextArea;
 
 public class TextAreaCursorPosition extends TestBase {
 
-    private LegacyTextField cursorPosition = new LegacyTextField("Cursor position");
+    private LegacyTextField cursorPosition = new LegacyTextField(
+            "Cursor position");
 
     @Override
     public void setup() {

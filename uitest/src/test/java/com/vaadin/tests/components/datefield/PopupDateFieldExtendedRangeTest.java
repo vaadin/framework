@@ -63,10 +63,9 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
 
         // verify contents
         WebElement popup = findElement(By.className("v-datefield-popup"));
-        assertEquals("unexpected month", "tammikuu 2011",
-                popup.findElements(
-                        By.className("v-datefield-calendarpanel-month")).get(1)
-                        .getText());
+        assertEquals("unexpected month", "tammikuu 2011", popup
+                .findElements(By.className("v-datefield-calendarpanel-month"))
+                .get(1).getText());
         List<WebElement> headerElements = popup
                 .findElement(By.className("v-datefield-calendarpanel-weekdays"))
                 .findElements(By.tagName("td"));
@@ -104,10 +103,9 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
                 .findElement(By.tagName("button")).click();
 
         // verify contents
-        assertEquals("unexpected month", "joulukuu 2010",
-                popup.findElements(
-                        By.className("v-datefield-calendarpanel-month")).get(1)
-                        .getText());
+        assertEquals("unexpected month", "joulukuu 2010", popup
+                .findElements(By.className("v-datefield-calendarpanel-month"))
+                .get(1).getText());
         assertEquals("unexpected selection", "1",
                 popup.findElement(
                         By.className("v-datefield-calendarpanel-day-selected"))
@@ -129,10 +127,9 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
                 .findElement(By.tagName("button")).click();
 
         // verify contents
-        assertEquals("unexpected month", "joulukuu 2009",
-                popup.findElements(
-                        By.className("v-datefield-calendarpanel-month")).get(1)
-                        .getText());
+        assertEquals("unexpected month", "joulukuu 2009", popup
+                .findElements(By.className("v-datefield-calendarpanel-month"))
+                .get(1).getText());
         assertEquals("unexpected selection", 0,
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-day-selected"))
@@ -173,10 +170,9 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
 
         // verify contents
         WebElement popup = findElement(By.className("v-datefield-popup"));
-        assertEquals("unexpected month", "February 2010",
-                popup.findElements(
-                        By.className("v-datefield-calendarpanel-month")).get(1)
-                        .getText());
+        assertEquals("unexpected month", "February 2010", popup
+                .findElements(By.className("v-datefield-calendarpanel-month"))
+                .get(1).getText());
         List<WebElement> headerElements = popup
                 .findElement(By.className("v-datefield-calendarpanel-weekdays"))
                 .findElements(By.tagName("td"));
@@ -224,10 +220,9 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         popupBody.sendKeys(Keys.ARROW_DOWN);
 
         // verify contents
-        assertEquals("unexpected month", "March 2010",
-                popup.findElements(
-                        By.className("v-datefield-calendarpanel-month")).get(1)
-                        .getText());
+        assertEquals("unexpected month", "March 2010", popup
+                .findElements(By.className("v-datefield-calendarpanel-month"))
+                .get(1).getText());
         assertEquals("unexpected selection", 0,
                 popup.findElements(
                         By.className("v-datefield-calendarpanel-day-selected"))
@@ -259,10 +254,9 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         popupBody.sendKeys(Keys.ARROW_LEFT);
 
         // verify contents
-        assertEquals("unexpected month", "February 2010",
-                popup.findElements(
-                        By.className("v-datefield-calendarpanel-month")).get(1)
-                        .getText());
+        assertEquals("unexpected month", "February 2010", popup
+                .findElements(By.className("v-datefield-calendarpanel-month"))
+                .get(1).getText());
         assertEquals("unexpected selection", "16",
                 popup.findElement(
                         By.className("v-datefield-calendarpanel-day-selected"))
@@ -303,10 +297,9 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
 
         // verify contents
         WebElement popup = findElement(By.className("v-datefield-popup"));
-        assertEquals("unexpected month", "helmikuu 2010",
-                popup.findElements(
-                        By.className("v-datefield-calendarpanel-month")).get(1)
-                        .getText());
+        assertEquals("unexpected month", "helmikuu 2010", popup
+                .findElements(By.className("v-datefield-calendarpanel-month"))
+                .get(1).getText());
         List<WebElement> headerElements = popup
                 .findElement(By.className("v-datefield-calendarpanel-weekdays"))
                 .findElements(By.tagName("td"));
@@ -358,10 +351,9 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         }
 
         // verify contents
-        assertEquals("unexpected month", "tammikuu 2010",
-                popup.findElements(
-                        By.className("v-datefield-calendarpanel-month")).get(1)
-                        .getText());
+        assertEquals("unexpected month", "tammikuu 2010", popup
+                .findElements(By.className("v-datefield-calendarpanel-month"))
+                .get(1).getText());
         weeknumbers = popup.findElements(
                 By.className("v-datefield-calendarpanel-weeknumber"));
         assertEquals("unexpected weeknumber count", 6, weeknumbers.size());
@@ -400,10 +392,9 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
                 .findElement(By.tagName("button")).click();
 
         // verify contents
-        assertEquals("unexpected month", "tammikuu 2009",
-                popup.findElements(
-                        By.className("v-datefield-calendarpanel-month")).get(1)
-                        .getText());
+        assertEquals("unexpected month", "tammikuu 2009", popup
+                .findElements(By.className("v-datefield-calendarpanel-month"))
+                .get(1).getText());
         weeknumbers = popup.findElements(
                 By.className("v-datefield-calendarpanel-weeknumber"));
         assertEquals("unexpected weeknumber count", 6, weeknumbers.size());

@@ -134,8 +134,8 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
         options.put("Every second", 2);
         options.put("Every third", 3);
 
-        createSelectAction("Checkable", category, options,
-                "No items checkable", setMenuItemCheckableDensity);
+        createSelectAction("Checkable", category, options, "No items checkable",
+                setMenuItemCheckableDensity);
     }
 
     /* COMMANDS */
@@ -269,8 +269,8 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
                 parent.addSeparator();
             }
 
-            MenuItem subMenuItem = parent.addItem("Sub menu " + parent.getId()
-                    + "/" + (i + 1), menuCommand);
+            MenuItem subMenuItem = parent.addItem(
+                    "Sub menu " + parent.getId() + "/" + (i + 1), menuCommand);
 
             if (disabledDensity != null && i % disabledDensity == 0) {
                 subMenuItem.setEnabled(false);

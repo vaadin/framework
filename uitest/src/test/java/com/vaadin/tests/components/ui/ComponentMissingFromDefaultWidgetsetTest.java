@@ -33,10 +33,8 @@ public class ComponentMissingFromDefaultWidgetsetTest extends MultiBrowserTest {
     public void testComponentInTestingWidgetset() {
         openTestURL();
         WebElement component = vaadinElementById("missing-component");
-        assertTrue(component
-                .getText()
-                .startsWith(
-                        "Widgetset 'com.vaadin.DefaultWidgetSet' does not contain implementation for com.vaadin.tests.widgetset.server.MissingFromDefaultWidgetsetComponent."));
+        assertTrue(component.getText().startsWith(
+                "Widgetset 'com.vaadin.DefaultWidgetSet' does not contain implementation for com.vaadin.tests.widgetset.server.MissingFromDefaultWidgetsetComponent."));
 
     }
 }

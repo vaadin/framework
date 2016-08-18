@@ -55,8 +55,8 @@ public class CookieMonsterUI extends UI {
                 } else {
                     // Create a new cookie
                     nameCookie = new Cookie(NAME_COOKIE, name);
-                    nameCookie
-                            .setComment("Cookie for storing the name of the user");
+                    nameCookie.setComment(
+                            "Cookie for storing the name of the user");
 
                     Notification.show("Stored name " + name + " in cookie");
                 }
@@ -65,8 +65,8 @@ public class CookieMonsterUI extends UI {
                 nameCookie.setMaxAge(120);
 
                 // Set the cookie path.
-                nameCookie.setPath(VaadinService.getCurrentRequest()
-                        .getContextPath());
+                nameCookie.setPath(
+                        VaadinService.getCurrentRequest().getContextPath());
 
                 // Save cookie
                 VaadinService.getCurrentResponse().addCookie(nameCookie);

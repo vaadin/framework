@@ -42,7 +42,8 @@ public class ComboBoxNoTextInputTest extends MultiBrowserTest {
     }
 
     @Test
-    public void testComboBoxWithTextInputNoPopupOpensOnClick() throws Exception {
+    public void testComboBoxWithTextInputNoPopupOpensOnClick()
+            throws Exception {
         openTestURL();
 
         // click and check that no popup appears

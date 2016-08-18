@@ -23,8 +23,8 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class HorizontalLayoutFullsizeContentWithErrorMsgTest extends
-        MultiBrowserTest {
+public class HorizontalLayoutFullsizeContentWithErrorMsgTest
+        extends MultiBrowserTest {
 
     @Test
     public void test() {

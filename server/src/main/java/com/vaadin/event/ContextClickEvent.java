@@ -32,9 +32,9 @@ import com.vaadin.util.ReflectTools;
  */
 public class ContextClickEvent extends ClickEvent {
 
-    public static final Method CONTEXT_CLICK_METHOD = ReflectTools
-            .findMethod(ContextClickListener.class, "contextClick",
-                    ContextClickEvent.class);
+    public static final Method CONTEXT_CLICK_METHOD = ReflectTools.findMethod(
+            ContextClickListener.class, "contextClick",
+            ContextClickEvent.class);
 
     public ContextClickEvent(Component source,
             MouseEventDetails mouseEventDetails) {

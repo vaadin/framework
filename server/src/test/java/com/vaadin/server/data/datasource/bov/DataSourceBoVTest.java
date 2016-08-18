@@ -47,16 +47,14 @@ public class DataSourceBoVTest {
 
         @Override
         public List<Person> fetchPersons(int offset, int limit) {
-            return Arrays.stream(persons)
-                    .skip(offset)
-                    .limit(limit)
+            return Arrays.stream(persons).skip(offset).limit(limit)
                     .collect(Collectors.toList());
         }
 
         @Override
-        public List<Person> fetchPersons(int offset, int limit, Collection<PersonSort> personSorts) {
-            Stream<Person> personStream = Arrays.stream(persons)
-                    .skip(offset)
+        public List<Person> fetchPersons(int offset, int limit,
+                Collection<PersonSort> personSorts) {
+            Stream<Person> personStream = Arrays.stream(persons).skip(offset)
                     .limit(limit);
             if (personSorts != null)
                 for (PersonSort personSort : personSorts) {
@@ -74,24 +72,30 @@ public class DataSourceBoVTest {
         public PersonSort createSort(String propertyName, boolean descending) {
             PersonSort result;
             switch (propertyName) {
-                case "name":
-                    result = (person1, person2) -> String.CASE_INSENSITIVE_ORDER.compare(person1.getName(), person2.getName());
-                    break;
-                case "born":
-                    result = (person1, person2) -> person2.getBorn() - person1.getBorn();
-                    break;
-                default:
-                    throw new IllegalArgumentException("wrong field name " + propertyName);
+            case "name":
+                result = (person1, person2) -> String.CASE_INSENSITIVE_ORDER
+                        .compare(person1.getName(), person2.getName());
+                break;
+            case "born":
+                result = (person1, person2) -> person2.getBorn()
+                        - person1.getBorn();
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "wrong field name " + propertyName);
             }
-            if (descending) return (person1, person2) -> result.compare(person2, person1);
-            else return result;
+            if (descending)
+                return (person1, person2) -> result.compare(person2, person1);
+            else
+                return result;
         }
     }
 
     @Test
     public void testPersons() {
         DataSource<Person> dataSource = createUnsortedDatasource();
-        //TODO test if the datasource contains all defined Persons in correct(unchanged) order
+        // TODO test if the datasource contains all defined Persons in
+        // correct(unchanged) order
     }
 
     private DataSource<Person> createUnsortedDatasource() {
@@ -104,13 +108,13 @@ public class DataSourceBoVTest {
                     // The number of items to load
                     int limit = query.getLimit();
 
-                    List<Person> persons = getPersonService().fetchPersons(offset, limit);
+                    List<Person> persons = getPersonService()
+                            .fetchPersons(offset, limit);
 
                     return persons.stream();
                 },
                 // Second callback fetches the number of items for a query
-                query -> getPersonService().getPersonCount()
-        );
+                query -> getPersonService().getPersonCount());
         return dataSource;
     }
 
@@ -118,8 +122,8 @@ public class DataSourceBoVTest {
     public void testSortedPersons() {
 
         DataSource<Person> dataSource = createSortedDataSource();
-        //TODO test if datasource contains all defined Persons in correct order
-        //TODO test Query.sortOrders correctness
+        // TODO test if datasource contains all defined Persons in correct order
+        // TODO test Query.sortOrders correctness
     }
 
     private DataSource<Person> createSortedDataSource() {
@@ -128,23 +132,20 @@ public class DataSourceBoVTest {
                 query -> {
                     List<PersonService.PersonSort> sortOrders = new ArrayList<>();
                     for (SortOrder<String> queryOrder : query.getSortOrders()) {
-                        PersonService.PersonSort sort = personService.createSort(
-                                // The name of the sorted property
-                                queryOrder.getSorted(),
-                                // The sort direction for this property
-                                queryOrder.getDirection() == SortDirection.DESCENDING);
+                        PersonService.PersonSort sort = personService
+                                .createSort(
+                                        // The name of the sorted property
+                                        queryOrder.getSorted(),
+                                        // The sort direction for this property
+                                        queryOrder
+                                                .getDirection() == SortDirection.DESCENDING);
                         sortOrders.add(sort);
                     }
-                    return getPersonService().fetchPersons(
-                            query.getOffset(),
-                            query.getLimit(),
-                            sortOrders
-                    ).stream();
-                }
-                ,
+                    return getPersonService().fetchPersons(query.getOffset(),
+                            query.getLimit(), sortOrders).stream();
+                },
                 // Second callback fetches the number of items for a query
-                query -> getPersonService().getPersonCount()
-        );
+                query -> getPersonService().getPersonCount());
         return dataSource;
     }
 

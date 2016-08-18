@@ -36,10 +36,10 @@ public class TableToggleColumnVisibilityTest extends MultiBrowserTest {
     public void testColumnWidthRestoredAfterTogglingVisibility() {
         openTestURL();
 
-        ButtonElement toggleVisibilityButton = $(ButtonElement.class).id(
-                "visib-toggler");
-        ButtonElement changeOrderButton = $(ButtonElement.class).id(
-                "order-toggler");
+        ButtonElement toggleVisibilityButton = $(ButtonElement.class)
+                .id("visib-toggler");
+        ButtonElement changeOrderButton = $(ButtonElement.class)
+                .id("order-toggler");
 
         checkHeaderAttributes(1);
 
@@ -65,16 +65,16 @@ public class TableToggleColumnVisibilityTest extends MultiBrowserTest {
         TableHeaderElement headerCell = $(TableElement.class).first()
                 .getHeaderCell(columnNumber);
 
-        Assert.assertTrue("Column header text should be custom", headerCell
-                .getText().equalsIgnoreCase("Hello World"));
+        Assert.assertTrue("Column header text should be custom",
+                headerCell.getText().equalsIgnoreCase("Hello World"));
 
-        Assert.assertTrue("Column should have an icon", headerCell
-                .findElements(By.className("v-icon")).size() > 0);
+        Assert.assertTrue("Column should have an icon",
+                headerCell.findElements(By.className("v-icon")).size() > 0);
 
-        Assert.assertTrue(
-                "Column should have alignment to the right",
-                headerCell.findElements(
-                        By.className("v-table-caption-container-align-right"))
+        Assert.assertTrue("Column should have alignment to the right",
+                headerCell
+                        .findElements(By.className(
+                                "v-table-caption-container-align-right"))
                         .size() > 0);
     }
 }

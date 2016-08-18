@@ -174,10 +174,9 @@ public class LegacyCommunicationManager implements Serializable {
         if (publishedFileContexts.containsKey(name)) {
             Class<?> oldContext = publishedFileContexts.get(name);
             if (oldContext != context) {
-                getLogger()
-                        .log(Level.WARNING,
-                                "{0} published by both {1} and {2}. File from {2} will be used.",
-                                new Object[] { name, context, oldContext });
+                getLogger().log(Level.WARNING,
+                        "{0} published by both {1} and {2}. File from {2} will be used.",
+                        new Object[] { name, context, oldContext });
             }
         } else {
             publishedFileContexts.put(name, context);
@@ -214,7 +213,8 @@ public class LegacyCommunicationManager implements Serializable {
      *         <code>false</code> otherwise
      */
     @Deprecated
-    public static boolean isConnectorVisibleToClient(ClientConnector connector) {
+    public static boolean isConnectorVisibleToClient(
+            ClientConnector connector) {
         if (connector instanceof Component) {
             return isComponentVisibleToClient((Component) connector);
         } else {
@@ -299,8 +299,8 @@ public class LegacyCommunicationManager implements Serializable {
      * @deprecated As of 7.1. Will be removed in the future.
      */
     @Deprecated
-    public static class InvalidUIDLSecurityKeyException extends
-            GeneralSecurityException {
+    public static class InvalidUIDLSecurityKeyException
+            extends GeneralSecurityException {
 
         public InvalidUIDLSecurityKeyException(String message) {
             super(message);
@@ -363,8 +363,8 @@ public class LegacyCommunicationManager implements Serializable {
      * @deprecated As of 7.1. See #11411.
      */
     @Deprecated
-    public String getStreamVariableTargetUrl(ClientConnector owner,
-            String name, StreamVariable value) {
+    public String getStreamVariableTargetUrl(ClientConnector owner, String name,
+            StreamVariable value) {
         /*
          * We will use the same APP/* URI space as ApplicationResources but
          * prefix url with UPLOAD
@@ -414,9 +414,8 @@ public class LegacyCommunicationManager implements Serializable {
      * Requests that the given UI should be fully re-rendered on the client
      * side.
      * 
-     * @since 7.1
-     * @deprecated. As of 7.1. Should be refactored once locales are fixed
-     *              (#11378)
+     * @since 7.1 @deprecated. As of 7.1. Should be refactored once locales are
+     *        fixed (#11378)
      */
     @Deprecated
     public void repaintAll(UI ui) {

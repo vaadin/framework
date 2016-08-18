@@ -54,8 +54,8 @@ public class CvalAddonsCheckerTest {
 
     @Before
     public void setup() {
-        addonChecker = new CvalAddonsChecker().setLicenseProvider(
-                validLicenseProvider).setFilter(".*test.*");
+        addonChecker = new CvalAddonsChecker()
+                .setLicenseProvider(validLicenseProvider).setFilter(".*test.*");
         licenseName = computeLicenseName(productNameCval);
 
         deleteCache(productNameCval);

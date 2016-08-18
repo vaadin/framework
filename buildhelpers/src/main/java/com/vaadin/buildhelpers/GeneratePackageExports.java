@@ -44,11 +44,10 @@ public class GeneratePackageExports {
 
     public static void main(String[] args) {
         if (args.length < 2) {
-            System.err
-                    .println("Invalid number of parameters\n"
-                            + "Usage: java -cp .. GenerateManifest <package.jar> <accepted package prefixes>\n"
-                            + "Use -Dvaadin.version to specify the version to be used for the packages\n"
-                            + "Use -DincludeNumberPackages=1 to include package names which start with a number (not 100% OSGi compatible)");
+            System.err.println("Invalid number of parameters\n"
+                    + "Usage: java -cp .. GenerateManifest <package.jar> <accepted package prefixes>\n"
+                    + "Use -Dvaadin.version to specify the version to be used for the packages\n"
+                    + "Use -DincludeNumberPackages=1 to include package names which start with a number (not 100% OSGi compatible)");
             System.exit(1);
         }
 
@@ -178,7 +177,8 @@ public class GeneratePackageExports {
     }
 
     private static HashSet<String> getPackages(JarFile jar,
-            List<String> acceptedPackagePrefixes, boolean includeNumberPackages) {
+            List<String> acceptedPackagePrefixes,
+            boolean includeNumberPackages) {
         HashSet<String> packages = new HashSet<String>();
 
         Pattern startsWithNumber = Pattern.compile("\\.\\d");
@@ -198,10 +198,11 @@ public class GeneratePackageExports {
             }
 
             int lastSlash = entry.getName().lastIndexOf('/');
-            String pkg = entry.getName().substring(0, lastSlash)
-                    .replace('/', '.');
+            String pkg = entry.getName().substring(0, lastSlash).replace('/',
+                    '.');
 
-            if (!includeNumberPackages && startsWithNumber.matcher(pkg).find()) {
+            if (!includeNumberPackages
+                    && startsWithNumber.matcher(pkg).find()) {
                 continue;
             }
 

@@ -88,8 +88,7 @@ public class ContainerHelpers implements Serializable {
             Object idByIndex = container.getIdByIndex(i);
             if (idByIndex == null) {
                 throw new RuntimeException(
-                        "Unable to get item id for index: "
-                                + i
+                        "Unable to get item id for index: " + i
                                 + " from container using Container.Indexed#getIdByIndex() "
                                 + "even though container.size() > endIndex. "
                                 + "Returned item id was null. "

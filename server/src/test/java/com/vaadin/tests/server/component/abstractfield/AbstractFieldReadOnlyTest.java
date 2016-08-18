@@ -18,14 +18,14 @@ import com.vaadin.ui.Label;
 public class AbstractFieldReadOnlyTest {
 
     Person paulaBean = new Person("Paula", "Brilliant", "paula@brilliant.com",
-            34, Sex.FEMALE, new Address("Paula street 1", 12345, "P-town",
-                    Country.FINLAND));
+            34, Sex.FEMALE,
+            new Address("Paula street 1", 12345, "P-town", Country.FINLAND));
 
     @Test
     public void testReadOnlyProperty() {
         LegacyTextField tf = new LegacyTextField();
-        tf.setPropertyDataSource(new MethodProperty<String>(paulaBean,
-                "firstName"));
+        tf.setPropertyDataSource(
+                new MethodProperty<String>(paulaBean, "firstName"));
         assertFalse(tf.isReadOnly());
         tf.getPropertyDataSource().setReadOnly(true);
         assertTrue(tf.isReadOnly());
@@ -41,8 +41,8 @@ public class AbstractFieldReadOnlyTest {
                 valueStore.setValue("event received!");
             }
         });
-        tf.setPropertyDataSource(new MethodProperty<String>(paulaBean,
-                "firstName"));
+        tf.setPropertyDataSource(
+                new MethodProperty<String>(paulaBean, "firstName"));
         assertTrue(valueStore.getValue().isEmpty());
         tf.getPropertyDataSource().setReadOnly(true);
         assertFalse(valueStore.getValue().isEmpty());

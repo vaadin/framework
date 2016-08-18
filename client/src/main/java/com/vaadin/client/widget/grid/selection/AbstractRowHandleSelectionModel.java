@@ -29,8 +29,8 @@ import com.vaadin.client.data.DataSource.RowHandle;
  *            The grid's row type
  * @since 7.4
  */
-public abstract class AbstractRowHandleSelectionModel<T> implements
-        SelectionModel<T> {
+public abstract class AbstractRowHandleSelectionModel<T>
+        implements SelectionModel<T> {
     /**
      * Select a row, based on its
      * {@link com.vaadin.client.data.DataSource.RowHandle RowHandle}.

@@ -105,8 +105,8 @@ public class TableClickAndDragOnIconAndComponentsTest extends MultiBrowserTest {
     }
 
     private void assertThatFocusTextFieldHasText(String text) {
-        List<WebElement> focused = getTable().findElements(
-                By.className("v-textfield-focus"));
+        List<WebElement> focused = getTable()
+                .findElements(By.className("v-textfield-focus"));
 
         assertThat(focused.get(0).getAttribute("value"), is(text));
     }

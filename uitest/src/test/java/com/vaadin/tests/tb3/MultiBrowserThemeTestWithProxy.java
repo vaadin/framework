@@ -26,8 +26,8 @@ import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 @RunWith(ParameterizedTB3Runner.class)
-public abstract class MultiBrowserThemeTestWithProxy extends
-        MultiBrowserTestWithProxy {
+public abstract class MultiBrowserThemeTestWithProxy
+        extends MultiBrowserTestWithProxy {
 
     private String theme;
 

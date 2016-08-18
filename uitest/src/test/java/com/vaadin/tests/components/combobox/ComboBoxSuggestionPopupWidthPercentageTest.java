@@ -27,8 +27,8 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * @author Vaadin Ltd
  */
-public class ComboBoxSuggestionPopupWidthPercentageTest extends
-        MultiBrowserTest {
+public class ComboBoxSuggestionPopupWidthPercentageTest
+        extends MultiBrowserTest {
 
     @Test
     public void suggestionPopupPersentageWidthTest() throws Exception {

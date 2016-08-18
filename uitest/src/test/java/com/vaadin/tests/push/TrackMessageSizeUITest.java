@@ -26,7 +26,7 @@ public class TrackMessageSizeUITest extends MultiBrowserTest {
     @Test
     public void runTests() {
         openTestURL();
-        Assert.assertEquals("1. All tests run", vaadinElementById("Log_row_0")
-                .getText());
+        Assert.assertEquals("1. All tests run",
+                vaadinElementById("Log_row_0").getText());
     }
 }

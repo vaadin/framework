@@ -22,7 +22,8 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.LayoutClickRpc;
 
-public abstract class LayoutClickEventHandler extends AbstractClickEventHandler {
+public abstract class LayoutClickEventHandler
+        extends AbstractClickEventHandler {
 
     public LayoutClickEventHandler(ComponentConnector connector) {
         this(connector, EventId.LAYOUT_CLICK_EVENT_IDENTIFIER);

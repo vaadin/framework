@@ -65,9 +65,11 @@ public class SplitPanelWithMinimumAndMaximumTest extends MultiBrowserTest {
 
             // Due to minor browser differences and sub-pixels we must allow 1px
             // of play between the expected and measured value
-            assertTrue("When moving left, the splitter at index " + i
-                    + " was at position " + newX + " (expected " + expectedX
-                    + ").", Math.abs(newX - expectedX) <= 1);
+            assertTrue(
+                    "When moving left, the splitter at index " + i
+                            + " was at position " + newX + " (expected "
+                            + expectedX + ").",
+                    Math.abs(newX - expectedX) <= 1);
         }
 
         // Amount of pixels to move each splitter (to right)
@@ -84,9 +86,11 @@ public class SplitPanelWithMinimumAndMaximumTest extends MultiBrowserTest {
             double newX = parseHorizontalPosition(splitter, i < 4);
             int expectedX = finalPositions[i];
 
-            assertTrue("When moving right, the splitter at index " + i
-                    + " was at position " + newX + " (expected " + expectedX
-                    + ").", Math.abs(newX - expectedX) <= 1);
+            assertTrue(
+                    "When moving right, the splitter at index " + i
+                            + " was at position " + newX + " (expected "
+                            + expectedX + ").",
+                    Math.abs(newX - expectedX) <= 1);
         }
     }
 
@@ -113,9 +117,11 @@ public class SplitPanelWithMinimumAndMaximumTest extends MultiBrowserTest {
             double newY = parseVerticalPosition(splitter, i < 4);
             int expectedY = finalPositions[i];
 
-            assertTrue("When moving up, the splitter at index " + i
-                    + " was at position " + newY + " (expected " + expectedY
-                    + ").", Math.abs(newY - expectedY) <= 1);
+            assertTrue(
+                    "When moving up, the splitter at index " + i
+                            + " was at position " + newY + " (expected "
+                            + expectedY + ").",
+                    Math.abs(newY - expectedY) <= 1);
         }
 
         // Amount of pixels to move each splitter (down)
@@ -132,9 +138,11 @@ public class SplitPanelWithMinimumAndMaximumTest extends MultiBrowserTest {
             double newY = parseVerticalPosition(splitter, i < 4);
             int expectedY = finalPositions[i];
 
-            assertTrue("When moving down, the splitter at index " + i
-                    + " was at position " + newY + " (expected " + expectedY
-                    + ").", Math.abs(newY - expectedY) <= 1);
+            assertTrue(
+                    "When moving down, the splitter at index " + i
+                            + " was at position " + newY + " (expected "
+                            + expectedY + ").",
+                    Math.abs(newY - expectedY) <= 1);
         }
     }
 
@@ -161,8 +169,9 @@ public class SplitPanelWithMinimumAndMaximumTest extends MultiBrowserTest {
         double newX = parseHorizontalPosition(splitter, true);
         int expectedX = finalPositions[0];
 
-        assertTrue("When moving to left limit, the splitter was at position "
-                + newX + " (expected " + expectedX + ").",
+        assertTrue(
+                "When moving to left limit, the splitter was at position "
+                        + newX + " (expected " + expectedX + ").",
                 Math.abs(newX - expectedX) <= 1);
 
         // Disable left limit
@@ -196,8 +205,9 @@ public class SplitPanelWithMinimumAndMaximumTest extends MultiBrowserTest {
         newX = parseHorizontalPosition(splitter, true);
         expectedX = finalPositions[2];
 
-        assertTrue("When moving to right limit, the splitter was at position "
-                + newX + " (expected " + expectedX + ").",
+        assertTrue(
+                "When moving to right limit, the splitter was at position "
+                        + newX + " (expected " + expectedX + ").",
                 Math.abs(newX - expectedX) <= 1);
 
         // Disable right limit
@@ -229,21 +239,22 @@ public class SplitPanelWithMinimumAndMaximumTest extends MultiBrowserTest {
     private double parseHorizontalPosition(TestBenchElement splitter,
             boolean left) {
         if (left) {
-            return Double.parseDouble(splitter.getCssValue("left").replace(
-                    "px", ""));
+            return Double.parseDouble(
+                    splitter.getCssValue("left").replace("px", ""));
         } else {
-            return Double.parseDouble(splitter.getCssValue("right").replace(
-                    "px", ""));
+            return Double.parseDouble(
+                    splitter.getCssValue("right").replace("px", ""));
         }
     }
 
-    private double parseVerticalPosition(TestBenchElement splitter, boolean top) {
+    private double parseVerticalPosition(TestBenchElement splitter,
+            boolean top) {
         if (top) {
-            return Double.parseDouble(splitter.getCssValue("top").replace("px",
-                    ""));
+            return Double
+                    .parseDouble(splitter.getCssValue("top").replace("px", ""));
         } else {
-            return Double.parseDouble(splitter.getCssValue("bottom").replace(
-                    "px", ""));
+            return Double.parseDouble(
+                    splitter.getCssValue("bottom").replace("px", ""));
         }
     }
 }

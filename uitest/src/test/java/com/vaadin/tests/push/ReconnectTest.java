@@ -98,7 +98,8 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
             @Override
             public Boolean apply(WebDriver input) {
-                return BasicPushTest.getServerCounter(ReconnectTest.this) > counter;
+                return BasicPushTest
+                        .getServerCounter(ReconnectTest.this) > counter;
             }
         }, 30);
     }
@@ -108,7 +109,8 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
             @Override
             public Boolean apply(WebDriver input) {
-                return BasicPushTest.getClientCounter(ReconnectTest.this) == expectedValue;
+                return BasicPushTest
+                        .getClientCounter(ReconnectTest.this) == expectedValue;
             }
         }, 5);
     }

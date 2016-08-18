@@ -44,8 +44,10 @@ public class DefaultDeploymentConfigurationTest {
     public void testGetSystemProperty() throws ClassNotFoundException {
         String value = "value";
         String prop = "prop";
-        System.setProperty(DefaultDeploymentConfigurationTest.class
-                .getPackage().getName() + '.' + prop, value);
+        System.setProperty(
+                DefaultDeploymentConfigurationTest.class.getPackage().getName()
+                        + '.' + prop,
+                value);
         DefaultDeploymentConfiguration config = new DefaultDeploymentConfiguration(
                 DefaultDeploymentConfigurationTest.class, new Properties());
         Assert.assertEquals(value, config.getSystemProperty(prop));

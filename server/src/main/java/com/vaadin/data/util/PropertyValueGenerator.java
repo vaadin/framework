@@ -94,9 +94,10 @@ public abstract class PropertyValueGenerator<T> implements Serializable {
      *             if the implementation doesn't support modifying the provided
      *             filter
      */
-    public Filter modifyFilter(Filter filter) throws UnsupportedFilterException {
-        throw new UnsupportedFilterException("Filter" + filter
-                + " is not supported");
+    public Filter modifyFilter(Filter filter)
+            throws UnsupportedFilterException {
+        throw new UnsupportedFilterException(
+                "Filter" + filter + " is not supported");
     }
 
 }

@@ -120,7 +120,7 @@ public interface RowContainer {
     /**
      * An arbitrary pixel height of a row, before any autodetection for the row
      * height has been made.
-     * */
+     */
     public static final double INITIAL_DEFAULT_ROW_HEIGHT = 20;
 
     /**

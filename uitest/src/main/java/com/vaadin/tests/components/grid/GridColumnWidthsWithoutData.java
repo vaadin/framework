@@ -50,16 +50,16 @@ public class GridColumnWidthsWithoutData extends AbstractTestUI {
         });
         addComponent(selectionModeSelector);
 
-        addComponent(new Button("Recreate without data",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Recreate without data", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         replaceGrid(createGrid(false));
                     }
                 }));
 
-        addComponent(new Button("Recreate with data",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Recreate with data", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         replaceGrid(createGrid(true));

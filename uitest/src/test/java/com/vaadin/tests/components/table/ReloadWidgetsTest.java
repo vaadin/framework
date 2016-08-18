@@ -64,8 +64,8 @@ public class ReloadWidgetsTest extends MultiBrowserTest {
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver input) {
-                List<WebElement> elements = findElements(By
-                        .className("v-table-scrollposition"));
+                List<WebElement> elements = findElements(
+                        By.className("v-table-scrollposition"));
                 return elements.isEmpty() || !elements.get(0).isDisplayed();
             }
 

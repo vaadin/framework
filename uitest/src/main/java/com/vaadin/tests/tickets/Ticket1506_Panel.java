@@ -25,8 +25,9 @@ public class Ticket1506_Panel extends Panel {
         layout.addComponent(initSelect(new Ticket1506_TestContainer(),
                 "Test select", property1));
         layout.addComponent(initButton(property1));
-        layout.addComponent(initSelect(new Ticket1506_TestContainer2(),
-                "Test select 2", new ObjectProperty<String>(null, String.class)));
+        layout.addComponent(
+                initSelect(new Ticket1506_TestContainer2(), "Test select 2",
+                        new ObjectProperty<String>(null, String.class)));
     }
 
     private Component initButton(final ObjectProperty<?> property) {

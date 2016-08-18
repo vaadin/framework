@@ -32,17 +32,16 @@ public class SortableHeaderStyles extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        getPage()
-                .getStyles()
-                .add(".valo .v-grid-header th.v-grid-cell.sortable { font-weight: bold;}");
+        getPage().getStyles().add(
+                ".valo .v-grid-header th.v-grid-cell.sortable { font-weight: bold;}");
 
         PersonContainer container = PersonContainer.createWithTestData();
 
         Collection<?> sortableContainerPropertyIds = container
                 .getSortableContainerPropertyIds();
 
-        final OptionGroup sortableSelector = new OptionGroup(
-                "Sortable columns", sortableContainerPropertyIds);
+        final OptionGroup sortableSelector = new OptionGroup("Sortable columns",
+                sortableContainerPropertyIds);
         sortableSelector.setMultiSelect(true);
         sortableSelector.setValue(sortableContainerPropertyIds);
 
@@ -54,8 +53,8 @@ public class SortableHeaderStyles extends AbstractTestUI {
                 Collection<?> sortableCols = (Collection<?>) sortableSelector
                         .getValue();
                 for (Column column : grid.getColumns()) {
-                    column.setSortable(sortableCols.contains(column
-                            .getPropertyId()));
+                    column.setSortable(
+                            sortableCols.contains(column.getPropertyId()));
                 }
             }
         });

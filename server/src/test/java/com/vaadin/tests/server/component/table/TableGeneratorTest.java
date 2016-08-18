@@ -17,8 +17,8 @@ public class TableGeneratorTest {
         for (int j = 0; j < items; j++) {
             Item item = t.addItem("Item " + j);
             for (int i = 0; i < properties; i++) {
-                item.getItemProperty("Property " + i).setValue(
-                        "Item " + j + "/Property " + i);
+                item.getItemProperty("Property " + i)
+                        .setValue("Item " + j + "/Property " + i);
             }
         }
 

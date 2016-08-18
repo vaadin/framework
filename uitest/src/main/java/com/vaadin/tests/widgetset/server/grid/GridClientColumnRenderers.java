@@ -92,8 +92,8 @@ public class GridClientColumnRenderers extends UI {
         content.addComponent(controls);
         setContent(content);
 
-        final NativeSelect select = new NativeSelect(
-                "Add Column with Renderer", Arrays.asList(Renderers.values()));
+        final NativeSelect select = new NativeSelect("Add Column with Renderer",
+                Arrays.asList(Renderers.values()));
         select.setItemCaptionMode(ItemCaptionMode.EXPLICIT);
         for (Renderers renderer : Renderers.values()) {
             select.setItemCaption(renderer, renderer.toString());

@@ -72,9 +72,8 @@ public class TableMoveFocusWithSelection extends AbstractTestUI {
         addComponent(t);
 
         // Select mode
-        Button toggleSelectMode = new Button(
-                t.isMultiSelect() ? "Press to use single select"
-                        : "Press to use multi select");
+        Button toggleSelectMode = new Button(t.isMultiSelect()
+                ? "Press to use single select" : "Press to use multi select");
         toggleSelectMode.setId("toggle-mode");
         toggleSelectMode.addClickListener(new ClickListener() {
 

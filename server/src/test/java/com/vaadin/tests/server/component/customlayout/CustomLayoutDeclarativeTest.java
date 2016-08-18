@@ -28,8 +28,8 @@ import com.vaadin.ui.Label;
  * @since
  * @author Vaadin Ltd
  */
-public class CustomLayoutDeclarativeTest extends
-        DeclarativeTestBase<CustomLayout> {
+public class CustomLayoutDeclarativeTest
+        extends DeclarativeTestBase<CustomLayout> {
 
     @Test
     public void testEmpty() {

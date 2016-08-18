@@ -30,10 +30,10 @@ public class WindowZIndexTest extends MultiBrowserTest {
     public void removingUpdatesZIndices() throws IOException {
         openTestURL();
 
-        WebElement addButton = driver.findElement(By
-                .xpath("//span[contains(text(),'Add window')]"));
-        WebElement closeButton = driver.findElement(By
-                .xpath("//span[contains(text(),'Close window')]"));
+        WebElement addButton = driver
+                .findElement(By.xpath("//span[contains(text(),'Add window')]"));
+        WebElement closeButton = driver.findElement(
+                By.xpath("//span[contains(text(),'Close window')]"));
 
         addButton.click();
         addButton.click();
@@ -52,8 +52,8 @@ public class WindowZIndexTest extends MultiBrowserTest {
 
         compareScreen("stacked");
 
-        WebElement window4 = driver.findElement(By
-                .xpath("//*[contains(text(), 'Window 4')]"));
+        WebElement window4 = driver
+                .findElement(By.xpath("//*[contains(text(), 'Window 4')]"));
         new Actions(driver).moveToElement(window4, 1, 9).click().perform();
 
         compareScreen("win4-on-top");

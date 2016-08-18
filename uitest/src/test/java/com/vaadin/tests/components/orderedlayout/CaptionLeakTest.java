@@ -75,8 +75,7 @@ public class CaptionLeakTest extends MultiBrowserTest {
     }
 
     private void checkConnectorCount() {
-        getDriver()
-                .findElement(
-                        By.xpath("//span[text() = 'Measured 3 non connector elements']"));
+        getDriver().findElement(By
+                .xpath("//span[text() = 'Measured 3 non connector elements']"));
     }
 }

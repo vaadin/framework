@@ -93,7 +93,8 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
     protected boolean isOpenEvent(EditorDomEvent<T> event) {
         final Event e = event.getDomEvent();
         return e.getTypeInt() == Event.ONDBLCLICK
-                || (e.getTypeInt() == Event.ONKEYDOWN && e.getKeyCode() == KEYCODE_OPEN)
+                || (e.getTypeInt() == Event.ONKEYDOWN
+                        && e.getKeyCode() == KEYCODE_OPEN)
                 || isTouchOpenEvent(event);
     }
 
@@ -172,8 +173,8 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
                 // of range.
                 if (rowDelta == 0) {
                     if (colIndex >= columnCount
-                            && rowIndex < event.getGrid().getDataSource()
-                                    .size() - 1) {
+                            && rowIndex < event.getGrid().getDataSource().size()
+                                    - 1) {
                         rowDelta = 1;
                         colIndex = 0;
                     } else if (colIndex < 0 && rowIndex > 0) {
@@ -208,8 +209,8 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         if (e.getType().equals(BrowserEvents.CLICK)
                 && event.getRowIndex() == event.getCell().getRowIndex()) {
 
-            editRow(event, event.getRowIndex(), event.getCell()
-                    .getColumnIndexDOM());
+            editRow(event, event.getRowIndex(),
+                    event.getCell().getColumnIndexDOM());
 
             return true;
 
@@ -268,7 +269,8 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         return false;
     }
 
-    protected void editRow(EditorDomEvent<T> event, int rowIndex, int colIndex) {
+    protected void editRow(EditorDomEvent<T> event, int rowIndex,
+            int colIndex) {
         int rowCount = event.getGrid().getDataSource().size();
         // Limit rowIndex between 0 and rowCount - 1
         rowIndex = Math.max(0, Math.min(rowCount - 1, rowIndex));
@@ -312,8 +314,10 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         final boolean handled;
         if (event.getGrid().isEditorActive()) {
             handled = handleCloseEvent(event)
-                    || (!editor.isBuffered() && isBody && handleMoveEvent(event))
-                    || (editor.isBuffered() && isBody && handleBufferedMoveEvent(event));
+                    || (!editor.isBuffered() && isBody
+                            && handleMoveEvent(event))
+                    || (editor.isBuffered() && isBody
+                            && handleBufferedMoveEvent(event));
         } else {
             handled = event.getGrid().isEnabled() && isBody
                     && handleOpenEvent(event);

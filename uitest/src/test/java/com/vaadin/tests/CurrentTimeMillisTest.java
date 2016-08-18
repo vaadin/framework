@@ -56,12 +56,14 @@ public class CurrentTimeMillisTest extends MultiBrowserTest {
             if (BrowserUtil.isChrome(getDesiredCapabilities())) {
                 // Chrome (version 33 at least) sometimes doesn't use high res
                 // time if number of ms is less then 1
-                Assert.assertTrue("High resolution time is not used in "
-                        + "JSON parsing mesurement. Time=" + time,
+                Assert.assertTrue(
+                        "High resolution time is not used in "
+                                + "JSON parsing mesurement. Time=" + time,
                         time.equals("0") || time.indexOf('.') > 0);
             } else {
-                Assert.assertTrue("High resolution time is not used in "
-                        + "JSON parsing mesurement. Time=" + time,
+                Assert.assertTrue(
+                        "High resolution time is not used in "
+                                + "JSON parsing mesurement. Time=" + time,
                         time.indexOf('.') > 0);
             }
         } else {
@@ -78,8 +80,8 @@ public class CurrentTimeMillisTest extends MultiBrowserTest {
         actions.sendKeys(Keys.SPACE).perform();
         findElement(By.className("v-debugwindow-tab")).click();
 
-        List<WebElement> messages = findElements(By
-                .className("v-debugwindow-message"));
+        List<WebElement> messages = findElements(
+                By.className("v-debugwindow-message"));
         for (WebElement message : messages) {
             if (message.getAttribute("innerHTML").startsWith("JSON parsing")) {
                 String text = message.getAttribute("innerHTML");

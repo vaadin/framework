@@ -51,8 +51,8 @@ public class ComponentFactoryTest {
                 if (componentFactory == null) {
                     componentFactory = defaultFactory;
                 }
-                return componentFactory.createComponent(
-                        fullyQualifiedClassName, context);
+                return componentFactory.createComponent(fullyQualifiedClassName,
+                        context);
             }
         });
     }
@@ -79,8 +79,7 @@ public class ComponentFactoryTest {
 
         Assert.assertEquals("There should be one message logged", 1,
                 messages.size());
-        Assert.assertEquals(
-                "Requested class " + Label.class.getCanonicalName(),
+        Assert.assertEquals("Requested class " + Label.class.getCanonicalName(),
                 messages.get(0));
     }
 
@@ -104,8 +103,8 @@ public class ComponentFactoryTest {
             public Component createComponent(String fullyQualifiedClassName,
                     DesignContext context) {
                 // Will throw because class is not found
-                return defaultFactory.createComponent("foobar."
-                        + fullyQualifiedClassName, context);
+                return defaultFactory.createComponent(
+                        "foobar." + fullyQualifiedClassName, context);
             }
         });
 

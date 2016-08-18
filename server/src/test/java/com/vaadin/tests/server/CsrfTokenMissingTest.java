@@ -158,8 +158,8 @@ public class CsrfTokenMissingTest {
      * Gets whether the token from the request is the default one.
      */
     private boolean isDefaultToken(RpcRequest rpcRequest) {
-        return ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE.equals(rpcRequest
-                .getCsrfToken());
+        return ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE
+                .equals(rpcRequest.getCsrfToken());
     }
 
     /*
@@ -184,8 +184,8 @@ public class CsrfTokenMissingTest {
                 rpcRequest.getCsrfToken());
     }
 
-    private static Logger LOGGER = Logger.getLogger(CsrfTokenMissingTest.class
-            .getName());
+    private static Logger LOGGER = Logger
+            .getLogger(CsrfTokenMissingTest.class.getName());
     static {
         LOGGER.setLevel(Level.ALL);
     }

@@ -39,7 +39,8 @@ public class LegacyLongRangeValidator extends LegacyRangeValidator<Long> {
      * @param maxValue
      *            The maximum value to accept or null for no limit
      */
-    public LegacyLongRangeValidator(String errorMessage, Long minValue, Long maxValue) {
+    public LegacyLongRangeValidator(String errorMessage, Long minValue,
+            Long maxValue) {
         super(errorMessage, Long.class, minValue, maxValue);
     }
 

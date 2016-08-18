@@ -76,8 +76,7 @@ public class GridColumnDeclarativeTest extends GridDeclarativeTestBase {
     @Test
     public void testReadEmptyExpand() {
         String design = "<vaadin-grid><table>"//
-                + "<colgroup>"
-                + "   <col sortable=true expand />"
+                + "<colgroup>" + "   <col sortable=true expand />"
                 + "</colgroup>" //
                 + "</table></vaadin-grid>";
 

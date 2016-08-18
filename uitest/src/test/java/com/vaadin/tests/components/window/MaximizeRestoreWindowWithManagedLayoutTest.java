@@ -23,8 +23,8 @@ import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.tb3.newelements.WindowElement;
 
-public class MaximizeRestoreWindowWithManagedLayoutTest extends
-        MultiBrowserTest {
+public class MaximizeRestoreWindowWithManagedLayoutTest
+        extends MultiBrowserTest {
 
     // This tests a timing issue so if this test fails randomly, it is
     // likely that something is broken

@@ -66,8 +66,8 @@ public class GridColspans extends AbstractTestUI {
                 .join(dataSource.getContainerPropertyIds().toArray())
                 .setText("All the stuff");
 
-        addComponent(new Button("Show/Hide firstName",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Show/Hide firstName", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
@@ -79,8 +79,8 @@ public class GridColspans extends AbstractTestUI {
                     }
                 }));
 
-        addComponent(new Button("Change column order",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Change column order", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {

@@ -47,8 +47,8 @@ public class AriaHelper {
                 ((HandlesAriaCaption) widget).bindAriaCaption(null);
             } else {
                 ensureHasId(captionElement);
-                ((HandlesAriaCaption) widget).bindAriaCaption(DOM
-                        .asOld(captionElement));
+                ((HandlesAriaCaption) widget)
+                        .bindAriaCaption(DOM.asOld(captionElement));
             }
         } else if (captionElement != null) {
             // Handle the default case
@@ -175,8 +175,9 @@ public class AriaHelper {
      * 
      * @param element
      *            Element to move out of sight
-     * @param boolean assistiveOnly true when element should only be visible for
-     *        assistive devices, false to make the element visible for all
+     * @param boolean
+     *            assistiveOnly true when element should only be visible for
+     *            assistive devices, false to make the element visible for all
      */
     public static void setVisibleForAssistiveDevicesOnly(Element element,
             boolean assistiveOnly) {

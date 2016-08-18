@@ -16,8 +16,8 @@ public class PropertyFormatterTest {
 
         @Override
         public String format(Object value) {
-            boolean isCorrectType = getExpectedClass().isAssignableFrom(
-                    value.getClass());
+            boolean isCorrectType = getExpectedClass()
+                    .isAssignableFrom(value.getClass());
             assertTrue(isCorrectType);
             return "FOO";
         }
@@ -44,8 +44,8 @@ public class PropertyFormatterTest {
      */
     @Test
     @SuppressWarnings({ "rawtypes" })
-    public void testCorrectTypeForFormat() throws InstantiationException,
-            IllegalAccessException {
+    public void testCorrectTypeForFormat()
+            throws InstantiationException, IllegalAccessException {
         Class[] testedTypes = new Class[] { Integer.class, Boolean.class,
                 Double.class, String.class, Date.class };
         Object[] testValues = new Object[] { new Integer(3), Boolean.FALSE,
@@ -61,13 +61,13 @@ public class PropertyFormatterTest {
             Object value = formatter.getValue();
 
             // test with property which value is null
-            formatter.setPropertyDataSource(new ObjectProperty(null,
-                    expectedClass));
+            formatter.setPropertyDataSource(
+                    new ObjectProperty(null, expectedClass));
             formatter.getValue(); // calls format
 
             // test with a value
-            formatter.setPropertyDataSource(new ObjectProperty(testValues[i++],
-                    expectedClass));
+            formatter.setPropertyDataSource(
+                    new ObjectProperty(testValues[i++], expectedClass));
             formatter.getValue(); // calls format
         }
 

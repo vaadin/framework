@@ -42,7 +42,8 @@ public class ComboBoxValueInputTest extends MultiBrowserTest {
         openTestURL();
     };
 
-    private void sendKeysToComboBox(ComboBoxElement comboBox, CharSequence keys) {
+    private void sendKeysToComboBox(ComboBoxElement comboBox,
+            CharSequence keys) {
         getComboBoxInput(comboBox).sendKeys(keys);
     }
 
@@ -77,7 +78,8 @@ public class ComboBoxValueInputTest extends MultiBrowserTest {
         assertThatComboBoxSuggestionsAreHidden(comboBox);
     }
 
-    private void assertThatComboBoxSuggestionsAreHidden(ComboBoxElement comboBox) {
+    private void assertThatComboBoxSuggestionsAreHidden(
+            ComboBoxElement comboBox) {
         assertThat(comboBox.isElementPresent(By.vaadin("#popup")), is(false));
     }
 
@@ -133,8 +135,8 @@ public class ComboBoxValueInputTest extends MultiBrowserTest {
 
         // selectByText doesn't work when filtering is off.
         comboBox.openPopup();
-        List<WebElement> filteredItems = findElements(By
-                .className("gwt-MenuItem"));
+        List<WebElement> filteredItems = findElements(
+                By.className("gwt-MenuItem"));
         filteredItems.get(1).click();
 
         sendKeysToComboBox(comboBox, "mnop");

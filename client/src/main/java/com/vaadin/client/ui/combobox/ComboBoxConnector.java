@@ -38,14 +38,14 @@ import com.vaadin.shared.ui.combobox.ComboBoxState;
 import com.vaadin.ui.ComboBox;
 
 @Connect(ComboBox.class)
-public class ComboBoxConnector extends AbstractFieldConnector implements
-        Paintable, SimpleManagedLayout {
+public class ComboBoxConnector extends AbstractFieldConnector
+        implements Paintable, SimpleManagedLayout {
 
     protected ComboBoxServerRpc rpc = RpcProxy.create(ComboBoxServerRpc.class,
             this);
 
-    protected FocusAndBlurServerRpc focusAndBlurRpc = RpcProxy.create(
-            FocusAndBlurServerRpc.class, this);
+    protected FocusAndBlurServerRpc focusAndBlurRpc = RpcProxy
+            .create(FocusAndBlurServerRpc.class, this);
 
     @Override
     protected void init() {
@@ -198,8 +198,9 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         }
 
         // TODO even this condition should probably be moved to the handler
-        if ((getDataReceivedHandler().isWaitingForFilteringResponse() && getWidget().lastFilter
-                .toLowerCase().equals(uidl.getStringVariable("filter")))
+        if ((getDataReceivedHandler().isWaitingForFilteringResponse()
+                && getWidget().lastFilter.toLowerCase()
+                        .equals(uidl.getStringVariable("filter")))
                 || popupOpenAndCleared) {
             getDataReceivedHandler().dataReceived();
         }
@@ -229,8 +230,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
     private boolean isWidgetsCurrentSelectionTextInTextBox() {
         return getWidget().currentSuggestion != null
-                && getWidget().currentSuggestion.getReplacementString().equals(
-                        getWidget().tb.getText());
+                && getWidget().currentSuggestion.getReplacementString()
+                        .equals(getWidget().tb.getText());
     }
 
     @Override

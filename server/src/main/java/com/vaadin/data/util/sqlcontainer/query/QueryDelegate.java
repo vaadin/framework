@@ -97,8 +97,8 @@ public interface QueryDelegate extends Serializable {
      * @throws UnsupportedOperationException
      *             if the implementation is read only.
      */
-    public int storeRow(RowItem row) throws UnsupportedOperationException,
-            SQLException;
+    public int storeRow(RowItem row)
+            throws UnsupportedOperationException, SQLException;
 
     /**
      * Removes the given RowItem from the database.
@@ -109,8 +109,8 @@ public interface QueryDelegate extends Serializable {
      * @throws UnsupportedOperationException
      * @throws SQLException
      */
-    public boolean removeRow(RowItem row) throws UnsupportedOperationException,
-            SQLException;
+    public boolean removeRow(RowItem row)
+            throws UnsupportedOperationException, SQLException;
 
     /**
      * Starts a new database transaction. Used when storing multiple changes.

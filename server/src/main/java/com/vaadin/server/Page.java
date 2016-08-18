@@ -222,9 +222,9 @@ public class Page implements Serializable {
         }
     }
 
-    private static final Method BROWSER_RESIZE_METHOD = ReflectTools
-            .findMethod(BrowserWindowResizeListener.class,
-                    "browserWindowResized", BrowserWindowResizeEvent.class);
+    private static final Method BROWSER_RESIZE_METHOD = ReflectTools.findMethod(
+            BrowserWindowResizeListener.class, "browserWindowResized",
+            BrowserWindowResizeEvent.class);
 
     /**
      * @deprecated As of 7.0, use {@link BorderStyle#NONE} instead.
@@ -491,7 +491,8 @@ public class Page implements Serializable {
         eventRouter.addListener(eventType, target, method);
     }
 
-    private void removeListener(Class<?> eventType, Object target, Method method) {
+    private void removeListener(Class<?> eventType, Object target,
+            Method method) {
         if (hasEventRouter()) {
             eventRouter.removeListener(eventType, target, method);
         }
@@ -579,9 +580,8 @@ public class Page implements Serializable {
             // instead set it to the empty string
             newUriFragment = "";
         }
-        if (newUriFragment == oldUriFragment
-                || (newUriFragment != null && newUriFragment
-                        .equals(oldUriFragment))) {
+        if (newUriFragment == oldUriFragment || (newUriFragment != null
+                && newUriFragment.equals(oldUriFragment))) {
             return;
         }
         try {
@@ -858,8 +858,7 @@ public class Page implements Serializable {
                             n.getDescription());
                 }
                 if (n.getIcon() != null) {
-                    target.addAttribute(
-                            UIConstants.ATTRIBUTE_NOTIFICATION_ICON,
+                    target.addAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON,
                             n.getIcon());
                 }
                 if (!n.isHtmlContentAllowed()) {
@@ -867,9 +866,8 @@ public class Page implements Serializable {
                             UIConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED,
                             true);
                 }
-                target.addAttribute(
-                        UIConstants.ATTRIBUTE_NOTIFICATION_POSITION, n
-                                .getPosition().ordinal());
+                target.addAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_POSITION,
+                        n.getPosition().ordinal());
                 target.addAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_DELAY,
                         n.getDelayMsec());
                 if (n.getStyleName() != null) {
@@ -908,8 +906,8 @@ public class Page implements Serializable {
      *            the URI to show
      */
     public void setLocation(String uri) {
-        openList.add(new OpenResource(uri, "_self", -1, -1, BORDER_DEFAULT,
-                false));
+        openList.add(
+                new OpenResource(uri, "_self", -1, -1, BORDER_DEFAULT, false));
         uI.markAsDirty();
     }
 
@@ -939,8 +937,8 @@ public class Page implements Serializable {
      * @return The browser location URI.
      */
     public URI getLocation() {
-        if (location == null
-                && !uI.getSession().getConfiguration().isSendUrlsAsParameters()) {
+        if (location == null && !uI.getSession().getConfiguration()
+                .isSendUrlsAsParameters()) {
             throw new IllegalStateException("Location is not available as the "
                     + Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS
                     + " parameter is configured as false");
@@ -1122,8 +1120,8 @@ public class Page implements Serializable {
      */
     public void open(String url, String windowName, int width, int height,
             BorderStyle border) {
-        openList.add(new OpenResource(url, windowName, width, height, border,
-                true));
+        openList.add(
+                new OpenResource(url, windowName, width, height, border, true));
         uI.markAsDirty();
     }
 

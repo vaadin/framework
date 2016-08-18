@@ -149,7 +149,8 @@ public class GridDeclarativeTestBase extends DeclarativeTestBase<Grid> {
                     col2.isEditable());
             assertEquals(baseError + "Hidable", col1.isHidable(),
                     col2.isHidable());
-            assertEquals(baseError + "Hidden", col1.isHidden(), col2.isHidden());
+            assertEquals(baseError + "Hidden", col1.isHidden(),
+                    col2.isHidden());
             assertEquals(baseError + "HidingToggleCaption",
                     col1.getHidingToggleCaption(),
                     col2.getHidingToggleCaption());

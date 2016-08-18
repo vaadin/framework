@@ -32,8 +32,8 @@ import java.util.stream.Stream;
  * @see ListDataSource
  * @see BackEndDataSource
  */
-public interface DataSource<T> extends Function<Query, Stream<T>>,
-        Serializable {
+public interface DataSource<T>
+        extends Function<Query, Stream<T>>, Serializable {
 
     /**
      * Gets whether the DataSource content all available in memory or does it
@@ -53,9 +53,9 @@ public interface DataSource<T> extends Function<Query, Stream<T>>,
     int size(Query t);
 
     /**
-     * This method creates a new {@link ListDataSource} from a given
-     * Collection. The ListDataSource creates a protective List copy of all
-     * the contents in the Collection.
+     * This method creates a new {@link ListDataSource} from a given Collection.
+     * The ListDataSource creates a protective List copy of all the contents in
+     * the Collection.
      *
      * @param data
      *            collection of data
@@ -66,9 +66,9 @@ public interface DataSource<T> extends Function<Query, Stream<T>>,
     }
 
     /**
-     * This method creates a new {@link ListDataSource} from given
-     * objects.The ListDataSource creates a protective List copy of all the
-     * contents in the array.
+     * This method creates a new {@link ListDataSource} from given objects.The
+     * ListDataSource creates a protective List copy of all the contents in the
+     * array.
      *
      * @param data
      *            data objects

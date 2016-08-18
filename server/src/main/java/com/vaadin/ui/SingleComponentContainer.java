@@ -27,8 +27,8 @@ import com.vaadin.ui.HasComponents.ComponentAttachDetachNotifier;
  * 
  * @since 7.0
  */
-public interface SingleComponentContainer extends HasComponents,
-        ComponentAttachDetachNotifier {
+public interface SingleComponentContainer
+        extends HasComponents, ComponentAttachDetachNotifier {
 
     /**
      * Gets the number of children this {@link SingleComponentContainer} has.

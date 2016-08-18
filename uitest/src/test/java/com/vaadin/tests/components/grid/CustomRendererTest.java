@@ -33,8 +33,8 @@ public class CustomRendererTest extends MultiBrowserTest {
         openTestURL();
 
         GridElement grid = findGrid();
-        assertEquals("1 :: 1 :: 2 :: 3 :: 5 :: 8 :: 13", grid.getCell(0, 0)
-                .getText());
+        assertEquals("1 :: 1 :: 2 :: 3 :: 5 :: 8 :: 13",
+                grid.getCell(0, 0).getText());
     }
 
     @Test
@@ -43,8 +43,8 @@ public class CustomRendererTest extends MultiBrowserTest {
 
         GridElement grid = findGrid();
         assertEquals("Click me!", grid.getCell(0, 1).getText());
-        assertEquals(CustomRenderer.INIT_DEBUG_LABEL_CAPTION, findDebugLabel()
-                .getText());
+        assertEquals(CustomRenderer.INIT_DEBUG_LABEL_CAPTION,
+                findDebugLabel().getText());
 
         grid.getCell(0, 1).click();
         assertEquals("row: 0, key: 1", grid.getCell(0, 1).getText());

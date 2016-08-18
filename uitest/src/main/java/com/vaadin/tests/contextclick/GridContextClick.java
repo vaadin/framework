@@ -24,8 +24,8 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.GridContextClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 
-public class GridContextClick extends
-        AbstractContextClickUI<Grid, GridContextClickEvent> {
+public class GridContextClick
+        extends AbstractContextClickUI<Grid, GridContextClickEvent> {
 
     @Override
     protected Grid createTestComponent() {
@@ -66,8 +66,8 @@ public class GridContextClick extends
     @Override
     protected HorizontalLayout createContextClickControls() {
         HorizontalLayout controls = super.createContextClickControls();
-        controls.addComponent(new Button("Remove all content",
-                new Button.ClickListener() {
+        controls.addComponent(
+                new Button("Remove all content", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {

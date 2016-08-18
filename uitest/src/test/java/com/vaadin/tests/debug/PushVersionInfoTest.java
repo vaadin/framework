@@ -59,8 +59,7 @@ public class PushVersionInfoTest extends SingleBrowserTest {
         Assert.assertTrue("Push row doesn't contain Atmosphere version",
                 pushRow.getText().contains(atmVersion));
         String jsString = getPushRowValue("Push client version").getText();
-        Assert.assertTrue(
-                "Push client version doesn't contain 'vaadin' string",
+        Assert.assertTrue("Push client version doesn't contain 'vaadin' string",
                 jsString.contains("vaadin"));
         Assert.assertTrue(
                 "Push client version doesn't contain 'javascript' string",
@@ -72,8 +71,8 @@ public class PushVersionInfoTest extends SingleBrowserTest {
 
             int size = findElements(By.className("v-debugwindow-tab")).size();
             for (int i = 0; i < size; i++) {
-                WebElement tab = findElement(By
-                        .className("v-debugwindow-tab-selected"));
+                WebElement tab = findElement(
+                        By.className("v-debugwindow-tab-selected"));
                 String title = tab.getAttribute("title");
                 if (title != null && title.startsWith("General information")) {
                     break;

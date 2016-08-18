@@ -57,8 +57,8 @@ public interface HasValue<V> extends Serializable {
          *            {@code true} if this event originates from the client,
          *            {@code false} otherwise.
          */
-        public <C extends ClientConnector & HasValue<V>> ValueChange(
-                C source, boolean userOriginated) {
+        public <C extends ClientConnector & HasValue<V>> ValueChange(C source,
+                boolean userOriginated) {
             super(source);
             this.value = source.getValue();
             this.userOriginated = userOriginated;
@@ -95,8 +95,8 @@ public interface HasValue<V> extends Serializable {
      * @see Registration
      */
     @FunctionalInterface
-    public interface ValueChangeListener<V> extends Consumer<ValueChange<V>>,
-            ConnectorEventListener {
+    public interface ValueChangeListener<V>
+            extends Consumer<ValueChange<V>>, ConnectorEventListener {
 
         /**
          * Invoked when this listener receives a value change event from an

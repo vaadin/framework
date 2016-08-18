@@ -97,7 +97,8 @@ public class ListSelectAddRemoveItems extends AbstractTestUIWithLog {
         addComponent(new Button("Remove middle", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                container.removeItem(container.getIdByIndex(container.size() / 2));
+                container.removeItem(
+                        container.getIdByIndex(container.size() / 2));
                 logContainer();
             }
         }));

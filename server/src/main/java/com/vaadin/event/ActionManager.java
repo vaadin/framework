@@ -39,8 +39,8 @@ import com.vaadin.ui.Component;
  * 
  * 
  */
-public class ActionManager implements Action.Container, Action.Handler,
-        Action.Notifier {
+public class ActionManager
+        implements Action.Container, Action.Handler, Action.Notifier {
 
     private static final long serialVersionUID = 1641868163608066491L;
 
@@ -227,8 +227,8 @@ public class ActionManager implements Action.Container, Action.Handler,
     @Override
     public void handleAction(Action action, Object sender, Object target) {
         if (actionHandlers != null) {
-            Handler[] array = actionHandlers.toArray(new Handler[actionHandlers
-                    .size()]);
+            Handler[] array = actionHandlers
+                    .toArray(new Handler[actionHandlers.size()]);
             for (Handler handler : array) {
                 handler.handleAction(action, sender, target);
             }

@@ -30,8 +30,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * A component for displaying Adobe® Flash® content.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
+ * @version @VERSION@
  * @since 7.0
  */
 @SuppressWarnings("serial")
@@ -87,8 +86,8 @@ public class Flash extends AbstractEmbedded {
      *            The base path
      */
     public void setCodebase(String codebase) {
-        if (codebase != getState().codebase
-                || (codebase != null && !codebase.equals(getState().codebase))) {
+        if (codebase != getState().codebase || (codebase != null
+                && !codebase.equals(getState().codebase))) {
             getState().codebase = codebase;
             requestRepaint();
         }
@@ -116,8 +115,8 @@ public class Flash extends AbstractEmbedded {
      *            the codetype to set.
      */
     public void setCodetype(String codetype) {
-        if (codetype != getState().codetype
-                || (codetype != null && !codetype.equals(getState().codetype))) {
+        if (codetype != getState().codetype || (codetype != null
+                && !codetype.equals(getState().codetype))) {
             getState().codetype = codetype;
             requestRepaint();
         }
@@ -216,8 +215,8 @@ public class Flash extends AbstractEmbedded {
      * @return the Value of parameter or null if not found.
      */
     public String getParameter(String name) {
-        return getState(false).embedParams != null ? getState(false).embedParams
-                .get(name) : null;
+        return getState(false).embedParams != null
+                ? getState(false).embedParams.get(name) : null;
     }
 
     /**
@@ -246,8 +245,8 @@ public class Flash extends AbstractEmbedded {
 
         Collections.sort(paramNames);
         for (String param : paramNames) {
-            design.appendElement("parameter").attr("name", param)
-                    .attr("value", getParameter(param));
+            design.appendElement("parameter").attr("name", param).attr("value",
+                    getParameter(param));
         }
     }
 

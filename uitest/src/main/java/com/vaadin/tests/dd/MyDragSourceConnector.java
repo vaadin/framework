@@ -23,8 +23,8 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.dd.CustomDDImplementation.MyDragSource;
 
 @Connect(MyDragSource.class)
-public class MyDragSourceConnector extends AbstractComponentConnector implements
-        Paintable {
+public class MyDragSourceConnector extends AbstractComponentConnector
+        implements Paintable {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

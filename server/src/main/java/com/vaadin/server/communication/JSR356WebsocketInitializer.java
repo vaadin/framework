@@ -91,8 +91,8 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
 
         @Override
         public Enumeration<String> getInitParameterNames() {
-            return Collections.enumeration(servletRegistration
-                    .getInitParameters().keySet());
+            return Collections.enumeration(
+                    servletRegistration.getInitParameters().keySet());
         }
 
     }
@@ -118,10 +118,10 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
                     initAtmosphereForVaadinServlet(servletRegistration,
                             servletContext);
                 } catch (Exception e) {
-                    getLogger().log(
-                            Level.WARNING,
+                    getLogger().log(Level.WARNING,
                             "Failed to initialize Atmosphere for "
-                                    + servletName, e);
+                                    + servletName,
+                            e);
                 }
             }
         }
@@ -149,9 +149,8 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
             return;
         }
         getLogger().finer("Creating AtmosphereFramework for " + servletName);
-        AtmosphereFramework framework = PushRequestHandler
-                .initAtmosphere(new FakeServletConfig(servletRegistration,
-                        servletContext));
+        AtmosphereFramework framework = PushRequestHandler.initAtmosphere(
+                new FakeServletConfig(servletRegistration, servletContext));
         servletContext.setAttribute(attributeName, framework);
         getLogger().finer("Created AtmosphereFramework for " + servletName);
 
@@ -179,9 +178,10 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
      * @return <code>true</code> if the attribute name matches the convention,
      *         <code>false</code> otherwise
      */
-    private static boolean isAtmosphereFrameworkAttribute(String attributeName) {
-        return attributeName.startsWith(JSR356WebsocketInitializer.class
-                .getName() + ".");
+    private static boolean isAtmosphereFrameworkAttribute(
+            String attributeName) {
+        return attributeName
+                .startsWith(JSR356WebsocketInitializer.class.getName() + ".");
     }
 
     /**

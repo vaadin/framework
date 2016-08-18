@@ -98,7 +98,8 @@ public class BasicPush extends AbstractTestUI {
                                 access(new Runnable() {
                                     @Override
                                     public void run() {
-                                        counter2.setValue(counter2.getValue() + 1);
+                                        counter2.setValue(
+                                                counter2.getValue() + 1);
                                     }
                                 });
                             }

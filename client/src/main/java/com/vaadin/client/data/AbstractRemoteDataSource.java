@@ -437,8 +437,10 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         Range received = Range.withLength(firstRowIndex, rowData.size());
 
         if (isWaitingForData()) {
-            cacheStrategy.onDataArrive(Duration.currentTimeMillis()
-                    - currentRequestCallback.requestStart, received.length());
+            cacheStrategy.onDataArrive(
+                    Duration.currentTimeMillis()
+                            - currentRequestCallback.requestStart,
+                    received.length());
 
             currentRequestCallback = null;
         }
@@ -450,17 +452,20 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         Range newUsefulData = partition[1];
         if (!newUsefulData.isEmpty()) {
             // Update the parts that are actually inside
-            for (int i = newUsefulData.getStart(); i < newUsefulData.getEnd(); i++) {
+            for (int i = newUsefulData.getStart(); i < newUsefulData
+                    .getEnd(); i++) {
                 final T row = rowData.get(i - firstRowIndex);
                 indexToRowMap.put(Integer.valueOf(i), row);
                 keyToIndexMap.put(getRowKey(row), Integer.valueOf(i));
             }
 
             if (dataChangeHandler != null) {
-                Profiler.enter("AbstractRemoteDataSource.setRowData notify dataChangeHandler");
+                Profiler.enter(
+                        "AbstractRemoteDataSource.setRowData notify dataChangeHandler");
                 dataChangeHandler.dataUpdated(newUsefulData.getStart(),
                         newUsefulData.length());
-                Profiler.leave("AbstractRemoteDataSource.setRowData notify dataChangeHandler");
+                Profiler.leave(
+                        "AbstractRemoteDataSource.setRowData notify dataChangeHandler");
             }
 
             // Potentially extend the range
@@ -552,8 +557,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             // Removal and cache share some indices. fix accordingly.
             Range[] partitions = cached.partitionWith(removedRange);
             Range remainsBefore = partitions[0];
-            Range transposedRemainsAfter = partitions[2].offsetBy(-removedRange
-                    .length());
+            Range transposedRemainsAfter = partitions[2]
+                    .offsetBy(-removedRange.length());
             cached = remainsBefore.combineWith(transposedRemainsAfter);
         } else if (removedRange.getEnd() <= cached.getStart()) {
             // Removal was before the cache. offset the cache.
@@ -696,8 +701,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         Object key = getRowKey(row);
 
         if (key == null) {
-            throw new NullPointerException("key may not be null (row: " + row
-                    + ")");
+            throw new NullPointerException(
+                    "key may not be null (row: " + row + ")");
         }
 
         if (pinnedRows.containsKey(key)) {

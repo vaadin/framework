@@ -151,8 +151,8 @@ public class VAccordion extends VTabsheetBase {
 
             addStyleDependentName("loading");
 
-            connector.getRpcProxy(TabsheetServerRpc.class).setSelected(
-                    tabKeys.get(index).toString());
+            connector.getRpcProxy(TabsheetServerRpc.class)
+                    .setSelected(tabKeys.get(index).toString());
         }
     }
 
@@ -361,13 +361,11 @@ public class VAccordion extends VTabsheetBase {
         public void updateCaption(TabState tabState) {
             // TODO need to call this because the caption does not have an owner
             caption.setCaptionAsHtml(isTabCaptionsAsHtml());
-            caption.updateCaptionWithoutOwner(
-                    tabState.caption,
-                    !tabState.enabled,
-                    hasAttribute(tabState.description),
+            caption.updateCaptionWithoutOwner(tabState.caption,
+                    !tabState.enabled, hasAttribute(tabState.description),
                     hasAttribute(tabState.componentError),
-                    connector.getResourceUrl(ComponentConstants.ICON_RESOURCE
-                            + tabState.key));
+                    connector.getResourceUrl(
+                            ComponentConstants.ICON_RESOURCE + tabState.key));
         }
 
         private boolean hasAttribute(String string) {

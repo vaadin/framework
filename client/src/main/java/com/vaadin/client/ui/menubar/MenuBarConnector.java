@@ -36,8 +36,8 @@ import com.vaadin.shared.ui.menubar.MenuBarConstants;
 import com.vaadin.shared.ui.menubar.MenuBarState;
 
 @Connect(com.vaadin.ui.MenuBar.class)
-public class MenuBarConnector extends AbstractComponentConnector implements
-        Paintable, SimpleManagedLayout {
+public class MenuBarConnector extends AbstractComponentConnector
+        implements Paintable, SimpleManagedLayout {
 
     /**
      * This method must be implemented to update the client-side component from
@@ -78,9 +78,8 @@ public class MenuBarConnector extends AbstractComponentConnector implements
 
             if (moreItemUIDL.hasAttribute("icon")) {
                 itemHTML.append("<img src=\""
-                        + WidgetUtil.escapeAttribute(client
-                                .translateVaadinUri(moreItemUIDL
-                                        .getStringAttribute("icon")))
+                        + WidgetUtil.escapeAttribute(client.translateVaadinUri(
+                                moreItemUIDL.getStringAttribute("icon")))
                         + "\" class=\"" + ImageIcon.CLASSNAME
                         + "\" alt=\"\" />");
             }
@@ -97,8 +96,8 @@ public class MenuBarConnector extends AbstractComponentConnector implements
 
             getWidget().collapsedRootItems = new VMenuBar(true, getWidget());
             getWidget().moreItem.setSubMenu(getWidget().collapsedRootItems);
-            getWidget().moreItem.addStyleName(getWidget().getStylePrimaryName()
-                    + "-more-menuitem");
+            getWidget().moreItem.addStyleName(
+                    getWidget().getStylePrimaryName() + "-more-menuitem");
         }
 
         UIDL uidlItems = uidl.getChildUIDL(1);
@@ -155,7 +154,8 @@ public class MenuBarConnector extends AbstractComponentConnector implements
 
             while (!itr.hasNext() && !iteratorStack.empty()) {
                 boolean hasCheckableItem = false;
-                for (VMenuBar.CustomMenuItem menuItem : currentMenu.getItems()) {
+                for (VMenuBar.CustomMenuItem menuItem : currentMenu
+                        .getItems()) {
                     hasCheckableItem = hasCheckableItem
                             || menuItem.isCheckable();
                 }
@@ -168,7 +168,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
                 itr = iteratorStack.pop();
                 currentMenu = menuStack.pop();
             }
-        }// while
+        } // while
 
         getLayoutManager().setNeedsHorizontalLayout(this);
 
@@ -196,8 +196,8 @@ public class MenuBarConnector extends AbstractComponentConnector implements
         // Check content of widget to find tooltip for element
         if (element != getWidget().getElement()) {
 
-            VMenuBar.CustomMenuItem item = getWidget().getMenuItemWithElement(
-                    element);
+            VMenuBar.CustomMenuItem item = getWidget()
+                    .getMenuItemWithElement(element);
             if (item != null) {
                 info = item.getTooltip();
             }

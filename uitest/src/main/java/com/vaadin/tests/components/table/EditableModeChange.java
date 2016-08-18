@@ -81,7 +81,8 @@ public class EditableModeChange extends AbstractTestUI {
                 Object propertyId, Component uiContext) {
             if (selectionEvent != null) {
                 if ((selectionEvent.getItemId().equals(itemId))
-                        && (selectionEvent.getPropertyId().equals(propertyId))) {
+                        && (selectionEvent.getPropertyId()
+                                .equals(propertyId))) {
                     return super.createField(container, itemId, propertyId,
                             uiContext);
                 }

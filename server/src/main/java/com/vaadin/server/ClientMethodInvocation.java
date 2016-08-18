@@ -33,8 +33,8 @@ import elemental.json.impl.JsonUtil;
  * 
  * @since 7.0
  */
-public class ClientMethodInvocation implements Serializable,
-        Comparable<ClientMethodInvocation> {
+public class ClientMethodInvocation
+        implements Serializable, Comparable<ClientMethodInvocation> {
     private final ClientConnector connector;
     private final String interfaceName;
     private final String methodName;
@@ -121,8 +121,8 @@ public class ClientMethodInvocation implements Serializable,
         stream.writeObject(serializedParameters);
     }
 
-    private void readObject(ObjectInputStream stream) throws IOException,
-            ClassNotFoundException {
+    private void readObject(ObjectInputStream stream)
+            throws IOException, ClassNotFoundException {
         // Reverses the serialization done in writeObject. Basically just
         // parsing the serialized type back to the non-serializable type.
         stream.defaultReadObject();

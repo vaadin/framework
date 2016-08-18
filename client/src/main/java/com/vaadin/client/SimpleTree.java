@@ -81,14 +81,15 @@ public class SimpleTree extends ComplexPanel implements HasDoubleClickHandlers {
             @Override
             public void onClick(ClickEvent event) {
                 if (event.getNativeEvent().getEventTarget().cast() == handle) {
-                    if (children.getStyle().getDisplay().intern() == Display.NONE
-                            .getCssName()) {
+                    if (children.getStyle().getDisplay()
+                            .intern() == Display.NONE.getCssName()) {
                         open(event.getNativeEvent().getAltKey());
                     } else {
                         close();
                     }
 
-                } else if (event.getNativeEvent().getEventTarget().cast() == text) {
+                } else if (event.getNativeEvent().getEventTarget()
+                        .cast() == text) {
                     select(event);
                 }
             }
@@ -173,20 +174,22 @@ public class SimpleTree extends ComplexPanel implements HasDoubleClickHandlers {
      * {@inheritDoc} Events are not fired when double clicking child widgets.
      */
     @Override
-    public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler) {
+    public HandlerRegistration addDoubleClickHandler(
+            DoubleClickHandler handler) {
         if (textDoubleClickHandlerManager == null) {
             textDoubleClickHandlerManager = new HandlerManager(this);
             addDomHandler(new DoubleClickHandler() {
                 @Override
                 public void onDoubleClick(DoubleClickEvent event) {
-                    if (event.getNativeEvent().getEventTarget().cast() == text) {
+                    if (event.getNativeEvent().getEventTarget()
+                            .cast() == text) {
                         textDoubleClickHandlerManager.fireEvent(event);
                     }
                 }
             }, DoubleClickEvent.getType());
         }
-        return textDoubleClickHandlerManager.addHandler(
-                DoubleClickEvent.getType(), handler);
+        return textDoubleClickHandlerManager
+                .addHandler(DoubleClickEvent.getType(), handler);
     }
 
 }

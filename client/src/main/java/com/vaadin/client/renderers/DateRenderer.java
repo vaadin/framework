@@ -34,8 +34,8 @@ public class DateRenderer implements Renderer<Date> {
 
     // Calendar is unavailable for GWT
     @SuppressWarnings("deprecation")
-    private TimeZone timeZone = TimeZone.createTimeZone(new Date()
-            .getTimezoneOffset());
+    private TimeZone timeZone = TimeZone
+            .createTimeZone(new Date().getTimezoneOffset());
 
     public DateRenderer() {
         this(PredefinedFormat.DATE_TIME_SHORT);
@@ -59,8 +59,8 @@ public class DateRenderer implements Renderer<Date> {
      * Gets the format of how the date is formatted.
      * 
      * @return the format
-     * @see <a
-     *      href="http://www.gwtproject.org/javadoc/latest/com/google/gwt/i18n/shared/DateTimeFormat.html">GWT
+     * @see <a href=
+     *      "http://www.gwtproject.org/javadoc/latest/com/google/gwt/i18n/shared/DateTimeFormat.html">GWT
      *      documentation on DateTimeFormat</a>
      */
     public DateTimeFormat getFormat() {
@@ -72,8 +72,8 @@ public class DateRenderer implements Renderer<Date> {
      * 
      * @param format
      *            the format to set
-     * @see <a
-     *      href="http://www.gwtproject.org/javadoc/latest/com/google/gwt/i18n/shared/DateTimeFormat.html">GWT
+     * @see <a href=
+     *      "http://www.gwtproject.org/javadoc/latest/com/google/gwt/i18n/shared/DateTimeFormat.html">GWT
      *      documentation on DateTimeFormat</a>
      */
     public void setFormat(DateTimeFormat format) {

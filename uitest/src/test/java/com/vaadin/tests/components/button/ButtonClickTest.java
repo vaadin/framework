@@ -29,8 +29,10 @@ public class ButtonClickTest extends MultiBrowserTest {
     public void buttonMouseDownOutOverUp() {
         openTestURL();
 
-        WebElement clickedButton = vaadinElement("/VVerticalLayout[0]/VButton[0]");
-        WebElement visitedButton = vaadinElement("/VVerticalLayout[0]/VButton[1]");
+        WebElement clickedButton = vaadinElement(
+                "/VVerticalLayout[0]/VButton[0]");
+        WebElement visitedButton = vaadinElement(
+                "/VVerticalLayout[0]/VButton[1]");
 
         new Actions(driver).moveToElement(clickedButton).clickAndHold()
                 .moveToElement(visitedButton).moveToElement(clickedButton)

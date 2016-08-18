@@ -100,10 +100,10 @@ public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
         WebElement[] col = new WebElement[3];
         col[0] = getDriver().findElement(
                 By.xpath("//thead//th[" + (i + 1) + "]/div[1]/span"));
-        col[1] = getDriver().findElement(
-                By.xpath("//tbody//td[" + (i + 1) + "]//span"));
-        col[2] = getDriver().findElement(
-                By.xpath("//tbody//td[" + (i + 1) + "]"));
+        col[1] = getDriver()
+                .findElement(By.xpath("//tbody//td[" + (i + 1) + "]//span"));
+        col[2] = getDriver()
+                .findElement(By.xpath("//tbody//td[" + (i + 1) + "]"));
         return col;
     }
 

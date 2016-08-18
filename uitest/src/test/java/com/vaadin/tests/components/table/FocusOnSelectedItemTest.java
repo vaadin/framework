@@ -50,9 +50,9 @@ public class FocusOnSelectedItemTest extends MultiBrowserTest {
 
         supposedlyFocusedRow = $(TableElement.class).first().getCell(198, 0);
 
-        Assert.assertTrue("Incorrect row was selected", selectedRow
-                .getLocation().getY() == supposedlyFocusedRow.getLocation()
-                .getY());
+        Assert.assertTrue("Incorrect row was selected",
+                selectedRow.getLocation().getY() == supposedlyFocusedRow
+                        .getLocation().getY());
 
         Assert.assertTrue("No row had the focused style.",
                 isElementPresent(By.className("v-table-focus")));

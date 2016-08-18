@@ -12,8 +12,8 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.AbstractContainer;
 import com.vaadin.data.util.ObjectProperty;
 
-public class LargeContainer extends AbstractContainer implements
-        Container.Indexed {
+public class LargeContainer extends AbstractContainer
+        implements Container.Indexed {
 
     public class TestItem implements Item {
 

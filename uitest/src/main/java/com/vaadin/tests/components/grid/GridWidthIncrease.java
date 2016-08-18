@@ -36,8 +36,8 @@ public class GridWidthIncrease extends AbstractTestUI {
         grid.addRow(rowData);
         grid.setWidth(400 + "px");
         addComponent(grid);
-        addComponent(new Button("Increase Grid Width",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Increase Grid Width", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {

@@ -20,7 +20,8 @@ public class ErrorMessages extends TestBase {
         bb.setComponentError(new CompositeErrorMessage(errors));
         addComponent(bb);
 
-        LegacyTextField tf = new LegacyTextField("", "Textfield with UserError");
+        LegacyTextField tf = new LegacyTextField("",
+                "Textfield with UserError");
         tf.setComponentError(new UserError("This is a failure"));
         addComponent(tf);
 

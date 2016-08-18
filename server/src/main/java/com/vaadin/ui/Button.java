@@ -44,8 +44,8 @@ import com.vaadin.util.ReflectTools;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Button extends AbstractFocusable implements
-        Action.ShortcutNotifier {
+public class Button extends AbstractFocusable
+        implements Action.ShortcutNotifier {
 
     private ButtonServerRpc rpc = new ButtonServerRpc() {
 
@@ -576,8 +576,8 @@ public class Button extends AbstractFocusable implements
         Attributes attr = design.attributes();
         String content;
         // plain-text (default is html)
-        Boolean plain = DesignAttributeHandler.readAttribute(
-                DESIGN_ATTR_PLAIN_TEXT, attr, Boolean.class);
+        Boolean plain = DesignAttributeHandler
+                .readAttribute(DESIGN_ATTR_PLAIN_TEXT, attr, Boolean.class);
         if (plain == null || !plain) {
             setHtmlContentAllowed(true);
             content = design.html();
@@ -588,13 +588,13 @@ public class Button extends AbstractFocusable implements
         }
         setCaption(content);
         if (attr.hasKey("icon-alt")) {
-            setIconAlternateText(DesignAttributeHandler.readAttribute(
-                    "icon-alt", attr, String.class));
+            setIconAlternateText(DesignAttributeHandler
+                    .readAttribute("icon-alt", attr, String.class));
         }
         // click-shortcut
         removeClickShortcut();
-        ShortcutAction action = DesignAttributeHandler.readAttribute(
-                "click-shortcut", attr, ShortcutAction.class);
+        ShortcutAction action = DesignAttributeHandler
+                .readAttribute("click-shortcut", attr, ShortcutAction.class);
         if (action != null) {
             setClickShortcut(action.getKeyCode(), action.getModifiers());
         }

@@ -25,8 +25,8 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.widgetset.server.UseStateFromHierachyComponent;
 
 @Connect(UseStateFromHierachyComponent.class)
-public class UseStateFromHierachyChangeConnector extends
-        AbstractSingleComponentContainerConnector {
+public class UseStateFromHierachyChangeConnector
+        extends AbstractSingleComponentContainerConnector {
 
     @Override
     public SimplePanel getWidget() {

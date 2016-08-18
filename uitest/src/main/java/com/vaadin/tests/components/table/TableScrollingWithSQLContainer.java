@@ -44,8 +44,8 @@ public class TableScrollingWithSQLContainer extends UI {
             // Will fail if table doesn't exist, which is OK.
             conn.rollback();
         }
-        statement
-                .execute("create table people (id integer generated always as identity,"
+        statement.execute(
+                "create table people (id integer generated always as identity,"
                         + " name varchar(32), AGE INTEGER)");
         statement.execute("alter table people add primary key (id)");
         for (int i = 0; i < 5000; i++) {

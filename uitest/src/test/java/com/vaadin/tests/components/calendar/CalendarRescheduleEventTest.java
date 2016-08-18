@@ -69,13 +69,13 @@ public class CalendarRescheduleEventTest extends DndActionsTest {
      * DnD event by Y axis
      */
     private int rescheduleEvent(int yOffset) {
-        WebElement eventCaption = getDriver().findElement(
-                By.className("v-calendar-event-caption"));
+        WebElement eventCaption = getDriver()
+                .findElement(By.className("v-calendar-event-caption"));
 
         dragAndDrop(eventCaption, 0, yOffset);
 
-        eventCaption = getDriver().findElement(
-                By.className("v-calendar-event-caption"));
+        eventCaption = getDriver()
+                .findElement(By.className("v-calendar-event-caption"));
         return eventCaption.getLocation().getY();
     }
 

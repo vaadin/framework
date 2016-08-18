@@ -22,8 +22,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
-public class TableSelectTest extends CustomComponent implements
-        Table.ValueChangeListener {
+public class TableSelectTest extends CustomComponent
+        implements Table.ValueChangeListener {
 
     public TableSelectTest() {
         final VerticalLayout main = new VerticalLayout();

@@ -31,8 +31,8 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @since 7.0.0
  */
-public class VColorPickerArea extends Widget implements ClickHandler, HasHTML,
-        HasClickHandlers {
+public class VColorPickerArea extends Widget
+        implements ClickHandler, HasHTML, HasClickHandlers {
 
     public static final String CLASSNAME = "v-colorpicker";
     private String color = null;
@@ -84,7 +84,8 @@ public class VColorPickerArea extends Widget implements ClickHandler, HasHTML,
         int type = DOM.eventGetType(event);
         switch (type) {
         case Event.ONCLICK:
-            if (DOM.isOrHasChild(area.getElement(), DOM.eventGetTarget(event))) {
+            if (DOM.isOrHasChild(area.getElement(),
+                    DOM.eventGetTarget(event))) {
                 super.onBrowserEvent(event);
             }
             break;

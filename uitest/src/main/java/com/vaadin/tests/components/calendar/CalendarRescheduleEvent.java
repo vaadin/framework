@@ -68,8 +68,8 @@ public class CalendarRescheduleEvent extends AbstractTestUI {
 
             @Override
             public void eventSetChange(EventSetChangeEvent event) {
-                List<CalendarEvent> events = event.getProvider().getEvents(
-                        new Date(0), new Date(Long.MAX_VALUE));
+                List<CalendarEvent> events = event.getProvider()
+                        .getEvents(new Date(0), new Date(Long.MAX_VALUE));
                 CalendarEvent calEvent = events.get(0);
                 Date startEvent = calEvent.getStart();
                 Date endEvent = calEvent.getEnd();

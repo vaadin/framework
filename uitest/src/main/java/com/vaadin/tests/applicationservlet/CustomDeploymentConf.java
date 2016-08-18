@@ -34,9 +34,8 @@ public class CustomDeploymentConf extends AbstractTestUI {
                 .getService().getDeploymentConfiguration();
         addComponent(new Label("Resource cache time: "
                 + deploymentConfiguration.getResourceCacheTime()));
-        addComponent(new Label("Custom config param: "
-                + deploymentConfiguration.getApplicationOrSystemProperty(
-                        "customParam", null)));
+        addComponent(new Label("Custom config param: " + deploymentConfiguration
+                .getApplicationOrSystemProperty("customParam", null)));
     }
 
     @Override

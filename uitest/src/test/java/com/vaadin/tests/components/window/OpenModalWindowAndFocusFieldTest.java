@@ -39,8 +39,8 @@ public class OpenModalWindowAndFocusFieldTest extends MultiBrowserTest {
         openTestURL();
         $(ButtonElement.class).id("open").click();
         // WindowElement window = $(WindowElement.class).first();
-        WebElement windowFocusElement = findElement(By
-                .xpath("//div[@class='v-window-contents']/div[@class='v-scrollable']"));
+        WebElement windowFocusElement = findElement(By.xpath(
+                "//div[@class='v-window-contents']/div[@class='v-scrollable']"));
 
         assertElementsEquals(windowFocusElement, getActiveElement());
     }

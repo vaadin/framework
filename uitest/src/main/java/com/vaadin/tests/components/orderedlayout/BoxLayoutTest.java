@@ -106,10 +106,10 @@ public class BoxLayoutTest extends AbstractTestUI {
         vertical.addValueChangeListener(event -> {
             view.removeAllComponents();
 
-            view.addComponent(createControls(!vertical.getValue()
-                    .booleanValue()));
-            view.addComponent(createTestLayout(!vertical.getValue()
-                    .booleanValue()));
+            view.addComponent(
+                    createControls(!vertical.getValue().booleanValue()));
+            view.addComponent(
+                    createTestLayout(!vertical.getValue().booleanValue()));
 
             view.setExpandRatio(view.getComponent(1), 1);
         });
@@ -124,7 +124,8 @@ public class BoxLayoutTest extends AbstractTestUI {
                                 new Button.ClickListener() {
                                     @Override
                                     public void buttonClick(ClickEvent event) {
-                                        if (event.getButton().getWidth() == -1) {
+                                        if (event.getButton()
+                                                .getWidth() == -1) {
                                             event.getButton().setHeight("50px");
                                             event.getButton().setWidth("200px");
                                         } else {
@@ -147,7 +148,8 @@ public class BoxLayoutTest extends AbstractTestUI {
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        Component last = l.getComponent(l.getComponentCount() - 1);
+                        Component last = l
+                                .getComponent(l.getComponentCount() - 1);
                         l.removeComponent(last);
                     }
                 });
@@ -223,8 +225,8 @@ public class BoxLayoutTest extends AbstractTestUI {
 
         align = new NativeSelect(null, alignments);
         for (Alignment a : alignments) {
-            align.setItemCaption(a,
-                    a.getVerticalAlignment() + "-" + a.getHorizontalAlignment());
+            align.setItemCaption(a, a.getVerticalAlignment() + "-"
+                    + a.getHorizontalAlignment());
         }
         align.setImmediate(true);
         align.setEnabled(false);
@@ -295,8 +297,8 @@ public class BoxLayoutTest extends AbstractTestUI {
         });
         component.addComponent(componentHeight);
 
-        componentCaption = new NativeSelect("Caption", Arrays.asList("Short",
-                "Slightly Longer Caption"));
+        componentCaption = new NativeSelect("Caption",
+                Arrays.asList("Short", "Slightly Longer Caption"));
         componentCaption.setImmediate(true);
         componentCaption.setEnabled(false);
         componentCaption.addListener(new ValueChangeListener() {
@@ -311,16 +313,17 @@ public class BoxLayoutTest extends AbstractTestUI {
         });
         component.addComponent(componentCaption);
 
-        componentIcon = new NativeSelect("Icon", Arrays.asList(
-                "../runo/icons/16/folder.png", "../runo/icons/32/document.png"));
+        componentIcon = new NativeSelect("Icon",
+                Arrays.asList("../runo/icons/16/folder.png",
+                        "../runo/icons/32/document.png"));
         componentIcon.setImmediate(true);
         componentIcon.setEnabled(false);
         componentIcon.addListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 if (componentIcon.getValue() != null) {
-                    target.setIcon(new ThemeResource(componentIcon.getValue()
-                            .toString()));
+                    target.setIcon(new ThemeResource(
+                            componentIcon.getValue().toString()));
                 } else {
                     target.setIcon(null);
                 }
@@ -344,8 +347,8 @@ public class BoxLayoutTest extends AbstractTestUI {
         componentError.setEnabled(false);
         componentError.addValueChangeListener(event -> {
             if (target != null) {
-                target.setComponentError(componentError.getValue() ? new UserError(
-                        "Error message") : null);
+                target.setComponentError(componentError.getValue()
+                        ? new UserError("Error message") : null);
             }
         });
         component.addComponent(componentError);
@@ -355,8 +358,8 @@ public class BoxLayoutTest extends AbstractTestUI {
         componentRequired.setEnabled(false);
         componentRequired.addValueChangeListener(event -> {
             if (target != null && target instanceof LegacyAbstractField) {
-                ((LegacyAbstractField<?>) target).setRequired(componentRequired
-                        .getValue());
+                ((LegacyAbstractField<?>) target)
+                        .setRequired(componentRequired.getValue());
             }
         });
         component.addComponent(componentRequired);
@@ -406,16 +409,16 @@ public class BoxLayoutTest extends AbstractTestUI {
                 expand.setEnabled(target != null);
                 if (target != null) {
                     if (target.getWidth() > -1) {
-                        componentWidth.select(new Float(target.getWidth())
-                                .intValue()
-                                + target.getWidthUnits().getSymbol());
+                        componentWidth
+                                .select(new Float(target.getWidth()).intValue()
+                                        + target.getWidthUnits().getSymbol());
                     } else {
                         componentWidth.select(null);
                     }
                     if (target.getHeight() > -1) {
-                        componentHeight.select(new Float(target.getHeight())
-                                .intValue()
-                                + target.getHeightUnits().getSymbol());
+                        componentHeight
+                                .select(new Float(target.getHeight()).intValue()
+                                        + target.getHeightUnits().getSymbol());
                     } else {
                         componentHeight.select(null);
                     }
@@ -433,8 +436,8 @@ public class BoxLayoutTest extends AbstractTestUI {
                     componentDescription.setValue(target.getDescription());
                     componentError.setValue(target.getComponentError() != null);
                     if (target instanceof LegacyAbstractField) {
-                        componentRequired.setValue(((LegacyAbstractField<?>) target)
-                                .isRequired());
+                        componentRequired.setValue(
+                                ((LegacyAbstractField<?>) target).isRequired());
                     }
                 }
             }

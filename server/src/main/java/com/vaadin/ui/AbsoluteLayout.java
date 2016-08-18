@@ -43,8 +43,8 @@ import com.vaadin.ui.declarative.DesignContext;
  * 
  */
 @SuppressWarnings("serial")
-public class AbsoluteLayout extends AbstractLayout implements
-        LayoutClickNotifier {
+public class AbsoluteLayout extends AbstractLayout
+        implements LayoutClickNotifier {
 
     // constants for design attributes
     private static final String ATTR_TOP = ":top";
@@ -103,7 +103,8 @@ public class AbsoluteLayout extends AbstractLayout implements
      * old components position.
      */
     @Override
-    public void replaceComponent(Component oldComponent, Component newComponent) {
+    public void replaceComponent(Component oldComponent,
+            Component newComponent) {
         ComponentPosition position = getPosition(oldComponent);
         removeComponent(oldComponent);
         addComponent(newComponent, position);
@@ -112,9 +113,8 @@ public class AbsoluteLayout extends AbstractLayout implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.AbstractComponentContainer#addComponent(com.vaadin.ui.Component
-     * )
+     * @see com.vaadin.ui.AbstractComponentContainer#addComponent(com.vaadin.ui.
+     * Component )
      */
     @Override
     public void addComponent(Component c) {
@@ -194,8 +194,8 @@ public class AbsoluteLayout extends AbstractLayout implements
         Map<String, String> connectorToPosition = new HashMap<String, String>();
         for (Iterator<Component> ci = getComponentIterator(); ci.hasNext();) {
             Component c = ci.next();
-            connectorToPosition.put(c.getConnectorId(), getPosition(c)
-                    .getCSSString());
+            connectorToPosition.put(c.getConnectorId(),
+                    getPosition(c).getCSSString());
         }
         getState().connectorToCssPosition = connectorToPosition;
 
@@ -730,19 +730,22 @@ public class AbsoluteLayout extends AbstractLayout implements
 
             // handle position
             ComponentPosition position = getPosition(child);
-            writePositionAttribute(childElement, ATTR_TOP, position
-                    .getTopUnits().getSymbol(), position.getTopValue());
-            writePositionAttribute(childElement, ATTR_RIGHT, position
-                    .getRightUnits().getSymbol(), position.getRightValue());
-            writePositionAttribute(childElement, ATTR_BOTTOM, position
-                    .getBottomUnits().getSymbol(), position.getBottomValue());
-            writePositionAttribute(childElement, ATTR_LEFT, position
-                    .getLeftUnits().getSymbol(), position.getLeftValue());
+            writePositionAttribute(childElement, ATTR_TOP,
+                    position.getTopUnits().getSymbol(), position.getTopValue());
+            writePositionAttribute(childElement, ATTR_RIGHT,
+                    position.getRightUnits().getSymbol(),
+                    position.getRightValue());
+            writePositionAttribute(childElement, ATTR_BOTTOM,
+                    position.getBottomUnits().getSymbol(),
+                    position.getBottomValue());
+            writePositionAttribute(childElement, ATTR_LEFT,
+                    position.getLeftUnits().getSymbol(),
+                    position.getLeftValue());
 
             // handle z-index
             if (position.getZIndex() >= 0) {
-                childElement
-                        .attr(ATTR_Z_INDEX, String.valueOf(position.zIndex));
+                childElement.attr(ATTR_Z_INDEX,
+                        String.valueOf(position.zIndex));
             }
         }
     }
@@ -763,8 +766,8 @@ public class AbsoluteLayout extends AbstractLayout implements
     private void writePositionAttribute(Node node, String key, String symbol,
             Float value) {
         if (value != null) {
-            String valueString = DesignAttributeHandler.getFormatter().format(
-                    value);
+            String valueString = DesignAttributeHandler.getFormatter()
+                    .format(value);
             node.attr(key, valueString + symbol);
         }
     }

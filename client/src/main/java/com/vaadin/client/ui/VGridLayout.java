@@ -155,7 +155,8 @@ public class VGridLayout extends ComplexPanel {
                     expandRatioSum += actualExpandRatio[i];
                 }
                 for (int i = 0; i < rowHeights.length; i++) {
-                    int ew = (int) (excessSpace * actualExpandRatio[i] / expandRatioSum);
+                    int ew = (int) (excessSpace * actualExpandRatio[i]
+                            / expandRatioSum);
                     rowHeights[i] = minRowHeights[i] + ew;
                     distributed += ew;
                 }
@@ -236,7 +237,8 @@ public class VGridLayout extends ComplexPanel {
                     expandRatioSum += actualExpandRatio[i];
                 }
                 for (int i = 0; i < columnWidths.length; i++) {
-                    int ew = (int) (excessSpace * actualExpandRatio[i] / expandRatioSum);
+                    int ew = (int) (excessSpace * actualExpandRatio[i]
+                            / expandRatioSum);
                     columnWidths[i] = minColumnWidths[i] + ew;
                     distributed += ew;
                 }
@@ -533,9 +535,8 @@ public class VGridLayout extends ComplexPanel {
         }
     }
 
-    private static void distributeSpanSize(int[] dimensions,
-            int spanStartIndex, int spanSize, int spacingSize, int size,
-            float[] expansionRatios) {
+    private static void distributeSpanSize(int[] dimensions, int spanStartIndex,
+            int spanSize, int spacingSize, int size, float[] expansionRatios) {
         int allocated = dimensions[spanStartIndex];
         for (int i = 1; i < spanSize; i++) {
             allocated += spacingSize + dimensions[spanStartIndex + i];

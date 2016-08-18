@@ -38,8 +38,8 @@ public class CalendarActionEventSourceTest extends PrivateTB3Configuration {
         openTestURL();
 
         // perform action on empty cell
-        WebElement element = getDriver().findElement(
-                By.className("v-calendar-spacer"));
+        WebElement element = getDriver()
+                .findElement(By.className("v-calendar-spacer"));
         performAction(element);
 
         checkEventSourceIsCalendar();
@@ -50,8 +50,8 @@ public class CalendarActionEventSourceTest extends PrivateTB3Configuration {
         openTestURL();
 
         // perform action on calendar event
-        WebElement element = getDriver().findElement(
-                By.className("v-calendar-event"));
+        WebElement element = getDriver()
+                .findElement(By.className("v-calendar-event"));
         performAction(element);
 
         checkEventSourceIsCalendar();
@@ -60,16 +60,16 @@ public class CalendarActionEventSourceTest extends PrivateTB3Configuration {
     private void performAction(WebElement element) {
         // right click
         new Actions(getDriver()).contextClick(element).perform();
-        WebElement menuItem = getDriver().findElement(
-                By.className("gwt-MenuItem"));
+        WebElement menuItem = getDriver()
+                .findElement(By.className("gwt-MenuItem"));
         menuItem.click();
     }
 
     private void checkEventSourceIsCalendar() {
         String calendarObject = getDriver().findElement(By.id("calendarlabel"))
                 .getText();
-        String actionSourceObject = getDriver().findElement(
-                By.id("senderlabel")).getText();
+        String actionSourceObject = getDriver()
+                .findElement(By.id("senderlabel")).getText();
         Assert.assertEquals(
                 "Calendar action event source must be the calendar itself",
                 calendarObject, actionSourceObject);

@@ -136,13 +136,13 @@ public class GridEditorTest {
     public void testEditItem() throws Exception {
         startEdit();
         assertEquals(ITEM_ID, grid.getEditedItemId());
-        assertEquals(getEditedItem(), grid.getEditorFieldGroup()
-                .getItemDataSource());
+        assertEquals(getEditedItem(),
+                grid.getEditorFieldGroup().getItemDataSource());
 
-        assertEquals(DEFAULT_NAME, grid.getColumn(PROPERTY_NAME)
-                .getEditorField().getValue());
-        assertEquals(String.valueOf(DEFAULT_AGE), grid.getColumn(PROPERTY_AGE)
-                .getEditorField().getValue());
+        assertEquals(DEFAULT_NAME,
+                grid.getColumn(PROPERTY_NAME).getEditorField().getValue());
+        assertEquals(String.valueOf(DEFAULT_AGE),
+                grid.getColumn(PROPERTY_AGE).getEditorField().getValue());
     }
 
     @Test
@@ -171,7 +171,8 @@ public class GridEditorTest {
             // Manual fail instead of @Test(expected=...) to check it is
             // saveEditor that fails and not setValue
             grid.saveEditor();
-            Assert.fail("CommitException expected when saving an invalid field value");
+            Assert.fail(
+                    "CommitException expected when saving an invalid field value");
         } catch (CommitException e) {
             // expected
         }

@@ -44,8 +44,8 @@ public class MenuBarsWithNesting extends AbstractTestUI {
     public final static String[] itemNames = { "Icon item", "Arrow down",
             "Arrow up", "Warning" };
     private final static Resource[] itemIcons = {
-            new ThemeResource("window/img/restore.png"),
-            FontAwesome.ARROW_DOWN, FontAwesome.ARROW_UP, FontAwesome.WARNING };
+            new ThemeResource("window/img/restore.png"), FontAwesome.ARROW_DOWN,
+            FontAwesome.ARROW_UP, FontAwesome.WARNING };
 
     // The last menu item is nested with the following submenu items.
     public final static String[] nestedItemnames = { "No icon", "Font icon",

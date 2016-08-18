@@ -27,15 +27,18 @@ public class EnableState extends AbstractTestCase {
         enable.setImmediate(true);
 
         CheckBox caption = new CheckBox("Toggle button caption", true);
-        caption.addValueChangeListener(event -> button.setCaption(button.getCaption() + "+"));
+        caption.addValueChangeListener(
+                event -> button.setCaption(button.getCaption() + "+"));
         caption.setImmediate(true);
 
         CheckBox visible = new CheckBox("Toggle panel visibility", true);
-        visible.addValueChangeListener(event -> panel.setVisible(event.getValue()));
+        visible.addValueChangeListener(
+                event -> panel.setVisible(event.getValue()));
         visible.setImmediate(true);
 
         CheckBox panelEnable = new CheckBox("Toggle panel enabled", true);
-        panelEnable.addValueChangeListener(event -> panel.setEnabled(event.getValue()));
+        panelEnable.addValueChangeListener(
+                event -> panel.setEnabled(event.getValue()));
         panelEnable.setImmediate(true);
 
         mainWindow.addComponent(enable);

@@ -27,8 +27,8 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 
-public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
-        Focusable {
+public class VPanel extends SimplePanel
+        implements ShortcutActionHandlerOwner, Focusable {
 
     public static final String CLASSNAME = "v-panel";
 
@@ -175,8 +175,8 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
                     "scrollTop");
             int newscrollLeft = DOM.getElementPropertyInt(contentNode,
                     "scrollLeft");
-            if (client != null
-                    && (newscrollLeft != scrollLeft || newscrollTop != scrollTop)) {
+            if (client != null && (newscrollLeft != scrollLeft
+                    || newscrollTop != scrollTop)) {
                 scrollLeft = newscrollLeft;
                 scrollTop = newscrollTop;
                 client.updateVariable(id, "scrollTop", scrollTop, false);

@@ -67,8 +67,8 @@ public class WidgetSet {
              * let the auto generated code instantiate this type
              */
             try {
-                ServerConnector connector = (ServerConnector) TypeData.getType(
-                        classType).createInstance();
+                ServerConnector connector = (ServerConnector) TypeData
+                        .getType(classType).createInstance();
                 if (connector instanceof HasJavaScriptConnectorHelper) {
                     ((HasJavaScriptConnectorHelper) connector)
                             .getJavascriptConnectorHelper().setTag(tag);
@@ -78,8 +78,7 @@ public class WidgetSet {
             } catch (NoDataException e) {
                 Profiler.leave("WidgetSet.createConnector");
                 throw new IllegalStateException(
-                        "There is no information about "
-                                + classType
+                        "There is no information about " + classType
                                 + ". Did you remember to compile the right widgetset?",
                         e);
             }
@@ -127,10 +126,9 @@ public class WidgetSet {
         } while (bundleName == null && t != null);
 
         if (bundleName != null && !loader.isBundleLoaded(bundleName)) {
-            getLogger().info(
-                    "Loading bundle " + bundleName
-                            + " to be able to render server side class "
-                            + serverSideClassName);
+            getLogger().info("Loading bundle " + bundleName
+                    + " to be able to render server side class "
+                    + serverSideClassName);
             ApplicationConfiguration.startDependencyLoading();
             loader.loadBundle(bundleName, new BundleLoadCallback() {
                 @Override

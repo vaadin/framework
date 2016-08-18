@@ -104,8 +104,8 @@ public class PerformanceTestIndexedContainerTest {
     private void checkMedian(int items, Collection<Long> times,
             String methodName, long threshold) {
         long median = median(times);
-        System.out.println(methodName + " timings (ms) for " + items
-                + " items: " + times);
+        System.out.println(
+                methodName + " timings (ms) for " + items + " items: " + times);
         Assert.assertTrue(methodName + " too slow, median time " + median
                 + "ms for " + items + " items", median <= threshold);
     }

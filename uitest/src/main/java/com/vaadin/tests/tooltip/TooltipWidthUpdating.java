@@ -30,7 +30,8 @@ public class TooltipWidthUpdating extends AbstractTestUI {
         getTooltipConfiguration().setMaxWidth(MAX_WIDTH);
         getTooltipConfiguration().setCloseTimeout(200);
 
-        NativeButton componentWithLongTooltip = new NativeButton("Long tooltip");
+        NativeButton componentWithLongTooltip = new NativeButton(
+                "Long tooltip");
         componentWithLongTooltip.setId("longTooltip");
         componentWithLongTooltip.setDescription(LONG_TOOLTIP_TEXT);
 

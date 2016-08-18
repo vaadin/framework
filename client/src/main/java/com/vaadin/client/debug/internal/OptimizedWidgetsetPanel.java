@@ -95,8 +95,8 @@ public class OptimizedWidgetsetPanel extends FlowPanel {
             tag++;
             if (tag > 10000) {
                 // Sanity check
-                getLogger()
-                        .severe("Search for used connector classes was forcefully terminated");
+                getLogger().severe(
+                        "Search for used connector classes was forcefully terminated");
                 break;
             }
         }

@@ -49,8 +49,7 @@ public class PopupViewDeclarativeTest extends DeclarativeTestBase<PopupView> {
         component.setPopupVisible(true);
         // hide-on-mouse-out is true by default. not seen in design
         String design = "<vaadin-popup-view popup-visible>" //
-                + "Click <u>here</u> to open"
-                + "<popup-content>"
+                + "Click <u>here</u> to open" + "<popup-content>"
                 + new DesignContext().createElement(verticalLayout)
                 + "</popup-content>" //
                 + "</vaadin-popup-view>";
@@ -64,8 +63,7 @@ public class PopupViewDeclarativeTest extends DeclarativeTestBase<PopupView> {
         PopupView component = new PopupView("Click Me!", label);
         component.setHideOnMouseOut(false);
         String design = "<vaadin-popup-view hide-on-mouse-out='false'>" //
-                + "Click Me!"
-                + "<popup-content>"
+                + "Click Me!" + "<popup-content>"
                 + new DesignContext().createElement(label) + "</popup-content>" //
                 + "</vaadin-popup-view>";
         testWrite(design, component);

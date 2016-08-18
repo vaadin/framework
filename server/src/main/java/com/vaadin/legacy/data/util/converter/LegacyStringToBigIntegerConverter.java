@@ -35,8 +35,8 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.4
  */
-public class LegacyStringToBigIntegerConverter extends
-        LegacyAbstractStringToNumberConverter<BigInteger> {
+public class LegacyStringToBigIntegerConverter
+        extends LegacyAbstractStringToNumberConverter<BigInteger> {
 
     @Override
     protected NumberFormat getFormat(Locale locale) {

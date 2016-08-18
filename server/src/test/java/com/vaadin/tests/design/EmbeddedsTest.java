@@ -85,8 +85,8 @@ public class EmbeddedsTest {
         ae.setStandby("foobar");
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         Design.write(ae, bos);
-        Flash result = (Flash) Design.read(new ByteArrayInputStream(bos
-                .toByteArray()));
+        Flash result = (Flash) Design
+                .read(new ByteArrayInputStream(bos.toByteArray()));
         assertTrue(equals((ExternalResource) ae.getSource(),
                 (ExternalResource) result.getSource()));
         assertEquals(ae.getAlternateText(), result.getAlternateText());

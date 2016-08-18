@@ -77,11 +77,12 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
         }
 
         @Override
-        public Object generateCell(Table source, Object itemId, Object columnId) {
+        public Object generateCell(Table source, Object itemId,
+                Object columnId) {
             if (counter++ % brokenInterval == 0
                     && Boolean.TRUE.equals(brokenGenerator.getValue())) {
-                throw new IllegalArgumentException("Broken generator for "
-                        + itemId + "/" + columnId);
+                throw new IllegalArgumentException(
+                        "Broken generator for " + itemId + "/" + columnId);
             } else {
                 return "Generated " + itemId + "/" + columnId;
             }
@@ -136,9 +137,9 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
                                     Table table = ((CacheUpdateException) t)
                                             .getTable();
                                     table.removeAllItems();
-                                    Notification
-                                            .show("Problem updating table. Please try again later",
-                                                    Notification.Type.ERROR_MESSAGE);
+                                    Notification.show(
+                                            "Problem updating table. Please try again later",
+                                            Notification.Type.ERROR_MESSAGE);
                                 }
                             }
                         }
@@ -158,8 +159,8 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
         for (int i = 1; i <= rows; i++) {
             Item item = container.addItem("item" + i);
             for (int j = 1; j <= cols; j++) {
-                item.getItemProperty("prop" + j).setValue(
-                        "item" + i + "/prop" + j);
+                item.getItemProperty("prop" + j)
+                        .setValue("item" + i + "/prop" + j);
             }
         }
         return container;

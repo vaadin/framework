@@ -118,15 +118,15 @@ public class ServerRpcQueue {
      */
     public void add(MethodInvocation invocation, boolean lastOnly) {
         if (!connection.isApplicationRunning()) {
-            getLogger()
-                    .warning(
-                            "Trying to invoke method on not yet started or stopped application");
+            getLogger().warning(
+                    "Trying to invoke method on not yet started or stopped application");
             return;
         }
         String tag;
         if (lastOnly) {
             tag = invocation.getLastOnlyTag();
-            assert !tag.matches("\\d+") : "getLastOnlyTag value must have at least one non-digit character";
+            assert !tag.matches(
+                    "\\d+") : "getLastOnlyTag value must have at least one non-digit character";
             pendingInvocations.remove(tag);
         } else {
             tag = Integer.toString(lastInvocationTag++);
@@ -255,9 +255,8 @@ public class ServerRpcQueue {
         for (MethodInvocation invocation : getAll()) {
             String connectorId = invocation.getConnectorId();
             if (!connectorExists(connectorId)) {
-                getLogger().info(
-                        "Ignoring RPC for removed connector: " + connectorId
-                                + ": " + invocation.toString());
+                getLogger().info("Ignoring RPC for removed connector: "
+                        + connectorId + ": " + invocation.toString());
                 continue;
             }
 
@@ -275,8 +274,8 @@ public class ServerRpcQueue {
                     Method method = type.getMethod(invocation.getMethodName());
                     parameterTypes = method.getParameterTypes();
                 } catch (NoDataException e) {
-                    throw new RuntimeException("No type data for "
-                            + invocation.toString(), e);
+                    throw new RuntimeException(
+                            "No type data for " + invocation.toString(), e);
                 }
             }
 
@@ -334,8 +333,8 @@ public class ServerRpcQueue {
      *         otherwise
      */
     public static boolean isLegacyVariableChange(MethodInvocation invocation) {
-        return ApplicationConstants.UPDATE_VARIABLE_METHOD.equals(invocation
-                .getInterfaceName())
+        return ApplicationConstants.UPDATE_VARIABLE_METHOD
+                .equals(invocation.getInterfaceName())
                 && ApplicationConstants.UPDATE_VARIABLE_METHOD
                         .equals(invocation.getMethodName());
     }

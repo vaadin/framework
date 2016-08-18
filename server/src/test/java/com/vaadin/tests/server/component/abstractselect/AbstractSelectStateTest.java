@@ -31,8 +31,8 @@ public class AbstractSelectStateTest {
     public void getState_selectHasCustomState() {
         TestSelect select = new TestSelect();
         AbstractSelectState state = select.getState();
-        Assert.assertEquals("Unexpected state class",
-                AbstractSelectState.class, state.getClass());
+        Assert.assertEquals("Unexpected state class", AbstractSelectState.class,
+                state.getClass());
     }
 
     @Test

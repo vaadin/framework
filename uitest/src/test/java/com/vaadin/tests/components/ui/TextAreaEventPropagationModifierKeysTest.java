@@ -49,7 +49,8 @@ public class TextAreaEventPropagationModifierKeysTest extends MultiBrowserTest {
     }
 
     @Test
-    public void textAreaCtrlEnterEventPropagation() throws InterruptedException {
+    public void textAreaCtrlEnterEventPropagation()
+            throws InterruptedException {
         openTestURL();
 
         WebElement textArea = $(TextAreaElement.class).first();

@@ -42,8 +42,8 @@ public class GridColumnAddingAndRemovingTest {
     public void testAddColumn() {
         grid.addColumn("foo");
 
-        Property<?> property = container.getContainerProperty(
-                container.firstItemId(), "foo");
+        Property<?> property = container
+                .getContainerProperty(container.firstItemId(), "foo");
         assertEquals(property.getType(), String.class);
     }
 
@@ -59,8 +59,8 @@ public class GridColumnAddingAndRemovingTest {
         grid.removeColumn("foo");
 
         // Removing a column, doesn't remove the property
-        Property<?> property = container.getContainerProperty(
-                container.firstItemId(), "foo");
+        Property<?> property = container
+                .getContainerProperty(container.firstItemId(), "foo");
         assertEquals(property.getType(), String.class);
         grid.addColumn("foo");
     }
@@ -70,8 +70,8 @@ public class GridColumnAddingAndRemovingTest {
         grid.addColumn("bar", Integer.class);
         grid.addColumn("baz", Double.class);
 
-        Property<?> property = container.getContainerProperty(
-                container.firstItemId(), "bar");
+        Property<?> property = container
+                .getContainerProperty(container.firstItemId(), "bar");
         assertEquals(property.getType(), Integer.class);
         assertEquals(null, property.getValue());
         property = container.getContainerProperty(container.firstItemId(),
@@ -126,8 +126,8 @@ public class GridColumnAddingAndRemovingTest {
     @Test
     public void testAddBooleanColumnProperty() {
         grid.addColumn("foo", Boolean.class);
-        Property<?> property = container.getContainerProperty(
-                container.firstItemId(), "foo");
+        Property<?> property = container
+                .getContainerProperty(container.firstItemId(), "foo");
         assertEquals(property.getType(), Boolean.class);
         assertEquals(property.getValue(), null);
     }

@@ -39,8 +39,8 @@ import com.vaadin.client.Focusable;
  * @author Vaadin Ltd.
  * 
  */
-public class FocusableComplexPanel extends ComplexPanel implements
-        HasFocusHandlers, HasBlurHandlers, HasKeyDownHandlers,
+public class FocusableComplexPanel extends ComplexPanel
+        implements HasFocusHandlers, HasBlurHandlers, HasKeyDownHandlers,
         HasKeyPressHandlers, Focusable {
 
     protected void makeFocusable() {

@@ -25,7 +25,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 
 @Widgetset(TestingWidgetSet.NAME)
-public class GridLayoutFractionalSizeAndAlignment extends AbstractTestUIWithLog {
+public class GridLayoutFractionalSizeAndAlignment
+        extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {

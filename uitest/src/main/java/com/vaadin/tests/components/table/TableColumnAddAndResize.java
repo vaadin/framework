@@ -27,15 +27,11 @@ public class TableColumnAddAndResize extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        String people[][] = {
-                { "Galileo", "Liked to go around the Sun" },
+        String people[][] = { { "Galileo", "Liked to go around the Sun" },
                 { "Monnier", "Liked star charts" },
-                { "VÃ€isÃ€lÃ€", "Liked optics" },
-                { "Oterma", "Liked comets" },
-                {
-                        "Valtaoja",
-                        "Likes cosmology and still "
-                                + "lives unlike the others above" }, };
+                { "VÃ€isÃ€lÃ€", "Liked optics" }, { "Oterma", "Liked comets" },
+                { "Valtaoja", "Likes cosmology and still "
+                        + "lives unlike the others above" }, };
 
         VerticalLayout content = new VerticalLayout();
 

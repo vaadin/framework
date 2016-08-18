@@ -160,8 +160,8 @@ public abstract class VOptionGroupBase extends Composite implements Field,
             client.updateVariable(paintableId, "selected", getSelectedItems(),
                     immediate);
         } else {
-            client.updateVariable(paintableId, "selected", new String[] { ""
-                    + getSelectedItem() }, immediate);
+            client.updateVariable(paintableId, "selected",
+                    new String[] { "" + getSelectedItem() }, immediate);
         }
     }
 

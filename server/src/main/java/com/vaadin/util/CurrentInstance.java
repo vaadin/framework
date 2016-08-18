@@ -134,7 +134,8 @@ public class CurrentInstance implements Serializable {
         }
     }
 
-    private static void removeStaleInstances(Map<Class<?>, CurrentInstance> map) {
+    private static void removeStaleInstances(
+            Map<Class<?>, CurrentInstance> map) {
         for (Iterator<Entry<Class<?>, CurrentInstance>> iterator = map
                 .entrySet().iterator(); iterator.hasNext();) {
             Entry<Class<?>, CurrentInstance> entry = iterator.next();
@@ -203,14 +204,12 @@ public class CurrentInstance implements Serializable {
                 instances.set(map);
             }
 
-            previousInstance = map.put(type, new CurrentInstance(instance,
-                    inheritable));
+            previousInstance = map.put(type,
+                    new CurrentInstance(instance, inheritable));
             if (previousInstance != null) {
                 assert previousInstance.inheritable == inheritable : "Inheritable status mismatch for "
-                        + type
-                        + " (previous was "
-                        + previousInstance.inheritable
-                        + ", new is "
+                        + type + " (previous was "
+                        + previousInstance.inheritable + ", new is "
                         + inheritable + ")";
             }
         }

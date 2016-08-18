@@ -48,8 +48,8 @@ import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.VerticalLayout;
 
-public class TestForStyledUpload extends LegacyApplication implements
-        Upload.FinishedListener, FailedListener, SucceededListener,
+public class TestForStyledUpload extends LegacyApplication
+        implements Upload.FinishedListener, FailedListener, SucceededListener,
         StartedListener {
 
     Layout main = new VerticalLayout();
@@ -89,8 +89,8 @@ public class TestForStyledUpload extends LegacyApplication implements
 
                 refreshMemUsage();
 
-                transferred.setValue("Transferred " + readBytes + " of "
-                        + contentLenght);
+                transferred.setValue(
+                        "Transferred " + readBytes + " of " + contentLenght);
             }
 
         });
@@ -165,8 +165,8 @@ public class TestForStyledUpload extends LegacyApplication implements
             sb.append("/");
             sb.append(up.getUploadSize());
             sb.append(" ");
-            sb.append(Math.round(100 * up.getBytesRead()
-                    / (double) up.getUploadSize()));
+            sb.append(Math.round(
+                    100 * up.getBytesRead() / (double) up.getUploadSize()));
             sb.append("%");
         } else {
             sb.append("Idle");
@@ -180,26 +180,28 @@ public class TestForStyledUpload extends LegacyApplication implements
         statusLayout.removeAllComponents();
         final InputStream stream = buffer.getStream();
         if (stream == null) {
-            statusLayout.addComponent(new Label(
-                    "Upload finished, but output buffer is null!!"));
+            statusLayout.addComponent(
+                    new Label("Upload finished, but output buffer is null!!"));
         } else {
-            statusLayout.addComponent(new Label("<b>Name:</b> "
-                    + event.getFilename(), ContentMode.HTML));
-            statusLayout.addComponent(new Label("<b>Mimetype:</b> "
-                    + event.getMIMEType(), ContentMode.HTML));
-            statusLayout.addComponent(new Label("<b>Size:</b> "
-                    + event.getLength() + " bytes.", ContentMode.HTML));
+            statusLayout.addComponent(new Label(
+                    "<b>Name:</b> " + event.getFilename(), ContentMode.HTML));
+            statusLayout.addComponent(
+                    new Label("<b>Mimetype:</b> " + event.getMIMEType(),
+                            ContentMode.HTML));
+            statusLayout.addComponent(
+                    new Label("<b>Size:</b> " + event.getLength() + " bytes.",
+                            ContentMode.HTML));
 
-            statusLayout.addComponent(new Link("Download "
-                    + buffer.getFileName(), new StreamResource(buffer, buffer
-                    .getFileName())));
+            statusLayout
+                    .addComponent(new Link("Download " + buffer.getFileName(),
+                            new StreamResource(buffer, buffer.getFileName())));
 
             status.setVisible(true);
         }
     }
 
-    public interface Buffer extends StreamResource.StreamSource,
-            Upload.Receiver {
+    public interface Buffer
+            extends StreamResource.StreamSource, Upload.Receiver {
 
         String getFileName();
     }

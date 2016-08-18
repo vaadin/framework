@@ -35,8 +35,8 @@ import com.vaadin.ui.VerticalLayout;
  * 
  * @author Vaadin Ltd.
  */
-public class TestForMultipleStyleNames extends CustomComponent implements
-        ValueChangeListener {
+public class TestForMultipleStyleNames extends CustomComponent
+        implements ValueChangeListener {
 
     private final VerticalLayout main = new VerticalLayout();
 
@@ -53,8 +53,8 @@ public class TestForMultipleStyleNames extends CustomComponent implements
 
     public void createNewView() {
         main.removeAllComponents();
-        main.addComponent(new Label(
-                "TK5 supports multiple stylenames for components."));
+        main.addComponent(
+                new Label("TK5 supports multiple stylenames for components."));
         main.addComponent(new Label("Note you need to add Theme under"
                 + " WebContent/VAADIN/Themes/mytheme"
                 + " in order to see actual visible results"
@@ -91,7 +91,8 @@ public class TestForMultipleStyleNames extends CustomComponent implements
 
         final Collection<?> styles = (Collection<?>) s.getValue();
 
-        for (final Iterator<?> iterator = styles.iterator(); iterator.hasNext();) {
+        for (final Iterator<?> iterator = styles.iterator(); iterator
+                .hasNext();) {
             final String styleName = (String) iterator.next();
             if (curStyles.contains(styleName)) {
                 // already added

@@ -35,12 +35,12 @@ public class MiddleNotificationPositionTest extends MultiBrowserTest {
     public void testMiddleLeft() {
         openTestURL();
 
-        WebElement webElement = driver.findElement(By
-                .className("show-middle-left"));
+        WebElement webElement = driver
+                .findElement(By.className("show-middle-left"));
         webElement.click();
 
-        WebElement notification = driver.findElement(By
-                .className("v-Notification"));
+        WebElement notification = driver
+                .findElement(By.className("v-Notification"));
 
         Assert.assertNotNull(notification);
         String left = notification.getCssValue("left");
@@ -65,12 +65,12 @@ public class MiddleNotificationPositionTest extends MultiBrowserTest {
     public void testMiddleRight() {
         openTestURL();
 
-        WebElement webElement = driver.findElement(By
-                .className("show-middle-right"));
+        WebElement webElement = driver
+                .findElement(By.className("show-middle-right"));
         webElement.click();
 
-        WebElement notification = driver.findElement(By
-                .className("v-Notification"));
+        WebElement notification = driver
+                .findElement(By.className("v-Notification"));
 
         Assert.assertNotNull(notification);
         String right = notification.getCssValue("right");

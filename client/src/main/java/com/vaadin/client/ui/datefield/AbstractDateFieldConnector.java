@@ -81,19 +81,17 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
 
         // Remove old stylename that indicates current resolution
         setWidgetStyleName(
-                getWidget().getStylePrimaryName()
-                        + "-"
-                        + VDateField.resolutionToString(getWidget()
-                                .getCurrentResolution()), false);
+                getWidget().getStylePrimaryName() + "-" + VDateField
+                        .resolutionToString(getWidget().getCurrentResolution()),
+                false);
 
         getWidget().setCurrentResolution(newResolution);
 
         // Add stylename that indicates current resolution
         setWidgetStyleName(
-                getWidget().getStylePrimaryName()
-                        + "-"
-                        + VDateField.resolutionToString(getWidget()
-                                .getCurrentResolution()), true);
+                getWidget().getStylePrimaryName() + "-" + VDateField
+                        .resolutionToString(getWidget().getCurrentResolution()),
+                true);
 
         final Resolution resolution = getWidget().getCurrentResolution();
         final int year = uidl.getIntVariable("year");
@@ -110,9 +108,8 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
 
         // Construct new date for this datefield (only if not null)
         if (year > -1) {
-            getWidget().setCurrentDate(
-                    new Date((long) getWidget().getTime(year, month, day, hour,
-                            min, sec, 0)));
+            getWidget().setCurrentDate(new Date((long) getWidget().getTime(year,
+                    month, day, hour, min, sec, 0)));
         } else {
             getWidget().setCurrentDate(null);
         }

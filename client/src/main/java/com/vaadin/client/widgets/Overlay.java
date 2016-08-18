@@ -71,8 +71,8 @@ import com.vaadin.client.WidgetUtil;
  * </p>
  * 
  * <p>
- * Read more about the DropShadow filter from <a
- * href="http://msdn.microsoft.com/en-us/library/ms532985(v=vs.85).aspx"
+ * Read more about the DropShadow filter from
+ * <a href="http://msdn.microsoft.com/en-us/library/ms532985(v=vs.85).aspx"
  * >Microsoft Developer Network</a>
  * </p>
  * 
@@ -583,11 +583,12 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
                             public void onAnimationEnd(NativeEvent event) {
                                 String animationName = AnimationUtil
                                         .getAnimationName(event);
-                                if (animationName
-                                        .contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                                if (animationName.contains(
+                                        ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
                                     AnimationUtil.removeAnimationEndListener(
                                             getElement(), animateInListener);
-                                    removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                                    removeStyleDependentName(
+                                            ADDITIONAL_CLASSNAME_ANIMATE_IN);
                                     if (isShadowEnabled()) {
                                         shadow.removeClassName(CLASSNAME_SHADOW
                                                 + "-"
@@ -770,18 +771,12 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
         // Opera fix, part 2 (ticket #2704)
         if (BrowserInfo.get().isOpera()) {
             // We'll fix the height of all the middle elements
-            DOM.getChild(shadow, 3)
-                    .getStyle()
-                    .setPropertyPx("height",
-                            DOM.getChild(shadow, 3).getOffsetHeight());
-            DOM.getChild(shadow, 4)
-                    .getStyle()
-                    .setPropertyPx("height",
-                            DOM.getChild(shadow, 4).getOffsetHeight());
-            DOM.getChild(shadow, 5)
-                    .getStyle()
-                    .setPropertyPx("height",
-                            DOM.getChild(shadow, 5).getOffsetHeight());
+            DOM.getChild(shadow, 3).getStyle().setPropertyPx("height",
+                    DOM.getChild(shadow, 3).getOffsetHeight());
+            DOM.getChild(shadow, 4).getStyle().setPropertyPx("height",
+                    DOM.getChild(shadow, 4).getOffsetHeight());
+            DOM.getChild(shadow, 5).getStyle().setPropertyPx("height",
+                    DOM.getChild(shadow, 5).getOffsetHeight());
         }
     }
 
@@ -1019,14 +1014,13 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
         if (BrowserInfo.get().isIE8() || BrowserInfo.get().isIE9()) {
             reallyHide(autoClosed);
         } else {
-            if (animateIn
-                    && getStyleName().contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+            if (animateIn && getStyleName()
+                    .contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
                 AnimationUtil.addAnimationEndListener(getElement(),
                         new AnimationEndListener() {
                             @Override
                             public void onAnimationEnd(NativeEvent event) {
-                                if (AnimationUtil
-                                        .getAnimationName(event)
+                                if (AnimationUtil.getAnimationName(event)
                                         .contains(
                                                 ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
                                     reallyHide(autoClosed);
@@ -1046,9 +1040,8 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
                     animationName = "";
                 }
 
-                if (animateOut
-                        && animationName
-                                .contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
+                if (animateOut && animationName
+                        .contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
                     // Disable GWT PopupPanel closing animation if used
                     setAnimationEnabled(false);
 
@@ -1058,21 +1051,24 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
                                 public void onAnimationEnd(NativeEvent event) {
                                     String animationName = AnimationUtil
                                             .getAnimationName(event);
-                                    if (animationName
-                                            .contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
+                                    if (animationName.contains(
+                                            ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
                                         AnimationUtil
-                                                .removeAllAnimationEndListeners(getElement());
+                                                .removeAllAnimationEndListeners(
+                                                        getElement());
                                         // Remove both animation styles just in
                                         // case
-                                        removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_IN);
-                                        removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_OUT);
+                                        removeStyleDependentName(
+                                                ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                                        removeStyleDependentName(
+                                                ADDITIONAL_CLASSNAME_ANIMATE_OUT);
                                         if (isShadowEnabled()) {
-                                            shadow.removeClassName(CLASSNAME_SHADOW
-                                                    + "-"
-                                                    + ADDITIONAL_CLASSNAME_ANIMATE_IN);
-                                            shadow.removeClassName(CLASSNAME_SHADOW
-                                                    + "-"
-                                                    + ADDITIONAL_CLASSNAME_ANIMATE_OUT);
+                                            shadow.removeClassName(
+                                                    CLASSNAME_SHADOW + "-"
+                                                            + ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                                            shadow.removeClassName(
+                                                    CLASSNAME_SHADOW + "-"
+                                                            + ADDITIONAL_CLASSNAME_ANIMATE_OUT);
                                         }
                                         reallyHide(autoClosed);
                                     }

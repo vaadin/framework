@@ -65,12 +65,13 @@ public class VaadinServiceTest {
                 "'fireSessionDestroy' method doesn't call 'close' for the session",
                 1, vaadinSession.getCloseCount());
 
-        vaadinSession.valueUnbound(EasyMock
-                .createMock(HttpSessionBindingEvent.class));
+        vaadinSession.valueUnbound(
+                EasyMock.createMock(HttpSessionBindingEvent.class));
 
-        Assert.assertEquals("'fireSessionDestroy' method may not call 'close' "
-                + "method for closing session", 1,
-                vaadinSession.getCloseCount());
+        Assert.assertEquals(
+                "'fireSessionDestroy' method may not call 'close' "
+                        + "method for closing session",
+                1, vaadinSession.getCloseCount());
 
         Assert.assertEquals("SessionDestroyListeners not called exactly once",
                 1, listener.callCount);

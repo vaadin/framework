@@ -22,20 +22,20 @@ public class MainViewEarlierExample extends Panel implements View {
                 new ExternalResource("#!" + CountView.NAME));
         layout.addComponent(lnk);
 
-        lnk = new Link("Message: Hello", new ExternalResource("#!"
-                + MessageView.NAME + "/Hello"));
+        lnk = new Link("Message: Hello",
+                new ExternalResource("#!" + MessageView.NAME + "/Hello"));
         layout.addComponent(lnk);
 
-        lnk = new Link("Message: Bye", new ExternalResource("#!"
-                + MessageView.NAME + "/Bye/Goodbye"));
+        lnk = new Link("Message: Bye",
+                new ExternalResource("#!" + MessageView.NAME + "/Bye/Goodbye"));
         layout.addComponent(lnk);
 
-        lnk = new Link("Private message: Secret", new ExternalResource("#!"
-                + SecretView.NAME + "/Secret"));
+        lnk = new Link("Private message: Secret",
+                new ExternalResource("#!" + SecretView.NAME + "/Secret"));
         layout.addComponent(lnk);
 
-        lnk = new Link("Private message: Topsecret", new ExternalResource("#!"
-                + SecretView.NAME + "/Topsecret"));
+        lnk = new Link("Private message: Topsecret",
+                new ExternalResource("#!" + SecretView.NAME + "/Topsecret"));
         layout.addComponent(lnk);
 
         // login/logout toggle so we can test this

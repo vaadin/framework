@@ -84,8 +84,8 @@ public class NetworkSection implements Section {
         VUIDLBrowser vuidlBrowser = new VUIDLBrowser(uidl, ac);
         vuidlBrowser.addStyleName(VDebugWindow.STYLENAME + "-row");
         vuidlBrowser.setText("Response @ " + sinceReset + "ms");
-        vuidlBrowser.setTitle(VDebugWindow.getTimingTooltip(sinceStart,
-                sinceReset));
+        vuidlBrowser.setTitle(
+                VDebugWindow.getTimingTooltip(sinceStart, sinceReset));
         vuidlBrowser.close();
 
         content.add(vuidlBrowser);

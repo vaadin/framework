@@ -18,8 +18,8 @@ public class IframeIsOpenedInNonIOS extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         final Label errorLabel = new Label("No error");
         Button button = new Button("Download");
-        FileDownloader downloader = new FileDownloader(new StreamResource(
-                new StreamResource.StreamSource() {
+        FileDownloader downloader = new FileDownloader(
+                new StreamResource(new StreamResource.StreamSource() {
                     @Override
                     public InputStream getStream() {
                         return createSomeFile();

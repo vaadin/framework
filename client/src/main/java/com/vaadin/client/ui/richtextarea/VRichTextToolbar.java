@@ -181,27 +181,27 @@ public class VRichTextToolbar extends Composite {
      * We use an inner EventHandler class to avoid exposing event methods on the
      * RichTextToolbar itself.
      */
-    private class EventHandler implements ClickHandler, ChangeHandler,
-            KeyUpHandler {
+    private class EventHandler
+            implements ClickHandler, ChangeHandler, KeyUpHandler {
 
         @Override
         @SuppressWarnings("deprecation")
         public void onChange(ChangeEvent event) {
             Object sender = event.getSource();
             if (sender == backColors) {
-                basic.setBackColor(backColors.getValue(backColors
-                        .getSelectedIndex()));
+                basic.setBackColor(
+                        backColors.getValue(backColors.getSelectedIndex()));
                 backColors.setSelectedIndex(0);
             } else if (sender == foreColors) {
-                basic.setForeColor(foreColors.getValue(foreColors
-                        .getSelectedIndex()));
+                basic.setForeColor(
+                        foreColors.getValue(foreColors.getSelectedIndex()));
                 foreColors.setSelectedIndex(0);
             } else if (sender == fonts) {
                 basic.setFontName(fonts.getValue(fonts.getSelectedIndex()));
                 fonts.setSelectedIndex(0);
             } else if (sender == fontSizes) {
-                basic.setFontSize(fontSizesConstants[fontSizes
-                        .getSelectedIndex() - 1]);
+                basic.setFontSize(
+                        fontSizesConstants[fontSizes.getSelectedIndex() - 1]);
                 fontSizes.setSelectedIndex(0);
             }
         }
@@ -239,8 +239,8 @@ public class VRichTextToolbar extends Composite {
                     extended.insertImage(url);
                 }
             } else if (sender == createLink) {
-                final String url = Window
-                        .prompt("Enter a link URL:", "http://");
+                final String url = Window.prompt("Enter a link URL:",
+                        "http://");
                 if (url != null) {
                     extended.createLink(url);
                 }
@@ -339,8 +339,8 @@ public class VRichTextToolbar extends Composite {
         setStyleName("gwt-RichTextToolbar");
 
         if (basic != null) {
-            topPanel.add(bold = createToggleButton(images.bold(),
-                    strings.bold()));
+            topPanel.add(
+                    bold = createToggleButton(images.bold(), strings.bold()));
             topPanel.add(italic = createToggleButton(images.italic(),
                     strings.italic()));
             topPanel.add(underline = createToggleButton(images.underline(),

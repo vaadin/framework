@@ -83,8 +83,8 @@ public class VDragAndDropManager {
         void clearServerCallback();
     }
 
-    private final class DefaultDragAndDropEventHandler implements
-            NativePreviewHandler {
+    private final class DefaultDragAndDropEventHandler
+            implements NativePreviewHandler {
 
         @Override
         public void onPreviewNativeEvent(NativePreviewEvent event) {
@@ -110,8 +110,8 @@ public class VDragAndDropManager {
             String display = getEventHandleStrategy().updateDragImage(event,
                     managerMediator);
 
-            Element targetElement = getEventHandleStrategy().getTargetElement(
-                    event, managerMediator);
+            Element targetElement = getEventHandleStrategy()
+                    .getTargetElement(event, managerMediator);
 
             try {
                 if (handleDragImage(targetElement, event)) {
@@ -130,7 +130,8 @@ public class VDragAndDropManager {
                     managerMediator);
         }
 
-        private boolean handleDragImage(Element target, NativePreviewEvent event) {
+        private boolean handleDragImage(Element target,
+                NativePreviewEvent event) {
             if (!WidgetUtil.isTouchEvent(event.getNativeEvent())
                     && getDragElement() == null) {
                 return false;
@@ -265,8 +266,8 @@ public class VDragAndDropManager {
                 addActiveDragSourceStyleName();
                 VDropHandler dh = null;
                 if (startEvent != null) {
-                    dh = findDragTarget(Element.as(currentDrag
-                            .getCurrentGwtEvent().getEventTarget()));
+                    dh = findDragTarget(Element.as(
+                            currentDrag.getCurrentGwtEvent().getEventTarget()));
                 }
                 if (dh != null) {
                     // drag has started on a DropHandler, kind of drag over
@@ -276,8 +277,8 @@ public class VDragAndDropManager {
                 }
 
                 if (handleDragEvents) {
-                    handlerRegistration = Event
-                            .addNativePreviewHandler(defaultDragAndDropEventHandler);
+                    handlerRegistration = Event.addNativePreviewHandler(
+                            defaultDragAndDropEventHandler);
                     if (dragElement != null
                             && dragElement.getParentElement() == null) {
                         attachDragElement();
@@ -290,32 +291,30 @@ public class VDragAndDropManager {
             private void addActiveDragSourceStyleName() {
                 ComponentConnector dragSource = currentDrag.getTransferable()
                         .getDragSource();
-                dragSource.getWidget().addStyleName(
-                        ACTIVE_DRAG_SOURCE_STYLENAME);
+                dragSource.getWidget()
+                        .addStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
             }
         };
 
         final int eventType = Event.as(startEvent).getTypeInt();
-        if (handleDragEvents
-                && (eventType == Event.ONMOUSEDOWN || eventType == Event.ONTOUCHSTART)) {
+        if (handleDragEvents && (eventType == Event.ONMOUSEDOWN
+                || eventType == Event.ONTOUCHSTART)) {
             // only really start drag event on mousemove
             deferredStartRegistration = Event
                     .addNativePreviewHandler(new NativePreviewHandler() {
 
-                        private int startX = WidgetUtil
-                                .getTouchOrMouseClientX(currentDrag
-                                        .getCurrentGwtEvent());
-                        private int startY = WidgetUtil
-                                .getTouchOrMouseClientY(currentDrag
-                                        .getCurrentGwtEvent());
+                        private int startX = WidgetUtil.getTouchOrMouseClientX(
+                                currentDrag.getCurrentGwtEvent());
+                        private int startY = WidgetUtil.getTouchOrMouseClientY(
+                                currentDrag.getCurrentGwtEvent());
 
                         @Override
                         public void onPreviewNativeEvent(
                                 NativePreviewEvent event) {
                             int typeInt = event.getTypeInt();
-                            if (typeInt == -1
-                                    && event.getNativeEvent().getType()
-                                            .toLowerCase().contains("pointer")) {
+                            if (typeInt == -1 && event.getNativeEvent()
+                                    .getType().toLowerCase()
+                                    .contains("pointer")) {
                                 /*
                                  * Ignore PointerEvents since IE10 and IE11 send
                                  * also MouseEvents for backwards compatibility.
@@ -332,8 +331,8 @@ public class VDragAndDropManager {
                                         .getNativeEvent()
                                         .getCurrentEventTarget();
                                 if (Node.is(currentEventTarget)
-                                        && !dragElement.isOrHasChild(Node
-                                                .as(currentEventTarget))) {
+                                        && !dragElement.isOrHasChild(
+                                                Node.as(currentEventTarget))) {
                                     // drag image appeared below, ignore
                                     break;
                                 }
@@ -353,24 +352,26 @@ public class VDragAndDropManager {
                                         .getNativeEvent()
                                         .getRelatedEventTarget();
                                 if (Node.is(relatedEventTarget)
-                                        && !dragElement.isOrHasChild(Node
-                                                .as(relatedEventTarget))) {
+                                        && !dragElement.isOrHasChild(
+                                                Node.as(relatedEventTarget))) {
                                     // drag image appeared below, ignore
                                     break;
                                 }
                             case Event.ONMOUSEMOVE:
                             case Event.ONTOUCHMOVE:
                                 int currentX = WidgetUtil
-                                        .getTouchOrMouseClientX(event
-                                                .getNativeEvent());
+                                        .getTouchOrMouseClientX(
+                                                event.getNativeEvent());
                                 int currentY = WidgetUtil
-                                        .getTouchOrMouseClientY(event
-                                                .getNativeEvent());
-                                if (Math.abs(startX - currentX) > MINIMUM_DISTANCE_TO_START_DRAG
-                                        || Math.abs(startY - currentY) > MINIMUM_DISTANCE_TO_START_DRAG) {
+                                        .getTouchOrMouseClientY(
+                                                event.getNativeEvent());
+                                if (Math.abs(
+                                        startX - currentX) > MINIMUM_DISTANCE_TO_START_DRAG
+                                        || Math.abs(startY
+                                                - currentY) > MINIMUM_DISTANCE_TO_START_DRAG) {
                                     ensureDeferredRegistrationCleanup();
-                                    currentDrag.setCurrentGwtEvent(event
-                                            .getNativeEvent());
+                                    currentDrag.setCurrentGwtEvent(
+                                            event.getNativeEvent());
                                     startDrag.execute();
                                 }
                                 break;
@@ -488,8 +489,7 @@ public class VDragAndDropManager {
                     Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
                         @Override
                         public boolean execute() {
-                            if (!client.getMessageSender()
-                                    .hasActiveRequest()) {
+                            if (!client.getMessageSender().hasActiveRequest()) {
                                 removeActiveDragSourceStyleName(dragSource);
                                 return false;
                             }
@@ -514,8 +514,8 @@ public class VDragAndDropManager {
          * the server visit is done.
          */
         if (!sendTransferableToServer && currentDrag != null) {
-            removeActiveDragSourceStyleName(currentDrag.getTransferable()
-                    .getDragSource());
+            removeActiveDragSourceStyleName(
+                    currentDrag.getTransferable().getDragSource());
         }
 
         currentDrag = null;
@@ -541,7 +541,8 @@ public class VDragAndDropManager {
         }
     }
 
-    private void removeActiveDragSourceStyleName(ComponentConnector dragSource) {
+    private void removeActiveDragSourceStyleName(
+            ComponentConnector dragSource) {
         dragSource.getWidget().removeStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
     }
 
@@ -608,8 +609,8 @@ public class VDragAndDropManager {
         if (currentDrag.getCurrentGwtEvent() != null) {
             try {
                 MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
-                        .buildMouseEventDetails(currentDrag
-                                .getCurrentGwtEvent());
+                        .buildMouseEventDetails(
+                                currentDrag.getCurrentGwtEvent());
                 currentDrag.getDropDetails().put("mouseEvent",
                         mouseEventDetails.serialize());
             } catch (Exception e) {
@@ -700,7 +701,8 @@ public class VDragAndDropManager {
             ApplicationConnection connection = getCurrentDragApplicationConnection();
             Element dragImageParent;
             if (connection == null) {
-                VConsole.error("Could not determine ApplicationConnection for current drag operation. The drag image will likely look broken");
+                VConsole.error(
+                        "Could not determine ApplicationConnection for current drag operation. The drag image will likely look broken");
                 dragImageParent = RootPanel.getBodyElement();
             } else {
                 dragImageParent = VOverlay.getOverlayContainer(connection);

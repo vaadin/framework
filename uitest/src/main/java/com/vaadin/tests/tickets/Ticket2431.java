@@ -36,7 +36,8 @@ public class Ticket2431 extends LegacyApplication {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 if (action == a1) {
                     getMainWindow().addComponent(new Label("CTRL X hit"));
                 } else {

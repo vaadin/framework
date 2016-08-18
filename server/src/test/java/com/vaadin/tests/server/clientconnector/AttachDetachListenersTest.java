@@ -148,8 +148,8 @@ public class AttachDetachListenersTest {
         control.verify();
     }
 
-    public static class EventEquals<E extends ConnectorEvent> implements
-            IArgumentMatcher {
+    public static class EventEquals<E extends ConnectorEvent>
+            implements IArgumentMatcher {
 
         private E expected;
 

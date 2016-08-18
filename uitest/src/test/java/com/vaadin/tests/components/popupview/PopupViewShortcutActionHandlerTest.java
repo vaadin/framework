@@ -44,8 +44,8 @@ public class PopupViewShortcutActionHandlerTest extends MultiBrowserTest {
         openTestURL();
 
         getDriver().findElement(By.className("v-popupview")).click();
-        WebElement textField = getDriver().findElement(
-                By.className("v-textfield"));
+        WebElement textField = getDriver()
+                .findElement(By.className("v-textfield"));
         textField.sendKeys("a", Keys.ENTER);
 
         Assert.assertTrue(

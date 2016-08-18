@@ -65,7 +65,8 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         final LinkedList<Component> l = new LinkedList<Component>();
 
         // Adds all components
-        for (final Iterator<Component> i = getComponentIterator(); i.hasNext();) {
+        for (final Iterator<Component> i = getComponentIterator(); i
+                .hasNext();) {
             l.add(i.next());
         }
 
@@ -88,7 +89,8 @@ public abstract class AbstractComponentContainer extends AbstractComponent
             components.add(i.next());
         }
 
-        for (final Iterator<Component> i = components.iterator(); i.hasNext();) {
+        for (final Iterator<Component> i = components.iterator(); i
+                .hasNext();) {
             final Component c = i.next();
             source.removeComponent(c);
             addComponent(c);
@@ -114,7 +116,8 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     /* documented in interface */
     @Override
-    public void removeComponentAttachListener(ComponentAttachListener listener) {
+    public void removeComponentAttachListener(
+            ComponentAttachListener listener) {
         removeListener(ComponentAttachEvent.class, listener,
                 ComponentAttachListener.attachMethod);
     }
@@ -148,7 +151,8 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     /* documented in interface */
     @Override
-    public void removeComponentDetachListener(ComponentDetachListener listener) {
+    public void removeComponentDetachListener(
+            ComponentDetachListener listener) {
         removeListener(ComponentDetachEvent.class, listener,
                 ComponentDetachListener.detachMethod);
     }
@@ -241,8 +245,9 @@ public abstract class AbstractComponentContainer extends AbstractComponent
             dirtyChildren = getInvalidSizedChildren(false);
         } else if ((width == SIZE_UNDEFINED && getWidth() != SIZE_UNDEFINED)
                 || (unit == Unit.PERCENTAGE
-                        && getWidthUnits() != Unit.PERCENTAGE && !ComponentSizeValidator
-                            .parentCanDefineWidth(this))) {
+                        && getWidthUnits() != Unit.PERCENTAGE
+                        && !ComponentSizeValidator
+                                .parentCanDefineWidth(this))) {
             /*
              * relative width children may get to invalid state if width becomes
              * invalid. Width may also become invalid if units become percentage
@@ -256,15 +261,15 @@ public abstract class AbstractComponentContainer extends AbstractComponent
                 false);
     }
 
-    private void repaintChangedChildTrees(
-            Collection<Component> invalidChildren,
+    private void repaintChangedChildTrees(Collection<Component> invalidChildren,
             boolean childrenMayBecomeUndefined, boolean vertical) {
         if (childrenMayBecomeUndefined) {
             Collection<Component> previouslyInvalidComponents = invalidChildren;
             invalidChildren = getInvalidSizedChildren(vertical);
-            if (previouslyInvalidComponents != null && invalidChildren != null) {
-                for (Iterator<Component> iterator = invalidChildren.iterator(); iterator
-                        .hasNext();) {
+            if (previouslyInvalidComponents != null
+                    && invalidChildren != null) {
+                for (Iterator<Component> iterator = invalidChildren
+                        .iterator(); iterator.hasNext();) {
                     Component component = iterator.next();
                     if (previouslyInvalidComponents.contains(component)) {
                         // still invalid don't repaint
@@ -273,7 +278,8 @@ public abstract class AbstractComponentContainer extends AbstractComponent
                 }
             }
         } else if (invalidChildren != null) {
-            Collection<Component> stillInvalidChildren = getInvalidSizedChildren(vertical);
+            Collection<Component> stillInvalidChildren = getInvalidSizedChildren(
+                    vertical);
             if (stillInvalidChildren != null) {
                 for (Component component : stillInvalidChildren) {
                     // didn't become valid
@@ -286,12 +292,13 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         }
     }
 
-    private Collection<Component> getInvalidSizedChildren(final boolean vertical) {
+    private Collection<Component> getInvalidSizedChildren(
+            final boolean vertical) {
         HashSet<Component> components = null;
         for (Component component : this) {
-            boolean valid = vertical ? ComponentSizeValidator
-                    .checkHeights(component) : ComponentSizeValidator
-                    .checkWidths(component);
+            boolean valid = vertical
+                    ? ComponentSizeValidator.checkHeights(component)
+                    : ComponentSizeValidator.checkWidths(component);
             if (!valid) {
                 if (components == null) {
                     components = new HashSet<Component>();
@@ -321,8 +328,9 @@ public abstract class AbstractComponentContainer extends AbstractComponent
             dirtyChildren = getInvalidSizedChildren(true);
         } else if ((height == SIZE_UNDEFINED && getHeight() != SIZE_UNDEFINED)
                 || (unit == Unit.PERCENTAGE
-                        && getHeightUnits() != Unit.PERCENTAGE && !ComponentSizeValidator
-                            .parentCanDefineHeight(this))) {
+                        && getHeightUnits() != Unit.PERCENTAGE
+                        && !ComponentSizeValidator
+                                .parentCanDefineHeight(this))) {
             /*
              * relative height children may get to invalid state if height
              * becomes invalid. Height may also become invalid if units become

@@ -23,7 +23,8 @@ public class StringToByteConverterTest {
     @Test
     public void testReverseNullConversion() {
         Assert.assertEquals("Null value reversely was converted incorrectly",
-                null, reverseConverter.convertToModel(null, String.class, null));
+                null,
+                reverseConverter.convertToModel(null, String.class, null));
     }
 
     @Test

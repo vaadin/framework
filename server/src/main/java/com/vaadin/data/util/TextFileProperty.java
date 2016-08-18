@@ -139,8 +139,9 @@ public class TextFileProperty extends AbstractProperty<String> {
 
         try {
             FileOutputStream fos = new FileOutputStream(file);
-            OutputStreamWriter osw = charset == null ? new OutputStreamWriter(
-                    fos) : new OutputStreamWriter(fos, charset);
+            OutputStreamWriter osw = charset == null
+                    ? new OutputStreamWriter(fos)
+                    : new OutputStreamWriter(fos, charset);
             BufferedWriter w = new BufferedWriter(osw);
             w.append(newValue.toString());
             w.flush();

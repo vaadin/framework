@@ -209,8 +209,8 @@ public class AtmospherePushConnection implements PushConnection {
 
         String csrfToken = connection.getMessageHandler().getCsrfToken();
         if (!csrfToken.equals(ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE)) {
-            extraParams += "&" + ApplicationConstants.CSRF_TOKEN_PARAMETER
-                    + "=" + csrfToken;
+            extraParams += "&" + ApplicationConstants.CSRF_TOKEN_PARAMETER + "="
+                    + csrfToken;
         }
 
         // uri is needed to identify the right connection when closing
@@ -266,9 +266,8 @@ public class AtmospherePushConnection implements PushConnection {
                     "This server to client push connection should not be used to send client to server messages");
         }
         if (state == State.CONNECTED) {
-            getLogger().info(
-                    "Sending push (" + transport + ") message to server: "
-                            + message.toJson());
+            getLogger().info("Sending push (" + transport
+                    + ") message to server: " + message.toJson());
 
             if (transport.equals("websocket")) {
                 FragmentedMessage fragmented = new FragmentedMessage(
@@ -295,9 +294,8 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     protected void onReopen(AtmosphereResponse response) {
-        getLogger().info(
-                "Push connection re-established using "
-                        + response.getTransport());
+        getLogger().info("Push connection re-established using "
+                + response.getTransport());
         onConnect(response);
     }
 
@@ -362,7 +360,8 @@ public class AtmospherePushConnection implements PushConnection {
             break;
         case DISCONNECT_PENDING:
         case DISCONNECTED:
-            throw new IllegalStateException("Can not disconnect more than once");
+            throw new IllegalStateException(
+                    "Can not disconnect more than once");
         }
     }
 
@@ -374,9 +373,8 @@ public class AtmospherePushConnection implements PushConnection {
             getConnectionStateHandler().pushInvalidContent(this, message);
             return;
         } else {
-            getLogger().info(
-                    "Received push (" + getTransportType() + ") message: "
-                            + message);
+            getLogger().info("Received push (" + getTransportType()
+                    + ") message: " + message);
             connection.getMessageHandler().handleMessage(json);
         }
     }
@@ -386,10 +384,9 @@ public class AtmospherePushConnection implements PushConnection {
      * tried
      */
     protected void onTransportFailure() {
-        getLogger().warning(
-                "Push connection using primary method ("
-                        + getConfig().getTransport() + ") failed. Trying with "
-                        + getConfig().getFallbackTransport());
+        getLogger().warning("Push connection using primary method ("
+                + getConfig().getTransport() + ") failed. Trying with "
+                + getConfig().getFallbackTransport());
     }
 
     /**
@@ -529,7 +526,7 @@ public class AtmospherePushConnection implements PushConnection {
             JavaScriptObject config)
     /*-{
         var self = this;
-
+    
         config.url = uri;
         config.onOpen = $entry(function(response) {
             self.@com.vaadin.client.communication.AtmospherePushConnection::onOpen(*)(response);
@@ -555,7 +552,7 @@ public class AtmospherePushConnection implements PushConnection {
         config.onClientTimeout = $entry(function(request) {
             self.@com.vaadin.client.communication.AtmospherePushConnection::onClientTimeout(*)(request);
         });
-
+    
         return $wnd.vaadinPush.atmosphere.subscribe(config);
     }-*/;
 

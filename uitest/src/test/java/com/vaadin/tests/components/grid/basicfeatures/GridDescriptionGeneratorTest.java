@@ -39,7 +39,8 @@ public class GridDescriptionGeneratorTest extends GridBasicFeaturesTest {
 
         getGridElement().getCell(1, 1).showTooltip();
         assertTrue("Tooltip should not be present in cell (1, 1) ",
-                findElement(By.className("v-tooltip-text")).getText().isEmpty());
+                findElement(By.className("v-tooltip-text")).getText()
+                        .isEmpty());
     }
 
     @Test

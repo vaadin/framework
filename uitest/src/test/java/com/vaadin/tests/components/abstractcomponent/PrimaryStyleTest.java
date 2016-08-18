@@ -35,16 +35,16 @@ public class PrimaryStyleTest extends MultiBrowserTest {
         openTestURL();
 
         // Verify the initial class names for all three components.
-        List<WebElement> initialElements = driver.findElements(By
-                .className("initial-state"));
+        List<WebElement> initialElements = driver
+                .findElements(By.className("initial-state"));
         assertThat(initialElements, hasSize(3));
 
         // Click on a button that updates the styles.
         $(ButtonElement.class).id("update-button").click();
 
         // Verify that the class names where updated as expected.
-        List<WebElement> updatedElements = driver.findElements(By
-                .className("updated-correctly"));
+        List<WebElement> updatedElements = driver
+                .findElements(By.className("updated-correctly"));
         assertThat(updatedElements, hasSize(initialElements.size()));
 
     }

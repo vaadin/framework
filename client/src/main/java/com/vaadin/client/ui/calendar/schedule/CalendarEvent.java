@@ -282,10 +282,10 @@ public class CalendarEvent {
             if (targetDay.compareTo(getStart()) == 0) { // for first day
                 rangeInMinutesForDay = DateConstants.DAYINMINUTES
                         - (getStartTime().getTime() - getStart().getTime())
-                        / DateConstants.MINUTEINMILLIS;
+                                / DateConstants.MINUTEINMILLIS;
             } else if (targetDay.compareTo(getEnd()) == 0) { // for last day
-                rangeInMinutesForDay = (getEndTime().getTime() - getEnd()
-                        .getTime()) / DateConstants.MINUTEINMILLIS;
+                rangeInMinutesForDay = (getEndTime().getTime()
+                        - getEnd().getTime()) / DateConstants.MINUTEINMILLIS;
             } else { // for in-between days
                 rangeInMinutesForDay = DateConstants.DAYINMINUTES;
             }
@@ -306,7 +306,8 @@ public class CalendarEvent {
 
         // if difference between start and end times is more than day - of
         // course it is not one day, but several days
-        if (getEndTime().getTime() - getStartTime().getTime() > DateConstants.DAYINMILLIS) {
+        if (getEndTime().getTime()
+                - getStartTime().getTime() > DateConstants.DAYINMILLIS) {
             isSeveralDays = true;
         } else { // if difference <= day -> there can be different cases
             if (getStart().compareTo(getEnd()) != 0

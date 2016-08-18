@@ -39,10 +39,10 @@ public class RetryOnFail implements TestRule {
                         return;
                     } catch (Throwable t) {
                         caughtThrowable = t;
-                        System.err.println(String.format(
-                                "%s: run %s/%s failed.",
-                                description.getDisplayName(), i + 1,
-                                retryCount + 1));
+                        System.err
+                                .println(String.format("%s: run %s/%s failed.",
+                                        description.getDisplayName(), i + 1,
+                                        retryCount + 1));
                         System.err.println(t.getMessage());
                     }
                 }

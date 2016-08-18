@@ -97,7 +97,8 @@ public class GridColumnExpand extends AbstractTestUI {
         return layout;
     }
 
-    private Component createWidthButton(final Column column, final double width) {
+    private Component createWidthButton(final Column column,
+            final double width) {
         return new Button("" + width, new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {

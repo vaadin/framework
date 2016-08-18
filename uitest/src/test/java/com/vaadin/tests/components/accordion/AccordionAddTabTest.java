@@ -41,8 +41,10 @@ public class AccordionAddTabTest extends MultiBrowserTest {
 
         List<WebElement> panels = driver.findElements(By.className("v-panel"));
 
-        Assert.assertEquals("Found two widgets inside one tab after "
-                + "subsequent tab removal and addition", 1, panels.size());
+        Assert.assertEquals(
+                "Found two widgets inside one tab after "
+                        + "subsequent tab removal and addition",
+                1, panels.size());
     }
 
 }

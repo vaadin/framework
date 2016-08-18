@@ -11,8 +11,8 @@ public class EmbeddedClickListenerRelativeCoordinates extends TestBase {
 
     @Override
     protected void setup() {
-        Embedded e = new Embedded("Embedded caption", new ThemeResource(
-                "../runo/icons/64/ok.png"));
+        Embedded e = new Embedded("Embedded caption",
+                new ThemeResource("../runo/icons/64/ok.png"));
         final Label xLabel = new Label();
         xLabel.setId("x");
         final Label yLabel = new Label();

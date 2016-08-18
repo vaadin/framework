@@ -54,7 +54,8 @@ public class ReconnectDialogUITest extends MultiBrowserTestWithProxy {
         Assert.assertEquals("1. Hello from the server", getLogRow(0));
         disconnectProxy();
         getButton().click();
-        waitForReconnectDialogWithText("Server connection lost, trying to reconnect...");
+        waitForReconnectDialogWithText(
+                "Server connection lost, trying to reconnect...");
         connectProxy();
         waitForReconnectDialogToDisappear();
         Assert.assertEquals("2. Hello from the server", getLogRow(0));
@@ -62,7 +63,8 @@ public class ReconnectDialogUITest extends MultiBrowserTestWithProxy {
 
     private void waitForReconnectDialogWithText(final String text) {
         waitForReconnectDialogPresent();
-        final WebElement reconnectDialog = findElement(ReconnectDialogThemeTest.reconnectDialogBy);
+        final WebElement reconnectDialog = findElement(
+                ReconnectDialogThemeTest.reconnectDialogBy);
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver input) {

@@ -50,25 +50,17 @@ public class Ticket1983 extends LegacyApplication {
             dataSource.addContainerProperty(propId, String.class, null);
             dataSource.addContainerProperty(propId2, String.class, null);
             final Object itemId = dataSource.addItem();
-            dataSource
-                    .getItem(itemId)
-                    .getItemProperty(propId)
-                    .setValue(
-                            "Very long value that makes a scrollbar appear for sure");
-            dataSource
-                    .getItem(itemId)
-                    .getItemProperty(propId2)
-                    .setValue(
-                            "Very long value that makes a scrollbar appear for sure");
+            dataSource.getItem(itemId).getItemProperty(propId).setValue(
+                    "Very long value that makes a scrollbar appear for sure");
+            dataSource.getItem(itemId).getItemProperty(propId2).setValue(
+                    "Very long value that makes a scrollbar appear for sure");
 
             for (int i = 0; i < 150; i++) {
                 Object id = dataSource.addItem();
-                dataSource
-                        .getItem(id)
-                        .getItemProperty(propId)
-                        .setValue(
-                                (i == 100 ? "Very long value that makes a scrollbar appear for sure"
-                                        : "Short"));
+                dataSource.getItem(id).getItemProperty(propId)
+                        .setValue((i == 100
+                                ? "Very long value that makes a scrollbar appear for sure"
+                                : "Short"));
                 dataSource.getItem(id).getItemProperty(propId2)
                         .setValue("Short");
             }
@@ -92,14 +84,10 @@ public class Ticket1983 extends LegacyApplication {
                                 .setValue("Short value");
                         isLong = false;
                     } else {
-                        dataSource
-                                .getItem(itemId)
-                                .getItemProperty(propId)
+                        dataSource.getItem(itemId).getItemProperty(propId)
                                 .setValue(
                                         "Very long value that makes a scrollbar appear for sure");
-                        dataSource
-                                .getItem(itemId)
-                                .getItemProperty(propId2)
+                        dataSource.getItem(itemId).getItemProperty(propId2)
                                 .setValue(
                                         "Very long value that makes a scrollbar appear for sure");
                         isLong = true;

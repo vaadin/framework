@@ -27,8 +27,8 @@ public class Ticket1772 extends com.vaadin.server.LegacyApplication {
             @Override
             public void buttonClick(ClickEvent event) {
 
-                gridLayout
-                        .addComponent(new LegacyTextField("Content " + (++counter)));
+                gridLayout.addComponent(
+                        new LegacyTextField("Content " + (++counter)));
 
             }
         });

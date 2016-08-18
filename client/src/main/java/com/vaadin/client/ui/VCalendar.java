@@ -262,7 +262,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
     	e.onselectstart = function() {
     		return false;
     	}
-
+    
     	e.ondragstart = function() {
     		return false;
     	}
@@ -308,7 +308,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
         }
     }
 
-    private void addEventToMonthGrid(CalendarEvent e, boolean renderImmediately) {
+    private void addEventToMonthGrid(CalendarEvent e,
+            boolean renderImmediately) {
         Date when = e.getStart();
         Date to = e.getEnd();
         boolean eventAdded = false;
@@ -374,7 +375,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
                 && from.getDay() != to.getDay() && isMidnight(endTime)));
     }
 
-    private void updateEventSlotIndex(CalendarEvent e, List<SimpleDayCell> cells) {
+    private void updateEventSlotIndex(CalendarEvent e,
+            List<SimpleDayCell> cells) {
         if (cells.isEmpty()) {
             return;
         }
@@ -437,8 +439,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
             // Remove event
             for (int row = 0; row < monthGrid.getRowCount(); row++) {
                 for (int cell = 0; cell < monthGrid.getCellCount(row); cell++) {
-                    SimpleDayCell sdc = (SimpleDayCell) monthGrid.getWidget(
-                            row, cell);
+                    SimpleDayCell sdc = (SimpleDayCell) monthGrid.getWidget(row,
+                            cell);
                     if (sdc == null) {
                         return;
                     }
@@ -467,7 +469,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
      *            The events to sort
      * @return An array where the events has been sorted
      */
-    public CalendarEvent[] sortEventsByDuration(Collection<CalendarEvent> events) {
+    public CalendarEvent[] sortEventsByDuration(
+            Collection<CalendarEvent> events) {
         CalendarEvent[] sorted = events
                 .toArray(new CalendarEvent[events.size()]);
         Arrays.sort(sorted, getEventComparator());
@@ -649,13 +652,13 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
             monthGrid.updateCellSizes(intWidth - weekToolbar.getOffsetWidth(),
                     intHeight - nameToolbar.getOffsetHeight());
-            weekToolbar.setHeightPX((intHeight == -1) ? intHeight : intHeight
-                    - nameToolbar.getOffsetHeight());
+            weekToolbar.setHeightPX((intHeight == -1) ? intHeight
+                    : intHeight - nameToolbar.getOffsetHeight());
 
         } else if (weekGrid != null) {
-            weekGrid.setHeightPX((intHeight == -1) ? intHeight : intHeight
-                    - weeklyLongEvents.getOffsetHeight()
-                    - dayToolbar.getOffsetHeight());
+            weekGrid.setHeightPX((intHeight == -1) ? intHeight
+                    : intHeight - weeklyLongEvents.getOffsetHeight()
+                            - dayToolbar.getOffsetHeight());
         }
     }
 
@@ -669,8 +672,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
             if (monthGrid != null) {
                 monthGrid.updateCellSizes(
-                        intWidth - weekToolbar.getOffsetWidth(), intHeight
-                                - nameToolbar.getOffsetHeight());
+                        intWidth - weekToolbar.getOffsetWidth(),
+                        intHeight - nameToolbar.getOffsetHeight());
             } else if (weekGrid != null) {
                 weekGrid.setWidthPX(intWidth);
                 weeklyLongEvents.setWidthPX(weekGrid.getInternalWidth());
@@ -846,8 +849,9 @@ public class VCalendar extends Composite implements VHasDropHandler {
                 int r = 0;
                 if (!d1.equals(0L) && !d2.equals(0L)) {
                     r = d2.compareTo(d1);
-                    return (r == 0) ? ((Integer) o2.getIndex()).compareTo(o1
-                            .getIndex()) : r;
+                    return (r == 0)
+                            ? ((Integer) o2.getIndex()).compareTo(o1.getIndex())
+                            : r;
                 }
 
                 if (d2.equals(0L) && d1.equals(0L)) {
@@ -862,8 +866,9 @@ public class VCalendar extends Composite implements VHasDropHandler {
                     return -1;
                 }
                 r = d2.compareTo(d1);
-                return (r == 0) ? ((Integer) o2.getIndex()).compareTo(o1
-                        .getIndex()) : r;
+                return (r == 0)
+                        ? ((Integer) o2.getIndex()).compareTo(o1.getIndex())
+                        : r;
             }
         };
     }
@@ -878,8 +883,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
      */
     @SuppressWarnings("deprecation")
     public static boolean isMidnight(Date date) {
-        return (date.getHours() == 0 && date.getMinutes() == 0 && date
-                .getSeconds() == 0);
+        return (date.getHours() == 0 && date.getMinutes() == 0
+                && date.getSeconds() == 0);
     }
 
     /**
@@ -1102,9 +1107,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
      * @param days
      *            The day information
      */
-    public void updateMonthView(int firstDayOfWeek, Date today,
-            int daysInMonth, Collection<CalendarEvent> events,
-            List<CalendarDay> days) {
+    public void updateMonthView(int firstDayOfWeek, Date today, int daysInMonth,
+            Collection<CalendarEvent> events, List<CalendarDay> days) {
 
         // Remove all week numbers from bar
         while (outer.getWidgetCount() > 0) {

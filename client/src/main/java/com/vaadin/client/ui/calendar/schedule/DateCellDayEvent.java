@@ -49,9 +49,9 @@ import com.vaadin.shared.ui.calendar.DateConstants;
  * 
  * @since 7.1
  */
-public class DateCellDayEvent extends FocusableHTML implements
-        MouseDownHandler, MouseUpHandler, MouseMoveHandler, KeyDownHandler,
-        ContextMenuHandler, HasTooltipKey {
+public class DateCellDayEvent extends FocusableHTML
+        implements MouseDownHandler, MouseUpHandler, MouseMoveHandler,
+        KeyDownHandler, ContextMenuHandler, HasTooltipKey {
 
     private final DateCell dateCell;
     private Element caption = null;
@@ -215,20 +215,24 @@ public class DateCellDayEvent extends FocusableHTML implements
     public void onMouseDown(MouseDownEvent event) {
         startX = event.getClientX();
         startY = event.getClientY();
-        if (isDisabled() || event.getNativeButton() != NativeEvent.BUTTON_LEFT) {
+        if (isDisabled()
+                || event.getNativeButton() != NativeEvent.BUTTON_LEFT) {
             return;
         }
 
         clickTarget = Element.as(event.getNativeEvent().getEventTarget());
         mouseMoveCanceled = false;
 
-        if (weekGrid.getCalendar().isEventMoveAllowed() || clickTargetsResize()) {
+        if (weekGrid.getCalendar().isEventMoveAllowed()
+                || clickTargetsResize()) {
             moveRegistration = addMouseMoveHandler(this);
             setFocus(true);
             try {
-                startYrelative = (int) ((double) event.getRelativeY(caption) % slotHeight);
-                startXrelative = (event.getRelativeX(weekGrid.getElement()) - weekGrid.timebar
-                        .getOffsetWidth()) % getDateCellWidth();
+                startYrelative = (int) ((double) event.getRelativeY(caption)
+                        % slotHeight);
+                startXrelative = (event.getRelativeX(weekGrid.getElement())
+                        - weekGrid.timebar.getOffsetWidth())
+                        % getDateCellWidth();
             } catch (Exception e) {
                 GWT.log("Exception calculating relative start position", e);
             }
@@ -282,7 +286,8 @@ public class DateCellDayEvent extends FocusableHTML implements
         s.setZIndex(1);
         if (!clickTargetsResize()) {
             // check if mouse has moved over threshold of 3 pixels
-            boolean mouseMoved = (xDiff < -3 || xDiff > 3 || yDiff < -3 || yDiff > 3);
+            boolean mouseMoved = (xDiff < -3 || xDiff > 3 || yDiff < -3
+                    || yDiff > 3);
 
             if (!weekGrid.getCalendar().isDisabledOrReadOnly() && mouseMoved) {
                 // Event Move:
@@ -296,7 +301,8 @@ public class DateCellDayEvent extends FocusableHTML implements
                 Element e = Element.as(et);
                 if (e == caption || e == eventContent
                         || e.getParentElement() == caption) {
-                    if (weekGrid.getCalendar().getEventClickListener() != null) {
+                    if (weekGrid.getCalendar()
+                            .getEventClickListener() != null) {
                         weekGrid.getCalendar().getEventClickListener()
                                 .eventClick(calendarEvent);
                     }
@@ -608,7 +614,8 @@ public class DateCellDayEvent extends FocusableHTML implements
      */
     private boolean clickTargetsResize() {
         return weekGrid.getCalendar().isEventResizeAllowed()
-                && (clickTarget == topResizeBar || clickTarget == bottomResizeBar);
+                && (clickTarget == topResizeBar
+                        || clickTarget == bottomResizeBar);
     }
 
     private void addGlobalResizeStyle() {

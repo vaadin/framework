@@ -23,8 +23,8 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.dd.CustomDDImplementation.MyDropTarget;
 
 @Connect(MyDropTarget.class)
-public class MyDropTargetConnector extends AbstractComponentConnector implements
-        Paintable {
+public class MyDropTargetConnector extends AbstractComponentConnector
+        implements Paintable {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

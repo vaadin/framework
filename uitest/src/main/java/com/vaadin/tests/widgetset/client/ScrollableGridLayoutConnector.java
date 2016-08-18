@@ -26,7 +26,8 @@ import com.vaadin.tests.widgetset.server.ScrollableGridLayout;
 public class ScrollableGridLayoutConnector extends GridLayoutConnector
         implements MayScrollChildren {
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         super.onConnectorHierarchyChange(event);
 
         for (VGridLayout.Cell cell : getWidget().widgetToCell.values()) {

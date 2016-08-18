@@ -20,8 +20,8 @@ import static org.mockito.Mockito.spy;
 
 import com.vaadin.server.VaadinPortlet.VaadinLiferayRequest;
 
-public class VaadinLiferayRequestTest extends
-        VaadinHttpAndPortletRequestTestBase<VaadinLiferayRequest> {
+public class VaadinLiferayRequestTest
+        extends VaadinHttpAndPortletRequestTestBase<VaadinLiferayRequest> {
 
     @Override
     protected VaadinLiferayRequest createSut() {

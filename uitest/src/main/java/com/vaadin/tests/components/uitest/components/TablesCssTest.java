@@ -67,8 +67,8 @@ public class TablesCssTest extends GridLayout {
         t.setColumnReorderingAllowed(true);
         t.setColumnCollapsingAllowed(true);
         // t.setColumnHeaders(new String[] { "Country", "Code", "Icon file" });
-        t.setColumnIcon(TestUtils.iso3166_PROPERTY_NAME, new ThemeResource(
-                parent.ICON_URL));
+        t.setColumnIcon(TestUtils.iso3166_PROPERTY_NAME,
+                new ThemeResource(parent.ICON_URL));
 
         // Actions (a.k.a context menu)
         t.addActionHandler(new Action.Handler() {
@@ -82,7 +82,8 @@ public class TablesCssTest extends GridLayout {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 // We just want the actions UI.. don't care about the logic...
                 if (ACTION_MARK == action) {
                     markedRows.add(target);

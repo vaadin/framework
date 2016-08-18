@@ -36,7 +36,8 @@ public class ContextMenuSize extends AbstractTestUI {
         table.addActionHandler(new Handler() {
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
             }
 
             @Override

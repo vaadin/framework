@@ -131,8 +131,8 @@ public class CalendarBasicsTest {
         // Setting the locale should set the internal calendars locale
         assertEquals(Locale.CANADA_FRENCH, calendar.getLocale());
         java.util.Calendar c = new GregorianCalendar(Locale.CANADA_FRENCH);
-        assertEquals(c.getTimeZone().getRawOffset(), calendar
-                .getInternalCalendar().getTimeZone().getRawOffset());
+        assertEquals(c.getTimeZone().getRawOffset(),
+                calendar.getInternalCalendar().getTimeZone().getRawOffset());
     }
 
     @Test
@@ -223,8 +223,8 @@ public class CalendarBasicsTest {
         calendar.setLocale(Locale.GERMAN);
         // simulating consequences of markAsDirty
         calendar.beforeClientResponse(true);
-        assertEquals(java.util.Calendar.MONDAY, calendar.getInternalCalendar()
-                .getFirstDayOfWeek());
+        assertEquals(java.util.Calendar.MONDAY,
+                calendar.getInternalCalendar().getFirstDayOfWeek());
     }
 
     @Test
@@ -235,8 +235,8 @@ public class CalendarBasicsTest {
 
         // simulating consequences of markAsDirty
         calendar.beforeClientResponse(true);
-        assertEquals(java.util.Calendar.SUNDAY, calendar.getInternalCalendar()
-                .getFirstDayOfWeek());
+        assertEquals(java.util.Calendar.SUNDAY,
+                calendar.getInternalCalendar().getFirstDayOfWeek());
     }
 
     @Test
@@ -247,8 +247,8 @@ public class CalendarBasicsTest {
         calendar.setLocale(Locale.GERMAN);
         // simulating consequences of markAsDirty
         calendar.beforeClientResponse(true);
-        assertEquals(java.util.Calendar.SUNDAY, calendar.getInternalCalendar()
-                .getFirstDayOfWeek());
+        assertEquals(java.util.Calendar.SUNDAY,
+                calendar.getInternalCalendar().getFirstDayOfWeek());
     }
 
     @Test
@@ -259,8 +259,8 @@ public class CalendarBasicsTest {
         calendar.setFirstDayOfWeek(null);
         // simulating consequences of markAsDirty
         calendar.beforeClientResponse(true);
-        assertEquals(java.util.Calendar.MONDAY, calendar.getInternalCalendar()
-                .getFirstDayOfWeek());
+        assertEquals(java.util.Calendar.MONDAY,
+                calendar.getInternalCalendar().getFirstDayOfWeek());
     }
 
     @Test(expected = IllegalArgumentException.class)

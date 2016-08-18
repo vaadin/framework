@@ -119,9 +119,8 @@ public class VOverlay extends Overlay implements CloseHandler<PopupPanel> {
         if (ac == null) {
             // could not figure out which one we belong to, styling will
             // probably fail
-            Logger.getLogger(getClass().getSimpleName())
-                    .warning(
-                            "Could not determine ApplicationConnection for Overlay. Overlay will be attached directly to the root panel");
+            Logger.getLogger(getClass().getSimpleName()).warning(
+                    "Could not determine ApplicationConnection for Overlay. Overlay will be attached directly to the root panel");
             return super.getOverlayContainer();
         } else {
             return getOverlayContainer(ac);

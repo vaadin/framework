@@ -45,7 +45,8 @@ public class BootstrapListenerCode {
         }
 
         @Override
-        public void modifyBootstrapFragment(BootstrapFragmentResponse response) {
+        public void modifyBootstrapFragment(
+                BootstrapFragmentResponse response) {
             // Wrap the fragment in a custom div element
             Element myDiv = new Element(Tag.valueOf("div"), "");
             List<Node> nodes = response.getFragmentNodes();
@@ -66,8 +67,8 @@ class MyVaadinServlet extends VaadinServlet {
             @Override
             public void sessionInit(SessionInitEvent event)
                     throws ServiceException {
-                event.getSession().addBootstrapListener(
-                        BootstrapListenerCode.listener);
+                event.getSession()
+                        .addBootstrapListener(BootstrapListenerCode.listener);
             }
         });
     }
@@ -83,8 +84,8 @@ class MyVaadinPortlet extends VaadinPortlet {
             @Override
             public void sessionInit(SessionInitEvent event)
                     throws ServiceException {
-                event.getSession().addBootstrapListener(
-                        BootstrapListenerCode.listener);
+                event.getSession()
+                        .addBootstrapListener(BootstrapListenerCode.listener);
             }
         });
     }

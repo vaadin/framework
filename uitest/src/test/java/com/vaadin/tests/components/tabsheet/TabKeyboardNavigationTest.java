@@ -175,8 +175,8 @@ public class TabKeyboardNavigationTest extends MultiBrowserTest {
     private TestBenchElement tab(int index) {
         By by = By.className("v-tabsheet-tabitemcell");
 
-        TestBenchElement element = (TestBenchElement) getDriver().findElements(
-                by).get(index - 1);
+        TestBenchElement element = (TestBenchElement) getDriver()
+                .findElements(by).get(index - 1);
 
         String expected = "Tab " + index;
         Assert.assertEquals(expected,

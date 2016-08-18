@@ -68,16 +68,11 @@ public class ClientRpcVisitor extends TypeVisitor {
     public static void checkReturnType(TreeLogger logger, JMethod method)
             throws UnableToCompleteException {
         if (!method.getReturnType().getQualifiedSourceName().equals("void")) {
-            logger.log(
-                    Type.ERROR,
-                    "The method "
-                            + method.getEnclosingType()
-                                    .getQualifiedSourceName()
-                            + "."
-                            + method.getName()
-                            + " returns "
-                            + method.getReturnType().getQualifiedSourceName()
-                            + " but only void is supported for methods in RPC interfaces.");
+            logger.log(Type.ERROR, "The method "
+                    + method.getEnclosingType().getQualifiedSourceName() + "."
+                    + method.getName() + " returns "
+                    + method.getReturnType().getQualifiedSourceName()
+                    + " but only void is supported for methods in RPC interfaces.");
             throw new UnableToCompleteException();
         }
     }

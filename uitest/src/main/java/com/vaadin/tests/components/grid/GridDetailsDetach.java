@@ -55,8 +55,8 @@ public class GridDetailsDetach extends AbstractTestUI {
             }
         });
 
-        layout.addComponent(new Button("Reattach Grid",
-                new Button.ClickListener() {
+        layout.addComponent(
+                new Button("Reattach Grid", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         gridContainer.removeAllComponents();
@@ -87,8 +87,8 @@ public class GridDetailsDetach extends AbstractTestUI {
             public Component getDetails(RowReference rowReference) {
                 final GridExampleBean bean = (GridExampleBean) rowReference
                         .getItemId();
-                VerticalLayout layout = new VerticalLayout(new Label(
-                        "Extra data for " + bean.getName()));
+                VerticalLayout layout = new VerticalLayout(
+                        new Label("Extra data for " + bean.getName()));
                 layout.setMargin(true);
                 return layout;
             }

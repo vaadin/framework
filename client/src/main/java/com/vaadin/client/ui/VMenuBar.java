@@ -53,8 +53,8 @@ import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
 
-public class VMenuBar extends SimpleFocusablePanel implements
-        CloseHandler<PopupPanel>, KeyPressHandler, KeyDownHandler,
+public class VMenuBar extends SimpleFocusablePanel
+        implements CloseHandler<PopupPanel>, KeyPressHandler, KeyDownHandler,
         FocusHandler, SubPartAware {
 
     // The hierarchy of VMenuBar is a bit weird as VMenuBar is the Paintable,
@@ -171,8 +171,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
     }
 
     protected void updateStyleNames() {
-        String primaryStyleName = getParentMenu() != null ? getParentMenu()
-                .getStylePrimaryName() : getStylePrimaryName();
+        String primaryStyleName = getParentMenu() != null
+                ? getParentMenu().getStylePrimaryName() : getStylePrimaryName();
 
         // Reset the style name for all the items
         for (CustomMenuItem item : items) {
@@ -184,8 +184,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
             /*
              * Sub-menus should get the sub-menu prefix
              */
-            super.setStylePrimaryName(primaryStyleName
-                    + SUBMENU_CLASSNAME_PREFIX);
+            super.setStylePrimaryName(
+                    primaryStyleName + SUBMENU_CLASSNAME_PREFIX);
         }
     }
 
@@ -224,7 +224,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
             if (item.getChildCount() > 0) {
                 String bgStyle = "";
                 itemHTML.append("<span class=\"" + getStylePrimaryName()
-                        + "-submenu-indicator\"" + bgStyle + ">&#x25BA;</span>");
+                        + "-submenu-indicator\"" + bgStyle
+                        + ">&#x25BA;</span>");
             }
 
             itemHTML.append("<span class=\"" + getStylePrimaryName()
@@ -467,7 +468,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * @param item
      */
     public void itemOver(CustomMenuItem item) {
-        if ((openRootOnHover || subMenu || menuVisible) && !item.isSeparator()) {
+        if ((openRootOnHover || subMenu || menuVisible)
+                && !item.isSeparator()) {
             setSelected(item);
             if (!subMenu && openRootOnHover && !menuVisible) {
                 menuVisible = true; // start opening menus
@@ -576,11 +578,11 @@ public class VMenuBar extends SimpleFocusablePanel implements
          * Use parents primary style name if possible and remove the submenu
          * prefix if needed
          */
-        String primaryStyleName = parentMenu != null ? parentMenu
-                .getStylePrimaryName() : getStylePrimaryName();
+        String primaryStyleName = parentMenu != null
+                ? parentMenu.getStylePrimaryName() : getStylePrimaryName();
         if (subMenu) {
-            primaryStyleName = primaryStyleName.replace(
-                    SUBMENU_CLASSNAME_PREFIX, "");
+            primaryStyleName = primaryStyleName
+                    .replace(SUBMENU_CLASSNAME_PREFIX, "");
         }
         popup.setStyleName(primaryStyleName + "-popup");
 
@@ -649,8 +651,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
     private int adjustPopupHeight(int top, final int shadowSpace) {
         // Check that the popup will fit the screen
-        int availableHeight = RootPanel.getBodyElement().getOffsetHeight()
-                - top - shadowSpace;
+        int availableHeight = RootPanel.getBodyElement().getOffsetHeight() - top
+                - shadowSpace;
         int missingHeight = popup.getOffsetHeight() - availableHeight;
         if (missingHeight > 0) {
             // First move the top of the popup to get more space
@@ -922,8 +924,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
             String primaryStyleName = parentMenu.getStylePrimaryName();
             if (parentMenu.subMenu) {
-                primaryStyleName = primaryStyleName.replace(
-                        SUBMENU_CLASSNAME_PREFIX, "");
+                primaryStyleName = primaryStyleName
+                        .replace(SUBMENU_CLASSNAME_PREFIX, "");
             }
 
             String currentStyles = super.getStyleName();
@@ -1055,20 +1057,21 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 // if the selected attribute is present (either true or false),
                 // the item is selectable
                 setCheckable(true);
-                setChecked(uidl
-                        .getBooleanAttribute(MenuBarConstants.ATTRIBUTE_CHECKED));
+                setChecked(uidl.getBooleanAttribute(
+                        MenuBarConstants.ATTRIBUTE_CHECKED));
             } else {
                 setCheckable(false);
             }
 
             if (uidl.hasAttribute(MenuBarConstants.ATTRIBUTE_ITEM_STYLE)) {
-                styleName = uidl
-                        .getStringAttribute(MenuBarConstants.ATTRIBUTE_ITEM_STYLE);
+                styleName = uidl.getStringAttribute(
+                        MenuBarConstants.ATTRIBUTE_ITEM_STYLE);
             }
 
-            if (uidl.hasAttribute(MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION)) {
-                description = uidl
-                        .getStringAttribute(MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION);
+            if (uidl.hasAttribute(
+                    MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION)) {
+                description = uidl.getStringAttribute(
+                        MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION);
             }
 
             updateStyleNames();
@@ -1104,8 +1107,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
     public void iLayout(boolean iconLoadEvent) {
         // Only collapse if there is more than one item in the root menu and the
         // menu has an explicit size
-        if ((getItems().size() > 1 || (collapsedRootItems != null && collapsedRootItems
-                .getItems().size() > 0))
+        if ((getItems().size() > 1 || (collapsedRootItems != null
+                && collapsedRootItems.getItems().size() > 0))
                 && getElement().getStyle().getProperty("width") != null
                 && moreItem != null) {
 
@@ -1117,8 +1120,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 removeItem(moreItem);
             }
 
-            int availableWidth = LayoutManager.get(client).getInnerWidth(
-                    getElement());
+            int availableWidth = LayoutManager.get(client)
+                    .getInnerWidth(getElement());
 
             // Used width includes the "more" item if present
             int usedWidth = getConsumedWidth();
@@ -1135,8 +1138,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
                 while (widthReduced < widthNeeded && getItems().size() > 0) {
                     // Move last root menu item to collapsed menu
-                    CustomMenuItem collapse = getItems().get(
-                            getItems().size() - 1);
+                    CustomMenuItem collapse = getItems()
+                            .get(getItems().size() - 1);
                     widthReduced += collapse.getOffsetWidth();
                     removeItem(collapse);
                     collapsedRootItems.addItem(collapse, 0);
@@ -1587,10 +1590,11 @@ public class VMenuBar extends SimpleFocusablePanel implements
     private final String SUBPART_PREFIX = "item";
 
     @Override
-    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(
+            String subPart) {
         if (subPart.startsWith(SUBPART_PREFIX)) {
-            int index = Integer.parseInt(subPart.substring(SUBPART_PREFIX
-                    .length()));
+            int index = Integer
+                    .parseInt(subPart.substring(SUBPART_PREFIX.length()));
             CustomMenuItem item = getItems().get(index);
 
             return item.getElement();
@@ -1609,7 +1613,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 if (!item.isSeparator() && isItemNamed(item, subPart)) {
                     return item.getElement();
                 }
-                if (item.getSubMenu() != null && item.getSubMenu().menuVisible) {
+                if (item.getSubMenu() != null
+                        && item.getSubMenu().menuVisible) {
                     submenuItems.addAll(item.getSubMenu().getItems());
                 }
 
@@ -1654,7 +1659,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
     }
 
     @Override
-    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+    public String getSubPartName(
+            com.google.gwt.user.client.Element subElement) {
         if (!getElement().isOrHasChild(subElement)) {
             return null;
         }

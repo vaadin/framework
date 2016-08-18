@@ -92,7 +92,8 @@ public class ShortcutActionTest {
      * @return <b>true</b> when both actions are the same (caption, icon, and
      *         key combination).
      */
-    public static final boolean equals(ShortcutAction act, ShortcutAction other) {
+    public static final boolean equals(ShortcutAction act,
+            ShortcutAction other) {
         if (SharedUtil.equals(other.getCaption(), act.getCaption())
                 && SharedUtil.equals(other.getIcon(), act.getIcon())
                 && act.getKeyCode() == other.getKeyCode()

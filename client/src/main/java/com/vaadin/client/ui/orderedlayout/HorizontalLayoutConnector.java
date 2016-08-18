@@ -31,9 +31,8 @@ public class HorizontalLayoutConnector extends AbstractOrderedLayoutConnector {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.client.ui.orderedlayout.AbstractOrderedLayoutConnector#getWidget
-     * ()
+     * @see com.vaadin.client.ui.orderedlayout.AbstractOrderedLayoutConnector#
+     * getWidget ()
      */
     @Override
     public VHorizontalLayout getWidget() {

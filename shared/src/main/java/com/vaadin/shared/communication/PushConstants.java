@@ -39,7 +39,8 @@ public class PushConstants implements Serializable {
      * exceed {@link PushConstants#WEBSOCKET_BUFFER_SIZE} given a UTF-8 encoded
      * message.
      */
-    public static final int WEBSOCKET_FRAGMENT_SIZE = WEBSOCKET_BUFFER_SIZE / 4 - 1;
+    public static final int WEBSOCKET_FRAGMENT_SIZE = WEBSOCKET_BUFFER_SIZE / 4
+            - 1;
 
     /**
      * The character used to mark message boundaries when messages may be split

@@ -74,7 +74,8 @@ public class SharedUtil implements Serializable {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < camelCaseString.length(); i++) {
             char c = camelCaseString.charAt(i);
-            if (Character.isUpperCase(c) && isWordComplete(camelCaseString, i)) {
+            if (Character.isUpperCase(c)
+                    && isWordComplete(camelCaseString, i)) {
                 sb.append(' ');
             }
             sb.append(c);

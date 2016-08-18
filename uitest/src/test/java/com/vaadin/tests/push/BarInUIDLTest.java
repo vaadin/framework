@@ -28,20 +28,19 @@ public class BarInUIDLTest extends MultiBrowserTest {
     public void sendBarInUIDL() {
         openTestURL();
         getButton().click();
-        Assert.assertEquals(
-                "Thank you for clicking | bar",
+        Assert.assertEquals("Thank you for clicking | bar",
                 vaadinElement(
                         "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VLabel[0]")
-                        .getText());
+                                .getText());
         getButton().click();
-        Assert.assertEquals(
-                "Thank you for clicking | bar",
+        Assert.assertEquals("Thank you for clicking | bar",
                 vaadinElement(
                         "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[2]/VLabel[0]")
-                        .getText());
+                                .getText());
     }
 
     private WebElement getButton() {
-        return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VButton[0]");
+        return vaadinElement(
+                "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VButton[0]");
     }
 }

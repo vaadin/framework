@@ -31,8 +31,8 @@ public class GridInWindowResizeTest extends MultiBrowserTest {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         // Must test on a browser with animations
-        return Collections.singletonList(Browser.CHROME
-                .getDesiredCapabilities());
+        return Collections
+                .singletonList(Browser.CHROME.getDesiredCapabilities());
     }
 
     @Test

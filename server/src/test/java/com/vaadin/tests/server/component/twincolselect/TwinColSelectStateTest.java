@@ -46,8 +46,8 @@ public class TwinColSelectStateTest {
     @Test
     public void selectStateHasCustomPrimaryStyleName() {
         TwinColSelectState state = new TwinColSelectState();
-        Assert.assertEquals("Unexpected primary style name",
-                "v-select-twincol", state.primaryStyleName);
+        Assert.assertEquals("Unexpected primary style name", "v-select-twincol",
+                state.primaryStyleName);
     }
 
     private static class TestTwinColSelect extends TwinColSelect {

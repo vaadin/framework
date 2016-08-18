@@ -23,8 +23,8 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class TableRemovedQuicklySendsInvalidRpcCallsTest extends
-        MultiBrowserTest {
+public class TableRemovedQuicklySendsInvalidRpcCallsTest
+        extends MultiBrowserTest {
 
     private static final String BUTTON_ID = TableRemovedQuicklySendsInvalidRpcCalls.BUTTON_ID;
     private static final String FAILURE_CAPTION = TableRemovedQuicklySendsInvalidRpcCalls.FAILURE_CAPTION;
@@ -35,18 +35,18 @@ public class TableRemovedQuicklySendsInvalidRpcCallsTest extends
         setDebug(true);
         openTestURL();
 
-        assertFalse("Test started with the error present.", button().getText()
-                .equals(FAILURE_CAPTION));
+        assertFalse("Test started with the error present.",
+                button().getText().equals(FAILURE_CAPTION));
         assertFalse("Test jumped the gun.",
                 button().getText().equals(SUCCESS_CAPTION));
 
         button().click();
         Thread.sleep(5000);
 
-        assertFalse("Test failed after trying to trigger the error.", button()
-                .getText().equals(FAILURE_CAPTION));
-        assertTrue("Test didn't end up in correct success state.", button()
-                .getText().equals(SUCCESS_CAPTION));
+        assertFalse("Test failed after trying to trigger the error.",
+                button().getText().equals(FAILURE_CAPTION));
+        assertTrue("Test didn't end up in correct success state.",
+                button().getText().equals(SUCCESS_CAPTION));
     }
 
     private WebElement button() {

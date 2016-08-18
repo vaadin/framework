@@ -60,8 +60,8 @@ public class ComponentMapperTest {
         });
     }
 
-    private final class CustomComponentMapper extends
-            Design.DefaultComponentMapper {
+    private final class CustomComponentMapper
+            extends Design.DefaultComponentMapper {
         @Override
         public Component tagToComponent(String tag,
                 ComponentFactory componentFactory, DesignContext context) {
@@ -78,7 +78,8 @@ public class ComponentMapperTest {
         }
 
         @Override
-        public String componentToTag(Component component, DesignContext context) {
+        public String componentToTag(Component component,
+                DesignContext context) {
             if (component instanceof ComponentWithCustomTagName) {
                 ComponentWithCustomTagName withCustomTagName = (ComponentWithCustomTagName) component;
                 return withCustomTagName.tagName;
@@ -96,11 +97,12 @@ public class ComponentMapperTest {
     public void testCustomComponentMapperRead() {
         currentMapper.set(new CustomComponentMapper());
 
-        Component component = Design.read(new ByteArrayInputStream(
-                "<custom-foobar />".getBytes()));
+        Component component = Design
+                .read(new ByteArrayInputStream("<custom-foobar />".getBytes()));
 
-        Assert.assertTrue("<custom-foobar> should resolve "
-                + ComponentWithCustomTagName.class.getSimpleName(),
+        Assert.assertTrue(
+                "<custom-foobar> should resolve "
+                        + ComponentWithCustomTagName.class.getSimpleName(),
                 component instanceof ComponentWithCustomTagName);
         Assert.assertEquals("custom-foobar",
                 ((ComponentWithCustomTagName) component).tagName);

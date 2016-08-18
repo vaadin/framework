@@ -69,8 +69,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                 if (properties.containsKey(RUN_LOCALLY_PROPERTY)) {
                     System.setProperty("useLocalWebDriver", "true");
                     DesiredCapabilities localBrowser = getRunLocallyCapabilities();
-                    System.setProperty(
-                            "browsers.include",
+                    System.setProperty("browsers.include",
                             localBrowser.getBrowserName()
                                     + localBrowser.getVersion());
                 }
@@ -93,15 +92,17 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         String allowRunLocally = getProperty(ALLOW_RUN_LOCALLY_PROPERTY);
         if ((allowRunLocally == null || !allowRunLocally.equals("" + true))
                 && getClass().getAnnotation(RunLocally.class) != null) {
-            Assert.fail("@RunLocally annotation is not allowed by default in framework tests. "
-                    + "See file uitest/eclipse-run-selected-test.properties for more information.");
+            Assert.fail(
+                    "@RunLocally annotation is not allowed by default in framework tests. "
+                            + "See file uitest/eclipse-run-selected-test.properties for more information.");
         }
 
         super.setup();
     }
 
     @Override
-    public void setDesiredCapabilities(DesiredCapabilities desiredCapabilities) {
+    public void setDesiredCapabilities(
+            DesiredCapabilities desiredCapabilities) {
         super.setDesiredCapabilities(desiredCapabilities);
 
         if (BrowserUtil.isIE(desiredCapabilities)) {
@@ -123,17 +124,15 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         desiredCapabilities.setCapability("project", "Vaadin Framework");
         desiredCapabilities.setCapability("build", String.format("%s / %s",
                 getDeploymentHostname(), Calendar.getInstance().getTime()));
-        desiredCapabilities.setCapability(
-                "name",
-                String.format("%s.%s", getClass().getCanonicalName(),
-                        testName.getMethodName()));
+        desiredCapabilities.setCapability("name", String.format("%s.%s",
+                getClass().getCanonicalName(), testName.getMethodName()));
     }
 
     protected static DesiredCapabilities getRunLocallyCapabilities() {
         VaadinBrowserFactory factory = new VaadinBrowserFactory();
         try {
-            return factory.create(Browser.valueOf(properties.getProperty(
-                    RUN_LOCALLY_PROPERTY).toUpperCase()));
+            return factory.create(Browser.valueOf(properties
+                    .getProperty(RUN_LOCALLY_PROPERTY).toUpperCase()));
         } catch (Exception e) {
             System.err.println(e.getMessage());
             System.err.println("Falling back to FireFox");
@@ -154,9 +153,8 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     protected String getScreenshotDirectory() {
         String screenshotDirectory = getProperty(SCREENSHOT_DIRECTORY);
         if (screenshotDirectory == null) {
-            throw new RuntimeException(
-                    "No screenshot directory defined. Use -D"
-                            + SCREENSHOT_DIRECTORY + "=<path>");
+            throw new RuntimeException("No screenshot directory defined. Use -D"
+                    + SCREENSHOT_DIRECTORY + "=<path>");
         }
         return screenshotDirectory;
     }

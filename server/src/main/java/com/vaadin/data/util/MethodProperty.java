@@ -94,7 +94,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     private static final Object[] DEFAULT_SET_ARGS = new Object[1];
 
     /* Special serialization to handle method references */
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+    private void writeObject(java.io.ObjectOutputStream out)
+            throws IOException {
         out.defaultWriteObject();
         SerializerHelper.writeClass(out, type);
         out.writeObject(instance);
@@ -102,16 +103,16 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         out.writeObject(getArgs);
         if (setMethod != null) {
             out.writeObject(setMethod.getName());
-            SerializerHelper
-                    .writeClassArray(out, setMethod.getParameterTypes());
+            SerializerHelper.writeClassArray(out,
+                    setMethod.getParameterTypes());
         } else {
             out.writeObject(null);
             out.writeObject(null);
         }
         if (getMethod != null) {
             out.writeObject(getMethod.getName());
-            SerializerHelper
-                    .writeClassArray(out, getMethod.getParameterTypes());
+            SerializerHelper.writeClassArray(out,
+                    getMethod.getParameterTypes());
         } else {
             out.writeObject(null);
             out.writeObject(null);
@@ -119,8 +120,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     }
 
     /* Special serialization to handle method references */
-    private void readObject(java.io.ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         try {
             @SuppressWarnings("unchecked")
@@ -197,8 +198,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         try {
             getMethod = initGetterMethod(beanPropertyName, beanClass);
         } catch (final java.lang.NoSuchMethodException ignored) {
-            throw new MethodException(this, "Bean property " + beanPropertyName
-                    + " can not be found");
+            throw new MethodException(this,
+                    "Bean property " + beanPropertyName + " can not be found");
         }
 
         // In case the get method is found, resolve the type
@@ -216,9 +217,9 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         if (returnType.isPrimitive()) {
             type = (Class<T>) convertPrimitiveType(returnType);
             if (type.isPrimitive()) {
-                throw new MethodException(this, "Bean property "
-                        + beanPropertyName
-                        + " getter return type must not be void");
+                throw new MethodException(this,
+                        "Bean property " + beanPropertyName
+                                + " getter return type must not be void");
             }
         } else {
             type = (Class<T>) returnType;
@@ -332,8 +333,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         if (setMethodName != null && setArgs == null) {
             throw new IndexOutOfBoundsException("The setArgs can not be null");
         }
-        if (setMethodName != null
-                && (setArgumentIndex < 0 || setArgumentIndex >= setArgs.length)) {
+        if (setMethodName != null && (setArgumentIndex < 0
+                || setArgumentIndex >= setArgs.length)) {
             throw new IndexOutOfBoundsException(
                     "The setArgumentIndex must be >= 0 and < setArgs.length");
         }
@@ -391,8 +392,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
             }
         }
         if (found != true) {
-            throw new MethodException(this, "Could not find " + getMethodName
-                    + "-method");
+            throw new MethodException(this,
+                    "Could not find " + getMethodName + "-method");
         }
 
         // Finds set method
@@ -444,8 +445,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                 }
             }
             if (found != true) {
-                throw new MethodException(this, "Could not identify "
-                        + setMethodName + "-method");
+                throw new MethodException(this,
+                        "Could not identify " + setMethodName + "-method");
             }
         }
 
@@ -509,7 +510,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         }
 
         // Gets the return type from get method
-        Class<? extends T> convertedType = (Class<? extends T>) convertPrimitiveType(type);
+        Class<? extends T> convertedType = (Class<? extends T>) convertPrimitiveType(
+                type);
 
         this.getMethod = getMethod;
         this.setMethod = setMethod;
@@ -529,8 +531,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * @throws NoSuchMethodException
      *             if no getter found
      */
-    static Method initGetterMethod(String propertyName, final Class<?> beanClass)
-            throws NoSuchMethodException {
+    static Method initGetterMethod(String propertyName,
+            final Class<?> beanClass) throws NoSuchMethodException {
         propertyName = SharedUtil.capitalize(propertyName);
 
         Method getMethod = null;
@@ -632,8 +634,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * 
      * @param newValue
      *            the New value of the property.
-     * @throws <code>Property.ReadOnlyException</code> if the object is in
-     *         read-only mode.
+     * @throws <code>Property.ReadOnlyException</code>
+     *             if the object is in read-only mode.
      * @see #invokeSetMethod(Object)
      */
     @Override
@@ -740,8 +742,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
          * @return MethodProperty or null if not a valid MethodProperty
          */
         public MethodProperty getMethodProperty() {
-            return (property instanceof MethodProperty) ? (MethodProperty) property
-                    : null;
+            return (property instanceof MethodProperty)
+                    ? (MethodProperty) property : null;
         }
 
         /**

@@ -57,13 +57,13 @@ public class ConnectorInfoPanel extends FlowPanel {
         if (connector instanceof ComponentConnector) {
             ComponentConnector component = (ComponentConnector) connector;
 
-            ignoreProperties.addAll(Arrays.asList("caption", "description",
-                    "width", "height"));
+            ignoreProperties.addAll(
+                    Arrays.asList("caption", "description", "width", "height"));
 
             AbstractComponentState componentState = component.getState();
 
-            html += getRowHTML("Widget", component.getWidget().getClass()
-                    .getSimpleName());
+            html += getRowHTML("Widget",
+                    component.getWidget().getClass().getSimpleName());
             html += getRowHTML("Caption", componentState.caption);
             html += getRowHTML("Description", componentState.description);
             html += getRowHTML("Width", componentState.width + " (actual: "

@@ -72,8 +72,8 @@ public class HorizontalSortableCssLayoutWithWrappers extends Window {
                         }
                         next = componentIterator.next();
                     }
-                    if (dropTargetData.getData("horizontalLocation").equals(
-                            "LEFT")) {
+                    if (dropTargetData.getData("horizontalLocation")
+                            .equals("LEFT")) {
                         index--;
                         if (index < 0) {
                             index = 0;
@@ -90,7 +90,8 @@ public class HorizontalSortableCssLayoutWithWrappers extends Window {
     };
 
     public HorizontalSortableCssLayoutWithWrappers() {
-        setCaption("Horizontally sortable csslayout via (ddwrappers):Try sorting blocks by draggin them");
+        setCaption(
+                "Horizontally sortable csslayout via (ddwrappers):Try sorting blocks by draggin them");
         DragAndDropWrapper pane = new DragAndDropWrapper(cssLayout);
         setContent(pane);
         pane.setSizeFull();

@@ -41,20 +41,20 @@ public class CompareFilterTest extends AbstractFilterTestBase<Compare> {
     protected void setUp() throws Exception {
         super.setUp();
         itemNull = new PropertysetItem();
-        itemNull.addItemProperty(PROPERTY1, new ObjectProperty<String>(null,
-                String.class));
+        itemNull.addItemProperty(PROPERTY1,
+                new ObjectProperty<String>(null, String.class));
         itemEmpty = new PropertysetItem();
-        itemEmpty.addItemProperty(PROPERTY1, new ObjectProperty<String>("",
-                String.class));
+        itemEmpty.addItemProperty(PROPERTY1,
+                new ObjectProperty<String>("", String.class));
         itemA = new PropertysetItem();
-        itemA.addItemProperty(PROPERTY1, new ObjectProperty<String>("a",
-                String.class));
+        itemA.addItemProperty(PROPERTY1,
+                new ObjectProperty<String>("a", String.class));
         itemB = new PropertysetItem();
-        itemB.addItemProperty(PROPERTY1, new ObjectProperty<String>("b",
-                String.class));
+        itemB.addItemProperty(PROPERTY1,
+                new ObjectProperty<String>("b", String.class));
         itemC = new PropertysetItem();
-        itemC.addItemProperty(PROPERTY1, new ObjectProperty<String>("c",
-                String.class));
+        itemC.addItemProperty(PROPERTY1,
+                new ObjectProperty<String>("c", String.class));
     }
 
     @Override
@@ -123,14 +123,14 @@ public class CompareFilterTest extends AbstractFilterTestBase<Compare> {
         int positive = 1;
 
         Item itemNegative = new PropertysetItem();
-        itemNegative.addItemProperty(PROPERTY1, new ObjectProperty<Integer>(
-                negative, Integer.class));
+        itemNegative.addItemProperty(PROPERTY1,
+                new ObjectProperty<Integer>(negative, Integer.class));
         Item itemZero = new PropertysetItem();
-        itemZero.addItemProperty(PROPERTY1, new ObjectProperty<Integer>(zero,
-                Integer.class));
+        itemZero.addItemProperty(PROPERTY1,
+                new ObjectProperty<Integer>(zero, Integer.class));
         Item itemPositive = new PropertysetItem();
-        itemPositive.addItemProperty(PROPERTY1, new ObjectProperty<Integer>(
-                positive, Integer.class));
+        itemPositive.addItemProperty(PROPERTY1,
+                new ObjectProperty<Integer>(positive, Integer.class));
 
         Filter equalZero = new Equal(PROPERTY1, zero);
         Assert.assertFalse(equalZero.passesFilter(null, itemNegative));
@@ -167,14 +167,14 @@ public class CompareFilterTest extends AbstractFilterTestBase<Compare> {
         BigDecimal positiveScaleTwo = new BigDecimal(1).setScale(2);
 
         Item itemNegative = new PropertysetItem();
-        itemNegative.addItemProperty(PROPERTY1, new ObjectProperty<BigDecimal>(
-                negative, BigDecimal.class));
+        itemNegative.addItemProperty(PROPERTY1,
+                new ObjectProperty<BigDecimal>(negative, BigDecimal.class));
         Item itemZero = new PropertysetItem();
-        itemZero.addItemProperty(PROPERTY1, new ObjectProperty<BigDecimal>(
-                zero, BigDecimal.class));
+        itemZero.addItemProperty(PROPERTY1,
+                new ObjectProperty<BigDecimal>(zero, BigDecimal.class));
         Item itemPositive = new PropertysetItem();
-        itemPositive.addItemProperty(PROPERTY1, new ObjectProperty<BigDecimal>(
-                positive, BigDecimal.class));
+        itemPositive.addItemProperty(PROPERTY1,
+                new ObjectProperty<BigDecimal>(positive, BigDecimal.class));
         Item itemPositiveScaleTwo = new PropertysetItem();
         itemPositiveScaleTwo.addItemProperty(PROPERTY1,
                 new ObjectProperty<BigDecimal>(positiveScaleTwo,
@@ -206,8 +206,8 @@ public class CompareFilterTest extends AbstractFilterTestBase<Compare> {
         Assert.assertFalse(isNonPositive.passesFilter(null, itemPositive));
 
         Filter isPositiveScaleTwo = new Equal(PROPERTY1, positiveScaleTwo);
-        Assert.assertTrue(isPositiveScaleTwo.passesFilter(null,
-                itemPositiveScaleTwo));
+        Assert.assertTrue(
+                isPositiveScaleTwo.passesFilter(null, itemPositiveScaleTwo));
         Assert.assertTrue(isPositiveScaleTwo.passesFilter(null, itemPositive));
 
     }
@@ -221,14 +221,14 @@ public class CompareFilterTest extends AbstractFilterTestBase<Compare> {
         Date later = new Date(now.getTime() + 1);
 
         Item itemEarlier = new PropertysetItem();
-        itemEarlier.addItemProperty(PROPERTY1, new ObjectProperty<Date>(
-                earlier, Date.class));
+        itemEarlier.addItemProperty(PROPERTY1,
+                new ObjectProperty<Date>(earlier, Date.class));
         Item itemNow = new PropertysetItem();
-        itemNow.addItemProperty(PROPERTY1, new ObjectProperty<Date>(now,
-                Date.class));
+        itemNow.addItemProperty(PROPERTY1,
+                new ObjectProperty<Date>(now, Date.class));
         Item itemLater = new PropertysetItem();
-        itemLater.addItemProperty(PROPERTY1, new ObjectProperty<Date>(later,
-                Date.class));
+        itemLater.addItemProperty(PROPERTY1,
+                new ObjectProperty<Date>(later, Date.class));
 
         Filter equalNow = new Equal(PROPERTY1, now);
         Assert.assertFalse(equalNow.passesFilter(null, itemEarlier));

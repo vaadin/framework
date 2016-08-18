@@ -58,8 +58,8 @@ public class SubWindowsTextSelectionTest extends MultiBrowserTest {
 
         openTestURL();
 
-        WebElement element = driver.findElement(By
-                .className("v-window-outerheader"));
+        WebElement element = driver
+                .findElement(By.className("v-window-outerheader"));
 
         Point location = element.getLocation();
 
@@ -72,8 +72,9 @@ public class SubWindowsTextSelectionTest extends MultiBrowserTest {
                 .moveByOffset(10, 2).moveByOffset(10, 0).moveByOffset(10, 0)
                 .moveByOffset(10, 0).release().perform();
 
-        String selection = ((JavascriptExecutor) getDriver()).executeScript(
-                "return document.getSelection().toString();").toString();
+        String selection = ((JavascriptExecutor) getDriver())
+                .executeScript("return document.getSelection().toString();")
+                .toString();
 
         Assert.assertTrue("Text selection was not empty:" + selection,
                 selection.isEmpty());

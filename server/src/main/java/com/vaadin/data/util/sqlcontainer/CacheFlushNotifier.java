@@ -87,10 +87,9 @@ class CacheFlushNotifier implements Serializable {
                 /* Compare QueryDelegate types and tableName/queryString */
                 QueryDelegate wrQd = wrc.getQueryDelegate();
                 QueryDelegate qd = c.getQueryDelegate();
-                if (wrQd instanceof TableQuery
-                        && qd instanceof TableQuery
-                        && ((TableQuery) wrQd).getTableName().equals(
-                                ((TableQuery) qd).getTableName())) {
+                if (wrQd instanceof TableQuery && qd instanceof TableQuery
+                        && ((TableQuery) wrQd).getTableName()
+                                .equals(((TableQuery) qd).getTableName())) {
                     wrc.refresh();
                 } else if (wrQd instanceof FreeformQuery
                         && qd instanceof FreeformQuery

@@ -103,9 +103,9 @@ public class Ticket1966 extends LegacyApplication {
     }
 
     private Button getButton(Layout l, Alignment align) {
-        Button b = new Button("Narrow Button - "
-                + align.getHorizontalAlignment() + " - "
-                + align.getVerticalAlignment());
+        Button b = new Button(
+                "Narrow Button - " + align.getHorizontalAlignment() + " - "
+                        + align.getVerticalAlignment());
         b.setWidth("100px");
         ((AlignmentHandler) l).setComponentAlignment(b, align);
 

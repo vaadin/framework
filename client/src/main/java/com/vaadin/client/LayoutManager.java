@@ -240,9 +240,8 @@ public class LayoutManager {
         }
         layoutCounts.put(layout.getConnectorId(), count);
         if (count.intValue() > 2) {
-            getLogger().severe(
-                    Util.getConnectorString(layout) + " has been layouted "
-                            + count.intValue() + " times");
+            getLogger().severe(Util.getConnectorString(layout)
+                    + " has been layouted " + count.intValue() + " times");
         }
     }
 
@@ -321,8 +320,8 @@ public class LayoutManager {
         for (int i = 0; i < dumpLength; i++) {
             ServerConnector connector = connectorMap.getConnector(dump.get(i));
             if (connector != null) {
-                currentDependencyTree.setNeedsMeasure(
-                        (ComponentConnector) connector, true);
+                currentDependencyTree
+                        .setNeedsMeasure((ComponentConnector) connector, true);
             }
         }
         needsMeasure = FastStringSet.create();
@@ -357,23 +356,27 @@ public class LayoutManager {
                     Collection<ElementResizeListener> listeners = elementResizeListeners
                             .get(element);
                     if (listeners != null) {
-                        Profiler.enter("Layout fire resize events - listeners not null");
-                        Profiler.enter("ElementResizeListener.onElementResize copy list");
-                        ElementResizeListener[] array = listeners
-                                .toArray(new ElementResizeListener[listeners
-                                        .size()]);
-                        Profiler.leave("ElementResizeListener.onElementResize copy list");
+                        Profiler.enter(
+                                "Layout fire resize events - listeners not null");
+                        Profiler.enter(
+                                "ElementResizeListener.onElementResize copy list");
+                        ElementResizeListener[] array = listeners.toArray(
+                                new ElementResizeListener[listeners.size()]);
+                        Profiler.leave(
+                                "ElementResizeListener.onElementResize copy list");
                         ElementResizeEvent event = new ElementResizeEvent(this,
                                 element);
                         for (ElementResizeListener listener : array) {
                             try {
                                 String key = null;
                                 if (Profiler.isEnabled()) {
-                                    Profiler.enter("ElementResizeListener.onElementResize construct profiler key");
+                                    Profiler.enter(
+                                            "ElementResizeListener.onElementResize construct profiler key");
                                     key = "ElementResizeListener.onElementResize for "
                                             + listener.getClass()
                                                     .getSimpleName();
-                                    Profiler.leave("ElementResizeListener.onElementResize construct profiler key");
+                                    Profiler.leave(
+                                            "ElementResizeListener.onElementResize construct profiler key");
                                     Profiler.enter(key);
                                 }
 
@@ -386,7 +389,8 @@ public class LayoutManager {
                                         "Error in resize listener", e);
                             }
                         }
-                        Profiler.leave("Layout fire resize events - listeners not null");
+                        Profiler.leave(
+                                "Layout fire resize events - listeners not null");
                     }
                 }
                 listenersToFire.clear();
@@ -451,10 +455,9 @@ public class LayoutManager {
                                 Profiler.leave(key);
                             }
                         } catch (RuntimeException e) {
-                            getLogger()
-                                    .log(Level.SEVERE,
-                                            "Error in SimpleManagedLayout (horizontal) handling",
-                                            e);
+                            getLogger().log(Level.SEVERE,
+                                    "Error in SimpleManagedLayout (horizontal) handling",
+                                    e);
 
                         }
                         countLayout(layoutCounts, rr);
@@ -488,10 +491,9 @@ public class LayoutManager {
                                 Profiler.leave(key);
                             }
                         } catch (RuntimeException e) {
-                            getLogger()
-                                    .log(Level.SEVERE,
-                                            "Error in DirectionalManagedLayout handling",
-                                            e);
+                            getLogger().log(Level.SEVERE,
+                                    "Error in DirectionalManagedLayout handling",
+                                    e);
                         }
                         countLayout(layoutCounts, cl);
                     } else {
@@ -514,10 +516,9 @@ public class LayoutManager {
                                 Profiler.leave(key);
                             }
                         } catch (RuntimeException e) {
-                            getLogger()
-                                    .log(Level.SEVERE,
-                                            "Error in SimpleManagedLayout (vertical) handling",
-                                            e);
+                            getLogger().log(Level.SEVERE,
+                                    "Error in SimpleManagedLayout (vertical) handling",
+                                    e);
                         }
                         countLayout(layoutCounts, rr);
                     }
@@ -544,8 +545,9 @@ public class LayoutManager {
                         }
                         String connectorString = changedCids.get(i);
                         if (changedCids.length() < 10) {
-                            ServerConnector connector = ConnectorMap.get(
-                                    connection).getConnector(connectorString);
+                            ServerConnector connector = ConnectorMap
+                                    .get(connection)
+                                    .getConnector(connectorString);
                             connectorString = Util
                                     .getConnectorString(connector);
                         }
@@ -557,18 +559,17 @@ public class LayoutManager {
 
             Profiler.leave("Layout pass");
 
-            getLogger()
-                    .info("Pass " + passes + " measured "
-                            + measuredConnectorCount + " elements, fired "
-                            + firedListeners + " listeners and did "
-                            + layoutCount + " layouts.");
+            getLogger().info("Pass " + passes + " measured "
+                    + measuredConnectorCount + " elements, fired "
+                    + firedListeners + " listeners and did " + layoutCount
+                    + " layouts.");
 
             if (passes > 100) {
                 getLogger().severe(LOOP_ABORT_MESSAGE);
                 if (ApplicationConfiguration.isDebugMode()) {
-                    VNotification.createNotification(
-                            VNotification.DELAY_FOREVER,
-                            connection.getUIConnector().getWidget())
+                    VNotification
+                            .createNotification(VNotification.DELAY_FOREVER,
+                                    connection.getUIConnector().getWidget())
                             .show(LOOP_ABORT_MESSAGE, VNotification.CENTERED,
                                     "error");
                 }
@@ -601,15 +602,14 @@ public class LayoutManager {
 
         cleanMeasuredSizes();
 
-        getLogger().info(
-                "Total layout phase time: " + totalDuration.elapsedMillis()
-                        + "ms");
+        getLogger().info("Total layout phase time: "
+                + totalDuration.elapsedMillis() + "ms");
     }
 
     private void logConnectorStatus(int connectorId) {
-        currentDependencyTree
-                .logDependencyStatus((ComponentConnector) ConnectorMap.get(
-                        connection).getConnector(Integer.toString(connectorId)));
+        currentDependencyTree.logDependencyStatus(
+                (ComponentConnector) ConnectorMap.get(connection)
+                        .getConnector(Integer.toString(connectorId)));
     }
 
     private int measureConnectors(LayoutDependencyTree layoutDependencyTree,
@@ -637,12 +637,10 @@ public class LayoutManager {
                 }
 
                 if (debugLogging) {
-                    getLogger()
-                            .info("Doing overflow fix for "
-                                    + Util.getConnectorString(componentConnector)
-                                    + " in "
-                                    + Util.getConnectorString(componentConnector
-                                            .getParent()));
+                    getLogger().info("Doing overflow fix for "
+                            + Util.getConnectorString(componentConnector)
+                            + " in " + Util.getConnectorString(
+                                    componentConnector.getParent()));
                 }
                 Profiler.enter("Overflow fix apply");
 
@@ -760,9 +758,8 @@ public class LayoutManager {
             return true;
         }
         ServerConnector parent = componentConnector.getParent();
-        if (parent instanceof ComponentConnector
-                && !currentDependencyTree
-                        .noMoreChangesExpected((ComponentConnector) parent)) {
+        if (parent instanceof ComponentConnector && !currentDependencyTree
+                .noMoreChangesExpected((ComponentConnector) parent)) {
             return true;
         }
 
@@ -819,9 +816,8 @@ public class LayoutManager {
             measuredAndUpdate(element, getMeasuredSize(element, null));
         }
         Profiler.leave("LayoutManager.measureNonConenctors");
-        getLogger().info(
-                "Measured " + measuredNonConnectorElements.size()
-                        + " non connector elements");
+        getLogger().info("Measured " + measuredNonConnectorElements.size()
+                + " non connector elements");
     }
 
     private MeasureResult measuredAndUpdate(Element element,
@@ -916,9 +912,8 @@ public class LayoutManager {
      */
     public final void setNeedsHorizontalLayout(ManagedLayout layout) {
         if (isLayoutRunning()) {
-            getLogger()
-                    .warning(
-                            "setNeedsHorizontalLayout should not be run while a layout phase is in progress.");
+            getLogger().warning(
+                    "setNeedsHorizontalLayout should not be run while a layout phase is in progress.");
         }
         needsHorizontalLayout.add(layout.getConnectorId());
     }
@@ -942,9 +937,8 @@ public class LayoutManager {
      */
     public final void setNeedsVerticalLayout(ManagedLayout layout) {
         if (isLayoutRunning()) {
-            getLogger()
-                    .warning(
-                            "setNeedsVerticalLayout should not be run while a layout phase is in progress.");
+            getLogger().warning(
+                    "setNeedsVerticalLayout should not be run while a layout phase is in progress.");
         }
         needsVerticalLayout.add(layout.getConnectorId());
     }
@@ -972,9 +966,10 @@ public class LayoutManager {
      *         borders) of the element in pixels.
      */
     public final int getOuterHeight(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
-        return (int) Math.ceil(getMeasuredSize(element, nullSize)
-                .getOuterHeight());
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
+        return (int) Math
+                .ceil(getMeasuredSize(element, nullSize).getOuterHeight());
     }
 
     /**
@@ -998,7 +993,8 @@ public class LayoutManager {
      *         borders) of the element in pixels.
      */
     public final double getOuterHeightDouble(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getOuterHeight();
     }
 
@@ -1026,9 +1022,10 @@ public class LayoutManager {
      *         borders) of the element in pixels.
      */
     public final int getOuterWidth(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
-        return (int) Math.ceil(getMeasuredSize(element, nullSize)
-                .getOuterWidth());
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
+        return (int) Math
+                .ceil(getMeasuredSize(element, nullSize).getOuterWidth());
     }
 
     /**
@@ -1051,7 +1048,8 @@ public class LayoutManager {
      *         borders) of the element in pixels.
      */
     public final double getOuterWidthDouble(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getOuterWidth();
     }
 
@@ -1078,9 +1076,10 @@ public class LayoutManager {
      *         borders) of the element in pixels.
      */
     public final int getInnerHeight(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
-        return (int) Math.ceil(getMeasuredSize(element, nullSize)
-                .getInnerHeight());
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
+        return (int) Math
+                .ceil(getMeasuredSize(element, nullSize).getInnerHeight());
     }
 
     /**
@@ -1104,7 +1103,8 @@ public class LayoutManager {
      *         borders) of the element in pixels.
      */
     public final double getInnerHeightDouble(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getInnerHeight();
     }
 
@@ -1131,9 +1131,10 @@ public class LayoutManager {
      *         borders) of the element in pixels.
      */
     public final int getInnerWidth(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
-        return (int) Math.ceil(getMeasuredSize(element, nullSize)
-                .getInnerWidth());
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
+        return (int) Math
+                .ceil(getMeasuredSize(element, nullSize).getInnerWidth());
     }
 
     /**
@@ -1157,7 +1158,8 @@ public class LayoutManager {
      *         borders) of the element in pixels.
      */
     public final double getInnerWidthDouble(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getInnerWidth();
     }
 
@@ -1182,7 +1184,8 @@ public class LayoutManager {
      *         element in pixels.
      */
     public final int getBorderHeight(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getBorderHeight();
     }
 
@@ -1207,7 +1210,8 @@ public class LayoutManager {
      *         element in pixels.
      */
     public int getPaddingHeight(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getPaddingHeight();
     }
 
@@ -1232,7 +1236,8 @@ public class LayoutManager {
      *         element in pixels.
      */
     public int getBorderWidth(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getBorderWidth();
     }
 
@@ -1255,7 +1260,8 @@ public class LayoutManager {
      * @return the measured top border of the element in pixels.
      */
     public int getBorderTop(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getBorderTop();
     }
 
@@ -1278,7 +1284,8 @@ public class LayoutManager {
      * @return the measured left border of the element in pixels.
      */
     public int getBorderLeft(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getBorderLeft();
     }
 
@@ -1301,7 +1308,8 @@ public class LayoutManager {
      * @return the measured bottom border of the element in pixels.
      */
     public int getBorderBottom(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getBorderBottom();
     }
 
@@ -1324,7 +1332,8 @@ public class LayoutManager {
      * @return the measured right border of the element in pixels.
      */
     public int getBorderRight(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getBorderRight();
     }
 
@@ -1349,7 +1358,8 @@ public class LayoutManager {
      *         element in pixels.
      */
     public int getPaddingWidth(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getPaddingWidth();
     }
 
@@ -1372,7 +1382,8 @@ public class LayoutManager {
      * @return the measured top padding of the element in pixels.
      */
     public int getPaddingTop(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getPaddingTop();
     }
 
@@ -1395,7 +1406,8 @@ public class LayoutManager {
      * @return the measured left padding of the element in pixels.
      */
     public int getPaddingLeft(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getPaddingLeft();
     }
 
@@ -1418,7 +1430,8 @@ public class LayoutManager {
      * @return the measured bottom padding of the element in pixels.
      */
     public int getPaddingBottom(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getPaddingBottom();
     }
 
@@ -1441,7 +1454,8 @@ public class LayoutManager {
      * @return the measured right padding of the element in pixels.
      */
     public int getPaddingRight(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getPaddingRight();
     }
 
@@ -1464,7 +1478,8 @@ public class LayoutManager {
      * @return the measured top margin of the element in pixels.
      */
     public int getMarginTop(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getMarginTop();
     }
 
@@ -1487,7 +1502,8 @@ public class LayoutManager {
      * @return the measured right margin of the element in pixels.
      */
     public int getMarginRight(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getMarginRight();
     }
 
@@ -1510,7 +1526,8 @@ public class LayoutManager {
      * @return the measured bottom margin of the element in pixels.
      */
     public int getMarginBottom(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getMarginBottom();
     }
 
@@ -1533,7 +1550,8 @@ public class LayoutManager {
      * @return the measured left margin of the element in pixels.
      */
     public int getMarginLeft(Element element) {
-        assert needsMeasure(element) : "Getting measurement for element that is not measured";
+        assert needsMeasure(
+                element) : "Getting measurement for element that is not measured";
         return getMeasuredSize(element, nullSize).getMarginLeft();
     }
 
@@ -1594,7 +1612,8 @@ public class LayoutManager {
      *            the new outer height (including margins, borders and paddings)
      *            of the component in pixels
      */
-    public void reportOuterHeight(ComponentConnector component, int outerHeight) {
+    public void reportOuterHeight(ComponentConnector component,
+            int outerHeight) {
         Element element = component.getWidget().getElement();
         MeasuredSize measuredSize = getMeasuredSize(element);
         if (isLayoutRunning()) {
@@ -1627,8 +1646,8 @@ public class LayoutManager {
             int assignedHeight) {
         assert component.isRelativeHeight();
 
-        float percentSize = parsePercent(component.getState().height == null ? ""
-                : component.getState().height);
+        float percentSize = parsePercent(component.getState().height == null
+                ? "" : component.getState().height);
         int effectiveHeight = Math.round(assignedHeight * (percentSize / 100));
 
         reportOuterHeight(component, effectiveHeight);
@@ -1792,7 +1811,8 @@ public class LayoutManager {
 
         if (component instanceof HasComponentsConnector) {
             HasComponentsConnector hasComponents = (HasComponentsConnector) component;
-            for (ComponentConnector child : hasComponents.getChildComponents()) {
+            for (ComponentConnector child : hasComponents
+                    .getChildComponents()) {
                 setNeedsMeasureRecursively(child);
             }
         }
@@ -1820,7 +1840,8 @@ public class LayoutManager {
      *         false otherwise
      */
     public boolean isLayoutNeeded() {
-        if (!needsHorizontalLayout.isEmpty() || !needsVerticalLayout.isEmpty()) {
+        if (!needsHorizontalLayout.isEmpty()
+                || !needsVerticalLayout.isEmpty()) {
             return true;
         }
         if (!needsMeasure.isEmpty()) {

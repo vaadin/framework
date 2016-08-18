@@ -39,16 +39,16 @@ public class RowAdditionTest extends TestBase {
                 item.getItemProperty("column1").setValue("0");
             }
         }));
-        hl.addComponent(new Button("Add at position 50",
-                new Button.ClickListener() {
+        hl.addComponent(
+                new Button("Add at position 50", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         Item item = container.addItemAt(50, new Object());
                         item.getItemProperty("column1").setValue("50");
                     }
                 }));
-        hl.addComponent(new Button("Add at position 100",
-                new Button.ClickListener() {
+        hl.addComponent(
+                new Button("Add at position 100", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         Item item = container.addItemAt(100, new Object());

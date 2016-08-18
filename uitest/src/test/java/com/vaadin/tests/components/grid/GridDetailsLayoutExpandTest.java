@@ -70,7 +70,8 @@ public class GridDetailsLayoutExpandTest extends MultiBrowserTest {
 
     private void assertLabelWidth(String id, double expectedWidth) {
         // 1px leeway for calculations
-        assertThat("Unexpected label width.", (double) $(LabelElement.class)
-                .id(id).getSize().width, closeTo(expectedWidth, 1d));
+        assertThat("Unexpected label width.",
+                (double) $(LabelElement.class).id(id).getSize().width,
+                closeTo(expectedWidth, 1d));
     }
 }

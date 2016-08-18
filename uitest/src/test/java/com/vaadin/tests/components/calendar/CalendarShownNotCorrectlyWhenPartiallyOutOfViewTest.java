@@ -28,8 +28,8 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * Tests calendar via prepared screenshots 'Calendar event not shown correctly
  * when partially out of view' (#7261)
  */
-public class CalendarShownNotCorrectlyWhenPartiallyOutOfViewTest extends
-        MultiBrowserTest {
+public class CalendarShownNotCorrectlyWhenPartiallyOutOfViewTest
+        extends MultiBrowserTest {
 
     @Test
     public void testCalendar() throws InterruptedException, IOException {
@@ -43,8 +43,8 @@ public class CalendarShownNotCorrectlyWhenPartiallyOutOfViewTest extends
     }
 
     private void openWeekView() {
-        List<WebElement> elements = getDriver().findElements(
-                By.className("v-calendar-week-number"));
+        List<WebElement> elements = getDriver()
+                .findElements(By.className("v-calendar-week-number"));
 
         for (WebElement webElement : elements) {
             if (webElement.getText().equals("36")) {
@@ -55,8 +55,8 @@ public class CalendarShownNotCorrectlyWhenPartiallyOutOfViewTest extends
     }
 
     private void openDayView() {
-        List<WebElement> elements = getDriver().findElements(
-                By.className("v-calendar-header-day"));
+        List<WebElement> elements = getDriver()
+                .findElements(By.className("v-calendar-header-day"));
 
         for (WebElement webElement : elements) {
             if (webElement.getText().contains("Thursday 9/5/13")) {

@@ -41,7 +41,8 @@ public class NullHeadersTest extends SingleBrowserTest {
 
     private void assertRow(GridElement grid, int row, String... contents) {
         for (int col = 0; col < contents.length; col++) {
-            Assert.assertEquals(contents[col], grid.getCell(row, col).getText());
+            Assert.assertEquals(contents[col],
+                    grid.getCell(row, col).getText());
         }
 
     }

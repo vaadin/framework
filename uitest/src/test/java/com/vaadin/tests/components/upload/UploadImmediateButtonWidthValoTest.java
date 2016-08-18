@@ -21,8 +21,8 @@ import static org.hamcrest.Matchers.closeTo;
 import com.vaadin.ui.themes.*;
 import org.junit.Test;
 
-public class UploadImmediateButtonWidthValoTest extends
-        UploadImmediateButtonWidthTest {
+public class UploadImmediateButtonWidthValoTest
+        extends UploadImmediateButtonWidthTest {
 
     @Override
     protected String getTheme() {

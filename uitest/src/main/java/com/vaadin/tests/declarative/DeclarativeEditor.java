@@ -54,8 +54,8 @@ public class DeclarativeEditor extends UI {
         editor = new TextArea();
         editor.setSizeFull();
         try {
-            editor.setValue(IOUtils.toString(getClass().getResourceAsStream(
-                    "DeclarativeEditorInitial.html")));
+            editor.setValue(IOUtils.toString(getClass()
+                    .getResourceAsStream("DeclarativeEditorInitial.html")));
         } catch (ReadOnlyException e) {
             e.printStackTrace();
         } catch (IOException e) {

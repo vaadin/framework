@@ -199,8 +199,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
         private void internalAddColumns(Collection<Column> addedColumns) {
             for (final Column column : addedColumns) {
-                final Property<?> property = item.getItemProperty(column
-                        .getPropertyId());
+                final Property<?> property = item
+                        .getItemProperty(column.getPropertyId());
                 if (property instanceof ValueChangeNotifier) {
                     ((ValueChangeNotifier) property)
                             .addValueChangeListener(this);
@@ -210,8 +210,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
         public void removeColumns(Collection<Column> removedColumns) {
             for (final Column column : removedColumns) {
-                final Property<?> property = item.getItemProperty(column
-                        .getPropertyId());
+                final Property<?> property = item
+                        .getItemProperty(column.getPropertyId());
                 if (property instanceof ValueChangeNotifier) {
                     ((ValueChangeNotifier) property)
                             .removeValueChangeListener(this);
@@ -297,8 +297,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
             @Override
             public void dropRows(JsonArray rowKeys) {
                 for (int i = 0; i < rowKeys.length(); ++i) {
-                    activeItemHandler.dropActiveItem(getKeyMapper().get(
-                            rowKeys.getString(i)));
+                    activeItemHandler.dropActiveItem(
+                            getKeyMapper().get(rowKeys.getString(i)));
                 }
             }
         });
@@ -383,7 +383,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
             diff = cached.length();
         }
 
-        for (int i = 0; i < newRange.length() && i + diff < itemIds.size(); ++i) {
+        for (int i = 0; i < newRange.length()
+                && i + diff < itemIds.size(); ++i) {
             Object itemId = itemIds.get(i + diff);
 
             Item item = container.getItem(itemId);

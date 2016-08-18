@@ -134,8 +134,8 @@ public class TableBlurFocus extends AbstractTestUIWithLog {
                     Notification.show("Clicked!");
                 }
             });
-            table.addItem(new Object[] { "entryString" + x, buttonLabel,
-                    button, " " }, "entryID" + x);
+            table.addItem(new Object[] { "entryString" + x, buttonLabel, button,
+                    " " }, "entryID" + x);
         }
         return table;
     }

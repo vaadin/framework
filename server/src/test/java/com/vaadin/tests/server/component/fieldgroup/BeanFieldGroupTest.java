@@ -87,7 +87,8 @@ public class BeanFieldGroupTest {
         BeanFieldGroup<MyBean> bindFields = BeanFieldGroup
                 .bindFieldsUnbuffered(myBean, viewStub);
 
-        LegacyField<String> field = (LegacyField<String>) bindFields.getField("basicField");
+        LegacyField<String> field = (LegacyField<String>) bindFields
+                .getField("basicField");
         Assert.assertEquals(DEFAULT_FOR_BASIC_FIELD, myBean.basicField);
         field.setValue("Foo");
         Assert.assertEquals("Foo", myBean.basicField);
@@ -103,8 +104,8 @@ public class BeanFieldGroupTest {
         MyBean myBean = new MyBean();
 
         ViewStub viewStub = new ViewStub();
-        BeanFieldGroup<MyBean> bindFields = BeanFieldGroup.bindFieldsBuffered(
-                myBean, viewStub);
+        BeanFieldGroup<MyBean> bindFields = BeanFieldGroup
+                .bindFieldsBuffered(myBean, viewStub);
 
         LegacyField<String> basicField = (LegacyField<String>) bindFields
                 .getField("basicField");
@@ -131,8 +132,8 @@ public class BeanFieldGroupTest {
         BeanFieldGroup<MyBean> bfg = new BeanFieldGroup<MyBean>(MyBean.class);
         bfg.setItemDataSource(bean);
 
-        com.vaadin.legacy.ui.LegacyField<?> helloField = bfg.buildAndBind("Hello string",
-                "nestedBean.hello");
+        com.vaadin.legacy.ui.LegacyField<?> helloField = bfg
+                .buildAndBind("Hello string", "nestedBean.hello");
         assertEquals(bean.nestedBean.hello, helloField.getValue().toString());
     }
 

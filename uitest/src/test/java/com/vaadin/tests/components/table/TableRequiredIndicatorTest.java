@@ -32,8 +32,8 @@ public class TableRequiredIndicatorTest extends MultiBrowserTest {
     @Test
     public void testRequiredIndicatorIsVisible() {
         openTestURL();
-        Assert.assertTrue(isElementPresent(By
-                .className("v-required-field-indicator")));
+        Assert.assertTrue(
+                isElementPresent(By.className("v-required-field-indicator")));
     }
 
 }

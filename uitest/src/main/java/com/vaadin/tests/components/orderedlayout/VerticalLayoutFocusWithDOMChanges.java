@@ -23,8 +23,8 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
 
-public class VerticalLayoutFocusWithDOMChanges extends AbstractTestUI implements
-        ValueChangeListener {
+public class VerticalLayoutFocusWithDOMChanges extends AbstractTestUI
+        implements ValueChangeListener {
 
     Button dummyButton = new Button("Just a button");
     LegacyTextField listenedTextField = new LegacyTextField();

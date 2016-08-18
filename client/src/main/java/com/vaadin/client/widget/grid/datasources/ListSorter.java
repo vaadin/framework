@@ -129,8 +129,8 @@ public class ListSorter<T> {
     private void sort(final List<SortOrder> order) {
         DataSource<T> ds = grid.getDataSource();
         if (!(ds instanceof ListDataSource)) {
-            throw new IllegalStateException("Grid " + grid
-                    + " data source is not a ListDataSource!");
+            throw new IllegalStateException(
+                    "Grid " + grid + " data source is not a ListDataSource!");
         }
 
         ((ListDataSource<T>) ds).sort(new Comparator<T>() {
@@ -158,15 +158,16 @@ public class ListSorter<T> {
                     }
 
                     if (result != 0) {
-                        return o.getDirection() == SortDirection.ASCENDING ? result
-                                : -result;
+                        return o.getDirection() == SortDirection.ASCENDING
+                                ? result : -result;
                     }
                 }
 
                 if (order.size() > 0) {
-                    return order.get(0).getDirection() == SortDirection.ASCENDING ? a
-                            .hashCode() - b.hashCode()
-                            : b.hashCode() - a.hashCode();
+                    return order.get(0)
+                            .getDirection() == SortDirection.ASCENDING
+                                    ? a.hashCode() - b.hashCode()
+                                    : b.hashCode() - a.hashCode();
                 }
                 return a.hashCode() - b.hashCode();
             }

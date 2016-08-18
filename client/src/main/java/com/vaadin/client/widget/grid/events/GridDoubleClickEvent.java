@@ -28,8 +28,8 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class GridDoubleClickEvent extends
-        AbstractGridMouseEvent<GridDoubleClickHandler> {
+public class GridDoubleClickEvent
+        extends AbstractGridMouseEvent<GridDoubleClickHandler> {
 
     public GridDoubleClickEvent(Grid<?> grid, CellReference<?> targetCell) {
         super(grid, targetCell);
@@ -42,9 +42,12 @@ public class GridDoubleClickEvent extends
 
     @Override
     protected void doDispatch(GridDoubleClickHandler handler, Section section) {
-        if ((section == Section.BODY && handler instanceof BodyDoubleClickHandler)
-                || (section == Section.HEADER && handler instanceof HeaderDoubleClickHandler)
-                || (section == Section.FOOTER && handler instanceof FooterDoubleClickHandler)) {
+        if ((section == Section.BODY
+                && handler instanceof BodyDoubleClickHandler)
+                || (section == Section.HEADER
+                        && handler instanceof HeaderDoubleClickHandler)
+                || (section == Section.FOOTER
+                        && handler instanceof FooterDoubleClickHandler)) {
             handler.onDoubleClick(this);
         }
     }

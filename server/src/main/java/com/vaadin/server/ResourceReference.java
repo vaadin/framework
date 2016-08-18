@@ -87,8 +87,8 @@ public class ResourceReference extends URLReference {
         String uri = ApplicationConstants.APP_PROTOCOL_PREFIX
                 + ApplicationConstants.APP_PATH + '/'
                 + ConnectorResource.CONNECTOR_PATH + '/'
-                + connector.getUI().getUIId() + '/'
-                + connector.getConnectorId() + '/' + encodeFileName(filename);
+                + connector.getUI().getUIId() + '/' + connector.getConnectorId()
+                + '/' + encodeFileName(filename);
         return uri;
     }
 

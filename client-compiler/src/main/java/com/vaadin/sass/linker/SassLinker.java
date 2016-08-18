@@ -109,30 +109,31 @@ public class SassLinker extends AbstractLinker {
                             // Store the file info for the compilation
                             scssFiles.add(new FileInfo(tempfile, partialPath));
                         } else {
-                            logger.log(TreeLogger.WARN, "Duplicate file "
-                                    + tempfile.getPath());
+                            logger.log(TreeLogger.WARN,
+                                    "Duplicate file " + tempfile.getPath());
                         }
                     } catch (IOException e) {
                         logger.log(TreeLogger.ERROR,
-                                "Could not write temporary file " + fileName, e);
+                                "Could not write temporary file " + fileName,
+                                e);
                     }
                 }
             }
 
             // Compile the files and store them in the artifact
-            logger.log(TreeLogger.INFO, "Processing " + scssFiles.size()
-                    + " Sass file(s)");
+            logger.log(TreeLogger.INFO,
+                    "Processing " + scssFiles.size() + " Sass file(s)");
             for (FileInfo fileInfo : scssFiles) {
                 logger.log(TreeLogger.INFO, "   " + fileInfo.originalScssPath
                         + " -> " + fileInfo.getOriginalCssPath());
 
                 try {
-                    ScssStylesheet scss = ScssStylesheet.get(fileInfo
-                            .getAbsolutePath());
+                    ScssStylesheet scss = ScssStylesheet
+                            .get(fileInfo.getAbsolutePath());
                     if (!fileInfo.isMixin()) {
                         scss.compile();
-                        InputStream is = new ByteArrayInputStream(scss
-                                .printState().getBytes());
+                        InputStream is = new ByteArrayInputStream(
+                                scss.printState().getBytes());
 
                         toReturn.add(this.emitInputStream(logger, is,
                                 fileInfo.getOriginalCssPath()));
@@ -143,10 +144,8 @@ public class SassLinker extends AbstractLinker {
                     logger.log(TreeLogger.ERROR, "SCSS compilation failed for "
                             + fileInfo.getOriginalCssPath(), e);
                 } catch (IOException e) {
-                    logger.log(
-                            TreeLogger.ERROR,
-                            "Could not write CSS file for "
-                                    + fileInfo.getOriginalCssPath(), e);
+                    logger.log(TreeLogger.ERROR, "Could not write CSS file for "
+                            + fileInfo.getOriginalCssPath(), e);
                 } catch (Exception e) {
                     logger.log(TreeLogger.ERROR, "SCSS compilation failed for "
                             + fileInfo.getOriginalCssPath(), e);

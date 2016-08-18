@@ -29,7 +29,8 @@ public class Ticket1966_3 extends LegacyApplication {
         p.setHeight("300px");
         ol.setSizeFull();
 
-        LegacyTextField tf = new LegacyTextField("Long caption, longer than 100 pixels");
+        LegacyTextField tf = new LegacyTextField(
+                "Long caption, longer than 100 pixels");
         tf.setWidth("100px");
 
         ol.addComponent(tf);

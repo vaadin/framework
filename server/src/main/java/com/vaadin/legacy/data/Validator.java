@@ -25,8 +25,8 @@ import com.vaadin.server.VaadinServlet;
  * valid or not.
  * <p>
  * Implementors of this class can be added to any
- * {@link com.vaadin.legacy.data.Validatable Validatable} implementor to verify its
- * value.
+ * {@link com.vaadin.legacy.data.Validatable Validatable} implementor to verify
+ * its value.
  * </p>
  * <p>
  * {@link #validate(Object)} can be used to check if a value is valid. An

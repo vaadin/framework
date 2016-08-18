@@ -28,8 +28,8 @@ final public class VTargetDetailIs extends VAcceptCriterion {
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {
         String name = configuration.getStringAttribute("p");
-        String t = configuration.hasAttribute("t") ? configuration
-                .getStringAttribute("t").intern() : "s";
+        String t = configuration.hasAttribute("t")
+                ? configuration.getStringAttribute("t").intern() : "s";
         Object value = null;
         if (t == "s") {
             value = configuration.getStringAttribute("v");

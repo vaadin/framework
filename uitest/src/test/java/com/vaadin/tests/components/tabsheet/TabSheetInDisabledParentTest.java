@@ -39,8 +39,8 @@ public class TabSheetInDisabledParentTest extends MultiBrowserTest {
         // disable parent
         button.click();
 
-        List<WebElement> tabHeaders = getDriver().findElements(
-                By.className("v-tabsheet-tabitemcell"));
+        List<WebElement> tabHeaders = getDriver()
+                .findElements(By.className("v-tabsheet-tabitemcell"));
         tabHeaders.get(1).findElement(By.className("v-captiontext")).click();
 
         Assert.assertFalse(
@@ -52,8 +52,8 @@ public class TabSheetInDisabledParentTest extends MultiBrowserTest {
         button.click();
 
         // selected tab is still the same
-        tabHeaders = getDriver().findElements(
-                By.className("v-tabsheet-tabitemcell"));
+        tabHeaders = getDriver()
+                .findElements(By.className("v-tabsheet-tabitemcell"));
         Assert.assertTrue(
                 "Tabsheet has wrong selected tab after enabling its parent",
                 tabHeaders.get(0).getAttribute("class")

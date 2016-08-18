@@ -104,18 +104,19 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     @OnStateChange("registeredEventListeners")
     void handleContextClickListenerChange() {
         if (contextHandler == null && hasEventListener(EventId.CONTEXT_CLICK)) {
-            contextHandler = getWidget().addDomHandler(
-                    new ContextMenuHandler() {
+            contextHandler = getWidget()
+                    .addDomHandler(new ContextMenuHandler() {
                         @Override
                         public void onContextMenu(ContextMenuEvent event) {
-                            final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder.buildMouseEventDetails(
-                                    event.getNativeEvent(), getWidget()
-                                            .getElement());
+                            final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
+                                    .buildMouseEventDetails(
+                                            event.getNativeEvent(),
+                                            getWidget().getElement());
 
                             event.preventDefault();
                             event.stopPropagation();
-                            sendContextClickEvent(mouseEventDetails, event
-                                    .getNativeEvent().getEventTarget());
+                            sendContextClickEvent(mouseEventDetails,
+                                    event.getNativeEvent().getEventTarget());
                         }
                     }, ContextMenuEvent.getType());
 
@@ -196,8 +197,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                  * this was the case with iOS devices.
                  */
 
-                final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder.buildMouseEventDetails(
-                        event.getNativeEvent(), getWidget().getElement());
+                final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
+                        .buildMouseEventDetails(event.getNativeEvent(),
+                                getWidget().getElement());
 
                 final EventTarget eventTarget = event.getNativeEvent()
                         .getEventTarget();
@@ -364,7 +366,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                             + getClass().getSimpleName()
                             + ". This might be caused by explicitely using "
                             + "super.createWidget() or some unspecified "
-                            + "problem with the widgetset compilation.", e);
+                            + "problem with the widgetset compilation.",
+                    e);
         }
     }
 
@@ -419,7 +422,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
          * first setting tabindex, then enabled state (through super
          * implementation).
          */
-        Profiler.enter("AbstractComponentConnector.onStateChanged update tab index");
+        Profiler.enter(
+                "AbstractComponentConnector.onStateChanged update tab index");
         if (getState() instanceof TabIndexState) {
             if (getWidget() instanceof Focusable) {
                 ((Focusable) getWidget())
@@ -434,27 +438,35 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                 // + " which does not implement Focusable");
             }
         }
-        Profiler.leave("AbstractComponentConnector.onStateChanged update tab index");
+        Profiler.leave(
+                "AbstractComponentConnector.onStateChanged update tab index");
 
-        Profiler.enter("AbstractComponentConnector.onStateChanged AbstractConnector.onStateChanged()");
+        Profiler.enter(
+                "AbstractComponentConnector.onStateChanged AbstractConnector.onStateChanged()");
         super.onStateChanged(stateChangeEvent);
-        Profiler.leave("AbstractComponentConnector.onStateChanged AbstractConnector.onStateChanged()");
+        Profiler.leave(
+                "AbstractComponentConnector.onStateChanged AbstractConnector.onStateChanged()");
 
         // Style names
-        Profiler.enter("AbstractComponentConnector.onStateChanged updateWidgetStyleNames");
+        Profiler.enter(
+                "AbstractComponentConnector.onStateChanged updateWidgetStyleNames");
         updateWidgetStyleNames();
-        Profiler.leave("AbstractComponentConnector.onStateChanged updateWidgetStyleNames");
+        Profiler.leave(
+                "AbstractComponentConnector.onStateChanged updateWidgetStyleNames");
 
         /*
          * updateComponentSize need to be after caption update so caption can be
          * taken into account
          */
 
-        Profiler.enter("AbstractComponentConnector.onStateChanged updateComponentSize");
+        Profiler.enter(
+                "AbstractComponentConnector.onStateChanged updateComponentSize");
         updateComponentSize();
-        Profiler.leave("AbstractComponentConnector.onStateChanged updateComponentSize");
+        Profiler.leave(
+                "AbstractComponentConnector.onStateChanged updateComponentSize");
 
-        Profiler.enter("AbstractComponentContainer.onStateChanged check tooltip");
+        Profiler.enter(
+                "AbstractComponentContainer.onStateChanged check tooltip");
         if (!tooltipListenersAttached && hasTooltip()) {
             /*
              * Add event handlers for tooltips if they are needed but have not
@@ -463,7 +475,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             tooltipListenersAttached = true;
             getConnection().getVTooltip().connectHandlersToWidget(getWidget());
         }
-        Profiler.leave("AbstractComponentContainer.onStateChanged check tooltip");
+        Profiler.leave(
+                "AbstractComponentContainer.onStateChanged check tooltip");
 
         Profiler.leave("AbstractComponentConnector.onStateChanged");
     }
@@ -518,16 +531,16 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         if (newWidth.endsWith("%") != lastKnownWidth.endsWith("%")) {
             Connector parent = getParent();
             if (parent instanceof ManagedLayout) {
-                getLayoutManager().setNeedsHorizontalLayout(
-                        (ManagedLayout) parent);
+                getLayoutManager()
+                        .setNeedsHorizontalLayout((ManagedLayout) parent);
             }
         }
 
         if (newHeight.endsWith("%") != lastKnownHeight.endsWith("%")) {
             Connector parent = getParent();
             if (parent instanceof ManagedLayout) {
-                getLayoutManager().setNeedsVerticalLayout(
-                        (ManagedLayout) parent);
+                getLayoutManager()
+                        .setNeedsVerticalLayout((ManagedLayout) parent);
             }
         }
 
@@ -537,14 +550,18 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // Set defined sizes
         Widget widget = getWidget();
 
-        Profiler.enter("AbstractComponentConnector.updateComponentSize update styleNames");
+        Profiler.enter(
+                "AbstractComponentConnector.updateComponentSize update styleNames");
         widget.setStyleName("v-has-width", !isUndefinedWidth());
         widget.setStyleName("v-has-height", !isUndefinedHeight());
-        Profiler.leave("AbstractComponentConnector.updateComponentSize update styleNames");
+        Profiler.leave(
+                "AbstractComponentConnector.updateComponentSize update styleNames");
 
-        Profiler.enter("AbstractComponentConnector.updateComponentSize update DOM");
+        Profiler.enter(
+                "AbstractComponentConnector.updateComponentSize update DOM");
         updateWidgetSize(newWidth, newHeight);
-        Profiler.leave("AbstractComponentConnector.updateComponentSize update DOM");
+        Profiler.leave(
+                "AbstractComponentConnector.updateComponentSize update DOM");
 
         Profiler.leave("AbstractComponentConnector.updateComponentSize");
     }
@@ -617,8 +634,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         setWidgetStyleName("v-readonly", isReadOnly());
 
         // add / remove error style name
-        setWidgetStyleNameWithPrefix(primaryStyleName,
-                StyleConstants.ERROR_EXT, null != state.errorMessage);
+        setWidgetStyleNameWithPrefix(primaryStyleName, StyleConstants.ERROR_EXT,
+                null != state.errorMessage);
 
         // add additional user defined style names as class names, prefixed with
         // component default class name. remove nonexistent style names.
@@ -693,8 +710,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      *             prefixes.
      */
     @Deprecated
-    protected void setWidgetStyleNameWithPrefix(String prefix,
-            String styleName, boolean add) {
+    protected void setWidgetStyleNameWithPrefix(String prefix, String styleName,
+            boolean add) {
         if (!styleName.startsWith("-")) {
             if (!prefix.endsWith("-")) {
                 prefix += "-";
@@ -738,9 +755,10 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // at this point.
         if (getWidget() != null && getWidget().isAttached()) {
             getWidget().removeFromParent();
-            VConsole.error("Widget is still attached to the DOM after the connector ("
-                    + Util.getConnectorString(this)
-                    + ") has been unregistered. Widget was removed.");
+            VConsole.error(
+                    "Widget is still attached to the DOM after the connector ("
+                            + Util.getConnectorString(this)
+                            + ") has been unregistered. Widget was removed.");
         }
     }
 
@@ -755,7 +773,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         AbstractComponentState state = getState();
         if (state.description != null && !state.description.equals("")) {
             return true;
-        } else if (state.errorMessage != null && !state.errorMessage.equals("")) {
+        } else if (state.errorMessage != null
+                && !state.errorMessage.equals("")) {
             return true;
         } else {
             return false;

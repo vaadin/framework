@@ -113,12 +113,12 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
 
         WebElement webElement = findElement(By.id("columnvisibility"));
         int counter = Integer.parseInt(webElement.getAttribute("counter"));
-        int columnIndex = Integer.parseInt(webElement
-                .getAttribute("columnindex"));
-        boolean userOriginated = Boolean.parseBoolean(webElement
-                .getAttribute("useroriginated"));
-        boolean hidden = Boolean.parseBoolean(webElement
-                .getAttribute("ishidden"));
+        int columnIndex = Integer
+                .parseInt(webElement.getAttribute("columnindex"));
+        boolean userOriginated = Boolean
+                .parseBoolean(webElement.getAttribute("useroriginated"));
+        boolean hidden = Boolean
+                .parseBoolean(webElement.getAttribute("ishidden"));
 
         assertNotNull("no event fired", webElement);
         assertEquals(1, counter);
@@ -132,8 +132,8 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         webElement = findElement(By.id("columnvisibility"));
         counter = Integer.parseInt(webElement.getAttribute("counter"));
         columnIndex = Integer.parseInt(webElement.getAttribute("columnIndex"));
-        userOriginated = Boolean.parseBoolean(webElement
-                .getAttribute("userOriginated"));
+        userOriginated = Boolean
+                .parseBoolean(webElement.getAttribute("userOriginated"));
         hidden = Boolean.parseBoolean(webElement.getAttribute("ishidden"));
 
         assertNotNull("no event fired", webElement);
@@ -156,12 +156,12 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
 
         WebElement webElement = findElement(By.id("columnvisibility"));
         int counter = Integer.parseInt(webElement.getAttribute("counter"));
-        int columnIndex = Integer.parseInt(webElement
-                .getAttribute("columnindex"));
-        boolean userOriginated = Boolean.parseBoolean(webElement
-                .getAttribute("useroriginated"));
-        boolean hidden = Boolean.parseBoolean(webElement
-                .getAttribute("ishidden"));
+        int columnIndex = Integer
+                .parseInt(webElement.getAttribute("columnindex"));
+        boolean userOriginated = Boolean
+                .parseBoolean(webElement.getAttribute("useroriginated"));
+        boolean hidden = Boolean
+                .parseBoolean(webElement.getAttribute("ishidden"));
 
         assertNotNull("no event fired", webElement);
         assertEquals(1, counter);
@@ -175,8 +175,8 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         webElement = findElement(By.id("columnvisibility"));
         counter = Integer.parseInt(webElement.getAttribute("counter"));
         columnIndex = Integer.parseInt(webElement.getAttribute("columnIndex"));
-        userOriginated = Boolean.parseBoolean(webElement
-                .getAttribute("userOriginated"));
+        userOriginated = Boolean
+                .parseBoolean(webElement.getAttribute("userOriginated"));
         hidden = Boolean.parseBoolean(webElement.getAttribute("ishidden"));
 
         assertNotNull("no event fired", webElement);
@@ -827,20 +827,20 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Row details", "Toggle details for...",
                 "Row 1");
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
-        Assert.assertNotNull("Details not found", getGridElement()
-                .getDetails(1));
+        Assert.assertNotNull("Details not found",
+                getGridElement().getDetails(1));
 
         toggleHideColumnAPI(0);
 
         assertColumnHeaderOrder(1, 2, 3, 4);
-        Assert.assertNotNull("Details not found", getGridElement()
-                .getDetails(1));
+        Assert.assertNotNull("Details not found",
+                getGridElement().getDetails(1));
 
         toggleHideColumnAPI(0);
 
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
-        Assert.assertNotNull("Details not found", getGridElement()
-                .getDetails(1));
+        Assert.assertNotNull("Details not found",
+                getGridElement().getDetails(1));
     }
 
     @Test
@@ -884,17 +884,17 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         toggleHideColumnAPI(1);
 
         getGridElement().scrollToRow(500);
-        Assert.assertEquals("(500, 0)", getGridElement().getCell(500, 0)
-                .getText());
-        Assert.assertEquals("(500, 2)", getGridElement().getCell(500, 1)
-                .getText());
+        Assert.assertEquals("(500, 0)",
+                getGridElement().getCell(500, 0).getText());
+        Assert.assertEquals("(500, 2)",
+                getGridElement().getCell(500, 1).getText());
 
         toggleHideColumnAPI(1);
 
-        Assert.assertEquals("(500, 0)", getGridElement().getCell(500, 0)
-                .getText());
-        Assert.assertEquals("(500, 1)", getGridElement().getCell(500, 1)
-                .getText());
+        Assert.assertEquals("(500, 0)",
+                getGridElement().getCell(500, 0).getText());
+        Assert.assertEquals("(500, 1)",
+                getGridElement().getCell(500, 1).getText());
     }
 
     @Test
@@ -902,26 +902,26 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         toggleHidableColumnAPI(0);
         toggleHidableColumnAPI(1);
 
-        Assert.assertEquals("(500, 0)", getGridElement().getCell(500, 0)
-                .getText());
-        Assert.assertEquals("(500, 1)", getGridElement().getCell(500, 1)
-                .getText());
+        Assert.assertEquals("(500, 0)",
+                getGridElement().getCell(500, 0).getText());
+        Assert.assertEquals("(500, 1)",
+                getGridElement().getCell(500, 1).getText());
 
         toggleHideColumnAPI(0);
         toggleHideColumnAPI(1);
 
-        Assert.assertEquals("(500, 2)", getGridElement().getCell(500, 0)
-                .getText());
-        Assert.assertEquals("(500, 3)", getGridElement().getCell(500, 1)
-                .getText());
+        Assert.assertEquals("(500, 2)",
+                getGridElement().getCell(500, 0).getText());
+        Assert.assertEquals("(500, 3)",
+                getGridElement().getCell(500, 1).getText());
 
         toggleHideColumnAPI(0);
         toggleHideColumnAPI(1);
 
-        Assert.assertEquals("(500, 0)", getGridElement().getCell(500, 0)
-                .getText());
-        Assert.assertEquals("(500, 1)", getGridElement().getCell(500, 1)
-                .getText());
+        Assert.assertEquals("(500, 0)",
+                getGridElement().getCell(500, 0).getText());
+        Assert.assertEquals("(500, 1)",
+                getGridElement().getCell(500, 1).getText());
     }
 
     private void loadSpannedCellsFixture() {
@@ -955,20 +955,22 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
     }
 
     private void toggleFrozenColumns(int count) {
-        selectMenuPath("Component", "State", "Frozen column count", count
-                + " columns");
+        selectMenuPath("Component", "State", "Frozen column count",
+                count + " columns");
     }
 
     private void verifyHeaderCellColspan(int row, int column, int colspan) {
         try {
-            assertEquals(Integer.valueOf(colspan), Integer.valueOf(Integer
-                    .parseInt(getGridElement().getHeaderCell(row, column)
-                            .getAttribute("colspan"))));
+            assertEquals(Integer.valueOf(colspan),
+                    Integer.valueOf(Integer.parseInt(
+                            getGridElement().getHeaderCell(row, column)
+                                    .getAttribute("colspan"))));
         } catch (NumberFormatException nfe) {
             // IE8 has colSpan
-            assertEquals(Integer.valueOf(colspan), Integer.valueOf(Integer
-                    .parseInt(getGridElement().getHeaderCell(row, column)
-                            .getAttribute("colSpan"))));
+            assertEquals(Integer.valueOf(colspan),
+                    Integer.valueOf(Integer.parseInt(
+                            getGridElement().getHeaderCell(row, column)
+                                    .getAttribute("colSpan"))));
         }
     }
 
@@ -983,8 +985,8 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
     }
 
     private void verifyHeaderCellContent(int row, int column, String content) {
-        GridCellElement headerCell = getGridElement()
-                .getHeaderCell(row, column);
+        GridCellElement headerCell = getGridElement().getHeaderCell(row,
+                column);
         assertEquals(content.toLowerCase(), headerCell.getText().toLowerCase());
         assertTrue(headerCell.isDisplayed());
     }
@@ -999,12 +1001,12 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
 
     private void verifyColumnHidingTogglesOrder(int... indices) {
         WebElement sidebar = getSidebarPopup();
-        List<WebElement> elements = sidebar.findElements(By
-                .className("column-hiding-toggle"));
+        List<WebElement> elements = sidebar
+                .findElements(By.className("column-hiding-toggle"));
         for (int i = 0; i < indices.length; i++) {
             WebElement e = elements.get(i);
-            assertTrue(("Header (0," + indices[i] + ")").equalsIgnoreCase(e
-                    .getText()));
+            assertTrue(("Header (0," + indices[i] + ")")
+                    .equalsIgnoreCase(e.getText()));
         }
     }
 
@@ -1041,8 +1043,8 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
     @Override
     protected WebElement getColumnHidingToggle(int columnIndex) {
         WebElement sidebar = getSidebarPopup();
-        List<WebElement> elements = sidebar.findElements(By
-                .className("column-hiding-toggle"));
+        List<WebElement> elements = sidebar
+                .findElements(By.className("column-hiding-toggle"));
         for (WebElement e : elements) {
             if (("Header (0," + columnIndex + ")")
                     .equalsIgnoreCase(e.getText())) {

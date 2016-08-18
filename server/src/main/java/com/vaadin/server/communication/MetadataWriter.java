@@ -89,8 +89,8 @@ public class MetadataWriter implements Serializable {
                     writer.write(",");
                 }
                 writer.write("\"timedRedirect\":{\"interval\":"
-                        + (newTimeoutInterval + 15) + ",\"url\":\""
-                        + escapedURL + "\"}");
+                        + (newTimeoutInterval + 15) + ",\"url\":\"" + escapedURL
+                        + "\"}");
                 metaOpen = true;
             }
             timeoutInterval = newTimeoutInterval;

@@ -74,7 +74,8 @@ public class LoadingIndicatorConfigurationTest extends AbstractTestUIWithLog {
 
     }
 
-    private LegacyTextField createIntegerTextField(String caption, int initialValue) {
+    private LegacyTextField createIntegerTextField(String caption,
+            int initialValue) {
         LegacyTextField tf = new LegacyTextField(caption);
         tf.setId(caption);
         tf.setConverter(Integer.class);

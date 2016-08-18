@@ -45,14 +45,14 @@ import elemental.json.JsonValue;
 // This is really typed to <JsonValue>, but because of the way native strings
 // are not always instanceof JsonValue, we need to accept Object
 @Connect(AbstractJavaScriptRenderer.class)
-public class JavaScriptRendererConnector extends
-        AbstractRendererConnector<Object> implements
-        HasJavaScriptConnectorHelper {
+public class JavaScriptRendererConnector
+        extends AbstractRendererConnector<Object>
+        implements HasJavaScriptConnectorHelper {
     private final JavaScriptConnectorHelper helper = new JavaScriptConnectorHelper(
             this);
 
-    private final JavaScriptObject cellReferenceWrapper = createCellReferenceWrapper(BrowserInfo
-            .get().isIE8());
+    private final JavaScriptObject cellReferenceWrapper = createCellReferenceWrapper(
+            BrowserInfo.get().isIE8());
 
     @Override
     protected void init() {
@@ -137,9 +137,9 @@ public class JavaScriptRendererConnector extends
         helper.ensureJavascriptInited();
 
         if (!hasFunction("render")) {
-            throw new RuntimeException("JavaScriptRenderer "
-                    + helper.getInitFunctionName()
-                    + " must have a function named 'render'");
+            throw new RuntimeException(
+                    "JavaScriptRenderer " + helper.getInitFunctionName()
+                            + " must have a function named 'render'");
         }
 
         final boolean hasInit = hasFunction("init");
@@ -221,8 +221,8 @@ public class JavaScriptRendererConnector extends
             @Override
             public Collection<String> getConsumedEvents() {
                 if (hasGetConsumedEvents) {
-                    JsArrayString events = getConsumedEvents(helper
-                            .getConnectorWrapper());
+                    JsArrayString events = getConsumedEvents(
+                            helper.getConnectorWrapper());
 
                     ArrayList<String> list = new ArrayList<String>(
                             events.length());

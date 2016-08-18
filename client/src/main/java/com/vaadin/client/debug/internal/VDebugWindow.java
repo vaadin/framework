@@ -710,22 +710,23 @@ public final class VDebugWindow extends VOverlay {
             public void execute() {
                 readStoredState();
 
-                Window.addResizeHandler(new com.google.gwt.event.logical.shared.ResizeHandler() {
+                Window.addResizeHandler(
+                        new com.google.gwt.event.logical.shared.ResizeHandler() {
 
-                    Timer t = new Timer() {
-                        @Override
-                        public void run() {
-                            applyPositionAndSize();
-                        }
-                    };
+                            Timer t = new Timer() {
+                                @Override
+                                public void run() {
+                                    applyPositionAndSize();
+                                }
+                            };
 
-                    @Override
-                    public void onResize(ResizeEvent event) {
-                        t.cancel();
-                        // TODO less
-                        t.schedule(1000);
-                    }
-                });
+                            @Override
+                            public void onResize(ResizeEvent event) {
+                                t.cancel();
+                                // TODO less
+                                t.schedule(1000);
+                            }
+                        });
             }
         });
     }
@@ -793,7 +794,8 @@ public final class VDebugWindow extends VOverlay {
         DebugButton[] modes = new DebugButton[] {
                 new DebugButton(Icon.DEVMODE_OFF,
                         "Debug only (causes page reload)"),
-                new DebugButton(Icon.DEVMODE_ON, "DevMode (causes page reload)"),
+                new DebugButton(Icon.DEVMODE_ON,
+                        "DevMode (causes page reload)"),
                 new DebugButton(Icon.DEVMODE_SUPER,
                         "SuperDevMode (causes page reload)") };
 

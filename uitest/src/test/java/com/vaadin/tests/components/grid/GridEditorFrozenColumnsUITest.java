@@ -71,8 +71,7 @@ public class GridEditorFrozenColumnsUITest extends MultiBrowserTest {
     }
 
     private WebElement getGridHorizontalScrollbar() {
-        return getDriver()
-                .findElement(
-                        By.xpath("//div[contains(@class, \"v-grid-scroller-horizontal\")]"));
+        return getDriver().findElement(By.xpath(
+                "//div[contains(@class, \"v-grid-scroller-horizontal\")]"));
     }
 }

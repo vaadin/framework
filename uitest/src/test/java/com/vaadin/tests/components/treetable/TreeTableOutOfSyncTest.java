@@ -39,11 +39,12 @@ public class TreeTableOutOfSyncTest extends MultiBrowserTest {
         openTestURL();
 
         TreeTableElement treeTable = $(TreeTableElement.class).first();
-        List<WebElement> rows = treeTable.findElement(
-                By.className("v-table-body")).findElements(By.tagName("tr"));
+        List<WebElement> rows = treeTable
+                .findElement(By.className("v-table-body"))
+                .findElements(By.tagName("tr"));
 
-        WebElement treeSpacer = rows.get(0).findElement(
-                By.className("v-treetable-treespacer"));
+        WebElement treeSpacer = rows.get(0)
+                .findElement(By.className("v-treetable-treespacer"));
         treeSpacer.click();
 
         sleep(100);
@@ -53,8 +54,8 @@ public class TreeTableOutOfSyncTest extends MultiBrowserTest {
         WebElement button = rows.get(2).findElement(By.className("v-button"));
         button.click();
 
-        List<WebElement> notifications = findElements(By
-                .className("v-Notification-system"));
+        List<WebElement> notifications = findElements(
+                By.className("v-Notification-system"));
         assertTrue(notifications.isEmpty());
     }
 

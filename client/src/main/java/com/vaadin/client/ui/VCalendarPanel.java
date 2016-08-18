@@ -238,7 +238,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     private void focusDay(Date date) {
         // Only used when calender body is present
-        if (resolution.getCalendarField() > Resolution.MONTH.getCalendarField()) {
+        if (resolution.getCalendarField() > Resolution.MONTH
+                .getCalendarField()) {
             if (focusedDay != null) {
                 focusedDay.removeStyleDependentName(CN_FOCUSED);
             }
@@ -275,8 +276,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private void selectDate(Date date) {
         if (selectedDay != null) {
             selectedDay.removeStyleDependentName(CN_SELECTED);
-            Roles.getGridcellRole().removeAriaSelectedState(
-                    selectedDay.getElement());
+            Roles.getGridcellRole()
+                    .removeAriaSelectedState(selectedDay.getElement());
         }
 
         int rowCount = days.getRowCount();
@@ -446,8 +447,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
         updateControlButtonRangeStyles(needsMonth);
 
-        final String monthName = needsMonth ? getDateTimeService().getMonth(
-                displayedMonth.getMonth()) : "";
+        final String monthName = needsMonth
+                ? getDateTimeService().getMonth(displayedMonth.getMonth()) : "";
         final int year = displayedMonth.getYear() + 1900;
 
         getFlexCellFormatter().setStyleName(0, 2,
@@ -461,9 +462,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
         getFlexCellFormatter().setStyleName(0, 1,
                 parent.getStylePrimaryName() + "-calendarpanel-prevmonth");
 
-        setHTML(0, 2, "<span class=\"" + parent.getStylePrimaryName()
-                + "-calendarpanel-month\">" + monthName + " " + year
-                + "</span>");
+        setHTML(0, 2,
+                "<span class=\"" + parent.getStylePrimaryName()
+                        + "-calendarpanel-month\">" + monthName + " " + year
+                        + "</span>");
     }
 
     private void updateControlButtonRangeStyles(boolean needsMonth) {
@@ -555,7 +557,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * @param minResolution
      * @return
      */
-    private boolean isAcceptedByRangeStart(Date date, Resolution minResolution) {
+    private boolean isAcceptedByRangeStart(Date date,
+            Resolution minResolution) {
         assert (date != null);
 
         // rangeStart == null means that we accept all values below rangeEnd
@@ -663,11 +666,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     "v-first");
             days.getFlexCellFormatter().setStyleName(headerRow,
                     firstWeekdayColumn, "");
-            days.getRowFormatter()
-                    .addStyleName(
-                            headerRow,
-                            parent.getStylePrimaryName()
-                                    + "-calendarpanel-weeknumbers");
+            days.getRowFormatter().addStyleName(headerRow,
+                    parent.getStylePrimaryName()
+                            + "-calendarpanel-weeknumbers");
         } else {
             days.getFlexCellFormatter().setStyleName(headerRow, weekColumn, "");
             days.getFlexCellFormatter().setStyleName(headerRow,
@@ -692,9 +693,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 days.setHTML(headerRow, firstWeekdayColumn + i, "");
             }
 
-            Roles.getColumnheaderRole().set(
-                    days.getCellFormatter().getElement(headerRow,
-                            firstWeekdayColumn + i));
+            Roles.getColumnheaderRole().set(days.getCellFormatter()
+                    .getElement(headerRow, firstWeekdayColumn + i));
         }
 
         // Zero out hours, minutes, seconds, and milliseconds to compare dates
@@ -703,11 +703,11 @@ public class VCalendarPanel extends FocusableFlexTable implements
         final Date today = new Date(tmp.getYear(), tmp.getMonth(),
                 tmp.getDate());
 
-        final Date selectedDate = value == null ? null : new Date(
-                value.getYear(), value.getMonth(), value.getDate());
+        final Date selectedDate = value == null ? null
+                : new Date(value.getYear(), value.getMonth(), value.getDate());
 
-        final int startWeekDay = getDateTimeService().getStartWeekDay(
-                displayedMonth);
+        final int startWeekDay = getDateTimeService()
+                .getStartWeekDay(displayedMonth);
         final Date curr = (Date) displayedMonth.clone();
         // Start from the first day of the week that at least partially belongs
         // to the current month
@@ -721,8 +721,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 Date dayDate = (Date) curr.clone();
                 Day day = new Day(dayDate);
 
-                day.setStyleName(parent.getStylePrimaryName()
-                        + "-calendarpanel-day");
+                day.setStyleName(
+                        parent.getStylePrimaryName() + "-calendarpanel-day");
 
                 if (!isDateInsideRange(dayDate, Resolution.DAY)) {
                     day.addStyleDependentName(CN_OUTSIDE_RANGE);
@@ -747,10 +747,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     day.addStyleDependentName(CN_OFFMONTH);
                 }
 
-                days.setWidget(weekOfMonth, firstWeekdayColumn + dayOfWeek, day);
-                Roles.getGridcellRole().set(
-                        days.getCellFormatter().getElement(weekOfMonth,
-                                firstWeekdayColumn + dayOfWeek));
+                days.setWidget(weekOfMonth, firstWeekdayColumn + dayOfWeek,
+                        day);
+                Roles.getGridcellRole().set(days.getCellFormatter().getElement(
+                        weekOfMonth, firstWeekdayColumn + dayOfWeek));
 
                 // ISO week numbers if requested
                 days.getCellFormatter().setVisible(weekOfMonth, weekColumn,
@@ -763,9 +763,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
                     int weekNumber = DateTimeService.getISOWeekNumber(curr);
 
-                    days.setHTML(weekOfMonth, 0, "<span class=\""
-                            + weekCssClass + "\"" + ">" + weekNumber
-                            + "</span>");
+                    days.setHTML(weekOfMonth, 0, "<span class=\"" + weekCssClass
+                            + "\"" + ">" + weekNumber + "</span>");
                 }
                 curr.setDate(curr.getDate() + 1);
             }
@@ -802,8 +801,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     public void renderCalendar(boolean updateDate) {
 
-        super.setStylePrimaryName(parent.getStylePrimaryName()
-                + "-calendarpanel");
+        super.setStylePrimaryName(
+                parent.getStylePrimaryName() + "-calendarpanel");
 
         if (focusedDate == null) {
             Date now = new Date();
@@ -813,14 +812,13 @@ public class VCalendarPanel extends FocusableFlexTable implements
             displayedMonth = new FocusedDate(now.getYear(), now.getMonth(), 1);
         }
 
-        if (updateDate
-                && getResolution().getCalendarField() <= Resolution.MONTH
-                        .getCalendarField() && focusChangeListener != null) {
+        if (updateDate && getResolution().getCalendarField() <= Resolution.MONTH
+                .getCalendarField() && focusChangeListener != null) {
             focusChangeListener.focusChanged(new Date(focusedDate.getTime()));
         }
 
-        final boolean needsMonth = getResolution().getCalendarField() > Resolution.YEAR
-                .getCalendarField();
+        final boolean needsMonth = getResolution()
+                .getCalendarField() > Resolution.YEAR.getCalendarField();
         boolean needsBody = getResolution().getCalendarField() >= Resolution.DAY
                 .getCalendarField();
         buildCalendarHeader(needsMonth);
@@ -901,7 +899,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
         // inside,
         // correct it
         if (!isDateInsideRange(requestedNextMonthDate, Resolution.DAY)) {
-            requestedNextMonthDate = adjustDateToFitInsideRange(requestedNextMonthDate);
+            requestedNextMonthDate = adjustDateToFitInsideRange(
+                    requestedNextMonthDate);
         }
 
         focusedDate.setTime(requestedNextMonthDate.getTime());
@@ -957,7 +956,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
 
         if (!isDateInsideRange(requestedPreviousMonthDate, Resolution.DAY)) {
-            requestedPreviousMonthDate = adjustDateToFitInsideRange(requestedPreviousMonthDate);
+            requestedPreviousMonthDate = adjustDateToFitInsideRange(
+                    requestedPreviousMonthDate);
         }
         focusedDate.setTime(requestedPreviousMonthDate.getTime());
         displayedMonth.setMonth(displayedMonth.getMonth() - 1);
@@ -1106,9 +1106,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     private void handleKeyPress(DomEvent<?> event) {
         // Special handling for events from time ListBoxes.
-        if (time != null
-                && time.getElement().isOrHasChild(
-                        (Node) event.getNativeEvent().getEventTarget().cast())) {
+        if (time != null && time.getElement().isOrHasChild(
+                (Node) event.getNativeEvent().getEventTarget().cast())) {
             int nativeKeyCode = event.getNativeEvent().getKeyCode();
             if (nativeKeyCode == getSelectKey()) {
                 onSubmit(); // submit if enter key hit down on listboxes
@@ -1125,16 +1124,18 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
         // Check tabs
         int keycode = event.getNativeEvent().getKeyCode();
-        if (keycode == KeyCodes.KEY_TAB && event.getNativeEvent().getShiftKey()) {
+        if (keycode == KeyCodes.KEY_TAB
+                && event.getNativeEvent().getShiftKey()) {
             if (onTabOut(event)) {
                 return;
             }
         }
 
         // Handle the navigation
-        if (handleNavigation(keycode, event.getNativeEvent().getCtrlKey()
-                || event.getNativeEvent().getMetaKey(), event.getNativeEvent()
-                .getShiftKey())) {
+        if (handleNavigation(keycode,
+                event.getNativeEvent().getCtrlKey()
+                        || event.getNativeEvent().getMetaKey(),
+                event.getNativeEvent().getShiftKey())) {
             event.preventDefault();
         }
 
@@ -1390,7 +1391,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * @return Return true if key press was handled by the component, else
      *         return false
      */
-    protected boolean handleNavigation(int keycode, boolean ctrl, boolean shift) {
+    protected boolean handleNavigation(int keycode, boolean ctrl,
+            boolean shift) {
         if (!isEnabled() || isReadonly()) {
             return false;
         }
@@ -1580,7 +1582,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
         boolean currentDateWasAdjusted = false;
         // Check that selected date is inside the allowed range
-        if (currentDate != null && !isDateInsideRange(currentDate, resolution)) {
+        if (currentDate != null
+                && !isDateInsideRange(currentDate, resolution)) {
             currentDate = adjustDateToFitInsideRange(currentDate);
             currentDateWasAdjusted = true;
         }
@@ -1595,9 +1598,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
             // If ranges enabled, we may need to focus on a different view to
             // potentially not get stuck
             if (rangeStart != null || rangeEnd != null) {
-                Date dateThatFitsInsideRange = adjustDateToFitInsideRange(new Date());
-                focusedDate = new FocusedDate(
-                        dateThatFitsInsideRange.getYear(),
+                Date dateThatFitsInsideRange = adjustDateToFitInsideRange(
+                        new Date());
+                focusedDate = new FocusedDate(dateThatFitsInsideRange.getYear(),
                         dateThatFitsInsideRange.getMonth(),
                         dateThatFitsInsideRange.getDate());
                 displayedMonth = new FocusedDate(
@@ -2054,7 +2057,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private Date rangeEnd;
 
     @Override
-    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+    public String getSubPartName(
+            com.google.gwt.user.client.Element subElement) {
         if (contains(nextMonth, subElement)) {
             return SUBPART_NEXT_MONTH;
         } else if (contains(prevMonth, subElement)) {
@@ -2090,7 +2094,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 return SUBPART_AMPM_SELECT;
 
             }
-        } else if (getCellFormatter().getElement(0, 2).isOrHasChild(subElement)) {
+        } else if (getCellFormatter().getElement(0, 2)
+                .isOrHasChild(subElement)) {
             return SUBPART_MONTH_YEAR_HEADER;
         }
 
@@ -2113,7 +2118,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     @Override
-    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(
+            String subPart) {
         if (SUBPART_NEXT_MONTH.equals(subPart)) {
             return nextMonth.getElement();
         }
@@ -2141,8 +2147,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
         if (subPart.startsWith(SUBPART_DAY)) {
             // Zero or negative ids map to days in the preceding month,
             // past-the-end-of-month ids to days in the following month
-            int dayOfMonth = Integer.parseInt(subPart.substring(SUBPART_DAY
-                    .length()));
+            int dayOfMonth = Integer
+                    .parseInt(subPart.substring(SUBPART_DAY.length()));
             Date date = new Date(displayedMonth.getYear(),
                     displayedMonth.getMonth(), dayOfMonth);
             Iterator<Widget> iter = days.iterator();
@@ -2158,8 +2164,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
 
         if (SUBPART_MONTH_YEAR_HEADER.equals(subPart)) {
-            return DOM.asOld((Element) getCellFormatter().getElement(0, 2)
-                    .getChild(0));
+            return DOM.asOld(
+                    (Element) getCellFormatter().getElement(0, 2).getChild(0));
         }
         return null;
     }

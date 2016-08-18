@@ -72,13 +72,13 @@ public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
                 getWidget().newItemField.addStyleName(StyleConstants.UI_WIDGET);
 
             }
-            getWidget().newItemField.setEnabled(getWidget().isEnabled()
-                    && !getWidget().isReadonly());
-            getWidget().newItemButton.setEnabled(getWidget().isEnabled()
-                    && !getWidget().isReadonly());
+            getWidget().newItemField.setEnabled(
+                    getWidget().isEnabled() && !getWidget().isReadonly());
+            getWidget().newItemButton.setEnabled(
+                    getWidget().isEnabled() && !getWidget().isReadonly());
 
-            if (getWidget().newItemField == null
-                    || getWidget().newItemField.getParent() != getWidget().container) {
+            if (getWidget().newItemField == null || getWidget().newItemField
+                    .getParent() != getWidget().container) {
                 getWidget().container.add(getWidget().newItemField);
                 getWidget().container.add(getWidget().newItemButton);
                 final int w = getWidget().container.getOffsetWidth()

@@ -58,9 +58,8 @@ public class GridMultiSortingTest extends GridBasicFeaturesTest {
 
         prev = getGridElement().getCell(0, 0).getText();
         for (int i = 1; i <= 6; ++i) {
-            assertTrue(
-                    "Grid is not sorted by column 0.",
-                    prev.compareTo(getGridElement().getCell(i, 0).getText()) < 0);
+            assertTrue("Grid is not sorted by column 0.", prev
+                    .compareTo(getGridElement().getCell(i, 0).getText()) < 0);
         }
     }
 }

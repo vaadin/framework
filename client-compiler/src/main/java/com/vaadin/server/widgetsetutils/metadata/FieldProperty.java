@@ -45,15 +45,16 @@ public class FieldProperty extends Property {
     @Override
     public void writeSetterBody(TreeLogger logger, SourceWriter w,
             String beanVariable, String valueVariable) {
-        w.println("%s.@%s::%s = %s;", beanVariable, getBeanType()
-                .getQualifiedSourceName(), getName(), unboxValue(valueVariable));
+        w.println("%s.@%s::%s = %s;", beanVariable,
+                getBeanType().getQualifiedSourceName(), getName(),
+                unboxValue(valueVariable));
     }
 
     @Override
     public void writeGetterBody(TreeLogger logger, SourceWriter w,
             String beanVariable) {
-        String value = String.format("%s.@%s::%s", beanVariable, getBeanType()
-                .getQualifiedSourceName(), getName());
+        String value = String.format("%s.@%s::%s", beanVariable,
+                getBeanType().getQualifiedSourceName(), getName());
         w.print("return ");
         w.print(boxValue(value));
         w.println(";");

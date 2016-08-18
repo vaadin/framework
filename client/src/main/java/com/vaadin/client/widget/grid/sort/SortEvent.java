@@ -46,7 +46,8 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
      * @param originator
      *            a value indicating where this event originated from
      */
-    public SortEvent(Grid<T> grid, List<SortOrder> order, boolean userOriginated) {
+    public SortEvent(Grid<T> grid, List<SortOrder> order,
+            boolean userOriginated) {
         this.grid = grid;
         this.order = order;
         this.userOriginated = userOriginated;

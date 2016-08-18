@@ -52,8 +52,8 @@ public abstract class AbstractTransactionalQuery implements Serializable {
      * @throws SQLException
      *             if a connection could not be obtained or configured
      */
-    public void beginTransaction() throws UnsupportedOperationException,
-            SQLException {
+    public void beginTransaction()
+            throws UnsupportedOperationException, SQLException {
         if (isInTransaction()) {
             throw new IllegalStateException("A transaction is already active!");
         }

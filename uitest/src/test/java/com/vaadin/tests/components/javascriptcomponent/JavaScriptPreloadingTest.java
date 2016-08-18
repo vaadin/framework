@@ -42,14 +42,14 @@ public class JavaScriptPreloadingTest extends MultiBrowserTest {
         openTestURL();
 
         try {
-            new WebDriverWait(driver, 10).until(ExpectedConditions
-                    .alertIsPresent());
+            new WebDriverWait(driver, 10)
+                    .until(ExpectedConditions.alertIsPresent());
             Alert alert = driver.switchTo().alert();
             assertEquals("First", alert.getText());
             alert.accept();
 
-            new WebDriverWait(driver, 10).until(ExpectedConditions
-                    .alertIsPresent());
+            new WebDriverWait(driver, 10)
+                    .until(ExpectedConditions.alertIsPresent());
             alert = driver.switchTo().alert();
             assertEquals("Second", alert.getText());
             alert.accept();

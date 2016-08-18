@@ -64,8 +64,8 @@ public class Ticket2048 extends LegacyApplication {
         l.setHeight("400px");
         ol.addComponent(l);
 
-        embedded = new Embedded(null, new ThemeResource(
-                "icons/64/folder-add.png"));
+        embedded = new Embedded(null,
+                new ThemeResource("icons/64/folder-add.png"));
         layout.addComponent(embedded);
         Button b = new Button(
                 "Replace image with new embedded component (flashes)",
@@ -92,7 +92,8 @@ public class Ticket2048 extends LegacyApplication {
                         .contains("folder-add")) {
                     img = "folder-delete";
                 }
-                embedded.setSource(new ThemeResource("icons/64/" + img + ".png"));
+                embedded.setSource(
+                        new ThemeResource("icons/64/" + img + ".png"));
 
             }
 

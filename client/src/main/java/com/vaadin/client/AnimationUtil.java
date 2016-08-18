@@ -65,7 +65,7 @@ public class AnimationUtil {
       var callbackFunc = $entry(function(e) {
         listener.@com.vaadin.client.AnimationUtil.AnimationEndListener::onAnimationEnd(Lcom/google/gwt/dom/client/NativeEvent;)(e);
       });
-
+    
       elem.addEventListener(@com.vaadin.client.AnimationUtil::ANIMATION_END_EVENT_NAME, callbackFunc, false);
       
       // Store function reference for later removal
@@ -111,7 +111,7 @@ public class AnimationUtil {
             return event.mozAnimationName;
         else if(event.oAnimationName)
             return event.oAnimationName;
-
+    
         return "";
     }-*/;
 
@@ -119,22 +119,22 @@ public class AnimationUtil {
     public static native String getAnimationName(ComputedStyle cstyle)
     /*-{
         var cs = cstyle.@com.vaadin.client.ComputedStyle::computedStyle;
-
+    
         if(!cs.getPropertyValue)
             return "";
-
+    
         if(cs.getPropertyValue("-webkit-animation-name"))
             return cs.getPropertyValue("-webkit-animation-name");
-
+    
         else if(cs.getPropertyValue("animation-name"))
             return cs.getPropertyValue("animation-name");
-
+    
         else if(cs.getPropertyValue("-moz-animation-name"))
             return cs.getPropertyValue("-moz-animation-name");
-
+    
         else if(cs.getPropertyValue("-o-animation-name"))
             return cs.getPropertyValue("-o-animation-name");
-
+    
         return "";
     }-*/;
 

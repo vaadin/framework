@@ -9,8 +9,8 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class PopupDateFieldStatesTest extends MultiBrowserTest {
 
     @Test
-    public void readOnlyDateFieldPopupShouldNotOpen() throws IOException,
-            InterruptedException {
+    public void readOnlyDateFieldPopupShouldNotOpen()
+            throws IOException, InterruptedException {
         openTestURL();
 
         compareScreen("dateFieldStates");

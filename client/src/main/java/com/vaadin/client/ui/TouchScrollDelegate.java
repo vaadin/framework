@@ -602,8 +602,8 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     private void translateTo(double translateY) {
         for (Element el : layers) {
             Style style = el.getStyle();
-            style.setProperty("webkitTransform", "translate3d(0px,"
-                    + translateY + "px,0px)");
+            style.setProperty("webkitTransform",
+                    "translate3d(0px," + translateY + "px,0px)");
         }
     }
 
@@ -621,8 +621,8 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
                 @Override
                 protected void onUpdate(double progress) {
-                    lastAnimatedTranslateY = (fromY + (finalY - fromY)
-                            * progress);
+                    lastAnimatedTranslateY = (fromY
+                            + (finalY - fromY) * progress);
                     translateTo(lastAnimatedTranslateY);
                 }
 
@@ -651,8 +651,8 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     private int getMaxOverScroll() {
-        return androidWithBrokenScrollTop ? 0 : scrolledElement
-                .getClientHeight() / 3;
+        return androidWithBrokenScrollTop ? 0
+                : scrolledElement.getClientHeight() / 3;
     }
 
     private int getMaxFinalY() {

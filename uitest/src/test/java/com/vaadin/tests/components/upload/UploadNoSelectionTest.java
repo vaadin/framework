@@ -42,8 +42,8 @@ public class UploadNoSelectionTest extends MultiBrowserTest {
     }
 
     private WebElement getSubmitButton() {
-        WebElement element = getDriver().findElement(
-                By.id(UploadNoSelection.UPLOAD_ID));
+        WebElement element = getDriver()
+                .findElement(By.id(UploadNoSelection.UPLOAD_ID));
         WebElement submitButton = element.findElement(By.className("v-button"));
         return submitButton;
     }

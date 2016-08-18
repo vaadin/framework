@@ -22,7 +22,7 @@ package com.vaadin.client.widget.grid;
  * temporary workaround and might be removed or renamed at any time.
  * </p>
  * 
- * @since  7.6.1
+ * @since 7.6.1
  * @author Vaadin Ltd
  */
 @Deprecated

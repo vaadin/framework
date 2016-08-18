@@ -141,11 +141,11 @@ public class SelectorPredicate {
      *         found.
      */
     private static String extractPredicateString(String pathFragment) {
-        int ixOpenBracket = LocatorUtil
-                .indexOfIgnoringQuoted(pathFragment, '[');
+        int ixOpenBracket = LocatorUtil.indexOfIgnoringQuoted(pathFragment,
+                '[');
         if (ixOpenBracket >= 0) {
-            int ixCloseBracket = LocatorUtil.indexOfIgnoringQuoted(
-                    pathFragment, ']', ixOpenBracket);
+            int ixCloseBracket = LocatorUtil.indexOfIgnoringQuoted(pathFragment,
+                    ']', ixOpenBracket);
             return pathFragment.substring(ixOpenBracket + 1, ixCloseBracket);
         }
         return "";

@@ -24,8 +24,8 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.extensions.LayoutMemoryUsageIE8Extension;
 
 @Connect(LayoutMemoryUsageIE8Extension.class)
-public class LayoutMemoryUsageIE8ExtensionConnector extends
-        AbstractExtensionConnector {
+public class LayoutMemoryUsageIE8ExtensionConnector
+        extends AbstractExtensionConnector {
 
     @Override
     protected void extend(ServerConnector target) {

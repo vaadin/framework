@@ -148,9 +148,9 @@ public class TableToggleVisibility extends AbstractTestCase {
                     ToggleButton.this.table.setVisible(!wasVisible);
                     setCaption((wasVisible ? "+ " : "- ")
                             + ToggleButton.this.table.getCaption());
-                    setDescription((wasVisible ? "Show " : "Hide ")
-                            + "the list with "
-                            + ToggleButton.this.table.getCaption());
+                    setDescription(
+                            (wasVisible ? "Show " : "Hide ") + "the list with "
+                                    + ToggleButton.this.table.getCaption());
 
                 }
             });

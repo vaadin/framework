@@ -52,8 +52,8 @@ public class BasicEventMoveHandler implements EventMoveHandler {
             // Update event dates
             long length = editableEvent.getEnd().getTime()
                     - editableEvent.getStart().getTime();
-            setDates(editableEvent, newFromTime, new Date(newFromTime.getTime()
-                    + length));
+            setDates(editableEvent, newFromTime,
+                    new Date(newFromTime.getTime() + length));
         }
     }
 

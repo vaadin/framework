@@ -75,11 +75,13 @@ public final class AlignmentInfo implements Serializable {
     }
 
     public boolean isVerticalCenter() {
-        return (bitMask & Bits.ALIGNMENT_VERTICAL_CENTER) == Bits.ALIGNMENT_VERTICAL_CENTER;
+        return (bitMask
+                & Bits.ALIGNMENT_VERTICAL_CENTER) == Bits.ALIGNMENT_VERTICAL_CENTER;
     }
 
     public boolean isHorizontalCenter() {
-        return (bitMask & Bits.ALIGNMENT_HORIZONTAL_CENTER) == Bits.ALIGNMENT_HORIZONTAL_CENTER;
+        return (bitMask
+                & Bits.ALIGNMENT_HORIZONTAL_CENTER) == Bits.ALIGNMENT_HORIZONTAL_CENTER;
     }
 
     public String getVerticalAlignment() {

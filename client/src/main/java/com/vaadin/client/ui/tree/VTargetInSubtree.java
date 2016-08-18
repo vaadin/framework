@@ -36,8 +36,8 @@ final public class VTargetInSubtree extends VAcceptCriterion {
 
         VTree tree = (VTree) VDragAndDropManager.get().getCurrentDropHandler()
                 .getConnector().getWidget();
-        TreeNode treeNode = tree.getNodeByKey((String) drag.getDropDetails()
-                .get("itemIdOver"));
+        TreeNode treeNode = tree
+                .getNodeByKey((String) drag.getDropDetails().get("itemIdOver"));
         if (treeNode != null) {
             Widget parent2 = treeNode;
             int depth = configuration.getIntAttribute("depth");

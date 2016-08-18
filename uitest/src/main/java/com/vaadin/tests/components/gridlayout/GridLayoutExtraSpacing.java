@@ -25,9 +25,8 @@ public class GridLayoutExtraSpacing extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        getUI().getPage()
-                .getStyles()
-                .add(".v-gridlayout {background: red;} .v-csslayout {background: white;}");
+        getUI().getPage().getStyles().add(
+                ".v-gridlayout {background: red;} .v-csslayout {background: white;}");
 
         final GridLayout gl = new GridLayout(4, 4);
 

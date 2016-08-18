@@ -121,7 +121,8 @@ public class VerticalLayoutWithEmptyLabel extends AbstractTestUI {
         private final Label myLabel = new Label("");
         private final LegacyTextField filterPhoneField = new LegacyTextField(
                 "Foobar Number");
-        private final LegacyTextField filterFoobarField = new LegacyTextField("Foobar ID");
+        private final LegacyTextField filterFoobarField = new LegacyTextField(
+                "Foobar ID");
         private final CheckBox incomingOnlyField = new CheckBox(
                 "Incoming foobar only");
 
@@ -146,7 +147,8 @@ public class VerticalLayoutWithEmptyLabel extends AbstractTestUI {
             this.addComponent(topLayout);
 
             // Foobar phone #
-            final LegacyTextField smsNumber = new LegacyTextField("Foobar Phone #");
+            final LegacyTextField smsNumber = new LegacyTextField(
+                    "Foobar Phone #");
             smsNumber.setSizeUndefined();
             smsNumber.setColumns(12);
             smsNumber.setMaxLength(16);

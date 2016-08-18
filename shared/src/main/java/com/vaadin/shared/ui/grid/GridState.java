@@ -127,7 +127,7 @@ public class GridState extends TabIndexState {
      * @see com.vaadin.ui.Grid#setDetailsVisible(Object, boolean)
      * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int,
      *      elemental.json.JsonArray)
-     * */
+     */
     public static final String JSONKEY_DETAILS_VISIBLE = "dv";
 
     /**

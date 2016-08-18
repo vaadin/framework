@@ -38,8 +38,8 @@ public class DetachOldUIOnReloadTest extends MultiBrowserTest {
         assertEquals("initial label incorrect", "This is UI 0",
                 lastLabelText(labels));
 
-        assertFalse("reloading button not found", $(ButtonElement.class)
-                .caption(RELOAD).all().isEmpty());
+        assertFalse("reloading button not found",
+                $(ButtonElement.class).caption(RELOAD).all().isEmpty());
 
         openTestURL();
         click(READ_LOG);
@@ -68,9 +68,12 @@ public class DetachOldUIOnReloadTest extends MultiBrowserTest {
                 String.format("label incorrect after %s reload", descriptor),
                 String.format("This is UI %s", index), lastLabelText(labels));
         if (!"final".equals(descriptor)) {
-            assertEquals(String.format("log message incorrect after %s reload",
-                    descriptor), String.format("%s. UI %s has been detached",
-                    index, index - 1), labels.get(0).getText());
+            assertEquals(
+                    String.format("log message incorrect after %s reload",
+                            descriptor),
+                    String.format("%s. UI %s has been detached", index,
+                            index - 1),
+                    labels.get(0).getText());
         }
     }
 

@@ -83,9 +83,9 @@ public class GridDetailsWidthTest extends SingleBrowserTest {
         WebElement spacer = findElement(By.className("v-grid-spacer"));
         Assert.assertEquals("Grid was not sorted correctly", "Hello 0",
                 cell.getText());
-        Assert.assertEquals("Details row was not in correct location", cell
-                .getLocation().getY() + cell.getSize().getHeight(), spacer
-                .getLocation().getY());
+        Assert.assertEquals("Details row was not in correct location",
+                cell.getLocation().getY() + cell.getSize().getHeight(),
+                spacer.getLocation().getY());
 
     }
 

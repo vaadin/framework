@@ -72,18 +72,18 @@ public class MassInsertMemoryLeakTestApp extends LegacyApplication {
                         SQLContainer c = new SQLContainer(q);
                         for (int i = 0; i < 100; i++) {
                             Object id = c.addItem();
-                            c.getContainerProperty(id, "FIRST_NAMES").setValue(
-                                    getRandonName());
-                            c.getContainerProperty(id, "LAST_NAME").setValue(
-                                    getRandonName());
+                            c.getContainerProperty(id, "FIRST_NAMES")
+                                    .setValue(getRandonName());
+                            c.getContainerProperty(id, "LAST_NAME")
+                                    .setValue(getRandonName());
                         }
                         c.commit();
                         getContext().lock();
                         try {
                             proggress
                                     .setValue(new Float((1.0f * cent) / cents));
-                            proggress.setCaption("" + 100 * cent
-                                    + " rows inserted");
+                            proggress.setCaption(
+                                    "" + 100 * cent + " rows inserted");
                         } finally {
                             getContext().unlock();
                         }

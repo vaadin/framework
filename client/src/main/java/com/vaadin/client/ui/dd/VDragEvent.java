@@ -112,7 +112,8 @@ public class VDragEvent {
      *             instead
      */
     @Deprecated
-    public void setElementOver(com.google.gwt.user.client.Element targetElement) {
+    public void setElementOver(
+            com.google.gwt.user.client.Element targetElement) {
         elementOver = targetElement;
     }
 

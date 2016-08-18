@@ -59,8 +59,8 @@ public class ImageRendererTest {
 
     @Test
     public void testExternalResource() {
-        JsonValue v = renderer.encode(new ExternalResource(
-                "http://example.com/foo.png"));
+        JsonValue v = renderer
+                .encode(new ExternalResource("http://example.com/foo.png"));
         assertEquals("http://example.com/foo.png", getUrl(v));
     }
 

@@ -33,8 +33,8 @@ public class ScrollingBodyElementWithModalOpenedTest extends MultiBrowserTest {
     public void testWindowScrollbars() throws Exception {
         openTestURL();
 
-        WebElement bodyElement = driver.findElement(By
-                .className("v-modal-window-open"));
+        WebElement bodyElement = driver
+                .findElement(By.className("v-modal-window-open"));
 
         TestBenchElementCommands scrollable = testBenchElement(bodyElement);
         scrollable.scroll(1000);

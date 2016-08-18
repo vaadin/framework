@@ -44,8 +44,8 @@ public class CalendarMonthViewDndEventTest extends DndActionsTest {
 
         // does calendar have space on the right for one more event (i.e. day
         // cell on the right).
-        boolean moveRight = event.getLocation().getX() + 2
-                * event.getSize().getWidth() <= calendarRight;
+        boolean moveRight = event.getLocation().getX()
+                + 2 * event.getSize().getWidth() <= calendarRight;
 
         WebElement cell = getParentCell(event, "v-calendar-month-day");
 
@@ -67,9 +67,9 @@ public class CalendarMonthViewDndEventTest extends DndActionsTest {
 
         Assert.assertTrue(
                 "Moved event has wrong Y position (not the same row), new Y position="
-                        + newY + ", cell Y position=" + cellY
-                        + ", cell height=" + cellHeight, newY >= cellY
-                        && newY < cellY + cellHeight);
+                        + newY + ", cell Y position=" + cellY + ", cell height="
+                        + cellHeight,
+                newY >= cellY && newY < cellY + cellHeight);
         if (moveRight) {
             Assert.assertTrue(
                     "Moved event has wrong X position (not after original event)",

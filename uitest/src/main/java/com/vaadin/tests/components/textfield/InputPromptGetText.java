@@ -67,17 +67,17 @@ public class InputPromptGetText extends AbstractTestUI {
                 getLayout().addComponent(label);
             }
         });
-        tf.addShortcutListener(new ShortcutListener("Shortcut", KeyCode.ENTER,
-                null) {
+        tf.addShortcutListener(
+                new ShortcutListener("Shortcut", KeyCode.ENTER, null) {
 
-            @Override
-            public void handleAction(Object sender, Object target) {
-                String input = tf.getValue();
-                Label label = new Label("Your input was: " + input);
-                label.setId(LABEL1);
-                getLayout().addComponent(label);
-            }
-        });
+                    @Override
+                    public void handleAction(Object sender, Object target) {
+                        String input = tf.getValue();
+                        Label label = new Label("Your input was: " + input);
+                        label.setId(LABEL1);
+                        getLayout().addComponent(label);
+                    }
+                });
 
         getLayout().addComponent(tf);
         getLayout().addComponent(button);

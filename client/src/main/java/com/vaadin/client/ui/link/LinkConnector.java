@@ -80,8 +80,8 @@ public class LinkConnector extends AbstractComponentConnector {
             DOM.insertChild(getWidget().getElement(),
                     getWidget().errorIndicatorElement, 0);
         } else if (getWidget().errorIndicatorElement != null) {
-            getWidget().errorIndicatorElement.getStyle().setDisplay(
-                    Display.NONE);
+            getWidget().errorIndicatorElement.getStyle()
+                    .setDisplay(Display.NONE);
         }
 
         if (getWidget().icon != null) {

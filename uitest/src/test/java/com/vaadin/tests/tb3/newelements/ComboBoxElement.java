@@ -7,8 +7,8 @@ import com.vaadin.testbench.By;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.ComboBox")
-public class ComboBoxElement extends
-        com.vaadin.testbench.elements.ComboBoxElement {
+public class ComboBoxElement
+        extends com.vaadin.testbench.elements.ComboBoxElement {
 
     private static org.openqa.selenium.By bySuggestionPopup = By
             .vaadin("#popup");

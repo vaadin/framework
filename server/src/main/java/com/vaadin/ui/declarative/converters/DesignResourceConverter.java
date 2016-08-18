@@ -40,7 +40,8 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")
-public class DesignResourceConverter implements LegacyConverter<String, Resource> {
+public class DesignResourceConverter
+        implements LegacyConverter<String, Resource> {
 
     @Override
     public Resource convertToModel(String value,
@@ -73,8 +74,8 @@ public class DesignResourceConverter implements LegacyConverter<String, Resource
         if (byType != null) {
             return byType.format(value);
         } else {
-            throw new LegacyConverter.ConversionException("unknown Resource type - "
-                    + value.getClass().getName());
+            throw new LegacyConverter.ConversionException(
+                    "unknown Resource type - " + value.getClass().getName());
         }
     }
 
@@ -94,8 +95,8 @@ public class DesignResourceConverter implements LegacyConverter<String, Resource
         public Resource parse(String value);
     }
 
-    private static enum ResourceConverterByProtocol implements
-            ProtocolResourceConverter {
+    private static enum ResourceConverterByProtocol
+            implements ProtocolResourceConverter {
 
         HTTP, HTTPS, FTP, FTPS, THEME {
 
@@ -125,7 +126,8 @@ public class DesignResourceConverter implements LegacyConverter<String, Resource
                     } catch (IllegalArgumentException iae) {
                         throw new ConversionException(
                                 "Unknown codepoint in FontAwesome: "
-                                        + codepoint, iae);
+                                        + codepoint,
+                                iae);
                     }
                 }
 
@@ -154,17 +156,17 @@ public class DesignResourceConverter implements LegacyConverter<String, Resource
                 try {
                     return FontAwesome.valueOf(iconName);
                 } catch (IllegalArgumentException iae) {
-                    throw new ConversionException("Unknown FontIcon constant: "
-                            + iconName, iae);
+                    throw new ConversionException(
+                            "Unknown FontIcon constant: " + iconName, iae);
                 }
             }
 
             @Override
             public String format(Resource value)
                     throws LegacyConverter.ConversionException {
-                throw new UnsupportedOperationException("Use "
-                        + ResourceConverterByProtocol.FONTICON.toString()
-                        + " instead");
+                throw new UnsupportedOperationException(
+                        "Use " + ResourceConverterByProtocol.FONTICON.toString()
+                                + " instead");
             }
         },
         FILE {

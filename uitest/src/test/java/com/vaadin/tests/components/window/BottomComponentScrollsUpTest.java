@@ -49,8 +49,8 @@ public class BottomComponentScrollsUpTest extends MultiBrowserTest {
                 .findElement(By.className("v-panel-content"));
         Dimension panelScrollableSize = panelScrollable.getSize();
 
-        WebElement verticalLayout = panelScrollable.findElement(By
-                .className("v-verticallayout"));
+        WebElement verticalLayout = panelScrollable
+                .findElement(By.className("v-verticallayout"));
         Dimension verticalLayoutSize = verticalLayout.getSize();
 
         panelScrollable.scroll(verticalLayoutSize.height);
@@ -63,8 +63,8 @@ public class BottomComponentScrollsUpTest extends MultiBrowserTest {
         // Loose the focus from the button.
         new Actions(getDriver())
                 .moveToElement(panelScrollable, panelScrollableSize.width / 2,
-                        panelScrollableSize.height / 2).click().build()
-                .perform();
+                        panelScrollableSize.height / 2)
+                .click().build().perform();
 
         compareScreen("window");
     }

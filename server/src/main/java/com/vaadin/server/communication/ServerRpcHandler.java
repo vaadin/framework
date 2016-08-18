@@ -257,8 +257,8 @@ public class ServerRpcHandler implements Serializable {
                 // Just a duplicate message due to a bad connection or similar
                 // It has already been handled by the server so it is safe to
                 // ignore
-                getLogger().fine(
-                        "Ignoring old message from the client. Expected: "
+                getLogger()
+                        .fine("Ignoring old message from the client. Expected: "
                                 + expectedId + ", got: "
                                 + rpcRequest.getClientToServerId());
             } else {
@@ -274,8 +274,8 @@ public class ServerRpcHandler implements Serializable {
                     rpcRequest.getRpcInvocationsData());
         }
 
-        ui.getConnectorTracker().cleanConcurrentlyRemovedConnectorIds(
-                rpcRequest.getSyncId());
+        ui.getConnectorTracker()
+                .cleanConcurrentlyRemovedConnectorIds(rpcRequest.getSyncId());
 
         if (rpcRequest.isResynchronize()) {
             ui.getSession().getCommunicationManager().repaintAll(ui);
@@ -299,9 +299,8 @@ public class ServerRpcHandler implements Serializable {
         }
 
         if (!Version.getFullVersion().equals(widgetsetVersion)) {
-            getLogger().warning(
-                    String.format(Constants.WIDGETSET_MISMATCH_INFO,
-                            Version.getFullVersion(), widgetsetVersion));
+            getLogger().warning(String.format(Constants.WIDGETSET_MISMATCH_INFO,
+                    Version.getFullVersion(), widgetsetVersion));
         }
     }
 
@@ -355,12 +354,11 @@ public class ServerRpcHandler implements Serializable {
                 final ClientConnector connector = connectorTracker
                         .getConnector(invocation.getConnectorId());
                 if (connector == null) {
-                    getLogger()
-                            .log(Level.WARNING,
-                                    "Received RPC call for unknown connector with id {0} (tried to invoke {1}.{2})",
-                                    new Object[] { invocation.getConnectorId(),
-                                            invocation.getInterfaceName(),
-                                            invocation.getMethodName() });
+                    getLogger().log(Level.WARNING,
+                            "Received RPC call for unknown connector with id {0} (tried to invoke {1}.{2})",
+                            new Object[] { invocation.getConnectorId(),
+                                    invocation.getInterfaceName(),
+                                    invocation.getMethodName() });
                     continue;
                 }
 
@@ -389,7 +387,8 @@ public class ServerRpcHandler implements Serializable {
                     continue;
                 }
                 // DragAndDropService has null UI
-                if (connector.getUI() != null && connector.getUI().isClosing()) {
+                if (connector.getUI() != null
+                        && connector.getUI().isClosing()) {
                     String msg = "Ignoring RPC call for connector "
                             + connector.getClass().getName();
                     if (connector instanceof Component) {
@@ -413,9 +412,8 @@ public class ServerRpcHandler implements Serializable {
                 }
             }
         } catch (JsonException e) {
-            getLogger().warning(
-                    "Unable to parse RPC call from the client: "
-                            + e.getMessage());
+            getLogger().warning("Unable to parse RPC call from the client: "
+                    + e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -464,8 +462,7 @@ public class ServerRpcHandler implements Serializable {
             } else {
                 throw new IllegalStateException(
                         "Received a legacy variable change for "
-                                + connector.getClass().getName()
-                                + " ("
+                                + connector.getClass().getName() + " ("
                                 + connector.getConnectorId()
                                 + ") which is not a VariableOwner. The client-side connector sent these legacy variables: "
                                 + changes.keySet());
@@ -524,21 +521,15 @@ public class ServerRpcHandler implements Serializable {
         String interfaceName = invocationJson.getString(1);
         String methodName = invocationJson.getString(2);
 
-        if (connectorTracker.getConnector(connectorId) == null
-                && !connectorId
-                        .equals(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID)) {
+        if (connectorTracker.getConnector(connectorId) == null && !connectorId
+                .equals(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID)) {
 
             if (!connectorTracker.connectorWasPresentAsRequestWasSent(
                     connectorId, lastSyncIdSeenByClient)) {
-                getLogger()
-                        .log(Level.WARNING,
-                                "RPC call to "
-                                        + interfaceName
-                                        + "."
-                                        + methodName
-                                        + " received for connector "
-                                        + connectorId
-                                        + " but no such connector could be found. Resynchronizing client.");
+                getLogger().log(Level.WARNING, "RPC call to " + interfaceName
+                        + "." + methodName + " received for connector "
+                        + connectorId
+                        + " but no such connector could be found. Resynchronizing client.");
                 // This is likely an out of sync issue (client tries to update a
                 // connector which is not present). Force resync.
                 connectorTracker.markAllConnectorsDirty();
@@ -548,8 +539,8 @@ public class ServerRpcHandler implements Serializable {
 
         JsonArray parametersJson = invocationJson.getArray(3);
 
-        if (LegacyChangeVariablesInvocation.isLegacyVariableChange(
-                interfaceName, methodName)) {
+        if (LegacyChangeVariablesInvocation
+                .isLegacyVariableChange(interfaceName, methodName)) {
             if (!(previousInvocation instanceof LegacyChangeVariablesInvocation)) {
                 previousInvocation = null;
             }
@@ -603,11 +594,10 @@ public class ServerRpcHandler implements Serializable {
              * corresponding to the received method invocation has been
              * registered.
              */
-            getLogger().warning(
-                    "Ignoring RPC call to " + interfaceName + "." + methodName
-                            + " in connector " + connector.getClass().getName()
-                            + "(" + connectorId
-                            + ") as no RPC implementation is registered");
+            getLogger().warning("Ignoring RPC call to " + interfaceName + "."
+                    + methodName + " in connector "
+                    + connector.getClass().getName() + "(" + connectorId
+                    + ") as no RPC implementation is registered");
             return null;
         }
 

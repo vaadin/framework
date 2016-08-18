@@ -21,7 +21,8 @@ import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.ui.Connect;
 
 @Connect(com.vaadin.tests.components.grid.IntArrayRenderer.class)
-public class IntArrayRendererConnector extends AbstractRendererConnector<int[]> {
+public class IntArrayRendererConnector
+        extends AbstractRendererConnector<int[]> {
 
     public static class IntArrayRenderer implements Renderer<int[]> {
         private static final String JOINER = " :: ";

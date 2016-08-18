@@ -30,8 +30,8 @@ import com.vaadin.ui.VerticalLayout;
  *
  * @author Vaadin Ltd.
  */
-public class TestForRichTextEditor extends CustomComponent implements
-        ValueChangeListener {
+public class TestForRichTextEditor extends CustomComponent
+        implements ValueChangeListener {
 
     private final VerticalLayout main = new VerticalLayout();
 

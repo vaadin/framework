@@ -61,7 +61,7 @@ public class ContextClickUITest extends MultiBrowserTest {
                 .moveToElement($(UIElement.class).first(), 10, 10).click()
                 .perform();
 
-        assertTrue("Context click should not be handled.", getLogRow(0).trim()
-                .isEmpty());
+        assertTrue("Context click should not be handled.",
+                getLogRow(0).trim().isEmpty());
     }
 }

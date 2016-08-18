@@ -35,10 +35,11 @@ public class ToolTipInWindowTest extends MultiBrowserTest {
 
         openTestURL();
 
-        WebElement header = driver.findElement(By
-                .className("v-window-outerheader"));
-        new Actions(driver).moveToElement(
-                driver.findElement(By.className("v-ui")), 0, 0).perform();
+        WebElement header = driver
+                .findElement(By.className("v-window-outerheader"));
+        new Actions(driver)
+                .moveToElement(driver.findElement(By.className("v-ui")), 0, 0)
+                .perform();
         sleep(500);
         new Actions(driver).moveToElement(header).perform();
         sleep(1100);
@@ -54,10 +55,11 @@ public class ToolTipInWindowTest extends MultiBrowserTest {
 
         openTestURL();
 
-        WebElement header = driver.findElement(By
-                .className("v-window-contents"));
-        new Actions(driver).moveToElement(
-                driver.findElement(By.className("v-ui")), 0, 300).perform();
+        WebElement header = driver
+                .findElement(By.className("v-window-contents"));
+        new Actions(driver)
+                .moveToElement(driver.findElement(By.className("v-ui")), 0, 300)
+                .perform();
         sleep(500);
         new Actions(driver).moveToElement(header).perform();
         sleep(1000);

@@ -91,8 +91,9 @@ public class BrowserWindowOpener extends AbstractExtension {
      */
     public BrowserWindowOpener(Class<? extends UI> uiClass, String path) {
         // Create a Resource with a translated URL going to the VaadinService
-        this(new ExternalResource(ApplicationConstants.APP_PROTOCOL_PREFIX
-                + path), new BrowserWindowOpenerUIProvider(uiClass, path));
+        this(new ExternalResource(
+                ApplicationConstants.APP_PROTOCOL_PREFIX + path),
+                new BrowserWindowOpenerUIProvider(uiClass, path));
     }
 
     /**

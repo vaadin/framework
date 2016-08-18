@@ -21,8 +21,10 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for a Grid column visibility change event, called when the Grid's
  * columns have changed visibility to hidden or visible.
  * 
- * @param<T> The row type of the grid. The row type is the POJO type from where
- *           the data is retrieved into the column cells.
+ * @param<T> The
+ *               row type of the grid. The row type is the POJO type from where
+ *               the data is retrieved into the column cells.
+ * 
  * @since 7.5.0
  * @author Vaadin Ltd
  */

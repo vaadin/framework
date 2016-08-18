@@ -113,8 +113,8 @@ public class PushConfigurator extends VerticalLayout {
         pushMode.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                ui.getPushConfiguration().setPushMode(
-                        (PushMode) pushMode.getValue());
+                ui.getPushConfiguration()
+                        .setPushMode((PushMode) pushMode.getValue());
                 refreshStatus();
             }
         });

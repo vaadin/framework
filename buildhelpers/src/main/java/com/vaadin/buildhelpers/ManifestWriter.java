@@ -85,9 +85,9 @@ public class ManifestWriter {
                 fos.write(getBytes());
                 fos.close();
             } catch (IOException e) {
-                System.err.println("Writing to file '"
-                        + newMfFile.getAbsolutePath() + "' failed because: "
-                        + e.getMessage());
+                System.err.println(
+                        "Writing to file '" + newMfFile.getAbsolutePath()
+                                + "' failed because: " + e.getMessage());
                 status = 1;
             }
         }
@@ -100,9 +100,9 @@ public class ManifestWriter {
                 is = new FileInputStream(newMfFile);
                 checkMf.read(is);
             } catch (IOException e) {
-                System.err.println("Reading from file '"
-                        + newMfFile.getAbsolutePath() + "' failed because: "
-                        + e.getMessage());
+                System.err.println(
+                        "Reading from file '" + newMfFile.getAbsolutePath()
+                                + "' failed because: " + e.getMessage());
                 status = 1;
             }
         }
@@ -112,8 +112,8 @@ public class ManifestWriter {
             System.out.println("Updating manifest in JAR " + jarFilename);
             try {
                 // The "mf" order must correspond with manifest-jarfile order
-                Process process = Runtime.getRuntime().exec(
-                        new String[] { "jar", "umf",
+                Process process = Runtime.getRuntime()
+                        .exec(new String[] { "jar", "umf",
                                 newMfFile.getAbsolutePath(), jarFilename });
                 int exitValue = process.waitFor();
                 if (exitValue != 0) {
@@ -123,14 +123,14 @@ public class ManifestWriter {
                     while (reader.ready()) {
                         System.err.println("jar: " + reader.readLine());
                     }
-                    System.err
-                            .println("The 'jar' command returned with exit value "
+                    System.err.println(
+                            "The 'jar' command returned with exit value "
                                     + exitValue);
                     status = 1;
                 }
             } catch (IOException e) {
-                System.err.println("Failed to execute 'jar' command. "
-                        + e.getMessage());
+                System.err.println(
+                        "Failed to execute 'jar' command. " + e.getMessage());
                 status = 1;
             } catch (InterruptedException e) {
                 System.err

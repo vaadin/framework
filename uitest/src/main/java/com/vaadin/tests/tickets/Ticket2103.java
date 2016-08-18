@@ -72,8 +72,8 @@ public class Ticket2103 extends LegacyApplication {
                 Item rowItem = table.addItem(j);
                 if (rowItem != null) {
                     for (int i = 0; i < columns.length; i++) {
-                        rowItem.getItemProperty(columns[i]).setValue(
-                                "Value" + j);
+                        rowItem.getItemProperty(columns[i])
+                                .setValue("Value" + j);
                     }
                 }
             }

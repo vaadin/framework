@@ -36,8 +36,8 @@ import com.vaadin.ui.ColorPickerArea;
 @Connect(value = ColorPickerArea.class, loadStyle = LoadStyle.LAZY)
 public class ColorPickerAreaConnector extends AbstractColorPickerConnector {
 
-    private ColorPickerServerRpc rpc = RpcProxy.create(
-            ColorPickerServerRpc.class, this);
+    private ColorPickerServerRpc rpc = RpcProxy
+            .create(ColorPickerServerRpc.class, this);
 
     @Override
     protected Widget createWidget() {

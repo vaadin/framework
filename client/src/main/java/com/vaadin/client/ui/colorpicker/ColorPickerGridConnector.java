@@ -40,8 +40,8 @@ import com.vaadin.ui.components.colorpicker.ColorPickerGrid;
 public class ColorPickerGridConnector extends AbstractComponentConnector
         implements ClickHandler {
 
-    private ColorPickerGridServerRpc rpc = RpcProxy.create(
-            ColorPickerGridServerRpc.class, this);
+    private ColorPickerGridServerRpc rpc = RpcProxy
+            .create(ColorPickerGridServerRpc.class, this);
 
     @Override
     protected Widget createWidget() {

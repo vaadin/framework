@@ -73,8 +73,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * A comparator that sorts the listed items before other items. Otherwise,
      * the order is undefined.
      */
-    private static class ListedItemsFirstComparator implements
-            Comparator<Object>, Serializable {
+    private static class ListedItemsFirstComparator
+            implements Comparator<Object>, Serializable {
         private final Collection<?> itemIds;
 
         private ListedItemsFirstComparator(Collection<?> itemIds) {
@@ -373,8 +373,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
         // If the wrapped container implements the method directly, use it
         if (hierarchical) {
-            return ((Container.Hierarchical) container).setChildrenAllowed(
-                    itemId, childrenAllowed);
+            return ((Container.Hierarchical) container)
+                    .setChildrenAllowed(itemId, childrenAllowed);
         }
 
         // Check that the item is in the container
@@ -457,7 +457,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
         // Check that the new parent exists in container and can have
         // children
-        if (!containsId(newParentId) || noChildrenAllowed.contains(newParentId)) {
+        if (!containsId(newParentId)
+                || noChildrenAllowed.contains(newParentId)) {
             return false;
         }
 
@@ -753,7 +754,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             Container.ItemSetChangeListener listener) {
         if (container instanceof Container.ItemSetChangeNotifier) {
             ((Container.ItemSetChangeNotifier) container)
-                    .removeItemSetChangeListener(new PiggybackListener(listener));
+                    .removeItemSetChangeListener(
+                            new PiggybackListener(listener));
         }
     }
 
@@ -777,8 +779,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             Container.PropertySetChangeListener listener) {
         if (container instanceof Container.PropertySetChangeNotifier) {
             ((Container.PropertySetChangeNotifier) container)
-                    .addPropertySetChangeListener(new PiggybackListener(
-                            listener));
+                    .addPropertySetChangeListener(
+                            new PiggybackListener(listener));
         }
     }
 
@@ -802,8 +804,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             Container.PropertySetChangeListener listener) {
         if (container instanceof Container.PropertySetChangeNotifier) {
             ((Container.PropertySetChangeNotifier) container)
-                    .removePropertySetChangeListener(new PiggybackListener(
-                            listener));
+                    .removePropertySetChangeListener(
+                            new PiggybackListener(listener));
         }
     }
 
@@ -823,8 +825,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * listener so that the correct listener gets removed.
      * 
      */
-    private class PiggybackListener implements
-            Container.PropertySetChangeListener,
+    private class PiggybackListener
+            implements Container.PropertySetChangeListener,
             Container.ItemSetChangeListener {
 
         Object listener;

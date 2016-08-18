@@ -63,8 +63,8 @@ public class GridWidthIncreaseTest extends MultiBrowserTest {
              * Selenium doesn't support subpixels correctly, we use a rough
              * estimation.
              */
-            assertEquals(grid.getRow(0).getSize().getWidth(), grid
-                    .getTableWrapper().getSize().getWidth(), accuracy);
+            assertEquals(grid.getRow(0).getSize().getWidth(),
+                    grid.getTableWrapper().getSize().getWidth(), accuracy);
         }
     }
 }

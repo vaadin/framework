@@ -43,7 +43,8 @@ public class SampleDirectory {
      * @param application
      * @return file pointing to sample directory
      */
-    public static File getDirectory(VaadinSession application, LegacyWindow uI) {
+    public static File getDirectory(VaadinSession application,
+            LegacyWindow uI) {
         String errorMessage = "Access to application "
                 + "context base directory failed, "
                 + "possible security constraint with Application "
@@ -82,8 +83,8 @@ public class SampleDirectory {
         final Panel errorPanel = new Panel("Demo application error",
                 errorLayout);
         errorPanel.setStyleName("strong");
-        errorPanel.setComponentError(new SystemError(
-                "Cannot provide sample directory"));
+        errorPanel.setComponentError(
+                new SystemError("Cannot provide sample directory"));
         errorLayout.addComponent(new Label(errorMessage, ContentMode.HTML));
         // Remove all components from applications main window
         uI.removeAllComponents();

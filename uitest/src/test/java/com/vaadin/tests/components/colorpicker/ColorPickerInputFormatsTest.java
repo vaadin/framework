@@ -77,8 +77,8 @@ public class ColorPickerInputFormatsTest extends MultiBrowserTest {
         getDriver().findElement(By.id("colorpicker1")).click();
 
         // Add RGB value
-        WebElement field = getDriver().findElement(
-                By.className("v-colorpicker-preview-textfield"));
+        WebElement field = getDriver()
+                .findElement(By.className("v-colorpicker-preview-textfield"));
 
         // Select all text
         field.sendKeys(Keys.chord(Keys.CONTROL, "a"));
@@ -91,8 +91,8 @@ public class ColorPickerInputFormatsTest extends MultiBrowserTest {
     }
 
     private String getColorpickerValue() {
-        WebElement field = getDriver().findElement(
-                By.className("v-colorpicker-preview-textfield"));
+        WebElement field = getDriver()
+                .findElement(By.className("v-colorpicker-preview-textfield"));
         return field.getAttribute("value");
     }
 }

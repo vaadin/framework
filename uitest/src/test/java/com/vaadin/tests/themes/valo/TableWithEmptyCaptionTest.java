@@ -30,8 +30,8 @@ public class TableWithEmptyCaptionTest extends MultiBrowserTest {
 
         // Wait for the loading bar to disappear before taking the screenshot.
         try {
-            waitUntil(ExpectedConditions.invisibilityOfElementLocated(By
-                    .className("v-loading-indicator")), 5);
+            waitUntil(ExpectedConditions.invisibilityOfElementLocated(
+                    By.className("v-loading-indicator")), 5);
         } catch (TimeoutException e) {
             // Just take the screenshot, PhantomJS always times out.
         }

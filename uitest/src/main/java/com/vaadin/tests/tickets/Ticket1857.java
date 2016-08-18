@@ -54,14 +54,13 @@ public class Ticket1857 extends LegacyApplication implements Handler {
                     @Override
                     public String getStyle(Table source, Object itemId,
                             Object propertyId) {
-                        Object cell = t.getContainerProperty(itemId,
-                                propertyId).getValue();
+                        Object cell = t.getContainerProperty(itemId, propertyId)
+                                .getValue();
                         if (!(cell instanceof Integer)) {
                             return null;
                         }
                         int age = ((Integer) cell).intValue();
-                        return age > 65 ? "old" : (age < 18 ? "young"
-                                : null);
+                        return age > 65 ? "old" : (age < 18 ? "young" : null);
                     }
                 });
             } else {

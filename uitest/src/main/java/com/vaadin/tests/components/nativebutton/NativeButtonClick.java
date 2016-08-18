@@ -47,16 +47,16 @@ public class NativeButtonClick extends AbstractTestUI {
                 new NativeButton.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        label1.setValue(event.getClientX() + ","
-                                + event.getClientY());
+                        label1.setValue(
+                                event.getClientX() + "," + event.getClientY());
                     }
                 });
         Button button2 = new NativeButton("Button2",
                 new NativeButton.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        label2.setValue(event.getClientX() + ","
-                                + event.getClientY());
+                        label2.setValue(
+                                event.getClientX() + "," + event.getClientY());
                     }
                 });
 

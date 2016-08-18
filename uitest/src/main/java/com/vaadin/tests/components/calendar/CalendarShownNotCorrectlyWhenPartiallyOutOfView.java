@@ -35,8 +35,8 @@ import com.vaadin.ui.components.calendar.event.BasicEvent;
  *         out of view (#7261)
  */
 @Theme("tests-calendar")
-public class CalendarShownNotCorrectlyWhenPartiallyOutOfView extends
-        AbstractTestUI {
+public class CalendarShownNotCorrectlyWhenPartiallyOutOfView
+        extends AbstractTestUI {
 
     private static final long serialVersionUID = 1L;
     private Calendar calendar;
@@ -52,11 +52,11 @@ public class CalendarShownNotCorrectlyWhenPartiallyOutOfView extends
         calendar = new Calendar();
 
         try {
-            BasicEvent event = new BasicEvent("EVENT NAME 1",
-                    "EVENT TOOLTIP 1",
+            BasicEvent event = new BasicEvent("EVENT NAME 1", "EVENT TOOLTIP 1",
                     new SimpleDateFormat("yyyy-MM-dd HH:mm")
-                            .parse("2013-09-05 09:30"), new SimpleDateFormat(
-                            "yyyy-MM-dd HH:mm").parse("2013-09-05 14:00"));
+                            .parse("2013-09-05 09:30"),
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm")
+                            .parse("2013-09-05 14:00"));
             event.setStyleName("color1");
             calendar.addEvent(event);
         } catch (ParseException e1) { // Nothing to do
@@ -64,10 +64,10 @@ public class CalendarShownNotCorrectlyWhenPartiallyOutOfView extends
         }
 
         try {
-            calendar.setStartDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2013-09-01"));
-            calendar.setEndDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2013-09-30"));
+            calendar.setStartDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2013-09-01"));
+            calendar.setEndDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2013-09-30"));
         } catch (ParseException e) { // Nothing to do
 
         }

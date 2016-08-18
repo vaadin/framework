@@ -109,9 +109,8 @@ public class ApplicationConnection implements HasHandlers {
      * <pre>
      * if (sessionExpired) {
      *     response.setHeader(&quot;Content-Type&quot;, &quot;text/html&quot;);
-     *     response.getWriter().write(
-     *             myLoginPageHtml + &quot;&lt;!-- Vaadin-Refresh: &quot;
-     *                     + request.getContextPath() + &quot; --&gt;&quot;);
+     *     response.getWriter().write(myLoginPageHtml + &quot;&lt;!-- Vaadin-Refresh: &quot;
+     *             + request.getContextPath() + &quot; --&gt;&quot;);
      * }
      * </pre>
      */
@@ -156,7 +155,8 @@ public class ApplicationConnection implements HasHandlers {
         void onResponseHandlingEnded(ResponseHandlingEndedEvent e);
     }
 
-    public static class RequestStartingEvent extends ApplicationConnectionEvent {
+    public static class RequestStartingEvent
+            extends ApplicationConnectionEvent {
 
         public static Type<CommunicationHandler> TYPE = new Type<CommunicationHandler>();
 
@@ -175,8 +175,8 @@ public class ApplicationConnection implements HasHandlers {
         }
     }
 
-    public static class ResponseHandlingEndedEvent extends
-            ApplicationConnectionEvent {
+    public static class ResponseHandlingEndedEvent
+            extends ApplicationConnectionEvent {
 
         public static Type<CommunicationHandler> TYPE = new Type<CommunicationHandler>();
 
@@ -195,8 +195,8 @@ public class ApplicationConnection implements HasHandlers {
         }
     }
 
-    public static abstract class ApplicationConnectionEvent extends
-            GwtEvent<CommunicationHandler> {
+    public static abstract class ApplicationConnectionEvent
+            extends GwtEvent<CommunicationHandler> {
 
         private ApplicationConnection connection;
 
@@ -210,8 +210,8 @@ public class ApplicationConnection implements HasHandlers {
 
     }
 
-    public static class ResponseHandlingStartedEvent extends
-            ApplicationConnectionEvent {
+    public static class ResponseHandlingStartedEvent
+            extends ApplicationConnectionEvent {
 
         public ResponseHandlingStartedEvent(ApplicationConnection connection) {
             super(connection);
@@ -242,8 +242,8 @@ public class ApplicationConnection implements HasHandlers {
      * @since 7.1.8
      * @author Vaadin Ltd
      */
-    public static class ApplicationStoppedEvent extends
-            GwtEvent<ApplicationStoppedHandler> {
+    public static class ApplicationStoppedEvent
+            extends GwtEvent<ApplicationStoppedHandler> {
 
         public static Type<ApplicationStoppedHandler> TYPE = new Type<ApplicationStoppedHandler>();
 
@@ -351,8 +351,8 @@ public class ApplicationConnection implements HasHandlers {
 
     public ApplicationConnection() {
         // Assuming UI data is eagerly loaded
-        ConnectorBundleLoader.get().loadBundle(
-                ConnectorBundleLoader.EAGER_BUNDLE_NAME, null);
+        ConnectorBundleLoader.get()
+                .loadBundle(ConnectorBundleLoader.EAGER_BUNDLE_NAME, null);
         uIConnector = GWT.create(UIConnector.class);
         rpcManager = GWT.create(RpcManager.class);
         layoutManager = GWT.create(LayoutManager.class);
@@ -368,9 +368,8 @@ public class ApplicationConnection implements HasHandlers {
         getLogger().info("Starting application " + cnf.getRootPanelId());
         getLogger().info("Using theme: " + cnf.getThemeName());
 
-        getLogger().info(
-                "Vaadin application servlet version: "
-                        + cnf.getServletVersion());
+        getLogger().info("Vaadin application servlet version: "
+                + cnf.getServletVersion());
 
         if (!cnf.getServletVersion().equals(Version.getFullVersion())) {
             getLogger()
@@ -440,8 +439,8 @@ public class ApplicationConnection implements HasHandlers {
 
             // Hack to avoid logging an error in endRequest()
             getMessageSender().startRequest();
-            getMessageHandler().handleMessage(
-                    MessageHandler.parseJson(jsonText));
+            getMessageHandler()
+                    .handleMessage(MessageHandler.parseJson(jsonText));
         }
 
         // Tooltip can't be created earlier because the
@@ -483,7 +482,7 @@ public class ApplicationConnection implements HasHandlers {
                 return vi;
             }
         }
-
+    
         client.getProfilingData = $entry(function() {
             var smh = ap.@com.vaadin.client.ApplicationConnection::getMessageHandler()();
             var pd = [
@@ -498,7 +497,7 @@ public class ApplicationConnection implements HasHandlers {
             pd[pd.length] = smh.@com.vaadin.client.communication.MessageHandler::bootstrapTime;
             return pd;
         });
-
+    
         client.getElementByPath = $entry(function(id) {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
         });
@@ -515,7 +514,7 @@ public class ApplicationConnection implements HasHandlers {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getPathForElement(Lcom/google/gwt/dom/client/Element;)(element);
         });
         client.initializing = false;
-
+    
         $wnd.vaadin.clients[TTAppId] = client;
     }-*/;
 
@@ -619,10 +618,9 @@ public class ApplicationConnection implements HasHandlers {
 
             // Show this message just once
             if (cssWaits++ == 0) {
-                getLogger().warning(
-                        "Assuming CSS loading is not complete, "
-                                + "postponing render phase. "
-                                + "(.v-loading-indicator height == 0)");
+                getLogger().warning("Assuming CSS loading is not complete, "
+                        + "postponing render phase. "
+                        + "(.v-loading-indicator height == 0)");
             }
         } else {
             cssLoaded = true;
@@ -775,9 +773,8 @@ public class ApplicationConnection implements HasHandlers {
 
             @Override
             public void onError(ResourceLoadEvent event) {
-                getLogger()
-                        .severe(event.getResourceUrl()
-                                + " could not be loaded, or the load detection failed because the stylesheet is empty.");
+                getLogger().severe(event.getResourceUrl()
+                        + " could not be loaded, or the load detection failed because the stylesheet is empty.");
                 // The show must go on
                 onLoad(event);
             }
@@ -1361,9 +1358,8 @@ public class ApplicationConnection implements HasHandlers {
      */
     @Deprecated
     public void unregisterPaintable(ServerConnector p) {
-        getLogger().info(
-                "unregisterPaintable (unnecessarily) called for "
-                        + Util.getConnectorString(p));
+        getLogger().info("unregisterPaintable (unnecessarily) called for "
+                + Util.getConnectorString(p));
     }
 
     /**
@@ -1397,10 +1393,8 @@ public class ApplicationConnection implements HasHandlers {
         }
 
         if (!manageCaption) {
-            getLogger()
-                    .warning(
-                            Util.getConnectorString(connector)
-                                    + " called updateComponent with manageCaption=false. The parameter was ignored - override delegateCaption() to return false instead. It is however not recommended to use caption this way at all.");
+            getLogger().warning(Util.getConnectorString(connector)
+                    + " called updateComponent with manageCaption=false. The parameter was ignored - override delegateCaption() to return false instead. It is however not recommended to use caption this way at all.");
         }
         return false;
     }
@@ -1474,37 +1468,35 @@ public class ApplicationConnection implements HasHandlers {
      * @param delegate
      *            the delegate.
      */
-    public void setCommunicationErrorDelegate(CommunicationErrorHandler delegate) {
+    public void setCommunicationErrorDelegate(
+            CommunicationErrorHandler delegate) {
         communicationErrorDelegate = delegate;
     }
 
     public void setApplicationRunning(boolean applicationRunning) {
         if (getApplicationState() == ApplicationState.TERMINATED) {
             if (applicationRunning) {
-                getLogger()
-                        .severe("Tried to restart a terminated application. This is not supported");
+                getLogger().severe(
+                        "Tried to restart a terminated application. This is not supported");
             } else {
-                getLogger()
-                        .warning(
-                                "Tried to stop a terminated application. This should not be done");
+                getLogger().warning(
+                        "Tried to stop a terminated application. This should not be done");
             }
             return;
         } else if (getApplicationState() == ApplicationState.INITIALIZING) {
             if (applicationRunning) {
                 applicationState = ApplicationState.RUNNING;
             } else {
-                getLogger()
-                        .warning(
-                                "Tried to stop the application before it has started. This should not be done");
+                getLogger().warning(
+                        "Tried to stop the application before it has started. This should not be done");
             }
         } else if (getApplicationState() == ApplicationState.RUNNING) {
             if (!applicationRunning) {
                 applicationState = ApplicationState.TERMINATED;
                 eventBus.fireEvent(new ApplicationStoppedEvent());
             } else {
-                getLogger()
-                        .warning(
-                                "Tried to start an already running application. This should not be done");
+                getLogger().warning(
+                        "Tried to start an already running application. This should not be done");
             }
         }
     }

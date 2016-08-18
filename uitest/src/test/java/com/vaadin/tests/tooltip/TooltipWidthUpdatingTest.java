@@ -40,7 +40,8 @@ public class TooltipWidthUpdatingTest extends TooltipTest {
         testBenchElement(btnShortTooltip).showTooltip();
 
         assertThat(getDriver().findElement(By.className("popupContent"))
-                .getSize().getWidth(), lessThan(TooltipWidthUpdating.MAX_WIDTH));
+                .getSize().getWidth(),
+                lessThan(TooltipWidthUpdating.MAX_WIDTH));
     }
 
 }

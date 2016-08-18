@@ -37,8 +37,8 @@ import com.vaadin.data.Item;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class HierarchicalContainer extends IndexedContainer implements
-        Container.Hierarchical {
+public class HierarchicalContainer extends IndexedContainer
+        implements Container.Hierarchical {
 
     /**
      * Set of IDs of those contained Items that can't have children.
@@ -304,7 +304,8 @@ public class HierarchicalContainer extends IndexedContainer implements
 
         // Checks that the new parent exists in container and can have
         // children
-        if (!containsId(newParentId) || noChildrenAllowed.contains(newParentId)) {
+        if (!containsId(newParentId)
+                || noChildrenAllowed.contains(newParentId)) {
             return false;
         }
 
@@ -448,9 +449,8 @@ public class HierarchicalContainer extends IndexedContainer implements
 
     private void enableAndFireContentsChangeEvents() {
         if (contentChangedEventsDisabledCount <= 0) {
-            getLogger()
-                    .log(Level.WARNING,
-                            "Mismatched calls to disable and enable contents change events in HierarchicalContainer");
+            getLogger().log(Level.WARNING,
+                    "Mismatched calls to disable and enable contents change events in HierarchicalContainer");
             contentChangedEventsDisabledCount = 0;
         } else {
             contentChangedEventsDisabledCount--;
@@ -632,8 +632,8 @@ public class HierarchicalContainer extends IndexedContainer implements
         if (children2 != null) {
             Object[] array = children2.toArray();
             for (int i = 0; i < array.length; i++) {
-                boolean removeItemRecursively = removeItemRecursively(
-                        container, array[i]);
+                boolean removeItemRecursively = removeItemRecursively(container,
+                        array[i]);
                 if (!removeItemRecursively) {
                     success = false;
                 }
@@ -746,7 +746,8 @@ public class HierarchicalContainer extends IndexedContainer implements
 
             for (Object itemId : filteredItemIds) {
                 Object itemParent = parent.get(itemId);
-                if (itemParent == null || !filteredItemIds.contains(itemParent)) {
+                if (itemParent == null
+                        || !filteredItemIds.contains(itemParent)) {
                     // Parent is not included or this was a root, in both cases
                     // this should be a filtered root
                     filteredRoots.add(itemId);

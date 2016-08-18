@@ -32,8 +32,8 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public abstract class LegacyAbstractStringToNumberConverter<T> implements
-        LegacyConverter<String, T> {
+public abstract class LegacyAbstractStringToNumberConverter<T>
+        implements LegacyConverter<String, T> {
 
     /**
      * Returns the format used by {@link #convertToPresentation(Object, Locale)}

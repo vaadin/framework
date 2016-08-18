@@ -42,11 +42,11 @@ public class LinkTest extends AbstractComponentTest<Link> {
     private void createTargetSelect(String category) {
         LinkedHashMap<String, Resource> options = new LinkedHashMap<String, Resource>();
         options.put("-", null);
-        options.put("https://vaadin.com", new ExternalResource(
-                "https://vaadin.com"));
+        options.put("https://vaadin.com",
+                new ExternalResource("https://vaadin.com"));
         options.put("32x32 theme icon", ICON_32_ATTENTION_PNG_CACHEABLE);
-        options.put("linktest-target.html", new ClassResource(
-                "linktest-target.html"));
+        options.put("linktest-target.html",
+                new ClassResource("linktest-target.html"));
 
         createSelectAction("Link target", category, options,
                 "https://vaadin.com", linkTargetCommand, null);

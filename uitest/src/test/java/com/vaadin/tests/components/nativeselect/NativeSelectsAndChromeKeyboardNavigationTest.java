@@ -28,8 +28,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class NativeSelectsAndChromeKeyboardNavigationTest extends
-        MultiBrowserTest {
+public class NativeSelectsAndChromeKeyboardNavigationTest
+        extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {

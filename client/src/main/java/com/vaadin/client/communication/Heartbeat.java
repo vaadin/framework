@@ -63,9 +63,10 @@ public class Heartbeat {
 
         setInterval(connection.getConfiguration().getHeartbeatInterval());
 
-        uri = SharedUtil.addGetParameters(connection
-                .translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
-                        + ApplicationConstants.HEARTBEAT_PATH + '/'),
+        uri = SharedUtil.addGetParameters(
+                connection.translateVaadinUri(
+                        ApplicationConstants.APP_PROTOCOL_PREFIX
+                                + ApplicationConstants.HEARTBEAT_PATH + '/'),
                 UIConstants.UI_ID_PARAMETER + "="
                         + connection.getConfiguration().getUIId());
 
@@ -111,8 +112,8 @@ public class Heartbeat {
             public void onError(Request request, Throwable exception) {
                 // Handler should stop the application if heartbeat should no
                 // longer be sent
-                connection.getConnectionStateHandler().heartbeatException(
-                        request, exception);
+                connection.getConnectionStateHandler()
+                        .heartbeatException(request, exception);
                 schedule();
             }
         };

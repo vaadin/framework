@@ -32,8 +32,8 @@ import com.vaadin.ui.VerticalSplitPanel;
  * @since
  * @author Vaadin Ltd
  */
-public class AbstractSplitPanelDeclarativeTest extends
-        DeclarativeTestBase<AbstractSplitPanel> {
+public class AbstractSplitPanelDeclarativeTest
+        extends DeclarativeTestBase<AbstractSplitPanel> {
 
     @Test
     public void testWithBothChildren() {

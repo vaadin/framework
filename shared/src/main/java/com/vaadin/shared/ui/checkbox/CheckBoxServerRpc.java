@@ -21,5 +21,6 @@ import com.vaadin.shared.communication.ServerRpc;
 
 public interface CheckBoxServerRpc extends ServerRpc {
     @Delayed
-    public void setChecked(boolean checked, MouseEventDetails mouseEventDetails);
+    public void setChecked(boolean checked,
+            MouseEventDetails mouseEventDetails);
 }

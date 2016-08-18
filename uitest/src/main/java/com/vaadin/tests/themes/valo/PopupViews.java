@@ -74,11 +74,13 @@ public class PopupViews extends VerticalLayout implements View {
                 return new VerticalLayout() {
                     {
                         setMargin(true);
-                        addComponent(new Label(
-                                "<h3>Thanks for waiting!</h3><p>You've opened this popup <b>"
-                                        + ++count + " time"
-                                        + (count > 1 ? "s" : " only")
-                                        + "</b>.</p>", ContentMode.HTML));
+                        addComponent(
+                                new Label(
+                                        "<h3>Thanks for waiting!</h3><p>You've opened this popup <b>"
+                                                + ++count + " time"
+                                                + (count > 1 ? "s" : " only")
+                                                + "</b>.</p>",
+                                        ContentMode.HTML));
                     }
                 };
             }

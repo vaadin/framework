@@ -74,8 +74,8 @@ public class PageTest {
 
     }
 
-    private static class TestBrowserWindowResizeListener implements
-            BrowserWindowResizeListener {
+    private static class TestBrowserWindowResizeListener
+            implements BrowserWindowResizeListener {
 
         @Override
         public void browserWindowResized(BrowserWindowResizeEvent event) {

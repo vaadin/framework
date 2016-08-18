@@ -418,7 +418,8 @@ public class ApplicationConfiguration implements EntryPoint {
                 .intValue();
 
         // null -> false
-        standalone = jsoConfiguration.getConfigBoolean("standalone") == Boolean.TRUE;
+        standalone = jsoConfiguration
+                .getConfigBoolean("standalone") == Boolean.TRUE;
 
         heartbeatInterval = jsoConfiguration
                 .getConfigInteger("heartbeatInterval");
@@ -442,7 +443,8 @@ public class ApplicationConfiguration implements EntryPoint {
             @Override
             public void execute() {
                 Profiler.enter("ApplicationConfiguration.startApplication");
-                ApplicationConfiguration appConf = getConfigFromDOM(applicationId);
+                ApplicationConfiguration appConf = getConfigFromDOM(
+                        applicationId);
                 ApplicationConnection a = GWT
                         .create(ApplicationConnection.class);
                 a.init(widgetSet, appConf);
@@ -511,7 +513,8 @@ public class ApplicationConfiguration implements EntryPoint {
             // Initialize if not already loaded
             Integer currentTag = Integer.valueOf(tag);
             while (type == null && currentTag != null) {
-                String serverSideClassNameForTag = getServerSideClassNameForTag(currentTag);
+                String serverSideClassNameForTag = getServerSideClassNameForTag(
+                        currentTag);
                 if (TypeData.hasIdentifier(serverSideClassNameForTag)) {
                     try {
                         type = (Class<? extends ServerConnector>) TypeData
@@ -624,9 +627,8 @@ public class ApplicationConfiguration implements EntryPoint {
                 cmd.execute();
             }
             callbacks.clear();
-        } else if (dependenciesLoading == 0
-                && !ConnectorBundleLoader.get().isBundleLoaded(
-                        ConnectorBundleLoader.DEFERRED_BUNDLE_NAME)) {
+        } else if (dependenciesLoading == 0 && !ConnectorBundleLoader.get()
+                .isBundleLoaded(ConnectorBundleLoader.DEFERRED_BUNDLE_NAME)) {
             ConnectorBundleLoader.get().loadBundle(
                     ConnectorBundleLoader.DEFERRED_BUNDLE_NAME,
                     new BundleLoadCallback() {
@@ -655,9 +657,8 @@ public class ApplicationConfiguration implements EntryPoint {
         // Don't run twice if the module has been inherited several times,
         // and don't continue if vaadinBootstrap was not executed.
         if (moduleLoaded || !vaadinBootstrapLoaded()) {
-            getLogger()
-                    .log(Level.WARNING,
-                            "vaadinBootstrap.js was not loaded, skipping vaadin application configuration.");
+            getLogger().log(Level.WARNING,
+                    "vaadinBootstrap.js was not loaded, skipping vaadin application configuration.");
             return;
         }
         moduleLoaded = true;
@@ -714,7 +715,8 @@ public class ApplicationConfiguration implements EntryPoint {
 
                     @Override
                     public void onFailure(Throwable reason) {
-                        Window.alert("Failed to load Vaadin debug window styles");
+                        Window.alert(
+                                "Failed to load Vaadin debug window styles");
                     }
                 });
 

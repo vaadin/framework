@@ -111,8 +111,8 @@ import elemental.json.JsonValue;
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.Grid.class)
-public class GridConnector extends AbstractHasComponentsConnector implements
-        SimpleManagedLayout, DeferredWorker {
+public class GridConnector extends AbstractHasComponentsConnector
+        implements SimpleManagedLayout, DeferredWorker {
 
     private static final class CustomStyleGenerator implements
             CellStyleGenerator<JsonObject>, RowStyleGenerator<JsonObject> {
@@ -223,7 +223,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                         public void onStateChanged(
                                 StateChangeEvent stateChangeEvent) {
 
-                            String error = editorConnector.getState().errorMessage;
+                            String error = editorConnector
+                                    .getState().errorMessage;
 
                             if (error == null) {
                                 columnToErrorMessage
@@ -233,7 +234,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                                 // therefore, we use this hack to make the
                                 // string human-readable.
                                 Element e = DOM.createElement("div");
-                                e.setInnerHTML(editorConnector.getState().errorMessage);
+                                e.setInnerHTML(editorConnector
+                                        .getState().errorMessage);
                                 error = getHeaderCaption() + ": "
                                         + e.getInnerText();
 
@@ -242,8 +244,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                             }
 
                             // Handle Editor RPC before updating error status
-                            Scheduler.get().scheduleFinally(
-                                    new ScheduledCommand() {
+                            Scheduler.get()
+                                    .scheduleFinally(new ScheduledCommand() {
 
                                         @Override
                                         public void execute() {
@@ -400,8 +402,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     }
 
-    private class ItemClickHandler implements BodyClickHandler,
-            BodyDoubleClickHandler {
+    private class ItemClickHandler
+            implements BodyClickHandler, BodyDoubleClickHandler {
 
         @Override
         public void onClick(GridClickEvent event) {
@@ -417,15 +419,13 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
         }
 
-        private void fireItemClick(CellReference<?> cell, NativeEvent mouseEvent) {
+        private void fireItemClick(CellReference<?> cell,
+                NativeEvent mouseEvent) {
             String rowKey = getRowKey((JsonObject) cell.getRow());
             String columnId = getColumnId(cell.getColumn());
-            getRpcProxy(GridServerRpc.class)
-                    .itemClick(
-                            rowKey,
-                            columnId,
-                            MouseEventDetailsBuilder
-                                    .buildMouseEventDetails(mouseEvent));
+            getRpcProxy(GridServerRpc.class).itemClick(rowKey, columnId,
+                    MouseEventDetailsBuilder
+                            .buildMouseEventDetails(mouseEvent));
         }
     }
 
@@ -441,8 +441,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                         newColumnOrder.add(((CustomGridColumn) column).id);
                     } // the other case would be the multi selection column
                 }
-                getRpcProxy(GridServerRpc.class).columnsReordered(
-                        newColumnOrder, columnOrder);
+                getRpcProxy(GridServerRpc.class)
+                        .columnsReordered(newColumnOrder, columnOrder);
                 columnOrder = newColumnOrder;
                 getState().columnOrder = newColumnOrder;
             }
@@ -491,7 +491,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     };
 
-    private class CustomDetailsGenerator implements HeightAwareDetailsGenerator {
+    private class CustomDetailsGenerator
+            implements HeightAwareDetailsGenerator {
 
         private final Map<String, ComponentConnector> idToDetailsMap = new HashMap<String, ComponentConnector>();
         private final Map<String, Integer> idToRowIndex = new HashMap<String, Integer>();
@@ -534,9 +535,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         private String getId(int rowIndex) {
             JsonObject row = getWidget().getDataSource().getRow(rowIndex);
 
-            if (!row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)
-                    || row.getString(GridState.JSONKEY_DETAILS_VISIBLE)
-                            .isEmpty()) {
+            if (!row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE) || row
+                    .getString(GridState.JSONKEY_DETAILS_VISIBLE).isEmpty()) {
                 return null;
             }
 
@@ -782,8 +782,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
                 if (!Arrays.equals(columnIds, getState().sortColumns)
                         || !Arrays.equals(directions, getState().sortDirs)) {
                     // Report back to server if changed
-                    getRpcProxy(GridServerRpc.class).sort(columnIds,
-                            directions, event.isUserOriginated());
+                    getRpcProxy(GridServerRpc.class).sort(columnIds, directions,
+                            event.isUserOriginated());
                 }
             }
         });
@@ -939,7 +939,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     }
 
-    private void updateHeaderCellFromState(HeaderCell cell, CellState cellState) {
+    private void updateHeaderCellFromState(HeaderCell cell,
+            CellState cellState) {
         switch (cellState.type) {
         case TEXT:
             cell.setText(cellState.text);
@@ -958,8 +959,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
             break;
         default:
-            throw new IllegalStateException("unexpected cell type: "
-                    + cellState.type);
+            throw new IllegalStateException(
+                    "unexpected cell type: " + cellState.type);
         }
         cell.setStyleName(cellState.styleName);
     }
@@ -999,7 +1000,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         }
     }
 
-    private void updateFooterCellFromState(FooterCell cell, CellState cellState) {
+    private void updateFooterCellFromState(FooterCell cell,
+            CellState cellState) {
         switch (cellState.type) {
         case TEXT:
             cell.setText(cellState.text);
@@ -1018,8 +1020,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
             }
             break;
         default:
-            throw new IllegalStateException("unexpected cell type: "
-                    + cellState.type);
+            throw new IllegalStateException(
+                    "unexpected cell type: " + cellState.type);
         }
         cell.setStyleName(cellState.styleName);
     }
@@ -1074,7 +1076,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         column.setExpandRatio(state.expandRatio);
 
         assert state.rendererConnector instanceof AbstractRendererConnector : "GridColumnState.rendererConnector is invalid (not subclass of AbstractRendererConnector)";
-        column.setRenderer((AbstractRendererConnector<Object>) state.rendererConnector);
+        column.setRenderer(
+                (AbstractRendererConnector<Object>) state.rendererConnector);
 
         column.setSortable(state.sortable);
 
@@ -1087,7 +1090,8 @@ public class GridConnector extends AbstractHasComponentsConnector implements
         column.setHidingToggleCaption(state.hidingToggleCaption);
 
         column.setEditable(state.editable);
-        column.setEditorConnector((AbstractComponentConnector) state.editorConnector);
+        column.setEditorConnector(
+                (AbstractComponentConnector) state.editorConnector);
     }
 
     /**

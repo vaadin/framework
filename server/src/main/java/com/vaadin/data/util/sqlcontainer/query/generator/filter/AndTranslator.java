@@ -28,8 +28,8 @@ public class AndTranslator implements FilterTranslator {
 
     @Override
     public String getWhereStringForFilter(Filter filter, StatementHelper sh) {
-        return QueryBuilder.group(QueryBuilder.getJoinedFilterString(
-                ((And) filter).getFilters(), "AND", sh));
+        return QueryBuilder.group(QueryBuilder
+                .getJoinedFilterString(((And) filter).getFilters(), "AND", sh));
     }
 
 }

@@ -40,18 +40,19 @@ public class GridEditorMultiselectTest extends MultiBrowserTest {
     private GridElement openEditor() {
         GridElement grid = $(GridElement.class).first();
         grid.getRow(0).doubleClick();
-        Assert.assertTrue("Grid editor should be displayed.", grid.getEditor()
-                .isDisplayed());
+        Assert.assertTrue("Grid editor should be displayed.",
+                grid.getEditor().isDisplayed());
         return grid;
     }
 
     private void assertCheckboxesEnabled(GridElement grid, boolean isEnabled) {
-        List<WebElement> checkboxes = grid.findElements(By
-                .xpath("//input[@type='checkbox']"));
+        List<WebElement> checkboxes = grid
+                .findElements(By.xpath("//input[@type='checkbox']"));
         for (WebElement checkbox : checkboxes) {
-            Assert.assertEquals("Select checkboxes should be "
-                    + (isEnabled ? "enabled" : "disabled"), isEnabled,
-                    checkbox.isEnabled());
+            Assert.assertEquals(
+                    "Select checkboxes should be "
+                            + (isEnabled ? "enabled" : "disabled"),
+                    isEnabled, checkbox.isEnabled());
         }
     }
 }

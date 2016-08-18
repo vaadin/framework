@@ -23,8 +23,8 @@ import java.util.Set;
 
 import com.vaadin.shared.communication.SharedState;
 
-public class JavaScriptExtensionState extends SharedState implements
-        JavaScriptConnectorState {
+public class JavaScriptExtensionState extends SharedState
+        implements JavaScriptConnectorState {
 
     private Set<String> callbackNames = new HashSet<String>();
     private Map<String, Set<String>> rpcInterfaces = new HashMap<String, Set<String>>();

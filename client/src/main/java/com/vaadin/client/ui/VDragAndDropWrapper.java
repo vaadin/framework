@@ -66,8 +66,8 @@ import com.vaadin.shared.ui.dd.VerticalDropLocation;
  * drop details: locations + sizes in document hierarchy up to wrapper
  * 
  */
-public class VDragAndDropWrapper extends VCustomComponent implements
-        VHasDropHandler {
+public class VDragAndDropWrapper extends VCustomComponent
+        implements VHasDropHandler {
 
     /**
      * Minimum pixel delta is used to detect click from drag. #12838
@@ -91,7 +91,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             @Override
             public void onMouseDown(final MouseDownEvent event) {
                 if (getConnector().isEnabled()
-                        && event.getNativeEvent().getButton() == Event.BUTTON_LEFT
+                        && event.getNativeEvent()
+                                .getButton() == Event.BUTTON_LEFT
                         && startDrag(event.getNativeEvent())) {
                     event.preventDefault(); // prevent text selection
                     startX = event.getClientX();
@@ -149,8 +150,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                     Element.as(event.getEventTarget()));
             Widget widget = paintable.getWidget();
             transferable.setData("component", paintable);
-            VDragEvent dragEvent = VDragAndDropManager.get().startDrag(
-                    transferable, event, true);
+            VDragEvent dragEvent = VDragAndDropManager.get()
+                    .startDrag(transferable, event, true);
 
             transferable.setData("mouseDown", MouseEventDetailsBuilder
                     .buildMouseEventDetails(event).serialize());
@@ -253,9 +254,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                         uploading = true;
                         final Integer fileId = fileIds.remove(0);
                         VHtml5File file = files.remove(0);
-                        final String receiverUrl = client
-                                .translateVaadinUri(fileIdToReceiver
-                                        .remove(fileId.toString()));
+                        final String receiverUrl = client.translateVaadinUri(
+                                fileIdToReceiver.remove(fileId.toString()));
                         ExtendedXHR extendedXHR = (ExtendedXHR) ExtendedXHR
                                 .create();
                         extendedXHR
@@ -297,14 +297,15 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                 dragleavetimer.cancel();
                 dragleavetimer = null;
             }
-            if (VDragAndDropManager.get().getCurrentDropHandler() != getDropHandler()) {
+            if (VDragAndDropManager.get()
+                    .getCurrentDropHandler() != getDropHandler()) {
                 VTransferable transferable = new VTransferable();
                 transferable.setDragSource(getConnector());
 
-                vaadinDragEvent = VDragAndDropManager.get().startDrag(
-                        transferable, event, false);
-                VDragAndDropManager.get().setCurrentDropHandler(
-                        getDropHandler());
+                vaadinDragEvent = VDragAndDropManager.get()
+                        .startDrag(transferable, event, false);
+                VDragAndDropManager.get()
+                        .setCurrentDropHandler(getDropHandler());
             }
             try {
                 event.preventDefault();
@@ -334,9 +335,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                     // this
                     // is what IE does).
                     // In Vaadin we fire it only if drop did not happen.
-                    if (vaadinDragEvent != null
-                            && VDragAndDropManager.get()
-                                    .getCurrentDropHandler() == getDropHandler()) {
+                    if (vaadinDragEvent != null && VDragAndDropManager.get()
+                            .getCurrentDropHandler() == getDropHandler()) {
                         VDragAndDropManager.get().interruptDrag();
                     }
                 }
@@ -466,11 +466,11 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         public final native void postFile(VHtml5File file)
         /*-{
-
+        
             this.setRequestHeader('Content-Type', 'multipart/form-data');
             // Seems like IE10 will loose the file if we don't keep a reference to it...
             this.fileBeingUploaded = file;
-
+        
             this.send(file);
         }-*/;
 
@@ -626,19 +626,19 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     protected native void hookHtml5Events(com.google.gwt.user.client.Element el)
     /*-{
             var me = this;
-
+    
             el.addEventListener("dragenter",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-
+    
             el.addEventListener("dragleave",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-
+    
             el.addEventListener("dragover",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-
+    
             el.addEventListener("drop",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
@@ -676,10 +676,12 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     protected void deEmphasis(boolean doLayout) {
         if (emphasizedVDrop != null) {
             VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, false);
-            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
-                    + emphasizedVDrop.toString().toLowerCase(), false);
-            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
-                    + emphasizedHDrop.toString().toLowerCase(), false);
+            VDragAndDropWrapper.setStyleName(getElement(),
+                    OVER_STYLE + "-" + emphasizedVDrop.toString().toLowerCase(),
+                    false);
+            VDragAndDropWrapper.setStyleName(getElement(),
+                    OVER_STYLE + "-" + emphasizedHDrop.toString().toLowerCase(),
+                    false);
         }
         if (doLayout) {
             notifySizePotentiallyChanged();
@@ -695,8 +697,10 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, true);
         VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
                 + verticalDropLocation.toString().toLowerCase(), true);
-        VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
-                + horizontalDropLocation.toString().toLowerCase(), true);
+        VDragAndDropWrapper.setStyleName(getElement(),
+                OVER_STYLE + "-"
+                        + horizontalDropLocation.toString().toLowerCase(),
+                true);
         emphasizedVDrop = verticalDropLocation;
         emphasizedHDrop = horizontalDropLocation;
 

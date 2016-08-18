@@ -86,8 +86,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         boolean hasSubParts = targetWidget instanceof SubPartAware;
         if (oldTarget != targetElement) {
             if (hasSubParts) {
-                subPart = ((SubPartAware) targetWidget).getSubPartName(DOM
-                        .asOld(oldTarget));
+                subPart = ((SubPartAware) targetWidget)
+                        .getSubPartName(DOM.asOld(oldTarget));
             }
 
             if (!hasSubParts || subPart == null) {
@@ -96,7 +96,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             }
         }
 
-        List<ConnectorPath> hierarchy = getConnectorHierarchyForElement(targetElement);
+        List<ConnectorPath> hierarchy = getConnectorHierarchyForElement(
+                targetElement);
         List<String> path = new ArrayList<String>();
 
         // Assemble longname path components back-to-forth with useful
@@ -151,12 +152,13 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             // See if we get minimum from second last. If not then we already
             // have the best one.. Second last one contains almost full
             // component hierarchy.
-            if (getElementsByPath(selectors.get(selectors.size() - 2)).indexOf(
-                    target) == min) {
+            if (getElementsByPath(selectors.get(selectors.size() - 2))
+                    .indexOf(target) == min) {
                 for (int i = 1; i < selectors.size() - 2; ++i) {
                     // Loop through the remaining selectors and look for one
                     // with the same index
-                    if (getElementsByPath(selectors.get(i)).indexOf(target) == min) {
+                    if (getElementsByPath(selectors.get(i))
+                            .indexOf(target) == min) {
                         bestSelector = selectors.get(i);
                         break;
                     }
@@ -218,8 +220,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      *         not exist on the object (or some other error is encountered).
      */
     private String getPropertyValue(ComponentConnector c, String propertyName) {
-        Property prop = AbstractConnector.getStateType(c).getProperty(
-                propertyName);
+        Property prop = AbstractConnector.getStateType(c)
+                .getProperty(propertyName);
         try {
             return prop.getValue(c.getState()).toString();
         } catch (Exception e) {
@@ -289,8 +291,9 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         } else {
 
             final UIConnector uiConnector = client.getUIConnector();
-            elements.addAll(eliminateDuplicates(getElementsByPathStartingAtConnector(
-                    path, uiConnector, Document.get().getBody())));
+            elements.addAll(
+                    eliminateDuplicates(getElementsByPathStartingAtConnector(
+                            path, uiConnector, Document.get().getBody())));
         }
 
         for (SelectorPredicate p : postFilters) {
@@ -340,7 +343,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      * {@inheritDoc}
      */
     @Override
-    public List<Element> getElementsByPathStartingAt(String path, Element root) {
+    public List<Element> getElementsByPathStartingAt(String path,
+            Element root) {
         List<SelectorPredicate> postFilters = SelectorPredicate
                 .extractPostFilterPredicates(path);
         if (postFilters.size() > 0) {
@@ -474,8 +478,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         for (ComponentConnector parent : parents) {
             connectors.addAll(filterMatches(
                     collectPotentialMatches(parent, fragments[0],
-                            findRecursively), SelectorPredicate
-                            .extractPredicates(fragments[0])));
+                            findRecursively),
+                    SelectorPredicate.extractPredicates(fragments[0])));
         }
 
         if (!connectors.isEmpty() && fragments.length > 1) {
@@ -518,8 +522,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
                 String propData = getPropertyValue(potentialMatches.get(i),
                         p.getName());
 
-                if ((p.isWildcard() && propData == null)
-                        || (!p.isWildcard() && !p.getValue().equals(propData))) {
+                if ((p.isWildcard() && propData == null) || (!p.isWildcard()
+                        && !p.getValue().equals(propData))) {
                     potentialMatches.remove(i);
                     --l;
                     --i;
@@ -637,7 +641,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             if (widgetName.equals(fullName + ".class")
                     || widgetName.equals(fullName)
                     || widgetName.equals(simpleName + ".class")
-                    || widgetName.equals(simpleName) || widgetName.equals(name)) {
+                    || widgetName.equals(simpleName)
+                    || widgetName.equals(name)) {
                 return true;
             }
         }

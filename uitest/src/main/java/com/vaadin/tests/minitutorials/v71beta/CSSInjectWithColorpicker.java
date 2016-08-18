@@ -29,26 +29,27 @@ public class CSSInjectWithColorpicker extends UI {
     protected void init(VaadinRequest request) {
 
         // Create a text editor
-        Component editor = createEditor("Lorem ipsum dolor sit amet, lacus pharetra sed, sit a "
-                + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
-                + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
-                + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
-                + "quam, ac urna eros est cras id cras, eleifend eu mattis nec."
-                + "Lorem ipsum dolor sit amet, lacus pharetra sed, sit a "
-                + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
-                + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
-                + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
-                + "quam, ac urna eros est cras id cras, eleifend eu mattis nec."
-                + "Lorem ipsum dolor sit amet, lacus pharetra sed, sit a "
-                + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
-                + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
-                + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
-                + "quam, ac urna eros est cras id cras, eleifend eu mattis nec."
-                + "Lorem ipsum dolor sit amet, lacus pharetra sed, sit a "
-                + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
-                + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
-                + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
-                + "quam, ac urna eros est cras id cras, eleifend eu mattis nec.");
+        Component editor = createEditor(
+                "Lorem ipsum dolor sit amet, lacus pharetra sed, sit a "
+                        + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
+                        + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
+                        + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
+                        + "quam, ac urna eros est cras id cras, eleifend eu mattis nec."
+                        + "Lorem ipsum dolor sit amet, lacus pharetra sed, sit a "
+                        + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
+                        + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
+                        + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
+                        + "quam, ac urna eros est cras id cras, eleifend eu mattis nec."
+                        + "Lorem ipsum dolor sit amet, lacus pharetra sed, sit a "
+                        + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
+                        + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
+                        + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
+                        + "quam, ac urna eros est cras id cras, eleifend eu mattis nec."
+                        + "Lorem ipsum dolor sit amet, lacus pharetra sed, sit a "
+                        + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
+                        + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
+                        + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
+                        + "quam, ac urna eros est cras id cras, eleifend eu mattis nec.");
 
         VerticalLayout content = new VerticalLayout(editor);
         content.setMargin(true);
@@ -203,8 +204,8 @@ public class CSSInjectWithColorpicker extends UI {
      */
     private Component createFontSizeSelect() {
 
-        final ComboBox select = new ComboBox(null, Arrays.asList(8, 9, 10, 12,
-                14, 16, 20, 25, 30, 40, 50));
+        final ComboBox select = new ComboBox(null,
+                Arrays.asList(8, 9, 10, 12, 14, 16, 20, 25, 30, 40, 50));
         select.setWidth("100px");
         select.setValue(12);
         select.setInputPrompt("Font size");

@@ -34,13 +34,13 @@ public class GridDefaultSelectionModeTest extends MultiBrowserTest {
 
         $(ButtonElement.class).caption("Select on server").first().click();
 
-        assertTrue("Row should be selected.", $(GridElement.class).first()
-                .getRow(0).isSelected());
+        assertTrue("Row should be selected.",
+                $(GridElement.class).first().getRow(0).isSelected());
 
         $(ButtonElement.class).caption("Deselect on server").first().click();
 
-        assertFalse("Row should not be selected.", $(GridElement.class).first()
-                .getRow(0).isSelected());
+        assertFalse("Row should not be selected.",
+                $(GridElement.class).first().getRow(0).isSelected());
 
         assertNoErrorNotifications();
     }

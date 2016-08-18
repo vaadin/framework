@@ -34,7 +34,8 @@ public class TableHeightWhenHidingHeaders extends AbstractTestCase {
             if (event.getValue()) {
                 // table body height is now 77px, which together
                 // with header makes 100px
-                table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
+                table.setColumnHeaderMode(
+                        Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
             } else {
                 table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
                 // header disappears, but table body height stays at

@@ -165,8 +165,8 @@ public class InfoSection implements Section {
         addRow("Widget set", GWT.getModuleName());
         addRow("Theme", connection.getUIConnector().getActiveTheme());
 
-        String communicationMethodInfo = connection
-                .getMessageSender().getCommunicationMethodName();
+        String communicationMethodInfo = connection.getMessageSender()
+                .getCommunicationMethodName();
         int pollInterval = connection.getUIConnector().getState().pollInterval;
         if (pollInterval > 0) {
             communicationMethodInfo += " (poll interval " + pollInterval
@@ -211,10 +211,10 @@ public class InfoSection implements Section {
                 themeVersion);
         boolean servletOk = equalsEither(servletVersion, clientVersion,
                 themeVersion);
-        addRow("Client engine version", clientVersion, clientOk ? null
-                : ERROR_STYLE);
-        addRow("Server engine version", servletVersion, servletOk ? null
-                : ERROR_STYLE);
+        addRow("Client engine version", clientVersion,
+                clientOk ? null : ERROR_STYLE);
+        addRow("Server engine version", servletVersion,
+                servletOk ? null : ERROR_STYLE);
         addRow("Theme version", themeVersion, themeOk ? null : ERROR_STYLE);
         if (jsVersion != null) {
             addRow("Push server version", atmosphereVersion);

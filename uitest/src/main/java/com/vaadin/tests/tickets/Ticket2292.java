@@ -21,8 +21,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
 
-public class Ticket2292 extends com.vaadin.server.LegacyApplication implements
-        RequestHandler {
+public class Ticket2292 extends com.vaadin.server.LegacyApplication
+        implements RequestHandler {
 
     @Override
     public void init() {

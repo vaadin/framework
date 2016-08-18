@@ -25,8 +25,8 @@ import com.vaadin.ui.PasswordField;
  * @since
  * @author Vaadin Ltd
  */
-public class PasswordFieldDeclarativeTest extends
-        DeclarativeTestBase<PasswordField> {
+public class PasswordFieldDeclarativeTest
+        extends DeclarativeTestBase<PasswordField> {
 
     @Test
     public void testReadOnlyValue() {

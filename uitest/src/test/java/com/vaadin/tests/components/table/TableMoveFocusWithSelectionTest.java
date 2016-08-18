@@ -40,8 +40,8 @@ public class TableMoveFocusWithSelectionTest extends MultiBrowserTest {
         getDriver().findElement(By.id("row-5")).click();
 
         // Ensure row 5 gets focused
-        WebElement row5TableRow = getDriver().findElement(
-                By.xpath("//div[@id='row-5']/../../.."));
+        WebElement row5TableRow = getDriver()
+                .findElement(By.xpath("//div[@id='row-5']/../../.."));
         String row5StyleName = row5TableRow.getAttribute("class");
         assertTrue(row5StyleName.contains("v-table-focus"));
     }
@@ -58,8 +58,8 @@ public class TableMoveFocusWithSelectionTest extends MultiBrowserTest {
         getDriver().findElement(By.id("row-7")).click();
 
         // Clicking a row should get the row focus
-        WebElement row7TableRow = getDriver().findElement(
-                By.xpath("//div[@id='row-7']/../../.."));
+        WebElement row7TableRow = getDriver()
+                .findElement(By.xpath("//div[@id='row-7']/../../.."));
         String row7StyleName = row7TableRow.getAttribute("class");
         assertTrue(row7StyleName.contains("v-table-focus"));
 
@@ -73,8 +73,8 @@ public class TableMoveFocusWithSelectionTest extends MultiBrowserTest {
         getDriver().findElement(By.id("test-table")).click();
 
         // Ensure row 7 is still focused
-        row7TableRow = getDriver().findElement(
-                By.xpath("//div[@id='row-7']/../../.."));
+        row7TableRow = getDriver()
+                .findElement(By.xpath("//div[@id='row-7']/../../.."));
         row7StyleName = row7TableRow.getAttribute("class");
         assertTrue(row7StyleName.contains("v-table-focus"));
     }

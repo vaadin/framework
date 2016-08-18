@@ -159,7 +159,8 @@ public class AutoScroller {
          * direction has started.
          */
         private static final int SCROLL_AREA_REBOUND_PX_PER_SEC = 1;
-        private static final double SCROLL_AREA_REBOUND_PX_PER_MS = SCROLL_AREA_REBOUND_PX_PER_SEC / 1000.0d;
+        private static final double SCROLL_AREA_REBOUND_PX_PER_MS = SCROLL_AREA_REBOUND_PX_PER_SEC
+                / 1000.0d;
 
         /**
          * The lowest y/x-coordinate on the {@link Event#getClientY() client-y}
@@ -273,8 +274,8 @@ public class AutoScroller {
                 return;
             }
 
-            int reboundPx = (int) Math.ceil(SCROLL_AREA_REBOUND_PX_PER_MS
-                    * timeDiff);
+            int reboundPx = (int) Math
+                    .ceil(SCROLL_AREA_REBOUND_PX_PER_MS * timeDiff);
             if (startBound < finalStartBound) {
                 startBound += reboundPx;
                 startBound = Math.min(startBound, finalStartBound);
@@ -378,7 +379,8 @@ public class AutoScroller {
                 final boolean startDidNotMove = oldTopBound == startBound;
                 final boolean endDidNotMove = oldBottomBound == endBound;
                 final boolean wasMovement = pageCordinate != scrollingAxisPageCoordinate;
-                scrollAreaShouldRebound = (startDidNotMove && endDidNotMove && wasMovement);
+                scrollAreaShouldRebound = (startDidNotMove && endDidNotMove
+                        && wasMovement);
             }
         }
     }
@@ -623,7 +625,8 @@ public class AutoScroller {
     private int getRealFrozenColumnCount() {
         if (grid.getFrozenColumnCount() < 0) {
             return 0;
-        } else if (grid.getSelectionModel().getSelectionColumnRenderer() != null) {
+        } else if (grid.getSelectionModel()
+                .getSelectionColumnRenderer() != null) {
             // includes the selection column
             return grid.getFrozenColumnCount() + 1;
         } else {
@@ -633,7 +636,8 @@ public class AutoScroller {
 
     private double getMaxScrollLeft() {
         return grid.getScrollWidth()
-                - (getTableElement().getParentElement().getOffsetWidth() - getFrozenColumnsWidth());
+                - (getTableElement().getParentElement().getOffsetWidth()
+                        - getFrozenColumnsWidth());
     }
 
     private double getMaxScrollTop() {

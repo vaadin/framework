@@ -19,8 +19,8 @@ import static org.junit.Assert.assertEquals;
 
 import com.vaadin.testbench.elements.TableElement;
 
-public abstract class TableContextClickTestBase extends
-        AbstractContextClickTest {
+public abstract class TableContextClickTestBase
+        extends AbstractContextClickTest {
 
     @Override
     protected Class<?> getUIClass() {

@@ -60,7 +60,8 @@ public class RowAwareRendererConnector extends AbstractRendererConnector<Void> {
         }
 
         @Override
-        public boolean onBrowserEvent(CellReference<?> cell, NativeEvent event) {
+        public boolean onBrowserEvent(CellReference<?> cell,
+                NativeEvent event) {
             String key = getRowKey((JsonObject) cell.getRow());
             getRpcProxy(RowAwareRendererRpc.class).clicky(key);
             cell.getElement().setInnerText(

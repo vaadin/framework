@@ -62,8 +62,8 @@ public class DefaultConverterFactoryTest {
     @SuppressWarnings("deprecation")
     @Test
     public void stringToDate() {
-        assertConverter("Oct 12, 2014 12:00:00 AM", new Date(2014 - 1900,
-                10 - 1, 12));
+        assertConverter("Oct 12, 2014 12:00:00 AM",
+                new Date(2014 - 1900, 10 - 1, 12));
     }
 
     @Test
@@ -105,25 +105,19 @@ public class DefaultConverterFactoryTest {
 
         U tConvertedToU = factory.createConverter(tClass, uClass)
                 .convertToModel(t, uClass, Locale.ENGLISH);
-        Assert.assertEquals(
-                "Incorrect type of value converted from "
-                        + tClass.getSimpleName() + " to "
-                        + uClass.getSimpleName(), uClass,
-                tConvertedToU.getClass());
-        Assert.assertEquals(
-                "Incorrect conversion of " + t + " to "
-                        + uClass.getSimpleName(), u, tConvertedToU);
+        Assert.assertEquals("Incorrect type of value converted from "
+                + tClass.getSimpleName() + " to " + uClass.getSimpleName(),
+                uClass, tConvertedToU.getClass());
+        Assert.assertEquals("Incorrect conversion of " + t + " to "
+                + uClass.getSimpleName(), u, tConvertedToU);
 
         T uConvertedToT = factory.createConverter(uClass, tClass)
                 .convertToModel(u, tClass, Locale.ENGLISH);
-        Assert.assertEquals(
-                "Incorrect type of value converted from "
-                        + uClass.getSimpleName() + " to "
-                        + tClass.getSimpleName(), tClass,
-                uConvertedToT.getClass());
-        Assert.assertEquals(
-                "Incorrect conversion of " + u + " to "
-                        + tClass.getSimpleName(), t, uConvertedToT);
+        Assert.assertEquals("Incorrect type of value converted from "
+                + uClass.getSimpleName() + " to " + tClass.getSimpleName(),
+                tClass, uConvertedToT.getClass());
+        Assert.assertEquals("Incorrect conversion of " + u + " to "
+                + tClass.getSimpleName(), t, uConvertedToT);
 
     }
 

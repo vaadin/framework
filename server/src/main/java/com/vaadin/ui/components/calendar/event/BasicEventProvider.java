@@ -93,11 +93,10 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventSetChangeNotifier
-     * #addListener
-     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventSetChangeListener
-     * )
+     * @see com.vaadin.addon.calendar.ui.CalendarComponentEvents.
+     * EventSetChangeNotifier #addListener
+     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.
+     * EventSetChangeListener )
      */
     @Override
     public void addEventSetChangeListener(EventSetChangeListener listener) {
@@ -108,11 +107,10 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventSetChangeNotifier
-     * #removeListener
-     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventSetChangeListener
-     * )
+     * @see com.vaadin.addon.calendar.ui.CalendarComponentEvents.
+     * EventSetChangeNotifier #removeListener
+     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.
+     * EventSetChangeListener )
      */
     @Override
     public void removeEventSetChangeListener(EventSetChangeListener listener) {

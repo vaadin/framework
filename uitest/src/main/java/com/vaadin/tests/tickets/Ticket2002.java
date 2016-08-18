@@ -34,7 +34,8 @@ public class Ticket2002 extends LegacyApplication {
         GridLayout layout = new GridLayout(2, 2);
         layout.setSpacing(true);
 
-        LegacyTextField f1 = new LegacyTextField("Non-immediate/Long text field",
+        LegacyTextField f1 = new LegacyTextField(
+                "Non-immediate/Long text field",
                 new MethodProperty<Long>(this, "long1"));
         f1.setImmediate(false);
         f1.setNullSettingAllowed(true);

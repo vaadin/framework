@@ -30,7 +30,8 @@ public class CalendarDeclarativeTest extends DeclarativeTestBase<Calendar> {
 
     @Test
     public void testEmpty() {
-        verifyDeclarativeDesign("<vaadin-calendar></vaadin-calendar>", new Calendar());
+        verifyDeclarativeDesign("<vaadin-calendar></vaadin-calendar>",
+                new Calendar());
     }
 
     @Test

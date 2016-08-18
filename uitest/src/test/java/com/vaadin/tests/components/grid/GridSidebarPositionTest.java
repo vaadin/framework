@@ -33,21 +33,21 @@ public class GridSidebarPositionTest extends MultiBrowserTest {
     @Test
     public void heightRestrictedToBrowserWindow() {
         openTestURL();
-        GridElement gridWithVeryManyColumns = $(GridElement.class).id(
-                GridSidebarPosition.POPUP_WINDOW_HEIGHT);
+        GridElement gridWithVeryManyColumns = $(GridElement.class)
+                .id(GridSidebarPosition.POPUP_WINDOW_HEIGHT);
         getSidebarOpenButton(gridWithVeryManyColumns).click();
         Dimension popupSize = getSidebarPopup().getSize();
         Dimension browserWindowSize = getDriver().manage().window().getSize();
 
-        Assert.assertTrue(popupSize.getHeight() <= browserWindowSize
-                .getHeight());
+        Assert.assertTrue(
+                popupSize.getHeight() <= browserWindowSize.getHeight());
     }
 
     @Test
     public void popupNotBelowBrowserWindow() {
         openTestURL();
-        GridElement gridAtBottom = $(GridElement.class).id(
-                GridSidebarPosition.POPUP_WINDOW_MOVED_UP);
+        GridElement gridAtBottom = $(GridElement.class)
+                .id(GridSidebarPosition.POPUP_WINDOW_MOVED_UP);
         getSidebarOpenButton(gridAtBottom).click();
         WebElement sidebarPopup = getSidebarPopup();
         Dimension popupSize = sidebarPopup.getSize();
@@ -61,8 +61,8 @@ public class GridSidebarPositionTest extends MultiBrowserTest {
     @Test
     public void popupAbove() {
         openTestURL();
-        GridElement gridPopupAbove = $(GridElement.class).id(
-                GridSidebarPosition.POPUP_ABOVE);
+        GridElement gridPopupAbove = $(GridElement.class)
+                .id(GridSidebarPosition.POPUP_ABOVE);
         WebElement sidebarOpenButton = getSidebarOpenButton(gridPopupAbove);
         sidebarOpenButton.click();
         WebElement sidebarPopup = getSidebarPopup();
@@ -81,14 +81,14 @@ public class GridSidebarPositionTest extends MultiBrowserTest {
     }
 
     protected WebElement getSidebarOpenButton(GridElement grid) {
-        List<WebElement> elements = grid.findElements(By
-                .className("v-grid-sidebar-button"));
+        List<WebElement> elements = grid
+                .findElements(By.className("v-grid-sidebar-button"));
         return elements.isEmpty() ? null : elements.get(0);
     }
 
     protected WebElement getSidebarPopup() {
-        List<WebElement> elements = findElements(By
-                .className("v-grid-sidebar-popup"));
+        List<WebElement> elements = findElements(
+                By.className("v-grid-sidebar-popup"));
         return elements.isEmpty() ? null : elements.get(0);
     }
 

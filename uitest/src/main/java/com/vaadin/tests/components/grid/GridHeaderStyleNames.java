@@ -42,8 +42,8 @@ public class GridHeaderStyleNames extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         Grid grid = new Grid();
         grid.setSelectionMode(SelectionMode.MULTI);
-        grid.setContainerDataSource(BeanItemContainerGenerator
-                .createContainer(100));
+        grid.setContainerDataSource(
+                BeanItemContainerGenerator.createContainer(100));
 
         ageHeaderCell = grid.getDefaultHeaderRow().getCell("age");
         grid.getDefaultHeaderRow().setStyleName("foo");
@@ -55,18 +55,14 @@ public class GridHeaderStyleNames extends AbstractTestUIWithLog {
         footerRow = grid.appendFooterRow();
         ageFooterCell = footerRow.getCell("age");
 
-        getPage()
-                .getStyles()
-                .add(".age {background-image: linear-gradient(to bottom,green 2%, #efefef 98%) !important;}");
-        getPage()
-                .getStyles()
-                .add(".valo .v-grid-header .v-grid-cell.city-country {background-image: linear-gradient(to bottom,yellow 2%, #efefef 98%) !important;}");
-        getPage()
-                .getStyles()
-                .add(".valo .v-grid-footer .v-grid-cell.age-footer {background-image: linear-gradient(to bottom,blue 2%, #efefef 98%) !important;}");
-        getPage()
-                .getStyles()
-                .add(".valo .v-grid .v-grid-row.custom-row > * {background-image: linear-gradient(to bottom,purple 2%, #efefef 98%);}");
+        getPage().getStyles().add(
+                ".age {background-image: linear-gradient(to bottom,green 2%, #efefef 98%) !important;}");
+        getPage().getStyles().add(
+                ".valo .v-grid-header .v-grid-cell.city-country {background-image: linear-gradient(to bottom,yellow 2%, #efefef 98%) !important;}");
+        getPage().getStyles().add(
+                ".valo .v-grid-footer .v-grid-cell.age-footer {background-image: linear-gradient(to bottom,blue 2%, #efefef 98%) !important;}");
+        getPage().getStyles().add(
+                ".valo .v-grid .v-grid-row.custom-row > * {background-image: linear-gradient(to bottom,purple 2%, #efefef 98%);}");
 
         setCellStyles(true);
         setRowStyles(true);

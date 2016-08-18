@@ -38,8 +38,10 @@ public class GridKeyDownEvent extends AbstractGridKeyEvent<GridKeyDownHandler> {
     @Override
     protected void doDispatch(GridKeyDownHandler handler, Section section) {
         if ((section == Section.BODY && handler instanceof BodyKeyDownHandler)
-                || (section == Section.HEADER && handler instanceof HeaderKeyDownHandler)
-                || (section == Section.FOOTER && handler instanceof FooterKeyDownHandler)) {
+                || (section == Section.HEADER
+                        && handler instanceof HeaderKeyDownHandler)
+                || (section == Section.FOOTER
+                        && handler instanceof FooterKeyDownHandler)) {
             handler.onKeyDown(this);
         }
     }

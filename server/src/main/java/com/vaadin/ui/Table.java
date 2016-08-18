@@ -759,8 +759,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
         this.columnHeaders.clear();
         int i = 0;
-        for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext() && i < columnHeaders.length; i++) {
+        for (final Iterator<Object> it = visibleColumns.iterator(); it.hasNext()
+                && i < columnHeaders.length; i++) {
             this.columnHeaders.put(it.next(), columnHeaders[i]);
         }
 
@@ -818,8 +818,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
         this.columnIcons.clear();
         int i = 0;
-        for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext() && i < columnIcons.length; i++) {
+        for (final Iterator<Object> it = visibleColumns.iterator(); it.hasNext()
+                && i < columnIcons.length; i++) {
             this.columnIcons.put(it.next(), columnIcons[i]);
         }
 
@@ -886,8 +886,8 @@ public class Table extends AbstractSelect implements Action.Container,
         // Resets the alignments
         final HashMap<Object, Align> newCA = new HashMap<Object, Align>();
         int i = 0;
-        for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext() && i < columnAlignments.length; i++) {
+        for (final Iterator<Object> it = visibleColumns.iterator(); it.hasNext()
+                && i < columnAlignments.length; i++) {
             newCA.put(it.next(), columnAlignments[i]);
         }
         this.columnAlignments = newCA;
@@ -1247,7 +1247,8 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         String header = columnHeaders.get(propertyId);
-        if ((header == null && getColumnHeaderMode() == ColumnHeaderMode.EXPLICIT_DEFAULTS_ID)
+        if ((header == null
+                && getColumnHeaderMode() == ColumnHeaderMode.EXPLICIT_DEFAULTS_ID)
                 || getColumnHeaderMode() == ColumnHeaderMode.ID) {
             header = propertyId.toString();
         }
@@ -1490,7 +1491,8 @@ public class Table extends AbstractSelect implements Action.Container,
         return currentPageFirstItemIndex;
     }
 
-    void setCurrentPageFirstItemIndex(int newIndex, boolean needsPageBufferReset) {
+    void setCurrentPageFirstItemIndex(int newIndex,
+            boolean needsPageBufferReset) {
 
         if (newIndex < 0) {
             newIndex = 0;
@@ -1704,8 +1706,8 @@ public class Table extends AbstractSelect implements Action.Container,
         final int pagelen = getPageLength();
         int rows, totalRows;
         rows = totalRows = size();
-        int firstIndex = Math
-                .min(getCurrentPageFirstItemIndex(), totalRows - 1);
+        int firstIndex = Math.min(getCurrentPageFirstItemIndex(),
+                totalRows - 1);
         if (rows > 0 && firstIndex >= 0) {
             rows -= firstIndex;
         }
@@ -1846,7 +1848,8 @@ public class Table extends AbstractSelect implements Action.Container,
             firstCacheRowToRemoveInPageBuffer = maxPageBufferIndex + 1;
         }
 
-        if (firstCacheRowToRemoveInPageBuffer - pageBufferFirstIndex < currentlyCachedRowCount) {
+        if (firstCacheRowToRemoveInPageBuffer
+                - pageBufferFirstIndex < currentlyCachedRowCount) {
             /*
              * Unregister all components that fall beyond the cache limits after
              * inserting the new rows.
@@ -1974,7 +1977,8 @@ public class Table extends AbstractSelect implements Action.Container,
         pageBuffer = newPageBuffer;
     }
 
-    private Object[][] getVisibleCellsUpdateCacheRows(int firstIndex, int rows) {
+    private Object[][] getVisibleCellsUpdateCacheRows(int firstIndex,
+            int rows) {
         Object[][] cells = getVisibleCellsNoCache(firstIndex, rows, false);
         int cacheIx = firstIndex - pageBufferFirstIndex;
         // update the new rows in the cache.
@@ -1997,11 +2001,11 @@ public class Table extends AbstractSelect implements Action.Container,
      *            too small.
      * @return
      */
-    private Object[][] getVisibleCellsInsertIntoCache(int firstIndex, int rows) {
-        getLogger()
-                .log(Level.FINEST,
-                        "Insert {0} rows at index {1} to existing page buffer requested",
-                        new Object[] { rows, firstIndex });
+    private Object[][] getVisibleCellsInsertIntoCache(int firstIndex,
+            int rows) {
+        getLogger().log(Level.FINEST,
+                "Insert {0} rows at index {1} to existing page buffer requested",
+                new Object[] { rows, firstIndex });
 
         int minPageBufferIndex = getMinPageBufferIndex();
         int maxPageBufferIndex = getMaxPageBufferIndex();
@@ -2051,9 +2055,9 @@ public class Table extends AbstractSelect implements Action.Container,
          * IF there is space remaining in the buffer after the rows have been
          * inserted, we can keep more rows.
          */
-        int numberOfOldRowsAfterInsertedRows = Math.min(pageBufferFirstIndex
-                + currentlyCachedRowCount + rows, maxPageBufferIndex + 1)
-                - (firstIndex + rows - 1);
+        int numberOfOldRowsAfterInsertedRows = Math.min(
+                pageBufferFirstIndex + currentlyCachedRowCount + rows,
+                maxPageBufferIndex + 1) - (firstIndex + rows - 1);
         if (numberOfOldRowsAfterInsertedRows > 0) {
             firstCacheRowToRemove += numberOfOldRowsAfterInsertedRows;
         }
@@ -2071,11 +2075,12 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Calculate the new cache size
         int newCachedRowCount = maxBufferSize;
-        if (pageBufferFirstIndex + currentlyCachedRowCount + rows - 1 < maxPageBufferIndex) {
+        if (pageBufferFirstIndex + currentlyCachedRowCount + rows
+                - 1 < maxPageBufferIndex) {
             // there aren't enough rows to fill the whole potential -> use what
             // there is
-            newCachedRowCount -= maxPageBufferIndex
-                    - (pageBufferFirstIndex + currentlyCachedRowCount + rows - 1);
+            newCachedRowCount -= maxPageBufferIndex - (pageBufferFirstIndex
+                    + currentlyCachedRowCount + rows - 1);
         } else if (minPageBufferIndex < pageBufferFirstIndex) {
             newCachedRowCount -= pageBufferFirstIndex - minPageBufferIndex;
         }
@@ -2105,23 +2110,21 @@ public class Table extends AbstractSelect implements Action.Container,
                 newPageBuffer[i][row] = cells[i][row
                         - firstIndexInNewPageBuffer];
             }
-            for (int row = firstIndexInNewPageBuffer + rows; row < newCachedRowCount; row++) {
+            for (int row = firstIndexInNewPageBuffer
+                    + rows; row < newCachedRowCount; row++) {
                 // Move the old rows down below the newly inserted rows
                 newPageBuffer[i][row] = pageBuffer[i][rowsFromBeginning + row
                         - rows];
             }
         }
         pageBuffer = newPageBuffer;
-        pageBufferFirstIndex = Math.max(pageBufferFirstIndex
-                + rowsFromBeginning, minPageBufferIndex);
+        pageBufferFirstIndex = Math.max(
+                pageBufferFirstIndex + rowsFromBeginning, minPageBufferIndex);
         if (getLogger().isLoggable(Level.FINEST)) {
-            getLogger().log(
-                    Level.FINEST,
+            getLogger().log(Level.FINEST,
                     "Page Buffer now contains {0} rows ({1}-{2})",
-                    new Object[] {
-                            pageBuffer[CELL_ITEMID].length,
-                            pageBufferFirstIndex,
-                            (pageBufferFirstIndex
+                    new Object[] { pageBuffer[CELL_ITEMID].length,
+                            pageBufferFirstIndex, (pageBufferFirstIndex
                                     + pageBuffer[CELL_ITEMID].length - 1) });
         }
         return cells;
@@ -2223,7 +2226,8 @@ public class Table extends AbstractSelect implements Action.Container,
             for (int i = 0; i < rows && i < itemIds.size(); i++) {
                 Object id = itemIds.get(i);
                 if (id == null) {
-                    throw new IllegalStateException("Null itemId returned from container");
+                    throw new IllegalStateException(
+                            "Null itemId returned from container");
                 }
                 // Start by parsing the values, id should already be set
                 parseItemIdToCells(cells, id, i, firstIndex, headmode, cols,
@@ -2272,8 +2276,8 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     protected List<Object> getItemIds(int firstIndex, int rows) {
-        return (List<Object>) ((Container.Indexed) items).getItemIds(
-                firstIndex, rows);
+        return (List<Object>) ((Container.Indexed) items).getItemIds(firstIndex,
+                rows);
     }
 
     /**
@@ -2311,8 +2315,8 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
 
-        GeneratedRow generatedRow = rowGenerator != null ? rowGenerator
-                .generateRow(this, id) : null;
+        GeneratedRow generatedRow = rowGenerator != null
+                ? rowGenerator.generateRow(this, id) : null;
         cells[CELL_GENERATED_ROW][i] = generatedRow;
 
         for (int j = 0; j < cols; j++) {
@@ -2351,7 +2355,8 @@ public class Table extends AbstractSelect implements Action.Container,
                     if (index < firstIndexNotInCache
                             && index >= pageBufferFirstIndex
                             && pageBuffer[CELL_GENERATED_ROW][indexInOldBuffer] == null
-                            && id.equals(pageBuffer[CELL_ITEMID][indexInOldBuffer])) {
+                            && id.equals(
+                                    pageBuffer[CELL_ITEMID][indexInOldBuffer])) {
                         // we already have data in our cache,
                         // recycle it instead of fetching it via
                         // getValue/getPropertyValue
@@ -2423,11 +2428,8 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     protected void registerComponent(Component component) {
-        getLogger().log(
-                Level.FINEST,
-                "Registered {0}: {1}",
-                new Object[] { component.getClass().getSimpleName(),
-                        component.getCaption() });
+        getLogger().log(Level.FINEST, "Registered {0}: {1}", new Object[] {
+                component.getClass().getSimpleName(), component.getCaption() });
         if (!equals(component.getParent())) {
             component.setParent(this);
         }
@@ -2457,7 +2459,8 @@ public class Table extends AbstractSelect implements Action.Container,
      *            to page buffer.
      * @param count
      */
-    private void unregisterComponentsAndPropertiesInRows(int firstIx, int count) {
+    private void unregisterComponentsAndPropertiesInRows(int firstIx,
+            int count) {
         if (getLogger().isLoggable(Level.FINEST)) {
             getLogger().log(Level.FINEST,
                     "Unregistering components in rows {0}-{1}",
@@ -2506,8 +2509,8 @@ public class Table extends AbstractSelect implements Action.Container,
             HashSet<Property<?>> oldListenedProperties,
             HashSet<Component> oldVisibleComponents) {
         if (oldVisibleComponents != null) {
-            for (final Iterator<Component> i = oldVisibleComponents.iterator(); i
-                    .hasNext();) {
+            for (final Iterator<Component> i = oldVisibleComponents
+                    .iterator(); i.hasNext();) {
                 Component c = i.next();
                 if (!visibleComponents.contains(c)) {
                     unregisterComponent(c);
@@ -2542,11 +2545,8 @@ public class Table extends AbstractSelect implements Action.Container,
      *            component that should be unregistered.
      */
     protected void unregisterComponent(Component component) {
-        getLogger().log(
-                Level.FINEST,
-                "Unregistered {0}: {1}",
-                new Object[] { component.getClass().getSimpleName(),
-                        component.getCaption() });
+        getLogger().log(Level.FINEST, "Unregistered {0}: {1}", new Object[] {
+                component.getClass().getSimpleName(), component.getCaption() });
         component.setParent(null);
         /*
          * Also remove property data sources to unregister listeners keeping the
@@ -2785,8 +2785,8 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 }
             }
-            propertyValueConverters.keySet().retainAll(
-                    retainableValueConverters);
+            propertyValueConverters.keySet()
+                    .retainAll(retainableValueConverters);
         }
 
         // Assures that the data source is ordered by making unordered
@@ -2794,8 +2794,8 @@ public class Table extends AbstractSelect implements Action.Container,
         if (newDataSource instanceof Container.Ordered) {
             super.setContainerDataSource(newDataSource);
         } else {
-            super.setContainerDataSource(new ContainerOrderedWrapper(
-                    newDataSource));
+            super.setContainerDataSource(
+                    new ContainerOrderedWrapper(newDataSource));
         }
 
         // Resets page position
@@ -3032,9 +3032,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 }
             }
             if (getLogger().isLoggable(Level.FINEST)) {
-                getLogger().log(
-                        Level.FINEST,
-                        "Client wants rows {0}-{1}",
+                getLogger().log(Level.FINEST, "Client wants rows {0}-{1}",
                         new Object[] { reqFirstRowToPaint,
                                 (reqFirstRowToPaint + reqRowsToPaint - 1) });
             }
@@ -3046,7 +3044,8 @@ public class Table extends AbstractSelect implements Action.Container,
             boolean doSort = false;
             if (variables.containsKey("sortcolumn")) {
                 final String colId = (String) variables.get("sortcolumn");
-                if (colId != null && !"".equals(colId) && !"null".equals(colId)) {
+                if (colId != null && !"".equals(colId)
+                        && !"null".equals(colId)) {
                     final Object id = columnIdMap.get(colId);
                     setSortContainerPropertyId(id, false);
                     doSort = true;
@@ -3077,8 +3076,8 @@ public class Table extends AbstractSelect implements Action.Container,
                     for (Object id : ids) {
                         idSet.add(columnIdMap.get(id.toString()));
                     }
-                    for (final Iterator<Object> it = visibleColumns.iterator(); it
-                            .hasNext();) {
+                    for (final Iterator<Object> it = visibleColumns
+                            .iterator(); it.hasNext();) {
                         Object propertyId = it.next();
                         if (isColumnCollapsed(propertyId)) {
                             if (!idSet.contains(propertyId)) {
@@ -3366,7 +3365,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
         if (keyMapperReset) {
             keyMapperReset = false;
-            target.addAttribute(TableConstants.ATTRIBUTE_KEY_MAPPER_RESET, true);
+            target.addAttribute(TableConstants.ATTRIBUTE_KEY_MAPPER_RESET,
+                    true);
         }
 
         if (dropHandler != null) {
@@ -3384,8 +3384,8 @@ public class Table extends AbstractSelect implements Action.Container,
         return rowCacheInvalidated;
     }
 
-    private void paintPartialRowUpdate(PaintTarget target, Set<Action> actionSet)
-            throws PaintException {
+    private void paintPartialRowUpdate(PaintTarget target,
+            Set<Action> actionSet) throws PaintException {
         paintPartialRowUpdates(target, actionSet);
         paintPartialRowAdditions(target, actionSet);
     }
@@ -3561,9 +3561,8 @@ public class Table extends AbstractSelect implements Action.Container,
         target.addAttribute("cols", getVisibleColumns().length);
         target.addAttribute("rows", rows);
 
-        target.addAttribute("firstrow",
-                (reqFirstRowToPaint >= 0 ? reqFirstRowToPaint
-                        : firstToBeRenderedInClient));
+        target.addAttribute("firstrow", (reqFirstRowToPaint >= 0
+                ? reqFirstRowToPaint : firstToBeRenderedInClient));
         target.addAttribute("totalrows", total);
         if (getPageLength() != 0) {
             target.addAttribute("pagelength", getPageLength());
@@ -3632,8 +3631,8 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 }
                 if (!Align.LEFT.equals(getColumnAlignment(colId))) {
-                    target.addAttribute("align", getColumnAlignment(colId)
-                            .toString());
+                    target.addAttribute("align",
+                            getColumnAlignment(colId).toString());
                 }
                 paintColumnWidth(target, colId);
                 paintColumnExpandRatio(target, colId);
@@ -3827,8 +3826,8 @@ public class Table extends AbstractSelect implements Action.Container,
             target.addAttribute("multiselectmode", multiSelectMode.ordinal());
         }
         if (isSelectable()) {
-            target.addAttribute("selectmode", (isMultiSelect() ? "multi"
-                    : "single"));
+            target.addAttribute("selectmode",
+                    (isMultiSelect() ? "multi" : "single"));
         } else {
             target.addAttribute("selectmode", "none");
         }
@@ -3938,20 +3937,21 @@ public class Table extends AbstractSelect implements Action.Container,
                 }
             }
 
-            if ((iscomponent[currentColumn] || iseditable || cells[CELL_GENERATED_ROW][indexInRowbuffer] != null)
+            if ((iscomponent[currentColumn] || iseditable
+                    || cells[CELL_GENERATED_ROW][indexInRowbuffer] != null)
                     && Component.class.isInstance(cells[CELL_FIRSTCOL
                             + currentColumn][indexInRowbuffer])) {
                 final Component c = (Component) cells[CELL_FIRSTCOL
                         + currentColumn][indexInRowbuffer];
-                if (c == null
-                        || !LegacyCommunicationManager
-                                .isComponentVisibleToClient(c)) {
+                if (c == null || !LegacyCommunicationManager
+                        .isComponentVisibleToClient(c)) {
                     target.addText("");
                 } else {
                     LegacyPaint.paint(c, target);
                 }
             } else {
-                target.addText((String) cells[CELL_FIRSTCOL + currentColumn][indexInRowbuffer]);
+                target.addText((String) cells[CELL_FIRSTCOL
+                        + currentColumn][indexInRowbuffer]);
             }
             paintCellTooltips(target, itemId, columnId);
         }
@@ -4034,7 +4034,8 @@ public class Table extends AbstractSelect implements Action.Container,
             int indexInRowBuffer) throws PaintException {
         GeneratedRow generatedRow = (GeneratedRow) cells[CELL_GENERATED_ROW][indexInRowBuffer];
         if (generatedRow != null) {
-            target.addAttribute("gen_html", generatedRow.isHtmlContentAllowed());
+            target.addAttribute("gen_html",
+                    generatedRow.isHtmlContentAllowed());
             target.addAttribute("gen_span", generatedRow.isSpanColumns());
             target.addAttribute("gen_widget",
                     generatedRow.getValue() instanceof Component);
@@ -4104,8 +4105,8 @@ public class Table extends AbstractSelect implements Action.Container,
     protected Object getPropertyValue(Object rowId, Object colId,
             Property property) {
         if (isEditable() && fieldFactory != null) {
-            final LegacyField<?> f = fieldFactory.createField(
-                    getContainerDataSource(), rowId, colId, this);
+            final LegacyField<?> f = fieldFactory
+                    .createField(getContainerDataSource(), rowId, colId, this);
             if (f != null) {
                 // Remember that we have made this association so we can remove
                 // it when the component is removed
@@ -4168,8 +4169,8 @@ public class Table extends AbstractSelect implements Action.Container,
         if (hasConverter(colId)) {
             converter = getConverter(colId);
         } else {
-            converter = (LegacyConverter) LegacyConverterUtil.getConverter(String.class,
-                    property.getType(), getSession());
+            converter = (LegacyConverter) LegacyConverterUtil.getConverter(
+                    String.class, property.getType(), getSession());
         }
         Object value = property.getValue();
         if (converter != null) {
@@ -4328,7 +4329,8 @@ public class Table extends AbstractSelect implements Action.Container,
     public boolean removeItem(Object itemId) {
         final Object nextItemId = nextItemId(itemId);
         final boolean ret = super.removeItem(itemId);
-        if (ret && (itemId != null) && (itemId.equals(currentPageFirstItemId))) {
+        if (ret && (itemId != null)
+                && (itemId.equals(currentPageFirstItemId))) {
             currentPageFirstItemId = nextItemId;
         }
         if (!(items instanceof Container.ItemSetChangeNotifier)) {
@@ -4618,8 +4620,8 @@ public class Table extends AbstractSelect implements Action.Container,
         for (Iterator<Object> iterator = newVisibleColumns.iterator(); iterator
                 .hasNext();) {
             Object id = iterator.next();
-            if (!(containerPropertyIds.contains(id) || columnGenerators
-                    .containsKey(id))) {
+            if (!(containerPropertyIds.contains(id)
+                    || columnGenerators.containsKey(id))) {
                 iterator.remove();
             }
         }
@@ -4628,8 +4630,8 @@ public class Table extends AbstractSelect implements Action.Container,
         for (Iterator<Object> iterator = collapsedColumns.iterator(); iterator
                 .hasNext();) {
             Object id = iterator.next();
-            if (!(containerPropertyIds.contains(id) || columnGenerators
-                    .containsKey(id))) {
+            if (!(containerPropertyIds.contains(id)
+                    || columnGenerators.containsKey(id))) {
                 iterator.remove();
             }
         }
@@ -4791,8 +4793,8 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Is table editable.
      * 
-     * If table is editable a editor of type LegacyField is created for each table
-     * cell. The assigned FieldFactory is used to create the instances.
+     * If table is editable a editor of type LegacyField is created for each
+     * table cell. The assigned FieldFactory is used to create the instances.
      * 
      * To provide custom editors for table cells create a class implementing the
      * FieldFactory interface, and assign it to table, and set the editable
@@ -4810,8 +4812,8 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Sets the editable property.
      * 
-     * If table is editable a editor of type LegacyField is created for each table
-     * cell. The assigned FieldFactory is used to create the instances.
+     * If table is editable a editor of type LegacyField is created for each
+     * table cell. The assigned FieldFactory is used to create the instances.
      * 
      * To provide custom editors for table cells create a class implementing the
      * FieldFactory interface, and assign it to table, and set the editable
@@ -4931,8 +4933,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param doSort
      */
     private void setSortContainerPropertyId(Object propertyId, boolean doSort) {
-        if ((sortContainerPropertyId != null && !sortContainerPropertyId
-                .equals(propertyId))
+        if ((sortContainerPropertyId != null
+                && !sortContainerPropertyId.equals(propertyId))
                 || (sortContainerPropertyId == null && propertyId != null)) {
             sortContainerPropertyId = propertyId;
 
@@ -5129,8 +5131,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
     @Override
     public void removeItemClickListener(ItemClickListener listener) {
-        removeListener(TableConstants.ITEM_CLICK_EVENT_ID,
-                ItemClickEvent.class, listener);
+        removeListener(TableConstants.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
+                listener);
     }
 
     /**
@@ -5272,7 +5274,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * initialized from server and no subsequent requests requests are needed
      * during that drag and drop operation.
      */
-    public static abstract class TableDropCriterion extends ServerSideCriterion {
+    public static abstract class TableDropCriterion
+            extends ServerSideCriterion {
 
         private Table table;
 
@@ -5895,7 +5898,8 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void addColumnCollapseListener(ColumnCollapseListener listener) {
         addListener(TableConstants.COLUMN_COLLAPSE_EVENT_ID,
-                ColumnCollapseEvent.class, listener, ColumnCollapseEvent.METHOD);
+                ColumnCollapseEvent.class, listener,
+                ColumnCollapseEvent.METHOD);
     }
 
     /**
@@ -5917,7 +5921,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param generator
      *            The generator to use or null to disable
      */
-    public void setItemDescriptionGenerator(ItemDescriptionGenerator generator) {
+    public void setItemDescriptionGenerator(
+            ItemDescriptionGenerator generator) {
         if (generator != itemDescriptionGenerator) {
             itemDescriptionGenerator = generator;
             // Assures the visual refresh. No need to reset the page buffer
@@ -6071,17 +6076,18 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param converter
      *            The converter to use for the property id
      */
-    public void setConverter(Object propertyId, LegacyConverter<String, ?> converter) {
+    public void setConverter(Object propertyId,
+            LegacyConverter<String, ?> converter) {
         if (!getContainerPropertyIds().contains(propertyId)) {
-            throw new IllegalArgumentException("PropertyId " + propertyId
-                    + " must be in the container");
+            throw new IllegalArgumentException(
+                    "PropertyId " + propertyId + " must be in the container");
         }
 
         if (!typeIsCompatible(converter.getModelType(), getType(propertyId))) {
-            throw new IllegalArgumentException("Property type ("
-                    + getType(propertyId)
-                    + ") must match converter source type ("
-                    + converter.getModelType() + ")");
+            throw new IllegalArgumentException(
+                    "Property type (" + getType(propertyId)
+                            + ") must match converter source type ("
+                            + converter.getModelType() + ")");
         }
         propertyValueConverters.put(propertyId,
                 (LegacyConverter<String, Object>) converter);
@@ -6172,10 +6178,8 @@ public class Table extends AbstractSelect implements Action.Container,
                 addContainerProperty(id, String.class, null);
 
                 if (col.hasAttr("width")) {
-                    setColumnWidth(
-                            id,
-                            DesignAttributeHandler.readAttribute("width",
-                                    col.attributes(), Integer.class));
+                    setColumnWidth(id, DesignAttributeHandler.readAttribute(
+                            "width", col.attributes(), Integer.class));
                 }
                 if (col.hasAttr("center")) {
                     setColumnAlignment(id, Align.CENTER);
@@ -6197,9 +6201,8 @@ public class Table extends AbstractSelect implements Action.Container,
                                     col.attributes(), boolean.class));
                 }
                 if (col.hasAttr("collapsed")) {
-                    setColumnCollapsed(id,
-                            DesignAttributeHandler.readAttribute("collapsed",
-                                    col.attributes(), boolean.class));
+                    setColumnCollapsed(id, DesignAttributeHandler.readAttribute(
+                            "collapsed", col.attributes(), boolean.class));
                 }
             }
             setVisibleColumns(pIds.toArray());
@@ -6241,14 +6244,13 @@ public class Table extends AbstractSelect implements Action.Container,
             }
             Iterator<?> propertyIt = propertyIds.iterator();
             for (Element e : elems) {
-                String columnValue = DesignFormatter.decodeFromTextNode(e
-                        .html());
+                String columnValue = DesignFormatter
+                        .decodeFromTextNode(e.html());
                 Object propertyId = propertyIt.next();
                 if (header) {
                     setColumnHeader(propertyId, columnValue);
                     if (e.hasAttr("icon")) {
-                        setColumnIcon(
-                                propertyId,
+                        setColumnIcon(propertyId,
                                 DesignAttributeHandler.readAttribute("icon",
                                         e.attributes(), Resource.class));
                     }
@@ -6345,9 +6347,9 @@ public class Table extends AbstractSelect implements Action.Container,
                     col.attributes(), isColumnCollapsible(id),
                     def.isColumnCollapsible(null), boolean.class);
 
-            DesignAttributeHandler.writeAttribute("collapsed",
-                    col.attributes(), isColumnCollapsed(id),
-                    def.isColumnCollapsed(null), boolean.class);
+            DesignAttributeHandler.writeAttribute("collapsed", col.attributes(),
+                    isColumnCollapsed(id), def.isColumnCollapsed(null),
+                    boolean.class);
         }
     }
 

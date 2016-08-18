@@ -45,7 +45,8 @@ public class BasicBackwardHandler implements BackwardHandler {
         Date end = event.getComponent().getEndDate();
 
         // calculate amount to move back
-        int durationInDays = (int) (((end.getTime()) - start.getTime()) / DateConstants.DAYINMILLIS);
+        int durationInDays = (int) (((end.getTime()) - start.getTime())
+                / DateConstants.DAYINMILLIS);
         durationInDays++;
         // for week view durationInDays = -7, for day view durationInDays = -1
         durationInDays = -durationInDays;

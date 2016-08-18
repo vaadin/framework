@@ -136,8 +136,8 @@ public interface CalendarComponentEvents extends Serializable {
     /**
      * Handler interface for day or time cell drag-marking with mouse.
      */
-    public interface RangeSelectNotifier extends Serializable,
-            CalendarEventNotifier {
+    public interface RangeSelectNotifier
+            extends Serializable, CalendarEventNotifier {
 
         /**
          * Set the RangeSelectHandler that listens for drag-marking.
@@ -224,9 +224,9 @@ public interface CalendarComponentEvents extends Serializable {
     public interface RangeSelectHandler extends EventListener, Serializable {
 
         /** Trigger method for the RangeSelectEvent. */
-        public static final Method rangeSelectMethod = ReflectTools
-                .findMethod(RangeSelectHandler.class, "rangeSelect",
-                        RangeSelectEvent.class);
+        public static final Method rangeSelectMethod = ReflectTools.findMethod(
+                RangeSelectHandler.class, "rangeSelect",
+                RangeSelectEvent.class);
 
         /**
          * This method will be called when day or time cells are drag-marked

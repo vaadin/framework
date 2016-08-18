@@ -29,7 +29,8 @@ public class UriFragment extends AbstractTestUI {
         addComponent(createButton("null", "setUriFragment(null)", null));
     }
 
-    private Button createButton(String id, String caption, final String fragment) {
+    private Button createButton(String id, String caption,
+            final String fragment) {
         Button button = new Button(caption, new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {

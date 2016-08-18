@@ -46,7 +46,8 @@ public class DDInterrupt extends AbstractTestUI {
         DragAndDropWrapper dndLayoutWrapper = new DragAndDropWrapper(layout);
         addComponent(dndLayoutWrapper);
 
-        DragAndDropWrapper labelWrapper = new DragAndDropWrapper(draggableLabel);
+        DragAndDropWrapper labelWrapper = new DragAndDropWrapper(
+                draggableLabel);
         draggableLabel.setSizeUndefined();
         labelWrapper.setDragStartMode(DragStartMode.COMPONENT);
         labelWrapper.setSizeUndefined();

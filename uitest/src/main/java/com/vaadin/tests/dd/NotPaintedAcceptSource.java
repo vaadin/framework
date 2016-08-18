@@ -35,8 +35,8 @@ public class NotPaintedAcceptSource extends TestBase {
             public void drop(DragAndDropEvent event) {
                 TableTransferable transferable = (TableTransferable) event
                         .getTransferable();
-                Item item = transferable.getSourceComponent().getItem(
-                        transferable.getItemId());
+                Item item = transferable.getSourceComponent()
+                        .getItem(transferable.getItemId());
                 Object value = item.getItemProperty("value").getValue();
                 AbstractSelectTargetDetails targetDetails = (AbstractSelectTargetDetails) event
                         .getTargetDetails();
@@ -44,8 +44,8 @@ public class NotPaintedAcceptSource extends TestBase {
                 Object addItemAfter = target.addItemAfter(targetItemId);
                 target.getItem(addItemAfter).getItemProperty("value")
                         .setValue(value);
-                transferable.getSourceComponent().removeItem(
-                        transferable.getItemId());
+                transferable.getSourceComponent()
+                        .removeItem(transferable.getItemId());
             }
         });
 

@@ -48,11 +48,8 @@ public class LastColumnNegative extends TestBase {
     private Table setupTable() {
         IndexedContainer container = new IndexedContainer();
 
-        container
-                .addContainerProperty(
-                        "fileName",
-                        String.class,
-                        "Long enough string to cause a scrollbar when the window is set to a dencently small size.");
+        container.addContainerProperty("fileName", String.class,
+                "Long enough string to cause a scrollbar when the window is set to a dencently small size.");
         container.addContainerProperty("size", Long.class, 23958l);
         container.addItem();
         container.addItem();

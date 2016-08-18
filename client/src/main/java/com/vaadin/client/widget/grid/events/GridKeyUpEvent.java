@@ -38,8 +38,10 @@ public class GridKeyUpEvent extends AbstractGridKeyEvent<GridKeyUpHandler> {
     @Override
     protected void doDispatch(GridKeyUpHandler handler, Section section) {
         if ((section == Section.BODY && handler instanceof BodyKeyUpHandler)
-                || (section == Section.HEADER && handler instanceof HeaderKeyUpHandler)
-                || (section == Section.FOOTER && handler instanceof FooterKeyUpHandler)) {
+                || (section == Section.HEADER
+                        && handler instanceof HeaderKeyUpHandler)
+                || (section == Section.FOOTER
+                        && handler instanceof FooterKeyUpHandler)) {
             handler.onKeyUp(this);
         }
     }

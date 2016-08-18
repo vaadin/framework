@@ -51,8 +51,8 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
 
 @Connect(GridClientColumnRenderers.GridController.class)
-public class GridClientColumnRendererConnector extends
-        AbstractComponentConnector {
+public class GridClientColumnRendererConnector
+        extends AbstractComponentConnector {
 
     public static enum Renderers {
         TEXT_RENDERER, WIDGET_RENDERER, HTML_RENDERER, NUMBER_RENDERER, DATE_RENDERER, CPLX_RENDERER;
@@ -84,8 +84,8 @@ public class GridClientColumnRendererConnector extends
                     DelayedDataSource.this.firstRowIndex = firstRowIndex;
                     DelayedDataSource.this.numberOfRows = numberOfRows;
                     dataChangeHandler.dataUpdated(firstRowIndex, numberOfRows);
-                    dataChangeHandler
-                            .dataAvailable(firstRowIndex, numberOfRows);
+                    dataChangeHandler.dataAvailable(firstRowIndex,
+                            numberOfRows);
                 }
             }.schedule(latency);
         }
@@ -130,14 +130,15 @@ public class GridClientColumnRendererConnector extends
         // Provide data as data source
         if (Location.getParameter("latency") != null) {
             grid.setDataSource(new DelayedDataSource(
-                    new ListDataSource<String>(columnData), Integer
-                            .parseInt(Location.getParameter("latency"))));
+                    new ListDataSource<String>(columnData),
+                    Integer.parseInt(Location.getParameter("latency"))));
         } else {
             grid.setDataSource(new ListDataSource<String>(columnData));
         }
 
         // Add a column to display the data in
-        Grid.Column<String, String> c = createColumnWithRenderer(Renderers.TEXT_RENDERER);
+        Grid.Column<String, String> c = createColumnWithRenderer(
+                Renderers.TEXT_RENDERER);
         grid.addColumn(c);
         grid.getDefaultHeaderRow().getCell(c).setText("Column 1");
 
@@ -150,8 +151,8 @@ public class GridClientColumnRendererConnector extends
         grid.addSortHandler(new SortHandler<String>() {
             @Override
             public void sort(SortEvent<String> event) {
-                Element console = Document.get().getElementById(
-                        "testDebugConsole");
+                Element console = Document.get()
+                        .getElementById("testDebugConsole");
                 String text = "Client-side sort event received<br>"
                         + "Columns: " + event.getOrder().size() + ", order: ";
                 for (SortOrder order : event.getOrder()) {
@@ -181,13 +182,9 @@ public class GridClientColumnRendererConnector extends
                         }
                         getWidget().addColumn(column);
 
-                        getWidget()
-                                .getDefaultHeaderRow()
-                                .getCell(column)
-                                .setText(
-                                        "Column "
-                                                + String.valueOf(getWidget()
-                                                        .getColumnCount() + 1));
+                        getWidget().getDefaultHeaderRow().getCell(column)
+                                .setText("Column " + String.valueOf(
+                                        getWidget().getColumnCount() + 1));
                     }
 
                     @Override
@@ -211,7 +208,8 @@ public class GridClientColumnRendererConnector extends
                     @SuppressWarnings("unchecked")
                     public void triggerClientSortingTest() {
                         Grid<String> grid = getWidget();
-                        ListSorter<String> sorter = new ListSorter<String>(grid);
+                        ListSorter<String> sorter = new ListSorter<String>(
+                                grid);
 
                         // Make sorter sort the numbers in natural order
                         sorter.setComparator(
@@ -294,7 +292,8 @@ public class GridClientColumnRendererConnector extends
             return new HtmlRenderer() {
 
                 @Override
-                public void render(RendererCellReference cell, String htmlString) {
+                public void render(RendererCellReference cell,
+                        String htmlString) {
                     super.render(cell, "<b>" + htmlString + "</b>");
                 }
             };

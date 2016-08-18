@@ -7,8 +7,8 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
-public class VerticalLayoutWithRelativeSizeComponentsInitiallyHidden extends
-        TestBase {
+public class VerticalLayoutWithRelativeSizeComponentsInitiallyHidden
+        extends TestBase {
 
     @Override
     protected String getDescription() {

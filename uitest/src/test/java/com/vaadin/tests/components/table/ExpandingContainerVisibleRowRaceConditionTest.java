@@ -28,8 +28,8 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class ExpandingContainerVisibleRowRaceConditionTest extends
-        MultiBrowserTest {
+public class ExpandingContainerVisibleRowRaceConditionTest
+        extends MultiBrowserTest {
 
     private static final int ROW_HEIGHT = 20;
 
@@ -76,15 +76,15 @@ public class ExpandingContainerVisibleRowRaceConditionTest extends
 
     private void assertScrollPositionIsNotVisible() {
         WebElement table = vaadinElementById(TABLE);
-        WebElement scrollPosition = table.findElement(By
-                .className("v-table-scrollposition"));
+        WebElement scrollPosition = table
+                .findElement(By.className("v-table-scrollposition"));
         assertFalse(scrollPosition.isDisplayed());
     }
 
     private List<WebElement> getCellsOfFirstColumn() {
         WebElement table = vaadinElementById(TABLE);
-        List<WebElement> firstCellOfRows = table.findElements(By
-                .cssSelector(".v-table-table tr > td"));
+        List<WebElement> firstCellOfRows = table
+                .findElements(By.cssSelector(".v-table-table tr > td"));
         return firstCellOfRows;
     }
 }

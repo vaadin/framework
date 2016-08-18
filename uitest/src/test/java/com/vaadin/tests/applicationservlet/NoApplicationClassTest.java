@@ -32,8 +32,8 @@ public class NoApplicationClassTest extends SingleBrowserTest {
         Assert.assertTrue(
                 String.format(
                         "Unexpected error message.\n expected to contain: '%s'\n was: %s",
-                        expected, exceptionMessage), exceptionMessage
-                        .contains(expected));
+                        expected, exceptionMessage),
+                exceptionMessage.contains(expected));
     }
 
     @Override

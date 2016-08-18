@@ -36,8 +36,8 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * 
  * @author Vaadin Ltd
  */
-public class EmptySpaceOnPageAfterExpandedComponentTest extends
-        MultiBrowserTest {
+public class EmptySpaceOnPageAfterExpandedComponentTest
+        extends MultiBrowserTest {
 
     @Test
     public void testNoEmptySpaceOnPageAfterExpandedComponent() {
@@ -49,8 +49,8 @@ public class EmptySpaceOnPageAfterExpandedComponentTest extends
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver input) {
-                int expandedElementBottom = expandedElement.getLocation()
-                        .getY() + expandedElement.getSize().getHeight();
+                int expandedElementBottom = expandedElement.getLocation().getY()
+                        + expandedElement.getSize().getHeight();
                 int containerElementBottom = containerElement.getLocation()
                         .getY() + containerElement.getSize().getHeight();
 

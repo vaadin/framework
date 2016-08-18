@@ -95,8 +95,8 @@ public class BasicJavaScriptComponent extends AbstractTestUI {
                     HasComponents parent = getParent();
                     int i = 1;
                     while (parent != null) {
-                        if (!parentIds.getString(i).equals(
-                                parent.getConnectorId())) {
+                        if (!parentIds.getString(i)
+                                .equals(parent.getConnectorId())) {
                             log.log("parentIds[" + i + "] doesn't match");
                         }
                         i++;
@@ -134,10 +134,8 @@ public class BasicJavaScriptComponent extends AbstractTestUI {
             getRpcProxy(TestRpc.class).sendRpc("RPC message");
             callFunction("messageToClient", "Callback message");
 
-            getState()
-                    .setMessages(
-                            Arrays.asList("First state message",
-                                    "Second state message"));
+            getState().setMessages(Arrays.asList("First state message",
+                    "Second state message"));
             // Dummy resource used to test URL translation
             Resource resource = new ConnectorResource() {
                 @Override

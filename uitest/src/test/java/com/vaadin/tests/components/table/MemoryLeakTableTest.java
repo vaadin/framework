@@ -84,8 +84,8 @@ public class MemoryLeakTableTest extends MultiBrowserTest {
     // Method scroll in TalbeElement class has a bug
     //
     private void scrollTable(TableElement tbl, int value) {
-        WebElement actualElement = tbl.findElement(By
-                .className("v-table-body-wrapper"));
+        WebElement actualElement = tbl
+                .findElement(By.className("v-table-body-wrapper"));
         JavascriptExecutor js = tbl.getCommandExecutor();
         js.executeScript("arguments[0].scrollTop = " + value, actualElement);
     }

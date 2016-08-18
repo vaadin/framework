@@ -26,15 +26,14 @@ public class LegacyChangeVariablesInvocation extends MethodInvocation {
     public LegacyChangeVariablesInvocation(String connectorId,
             String variableName, Object value) {
         super(connectorId, ApplicationConstants.UPDATE_VARIABLE_INTERFACE,
-                ApplicationConstants.UPDATE_VARIABLE_METHOD, new Object[] {
-                        variableName, new UidlValue(value) });
+                ApplicationConstants.UPDATE_VARIABLE_METHOD,
+                new Object[] { variableName, new UidlValue(value) });
         setVariableChange(variableName, value);
     }
 
     public static boolean isLegacyVariableChange(String interfaceName,
             String methodName) {
-        return ApplicationConstants.UPDATE_VARIABLE_METHOD
-                .equals(interfaceName)
+        return ApplicationConstants.UPDATE_VARIABLE_METHOD.equals(interfaceName)
                 && ApplicationConstants.UPDATE_VARIABLE_METHOD
                         .equals(methodName);
     }

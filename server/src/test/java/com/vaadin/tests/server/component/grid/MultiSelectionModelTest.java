@@ -108,14 +108,14 @@ public class MultiSelectionModelTest {
     public void testSettingSelection() throws Throwable {
         try {
             expectSelectEvent(itemId2Present, itemId1Present);
-            model.setSelected(Arrays.asList(new Object[] { itemId1Present,
-                    itemId2Present }));
+            model.setSelected(Arrays
+                    .asList(new Object[] { itemId1Present, itemId2Present }));
             verifyCurrentSelection(itemId1Present, itemId2Present);
 
             expectDeselectEvent(itemId1Present);
             expectSelectEvent(itemId3Present);
-            model.setSelected(Arrays.asList(new Object[] { itemId3Present,
-                    itemId2Present }));
+            model.setSelected(Arrays
+                    .asList(new Object[] { itemId3Present, itemId2Present }));
             verifyCurrentSelection(itemId3Present, itemId2Present);
         } catch (Exception e) {
             throw e.getCause();

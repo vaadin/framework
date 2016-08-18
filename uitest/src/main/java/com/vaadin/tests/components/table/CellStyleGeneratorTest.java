@@ -10,9 +10,8 @@ public class CellStyleGeneratorTest extends TestBase {
 
     @Override
     protected void setup() {
-        TestUtils
-                .injectCSS(getMainWindow(),
-                        ".v-table-cell-content-red{background:red;}.v-table-row-blue{background:blue;}");
+        TestUtils.injectCSS(getMainWindow(),
+                ".v-table-cell-content-red{background:red;}.v-table-row-blue{background:blue;}");
 
         CellStyleGenerator g = new CellStyleGenerator() {
 

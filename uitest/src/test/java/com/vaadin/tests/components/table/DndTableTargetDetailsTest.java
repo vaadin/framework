@@ -45,8 +45,8 @@ public class DndTableTargetDetailsTest extends DndActionsTest {
     }
 
     protected WebElement getTarget() {
-        return findElement(By.className("target")).findElement(
-                By.className("v-table-cell-wrapper"));
+        return findElement(By.className("target"))
+                .findElement(By.className("v-table-cell-wrapper"));
     }
 
 }

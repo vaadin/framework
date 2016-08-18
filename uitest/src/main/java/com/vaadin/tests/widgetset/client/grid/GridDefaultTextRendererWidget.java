@@ -21,8 +21,8 @@ import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.client.widgets.Grid.SelectionMode;
 import com.vaadin.shared.ui.grid.HeightMode;
 
-public class GridDefaultTextRendererWidget extends
-        PureGWTTestApplication<Grid<String>> {
+public class GridDefaultTextRendererWidget
+        extends PureGWTTestApplication<Grid<String>> {
     /*
      * This can't be null, because grid thinks that a row object of null means
      * "data is still being fetched".

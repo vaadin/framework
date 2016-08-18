@@ -67,8 +67,8 @@ public class NotificationTestUI extends UI {
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        Notification
-                                .show("This will disappear when you move your mouse!");
+                        Notification.show(
+                                "This will disappear when you move your mouse!");
                     }
                 });
         content.addComponent(btn);
@@ -81,8 +81,8 @@ public class NotificationTestUI extends UI {
             @Override
             public void dateClick(DateClickEvent event) {
                 provider.addEvent(event.getDate());
-                Notification
-                        .show("This should disappear, but if wont unless clicked.");
+                Notification.show(
+                        "This should disappear, but if wont unless clicked.");
 
                 // this requestRepaint call interferes with the notification
                 cal.markAsDirty();

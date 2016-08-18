@@ -73,8 +73,8 @@ public class TableReduceContainerSize extends TestBase {
                         label.setValue("Index: "
                                 + table.getCurrentPageFirstItemIndex());
                     } catch (Exception e) {
-                        label.setValue("Exception: "
-                                + e.getClass().getSimpleName());
+                        label.setValue(
+                                "Exception: " + e.getClass().getSimpleName());
                     }
                 }
             });
@@ -95,8 +95,8 @@ public class TableReduceContainerSize extends TestBase {
                         label.setValue("Index: "
                                 + table.getCurrentPageFirstItemIndex());
                     } catch (Exception e) {
-                        label.setValue("Exception: "
-                                + e.getClass().getSimpleName());
+                        label.setValue(
+                                "Exception: " + e.getClass().getSimpleName());
                     }
                 }
             });

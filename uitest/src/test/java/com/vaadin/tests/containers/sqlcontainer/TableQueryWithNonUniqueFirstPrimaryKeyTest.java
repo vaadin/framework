@@ -12,8 +12,8 @@ import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class TableQueryWithNonUniqueFirstPrimaryKeyTest extends
-        MultiBrowserTest {
+public class TableQueryWithNonUniqueFirstPrimaryKeyTest
+        extends MultiBrowserTest {
 
     private static final String[] DATA = { "TARUSCIO GIOVANNI",
             "RUSSO GAETANO AUTORICAMBI", "AMORUSO LUIGI SRL", "CARUSO ROCCO",
@@ -29,8 +29,8 @@ public class TableQueryWithNonUniqueFirstPrimaryKeyTest extends
         List<String> result = new ArrayList<String>();
 
         // pick list items that are shown in suggestion popup
-        List<WebElement> elems = findElements(By
-                .cssSelector("td[role=\"listitem\"]"));
+        List<WebElement> elems = findElements(
+                By.cssSelector("td[role=\"listitem\"]"));
         Assert.assertEquals("not enough suggestions shown", DATA.length,
                 elems.size());
 

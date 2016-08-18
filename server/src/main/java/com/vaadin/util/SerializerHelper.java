@@ -142,8 +142,8 @@ public class SerializerHelper {
      * @throws IOException
      *             Rethrows IOExceptions from the ObjectInputStream
      */
-    public static Class<?> readClass(ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
+    public static Class<?> readClass(ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
         String className = (String) in.readObject();
         if (className == null) {
             return null;

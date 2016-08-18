@@ -32,8 +32,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
 
-public class GridLayoutDeclarativeTest extends
-        DeclarativeMarginTestBase<GridLayout> {
+public class GridLayoutDeclarativeTest
+        extends DeclarativeMarginTestBase<GridLayout> {
 
     @Test
     public void testMargins() {
@@ -272,7 +272,8 @@ public class GridLayoutDeclarativeTest extends
         context.setRootComponent(layout);
         Design.write(context, out);
 
-        ByteArrayInputStream input = new ByteArrayInputStream(out.toByteArray());
+        ByteArrayInputStream input = new ByteArrayInputStream(
+                out.toByteArray());
         Component component = Design.read(input);
         GridLayout readLayout = (GridLayout) component;
 

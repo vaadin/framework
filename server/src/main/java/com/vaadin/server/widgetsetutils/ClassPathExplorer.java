@@ -80,7 +80,8 @@ public class ClassPathExplorer {
 
         private final Map<String, URL> addonStyles;
 
-        public LocationInfo(Map<String, URL> widgetsets, Map<String, URL> themes) {
+        public LocationInfo(Map<String, URL> widgetsets,
+                Map<String, URL> themes) {
             this.widgetsets = widgetsets;
             addonStyles = themes;
         }
@@ -107,7 +108,8 @@ public class ClassPathExplorer {
      * slash, or a URL for a JAR file) to the corresponding URLs. This is
      * constructed from the class path.
      */
-    private static Map<String, URL> classpathLocations = getClasspathLocations(rawClasspathEntries);
+    private static Map<String, URL> classpathLocations = getClasspathLocations(
+            rawClasspathEntries);
 
     private static boolean debug = false;
 
@@ -192,9 +194,8 @@ public class ClassPathExplorer {
      *            separators) to a URL (see {@link #classpathLocations}) - new
      *            entries are added to this map
      */
-    private static void searchForWidgetSetsAndAddonStyles(
-            String locationString, Map<String, URL> widgetsets,
-            Map<String, URL> addonStyles) {
+    private static void searchForWidgetSetsAndAddonStyles(String locationString,
+            Map<String, URL> widgetsets, Map<String, URL> addonStyles) {
 
         URL location = classpathLocations.get(locationString);
         File directory = new File(location.getFile());
@@ -210,8 +211,8 @@ public class ClassPathExplorer {
 
                 // remove the .gwt.xml extension
                 String classname = files[i].substring(0, files[i].length() - 8);
-                String packageName = locationString.substring(locationString
-                        .lastIndexOf("/") + 1);
+                String packageName = locationString
+                        .substring(locationString.lastIndexOf("/") + 1);
                 classname = packageName + "." + classname;
 
                 if (!WidgetSetBuilder.isWidgetset(classname)) {
@@ -222,8 +223,8 @@ public class ClassPathExplorer {
 
                 if (!widgetsets.containsKey(classname)) {
                     String packagePath = packageName.replaceAll("\\.", "/");
-                    String basePath = location.getFile().replaceAll(
-                            "/" + packagePath + "$", "");
+                    String basePath = location.getFile()
+                            .replaceAll("/" + packagePath + "$", "");
                     try {
                         URL url = new URL(location.getProtocol(),
                                 location.getHost(), location.getPort(),
@@ -255,8 +256,8 @@ public class ClassPathExplorer {
                     }
 
                     // Check for widgetset attribute
-                    String value = manifest.getMainAttributes().getValue(
-                            "Vaadin-Widgetsets");
+                    String value = manifest.getMainAttributes()
+                            .getValue("Vaadin-Widgetsets");
                     if (value != null) {
                         String[] widgetsetNames = value.split(",");
                         for (int i = 0; i < widgetsetNames.length; i++) {
@@ -268,8 +269,8 @@ public class ClassPathExplorer {
                     }
 
                     // Check for theme attribute
-                    value = manifest.getMainAttributes().getValue(
-                            "Vaadin-Stylesheets");
+                    value = manifest.getMainAttributes()
+                            .getValue("Vaadin-Stylesheets");
                     if (value != null) {
                         String[] stylesheets = value.split(",");
                         for (int i = 0; i < stylesheets.length; i++) {
@@ -390,10 +391,12 @@ public class ClassPathExplorer {
                     if (manifest != null) {
                         Attributes mainAttributes = manifest
                                 .getMainAttributes();
-                        if (mainAttributes.getValue("Vaadin-Widgetsets") != null) {
+                        if (mainAttributes
+                                .getValue("Vaadin-Widgetsets") != null) {
                             return true;
                         }
-                        if (mainAttributes.getValue("Vaadin-Stylesheets") != null) {
+                        if (mainAttributes
+                                .getValue("Vaadin-Stylesheets") != null) {
                             return true;
                         }
                     }
@@ -541,7 +544,8 @@ public class ClassPathExplorer {
                     }
 
                     if (widgetsetFileName == null
-                            || new File(directory, widgetsetFileName).exists()) {
+                            || new File(directory, widgetsetFileName)
+                                    .exists()) {
                         return directoryUrl;
                     }
                 } catch (MalformedURLException e) {

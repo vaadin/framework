@@ -26,7 +26,8 @@ import com.vaadin.ui.Grid.DetailComponentManager;
  * @since 7.6.1
  */
 @Connect(DetailComponentManager.class)
-public class DetailComponentManagerConnector extends AbstractExtensionConnector {
+public class DetailComponentManagerConnector
+        extends AbstractExtensionConnector {
 
     @Override
     protected void extend(ServerConnector target) {

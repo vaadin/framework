@@ -116,17 +116,15 @@ public class UidlWriter implements Serializable {
             }
         }
 
-        getLogger().log(
-                Level.FINE,
-                "Found " + processedConnectors.size()
-                        + " dirty connectors to paint");
+        getLogger().log(Level.FINE, "Found " + processedConnectors.size()
+                + " dirty connectors to paint");
 
         uiConnectorTracker.setWritingResponse(true);
         try {
 
             int syncId = service.getDeploymentConfiguration()
-                    .isSyncIdCheckEnabled() ? uiConnectorTracker
-                    .getCurrentSyncId() : -1;
+                    .isSyncIdCheckEnabled()
+                            ? uiConnectorTracker.getCurrentSyncId() : -1;
             writer.write("\"" + ApplicationConstants.SERVER_SYNC_ID + "\": "
                     + syncId + ", ");
             if (repaintAll) {
@@ -159,8 +157,8 @@ public class UidlWriter implements Serializable {
             // processing.
 
             writer.write("\"state\":");
-            Set<String> stateUpdateConnectors = new SharedStateWriter().write(
-                    ui, writer);
+            Set<String> stateUpdateConnectors = new SharedStateWriter()
+                    .write(ui, writer);
             writer.write(", "); // close states
 
             // TODO This should be optimized. The type only needs to be
@@ -241,8 +239,8 @@ public class UidlWriter implements Serializable {
             if (typeMappingsOpen) {
                 // send the whole type inheritance map if any new mappings
                 for (Class<? extends ClientConnector> class1 : usedClientConnectors) {
-                    if (!ClientConnector.class.isAssignableFrom(class1
-                            .getSuperclass())) {
+                    if (!ClientConnector.class
+                            .isAssignableFrom(class1.getSuperclass())) {
                         continue;
                     }
                     if (!typeInheritanceMapOpen) {
@@ -254,8 +252,8 @@ public class UidlWriter implements Serializable {
                     writer.write("\"");
                     writer.write(manager.getTagForType(class1));
                     writer.write("\" : ");
-                    writer.write(manager
-                            .getTagForType((Class<? extends ClientConnector>) class1
+                    writer.write(manager.getTagForType(
+                            (Class<? extends ClientConnector>) class1
                                     .getSuperclass()));
                 }
                 if (typeInheritanceMapOpen) {
@@ -294,8 +292,8 @@ public class UidlWriter implements Serializable {
                         .getAnnotation(JavaScript.class);
                 if (jsAnnotation != null) {
                     for (String uri : jsAnnotation.value()) {
-                        scriptDependencies.add(manager.registerDependency(uri,
-                                class1));
+                        scriptDependencies
+                                .add(manager.registerDependency(uri, class1));
                     }
                 }
 
@@ -303,8 +301,8 @@ public class UidlWriter implements Serializable {
                         .getAnnotation(StyleSheet.class);
                 if (styleAnnotation != null) {
                     for (String uri : styleAnnotation.value()) {
-                        styleDependencies.add(manager.registerDependency(uri,
-                                class1));
+                        styleDependencies
+                                .add(manager.registerDependency(uri, class1));
                     }
                 }
             }
@@ -327,7 +325,8 @@ public class UidlWriter implements Serializable {
                 uiConnectorTracker.markClientSideInitialized(connector);
             }
 
-            assert (uiConnectorTracker.getDirtyConnectors().isEmpty()) : "Connectors have been marked as dirty during the end of the paint phase. This is most certainly not intended.";
+            assert (uiConnectorTracker.getDirtyConnectors()
+                    .isEmpty()) : "Connectors have been marked as dirty during the end of the paint phase. This is most certainly not intended.";
 
             writePerformanceData(ui, writer);
         } finally {
@@ -354,9 +353,9 @@ public class UidlWriter implements Serializable {
     private void writePerformanceData(UI ui, Writer writer) throws IOException {
         if (!ui.getSession().getService().getDeploymentConfiguration()
                 .isProductionMode()) {
-            writer.write(String.format(", \"timings\":[%d, %d]", ui
-                    .getSession().getCumulativeRequestDuration(), ui
-                    .getSession().getLastRequestDuration()));
+            writer.write(String.format(", \"timings\":[%d, %d]",
+                    ui.getSession().getCumulativeRequestDuration(),
+                    ui.getSession().getLastRequestDuration()));
         }
     }
 

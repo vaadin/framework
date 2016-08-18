@@ -56,7 +56,8 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
                 startTest();
             }
         });
-        b.setDescription("Push this button to start test. A test label will be rendered above existing components.");
+        b.setDescription(
+                "Push this button to start test. A test label will be rendered above existing components.");
         main.addComponent(b);
         b = new Button("end test", new Button.ClickListener() {
             @Override
@@ -64,7 +65,8 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
                 endTest();
             }
         });
-        b.setDescription("Push this button as soon as test componenet is rendered.");
+        b.setDescription(
+                "Push this button as soon as test componenet is rendered.");
         main.addComponent(b);
 
         result = new Label();

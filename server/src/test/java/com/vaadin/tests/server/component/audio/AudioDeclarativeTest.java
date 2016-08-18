@@ -55,8 +55,8 @@ public class AudioDeclarativeTest extends DeclarativeTestBase<Audio> {
         audio.setMuted(true);
         audio.setShowControls(false);
         audio.setSources(new ExternalResource("http://foo.pl"),
-                new ExternalResource("https://bar.pl"), new FileResource(
-                        new File("ohai")));
+                new ExternalResource("https://bar.pl"),
+                new FileResource(new File("ohai")));
         testRead(design, audio);
         testWrite(design, audio);
     }

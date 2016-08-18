@@ -119,10 +119,11 @@ public class LegacyBeanValidator implements Validator {
             for (Object v : violations) {
                 final ConstraintViolation<?> violation = (ConstraintViolation<?>) v;
                 String msg = getJavaxBeanValidatorFactory()
-                        .getMessageInterpolator().interpolate(
-                                violation.getMessageTemplate(),
-                                new SimpleContext(value, violation
-                                        .getConstraintDescriptor()), locale);
+                        .getMessageInterpolator()
+                        .interpolate(violation.getMessageTemplate(),
+                                new SimpleContext(value,
+                                        violation.getConstraintDescriptor()),
+                                locale);
                 causes[i] = new InvalidValueException(msg);
                 ++i;
             }

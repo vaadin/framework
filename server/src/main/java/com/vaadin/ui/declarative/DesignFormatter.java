@@ -145,12 +145,13 @@ public class DesignFormatter implements Serializable {
         final DecimalFormat bigDecimalFmt = new DecimalFormat("0.###", symbols);
         bigDecimalFmt.setGroupingUsed(false);
         bigDecimalFmt.setParseBigDecimal(true);
-        converterMap.put(BigDecimal.class, new LegacyStringToBigDecimalConverter() {
-            @Override
-            protected NumberFormat getFormat(Locale locale) {
-                return bigDecimalFmt;
-            };
-        });
+        converterMap.put(BigDecimal.class,
+                new LegacyStringToBigDecimalConverter() {
+                    @Override
+                    protected NumberFormat getFormat(Locale locale) {
+                        return bigDecimalFmt;
+                    };
+                });
 
         // strings do nothing
         converterMap.put(String.class, new LegacyConverter<String, String>() {
@@ -275,7 +276,8 @@ public class DesignFormatter implements Serializable {
      *         registered converter.
      */
     public String format(Object object) {
-        return format(object, object == null ? Object.class : object.getClass());
+        return format(object,
+                object == null ? Object.class : object.getClass());
     }
 
     /**
@@ -292,8 +294,8 @@ public class DesignFormatter implements Serializable {
         if (object == null) {
             return null;
         } else {
-            LegacyConverter<String, Object> converter = findConverterFor(object
-                    .getClass());
+            LegacyConverter<String, Object> converter = findConverterFor(
+                    object.getClass());
             return converter.convertToPresentation(object, String.class, null);
         }
     }
@@ -339,7 +341,8 @@ public class DesignFormatter implements Serializable {
         } else if (!strict) {
             for (Class<?> supported : converterMap.keySet()) {
                 if (supported.isAssignableFrom(sourceType)) {
-                    return ((LegacyConverter<String, T>) converterMap.get(supported));
+                    return ((LegacyConverter<String, T>) converterMap
+                            .get(supported));
                 }
             }
         }
@@ -388,8 +391,8 @@ public class DesignFormatter implements Serializable {
         if (input == null) {
             return null;
         }
-        return input.replace("&", "&amp;").replace(">", "&gt;")
-                .replace("<", "&lt;");
+        return input.replace("&", "&amp;").replace(">", "&gt;").replace("<",
+                "&lt;");
     }
 
     /**

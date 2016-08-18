@@ -102,8 +102,8 @@ public class CheckBoxes extends VerticalLayout implements View {
         OptionGroup options = new OptionGroup("Choose one, explicit width");
         options.setWidth("200px");
         options.addItem("Option One");
-        Item two = options
-                .addItem("Option Two, with a longer caption that should wrap when the components width is explicitly set.");
+        Item two = options.addItem(
+                "Option Two, with a longer caption that should wrap when the components width is explicitly set.");
         options.addItem("Option Three");
         options.select("Option One");
         options.setItemIcon("Option One", testIcon.get());
@@ -115,8 +115,8 @@ public class CheckBoxes extends VerticalLayout implements View {
         options.setMultiSelect(true);
         options.setWidth("200px");
         options.addItem("Option One");
-        two = options
-                .addItem("Option Two, with a longer caption that should wrap when the components width is explicitly set.");
+        two = options.addItem(
+                "Option Two, with a longer caption that should wrap when the components width is explicitly set.");
         options.addItem("Option Three");
         options.select("Option One");
         options.setItemIcon("Option One", testIcon.get());

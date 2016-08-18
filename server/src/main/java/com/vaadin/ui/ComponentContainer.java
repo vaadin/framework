@@ -28,8 +28,8 @@ import com.vaadin.ui.HasComponents.ComponentAttachDetachNotifier;
  * @author Vaadin Ltd.
  * @since 3.0
  */
-public interface ComponentContainer extends HasComponents,
-        ComponentAttachDetachNotifier {
+public interface ComponentContainer
+        extends HasComponents, ComponentAttachDetachNotifier {
 
     /**
      * Adds the component into this container.
@@ -78,7 +78,8 @@ public interface ComponentContainer extends HasComponents,
      * @param newComponent
      *            the new component to be replaced.
      */
-    public void replaceComponent(Component oldComponent, Component newComponent);
+    public void replaceComponent(Component oldComponent,
+            Component newComponent);
 
     /**
      * Gets an iterator to the collection of contained components. Using this

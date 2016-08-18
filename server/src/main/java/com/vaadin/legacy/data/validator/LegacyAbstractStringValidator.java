@@ -28,7 +28,8 @@ package com.vaadin.legacy.data.validator;
  * @since 5.4
  */
 @SuppressWarnings("serial")
-public abstract class LegacyAbstractStringValidator extends LegacyAbstractValidator<String> {
+public abstract class LegacyAbstractStringValidator
+        extends LegacyAbstractValidator<String> {
 
     /**
      * Constructs a validator for strings.
@@ -41,7 +42,7 @@ public abstract class LegacyAbstractStringValidator extends LegacyAbstractValida
      * @param errorMessage
      *            the message to be included in an {@link InvalidValueException}
      *            (with "{0}" replaced by the value that failed validation).
-     * */
+     */
     public LegacyAbstractStringValidator(String errorMessage) {
         super(errorMessage);
     }

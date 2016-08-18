@@ -43,8 +43,8 @@ public class NoLayout extends AbstractTestUI {
         });
         addComponent(uiPolling);
 
-        addComponent(new Button("Change regular state",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Change regular state", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         event.getButton().setCaption(

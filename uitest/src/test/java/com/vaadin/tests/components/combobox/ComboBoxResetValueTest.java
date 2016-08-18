@@ -37,14 +37,14 @@ public class ComboBoxResetValueTest extends MultiBrowserTest {
 
         openTestURL();
 
-        comboBoxWithNullSelectionItemId = $(ComboBoxElement.class).id(
-                ComboBoxResetValue.WITH_SET_NULL_SELECTION_ITEM_ID);
+        comboBoxWithNullSelectionItemId = $(ComboBoxElement.class)
+                .id(ComboBoxResetValue.WITH_SET_NULL_SELECTION_ITEM_ID);
 
-        comboBoxWithoutNullSelectionItemId = $(ComboBoxElement.class).id(
-                ComboBoxResetValue.WITHOUT_NULL_SELECTION_ITEM_ID);
+        comboBoxWithoutNullSelectionItemId = $(ComboBoxElement.class)
+                .id(ComboBoxResetValue.WITHOUT_NULL_SELECTION_ITEM_ID);
 
-        comboBoxWithNullNotAllowed = $(ComboBoxElement.class).id(
-                ComboBoxResetValue.NULL_SELECTION_NOT_ALLOWED);
+        comboBoxWithNullNotAllowed = $(ComboBoxElement.class)
+                .id(ComboBoxResetValue.NULL_SELECTION_NOT_ALLOWED);
 
         clickResetButton();
     }

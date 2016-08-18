@@ -10,8 +10,9 @@ public class DateFieldBackedByString extends AbstractComponentDataBindingTest {
     protected void createFields() {
         LegacyDateField df = new LegacyDateField("Date field");
         addComponent(df);
-        df.setPropertyDataSource(new com.vaadin.data.util.ObjectProperty<String>(
-                s, String.class));
+        df.setPropertyDataSource(
+                new com.vaadin.data.util.ObjectProperty<String>(s,
+                        String.class));
 
     }
 }

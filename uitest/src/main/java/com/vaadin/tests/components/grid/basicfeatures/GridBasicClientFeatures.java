@@ -33,7 +33,8 @@ public class GridBasicClientFeatures extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        setContent(new TestWidgetComponent(GridBasicClientFeaturesWidget.class));
+        setContent(
+                new TestWidgetComponent(GridBasicClientFeaturesWidget.class));
     }
 
 }

@@ -13,7 +13,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-
 public class ListDataSourceTest {
 
     private ListDataSource<StrBean> dataSource;
@@ -27,8 +26,8 @@ public class ListDataSourceTest {
 
     @Test
     public void testListContainsAllData() {
-        dataSource.apply(new Query()).forEach(
-                str -> assertTrue(
+        dataSource.apply(new Query())
+                .forEach(str -> assertTrue(
                         "Data source contained values not in original data",
                         data.remove(str)));
         assertTrue("Not all values from original data were in data source",
@@ -77,7 +76,8 @@ public class ListDataSourceTest {
 
             if (prev.getRandomNumber() == cur.getRandomNumber()) {
                 // Test default sort
-                Assert.assertTrue(prev.getValue().compareTo(cur.getValue()) <= 0);
+                Assert.assertTrue(
+                        prev.getValue().compareTo(cur.getValue()) <= 0);
                 if (prev.getValue().equals(cur.getValue())) {
                     Assert.assertTrue(prev.getId() > cur.getId());
                 }

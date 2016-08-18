@@ -62,10 +62,10 @@ public class OptionGroupConnector extends OptionGroupBaseConnector {
             // add focus and blur handlers to checkboxes / radio buttons
             for (Widget wid : getWidget().panel) {
                 if (wid instanceof CheckBox) {
-                    getWidget().focusHandlers.add(((CheckBox) wid)
-                            .addFocusHandler(getWidget()));
-                    getWidget().blurHandlers.add(((CheckBox) wid)
-                            .addBlurHandler(getWidget()));
+                    getWidget().focusHandlers
+                            .add(((CheckBox) wid).addFocusHandler(getWidget()));
+                    getWidget().blurHandlers
+                            .add(((CheckBox) wid).addBlurHandler(getWidget()));
                 }
             }
         }

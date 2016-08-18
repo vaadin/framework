@@ -45,8 +45,8 @@ public class AddSelectionToRemovedRangeTest extends MultiBrowserTest {
     @Test
     public void addAndRemoveItemToRemovedRange() throws IOException {
         openTestURL();
-        List<WebElement> rows = driver.findElements(By
-                .className("v-table-cell-wrapper"));
+        List<WebElement> rows = driver
+                .findElements(By.className("v-table-cell-wrapper"));
         WebElement rangeStart = rows.get(0);
         WebElement rangeEnd = rows.get(1);
         rangeStart.click();
@@ -54,8 +54,8 @@ public class AddSelectionToRemovedRangeTest extends MultiBrowserTest {
         rangeEnd.click();
         new Actions(driver).keyUp(Keys.SHIFT).perform();
         driver.findElement(By.className("v-button")).click();
-        WebElement extraRow = driver.findElements(
-                By.className("v-table-cell-wrapper")).get(1);
+        WebElement extraRow = driver
+                .findElements(By.className("v-table-cell-wrapper")).get(1);
         new Actions(driver).keyDown(Keys.CONTROL).click(extraRow)
                 .click(extraRow).keyUp(Keys.CONTROL).perform();
         driver.findElement(By.className("v-button")).click();

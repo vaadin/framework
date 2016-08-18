@@ -87,7 +87,8 @@ public class LayoutDemo extends com.vaadin.server.LegacyApplication {
         // Create TabSheet
         //
         final TabSheet tabsheet = new TabSheet();
-        tabsheet.setCaption("Tabsheet, above layouts are added to this component");
+        tabsheet.setCaption(
+                "Tabsheet, above layouts are added to this component");
         tabsheet.addTab(layoutA, "Horizontal ordered layout", null);
         tabsheet.addTab(layoutB, "Vertical ordered layout", null);
         tabsheet.addTab(layoutG, "First grid layout", null);
@@ -108,13 +109,15 @@ public class LayoutDemo extends com.vaadin.server.LegacyApplication {
                 "<br /><h3>Grid Layout (4 x 4)</h3>Added 16 components.",
                 ContentMode.HTML));
         mainWindow.addComponent(layoutG);
-        mainWindow.addComponent(new Label("<br /><h3>Grid Layout (4 x 4)</h3>"
-                + "Added four panels and four embedded components "
-                + "diagonally with absolute coordinates.", ContentMode.HTML));
-        mainWindow.addComponent(layoutG2);
         mainWindow.addComponent(new Label(
-                "<br /><h3>TabSheet</h3>Added above layouts as tabs.",
+                "<br /><h3>Grid Layout (4 x 4)</h3>"
+                        + "Added four panels and four embedded components "
+                        + "diagonally with absolute coordinates.",
                 ContentMode.HTML));
+        mainWindow.addComponent(layoutG2);
+        mainWindow.addComponent(
+                new Label("<br /><h3>TabSheet</h3>Added above layouts as tabs.",
+                        ContentMode.HTML));
         mainWindow.addComponent(tabsheet);
 
     }

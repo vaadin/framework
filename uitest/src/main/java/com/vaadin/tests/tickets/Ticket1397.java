@@ -95,7 +95,8 @@ public class Ticket1397 extends LegacyApplication {
         panel3Layout.setMargin(true);
         final Panel panel3 = new Panel("Editor popup for a property",
                 panel3Layout);
-        LegacyTextField tf2 = new LegacyTextField("TextField for editing a property");
+        LegacyTextField tf2 = new LegacyTextField(
+                "TextField for editing a property");
         final ObjectProperty<String> op = new ObjectProperty<String>(
                 "This is property text.");
         tf2.setPropertyDataSource(op);
@@ -141,7 +142,8 @@ public class Ticket1397 extends LegacyApplication {
             final int lineNum = i;
             PopupView pp2 = new PopupView(new PopupView.Content() {
 
-                LegacyTextField tf = new LegacyTextField("Editor for line " + lineNum,
+                LegacyTextField tf = new LegacyTextField(
+                        "Editor for line " + lineNum,
 
                         "Try to edit the contents for this textfield on line "
                                 + lineNum

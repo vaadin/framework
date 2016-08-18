@@ -30,8 +30,8 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.ui.CustomField;
 
 @Connect(value = CustomField.class)
-public class CustomFieldConnector extends AbstractFieldConnector implements
-        HasComponentsConnector, ConnectorHierarchyChangeHandler {
+public class CustomFieldConnector extends AbstractFieldConnector
+        implements HasComponentsConnector, ConnectorHierarchyChangeHandler {
 
     List<ComponentConnector> childComponents;
 
@@ -53,7 +53,8 @@ public class CustomFieldConnector extends AbstractFieldConnector implements
     }
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         // We always have 1 child, unless the child is hidden
         getWidget().setWidget(getContentWidget());
     }
@@ -86,8 +87,8 @@ public class CustomFieldConnector extends AbstractFieldConnector implements
     @Override
     public HandlerRegistration addConnectorHierarchyChangeHandler(
             ConnectorHierarchyChangeHandler handler) {
-        return ensureHandlerManager().addHandler(
-                ConnectorHierarchyChangeEvent.TYPE, handler);
+        return ensureHandlerManager()
+                .addHandler(ConnectorHierarchyChangeEvent.TYPE, handler);
     }
 
     /**

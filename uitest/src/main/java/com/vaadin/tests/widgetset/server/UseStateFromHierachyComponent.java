@@ -20,8 +20,8 @@ import com.vaadin.tests.widgetset.client.UseStateFromHierachyChangeConnectorStat
 import com.vaadin.ui.AbstractSingleComponentContainer;
 import com.vaadin.ui.Component;
 
-public class UseStateFromHierachyComponent extends
-        AbstractSingleComponentContainer {
+public class UseStateFromHierachyComponent
+        extends AbstractSingleComponentContainer {
 
     @Override
     protected UseStateFromHierachyChangeConnectorState getState() {

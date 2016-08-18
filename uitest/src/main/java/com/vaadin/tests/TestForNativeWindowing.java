@@ -37,14 +37,14 @@ public class TestForNativeWindowing extends LegacyApplication {
 
         setMainWindow(main);
 
-        main.addComponent(new Button("Add new subwindow",
-                new Button.ClickListener() {
+        main.addComponent(
+                new Button("Add new subwindow", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         VerticalLayout layout = new VerticalLayout();
                         layout.setMargin(true);
-                        final Window w = new Window("sw "
-                                + System.currentTimeMillis(), layout);
+                        final Window w = new Window(
+                                "sw " + System.currentTimeMillis(), layout);
                         main.addWindow(w);
                         w.setPositionX(100);
                         w.setPositionY(100);
@@ -54,14 +54,15 @@ public class TestForNativeWindowing extends LegacyApplication {
                         w.setWidth("100px");
                         w.setHeight("400px");
 
-                        final Button closebutton = new Button("Close "
-                                + w.getCaption(), new Button.ClickListener() {
-                            @Override
-                            public void buttonClick(ClickEvent event) {
-                                main.removeWindow(w);
-                            }
+                        final Button closebutton = new Button(
+                                "Close " + w.getCaption(),
+                                new Button.ClickListener() {
+                                    @Override
+                                    public void buttonClick(ClickEvent event) {
+                                        main.removeWindow(w);
+                                    }
 
-                        });
+                                });
                         layout.addComponent(closebutton);
 
                         layout.addComponent(new Label(
@@ -98,13 +99,12 @@ public class TestForNativeWindowing extends LegacyApplication {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         try {
-                            main.open(
-                                    new com.vaadin.server.ExternalResource(
-                                            new URL(
-                                                    getURL(),
-                                                    "mainwin-"
-                                                            + System.currentTimeMillis()
-                                                            + "/")), null);
+                            main.open(new com.vaadin.server.ExternalResource(
+                                    new URL(getURL(),
+                                            "mainwin-"
+                                                    + System.currentTimeMillis()
+                                                    + "/")),
+                                    null);
                         } catch (final MalformedURLException e) {
                         }
                     }
@@ -134,8 +134,8 @@ public class TestForNativeWindowing extends LegacyApplication {
 
                 @Override
                 public void buttonClick(ClickEvent event) {
-                    ww.addComponent(new Label("Button clicked " + (++state)
-                            + " times"));
+                    ww.addComponent(new Label(
+                            "Button clicked " + (++state) + " times"));
                 }
             }));
             addWindow(ww);

@@ -106,9 +106,9 @@ public class CommErrorEmulatorServlet extends VaadinServlet {
     public void setUIDLResponseCode(final UI ui, int responseCode,
             final int delay) {
         uidlResponseCode.put(ui, responseCode);
-        System.out.println("Responding with " + responseCode
-                + " to UIDL requests for " + ui + " for the next " + delay
-                + "s");
+        System.out.println(
+                "Responding with " + responseCode + " to UIDL requests for "
+                        + ui + " for the next " + delay + "s");
 
         new Thread(new Runnable() {
             @Override

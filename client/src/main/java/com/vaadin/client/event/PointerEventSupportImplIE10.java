@@ -23,8 +23,8 @@ import com.vaadin.client.event.PointerEvent.EventType;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class PointerEventSupportImplIE10 extends
-        PointerEventSupportImplModernIE {
+public class PointerEventSupportImplIE10
+        extends PointerEventSupportImplModernIE {
 
     @Override
     public String getNativeEventName(EventType eventName) {

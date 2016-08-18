@@ -41,12 +41,12 @@ public class SingleUseDragAndDropUpload extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Label upload = new Label(FontAwesome.UPLOAD.getHtml(), ContentMode.HTML);
+        Label upload = new Label(FontAwesome.UPLOAD.getHtml(),
+                ContentMode.HTML);
         upload.setSizeUndefined();
         upload.setStyleName("upload");
-        getPage()
-                .getStyles()
-                .add(".upload{ font-size: 36px; border: 1px solid black; padding:15px;}");
+        getPage().getStyles().add(
+                ".upload{ font-size: 36px; border: 1px solid black; padding:15px;}");
 
         final DragAndDropWrapper dnd = new DragAndDropWrapper(upload);
         dnd.setSizeUndefined();

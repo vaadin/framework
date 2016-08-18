@@ -63,16 +63,18 @@ public abstract class TooltipTest extends MultiBrowserTest {
         WebElement body = findElement(By.cssSelector("body"));
         WebElement tooltip = getTooltip();
         Assert.assertEquals(value, tooltip.getText());
-        Assert.assertTrue("Tooltip overflowed to the left", tooltip
-                .getLocation().getX() >= 0);
+        Assert.assertTrue("Tooltip overflowed to the left",
+                tooltip.getLocation().getX() >= 0);
         Assert.assertTrue("Tooltip overflowed up",
                 tooltip.getLocation().getY() >= 0);
-        Assert.assertTrue("Tooltip overflowed to the right", tooltip
-                .getLocation().getX() + tooltip.getSize().getWidth() < body
-                .getSize().getWidth());
-        Assert.assertTrue("Tooltip overflowed down", tooltip.getLocation()
-                .getY() + tooltip.getSize().getHeight() < body.getSize()
-                .getHeight());
+        Assert.assertTrue("Tooltip overflowed to the right",
+                tooltip.getLocation().getX()
+                        + tooltip.getSize().getWidth() < body.getSize()
+                                .getWidth());
+        Assert.assertTrue("Tooltip overflowed down",
+                tooltip.getLocation().getY()
+                        + tooltip.getSize().getHeight() < body.getSize()
+                                .getHeight());
 
     }
 
@@ -95,7 +97,8 @@ public abstract class TooltipTest extends MultiBrowserTest {
                         + tooltip.getText() + " at " + tooltip.getLocation());
             }
         } catch (NoSuchElementException e) {
-            Assert.fail("Tooltip element was removed completely, causing extra events to accessibility tools");
+            Assert.fail(
+                    "Tooltip element was removed completely, causing extra events to accessibility tools");
         }
     }
 

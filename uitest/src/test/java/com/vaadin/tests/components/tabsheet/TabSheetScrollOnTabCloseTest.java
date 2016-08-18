@@ -42,8 +42,8 @@ public class TabSheetScrollOnTabCloseTest extends MultiBrowserTest {
     public void testScrollPositionAfterClosing() throws Exception {
         openTestURL();
         TabSheetElement ts = $(TabSheetElement.class).first();
-        WebElement tabSheetScroller = ts.findElement(By
-                .className("v-tabsheet-scrollerNext"));
+        WebElement tabSheetScroller = ts
+                .findElement(By.className("v-tabsheet-scrollerNext"));
         // scroll to the right
         for (int i = 0; i < 4; i++) {
             tabSheetScroller.click();
@@ -152,8 +152,8 @@ public class TabSheetScrollOnTabCloseTest extends MultiBrowserTest {
             @Override
             public Boolean apply(WebDriver driver) {
                 try {
-                    WebElement leftElement = tabSheet.findElement(By
-                            .cssSelector(".v-tabsheet-tabitemcell"));
+                    WebElement leftElement = tabSheet.findElement(
+                            By.cssSelector(".v-tabsheet-tabitemcell"));
                     String leftId = leftElement.getAttribute("id");
                     return leftId.equals(tabId);
                 } catch (NoSuchElementException e) {

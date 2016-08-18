@@ -14,7 +14,8 @@ public class RangeValidatorTest {
     // RangeValidator
     @Test
     public void testMinValueNonInclusive() {
-        LegacyIntegerRangeValidator iv = new LegacyIntegerRangeValidator("Failed", 0, 10);
+        LegacyIntegerRangeValidator iv = new LegacyIntegerRangeValidator(
+                "Failed", 0, 10);
         iv.setMinValueIncluded(false);
         assertFalse(iv.isValid(0));
         assertTrue(iv.isValid(10));
@@ -24,7 +25,8 @@ public class RangeValidatorTest {
 
     @Test
     public void testMinMaxValuesInclusive() {
-        LegacyIntegerRangeValidator iv = new LegacyIntegerRangeValidator("Failed", 0, 10);
+        LegacyIntegerRangeValidator iv = new LegacyIntegerRangeValidator(
+                "Failed", 0, 10);
         assertTrue(iv.isValid(0));
         assertTrue(iv.isValid(1));
         assertTrue(iv.isValid(10));
@@ -34,7 +36,8 @@ public class RangeValidatorTest {
 
     @Test
     public void testMaxValueNonInclusive() {
-        LegacyIntegerRangeValidator iv = new LegacyIntegerRangeValidator("Failed", 0, 10);
+        LegacyIntegerRangeValidator iv = new LegacyIntegerRangeValidator(
+                "Failed", 0, 10);
         iv.setMaxValueIncluded(false);
         assertTrue(iv.isValid(0));
         assertTrue(iv.isValid(9));
@@ -45,7 +48,8 @@ public class RangeValidatorTest {
 
     @Test
     public void testMinMaxValuesNonInclusive() {
-        LegacyIntegerRangeValidator iv = new LegacyIntegerRangeValidator("Failed", 0, 10);
+        LegacyIntegerRangeValidator iv = new LegacyIntegerRangeValidator(
+                "Failed", 0, 10);
         iv.setMinValueIncluded(false);
         iv.setMaxValueIncluded(false);
 

@@ -56,10 +56,9 @@ public class VaadinServletService extends VaadinService {
                 // Atmosphere init failed. Push won't work but we don't throw a
                 // service exception as we don't want to prevent non-push
                 // applications from working
-                getLogger()
-                        .log(Level.WARNING,
-                                "Error initializing Atmosphere. Push will not work.",
-                                e);
+                getLogger().log(Level.WARNING,
+                        "Error initializing Atmosphere. Push will not work.",
+                        e);
             }
         }
         return handlers;
@@ -118,8 +117,8 @@ public class VaadinServletService extends VaadinService {
 
     @Override
     public String getConfiguredWidgetset(VaadinRequest request) {
-        return getDeploymentConfiguration().getWidgetset(
-                VaadinServlet.DEFAULT_WIDGETSET);
+        return getDeploymentConfiguration()
+                .getWidgetset(VaadinServlet.DEFAULT_WIDGETSET);
     }
 
     @Override
@@ -140,8 +139,8 @@ public class VaadinServletService extends VaadinService {
 
     @Override
     public File getBaseDirectory() {
-        final String realPath = VaadinServlet.getResourcePath(
-                servlet.getServletContext(), "/");
+        final String realPath = VaadinServlet
+                .getResourcePath(servlet.getServletContext(), "/");
         if (realPath == null) {
             return null;
         }
@@ -172,8 +171,8 @@ public class VaadinServletService extends VaadinService {
                 && !ServletPortletHelper.isFileUploadRequest(request)
                 && !ServletPortletHelper.isHeartbeatRequest(request)
                 && !ServletPortletHelper.isPublishedFileRequest(request)
-                && !ServletPortletHelper.isUIDLRequest(request) && !ServletPortletHelper
-                    .isPushRequest(request));
+                && !ServletPortletHelper.isUIDLRequest(request)
+                && !ServletPortletHelper.isPushRequest(request));
     }
 
     @Override
@@ -211,10 +210,9 @@ public class VaadinServletService extends VaadinService {
             // security check: do not permit navigation out of the VAADIN
             // directory
             if (!servlet.isAllowedVAADINResourceUrl(null, resourceUrl)) {
-                throw new IOException(
-                        String.format(
-                                "Requested resource [{0}] not accessible in the VAADIN directory or access to it is forbidden.",
-                                filename));
+                throw new IOException(String.format(
+                        "Requested resource [{0}] not accessible in the VAADIN directory or access to it is forbidden.",
+                        filename));
             }
 
             return resourceUrl.openStream();
@@ -228,8 +226,8 @@ public class VaadinServletService extends VaadinService {
             Class<? extends UI> uiClass) {
         String appId = null;
         try {
-            URL appUrl = getServlet().getApplicationUrl(
-                    (VaadinServletRequest) request);
+            URL appUrl = getServlet()
+                    .getApplicationUrl((VaadinServletRequest) request);
             appId = appUrl.getPath();
         } catch (MalformedURLException e) {
             // Just ignore problem here

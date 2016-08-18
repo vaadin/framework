@@ -20,14 +20,14 @@ import com.vaadin.legacy.data.util.converter.LegacyStringToDoubleConverter;
 
 /**
  * String validator for a double precision floating point number. See
- * {@link com.vaadin.legacy.data.validator.LegacyAbstractStringValidator} for more
- * information.
+ * {@link com.vaadin.legacy.data.validator.LegacyAbstractStringValidator} for
+ * more information.
  * 
  * @author Vaadin Ltd.
  * @since 5.4
- * @deprecated As of 7.0. Use a {@link LegacyStringToDoubleConverter} converter on the
- *             field instead or bind the field to a {@link Property} of type
- *             {@link Double}.
+ * @deprecated As of 7.0. Use a {@link LegacyStringToDoubleConverter} converter
+ *             on the field instead or bind the field to a {@link Property} of
+ *             type {@link Double}.
  */
 @Deprecated
 @SuppressWarnings("serial")
@@ -40,8 +40,8 @@ public class LegacyDoubleValidator extends LegacyAbstractStringValidator {
      * @param errorMessage
      *            the message to display in case the value does not validate.
      * @deprecated As of 7.0. Use a Double converter on the field instead and/or
-     *             use a {@link LegacyDoubleRangeValidator} for validating that the
-     *             value is inside a given range.
+     *             use a {@link LegacyDoubleRangeValidator} for validating that
+     *             the value is inside a given range.
      */
     @Deprecated
     public LegacyDoubleValidator(String errorMessage) {

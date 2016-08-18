@@ -33,14 +33,14 @@ public class TableWidthItemRemoveTest extends MultiBrowserTest {
     public void testWidthResizeOnItemAdd() {
         openTestURL();
 
-        WebElement populateButton = driver.findElement(By
-                .vaadin("//Button[caption=\"Populate\"]"));
-        WebElement table = driver.findElement(By
-                .vaadin("//Table[caption=\"My table\"]"));
+        WebElement populateButton = driver
+                .findElement(By.vaadin("//Button[caption=\"Populate\"]"));
+        WebElement table = driver
+                .findElement(By.vaadin("//Table[caption=\"My table\"]"));
         int original_width = table.getSize().getWidth();
         populateButton.click();
-        Assert.assertTrue("Width changed on item add.", original_width == table
-                .getSize().getWidth());
+        Assert.assertTrue("Width changed on item add.",
+                original_width == table.getSize().getWidth());
     }
 
 }

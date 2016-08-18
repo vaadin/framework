@@ -33,7 +33,8 @@ public class ComboboxStyleChangeWidth extends AbstractTestUIWithLog {
         final ComboBox cbFoo = new ComboBox();
         cbFoo.setImmediate(true);
         cbFoo.setSizeUndefined();
-        cbFoo.addItem("A really long string that causes an inline width to be set");
+        cbFoo.addItem(
+                "A really long string that causes an inline width to be set");
 
         Button btn = new Button("Click to break CB",
                 new Button.ClickListener() {

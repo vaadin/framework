@@ -184,9 +184,8 @@ class PushConfigurationImpl implements PushConfiguration {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.PushConfiguration#setPushMode(com.vaadin.shared.communication
-     * .PushMode)
+     * @see com.vaadin.ui.PushConfiguration#setPushMode(com.vaadin.shared.
+     * communication .PushMode)
      */
     @Override
     public void setPushMode(PushMode pushMode) {
@@ -203,7 +202,8 @@ class PushConfigurationImpl implements PushConfiguration {
 
         assert session.hasLock();
 
-        if (pushMode.isEnabled() && !session.getService().ensurePushAvailable()) {
+        if (pushMode.isEnabled()
+                && !session.getService().ensurePushAvailable()) {
             throw new IllegalStateException(
                     "Push is not available. See previous log messages for more information.");
         }
@@ -240,8 +240,8 @@ class PushConfigurationImpl implements PushConfiguration {
     @Override
     public Transport getTransport() {
         try {
-            Transport tr = Transport
-                    .getByIdentifier(getParameter(PushConfigurationState.TRANSPORT_PARAM));
+            Transport tr = Transport.getByIdentifier(
+                    getParameter(PushConfigurationState.TRANSPORT_PARAM));
             if (tr == Transport.WEBSOCKET
                     && getState(false).alwaysUseXhrForServerRequests) {
                 return Transport.WEBSOCKET_XHR;
@@ -282,8 +282,8 @@ class PushConfigurationImpl implements PushConfiguration {
     @Override
     public Transport getFallbackTransport() {
         try {
-            return Transport
-                    .valueOf(getParameter(PushConfigurationState.FALLBACK_TRANSPORT_PARAM));
+            return Transport.valueOf(getParameter(
+                    PushConfigurationState.FALLBACK_TRANSPORT_PARAM));
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -338,8 +338,8 @@ class PushConfigurationImpl implements PushConfiguration {
 
     @Override
     public Collection<String> getParameterNames() {
-        return Collections.unmodifiableCollection(getState(false).parameters
-                .keySet());
+        return Collections
+                .unmodifiableCollection(getState(false).parameters.keySet());
     }
 
 }

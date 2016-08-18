@@ -147,8 +147,8 @@ public class WrappedPortletSession implements WrappedSession {
      * @since 7.6
      */
     public Set<String> getAttributeNames(int scope) {
-        return WrappedHttpSession.enumerationToSet(session
-                .getAttributeNames(scope));
+        return WrappedHttpSession
+                .enumerationToSet(session.getAttributeNames(scope));
     }
 
     @Override

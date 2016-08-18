@@ -57,13 +57,16 @@ public class GridLayoutAlignments extends UI {
         setContent(layout);
     }
 
-    private Component createButton(final GridLayout g, final Alignment topLeft) {
-        return new Button("Align " + topLeft.getVerticalAlignment() + ", "
-                + topLeft.getHorizontalAlignment(), new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                g.setComponentAlignment(g.getComponent(0, 0), topLeft);
-            }
-        });
+    private Component createButton(final GridLayout g,
+            final Alignment topLeft) {
+        return new Button(
+                "Align " + topLeft.getVerticalAlignment() + ", "
+                        + topLeft.getHorizontalAlignment(),
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(Button.ClickEvent clickEvent) {
+                        g.setComponentAlignment(g.getComponent(0, 0), topLeft);
+                    }
+                });
     }
 }

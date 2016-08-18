@@ -67,8 +67,8 @@ public class TimeoutRedirectResetsOnActivity extends AbstractTestUI {
     }
 
     private void setupTimeout(VaadinRequest request) {
-        request.getService().setSystemMessagesProvider(
-                new SystemMessagesProvider() {
+        request.getService()
+                .setSystemMessagesProvider(new SystemMessagesProvider() {
                     @Override
                     public SystemMessages getSystemMessages(
                             SystemMessagesInfo systemMessagesInfo) {

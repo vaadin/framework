@@ -204,8 +204,8 @@ public class Highlight {
             style.setBackgroundColor(color);
             style.setOpacity(DEFAULT_OPACITY);
             if (BrowserInfo.get().isIE()) {
-                style.setProperty("filter", "alpha(opacity="
-                        + (DEFAULT_OPACITY * 100) + ")");
+                style.setProperty("filter",
+                        "alpha(opacity=" + (DEFAULT_OPACITY * 100) + ")");
             }
 
             highlights.add(highlight);

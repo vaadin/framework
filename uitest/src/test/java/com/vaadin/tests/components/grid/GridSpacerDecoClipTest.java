@@ -92,7 +92,7 @@ public class GridSpacerDecoClipTest extends MultiBrowserTest {
 
     private TestBenchElement getSpacerDeco(int index) {
         SearchContext context = getContext();
-        return (TestBenchElement) context.findElements(
-                By.className(SPACER_CSS_CLASS_DECO)).get(index);
+        return (TestBenchElement) context
+                .findElements(By.className(SPACER_CSS_CLASS_DECO)).get(index);
     }
 }

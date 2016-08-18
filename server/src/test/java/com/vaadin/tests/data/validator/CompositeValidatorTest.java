@@ -16,10 +16,10 @@ import com.vaadin.legacy.data.validator.LegacyCompositeValidator.CombinationMode
 
 public class CompositeValidatorTest {
 
-    LegacyCompositeValidator and = new LegacyCompositeValidator(CombinationMode.AND,
-            "One validator not valid");
-    LegacyCompositeValidator or = new LegacyCompositeValidator(CombinationMode.OR,
-            "No validators are valid");
+    LegacyCompositeValidator and = new LegacyCompositeValidator(
+            CombinationMode.AND, "One validator not valid");
+    LegacyCompositeValidator or = new LegacyCompositeValidator(
+            CombinationMode.OR, "No validators are valid");
     LegacyEmailValidator email = new LegacyEmailValidator("Faulty email");
     LegacyRegexpValidator regex = new LegacyRegexpValidator("@mail.com", false,
             "Partial match validator error");

@@ -34,8 +34,8 @@ public class PortletUIInitHandler extends UIInitHandler {
             return false;
         }
 
-        return UIInitHandler.BROWSER_DETAILS_PARAMETER.equals(resourceRequest
-                .getResourceID());
+        return UIInitHandler.BROWSER_DETAILS_PARAMETER
+                .equals(resourceRequest.getResourceID());
     }
 
     /**

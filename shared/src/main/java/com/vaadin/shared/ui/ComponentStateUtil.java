@@ -31,7 +31,8 @@ public final class ComponentStateUtil implements Serializable {
         return state.width == null || "".equals(state.width);
     }
 
-    public static final boolean isUndefinedHeight(AbstractComponentState state) {
+    public static final boolean isUndefinedHeight(
+            AbstractComponentState state) {
         return state.height == null || "".equals(state.height);
     }
 

@@ -62,8 +62,8 @@ public class GridFocusTest extends GridBasicFeaturesTest {
     public void testProgrammaticFocus() {
         selectMenuPath("Component", "State", "Set focus");
 
-        assertTrue("Grid cell (0, 0) should be focused", getGridElement()
-                .getCell(0, 0).isFocused());
+        assertTrue("Grid cell (0, 0) should be focused",
+                getGridElement().getCell(0, 0).isFocused());
     }
 
     @Test

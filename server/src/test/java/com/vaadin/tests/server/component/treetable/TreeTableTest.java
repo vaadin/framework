@@ -58,8 +58,9 @@ public class TreeTableTest {
 
         for (RowHeaderMode mode : modes) {
             tree.setRowHeaderMode(mode);
-            Assert.assertTrue("Row headers are disabled for " + mode
-                    + " header mode", tree.rowHeadersAreEnabled());
+            Assert.assertTrue(
+                    "Row headers are disabled for " + mode + " header mode",
+                    tree.rowHeadersAreEnabled());
         }
     }
 

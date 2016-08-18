@@ -29,11 +29,11 @@ import com.vaadin.shared.ui.slider.SliderState;
 import com.vaadin.ui.Slider;
 
 @Connect(Slider.class)
-public class SliderConnector extends AbstractFieldConnector implements
-        ValueChangeHandler<Double> {
+public class SliderConnector extends AbstractFieldConnector
+        implements ValueChangeHandler<Double> {
 
-    protected SliderServerRpc rpc = RpcProxy
-            .create(SliderServerRpc.class, this);
+    protected SliderServerRpc rpc = RpcProxy.create(SliderServerRpc.class,
+            this);
 
     private final ElementResizeListener resizeListener = new ElementResizeListener() {
 
@@ -56,8 +56,8 @@ public class SliderConnector extends AbstractFieldConnector implements
     @Override
     public void onUnregister() {
         super.onUnregister();
-        getLayoutManager().removeElementResizeListener(
-                getWidget().getElement(), resizeListener);
+        getLayoutManager().removeElementResizeListener(getWidget().getElement(),
+                resizeListener);
     }
 
     @Override

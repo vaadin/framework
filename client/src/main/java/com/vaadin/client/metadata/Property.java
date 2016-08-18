@@ -105,8 +105,8 @@ public class Property {
 
     /**
      * Gets the property name formatted for displaying in a user interface. This
-     * returns a string where e.g. "camelCase" has been converted to
-     * "Camel case".
+     * returns a string where e.g. "camelCase" has been converted to "Camel
+     * case".
      * 
      * @return the name of this property, formatted for humans to read
      */

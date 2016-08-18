@@ -56,16 +56,15 @@ public class VaadinPortletServiceTest {
     }
 
     private void mockFileLocationPreference(String location) {
-        when(
-                request.getPortletPreference(Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH))
-                .thenReturn(location);
+        when(request.getPortletPreference(
+                Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH))
+                        .thenReturn(location);
     }
 
     private void mockLocationDeploymentConfiguration(String location) {
-        when(
-                conf.getApplicationOrSystemProperty(
-                        Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH, null))
-                .thenReturn(location);
+        when(conf.getApplicationOrSystemProperty(
+                Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH, null))
+                        .thenReturn(location);
     }
 
     private String getStaticFileLocation() {
@@ -184,7 +183,8 @@ public class VaadinPortletServiceTest {
 
     @Test
     public void oldDefaultWidgetSetIsNotMappedToDefaultWidgetset() {
-        mockWidgetsetConfiguration("com.vaadin.portal.gwt.PortalDefaultWidgetSet");
+        mockWidgetsetConfiguration(
+                "com.vaadin.portal.gwt.PortalDefaultWidgetSet");
         mockWidgetsetProperty(null);
 
         String widgetset = getWidgetset();
@@ -201,14 +201,14 @@ public class VaadinPortletServiceTest {
 
             WrappedSession emptyWrappedSession = Mockito
                     .mock(WrappedPortletSession.class);
-            when(emptyWrappedSession.getAttribute("null.lock")).thenReturn(
-                    mockLock);
+            when(emptyWrappedSession.getAttribute("null.lock"))
+                    .thenReturn(mockLock);
             VaadinRequest requestWithUIIDSet = Mockito
                     .mock(VaadinRequest.class);
             when(requestWithUIIDSet.getParameter(UIConstants.UI_ID_PARAMETER))
                     .thenReturn("1");
-            when(requestWithUIIDSet.getWrappedSession()).thenReturn(
-                    emptyWrappedSession);
+            when(requestWithUIIDSet.getWrappedSession())
+                    .thenReturn(emptyWrappedSession);
 
             UI ui = sut.findUI(requestWithUIIDSet);
             Assert.assertNull("Unset session did not return null", ui);

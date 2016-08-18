@@ -29,8 +29,9 @@ public class DefaultUIProvider extends UIProvider {
         if (uiClassName != null) {
             ClassLoader classLoader = request.getService().getClassLoader();
             try {
-                Class<? extends UI> uiClass = Class.forName(uiClassName, true,
-                        classLoader).asSubclass(UI.class);
+                Class<? extends UI> uiClass = Class
+                        .forName(uiClassName, true, classLoader)
+                        .asSubclass(UI.class);
 
                 return uiClass;
             } catch (ClassNotFoundException e) {

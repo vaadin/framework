@@ -40,7 +40,8 @@ public class TableRowHeight3 extends TestBase {
             b.setStyleName(BaseTheme.BUTTON_LINK);
             b.addStyleName("nowraplink");
             if (i < 2) {
-                b.setCaption("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ullamcorper, elit quis elementum iaculis, dui est rutrum risus, at cursus sem leo eget arcu. Proin vel eros ut tortor luctus pretium. Nulla facilisi. Donec in dui. Proin ac diam vitae massa tempus faucibus. Fusce eu risus. Nunc ac risus. Cras libero.");
+                b.setCaption(
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ullamcorper, elit quis elementum iaculis, dui est rutrum risus, at cursus sem leo eget arcu. Proin vel eros ut tortor luctus pretium. Nulla facilisi. Donec in dui. Proin ac diam vitae massa tempus faucibus. Fusce eu risus. Nunc ac risus. Cras libero.");
             } else if (2 <= i && i < 4) {
                 b.setCaption("One line");
             } else {

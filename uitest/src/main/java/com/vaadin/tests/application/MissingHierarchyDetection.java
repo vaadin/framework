@@ -29,10 +29,11 @@ public class MissingHierarchyDetection extends AbstractTestUI {
     private boolean isChildRendered = true;
     private BrokenCssLayout brokenLayout = new BrokenCssLayout();
 
-    private CssLayout normalLayout = new CssLayout(new Label(
-            "Normal layout child"));
+    private CssLayout normalLayout = new CssLayout(
+            new Label("Normal layout child"));
 
-    public class BrokenCssLayout extends CssLayout implements SelectiveRenderer {
+    public class BrokenCssLayout extends CssLayout
+            implements SelectiveRenderer {
         public BrokenCssLayout() {
             setCaption("Broken layout");
             Label label = new Label("Child component");
@@ -56,8 +57,8 @@ public class MissingHierarchyDetection extends AbstractTestUI {
                 toggle(true);
             }
         }));
-        addComponent(new Button("Toggle improperly",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Toggle improperly", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         toggle(false);

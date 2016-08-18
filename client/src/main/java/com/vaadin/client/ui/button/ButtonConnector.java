@@ -34,8 +34,8 @@ import com.vaadin.shared.ui.button.ButtonState;
 import com.vaadin.ui.Button;
 
 @Connect(value = Button.class, loadStyle = LoadStyle.EAGER)
-public class ButtonConnector extends AbstractComponentConnector implements
-        ClickHandler {
+public class ButtonConnector extends AbstractComponentConnector
+        implements ClickHandler {
 
     @Override
     public boolean delegateCaptionHandling() {
@@ -123,8 +123,8 @@ public class ButtonConnector extends AbstractComponentConnector implements
 
         // Add mouse details
         MouseEventDetails details = MouseEventDetailsBuilder
-                .buildMouseEventDetails(event.getNativeEvent(), getWidget()
-                        .getElement());
+                .buildMouseEventDetails(event.getNativeEvent(),
+                        getWidget().getElement());
         getRpcProxy(ButtonServerRpc.class).click(details);
 
     }

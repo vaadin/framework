@@ -64,8 +64,9 @@ public class LocaleChangeTest extends MultiBrowserTest {
         if (!BrowserUtil.isIE(getDesiredCapabilities())) {
             driver.findElement(By.className("v-datefield-button")).click();
         } else {
-            boolean popupOpen = driver.findElements(
-                    By.className("v-datefield-popup")).size() == 1;
+            boolean popupOpen = driver
+                    .findElements(By.className("v-datefield-popup"))
+                    .size() == 1;
             if (popupOpen) {
                 driver.findElement(
                         By.className("v-datefield-calendarpanel-day-selected"))

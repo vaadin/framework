@@ -47,8 +47,8 @@ import com.vaadin.client.ui.richtextarea.VRichTextToolbar;
  * @author Vaadin Ltd.
  * 
  */
-public class VRichTextArea extends Composite implements Field, KeyPressHandler,
-        KeyDownHandler, Focusable {
+public class VRichTextArea extends Composite
+        implements Field, KeyPressHandler, KeyDownHandler, Focusable {
 
     /**
      * The input node CSS classname.
@@ -232,10 +232,9 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
         ShortcutActionHandler shortcutHandler = getShortcutHandlerOwner()
                 .getShortcutActionHandler();
         if (shortcutHandler != null) {
-            shortcutHandler
-                    .handleKeyboardEvent(com.google.gwt.user.client.Event
-                            .as(event.getNativeEvent()),
-                            ConnectorMap.get(client).getConnector(this));
+            shortcutHandler.handleKeyboardEvent(
+                    com.google.gwt.user.client.Event.as(event.getNativeEvent()),
+                    ConnectorMap.get(client).getConnector(this));
         }
     }
 

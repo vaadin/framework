@@ -63,8 +63,8 @@ import com.vaadin.shared.Position;
  */
 public class Notification implements Serializable {
     public enum Type {
-        HUMANIZED_MESSAGE("humanized"), WARNING_MESSAGE("warning"), ERROR_MESSAGE(
-                "error"), TRAY_NOTIFICATION("tray"),
+        HUMANIZED_MESSAGE("humanized"), WARNING_MESSAGE(
+                "warning"), ERROR_MESSAGE("error"), TRAY_NOTIFICATION("tray"),
         /**
          * @since 7.2
          */

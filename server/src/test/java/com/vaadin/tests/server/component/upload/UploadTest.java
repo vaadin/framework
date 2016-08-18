@@ -64,7 +64,8 @@ public class UploadTest {
                 state.primaryStyleName);
     }
 
-    private static class TestStreamingErrorEvent implements StreamingErrorEvent {
+    private static class TestStreamingErrorEvent
+            implements StreamingErrorEvent {
 
         @Override
         public String getFileName() {

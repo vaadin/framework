@@ -100,12 +100,12 @@ public final class BeanUtil implements Serializable {
             // Find the rest from the sub type
             return getPropertyType(propertyBean, parts[1]);
         } else {
-            List<PropertyDescriptor> descriptors = getBeanPropertyDescriptor(clazz);
+            List<PropertyDescriptor> descriptors = getBeanPropertyDescriptor(
+                    clazz);
 
             for (PropertyDescriptor descriptor : descriptors) {
                 final Method getMethod = descriptor.getReadMethod();
-                if (descriptor.getName().equals(propertyId)
-                        && getMethod != null
+                if (descriptor.getName().equals(propertyId) && getMethod != null
                         && getMethod.getDeclaringClass() != Object.class) {
                     return descriptor.getPropertyType();
                 }
@@ -122,8 +122,8 @@ public final class BeanUtil implements Serializable {
                 descriptors.length);
         for (PropertyDescriptor descriptor : descriptors) {
             try {
-                Method readMethod = getMethodFromBridge(descriptor
-                        .getReadMethod());
+                Method readMethod = getMethodFromBridge(
+                        descriptor.getReadMethod());
                 if (readMethod != null) {
                     Method writeMethod = getMethodFromBridge(
                             descriptor.getWriteMethod(),
@@ -170,8 +170,8 @@ public final class BeanUtil implements Serializable {
             return null;
         }
         try {
-            return bridgeMethod.getDeclaringClass().getMethod(
-                    bridgeMethod.getName(), paramTypes);
+            return bridgeMethod.getDeclaringClass()
+                    .getMethod(bridgeMethod.getName(), paramTypes);
         } catch (NoSuchMethodException e) {
             return null;
         }

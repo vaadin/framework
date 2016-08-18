@@ -129,8 +129,8 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
 
             URL applicationUrl;
             try {
-                applicationUrl = VaadinService.getCurrent().getApplicationUrl(
-                        VaadinService.getCurrentRequest());
+                applicationUrl = VaadinService.getCurrent()
+                        .getApplicationUrl(VaadinService.getCurrentRequest());
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);
             }

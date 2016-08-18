@@ -37,7 +37,8 @@ public class CustomComponentConnector extends AbstractHasComponentsConnector {
     }
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         VCustomComponent customComponent = getWidget();
         if (getChildComponents().size() == 1) {
             ComponentConnector newChild = getChildComponents().get(0);

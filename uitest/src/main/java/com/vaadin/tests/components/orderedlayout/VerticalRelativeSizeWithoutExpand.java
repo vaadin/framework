@@ -28,7 +28,8 @@ public class VerticalRelativeSizeWithoutExpand extends UI {
         verticalLayout1.setSizeFull();
         Tree tree = new Tree();
         tree.setSizeFull();
-        tree.setContainerDataSource(new BeanItemContainer<String>(String.class));
+        tree.setContainerDataSource(
+                new BeanItemContainer<String>(String.class));
         String a = "aaaaaaaaaaaaaaaaaaaaaaaa";
         String b = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
         String c = "ccccccccccccccccccccccccccccccccccccccccccccccccc";

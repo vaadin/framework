@@ -83,11 +83,11 @@ public class GridHeightTest extends MultiBrowserTest {
         } else {
             caption = (String) gridHeight;
         }
-        $(OptionGroupElement.class).id("gridHeightSelector").selectByText(
-                caption);
+        $(OptionGroupElement.class).id("gridHeightSelector")
+                .selectByText(caption);
         for (String gridWidth : GridHeight.gridWidths) {
-            $(OptionGroupElement.class).id("gridWidthSelector").selectByText(
-                    gridWidth);
+            $(OptionGroupElement.class).id("gridWidthSelector")
+                    .selectByText(gridWidth);
             for (String detailsRowHeight : GridHeight.detailsRowHeights) {
                 $(OptionGroupElement.class).id("detailsHeightSelector")
                         .selectByText(detailsRowHeight);
@@ -110,9 +110,8 @@ public class GridHeightTest extends MultiBrowserTest {
                 int openHeight = grid.getSize().getHeight();
                 try {
                     // check height with details row opened
-                    assertGridHeight(
-                            getExpectedOpenedHeight(gridHeight,
-                                    detailsRowHeight), openHeight);
+                    assertGridHeight(getExpectedOpenedHeight(gridHeight,
+                            detailsRowHeight), openHeight);
                 } catch (AssertionError e) {
                     errors.put(e, new Object[] { gridHeight, gridWidth,
                             detailsRowHeight, "opened" });

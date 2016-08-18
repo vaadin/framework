@@ -77,8 +77,8 @@ public class AcceptAnythingWindow extends Window {
                         int clientY = eventDetails.getClientY();
 
                         try {
-                            layout.getPosition(component).setTopValue(
-                                    Float.valueOf(clientY - top));
+                            layout.getPosition(component)
+                                    .setTopValue(Float.valueOf(clientY - top));
                             layout.getPosition(component).setLeftValue(
                                     Float.valueOf(clientX - left));
                         } catch (Exception e) {

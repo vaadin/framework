@@ -38,6 +38,7 @@ public class WindowAndUIShortcutsTest extends SingleBrowserTest {
         // Window should have been closed
         Assert.assertTrue($(WindowElement.class).all().isEmpty());
         // "Close page" should not have been clicked
-        Assert.assertTrue($(ButtonElement.class).caption("Close page").exists());
+        Assert.assertTrue(
+                $(ButtonElement.class).caption("Close page").exists());
     }
 }

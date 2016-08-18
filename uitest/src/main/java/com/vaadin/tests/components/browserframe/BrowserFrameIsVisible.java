@@ -101,8 +101,8 @@ public class BrowserFrameIsVisible extends TestBase {
 
             ByteArrayInputStream istream;
             try {
-                istream = new ByteArrayInputStream(sb.toString().getBytes(
-                        "UTF-8"));
+                istream = new ByteArrayInputStream(
+                        sb.toString().getBytes("UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

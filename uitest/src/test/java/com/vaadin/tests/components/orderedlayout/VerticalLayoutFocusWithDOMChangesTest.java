@@ -35,8 +35,8 @@ public class VerticalLayoutFocusWithDOMChangesTest extends MultiBrowserTest {
     @Test
     public void inputTextAndChangeFocus() throws InterruptedException {
         openTestURL();
-        List<WebElement> textFields = getDriver().findElements(
-                By.tagName("input"));
+        List<WebElement> textFields = getDriver()
+                .findElements(By.tagName("input"));
         WebElement tf1 = textFields.get(0);
         WebElement tf2 = textFields.get(1);
         tf1.sendKeys(initialText);
@@ -69,8 +69,8 @@ public class VerticalLayoutFocusWithDOMChangesTest extends MultiBrowserTest {
     @Test
     public void moveFocusAndChangeFieldWithValue() {
         openTestURL();
-        List<WebElement> textFields = getDriver().findElements(
-                By.tagName("input"));
+        List<WebElement> textFields = getDriver()
+                .findElements(By.tagName("input"));
         WebElement tf1 = textFields.get(0);
         WebElement tf2 = textFields.get(1);
 

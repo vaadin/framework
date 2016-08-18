@@ -15,15 +15,17 @@ public class DoubleInTextField extends AbstractComponentDataBindingTest {
                 new Address("Dovestreet 12", 12233, "Johnston",
                         Country.SOUTH_AFRICA));
 
-        LegacyTextField salary = new LegacyTextField("Vaadin 7 - TextField with Double");
+        LegacyTextField salary = new LegacyTextField(
+                "Vaadin 7 - TextField with Double");
         addComponent(salary);
-        salary.setPropertyDataSource(new MethodProperty<Double>(person,
-                "salaryDouble"));
+        salary.setPropertyDataSource(
+                new MethodProperty<Double>(person, "salaryDouble"));
 
-        LegacyTextField salary6 = new LegacyTextField("Vaadin 6 - TextField with Double");
+        LegacyTextField salary6 = new LegacyTextField(
+                "Vaadin 6 - TextField with Double");
         addComponent(salary6);
-        salary6.setPropertyDataSource(new MethodProperty<Double>(person,
-                "salaryDouble"));
+        salary6.setPropertyDataSource(
+                new MethodProperty<Double>(person, "salaryDouble"));
         salary6.setConverter(new Vaadin6ImplicitDoubleConverter());
 
     }

@@ -19,7 +19,7 @@ package com.vaadin.tests.widgetset.client;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.Connector;
 
-public class UseStateFromHierachyChangeConnectorState extends
-        AbstractComponentState {
+public class UseStateFromHierachyChangeConnectorState
+        extends AbstractComponentState {
     public Connector child;
 }

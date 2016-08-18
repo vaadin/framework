@@ -78,8 +78,8 @@ public abstract class AbstractContainer implements Container {
      * performed, but subclasses can add provide additional information about
      * the changes.
      */
-    protected static class BaseItemSetChangeEvent extends EventObject implements
-            Container.ItemSetChangeEvent, Serializable {
+    protected static class BaseItemSetChangeEvent extends EventObject
+            implements Container.ItemSetChangeEvent, Serializable {
 
         protected BaseItemSetChangeEvent(Container source) {
             super(source);
@@ -103,7 +103,8 @@ public abstract class AbstractContainer implements Container {
     protected void addPropertySetChangeListener(
             Container.PropertySetChangeListener listener) {
         if (getPropertySetChangeListeners() == null) {
-            setPropertySetChangeListeners(new LinkedList<Container.PropertySetChangeListener>());
+            setPropertySetChangeListeners(
+                    new LinkedList<Container.PropertySetChangeListener>());
         }
         getPropertySetChangeListeners().add(listener);
     }
@@ -137,7 +138,8 @@ public abstract class AbstractContainer implements Container {
      *             {@link #removePropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
      **/
     @Deprecated
-    protected void removeListener(Container.PropertySetChangeListener listener) {
+    protected void removeListener(
+            Container.PropertySetChangeListener listener) {
         removePropertySetChangeListener(listener);
     }
 
@@ -153,7 +155,8 @@ public abstract class AbstractContainer implements Container {
     protected void addItemSetChangeListener(
             Container.ItemSetChangeListener listener) {
         if (getItemSetChangeListeners() == null) {
-            setItemSetChangeListeners(new LinkedList<Container.ItemSetChangeListener>());
+            setItemSetChangeListeners(
+                    new LinkedList<Container.ItemSetChangeListener>());
         }
         getItemSetChangeListeners().add(listener);
     }
@@ -281,7 +284,8 @@ public abstract class AbstractContainer implements Container {
     }
 
     public Collection<?> getListeners(Class<?> eventType) {
-        if (Container.PropertySetChangeEvent.class.isAssignableFrom(eventType)) {
+        if (Container.PropertySetChangeEvent.class
+                .isAssignableFrom(eventType)) {
             if (propertySetChangeListeners == null) {
                 return Collections.EMPTY_LIST;
             } else {

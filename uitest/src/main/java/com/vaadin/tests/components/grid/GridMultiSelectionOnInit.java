@@ -38,8 +38,8 @@ public class GridMultiSelectionOnInit extends AbstractTestUI {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                ((MultiSelectionModel) grid.getSelectionModel())
-                        .setSelected(grid.getContainerDataSource().getItemIds());
+                ((MultiSelectionModel) grid.getSelectionModel()).setSelected(
+                        grid.getContainerDataSource().getItemIds());
             }
         }));
     }

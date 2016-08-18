@@ -36,8 +36,8 @@ import com.vaadin.data.Property;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
-        Cloneable {
+public class PropertysetItem
+        implements Item, Item.PropertySetChangeNotifier, Cloneable {
 
     /* Private representation of the item */
 
@@ -155,7 +155,8 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
     public String toString() {
         String retValue = "";
 
-        for (final Iterator<?> i = getItemPropertyIds().iterator(); i.hasNext();) {
+        for (final Iterator<?> i = getItemPropertyIds().iterator(); i
+                .hasNext();) {
             final Object propertyId = i.next();
             retValue += getItemProperty(propertyId).getValue();
             if (i.hasNext()) {
@@ -175,8 +176,8 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    private static class PropertySetChangeEvent extends EventObject implements
-            Item.PropertySetChangeEvent {
+    private static class PropertySetChangeEvent extends EventObject
+            implements Item.PropertySetChangeEvent {
 
         private PropertySetChangeEvent(Item source) {
             super(source);
@@ -297,8 +298,10 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
         final PropertysetItem npsi = new PropertysetItem();
 
         npsi.list = list != null ? (LinkedList<Object>) list.clone() : null;
-        npsi.propertySetChangeListeners = propertySetChangeListeners != null ? (LinkedList<PropertySetChangeListener>) propertySetChangeListeners
-                .clone() : null;
+        npsi.propertySetChangeListeners = propertySetChangeListeners != null
+                ? (LinkedList<PropertySetChangeListener>) propertySetChangeListeners
+                        .clone()
+                : null;
         npsi.map = (HashMap<Object, Property<?>>) map.clone();
 
         return npsi;
@@ -335,10 +338,10 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
             }
         }
         if (other.propertySetChangeListeners != propertySetChangeListeners) {
-            boolean thisEmpty = (propertySetChangeListeners == null || propertySetChangeListeners
-                    .isEmpty());
-            boolean otherEmpty = (other.propertySetChangeListeners == null || other.propertySetChangeListeners
-                    .isEmpty());
+            boolean thisEmpty = (propertySetChangeListeners == null
+                    || propertySetChangeListeners.isEmpty());
+            boolean otherEmpty = (other.propertySetChangeListeners == null
+                    || other.propertySetChangeListeners.isEmpty());
             if (thisEmpty && otherEmpty) {
                 return true;
             }
@@ -364,7 +367,8 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
 
         return (list == null ? 0 : list.hashCode())
                 ^ (map == null ? 0 : map.hashCode())
-                ^ ((propertySetChangeListeners == null || propertySetChangeListeners
-                        .isEmpty()) ? 0 : propertySetChangeListeners.hashCode());
+                ^ ((propertySetChangeListeners == null
+                        || propertySetChangeListeners.isEmpty()) ? 0
+                                : propertySetChangeListeners.hashCode());
     }
 }

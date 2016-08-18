@@ -5,8 +5,8 @@ import java.util.Locale;
 
 import com.vaadin.legacy.data.util.converter.LegacyStringToDoubleConverter;
 
-public class StringToDoubleConverterWithThreeFractionDigits extends
-        LegacyStringToDoubleConverter {
+public class StringToDoubleConverterWithThreeFractionDigits
+        extends LegacyStringToDoubleConverter {
 
     @Override
     protected NumberFormat getFormat(Locale locale) {

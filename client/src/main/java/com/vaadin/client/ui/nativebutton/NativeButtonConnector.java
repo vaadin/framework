@@ -67,8 +67,8 @@ public class NativeButtonConnector extends AbstractComponentConnector {
                     getWidget().captionElement);
 
         } else if (getWidget().errorIndicatorElement != null) {
-            getWidget().getElement().removeChild(
-                    getWidget().errorIndicatorElement);
+            getWidget().getElement()
+                    .removeChild(getWidget().errorIndicatorElement);
             getWidget().errorIndicatorElement = null;
         }
 

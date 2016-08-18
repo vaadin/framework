@@ -144,7 +144,8 @@ public class GridHeaderTest extends GridStaticSectionTest {
 
         selectMenuPath("Component", "Header", "Append row");
 
-        selectMenuPath("Component", "Header", "Row 2", "Join column cells 0, 1");
+        selectMenuPath("Component", "Header", "Row 2",
+                "Join column cells 0, 1");
 
         GridCellElement spannedCell = getGridElement().getHeaderCell(1, 0);
         assertTrue(spannedCell.isDisplayed());

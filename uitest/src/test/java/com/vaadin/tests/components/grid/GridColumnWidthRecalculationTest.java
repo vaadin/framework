@@ -41,8 +41,7 @@ public class GridColumnWidthRecalculationTest extends SingleBrowserTest {
     public void columnWidthAfterSwap() {
         int column0Width = getColumnWidth(0);
         int column1Width = getColumnWidth(1);
-        Assert.assertTrue(
-                "Column 0 should be narrower than column 1 initially",
+        Assert.assertTrue("Column 0 should be narrower than column 1 initially",
                 column0Width < column1Width);
 
         $(ButtonElement.class).caption("Swap content").first().click();
@@ -59,8 +58,7 @@ public class GridColumnWidthRecalculationTest extends SingleBrowserTest {
     public void columnWidthAfterSwapAndRecalculate() {
         int column0Width = getColumnWidth(0);
         int column1Width = getColumnWidth(1);
-        Assert.assertTrue(
-                "Column 0 should be narrower than column 1 initially",
+        Assert.assertTrue("Column 0 should be narrower than column 1 initially",
                 column0Width < column1Width);
 
         $(ButtonElement.class).caption("Swap content and recalculate columns")

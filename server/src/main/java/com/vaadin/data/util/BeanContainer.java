@@ -68,8 +68,8 @@ import java.util.Collection;
  * 
  * @since 6.5
  */
-public class BeanContainer<IDTYPE, BEANTYPE> extends
-        AbstractBeanContainer<IDTYPE, BEANTYPE> {
+public class BeanContainer<IDTYPE, BEANTYPE>
+        extends AbstractBeanContainer<IDTYPE, BEANTYPE> {
 
     public BeanContainer(Class<? super BEANTYPE> type) {
         super(type);

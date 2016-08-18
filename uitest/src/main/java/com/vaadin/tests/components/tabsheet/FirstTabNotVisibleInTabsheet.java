@@ -25,8 +25,8 @@ public class FirstTabNotVisibleInTabsheet extends AbstractTestUI {
             tabSheet.addTab(new Label("visible tab " + i), "visible tab " + i);
         }
 
-        addComponent(new VerticalLayout(tabSheet, new Button(
-                "Toggle first tab", new Button.ClickListener() {
+        addComponent(new VerticalLayout(tabSheet,
+                new Button("Toggle first tab", new Button.ClickListener() {
                     @Override
                     public void buttonClick(Button.ClickEvent event) {
                         firstTab.setVisible(!firstTab.isVisible());

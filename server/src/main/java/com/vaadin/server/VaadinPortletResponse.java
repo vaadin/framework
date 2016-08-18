@@ -125,7 +125,8 @@ public class VaadinPortletResponse implements VaadinResponse {
 
     @Override
     public void setDateHeader(String name, long timestamp) {
-        response.setProperty(name, HTTP_DATE_FORMAT.format(new Date(timestamp)));
+        response.setProperty(name,
+                HTTP_DATE_FORMAT.format(new Date(timestamp)));
     }
 
     @Override

@@ -58,8 +58,8 @@ public class MultipleUIUploadTest extends AbstractTestUI {
 
     }
 
-    public class MemoryBuffer implements StreamResource.StreamSource,
-            Upload.Receiver {
+    public class MemoryBuffer
+            implements StreamResource.StreamSource, Upload.Receiver {
         ByteArrayOutputStream outputBuffer = null;
 
         String mimeType;

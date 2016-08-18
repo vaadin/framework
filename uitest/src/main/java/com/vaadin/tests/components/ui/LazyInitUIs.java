@@ -48,7 +48,8 @@ public class LazyInitUIs extends AbstractTestUIProvider {
                     layout.setMargin(true);
                     setContent(layout);
 
-                    layout.addComponent(getRequestInfo("LazyCreateUI", request));
+                    layout.addComponent(
+                            getRequestInfo("LazyCreateUI", request));
                 }
             };
             return uI;

@@ -35,8 +35,8 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
         CheckBox headerClickListenerCheckbox = new CheckBox(
                 "Header click listener");
         headerClickListenerCheckbox.setImmediate(true);
-        headerClickListenerCheckbox
-                .addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
+        headerClickListenerCheckbox.addValueChangeListener(
+                new HasValue.ValueChangeListener<Boolean>() {
 
                     private HeaderClickListener headerClickListener = new HeaderClickListener() {
 
@@ -57,7 +57,8 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
                                 .isEmpty()) {
                             table.addHeaderClickListener(headerClickListener);
                         } else {
-                            table.removeHeaderClickListener(headerClickListener);
+                            table.removeHeaderClickListener(
+                                    headerClickListener);
                         }
                     }
                 });
@@ -66,8 +67,8 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
         CheckBox footerClickListenerCheckbox = new CheckBox(
                 "Footer click listener");
         footerClickListenerCheckbox.setImmediate(true);
-        footerClickListenerCheckbox
-                .addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
+        footerClickListenerCheckbox.addValueChangeListener(
+                new HasValue.ValueChangeListener<Boolean>() {
 
                     private FooterClickListener footerClickListener = new FooterClickListener() {
 
@@ -87,7 +88,8 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
                                 .isEmpty()) {
                             table.addFooterClickListener(footerClickListener);
                         } else {
-                            table.removeFooterClickListener(footerClickListener);
+                            table.removeFooterClickListener(
+                                    footerClickListener);
                         }
                     }
                 });

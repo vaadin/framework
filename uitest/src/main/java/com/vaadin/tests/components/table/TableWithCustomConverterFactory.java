@@ -25,8 +25,8 @@ import com.vaadin.ui.Table;
 
 public class TableWithCustomConverterFactory extends AbstractTestUI {
 
-    public static class MyIntegerConverter implements
-            LegacyConverter<String, Integer> {
+    public static class MyIntegerConverter
+            implements LegacyConverter<String, Integer> {
 
         @Override
         public Integer convertToModel(String value,
@@ -55,9 +55,11 @@ public class TableWithCustomConverterFactory extends AbstractTestUI {
 
     }
 
-    public static class MyConverterFactory extends LegacyDefaultConverterFactory {
+    public static class MyConverterFactory
+            extends LegacyDefaultConverterFactory {
         @Override
-        protected LegacyConverter<String, ?> createStringConverter(Class<?> sourceType) {
+        protected LegacyConverter<String, ?> createStringConverter(
+                Class<?> sourceType) {
             if (Integer.class.isAssignableFrom(sourceType)) {
                 return new MyIntegerConverter();
             } else {

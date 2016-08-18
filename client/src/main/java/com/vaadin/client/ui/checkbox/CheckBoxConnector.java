@@ -37,8 +37,8 @@ import com.vaadin.shared.ui.checkbox.CheckBoxState;
 import com.vaadin.ui.CheckBox;
 
 @Connect(CheckBox.class)
-public class CheckBoxConnector extends AbstractFieldConnector implements
-        ClickHandler {
+public class CheckBoxConnector extends AbstractFieldConnector
+        implements ClickHandler {
 
     @Override
     public boolean delegateCaptionHandling() {
@@ -76,8 +76,8 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
                 getWidget().errorIndicatorElement.getStyle().clearDisplay();
             }
         } else if (getWidget().errorIndicatorElement != null) {
-            getWidget().errorIndicatorElement.getStyle().setDisplay(
-                    Display.NONE);
+            getWidget().errorIndicatorElement.getStyle()
+                    .setDisplay(Display.NONE);
 
             getWidget().setAriaInvalid(false);
         }
@@ -130,8 +130,8 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
 
             // Add mouse details
             MouseEventDetails details = MouseEventDetailsBuilder
-                    .buildMouseEventDetails(event.getNativeEvent(), getWidget()
-                            .getElement());
+                    .buildMouseEventDetails(event.getNativeEvent(),
+                            getWidget().getElement());
             getRpcProxy(CheckBoxServerRpc.class).setChecked(getState().checked,
                     details);
             if (getState().immediate) {

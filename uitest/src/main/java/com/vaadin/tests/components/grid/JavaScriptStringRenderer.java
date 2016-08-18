@@ -19,8 +19,8 @@ import com.vaadin.annotations.JavaScript;
 import com.vaadin.ui.renderers.AbstractJavaScriptRenderer;
 
 @JavaScript("JavaScriptStringRenderer.js")
-public class JavaScriptStringRenderer extends
-        AbstractJavaScriptRenderer<String> {
+public class JavaScriptStringRenderer
+        extends AbstractJavaScriptRenderer<String> {
 
     protected JavaScriptStringRenderer() {
         super(String.class);

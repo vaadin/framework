@@ -45,8 +45,7 @@ public class PushConfigurationWebSocketTest extends PushConfigurationTest {
         // Use debug console to verify we used the correct transport type
         assertThat(driver.getPageSource(),
                 containsString("Push connection established using websocket"));
-        assertThat(
-                driver.getPageSource(),
-                not(containsString("Push connection established using streaming")));
+        assertThat(driver.getPageSource(), not(
+                containsString("Push connection established using streaming")));
     }
 }

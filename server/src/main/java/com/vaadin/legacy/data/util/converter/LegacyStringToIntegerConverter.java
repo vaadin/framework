@@ -30,8 +30,8 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.0
  */
-public class LegacyStringToIntegerConverter extends
-        LegacyAbstractStringToNumberConverter<Integer> {
+public class LegacyStringToIntegerConverter
+        extends LegacyAbstractStringToNumberConverter<Integer> {
 
     /**
      * Returns the format used by

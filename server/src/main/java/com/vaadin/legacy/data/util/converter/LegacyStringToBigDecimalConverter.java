@@ -34,8 +34,8 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.2
  */
-public class LegacyStringToBigDecimalConverter extends
-        LegacyAbstractStringToNumberConverter<BigDecimal> {
+public class LegacyStringToBigDecimalConverter
+        extends LegacyAbstractStringToNumberConverter<BigDecimal> {
     @Override
     protected NumberFormat getFormat(Locale locale) {
         NumberFormat numberFormat = super.getFormat(locale);

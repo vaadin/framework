@@ -25,9 +25,8 @@ public class ServletUIInitHandler extends UIInitHandler {
     }
 
     public static boolean isUIInitRequest(VaadinRequest request) {
-        return "POST".equals(request.getMethod())
-                && request
-                        .getParameter(UIInitHandler.BROWSER_DETAILS_PARAMETER) != null;
+        return "POST".equals(request.getMethod()) && request
+                .getParameter(UIInitHandler.BROWSER_DETAILS_PARAMETER) != null;
     }
 
 }

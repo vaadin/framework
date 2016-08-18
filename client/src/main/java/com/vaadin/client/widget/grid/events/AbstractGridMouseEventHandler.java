@@ -26,13 +26,13 @@ import com.vaadin.client.widgets.Grid.AbstractGridMouseEvent;
  */
 public abstract interface AbstractGridMouseEventHandler extends EventHandler {
 
-    public abstract interface GridClickHandler extends
-            AbstractGridMouseEventHandler {
+    public abstract interface GridClickHandler
+            extends AbstractGridMouseEventHandler {
         public void onClick(GridClickEvent event);
     }
 
-    public abstract interface GridDoubleClickHandler extends
-            AbstractGridMouseEventHandler {
+    public abstract interface GridDoubleClickHandler
+            extends AbstractGridMouseEventHandler {
         public void onDoubleClick(GridDoubleClickEvent event);
     }
 

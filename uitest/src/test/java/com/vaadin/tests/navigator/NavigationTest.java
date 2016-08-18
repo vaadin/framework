@@ -24,8 +24,8 @@ public class NavigationTest extends SingleBrowserTest {
     public void testNavigateToSameViewWithDifferentParameters() {
         openTestURL();
 
-        ButtonElement listButton = $(ButtonElement.class).caption(
-                "Navigate to list").first();
+        ButtonElement listButton = $(ButtonElement.class)
+                .caption("Navigate to list").first();
         listButton.click();
 
         TableElement table = $(TableElement.class).first();

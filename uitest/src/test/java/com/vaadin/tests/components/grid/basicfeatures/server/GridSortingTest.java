@@ -86,8 +86,10 @@ public class GridSortingTest extends GridBasicFeaturesTest {
             row += "9";
             String expected = "(" + row + ", 0)";
             String cellValue = getGridElement().getCell(i, 0).getText();
-            assertEquals("Grid is not sorted by Column 9 "
-                    + "using descending direction.", expected, cellValue);
+            assertEquals(
+                    "Grid is not sorted by Column 9 "
+                            + "using descending direction.",
+                    expected, cellValue);
         }
 
         // Column 10 is random numbers from Random with seed 13334
@@ -100,10 +102,10 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         assertColumnsAreSortedAs(_(10, 1, SortDirection.ASCENDING));
 
         for (int i = 0; i < 5; ++i) {
-            Integer firstRow = Integer.valueOf(getGridElement().getCell(i + 1,
-                    10).getText());
-            Integer secondRow = Integer.valueOf(getGridElement().getCell(i, 10)
-                    .getText());
+            Integer firstRow = Integer
+                    .valueOf(getGridElement().getCell(i + 1, 10).getText());
+            Integer secondRow = Integer
+                    .valueOf(getGridElement().getCell(i, 10).getText());
             assertGreater("Grid is not sorted by Column 10 using"
                     + " ascending direction", firstRow, secondRow);
 
@@ -114,8 +116,8 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         sortBy("Column 7, DESC");
         for (int i = 0; i < 3; ++i) {
             String expected = "(" + i + ", 0)";
-            String cellContent = getGridElement().getCell(
-                    GridBasicFeatures.ROWS - (i + 1), 0).getText();
+            String cellContent = getGridElement()
+                    .getCell(GridBasicFeatures.ROWS - (i + 1), 0).getText();
             assertEquals("Grid is not sorted by Column 7 using "
                     + "descending direction", expected, cellContent);
         }
@@ -167,8 +169,8 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         assertColumnsAreSortedAs(_(10, 1, SortDirection.ASCENDING));
 
         for (int i = 0; i < 5; ++i) {
-            Integer firstRow = Integer.valueOf(grid.getCell(i + 1, 10)
-                    .getText());
+            Integer firstRow = Integer
+                    .valueOf(grid.getCell(i + 1, 10).getText());
             Integer secondRow = Integer.valueOf(grid.getCell(i, 10).getText());
             assertGreater(
                     "Grid is not sorted by Column 10 using ascending direction",
@@ -190,7 +192,8 @@ public class GridSortingTest extends GridBasicFeaturesTest {
             assertEquals(
                     "Grid is not sorted by Column 7 using descending direction",
                     "(" + i + ", 0)",
-                    grid.getCell(GridBasicFeatures.ROWS - (i + 1), 0).getText());
+                    grid.getCell(GridBasicFeatures.ROWS - (i + 1), 0)
+                            .getText());
         }
 
     }
@@ -377,9 +380,8 @@ public class GridSortingTest extends GridBasicFeaturesTest {
 
     private void assertLastSortIsUserOriginated(boolean isUserOriginated) {
         // Find a message in the log
-        List<WebElement> userOriginatedMessages = getDriver()
-                .findElements(
-                        By.xpath("//div[@id='Log']//*[contains(text(),'SortEvent: isUserOriginated')]"));
+        List<WebElement> userOriginatedMessages = getDriver().findElements(By
+                .xpath("//div[@id='Log']//*[contains(text(),'SortEvent: isUserOriginated')]"));
 
         Collections.sort(userOriginatedMessages, new Comparator<WebElement>() {
             @Override
@@ -388,8 +390,8 @@ public class GridSortingTest extends GridBasicFeaturesTest {
             }
         });
 
-        String newestEntry = userOriginatedMessages.get(
-                userOriginatedMessages.size() - 1).getText();
+        String newestEntry = userOriginatedMessages
+                .get(userOriginatedMessages.size() - 1).getText();
 
         String[] parts = newestEntry.split(" ");
         boolean wasUserOriginated = Boolean

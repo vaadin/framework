@@ -29,8 +29,8 @@ import com.vaadin.data.Property;
  * 
  * @since 6.6
  */
-public class NestedPropertyDescriptor<BT> implements
-        VaadinPropertyDescriptor<BT> {
+public class NestedPropertyDescriptor<BT>
+        implements VaadinPropertyDescriptor<BT> {
 
     private final String name;
     private final Class<?> propertyType;

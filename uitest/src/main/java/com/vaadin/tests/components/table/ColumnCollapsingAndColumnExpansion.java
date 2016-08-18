@@ -37,7 +37,8 @@ public class ColumnCollapsingAndColumnExpansion extends AbstractTestUIWithLog {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 table.setColumnCollapsed("Col2",
                         !table.isColumnCollapsed("Col2"));
 

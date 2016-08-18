@@ -51,8 +51,8 @@ public class GridInTabSheet extends AbstractTestUI {
                 grid.addRow(100 + (k++));
             }
         }));
-        addComponent(new Button("Remove row from Grid",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Remove row from Grid", new Button.ClickListener() {
 
                     private Integer k = 0;
 
@@ -61,8 +61,8 @@ public class GridInTabSheet extends AbstractTestUI {
                         Object firstItemId = grid.getContainerDataSource()
                                 .firstItemId();
                         if (firstItemId != null) {
-                            grid.getContainerDataSource().removeItem(
-                                    firstItemId);
+                            grid.getContainerDataSource()
+                                    .removeItem(firstItemId);
                         }
                     }
                 }));
@@ -73,7 +73,8 @@ public class GridInTabSheet extends AbstractTestUI {
                     public void buttonClick(ClickEvent event) {
                         grid.setCellStyleGenerator(new CellStyleGenerator() {
                             @Override
-                            public String getStyle(CellReference cellReference) {
+                            public String getStyle(
+                                    CellReference cellReference) {
                                 int rowIndex = ((Integer) cellReference
                                         .getItemId()).intValue();
                                 Object propertyId = cellReference

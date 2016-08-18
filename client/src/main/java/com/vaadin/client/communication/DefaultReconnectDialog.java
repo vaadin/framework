@@ -37,7 +37,8 @@ import com.vaadin.client.ui.VOverlay;
  * @since 7.6
  * @author Vaadin Ltd
  */
-public class DefaultReconnectDialog extends VOverlay implements ReconnectDialog {
+public class DefaultReconnectDialog extends VOverlay
+        implements ReconnectDialog {
 
     private static final String STYLE_RECONNECTING = "active";
     private static final String STYLE_BODY_RECONNECTING = "v-reconnecting";

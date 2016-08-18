@@ -9,10 +9,10 @@ import com.vaadin.legacy.data.validator.LegacyRegexpValidator;
 
 public class RegexpValidatorTest {
 
-    private LegacyRegexpValidator completeValidator = new LegacyRegexpValidator("pattern",
-            true, "Complete match validator error");
-    private LegacyRegexpValidator partialValidator = new LegacyRegexpValidator("pattern",
-            false, "Partial match validator error");
+    private LegacyRegexpValidator completeValidator = new LegacyRegexpValidator(
+            "pattern", true, "Complete match validator error");
+    private LegacyRegexpValidator partialValidator = new LegacyRegexpValidator(
+            "pattern", false, "Partial match validator error");
 
     @Test
     public void testRegexpValidatorWithNull() {

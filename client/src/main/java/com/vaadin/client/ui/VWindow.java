@@ -136,10 +136,14 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     /** For internal use only. May be removed or replaced in the future. */
     public ShortcutActionHandler shortcutHandler;
 
-    /** Last known positionx read from UIDL or updated to application connection */
+    /**
+     * Last known positionx read from UIDL or updated to application connection
+     */
     private int uidlPositionX = -1;
 
-    /** Last known positiony read from UIDL or updated to application connection */
+    /**
+     * Last known positiony read from UIDL or updated to application connection
+     */
     private int uidlPositionY = -1;
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -334,8 +338,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         final int order = windowOrder.size();
         setWindowOrder(order);
         windowOrder.add(this);
-        setPopupPosition(order * STACKING_OFFSET_PIXELS, order
-                * STACKING_OFFSET_PIXELS);
+        setPopupPosition(order * STACKING_OFFSET_PIXELS,
+                order * STACKING_OFFSET_PIXELS);
 
     }
 
@@ -374,11 +378,12 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         footer = DOM.createDiv();
         DOM.setElementProperty(footer, "className", CLASSNAME + "-footer");
         resizeBox = DOM.createDiv();
-        DOM.setElementProperty(resizeBox, "className", CLASSNAME + "-resizebox");
+        DOM.setElementProperty(resizeBox, "className",
+                CLASSNAME + "-resizebox");
         closeBox = DOM.createDiv();
         maximizeRestoreBox = DOM.createDiv();
-        DOM.setElementProperty(maximizeRestoreBox, "className", CLASSNAME
-                + "-maximizebox");
+        DOM.setElementProperty(maximizeRestoreBox, "className",
+                CLASSNAME + "-maximizebox");
         DOM.setElementAttribute(maximizeRestoreBox, "tabindex", "0");
         DOM.setElementProperty(closeBox, "className", CLASSNAME + "-closebox");
         DOM.setElementAttribute(closeBox, "tabindex", "0");
@@ -580,8 +585,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             super.setVisible(visible);
         }
 
-        if (visible
-                && BrowserInfo.get().requiresPositionAbsoluteOverflowAutoFix()) {
+        if (visible && BrowserInfo.get()
+                .requiresPositionAbsoluteOverflowAutoFix()) {
 
             /*
              * Shake up the DOM a bit to make the window shed unnecessary
@@ -629,8 +634,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         this.closable = closable;
         if (closable) {
-            DOM.setElementProperty(closeBox, "className", CLASSNAME
-                    + "-closebox");
+            DOM.setElementProperty(closeBox, "className",
+                    CLASSNAME + "-closebox");
 
         } else {
             DOM.setElementProperty(closeBox, "className", CLASSNAME
@@ -737,8 +742,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private void showModalityCurtain() {
-        getModalityCurtain().getStyle().setZIndex(
-                windowOrder.indexOf(this) + Z_INDEX);
+        getModalityCurtain().getStyle()
+                .setZIndex(windowOrder.indexOf(this) + Z_INDEX);
 
         if (isShowing()) {
             getOverlayContainer().insertBefore(getModalityCurtain(),
@@ -826,11 +831,11 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         resizable = resizability;
         if (resizability) {
             DOM.setElementProperty(footer, "className", CLASSNAME + "-footer");
-            DOM.setElementProperty(resizeBox, "className", CLASSNAME
-                    + "-resizebox");
+            DOM.setElementProperty(resizeBox, "className",
+                    CLASSNAME + "-resizebox");
         } else {
-            DOM.setElementProperty(footer, "className", CLASSNAME + "-footer "
-                    + CLASSNAME + "-footer-noresize");
+            DOM.setElementProperty(footer, "className",
+                    CLASSNAME + "-footer " + CLASSNAME + "-footer-noresize");
             DOM.setElementProperty(resizeBox, "className", CLASSNAME
                     + "-resizebox " + CLASSNAME + "-resizebox-disabled");
         }
@@ -896,9 +901,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
         // Provide information to assistive device users that a sub window was
         // opened
-        String prefix = "<span class='"
-                + AriaHelper.ASSISTIVE_DEVICE_ONLY_STYLE + "'>"
-                + assistivePrefix + "</span>";
+        String prefix = "<span class='" + AriaHelper.ASSISTIVE_DEVICE_ONLY_STYLE
+                + "'>" + assistivePrefix + "</span>";
         String postfix = "<span class='"
                 + AriaHelper.ASSISTIVE_DEVICE_ONLY_STYLE + "'>"
                 + assistivePostfix + "</span>";
@@ -1185,8 +1189,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     public void updateContentsSize() {
         LayoutManager layoutManager = getLayoutManager();
-        layoutManager.setNeedsMeasure(ConnectorMap.get(client).getConnector(
-                this));
+        layoutManager
+                .setNeedsMeasure(ConnectorMap.get(client).getConnector(this));
         layoutManager.layoutNow();
     }
 
@@ -1347,8 +1351,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void onScroll(ScrollEvent event) {
-        client.updateVariable(id, "scrollTop",
-                contentPanel.getScrollPosition(), false);
+        client.updateVariable(id, "scrollTop", contentPanel.getScrollPosition(),
+                false);
         client.updateVariable(id, "scrollLeft",
                 contentPanel.getHorizontalScrollPosition(), false);
 
@@ -1356,8 +1360,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void onKeyDown(KeyDownEvent event) {
-        if (vaadinModality
-                && event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE
+        if (vaadinModality && event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE
                 && !isFocusedElementEditable()) {
             event.preventDefault();
         }
@@ -1423,8 +1426,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             assistiveConnectors = connectors;
 
             if (connectors.length == 0) {
-                Roles.getDialogRole().removeAriaDescribedbyProperty(
-                        getElement());
+                Roles.getDialogRole()
+                        .removeAriaDescribedbyProperty(getElement());
             } else {
                 Id[] ids = new Id[connectors.length];
                 for (int index = 0; index < connectors.length; index++) {
@@ -1463,8 +1466,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * Sets the WAI-ARIA role the window.
      * 
      * This role defines how an assistive device handles a window. Available
-     * roles are alertdialog and dialog (@see <a
-     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * roles are alertdialog and dialog (@see
+     * <a href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
      * Model</a>).
      * 
      * The default role is dialog.

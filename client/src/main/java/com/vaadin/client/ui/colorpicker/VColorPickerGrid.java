@@ -30,8 +30,8 @@ import com.google.gwt.user.client.ui.HTMLTable.Cell;
  * @since 7.0.0
  * 
  */
-public class VColorPickerGrid extends AbsolutePanel implements ClickHandler,
-        HasClickHandlers {
+public class VColorPickerGrid extends AbsolutePanel
+        implements ClickHandler, HasClickHandlers {
 
     private int rows = 1;
     private int columns = 1;

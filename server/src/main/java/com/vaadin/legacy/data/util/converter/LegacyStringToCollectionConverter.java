@@ -38,8 +38,8 @@ import java.util.Locale;
  * 
  * @author Vaadin Ltd
  */
-public class LegacyStringToCollectionConverter implements
-        LegacyConverter<String, Collection> {
+public class LegacyStringToCollectionConverter
+        implements LegacyConverter<String, Collection> {
 
     private final String delimiter;
     private final LegacyConverter<String, ?> tokenConverter;
@@ -77,8 +77,8 @@ public class LegacyStringToCollectionConverter implements
      * @param tokenType
      *            expected token model type
      */
-    public LegacyStringToCollectionConverter(LegacyConverter<String, ?> tokenConverter,
-            Class<?> tokenType) {
+    public LegacyStringToCollectionConverter(
+            LegacyConverter<String, ?> tokenConverter, Class<?> tokenType) {
         this(", ", tokenConverter, tokenType);
     }
 
@@ -205,7 +205,8 @@ public class LegacyStringToCollectionConverter implements
     public static class DefaultCollectionFactory implements CollectionFactory {
 
         @Override
-        public Collection<?> createCollection(Class<? extends Collection> type) {
+        public Collection<?> createCollection(
+                Class<? extends Collection> type) {
             if (type.isAssignableFrom(ArrayList.class)) {
                 return new ArrayList();
             } else if (type.isAssignableFrom(HashSet.class)) {

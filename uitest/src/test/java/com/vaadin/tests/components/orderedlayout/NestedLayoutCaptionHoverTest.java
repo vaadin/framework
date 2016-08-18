@@ -38,8 +38,8 @@ public class NestedLayoutCaptionHoverTest extends MultiBrowserTest {
     public void testTooltipInNestedLayout() throws Exception {
         openTestURL();
 
-        WebElement caption = getDriver().findElement(
-                By.className("v-captiontext"));
+        WebElement caption = getDriver()
+                .findElement(By.className("v-captiontext"));
 
         assertEquals("inner layout", caption.getText());
 

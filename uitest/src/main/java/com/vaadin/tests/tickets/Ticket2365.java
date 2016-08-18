@@ -12,8 +12,8 @@ public class Ticket2365 extends LegacyApplication {
     @Override
     public void init() {
 
-        final LegacyWindow mainWin = new LegacyWindow(getClass()
-                .getSimpleName());
+        final LegacyWindow mainWin = new LegacyWindow(
+                getClass().getSimpleName());
         setMainWindow(mainWin);
 
         VerticalLayout lo = new VerticalLayout();

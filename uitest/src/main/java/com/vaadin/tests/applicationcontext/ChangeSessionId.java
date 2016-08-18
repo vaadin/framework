@@ -19,8 +19,8 @@ public class ChangeSessionId extends AbstractTestCase {
         LegacyWindow mainWindow = new LegacyWindow("Sestest Application");
         mainWindow.addComponent(log);
         mainWindow.addComponent(loginButton);
-        mainWindow.addComponent(new Button("Show session id",
-                new Button.ClickListener() {
+        mainWindow.addComponent(
+                new Button("Show session id", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
@@ -33,8 +33,8 @@ public class ChangeSessionId extends AbstractTestCase {
             @Override
             public void buttonClick(ClickEvent event) {
                 String oldSessionId = getSessionId();
-                VaadinService.reinitializeSession(VaadinService
-                        .getCurrentRequest());
+                VaadinService
+                        .reinitializeSession(VaadinService.getCurrentRequest());
                 String newSessionId = getSessionId();
                 if (oldSessionId.equals(newSessionId)) {
                     log.log("FAILED! Both old and new session id is "

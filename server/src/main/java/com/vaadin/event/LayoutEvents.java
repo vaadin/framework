@@ -114,8 +114,8 @@ public interface LayoutEvents {
         private final Component childComponent;
 
         public LayoutClickEvent(Component source,
-                MouseEventDetails mouseEventDetails,
-                Component clickedComponent, Component childComponent) {
+                MouseEventDetails mouseEventDetails, Component clickedComponent,
+                Component childComponent) {
             super(source, mouseEventDetails);
             this.clickedComponent = clickedComponent;
             this.childComponent = childComponent;

@@ -287,7 +287,8 @@ public class DownloadStream implements Serializable {
                 // Content-Disposition: attachment generally forces download
                 String contentDisposition = getParameter(CONTENT_DISPOSITION);
                 if (contentDisposition == null) {
-                    contentDisposition = getContentDispositionFilename(getFileName());
+                    contentDisposition = getContentDispositionFilename(
+                            getFileName());
                 }
 
                 response.setHeader(CONTENT_DISPOSITION, contentDisposition);

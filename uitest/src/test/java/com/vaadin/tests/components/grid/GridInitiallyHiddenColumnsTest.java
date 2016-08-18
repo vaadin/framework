@@ -53,8 +53,8 @@ public class GridInitiallyHiddenColumnsTest extends SingleBrowserTest {
     // TODO: as to the getX methods reuse ones from GridBasicFeaturesTest?
 
     protected WebElement getSidebarOpenButton(GridElement grid) {
-        List<WebElement> elements = grid.findElements(By
-                .className("v-grid-sidebar-button"));
+        List<WebElement> elements = grid
+                .findElements(By.className("v-grid-sidebar-button"));
         return elements.isEmpty() ? null : elements.get(0);
     }
 
@@ -62,10 +62,11 @@ public class GridInitiallyHiddenColumnsTest extends SingleBrowserTest {
      * Returns the toggle inside the sidebar for hiding the column at the given
      * index, or null if not found.
      */
-    protected WebElement getColumnHidingToggle(GridElement grid, String caption) {
+    protected WebElement getColumnHidingToggle(GridElement grid,
+            String caption) {
         WebElement sidebar = getSidebar(grid);
-        List<WebElement> elements = sidebar.findElements(By
-                .className("column-hiding-toggle"));
+        List<WebElement> elements = sidebar
+                .findElements(By.className("column-hiding-toggle"));
         for (WebElement e : elements) {
             if (caption.equalsIgnoreCase(e.getText())) {
                 return e;
@@ -75,8 +76,8 @@ public class GridInitiallyHiddenColumnsTest extends SingleBrowserTest {
     }
 
     protected WebElement getSidebar(GridElement grid) {
-        List<WebElement> elements = findElements(By
-                .className("v-grid-sidebar-popup"));
+        List<WebElement> elements = findElements(
+                By.className("v-grid-sidebar-popup"));
         return elements.isEmpty() ? null : elements.get(0);
     }
 

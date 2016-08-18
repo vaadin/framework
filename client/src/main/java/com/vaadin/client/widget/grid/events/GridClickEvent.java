@@ -42,8 +42,10 @@ public class GridClickEvent extends AbstractGridMouseEvent<GridClickHandler> {
     @Override
     protected void doDispatch(GridClickHandler handler, Section section) {
         if ((section == Section.BODY && handler instanceof BodyClickHandler)
-                || (section == Section.HEADER && handler instanceof HeaderClickHandler)
-                || (section == Section.FOOTER && handler instanceof FooterClickHandler)) {
+                || (section == Section.HEADER
+                        && handler instanceof HeaderClickHandler)
+                || (section == Section.FOOTER
+                        && handler instanceof FooterClickHandler)) {
             handler.onClick(this);
         }
     }

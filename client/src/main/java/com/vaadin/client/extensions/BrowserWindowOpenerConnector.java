@@ -68,7 +68,8 @@ public class BrowserWindowOpenerConnector extends AbstractExtensionConnector
 
         if (!getState().parameters.isEmpty()) {
             StringBuilder params = new StringBuilder();
-            for (Entry<String, String> entry : getState().parameters.entrySet()) {
+            for (Entry<String, String> entry : getState().parameters
+                    .entrySet()) {
                 if (params.length() != 0) {
                     params.append('&');
                 }

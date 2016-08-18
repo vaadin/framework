@@ -30,8 +30,8 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.4
  */
-public class LegacyStringToByteConverter extends
-        LegacyAbstractStringToNumberConverter<Byte> {
+public class LegacyStringToByteConverter
+        extends LegacyAbstractStringToNumberConverter<Byte> {
 
     /**
      * Returns the format used by

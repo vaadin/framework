@@ -49,8 +49,8 @@ public class LongMultiselectTest extends MultiBrowserTest {
         scrollToBottom();
 
         new Actions(getDriver()).keyDown(Keys.SHIFT)
-                .click(getTable().getCell(LASTSELECTEDROW, 0))
-                .keyUp(Keys.SHIFT).build().perform();
+                .click(getTable().getCell(LASTSELECTEDROW, 0)).keyUp(Keys.SHIFT)
+                .build().perform();
     }
 
     private TableElement getTable() {

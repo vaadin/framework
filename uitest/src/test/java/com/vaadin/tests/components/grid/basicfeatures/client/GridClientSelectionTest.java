@@ -33,11 +33,11 @@ public class GridClientSelectionTest extends GridBasicClientFeaturesTest {
         openTestURL();
 
         setSelectionModelNone();
-        assertTrue("First column was selection column", getGridElement()
-                .getCell(0, 0).getText().equals("(0, 0)"));
+        assertTrue("First column was selection column",
+                getGridElement().getCell(0, 0).getText().equals("(0, 0)"));
         setSelectionModelMulti();
-        assertTrue("First column was not selection column", getGridElement()
-                .getCell(0, 1).getText().equals("(0, 0)"));
+        assertTrue("First column was not selection column",
+                getGridElement().getCell(0, 1).getText().equals("(0, 0)"));
     }
 
     @Test
@@ -45,20 +45,21 @@ public class GridClientSelectionTest extends GridBasicClientFeaturesTest {
         openTestURL();
 
         setSelectionModelMulti();
-        selectMenuPath("Component", "DataSource", "Reset with 100 rows of Data");
+        selectMenuPath("Component", "DataSource",
+                "Reset with 100 rows of Data");
         GridCellElement header = getGridElement().getHeaderCell(0, 0);
 
         assertTrue("No checkbox", header.isElementPresent(By.tagName("input")));
         header.findElement(By.tagName("input")).click();
 
         for (int i = 0; i < 100; i += 10) {
-            assertTrue("Row " + i + " was not selected.", getGridElement()
-                    .getRow(i).isSelected());
+            assertTrue("Row " + i + " was not selected.",
+                    getGridElement().getRow(i).isSelected());
         }
 
         header.findElement(By.tagName("input")).click();
-        assertFalse("Row 52 was still selected", getGridElement().getRow(52)
-                .isSelected());
+        assertFalse("Row 52 was still selected",
+                getGridElement().getRow(52).isSelected());
     }
 
     @Test

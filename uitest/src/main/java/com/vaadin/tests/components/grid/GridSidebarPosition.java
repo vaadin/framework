@@ -41,7 +41,8 @@ public class GridSidebarPosition extends AbstractTestUI {
         for (int i = 0; i < 30; i++) {
             grid.addColumn(
                     "This is a really really really really long column name "
-                            + i).setHidable(true);
+                            + i)
+                    .setHidable(true);
         }
         hl.addComponent(grid);
 

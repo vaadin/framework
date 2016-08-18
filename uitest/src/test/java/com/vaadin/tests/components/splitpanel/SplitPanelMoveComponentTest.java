@@ -37,19 +37,17 @@ public class SplitPanelMoveComponentTest extends MultiBrowserTest {
     }
 
     private WebElement getFirstChild() {
-        WebElement container = getDriver()
-                .findElement(
-                        By.xpath("//div[contains(@class,'v-splitpanel-first-container')]"));
-        return container.findElement(By
-                .xpath("//div[contains(@class, 'v-button')]"));
+        WebElement container = getDriver().findElement(By.xpath(
+                "//div[contains(@class,'v-splitpanel-first-container')]"));
+        return container
+                .findElement(By.xpath("//div[contains(@class, 'v-button')]"));
     }
 
     private WebElement getSecondChild() {
-        WebElement container = getDriver()
-                .findElement(
-                        By.xpath("//div[contains(@class,'v-splitpanel-second-container')]"));
-        return container.findElement(By
-                .xpath("//div[contains(@class, 'v-button')]"));
+        WebElement container = getDriver().findElement(By.xpath(
+                "//div[contains(@class,'v-splitpanel-second-container')]"));
+        return container
+                .findElement(By.xpath("//div[contains(@class, 'v-button')]"));
     }
 
 }

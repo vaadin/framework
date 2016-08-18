@@ -39,7 +39,8 @@ public class CreatingPreserveState extends UI {
 
     @Override
     public void init(VaadinRequest request) {
-        LegacyTextField tf = new LegacyTextField("Instance #" + (++instanceCounter));
+        LegacyTextField tf = new LegacyTextField(
+                "Instance #" + (++instanceCounter));
         tf.setImmediate(true);
 
         content.addComponent(tf);
@@ -48,7 +49,7 @@ public class CreatingPreserveState extends UI {
 
     @Override
     protected void refresh(VaadinRequest request) {
-        content.addComponent(new Label("UI was refreshed @"
-                + System.currentTimeMillis()));
+        content.addComponent(
+                new Label("UI was refreshed @" + System.currentTimeMillis()));
     }
 }

@@ -58,8 +58,8 @@ public class FormLayoutResizingTest extends MultiBrowserThemeTest {
 
         int[] expandedWidths = getWidths(tables);
 
-        Assert.assertEquals("Table should have grown ",
-                originalWidths[0] + 200, expandedWidths[0]);
+        Assert.assertEquals("Table should have grown ", originalWidths[0] + 200,
+                expandedWidths[0]);
         Assert.assertEquals("Wrapped table should have grown ",
                 originalWidths[1] + 200, expandedWidths[1]);
 
@@ -79,8 +79,8 @@ public class FormLayoutResizingTest extends MultiBrowserThemeTest {
 
         expandedWidths = getWidths(tables);
 
-        Assert.assertEquals("Table should have grown ",
-                originalWidths[0] + 200, expandedWidths[0]);
+        Assert.assertEquals("Table should have grown ", originalWidths[0] + 200,
+                expandedWidths[0]);
         Assert.assertEquals("Wrapped table should have grown ",
                 originalWidths[1] + 200, expandedWidths[1]);
     }

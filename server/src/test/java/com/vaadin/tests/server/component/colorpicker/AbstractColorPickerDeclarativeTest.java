@@ -24,8 +24,8 @@ import com.vaadin.ui.AbstractColorPicker.PopupStyle;
 import com.vaadin.ui.ColorPicker;
 import com.vaadin.ui.ColorPickerArea;
 
-public class AbstractColorPickerDeclarativeTest extends
-        DeclarativeTestBase<AbstractColorPicker> {
+public class AbstractColorPickerDeclarativeTest
+        extends DeclarativeTestBase<AbstractColorPicker> {
 
     @Test
     public void testAllAbstractColorPickerFeatures() {

@@ -37,13 +37,16 @@ public class HierarchyAfterAnalyzeLayoutsTest extends MultiBrowserTest {
         openTestURL();
 
         // select tab
-        pressDebugWindowButton(findByXpath("//button[@title = 'Examine component hierarchy']"));
+        pressDebugWindowButton(findByXpath(
+                "//button[@title = 'Examine component hierarchy']"));
 
         // click "analyze layouts"
-        pressDebugWindowButton(findByXpath("//button[@title = 'Check layouts for potential problems']"));
+        pressDebugWindowButton(findByXpath(
+                "//button[@title = 'Check layouts for potential problems']"));
 
         // check that no problems found
-        findByXpath("//div[text() = 'Layouts analyzed, no top level problems']");
+        findByXpath(
+                "//div[text() = 'Layouts analyzed, no top level problems']");
 
         // check that original label still there
         findByXpath("//div[text() = 'This is a label']");

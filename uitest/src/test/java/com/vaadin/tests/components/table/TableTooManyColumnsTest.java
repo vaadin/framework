@@ -30,8 +30,8 @@ public class TableTooManyColumnsTest extends MultiBrowserTest {
     public void testDropdownTable() throws IOException {
         openTestURL();
 
-        WebElement element = findElement(By
-                .className("v-table-column-selector"));
+        WebElement element = findElement(
+                By.className("v-table-column-selector"));
 
         element.click();
 

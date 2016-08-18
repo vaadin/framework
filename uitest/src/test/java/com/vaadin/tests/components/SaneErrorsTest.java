@@ -41,8 +41,8 @@ public class SaneErrorsTest extends MultiBrowserTest {
     @Test
     public void test() {
         openTestURL();
-        List<WebElement> elements = getDriver().findElements(
-                By.xpath("//*[text() = 'Show me my NPE!']"));
+        List<WebElement> elements = getDriver()
+                .findElements(By.xpath("//*[text() = 'Show me my NPE!']"));
         for (WebElement webElement : elements) {
             webElement.click();
         }
@@ -50,8 +50,8 @@ public class SaneErrorsTest extends MultiBrowserTest {
         getDriver().findElement(By.xpath("//*[text() = 'Collect exceptions']"))
                 .click();
 
-        List<WebElement> errorMessages = getDriver().findElements(
-                By.className("v-label"));
+        List<WebElement> errorMessages = getDriver()
+                .findElements(By.className("v-label"));
         for (WebElement webElement : errorMessages) {
             String text = webElement.getText();
             Assert.assertEquals("java.lang.NullPointerException", text);

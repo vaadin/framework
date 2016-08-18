@@ -39,7 +39,8 @@ public class LegacyByteRangeValidator extends LegacyRangeValidator<Byte> {
      * @param maxValue
      *            The maximum value to accept or null for no limit
      */
-    public LegacyByteRangeValidator(String errorMessage, Byte minValue, Byte maxValue) {
+    public LegacyByteRangeValidator(String errorMessage, Byte minValue,
+            Byte maxValue) {
         super(errorMessage, Byte.class, minValue, maxValue);
     }
 

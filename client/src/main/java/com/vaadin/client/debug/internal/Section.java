@@ -31,7 +31,8 @@ public interface Section {
      * Returns a button that will be used to activate this section, displayed as
      * a tab in {@link VDebugWindow}.
      * <p>
-     * <em>The same instance <b>must</b> be returned each time this method is called.</em>
+     * <em>The same instance <b>must</b> be returned each time this method is
+     * called.</em>
      * </p>
      * <p>
      * The button should preferably only have an icon (no caption), and should

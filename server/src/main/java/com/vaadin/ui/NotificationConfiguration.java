@@ -86,8 +86,8 @@ public interface NotificationConfiguration extends Serializable {
      * Sets the WAI-ARIA role for a notification type.
      * <p>
      * This role defines how an assistive device handles a notification.
-     * Available roles are alert and status (@see <a
-     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * Available roles are alert and status (@see
+     * <a href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
      * Model</a>).
      *
      * The default role is alert.
@@ -103,8 +103,8 @@ public interface NotificationConfiguration extends Serializable {
      * Gets the WAI-ARIA role for a notification type.
      * <p>
      * This role defines how an assistive device handles a notification.
-     * Available roles are alert and status (@see <a
-     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * Available roles are alert and status (@see
+     * <a href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
      * Model</a>)
      * <p>
      * The default role is alert.

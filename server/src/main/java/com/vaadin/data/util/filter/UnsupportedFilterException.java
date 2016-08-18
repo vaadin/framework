@@ -28,8 +28,8 @@ import java.io.Serializable;
  * 
  * @since 6.6
  */
-public class UnsupportedFilterException extends RuntimeException implements
-        Serializable {
+public class UnsupportedFilterException extends RuntimeException
+        implements Serializable {
     public UnsupportedFilterException() {
     }
 

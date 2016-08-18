@@ -6,8 +6,8 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.LegacyWindow;
 
-public class Ticket2023 extends com.vaadin.server.LegacyApplication implements
-        Button.ClickListener {
+public class Ticket2023 extends com.vaadin.server.LegacyApplication
+        implements Button.ClickListener {
 
     AbstractComponent c = new Button();
 

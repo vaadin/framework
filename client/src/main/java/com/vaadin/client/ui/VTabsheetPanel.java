@@ -129,8 +129,8 @@ public class VTabsheetPanel extends ComplexPanel {
                 hide(DOM.getParent(visibleWidget.getElement()));
             }
             visibleWidget = newVisible;
-            touchScrollHandler.setElements(visibleWidget.getElement()
-                    .getParentElement());
+            touchScrollHandler
+                    .setElements(visibleWidget.getElement().getParentElement());
         }
         // Always ensure the selected tab is visible. If server prevents a tab
         // change we might end up here with visibleWidget == newVisible but its

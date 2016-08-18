@@ -37,7 +37,8 @@ public class EnterShortcutMaySendInputPromptAsValue extends TestBase {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 if (action == enter) {
 
                 }

@@ -25,8 +25,8 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 public class CustomProgressBarElement extends ProgressBarElement {
 
     public double getValue() {
-        WebElement indicator = findElement(By
-                .className("v-progressbar-indicator"));
+        WebElement indicator = findElement(
+                By.className("v-progressbar-indicator"));
         String width = getStyleAttribute(indicator, "width");
         if (!width.endsWith("%")) {
             return 0;

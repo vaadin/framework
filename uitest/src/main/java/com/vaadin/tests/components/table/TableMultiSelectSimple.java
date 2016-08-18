@@ -30,8 +30,8 @@ public class TableMultiSelectSimple extends TestBase {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                TreeSet<?> sorted = new TreeSet<Object>((Set<?>) event
-                        .getProperty().getValue());
+                TreeSet<?> sorted = new TreeSet<Object>(
+                        (Set<?>) event.getProperty().getValue());
                 log.log("Selected value: " + sorted);
             }
         });

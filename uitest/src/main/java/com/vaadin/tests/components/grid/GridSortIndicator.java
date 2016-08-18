@@ -49,16 +49,17 @@ public class GridSortIndicator extends AbstractTestUI {
                     // is not null.
                     List<SortOrder> newSortOrder = new ArrayList<SortOrder>();
                     SortDirection newSortDirection = oldSortDirection;
-                    if (currentSortOrder.get(0).getPropertyId().equals("Name")) {
-                        newSortDirection = SortDirection.ASCENDING
-                                .equals(oldSortDirection) ? SortDirection.DESCENDING
-                                : SortDirection.ASCENDING;
+                    if (currentSortOrder.get(0).getPropertyId()
+                            .equals("Name")) {
+                        newSortDirection = SortDirection.ASCENDING.equals(
+                                oldSortDirection) ? SortDirection.DESCENDING
+                                        : SortDirection.ASCENDING;
                     }
                     if (newSortDirection != null) {
                         newSortOrder
                                 .add(new SortOrder("Name", newSortDirection));
-                        newSortOrder.add(new SortOrder("Value",
-                                newSortDirection));
+                        newSortOrder
+                                .add(new SortOrder("Value", newSortDirection));
                         g.setSortOrder(newSortOrder);
                     }
                     oldSortDirection = newSortDirection;

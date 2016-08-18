@@ -70,8 +70,8 @@ public class J2EEConnectionPool implements JDBCConnectionPool {
             try {
                 conn.close();
             } catch (SQLException e) {
-                Logger.getLogger(J2EEConnectionPool.class.getName()).log(
-                        Level.FINE, "Could not release SQL connection", e);
+                Logger.getLogger(J2EEConnectionPool.class.getName())
+                        .log(Level.FINE, "Could not release SQL connection", e);
             }
         }
     }

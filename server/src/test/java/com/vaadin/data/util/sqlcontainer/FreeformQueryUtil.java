@@ -25,7 +25,8 @@ public class FreeformQueryUtil {
             query.append(") AS rownum, * FROM \"PEOPLE\"");
 
             if (!filters.isEmpty()) {
-                query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
+                query.append(
+                        QueryBuilder.getWhereStringForFilters(filters, sh));
             }
             query.append(") AS a WHERE a.rownum BETWEEN ").append(offset)
                     .append(" AND ").append(Integer.toString(offset + limit));
@@ -40,7 +41,8 @@ public class FreeformQueryUtil {
             query.append("SELECT * FROM (SELECT x.*, ROWNUM AS "
                     + "\"rownum\" FROM (SELECT * FROM \"PEOPLE\"");
             if (!filters.isEmpty()) {
-                query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
+                query.append(
+                        QueryBuilder.getWhereStringForFilters(filters, sh));
             }
             query.append(") x) WHERE \"rownum\" BETWEEN ? AND ?");
             sh.addParameterValue(offset);
@@ -50,7 +52,8 @@ public class FreeformQueryUtil {
         } else {
             StringBuilder query = new StringBuilder("SELECT * FROM people");
             if (!filters.isEmpty()) {
-                query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
+                query.append(
+                        QueryBuilder.getWhereStringForFilters(filters, sh));
             }
             if (limit != 0 || offset != 0) {
                 query.append(" LIMIT ? OFFSET ?");

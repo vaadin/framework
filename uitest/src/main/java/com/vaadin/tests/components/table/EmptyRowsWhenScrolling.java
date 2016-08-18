@@ -83,9 +83,9 @@ public class EmptyRowsWhenScrolling extends UI {
                     SimpleBean.class);
             container.setBeanIdProperty("id");
             for (int i = 1; i <= 50; ++i) {
-                container.addBean(new SimpleBean(i, "image",
-                        "Column1 row " + i, "Column2 row " + i, "Column3 row "
-                                + i, "Column4 row " + i));
+                container.addBean(new SimpleBean(i, "image", "Column1 row " + i,
+                        "Column2 row " + i, "Column3 row " + i,
+                        "Column4 row " + i));
             }
             table.setContainerDataSource(container);
             table.setEditable(true);
@@ -99,8 +99,8 @@ public class EmptyRowsWhenScrolling extends UI {
                     int imgNum = new Random().nextInt(5) + 1;
                     try {
                         // Simulate background work
-                        System.out
-                                .println("Generated column for image /com/example/simpletable/img/px50-"
+                        System.out.println(
+                                "Generated column for image /com/example/simpletable/img/px50-"
                                         + imgNum + ".jpg");
                         Thread.sleep(50);
                     } catch (InterruptedException e) {
@@ -112,13 +112,14 @@ public class EmptyRowsWhenScrolling extends UI {
                     Embedded image = new Embedded("", resource);
                     image.setWidth("50px");
                     image.setHeight("50px");
-                    image.addClickListener(new com.vaadin.event.MouseEvents.ClickListener() {
-                        @Override
-                        public void click(
-                                com.vaadin.event.MouseEvents.ClickEvent event) {
-                            Notification.show("Image clicked!");
-                        }
-                    });
+                    image.addClickListener(
+                            new com.vaadin.event.MouseEvents.ClickListener() {
+                                @Override
+                                public void click(
+                                        com.vaadin.event.MouseEvents.ClickEvent event) {
+                                    Notification.show("Image clicked!");
+                                }
+                            });
                     return image;
                 }
             });

@@ -165,12 +165,13 @@ public abstract class VaadinService implements Serializable {
                         .loadClass(classLoaderName);
                 final Constructor<?> c = classLoaderClass
                         .getConstructor(new Class[] { ClassLoader.class });
-                setClassLoader((ClassLoader) c
-                        .newInstance(new Object[] { getClass().getClassLoader() }));
+                setClassLoader((ClassLoader) c.newInstance(
+                        new Object[] { getClass().getClassLoader() }));
             } catch (final Exception e) {
                 throw new RuntimeException(
                         "Could not find specified class loader: "
-                                + classLoaderName, e);
+                                + classLoaderName,
+                        e);
             }
         }
 
@@ -372,7 +373,8 @@ public abstract class VaadinService implements Serializable {
      * @param request
      * @return the system messages to use
      */
-    public SystemMessages getSystemMessages(Locale locale, VaadinRequest request) {
+    public SystemMessages getSystemMessages(Locale locale,
+            VaadinRequest request) {
         SystemMessagesInfo systemMessagesInfo = new SystemMessagesInfo();
         systemMessagesInfo.setLocale(locale);
         systemMessagesInfo.setService(this);
@@ -485,8 +487,9 @@ public abstract class VaadinService implements Serializable {
                 // for now, use the session error handler; in the future, could
                 // have an API for using some other handler for session init and
                 // destroy listeners
-                eventRouter.fireEvent(new SessionDestroyEvent(
-                        VaadinService.this, session), session.getErrorHandler());
+                eventRouter.fireEvent(
+                        new SessionDestroyEvent(VaadinService.this, session),
+                        session.getErrorHandler());
 
                 session.setState(State.CLOSED);
             }
@@ -553,7 +556,8 @@ public abstract class VaadinService implements Serializable {
         }
         Object currentSessionLock = wrappedSession
                 .getAttribute(getLockAttributeName());
-        assert (currentSessionLock == null || currentSessionLock == lock) : "Changing the lock for a session is not allowed";
+        assert (currentSessionLock == null
+                || currentSessionLock == lock) : "Changing the lock for a session is not allowed";
 
         wrappedSession.setAttribute(getLockAttributeName(), lock);
     }
@@ -665,7 +669,8 @@ public abstract class VaadinService implements Serializable {
         }
 
         try {
-            return doFindOrCreateVaadinSession(request, requestCanCreateSession);
+            return doFindOrCreateVaadinSession(request,
+                    requestCanCreateSession);
         } finally {
             unlockSession(wrappedSession);
         }
@@ -684,8 +689,8 @@ public abstract class VaadinService implements Serializable {
      * @throws ServiceException
      */
     private VaadinSession doFindOrCreateVaadinSession(VaadinRequest request,
-            boolean requestCanCreateSession) throws SessionExpiredException,
-            ServiceException {
+            boolean requestCanCreateSession)
+            throws SessionExpiredException, ServiceException {
         assert ((ReentrantLock) getSessionLock(request.getWrappedSession()))
                 .isHeldByCurrentThread() : "Session has not been locked by this thread";
 
@@ -768,7 +773,8 @@ public abstract class VaadinService implements Serializable {
         Locale locale = request.getLocale();
         session.setLocale(locale);
         session.setConfiguration(getDeploymentConfiguration());
-        session.setCommunicationManager(new LegacyCommunicationManager(session));
+        session.setCommunicationManager(
+                new LegacyCommunicationManager(session));
 
         ServletPortletHelper.initDefaultUIProvider(session, this);
         onVaadinSessionStarted(request, session);
@@ -1020,7 +1026,8 @@ public abstract class VaadinService implements Serializable {
      *         <code>false</code> if a new UI instance should be initialized on
      *         refreshed.
      */
-    public boolean preserveUIOnRefresh(UIProvider provider, UICreateEvent event) {
+    public boolean preserveUIOnRefresh(UIProvider provider,
+            UICreateEvent event) {
         return provider.isPreservedOnRefresh(event);
     }
 
@@ -1237,7 +1244,8 @@ public abstract class VaadinService implements Serializable {
      */
     private int getHeartbeatTimeout() {
         // Permit three missed heartbeats before closing the UI
-        return (int) (getDeploymentConfiguration().getHeartbeatInterval() * (3.1));
+        return (int) (getDeploymentConfiguration().getHeartbeatInterval()
+                * (3.1));
     }
 
     /**
@@ -1260,8 +1268,8 @@ public abstract class VaadinService implements Serializable {
      *         timeout never occurs.
      */
     private int getUidlRequestTimeout(VaadinSession session) {
-        return getDeploymentConfiguration().isCloseIdleSessions() ? session
-                .getSession().getMaxInactiveInterval() : -1;
+        return getDeploymentConfiguration().isCloseIdleSessions()
+                ? session.getSession().getMaxInactiveInterval() : -1;
     }
 
     /**
@@ -1445,12 +1453,10 @@ public abstract class VaadinService implements Serializable {
 
             // if this was an UIDL request, send UIDL back to the client
             if (ServletPortletHelper.isUIDLRequest(request)) {
-                SystemMessages ci = getSystemMessages(
-                        ServletPortletHelper.findLocale(null, vaadinSession,
-                                request), request);
+                SystemMessages ci = getSystemMessages(ServletPortletHelper
+                        .findLocale(null, vaadinSession, request), request);
                 try {
-                    writeStringResponse(
-                            response,
+                    writeStringResponse(response,
                             JsonConstants.JSON_CONTENT_TYPE,
                             createCriticalNotificationJSON(
                                     ci.getInternalErrorCaption(),
@@ -1459,10 +1465,9 @@ public abstract class VaadinService implements Serializable {
                 } catch (IOException e) {
                     // An exception occured while writing the response. Log
                     // it and continue handling only the original error.
-                    getLogger()
-                            .log(Level.WARNING,
-                                    "Failed to write critical notification response to the client",
-                                    e);
+                    getLogger().log(Level.WARNING,
+                            "Failed to write critical notification response to the client",
+                            e);
                 }
             } else {
                 // Re-throw other exceptions
@@ -1488,14 +1493,14 @@ public abstract class VaadinService implements Serializable {
      * @throws IOException
      *             If an error occured while writing the response
      */
-    public void writeStringResponse(VaadinResponse response,
-            String contentType, String reponseString) throws IOException {
+    public void writeStringResponse(VaadinResponse response, String contentType,
+            String reponseString) throws IOException {
 
         response.setContentType(contentType);
 
         final OutputStream out = response.getOutputStream();
-        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
-                new OutputStreamWriter(out, "UTF-8")));
+        final PrintWriter outWriter = new PrintWriter(
+                new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));
         outWriter.print(reponseString);
         outWriter.close();
     }
@@ -1517,8 +1522,8 @@ public abstract class VaadinService implements Serializable {
         for (RequestHandler handler : getRequestHandlers()) {
             if (handler instanceof SessionExpiredHandler) {
                 try {
-                    if (((SessionExpiredHandler) handler).handleSessionExpired(
-                            request, response)) {
+                    if (((SessionExpiredHandler) handler)
+                            .handleSessionExpired(request, response)) {
                         return;
                     }
                 } catch (IOException e) {
@@ -1652,8 +1657,7 @@ public abstract class VaadinService implements Serializable {
         }
 
         if (!Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION.equals(rawVersion)) {
-            getLogger().log(
-                    Level.WARNING,
+            getLogger().log(Level.WARNING,
                     Constants.INVALID_ATMOSPHERE_VERSION_WARNING,
                     new Object[] {
                             Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION,
@@ -1763,7 +1767,8 @@ public abstract class VaadinService implements Serializable {
      * @return a future that can be used to check for task completion and to
      *         cancel the task
      */
-    public Future<Void> accessSession(VaadinSession session, Runnable runnable) {
+    public Future<Void> accessSession(VaadinSession session,
+            Runnable runnable) {
         FutureAccess future = new FutureAccess(session, runnable);
         session.getPendingAccessQueue().add(future);
 
@@ -1831,11 +1836,12 @@ public abstract class VaadinService implements Serializable {
 
         FutureAccess pendingAccess;
         try {
-            while ((pendingAccess = session.getPendingAccessQueue().poll()) != null) {
+            while ((pendingAccess = session.getPendingAccessQueue()
+                    .poll()) != null) {
                 if (!pendingAccess.isCancelled()) {
                     CurrentInstance.clearAll();
-                    CurrentInstance.restoreInstances(pendingAccess
-                            .getCurrentInstances());
+                    CurrentInstance.restoreInstances(
+                            pendingAccess.getCurrentInstances());
                     CurrentInstance.setCurrent(session);
                     pendingAccess.run();
 
@@ -1911,8 +1917,8 @@ public abstract class VaadinService implements Serializable {
      */
     protected void setDefaultClassLoader() {
         try {
-            setClassLoader(VaadinServiceClassLoaderUtil
-                    .findDefaultClassLoader());
+            setClassLoader(
+                    VaadinServiceClassLoaderUtil.findDefaultClassLoader());
         } catch (SecurityException e) {
             getLogger().log(Level.SEVERE,
                     Constants.CANNOT_ACQUIRE_CLASSLOADER_SEVERE, e);

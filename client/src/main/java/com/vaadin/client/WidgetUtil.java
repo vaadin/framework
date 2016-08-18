@@ -293,8 +293,8 @@ public class WidgetUtil {
             setHeight(widget, "");
             return paddingBorderGuess;
         } else if (height.endsWith("px")) {
-            int pixelHeight = Integer.parseInt(height.substring(0,
-                    height.length() - 2));
+            int pixelHeight = Integer
+                    .parseInt(height.substring(0, height.length() - 2));
             return setHeightExcludingPaddingAndBorder(widget.getElement(),
                     pixelHeight, paddingBorderGuess, false);
         } else {
@@ -320,8 +320,8 @@ public class WidgetUtil {
             setWidth(widget, "");
             return paddingBorderGuess;
         } else if (width.endsWith("px")) {
-            int pixelWidth = Integer.parseInt(width.substring(0,
-                    width.length() - 2));
+            int pixelWidth = Integer
+                    .parseInt(width.substring(0, width.length() - 2));
             return setWidthExcludingPaddingAndBorder(widget.getElement(),
                     pixelWidth, paddingBorderGuess, false);
         } else {
@@ -455,12 +455,12 @@ public class WidgetUtil {
         // Add max version if fix lands sometime to Webkit
         // Starting from Opera 11.00, also a problem in Opera
         if (BrowserInfo.get().requiresOverflowAutoFix()) {
-            final String originalOverflow = elem.getStyle().getProperty(
-                    "overflow");
-            final String originalOverflowX = elem.getStyle().getProperty(
-                    "overflowX");
-            final String originalOverflowY = elem.getStyle().getProperty(
-                    "overflowY");
+            final String originalOverflow = elem.getStyle()
+                    .getProperty("overflow");
+            final String originalOverflowX = elem.getStyle()
+                    .getProperty("overflowX");
+            final String originalOverflowY = elem.getStyle()
+                    .getProperty("overflowY");
             if ("hidden".equals(originalOverflow)
                     || "hidden".equals(originalOverflowX)
                     || "hidden".equals(originalOverflowY)) {
@@ -505,7 +505,8 @@ public class WidgetUtil {
                     // updated when collapsing/expanding columns
                     // Also appeared in Safari 5.1 with webkit 534 (#7667)
                     if ((BrowserInfo.get().isChrome() || (BrowserInfo.get()
-                            .isSafari() && BrowserInfo.get().getWebkitVersion() >= 534))
+                            .isSafari()
+                            && BrowserInfo.get().getWebkitVersion() >= 534))
                             && (scrollleft > 0 || elem.getScrollLeft() > 0)) {
                         int scrollvalue = scrollleft;
 
@@ -541,7 +542,8 @@ public class WidgetUtil {
      *            The element to check
      * @return The border-box width for the element
      */
-    public static int getRequiredWidth(com.google.gwt.dom.client.Element element) {
+    public static int getRequiredWidth(
+            com.google.gwt.dom.client.Element element) {
         int reqWidth = getRequiredWidthBoundingClientRect(element);
         if (BrowserInfo.get().isIE() && !BrowserInfo.get().isIE8()) {
             int csSize = getRequiredWidthComputedStyle(element);
@@ -772,7 +774,8 @@ public class WidgetUtil {
      *            the element to detect
      * @return true if auto or scroll
      */
-    public static boolean mayHaveScrollBars(com.google.gwt.dom.client.Element pe) {
+    public static boolean mayHaveScrollBars(
+            com.google.gwt.dom.client.Element pe) {
         String overflow = getComputedStyle(pe, "overflow");
         if (overflow != null) {
             if (overflow.equals("auto") || overflow.equals("scroll")) {
@@ -800,7 +803,7 @@ public class WidgetUtil {
             com.google.gwt.dom.client.Element el, String p)
     /*-{
         try {
-
+    
         if (el.currentStyle) {
             // IE
             return el.currentStyle[p];
@@ -815,7 +818,7 @@ public class WidgetUtil {
         } catch (e) {
             return "";
         }
-
+    
      }-*/;
 
     /**
@@ -829,7 +832,7 @@ public class WidgetUtil {
         try {
             el.focus();
         } catch (e) {
-
+    
         }
     }-*/;
 
@@ -1087,10 +1090,9 @@ public class WidgetUtil {
                         touch.getClientX(), touch.getClientY(), false, false,
                         false, false, NativeEvent.BUTTON_LEFT);
         final NativeEvent createMouseDownEvent = Document.get()
-                .createMouseDownEvent(0, touch.getScreenX(),
-                        touch.getScreenY(), touch.getClientX(),
-                        touch.getClientY(), false, false, false, false,
-                        NativeEvent.BUTTON_LEFT);
+                .createMouseDownEvent(0, touch.getScreenX(), touch.getScreenY(),
+                        touch.getClientX(), touch.getClientY(), false, false,
+                        false, false, NativeEvent.BUTTON_LEFT);
         final NativeEvent createMouseClickEvent = Document.get()
                 .createClickEvent(0, touch.getScreenX(), touch.getScreenY(),
                         touch.getClientX(), touch.getClientY(), false, false,
@@ -1140,7 +1142,7 @@ public class WidgetUtil {
        if ($wnd.document.activeElement) {
            return $wnd.document.activeElement;
        }
-
+    
        return null;
      }-*/;
 
@@ -1211,11 +1213,11 @@ public class WidgetUtil {
     /*-{
         var top = elem.offsetTop;
         var height = elem.offsetHeight;
-
+    
         if (elem.parentNode != elem.offsetParent) {
           top -= elem.parentNode.offsetTop;
         }
-
+    
         var cur = elem.parentNode;
         while (cur && (cur.nodeType == 1)) {
           if (top < cur.scrollTop) {
@@ -1224,12 +1226,12 @@ public class WidgetUtil {
           if (top + height > cur.scrollTop + cur.clientHeight) {
             cur.scrollTop = (top + height) - cur.clientHeight;
           }
-
+    
           var offsetTop = cur.offsetTop;
           if (cur.parentNode != cur.offsetParent) {
             offsetTop -= cur.parentNode.offsetTop;
           }
-
+    
           top += offsetTop - cur.scrollTop;
           cur = cur.parentNode;
         }
@@ -1263,8 +1265,8 @@ public class WidgetUtil {
             divElement.getStyle().setDisplay(Display.NONE);
 
             RootPanel.getBodyElement().appendChild(divElement);
-            divElement.setInnerHTML("<a href='" + escapeAttribute(url)
-                    + "' ></a>");
+            divElement.setInnerHTML(
+                    "<a href='" + escapeAttribute(url) + "' ></a>");
 
             AnchorElement a = divElement.getChild(0).cast();
             String href = a.getHref();
@@ -1365,7 +1367,8 @@ public class WidgetUtil {
      * 
      * @return true if the values are considered equals; false otherwise
      */
-    public static boolean pixelValuesEqual(final double num1, final double num2) {
+    public static boolean pixelValuesEqual(final double num1,
+            final double num2) {
         return Math.abs(num1 - num2) <= PIXEL_EPSILON;
     }
 
@@ -1480,9 +1483,9 @@ public class WidgetUtil {
                     unit = unitByType(symbol);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid size argument: \""
-                        + s + "\" (should match " + sizePattern.getSource()
-                        + ")");
+                throw new IllegalArgumentException(
+                        "Invalid size argument: \"" + s + "\" (should match "
+                                + sizePattern.getSource() + ")");
             }
             return new CssSize(size, unit);
         }
@@ -1558,8 +1561,8 @@ public class WidgetUtil {
          * @return true if the two sizes are equals, otherwise false.
          */
         public static boolean equals(String cssSize1, String cssSize2) {
-            return CssSize.fromString(cssSize1).equals(
-                    CssSize.fromString(cssSize2));
+            return CssSize.fromString(cssSize1)
+                    .equals(CssSize.fromString(cssSize2));
         }
 
     }
@@ -1595,7 +1598,8 @@ public class WidgetUtil {
      * @return the bottom border thickness
      */
     public static double getBorderBottomThickness(Element element) {
-        return getBorderThickness(element, new String[] { "borderBottomWidth" });
+        return getBorderThickness(element,
+                new String[] { "borderBottomWidth" });
     }
 
     /**
@@ -1611,8 +1615,8 @@ public class WidgetUtil {
      * @return the top and bottom border thickness
      */
     public static double getBorderTopAndBottomThickness(Element element) {
-        return getBorderThickness(element, new String[] { "borderTopWidth",
-                "borderBottomWidth" });
+        return getBorderThickness(element,
+                new String[] { "borderTopWidth", "borderBottomWidth" });
     }
 
     /**
@@ -1657,8 +1661,8 @@ public class WidgetUtil {
      * @return the top border thickness
      */
     public static double getBorderLeftAndRightThickness(Element element) {
-        return getBorderThickness(element, new String[] { "borderLeftWidth",
-                "borderRightWidth" });
+        return getBorderThickness(element,
+                new String[] { "borderLeftWidth", "borderRightWidth" });
     }
 
     private static native double getBorderThickness(

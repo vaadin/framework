@@ -109,8 +109,8 @@ public class IconsInCaption extends TestBase {
                     ContentMode.HTML);
             container.addComponent(title);
             for (String icon : icons) {
-                ThemeResource res = new ThemeResource("../runo/icons/" + size
-                        + "/" + icon);
+                ThemeResource res = new ThemeResource(
+                        "../runo/icons/" + size + "/" + icon);
                 if (TYPE_CAPTION.equals(iconType)) {
                     Label name = new Label();
                     name.setCaption(icon);

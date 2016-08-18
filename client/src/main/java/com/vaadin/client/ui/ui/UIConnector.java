@@ -161,7 +161,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
             @Override
             public void reportLayoutProblems(String json) {
-                VConsole.printLayoutProblems(getValueMap(json), getConnection());
+                VConsole.printLayoutProblems(getValueMap(json),
+                        getConnection());
             }
 
             private native ValueMap getValueMap(String json)
@@ -239,8 +240,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         while (childIndex < uidl.getChildCount()
                 && "open".equals(uidl.getChildUIDL(childIndex).getTag())) {
             final UIDL open = uidl.getChildUIDL(childIndex);
-            final String url = client.translateVaadinUri(open
-                    .getStringAttribute("src"));
+            final String url = client
+                    .translateVaadinUri(open.getStringAttribute("src"));
             final String target = open.getStringAttribute("name");
             if (target == null) {
                 // source will be opened to this browser window, but we may have
@@ -265,7 +266,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 }
                 if (alwaysAsPopup) {
                     if (open.hasAttribute("border")) {
-                        if (open.getStringAttribute("border").equals("minimal")) {
+                        if (open.getStringAttribute("border")
+                                .equals("minimal")) {
                             options = "menubar=yes,location=no,status=no";
                         } else {
                             options = "menubar=no,location=no,status=no";
@@ -350,8 +352,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                                         + " but it is not focusable. The widget should implement either "
                                         + com.google.gwt.user.client.ui.Focusable.class
                                                 .getName()
-                                        + " or "
-                                        + Focusable.class.getName());
+                                        + " or " + Focusable.class.getName());
                     }
                 }
             });
@@ -378,8 +379,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             int fragmentIndex = location.indexOf('#');
             if (fragmentIndex >= 0) {
                 // Decode fragment to avoid double encoding (#10769)
-                newFragment = URL.decodePathSegment(location
-                        .substring(fragmentIndex + 1));
+                newFragment = URL.decodePathSegment(
+                        location.substring(fragmentIndex + 1));
 
                 if (newFragment.isEmpty()
                         && Location.getHref().indexOf('#') == -1) {
@@ -429,11 +430,10 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
             // Check if we have resources to inject
             if (cssInjectionsUidl.getTag().equals("css-resource")) {
-                String url = getWidget().connection
-                        .translateVaadinUri(cssInjectionsUidl
-                                .getStringAttribute("url"));
-                LinkElement link = LinkElement.as(DOM
-                        .createElement(LinkElement.TAG));
+                String url = getWidget().connection.translateVaadinUri(
+                        cssInjectionsUidl.getStringAttribute("url"));
+                LinkElement link = LinkElement
+                        .as(DOM.createElement(LinkElement.TAG));
                 link.setRel("stylesheet");
                 link.setHref(url);
                 link.setType("text/css");
@@ -468,8 +468,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      *            the url to match with existing stylesheets
      */
     private void removeStylesheet(String url) {
-        NodeList<Element> linkTags = getHead().getElementsByTagName(
-                LinkElement.TAG);
+        NodeList<Element> linkTags = getHead()
+                .getElementsByTagName(LinkElement.TAG);
         for (int i = 0; i < linkTags.getLength(); i++) {
             LinkElement link = LinkElement.as(linkTags.getItem(i));
             if (!"stylesheet".equals(link.getRel())) {
@@ -507,14 +507,13 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             @Override
             public void onKeyDown(KeyDownEvent event) {
                 if (getWidget().actionHandler != null) {
-                    Element target = Element.as(event.getNativeEvent()
-                            .getEventTarget());
+                    Element target = Element
+                            .as(event.getNativeEvent().getEventTarget());
                     if (target == Document.get().getBody()
                             || getWidget().getElement().isOrHasChild(target)) {
                         // Only react to body and elements inside the UI
-                        getWidget().actionHandler
-                                .handleKeyboardEvent((Event) event
-                                        .getNativeEvent().cast());
+                        getWidget().actionHandler.handleKeyboardEvent(
+                                (Event) event.getNativeEvent().cast());
                     }
 
                 }
@@ -671,7 +670,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         ComponentConnector oldChild = null;
         ComponentConnector newChild = getContent();
 
@@ -763,14 +763,14 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         if (stateChangeEvent.hasPropertyChanged("tooltipConfiguration")) {
             getConnection().getVTooltip().setCloseTimeout(
                     getState().tooltipConfiguration.closeTimeout);
-            getConnection().getVTooltip().setOpenDelay(
-                    getState().tooltipConfiguration.openDelay);
+            getConnection().getVTooltip()
+                    .setOpenDelay(getState().tooltipConfiguration.openDelay);
             getConnection().getVTooltip().setQuickOpenDelay(
                     getState().tooltipConfiguration.quickOpenDelay);
             getConnection().getVTooltip().setQuickOpenTimeout(
                     getState().tooltipConfiguration.quickOpenTimeout);
-            getConnection().getVTooltip().setMaxWidth(
-                    getState().tooltipConfiguration.maxWidth);
+            getConnection().getVTooltip()
+                    .setMaxWidth(getState().tooltipConfiguration.maxWidth);
         }
 
         if (stateChangeEvent
@@ -798,7 +798,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             getConnection().getMessageSender().setPushEnabled(
                     getState().pushConfiguration.mode.isEnabled());
         }
-        if (stateChangeEvent.hasPropertyChanged("reconnectDialogConfiguration")) {
+        if (stateChangeEvent
+                .hasPropertyChanged("reconnectDialogConfiguration")) {
             getConnection().getConnectionStateHandler().configurationUpdated();
         }
 
@@ -831,9 +832,9 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             pollTimer.scheduleRepeating(getState().pollInterval);
         } else {
             // Ensure no more polls are sent as polling has been disabled
-            getConnection().getServerRpcQueue().removeMatching(
-                    new MethodInvocation(getConnectorId(), UIServerRpc.class
-                            .getName(), "poll"));
+            getConnection().getServerRpcQueue()
+                    .removeMatching(new MethodInvocation(getConnectorId(),
+                            UIServerRpc.class.getName(), "poll"));
         }
     }
 
@@ -856,8 +857,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      *            the connector to locate
      */
     public void showServerDebugInfo(ServerConnector serverConnector) {
-        getRpcProxy(DebugWindowServerRpc.class).showServerDebugInfo(
-                serverConnector);
+        getRpcProxy(DebugWindowServerRpc.class)
+                .showServerDebugInfo(serverConnector);
     }
 
     /**
@@ -929,11 +930,10 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
             if (tagToReplace == null) {
                 getLogger()
-                        .warning(
-                                "Did not find the link tag for the old theme ("
-                                        + oldThemeUrl
-                                        + "), adding a new stylesheet for the new theme ("
-                                        + newThemeUrl + ")");
+                        .warning("Did not find the link tag for the old theme ("
+                                + oldThemeUrl
+                                + "), adding a new stylesheet for the new theme ("
+                                + newThemeUrl + ")");
             }
         }
 
@@ -950,7 +950,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     private void updateVaadinFavicon(String newTheme) {
-        NodeList<Element> iconElements = querySelectorAll("link[rel~=\"icon\"]");
+        NodeList<Element> iconElements = querySelectorAll(
+                "link[rel~=\"icon\"]");
         for (int i = 0; i < iconElements.getLength(); i++) {
             Element iconElement = iconElements.getItem(i);
 
@@ -978,8 +979,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * @return the link tag or null if no matching link tag was found
      */
     private LinkElement findStylesheetTag(String url) {
-        NodeList<Element> linkTags = getHead().getElementsByTagName(
-                LinkElement.TAG);
+        NodeList<Element> linkTags = getHead()
+                .getElementsByTagName(LinkElement.TAG);
         for (int i = 0; i < linkTags.getLength(); i++) {
             final LinkElement link = LinkElement.as(linkTags.getItem(i));
             if ("stylesheet".equals(link.getRel())
@@ -1014,22 +1015,20 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
                     @Override
                     public void onLoad(ResourceLoadEvent event) {
-                        getLogger().info(
-                                "Loading of " + newTheme + " from "
-                                        + newThemeUrl + " completed");
+                        getLogger().info("Loading of " + newTheme + " from "
+                                + newThemeUrl + " completed");
 
                         if (tagToReplace != null) {
-                            tagToReplace.getParentElement().removeChild(
-                                    tagToReplace);
+                            tagToReplace.getParentElement()
+                                    .removeChild(tagToReplace);
                         }
                         activateTheme(newTheme);
                     }
 
                     @Override
                     public void onError(ResourceLoadEvent event) {
-                        getLogger().warning(
-                                "Could not load theme from "
-                                        + getThemeUrl(newTheme));
+                        getLogger().warning("Could not load theme from "
+                                + getThemeUrl(newTheme));
                     }
                 }, null);
 
@@ -1051,8 +1050,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     protected void activateTheme(String newTheme) {
         if (activeTheme != null) {
             getWidget().getParent().removeStyleName(activeTheme);
-            VOverlay.getOverlayContainer(getConnection()).removeClassName(
-                    activeTheme);
+            VOverlay.getOverlayContainer(getConnection())
+                    .removeClassName(activeTheme);
         }
 
         String oldThemeBase = getConnection().translateVaadinUri("theme://");
@@ -1061,8 +1060,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
         if (newTheme != null) {
             getWidget().getParent().addStyleName(newTheme);
-            VOverlay.getOverlayContainer(getConnection()).addClassName(
-                    activeTheme);
+            VOverlay.getOverlayContainer(getConnection())
+                    .addClassName(activeTheme);
 
             updateVaadinFavicon(newTheme);
 
@@ -1109,9 +1108,9 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * @return The URL the theme can be loaded from
      */
     private String getThemeUrl(String theme) {
-        String themeUrl = getConnection().translateVaadinUri(
-                ApplicationConstants.VAADIN_PROTOCOL_PREFIX + "themes/" + theme
-                        + "/styles" + ".css");
+        String themeUrl = getConnection()
+                .translateVaadinUri(ApplicationConstants.VAADIN_PROTOCOL_PREFIX
+                        + "themes/" + theme + "/styles" + ".css");
         // Parameter appended to bypass caches after version upgrade.
         themeUrl += "?v=" + Version.getFullVersion();
         return themeUrl;

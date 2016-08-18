@@ -84,7 +84,8 @@ public interface ServerConnector extends Connector {
      * @return A handler registration reference that can be used to unregister
      *         the handler
      */
-    public HandlerRegistration addStateChangeHandler(StateChangeHandler handler);
+    public HandlerRegistration addStateChangeHandler(
+            StateChangeHandler handler);
 
     /**
      * Removes a handler that is called whenever any part of the state has been

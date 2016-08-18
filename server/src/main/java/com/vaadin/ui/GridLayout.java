@@ -73,9 +73,9 @@ import com.vaadin.ui.declarative.DesignContext;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class GridLayout extends AbstractLayout implements
-        Layout.AlignmentHandler, Layout.SpacingHandler, Layout.MarginHandler,
-        LayoutClickNotifier {
+public class GridLayout extends AbstractLayout
+        implements Layout.AlignmentHandler, Layout.SpacingHandler,
+        Layout.MarginHandler, LayoutClickNotifier {
 
     private GridLayoutServerRpc rpc = new GridLayoutServerRpc() {
 
@@ -191,8 +191,8 @@ public class GridLayout extends AbstractLayout implements
      *             if the cells are outside the grid area.
      */
     public void addComponent(Component component, int column1, int row1,
-            int column2, int row2) throws OverlapsException,
-            OutOfBoundsException {
+            int column2, int row2)
+            throws OverlapsException, OutOfBoundsException {
 
         if (component == null) {
             throw new NullPointerException("Component must not be null");
@@ -282,8 +282,8 @@ public class GridLayout extends AbstractLayout implements
                 .entrySet()) {
             if (componentsOverlap(entry.getValue(), area.childData)) {
                 // Component not added, overlaps with existing component
-                throw new OverlapsException(new Area(entry.getValue(),
-                        (Component) entry.getKey()));
+                throw new OverlapsException(
+                        new Area(entry.getValue(), (Component) entry.getKey()));
             }
         }
     }
@@ -413,7 +413,8 @@ public class GridLayout extends AbstractLayout implements
     public void removeComponent(int column, int row) {
 
         // Finds the area
-        for (final Iterator<Component> i = components.iterator(); i.hasNext();) {
+        for (final Iterator<Component> i = components.iterator(); i
+                .hasNext();) {
             final Component component = i.next();
             final ChildComponentData childData = getState().childData
                     .get(component);
@@ -870,7 +871,8 @@ public class GridLayout extends AbstractLayout implements
 
     /* Documented in superclass */
     @Override
-    public void replaceComponent(Component oldComponent, Component newComponent) {
+    public void replaceComponent(Component oldComponent,
+            Component newComponent) {
 
         // Gets the locations
         ChildComponentData oldLocation = getState().childData.get(oldComponent);
@@ -1132,8 +1134,8 @@ public class GridLayout extends AbstractLayout implements
      * @return Component in given cell or null if empty
      */
     public Component getComponent(int x, int y) {
-        for (Entry<Connector, ChildComponentData> entry : getState(false).childData
-                .entrySet()) {
+        for (Entry<Connector, ChildComponentData> entry : getState(
+                false).childData.entrySet()) {
             ChildComponentData childData = entry.getValue();
             if (childData.column1 <= x && x <= childData.column2
                     && childData.row1 <= y && y <= childData.row2) {
@@ -1208,9 +1210,8 @@ public class GridLayout extends AbstractLayout implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.ui.Layout.MarginHandler#setMargin(com.vaadin.shared.ui.MarginInfo
-     * )
+     * @see com.vaadin.ui.Layout.MarginHandler#setMargin(com.vaadin.shared.ui.
+     * MarginInfo )
      */
     @Override
     public void setMargin(MarginInfo marginInfo) {
@@ -1345,13 +1346,14 @@ public class GridLayout extends AbstractLayout implements
                         attr, 1, int.class);
 
                 for (int rowIndex = row; rowIndex < row + rowspan; ++rowIndex) {
-                    for (int colIndex = column; colIndex < column + colspan; ++colIndex) {
+                    for (int colIndex = column; colIndex < column
+                            + colspan; ++colIndex) {
                         if (rowIndex == rows.size()) {
                             // Rowspan with not enough rows. Fix by adding rows.
                             rows.add(new HashMap<Integer, Component>());
                         }
-                        rows.get(rowIndex)
-                                .put(colIndex + skippedColumns, child);
+                        rows.get(rowIndex).put(colIndex + skippedColumns,
+                                child);
                     }
                 }
 
@@ -1492,8 +1494,8 @@ public class GridLayout extends AbstractLayout implements
 
                     col.appendChild(childElement);
                     if (coords.row1 != coords.row2) {
-                        col.attr("rowspan", ""
-                                + (1 + coords.row2 - coords.row1));
+                        col.attr("rowspan",
+                                "" + (1 + coords.row2 - coords.row1));
                     }
 
                     colspan = 1 + coords.column2 - coords.column1;
@@ -1503,8 +1505,8 @@ public class GridLayout extends AbstractLayout implements
 
                 } else {
                     boolean hasExpands = false;
-                    if (i == 0
-                            && lastComponentOnRow(componentMap[i], j, visited)) {
+                    if (i == 0 && lastComponentOnRow(componentMap[i], j,
+                            visited)) {
                         // A column with expand and no content in the end of
                         // first row needs to be present.
                         for (int c = j; c < componentMap[i].length; ++c) {
@@ -1528,7 +1530,8 @@ public class GridLayout extends AbstractLayout implements
                         ++colspan;
                     }
 
-                    int rowspan = getRowSpan(componentMap, i, j, colspan, child);
+                    int rowspan = getRowSpan(componentMap, i, j, colspan,
+                            child);
                     if (colspan > 1) {
                         col.attr("colspan", "" + colspan);
                     }
@@ -1596,7 +1599,8 @@ public class GridLayout extends AbstractLayout implements
     private int getRowSpan(Component[][] compMap, int i, int j, int colspan,
             Component child) {
         int rowspan = 1;
-        while (i + rowspan < compMap.length && compMap[i + rowspan][j] == child) {
+        while (i + rowspan < compMap.length
+                && compMap[i + rowspan][j] == child) {
             for (int k = 0; k < colspan; ++k) {
                 if (compMap[i + rowspan][j + k] != child) {
                     return rowspan;

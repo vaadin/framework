@@ -391,8 +391,8 @@ public class DesignContext implements Serializable {
                 if ("meta".equals(childElement.tagName())) {
                     Attributes attributes = childElement.attributes();
                     if (attributes.hasKey("name")
-                            && attributes.hasKey("content")
-                            && "package-mapping".equals(attributes.get("name"))) {
+                            && attributes.hasKey("content") && "package-mapping"
+                                    .equals(attributes.get("name"))) {
                         String contentString = attributes.get("content");
                         String[] parts = contentString.split(":");
                         if (parts.length != 2) {
@@ -422,7 +422,8 @@ public class DesignContext implements Serializable {
         for (String prefix : getPackagePrefixes()) {
             // Only store the prefix-name mapping if it is not a default mapping
             // (such as "vaadin" -> "com.vaadin.ui")
-            if (!VAADIN_PREFIX.equals(prefix) && !LEGACY_PREFIX.equals(prefix)) {
+            if (!VAADIN_PREFIX.equals(prefix)
+                    && !LEGACY_PREFIX.equals(prefix)) {
                 Node newNode = doc.createElement("meta");
                 newNode.attr("name", "package-mapping");
                 String prefixToPackageName = prefix + ":" + getPackage(prefix);
@@ -623,7 +624,8 @@ public class DesignContext implements Serializable {
      * @param listener
      *            the component creation listener to be added
      */
-    public void addComponentCreationListener(ComponentCreationListener listener) {
+    public void addComponentCreationListener(
+            ComponentCreationListener listener) {
         listeners.add(listener);
     }
 
@@ -646,7 +648,8 @@ public class DesignContext implements Serializable {
      * @param component
      *            the component that was created
      */
-    private void fireComponentCreatedEvent(String localId, Component component) {
+    private void fireComponentCreatedEvent(String localId,
+            Component component) {
         ComponentCreatedEvent event = new ComponentCreatedEvent(localId,
                 component);
         for (ComponentCreationListener listener : listeners) {

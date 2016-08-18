@@ -31,8 +31,8 @@ import com.vaadin.client.ui.VCalendar;
  * 
  * since 7.1
  */
-public class DateCellContainer extends FlowPanel implements MouseDownHandler,
-        MouseUpHandler {
+public class DateCellContainer extends FlowPanel
+        implements MouseDownHandler, MouseUpHandler {
 
     private Date date;
 

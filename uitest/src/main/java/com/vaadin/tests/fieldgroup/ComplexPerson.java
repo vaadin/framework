@@ -96,8 +96,8 @@ public class ComplexPerson {
         cp.lastName = TestDataGenerator.getLastName(r);
         cp.setAlive(r.nextBoolean());
         cp.setBirthDate(TestDataGenerator.getBirthDate(r));
-        cp.setAge((int) ((new Date(2014 - 1900, 1, 1).getTime() - cp
-                .getBirthDate().getTime()) / 1000 / 3600 / 24 / 365));
+        cp.setAge((int) ((new Date(2014 - 1900, 1, 1).getTime()
+                - cp.getBirthDate().getTime()) / 1000 / 3600 / 24 / 365));
         cp.setSalary(TestDataGenerator.getSalary(r));
         cp.setAddress(ComplexAddress.create(r));
         cp.setGender(TestDataGenerator.getEnum(Gender.class, r));

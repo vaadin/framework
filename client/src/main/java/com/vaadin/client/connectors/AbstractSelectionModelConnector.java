@@ -53,8 +53,8 @@ public abstract class AbstractSelectionModelConnector<T extends SelectionModel<J
 
     protected abstract T createSelectionModel();
 
-    public abstract static class AbstractSelectionModel implements
-            SelectionModel<JsonObject> {
+    public abstract static class AbstractSelectionModel
+            implements SelectionModel<JsonObject> {
 
         @Override
         public boolean isSelected(JsonObject row) {

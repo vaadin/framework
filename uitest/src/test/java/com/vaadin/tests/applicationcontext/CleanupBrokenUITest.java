@@ -28,8 +28,8 @@ public class CleanupBrokenUITest extends SingleBrowserTest {
         // UI 1 has not yet been added in UI.init where logging takes place
         Assert.assertEquals("1. UIs in session: 0", getLogRow(0));
 
-        String url = getTestURL(getUIClass())
-                .replace("restartApplication", "1");
+        String url = getTestURL(getUIClass()).replace("restartApplication",
+                "1");
         driver.get(url);
         // UI 1 remains in session during UI2 init where logging takes place
         Assert.assertEquals("1. UIs in session: 1", getLogRow(0));

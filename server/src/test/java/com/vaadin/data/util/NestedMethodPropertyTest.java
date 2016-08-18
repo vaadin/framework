@@ -323,8 +323,8 @@ public class NestedMethodPropertyTest {
     }
 
     @Test
-    public void testSerializationWithIntermediateNull() throws IOException,
-            ClassNotFoundException {
+    public void testSerializationWithIntermediateNull()
+            throws IOException, ClassNotFoundException {
         vaadin.setManager(null);
         NestedMethodProperty<String> streetProperty = new NestedMethodProperty<String>(
                 vaadin, "manager.address.street");

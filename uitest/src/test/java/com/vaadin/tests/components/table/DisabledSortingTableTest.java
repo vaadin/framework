@@ -91,8 +91,8 @@ public class DisabledSortingTableTest extends MultiBrowserTest {
             @Override
             public String toString() {
                 // Timed out after 10 seconds waiting for ...
-                return String
-                        .format("header to get class name '%s'", className);
+                return String.format("header to get class name '%s'",
+                        className);
             }
         });
     }

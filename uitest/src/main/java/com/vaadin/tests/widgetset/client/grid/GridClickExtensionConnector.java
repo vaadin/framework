@@ -47,8 +47,8 @@ public class GridClickExtensionConnector extends AbstractExtensionConnector {
                 CellReference<?> cellRef = event.getTargetCell();
 
                 // Gather needed information.
-                String rowKey = getParent().getRowKey(
-                        (JsonObject) cellRef.getRow());
+                String rowKey = getParent()
+                        .getRowKey((JsonObject) cellRef.getRow());
                 String columnId = getParent().getColumnId(cellRef.getColumn());
                 MouseEventDetails clickDetails = MouseEventDetailsBuilder
                         .buildMouseEventDetails(event.getNativeEvent());

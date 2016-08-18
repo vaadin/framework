@@ -70,7 +70,8 @@ abstract class PushConfigurationTest extends MultiBrowserTest {
     }
 
     protected WebElement getServerCounterElement() {
-        return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[5]/VLabel[0]");
+        return vaadinElement(
+                "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[5]/VLabel[0]");
     }
 
     protected void waitForServerCounterToUpdate() {

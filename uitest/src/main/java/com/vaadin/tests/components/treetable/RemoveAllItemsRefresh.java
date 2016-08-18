@@ -80,14 +80,14 @@ public class RemoveAllItemsRefresh extends TestBase {
         containerItem = treeContainer.addItem("first");
         containerItem.getItemProperty(NAME_PROPERTY)
                 .setValue("1 NAME_PROPERTY");
-        containerItem.getItemProperty(TITLE_PROPERTY).setValue(
-                "1 TITLE_PROPERTY");
+        containerItem.getItemProperty(TITLE_PROPERTY)
+                .setValue("1 TITLE_PROPERTY");
 
         containerItem = treeContainer.addItem("second");
         containerItem.getItemProperty(NAME_PROPERTY)
                 .setValue("2 NAME_PROPERTY");
-        containerItem.getItemProperty(TITLE_PROPERTY).setValue(
-                "2 TITLE_PROPERTY");
+        containerItem.getItemProperty(TITLE_PROPERTY)
+                .setValue("2 TITLE_PROPERTY");
         treetable.setContainerDataSource(treeContainer);
     }
 

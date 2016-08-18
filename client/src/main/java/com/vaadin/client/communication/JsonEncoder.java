@@ -122,14 +122,14 @@ public class JsonEncoder {
                         Type propertyType = property.getType();
                         JsonValue encodedPropertyValue = encode(propertyValue,
                                 propertyType, connection);
-                        jsonObject
-                                .put(property.getName(), encodedPropertyValue);
+                        jsonObject.put(property.getName(),
+                                encodedPropertyValue);
                     }
                     return jsonObject;
 
                 } catch (NoDataException e) {
-                    throw new RuntimeException("Can not encode "
-                            + type.getSignature(), e);
+                    throw new RuntimeException(
+                            "Can not encode " + type.getSignature(), e);
                 }
 
             } else {
@@ -154,8 +154,8 @@ public class JsonEncoder {
             if (value != null) {
                 valueType = value.getClass().getName();
             }
-            throw new IllegalArgumentException("Cannot encode object of type "
-                    + valueType);
+            throw new IllegalArgumentException(
+                    "Cannot encode object of type " + valueType);
         }
         jsonArray.set(0, Json.create(transportType));
         jsonArray.set(1, encode(value, null, connection));
@@ -188,22 +188,23 @@ public class JsonEncoder {
         }
     }
 
-    private static JsonValue encodeChildValue(Object value,
-            Type collectionType, int typeIndex, ApplicationConnection connection) {
+    private static JsonValue encodeChildValue(Object value, Type collectionType,
+            int typeIndex, ApplicationConnection connection) {
         if (collectionType == null) {
             return encode(new UidlValue(value), null, connection);
         } else {
             assert collectionType.getParameterTypes() != null
                     && collectionType.getParameterTypes().length > typeIndex
-                    && collectionType.getParameterTypes()[typeIndex] != null : "Proper generics required for encoding child value, assertion failed for "
-                    + collectionType;
+                    && collectionType
+                            .getParameterTypes()[typeIndex] != null : "Proper generics required for encoding child value, assertion failed for "
+                                    + collectionType;
             Type childType = collectionType.getParameterTypes()[typeIndex];
             return encode(value, childType, connection);
         }
     }
 
-    private static JsonArray encodeObjectMap(Map<Object, Object> map,
-            Type type, ApplicationConnection connection) {
+    private static JsonArray encodeObjectMap(Map<Object, Object> map, Type type,
+            ApplicationConnection connection) {
         JsonArray keys = Json.createArray();
         JsonArray values = Json.createArray();
 
@@ -230,8 +231,8 @@ public class JsonEncoder {
         for (Entry<?, ?> entry : map.entrySet()) {
             Connector connector = (Connector) entry.getKey();
 
-            JsonValue encodedValue = encodeChildValue(entry.getValue(), type,
-                    1, connection);
+            JsonValue encodedValue = encodeChildValue(entry.getValue(), type, 1,
+                    connection);
 
             jsonMap.put(connector.getConnectorId(), encodedValue);
         }
@@ -239,8 +240,8 @@ public class JsonEncoder {
         return jsonMap;
     }
 
-    private static JsonValue encodeStringMap(Map<Object, Object> map,
-            Type type, ApplicationConnection connection) {
+    private static JsonValue encodeStringMap(Map<Object, Object> map, Type type,
+            ApplicationConnection connection) {
         JsonObject jsonMap = Json.createObject();
 
         for (Entry<?, ?> entry : map.entrySet()) {

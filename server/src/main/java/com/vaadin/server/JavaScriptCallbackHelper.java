@@ -89,13 +89,12 @@ public class JavaScriptCallbackHelper implements Serializable {
 
     public void invokeCallback(String name, Object... arguments) {
         if (callbacks.containsKey(name)) {
-            throw new IllegalStateException(
-                    "Can't call callback "
-                            + name
-                            + " on the client because a callback with the same name is registered on the server.");
+            throw new IllegalStateException("Can't call callback " + name
+                    + " on the client because a callback with the same name is registered on the server.");
         }
-        JsonArray args = (JsonArray) JsonCodec.encode(arguments, null,
-                Object[].class, null).getEncodedValue();
+        JsonArray args = (JsonArray) JsonCodec
+                .encode(arguments, null, Object[].class, null)
+                .getEncodedValue();
         connector.addMethodInvocationToQueue(
                 JavaScriptCallbackRpc.class.getName(), CALL_METHOD,
                 new Object[] { name, args });

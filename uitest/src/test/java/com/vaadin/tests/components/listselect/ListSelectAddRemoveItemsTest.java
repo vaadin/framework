@@ -53,8 +53,8 @@ public class ListSelectAddRemoveItemsTest extends SingleBrowserTest {
     }
 
     private void assertOptions(String... options) {
-        Assert.assertEquals(Arrays.asList(options), $(ListSelectElement.class)
-                .first().getOptions());
+        Assert.assertEquals(Arrays.asList(options),
+                $(ListSelectElement.class).first().getOptions());
     }
 
     private void click(String caption) {

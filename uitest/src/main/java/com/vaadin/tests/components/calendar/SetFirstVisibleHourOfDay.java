@@ -36,11 +36,11 @@ public class SetFirstVisibleHourOfDay extends AbstractTestUI {
         calendar = new Calendar();
 
         try {
-            BasicEvent event = new BasicEvent("EVENT NAME 1",
-                    "EVENT TOOLTIP 1",
+            BasicEvent event = new BasicEvent("EVENT NAME 1", "EVENT TOOLTIP 1",
                     new SimpleDateFormat("yyyy-MM-dd HH:mm")
-                            .parse("2013-09-05 00:00"), new SimpleDateFormat(
-                            "yyyy-MM-dd HH:mm").parse("2013-09-05 13:00"));
+                            .parse("2013-09-05 00:00"),
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm")
+                            .parse("2013-09-05 13:00"));
             event.setStyleName("color1");
             calendar.addEvent(event);
         } catch (ParseException e) {
@@ -48,10 +48,10 @@ public class SetFirstVisibleHourOfDay extends AbstractTestUI {
         }
 
         try {
-            calendar.setStartDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2013-09-01"));
-            calendar.setEndDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2013-09-30"));
+            calendar.setStartDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2013-09-01"));
+            calendar.setEndDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2013-09-30"));
         } catch (ParseException e) {
             e.printStackTrace();
         }

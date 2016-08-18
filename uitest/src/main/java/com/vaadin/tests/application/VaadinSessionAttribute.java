@@ -31,15 +31,14 @@ public class VaadinSessionAttribute extends AbstractTestUI {
         getSession().setAttribute(ATTR_NAME, Integer.valueOf(42));
         getSession().setAttribute(Integer.class, Integer.valueOf(42 * 2));
 
-        addComponent(new Button("Show attribute values",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Show attribute values", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         Notification notification = new Notification(
-                                getSession().getAttribute(ATTR_NAME)
-                                        + " & "
-                                        + getSession().getAttribute(
-                                                Integer.class));
+                                getSession().getAttribute(ATTR_NAME) + " & "
+                                        + getSession()
+                                                .getAttribute(Integer.class));
                         notification.setDelayMsec(Notification.DELAY_FOREVER);
                         notification.show(getPage());
                     }

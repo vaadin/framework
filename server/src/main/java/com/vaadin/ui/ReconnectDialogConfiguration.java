@@ -160,7 +160,8 @@ class ReconnectDialogConfigurationImpl implements ReconnectDialogConfiguration {
 
     @Override
     public int getReconnectAttempts() {
-        return ui.getState(false).reconnectDialogConfiguration.reconnectAttempts;
+        return ui
+                .getState(false).reconnectDialogConfiguration.reconnectAttempts;
     }
 
     @Override
@@ -170,7 +171,8 @@ class ReconnectDialogConfigurationImpl implements ReconnectDialogConfiguration {
 
     @Override
     public int getReconnectInterval() {
-        return ui.getState(false).reconnectDialogConfiguration.reconnectInterval;
+        return ui
+                .getState(false).reconnectDialogConfiguration.reconnectInterval;
     }
 
     @Override
@@ -180,7 +182,8 @@ class ReconnectDialogConfigurationImpl implements ReconnectDialogConfiguration {
 
     @Override
     public int getDialogGracePeriod() {
-        return ui.getState(false).reconnectDialogConfiguration.dialogGracePeriod;
+        return ui
+                .getState(false).reconnectDialogConfiguration.dialogGracePeriod;
     }
 
     @Override

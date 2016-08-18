@@ -35,10 +35,11 @@ public class SplitPositionChangeListenerTest {
     @Test
     public void testSplitPositionListenerIsTriggered() throws Exception {
         final HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
-        SplitPositionChangeListener splitPositionChangeListener = mock(SplitPositionChangeListener.class);
+        SplitPositionChangeListener splitPositionChangeListener = mock(
+                SplitPositionChangeListener.class);
         splitPanel.addSplitPositionChangeListener(splitPositionChangeListener);
         splitPanel.setSplitPosition(50, Unit.PERCENTAGE);
-        verify(splitPositionChangeListener).onSplitPositionChanged(
-                any(SplitPositionChangeEvent.class));
+        verify(splitPositionChangeListener)
+                .onSplitPositionChanged(any(SplitPositionChangeEvent.class));
     }
 }

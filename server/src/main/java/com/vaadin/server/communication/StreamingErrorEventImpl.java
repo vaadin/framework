@@ -18,8 +18,8 @@ package com.vaadin.server.communication;
 import com.vaadin.server.StreamVariable.StreamingErrorEvent;
 
 @SuppressWarnings("serial")
-final class StreamingErrorEventImpl extends AbstractStreamingEvent implements
-        StreamingErrorEvent {
+final class StreamingErrorEventImpl extends AbstractStreamingEvent
+        implements StreamingErrorEvent {
 
     private final Exception exception;
 

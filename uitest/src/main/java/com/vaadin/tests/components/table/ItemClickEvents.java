@@ -57,9 +57,7 @@ public class ItemClickEvents extends AbstractTestUI {
         tree.setParent("2. Child 1", "Root 2");
         tree.addItem("2. Child 2");
         tree.setParent("2. Child 2", "Root 2");
-        tree.addContainerProperty(
-                "icon",
-                ExternalResource.class,
+        tree.addContainerProperty("icon", ExternalResource.class,
                 new ExternalResource(
                         "https://vaadin.com/vaadin-theme/images/vaadin-logo.png"));
 
@@ -144,16 +142,19 @@ public class ItemClickEvents extends AbstractTestUI {
         b = new CheckBox("selectable");
         if (c instanceof Table) {
             b.setValue(((Table) c).isSelectable());
-            b.addValueChangeListener(event -> ((Table) c).setSelectable(event.getValue()));
+            b.addValueChangeListener(
+                    event -> ((Table) c).setSelectable(event.getValue()));
         } else if (c instanceof Tree) {
             b.setValue(((Tree) c).isSelectable());
-            b.addValueChangeListener(event -> ((Tree) c).setSelectable(event.getValue()));
+            b.addValueChangeListener(
+                    event -> ((Tree) c).setSelectable(event.getValue()));
         }
         b.setImmediate(true);
         layout.addComponent(b);
         b = new CheckBox("nullsel");
         b.setValue(c.isNullSelectionAllowed());
-        b.addValueChangeListener(event -> c.setNullSelectionAllowed(event.getValue()));
+        b.addValueChangeListener(
+                event -> c.setNullSelectionAllowed(event.getValue()));
         b.setImmediate(true);
         layout.addComponent(b);
         b = new CheckBox("multi");

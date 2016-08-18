@@ -148,8 +148,8 @@ public class BeanItemTest {
         }
     }
 
-    protected static interface MySubInterface extends MySuperInterface,
-            MySuperInterface2 {
+    protected static interface MySubInterface
+            extends MySuperInterface, MySuperInterface2 {
         public int getSub();
 
         public void setSub(int i);
@@ -203,8 +203,8 @@ public class BeanItemTest {
     public void testGetInterfaceProperties() throws SecurityException,
             NoSuchMethodException, IllegalArgumentException,
             IllegalAccessException, InvocationTargetException {
-        Method method = BeanItem.class.getDeclaredMethod(
-                "getPropertyDescriptors", Class.class);
+        Method method = BeanItem.class
+                .getDeclaredMethod("getPropertyDescriptors", Class.class);
         method.setAccessible(true);
         LinkedHashMap<String, VaadinPropertyDescriptor<Class>> propertyDescriptors = (LinkedHashMap<String, VaadinPropertyDescriptor<Class>>) method
                 .invoke(null, MySuperInterface.class);
@@ -222,8 +222,8 @@ public class BeanItemTest {
     public void testGetSuperInterfaceProperties() throws SecurityException,
             NoSuchMethodException, IllegalArgumentException,
             IllegalAccessException, InvocationTargetException {
-        Method method = BeanItem.class.getDeclaredMethod(
-                "getPropertyDescriptors", Class.class);
+        Method method = BeanItem.class
+                .getDeclaredMethod("getPropertyDescriptors", Class.class);
         method.setAccessible(true);
         LinkedHashMap<String, VaadinPropertyDescriptor<Class>> propertyDescriptors = (LinkedHashMap<String, VaadinPropertyDescriptor<Class>>) method
                 .invoke(null, MySubInterface.class);
@@ -314,14 +314,14 @@ public class BeanItemTest {
     public void testPropertyTypes() {
         BeanItem<MyClass> item = new BeanItem<MyClass>(new MyClass("bean1"));
 
-        Assert.assertTrue(Integer.class.equals(item.getItemProperty(
-                "superPrivate").getType()));
-        Assert.assertTrue(Double.class.equals(item.getItemProperty(
-                "superProtected").getType()));
-        Assert.assertTrue(Boolean.class.equals(item.getItemProperty(
-                "superPublic").getType()));
-        Assert.assertTrue(String.class.equals(item.getItemProperty("name")
-                .getType()));
+        Assert.assertTrue(Integer.class
+                .equals(item.getItemProperty("superPrivate").getType()));
+        Assert.assertTrue(Double.class
+                .equals(item.getItemProperty("superProtected").getType()));
+        Assert.assertTrue(Boolean.class
+                .equals(item.getItemProperty("superPublic").getType()));
+        Assert.assertTrue(
+                String.class.equals(item.getItemProperty("name").getType()));
     }
 
     @Test
@@ -335,12 +335,12 @@ public class BeanItemTest {
     @Test
     public void testCustomProperties() throws Exception {
         LinkedHashMap<String, VaadinPropertyDescriptor<MyClass>> propertyDescriptors = new LinkedHashMap<String, VaadinPropertyDescriptor<MyClass>>();
-        propertyDescriptors.put(
-                "myname",
+        propertyDescriptors.put("myname",
                 new MethodPropertyDescriptor<BeanItemTest.MyClass>("myname",
-                        MyClass.class, MyClass.class
-                                .getDeclaredMethod("getName"), MyClass.class
-                                .getDeclaredMethod("setName", String.class)));
+                        MyClass.class,
+                        MyClass.class.getDeclaredMethod("getName"),
+                        MyClass.class.getDeclaredMethod("setName",
+                                String.class)));
         MyClass instance = new MyClass("bean1");
         Constructor<BeanItem> constructor = BeanItem.class
                 .getDeclaredConstructor(Object.class, Map.class);

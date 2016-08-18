@@ -9,13 +9,13 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.server.component.AbstractListenerMethodsTestBase;
 
-public class IndexedContainerListenersTest extends
-        AbstractListenerMethodsTestBase {
+public class IndexedContainerListenersTest
+        extends AbstractListenerMethodsTestBase {
 
     @Test
     public void testValueChangeListenerAddGetRemove() throws Exception {
-        testListenerAddGetRemove(IndexedContainer.class,
-                ValueChangeEvent.class, ValueChangeListener.class);
+        testListenerAddGetRemove(IndexedContainer.class, ValueChangeEvent.class,
+                ValueChangeListener.class);
     }
 
     @Test

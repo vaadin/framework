@@ -33,8 +33,8 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.0
  */
-public class LegacyStringToDoubleConverter extends
-        LegacyAbstractStringToNumberConverter<Double> {
+public class LegacyStringToDoubleConverter
+        extends LegacyAbstractStringToNumberConverter<Double> {
 
     /*
      * (non-Javadoc)

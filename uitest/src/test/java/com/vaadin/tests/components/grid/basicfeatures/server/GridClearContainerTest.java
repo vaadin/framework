@@ -37,15 +37,15 @@ public class GridClearContainerTest extends MultiBrowserTest {
     @Test
     public void clearAndReadd() {
         openTestURL();
-        ButtonElement button = $(ButtonElement.class).caption(
-                "Clear and re-add").first();
+        ButtonElement button = $(ButtonElement.class)
+                .caption("Clear and re-add").first();
         GridElement grid = $(GridElement.class).first();
         Assert.assertEquals(ERRORNOTE, "default", grid.getCell(0, 0).getText());
         Assert.assertEquals(ERRORNOTE, "default", grid.getCell(1, 0).getText());
         button.click();
-        Assert.assertEquals(ERRORNOTE, "Updated value 1", grid.getCell(0, 0)
-                .getText());
-        Assert.assertEquals(ERRORNOTE, "Updated value 2", grid.getCell(1, 0)
-                .getText());
+        Assert.assertEquals(ERRORNOTE, "Updated value 1",
+                grid.getCell(0, 0).getText());
+        Assert.assertEquals(ERRORNOTE, "Updated value 2",
+                grid.getCell(1, 0).getText());
     }
 }

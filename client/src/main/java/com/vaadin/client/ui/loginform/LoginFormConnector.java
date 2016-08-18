@@ -41,8 +41,8 @@ import com.vaadin.shared.ui.loginform.LoginFormState;
 import com.google.gwt.core.client.Scheduler;
 
 @Connect(com.vaadin.ui.LoginForm.class)
-public class LoginFormConnector extends
-        AbstractSingleComponentContainerConnector {
+public class LoginFormConnector
+        extends AbstractSingleComponentContainerConnector {
 
     private VLegacyTextField passwordField;
     private VLegacyTextField userField;
@@ -63,13 +63,15 @@ public class LoginFormConnector extends
         super.init();
 
         loginFormRpc = getRpcProxy(LoginFormRpc.class);
-        getWidget().addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-            @Override
-            public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
-                valuesChanged();
-                loginFormRpc.submitCompleted();
-            }
-        });
+        getWidget().addSubmitCompleteHandler(
+                new FormPanel.SubmitCompleteHandler() {
+                    @Override
+                    public void onSubmitComplete(
+                            FormPanel.SubmitCompleteEvent event) {
+                        valuesChanged();
+                        loginFormRpc.submitCompleted();
+                    }
+                });
     }
 
     @Override
@@ -78,7 +80,8 @@ public class LoginFormConnector extends
     }
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         ComponentConnector content = getContent();
         if (content != null) {
             getWidget().setWidget(getContentWidget());
@@ -90,7 +93,8 @@ public class LoginFormConnector extends
         super.onStateChanged(stateChangeEvent);
 
         LoginFormState state = getState();
-        userField = configureTextField(state.userNameFieldConnector, "username");
+        userField = configureTextField(state.userNameFieldConnector,
+                "username");
         passwordField = configureTextField(state.passwordFieldConnector,
                 "password");
         addSubmitButtonClickHandler(state.loginButtonConnector);
@@ -98,9 +102,11 @@ public class LoginFormConnector extends
                 getResourceUrl(LoginFormConstants.LOGIN_RESOURCE_NAME));
     }
 
-    private VLegacyTextField configureTextField(Connector connector, String id) {
+    private VLegacyTextField configureTextField(Connector connector,
+            String id) {
         if (connector != null) {
-            VLegacyTextField textField = ((LegacyTextFieldConnector) connector).getWidget();
+            VLegacyTextField textField = ((LegacyTextFieldConnector) connector)
+                    .getWidget();
 
             textField.addKeyDownHandler(new SubmitKeyHandler());
 
@@ -135,11 +141,11 @@ public class LoginFormConnector extends
 
     private void addSubmitButtonClickHandler(Connector buttonConnector) {
         if (buttonConnector instanceof ButtonConnector) {
-            addSubmitButtonClickHandler(((ButtonConnector) buttonConnector)
-                    .getWidget());
+            addSubmitButtonClickHandler(
+                    ((ButtonConnector) buttonConnector).getWidget());
         } else if (buttonConnector instanceof NativeButtonConnector) {
-            addSubmitButtonClickHandler(((NativeButtonConnector) buttonConnector)
-                    .getWidget());
+            addSubmitButtonClickHandler(
+                    ((NativeButtonConnector) buttonConnector).getWidget());
         }
     }
 

@@ -881,9 +881,9 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      *             getWindow().showNotification(&quot;Click!&quot;);
      * 
      *         // Display source component and event class names
-     *         status.setValue(&quot;Event from &quot; + event.getSource().getClass()
-     *                 .getName()
-     *                 + &quot;: &quot; + event.getClass().getName());
+     *         status.setValue(
+     *                 &quot;Event from &quot; + event.getSource().getClass().getName()
+     *                         + &quot;: &quot; + event.getClass().getName());
      *     }
      * }
      * 
@@ -907,14 +907,14 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
          * <pre>
          * public void componentEvent(Event event) {
          *     // Act according to the source of the event
-         *     if (event.getSource() == ok &amp;&amp; event
-         *             .getClass() == Button.ClickEvent.class)
+         *     if (event.getSource() == ok
+         *             &amp;&amp; event.getClass() == Button.ClickEvent.class)
          *         getWindow().showNotification(&quot;Click!&quot;);
          * 
          *     // Display source component and event class names
-         *     status.setValue(&quot;Event from &quot; + event.getSource().getClass()
-         *             .getName()
-         *             + &quot;: &quot; + event.getClass().getName());
+         *     status.setValue(
+         *             &quot;Event from &quot; + event.getSource().getClass().getName() + &quot;: &quot;
+         *                     + event.getClass().getName());
          * }
          * </pre>
          * 
@@ -961,9 +961,9 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      *         if (event.getSource() == ok)
      *             getWindow().showNotification(&quot;Click!&quot;);
      * 
-     *         status.setValue(&quot;Event from &quot; + event.getSource().getClass()
-     *                 .getName()
-     *                 + &quot;: &quot; + event.getClass().getName());
+     *         status.setValue(
+     *                 &quot;Event from &quot; + event.getSource().getClass().getName()
+     *                         + &quot;: &quot; + event.getClass().getName());
      *     }
      * }
      * 

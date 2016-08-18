@@ -40,8 +40,8 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class HeartbeatHandler extends SynchronizedRequestHandler implements
-        SessionExpiredHandler {
+public class HeartbeatHandler extends SynchronizedRequestHandler
+        implements SessionExpiredHandler {
 
     @Override
     protected boolean canHandleRequest(VaadinRequest request) {
@@ -68,7 +68,8 @@ public class HeartbeatHandler extends SynchronizedRequestHandler implements
             // complain about the empty response body (#12182)
             response.setHeader("Content-Type", "text/plain");
         } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "UI not found");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND,
+                    "UI not found");
         }
 
         return true;

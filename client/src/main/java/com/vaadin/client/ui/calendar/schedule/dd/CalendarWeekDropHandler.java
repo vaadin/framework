@@ -121,7 +121,8 @@ public class CalendarWeekDropHandler extends CalendarDropHandler {
         return DOM.isOrHasChild(weekGridElement, elementOver)
                 && !DOM.isOrHasChild(timeBarElement, elementOver)
                 && todayBarElement != elementOver
-                && (WidgetUtil.findWidget(elementOver, DateCellDayEvent.class) == null);
+                && (WidgetUtil.findWidget(elementOver,
+                        DateCellDayEvent.class) == null);
     }
 
     /*

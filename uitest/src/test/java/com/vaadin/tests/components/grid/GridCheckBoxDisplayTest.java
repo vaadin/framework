@@ -35,8 +35,8 @@ public class GridCheckBoxDisplayTest extends SingleBrowserTest {
 
         Assert.assertEquals("First item had wrong value", "true",
                 grid.getCell(0, 0).getText());
-        Assert.assertEquals("Second item had wrong value", "false", grid
-                .getCell(1, 0).getText());
+        Assert.assertEquals("Second item had wrong value", "false",
+                grid.getCell(1, 0).getText());
 
         // First edit false item and see that the CheckBox is unchecked
         grid.getCell(1, 0).doubleClick();

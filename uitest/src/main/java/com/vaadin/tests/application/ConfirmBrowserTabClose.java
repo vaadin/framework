@@ -38,8 +38,8 @@ public class ConfirmBrowserTabClose extends AbstractTestUIWithLog {
             }
         });
         addComponent(b);
-        getPage().getJavaScript().eval(
-                "window.addEventListener('beforeunload', function (e) {"
+        getPage().getJavaScript()
+                .eval("window.addEventListener('beforeunload', function (e) {"
                         + "var confirmationMessage = 'Please stay!';"
                         + "e.returnValue = confirmationMessage;"
                         + "return confirmationMessage;" + "});");

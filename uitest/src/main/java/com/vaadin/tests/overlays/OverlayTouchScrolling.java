@@ -35,8 +35,8 @@ public class OverlayTouchScrolling extends AbstractTestUI {
             @Override
             public void buttonClick(ClickEvent event) {
 
-                Notification
-                        .show("Now close this and you can scroll in mad places.");
+                Notification.show(
+                        "Now close this and you can scroll in mad places.");
                 green.addComponent(new Label(
                         "Thank you for clicking, now scroll (with touch device) to area without green background, which shouldn't be possible."));
             }

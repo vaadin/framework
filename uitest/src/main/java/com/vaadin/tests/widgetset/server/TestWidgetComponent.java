@@ -52,10 +52,10 @@ public class TestWidgetComponent extends AbstractComponent {
         Widgetset widgetset = uiClass.getAnnotation(Widgetset.class);
         if (widgetset == null
                 || !widgetset.value().equals(TestingWidgetSet.NAME)) {
-            throw new IllegalStateException("You must add @"
-                    + Widgetset.class.getSimpleName() + "("
-                    + TestingWidgetSet.class.getSimpleName() + ".NAME) to "
-                    + uiClass.getSimpleName());
+            throw new IllegalStateException(
+                    "You must add @" + Widgetset.class.getSimpleName() + "("
+                            + TestingWidgetSet.class.getSimpleName()
+                            + ".NAME) to " + uiClass.getSimpleName());
         }
     }
 

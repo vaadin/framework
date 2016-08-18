@@ -53,7 +53,8 @@ import java.util.Iterator;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class CustomComponent extends AbstractComponent implements HasComponents {
+public class CustomComponent extends AbstractComponent
+        implements HasComponents {
 
     /**
      * The root component implementing the custom component.

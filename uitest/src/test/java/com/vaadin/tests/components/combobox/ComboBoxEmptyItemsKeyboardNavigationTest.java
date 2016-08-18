@@ -13,8 +13,8 @@ import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
 import com.vaadin.tests.tb3.newelements.ComboBoxElement;
 
-public class ComboBoxEmptyItemsKeyboardNavigationTest extends
-        SingleBrowserTestPhantomJS2 {
+public class ComboBoxEmptyItemsKeyboardNavigationTest
+        extends SingleBrowserTestPhantomJS2 {
 
     @Test
     public void navigatingUpOnAnEmptyMenuDoesntThrowErrors() {

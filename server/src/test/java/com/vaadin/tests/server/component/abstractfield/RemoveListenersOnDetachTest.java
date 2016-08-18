@@ -71,8 +71,8 @@ public class RemoveListenersOnDetachTest {
         }
 
         @Override
-        public void setValue(String newValue) throws ReadOnlyException,
-                ConversionException {
+        public void setValue(String newValue)
+                throws ReadOnlyException, ConversionException {
             fireValueChange();
         }
 

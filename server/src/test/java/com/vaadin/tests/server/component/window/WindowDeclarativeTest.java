@@ -169,10 +169,8 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
         Label assistive2 = new Label("More assistive text");
 
         String design = "<vaadin-window>"
-                + createElement(assistive1)
-                        .attr(":assistive-description", true)
-                + createElement(new Button("OK"))
-                + createElement(assistive2)
+                + createElement(assistive1).attr(":assistive-description", true)
+                + createElement(new Button("OK")) + createElement(assistive2)
                         .attr(":assistive-description", true);
 
         Window expected = new Window();
@@ -181,12 +179,10 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
 
         testRead(design, expected);
 
-        String written = "<vaadin-window>"
-                + createElement(new Button("OK"))
-                + createElement(assistive1)
-                        .attr(":assistive-description", true)
-                + createElement(assistive2)
-                        .attr(":assistive-description", true);
+        String written = "<vaadin-window>" + createElement(new Button("OK"))
+                + createElement(assistive1).attr(":assistive-description", true)
+                + createElement(assistive2).attr(":assistive-description",
+                        true);
 
         testWrite(written, expected);
     }

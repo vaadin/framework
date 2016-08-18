@@ -27,8 +27,8 @@ import com.vaadin.tests.contextclick.BrowserContextMenuInSubComponent.BrowserCon
  * Client-side connector of the {@link BrowserContextMenuExtension}.
  */
 @Connect(BrowserContextMenuExtension.class)
-public class BrowserContextMenuExtensionConnector extends
-        AbstractExtensionConnector {
+public class BrowserContextMenuExtensionConnector
+        extends AbstractExtensionConnector {
 
     @Override
     protected void extend(ServerConnector target) {

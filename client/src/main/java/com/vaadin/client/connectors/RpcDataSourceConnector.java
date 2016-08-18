@@ -133,8 +133,8 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
 
             Range cached = getCachedRange();
 
-            rpcProxy.requestRows(firstRowIndex, numberOfRows,
-                    cached.getStart(), cached.length());
+            rpcProxy.requestRows(firstRowIndex, numberOfRows, cached.getStart(),
+                    cached.length());
 
             /*
              * Show the progress indicator if there is a pending data request

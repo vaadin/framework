@@ -31,8 +31,8 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * 
  * @author Vaadin Ltd
  */
-public class TableWithContainerRequiringEqualsForItemIdTest extends
-        MultiBrowserTest {
+public class TableWithContainerRequiringEqualsForItemIdTest
+        extends MultiBrowserTest {
 
     @Test
     public void testSorting() {
@@ -68,8 +68,8 @@ public class TableWithContainerRequiringEqualsForItemIdTest extends
     }
 
     private void checkFirstCell(TableElement table, String expected) {
-        assertEquals("unexpected contents", expected, table.getCell(0, 0)
-                .getText());
+        assertEquals("unexpected contents", expected,
+                table.getCell(0, 0).getText());
     }
 
     private void clickTableHeaderToSort(TableElement table) {

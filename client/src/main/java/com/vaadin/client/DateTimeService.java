@@ -152,8 +152,8 @@ public class DateTimeService {
         try {
             firstDay = LocaleService.getFirstDayOfWeek(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            getLogger().log(Level.SEVERE,
-                    "Locale not loaded, using fallback 0", e);
+            getLogger().log(Level.SEVERE, "Locale not loaded, using fallback 0",
+                    e);
             firstDay = 0;
         }
         int start = dateForFirstOfThisMonth.getDay() - firstDay;
@@ -278,16 +278,16 @@ public class DateTimeService {
         // Find nearest thursday (defines the week in ISO 8601). The week number
         // for the nearest thursday is the same as for the target date.
         int nearestThursdayDiff = 4 - dayOfWeek; // 4 is thursday
-        Date nearestThursday = new Date(date.getTime() + nearestThursdayDiff
-                * MILLISECONDS_PER_DAY);
+        Date nearestThursday = new Date(
+                date.getTime() + nearestThursdayDiff * MILLISECONDS_PER_DAY);
 
         Date firstOfJanuary = new Date(nearestThursday.getYear(), 0, 1);
         long timeDiff = nearestThursday.getTime() - firstOfJanuary.getTime();
 
         // Rounding the result, as the division doesn't result in an integer
         // when the given date is inside daylight saving time period.
-        int daysSinceFirstOfJanuary = (int) Math.round((double) timeDiff
-                / MILLISECONDS_PER_DAY);
+        int daysSinceFirstOfJanuary = (int) Math
+                .round((double) timeDiff / MILLISECONDS_PER_DAY);
 
         int weekNumber = (daysSinceFirstOfJanuary) / 7 + 1;
 
@@ -343,8 +343,8 @@ public class DateTimeService {
                 formatStr = formatStr.replaceAll("'([E]{4,})'", dayName);
                 formatStr = formatStr.replaceAll("([E]{4,})'", "'" + dayName);
                 formatStr = formatStr.replaceAll("'([E]{4,})", dayName + "'");
-                formatStr = formatStr
-                        .replaceAll("[E]{4,}", "'" + dayName + "'");
+                formatStr = formatStr.replaceAll("[E]{4,}",
+                        "'" + dayName + "'");
             }
         }
 
@@ -363,8 +363,8 @@ public class DateTimeService {
                 formatStr = formatStr.replaceAll("'([E]{3,})'", dayName);
                 formatStr = formatStr.replaceAll("([E]{3,})'", "'" + dayName);
                 formatStr = formatStr.replaceAll("'([E]{3,})", dayName + "'");
-                formatStr = formatStr
-                        .replaceAll("[E]{3,}", "'" + dayName + "'");
+                formatStr = formatStr.replaceAll("[E]{3,}",
+                        "'" + dayName + "'");
             }
         }
 
@@ -386,8 +386,8 @@ public class DateTimeService {
                 formatStr = formatStr.replaceAll("'([M]{4,})'", monthName);
                 formatStr = formatStr.replaceAll("([M]{4,})'", "'" + monthName);
                 formatStr = formatStr.replaceAll("'([M]{4,})", monthName + "'");
-                formatStr = formatStr.replaceAll("[M]{4,}", "'" + monthName
-                        + "'");
+                formatStr = formatStr.replaceAll("[M]{4,}",
+                        "'" + monthName + "'");
             }
         }
 
@@ -406,8 +406,8 @@ public class DateTimeService {
                 formatStr = formatStr.replaceAll("'([M]{3,})'", monthName);
                 formatStr = formatStr.replaceAll("([M]{3,})'", "'" + monthName);
                 formatStr = formatStr.replaceAll("'([M]{3,})", monthName + "'");
-                formatStr = formatStr.replaceAll("[M]{3,}", "'" + monthName
-                        + "'");
+                formatStr = formatStr.replaceAll("[M]{3,}",
+                        "'" + monthName + "'");
             }
         }
 
@@ -490,8 +490,8 @@ public class DateTimeService {
 
         // Some version of Firefox sets the timestamp to 0 if parsing fails.
         if (date != null && date.getTime() == 0) {
-            throw new IllegalArgumentException("Parsing of '" + dateString
-                    + "' failed");
+            throw new IllegalArgumentException(
+                    "Parsing of '" + dateString + "' failed");
         }
 
         return date;

@@ -47,8 +47,8 @@ public class MenuTooltipTest extends MultiBrowserTest {
     public void testToolTipDelay() throws InterruptedException {
         openTestURL();
 
-        Coordinates elementCoordinates = getCoordinates($(MenuBarElement.class)
-                .first());
+        Coordinates elementCoordinates = getCoordinates(
+                $(MenuBarElement.class).first());
         sleep(1000);
 
         Mouse mouse = ((HasInputDevices) getDriver()).getMouse();

@@ -42,8 +42,8 @@ public class DynamicViewportEmptyTest extends MultiBrowserTest {
     public void testGeneratedEmptyViewport() {
         openTestURL();
 
-        List<WebElement> viewportElements = findElements(By
-                .cssSelector("meta[name=viewport]"));
+        List<WebElement> viewportElements = findElements(
+                By.cssSelector("meta[name=viewport]"));
 
         Assert.assertTrue("There should be no viewport tags",
                 viewportElements.isEmpty());

@@ -78,8 +78,8 @@ public class WeeklyLongEvents extends HorizontalPanel implements HasTooltipKey {
             Date dcDate = dc.getDate();
             int comp = dcDate.compareTo(from);
             int comp2 = dcDate.compareTo(to);
-            WeeklyLongEventsDateCell eventLabel = dc.getDateCell(calendarEvent
-                    .getSlotIndex());
+            WeeklyLongEventsDateCell eventLabel = dc
+                    .getDateCell(calendarEvent.getSlotIndex());
             eventLabel.setStylePrimaryName("v-calendar-event");
             if (comp >= 0 && comp2 <= 0) {
                 eventLabel.setEvent(calendarEvent);
@@ -176,8 +176,8 @@ public class WeeklyLongEvents extends HorizontalPanel implements HasTooltipKey {
                 dc.setWidth(cellWidth + "px");
 
             } else {
-                dc.setWidth(calendar.getWeekGrid().getDateCellWidths()[i]
-                        + "px");
+                dc.setWidth(
+                        calendar.getWeekGrid().getDateCellWidths()[i] + "px");
             }
         }
     }

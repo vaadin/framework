@@ -37,8 +37,8 @@ public class TableParentEnabledStateChange extends AbstractTestUIWithLog {
 
         final MyCustomComponent customComponent = new MyCustomComponent();
 
-        toggle = new Button("Toggle enabled state ; "
-                + customComponent.isEnabled());
+        toggle = new Button(
+                "Toggle enabled state ; " + customComponent.isEnabled());
         toggle.addClickListener(new Button.ClickListener() {
 
             @Override

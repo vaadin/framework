@@ -9,18 +9,10 @@ import com.vaadin.ui.ComboBox;
 
 public class ComboBoxSuggestionPopupWidthPercentage extends AbstractTestUI {
 
-    private static List<String> items = Arrays
-            .asList("abc",
-                    "cde",
-                    "efg",
-                    "ghi",
-                    "ijk",
-                    "more items 1",
-                    "more items 2",
-                    "more items 3",
-                    "Ridicilously long item caption so we can see how the ComboBox displays ridicilously long captions in the suggestion pop-up",
-                    "more items 4", "more items 5", "more items 6",
-                    "more items 7");
+    private static List<String> items = Arrays.asList("abc", "cde", "efg",
+            "ghi", "ijk", "more items 1", "more items 2", "more items 3",
+            "Ridicilously long item caption so we can see how the ComboBox displays ridicilously long captions in the suggestion pop-up",
+            "more items 4", "more items 5", "more items 6", "more items 7");
 
     @Override
     protected void setup(VaadinRequest request) {

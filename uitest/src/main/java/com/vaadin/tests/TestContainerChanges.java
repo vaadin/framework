@@ -72,8 +72,8 @@ public class TestContainerChanges extends CustomComponent {
         tbl2.addListener(new Table.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                System.err.println("Value now "
-                        + event.getProperty().getValue());
+                System.err
+                        .println("Value now " + event.getProperty().getValue());
 
             }
         });

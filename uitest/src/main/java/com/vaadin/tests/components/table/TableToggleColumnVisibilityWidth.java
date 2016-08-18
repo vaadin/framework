@@ -58,7 +58,8 @@ public class TableToggleColumnVisibilityWidth extends AbstractTestUI {
                 if (detailed) {
                     table.setVisibleColumns(new Object[] { "Name" });
                 } else {
-                    table.setVisibleColumns(new Object[] { "Name", "Last Name" });
+                    table.setVisibleColumns(
+                            new Object[] { "Name", "Last Name" });
                 }
                 detailed = !detailed;
             }

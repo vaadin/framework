@@ -30,11 +30,13 @@ import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
  * @since
  * @author Vaadin Ltd
  */
-public abstract class GridStaticSectionTest extends GridBasicClientFeaturesTest {
+public abstract class GridStaticSectionTest
+        extends GridBasicClientFeaturesTest {
 
     protected void assertHeaderTexts(int headerId, int rowIndex) {
         int i = 0;
-        for (TestBenchElement cell : getGridElement().getHeaderCells(rowIndex)) {
+        for (TestBenchElement cell : getGridElement()
+                .getHeaderCells(rowIndex)) {
             WebElement content = cell.findElement(By.tagName("div"));
 
             if (i % 3 == 0) {
@@ -56,7 +58,8 @@ public abstract class GridStaticSectionTest extends GridBasicClientFeaturesTest 
 
     protected void assertFooterTexts(int footerId, int rowIndex) {
         int i = 0;
-        for (TestBenchElement cell : getGridElement().getFooterCells(rowIndex)) {
+        for (TestBenchElement cell : getGridElement()
+                .getFooterCells(rowIndex)) {
             WebElement content = cell.findElement(By.tagName("div"));
 
             if (i % 3 == 0) {

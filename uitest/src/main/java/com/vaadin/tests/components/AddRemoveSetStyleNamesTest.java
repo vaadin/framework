@@ -29,8 +29,9 @@ public class AddRemoveSetStyleNamesTest extends TestBase {
             @Override
             public void buttonClick(ClickEvent event) {
                 String style = (String) event.getButton().getData();
-                setComponentsStyle(style, !popupDateField.getStyleName()
-                        .contains(style), event.getButton());
+                setComponentsStyle(style,
+                        !popupDateField.getStyleName().contains(style),
+                        event.getButton());
             }
         };
 

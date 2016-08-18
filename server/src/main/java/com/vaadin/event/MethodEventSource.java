@@ -91,7 +91,8 @@ public interface MethodEventSource extends Serializable {
      *             unless <code>method</code> has exactly one match in
      *             <code>object</code>
      */
-    public void addListener(Class<?> eventType, Object object, String methodName);
+    public void addListener(Class<?> eventType, Object object,
+            String methodName);
 
     /**
      * Removes all registered listeners matching the given parameters. Since
@@ -132,7 +133,8 @@ public interface MethodEventSource extends Serializable {
      *            the method owned by the target that's registered to listen to
      *            events of type eventType.
      */
-    public void removeListener(Class<?> eventType, Object target, Method method);
+    public void removeListener(Class<?> eventType, Object target,
+            Method method);
 
     /**
      * <p>

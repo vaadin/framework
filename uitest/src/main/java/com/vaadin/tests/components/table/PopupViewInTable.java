@@ -41,8 +41,8 @@ public class PopupViewInTable extends AbstractTestUI {
     }
 
     private Component createContent() {
-        VerticalLayout vl = new VerticalLayout(new Label("Hello"), new Button(
-                "World"));
+        VerticalLayout vl = new VerticalLayout(new Label("Hello"),
+                new Button("World"));
         return vl;
     }
 

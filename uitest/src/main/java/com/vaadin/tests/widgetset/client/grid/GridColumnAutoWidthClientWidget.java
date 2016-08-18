@@ -24,8 +24,8 @@ import com.vaadin.client.widget.grid.datasources.ListDataSource;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.SelectionMode;
 
-public class GridColumnAutoWidthClientWidget extends
-        PureGWTTestApplication<Grid<List<String>>> {
+public class GridColumnAutoWidthClientWidget
+        extends PureGWTTestApplication<Grid<List<String>>> {
 
     private Grid<List<String>> grid;
 

@@ -115,11 +115,13 @@ public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
         private LegacyTextField address_streetAddress = new LegacyTextField(
                 "Street address");
         @PropertyId("address.postalCode")
-        private LegacyTextField address_postalCode = new LegacyTextField("Postal code");
+        private LegacyTextField address_postalCode = new LegacyTextField(
+                "Postal code");
         @PropertyId("address.city")
         private LegacyTextField address_city = new LegacyTextField("City");
         @PropertyId("address.country")
-        private LegacyTextField address_country = new LegacyTextField("Country");
+        private LegacyTextField address_country = new LegacyTextField(
+                "Country");
 
         public CustomForm() {
             fieldGroup.bindMemberFields(this);

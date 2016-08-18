@@ -88,11 +88,11 @@ public class ConnectorResourceHandler implements RequestHandler {
                 .setCurrent(ui);
         try {
             if (!connector.handleConnectorRequest(request, response, key)) {
-                return error(request, response, connector.getClass()
-                        .getSimpleName()
-                        + " ("
-                        + connector.getConnectorId()
-                        + ") did not handle connector request for " + key);
+                return error(request, response,
+                        connector.getClass().getSimpleName() + " ("
+                                + connector.getConnectorId()
+                                + ") did not handle connector request for "
+                                + key);
             }
         } catch (Exception e) {
             session.lock();
@@ -120,16 +120,15 @@ public class ConnectorResourceHandler implements RequestHandler {
 
             if (!loggedDecodingWarning) {
                 loggedDecodingWarning = true;
-                getLogger()
-                        .warning(
-                                "Request path contains a new line character. This typically means that the server is incorrectly configured to use something else than UTF-8 for URL decoding (requestPath: "
-                                        + requestPath + ")");
+                getLogger().warning(
+                        "Request path contains a new line character. This typically means that the server is incorrectly configured to use something else than UTF-8 for URL decoding (requestPath: "
+                                + requestPath + ")");
             }
         }
     }
 
-    private static boolean error(VaadinRequest request,
-            VaadinResponse response, String logMessage) throws IOException {
+    private static boolean error(VaadinRequest request, VaadinResponse response,
+            String logMessage) throws IOException {
         getLogger().log(Level.WARNING, logMessage);
         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                 request.getPathInfo() + " can not be found");

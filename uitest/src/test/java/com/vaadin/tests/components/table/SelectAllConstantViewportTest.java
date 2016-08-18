@@ -39,8 +39,8 @@ public class SelectAllConstantViewportTest extends MultiBrowserTest {
         CheckBoxElement checkbox = $(CheckBoxElement.class).first();
 
         WebElement row = $(TableElement.class).first().getCell(190, 0);
-        final WebElement scrollPositionDisplay = getDriver().findElement(
-                By.className("v-table-scrollposition"));
+        final WebElement scrollPositionDisplay = getDriver()
+                .findElement(By.className("v-table-scrollposition"));
         waitUntilNot(new ExpectedCondition<Boolean>() {
 
             @Override

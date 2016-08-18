@@ -55,8 +55,8 @@ public class IndexedContainerFilteringTest extends TestBase {
         cb.addValueChangeListener(event -> {
             container.removeAllContainerFilters();
             if (event.getValue()) {
-                container.addContainerFilter("column1", filterString
-                        .getValue().toString(), false, false);
+                container.addContainerFilter("column1",
+                        filterString.getValue().toString(), false, false);
             }
         });
         cb.setImmediate(true);
@@ -74,8 +74,8 @@ public class IndexedContainerFilteringTest extends TestBase {
                     public void buttonClick(ClickEvent event) {
                         Item item = container.addItem("addItem() " + nextToAdd);
                         if (item != null) {
-                            item.getItemProperty("column1").setValue(
-                                    "addItem() " + nextToAdd);
+                            item.getItemProperty("column1")
+                                    .setValue("addItem() " + nextToAdd);
                         }
                         nextToAdd++;
                         nextLabel.setCaption("Next id: " + nextToAdd);
@@ -98,9 +98,9 @@ public class IndexedContainerFilteringTest extends TestBase {
                             item.getItemProperty("column1").setValue(id);
                             table.setValue(id);
                         } else {
-                            getMainWindow().showNotification(
-                                    "Adding item after " + selection
-                                            + " failed");
+                            getMainWindow()
+                                    .showNotification("Adding item after "
+                                            + selection + " failed");
                         }
                         nextToAdd++;
                         nextLabel.setCaption("Next id: " + nextToAdd);
@@ -116,16 +116,16 @@ public class IndexedContainerFilteringTest extends TestBase {
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        int index = Integer.parseInt(position.getValue()
-                                .toString());
+                        int index = Integer
+                                .parseInt(position.getValue().toString());
                         String id = "addItemAt() " + nextToAdd;
                         Item item = container.addItemAt(index, id);
                         if (item != null) {
                             item.getItemProperty("column1").setValue(id);
                             table.setValue(id);
                         } else {
-                            getMainWindow().showNotification(
-                                    "Adding item at index "
+                            getMainWindow()
+                                    .showNotification("Adding item at index "
                                             + position.getValue() + " failed");
                         }
                         nextToAdd++;

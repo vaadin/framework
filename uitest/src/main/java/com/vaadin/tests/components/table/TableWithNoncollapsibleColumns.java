@@ -21,9 +21,10 @@ public class TableWithNoncollapsibleColumns extends TestBase {
 
         table.addContainerProperty("Column 1 - noncollapsible", String.class,
                 null);
-        table.addContainerProperty("Column 2 - collapsible", String.class, null);
-        table.addContainerProperty("Column 3 - toggle collapsing",
-                String.class, null);
+        table.addContainerProperty("Column 2 - collapsible", String.class,
+                null);
+        table.addContainerProperty("Column 3 - toggle collapsing", String.class,
+                null);
 
         table.setColumnCollapsible("Column 1 - noncollapsible", false);
         layout.addComponent(table);
@@ -32,18 +33,18 @@ public class TableWithNoncollapsibleColumns extends TestBase {
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        table.setColumnCollapsed(
-                                "Column 1 - noncollapsible",
-                                !table.isColumnCollapsed("Column 1 - noncollapsible"));
+                        table.setColumnCollapsed("Column 1 - noncollapsible",
+                                !table.isColumnCollapsed(
+                                        "Column 1 - noncollapsible"));
                     }
                 });
         final Button button2 = new Button("Column 2: collapse/show",
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        table.setColumnCollapsed(
-                                "Column 2 - collapsible",
-                                !table.isColumnCollapsed("Column 2 - collapsible"));
+                        table.setColumnCollapsed("Column 2 - collapsible",
+                                !table.isColumnCollapsed(
+                                        "Column 2 - collapsible"));
                     }
                 });
 
@@ -51,9 +52,9 @@ public class TableWithNoncollapsibleColumns extends TestBase {
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        table.setColumnCollapsed(
-                                "Column 3 - toggle collapsing",
-                                !table.isColumnCollapsed("Column 3 - toggle collapsing"));
+                        table.setColumnCollapsed("Column 3 - toggle collapsing",
+                                !table.isColumnCollapsed(
+                                        "Column 3 - toggle collapsing"));
                     }
                 });
         final Button button4 = new Button(
@@ -63,7 +64,8 @@ public class TableWithNoncollapsibleColumns extends TestBase {
                     public void buttonClick(ClickEvent event) {
                         table.setColumnCollapsible(
                                 "Column 3 - toggle collapsing",
-                                !table.isColumnCollapsible("Column 3 - toggle collapsing"));
+                                !table.isColumnCollapsible(
+                                        "Column 3 - toggle collapsing"));
                     }
                 });
 

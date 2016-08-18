@@ -33,8 +33,8 @@ public class TableColumnAddAndResizeTest extends MultiBrowserTest {
         openTestURL();
 
         $(ButtonElement.class).caption("Add and Resize").first().click();
-        assertFalse("Error notification present.", $(NotificationElement.class)
-                .exists());
+        assertFalse("Error notification present.",
+                $(NotificationElement.class).exists());
         assertEquals("Unexpected column width. ", 200, $(TableElement.class)
                 .first().getCell(0, 1).getSize().getWidth());
     }

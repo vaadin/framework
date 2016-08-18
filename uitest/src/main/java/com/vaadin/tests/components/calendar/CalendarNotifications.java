@@ -68,8 +68,8 @@ public class CalendarNotifications extends AbstractTestUIWithLog {
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        Notification
-                                .show("This will disappear when you move your mouse!");
+                        Notification.show(
+                                "This will disappear when you move your mouse!");
                     }
                 });
         content.addComponent(btn);

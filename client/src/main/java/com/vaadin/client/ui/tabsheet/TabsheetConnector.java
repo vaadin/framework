@@ -30,8 +30,8 @@ import com.vaadin.shared.ui.tabsheet.TabsheetClientRpc;
 import com.vaadin.ui.TabSheet;
 
 @Connect(TabSheet.class)
-public class TabsheetConnector extends TabsheetBaseConnector implements
-        SimpleManagedLayout, MayScrollChildren {
+public class TabsheetConnector extends TabsheetBaseConnector
+        implements SimpleManagedLayout, MayScrollChildren {
 
     public TabsheetConnector() {
         registerRpc(TabsheetClientRpc.class, new TabsheetClientRpc() {

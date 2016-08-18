@@ -171,8 +171,8 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
          * When getting a mousedown event, we must detect where the
          * corresponding mouseup event if it's on a different part of the page.
          */
-        lastMouseDownTarget = WidgetUtil.getElementUnderMouse(event
-                .getNativeEvent());
+        lastMouseDownTarget = WidgetUtil
+                .getElementUnderMouse(event.getNativeEvent());
         mouseUpPreviewMatched = false;
         mouseUpEventPreviewRegistration = Event
                 .addNativePreviewHandler(mouseUpPreviewHandler);
@@ -186,10 +186,10 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
          * but we can't fire the even there as the event might get canceled
          * before it gets here.
          */
-        if (hasEventListener()
-                && mouseUpPreviewMatched
+        if (hasEventListener() && mouseUpPreviewMatched
                 && lastMouseDownTarget != null
-                && WidgetUtil.getElementUnderMouse(event.getNativeEvent()) == lastMouseDownTarget
+                && WidgetUtil.getElementUnderMouse(
+                        event.getNativeEvent()) == lastMouseDownTarget
                 && shouldFireEvent(event)) {
             // "Click" with left, right or middle button
             fireClick(event.getNativeEvent());

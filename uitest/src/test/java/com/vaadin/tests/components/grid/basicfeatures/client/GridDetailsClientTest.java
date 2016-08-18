@@ -111,7 +111,8 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         selectMenuPath(SET_FAULTY_GENERATOR);
         toggleDetailsFor(1);
 
-        ElementQuery<FixedNotificationElement> notification = $(FixedNotificationElement.class);
+        ElementQuery<FixedNotificationElement> notification = $(
+                FixedNotificationElement.class);
         assertTrue("Was expecting an error notification here",
                 notification.exists());
         notification.first().close();
@@ -140,9 +141,8 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         selectMenuPath(SET_GENERATOR);
         toggleDetailsFor(1);
 
-        assertNotEquals(
-                "New details should've been generated even after error", "",
-                getGridElement().getDetails(1).getText());
+        assertNotEquals("New details should've been generated even after error",
+                "", getGridElement().getDetails(1).getText());
     }
 
     @Test
@@ -161,8 +161,8 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         toggleDetailsFor(1);
 
         TestBenchElement detailsElement = getGridElement().getDetails(1);
-        WebElement button = detailsElement.findElement(By
-                .className("gwt-Button"));
+        WebElement button = detailsElement
+                .findElement(By.className("gwt-Button"));
         button.click();
 
         WebElement label = detailsElement
@@ -175,8 +175,8 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         selectMenuPath(SET_EMPTY_GENERATOR);
         toggleDetailsFor(1);
 
-        assertEquals("empty generator did not produce an empty details row",
-                "", getGridElement().getDetails(1).getText());
+        assertEquals("empty generator did not produce an empty details row", "",
+                getGridElement().getDetails(1).getText());
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -194,8 +194,8 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         toggleDetailsFor(0);
         toggleDetailsFor(1);
 
-        List<WebElement> elements = getGridElement().findElements(
-                By.className("v-grid-spacer"));
+        List<WebElement> elements = getGridElement()
+                .findElements(By.className("v-grid-spacer"));
         assertEquals("v-grid-spacer", elements.get(0).getAttribute("class"));
         assertEquals("v-grid-spacer stripe",
                 elements.get(1).getAttribute("class"));

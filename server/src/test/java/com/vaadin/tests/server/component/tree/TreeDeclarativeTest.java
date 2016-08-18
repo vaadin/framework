@@ -72,8 +72,8 @@ public class TreeDeclarativeTest extends DeclarativeTestBase<Tree> {
         tree.setParent("Grandchild", "Child");
 
         tree.addItem("With icon");
-        tree.setItemIcon("With icon", new ExternalResource(
-                "http://example.com/icon.png"));
+        tree.setItemIcon("With icon",
+                new ExternalResource("http://example.com/icon.png"));
 
         testRead(design, tree);
         testWrite(design, tree, true);

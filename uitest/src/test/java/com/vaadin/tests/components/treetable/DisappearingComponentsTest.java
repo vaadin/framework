@@ -40,8 +40,8 @@ public class DisappearingComponentsTest extends MultiBrowserTest {
                 .findElement(By.className("v-treetable-treespacer")).click();
         sleep(100);
 
-        WebElement link = treeTable.getCell(2, 1).findElement(
-                By.className("v-link"));
+        WebElement link = treeTable.getCell(2, 1)
+                .findElement(By.className("v-link"));
         assertEquals("3", link.getText());
     }
 

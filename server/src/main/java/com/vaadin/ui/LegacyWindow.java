@@ -278,7 +278,7 @@ public class LegacyWindow extends UI {
      * @param tryToOpenAsPopup
      *            Whether to try to force the resource to be opened in a new
      *            window
-     * */
+     */
     public void open(Resource resource, String windowName,
             boolean tryToOpenAsPopup) {
         getPage().open(resource, windowName, tryToOpenAsPopup);
@@ -432,7 +432,8 @@ public class LegacyWindow extends UI {
      * {@link ComponentContainer} (default {@link VerticalLayout} or explicitly
      * set).
      */
-    public void replaceComponent(Component oldComponent, Component newComponent) {
+    public void replaceComponent(Component oldComponent,
+            Component newComponent) {
         getContent().replaceComponent(oldComponent, newComponent);
     }
 

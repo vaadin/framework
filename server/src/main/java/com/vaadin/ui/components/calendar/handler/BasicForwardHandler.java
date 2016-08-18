@@ -34,8 +34,8 @@ public class BasicForwardHandler implements ForwardHandler {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.ForwardHandler#forward
+     * @see com.vaadin.addon.calendar.ui.CalendarComponentEvents.ForwardHandler#
+     * forward
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.ForwardEvent)
      */
     @Override
@@ -44,7 +44,8 @@ public class BasicForwardHandler implements ForwardHandler {
         Date end = event.getComponent().getEndDate();
 
         // calculate amount to move forward
-        int durationInDays = (int) (((end.getTime()) - start.getTime()) / DateConstants.DAYINMILLIS);
+        int durationInDays = (int) (((end.getTime()) - start.getTime())
+                / DateConstants.DAYINMILLIS);
         // for week view durationInDays = 7, for day view durationInDays = 1
         durationInDays++;
 

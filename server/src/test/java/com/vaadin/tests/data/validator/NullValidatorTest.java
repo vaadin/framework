@@ -10,8 +10,10 @@ import com.vaadin.legacy.data.validator.LegacyNullValidator;
 
 public class NullValidatorTest {
 
-    LegacyNullValidator notNull = new LegacyNullValidator("Null not accepted", false);
-    LegacyNullValidator onlyNull = new LegacyNullValidator("Only null accepted", true);
+    LegacyNullValidator notNull = new LegacyNullValidator("Null not accepted",
+            false);
+    LegacyNullValidator onlyNull = new LegacyNullValidator("Only null accepted",
+            true);
 
     @Test
     public void testNullValue() {

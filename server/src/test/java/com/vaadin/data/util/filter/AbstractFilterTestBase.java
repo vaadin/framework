@@ -8,8 +8,8 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;
 
-public abstract class AbstractFilterTestBase<FILTERTYPE extends Filter> extends
-        TestCase {
+public abstract class AbstractFilterTestBase<FILTERTYPE extends Filter>
+        extends TestCase {
 
     protected static final String PROPERTY1 = "property1";
     protected static final String PROPERTY2 = "property2";

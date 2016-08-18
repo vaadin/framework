@@ -66,7 +66,8 @@ public class LegacyCheckBox extends LegacyAbstractField<Boolean> {
         }
     };
 
-    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
+    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(
+            this) {
         @Override
         protected void fireEvent(Event event) {
             LegacyCheckBox.this.fireEvent(event);
@@ -130,8 +131,8 @@ public class LegacyCheckBox extends LegacyAbstractField<Boolean> {
 
     /*
      * Overridden to keep the shared state in sync with the LegacyAbstractField
-     * internal value. Should be removed once LegacyAbstractField is refactored to use
-     * shared state.
+     * internal value. Should be removed once LegacyAbstractField is refactored
+     * to use shared state.
      *
      * See tickets #10921 and #11064.
      */
@@ -221,9 +222,8 @@ public class LegacyCheckBox extends LegacyAbstractField<Boolean> {
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         if (design.hasAttr("checked")) {
-            this.setValue(
-                    DesignAttributeHandler.readAttribute("checked",
-                            design.attributes(), Boolean.class), false, true);
+            this.setValue(DesignAttributeHandler.readAttribute("checked",
+                    design.attributes(), Boolean.class), false, true);
         }
     }
 
@@ -248,7 +248,8 @@ public class LegacyCheckBox extends LegacyAbstractField<Boolean> {
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        LegacyCheckBox def = (LegacyCheckBox) designContext.getDefaultInstance(this);
+        LegacyCheckBox def = (LegacyCheckBox) designContext
+                .getDefaultInstance(this);
         Attributes attr = design.attributes();
         DesignAttributeHandler.writeAttribute("checked", attr, getValue(),
                 def.getValue(), Boolean.class);

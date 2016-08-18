@@ -30,8 +30,8 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * 
  * @author Vaadin Ltd
  */
-public class TableRepairsScrollPositionOnReAddingAllRowsTest extends
-        MultiBrowserTest {
+public class TableRepairsScrollPositionOnReAddingAllRowsTest
+        extends MultiBrowserTest {
 
     private int rowLocation0;
 

@@ -36,14 +36,14 @@ public class RpcProxy {
             return (T) TypeData.getType(rpcInterface).createProxy(
                     new RpcInvokationHandler(rpcInterface, connector));
         } catch (NoDataException e) {
-            throw new IllegalStateException("There is no information about "
-                    + rpcInterface
-                    + ". Did you forget to compile the widgetset?");
+            throw new IllegalStateException(
+                    "There is no information about " + rpcInterface
+                            + ". Did you forget to compile the widgetset?");
         }
     }
 
-    private static final class RpcInvokationHandler implements
-            InvokationHandler {
+    private static final class RpcInvokationHandler
+            implements InvokationHandler {
         private final Class<?> rpcInterface;
         private final ServerConnector connector;
 
@@ -58,8 +58,8 @@ public class RpcProxy {
             MethodInvocation invocation = new MethodInvocation(
                     connector.getConnectorId(), rpcInterface.getName(),
                     method.getName(), params);
-            ServerRpcQueue serverRpcQueue = ServerRpcQueue.get(connector
-                    .getConnection());
+            ServerRpcQueue serverRpcQueue = ServerRpcQueue
+                    .get(connector.getConnection());
             serverRpcQueue.add(invocation, method.isLastOnly());
             if (!method.isDelayed()) {
                 serverRpcQueue.flush();

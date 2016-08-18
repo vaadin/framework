@@ -20,8 +20,8 @@ public class EmbeddedAltText extends TestBase {
 
     @Override
     protected void setup() {
-        final Embedded e = new Embedded("Caption", new ThemeResource(
-                "../runo/icons/64/ok.png"));
+        final Embedded e = new Embedded("Caption",
+                new ThemeResource("../runo/icons/64/ok.png"));
         e.setAlternateText("Alt text of the image");
         addComponent(e);
         final Embedded player = new Embedded();

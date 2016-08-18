@@ -15,25 +15,30 @@ public class LabelModes extends ComponentTestCase<Label> {
     protected void initializeComponents() {
 
         Label l;
-        l = createLabel("This is an undefined wide label with default content mode");
+        l = createLabel(
+                "This is an undefined wide label with default content mode");
         l.setWidth(null);
         addTestComponent(l);
 
-        l = createLabel("This label                       contains\nnewlines and spaces\nbut is in\ndefault content mode");
+        l = createLabel(
+                "This label                       contains\nnewlines and spaces\nbut is in\ndefault content mode");
         l.setWidth(null);
         addTestComponent(l);
 
-        l = createLabel("This label                       contains\nnewlines and spaces\nand is in\npreformatted mode");
+        l = createLabel(
+                "This label                       contains\nnewlines and spaces\nand is in\npreformatted mode");
         l.setContentMode(ContentMode.PREFORMATTED);
         l.setWidth(null);
         addTestComponent(l);
 
-        l = createLabel("This label                       contains\nnewlines and spaces\nand is in\nhtml mode");
+        l = createLabel(
+                "This label                       contains\nnewlines and spaces\nand is in\nhtml mode");
         l.setContentMode(ContentMode.HTML);
         l.setWidth(null);
         addTestComponent(l);
 
-        l = createLabel("This label                       contains\nnewlines and spaces\nand is in\nraw mode");
+        l = createLabel(
+                "This label                       contains\nnewlines and spaces\nand is in\nraw mode");
         l.setContentMode(ContentMode.RAW);
         l.setWidth(null);
         addTestComponent(l);

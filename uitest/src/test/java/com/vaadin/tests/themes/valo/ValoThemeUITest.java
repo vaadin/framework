@@ -285,9 +285,8 @@ public class ValoThemeUITest extends MultiBrowserTest {
         LabelElement captionElem = content.$(LabelElement.class).first();
         if (!captionElem.getText().equals(caption)) {
             // IE ... why you fail clicks
-            System.err.println("Extra click needed on '" + link
-                    + "' on remote " + getDesiredCapabilities() + " "
-                    + getRemoteControlName());
+            System.err.println("Extra click needed on '" + link + "' on remote "
+                    + getDesiredCapabilities() + " " + getRemoteControlName());
 
             open(link, caption, tries - 1);
         } else {

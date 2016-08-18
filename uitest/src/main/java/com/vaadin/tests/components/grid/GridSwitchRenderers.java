@@ -60,8 +60,8 @@ public class GridSwitchRenderers extends AbstractTestUIWithLog {
         grid.getColumn(EXPANSION_COLUMN_ID).setWidth(50);
         for (int col = MANUALLY_FORMATTED_COLUMNS; col < COLUMNS; col++) {
             grid.getColumn(getColumnProperty(col)).setWidth(300);
-            grid.getColumn(getColumnProperty(col)).setRenderer(
-                    new TextRenderer());
+            grid.getColumn(getColumnProperty(col))
+                    .setRenderer(new TextRenderer());
         }
 
         grid.setSelectionMode(SelectionMode.NONE);
@@ -86,8 +86,8 @@ public class GridSwitchRenderers extends AbstractTestUIWithLog {
         int col = MANUALLY_FORMATTED_COLUMNS;
 
         for (; col < COLUMNS; col++) {
-            item.getItemProperty(getColumnProperty(col)).setValue(
-                    "<b>(" + content + ", " + col + ")</b>");
+            item.getItemProperty(getColumnProperty(col))
+                    .setValue("<b>(" + content + ", " + col + ")</b>");
         }
     }
 

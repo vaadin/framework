@@ -69,7 +69,7 @@ class TouchUI extends UI {
         WebBrowser webBrowser = getPage().getWebBrowser();
         String screenSize = "" + webBrowser.getScreenWidth() + "x"
                 + webBrowser.getScreenHeight();
-        setContent(new Label("Using a touch enabled device with screen size"
-                + screenSize));
+        setContent(new Label(
+                "Using a touch enabled device with screen size" + screenSize));
     }
 }

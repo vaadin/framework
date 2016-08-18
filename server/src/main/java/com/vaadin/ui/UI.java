@@ -104,9 +104,9 @@ import com.vaadin.util.CurrentInstance;
  * 
  * @since 7.0
  */
-public abstract class UI extends AbstractSingleComponentContainer implements
-        Action.Container, Action.Notifier, PollNotifier, LegacyComponent,
-        Focusable {
+public abstract class UI extends AbstractSingleComponentContainer
+        implements Action.Container, Action.Notifier, PollNotifier,
+        LegacyComponent, Focusable {
 
     /**
      * The application to which this UI belongs
@@ -214,16 +214,15 @@ public abstract class UI extends AbstractSingleComponentContainer implements
                 }
             }
             json.append("]}");
-            getRpcProxy(DebugWindowClientRpc.class).reportLayoutProblems(
-                    json.toString());
+            getRpcProxy(DebugWindowClientRpc.class)
+                    .reportLayoutProblems(json.toString());
         }
 
         @Override
         public void showServerDesign(Connector connector) {
             if (!(connector instanceof Component)) {
-                getLogger().severe(
-                        "Tried to output declarative design for " + connector
-                                + ", which is not a component");
+                getLogger().severe("Tried to output declarative design for "
+                        + connector + ", which is not a component");
                 return;
             }
             if (connector instanceof UI) {
@@ -234,10 +233,9 @@ public abstract class UI extends AbstractSingleComponentContainer implements
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             try {
                 Design.write((Component) connector, baos);
-                getLogger().info(
-                        "Design for " + connector
-                                + " requested from debug window:\n"
-                                + baos.toString("UTF-8"));
+                getLogger().info("Design for " + connector
+                        + " requested from debug window:\n"
+                        + baos.toString("UTF-8"));
             } catch (IOException e) {
                 getLogger().log(Level.WARNING,
                         "Error producing design for " + connector, e);
@@ -360,9 +358,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
         if (pendingFocus != null) {
             // ensure focused component is still attached to this main window
-            if (equals(pendingFocus.getUI())
-                    || (pendingFocus.getUI() != null && equals(pendingFocus
-                            .getUI().getParent()))) {
+            if (equals(pendingFocus.getUI()) || (pendingFocus.getUI() != null
+                    && equals(pendingFocus.getUI().getParent()))) {
                 target.addAttribute("focused", pendingFocus);
             }
             pendingFocus = null;
@@ -521,8 +518,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * @throws NullPointerException
      *             if the given <code>Window</code> is <code>null</code>.
      */
-    public void addWindow(Window window) throws IllegalArgumentException,
-            NullPointerException {
+    public void addWindow(Window window)
+            throws IllegalArgumentException, NullPointerException {
 
         if (window == null) {
             throw new NullPointerException("Argument must not be null");
@@ -1098,7 +1095,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     @Deprecated
     public void showNotification(String caption, String description,
             Notification.Type type) {
-        Notification notification = new Notification(caption, description, type);
+        Notification notification = new Notification(caption, description,
+                type);
         notification.setHtmlContentAllowed(true);// Backwards compatibility
         getPage().showNotification(notification);
     }
@@ -1130,10 +1128,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     @Deprecated
     public void showNotification(String caption, String description,
             Notification.Type type, boolean htmlContentAllowed) {
-        getPage()
-                .showNotification(
-                        new Notification(caption, description, type,
-                                htmlContentAllowed));
+        getPage().showNotification(new Notification(caption, description, type,
+                htmlContentAllowed));
     }
 
     /**
@@ -1240,7 +1236,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     public void close() {
         closing = true;
 
-        boolean sessionExpired = (session == null || session.getState() != State.OPEN);
+        boolean sessionExpired = (session == null
+                || session.getState() != State.OPEN);
         getRpcProxy(UIClientRpc.class).uiClosed(sessionExpired);
         if (getPushConnection() != null) {
             // Push the Rpc to the client. The connection will be closed when
@@ -1568,7 +1565,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      *         not available.
      */
     public PushConnection getPushConnection() {
-        assert !(getPushConfiguration().getPushMode().isEnabled() && pushConnection == null);
+        assert !(getPushConfiguration().getPushMode().isEnabled()
+                && pushConnection == null);
         return pushConnection;
     }
 

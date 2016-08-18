@@ -32,8 +32,7 @@ public class RemoveFromParentLockingTest {
 
     @Before
     @After
-    public void cleanCurrentSession()
-    {
+    public void cleanCurrentSession() {
         VaadinSession.setCurrent(null);
     }
 

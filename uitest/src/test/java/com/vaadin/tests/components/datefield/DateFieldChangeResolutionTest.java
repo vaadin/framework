@@ -86,8 +86,8 @@ public class DateFieldChangeResolutionTest extends MultiBrowserTest {
     private void initialize() {
         openTestURL();
         WebElement dateField = driver.findElement(By.id(DATEFIELD_ID));
-        dateFieldButton = dateField.findElement(By
-                .className("v-datefield-button"));
+        dateFieldButton = dateField
+                .findElement(By.className("v-datefield-button"));
         textField = dateField
                 .findElement(By.className("v-datefield-textfield"));
         resolutionSecond = driver.findElement(By.id(BUTTON_BASE_ID + "second"));
@@ -111,7 +111,8 @@ public class DateFieldChangeResolutionTest extends MultiBrowserTest {
         } else {
             checkYearHeader();
         }
-        if (resolution.getCalendarField() >= Resolution.DAY.getCalendarField()) {
+        if (resolution.getCalendarField() >= Resolution.DAY
+                .getCalendarField()) {
             assertTrue(
                     "A calendar with the chosen resolution should have a body",
                     calendarHasBody());
@@ -150,37 +151,36 @@ public class DateFieldChangeResolutionTest extends MultiBrowserTest {
         if (buttonsExpected) {
             assertTrue(
                     "The calendar should have a button for switching to the previous month",
-                    isElementPresent(By
-                            .cssSelector(".v-datefield-calendarpanel-header .v-datefield-calendarpanel-prevmonth .v-button-prevmonth")));
+                    isElementPresent(By.cssSelector(
+                            ".v-datefield-calendarpanel-header .v-datefield-calendarpanel-prevmonth .v-button-prevmonth")));
             assertTrue(
                     "The calendar should have a button for switching to the next month",
-                    isElementPresent(By
-                            .cssSelector(".v-datefield-calendarpanel-header .v-datefield-calendarpanel-nextmonth .v-button-nextmonth")));
+                    isElementPresent(By.cssSelector(
+                            ".v-datefield-calendarpanel-header .v-datefield-calendarpanel-nextmonth .v-button-nextmonth")));
         } else {
             assertFalse(
                     "The calendar should not have a button for switching to the previous month",
-                    isElementPresent(By
-                            .cssSelector(".v-datefield-calendarpanel-header .v-datefield-calendarpanel-prevmonth .v-button-prevmonth")));
+                    isElementPresent(By.cssSelector(
+                            ".v-datefield-calendarpanel-header .v-datefield-calendarpanel-prevmonth .v-button-prevmonth")));
             assertFalse(
                     "The calendar should not have a button for switching to the next month",
-                    isElementPresent(By
-                            .cssSelector(".v-datefield-calendarpanel-header .v-datefield-calendarpanel-nextmonth .v-button-nextmonth")));
+                    isElementPresent(By.cssSelector(
+                            ".v-datefield-calendarpanel-header .v-datefield-calendarpanel-nextmonth .v-button-nextmonth")));
         }
     }
 
     private void checkHeaderForYear() {
         assertTrue(
                 "The calendar should have a button for switching to the previous year",
-                isElementPresent(By
-                        .cssSelector(".v-datefield-calendarpanel-header .v-datefield-calendarpanel-prevyear .v-button-prevyear")));
-        assertTrue(
-                "The calendar header should show the selected year",
-                isElementPresent(By
-                        .cssSelector(".v-datefield-calendarpanel-header .v-datefield-calendarpanel-month")));
+                isElementPresent(By.cssSelector(
+                        ".v-datefield-calendarpanel-header .v-datefield-calendarpanel-prevyear .v-button-prevyear")));
+        assertTrue("The calendar header should show the selected year",
+                isElementPresent(By.cssSelector(
+                        ".v-datefield-calendarpanel-header .v-datefield-calendarpanel-month")));
         assertTrue(
                 "The calendar should have a button for switching to the next year",
-                isElementPresent(By
-                        .cssSelector(".v-datefield-calendarpanel-header .v-datefield-calendarpanel-nextyear .v-button-nextyear")));
+                isElementPresent(By.cssSelector(
+                        ".v-datefield-calendarpanel-header .v-datefield-calendarpanel-nextyear .v-button-nextyear")));
 
     }
 
@@ -193,8 +193,8 @@ public class DateFieldChangeResolutionTest extends MultiBrowserTest {
     }
 
     private void closePopupDateField() {
-        WebElement element = driver.findElement(By
-                .cssSelector(".v-datefield-calendarpanel"));
+        WebElement element = driver
+                .findElement(By.cssSelector(".v-datefield-calendarpanel"));
         element.sendKeys(Keys.ESCAPE);
     }
 }

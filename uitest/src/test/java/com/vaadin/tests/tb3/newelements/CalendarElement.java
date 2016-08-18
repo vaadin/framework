@@ -8,8 +8,8 @@ import com.vaadin.testbench.By;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.Calendar")
-public class CalendarElement extends
-        com.vaadin.testbench.elements.CalendarElement {
+public class CalendarElement
+        extends com.vaadin.testbench.elements.CalendarElement {
     public List<WebElement> getWeekNumbers() {
         return findElements(By.className("v-calendar-week-number"));
     }

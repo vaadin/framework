@@ -15,8 +15,8 @@ public class ComboBoxUndefinedWidthAndIcon extends TestBase {
         for (int i = 1; i < 200 + 1; i++) {
             Item item = cb.addItem(i);
             item.getItemProperty("caption").setValue("Item " + i);
-            item.getItemProperty("icon").setValue(
-                    new ThemeResource("../runo/icons/16/users.png"));
+            item.getItemProperty("icon")
+                    .setValue(new ThemeResource("../runo/icons/16/users.png"));
         }
         cb.setItemIconPropertyId("icon");
         cb.setItemCaptionPropertyId("caption");

@@ -32,9 +32,8 @@ public class SetThemeAndResponsiveLayout extends AbstractTestUI {
         responsiveLayout.addStyleName("width-and-height");
         responsiveLayout.setSizeFull();
         setContent(responsiveLayout);
-        responsiveLayout
-                .addComponent(new Label(
-                        "First set the theme using the button and then resize the browser window in both dimensions to see the background color change."));
+        responsiveLayout.addComponent(new Label(
+                "First set the theme using the button and then resize the browser window in both dimensions to see the background color change."));
         Button setThemeButton = new Button("Set theme");
         setThemeButton.addClickListener(new Button.ClickListener() {
             @Override

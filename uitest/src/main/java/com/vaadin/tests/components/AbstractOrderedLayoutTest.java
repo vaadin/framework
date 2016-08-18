@@ -15,7 +15,8 @@ public abstract class AbstractOrderedLayoutTest<T extends AbstractOrderedLayout>
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((LayoutClickListener) AbstractOrderedLayoutTest.this);
+                c.addListener(
+                        (LayoutClickListener) AbstractOrderedLayoutTest.this);
             } else {
 
             }

@@ -61,9 +61,9 @@ public class GlobalResourceHandler implements RequestHandler {
     private int nextLegacyId = 0;
 
     // APP/global/[uiid]/[type]/[id]
-    private static final Pattern pattern = Pattern.compile("^/?"
-            + ApplicationConstants.APP_PATH + '/' + RESOURCE_REQUEST_PATH
-            + "(\\d+)/(([^/]+)(/.*))");
+    private static final Pattern pattern = Pattern
+            .compile("^/?" + ApplicationConstants.APP_PATH + '/'
+                    + RESOURCE_REQUEST_PATH + "(\\d+)/(([^/]+)(/.*))");
 
     @Override
     public boolean handleRequest(VaadinSession session, VaadinRequest request,
@@ -83,8 +83,8 @@ public class GlobalResourceHandler implements RequestHandler {
         String key = matcher.group(2);
 
         if (key == null) {
-            return error(request, response, pathInfo
-                    + " is not a valid global resource path");
+            return error(request, response,
+                    pathInfo + " is not a valid global resource path");
         }
         session.lock();
         Map<Class<?>, CurrentInstance> oldInstances = null;
@@ -104,14 +104,14 @@ public class GlobalResourceHandler implements RequestHandler {
             }
 
             if (resource == null) {
-                return error(request, response, "Global resource " + key
-                        + " not found");
+                return error(request, response,
+                        "Global resource " + key + " not found");
             }
 
             stream = resource.getStream();
             if (stream == null) {
-                return error(request, response, "Resource " + resource
-                        + " didn't produce any stream.");
+                return error(request, response,
+                        "Resource " + resource + " didn't produce any stream.");
             }
         } finally {
             session.unlock();
@@ -189,7 +189,8 @@ public class GlobalResourceHandler implements RequestHandler {
      * @return an URI string, or <code>null</code> if the resource is not
      *         registered.
      */
-    public String getUri(ClientConnector connector, ConnectorResource resource) {
+    public String getUri(ClientConnector connector,
+            ConnectorResource resource) {
         // app://APP/global/[ui]/[type]/[id]
         String uri = legacyResourceKeys.get(resource);
         if (uri != null && !uri.isEmpty()) {
@@ -230,8 +231,8 @@ public class GlobalResourceHandler implements RequestHandler {
         return Logger.getLogger(GlobalResourceHandler.class.getName());
     }
 
-    private static boolean error(VaadinRequest request,
-            VaadinResponse response, String logMessage) throws IOException {
+    private static boolean error(VaadinRequest request, VaadinResponse response,
+            String logMessage) throws IOException {
         getLogger().log(Level.WARNING, logMessage);
         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                 request.getPathInfo() + " can not be found");

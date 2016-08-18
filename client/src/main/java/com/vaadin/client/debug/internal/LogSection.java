@@ -61,7 +61,8 @@ public class LogSection implements Section {
                 }
 
                 @Override
-                protected String getRecordInfo(LogRecord event, String newline) {
+                protected String getRecordInfo(LogRecord event,
+                        String newline) {
                     return "";
                 }
             });
@@ -157,8 +158,8 @@ public class LogSection implements Section {
             public void onClick(ClickEvent event) {
                 Element el = Element
                         .as(event.getNativeEvent().getEventTarget());
-                while (!el.getClassName().contains(
-                        VDebugWindow.STYLENAME + "-message")) {
+                while (!el.getClassName()
+                        .contains(VDebugWindow.STYLENAME + "-message")) {
                     if (el == contentElement) {
                         // clicked something else
                         return;
@@ -336,8 +337,8 @@ public class LogSection implements Section {
                 + "'></span><span class='" + VDebugWindow.STYLENAME
                 + "-time' title='"
                 + VDebugWindow.getTimingTooltip(sinceStart, sinceReset) + "'>"
-                + sinceReset + "ms</span><span class='"
-                + VDebugWindow.STYLENAME + "-message'>" + msg + "</span>";
+                + sinceReset + "ms</span><span class='" + VDebugWindow.STYLENAME
+                + "-message'>" + msg + "</span>";
         row.setInnerHTML(inner);
 
         contentElement.appendChild(row);

@@ -33,9 +33,10 @@ public class SortOrder<T> implements Serializable {
      * Constructs a field sorting information
      *
      * @param sorted
-     *         sorting information, usually field id or {@link java.util.Comparator}
+     *            sorting information, usually field id or
+     *            {@link java.util.Comparator}
      * @param direction
-     *         sorting direction
+     *            sorting direction
      */
     public SortOrder(T sorted, SortDirection direction) {
         this.sorted = sorted;

@@ -225,8 +225,8 @@ public class Util {
     @Deprecated
     public static int measureVerticalPaddingAndBorder(Element element,
             int paddingGuess) {
-        return WidgetUtil
-                .measureVerticalPaddingAndBorder(element, paddingGuess);
+        return WidgetUtil.measureVerticalPaddingAndBorder(element,
+                paddingGuess);
     }
 
     /**
@@ -441,7 +441,8 @@ public class Util {
      * @return The border-box width for the element
      */
     @Deprecated
-    public static int getRequiredWidth(com.google.gwt.dom.client.Element element) {
+    public static int getRequiredWidth(
+            com.google.gwt.dom.client.Element element) {
         return WidgetUtil.getRequiredWidth(element);
     }
 
@@ -535,7 +536,8 @@ public class Util {
      * @return true if auto or scroll
      */
     @Deprecated
-    public static boolean mayHaveScrollBars(com.google.gwt.dom.client.Element pe) {
+    public static boolean mayHaveScrollBars(
+            com.google.gwt.dom.client.Element pe) {
         return WidgetUtil.mayHaveScrollBars(pe);
     }
 
@@ -596,8 +598,9 @@ public class Util {
         VOverlay overlay = findWidget(element, VOverlay.class);
         if (overlay != null && overlay.getOwner() != null) {
 
-            return getConnectorForElement(client, client.getUIConnector()
-                    .getWidget(), overlay.getOwner().getElement());
+            return getConnectorForElement(client,
+                    client.getUIConnector().getWidget(),
+                    overlay.getOwner().getElement());
         } else {
             return null;
         }
@@ -623,8 +626,8 @@ public class Util {
      * @param element
      *            the element to start from
      */
-    public static ComponentConnector findPaintable(
-            ApplicationConnection client, Element element) {
+    public static ComponentConnector findPaintable(ApplicationConnection client,
+            Element element) {
         Widget widget = Util.findWidget(element, null);
         ConnectorMap vPaintableMap = ConnectorMap.get(client);
         while (widget != null && !vPaintableMap.isConnector(widget)) {
@@ -746,9 +749,8 @@ public class Util {
         if (connector != null) {
             getLogger().info("\t" + id + " (" + connector.getClass() + ") :");
         } else {
-            getLogger().warning(
-                    "\t" + id + ": Warning: no corresponding connector for id "
-                            + id);
+            getLogger().warning("\t" + id
+                    + ": Warning: no corresponding connector for id " + id);
         }
         for (MethodInvocation invocation : invocations) {
             getLogger().info("\t\t" + getInvocationDebugString(invocation));
@@ -763,22 +765,24 @@ public class Util {
      * @param invocation
      * @return
      */
-    private static String getInvocationDebugString(MethodInvocation invocation) {
+    private static String getInvocationDebugString(
+            MethodInvocation invocation) {
         Object[] parameters = invocation.getParameters();
         String formattedParams = null;
-        if (ApplicationConstants.UPDATE_VARIABLE_METHOD.equals(invocation
-                .getMethodName()) && parameters.length == 2) {
+        if (ApplicationConstants.UPDATE_VARIABLE_METHOD
+                .equals(invocation.getMethodName()) && parameters.length == 2) {
             // name, value
             Object value = parameters[1];
             // TODO paintables inside lists/maps get rendered as
             // components in the debug console
-            String formattedValue = value instanceof ServerConnector ? ((ServerConnector) value)
-                    .getConnectorId() : String.valueOf(value);
+            String formattedValue = value instanceof ServerConnector
+                    ? ((ServerConnector) value).getConnectorId()
+                    : String.valueOf(value);
             formattedParams = parameters[0] + " : " + formattedValue;
         }
         if (null == formattedParams) {
-            formattedParams = (null != parameters) ? Arrays
-                    .toString(parameters) : null;
+            formattedParams = (null != parameters) ? Arrays.toString(parameters)
+                    : null;
         }
         return invocation.getInterfaceName() + "." + invocation.getMethodName()
                 + "(" + formattedParams + ")";
@@ -806,8 +810,8 @@ public class Util {
                 printConnectorInvocations(invocations, curId, c);
             }
         } catch (Exception e) {
-            getLogger()
-                    .log(Level.SEVERE, "Error logging method invocations", e);
+            getLogger().log(Level.SEVERE, "Error logging method invocations",
+                    e);
         }
     }
 
@@ -1230,7 +1234,8 @@ public class Util {
         Profiler.enter("skipMeasureDueLayoutHint");
         boolean skip = false;
 
-        HasChildMeasurementHintConnector parent = getPossibleChildMeasurementHintParentConnector(candidate);
+        HasChildMeasurementHintConnector parent = getPossibleChildMeasurementHintParentConnector(
+                candidate);
 
         if (parent != null) {
             ChildMeasurementHint measureMode = parent.getChildMeasurementHint();

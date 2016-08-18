@@ -90,10 +90,9 @@ public class VContextMenu extends VOverlay implements SubPartAware {
             @Override
             public void onClose(CloseEvent<PopupPanel> event) {
                 Element currentFocus = WidgetUtil.getFocusedElement();
-                if (focusedElement != null
-                        && (currentFocus == null
-                                || menu.getElement().isOrHasChild(currentFocus) || RootPanel
-                                .getBodyElement().equals(currentFocus))) {
+                if (focusedElement != null && (currentFocus == null
+                        || menu.getElement().isOrHasChild(currentFocus)
+                        || RootPanel.getBodyElement().equals(currentFocus))) {
                     focusedElement.focus();
                     focusedElement = null;
                 }
@@ -197,9 +196,9 @@ public class VContextMenu extends VOverlay implements SubPartAware {
      * Extend standard Gwt MenuBar to set proper settings and to override
      * onPopupClosed method so that PopupPanel gets closed.
      */
-    class CMenuBar extends MenuBar implements HasFocusHandlers,
-            HasBlurHandlers, HasKeyDownHandlers, HasKeyPressHandlers,
-            Focusable, LoadHandler, KeyUpHandler {
+    class CMenuBar extends MenuBar
+            implements HasFocusHandlers, HasBlurHandlers, HasKeyDownHandlers,
+            HasKeyPressHandlers, Focusable, LoadHandler, KeyUpHandler {
         public CMenuBar() {
             super(true);
             addDomHandler(this, LoadEvent.getType());
@@ -282,7 +281,8 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     }
 
     @Override
-    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(
+            String subPart) {
         int index = Integer.parseInt(subPart.substring(6));
         // ApplicationConnection.getConsole().log(
         // "Searching element for selection index " + index);
@@ -293,11 +293,13 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     }
 
     @Override
-    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+    public String getSubPartName(
+            com.google.gwt.user.client.Element subElement) {
         if (getElement().isOrHasChild(subElement)) {
             com.google.gwt.dom.client.Element e = subElement;
             {
-                while (e != null && !e.getTagName().toLowerCase().equals("tr")) {
+                while (e != null
+                        && !e.getTagName().toLowerCase().equals("tr")) {
                     e = e.getParentElement();
                     // ApplicationConnection.getConsole().log("Found row");
                 }

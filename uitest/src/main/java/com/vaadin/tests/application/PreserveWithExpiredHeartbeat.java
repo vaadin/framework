@@ -23,7 +23,8 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
 
 @PreserveOnRefresh
-@CustomDeploymentConfiguration({ @Conf(name = "heartbeatInterval", value = "5") })
+@CustomDeploymentConfiguration({
+        @Conf(name = "heartbeatInterval", value = "5") })
 public class PreserveWithExpiredHeartbeat extends AbstractTestUI {
 
     @Override

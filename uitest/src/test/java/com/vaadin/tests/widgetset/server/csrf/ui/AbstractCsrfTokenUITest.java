@@ -29,8 +29,8 @@ import com.vaadin.tests.widgetset.client.csrf.CsrfButtonConnector;
 
 public abstract class AbstractCsrfTokenUITest extends MultiBrowserTest {
 
-    static final Logger LOGGER = Logger.getLogger(AbstractCsrfTokenUITest.class
-            .getName());
+    static final Logger LOGGER = Logger
+            .getLogger(AbstractCsrfTokenUITest.class.getName());
 
     @Test
     public void testTokens() {

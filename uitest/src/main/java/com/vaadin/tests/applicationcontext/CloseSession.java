@@ -56,7 +56,8 @@ public class CloseSession extends AbstractTestUI {
         String oldSessionId = request.getParameter(OLD_SESSION_ID_PARAM);
         if (oldSessionId != null) {
             log.log("Old WrappedSession id: " + oldSessionId);
-            log.log("Same WrappedSession id? " + oldSessionId.equals(sessionId));
+            log.log("Same WrappedSession id? "
+                    + oldSessionId.equals(sessionId));
         }
 
         // Add parameters to help see what has changed
@@ -65,16 +66,18 @@ public class CloseSession extends AbstractTestUI {
                 + OLD_SESSION_ID_PARAM + "=" + sessionId;
 
         addComponent(log);
-        addComponent(new Button(
-                "Close VaadinServiceSession and redirect elsewhere",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        // Assuming Vaadin is deployed to the root context
-                        getPage().setLocation("/statictestfiles/static.html");
-                        getSession().close();
-                    }
-                }));
+        addComponent(
+                new Button("Close VaadinServiceSession and redirect elsewhere",
+                        new Button.ClickListener() {
+                            @Override
+                            public void buttonClick(ClickEvent event) {
+                                // Assuming Vaadin is deployed to the root
+                                // context
+                                getPage().setLocation(
+                                        "/statictestfiles/static.html");
+                                getSession().close();
+                            }
+                        }));
         addComponent(new Button("Close VaadinServiceSession and reopen page",
                 new Button.ClickListener() {
                     @Override
@@ -106,8 +109,7 @@ public class CloseSession extends AbstractTestUI {
                         getPage().setLocation(reopenUrl);
                     }
                 }));
-        addComponent(new Button(
-                "Invalidate HttpSession and redirect elsewhere",
+        addComponent(new Button("Invalidate HttpSession and redirect elsewhere",
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
@@ -116,14 +118,13 @@ public class CloseSession extends AbstractTestUI {
                         getPage().setLocation("/statictestfiles/static.html");
                     }
                 }));
-        addComponent(new Button(
-                "Invalidate HttpSession in a background thread",
+        addComponent(new Button("Invalidate HttpSession in a background thread",
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         final HttpSession session = ((WrappedHttpSession) VaadinService
                                 .getCurrentRequest().getWrappedSession())
-                                .getHttpSession();
+                                        .getHttpSession();
                         Thread t = new Thread(new Runnable() {
 
                             @Override
@@ -133,12 +134,12 @@ public class CloseSession extends AbstractTestUI {
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                System.out
-                                        .println("Invalidating session from thread "
+                                System.out.println(
+                                        "Invalidating session from thread "
                                                 + session.getId());
                                 session.invalidate();
-                                System.out
-                                        .println("Invalidated session from thread "
+                                System.out.println(
+                                        "Invalidated session from thread "
                                                 + session.getId());
 
                             }
@@ -164,9 +165,10 @@ public class CloseSession extends AbstractTestUI {
         log.log("Detach of " + this + " (" + getUIId() + ")");
         boolean correctUI = (UI.getCurrent() == this);
         boolean correctPage = (Page.getCurrent() == getPage());
-        boolean correctVaadinSession = (VaadinSession.getCurrent() == getSession());
-        boolean correctVaadinService = (VaadinService.getCurrent() == getSession()
-                .getService());
+        boolean correctVaadinSession = (VaadinSession
+                .getCurrent() == getSession());
+        boolean correctVaadinService = (VaadinService
+                .getCurrent() == getSession().getService());
         log.log("UI.current correct in detach: " + correctUI);
         log.log("Page.current correct in detach: " + correctPage);
         log.log("VaadinSession.current correct in detach: "

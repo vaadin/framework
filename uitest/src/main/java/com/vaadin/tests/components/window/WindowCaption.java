@@ -48,7 +48,8 @@ public class WindowCaption extends AbstractTestUI {
         Button red = new Button("Red", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                setWindowCaption("<font style='color: red;'>This may or may not be red</font>");
+                setWindowCaption(
+                        "<font style='color: red;'>This may or may not be red</font>");
             }
         });
         Button plainText = new Button("Plain text", new ClickListener() {

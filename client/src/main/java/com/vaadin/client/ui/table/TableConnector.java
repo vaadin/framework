@@ -54,9 +54,9 @@ import com.vaadin.shared.ui.table.TableServerRpc;
 import com.vaadin.shared.ui.table.TableState;
 
 @Connect(com.vaadin.ui.Table.class)
-public class TableConnector extends AbstractFieldConnector implements
-        HasComponentsConnector, ConnectorHierarchyChangeHandler, Paintable,
-        DirectionalManagedLayout, PostLayoutListener,
+public class TableConnector extends AbstractFieldConnector
+        implements HasComponentsConnector, ConnectorHierarchyChangeHandler,
+        Paintable, DirectionalManagedLayout, PostLayoutListener,
         HasChildMeasurementHintConnector {
 
     private List<ComponentConnector> childComponents;
@@ -113,8 +113,9 @@ public class TableConnector extends AbstractFieldConnector implements
                  */
                 if (w != null) {
                     rowKey = w.getKey();
-                    colKey = getWidget().tHead.getHeaderCell(
-                            getElementIndex(e, w.getElement())).getColKey();
+                    colKey = getWidget().tHead
+                            .getHeaderCell(getElementIndex(e, w.getElement()))
+                            .getColKey();
                 }
             }
         }
@@ -190,8 +191,8 @@ public class TableConnector extends AbstractFieldConnector implements
         getWidget().updateDragMode(uidl);
 
         // Update child measure hint
-        int childMeasureHint = uidl.hasAttribute("measurehint") ? uidl
-                .getIntAttribute("measurehint") : 0;
+        int childMeasureHint = uidl.hasAttribute("measurehint")
+                ? uidl.getIntAttribute("measurehint") : 0;
         getWidget().setChildMeasurementHint(
                 ChildMeasurementHint.values()[childMeasureHint]);
 
@@ -251,8 +252,8 @@ public class TableConnector extends AbstractFieldConnector implements
 
             // sanity check (in case the value has slipped beyond the total
             // amount of rows)
-            getWidget().scrollBody.setLastRendered(getWidget().scrollBody
-                    .getLastRendered());
+            getWidget().scrollBody
+                    .setLastRendered(getWidget().scrollBody.getLastRendered());
             getWidget().updateMaxIndent();
         } else {
             getWidget().postponeSanityCheckForLastRendered = false;
@@ -284,11 +285,11 @@ public class TableConnector extends AbstractFieldConnector implements
         showSavedContextMenu(contextMenuBeforeUpdate);
 
         if (!getWidget().isSelectable()) {
-            getWidget().scrollBody.addStyleName(getWidget()
-                    .getStylePrimaryName() + "-body-noselection");
+            getWidget().scrollBody.addStyleName(
+                    getWidget().getStylePrimaryName() + "-body-noselection");
         } else {
-            getWidget().scrollBody.removeStyleName(getWidget()
-                    .getStylePrimaryName() + "-body-noselection");
+            getWidget().scrollBody.removeStyleName(
+                    getWidget().getStylePrimaryName() + "-body-noselection");
         }
 
         getWidget().hideScrollPositionAnnotation();
@@ -326,21 +327,19 @@ public class TableConnector extends AbstractFieldConnector implements
 
         if (getWidget().focusedRow != null) {
             if (!getWidget().focusedRow.isAttached()
-                    && !getWidget().rowRequestHandler.isRequestHandlerRunning()) {
+                    && !getWidget().rowRequestHandler
+                            .isRequestHandlerRunning()) {
                 // focused row has been orphaned, can't focus
-                if (getWidget().selectedRowKeys.contains(getWidget().focusedRow
-                        .getKey())) {
+                if (getWidget().selectedRowKeys
+                        .contains(getWidget().focusedRow.getKey())) {
                     // if row cache was refreshed, focused row should be
                     // in selection and exists with same index
-                    getWidget().setRowFocus(
-                            getWidget().getRenderedRowByKey(
-                                    getWidget().focusedRow.getKey()));
+                    getWidget().setRowFocus(getWidget().getRenderedRowByKey(
+                            getWidget().focusedRow.getKey()));
                 } else if (getWidget().selectedRowKeys.size() > 0) {
                     // try to focus any row in selection
-                    getWidget().setRowFocus(
-                            getWidget().getRenderedRowByKey(
-                                    getWidget().selectedRowKeys.iterator()
-                                            .next()));
+                    getWidget().setRowFocus(getWidget().getRenderedRowByKey(
+                            getWidget().selectedRowKeys.iterator().next()));
                 } else {
                     // try to focus any row
                     getWidget().focusRowFromBody();
@@ -356,7 +355,8 @@ public class TableConnector extends AbstractFieldConnector implements
          * (#8584)
          */
         if (uidl.hasAttribute(TableConstants.ATTRIBUTE_KEY_MAPPER_RESET)
-                && uidl.getBooleanAttribute(TableConstants.ATTRIBUTE_KEY_MAPPER_RESET)
+                && uidl.getBooleanAttribute(
+                        TableConstants.ATTRIBUTE_KEY_MAPPER_RESET)
                 && getWidget().selectionRangeStart != null) {
             assert !getWidget().selectionRangeStart.isAttached();
             getWidget().selectionRangeStart = getWidget().focusedRow;
@@ -437,11 +437,11 @@ public class TableConnector extends AbstractFieldConnector implements
                     getLayoutManager().setNeedsMeasure(TableConnector.this);
                     ServerConnector parent = getParent();
                     if (parent instanceof ComponentConnector) {
-                        getLayoutManager().setNeedsMeasure(
-                                (ComponentConnector) parent);
+                        getLayoutManager()
+                                .setNeedsMeasure((ComponentConnector) parent);
                     }
-                    getLayoutManager().setNeedsVerticalLayout(
-                            TableConnector.this);
+                    getLayoutManager()
+                            .setNeedsVerticalLayout(TableConnector.this);
                     getLayoutManager().layoutNow();
                 }
             });
@@ -544,8 +544,8 @@ public class TableConnector extends AbstractFieldConnector implements
     @Override
     public HandlerRegistration addConnectorHierarchyChangeHandler(
             ConnectorHierarchyChangeHandler handler) {
-        return ensureHandlerManager().addHandler(
-                ConnectorHierarchyChangeEvent.TYPE, handler);
+        return ensureHandlerManager()
+                .addHandler(ConnectorHierarchyChangeEvent.TYPE, handler);
     }
 
     @Override

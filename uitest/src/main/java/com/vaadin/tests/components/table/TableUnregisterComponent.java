@@ -30,7 +30,8 @@ public class TableUnregisterComponent extends TestBase {
         container.addContainerProperty(COL_B, String.class, "");
 
         Item it = container.addItem("a");
-        final ObjectProperty<String> valA = new ObjectProperty<String>("orgVal");
+        final ObjectProperty<String> valA = new ObjectProperty<String>(
+                "orgVal");
         final LegacyTextField fieldA = new LegacyTextField(valA) {
             @Override
             public void setPropertyDataSource(Property newDataSource) {
@@ -49,12 +50,13 @@ public class TableUnregisterComponent extends TestBase {
         table.setColumnCollapsingAllowed(true);
         table.setTableFieldFactory(new DefaultFieldFactory() {
             @Override
-            public LegacyField<?> createField(Container container, Object itemId,
-                    Object propertyId, Component uiContext) {
+            public LegacyField<?> createField(Container container,
+                    Object itemId, Object propertyId, Component uiContext) {
                 if (COL_B.equals(propertyId)) {
                     LegacyField<String> field = new LegacyTextField() {
                         @Override
-                        public void setPropertyDataSource(Property newDataSource) {
+                        public void setPropertyDataSource(
+                                Property newDataSource) {
                             super.setPropertyDataSource(newDataSource);
                             if (newDataSource == null) {
                                 log.log("Edit field property data source cleared");
@@ -78,7 +80,8 @@ public class TableUnregisterComponent extends TestBase {
         addComponent(new Button("Switch column collapse", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                table.setColumnCollapsed(COL_A, !table.isColumnCollapsed(COL_A));
+                table.setColumnCollapsed(COL_A,
+                        !table.isColumnCollapsed(COL_A));
             }
         }));
 

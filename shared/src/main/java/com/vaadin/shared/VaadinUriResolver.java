@@ -70,15 +70,14 @@ public abstract class VaadinUriResolver implements Serializable {
             // without published://)
             vaadinUri = ApplicationConstants.APP_PROTOCOL_PREFIX
                     + ApplicationConstants.PUBLISHED_FILE_PATH
-                    + vaadinUri
-                            .substring(ApplicationConstants.PUBLISHED_PROTOCOL_PREFIX
+                    + vaadinUri.substring(
+                            ApplicationConstants.PUBLISHED_PROTOCOL_PREFIX
                                     .length());
             // Let translation of app:// urls take care of the rest
         }
         if (vaadinUri.startsWith(ApplicationConstants.APP_PROTOCOL_PREFIX)) {
-            String relativeUrl = vaadinUri
-                    .substring(ApplicationConstants.APP_PROTOCOL_PREFIX
-                            .length());
+            String relativeUrl = vaadinUri.substring(
+                    ApplicationConstants.APP_PROTOCOL_PREFIX.length());
             String serviceUrl = getServiceUrl();
             String serviceUrlParameterName = getServiceUrlParameterName();
             if (serviceUrlParameterName != null) {
@@ -107,9 +106,8 @@ public abstract class VaadinUriResolver implements Serializable {
         }
         if (vaadinUri.startsWith(ApplicationConstants.VAADIN_PROTOCOL_PREFIX)) {
             final String vaadinDirUri = getVaadinDirUrl();
-            String relativeUrl = vaadinUri
-                    .substring(ApplicationConstants.VAADIN_PROTOCOL_PREFIX
-                            .length());
+            String relativeUrl = vaadinUri.substring(
+                    ApplicationConstants.VAADIN_PROTOCOL_PREFIX.length());
             vaadinUri = vaadinDirUri + relativeUrl;
         }
 

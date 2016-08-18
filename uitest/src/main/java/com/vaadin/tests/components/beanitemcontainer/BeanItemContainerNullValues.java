@@ -23,8 +23,8 @@ public class BeanItemContainerNullValues extends TestBase {
     protected void setup() {
         table = new Table();
         table.setSortDisabled(false);
-        table.setContainerDataSource(BeanItemContainerGenerator
-                .createContainer(100, 1));
+        table.setContainerDataSource(
+                BeanItemContainerGenerator.createContainer(100, 1));
         table.setColumnCollapsingAllowed(true);
 
         Button b = new Button("Disable sorting", new Button.ClickListener() {

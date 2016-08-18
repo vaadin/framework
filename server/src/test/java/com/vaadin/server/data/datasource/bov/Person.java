@@ -22,7 +22,7 @@ import java.io.Serializable;
  *
  * @author Vaadin Ltd
  */
-public class Person implements Serializable{
+public class Person implements Serializable {
     private final String name;
     private final int born;
 

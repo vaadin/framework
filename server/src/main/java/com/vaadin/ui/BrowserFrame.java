@@ -23,8 +23,7 @@ import com.vaadin.shared.ui.browserframe.BrowserFrameState;
  * <code>iframe</code> element.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
+ * @version @VERSION@
  * @since 7.0
  */
 public class BrowserFrame extends AbstractEmbedded {

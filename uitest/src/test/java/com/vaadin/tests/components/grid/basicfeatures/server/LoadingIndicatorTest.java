@@ -45,11 +45,11 @@ public class LoadingIndicatorTest extends GridBasicFeaturesTest {
         gridElement.getCell(200, 1);
 
         // Wait for loading indicator delay
-        waitUntil(ExpectedConditions.visibilityOfElementLocated(By
-                .className("v-loading-indicator")));
+        waitUntil(ExpectedConditions.visibilityOfElementLocated(
+                By.className("v-loading-indicator")));
 
-        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(By
-                .className("v-loading-indicator")));
+        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(
+                By.className("v-loading-indicator")));
 
         // Scroll so much that more data gets fetched, but not so much that
         // missing rows are shown

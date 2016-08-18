@@ -28,7 +28,8 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class DesignTimeZoneConverter implements LegacyConverter<String, TimeZone> {
+public class DesignTimeZoneConverter
+        implements LegacyConverter<String, TimeZone> {
 
     @Override
     public TimeZone convertToModel(String value,

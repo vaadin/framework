@@ -53,8 +53,8 @@ public abstract class BasicPushTest extends MultiBrowserTest {
     }
 
     public static int getClientCounter(AbstractTB3Test t) {
-        WebElement clientCounterElem = t.findElement(By
-                .id(BasicPush.CLIENT_COUNTER_ID));
+        WebElement clientCounterElem = t
+                .findElement(By.id(BasicPush.CLIENT_COUNTER_ID));
         return Integer.parseInt(clientCounterElem.getText());
     }
 
@@ -67,8 +67,8 @@ public abstract class BasicPushTest extends MultiBrowserTest {
     }
 
     public static int getServerCounter(AbstractTB3Test t) {
-        WebElement serverCounterElem = t.findElement(By
-                .id(BasicPush.SERVER_COUNTER_ID));
+        WebElement serverCounterElem = t
+                .findElement(By.id(BasicPush.SERVER_COUNTER_ID));
         return Integer.parseInt(serverCounterElem.getText());
     }
 
@@ -89,7 +89,8 @@ public abstract class BasicPushTest extends MultiBrowserTest {
 
             @Override
             public Boolean apply(WebDriver input) {
-                return BasicPushTest.getClientCounter(BasicPushTest.this) == expectedValue;
+                return BasicPushTest
+                        .getClientCounter(BasicPushTest.this) == expectedValue;
             }
         }, 10);
     }
@@ -100,7 +101,8 @@ public abstract class BasicPushTest extends MultiBrowserTest {
 
             @Override
             public Boolean apply(WebDriver input) {
-                return BasicPushTest.getServerCounter(BasicPushTest.this) > counter;
+                return BasicPushTest
+                        .getServerCounter(BasicPushTest.this) > counter;
             }
         }, 10);
     }

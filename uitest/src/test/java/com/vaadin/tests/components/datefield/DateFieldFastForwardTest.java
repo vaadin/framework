@@ -32,8 +32,8 @@ public class DateFieldFastForwardTest extends MultiBrowserTest {
     public void testFastForwardOnRightMouseClick() throws Exception {
         openTestURL();
         String firstMonth = getSelectedMonth();
-        WebElement nextMonthButton = driver.findElement(By
-                .className("v-button-nextmonth"));
+        WebElement nextMonthButton = driver
+                .findElement(By.className("v-button-nextmonth"));
 
         // Click and hold left mouse button to start fast forwarding.
         new Actions(driver).clickAndHold(nextMonthButton).perform();
@@ -63,8 +63,9 @@ public class DateFieldFastForwardTest extends MultiBrowserTest {
     }
 
     private String getSelectedMonth() {
-        return driver.findElement(
-                By.className("v-inline-datefield-calendarpanel-month"))
+        return driver
+                .findElement(
+                        By.className("v-inline-datefield-calendarpanel-month"))
                 .getText();
     }
 

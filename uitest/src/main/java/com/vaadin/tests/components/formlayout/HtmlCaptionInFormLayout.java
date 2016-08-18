@@ -25,10 +25,12 @@ import com.vaadin.ui.FormLayout;
 public class HtmlCaptionInFormLayout extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
-        final LegacyTextField asHtml = new LegacyTextField("Contains <b>HTML</b>");
+        final LegacyTextField asHtml = new LegacyTextField(
+                "Contains <b>HTML</b>");
         asHtml.setCaptionAsHtml(true);
 
-        final LegacyTextField asText = new LegacyTextField("Contains <b>HTML</b>");
+        final LegacyTextField asText = new LegacyTextField(
+                "Contains <b>HTML</b>");
 
         addComponent(new FormLayout(asHtml, asText));
 

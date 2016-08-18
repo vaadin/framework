@@ -51,8 +51,8 @@ public class MultiFileUploadTest extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        getPage().getStyles().add(
-                ".v-upload-hidden-button .v-button {display:none};");
+        getPage().getStyles()
+                .add(".v-upload-hidden-button .v-button {display:none};");
         addUpload();
         addComponent(uploadsLayout);
         addComponent(new Button("Upload files", new ClickListener() {
@@ -95,7 +95,8 @@ public class MultiFileUploadTest extends AbstractTestUIWithLog {
 
         upload.setReceiver(new Receiver() {
             @Override
-            public OutputStream receiveUpload(String filename, String mimeType) {
+            public OutputStream receiveUpload(String filename,
+                    String mimeType) {
                 return new OutputStream() {
                     @Override
                     public void write(int arg0) throws IOException {

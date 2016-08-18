@@ -40,8 +40,8 @@ import com.vaadin.ui.components.colorpicker.ColorPickerGradient;
 public class ColorPickerGradientConnector extends AbstractComponentConnector
         implements MouseUpHandler {
 
-    private ColorPickerGradientServerRpc rpc = RpcProxy.create(
-            ColorPickerGradientServerRpc.class, this);
+    private ColorPickerGradientServerRpc rpc = RpcProxy
+            .create(ColorPickerGradientServerRpc.class, this);
 
     @Override
     protected Widget createWidget() {

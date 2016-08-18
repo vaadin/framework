@@ -54,8 +54,8 @@ public class EditableModeChangeTest extends MultiBrowserTest {
         sleep(100);
 
         // fetch the updated cell
-        WebElement textField = table.getCell(1, 0).findElement(
-                By.className("v-textfield"));
+        WebElement textField = table.getCell(1, 0)
+                .findElement(By.className("v-textfield"));
         assertEquals(
                 "original value not found, wrong cell or contents (1st column of the 2nd row expected)",
                 "Teppo", textField.getAttribute("value"));
@@ -73,13 +73,13 @@ public class EditableModeChangeTest extends MultiBrowserTest {
                 "baa", table.getCell(1, 0).getText());
 
         // check that selection got updated correctly
-        List<WebElement> selected = table.findElement(
-                By.className("v-table-body")).findElements(
-                By.className("v-selected"));
+        List<WebElement> selected = table
+                .findElement(By.className("v-table-body"))
+                .findElements(By.className("v-selected"));
         assertEquals(1, selected.size());
 
-        WebElement content = selected.get(0).findElement(
-                By.className("v-table-cell-wrapper"));
+        WebElement content = selected.get(0)
+                .findElement(By.className("v-table-cell-wrapper"));
         assertEquals(
                 "expected value not found, wrong cell or contents (1st column of the 1st row expected)",
                 "Teemu", content.getText());

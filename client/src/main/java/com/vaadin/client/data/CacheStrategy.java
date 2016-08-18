@@ -46,8 +46,8 @@ public interface CacheStrategy {
                 Range estimatedAvailableRange) {
             int cacheSize = getMinimumCacheSize(displayedRange.length());
 
-            return displayedRange.expand(cacheSize, cacheSize).restrictTo(
-                    estimatedAvailableRange);
+            return displayedRange.expand(cacheSize, cacheSize)
+                    .restrictTo(estimatedAvailableRange);
         }
 
         @Override
@@ -55,8 +55,8 @@ public interface CacheStrategy {
                 Range estimatedAvailableRange) {
             int cacheSize = getMaximumCacheSize(displayedRange.length());
 
-            return displayedRange.expand(cacheSize, cacheSize).restrictTo(
-                    estimatedAvailableRange);
+            return displayedRange.expand(cacheSize, cacheSize)
+                    .restrictTo(estimatedAvailableRange);
         }
 
         /**
@@ -86,8 +86,8 @@ public interface CacheStrategy {
      * the cache and items are discarded if there's yet another page size worth
      * of items cached in either direction.
      */
-    public static class DefaultCacheStrategy extends
-            AbstractBasicSymmetricalCacheStrategy {
+    public static class DefaultCacheStrategy
+            extends AbstractBasicSymmetricalCacheStrategy {
         private final int minimumRatio;
         private final int maximumRatio;
 

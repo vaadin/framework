@@ -41,8 +41,8 @@ public class GridInTabSheetTest extends MultiBrowserTest {
 
         for (int i = 0; i < 3; ++i) {
             addGridRow();
-            assertEquals("" + (100 + i), getGridElement().getCell(i, 1)
-                    .getText());
+            assertEquals("" + (100 + i),
+                    getGridElement().getCell(i, 1).getText());
         }
 
         assertNoNotification();

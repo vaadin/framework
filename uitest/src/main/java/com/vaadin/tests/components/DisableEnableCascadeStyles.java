@@ -36,7 +36,8 @@ public class DisableEnableCascadeStyles extends TestBase {
 
         button = new Button("Button, enabled");
         nativeButton = new NativeButton("NativeButton, enabled");
-        textField = new LegacyTextField("TextField with caption and value, enabled");
+        textField = new LegacyTextField(
+                "TextField with caption and value, enabled");
         textField.setValue("Text");
         textArea = new TextArea("TextArea with caption and value, enabled");
         textArea.setValue("Text");
@@ -101,15 +102,13 @@ public class DisableEnableCascadeStyles extends TestBase {
                             }
                         }
                         if (layout.getComponent(0).isEnabled()) {
-                            enableDisableComponentsButton
-                                    .setCaption(enableDisableComponentsButton
-                                            .getCaption().replace("Enable",
-                                                    "Disable"));
+                            enableDisableComponentsButton.setCaption(
+                                    enableDisableComponentsButton.getCaption()
+                                            .replace("Enable", "Disable"));
                         } else {
-                            enableDisableComponentsButton
-                                    .setCaption(enableDisableComponentsButton
-                                            .getCaption().replace("Disable",
-                                                    "Enable"));
+                            enableDisableComponentsButton.setCaption(
+                                    enableDisableComponentsButton.getCaption()
+                                            .replace("Disable", "Enable"));
                         }
                     }
                 });
@@ -123,13 +122,13 @@ public class DisableEnableCascadeStyles extends TestBase {
         if (target.isEnabled()) {
             target.setEnabled(false);
             button.setCaption(button.getCaption().replace("Disable", "Enable"));
-            target.setCaption(target.getCaption()
-                    .replace("enabled", "disabled"));
+            target.setCaption(
+                    target.getCaption().replace("enabled", "disabled"));
         } else {
             target.setEnabled(true);
             button.setCaption(button.getCaption().replace("Enable", "Disable"));
-            target.setCaption(target.getCaption()
-                    .replace("disabled", "enabled"));
+            target.setCaption(
+                    target.getCaption().replace("disabled", "enabled"));
         }
     }
 

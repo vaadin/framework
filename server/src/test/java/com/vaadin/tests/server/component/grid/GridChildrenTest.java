@@ -34,8 +34,8 @@ public class GridChildrenTest {
         grid.addColumn("foo");
         grid.addColumn("bar");
         grid.addColumn("baz");
-        HeaderCell merged = grid.getDefaultHeaderRow()
-                .join("foo", "bar", "baz");
+        HeaderCell merged = grid.getDefaultHeaderRow().join("foo", "bar",
+                "baz");
         Label label = new Label();
         merged.setComponent(label);
         Iterator<Component> i = grid.iterator();

@@ -31,9 +31,8 @@ public class VerticalLayoutConnector extends AbstractOrderedLayoutConnector {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.client.ui.orderedlayout.AbstractOrderedLayoutConnector#getWidget
-     * ()
+     * @see com.vaadin.client.ui.orderedlayout.AbstractOrderedLayoutConnector#
+     * getWidget ()
      */
     @Override
     public VVerticalLayout getWidget() {

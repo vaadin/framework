@@ -25,8 +25,8 @@ import com.vaadin.client.renderers.TextRenderer;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.SelectionMode;
 
-public class GridClientDataSourcesWidget extends
-        PureGWTTestApplication<Grid<String[]>> {
+public class GridClientDataSourcesWidget
+        extends PureGWTTestApplication<Grid<String[]>> {
 
     private interface RestCallback {
         void onResponse(RestishDataSource.Backend.Result result);
@@ -75,7 +75,7 @@ public class GridClientDataSourcesWidget extends
          * somewhere.
          * <p>
          * It's scoped inside the RDS class only because it's tied to that.
-         * */
+         */
         private class Backend {
             public class Result {
                 public int size;
@@ -100,11 +100,13 @@ public class GridClientDataSourcesWidget extends
 
             }
 
-            private List<String[]> fetchRows(int firstRowIndex, int numberOfRows) {
+            private List<String[]> fetchRows(int firstRowIndex,
+                    int numberOfRows) {
                 List<String[]> rows = new ArrayList<String[]>();
                 for (int i = 0; i < numberOfRows; i++) {
                     String id = String.valueOf(firstRowIndex + i);
-                    rows.add(new String[] { id, "cell " + id + " #" + modCount });
+                    rows.add(new String[] { id,
+                            "cell " + id + " #" + modCount });
                 }
                 return rows;
             }

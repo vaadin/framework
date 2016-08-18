@@ -35,16 +35,16 @@ public class CalendarReadOnly extends AbstractTestUI {
         calendar.setSizeFull();
 
         try {
-            calendar.setStartDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2013-09-01"));
-            calendar.setEndDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2013-09-30"));
+            calendar.setStartDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2013-09-01"));
+            calendar.setEndDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2013-09-30"));
 
-            BasicEvent event = new BasicEvent("EVENT NAME 1",
-                    "EVENT TOOLTIP 1",
+            BasicEvent event = new BasicEvent("EVENT NAME 1", "EVENT TOOLTIP 1",
                     new SimpleDateFormat("yyyy-MM-dd HH:mm")
-                            .parse("2013-09-05 15:30"), new SimpleDateFormat(
-                            "yyyy-MM-dd HH:mm").parse("2013-09-05 22:20"));
+                            .parse("2013-09-05 15:30"),
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm")
+                            .parse("2013-09-05 22:20"));
             event.setStyleName("color1");
 
             calendar.addEvent(event);

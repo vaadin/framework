@@ -36,7 +36,8 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.4
  */
-public class LegacyStringToEnumConverter implements LegacyConverter<String, Enum> {
+public class LegacyStringToEnumConverter
+        implements LegacyConverter<String, Enum> {
 
     @Override
     public Enum convertToModel(String value, Class<? extends Enum> targetType,
@@ -71,8 +72,8 @@ public class LegacyStringToEnumConverter implements LegacyConverter<String, Enum
         }
 
         if (!enumType.isEnum()) {
-            throw new ConversionException(enumType.getName()
-                    + " is not an enum type");
+            throw new ConversionException(
+                    enumType.getName() + " is not an enum type");
         }
 
         // First test for the human-readable value since that's the more likely
@@ -128,8 +129,8 @@ public class LegacyStringToEnumConverter implements LegacyConverter<String, Enum
             // FOO_BAR -> Foo bar
             // _FOO -> _foo
             String result = enumString.substring(0, 1).toUpperCase(locale);
-            result += enumString.substring(1).toLowerCase(locale)
-                    .replace('_', ' ');
+            result += enumString.substring(1).toLowerCase(locale).replace('_',
+                    ' ');
             return result;
         } else {
             return enumString;

@@ -30,7 +30,8 @@ import com.vaadin.ui.AbstractComponent;
  * 
  * @since 7.0.0
  */
-public class ColorPickerGrid extends AbstractComponent implements ColorSelector {
+public class ColorPickerGrid extends AbstractComponent
+        implements ColorSelector {
 
     private static final String STYLENAME = "v-colorpicker-grid";
 

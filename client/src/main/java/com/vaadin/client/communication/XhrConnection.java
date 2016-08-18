@@ -146,10 +146,9 @@ public class XhrConnection {
                 return;
             }
 
-            getLogger().info(
-                    "Server visit took "
-                            + Util.round(Profiler.getRelativeTimeMillis()
-                                    - requestStartTime, 3) + "ms");
+            getLogger().info("Server visit took " + Util.round(
+                    Profiler.getRelativeTimeMillis() - requestStartTime, 3)
+                    + "ms");
 
             // for(;;);["+ realJson +"]"
             String responseText = response.getText();
@@ -221,8 +220,8 @@ public class XhrConnection {
                 }.schedule(retryTimeout);
             }
         } catch (RequestException e) {
-            getConnectionStateHandler().xhrException(
-                    new XhrConnectionError(null, payload, e));
+            getConnectionStateHandler()
+                    .xhrException(new XhrConnectionError(null, payload, e));
         }
     }
 
@@ -236,8 +235,8 @@ public class XhrConnection {
                 .translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
                         + ApplicationConstants.UIDL_PATH + '/');
 
-        uri = SharedUtil.addGetParameters(uri, UIConstants.UI_ID_PARAMETER
-                + "=" + connection.getConfiguration().getUIId());
+        uri = SharedUtil.addGetParameters(uri, UIConstants.UI_ID_PARAMETER + "="
+                + connection.getConfiguration().getUIId());
 
         return uri;
 

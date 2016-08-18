@@ -24,9 +24,10 @@ import com.vaadin.legacy.ui.LegacyField;
 import com.vaadin.legacy.ui.LegacyAbstractField;
 
 /**
- * A {@link LegacyField} whose UI content can be constructed by the user, enabling the
- * creation of e.g. form fields by composing Vaadin components. Customization of
- * both the visual presentation and the logic of the field is possible.
+ * A {@link LegacyField} whose UI content can be constructed by the user,
+ * enabling the creation of e.g. form fields by composing Vaadin components.
+ * Customization of both the visual presentation and the logic of the field is
+ * possible.
  * 
  * Subclasses must implement {@link #getType()} and {@link #initContent()}.
  * 
@@ -45,8 +46,8 @@ import com.vaadin.legacy.ui.LegacyAbstractField;
  * 
  * @since 7.0
  */
-public abstract class CustomField<T> extends LegacyAbstractField<T> implements
-        HasComponents {
+public abstract class CustomField<T> extends LegacyAbstractField<T>
+        implements HasComponents {
 
     /**
      * The root component implementing the custom component.
@@ -127,8 +128,8 @@ public abstract class CustomField<T> extends LegacyAbstractField<T> implements
 
     // ComponentContainer methods
 
-    private class ComponentIterator implements Iterator<Component>,
-            Serializable {
+    private class ComponentIterator
+            implements Iterator<Component>, Serializable {
         boolean first = (root != null);
 
         @Override

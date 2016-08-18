@@ -48,15 +48,15 @@ public class SetFirstVisibleHourOfDayTest extends MultiBrowserTest {
         // first of all check if event is present in calendar view
         waitForElementPresent(By.className("v-calendar-event-content"));
 
-        WebElement event = getDriver().findElement(
-                By.className("v-calendar-event-content"));
-        WebElement dateSlot = getDriver().findElement(
-                By.className("v-datecellslot"));
+        WebElement event = getDriver()
+                .findElement(By.className("v-calendar-event-content"));
+        WebElement dateSlot = getDriver()
+                .findElement(By.className("v-datecellslot"));
 
         Assert.assertEquals(
                 "The height of shown part of calendar event should be equal to 12 datecell slots",
-                dateSlot.getSize().getHeight() * 12, event.getSize()
-                        .getHeight());
+                dateSlot.getSize().getHeight() * 12,
+                event.getSize().getHeight());
     }
 
     @Test
@@ -70,15 +70,15 @@ public class SetFirstVisibleHourOfDayTest extends MultiBrowserTest {
         // first of all check if event is present in calendar view
         waitForElementPresent(By.className("v-calendar-event-content"));
 
-        WebElement event = getDriver().findElement(
-                By.className("v-calendar-event-content"));
-        WebElement dateSlot = getDriver().findElement(
-                By.className("v-datecellslot"));
+        WebElement event = getDriver()
+                .findElement(By.className("v-calendar-event-content"));
+        WebElement dateSlot = getDriver()
+                .findElement(By.className("v-datecellslot"));
 
         Assert.assertEquals(
                 "The height of shown part of calendar event should be equal to 12 datecell slots",
-                dateSlot.getSize().getHeight() * 12, event.getSize()
-                        .getHeight());
+                dateSlot.getSize().getHeight() * 12,
+                event.getSize().getHeight());
     }
 
     private void clickElement(String className, String text) {
@@ -93,8 +93,8 @@ public class SetFirstVisibleHourOfDayTest extends MultiBrowserTest {
                         // sometimes the element only gets focus from click and
                         // we need to click the text, which is in the right edge
                         // of the element
-                        testBenchElement(webElement).click(
-                                webElement.getSize().getWidth() - 5, 9);
+                        testBenchElement(webElement)
+                                .click(webElement.getSize().getWidth() - 5, 9);
                     } catch (StaleElementReferenceException e) {
                         // the first click succeeded after all
                     }

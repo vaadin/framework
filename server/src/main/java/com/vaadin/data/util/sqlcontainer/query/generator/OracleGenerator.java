@@ -28,7 +28,8 @@ public class OracleGenerator extends DefaultSQLGenerator {
 
     }
 
-    public OracleGenerator(Class<? extends StatementHelper> statementHelperClazz) {
+    public OracleGenerator(
+            Class<? extends StatementHelper> statementHelperClazz) {
         super(statementHelperClazz);
     }
 
@@ -80,7 +81,8 @@ public class OracleGenerator extends DefaultSQLGenerator {
                     "SELECT COUNT(*) AS %s FROM (SELECT * FROM %s",
                     QueryBuilder.quote("rowcount"), tableName));
             if (filters != null && !filters.isEmpty()) {
-                query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
+                query.append(
+                        QueryBuilder.getWhereStringForFilters(filters, sh));
             }
             query.append(")");
             sh.setQueryString(query.toString());
@@ -92,7 +94,8 @@ public class OracleGenerator extends DefaultSQLGenerator {
             query.append("SELECT ").append(toSelect).append(" FROM ")
                     .append(tableName);
             if (filters != null) {
-                query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
+                query.append(
+                        QueryBuilder.getWhereStringForFilters(filters, sh));
             }
             if (orderBys != null) {
                 for (OrderBy o : orderBys) {
@@ -104,9 +107,9 @@ public class OracleGenerator extends DefaultSQLGenerator {
         }
 
         /* Remaining SELECT cases are handled here */
-        query.append(String
-                .format("SELECT * FROM (SELECT x.*, ROWNUM AS %s FROM (SELECT %s FROM %s",
-                        QueryBuilder.quote("rownum"), toSelect, tableName));
+        query.append(String.format(
+                "SELECT * FROM (SELECT x.*, ROWNUM AS %s FROM (SELECT %s FROM %s",
+                QueryBuilder.quote("rownum"), toSelect, tableName));
         if (filters != null) {
             query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
         }

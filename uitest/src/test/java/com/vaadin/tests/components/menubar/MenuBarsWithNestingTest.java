@@ -53,8 +53,8 @@ public class MenuBarsWithNestingTest extends MultiBrowserTest {
         fileMenu.click();
         WebElement exportMenu = fileMenu.findElement(By.vaadin("#Export.."));
         exportMenu.click();
-        waitUntil(ExpectedConditions.visibilityOfElementLocated(By
-                .xpath(".//*[text() = 'As PDF...']")));
+        waitUntil(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath(".//*[text() = 'As PDF...']")));
     }
 
     @Test
@@ -72,8 +72,8 @@ public class MenuBarsWithNestingTest extends MultiBrowserTest {
     public void testNestedMenuWithIcons() throws InterruptedException {
         String selection = itemNames[itemNames.length - 1];
         for (String itemName : nestedItemnames) {
-            WebElement lastMenuItem = secondMenuBar.findElement(By.vaadin("#"
-                    + selection));
+            WebElement lastMenuItem = secondMenuBar
+                    .findElement(By.vaadin("#" + selection));
             lastMenuItem.click();
             lastMenuItem.findElement(By.vaadin("#" + itemName)).click();
             waitUntil(ExpectedConditions.textToBePresentInElement(

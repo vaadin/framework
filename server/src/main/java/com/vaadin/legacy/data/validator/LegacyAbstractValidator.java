@@ -18,8 +18,8 @@ package com.vaadin.legacy.data.validator;
 import com.vaadin.legacy.data.Validator;
 
 /**
- * Abstract {@link com.vaadin.legacy.data.Validator Validator} implementation that
- * provides a basic Validator implementation except the
+ * Abstract {@link com.vaadin.legacy.data.Validator Validator} implementation
+ * that provides a basic Validator implementation except the
  * {@link #isValidValue(Object)} method.
  * <p>
  * To include the value that failed validation in the exception message you can

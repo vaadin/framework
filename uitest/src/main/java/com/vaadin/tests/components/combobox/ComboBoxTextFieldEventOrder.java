@@ -14,8 +14,8 @@ public class ComboBoxTextFieldEventOrder extends TestBase {
     protected void setup() {
         LegacyTextField textField = new LegacyTextField("text field");
         textField.setImmediate(true);
-        final Select select = new Select("select", Arrays.asList("1", "2", "3",
-                "4"));
+        final Select select = new Select("select",
+                Arrays.asList("1", "2", "3", "4"));
         textField.addListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {

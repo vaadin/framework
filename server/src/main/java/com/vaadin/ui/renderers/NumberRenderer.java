@@ -128,8 +128,8 @@ public class NumberRenderer extends AbstractRenderer<Number> {
      *            the format string with which to format the number
      * @throws IllegalArgumentException
      *             if {@code formatString} is {@code null}
-     * @see <a
-     *      href="http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
+     * @see <a href=
+     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
      *      String Syntax</a>
      */
     public NumberRenderer(String formatString) throws IllegalArgumentException {
@@ -148,8 +148,8 @@ public class NumberRenderer extends AbstractRenderer<Number> {
      *            the locale in which to present numbers
      * @throws IllegalArgumentException
      *             if either argument is {@code null}
-     * @see <a
-     *      href="http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
+     * @see <a href=
+     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
      *      String Syntax</a>
      */
     public NumberRenderer(String formatString, Locale locale,
@@ -179,9 +179,9 @@ public class NumberRenderer extends AbstractRenderer<Number> {
         } else if (numberFormat != null) {
             stringValue = numberFormat.format(value);
         } else {
-            throw new IllegalStateException(String.format("Internal bug: "
-                    + "%s is in an illegal state: "
-                    + "[locale: %s, numberFormat: %s, formatString: %s]",
+            throw new IllegalStateException(String.format(
+                    "Internal bug: " + "%s is in an illegal state: "
+                            + "[locale: %s, numberFormat: %s, formatString: %s]",
                     getClass().getSimpleName(), locale, numberFormat,
                     formatString));
         }

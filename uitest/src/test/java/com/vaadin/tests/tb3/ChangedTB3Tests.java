@@ -33,8 +33,8 @@ import com.vaadin.tests.tb3.ChangedTB3Tests.ChangedTB3TestsSuite;
 @RunWith(ChangedTB3TestsSuite.class)
 public class ChangedTB3Tests {
     public static class ChangedTB3TestsSuite extends TB3TestSuite {
-        public ChangedTB3TestsSuite(Class<?> klass) throws InitializationError,
-                IOException {
+        public ChangedTB3TestsSuite(Class<?> klass)
+                throws InitializationError, IOException {
             super(klass, AbstractTB3Test.class, "com.vaadin.tests",
                     new String[] { "com.vaadin.tests.integration" },
                     new ChangedTB3TestLocator());

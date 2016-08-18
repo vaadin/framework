@@ -32,16 +32,17 @@ import java.util.Locale;
  * @since 7.1
  * @author Vaadin Ltd
  */
-public class LegacyDateToSqlDateConverter implements LegacyConverter<Date, java.sql.Date> {
+public class LegacyDateToSqlDateConverter
+        implements LegacyConverter<Date, java.sql.Date> {
 
     @Override
     public java.sql.Date convertToModel(Date value,
             Class<? extends java.sql.Date> targetType, Locale locale)
             throws ConversionException {
         if (targetType != getModelType()) {
-            throw new ConversionException("Converter only supports "
-                    + getModelType().getName() + " (targetType was "
-                    + targetType.getName() + ")");
+            throw new ConversionException(
+                    "Converter only supports " + getModelType().getName()
+                            + " (targetType was " + targetType.getName() + ")");
         }
 
         if (value == null) {
@@ -56,9 +57,9 @@ public class LegacyDateToSqlDateConverter implements LegacyConverter<Date, java.
             Class<? extends Date> targetType, Locale locale)
             throws ConversionException {
         if (targetType != getPresentationType()) {
-            throw new ConversionException("Converter only supports "
-                    + getPresentationType().getName() + " (targetType was "
-                    + targetType.getName() + ")");
+            throw new ConversionException(
+                    "Converter only supports " + getPresentationType().getName()
+                            + " (targetType was " + targetType.getName() + ")");
         }
 
         if (value == null) {

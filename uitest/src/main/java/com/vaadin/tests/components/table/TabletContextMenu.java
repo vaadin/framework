@@ -104,7 +104,8 @@ public class TabletContextMenu extends AbstractTestUI {
                     ShortcutAction.KeyCode.DELETE, null);
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 System.out.println(action.getCaption());
             }
 

@@ -66,8 +66,8 @@ public class ErrorNotificationHandler extends Handler {
                         .getRunningApplications().get(0);
                 owner = connection.getUIConnector().getWidget();
             }
-            VNotification n = VNotification.createNotification(
-                    VNotification.DELAY_FOREVER, owner);
+            VNotification n = VNotification
+                    .createNotification(VNotification.DELAY_FOREVER, owner);
             n.getElement().getStyle().setTextAlign(TextAlign.LEFT);
             n.show("<h1>Uncaught client side exception</h1><br />"
                     + exceptionText.replace("\n", "<br/>\n"),

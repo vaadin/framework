@@ -58,11 +58,10 @@ public class CalendarHtmlInEvents extends AbstractTestUIWithLog {
         ns.setValue("Month");
         final CheckBox allowHtml = new CheckBox("Allow HTML in event caption");
         allowHtml.setValue(calendar.isEventCaptionAsHtml());
-        allowHtml.addValueChangeListener(
-                event -> {
-                    calendar.setEventCaptionAsHtml(event.getValue());
-                    log("HTML in event caption: " + event.getValue());
-                });
+        allowHtml.addValueChangeListener(event -> {
+            calendar.setEventCaptionAsHtml(event.getValue());
+            log("HTML in event caption: " + event.getValue());
+        });
         HorizontalLayout hl = new HorizontalLayout();
         hl.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
         hl.addComponents(ns, allowHtml);

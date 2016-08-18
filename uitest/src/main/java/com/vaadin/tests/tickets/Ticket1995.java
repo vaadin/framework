@@ -31,8 +31,8 @@ public class Ticket1995 extends LegacyApplication {
 
         Filterable filterable = (Container.Filterable) table
                 .getContainerDataSource();
-        filterable.addContainerFilter(new SimpleStringFilter(PROPERTY_1, "Row",
-                true, false));
+        filterable.addContainerFilter(
+                new SimpleStringFilter(PROPERTY_1, "Row", true, false));
 
         table.setColumnHeader(PROPERTY_1, "Test (filter: Row)");
 
@@ -61,8 +61,8 @@ public class Ticket1995 extends LegacyApplication {
 
         getMainWindow().showNotification("Tried to add item 'abc', " + res);
 
-        filterable.addContainerFilter(new SimpleStringFilter(PROPERTY_1, "Row",
-                true, false));
+        filterable.addContainerFilter(
+                new SimpleStringFilter(PROPERTY_1, "Row", true, false));
 
     }
 }

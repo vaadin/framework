@@ -78,7 +78,7 @@ public class ComputedStyle {
             if(borderStyle == "none")
                 return "0px";
         }
-
+    
         if(cs.getPropertyValue) {
         
             // Convert name to dashed format
@@ -89,10 +89,10 @@ public class ComputedStyle {
         
             var ret = cs[name];
             var style = elem.style;
-
+    
             // From the awesome hack by Dean Edwards
             // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
-
+    
             // If we're not dealing with a regular pixel number
             // but a number that has a weird ending, we need to convert it to pixels
                 if ( !/^\d+(px)?$/i.test( ret ) && /^\d/.test( ret ) ) {
@@ -124,7 +124,7 @@ public class ComputedStyle {
         } else if (name == "height" && ret == "auto") {
             ret = elem.clientHeight + "px";
         }
-
+    
         return ret;
         
     }-*/;

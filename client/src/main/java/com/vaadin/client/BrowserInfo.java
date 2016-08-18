@@ -453,8 +453,8 @@ public class BrowserInfo {
      *         otherwise
      */
     public boolean isAndroidWithBrokenScrollTop() {
-        return isAndroid()
-                && (getOperatingSystemMajorVersion() == 3 || getOperatingSystemMajorVersion() == 4);
+        return isAndroid() && (getOperatingSystemMajorVersion() == 3
+                || getOperatingSystemMajorVersion() == 4);
     }
 
     public boolean isAndroid23() {

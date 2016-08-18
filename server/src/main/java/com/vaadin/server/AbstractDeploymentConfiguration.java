@@ -23,8 +23,8 @@ package com.vaadin.server;
  * 
  * @author Vaadin Ltd
  */
-public abstract class AbstractDeploymentConfiguration implements
-        DeploymentConfiguration {
+public abstract class AbstractDeploymentConfiguration
+        implements DeploymentConfiguration {
 
     @Override
     public String getUIClassName() {

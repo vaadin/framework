@@ -37,7 +37,8 @@ public class AddRemoveComponentTest {
         hl.addComponent(label);
 
         componentContainer.removeComponent(label);
-        Assert.assertEquals("Parent no longer correct for "
-                + componentContainer.getClass(), hl, label.getParent());
+        Assert.assertEquals(
+                "Parent no longer correct for " + componentContainer.getClass(),
+                hl, label.getParent());
     }
 }

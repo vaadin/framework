@@ -41,8 +41,8 @@ public class GeneratedPropertyContainerTest {
     Indexed wrappedContainer;
     private static double MILES_CONVERSION = 0.6214d;
 
-    private class GeneratedPropertyListener implements
-            PropertySetChangeListener {
+    private class GeneratedPropertyListener
+            implements PropertySetChangeListener {
 
         private int callCount = 0;
 
@@ -99,8 +99,9 @@ public class GeneratedPropertyContainerTest {
                 });
 
         Object itemId = container.addItem();
-        assertEquals("Expected value not in item.", container.getItem(itemId)
-                .getItemProperty("hello").getValue(), "Hello World!");
+        assertEquals("Expected value not in item.",
+                container.getItem(itemId).getItemProperty("hello").getValue(),
+                "Hello World!");
     }
 
     @Test
@@ -123,8 +124,8 @@ public class GeneratedPropertyContainerTest {
                     @Override
                     public SortOrder[] getSortProperties(SortOrder order) {
                         SortOrder[] sortOrder = new SortOrder[1];
-                        sortOrder[0] = new SortOrder("bar", order
-                                .getDirection());
+                        sortOrder[0] = new SortOrder("bar",
+                                order.getDirection());
                         return sortOrder;
                     }
                 });
@@ -159,7 +160,8 @@ public class GeneratedPropertyContainerTest {
                     }
                 });
 
-        assertFalse(container.getSortableContainerPropertyIds().contains("bar"));
+        assertFalse(
+                container.getSortableContainerPropertyIds().contains("bar"));
     }
 
     @Test
@@ -273,8 +275,8 @@ public class GeneratedPropertyContainerTest {
     @Test
     public void testRemoveProperty() {
         container.removeContainerProperty("foo");
-        assertFalse("Container contained removed property", container
-                .getContainerPropertyIds().contains("foo"));
+        assertFalse("Container contained removed property",
+                container.getContainerPropertyIds().contains("foo"));
         assertTrue("Wrapped container did not contain removed property",
                 wrappedContainer.getContainerPropertyIds().contains("foo"));
 
@@ -282,8 +284,8 @@ public class GeneratedPropertyContainerTest {
                 .getItemPropertyIds().contains("foo"));
 
         container.addContainerProperty("foo", null, null);
-        assertTrue("Container did not contain returned property", container
-                .getContainerPropertyIds().contains("foo"));
+        assertTrue("Container did not contain returned property",
+                container.getContainerPropertyIds().contains("foo"));
     }
 
     @Test

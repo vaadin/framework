@@ -173,9 +173,8 @@ public class DragAndDropHandler {
                     @Override
                     public void onPreviewNativeEvent(NativePreviewEvent event) {
                         final int typeInt = event.getTypeInt();
-                        if (typeInt == -1
-                                && event.getNativeEvent().getType()
-                                        .toLowerCase().contains("pointer")) {
+                        if (typeInt == -1 && event.getNativeEvent().getType()
+                                .toLowerCase().contains("pointer")) {
                             /*
                              * Ignore PointerEvents since IE10 and IE11 send
                              * also MouseEvents for backwards compatibility.
@@ -196,12 +195,10 @@ public class DragAndDropHandler {
                             break;
                         case Event.ONMOUSEMOVE:
                         case Event.ONTOUCHMOVE:
-                            int currentX = WidgetUtil
-                                    .getTouchOrMouseClientX(event
-                                            .getNativeEvent());
-                            int currentY = WidgetUtil
-                                    .getTouchOrMouseClientY(event
-                                            .getNativeEvent());
+                            int currentX = WidgetUtil.getTouchOrMouseClientX(
+                                    event.getNativeEvent());
+                            int currentY = WidgetUtil.getTouchOrMouseClientY(
+                                    event.getNativeEvent());
                             if (Math.abs(startX - currentX) > 3
                                     || Math.abs(startY - currentY) > 3) {
                                 removeStartPreviewHandler();

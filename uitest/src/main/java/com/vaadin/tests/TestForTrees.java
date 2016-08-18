@@ -92,7 +92,8 @@ public class TestForTrees extends CustomComponent implements Handler {
         t.setCaption("with actions");
         t.setImmediate(true);
         t.addActionHandler(this);
-        final AbstractOrderedLayout ol = (AbstractOrderedLayout) createTestBench(t);
+        final AbstractOrderedLayout ol = (AbstractOrderedLayout) createTestBench(
+                t);
         al = new VerticalLayout();
         al.setMargin(true);
         ol.addComponent(new Panel("action log", al));
@@ -113,8 +114,8 @@ public class TestForTrees extends CustomComponent implements Handler {
         Tree t = new Tree("Tree");
         final String[] names = new String[100];
         for (int i = 0; i < names.length; i++) {
-            names[i] = firstnames[(int) (Math.random() * (firstnames.length - 1))]
-                    + " "
+            names[i] = firstnames[(int) (Math.random()
+                    * (firstnames.length - 1))] + " "
                     + lastnames[(int) (Math.random() * (lastnames.length - 1))];
         }
 
@@ -122,7 +123,8 @@ public class TestForTrees extends CustomComponent implements Handler {
         t = new Tree("Organization Structure");
         for (int i = 0; i < 100; i++) {
             t.addItem(names[i]);
-            final String parent = names[(int) (Math.random() * (names.length - 1))];
+            final String parent = names[(int) (Math.random()
+                    * (names.length - 1))];
             if (t.containsId(parent)) {
                 t.setParent(names[i], parent);
             }
@@ -166,8 +168,8 @@ public class TestForTrees extends CustomComponent implements Handler {
                 statusLayout
                         .addComponent(new Label(event.getClass().getName()));
                 // TODO should not use LegacyField.toString()
-                statusLayout.addComponent(new Label("selected: "
-                        + event.getSource().toString()));
+                statusLayout.addComponent(
+                        new Label("selected: " + event.getSource().toString()));
             }
         });
 

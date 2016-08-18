@@ -31,8 +31,8 @@ public class Ticket2014 extends LegacyApplication {
     private void createUI(GridLayout layout) {
         createPanel(layout);
 
-        layout.addComponent(new Button("Change class name",
-                new ClickListener() {
+        layout.addComponent(
+                new Button("Change class name", new ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {

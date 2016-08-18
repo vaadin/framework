@@ -26,8 +26,8 @@ import com.vaadin.client.ui.VTabsheetBase;
 import com.vaadin.shared.ui.tabsheet.TabState;
 import com.vaadin.shared.ui.tabsheet.TabsheetState;
 
-public abstract class TabsheetBaseConnector extends
-        AbstractComponentContainerConnector {
+public abstract class TabsheetBaseConnector
+        extends AbstractComponentContainerConnector {
 
     /*
      * (non-Javadoc)
@@ -57,8 +57,8 @@ public abstract class TabsheetBaseConnector extends
 
         // Widgets in the TabSheet before update
         ArrayList<Widget> oldWidgets = new ArrayList<Widget>();
-        for (Iterator<Widget> iterator = getWidget().getWidgetIterator(); iterator
-                .hasNext();) {
+        for (Iterator<Widget> iterator = getWidget()
+                .getWidgetIterator(); iterator.hasNext();) {
             oldWidgets.add(iterator.next());
         }
 

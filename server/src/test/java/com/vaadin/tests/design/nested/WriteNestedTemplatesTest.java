@@ -59,8 +59,8 @@ public class WriteNestedTemplatesTest {
 
     @Test
     public void testChildRendered() {
-        assertEquals("Root layout must have one child", 1, design.children()
-                .size());
+        assertEquals("Root layout must have one child", 1,
+                design.children().size());
         assertEquals("com_vaadin_tests_design_nested-my-extended-child-design",
                 design.child(0).tagName());
     }

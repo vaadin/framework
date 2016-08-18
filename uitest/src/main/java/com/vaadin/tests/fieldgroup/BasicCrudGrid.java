@@ -39,8 +39,8 @@ public class BasicCrudGrid extends AbstractBasicCrud {
 
             @Override
             public void select(SelectionEvent event) {
-                Item item = grid.getContainerDataSource().getItem(
-                        grid.getSelectedRow());
+                Item item = grid.getContainerDataSource()
+                        .getItem(grid.getSelectedRow());
                 form.edit((BeanItem<ComplexPerson>) item);
             }
         });

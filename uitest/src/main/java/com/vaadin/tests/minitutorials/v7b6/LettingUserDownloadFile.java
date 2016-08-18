@@ -51,8 +51,8 @@ public class LettingUserDownloadFile extends UI {
                 String text = "My image";
                 BufferedImage bi = new BufferedImage(100, 30,
                         BufferedImage.TYPE_3BYTE_BGR);
-                bi.getGraphics().drawChars(text.toCharArray(), 0,
-                        text.length(), 10, 20);
+                bi.getGraphics().drawChars(text.toCharArray(), 0, text.length(),
+                        10, 20);
 
                 try {
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();

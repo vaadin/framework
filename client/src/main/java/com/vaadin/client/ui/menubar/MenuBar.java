@@ -60,13 +60,11 @@ import com.vaadin.client.ui.VOverlay;
  * <ul class='css'>
  * <li>.gwt-MenuBar { the menu bar itself }</li>
  * <li>.gwt-MenuBar .gwt-MenuItem { menu items }</li>
- * <li>
- * .gwt-MenuBar .gwt-MenuItem-selected { selected menu items }</li>
+ * <li>.gwt-MenuBar .gwt-MenuItem-selected { selected menu items }</li>
  * </ul>
  * 
  * <p>
- * <h3>Example</h3>
- * {@example com.google.gwt.examples.MenuBarExample}
+ * <h3>Example</h3> {@example com.google.gwt.examples.MenuBarExample}
  * </p>
  * 
  * @deprecated
@@ -377,7 +375,8 @@ public class MenuBar extends Widget implements PopupListener {
         while (curMenu != null) {
             curMenu.close();
 
-            if ((curMenu.parentMenu == null) && (curMenu.selectedItem != null)) {
+            if ((curMenu.parentMenu == null)
+                    && (curMenu.selectedItem != null)) {
                 curMenu.selectedItem.setSelectionStyle(false);
                 curMenu.selectedItem = null;
             }

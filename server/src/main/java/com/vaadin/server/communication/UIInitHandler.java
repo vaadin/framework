@@ -122,7 +122,8 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         return true;
     }
 
-    private UI getBrowserDetailsUI(VaadinRequest request, VaadinSession session) {
+    private UI getBrowserDetailsUI(VaadinRequest request,
+            VaadinSession session) {
         VaadinService vaadinService = request.getService();
 
         List<UIProvider> uiProviders = session.getUIProviders();
@@ -162,17 +163,16 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
 
         UI retainedUI = session.getUIByEmbedId(embedId);
         if (retainedUI != null) {
-            if (vaadinService.preserveUIOnRefresh(provider, new UICreateEvent(
-                    request, uiClass))) {
+            if (vaadinService.preserveUIOnRefresh(provider,
+                    new UICreateEvent(request, uiClass))) {
                 if (uiClass.isInstance(retainedUI)) {
                     reinitUI(retainedUI, request);
                     return retainedUI;
                 } else {
-                    getLogger().info(
-                            "Not using the preserved UI " + embedId
-                                    + " because it is of type "
-                                    + retainedUI.getClass() + " but " + uiClass
-                                    + " is expected for the request.");
+                    getLogger().info("Not using the preserved UI " + embedId
+                            + " because it is of type " + retainedUI.getClass()
+                            + " but " + uiClass
+                            + " is expected for the request.");
                 }
             }
             /*
@@ -218,9 +218,8 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         // Warn if the window can't be preserved
         if (embedId == null
                 && vaadinService.preserveUIOnRefresh(provider, event)) {
-            getLogger().warning(
-                    "There is no embed id available for UI " + uiClass
-                            + " that should be preserved.");
+            getLogger().warning("There is no embed id available for UI "
+                    + uiClass + " that should be preserved.");
         }
 
         return ui;

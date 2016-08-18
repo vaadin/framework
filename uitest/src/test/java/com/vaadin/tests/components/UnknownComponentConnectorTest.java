@@ -31,11 +31,9 @@ public class UnknownComponentConnectorTest extends MultiBrowserTest {
     public void testConnectorNotFoundInWidgetset() throws Exception {
         openTestURL();
         WebElement component = vaadinElementById("no-connector-component");
-        assertTrue(component
-                .getText()
-                .startsWith(
-                        "Widgetset 'com.vaadin.DefaultWidgetSet' does not contain "
-                                + "implementation for com.vaadin.tests.components.UnknownComponentConnector."
-                                + "ComponentWithoutConnector."));
+        assertTrue(component.getText().startsWith(
+                "Widgetset 'com.vaadin.DefaultWidgetSet' does not contain "
+                        + "implementation for com.vaadin.tests.components.UnknownComponentConnector."
+                        + "ComponentWithoutConnector."));
     }
 }

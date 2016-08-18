@@ -17,8 +17,8 @@ import com.vaadin.client.ui.dd.VTransferable;
 /**
  * Example code to implement Component that has something to drag.
  */
-public class VMyDragSource extends Composite implements MouseDownHandler,
-        MouseMoveHandler, MouseOutHandler {
+public class VMyDragSource extends Composite
+        implements MouseDownHandler, MouseMoveHandler, MouseOutHandler {
 
     private boolean mouseDown;
     private MouseDownEvent mDownEvent;

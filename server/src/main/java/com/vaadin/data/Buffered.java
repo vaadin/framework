@@ -110,8 +110,8 @@ public interface Buffered extends Serializable {
      * @since 3.0
      */
     @SuppressWarnings("serial")
-    public class SourceException extends RuntimeException implements
-            Serializable {
+    public class SourceException extends RuntimeException
+            implements Serializable {
 
         /** Source class implementing the buffered interface */
         private final Buffered source;

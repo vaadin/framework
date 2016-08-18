@@ -153,8 +153,8 @@ public final class CvalChecker {
 
         public boolean isLicenseExpired() {
             return (getExpired() != null && getExpired())
-                    || (getExpiredEpoch() != null && getExpiredEpoch().before(
-                            new Date()));
+                    || (getExpiredEpoch() != null
+                            && getExpiredEpoch().before(new Date()));
         }
 
         public boolean isValidVersion(int majorVersion) {
@@ -248,8 +248,8 @@ public final class CvalChecker {
             } else if (info != null && info.getMessage() != null) {
                 msg = info.getMessage().replace("\\n", "\n");
             } else if (info != null && info.isLicenseExpired()) {
-                String type = "evaluation".equals(info.getType()) ? "Evaluation license"
-                        : "License";
+                String type = "evaluation".equals(info.getType())
+                        ? "Evaluation license" : "License";
                 msg = getErrorMessage("expired", title, majorVers, type);
             } else if (key == null) {
                 msg = getErrorMessage("none", title, majorVers);
@@ -359,8 +359,8 @@ public final class CvalChecker {
      *             when we have license key but server is unreachable
      */
     public CvalInfo validateProduct(String productName, String productVersion,
-            String productTitle) throws InvalidCvalException,
-            UnreachableCvalServerException {
+            String productTitle)
+            throws InvalidCvalException, UnreachableCvalServerException {
         String key = getDeveloperLicenseKey(productName, productVersion,
                 productTitle);
 
@@ -416,8 +416,8 @@ public final class CvalChecker {
         int timeout = validCache ? 2000 : 10000;
 
         try {
-            CvalInfo srvinfo = parseJson(provider.askServer(productName + "-"
-                    + productVersion, productKey, timeout));
+            CvalInfo srvinfo = parseJson(provider.askServer(
+                    productName + "-" + productVersion, productKey, timeout));
             if (srvinfo != null && srvinfo.isValidInfo(productName, productKey)
                     && srvinfo.isValidVersion(majorVersion)) {
                 // We always cache the info if it is valid although it is
@@ -502,8 +502,8 @@ public final class CvalChecker {
 
     static String getErrorMessage(String key, Object... pars) {
         Locale loc = Locale.getDefault();
-        ResourceBundle res = ResourceBundle.getBundle(
-                CvalChecker.class.getName(), loc);
+        ResourceBundle res = ResourceBundle
+                .getBundle(CvalChecker.class.getName(), loc);
         String msg = res.getString(key);
         return new MessageFormat(msg, loc).format(pars);
     }

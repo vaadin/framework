@@ -34,8 +34,8 @@ import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 import com.vaadin.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
 
 @SuppressWarnings("serial")
-public class FreeformQuery extends AbstractTransactionalQuery implements
-        QueryDelegate {
+public class FreeformQuery extends AbstractTransactionalQuery
+        implements QueryDelegate {
 
     FreeformQueryDelegate delegate = null;
     private String queryString;
@@ -211,7 +211,8 @@ public class FreeformQuery extends AbstractTransactionalQuery implements
      */
     @Override
     @SuppressWarnings({ "deprecation", "finally" })
-    public ResultSet getResults(int offset, int pagelength) throws SQLException {
+    public ResultSet getResults(int offset, int pagelength)
+            throws SQLException {
         ensureTransaction();
         String query = queryString;
         if (delegate != null) {
@@ -220,8 +221,8 @@ public class FreeformQuery extends AbstractTransactionalQuery implements
                 try {
                     StatementHelper sh = ((FreeformStatementDelegate) delegate)
                             .getQueryStatement(offset, pagelength);
-                    PreparedStatement pstmt = getConnection().prepareStatement(
-                            sh.getQueryString());
+                    PreparedStatement pstmt = getConnection()
+                            .prepareStatement(sh.getQueryString());
                     sh.setParameterValuesToStatement(pstmt);
                     return pstmt.executeQuery();
                 } catch (UnsupportedOperationException e) {
@@ -339,9 +340,8 @@ public class FreeformQuery extends AbstractTransactionalQuery implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#removeRow(com.vaadin
-     * .data.util.sqlcontainer.RowItem)
+     * @see com.vaadin.data.util.sqlcontainer.query.QueryDelegate#removeRow(com.
+     * vaadin .data.util.sqlcontainer.RowItem)
      */
     @Override
     public boolean removeRow(RowItem row) throws SQLException {
@@ -366,23 +366,22 @@ public class FreeformQuery extends AbstractTransactionalQuery implements
     }
 
     @Override
-    public synchronized void commit() throws UnsupportedOperationException,
-            SQLException {
+    public synchronized void commit()
+            throws UnsupportedOperationException, SQLException {
         super.commit();
     }
 
     @Override
-    public synchronized void rollback() throws UnsupportedOperationException,
-            SQLException {
+    public synchronized void rollback()
+            throws UnsupportedOperationException, SQLException {
         super.rollback();
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#getPrimaryKeyColumns
-     * ()
+     * @see com.vaadin.data.util.sqlcontainer.query.QueryDelegate#
+     * getPrimaryKeyColumns ()
      */
     @Override
     public List<String> getPrimaryKeyColumns() {
@@ -485,7 +484,8 @@ public class FreeformQuery extends AbstractTransactionalQuery implements
         return queryString + " WHERE " + where;
     }
 
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+    private void writeObject(java.io.ObjectOutputStream out)
+            throws IOException {
         try {
             rollback();
         } catch (SQLException ignored) {

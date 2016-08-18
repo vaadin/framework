@@ -20,8 +20,8 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.legacy.ui.LegacyTextField;
 import com.vaadin.ui.Notification;
 
-public class ExtendedDesignWithEmptyAnnotation extends
-        DesignWithEmptyAnnotation {
+public class ExtendedDesignWithEmptyAnnotation
+        extends DesignWithEmptyAnnotation {
 
     private LegacyTextField customField = new LegacyTextField();
 

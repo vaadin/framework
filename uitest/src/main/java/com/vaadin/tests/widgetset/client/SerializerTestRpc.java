@@ -49,8 +49,8 @@ public interface SerializerTestRpc extends ServerRpc, ClientRpc {
 
     public void sendConnector(Connector connector);
 
-    public void sendBean(ComplexTestBean complexBean,
-            SimpleTestBean simpleBean, SimpleTestBean[] array);
+    public void sendBean(ComplexTestBean complexBean, SimpleTestBean simpleBean,
+            SimpleTestBean[] array);
 
     public void sendNull(String value1, String value2);
 

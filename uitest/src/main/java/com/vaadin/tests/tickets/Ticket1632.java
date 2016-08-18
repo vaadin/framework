@@ -49,7 +49,8 @@ public class Ticket1632 extends LegacyApplication {
             public void buttonClick(ClickEvent event) {
                 visible = !visible;
                 if (visible) {
-                    t.setVisibleColumns(new Object[] { "col1", "col2", "col3" });
+                    t.setVisibleColumns(
+                            new Object[] { "col1", "col2", "col3" });
 
                 } else {
                     t.setVisibleColumns(new Object[] { "col1", "col2" });

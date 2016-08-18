@@ -18,7 +18,8 @@ package com.vaadin.client.ui;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.shared.AbstractFieldState;
 
-public abstract class AbstractFieldConnector extends AbstractComponentConnector {
+public abstract class AbstractFieldConnector
+        extends AbstractComponentConnector {
 
     @Override
     public AbstractFieldState getState() {

@@ -31,8 +31,8 @@ public class BasicCrudGridTest extends SingleBrowserTestPhantomJS2 {
     @Test
     public void fieldsInitiallyEmpty() {
         openTestURL();
-        List<TextFieldElement> textFields = getFieldsLayout().$(
-                TextFieldElement.class).all();
+        List<TextFieldElement> textFields = getFieldsLayout()
+                .$(TextFieldElement.class).all();
 
         for (TextFieldElement e : textFields) {
             Assert.assertEquals("TextField should be empty", "", e.getValue());
@@ -50,8 +50,8 @@ public class BasicCrudGridTest extends SingleBrowserTestPhantomJS2 {
         // Select row
         $(GridElement.class).first().getCell(2, 2).click();
 
-        List<TextFieldElement> textFields = getFieldsLayout().$(
-                TextFieldElement.class).all();
+        List<TextFieldElement> textFields = getFieldsLayout()
+                .$(TextFieldElement.class).all();
 
         for (TextFieldElement e : textFields) {
             Assert.assertNotEquals("TextField should not be empty", "",

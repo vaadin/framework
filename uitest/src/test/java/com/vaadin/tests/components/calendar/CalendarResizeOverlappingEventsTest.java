@@ -76,20 +76,23 @@ public class CalendarResizeOverlappingEventsTest extends DndActionsTest {
 
         int actualWidth = firstEvent.getSize().getWidth();
         int expectedWidth = firstEventExpectedWidth;
-        Assert.assertTrue(String.format(errorMessage, expectedWidth,
-                widthTolerance, actualWidth),
+        Assert.assertTrue(
+                String.format(errorMessage, expectedWidth, widthTolerance,
+                        actualWidth),
                 isAproximateWidth(actualWidth, expectedWidth, widthTolerance));
 
         actualWidth = secondEvent.getSize().getWidth();
         expectedWidth = secondEventExpectedWidth;
-        Assert.assertTrue(String.format(errorMessage, expectedWidth,
-                widthTolerance, actualWidth),
+        Assert.assertTrue(
+                String.format(errorMessage, expectedWidth, widthTolerance,
+                        actualWidth),
                 isAproximateWidth(actualWidth, expectedWidth, widthTolerance));
 
         actualWidth = thirdEvent.getSize().getWidth();
         expectedWidth = thirdEventExpectedWidth;
-        Assert.assertTrue(String.format(errorMessage, expectedWidth,
-                widthTolerance, actualWidth),
+        Assert.assertTrue(
+                String.format(errorMessage, expectedWidth, widthTolerance,
+                        actualWidth),
                 isAproximateWidth(actualWidth, expectedWidth, widthTolerance));
     }
 
@@ -103,8 +106,8 @@ public class CalendarResizeOverlappingEventsTest extends DndActionsTest {
     }
 
     private void initParams() {
-        WebElement dateSlot = getDriver().findElement(
-                By.className("v-datecellslot"));
+        WebElement dateSlot = getDriver()
+                .findElement(By.className("v-datecellslot"));
         int dateSlotWidth = dateSlot.getSize().getWidth();
         noOverlapWidth = dateSlotWidth;
         oneOverlapWidth = dateSlotWidth / 2;
@@ -119,15 +122,15 @@ public class CalendarResizeOverlappingEventsTest extends DndActionsTest {
             }
         };
 
-        List<WebElement> eventElements = getDriver().findElements(
-                By.className("v-calendar-event-content"));
+        List<WebElement> eventElements = getDriver()
+                .findElements(By.className("v-calendar-event-content"));
         Collections.sort(eventElements, startTimeComparator);
         firstEvent = eventElements.get(0);
         secondEvent = eventElements.get(1);
         thirdEvent = eventElements.get(2);
 
-        List<WebElement> resizeBottomElements = getDriver().findElements(
-                By.className("v-calendar-event-resizebottom"));
+        List<WebElement> resizeBottomElements = getDriver()
+                .findElements(By.className("v-calendar-event-resizebottom"));
         Collections.sort(resizeBottomElements, startTimeComparator);
         firstEventBottomResize = resizeBottomElements.get(0);
         secondEventBottomResize = resizeBottomElements.get(1);

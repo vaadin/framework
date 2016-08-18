@@ -50,7 +50,8 @@ public abstract class GridLayoutBaseTest extends MultiBrowserTest {
         }
     }
 
-    private void waitUntilColumnAndRowAreHidden(final List<WebElement> slots4x4) {
+    private void waitUntilColumnAndRowAreHidden(
+            final List<WebElement> slots4x4) {
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver input) {

@@ -32,7 +32,8 @@ public class PreserveWithExpiredHeartbeatTest extends SingleBrowserTest {
 
         long startTime = System.currentTimeMillis();
 
-        while (System.currentTimeMillis() - startTime < heartbeatInterval * 3.1) {
+        while (System.currentTimeMillis() - startTime < heartbeatInterval
+                * 3.1) {
             // "Close" the tab
             driver.get("about:blank");
 

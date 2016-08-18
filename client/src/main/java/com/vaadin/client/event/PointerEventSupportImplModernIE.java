@@ -50,8 +50,8 @@ public class PointerEventSupportImplModernIE extends PointerEventSupportImpl {
             }
             DOMImplStandard
                     .addBitlessEventDispatchers(eventDispatcherMapExtensions);
-            DOMImplStandard
-                    .addCaptureEventDispatchers(captureEventDispatcherMapExtensions);
+            DOMImplStandard.addCaptureEventDispatchers(
+                    captureEventDispatcherMapExtensions);
 
             inited = true;
         }

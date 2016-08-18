@@ -73,8 +73,8 @@ import com.vaadin.util.ReflectTools;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Upload extends AbstractComponent implements Component.Focusable,
-        LegacyComponent {
+public class Upload extends AbstractComponent
+        implements Component.Focusable, LegacyComponent {
 
     /**
      * Should the field be focused on next repaint?
@@ -233,9 +233,8 @@ public class Upload extends AbstractComponent implements Component.Focusable,
                     "uploadFailed", new Class[] { FailedEvent.class });
             UPLOAD_STARTED_METHOD = StartedListener.class.getDeclaredMethod(
                     "uploadStarted", new Class[] { StartedEvent.class });
-            UPLOAD_SUCCEEDED_METHOD = SucceededListener.class
-                    .getDeclaredMethod("uploadSucceeded",
-                            new Class[] { SucceededEvent.class });
+            UPLOAD_SUCCEEDED_METHOD = SucceededListener.class.getDeclaredMethod(
+                    "uploadSucceeded", new Class[] { SucceededEvent.class });
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException(
@@ -907,8 +906,8 @@ public class Upload extends AbstractComponent implements Component.Focusable,
         // this is implemented differently than other listeners to maintain
         // backwards compatibility
         if (progressListeners != null) {
-            for (Iterator<ProgressListener> it = progressListeners.iterator(); it
-                    .hasNext();) {
+            for (Iterator<ProgressListener> it = progressListeners
+                    .iterator(); it.hasNext();) {
                 ProgressListener l = it.next();
                 l.updateProgress(totalBytes, contentLength);
             }
@@ -1115,8 +1114,8 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
                 @Override
                 public boolean listenProgress() {
-                    return (progressListeners != null && !progressListeners
-                            .isEmpty());
+                    return (progressListeners != null
+                            && !progressListeners.isEmpty());
                 }
 
                 @Override

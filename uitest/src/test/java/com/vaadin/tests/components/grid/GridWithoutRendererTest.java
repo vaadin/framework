@@ -34,8 +34,8 @@ public class GridWithoutRendererTest extends SingleBrowserTest {
         // WebElement errorIndicator = findElement(By
         // .cssSelector("v-error-indicator"));
         // System.out.println(errorIndicator);
-        List<WebElement> errorIndicator = findElements(By
-                .xpath("//span[@class='v-errorindicator']"));
+        List<WebElement> errorIndicator = findElements(
+                By.xpath("//span[@class='v-errorindicator']"));
         Assert.assertTrue("There should not be an error indicator",
                 errorIndicator.isEmpty());
     }

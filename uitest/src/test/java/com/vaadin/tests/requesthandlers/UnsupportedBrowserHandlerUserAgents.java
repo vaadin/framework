@@ -32,21 +32,24 @@ public class UnsupportedBrowserHandlerUserAgents {
 
     @Test
     public void ie7NotSupported() {
-        String response = requestWithUserAgent("Mozilla/5.0 (compatible; MSIE 7.0; Windows NT 5.2; WOW64; .NET CLR 2.0.50727)");
+        String response = requestWithUserAgent(
+                "Mozilla/5.0 (compatible; MSIE 7.0; Windows NT 5.2; WOW64; .NET CLR 2.0.50727)");
         Assert.assertTrue("IE7 should not be supported",
                 response.contains("your browser is not supported"));
     }
 
     @Test
     public void ie9Supported() {
-        String response = requestWithUserAgent("Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 7.1; Trident/5.0)");
+        String response = requestWithUserAgent(
+                "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 7.1; Trident/5.0)");
         Assert.assertFalse("IE9 should be supported",
                 response.contains("your browser is not supported"));
     }
 
     @Test
     public void unknownSupported() {
-        String response = requestWithUserAgent("Very strange user agent, like wat");
+        String response = requestWithUserAgent(
+                "Very strange user agent, like wat");
         Assert.assertFalse("Unkonwn user agent should be supported",
                 response.contains("your browser is not supported"));
     }

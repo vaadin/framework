@@ -123,8 +123,8 @@ public class TreeContextMenuAndIconsTest extends MultiBrowserTest {
     }
 
     private WebElement getTreeNodeByCaption(String caption) {
-        return getDriver().findElement(
-                By.xpath("//span[text() = '" + caption + "']"));
+        return getDriver()
+                .findElement(By.xpath("//span[text() = '" + caption + "']"));
     }
 
 }

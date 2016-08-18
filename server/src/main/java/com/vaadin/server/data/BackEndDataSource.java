@@ -27,8 +27,7 @@ import java.util.stream.Stream;
  * @param <T>
  *            data source data type
  */
-public class BackEndDataSource<T> implements
-        DataSource<T> {
+public class BackEndDataSource<T> implements DataSource<T> {
 
     private Function<Query, Stream<T>> request;
     private Function<Query, Integer> sizeCallback;
@@ -64,7 +63,8 @@ public class BackEndDataSource<T> implements
      * Sets a default sorting order to the data source.
      *
      * @param sortOrders
-     *            a list of sorting information containing field ids and directions
+     *            a list of sorting information containing field ids and
+     *            directions
      * @return new data source with modified sorting
      */
     public BackEndDataSource<T> sortingBy(List<SortOrder<String>> sortOrders) {

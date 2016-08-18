@@ -28,7 +28,8 @@ public class DragStartModesTest extends MultiBrowserTest {
     @Test
     public void testDragStartModes() throws IOException {
         openTestURL();
-        WebElement dropTarget = vaadinElement("/VVerticalLayout[0]/VVerticalLayout[0]/VLabel[0]");
+        WebElement dropTarget = vaadinElement(
+                "/VVerticalLayout[0]/VVerticalLayout[0]/VLabel[0]");
         dragToTarget("COMPONENT", dropTarget);
         dragToTarget("WRAPPER", dropTarget);
         dragToTarget("COMPONENT_OTHER", dropTarget);

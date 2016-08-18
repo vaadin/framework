@@ -67,8 +67,8 @@ public class CustomRenderer extends AbstractTestUI {
         Grid grid = new Grid(container);
 
         grid.getColumn(INT_ARRAY_PROPERTY).setRenderer(new IntArrayRenderer());
-        grid.getColumn(VOID_PROPERTY).setRenderer(
-                new RowAwareRenderer(debugLabel));
+        grid.getColumn(VOID_PROPERTY)
+                .setRenderer(new RowAwareRenderer(debugLabel));
         grid.getColumn(BEAN_PROPERTY).setRenderer(new BeanRenderer());
 
         grid.setSelectionMode(SelectionMode.NONE);

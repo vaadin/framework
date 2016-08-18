@@ -37,8 +37,8 @@ public class FlotJavaScriptUI extends UI {
         flot.addSeries(1, 2, 4, 8, 16);
         layout.addComponent(flot);
 
-        layout.addComponent(new Button("Highlight point",
-                new Button.ClickListener() {
+        layout.addComponent(
+                new Button("Highlight point", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         flot.highlight(0, 3);

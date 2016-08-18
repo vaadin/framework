@@ -27,8 +27,7 @@ import com.vaadin.shared.ui.image.ImageState;
  * Component for embedding images.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
+ * @version @VERSION@
  * @since 7.0
  */
 @SuppressWarnings("serial")

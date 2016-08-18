@@ -250,8 +250,9 @@ public class VUpload extends SimplePanel {
                         }
                         VConsole.log("VUpload:Submit complete");
                         ((UploadConnector) ConnectorMap.get(client)
-                                .getConnector(VUpload.this)).getRpcProxy(
-                                UploadServerRpc.class).poll();
+                                .getConnector(VUpload.this))
+                                        .getRpcProxy(UploadServerRpc.class)
+                                        .poll();
                     }
 
                     rebuildPanel();
@@ -293,7 +294,8 @@ public class VUpload extends SimplePanel {
                     // Only visit the server if the upload has not already
                     // finished
                     if (thisUploadId == nextUploadId) {
-                        VConsole.log("Visiting server to see if upload started event changed UI.");
+                        VConsole.log(
+                                "Visiting server to see if upload started event changed UI.");
                         client.updateVariable(paintableId, "pollForStart",
                                 thisUploadId, true);
                     }

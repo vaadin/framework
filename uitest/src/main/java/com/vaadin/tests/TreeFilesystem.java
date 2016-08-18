@@ -66,8 +66,8 @@ public class TreeFilesystem extends com.vaadin.server.LegacyApplication
         tree.addListener(this);
 
         // Get sample directory
-        final File sampleDir = SampleDirectory.getDirectory(
-                VaadinSession.getCurrent(), main);
+        final File sampleDir = SampleDirectory
+                .getDirectory(VaadinSession.getCurrent(), main);
         // populate tree's root node with example directory
         if (sampleDir != null) {
             populateNode(sampleDir.getAbsolutePath(), null);

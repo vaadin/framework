@@ -34,8 +34,8 @@ public class Flot extends AbstractJavaScriptComponent {
         registerRpc(new FlotClickRpc() {
             @Override
             public void onPlotClick(int seriesIndex, int dataIndex) {
-                Notification.show("Clicked on [" + seriesIndex + ", "
-                        + dataIndex + "]");
+                Notification.show(
+                        "Clicked on [" + seriesIndex + ", " + dataIndex + "]");
             }
         });
         addFunction("onPlotClick", new JavaScriptFunction() {
@@ -43,8 +43,8 @@ public class Flot extends AbstractJavaScriptComponent {
             public void call(JsonArray arguments) {
                 int seriesIndex = (int) arguments.getNumber(0);
                 int dataIndex = (int) arguments.getNumber(1);
-                Notification.show("Clicked on [" + seriesIndex + ", "
-                        + dataIndex + "]");
+                Notification.show(
+                        "Clicked on [" + seriesIndex + ", " + dataIndex + "]");
             }
         });
     }

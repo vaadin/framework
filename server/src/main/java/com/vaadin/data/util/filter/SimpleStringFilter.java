@@ -61,8 +61,8 @@ public final class SimpleStringFilter implements Filter {
         if (propertyValue == null) {
             return false;
         }
-        final String value = ignoreCase ? propertyValue.toString()
-                .toLowerCase() : propertyValue.toString();
+        final String value = ignoreCase ? propertyValue.toString().toLowerCase()
+                : propertyValue.toString();
         if (onlyMatchPrefix) {
             if (!value.startsWith(filterString)) {
                 return false;

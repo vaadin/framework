@@ -13,7 +13,8 @@ public class GridClientHeightByRowOnInitTest extends MultiBrowserTest {
     public void gridHeightIsMoreThanACoupleOfRows() {
         openTestURL();
         int height = findElement(By.className("v-grid")).getSize().getHeight();
-        assertGreater("Grid should be much taller than 150px (was " + height
-                + "px)", height, 150);
+        assertGreater(
+                "Grid should be much taller than 150px (was " + height + "px)",
+                height, 150);
     }
 }

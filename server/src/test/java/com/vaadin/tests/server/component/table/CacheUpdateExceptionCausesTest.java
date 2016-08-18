@@ -26,8 +26,8 @@ public class CacheUpdateExceptionCausesTest {
     @Test
     public void testSingleCauseException() {
         Table table = new Table();
-        Throwable[] causes = new Throwable[] { new RuntimeException(
-                "Broken in one way.") };
+        Throwable[] causes = new Throwable[] {
+                new RuntimeException("Broken in one way.") };
 
         CacheUpdateException exception = new CacheUpdateException(table,
                 "Error during Table cache update.", causes);

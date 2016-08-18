@@ -69,12 +69,14 @@ public class MarginInfo implements Serializable {
      * @param left
      *            enable or disable left margin
      */
-    public MarginInfo(boolean top, boolean right, boolean bottom, boolean left) {
+    public MarginInfo(boolean top, boolean right, boolean bottom,
+            boolean left) {
         doSetMargins(top, right, bottom, left);
     }
 
     /**
-     * Creates a MarginInfo object by having horizontal and vertical margins specified (analogous to CSS).
+     * Creates a MarginInfo object by having horizontal and vertical margins
+     * specified (analogous to CSS).
      *
      * @since 7.6.5
      *
@@ -210,8 +212,8 @@ public class MarginInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "MarginInfo(" + hasTop() + ", " + hasRight() + ", "
-                + hasBottom() + ", " + hasLeft() + ")";
+        return "MarginInfo(" + hasTop() + ", " + hasRight() + ", " + hasBottom()
+                + ", " + hasLeft() + ")";
 
     }
 
