@@ -149,5 +149,7 @@ public class TextFieldConnector extends AbstractComponentConnector {
         }
         getRpcProxy(TextFieldServerRpc.class).setText(getWidget().getValue(),
                 getWidget().getCursorPos());
+        getState().text = getWidget().getValue();
+        getState().cursorPosition = getWidget().getCursorPos();
     }
 }

@@ -17,6 +17,10 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.TextBoxBase;
 
@@ -26,18 +30,21 @@ import com.google.gwt.user.client.ui.TextBoxBase;
  * @author Vaadin Ltd.
  *
  */
-public class VTextField extends TextBoxBase implements Field {
+public class VTextField extends TextBoxBase
+        implements Field, FocusHandler, BlurHandler {
 
     public static final String CLASSNAME = "v-textfield";
+    public static final String CLASSNAME_FOCUS = "focus";
 
     public VTextField() {
         this(DOM.createInputText());
-        setStyleName(CLASSNAME);
     }
 
     protected VTextField(Element node) {
         super(node);
         setStyleName(CLASSNAME);
+        addFocusHandler(this);
+        addBlurHandler(this);
     }
 
     public void setMaxLength(int maxLength) {
@@ -54,5 +61,15 @@ public class VTextField extends TextBoxBase implements Field {
         } else {
             getElement().removeAttribute("placeholder");
         }
+    }
+
+    @Override
+    public void onBlur(BlurEvent event) {
+        removeStyleDependentName(CLASSNAME_FOCUS);
+    }
+
+    @Override
+    public void onFocus(FocusEvent event) {
+        addStyleDependentName(CLASSNAME_FOCUS);
     }
 }

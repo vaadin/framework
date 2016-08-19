@@ -17,14 +17,13 @@ public class InputPromptAndCursorPositionTest extends MultiBrowserTest {
 
         // Clear the current value and reveal the input prompt.
         TextFieldElement textFieldElement = $(TextFieldElement.class).get(0);
-        textFieldElement.setValue("");
+        textFieldElement.clear();
 
         // Update cursor position.
         $(ButtonElement.class).get(0).click();
 
         // The cursor position should now be zero (not the input prompt length).
         LabelElement cursorPosLabel = $(LabelElement.class).get(1);
-        assertEquals(cursorPosLabel.getText(), "Cursor position: 0");
+        assertEquals("Cursor position: 0", cursorPosLabel.getText());
     }
-
 }
