@@ -69,7 +69,7 @@ corners. The [guibutton]#Minimize# button minimizes the debug window in the
 corner of the browser window, and the [guibutton]#Close# button closes it.
 
 If you use the Firebug plugin for Firefox or the Developer Tools console in
-Chrome, the log messages will also be printed to the Firebug console. In such a
+Chrome, the log messages will also be printed to the inspector console. In such a
 case, you may want to enable client-side debugging without showing the Debug
 Window with " ?debug=quiet" in the URL. In the quiet debug mode, log messages
 will only be printed to the console of the browser debugger.
@@ -141,9 +141,8 @@ The [guibutton]#Select a component in the page to inspect it# button lets you
 select a component in the UI by clicking it and display its client-side
 properties.
 
-To view the HTML structure and CSS styles in more detail, you can use Firebug in
-Firefox, or the Developer Tools in Chrome, as described in
-<<dummy/../../../framework/installing/installing-other#installing.other.firefox,"Firefox and Firebug">>. Firefox also has a built-in feature for inspecting HTML and CSS.
+To view the HTML structure and CSS styles in more detail, you can use Inspector in
+Firefox or the Developer Tools in Chrome.
 
 
 [[advanced.debug.hierarchy.analyze]]
