@@ -16,5 +16,3 @@ include::installing-eclipse.adoc[leveloffset=+2]
 include::installing-netbeans.asciidoc[leveloffset=+2]
 
 include::installing-idea.asciidoc[leveloffset=+2]
-
-include::installing-other.adoc[leveloffset=+2]
