@@ -7,7 +7,6 @@
 		<artifactId>vaadin-root</artifactId>
 		<version>8.0-SNAPSHOT</version>
 	</parent>
-	<groupId>com.vaadin.v7</groupId>
 	<artifactId>vaadin-compatibility-server</artifactId>
 	<name>vaadin-compatibility-server</name>
 	<packaging>jar</packaging>
@@ -18,12 +17,12 @@
 	<dependencies>
 		<!-- Project modules -->
 		<dependency>
-			<groupId>com.vaadin</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>vaadin-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.vaadin.v7</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>vaadin-compatibility-shared</artifactId>
 			<version>${project.version}</version>
 		</dependency>
