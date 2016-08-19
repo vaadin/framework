@@ -39,6 +39,8 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
+import com.vaadin.server.WebBrowser;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -66,13 +68,7 @@ public class ValoThemeUI extends UI {
     private static LinkedHashMap<String, String> themeVariants = new LinkedHashMap<String, String>();
     static {
         themeVariants.put("tests-valo", "Default");
-        themeVariants.put("tests-valo-blueprint", "Blueprint");
         themeVariants.put("tests-valo-dark", "Dark");
-        themeVariants.put("tests-valo-facebook", "Facebook");
-        themeVariants.put("tests-valo-flatdark", "Flat dark");
-        themeVariants.put("tests-valo-flat", "Flat");
-        themeVariants.put("tests-valo-light", "Light");
-        themeVariants.put("tests-valo-metro", "Metro");
     }
     private TestIcon testIcon = new TestIcon(100);
 
@@ -343,6 +339,18 @@ public class ValoThemeUI extends UI {
     }
 
     private Component createThemeSelect() {
+        // Keep theme select the same size as in the current screenshots
+        double width = 96;
+        WebBrowser browser = VaadinSession.getCurrent().getBrowser();
+        if (browser.isChrome()) {
+            width = 95;
+        } else if (browser.isIE()) {
+            width = 95.39;
+        } else if (browser.isFirefox()) {
+            width = 98;
+        }
+        getPage().getStyles()
+                .add("#themeSelect select {width: " + width + "px;}");
         final NativeSelect ns = new NativeSelect();
         ns.setNullSelectionAllowed(false);
         ns.setId("themeSelect");
