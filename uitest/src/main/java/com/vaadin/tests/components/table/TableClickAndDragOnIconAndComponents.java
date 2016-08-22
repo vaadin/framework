@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
@@ -14,6 +13,7 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.event.DataBoundTransferable;
 import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.ColumnGenerator;

@@ -31,7 +31,6 @@ import java.util.Set;
 
 import org.jsoup.nodes.Element;
 
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropTarget;
@@ -60,6 +59,7 @@ import com.vaadin.v7.data.Validator.InvalidValueException;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.Converter.ConversionException;
+import com.vaadin.v7.event.DataBoundTransferable;
 import com.vaadin.v7.data.util.converter.ConverterUtil;
 
 /**

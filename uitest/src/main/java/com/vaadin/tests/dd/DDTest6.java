@@ -12,7 +12,6 @@ import java.util.Set;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -44,6 +43,7 @@ import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
+import com.vaadin.v7.event.DataBoundTransferable;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Tree;
 import com.vaadin.v7.ui.Tree.TreeDragMode;

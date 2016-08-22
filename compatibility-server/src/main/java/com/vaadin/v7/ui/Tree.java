@@ -35,10 +35,6 @@ import org.jsoup.nodes.Element;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ContextClickEvent;
-import com.vaadin.event.DataBoundTransferable;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.event.ItemClickEvent.ItemClickNotifier;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
@@ -67,6 +63,10 @@ import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.event.DataBoundTransferable;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickNotifier;
 
 /**
  * Tree component. A Tree can be used to select an item (or multiple items) from

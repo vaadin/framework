@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.tree;
 
-import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.v7.ui.Tree;
 
 public class TreeItemClickListening extends AbstractTestUIWithLog {

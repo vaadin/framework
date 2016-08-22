@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.tree;
 
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.data.Container;
+import com.vaadin.v7.event.DataBoundTransferable;
 import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.TableDragMode;

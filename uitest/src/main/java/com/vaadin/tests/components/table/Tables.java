@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -16,6 +15,7 @@ import com.vaadin.shared.ui.table.TableConstants;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.Align;
 import com.vaadin.v7.ui.Table.CellStyleGenerator;

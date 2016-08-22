@@ -30,8 +30,6 @@ import java.util.Random;
 
 import com.vaadin.data.sort.Sort;
 import com.vaadin.data.sort.SortOrder;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.event.SortEvent;
@@ -55,6 +53,8 @@ import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.CellDescriptionGenerator;

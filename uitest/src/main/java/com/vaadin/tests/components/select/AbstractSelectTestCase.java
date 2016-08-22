@@ -5,14 +5,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.vaadin.event.Action;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.event.ItemClickEvent.ItemClickNotifier;
 import com.vaadin.server.Resource;
 import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickNotifier;
 import com.vaadin.v7.ui.AbstractSelect;
 
 public abstract class AbstractSelectTestCase<T extends AbstractSelect>

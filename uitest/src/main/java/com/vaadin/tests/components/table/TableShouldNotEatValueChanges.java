@@ -1,9 +1,9 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Notification;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.TableDragMode;
 import com.vaadin.v7.ui.TextField;

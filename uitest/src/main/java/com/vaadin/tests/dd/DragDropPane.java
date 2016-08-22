@@ -3,7 +3,6 @@ package com.vaadin.tests.dd;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -13,6 +12,7 @@ import com.vaadin.server.StreamVariable;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
+import com.vaadin.v7.event.DataBoundTransferable;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Html5File;

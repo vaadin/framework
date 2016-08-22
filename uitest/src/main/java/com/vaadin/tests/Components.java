@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Sizeable;
@@ -26,6 +24,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.DefaultItemSorter;
 import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.LegacyWindow;
 import com.vaadin.v7.ui.Tree;
 import com.vaadin.v7.ui.Tree.ItemStyleGenerator;

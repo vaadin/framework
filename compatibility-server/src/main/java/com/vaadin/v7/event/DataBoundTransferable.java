@@ -13,10 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event;
+package com.vaadin.v7.event;
 
 import java.util.Map;
 
+import com.vaadin.event.Transferable;
+import com.vaadin.event.TransferableImpl;
 import com.vaadin.ui.Component;
 import com.vaadin.v7.data.Container;
 

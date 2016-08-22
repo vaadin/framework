@@ -1,8 +1,6 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.event.Action;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -11,6 +9,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
 import com.vaadin.v7.data.Item;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Table;
 
 public class HeaderPositionWhenSorting extends AbstractTestUI

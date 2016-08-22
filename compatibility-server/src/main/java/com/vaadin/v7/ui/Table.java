@@ -40,10 +40,6 @@ import org.jsoup.select.Elements;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ContextClickEvent;
-import com.vaadin.event.DataBoundTransferable;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.event.ItemClickEvent.ItemClickNotifier;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
@@ -80,6 +76,10 @@ import com.vaadin.v7.data.util.ContainerOrderedWrapper;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.ConverterUtil;
+import com.vaadin.v7.event.DataBoundTransferable;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickNotifier;
 
 /**
  * <p>

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event;
+package com.vaadin.v7.event;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;

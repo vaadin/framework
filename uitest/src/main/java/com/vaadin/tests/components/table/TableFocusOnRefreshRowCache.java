@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Table;
 
 public class TableFocusOnRefreshRowCache extends TestBase {

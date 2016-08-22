@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
@@ -18,6 +17,7 @@ import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.event.DataBoundTransferable;
 import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.v7.ui.AbstractSelect.VerticalLocationIs;
 import com.vaadin.v7.ui.Table;

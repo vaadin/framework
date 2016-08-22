@@ -1,6 +1,5 @@
 package com.vaadin.tests.dd;
 
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -16,6 +15,7 @@ import com.vaadin.ui.DragAndDropWrapper.WrapperTargetDetails;
 import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.event.DataBoundTransferable;
 import com.vaadin.v7.ui.Tree;
 
 public class AcceptFromComponent extends Window {

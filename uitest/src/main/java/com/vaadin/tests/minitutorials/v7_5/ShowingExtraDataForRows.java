@@ -15,8 +15,6 @@
  */
 package com.vaadin.tests.minitutorials.v7_5;
 
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.minitutorials.v7_4.GridExampleBean;
@@ -29,6 +27,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.DetailsGenerator;
 import com.vaadin.v7.ui.Grid.RowReference;

@@ -2,7 +2,6 @@ package com.vaadin.tests.dd;
 
 import java.util.Collection;
 
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -18,6 +17,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.event.DataBoundTransferable;
 import com.vaadin.v7.ui.AbstractSelect.AcceptItem;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.TableDragMode;

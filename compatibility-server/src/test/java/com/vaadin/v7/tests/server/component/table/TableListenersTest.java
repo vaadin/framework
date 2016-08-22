@@ -2,9 +2,9 @@ package com.vaadin.v7.tests.server.component.table;
 
 import org.junit.Test;
 
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.tests.server.component.AbstractListenerMethodsTestBase;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.ColumnReorderEvent;
 import com.vaadin.v7.ui.Table.ColumnReorderListener;

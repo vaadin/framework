@@ -5,11 +5,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.v7.data.Container;
+import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.v7.ui.DefaultFieldFactory;
 import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.Table;
