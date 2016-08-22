@@ -57,6 +57,9 @@
             <when-property-is name="user.agent" value="gecko1_8" />
         </none>
     </set-property>
+    
+    <!-- If no proper user agent is found, at least try some, e.g. with crawlers -->
+    <set-property-fallback name="user.agent" value="safari" />
 
     <!-- Fall through to this rule when the browser doesn't support pointer 
         event -->
