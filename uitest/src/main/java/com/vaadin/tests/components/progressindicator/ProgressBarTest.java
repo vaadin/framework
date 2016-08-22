@@ -20,9 +20,9 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.v7.ui.ProgressBar;
+import com.vaadin.v7.ui.ProgressIndicator;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.ProgressBar;
-import com.vaadin.ui.ProgressIndicator;
 
 public class ProgressBarTest extends AbstractTestUI {
 

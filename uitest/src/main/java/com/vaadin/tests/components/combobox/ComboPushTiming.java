@@ -13,9 +13,9 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.v7.data.util.ObjectProperty;
 import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.ProgressIndicator;
 import com.vaadin.v7.ui.TextField;
 
 public class ComboPushTiming extends TestBase {

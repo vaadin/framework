@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.window;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.ui.ProgressIndicator;
 
 public class SubWindowPositionUpdate extends TestBase {
 

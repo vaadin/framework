@@ -21,7 +21,7 @@ import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.VProgressBar;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.progressindicator.ProgressBarState;
-import com.vaadin.ui.ProgressBar;
+import com.vaadin.v7.ui.ProgressBar;
 
 /**
  * Connector for {@link VProgressBar}.

@@ -23,7 +23,7 @@ import com.vaadin.client.ui.VProgressIndicator;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorServerRpc;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorState;
-import com.vaadin.ui.ProgressIndicator;
+import com.vaadin.v7.ui.ProgressIndicator;
 
 /**
  * Connector for {@link VProgressBar} with polling support.

@@ -3,7 +3,7 @@ package com.vaadin.tests.components.progressindicator;
 import java.util.LinkedHashMap;
 
 import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
-import com.vaadin.ui.ProgressBar;
+import com.vaadin.v7.ui.ProgressBar;
 
 public class ProgressBarGenericTest
         extends LegacyAbstractFieldTest<ProgressBar> {

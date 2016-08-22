@@ -20,7 +20,7 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elementsbase.ServerClass;
 
-@ServerClass("com.vaadin.ui.ProgressBar")
+@ServerClass("com.vaadin.v7.ui.ProgressBar")
 public class ProgressBarElement
         extends com.vaadin.testbench.elements.ProgressBarElement {
 

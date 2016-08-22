@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.server.component.progressbar;
+package com.vaadin.v7.tests.server.component.progressbar;
 
 import org.junit.Test;
 
 import com.vaadin.tests.design.DeclarativeTestBase;
-import com.vaadin.ui.ProgressBar;
+import com.vaadin.v7.ui.ProgressBar;
 
 /**
  * Test cases for reading the properties of selection components.
@@ -29,7 +29,7 @@ public class ProgressBarDeclarativeTest
         extends DeclarativeTestBase<ProgressBar> {
 
     public String getBasicDesign() {
-        return "<vaadin-progress-bar value=0.5 indeterminate>";
+        return "<vaadin7-progress-bar value=0.5 indeterminate>";
     }
 
     public ProgressBar getBasicExpected() {
@@ -51,17 +51,17 @@ public class ProgressBarDeclarativeTest
 
     @Test
     public void testReadEmpty() {
-        testRead("<vaadin-progress-bar>", new ProgressBar());
+        testRead("<vaadin7-progress-bar>", new ProgressBar());
     }
 
     @Test
     public void testWriteEmpty() {
-        testWrite("<vaadin-progress-bar>", new ProgressBar());
+        testWrite("<vaadin7-progress-bar>", new ProgressBar());
     }
 
     @Test
     public void testReadOnlyValue() {
-        String design = "<vaadin-progress-bar readonly value=0.5 indeterminate>";
+        String design = "<vaadin7-progress-bar readonly value=0.5 indeterminate>";
         ProgressBar progressBar = new ProgressBar();
         progressBar.setIndeterminate(true);
         progressBar.setValue(0.5f);

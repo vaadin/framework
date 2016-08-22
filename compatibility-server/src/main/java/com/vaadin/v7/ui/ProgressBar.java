@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.ui;
+package com.vaadin.v7.ui;
 
 import org.jsoup.nodes.Element;
 

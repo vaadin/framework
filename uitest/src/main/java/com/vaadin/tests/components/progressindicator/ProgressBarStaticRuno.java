@@ -18,8 +18,8 @@ package com.vaadin.tests.components.progressindicator;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.themes.Runo;
+import com.vaadin.v7.ui.ProgressBar;
 
 @Theme(Runo.THEME_NAME)
 public class ProgressBarStaticRuno extends AbstractTestUI {

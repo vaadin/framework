@@ -14,11 +14,12 @@
  * the License.
  */
 
-package com.vaadin.ui;
+package com.vaadin.v7.ui;
 
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorServerRpc;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorState;
+import com.vaadin.ui.UI;
 import com.vaadin.v7.data.Property;
 
 /**
