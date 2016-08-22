@@ -21,7 +21,7 @@ import com.vaadin.server.data.DataSource;
 import com.vaadin.server.data.TypedDataGenerator;
 
 /**
- * Base class for Listing components. Provides common handling for
+ * Base class for {@link Listing} components. Provides common handling for
  * {@link DataCommunicator} and {@link TypedDataGenerator}s.
  *
  * @param <T>
@@ -31,7 +31,31 @@ public abstract class AbstractListing<T> extends AbstractComponent
         implements Listing<T> {
 
     /* DataCommunicator for this Listing component */
-    private final DataCommunicator<T> dataCommunicator = new DataCommunicator<>();
+    private final DataCommunicator<T> dataCommunicator;
+
+    /**
+     * Constructs an {@link AbstractListing}, extending it with a
+     * {@link DataCommunicator}.
+     */
+    protected AbstractListing() {
+        this(new DataCommunicator<>());
+    }
+
+    /**
+     * Constructs an {@link AbstractListing}, extending it with given
+     * {@link DataCommunicator}.
+     * <p>
+     * <strong>Note:</strong> This method is for creating an
+     * {@link AbstractListing} with a custom {@link DataCommunicator}. In the
+     * common case {@link AbstractListing#AbstractListing()} should be used.
+     *
+     * @param dataCommunicator
+     *            a customized data communicator instance
+     */
+    protected AbstractListing(DataCommunicator<T> dataCommunicator) {
+        this.dataCommunicator = dataCommunicator;
+        addExtension(dataCommunicator);
+    }
 
     @Override
     public void setDataSource(DataSource<T> dataSource) {
