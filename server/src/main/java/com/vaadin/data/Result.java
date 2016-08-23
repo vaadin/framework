@@ -155,9 +155,10 @@ public interface Result<R> extends Serializable {
     }
 
     /**
-     * Returns {@code true} if result is an error.
+     * Checks if the result denotes an error.
      *
-     * @return whether the result is an error
+     * @return <code>true</code> if the result denotes an error,
+     *         <code>false</code> otherwise
      */
     public boolean isError();
 
@@ -168,10 +169,4 @@ public interface Result<R> extends Serializable {
      */
     public Optional<String> getMessage();
 
-    /**
-     * Returns an Optional of the value, or an empty Optional if none.
-     *
-     * @return the optional value
-     */
-    public Optional<R> getValue();
 }

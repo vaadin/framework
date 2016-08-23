@@ -180,6 +180,29 @@ public class BinderTest {
     }
 
     @Test
+    public void save_null_beanIsUpdated() {
+        Binder<Person> binder = new Binder<>();
+        binder.forField(nameField).withConverter(fieldValue -> {
+            if ("null".equals(fieldValue)) {
+                return null;
+            } else {
+                return fieldValue;
+            }
+        }, model -> {
+            return model;
+        }).bind(Person::getFirstName, Person::setFirstName);
+
+        Person person = new Person();
+        person.setFirstName("foo");
+
+        nameField.setValue("null");
+
+        binder.save(person);
+
+        Assert.assertNull(person.getFirstName());
+    }
+
+    @Test
     public void load_bound_fieldValueIsUpdated() {
         Binder<Person> binder = new Binder<>();
         binder.bind(nameField, Person::getFirstName, Person::setFirstName);

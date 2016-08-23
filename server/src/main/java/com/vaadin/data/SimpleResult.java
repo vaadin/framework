@@ -81,11 +81,6 @@ class SimpleResult<R> implements Result<R> {
     }
 
     @Override
-    public Optional<R> getValue() {
-        return Optional.ofNullable(value);
-    }
-
-    @Override
     public boolean isError() {
         return message != null;
     }
