@@ -30,10 +30,10 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
+import com.vaadin.client.ui.VTextField;
 import com.vaadin.client.ui.button.ButtonConnector;
 import com.vaadin.client.ui.nativebutton.NativeButtonConnector;
-import com.vaadin.client.v7.ui.VLegacyTextField;
-import com.vaadin.client.v7.ui.textfield.LegacyTextFieldConnector;
+import com.vaadin.client.ui.textfield.TextFieldConnector;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.loginform.LoginFormConstants;
@@ -44,8 +44,6 @@ import com.vaadin.shared.ui.loginform.LoginFormState;
 public class LoginFormConnector
         extends AbstractSingleComponentContainerConnector {
 
-    private VLegacyTextField passwordField;
-    private VLegacyTextField userField;
     private LoginFormRpc loginFormRpc;
 
     @Override
@@ -93,20 +91,25 @@ public class LoginFormConnector
         super.onStateChanged(stateChangeEvent);
 
         LoginFormState state = getState();
-        userField = configureTextField(state.userNameFieldConnector,
-                "username");
-        passwordField = configureTextField(state.passwordFieldConnector,
-                "password");
+        configureTextField(getUsernameFieldConnector(), "username");
+        configureTextField(getPasswordFieldConnector(), "password");
         addSubmitButtonClickHandler(state.loginButtonConnector);
         getWidget().setAction(
                 getResourceUrl(LoginFormConstants.LOGIN_RESOURCE_NAME));
     }
 
-    private VLegacyTextField configureTextField(Connector connector,
+    private TextFieldConnector getUsernameFieldConnector() {
+        return (TextFieldConnector) getState().userNameFieldConnector;
+    }
+
+    private TextFieldConnector getPasswordFieldConnector() {
+        return (TextFieldConnector) getState().passwordFieldConnector;
+    }
+
+    private VTextField configureTextField(TextFieldConnector connector,
             String id) {
         if (connector != null) {
-            VLegacyTextField textField = ((LegacyTextFieldConnector) connector)
-                    .getWidget();
+            VTextField textField = connector.getWidget();
 
             textField.addKeyDownHandler(new SubmitKeyHandler());
 
@@ -159,11 +162,13 @@ public class LoginFormConnector
     }
 
     private void valuesChanged() {
-        if (passwordField != null) {
-            passwordField.valueChange(true);
+        TextFieldConnector connector = getUsernameFieldConnector();
+        if (connector != null) {
+            connector.flush();
         }
-        if (userField != null) {
-            userField.valueChange(true);
+        connector = getPasswordFieldConnector();
+        if (connector != null) {
+            connector.flush();
         }
     }
 
