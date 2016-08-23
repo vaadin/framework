@@ -7,11 +7,15 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.v7.data.util.converter.StringToBooleanConverter;
+import com.vaadin.data.util.converter.StringToBooleanConverter;
 
-public class StringToBooleanConverterTest {
+public class StringToBooleanConverterTest extends AbstractConverterTest {
 
-    StringToBooleanConverter converter = new StringToBooleanConverter();
+    @Override
+    protected StringToBooleanConverter getConverter() {
+        return new StringToBooleanConverter();
+    }
+
     StringToBooleanConverter yesNoConverter = new StringToBooleanConverter(
             "yes", "no");
     StringToBooleanConverter localeConverter = new StringToBooleanConverter() {
@@ -35,48 +39,37 @@ public class StringToBooleanConverterTest {
     };
 
     @Test
-    public void testNullConversion() {
-        Assert.assertEquals(null,
-                converter.convertToModel(null, Boolean.class, null));
-    }
-
-    @Test
     public void testEmptyStringConversion() {
-        Assert.assertEquals(null,
-                converter.convertToModel("", Boolean.class, null));
+        assertResult(null, getConverter().convertToModel("", null));
     }
 
     @Test
     public void testValueConversion() {
-        Assert.assertTrue(
-                converter.convertToModel("true", Boolean.class, null));
-        Assert.assertFalse(
-                converter.convertToModel("false", Boolean.class, null));
+        assertResult(true, getConverter().convertToModel("true", null));
+        assertResult(false, getConverter().convertToModel("false", null));
     }
 
     @Test
     public void testYesNoValueConversion() {
-        Assert.assertTrue(
-                yesNoConverter.convertToModel("yes", Boolean.class, null));
-        Assert.assertFalse(
-                yesNoConverter.convertToModel("no", Boolean.class, null));
+        assertResult(true, yesNoConverter.convertToModel("yes", null));
+        assertResult(false, yesNoConverter.convertToModel("no", null));
 
         Assert.assertEquals("yes",
-                yesNoConverter.convertToPresentation(true, String.class, null));
-        Assert.assertEquals("no", yesNoConverter.convertToPresentation(false,
-                String.class, null));
+                yesNoConverter.convertToPresentation(true, null));
+        Assert.assertEquals("no",
+                yesNoConverter.convertToPresentation(false, null));
     }
 
     @Test
     public void testLocale() {
-        Assert.assertEquals("May 18, 2033", localeConverter
-                .convertToPresentation(true, String.class, Locale.US));
-        Assert.assertEquals("January 24, 2065", localeConverter
-                .convertToPresentation(false, String.class, Locale.US));
+        Assert.assertEquals("May 18, 2033",
+                localeConverter.convertToPresentation(true, Locale.US));
+        Assert.assertEquals("January 24, 2065",
+                localeConverter.convertToPresentation(false, Locale.US));
 
-        Assert.assertEquals("18. Mai 2033", localeConverter
-                .convertToPresentation(true, String.class, Locale.GERMANY));
-        Assert.assertEquals("24. Januar 2065", localeConverter
-                .convertToPresentation(false, String.class, Locale.GERMANY));
+        Assert.assertEquals("18. Mai 2033",
+                localeConverter.convertToPresentation(true, Locale.GERMANY));
+        Assert.assertEquals("24. Januar 2065",
+                localeConverter.convertToPresentation(false, Locale.GERMANY));
     }
 }

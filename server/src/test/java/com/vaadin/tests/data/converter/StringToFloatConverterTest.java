@@ -1,29 +1,30 @@
 package com.vaadin.tests.data.converter;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.v7.data.util.converter.StringToFloatConverter;
+import com.vaadin.data.util.converter.StringToFloatConverter;
 
-public class StringToFloatConverterTest {
+public class StringToFloatConverterTest extends AbstractConverterTest {
 
-    StringToFloatConverter converter = new StringToFloatConverter();
+    @Override
+    protected StringToFloatConverter getConverter() {
+        return new StringToFloatConverter();
+    }
 
+    @Override
     @Test
     public void testNullConversion() {
-        Assert.assertEquals(null,
-                converter.convertToModel(null, Float.class, null));
+        assertResult(null, getConverter().convertToModel(null, null));
     }
 
     @Test
     public void testEmptyStringConversion() {
-        Assert.assertEquals(null,
-                converter.convertToModel("", Float.class, null));
+        assertResult(null, getConverter().convertToModel("", null));
     }
 
     @Test
     public void testValueConversion() {
-        Assert.assertEquals(Float.valueOf(10),
-                converter.convertToModel("10", Float.class, null));
+        assertResult(Float.valueOf(10),
+                getConverter().convertToModel("10", null));
     }
 }

@@ -94,4 +94,16 @@ class SimpleResult<R> implements Result<R> {
         }
     }
 
+    @Override
+    public <X extends Throwable> R getOrThrow(
+            Function<String, ? extends X> exceptionSupplier) throws X {
+        Objects.requireNonNull(exceptionSupplier,
+                "Exception supplier cannot be null");
+        if (isError()) {
+            throw exceptionSupplier.apply(message);
+        } else {
+            return value;
+        }
+    }
+
 }

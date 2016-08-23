@@ -3,9 +3,9 @@ package com.vaadin.v7.tests.server.component.textfield;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.tests.data.converter.ConverterFactoryTest.ConvertTo42;
 import com.vaadin.v7.data.util.ObjectProperty;
 import com.vaadin.v7.data.validator.RangeValidator;
+import com.vaadin.v7.tests.data.converter.ConverterFactoryTest.ConvertTo42;
 import com.vaadin.v7.ui.TextField;
 
 public class TextFieldWithConverterAndValidatorTest {

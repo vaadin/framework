@@ -3,23 +3,18 @@ package com.vaadin.tests.data.converter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.v7.data.util.converter.Converter.ConversionException;
-import com.vaadin.v7.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.util.converter.StringToIntegerConverter;
 
-public class StringToIntegerConverterTest {
+public class StringToIntegerConverterTest extends AbstractConverterTest {
 
-    StringToIntegerConverter converter = new StringToIntegerConverter();
-
-    @Test
-    public void testNullConversion() {
-        Assert.assertEquals(null,
-                converter.convertToModel(null, Integer.class, null));
+    @Override
+    protected StringToIntegerConverter getConverter() {
+        return new StringToIntegerConverter("Failed");
     }
 
     @Test
     public void testEmptyStringConversion() {
-        Assert.assertEquals(null,
-                converter.convertToModel("", Integer.class, null));
+        assertResult(null, getConverter().convertToModel("", null));
     }
 
     @Test
@@ -31,10 +26,10 @@ public class StringToIntegerConverterTest {
         boolean accepted = false;
         for (Number value : values) {
             try {
-                converter.convertToModel(String.format("%.0f", value),
-                        Integer.class, null);
+                getConverter().convertToModel(String.format("%.0f", value),
+                        null);
+            } catch (Exception e) {
                 accepted = true;
-            } catch (ConversionException expected) {
             }
         }
         Assert.assertFalse("Accepted value outside range of int", accepted);
@@ -42,7 +37,7 @@ public class StringToIntegerConverterTest {
 
     @Test
     public void testValueConversion() {
-        Assert.assertEquals(Integer.valueOf(10),
-                converter.convertToModel("10", Integer.class, null));
+        assertResult(Integer.valueOf(10),
+                getConverter().convertToModel("10", null));
     }
 }

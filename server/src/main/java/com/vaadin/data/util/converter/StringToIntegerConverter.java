@@ -69,7 +69,7 @@ public class StringToIntegerConverter
         Number n = convertToNumber(value, locale);
 
         if (n == null) {
-            return null;
+            return Result.ok(null);
         }
 
         int intValue = n.intValue();

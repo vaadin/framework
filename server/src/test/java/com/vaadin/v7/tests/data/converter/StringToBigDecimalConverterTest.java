@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.data.converter;
+package com.vaadin.v7.tests.data.converter;
 
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -21,27 +21,30 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.Result;
-import com.vaadin.data.util.converter.StringToBigDecimalConverter;
+import com.vaadin.v7.data.util.converter.StringToBigDecimalConverter;
 
-public class StringToBigDecimalConverterTest extends AbstractConverterTest {
+public class StringToBigDecimalConverterTest {
 
-    @Override
-    protected StringToBigDecimalConverter getConverter() {
-        return new StringToBigDecimalConverter();
+    StringToBigDecimalConverter converter = new StringToBigDecimalConverter();
+
+    @Test
+    public void testNullConversion() {
+        Assert.assertEquals(null,
+                converter.convertToModel(null, BigDecimal.class, null));
     }
 
     @Test
     public void testEmptyStringConversion() {
-        assertResult(null, getConverter().convertToModel("", null));
+        Assert.assertEquals(null,
+                converter.convertToModel("", BigDecimal.class, null));
     }
 
     @Test
     public void testValueParsing() {
-        Result<BigDecimal> converted = getConverter().convertToModel("10",
+        BigDecimal converted = converter.convertToModel("10", BigDecimal.class,
                 null);
         BigDecimal expected = new BigDecimal(10);
-        assertResult(expected, converted);
+        Assert.assertEquals(expected, converted);
     }
 
     @Test
@@ -49,7 +52,7 @@ public class StringToBigDecimalConverterTest extends AbstractConverterTest {
         BigDecimal bd = new BigDecimal(12.5);
         String expected = "12,5";
 
-        String converted = getConverter().convertToPresentation(bd,
+        String converted = converter.convertToPresentation(bd, String.class,
                 Locale.GERMAN);
         Assert.assertEquals(expected, converted);
     }

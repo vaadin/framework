@@ -1,4 +1,4 @@
-package com.vaadin.tests.data.converter;
+package com.vaadin.v7.tests.data.converter;
 
 import org.junit.Assert;
 import org.junit.Test;

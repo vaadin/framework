@@ -169,4 +169,19 @@ public interface Result<R> extends Serializable {
      */
     public Optional<String> getMessage();
 
+    /**
+     * Return the value, if the result denotes success, otherwise throw an
+     * exception to be created by the provided supplier.
+     *
+     * @param <X>
+     *            Type of the exception to be thrown
+     * @param exceptionProvider
+     *            The provider which will return the exception to be thrown
+     *            based on the given error message
+     * @return the value
+     * @throws X
+     *             if this result denotes an error
+     */
+    public <X extends Throwable> R getOrThrow(
+            Function<String, ? extends X> exceptionProvider) throws X;
 }
