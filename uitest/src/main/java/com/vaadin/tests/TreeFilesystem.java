@@ -22,10 +22,10 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.ui.LegacyWindow;
 import com.vaadin.v7.ui.Tree;
 import com.vaadin.v7.ui.Tree.ExpandEvent;
 

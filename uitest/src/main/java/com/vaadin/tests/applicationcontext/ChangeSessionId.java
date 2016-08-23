@@ -4,9 +4,9 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.ui.LegacyWindow;
 
 public class ChangeSessionId extends AbstractTestCase {
 

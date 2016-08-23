@@ -20,13 +20,13 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.DefaultItemSorter;
 import com.vaadin.v7.data.util.HierarchicalContainer;
 import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.v7.ui.LegacyWindow;
 import com.vaadin.v7.ui.Tree;
 import com.vaadin.v7.ui.Tree.ItemStyleGenerator;
 

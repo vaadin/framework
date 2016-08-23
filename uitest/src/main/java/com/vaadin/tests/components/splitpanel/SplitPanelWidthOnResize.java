@@ -4,9 +4,9 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyWindow;
 import com.vaadin.v7.ui.TextField;
 
 public class SplitPanelWidthOnResize extends AbstractTestCase {

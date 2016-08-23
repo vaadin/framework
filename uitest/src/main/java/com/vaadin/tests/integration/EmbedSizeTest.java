@@ -5,7 +5,7 @@ import com.vaadin.server.Page.BrowserWindowResizeEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 
 public class EmbedSizeTest extends TestBase {
 

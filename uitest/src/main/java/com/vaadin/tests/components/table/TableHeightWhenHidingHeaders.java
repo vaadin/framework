@@ -2,7 +2,7 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.v7.ui.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.v7.ui.Table;
 
 /**

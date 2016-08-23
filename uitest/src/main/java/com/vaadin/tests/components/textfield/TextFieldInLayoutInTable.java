@@ -2,8 +2,8 @@ package com.vaadin.tests.components.textfield;
 
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.LegacyWindow;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextField;
 

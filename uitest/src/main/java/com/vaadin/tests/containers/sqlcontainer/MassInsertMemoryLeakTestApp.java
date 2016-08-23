@@ -7,12 +7,12 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.v7.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.v7.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.v7.data.util.sqlcontainer.query.TableQuery;
-import com.vaadin.v7.ui.LegacyWindow;
 import com.vaadin.v7.ui.ProgressIndicator;
 
 // author table in testdb (MySQL) is set out as follows

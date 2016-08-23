@@ -23,8 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;
-import com.vaadin.v7.ui.LegacyWindow;
 
 /**
  * A special application designed to help migrating applications from Vaadin 6

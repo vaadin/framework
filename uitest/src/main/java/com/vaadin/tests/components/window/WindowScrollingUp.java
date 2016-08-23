@@ -2,8 +2,8 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.v7.ui.LegacyWindow;
 import com.vaadin.v7.ui.Table;
 
 public class WindowScrollingUp extends AbstractTestCase {

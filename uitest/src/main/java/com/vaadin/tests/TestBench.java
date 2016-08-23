@@ -33,12 +33,12 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.util.HierarchicalContainer;
-import com.vaadin.v7.ui.LegacyWindow;
 import com.vaadin.v7.ui.Tree;
 
 /**

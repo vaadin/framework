@@ -9,9 +9,9 @@ import org.junit.Test;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.ui.LegacyWindow;
 
 public class AddRemoveSubWindowTest {
 

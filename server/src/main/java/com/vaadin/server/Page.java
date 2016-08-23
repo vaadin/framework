@@ -34,11 +34,11 @@ import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.JavaScript;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.util.ReflectTools;
-import com.vaadin.v7.ui.LegacyWindow;
 
 public class Page implements Serializable {
 
