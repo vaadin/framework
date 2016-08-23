@@ -12,7 +12,7 @@ public class LoginFormUIInLoginHandler extends TestBase {
     @Override
     protected void setup() {
         LoginForm lf = new LoginForm();
-        lf.addListener(new LoginListener() {
+        lf.addLoginListener(new LoginListener() {
 
             @Override
             public void onLogin(LoginEvent event) {
@@ -23,7 +23,7 @@ public class LoginFormUIInLoginHandler extends TestBase {
                 } else {
                     addComponent(new Label("UI.getCurrent() is null"));
                 }
-                UI r2 = ((LoginForm) event.getSource()).getUI();
+                UI r2 = event.getSource().getUI();
                 if (r2 != null) {
                     addComponent(new Label(
                             "event.getSource().data: " + r2.getData()));

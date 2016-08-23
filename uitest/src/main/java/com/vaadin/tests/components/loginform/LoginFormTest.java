@@ -24,7 +24,7 @@ public class LoginFormTest extends TestBase {
         loginForm.setSizeUndefined();
 
         updateCaption();
-        loginForm.addListener(new LoginListener() {
+        loginForm.addLoginListener(new LoginListener() {
 
             /**
              *
@@ -33,8 +33,7 @@ public class LoginFormTest extends TestBase {
 
             @Override
             public void onLogin(LoginEvent event) {
-                login((LoginForm) event.getSource(),
-                        event.getLoginParameter("username"),
+                login(event.getSource(), event.getLoginParameter("username"),
                         event.getLoginParameter("password"));
 
             }

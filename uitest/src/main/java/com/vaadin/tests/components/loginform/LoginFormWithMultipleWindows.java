@@ -21,7 +21,7 @@ public class LoginFormWithMultipleWindows extends LegacyApplication {
             LoginForm loginForm = new LoginForm();
             loginForm.setSizeUndefined();
 
-            loginForm.addListener(new LoginListener() {
+            loginForm.addLoginListener(new LoginListener() {
 
                 private static final long serialVersionUID = 1L;
 

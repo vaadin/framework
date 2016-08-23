@@ -19,8 +19,8 @@ package com.vaadin.ui;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +28,7 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.loginform.LoginFormConstants;
 import com.vaadin.shared.ui.loginform.LoginFormRpc;
 import com.vaadin.shared.ui.loginform.LoginFormState;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Login form with auto-completion and auto-fill for all major browsers. You can
@@ -57,42 +58,53 @@ import com.vaadin.shared.ui.loginform.LoginFormState;
 public class LoginForm extends AbstractSingleComponentContainer {
 
     /**
-     * This event is sent when login form is submitted.
+     * Event sent when the login form is submitted.
      */
-    public static class LoginEvent extends Event {
+    public static class LoginEvent extends Component.Event {
 
         private Map<String, String> params;
 
-        private LoginEvent(Component source, Map<String, String> params) {
+        /**
+         * Creates a login event using the given source and the given
+         * parameters.
+         *
+         * @param source
+         *            the source of the event
+         * @param params
+         */
+        private LoginEvent(LoginForm source, Map<String, String> params) {
             super(source);
             this.params = params;
         }
 
+        @Override
+        public LoginForm getSource() {
+            return (LoginForm) super.getSource();
+        }
+
         /**
-         * Access method to form values by field names.
+         * Gets the login parameter with the given name.
          *
          * @param name
-         * @return value in given field
+         *            the name of the parameter
+         * @return the value of the parameter or null if no such parameter is
+         *         present
          */
         public String getLoginParameter(String name) {
-            if (params.containsKey(name)) {
-                return params.get(name);
-            } else {
-                return null;
-            }
+            return params.get(name);
         }
     }
 
     /**
-     * Login listener is a class capable to listen LoginEvents sent from
-     * LoginBox
+     * Listener triggered when a login occurs in a {@link LoginForm}.
      */
     public interface LoginListener extends Serializable {
         /**
-         * This method is fired on each login form post.
+         * Event method invoked when the login button is pressed in a login
+         * form.
          *
          * @param event
-         *            Login event
+         *            the login event
          */
         public void onLogin(LoginEvent event);
     }
@@ -105,28 +117,13 @@ public class LoginForm extends AbstractSingleComponentContainer {
             implements StreamResource.StreamSource {
         @Override
         public InputStream getStream() {
-            try {
-                return new ByteArrayInputStream(
-                        "<html>Success</html>".toString().getBytes("UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                return null;
-            }
-
+            return new ByteArrayInputStream(
+                    "<html>Success</html>".getBytes(StandardCharsets.UTF_8));
         }
     }
 
-    static {
-        try {
-            ON_LOGIN_METHOD = LoginListener.class.getDeclaredMethod("onLogin",
-                    new Class[] { LoginEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
-            // This should never happen
-            throw new java.lang.RuntimeException(
-                    "Internal error finding methods in LoginForm");
-        }
-    }
-
-    private static final Method ON_LOGIN_METHOD;
+    private static final Method ON_LOGIN_METHOD = ReflectTools
+            .findMethod(LoginListener.class, "onLogin", LoginEvent.class);
 
     private boolean initialized;
 
@@ -141,36 +138,36 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * @since 7.7
      */
     protected TextField createUsernameField() {
-        checkInitialized();
+        throwIfInitialized();
         TextField field = new TextField(getUsernameCaption());
         field.focus();
         return field;
     }
 
     /**
-     * Returns the caption set with {@link #setUsernameCaption(String)}. Note
-     * that this method might not match what is shown to the user if
+     * Gets the caption set with {@link #setUsernameCaption(String)}. Note that
+     * this method might not match what is shown to the user if
      * {@link #createUsernameField()} has been overridden.
      *
-     * @return user name field caption
+     * @return the user name field caption
      */
     public String getUsernameCaption() {
         return usernameCaption;
     }
 
     /**
-     * Set the caption of the user name field. Note that the caption can only be
-     * set with this method before the login form has been initialized
+     * Sets the caption of the user name field. Note that the caption can only
+     * be set with this method before the login form has been initialized
      * (attached).
      * <p>
      * As an alternative to calling this method, the method
      * {@link #createUsernameField()} can be overridden.
      *
-     * @param cap
-     *            new caption
+     * @param usernameCaption
+     *            the caption to set for the user name field
      */
-    public void setUsernameCaption(String cap) {
-        usernameCaption = cap;
+    public void setUsernameCaption(String usernameCaption) {
+        this.usernameCaption = usernameCaption;
     }
 
     /**
@@ -180,16 +177,17 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * @since 7.7
      */
     protected PasswordField createPasswordField() {
-        checkInitialized();
+        throwIfInitialized();
         return new PasswordField(getPasswordCaption());
     }
 
     /**
-     * Returns the caption set with {@link #setPasswordCaption(String)}. Note
-     * that this method might not match what is shown to the user if
+     * Gets the caption set with {@link #setPasswordCaption(String)}. Note that
+     * this method might not match what is shown to the user if
      * {@link #createPasswordField()} has been overridden.
      *
-     * @return password field caption
+     *
+     * @return the password field caption
      */
     public String getPasswordCaption() {
         return passwordCaption;
@@ -203,12 +201,11 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * As an alternative to calling this method, the method
      * {@link #createPasswordField()} can be overridden.
      *
-     * @param cap
-     *            new caption
+     * @param passwordCaption
+     *            the caption for the password field
      */
-    public void setPasswordCaption(String cap) {
-        passwordCaption = cap;
-        ;
+    public void setPasswordCaption(String passwordCaption) {
+        this.passwordCaption = passwordCaption;
     }
 
     /**
@@ -218,34 +215,34 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * @since 7.7
      */
     protected Button createLoginButton() {
-        checkInitialized();
+        throwIfInitialized();
         return new Button(getLoginButtonCaption());
     }
 
     /**
-     * Returns the caption set with {@link #setLoginButtonCaption(String)}. Note
+     * Gets the caption set with {@link #setLoginButtonCaption(String)}. Note
      * that this method might not match what is shown to the user if
      * {@link #createLoginButton()} has been overridden.
      *
-     * @return login button caption
+     * @return the login button caption
      */
     public String getLoginButtonCaption() {
         return loginButtonCaption;
     }
 
     /**
-     * Set the caption of the login button. Note that the caption can only be
+     * Sets the caption of the login button. Note that the caption can only be
      * set with this method before the login form has been initialized
      * (attached).
      * <p>
      * As an alternative to calling this method, the method
      * {@link #createLoginButton()} can be overridden.
      *
-     * @param cap
+     * @param loginButtonCaption
      *            new caption
      */
-    public void setLoginButtonCaption(String cap) {
-        loginButtonCaption = cap;
+    public void setLoginButtonCaption(String loginButtonCaption) {
+        this.loginButtonCaption = loginButtonCaption;
     }
 
     @Override
@@ -254,12 +251,17 @@ public class LoginForm extends AbstractSingleComponentContainer {
     }
 
     @Override
+    protected LoginFormState getState(boolean markAsDirty) {
+        return (LoginFormState) super.getState(markAsDirty);
+    }
+
+    @Override
     public void attach() {
         super.attach();
         init();
     }
 
-    private void checkInitialized() {
+    private void throwIfInitialized() {
         if (initialized) {
             throw new IllegalStateException(
                     "Already initialized. The create methods may not be called explicitly.");
@@ -327,26 +329,28 @@ public class LoginForm extends AbstractSingleComponentContainer {
     }
 
     private TextField getUsernameField() {
+        assert initialized;
         return (TextField) getState().userNameFieldConnector;
     }
 
     private PasswordField getPasswordField() {
+        assert initialized;
         return (PasswordField) getState().passwordFieldConnector;
     }
 
     private Button getLoginButton() {
+        assert initialized;
         return (Button) getState().loginButtonConnector;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * Handle the login. In deferred mode, this method is called after the dummy
-     * POST request that triggers the password manager has been completed. In
-     * direct mode (the default setting), it is called directly when the user
-     * hits the enter key or clicks on the login button. In the latter case, you
-     * cannot change the URL in the method or the password manager will not be
-     * triggered.
+    /**
+     * Handles the login.
+     * <p>
+     * In deferred mode, this method is called after the dummy POST request that
+     * triggers the password manager has been completed. In direct mode (the
+     * default setting), it is called directly when the user hits the enter key
+     * or clicks on the login button. In the latter case, you cannot change the
+     * URL in the method or the password manager will not be triggered.
      */
     private void login() {
         HashMap<String, String> params = new HashMap<String, String>();
@@ -357,39 +361,25 @@ public class LoginForm extends AbstractSingleComponentContainer {
     }
 
     /**
-     * Adds LoginListener to handle login logic
+     * Adds a {@link LoginListener}.
+     * <p>
+     * The listener is called when the user presses the login button.
      *
      * @param listener
+     *            the listener to add
      */
     public void addLoginListener(LoginListener listener) {
         addListener(LoginEvent.class, listener, ON_LOGIN_METHOD);
     }
 
     /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addLoginListener(LoginListener)}
-     **/
-    @Deprecated
-    public void addListener(LoginListener listener) {
-        addLoginListener(listener);
-    }
-
-    /**
-     * Removes LoginListener
+     * Removes a {@link LoginListener}.
      *
      * @param listener
+     *            the listener to remove
      */
     public void removeLoginListener(LoginListener listener) {
         removeListener(LoginEvent.class, listener, ON_LOGIN_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeLoginListener(LoginListener)}
-     **/
-    @Deprecated
-    public void removeListener(LoginListener listener) {
-        removeLoginListener(listener);
     }
 
 }
