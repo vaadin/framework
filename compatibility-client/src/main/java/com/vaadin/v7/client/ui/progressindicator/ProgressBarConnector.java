@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.ui.progressindicator;
+package com.vaadin.v7.client.ui.progressindicator;
 
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
