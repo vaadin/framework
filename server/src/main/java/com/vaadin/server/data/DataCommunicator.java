@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -87,13 +88,13 @@ public class DataCommunicator<T> extends AbstractExtension {
         /**
          * Set of key strings for currently active data objects
          */
-        private final Set<String> activeData = new HashSet<String>();
+        private final Set<String> activeData = new HashSet<>();
 
         /**
          * Set of key strings for data objects dropped on the client. This set
          * is used to clean up old data when it's no longer needed.
          */
-        private final Set<String> droppedData = new HashSet<String>();
+        private final Set<String> droppedData = new HashSet<>();
 
         /**
          * Adds given objects as currently active objects.
@@ -148,7 +149,7 @@ public class DataCommunicator<T> extends AbstractExtension {
          * @return collection of active data objects
          */
         public Collection<T> getActiveData() {
-            HashSet<T> hashSet = new HashSet<T>();
+            HashSet<T> hashSet = new HashSet<>();
             for (String key : activeData) {
                 hashSet.add(getKeyMapper().get(key));
             }
@@ -171,14 +172,14 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
     }
 
-    private Collection<TypedDataGenerator<T>> generators = new LinkedHashSet<TypedDataGenerator<T>>();
+    private Collection<TypedDataGenerator<T>> generators = new LinkedHashSet<>();
     private ActiveDataHandler handler = new ActiveDataHandler();
 
     private DataSource<T> dataSource;
     private DataKeyMapper<T> keyMapper;
 
     private boolean reset = false;
-    private final Set<T> updatedData = new HashSet<T>();
+    private final Set<T> updatedData = new HashSet<>();
     private Range pushRows = Range.withLength(0, 40);
 
     private Comparator<T> inMemorySorting;
@@ -248,22 +249,27 @@ public class DataCommunicator<T> extends AbstractExtension {
     }
 
     /**
-     * Adds a {@link TypedDataGenerator} to this {@link DataCommunicator}.
+     * Adds a data generator to this data communicator. Data generators can be
+     * used to insert custom data to the rows sent to the client. If the data
+     * generator is already added, does nothing.
      *
      * @param generator
-     *            typed data generator
+     *            the data generator to add, not null
      */
     public void addDataGenerator(TypedDataGenerator<T> generator) {
+        Objects.requireNonNull(generator, "generator cannot be null");
         generators.add(generator);
     }
 
     /**
-     * Removes a {@link TypedDataGenerator} from this {@link DataCommunicator}.
+     * Removes a data generator from this data communicator. If there is no such
+     * data generator, does nothing.
      *
      * @param generator
-     *            typed data generator
+     *            the data generator to remove, not null
      */
     public void removeDataGenerator(TypedDataGenerator<T> generator) {
+        Objects.requireNonNull(generator, "generator cannot be null");
         generators.remove(generator);
     }
 
@@ -395,7 +401,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @return key mapper
      */
     protected DataKeyMapper<T> createKeyMapper() {
-        return new KeyMapper<T>();
+        return new KeyMapper<>();
     }
 
     /**
@@ -422,9 +428,10 @@ public class DataCommunicator<T> extends AbstractExtension {
      * Sets the current data source for this DataCommunicator.
      *
      * @param dataSource
-     *            the data source to set
+     *            the data source to set, not null
      */
     public void setDataSource(DataSource<T> dataSource) {
+        Objects.requireNonNull(dataSource, "data source cannot be null");
         this.dataSource = dataSource;
         reset();
     }

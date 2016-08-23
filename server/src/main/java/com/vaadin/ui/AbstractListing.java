@@ -18,50 +18,44 @@ package com.vaadin.ui;
 import java.util.Objects;
 
 import com.vaadin.data.Listing;
+import com.vaadin.data.selection.SelectionModel;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.server.data.TypedDataGenerator;
 
 /**
- * Base class for {@link Listing} components. Provides common handling for
- * {@link DataCommunicator} and {@link TypedDataGenerator}s.
- *
+ * A base class for listing components. Provides common handling for fetching
+ * backend data items, selection logic, and server-client communication.
+ * 
  * @param <T>
- *            listing data type
+ *            the item data type
+ * @param <SELECTIONMODEL>
+ *            the selection logic supported by this listing
  */
-public abstract class AbstractListing<T> extends AbstractComponent
-        implements Listing<T> {
+public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T>>
+        extends AbstractComponent implements Listing<T, SELECTIONMODEL> {
 
     /**
-     * Helper base class for creating extensions for Listing components. This
+     * A helper base class for creating extensions for Listing components. This
      * class provides helpers for accessing the underlying parts of the
-     * component and its communicational mechanism.
+     * component and its communication mechanism.
      *
      * @param <T>
-     *            listing data type
+     *            the listing item type
      */
     public abstract static class AbstractListingExtension<T>
             extends AbstractExtension implements TypedDataGenerator<T> {
 
         /**
-         * {@inheritDoc}
-         * <p>
-         * Note: AbstractListingExtensions need parent to be of type
-         * AbstractListing.
-         *
-         * @throws IllegalArgument
-         *             if parent is not an AbstractListing
+         * Adds this extension to the given parent listing.
+         * 
+         * @param listing
+         *            the parent component to add to
          */
-        public void extend(Listing<T> listing) {
-            if (listing instanceof AbstractListing) {
-                AbstractListing<T> parent = (AbstractListing<T>) listing;
-                super.extend(parent);
-                parent.addDataGenerator(this);
-            } else {
-                throw new IllegalArgumentException(
-                        "Parent needs to extend AbstractListing");
-            }
+        public void extend(AbstractListing<T, ?> listing) {
+            super.extend(listing);
+            listing.addDataGenerator(this);
         }
 
         @Override
@@ -84,46 +78,56 @@ public abstract class AbstractListing<T> extends AbstractComponent
 
         @Override
         @SuppressWarnings("unchecked")
-        public AbstractListing<T> getParent() {
-            return (AbstractListing<T>) super.getParent();
+        public AbstractListing<T, ?> getParent() {
+            return (AbstractListing<T, ?>) super.getParent();
         }
 
         /**
-         * Helper method for refreshing a single data object.
+         * A helper method for refreshing the client-side representation of a
+         * single data item.
          *
-         * @param data
-         *            data object to refresh
+         * @param item
+         *            the item to refresh
          */
-        protected void refresh(T data) {
-            getParent().getDataCommunicator().refresh(data);
+        protected void refresh(T item) {
+            getParent().getDataCommunicator().refresh(item);
         }
     }
 
-    /* DataCommunicator for this Listing component */
     private final DataCommunicator<T> dataCommunicator;
 
+    private SELECTIONMODEL selectionModel;
+
     /**
-     * Constructs an {@link AbstractListing}, extending it with a
-     * {@link DataCommunicator}.
+     * Creates a new {@code AbstractListing} using the given selection model.
+     * 
+     * @param selectionModel
+     *            the selection model to use, not null
      */
-    protected AbstractListing() {
-        this(new DataCommunicator<>());
+    protected AbstractListing(SELECTIONMODEL selectionModel) {
+        this(selectionModel, new DataCommunicator<>());
     }
 
     /**
-     * Constructs an {@link AbstractListing}, extending it with given
-     * {@link DataCommunicator}.
+     * Creates a new {@code AbstractListing} with the given selection model and
+     * data communicator.
      * <p>
      * <strong>Note:</strong> This method is for creating an
      * {@link AbstractListing} with a custom {@link DataCommunicator}. In the
      * common case {@link AbstractListing#AbstractListing()} should be used.
      *
+     * @param selectionModel
+     *            the selection model to use, not null
      * @param dataCommunicator
-     *            a customized data communicator instance
+     *            the custom data communicator to use, not null
      */
-    protected AbstractListing(DataCommunicator<T> dataCommunicator) {
+    protected AbstractListing(SELECTIONMODEL selectionModel,
+            DataCommunicator<T> dataCommunicator) {
+        Objects.requireNonNull(selectionModel, "selectionModel cannot be null");
         Objects.requireNonNull(dataCommunicator,
-                "The data communicator can't be null");
+                "dataCommunicator cannot be null");
+
+        this.selectionModel = selectionModel;
         this.dataCommunicator = dataCommunicator;
         addExtension(dataCommunicator);
     }
@@ -138,32 +142,37 @@ public abstract class AbstractListing<T> extends AbstractComponent
         return getDataCommunicator().getDataSource();
     }
 
+    @Override
+    public SELECTIONMODEL getSelectionModel() {
+        return selectionModel;
+    }
+
     /**
-     * Adds a {@link TypedDataGenerator} for the {@link DataCommunicator} of
-     * this Listing component.
+     * Adds the given data generator to this listing. If the generator was
+     * already added, does nothing.
      *
      * @param generator
-     *            typed data generator
+     *            the data generator to add, not null
      */
     protected void addDataGenerator(TypedDataGenerator<T> generator) {
-        dataCommunicator.addDataGenerator(generator);
+        getDataCommunicator().addDataGenerator(generator);
     }
 
     /**
-     * Removed a {@link TypedDataGenerator} from the {@link DataCommunicator} of
-     * this Listing component.
+     * Removes the given data generator from this listing. If this listing does
+     * not have the generator, does nothing.
      *
      * @param generator
-     *            typed data generator
+     *            the data generator to remove, not null
      */
     protected void removeDataGenerator(TypedDataGenerator<T> generator) {
-        dataCommunicator.removeDataGenerator(generator);
+        getDataCommunicator().removeDataGenerator(generator);
     }
 
     /**
-     * Get the {@link DataCommunicator} of this Listing component.
+     * Returns the data communicator of this listing.
      *
-     * @return data provider
+     * @return the data communicator, not null
      */
     public DataCommunicator<T> getDataCommunicator() {
         return dataCommunicator;

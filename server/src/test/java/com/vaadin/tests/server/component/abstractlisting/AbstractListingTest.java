@@ -2,17 +2,21 @@ package com.vaadin.tests.server.component.abstractlisting;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.selection.SelectionModel;
 import com.vaadin.server.data.BackEndDataSource;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.server.data.ListDataSource;
 import com.vaadin.server.data.Query;
+import com.vaadin.server.data.TypedDataGenerator;
 import com.vaadin.ui.AbstractListing;
 import com.vaadin.ui.AbstractListing.AbstractListingExtension;
 
@@ -20,7 +24,39 @@ import elemental.json.JsonObject;
 
 public class AbstractListingTest {
 
-    private final class TestListing extends AbstractListing<String> {
+    private final class TestListing extends
+            AbstractListing<String, SelectionModel<String>> {
+
+        protected TestListing() {
+            // Stub for now, implement (and test) when adding concrete
+            // SelectionModels
+            super(new SelectionModel<String>() {
+
+                @Override
+                public Set<String> getSelectedItems() {
+                    return Collections.emptySet();
+                }
+
+                @Override
+                public void select(String item) {
+                }
+
+                @Override
+                public void deselect(String item) {
+                }
+            });
+        }
+
+        @Override
+        public void addDataGenerator(TypedDataGenerator<String> generator) {
+            super.addDataGenerator(generator);
+        }
+
+        @Override
+        public void removeDataGenerator(TypedDataGenerator<String> generator) {
+            super.removeDataGenerator(generator);
+        }
+
         /**
          * Used to execute data generation
          */
@@ -95,7 +131,7 @@ public class AbstractListingTest {
     }
 
     @Test
-    public void testAddDataGeneartorBeforeDataSource() {
+    public void testAddDataGeneratorBeforeDataSource() {
         CountGenerator generator = new CountGenerator();
         generator.extend(listing);
         listing.setItems("Foo");
@@ -105,7 +141,7 @@ public class AbstractListingTest {
     }
 
     @Test
-    public void testAddDataGeneartorAfterDataSource() {
+    public void testAddDataGeneratorAfterDataSource() {
         CountGenerator generator = new CountGenerator();
         listing.setItems("Foo");
         generator.extend(listing);
@@ -128,7 +164,7 @@ public class AbstractListingTest {
     }
 
     @Test
-    public void testRemoveDataGeneartor() {
+    public void testRemoveDataGenerator() {
         listing.setItems("Foo");
         CountGenerator generator = new CountGenerator();
         generator.extend(listing);

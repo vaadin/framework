@@ -17,49 +17,116 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Set;
 
+import com.vaadin.data.selection.SelectionModel;
 import com.vaadin.server.data.DataSource;
 
 /**
- * Generic interface for Components that show a list of data.
+ * A generic interface for components that show a list of data.
  *
+ * @author Vaadin Ltd.
  * @param <T>
- *            data type for listing
+ *            the item data type
+ * @param <SELECTIONMODEL>
+ *            the selection logic supported by this listing
+ * @since
  */
-public interface Listing<T> extends Serializable {
+public interface Listing<T, SELECTIONMODEL extends SelectionModel<T>> extends
+        Serializable {
 
     /**
-     * Sets the {@link DataSource} used by this Listing.
+     * Returns the source of data items used by this listing.
      *
-     * @param data
-     *            data source
-     */
-    void setDataSource(DataSource<T> data);
-
-    /**
-     * Sets the options available for this Listing.
-     *
-     * @param data
-     *            collection of data
-     */
-    default void setItems(Collection<T> data) {
-        setDataSource(DataSource.create(data));
-    }
-
-    /**
-     * Sets the options available for this Listing.
-     *
-     * @param data
-     *            array of data
-     */
-    default void setItems(T... data) {
-        setDataSource(DataSource.create(data));
-    }
-
-    /**
-     * Returns the {@link DataSource} of this Listing.
-     *
-     * @return data source
+     * @return the data source, not null
      */
     DataSource<T> getDataSource();
+
+    /**
+     * Sets the source of data items used by this listing. The data source is
+     * queried for displayed items as needed.
+     *
+     * @param dataSource
+     *            the data source, not null
+     */
+    void setDataSource(DataSource<T> dataSource);
+
+    /**
+     * Returns the selection model for this listing.
+     * 
+     * @return the selection model, not null
+     */
+    SELECTIONMODEL getSelectionModel();
+
+    /**
+     * Sets the collection of data items of this listing.
+     *
+     * @param items
+     *            the data items to display
+     * 
+     */
+    default void setItems(Collection<T> items) {
+        setDataSource(DataSource.create(items));
+    }
+
+    /**
+     * Sets the data items of this listing.
+     *
+     * @param items
+     *            the data items to display
+     */
+    default void setItems(T... items) {
+        setDataSource(DataSource.create(items));
+    }
+
+    /* SelectionModel helper methods */
+
+    /**
+     * Returns an immutable set of the currently selected items. The iteration
+     * order of the items in the returned set is specified by the
+     * {@linkplain #getSelectionModel() selection model} used.
+     * 
+     * @return the current selection
+     * 
+     * @see SelectionModel#getSelectedItems
+     */
+    default Set<T> getSelectedItems() {
+        return getSelectionModel().getSelectedItems();
+    }
+
+    /**
+     * Selects the given item. If the item is already selected, does nothing.
+     * 
+     * @param item
+     *            the item to select, not null
+     * 
+     * @see SelectionModel#select
+     */
+    default void select(T item) {
+        getSelectionModel().select(item);
+    }
+
+    /**
+     * Deselects the given item. If the item is not currently selected, does
+     * nothing.
+     * 
+     * @param item
+     *            the item to deselect, not null
+     * 
+     * @see SelectionModel#deselect
+     */
+    default void deselect(T item) {
+        getSelectionModel().deselect(item);
+    }
+
+    /**
+     * Returns whether the given item is currently selected.
+     * 
+     * @param item
+     *            the item to check, not null
+     * @return {@code true} if the item is selected, {@code false} otherwise
+     */
+    default boolean isSelected(T item) {
+        return getSelectionModel().isSelected(item);
+    }
 }

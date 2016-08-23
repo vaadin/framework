@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import com.vaadin.data.selection.SelectionModel;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.data.DataSource;
@@ -51,7 +52,7 @@ import elemental.json.JsonObject;
  * @param <T>
  *            the grid bean type
  */
-public class Grid<T> extends AbstractListing<T> {
+public class Grid<T> extends AbstractListing<T, SelectionModel<T>> {
 
     private final class GridServerRpcImpl implements GridServerRpc {
         @Override
@@ -159,6 +160,7 @@ public class Grid<T> extends AbstractListing<T> {
 
             if (Comparable.class.isAssignableFrom(valueType)) {
                 comparator = (a, b) -> {
+                    @SuppressWarnings("unchecked")
                     Comparable<V> comp = (Comparable<V>) valueProvider.apply(a);
                     return comp.compareTo(valueProvider.apply(b));
                 };
@@ -351,6 +353,21 @@ public class Grid<T> extends AbstractListing<T> {
      * Constructor for the {@link Grid} component.
      */
     public Grid() {
+        super(new SelectionModel<T>() {
+            // Stub no-op selection model until selection models are implemented
+            @Override
+            public Set<T> getSelectedItems() {
+                return Collections.emptySet();
+            }
+
+            @Override
+            public void select(T item) {
+            }
+
+            @Override
+            public void deselect(T item) {
+            }
+        });
         setDataSource(DataSource.create());
         registerRpc(new GridServerRpcImpl());
     }
@@ -372,7 +389,7 @@ public class Grid<T> extends AbstractListing<T> {
      */
     public <V> Column<T, V> addColumn(String caption, Class<V> valueType,
             Function<T, V> valueProvider) {
-        Column<T, V> c = new Column<T, V>(caption, valueType, valueProvider);
+        Column<T, V> c = new Column<>(caption, valueType, valueProvider);
 
         c.extend(this);
         c.setId(columnKeys.key(c));
