@@ -170,7 +170,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
     public void updateCaption(ComponentConnector childConnector) {
         VGridLayout layout = getWidget();
         Cell cell = layout.widgetToCell.get(childConnector.getWidget());
-        if (VCaption.isNeeded(childConnector.getState())) {
+        if (VCaption.isNeeded(childConnector)) {
             VLayoutSlot layoutSlot = cell.slot;
             VCaption caption = layoutSlot.getCaption();
             if (caption == null) {

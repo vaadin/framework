@@ -27,8 +27,8 @@ import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractLayoutConnector;
+import com.vaadin.client.ui.HasErrorIndicator;
 import com.vaadin.client.ui.LayoutClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.VFormLayout;
@@ -248,10 +248,9 @@ public class FormLayoutConnector extends AbstractLayoutConnector
                 component.getState(), component.isEnabled());
         boolean hideErrors = false;
 
-        // FIXME This incorrectly depends on AbstractFieldConnector
-        if (component instanceof AbstractFieldConnector) {
-            hideErrors = ((AbstractFieldConnector) component)
-                    .getState().hideErrors;
+        if (component instanceof HasErrorIndicator) {
+            hideErrors = !((HasErrorIndicator) component)
+                    .isErrorIndicatorVisible();
         }
 
         getWidget().table.updateError(component.getWidget(),

@@ -33,14 +33,14 @@ import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
-import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractLayoutConnector;
+import com.vaadin.client.ui.HasErrorIndicator;
+import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.LayoutClickEventHandler;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
-import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.AlignmentInfo;
@@ -260,15 +260,14 @@ public abstract class AbstractOrderedLayoutConnector
 
         List<String> styles = child.getState().styles;
         String error = child.getState().errorMessage;
-        boolean showError = error != null;
-        if (child.getState() instanceof AbstractFieldState) {
-            AbstractFieldState abstractFieldState = (AbstractFieldState) child
-                    .getState();
-            showError = showError && !abstractFieldState.hideErrors;
+        boolean showError = false;
+        if (child instanceof HasErrorIndicator) {
+            showError = ((HasErrorIndicator) child).isErrorIndicatorVisible();
         }
         boolean required = false;
-        if (child instanceof AbstractFieldConnector) {
-            required = ((AbstractFieldConnector) child).isRequired();
+        if (child instanceof HasRequiredIndicator) {
+            required = ((HasRequiredIndicator) child)
+                    .isRequiredIndicatorVisible();
         }
         boolean enabled = child.isEnabled();
 

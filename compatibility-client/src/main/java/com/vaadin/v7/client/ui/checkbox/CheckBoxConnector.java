@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui.checkbox;
+package com.vaadin.v7.client.ui.checkbox;
 
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -25,7 +25,6 @@ import com.vaadin.client.VCaption;
 import com.vaadin.client.VTooltip;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VCheckBox;
@@ -34,7 +33,8 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.shared.ui.checkbox.CheckBoxState;
-import com.vaadin.ui.CheckBox;
+import com.vaadin.v7.client.ui.AbstractFieldConnector;
+import com.vaadin.v7.ui.CheckBox;
 
 @Connect(CheckBox.class)
 public class CheckBoxConnector extends AbstractFieldConnector

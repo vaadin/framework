@@ -13,13 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.v7.ui.checkbox;
+package com.vaadin.client.ui;
 
-import com.vaadin.client.ui.checkbox.CheckBoxConnector;
-import com.vaadin.shared.ui.Connect;
-import com.vaadin.v7.ui.CheckBox;
+import com.vaadin.client.ComponentConnector;
 
-@Connect(CheckBox.class)
-public class LegacyCheckBoxConnector extends CheckBoxConnector {
+/**
+ * Implemented by connectors supporting a required flag.
+ */
+public interface HasRequiredIndicator extends ComponentConnector {
+
+    /**
+     * Checks if a required indicator should be shown for the given connector.
+     *
+     * @return <code>true</code> to show an indicator, <code>false</code>
+     *         otherwise
+     */
+    boolean isRequiredIndicatorVisible();
 
 }

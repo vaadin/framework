@@ -62,7 +62,7 @@ import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.TabIndexState;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
-        implements ComponentConnector {
+        implements ComponentConnector, HasErrorIndicator {
 
     private HandlerRegistration contextHandler = null;
 
@@ -616,8 +616,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * primary style name of the widget returned by {@link #getWidget()}
      * <p>
      * This method can be overridden to provide additional style names for the
-     * component, for example see
-     * {@link AbstractFieldConnector#updateWidgetStyleNames()}
+     * component, for example see {@code AbstractFieldConnector}
      * </p>
      */
     protected void updateWidgetStyleNames() {
@@ -808,5 +807,10 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     @Override
     public void flush() {
         // No generic implementation. Override if needed
+    }
+
+    @Override
+    public boolean isErrorIndicatorVisible() {
+        return getState().errorMessage != null;
     }
 }

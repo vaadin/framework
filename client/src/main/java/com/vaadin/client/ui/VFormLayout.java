@@ -302,8 +302,8 @@ public class VFormLayout extends SimplePanel {
                 removeStyleDependentName("hasdescription");
             }
 
-            boolean required = owner instanceof AbstractFieldConnector
-                    && ((AbstractFieldConnector) owner).isRequired();
+            boolean required = owner instanceof HasRequiredIndicator
+                    && ((HasRequiredIndicator) owner).isRequiredIndicatorVisible();
 
             AriaHelper.handleInputRequired(owner.getWidget(), required);
 

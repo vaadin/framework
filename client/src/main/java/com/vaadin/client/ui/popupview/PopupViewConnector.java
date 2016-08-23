@@ -63,13 +63,13 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
     }
 
     @Override
-    public void updateCaption(ComponentConnector component) {
-        if (VCaption.isNeeded(component.getState())) {
+    public void updateCaption(ComponentConnector childConnector) {
+        if (VCaption.isNeeded(childConnector)) {
             if (getWidget().popup.captionWrapper != null) {
                 getWidget().popup.captionWrapper.updateCaption();
             } else {
                 getWidget().popup.captionWrapper = new VCaptionWrapper(
-                        component, getConnection());
+                        childConnector, getConnection());
                 getWidget().popup.setWidget(getWidget().popup.captionWrapper);
                 getWidget().popup.captionWrapper.updateCaption();
             }

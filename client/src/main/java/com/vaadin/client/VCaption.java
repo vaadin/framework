@@ -26,12 +26,12 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.HasErrorIndicator;
+import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.AbstractComponentState;
-import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
 
@@ -158,14 +158,13 @@ public class VCaption extends HTML {
         boolean hasIcon = owner.getState().resources
                 .containsKey(ComponentConstants.ICON_RESOURCE);
         boolean showRequired = false;
-        boolean showError = owner.getState().errorMessage != null;
-        if (owner.getState() instanceof AbstractFieldState) {
-            AbstractFieldState abstractFieldState = (AbstractFieldState) owner
-                    .getState();
-            showError = showError && !abstractFieldState.hideErrors;
+        boolean showError = false;
+        if (owner instanceof HasRequiredIndicator) {
+            showRequired = ((HasRequiredIndicator) owner)
+                    .isRequiredIndicatorVisible();
         }
-        if (owner instanceof AbstractFieldConnector) {
-            showRequired = ((AbstractFieldConnector) owner).isRequired();
+        if (owner instanceof HasErrorIndicator) {
+            showError = ((HasErrorIndicator) owner).isErrorIndicatorVisible();
         }
 
         if (icon != null) {
@@ -454,24 +453,27 @@ public class VCaption extends HTML {
         }
     }
 
-    public static boolean isNeeded(AbstractComponentState state) {
+    public static boolean isNeeded(ComponentConnector connector) {
+        AbstractComponentState state = connector.getState();
         if (state.caption != null) {
             return true;
         }
         if (state.resources.containsKey(ComponentConstants.ICON_RESOURCE)) {
             return true;
         }
-        if (state.errorMessage != null) {
+        if (connector instanceof HasErrorIndicator
+                && ((HasErrorIndicator) connector).isErrorIndicatorVisible()) {
             return true;
         }
 
-        if (state instanceof AbstractFieldState) {
-            if (((AbstractFieldState) state).required) {
-                return true;
-            }
+        if (connector instanceof HasRequiredIndicator
+                && ((HasRequiredIndicator) connector)
+                        .isRequiredIndicatorVisible()) {
+            return true;
         }
 
         return false;
+
     }
 
     /**

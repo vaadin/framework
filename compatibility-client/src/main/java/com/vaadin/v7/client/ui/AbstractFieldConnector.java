@@ -13,11 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui;
+package com.vaadin.v7.client.ui;
 
 import com.vaadin.client.StyleConstants;
+import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.HasErrorIndicator;
+import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.shared.AbstractFieldState;
 
+@Deprecated
 public abstract class AbstractFieldConnector extends AbstractComponentConnector
         implements HasRequiredIndicator, HasErrorIndicator {
 

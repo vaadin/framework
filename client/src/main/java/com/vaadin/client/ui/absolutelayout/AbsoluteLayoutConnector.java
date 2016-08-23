@@ -116,20 +116,21 @@ public class AbsoluteLayoutConnector extends AbstractComponentContainerConnector
      * .client.ComponentConnector)
      */
     @Override
-    public void updateCaption(ComponentConnector component) {
+    public void updateCaption(ComponentConnector childConnector) {
         VAbsoluteLayout absoluteLayoutWidget = getWidget();
-        boolean captionIsNeeded = VCaption.isNeeded(component.getState());
+        boolean captionIsNeeded = VCaption.isNeeded(childConnector);
 
         VCaption caption = absoluteLayoutWidget
-                .getWidgetCaption(component.getWidget());
+                .getWidgetCaption(childConnector.getWidget());
         if (captionIsNeeded) {
             if (caption == null) {
-                caption = new VCaption(component, getConnection());
+                caption = new VCaption(childConnector, getConnection());
             }
-            absoluteLayoutWidget.setWidgetCaption(component.getWidget(),
+            absoluteLayoutWidget.setWidgetCaption(childConnector.getWidget(),
                     caption);
         } else if (caption != null) {
-            absoluteLayoutWidget.setWidgetCaption(component.getWidget(), null);
+            absoluteLayoutWidget.setWidgetCaption(childConnector.getWidget(),
+                    null);
         }
     }
 

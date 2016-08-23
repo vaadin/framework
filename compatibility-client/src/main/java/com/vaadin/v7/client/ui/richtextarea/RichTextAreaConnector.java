@@ -20,12 +20,12 @@ import com.google.gwt.event.dom.client.BlurHandler;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.textarea.RichTextAreaState;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.v7.client.ui.AbstractFieldConnector;
 import com.vaadin.v7.client.ui.VRichTextArea;
 import com.vaadin.v7.ui.RichTextArea;
 

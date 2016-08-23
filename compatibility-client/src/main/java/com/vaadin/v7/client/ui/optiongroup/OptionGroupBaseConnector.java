@@ -20,11 +20,11 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.VNativeButton;
 import com.vaadin.client.ui.VOptionGroupBase;
 import com.vaadin.client.v7.ui.VLegacyTextField;
 import com.vaadin.shared.ui.select.AbstractSelectState;
+import com.vaadin.v7.client.ui.AbstractFieldConnector;
 
 public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
         implements Paintable {

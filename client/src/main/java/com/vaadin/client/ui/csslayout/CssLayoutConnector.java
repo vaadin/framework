@@ -190,7 +190,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
 
         String childId = child.getConnectorId();
         VCaption caption = childIdToCaption.get(childId);
-        if (VCaption.isNeeded(child.getState())) {
+        if (VCaption.isNeeded(child)) {
             if (caption == null) {
                 caption = new VCaption(child, getConnection());
                 childIdToCaption.put(childId, caption);
