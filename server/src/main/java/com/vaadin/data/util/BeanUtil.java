@@ -52,7 +52,7 @@ public final class BeanUtil implements Serializable {
      * <p>
      * For interfaces, the iteration is depth first and the properties of
      * superinterfaces are returned before those of their subinterfaces.
-     * 
+     *
      * @param beanType
      *            the type whose properties to query
      * @return a list of property descriptors of the given type
@@ -86,7 +86,7 @@ public final class BeanUtil implements Serializable {
      * "property.subProperty" or "property.subProperty1.subProperty2". The
      * property must have a public read method (or a chain of read methods in
      * case of a nested property).
-     * 
+     *
      * @param beanType
      *            the type declaring the property
      * @param propertyName
@@ -113,7 +113,7 @@ public final class BeanUtil implements Serializable {
      * "property.subProperty" or "property.subProperty1.subProperty2". The
      * property must have a public read method (or a chain of read methods in
      * case of a nested property).
-     * 
+     *
      * @param beanType
      *            the type declaring the property
      * @param propertyName

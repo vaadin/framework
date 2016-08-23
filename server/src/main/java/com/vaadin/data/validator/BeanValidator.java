@@ -42,7 +42,7 @@ import com.vaadin.data.Validator;
  * <a href="http://bval.apache.org/">Apache BVal</a>) must be present on the
  * project classpath when using bean validation. Specification versions 1.0 and
  * 1.1 are supported.
- * 
+ *
  * @author Petri Hakala
  * @author Vaadin Ltd.
  *
@@ -63,7 +63,7 @@ public class BeanValidator implements Validator<Object> {
      * a {@code BeanValidator} instance will throw an
      * {@code IllegalStateException}. If an implementation is not found, logs a
      * level {@code FINE} message the first time it is run.
-     * 
+     *
      * @return {@code true} if bean validation is available, {@code false}
      *         otherwise.
      */

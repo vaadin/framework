@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2016 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,12 +36,12 @@ import com.vaadin.ui.UI;
  * that conform to the JavaBeans specification. Bean properties are bound by
  * their names. If a JSR-303 bean validation implementation is present on the
  * classpath, {@code BeanBinder} adds a {@link BeanValidator} to each binding.
- * 
+ *
  * @author Vaadin Ltd.
  *
  * @param <BEAN>
  *            the bean type
- * 
+ *
  * @since
  */
 public class BeanBinder<BEAN> extends Binder<BEAN> {
@@ -103,15 +103,15 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
          * The property must have an accessible getter method. It need not have
          * an accessible setter; in that case the property value is never
          * updated and the binding is said to be <i>read-only</i>.
-         * 
+         *
          * @param propertyName
          *            the name of the property to bind, not null
-         * 
+         *
          * @throws IllegalArgumentException
          *             if the property name is invalid
          * @throws IllegalArgumentException
          *             if the property has no accessible getter
-         * 
+         *
          * @see Binding#bind(Function, java.util.function.BiConsumer)
          */
         public void bind(String propertyName);
@@ -119,7 +119,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
 
     /**
      * An internal implementation of {@link BeanBinding}.
-     * 
+     *
      * @param <BEAN>
      *            the bean type
      * @param <FIELDVALUE>
@@ -136,7 +136,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
 
         /**
          * Creates a new bean binding.
-         * 
+         *
          * @param binder
          *            the binder this instance is connected to, not null
          * @param field
@@ -262,7 +262,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
 
     /**
      * Creates a new {@code BeanBinder} supporting beans of the given type.
-     * 
+     *
      * @param beanType
      *            the bean {@code Class} instance, not null
      */
@@ -289,19 +289,19 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      * The property must have an accessible getter method. It need not have an
      * accessible setter; in that case the property value is never updated and
      * the binding is said to be <i>read-only</i>.
-     * 
+     *
      * @param <FIELDVALUE>
      *            the value type of the field to bind
      * @param field
      *            the field to bind, not null
      * @param propertyName
      *            the name of the property to bind, not null
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the property name is invalid
      * @throws IllegalArgumentException
      *             if the property has no accessible getter
-     * 
+     *
      * @see #bind(HasValue, java.util.function.Function,
      *      java.util.function.BiConsumer)
      */

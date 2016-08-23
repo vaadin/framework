@@ -459,7 +459,7 @@ public class Binder<BEAN> implements Serializable {
         /**
          * Returns the {@code Binder} connected to this {@code Binding}
          * instance.
-         * 
+         *
          * @return the binder
          */
         protected Binder<BEAN> getBinder() {
@@ -469,7 +469,7 @@ public class Binder<BEAN> implements Serializable {
         /**
          * Throws if this binding is already completed and cannot be modified
          * anymore.
-         * 
+         *
          * @throws IllegalStateException
          *             if this binding is already bound
          */
