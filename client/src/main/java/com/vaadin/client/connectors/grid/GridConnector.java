@@ -16,11 +16,17 @@
 package com.vaadin.client.connectors.grid;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 import com.vaadin.client.DeferredWorker;
+import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SimpleManagedLayout;
@@ -43,9 +49,12 @@ import elemental.json.JsonObject;
  */
 @Connect(com.vaadin.ui.Grid.class)
 public class GridConnector extends AbstractListingConnector
-        implements SimpleManagedLayout, DeferredWorker {
+        implements HasComponentsConnector, SimpleManagedLayout, DeferredWorker {
+
     /* Map to keep track of all added columns */
     private Map<Column<?, JsonObject>, String> columnToIdMap = new HashMap<>();
+    /* Child component list for HasComponentsConnector */
+    private List<ComponentConnector> childComponents;
 
     @Override
     public Grid<JsonObject> getWidget() {
@@ -132,5 +141,34 @@ public class GridConnector extends AbstractListingConnector
         getRpcProxy(GridServerRpc.class).sort(columnIds.toArray(new String[0]),
                 sortDirections.toArray(new SortDirection[0]),
                 event.isUserOriginated());
+    }
+
+    /* HasComponentsConnector */
+
+    @Override
+    public void updateCaption(ComponentConnector connector) {
+        // Details components don't support captions.
+    }
+
+    @Override
+    public List<ComponentConnector> getChildComponents() {
+        if (childComponents == null) {
+            return Collections.emptyList();
+        }
+
+        return childComponents;
+    }
+
+    @Override
+    public void setChildComponents(List<ComponentConnector> children) {
+        this.childComponents = children;
+
+    }
+
+    @Override
+    public HandlerRegistration addConnectorHierarchyChangeHandler(
+            ConnectorHierarchyChangeHandler handler) {
+        return ensureHandlerManager()
+                .addHandler(ConnectorHierarchyChangeEvent.TYPE, handler);
     }
 }

@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.Before;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -35,11 +37,32 @@ public abstract class GridBasicsTest extends MultiBrowserTest {
         testData = DataObject.generateObjects();
     }
 
-    protected GridElement getGrid() {
+    protected GridElement getGridElement() {
         return $(GridElement.class).first();
     }
 
     protected Stream<DataObject> getTestData() {
         return testData.stream();
     }
+
+    protected void scrollGridVerticallyTo(double px) {
+        executeScript("arguments[0].scrollTop = " + px,
+                getGridVerticalScrollbar());
+    }
+
+    protected void scrollGridHorizontallyTo(double px) {
+        executeScript("arguments[0].scrollLeft = " + px,
+                getGridHorizontalScrollbar());
+    }
+
+    protected WebElement getGridVerticalScrollbar() {
+        return getDriver().findElement(By.xpath(
+                "//div[contains(@class, \"v-grid-scroller-vertical\")]"));
+    }
+
+    protected WebElement getGridHorizontalScrollbar() {
+        return getDriver().findElement(By.xpath(
+                "//div[contains(@class, \"v-grid-scroller-horizontal\")]"));
+    }
+
 }

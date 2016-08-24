@@ -15,13 +15,17 @@
  */
 package com.vaadin.ui;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
@@ -39,6 +43,7 @@ import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.ColumnState;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
+import com.vaadin.shared.ui.grid.GridState;
 
 import elemental.json.Json;
 import elemental.json.JsonObject;
@@ -52,7 +57,62 @@ import elemental.json.JsonObject;
  * @param <T>
  *            the grid bean type
  */
-public class Grid<T> extends AbstractListing<T, SelectionModel<T>> {
+public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
+        implements HasComponents {
+
+    /**
+     * A callback interface for generating details for a particular row in Grid.
+     *
+     * @param <T>
+     *            the grid bean type
+     */
+    @FunctionalInterface
+    public interface DetailsGenerator<T>
+            extends Function<T, Component>, Serializable {
+    }
+
+    /**
+     * A helper base class for creating extensions for the Grid component.
+     *
+     * @param <T>
+     */
+    public static abstract class AbstractGridExtension<T>
+            extends AbstractListingExtension<T> {
+
+        @Override
+        public void extend(AbstractListing<T, ?> grid) {
+            if (!(grid instanceof Grid)) {
+                throw new IllegalArgumentException(
+                        getClass().getSimpleName() + " can only extend Grid");
+            }
+            super.extend(grid);
+        }
+
+        /**
+         * Adds given component to the connector hierarchy of Grid.
+         *
+         * @param c
+         *            the component to add
+         */
+        protected void addComponentToGrid(Component c) {
+            getParent().addExtensionComponent(c);
+        }
+
+        /**
+         * Removes given component from the connector hierarchy of Grid.
+         *
+         * @param c
+         *            the component to remove
+         */
+        protected void removeComponentFromGrid(Component c) {
+            getParent().removeExtensionComponent(c);
+        }
+
+        @Override
+        public Grid<T> getParent() {
+            return (Grid<T>) super.getParent();
+        }
+    }
 
     private final class GridServerRpcImpl implements GridServerRpc {
         @Override
@@ -121,6 +181,117 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>> {
     }
 
     /**
+     * Class for managing visible details rows.
+     *
+     * @param <T>
+     *            the grid bean type
+     */
+    public static class DetailsManager<T> extends AbstractGridExtension<T> {
+
+        private Set<T> visibleDetails = new HashSet<>();
+        private Map<T, Component> components = new HashMap<>();
+        private DetailsGenerator<T> generator;
+
+        /**
+         * Sets the details component generator.
+         *
+         * @param generator
+         *            the generator for details components
+         */
+        public void setDetailsGenerator(DetailsGenerator<T> generator) {
+            if (this.generator != generator) {
+                removeAllComponents();
+            }
+            this.generator = generator;
+            visibleDetails.forEach(this::refresh);
+        }
+
+        @Override
+        public void remove() {
+            removeAllComponents();
+
+            super.remove();
+        }
+
+        private void removeAllComponents() {
+            // Clean up old components
+            components.values().forEach(this::removeComponentFromGrid);
+            components.clear();
+        }
+
+        @Override
+        public void generateData(T data, JsonObject jsonObject) {
+            if (generator == null || !visibleDetails.contains(data)) {
+                return;
+            }
+
+            if (!components.containsKey(data)) {
+                Component detailsComponent = generator.apply(data);
+                Objects.requireNonNull(detailsComponent,
+                        "Details generator can't create null components");
+                if (detailsComponent.getParent() != null) {
+                    throw new IllegalStateException(
+                            "Details component was already attached");
+                }
+                addComponentToGrid(detailsComponent);
+                components.put(data, detailsComponent);
+            }
+
+            jsonObject.put(GridState.JSONKEY_DETAILS_VISIBLE,
+                    components.get(data).getConnectorId());
+        }
+
+        @Override
+        public void destroyData(T data) {
+            // No clean up needed. Components are removed when hiding details
+            // and/or changing details generator
+        }
+
+        /**
+         * Sets the visibility of details component for given item.
+         *
+         * @param data
+         *            the item to show details for
+         * @param visible
+         *            {@code true} if details component should be visible;
+         *            {@code false} if it should be hidden
+         */
+        public void setDetailsVisible(T data, boolean visible) {
+            boolean refresh = false;
+            if (!visible) {
+                refresh = visibleDetails.remove(data);
+                if (components.containsKey(data)) {
+                    removeComponentFromGrid(components.remove(data));
+                }
+            } else {
+                refresh = visibleDetails.add(data);
+            }
+
+            if (refresh) {
+                refresh(data);
+            }
+        }
+
+        /**
+         * Returns the visibility of details component for given item.
+         *
+         * @param data
+         *            the item to show details for
+         *
+         * @return {@code true} if details component should be visible;
+         *         {@code false} if it should be hidden
+         */
+        public boolean isDetailsVisible(T data) {
+            return visibleDetails.contains(data);
+        }
+
+        @Override
+        public Grid<T> getParent() {
+            return super.getParent();
+        }
+    }
+
+    /**
      * This extension manages the configuration and data communication for a
      * Column inside of a Grid component.
      *
@@ -145,7 +316,7 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>> {
          * @param valueType
          *            the type of value
          * @param valueProvider
-         *            the function to get values from data objects
+         *            the function to get values from items
          */
         protected Column(String caption, Class<V> valueType,
                 Function<T, V> valueProvider) {
@@ -182,7 +353,8 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>> {
             }
             JsonObject obj = jsonObject
                     .getObject(DataCommunicatorConstants.DATA);
-            // Since we dont' have renderers yet, use a dummy toString for data.
+            // Since we dont' have renderers yet, use a dummy toString for
+            // data.
             obj.put(getState(false).id, valueProvider.apply(data).toString());
         }
 
@@ -348,6 +520,8 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>> {
     private KeyMapper<Column<T, ?>> columnKeys = new KeyMapper<>();
     private Set<Column<T, ?>> columnSet = new HashSet<>();
     private List<SortOrder<Column<T, ?>>> sortOrder = new ArrayList<>();
+    private DetailsManager<T> detailsManager;
+    private Set<Component> extensionComponents = new HashSet<>();
 
     /**
      * Constructor for the {@link Grid} component.
@@ -370,6 +544,9 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>> {
         });
         setDataSource(DataSource.create());
         registerRpc(new GridServerRpcImpl());
+        detailsManager = new DetailsManager<>();
+        addExtension(detailsManager);
+        addDataGenerator(detailsManager);
     }
 
     /**
@@ -414,6 +591,42 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>> {
     }
 
     /**
+     * Sets the details component generator.
+     *
+     * @param generator
+     *            the generator for details components
+     */
+    public void setDetailsGenerator(DetailsGenerator<T> generator) {
+        this.detailsManager.setDetailsGenerator(generator);
+    }
+
+    /**
+     * Sets the visibility of details component for given item.
+     *
+     * @param data
+     *            the item to show details for
+     * @param visible
+     *            {@code true} if details component should be visible;
+     *            {@code false} if it should be hidden
+     */
+    public void setDetailsVisible(T data, boolean visible) {
+        detailsManager.setDetailsVisible(data, visible);
+    }
+
+    /**
+     * Returns the visibility of details component for given item.
+     *
+     * @param data
+     *            the item to show details for
+     *
+     * @return {@code true} if details component should be visible;
+     *         {@code false} if it should be hidden
+     */
+    public boolean isDetailsVisible(T data) {
+        return detailsManager.isDetailsVisible(data);
+    }
+
+    /**
      * Gets an unmodifiable collection of all columns currently in this
      * {@link Grid}.
      *
@@ -421,5 +634,24 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>> {
      */
     public Collection<Column<T, ?>> getColumns() {
         return Collections.unmodifiableSet(columnSet);
+    }
+
+    @Override
+    public Iterator<Component> iterator() {
+        return Collections.unmodifiableSet(extensionComponents).iterator();
+    }
+
+    private void addExtensionComponent(Component c) {
+        if (extensionComponents.add(c)) {
+            c.setParent(this);
+            markAsDirty();
+        }
+    }
+
+    private void removeExtensionComponent(Component c) {
+        if (extensionComponents.remove(c)) {
+            c.setParent(null);
+            markAsDirty();
+        }
     }
 }
