@@ -16,10 +16,9 @@
 package com.vaadin.data;
 
 import java.io.Serializable;
-import java.util.function.Consumer;
 
 import com.vaadin.event.ConnectorEvent;
-import com.vaadin.event.ConnectorEventListener;
+import com.vaadin.event.EventListener;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.shared.Registration;
 
@@ -28,9 +27,12 @@ import com.vaadin.shared.Registration;
  * that have a user-editable value. Emits change events whenever the value is
  * changed, either by the user or programmatically.
  *
- * @since
+ * @author Vaadin Ltd.
+ * 
  * @param <V>
  *            the value type
+ * 
+ * @since
  */
 public interface HasValue<V> extends Serializable {
 
@@ -49,7 +51,7 @@ public interface HasValue<V> extends Serializable {
          * Creates a new {@code ValueChange} event containing the current value
          * of the given value-bearing source connector.
          *
-         * @param <C>
+         * @param <CONNECTOR>
          *            the type of the source connector
          * @param source
          *            the source connector bearing the value, not null
@@ -57,10 +59,27 @@ public interface HasValue<V> extends Serializable {
          *            {@code true} if this event originates from the client,
          *            {@code false} otherwise.
          */
-        public <C extends ClientConnector & HasValue<V>> ValueChange(C source,
+        public <CONNECTOR extends ClientConnector & HasValue<V>> ValueChange(
+                CONNECTOR source, boolean userOriginated) {
+            this(source, source.getValue(), userOriginated);
+        }
+
+        /**
+         * Creates a new {@code ValueChange} event containing the given value,
+         * originating from the given source connector.
+         * 
+         * @param source
+         *            the source connector, not null
+         * @param value
+         *            the new value, may be null
+         * @param userOriginated
+         *            {@code true} if this event originates from the client,
+         *            {@code false} otherwise.
+         */
+        public ValueChange(ClientConnector source, V value,
                 boolean userOriginated) {
             super(source);
-            this.value = source.getValue();
+            this.value = value;
             this.userOriginated = userOriginated;
         }
 
@@ -95,8 +114,8 @@ public interface HasValue<V> extends Serializable {
      * @see Registration
      */
     @FunctionalInterface
-    public interface ValueChangeListener<V>
-            extends Consumer<ValueChange<V>>, ConnectorEventListener {
+    public interface ValueChangeListener<V> extends
+            EventListener<ValueChange<V>> {
 
         /**
          * Invoked when this listener receives a value change event from an
@@ -105,11 +124,6 @@ public interface HasValue<V> extends Serializable {
          * @param event
          *            the received event, not null
          */
-        // In addition to customizing the Javadoc, this override is needed
-        // to make ReflectTools.findMethod work as expected. It uses
-        // Class.getDeclaredMethod, but even if it used getMethod instead, the
-        // superinterface argument type is Object, not Event, after type
-        // erasure.
         @Override
         public void accept(ValueChange<V> event);
     }
@@ -140,9 +154,8 @@ public interface HasValue<V> extends Serializable {
     public V getValue();
 
     /**
-     * Adds an {@link ValueChangeListener}. The listener is called when the
-     * value of this {@code hasValue} is changed either by the user or
-     * programmatically.
+     * Adds a value change listener. The listener is called when the value of
+     * this {@code hasValue} is changed either by the user or programmatically.
      *
      * @param listener
      *            the value change listener, not null

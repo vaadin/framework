@@ -18,6 +18,7 @@ package com.vaadin.client.connectors;
 import com.vaadin.client.connectors.data.HasDataSource;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.ui.AbstractListing;
 
 import elemental.json.JsonObject;
@@ -32,6 +33,8 @@ public abstract class AbstractListingConnector
 
     private DataSource<JsonObject> dataSource = null;
 
+    private SelectionModel<String> selectionModel = null;
+
     @Override
     public void setDataSource(DataSource<JsonObject> dataSource) {
         this.dataSource = dataSource;
@@ -40,5 +43,19 @@ public abstract class AbstractListingConnector
     @Override
     public DataSource<JsonObject> getDataSource() {
         return dataSource;
+    }
+
+    /**
+     * Sets the selection model to use. Passing {@code null} disables selection.
+     * 
+     * @param selectionModel
+     *            the selection model or null to disable
+     */
+    public void setSelectionModel(SelectionModel<String> selectionModel) {
+        this.selectionModel = selectionModel;
+    }
+
+    public SelectionModel<String> getSelectionModel() {
+        return selectionModel;
     }
 }

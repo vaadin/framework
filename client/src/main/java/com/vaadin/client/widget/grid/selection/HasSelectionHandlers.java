@@ -29,7 +29,7 @@ public interface HasSelectionHandlers<T> {
      * Register a selection change handler.
      * <p>
      * This handler is called whenever a
-     * {@link com.vaadin.ui.components.grid.selection.SelectionModel
+     * {@link com.vaadin.client.data.selection.components.grid.selection.SelectionModel
      * SelectionModel} detects a change in selection state.
      *
      * @param handler

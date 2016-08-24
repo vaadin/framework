@@ -18,20 +18,24 @@ package com.vaadin.ui;
 import java.util.Objects;
 
 import com.vaadin.data.Listing;
-import com.vaadin.data.selection.SelectionModel;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.DataGenerator;
 import com.vaadin.server.data.DataSource;
+import com.vaadin.shared.data.selection.SelectionModel;
 
 /**
  * A base class for listing components. Provides common handling for fetching
  * backend data items, selection logic, and server-client communication.
  * 
+ * @author Vaadin Ltd.
+ * 
  * @param <T>
  *            the item data type
  * @param <SELECTIONMODEL>
  *            the selection logic supported by this listing
+ * 
+ * @since
  */
 public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T>>
         extends AbstractComponent implements Listing<T, SELECTIONMODEL> {
@@ -99,35 +103,35 @@ public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T
     private SELECTIONMODEL selectionModel;
 
     /**
-     * Creates a new {@code AbstractListing} using the given selection model.
-     * 
-     * @param selectionModel
-     *            the selection model to use, not null
+     * Creates a new {@code AbstractListing} with a default data communicator.
+     * <p>
+     * <strong>Note:</strong> This constructor does not set a selection model
+     * for the new listing. The invoking constructor must explicitly call
+     * {@link #setSelectionModel(SelectionModel)}.
      */
-    protected AbstractListing(SELECTIONMODEL selectionModel) {
-        this(selectionModel, new DataCommunicator<>());
+    protected AbstractListing() {
+        this(new DataCommunicator<>());
     }
 
     /**
-     * Creates a new {@code AbstractListing} with the given selection model and
-     * data communicator.
+     * Creates a new {@code AbstractListing} with the given custom data
+     * communicator.
      * <p>
      * <strong>Note:</strong> This method is for creating an
-     * {@link AbstractListing} with a custom {@link DataCommunicator}. In the
-     * common case {@link AbstractListing#AbstractListing()} should be used.
-     *
-     * @param selectionModel
-     *            the selection model to use, not null
+     * {@code AbstractListing} with a custom communicator. In the common case
+     * {@link AbstractListing#AbstractListing()} should be used.
+     * <p>
+     * <strong>Note:</strong> This constructor does not set a selection model
+     * for the new listing. The invoking constructor must explicitly call
+     * {@link #setSelectionModel(SelectionModel)}.
+     * 
      * @param dataCommunicator
-     *            the custom data communicator to use, not null
+     *            the data communicator to use, not null
      */
-    protected AbstractListing(SELECTIONMODEL selectionModel,
-            DataCommunicator<T> dataCommunicator) {
-        Objects.requireNonNull(selectionModel, "selectionModel cannot be null");
+    protected AbstractListing(DataCommunicator<T> dataCommunicator) {
         Objects.requireNonNull(dataCommunicator,
                 "dataCommunicator cannot be null");
 
-        this.selectionModel = selectionModel;
         this.dataCommunicator = dataCommunicator;
         addExtension(dataCommunicator);
     }
@@ -144,7 +148,20 @@ public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T
 
     @Override
     public SELECTIONMODEL getSelectionModel() {
+        assert selectionModel != null : "No selection model set by "
+                + getClass().getName() + " constructor";
         return selectionModel;
+    }
+
+    /**
+     * Sets the selection model for this listing.
+     * 
+     * @param model
+     *            the selection model to use, not null
+     */
+    protected void setSelectionModel(SELECTIONMODEL model) {
+        Objects.requireNonNull(model, "selection model cannot be null");
+        selectionModel = model;
     }
 
     /**

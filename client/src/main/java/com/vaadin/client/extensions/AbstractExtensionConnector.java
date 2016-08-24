@@ -19,6 +19,12 @@ package com.vaadin.client.extensions;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.ui.AbstractConnector;
 
+/**
+ * An abstract implementation for extension connectors.
+ * 
+ * @author Vaadin Ltd.
+ * @since 7.0
+ */
 public abstract class AbstractExtensionConnector extends AbstractConnector {
     boolean hasBeenAttached = false;
 

@@ -31,7 +31,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import com.vaadin.data.selection.SelectionModel;
+import com.vaadin.data.selection.SingleSelection;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.data.DataSource;
@@ -39,6 +39,7 @@ import com.vaadin.server.data.SortOrder;
 import com.vaadin.server.data.DataGenerator;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.DataCommunicatorConstants;
+import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.ColumnState;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
@@ -527,21 +528,7 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
      * Constructor for the {@link Grid} component.
      */
     public Grid() {
-        super(new SelectionModel<T>() {
-            // Stub no-op selection model until selection models are implemented
-            @Override
-            public Set<T> getSelectedItems() {
-                return Collections.emptySet();
-            }
-
-            @Override
-            public void select(T item) {
-            }
-
-            @Override
-            public void deselect(T item) {
-            }
-        });
+        setSelectionModel(new SingleSelection<>(this));
         setDataSource(DataSource.create());
         registerRpc(new GridServerRpcImpl());
         detailsManager = new DetailsManager<>();

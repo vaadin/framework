@@ -13,16 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.selection;
+package com.vaadin.shared.data.selection;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
-
-import com.vaadin.data.HasValue;
-import com.vaadin.data.Listing;
 
 /**
  * Models the selection logic of a {@code Listing} component. Determines how
@@ -33,19 +29,17 @@ import com.vaadin.data.Listing;
  * @param <T>
  *            the type of the items to select
  * @since
- * 
- * @see Listing
  */
 public interface SelectionModel<T> extends Serializable {
 
     /**
-     * A selection model in which a single item can be selected at a time.
+     * A selection model in which at most one item can be selected at a time.
      * Selecting another item deselects the originally selected item.
      *
      * @param <T>
      *            the type of the items to select
      */
-    public interface Single<T> extends SelectionModel<T>, HasValue<T> {
+    public interface Single<T> extends SelectionModel<T> {
 
         /**
          * Selects the given item. If another item was already selected, that
@@ -84,23 +78,17 @@ public interface SelectionModel<T> extends Serializable {
      * @param <T>
      *            the type of the items to select
      */
-    public interface Multi<T> extends SelectionModel<T>,
-            HasValue<Collection<T>> {
+    public interface Multi<T> extends SelectionModel<T> {
 
         /**
          * Adds the given items to the set of currently selected items.
          */
         @Override
         public void select(T item);
-
-        /**
-         * Adds the given items to the set of currently selected items.
-         */
-        public void select(@SuppressWarnings("unchecked") T... items);
     }
 
     /**
-     * Returns an immutable set of the currently selected item.
+     * Returns an immutable set of the currently selected items.
      * <p>
      * <i>Implementation note:</i> the iteration order of the items in the
      * returned set should be well-defined and documented by the implementing
