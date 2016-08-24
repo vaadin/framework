@@ -16,6 +16,8 @@
 
 package com.vaadin.client.data;
 
+import com.vaadin.shared.Registration;
+
 /**
  * Source of data for widgets showing lazily loaded data based on indexable
  * items (e.g. rows) of a specified type. The data source is a lazy view into a
@@ -140,7 +142,7 @@ public interface DataSource<T> {
      * discards the previously set range.
      * <p>
      * This method triggers lazy loading of data if necessary. The change
-     * handler registered using {@link #setDataChangeHandler(DataChangeHandler)}
+     * handler registered using {@link #addDataChangeHandler(DataChangeHandler)}
      * is informed when new data has been loaded.
      * <p>
      * After any possible lazy loading and updates are done, the change handler
@@ -181,7 +183,8 @@ public interface DataSource<T> {
      * @param dataChangeHandler
      *            the data change handler
      */
-    public void setDataChangeHandler(DataChangeHandler dataChangeHandler);
+    public Registration addDataChangeHandler(
+            DataChangeHandler dataChangeHandler);
 
     /**
      * Gets a {@link RowHandle} of a row object in the cache.

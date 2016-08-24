@@ -17,13 +17,18 @@
 package com.vaadin.client.data;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.Profiler;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.Range;
 
 /**
@@ -159,8 +164,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         @Override
         public void updateRow() {
             int index = indexOf(row);
-            if (index >= 0 && dataChangeHandler != null) {
-                dataChangeHandler.dataUpdated(index, 1);
+            if (index >= 0) {
+                getHandlers().forEach(dch -> dch.dataUpdated(index, 1));
             }
         }
     }
@@ -176,7 +181,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     private final HashMap<Integer, T> indexToRowMap = new HashMap<Integer, T>();
     private final HashMap<Object, Integer> keyToIndexMap = new HashMap<Object, Integer>();
 
-    private DataChangeHandler dataChangeHandler;
+    private Set<DataChangeHandler> dataChangeHandlers = new LinkedHashSet<>();
 
     private CacheStrategy cacheStrategy = new CacheStrategy.DefaultCacheStrategy();
 
@@ -292,9 +297,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                         .partitionWith(cached);
                 handleMissingRows(missingCachePartition[0]);
                 handleMissingRows(missingCachePartition[2]);
-            } else if (dataChangeHandler != null) {
-                dataChangeHandler.dataAvailable(cached.getStart(),
-                        cached.length());
+            } else {
+                getHandlers().forEach(dch -> dch
+                        .dataAvailable(cached.getStart(), cached.length()));
             }
         }
 
@@ -411,14 +416,19 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     }
 
     @Override
-    public void setDataChangeHandler(DataChangeHandler dataChangeHandler) {
-        this.dataChangeHandler = dataChangeHandler;
+    public Registration addDataChangeHandler(
+            final DataChangeHandler dataChangeHandler) {
+        Objects.requireNonNull(dataChangeHandler,
+                "DataChangeHandler can't be null");
+        dataChangeHandlers.add(dataChangeHandler);
 
-        if (dataChangeHandler != null && !cached.isEmpty()) {
+        if (!cached.isEmpty()) {
             // Push currently cached data to the implementation
             dataChangeHandler.dataUpdated(cached.getStart(), cached.length());
             dataChangeHandler.dataAvailable(cached.getStart(), cached.length());
         }
+
+        return () -> dataChangeHandlers.remove(dataChangeHandler);
     }
 
     /**
@@ -452,21 +462,19 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         Range newUsefulData = partition[1];
         if (!newUsefulData.isEmpty()) {
             // Update the parts that are actually inside
-            for (int i = newUsefulData.getStart(); i < newUsefulData
-                    .getEnd(); i++) {
+            int start = newUsefulData.getStart();
+            for (int i = start; i < newUsefulData.getEnd(); i++) {
                 final T row = rowData.get(i - firstRowIndex);
                 indexToRowMap.put(Integer.valueOf(i), row);
                 keyToIndexMap.put(getRowKey(row), Integer.valueOf(i));
             }
 
-            if (dataChangeHandler != null) {
-                Profiler.enter(
-                        "AbstractRemoteDataSource.setRowData notify dataChangeHandler");
-                dataChangeHandler.dataUpdated(newUsefulData.getStart(),
-                        newUsefulData.length());
-                Profiler.leave(
-                        "AbstractRemoteDataSource.setRowData notify dataChangeHandler");
-            }
+            Profiler.enter(
+                    "AbstractRemoteDataSource.setRowData notify dataChangeHandler");
+            int length = newUsefulData.length();
+            getHandlers().forEach(dch -> dch.dataUpdated(start, length));
+            Profiler.leave(
+                    "AbstractRemoteDataSource.setRowData notify dataChangeHandler");
 
             // Potentially extend the range
             if (cached.isEmpty()) {
@@ -484,10 +492,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                     cached = newUsefulData;
                 }
             }
-            if (dataChangeHandler != null) {
-                dataChangeHandler.dataAvailable(cached.getStart(),
-                        cached.length());
-            }
+
+            getHandlers().forEach(dch -> dch.dataAvailable(cached.getStart(),
+                    cached.length()));
 
             updatePinnedRows(rowData);
         }
@@ -515,6 +522,12 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         ensureCoverageCheck();
 
         Profiler.leave("AbstractRemoteDataSource.setRowData");
+
+    }
+
+    private Stream<DataChangeHandler> getHandlers() {
+        Set<DataChangeHandler> copy = new LinkedHashSet<>(dataChangeHandlers);
+        return copy.stream();
     }
 
     private void updatePinnedRows(final List<T> rowData) {
@@ -565,9 +578,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             cached = cached.offsetBy(-removedRange.length());
         }
 
-        if (dataChangeHandler != null) {
-            dataChangeHandler.dataRemoved(firstRowIndex, count);
-        }
+        getHandlers().forEach(dch -> dch.dataRemoved(firstRowIndex, count));
+
         ensureCoverageCheck();
 
         Profiler.leave("AbstractRemoteDataSource.removeRowData");
@@ -612,9 +624,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                 keyToIndexMap.remove(getRowKey(row));
             }
         }
-        if (dataChangeHandler != null) {
-            dataChangeHandler.dataAdded(firstRowIndex, count);
-        }
+
+        getHandlers().forEach(dch -> dch.dataAdded(firstRowIndex, count));
+
         ensureCoverageCheck();
 
         Profiler.leave("AbstractRemoteDataSource.insertRowData");
@@ -760,9 +772,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         size = newSize;
         dropFromCache(getCachedRange());
         cached = Range.withLength(0, 0);
-        if (dataChangeHandler != null) {
-            dataChangeHandler.resetDataAndSize(newSize);
-        }
+
+        getHandlers().forEach(dch -> dch.resetDataAndSize(newSize));
     }
 
     protected int indexOfKey(Object rowKey) {

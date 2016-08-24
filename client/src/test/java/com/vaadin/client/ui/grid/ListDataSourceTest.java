@@ -56,7 +56,7 @@ public class ListDataSourceTest {
 
         DataChangeHandler handler = EasyMock
                 .createNiceMock(DataChangeHandler.class);
-        ds.setDataChangeHandler(handler);
+        ds.addDataChangeHandler(handler);
 
         handler.dataAdded(4, 1);
         EasyMock.expectLastCall();
@@ -80,7 +80,7 @@ public class ListDataSourceTest {
 
         DataChangeHandler handler = EasyMock
                 .createNiceMock(DataChangeHandler.class);
-        ds.setDataChangeHandler(handler);
+        ds.addDataChangeHandler(handler);
 
         handler.dataAdded(4, 3);
         EasyMock.expectLastCall();
@@ -106,7 +106,7 @@ public class ListDataSourceTest {
 
         DataChangeHandler handler = EasyMock
                 .createNiceMock(DataChangeHandler.class);
-        ds.setDataChangeHandler(handler);
+        ds.addDataChangeHandler(handler);
 
         handler.dataRemoved(3, 1);
         EasyMock.expectLastCall();
@@ -128,7 +128,7 @@ public class ListDataSourceTest {
 
         DataChangeHandler handler = EasyMock
                 .createNiceMock(DataChangeHandler.class);
-        ds.setDataChangeHandler(handler);
+        ds.addDataChangeHandler(handler);
 
         handler.dataRemoved(0, 3);
         EasyMock.expectLastCall();
@@ -148,7 +148,7 @@ public class ListDataSourceTest {
 
         DataChangeHandler handler = EasyMock
                 .createNiceMock(DataChangeHandler.class);
-        ds.setDataChangeHandler(handler);
+        ds.addDataChangeHandler(handler);
 
         handler.dataRemoved(0, 4);
         EasyMock.expectLastCall();

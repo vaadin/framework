@@ -20,8 +20,8 @@ import java.util.function.Consumer;
 
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ConnectorEventListener;
-import com.vaadin.event.Registration;
 import com.vaadin.server.ClientConnector;
+import com.vaadin.shared.Registration;
 
 /**
  * A generic interface for field components and other user interface objects

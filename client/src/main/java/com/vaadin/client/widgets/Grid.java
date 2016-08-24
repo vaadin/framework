@@ -174,6 +174,7 @@ import com.vaadin.client.widgets.Escalator.SubPartArguments;
 import com.vaadin.client.widgets.Grid.Editor.State;
 import com.vaadin.client.widgets.Grid.StaticSection.StaticCell;
 import com.vaadin.client.widgets.Grid.StaticSection.StaticRow;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
@@ -4022,6 +4023,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * on initialization, but not after that.
      */
     private DataSource<T> dataSource;
+    private Registration changeHandler;
 
     /**
      * Currently available row range in DataSource.
@@ -6700,73 +6702,85 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         selectionModel.reset();
 
-        if (this.dataSource != null) {
-            this.dataSource.setDataChangeHandler(null);
+        if (changeHandler != null) {
+            changeHandler.remove();
+            changeHandler = null;
         }
 
         this.dataSource = dataSource;
-        dataSource.setDataChangeHandler(new DataChangeHandler() {
-            @Override
-            public void dataUpdated(int firstIndex, int numberOfItems) {
-                escalator.getBody().refreshRows(firstIndex, numberOfItems);
-            }
+        changeHandler = dataSource
+                .addDataChangeHandler(new DataChangeHandler() {
+                    @Override
+                    public void dataUpdated(int firstIndex, int numberOfItems) {
+                        escalator.getBody().refreshRows(firstIndex,
+                                numberOfItems);
+                    }
 
-            @Override
-            public void dataRemoved(int firstIndex, int numberOfItems) {
-                escalator.getBody().removeRows(firstIndex, numberOfItems);
-                Range removed = Range.withLength(firstIndex, numberOfItems);
-                cellFocusHandler.rowsRemovedFromBody(removed);
-            }
+                    @Override
+                    public void dataRemoved(int firstIndex, int numberOfItems) {
+                        escalator.getBody().removeRows(firstIndex,
+                                numberOfItems);
+                        Range removed = Range.withLength(firstIndex,
+                                numberOfItems);
+                        cellFocusHandler.rowsRemovedFromBody(removed);
+                    }
 
-            @Override
-            public void dataAdded(int firstIndex, int numberOfItems) {
-                escalator.getBody().insertRows(firstIndex, numberOfItems);
-                Range added = Range.withLength(firstIndex, numberOfItems);
-                cellFocusHandler.rowsAddedToBody(added);
-            }
+                    @Override
+                    public void dataAdded(int firstIndex, int numberOfItems) {
+                        escalator.getBody().insertRows(firstIndex,
+                                numberOfItems);
+                        Range added = Range.withLength(firstIndex,
+                                numberOfItems);
+                        cellFocusHandler.rowsAddedToBody(added);
+                    }
 
-            @Override
-            public void dataAvailable(int firstIndex, int numberOfItems) {
-                currentDataAvailable = Range.withLength(firstIndex,
-                        numberOfItems);
-                fireEvent(new DataAvailableEvent(currentDataAvailable));
-            }
+                    @Override
+                    public void dataAvailable(int firstIndex,
+                            int numberOfItems) {
+                        currentDataAvailable = Range.withLength(firstIndex,
+                                numberOfItems);
+                        fireEvent(new DataAvailableEvent(currentDataAvailable));
+                    }
 
-            @Override
-            public void resetDataAndSize(int newSize) {
-                RowContainer body = escalator.getBody();
-                int oldSize = body.getRowCount();
+                    @Override
+                    public void resetDataAndSize(int newSize) {
+                        RowContainer body = escalator.getBody();
+                        int oldSize = body.getRowCount();
 
-                // Hide all details.
-                Set<Integer> oldDetails = new HashSet<Integer>(visibleDetails);
-                for (int i : oldDetails) {
-                    setDetailsVisible(i, false);
-                }
+                        // Hide all details.
+                        Set<Integer> oldDetails = new HashSet<Integer>(
+                                visibleDetails);
+                        for (int i : oldDetails) {
+                            setDetailsVisible(i, false);
+                        }
 
-                if (newSize > oldSize) {
-                    body.insertRows(oldSize, newSize - oldSize);
-                    cellFocusHandler.rowsAddedToBody(
-                            Range.withLength(oldSize, newSize - oldSize));
-                } else if (newSize < oldSize) {
-                    body.removeRows(newSize, oldSize - newSize);
-                    cellFocusHandler.rowsRemovedFromBody(
-                            Range.withLength(newSize, oldSize - newSize));
-                }
+                        if (newSize > oldSize) {
+                            body.insertRows(oldSize, newSize - oldSize);
+                            cellFocusHandler.rowsAddedToBody(Range
+                                    .withLength(oldSize, newSize - oldSize));
+                        } else if (newSize < oldSize) {
+                            body.removeRows(newSize, oldSize - newSize);
+                            cellFocusHandler.rowsRemovedFromBody(Range
+                                    .withLength(newSize, oldSize - newSize));
+                        }
 
-                if (newSize > 0) {
-                    dataIsBeingFetched = true;
-                    Range visibleRowRange = escalator.getVisibleRowRange();
-                    dataSource.ensureAvailability(visibleRowRange.getStart(),
-                            visibleRowRange.length());
-                } else {
-                    // We won't expect any data more data updates, so just make
-                    // the bookkeeping happy
-                    dataAvailable(0, 0);
-                }
+                        if (newSize > 0) {
+                            dataIsBeingFetched = true;
+                            Range visibleRowRange = escalator
+                                    .getVisibleRowRange();
+                            dataSource.ensureAvailability(
+                                    visibleRowRange.getStart(),
+                                    visibleRowRange.length());
+                        } else {
+                            // We won't expect any data more data updates, so
+                            // just make
+                            // the bookkeeping happy
+                            dataAvailable(0, 0);
+                        }
 
-                assert body.getRowCount() == newSize;
-            }
-        });
+                        assert body.getRowCount() == newSize;
+                    }
+                });
 
         int previousRowCount = escalator.getBody().getRowCount();
         if (previousRowCount != 0) {

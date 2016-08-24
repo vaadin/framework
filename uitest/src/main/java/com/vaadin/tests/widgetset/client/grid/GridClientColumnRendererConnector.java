@@ -47,6 +47,7 @@ import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortHandler;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Grid;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
 
@@ -105,8 +106,10 @@ public class GridClientColumnRendererConnector
         }
 
         @Override
-        public void setDataChangeHandler(DataChangeHandler dataChangeHandler) {
+        public Registration addDataChangeHandler(
+                DataChangeHandler dataChangeHandler) {
             this.dataChangeHandler = dataChangeHandler;
+            return null;
         }
 
         @Override

@@ -25,7 +25,7 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.event.Registration;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.textfield.TextFieldServerRpc;
 import com.vaadin.shared.ui.textfield.TextFieldState;
 import com.vaadin.shared.ui.textfield.ValueChangeMode;

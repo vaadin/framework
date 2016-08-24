@@ -25,8 +25,8 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasRequired;
 import com.vaadin.data.HasValue;
-import com.vaadin.event.Registration;
 import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -39,8 +39,8 @@ import com.vaadin.util.ReflectTools;
  * <p>
  * This class replaces the Vaadin 7 {@code com.vaadin.ui.AbstractField} class.
  * The old {@code AbstractField} is retained, under the new name
- * {@link com.vaadin.v7.ui.AbstractField}, for compatibility and
- * migration purposes.
+ * {@link com.vaadin.v7.ui.AbstractField}, for compatibility and migration
+ * purposes.
  *
  * @author Vaadin Ltd.
  * @since

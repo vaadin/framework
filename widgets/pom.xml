@@ -126,6 +126,7 @@
                                         com/vaadin/shared/ui/grid/*.*,
                                         com/vaadin/shared/ui/grid/**/*.*,
                                         com/vaadin/shared/util/SharedUtil*,
+                                        com/vaadin/shared/Registration*,
                                         com/vaadin/shared/VBrowserDetails*,
                                         com/vaadin/shared/data/sort/SortDirection*
                                     </includes>

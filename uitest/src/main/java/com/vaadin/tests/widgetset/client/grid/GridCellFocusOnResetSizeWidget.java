@@ -26,6 +26,7 @@ import com.vaadin.client.data.DataSource;
 import com.vaadin.client.renderers.HtmlRenderer;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.SelectionMode;
+import com.vaadin.shared.Registration;
 
 public class GridCellFocusOnResetSizeWidget
         extends PureGWTTestApplication<Grid<String[]>> {
@@ -54,8 +55,10 @@ public class GridCellFocusOnResetSizeWidget
         }
 
         @Override
-        public void setDataChangeHandler(DataChangeHandler dataChangeHandler) {
+        public Registration addDataChangeHandler(
+                DataChangeHandler dataChangeHandler) {
             handler = dataChangeHandler;
+            return null;
         }
 
         @Override

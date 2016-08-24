@@ -9,7 +9,7 @@ import java.util.Locale;
 
 import com.vaadin.data.HasValue.ValueChange;
 import com.vaadin.data.HasValue.ValueChangeListener;
-import com.vaadin.event.Registration;
+import com.vaadin.shared.Registration;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.MenuBar;

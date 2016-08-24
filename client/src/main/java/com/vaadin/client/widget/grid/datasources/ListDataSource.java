@@ -21,13 +21,18 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.widget.grid.events.SelectAllEvent;
 import com.vaadin.client.widget.grid.events.SelectAllHandler;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
@@ -110,9 +115,8 @@ public class ListDataSource<T> implements DataSource<T> {
 
         @Override
         public void updateRow() {
-            if (changeHandler != null) {
-                changeHandler.dataUpdated(ds.indexOf(getRow()), 1);
-            }
+            getHandlers()
+                    .forEach(dch -> dch.dataUpdated(ds.indexOf(getRow()), 1));
         }
     }
 
@@ -156,9 +160,7 @@ public class ListDataSource<T> implements DataSource<T> {
         @Override
         public boolean add(T e) {
             if (ds.add(e)) {
-                if (changeHandler != null) {
-                    changeHandler.dataAdded(ds.size() - 1, 1);
-                }
+                getHandlers().forEach(dch -> dch.dataAdded(ds.size() - 1, 1));
                 return true;
             }
             return false;
@@ -168,9 +170,7 @@ public class ListDataSource<T> implements DataSource<T> {
         public boolean remove(Object o) {
             int index = ds.indexOf(o);
             if (ds.remove(o)) {
-                if (changeHandler != null) {
-                    changeHandler.dataRemoved(index, 1);
-                }
+                getHandlers().forEach(dch -> dch.dataRemoved(index, 1));
                 return true;
             }
             return false;
@@ -185,9 +185,7 @@ public class ListDataSource<T> implements DataSource<T> {
         public boolean addAll(Collection<? extends T> c) {
             int idx = ds.size();
             if (ds.addAll(c)) {
-                if (changeHandler != null) {
-                    changeHandler.dataAdded(idx, c.size());
-                }
+                getHandlers().forEach(dch -> dch.dataAdded(idx, c.size()));
                 return true;
             }
             return false;
@@ -196,9 +194,7 @@ public class ListDataSource<T> implements DataSource<T> {
         @Override
         public boolean addAll(int index, Collection<? extends T> c) {
             if (ds.addAll(index, c)) {
-                if (changeHandler != null) {
-                    changeHandler.dataAdded(index, c.size());
-                }
+                getHandlers().forEach(dch -> dch.dataAdded(index, c.size()));
                 return true;
             }
             return false;
@@ -207,12 +203,8 @@ public class ListDataSource<T> implements DataSource<T> {
         @Override
         public boolean removeAll(Collection<?> c) {
             if (ds.removeAll(c)) {
-                if (changeHandler != null) {
-                    // Have to update the whole list as the removal does not
-                    // have to be a continuous range
-                    changeHandler.dataUpdated(0, ds.size());
-                    changeHandler.dataAvailable(0, ds.size());
-                }
+                getHandlers().forEach(dch -> dch.dataUpdated(0, ds.size()));
+                getHandlers().forEach(dch -> dch.dataAvailable(0, ds.size()));
                 return true;
             }
             return false;
@@ -221,12 +213,8 @@ public class ListDataSource<T> implements DataSource<T> {
         @Override
         public boolean retainAll(Collection<?> c) {
             if (ds.retainAll(c)) {
-                if (changeHandler != null) {
-                    // Have to update the whole list as the retain does not
-                    // have to be a continuous range
-                    changeHandler.dataUpdated(0, ds.size());
-                    changeHandler.dataAvailable(0, ds.size());
-                }
+                getHandlers().forEach(dch -> dch.dataUpdated(0, ds.size()));
+                getHandlers().forEach(dch -> dch.dataAvailable(0, ds.size()));
                 return true;
             }
             return false;
@@ -236,9 +224,7 @@ public class ListDataSource<T> implements DataSource<T> {
         public void clear() {
             int size = ds.size();
             ds.clear();
-            if (changeHandler != null) {
-                changeHandler.dataRemoved(0, size);
-            }
+            getHandlers().forEach(dch -> dch.dataRemoved(0, size));
         }
 
         @Override
@@ -249,26 +235,20 @@ public class ListDataSource<T> implements DataSource<T> {
         @Override
         public T set(int index, T element) {
             T prev = ds.set(index, element);
-            if (changeHandler != null) {
-                changeHandler.dataUpdated(index, 1);
-            }
+            getHandlers().forEach(dch -> dch.dataUpdated(index, 1));
             return prev;
         }
 
         @Override
         public void add(int index, T element) {
             ds.add(index, element);
-            if (changeHandler != null) {
-                changeHandler.dataAdded(index, 1);
-            }
+            getHandlers().forEach(dch -> dch.dataAdded(index, 1));
         }
 
         @Override
         public T remove(int index) {
             T removed = ds.remove(index);
-            if (changeHandler != null) {
-                changeHandler.dataRemoved(index, 1);
-            }
+            getHandlers().forEach(dch -> dch.dataRemoved(index, 1));
             return removed;
         }
 
@@ -346,7 +326,7 @@ public class ListDataSource<T> implements DataSource<T> {
     /**
      * Handler for listening to changes in the underlying list.
      */
-    private DataChangeHandler changeHandler;
+    private Set<DataChangeHandler> changeHandlers = new LinkedHashSet<>();
 
     /**
      * Constructs a new list data source.
@@ -392,9 +372,8 @@ public class ListDataSource<T> implements DataSource<T> {
                     "Trying to fetch rows outside of array");
         }
 
-        if (changeHandler != null) {
-            changeHandler.dataAvailable(firstRowIndex, numberOfRows);
-        }
+        getHandlers()
+                .forEach(dch -> dch.dataAvailable(firstRowIndex, numberOfRows));
     }
 
     @Override
@@ -408,8 +387,12 @@ public class ListDataSource<T> implements DataSource<T> {
     }
 
     @Override
-    public void setDataChangeHandler(DataChangeHandler dataChangeHandler) {
-        this.changeHandler = dataChangeHandler;
+    public Registration addDataChangeHandler(
+            DataChangeHandler dataChangeHandler) {
+        Objects.requireNonNull(dataChangeHandler,
+                "DataChangeHandler can't be null");
+        changeHandlers.add(dataChangeHandler);
+        return () -> changeHandlers.remove(dataChangeHandler);
     }
 
     /**
@@ -443,9 +426,7 @@ public class ListDataSource<T> implements DataSource<T> {
      */
     public void sort(Comparator<T> comparator) {
         Collections.sort(ds, comparator);
-        if (changeHandler != null) {
-            changeHandler.dataUpdated(0, ds.size());
-        }
+        getHandlers().forEach(dch -> dch.dataUpdated(0, ds.size()));
     }
 
     /**
@@ -475,4 +456,10 @@ public class ListDataSource<T> implements DataSource<T> {
             }
         };
     }
+
+    private Stream<DataChangeHandler> getHandlers() {
+        Set<DataChangeHandler> copy = new LinkedHashSet<>(changeHandlers);
+        return copy.stream();
+    }
+
 }
