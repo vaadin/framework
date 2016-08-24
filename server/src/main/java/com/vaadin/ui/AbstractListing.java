@@ -15,7 +15,10 @@
  */
 package com.vaadin.ui;
 
+import java.util.Objects;
+
 import com.vaadin.data.Listing;
+import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.server.data.TypedDataGenerator;
@@ -29,6 +32,72 @@ import com.vaadin.server.data.TypedDataGenerator;
  */
 public abstract class AbstractListing<T> extends AbstractComponent
         implements Listing<T> {
+
+    /**
+     * Helper base class for creating extensions for Listing components. This
+     * class provides helpers for accessing the underlying parts of the
+     * component and its communicational mechanism.
+     *
+     * @param <T>
+     *            listing data type
+     */
+    public abstract static class AbstractListingExtension<T>
+            extends AbstractExtension implements TypedDataGenerator<T> {
+
+        /**
+         * {@inheritDoc}
+         * <p>
+         * Note: AbstractListingExtensions need parent to be of type
+         * AbstractListing.
+         *
+         * @throws IllegalArgument
+         *             if parent is not an AbstractListing
+         */
+        public void extend(Listing<T> listing) {
+            if (listing instanceof AbstractListing) {
+                AbstractListing<T> parent = (AbstractListing<T>) listing;
+                super.extend(parent);
+                parent.addDataGenerator(this);
+            } else {
+                throw new IllegalArgumentException(
+                        "Parent needs to extend AbstractListing");
+            }
+        }
+
+        @Override
+        public void remove() {
+            getParent().removeDataGenerator(this);
+
+            super.remove();
+        }
+
+        /**
+         * Gets a data object based on its client-side identifier key.
+         *
+         * @param key
+         *            key for data object
+         * @return the data object
+         */
+        protected T getData(String key) {
+            return getParent().getDataCommunicator().getKeyMapper().get(key);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public AbstractListing<T> getParent() {
+            return (AbstractListing<T>) super.getParent();
+        }
+
+        /**
+         * Helper method for refreshing a single data object.
+         *
+         * @param data
+         *            data object to refresh
+         */
+        protected void refresh(T data) {
+            getParent().getDataCommunicator().refresh(data);
+        }
+    }
 
     /* DataCommunicator for this Listing component */
     private final DataCommunicator<T> dataCommunicator;
@@ -53,6 +122,8 @@ public abstract class AbstractListing<T> extends AbstractComponent
      *            a customized data communicator instance
      */
     protected AbstractListing(DataCommunicator<T> dataCommunicator) {
+        Objects.requireNonNull(dataCommunicator,
+                "The data communicator can't be null");
         this.dataCommunicator = dataCommunicator;
         addExtension(dataCommunicator);
     }

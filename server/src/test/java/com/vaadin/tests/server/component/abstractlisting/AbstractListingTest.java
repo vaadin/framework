@@ -13,25 +13,14 @@ import com.vaadin.server.data.BackEndDataSource;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.server.data.ListDataSource;
 import com.vaadin.server.data.Query;
-import com.vaadin.server.data.TypedDataGenerator;
 import com.vaadin.ui.AbstractListing;
+import com.vaadin.ui.AbstractListing.AbstractListingExtension;
 
 import elemental.json.JsonObject;
 
 public class AbstractListingTest {
 
     private final class TestListing extends AbstractListing<String> {
-
-        @Override
-        public void addDataGenerator(TypedDataGenerator<String> generator) {
-            super.addDataGenerator(generator);
-        }
-
-        @Override
-        public void removeDataGenerator(TypedDataGenerator<String> generator) {
-            super.removeDataGenerator(generator);
-        }
-
         /**
          * Used to execute data generation
          */
@@ -40,7 +29,8 @@ public class AbstractListingTest {
         }
     }
 
-    private final class CountGenerator implements TypedDataGenerator<String> {
+    private final class CountGenerator
+            extends AbstractListingExtension<String> {
 
         int callCount = 0;
 
@@ -51,6 +41,11 @@ public class AbstractListingTest {
 
         @Override
         public void destroyData(String data) {
+        }
+
+        @Override
+        public void refresh(String data) {
+            super.refresh(data);
         }
     }
 
@@ -102,7 +97,7 @@ public class AbstractListingTest {
     @Test
     public void testAddDataGeneartorBeforeDataSource() {
         CountGenerator generator = new CountGenerator();
-        listing.addDataGenerator(generator);
+        generator.extend(listing);
         listing.setItems("Foo");
         listing.runDataGeneration();
         Assert.assertEquals("Generator should have been called once", 1,
@@ -113,9 +108,22 @@ public class AbstractListingTest {
     public void testAddDataGeneartorAfterDataSource() {
         CountGenerator generator = new CountGenerator();
         listing.setItems("Foo");
-        listing.addDataGenerator(generator);
+        generator.extend(listing);
         listing.runDataGeneration();
         Assert.assertEquals("Generator should have been called once", 1,
+                generator.callCount);
+    }
+
+    @Test
+    public void testDataNotGeneratedTwice() {
+        listing.setItems("Foo");
+        CountGenerator generator = new CountGenerator();
+        generator.extend(listing);
+        listing.runDataGeneration();
+        Assert.assertEquals("Generator should have been called once", 1,
+                generator.callCount);
+        listing.runDataGeneration();
+        Assert.assertEquals("Generator should not have been called again", 1,
                 generator.callCount);
     }
 
@@ -123,10 +131,24 @@ public class AbstractListingTest {
     public void testRemoveDataGeneartor() {
         listing.setItems("Foo");
         CountGenerator generator = new CountGenerator();
-        listing.addDataGenerator(generator);
-        listing.removeDataGenerator(generator);
+        generator.extend(listing);
+        generator.remove();
         listing.runDataGeneration();
         Assert.assertEquals("Generator should not have been called", 0,
+                generator.callCount);
+    }
+
+    @Test
+    public void testDataRefresh() {
+        listing.setItems("Foo");
+        CountGenerator generator = new CountGenerator();
+        generator.extend(listing);
+        listing.runDataGeneration();
+        Assert.assertEquals("Generator should have been called once", 1,
+                generator.callCount);
+        generator.refresh("Foo");
+        listing.runDataGeneration();
+        Assert.assertEquals("Generator should have been called again", 2,
                 generator.callCount);
     }
 }
