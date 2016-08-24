@@ -18,8 +18,9 @@ package com.vaadin.ui.declarative.converters;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
+import com.vaadin.data.Result;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
-import com.vaadin.v7.data.util.converter.Converter;
 
 /**
  * Utility class for {@link DesignAttributeHandler} that deals with converting
@@ -30,8 +31,7 @@ import com.vaadin.v7.data.util.converter.Converter;
  * @param <TYPE>
  *            Type of the data being converted.
  */
-public class DesignToStringConverter<TYPE>
-        implements Converter<String, TYPE> {
+public class DesignToStringConverter<TYPE> implements Converter<String, TYPE> {
 
     private final Class<? extends TYPE> type;
 
@@ -72,45 +72,25 @@ public class DesignToStringConverter<TYPE>
     }
 
     @Override
-    public TYPE convertToModel(String value, Class<? extends TYPE> targetType,
-            Locale locale) throws Converter.ConversionException {
+    public Result<TYPE> convertToModel(String value, Locale locale) {
         try {
-            return type.cast(type.getMethod(this.staticMethodName, String.class)
-                    .invoke(null, value));
-        } catch (IllegalAccessException e) {
-            throw new Converter.ConversionException(e);
-        } catch (IllegalArgumentException e) {
-            throw new Converter.ConversionException(e);
+            return Result.ok(type
+                    .cast(type.getMethod(this.staticMethodName, String.class)
+                            .invoke(null, value)));
         } catch (InvocationTargetException e) {
-            throw new Converter.ConversionException(e.getCause());
-        } catch (NoSuchMethodException e) {
-            throw new Converter.ConversionException(e);
-        } catch (SecurityException e) {
-            throw new Converter.ConversionException(e);
-        } catch (RuntimeException e) {
-            throw new Converter.ConversionException(e);
+            return Result.error(e.getCause().getMessage());
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
         }
     }
 
     @Override
-    public String convertToPresentation(TYPE value,
-            Class<? extends String> targetType, Locale locale)
-            throws Converter.ConversionException {
+    public String convertToPresentation(TYPE value, Locale locale) {
         if (value == null) {
             return NULL_VALUE_REPRESENTATION;
         } else {
             return value.toString();
         }
-    }
-
-    @Override
-    public Class<TYPE> getModelType() {
-        return (Class<TYPE>) this.type;
-    }
-
-    @Override
-    public Class<String> getPresentationType() {
-        return String.class;
     }
 
 }

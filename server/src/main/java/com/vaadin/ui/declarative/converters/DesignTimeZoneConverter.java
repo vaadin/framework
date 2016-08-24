@@ -18,8 +18,9 @@ package com.vaadin.ui.declarative.converters;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import com.vaadin.data.Result;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
-import com.vaadin.v7.data.util.converter.Converter;
 
 /**
  * Utility class for {@link DesignAttributeHandler} that deals with converting
@@ -28,39 +29,24 @@ import com.vaadin.v7.data.util.converter.Converter;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class DesignTimeZoneConverter
-        implements Converter<String, TimeZone> {
+public class DesignTimeZoneConverter implements Converter<String, TimeZone> {
 
     @Override
-    public TimeZone convertToModel(String value,
-            Class<? extends TimeZone> targetTimeZone, Locale locale)
-            throws Converter.ConversionException {
+    public Result<TimeZone> convertToModel(String value, Locale locale) {
         if (value == null || value.isEmpty()) {
-            return null;
+            return Result.ok(null);
         }
 
-        return TimeZone.getTimeZone(value);
+        return Result.ok(TimeZone.getTimeZone(value));
     }
 
     @Override
-    public String convertToPresentation(TimeZone value,
-            Class<? extends String> targetTimeZone, Locale locale)
-            throws Converter.ConversionException {
+    public String convertToPresentation(TimeZone value, Locale locale) {
         if (value == null) {
             return "";
         } else {
             return value.getID();
         }
-    }
-
-    @Override
-    public Class<TimeZone> getModelType() {
-        return TimeZone.class;
-    }
-
-    @Override
-    public Class<String> getPresentationType() {
-        return String.class;
     }
 
 }

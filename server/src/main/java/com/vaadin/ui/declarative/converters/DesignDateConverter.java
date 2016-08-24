@@ -20,8 +20,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import com.vaadin.data.Result;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
-import com.vaadin.v7.data.util.converter.Converter;
 
 /**
  * A date converter to be used by {@link DesignAttributeHandler}. Provides
@@ -33,35 +34,22 @@ import com.vaadin.v7.data.util.converter.Converter;
 public class DesignDateConverter implements Converter<String, Date> {
 
     @Override
-    public Date convertToModel(String value, Class<? extends Date> targetType,
-            Locale locale) throws Converter.ConversionException {
+    public Result<Date> convertToModel(String value, Locale locale) {
         for (String pattern : new String[] { "yyyy-MM-dd HH:mm:ssZ",
                 "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH",
                 "yyyy-MM-dd", "yyyy-MM", "yyyy" }) {
             try {
-                return new SimpleDateFormat(pattern).parse(value);
+                return Result.ok(new SimpleDateFormat(pattern).parse(value));
             } catch (ParseException e) {
                 // not parseable, ignore and try another format
             }
         }
-        return null;
+        return Result.error("Could not parse date value: " + value);
     }
 
     @Override
-    public String convertToPresentation(Date value,
-            Class<? extends String> targetType, Locale locale)
-            throws Converter.ConversionException {
+    public String convertToPresentation(Date value, Locale locale) {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ").format(value);
-    }
-
-    @Override
-    public Class<Date> getModelType() {
-        return Date.class;
-    }
-
-    @Override
-    public Class<String> getPresentationType() {
-        return String.class;
     }
 
 }

@@ -30,6 +30,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.jsoup.parser.Parser;
 
+import com.vaadin.data.Result;
+import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.StringToBigDecimalConverter;
+import com.vaadin.data.util.converter.StringToDoubleConverter;
+import com.vaadin.data.util.converter.StringToFloatConverter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.declarative.converters.DesignDateConverter;
@@ -39,10 +44,6 @@ import com.vaadin.ui.declarative.converters.DesignResourceConverter;
 import com.vaadin.ui.declarative.converters.DesignShortcutActionConverter;
 import com.vaadin.ui.declarative.converters.DesignTimeZoneConverter;
 import com.vaadin.ui.declarative.converters.DesignToStringConverter;
-import com.vaadin.v7.data.util.converter.Converter;
-import com.vaadin.v7.data.util.converter.StringToBigDecimalConverter;
-import com.vaadin.v7.data.util.converter.StringToDoubleConverter;
-import com.vaadin.v7.data.util.converter.StringToFloatConverter;
 
 /**
  * Class focused on flexible and consistent formatting and parsing of different
@@ -55,7 +56,6 @@ import com.vaadin.v7.data.util.converter.StringToFloatConverter;
 public class DesignFormatter implements Serializable {
 
     private final Map<Class<?>, Converter<String, ?>> converterMap = new ConcurrentHashMap<Class<?>, Converter<String, ?>>();
-    private final Converter<String, Enum> stringEnumConverter = new DesignEnumConverter();
     private final Converter<String, Object> stringObjectConverter = new DesignObjectConverter();
 
     /**
@@ -86,31 +86,17 @@ public class DesignFormatter implements Serializable {
         Converter<String, Boolean> booleanConverter = new Converter<String, Boolean>() {
 
             @Override
-            public Boolean convertToModel(String value,
-                    Class<? extends Boolean> targetType, Locale locale)
-                    throws Converter.ConversionException {
-                return !value.equalsIgnoreCase("false");
+            public Result<Boolean> convertToModel(String value, Locale locale) {
+                return Result.ok(!value.equalsIgnoreCase("false"));
             }
 
             @Override
-            public String convertToPresentation(Boolean value,
-                    Class<? extends String> targetType, Locale locale)
-                    throws Converter.ConversionException {
+            public String convertToPresentation(Boolean value, Locale locale) {
                 if (value.booleanValue()) {
                     return "";
                 } else {
                     return "false";
                 }
-            }
-
-            @Override
-            public Class<Boolean> getModelType() {
-                return Boolean.class;
-            }
-
-            @Override
-            public Class<String> getPresentationType() {
-                return String.class;
             }
 
         };
@@ -144,39 +130,24 @@ public class DesignFormatter implements Serializable {
         final DecimalFormat bigDecimalFmt = new DecimalFormat("0.###", symbols);
         bigDecimalFmt.setGroupingUsed(false);
         bigDecimalFmt.setParseBigDecimal(true);
-        converterMap.put(BigDecimal.class,
-                new StringToBigDecimalConverter() {
-                    @Override
-                    protected NumberFormat getFormat(Locale locale) {
-                        return bigDecimalFmt;
-                    };
-                });
+        converterMap.put(BigDecimal.class, new StringToBigDecimalConverter() {
+            @Override
+            protected NumberFormat getFormat(Locale locale) {
+                return bigDecimalFmt;
+            };
+        });
 
         // strings do nothing
         converterMap.put(String.class, new Converter<String, String>() {
 
             @Override
-            public String convertToModel(String value,
-                    Class<? extends String> targetType, Locale locale)
-                    throws Converter.ConversionException {
+            public Result<String> convertToModel(String value, Locale locale) {
+                return Result.ok(value);
+            }
+
+            @Override
+            public String convertToPresentation(String value, Locale locale) {
                 return value;
-            }
-
-            @Override
-            public String convertToPresentation(String value,
-                    Class<? extends String> targetType, Locale locale)
-                    throws Converter.ConversionException {
-                return value;
-            }
-
-            @Override
-            public Class<String> getModelType() {
-                return String.class;
-            }
-
-            @Override
-            public Class<String> getPresentationType() {
-                return String.class;
             }
 
         });
@@ -186,10 +157,9 @@ public class DesignFormatter implements Serializable {
                 Character.class) {
 
             @Override
-            public Character convertToModel(String value,
-                    Class<? extends Character> targetType, Locale locale)
-                    throws Converter.ConversionException {
-                return value.charAt(0);
+            public Result<Character> convertToModel(String value,
+                    Locale locale) {
+                return Result.ok(value.charAt(0));
             }
 
         };
@@ -201,16 +171,6 @@ public class DesignFormatter implements Serializable {
                 new DesignShortcutActionConverter());
         converterMap.put(Resource.class, new DesignResourceConverter());
         converterMap.put(TimeZone.class, new DesignTimeZoneConverter());
-    }
-
-    /**
-     * Adds a converter for a new type.
-     *
-     * @param converter
-     *            Converter to add.
-     */
-    protected <T> void addConverter(Converter<String, T> converter) {
-        converterMap.put(converter.getModelType(), converter);
     }
 
     /**
@@ -248,7 +208,7 @@ public class DesignFormatter implements Serializable {
     }
 
     /**
-     * Parses a given string as a value of given type
+     * Parses a given string as a value of given type.
      *
      * @param value
      *            String value to convert.
@@ -260,7 +220,8 @@ public class DesignFormatter implements Serializable {
     public <T> T parse(String value, Class<? extends T> type) {
         Converter<String, T> converter = findConverterFor(type);
         if (converter != null) {
-            return converter.convertToModel(value, type, null);
+            Result<T> result = converter.convertToModel(value, null);
+            return result.getOrThrow(msg -> new IllegalArgumentException(msg));
         } else {
             return null;
         }
@@ -295,7 +256,7 @@ public class DesignFormatter implements Serializable {
         } else {
             Converter<String, Object> converter = findConverterFor(
                     object.getClass());
-            return converter.convertToPresentation(object, String.class, null);
+            return converter.convertToPresentation(object, null);
         }
     }
 
@@ -325,7 +286,7 @@ public class DesignFormatter implements Serializable {
      * @return A valid converter for a given type or its supertype, <b>null</b>
      *         if it was not found.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected <T> Converter<String, T> findConverterFor(
             Class<? extends T> sourceType, boolean strict) {
         if (sourceType == Object.class) {
@@ -340,14 +301,13 @@ public class DesignFormatter implements Serializable {
         } else if (!strict) {
             for (Class<?> supported : converterMap.keySet()) {
                 if (supported.isAssignableFrom(sourceType)) {
-                    return ((Converter<String, T>) converterMap
-                            .get(supported));
+                    return ((Converter<String, T>) converterMap.get(supported));
                 }
             }
         }
 
         if (sourceType.isEnum()) {
-            return (Converter<String, T>) stringEnumConverter;
+            return new DesignEnumConverter(sourceType);
         }
         return null;
     }

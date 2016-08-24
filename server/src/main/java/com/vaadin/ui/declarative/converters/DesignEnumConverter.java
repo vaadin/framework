@@ -17,8 +17,9 @@ package com.vaadin.ui.declarative.converters;
 
 import java.util.Locale;
 
+import com.vaadin.data.Result;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
-import com.vaadin.v7.data.util.converter.Converter;
 
 /**
  * An converter for Enum to/from String for {@link DesignAttributeHandler} to
@@ -27,37 +28,44 @@ import com.vaadin.v7.data.util.converter.Converter;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class DesignEnumConverter implements Converter<String, Enum> {
+@SuppressWarnings("rawtypes")
+public class DesignEnumConverter<T extends Enum>
+        implements Converter<String, T> {
 
+    private Class<T> type;
+
+    /**
+     * Creates a converter for the given enum type.
+     *
+     * @param type
+     *            the enum type to convert to/from
+     */
+    public DesignEnumConverter(Class<T> type) {
+        this.type = type;
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
-    public Enum convertToModel(String value, Class<? extends Enum> targetType,
-            Locale locale)
-            throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+    public Result<T> convertToModel(String value, Locale locale) {
         if (value == null || value.trim().equals("")) {
-            return null;
+            return Result.ok(null);
         }
-        return Enum.valueOf(targetType, value.toUpperCase(Locale.ENGLISH));
+        try {
+            T result = (T) Enum.valueOf(type,
+                    value.toUpperCase(Locale.ENGLISH));
+            return Result.ok(result);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
     }
 
     @Override
-    public String convertToPresentation(Enum value,
-            Class<? extends String> targetType, Locale locale)
-            throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+    public String convertToPresentation(T value, Locale locale) {
         if (value == null) {
             return null;
         }
 
         return value.name().toLowerCase(Locale.ENGLISH);
-    }
-
-    @Override
-    public Class<Enum> getModelType() {
-        return Enum.class;
-    }
-
-    @Override
-    public Class<String> getPresentationType() {
-        return String.class;
     }
 
 }

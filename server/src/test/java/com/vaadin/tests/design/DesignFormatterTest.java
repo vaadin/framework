@@ -42,7 +42,6 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignFormatter;
-import com.vaadin.v7.data.util.converter.Converter.ConversionException;
 
 /**
  * Various tests related to formatter.
@@ -238,7 +237,7 @@ public class DesignFormatterTest {
         try {
             formatter.parse(shortcut, ShortcutAction.class);
             Assert.fail("Invalid shortcut '" + shortcut + "' should throw");
-        } catch (ConversionException e) {
+        } catch (IllegalArgumentException e) {
             // expected
         }
     }
@@ -298,13 +297,13 @@ public class DesignFormatterTest {
                 formatter.format(new FileResource(new File(fileSystemPath))));
     }
 
-    @Test(expected = ConversionException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testResourceParseException() {
         String someRandomResourceUrl = "random://url";
         formatter.parse(someRandomResourceUrl, Resource.class);
     }
 
-    @Test(expected = ConversionException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testResourceFormatException() {
         formatter.format(new Resource() { // must use unknown resource type
             @Override

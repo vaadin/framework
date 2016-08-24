@@ -21,10 +21,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.vaadin.data.Result;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
-import com.vaadin.v7.data.util.converter.Converter;
 
 /**
  * Converter for {@link ShortcutActions}.
@@ -120,11 +121,9 @@ public class DesignShortcutActionConverter
     }
 
     @Override
-    public ShortcutAction convertToModel(String value,
-            Class<? extends ShortcutAction> targetType, Locale locale)
-            throws Converter.ConversionException {
+    public Result<ShortcutAction> convertToModel(String value, Locale locale) {
         if (value.length() == 0) {
-            return null;
+            return Result.ok(null);
         }
 
         String[] data = value.split(" ", 2);
@@ -152,18 +151,15 @@ public class DesignShortcutActionConverter
                             "Invalid modifier '" + parts[i] + "'");
                 }
             }
-            return new ShortcutAction(data.length == 2 ? data[1] : null,
-                    keyCode, modifiers);
+            return Result.ok(new ShortcutAction(
+                    data.length == 2 ? data[1] : null, keyCode, modifiers));
         } catch (Exception e) {
-            throw new ConversionException("Invalid shortcut '" + value + "'",
-                    e);
+            return Result.error("Invalid shortcut '" + value + "'");
         }
     }
 
     @Override
-    public String convertToPresentation(ShortcutAction value,
-            Class<? extends String> targetType, Locale locale)
-            throws Converter.ConversionException {
+    public String convertToPresentation(ShortcutAction value, Locale locale) {
         StringBuilder sb = new StringBuilder();
         // handle modifiers
         if (value.getModifiers() != null) {
@@ -177,16 +173,6 @@ public class DesignShortcutActionConverter
             sb.append(" ").append(value.getCaption());
         }
         return sb.toString();
-    }
-
-    @Override
-    public Class<ShortcutAction> getModelType() {
-        return ShortcutAction.class;
-    }
-
-    @Override
-    public Class<String> getPresentationType() {
-        return String.class;
     }
 
     public int getKeycodeForString(String attributePresentation) {
