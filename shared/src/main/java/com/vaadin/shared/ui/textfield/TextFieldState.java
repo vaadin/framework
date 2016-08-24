@@ -51,15 +51,6 @@ public class TextFieldState extends AbstractFieldState {
     public String text = "";
 
     @NoLayout
-    public int selectionStart = -1;
-
-    @NoLayout
-    public int selectionLength = 0;
-
-    @NoLayout
-    public int cursorPosition = 0;
-
-    @NoLayout
     public ValueChangeMode valueChangeMode = ValueChangeMode.LAZY;
 
     @NoLayout

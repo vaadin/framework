@@ -1,10 +1,9 @@
 package com.vaadin.tests.components.textfield;
 
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -12,14 +11,24 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.v7.ui.TextArea;
 
-public class SelectionAndCursorPosition extends TestBase {
+public class SelectionAndCursorPosition extends AbstractTestUI {
+
+    static final String DEFAULT_TEXT = "So we have some text to select";
+    static final String TEXTFIELD_ID = "tf";
+    static final String TEXTAREA_ID = "ta";
+    static final String SELECT_ALL_ID = "selectAll";
+    static final String RANGE_START_ID = "rS";
+    static final String RANGE_LENGTH_ID = "rL";
+    static final String CURSOR_POS_ID = "cp";
+    static final String RANGE_SET_BUTTON_ID = "setSelection";
+    static final String CURSOR_POS_SET_ID = "cps";
 
     TextField textField = createTextField();
     TextArea textArea = createTextArea();
     AbstractTextField activeComponent = textField;
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         FormLayout fl = new FormLayout();
         Panel panel = new Panel(fl);
         panel.setCaption("Hackers panel");
@@ -42,49 +51,44 @@ public class SelectionAndCursorPosition extends TestBase {
         // });
         fl.addComponent(ml);
 
-        Button b = new Button("Select all ( selectAll() )");
-        b.addListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                activeComponent.selectAll();
-            }
-        });
-        fl.addComponent(b);
+        Button selectAll = new Button("Select all ( selectAll() )");
+        selectAll.setId(SELECT_ALL_ID);
+        selectAll.addClickListener(event -> activeComponent.selectAll());
+        fl.addComponent(selectAll);
 
         HorizontalLayout selectRange = new HorizontalLayout();
         selectRange.setCaption(
                 "Select range of text ( setSelectionRange(int start, int lengt) )");
         final TextField start = new TextField("From:");
+        start.setId(RANGE_START_ID);
         final TextField length = new TextField("Selection length:");
-        b = new Button("select");
-        b.addListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                int startPos = Integer.parseInt(start.getValue());
-                int lenght = Integer.parseInt(length.getValue());
+        length.setId(RANGE_LENGTH_ID);
+        Button select = new Button("select");
+        select.setId(RANGE_SET_BUTTON_ID);
+        select.addClickListener(event -> {
+            int startPos = Integer.parseInt(start.getValue());
+            int lenght = Integer.parseInt(length.getValue());
 
-                activeComponent.setSelection(startPos, lenght);
-            }
+            activeComponent.setSelection(startPos, lenght);
         });
 
         selectRange.addComponent(start);
         selectRange.addComponent(length);
-        selectRange.addComponent(b);
+        selectRange.addComponent(select);
         fl.addComponent(selectRange);
 
         HorizontalLayout setCursorPosition = new HorizontalLayout();
         final TextField pos = new TextField("Position:");
-        b = new Button("set");
-        b.addListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                int startPos = Integer.parseInt(pos.getValue());
-                activeComponent.setCursorPosition(startPos);
-            }
+        pos.setId(CURSOR_POS_ID);
+        Button setCursorButton = new Button("set");
+        setCursorButton.setId(CURSOR_POS_SET_ID);
+        setCursorButton.addClickListener(event -> {
+            int startPos = Integer.parseInt(pos.getValue());
+            activeComponent.setCursorPosition(startPos);
         });
 
         setCursorPosition.addComponent(pos);
-        setCursorPosition.addComponent(b);
+        setCursorPosition.addComponent(setCursorButton);
         setCursorPosition.setCaption(
                 "Set cursor position ( setCursorPosition(int pos) )");
         fl.addComponent(setCursorPosition);
@@ -95,29 +99,29 @@ public class SelectionAndCursorPosition extends TestBase {
     }
 
     private static TextField createTextField() {
-        TextField tf = new TextField();
-        tf.setCaption("Text field");
-        tf.setValue("So we have some text to select");
-        tf.setWidth("400px");
+        TextField textField = new TextField();
+        textField.setId(TEXTFIELD_ID);
+        textField.setCaption("Text field");
+        textField.setValue(DEFAULT_TEXT);
+        textField.setWidth("400px");
 
-        return tf;
+        return textField;
     }
 
     private static TextArea createTextArea() {
-        TextArea ta = new TextArea();
-        ta.setCaption("Text area");
-        ta.setValue("So we have some text to select");
-        ta.setWidth("400px");
-        ta.setHeight("50px");
+        TextArea textArea = new TextArea();
+        textArea.setId(TEXTAREA_ID);
+        textArea.setCaption("Text area");
+        textArea.setValue(DEFAULT_TEXT);
+        textArea.setWidth("400px");
+        textArea.setHeight("50px");
 
-        return ta;
+        return textArea;
     }
 
     @Override
-    protected String getDescription() {
-        return "For usability reasons it is often essential that developer "
-                + "can hint how to select the text in the "
-                + "field or where to set the cursor position.";
+    protected String getTestDescription() {
+        return "Tests that setSelectionRange and setCursorPosition works for a TextField";
     }
 
     @Override

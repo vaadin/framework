@@ -17,7 +17,6 @@
 package com.vaadin.client.ui.textfield;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.event.InputEvent;
@@ -26,6 +25,7 @@ import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.VTextField;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.textfield.AbstractTextFieldClientRpc;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc;
 import com.vaadin.shared.ui.textfield.TextFieldState;
 import com.vaadin.shared.ui.textfield.ValueChangeMode;
@@ -37,6 +37,35 @@ import com.vaadin.ui.TextField;
 @Connect(value = TextField.class, loadStyle = LoadStyle.EAGER)
 public class TextFieldConnector extends AbstractComponentConnector {
 
+    private class AbstractTextFieldClientRpcImpl
+            implements AbstractTextFieldClientRpc {
+        @Override
+        public void selectRange(int start, int length) {
+            int textLength = getWidget().getText().length();
+            start = restrictTo(start, 0, textLength - 1);
+            length = restrictTo(length, 0, textLength - start);
+            getWidget().setSelectionRange(start, length);
+        }
+
+        private int restrictTo(int value, int min, int max) {
+            if (value < min) {
+                value = min;
+            }
+            if (value > max) {
+                value = max;
+            }
+
+            return value;
+        }
+
+        @Override
+        public void selectAll() {
+            getWidget().selectAll();
+        }
+    }
+
+    private int lastSentCursorPosition = -1;
+
     private Timer valueChangeTrigger = new Timer() {
         @Override
         public void run() {
@@ -46,6 +75,8 @@ public class TextFieldConnector extends AbstractComponentConnector {
 
     @Override
     protected void init() {
+        registerRpc(AbstractTextFieldClientRpc.class,
+                new AbstractTextFieldClientRpcImpl());
         ConnectorFocusAndBlurHandler.addHandlers(this);
         getWidget().addChangeHandler(event -> sendValueChange());
         getWidget().addDomHandler(event -> {
@@ -102,33 +133,10 @@ public class TextFieldConnector extends AbstractComponentConnector {
         getWidget().setReadOnly(getState().readOnly);
     }
 
-    @OnStateChange({ "selectionStart", "selectionLength" })
-    private void updateSelection() {
-        if (getState().selectionStart != -1) {
-            Scheduler.get().scheduleDeferred(new Command() {
-                @Override
-                public void execute() {
-                    getWidget().setSelectionRange(getState().selectionStart,
-                            getState().selectionLength);
-                }
-            });
-        }
-    }
-
-    @OnStateChange("cursorPosition")
-    private void updateCursorPosition() {
-        Scheduler.get().scheduleDeferred(new Command() {
-            @Override
-            public void execute() {
-                getWidget().setCursorPos(getState().cursorPosition);
-            }
-        });
-    }
-
     private boolean hasStateChanged() {
         boolean textChanged = !getWidget().getValue().equals(getState().text);
         boolean cursorPosChanged = getWidget()
-                .getCursorPos() != getState().cursorPosition;
+                .getCursorPos() != lastSentCursorPosition;
         return textChanged || cursorPosChanged;
     }
 
@@ -136,9 +144,9 @@ public class TextFieldConnector extends AbstractComponentConnector {
         if (!hasStateChanged()) {
             return;
         }
+        lastSentCursorPosition = getWidget().getCursorPos();
         getRpcProxy(AbstractTextFieldServerRpc.class)
-                .setText(getWidget().getValue(), getWidget().getCursorPos());
+                .setText(getWidget().getValue(), lastSentCursorPosition);
         getState().text = getWidget().getValue();
-        getState().cursorPosition = getWidget().getCursorPos();
     }
 }

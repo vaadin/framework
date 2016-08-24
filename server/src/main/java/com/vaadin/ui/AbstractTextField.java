@@ -26,6 +26,7 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.textfield.AbstractTextFieldClientRpc;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc;
 import com.vaadin.shared.ui.textfield.TextFieldState;
 import com.vaadin.shared.ui.textfield.ValueChangeMode;
@@ -56,13 +57,16 @@ public abstract class AbstractTextField extends AbstractField<String> {
         public void setText(String text, int cursorPosition) {
             getUI().getConnectorTracker().getDiffState(AbstractTextField.this)
                     .put("text", text);
-            getUI().getConnectorTracker().getDiffState(AbstractTextField.this)
-                    .put("cursorPosition", cursorPosition);
-            getState(false).cursorPosition = cursorPosition;
+            lastKnownCursorPosition = cursorPosition;
             setValue(text, true);
         }
     }
 
+    private int lastKnownCursorPosition = -1;
+
+    /**
+     * Creates a new instance.
+     */
     protected AbstractTextField() {
         registerRpc(new TextFieldServerRpcImpl());
     }
@@ -125,24 +129,27 @@ public abstract class AbstractTextField extends AbstractField<String> {
 
     /**
      * Selects all text in the field.
+     * <p>
+     * As a side effect the field will become focused.
      */
     public void selectAll() {
-        setSelection(0, getValue().length());
+        getRpcProxy(AbstractTextFieldClientRpc.class).selectAll();
+        focus();
     }
 
     /**
      * Sets the range of text to be selected.
-     *
+     * <p>
      * As a side effect the field will become focused.
      *
-     * @param pos
+     * @param start
      *            the position of the first character to be selected
      * @param length
      *            the number of characters to be selected
      */
     public void setSelection(int start, int length) {
-        getState().selectionStart = start;
-        getState().selectionLength = length;
+        getRpcProxy(AbstractTextFieldClientRpc.class).selectRange(start,
+                length);
         focus();
     }
 
@@ -154,8 +161,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
      *            the position for the cursor
      */
     public void setCursorPosition(int pos) {
-        getState().cursorPosition = pos;
-        focus();
+        setSelection(pos, 0);
     }
 
     /**
@@ -163,7 +169,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
      *
      */
     public int getCursorPosition() {
-        return getState(false).cursorPosition;
+        return lastKnownCursorPosition;
     }
 
     /**
