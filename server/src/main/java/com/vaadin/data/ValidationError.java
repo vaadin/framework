@@ -17,44 +17,67 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
+
+import com.vaadin.data.Binder.Binding;
 
 /**
- * Represents a validation error. An error contains a reference to a field whose
- * value is invalid and a message describing a validation failure.
+ * Represents a validation error.
+ * <p>
+ * A validation error is either connected to a field validator (
+ * {@link #getField()} returns a non-empty optional) or to an item level
+ * validator ({@link #getField()} returns an empty optional).
  *
  * @author Vaadin Ltd
  * @since 8.0
  *
  * @param <V>
- *            the field value type
+ *            the value type
  */
 public class ValidationError<V> implements Serializable {
 
-    private HasValue<V> field;
-    private String message;
+    /**
+     * This is either a {@link Binding} or a {@link Binder}.
+     */
+    private final Object source;
+    private final String message;
+    /**
+     * This is either HasValue<V> value (in case of Binding) or bean (in case of
+     * Binder).
+     */
+    private final V value;
 
     /**
-     * Creates a new instance of ValidationError with provided validated field
-     * and error message.
+     * Creates a new instance of ValidationError using the provided source
+     * ({@link Binding} or {@link Binder}), value and error message.
      *
-     * @param field
-     *            the validated field
+     * @param source
+     *            the validated binding or the binder
+     * @param value
+     *            the invalid value
      * @param message
      *            the validation error message, not {@code null}
      */
-    public ValidationError(HasValue<V> field, String message) {
+    public ValidationError(Object source, V value, String message) {
         Objects.requireNonNull(message, "message cannot be null");
-        this.field = field;
+        this.source = source;
         this.message = message;
+        this.value = value;
     }
 
     /**
-     * Returns a reference to the validated field.
+     * Returns a reference to the validated field or an empty optional if the
+     * validation was not related to a single field.
      *
-     * @return the validated field
+     * @return the validated field or an empty optional
      */
-    public HasValue<V> getField() {
-        return field;
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public Optional<HasValue<V>> getField() {
+        if (source instanceof Binding) {
+            return Optional.of(((Binding) source).getField());
+        } else {
+            return Optional.empty();
+        }
     }
 
     /**
@@ -65,4 +88,17 @@ public class ValidationError<V> implements Serializable {
     public String getMessage() {
         return message;
     }
+
+    /**
+     * Returns the invalid value.
+     * <p>
+     * This is either the field value (if the validator error comes from a field
+     * binding) or the bean (for item validators).
+     *
+     * @return the source value
+     */
+    public V getValue() {
+        return value;
+    }
+
 }

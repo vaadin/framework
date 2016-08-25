@@ -17,15 +17,19 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
@@ -42,12 +46,24 @@ import com.vaadin.ui.Label;
  * explicit logic needed to move data between the UI and the data layers of the
  * application.
  * <p>
- * A binder is a collection of <i>bindings</i>, each representing the
- * association of a single field and a backing property.
+ * A binder is a collection of <i>bindings</i>, each representing the mapping of
+ * a single field, through converters and validators, to a backing property.
  * <p>
  * A binder instance can be bound to a single bean instance at a time, but can
  * be rebound as needed. This allows usage patterns like a <i>master-details</i>
  * view, where a select component is used to pick the bean to edit.
+ * <p>
+ * Bean level validators can be added using the
+ * {@link #withValidator(Validator)} method and will be run on the bound bean
+ * once it has been updated from the values of the bound fields. Bean level
+ * validators are also run as part of {@link #save(Object)} and
+ * {@link #saveIfValid(Object)} if all field level validators pass.
+ * <p>
+ * Note: For bean level validators, the item must be updated before the
+ * validators are run. If a bean level validator fails in {@link #save(Object)}
+ * or {@link #saveIfValid(Object)}, the item will be reverted to the previous
+ * state before returning from the method. You should ensure that the
+ * getters/setters in the item do not have side effects.
  * <p>
  * Unless otherwise specified, {@code Binder} method arguments cannot be null.
  *
@@ -484,14 +500,12 @@ public class Binder<BEAN> implements Serializable {
         private void bind(BEAN bean) {
             setFieldValue(bean);
             onValueChange = getField()
-                    .addValueChangeListener(e -> storeFieldValue(bean));
+                    .addValueChangeListener(e -> storeFieldValue(bean, true));
         }
 
         @Override
         public Result<TARGET> validate() {
-            FIELDVALUE fieldValue = field.getValue();
-            Result<TARGET> dataValue = converterValidatorChain.convertToModel(
-                    fieldValue, ((AbstractComponent) field).getLocale());
+            Result<TARGET> dataValue = getTargetValue();
             fireStatusChangeEvent(dataValue);
             return dataValue;
         }
@@ -503,7 +517,10 @@ public class Binder<BEAN> implements Serializable {
          *         describing an error
          */
         private Result<TARGET> getTargetValue() {
-            return validate();
+            FIELDVALUE fieldValue = field.getValue();
+            Result<TARGET> dataValue = converterValidatorChain.convertToModel(
+                    fieldValue, ((AbstractComponent) field).getLocale());
+            return dataValue;
         }
 
         private void unbind() {
@@ -530,16 +547,33 @@ public class Binder<BEAN> implements Serializable {
 
         /**
          * Saves the field value by invoking the setter function on the given
-         * bean, if the value passes all registered validators.
+         * bean, if the value passes all registered validators. Optionally runs
+         * item level validators if all field validators pass.
          *
          * @param bean
          *            the bean to set the property value to
+         * @param runBeanLevelValidation
+         *            <code>true</code> to run item level validators if all
+         *            field validators pass, <code>false</code> to always skip
+         *            item level validators
          */
-        private void storeFieldValue(BEAN bean) {
+        private void storeFieldValue(BEAN bean,
+                boolean runBeanLevelValidation) {
             assert bean != null;
             if (setter != null) {
-                getTargetValue().ifOk(value -> setter.accept(bean, value));
+                getTargetValue().ifOk(value -> setBeanValue(bean, value));
             }
+            if (runBeanLevelValidation && !getBinder().bindings.stream()
+                    .map(BindingImpl::getTargetValue)
+                    .anyMatch(Result::isError)) {
+                List<ValidationError<?>> errors = binder.validateItem(bean);
+                // TODO: Pass errors to Binder statusChangeHandler once that is
+                // available
+            }
+        }
+
+        private void setBeanValue(BEAN bean, TARGET value) {
+            setter.accept(bean, value);
         }
 
         private void fireStatusChangeEvent(Result<TARGET> result) {
@@ -594,7 +628,9 @@ public class Binder<BEAN> implements Serializable {
 
     private BEAN bean;
 
-    private Set<BindingImpl<BEAN, ?, ?>> bindings = new LinkedHashSet<>();
+    private final Set<BindingImpl<BEAN, ?, ?>> bindings = new LinkedHashSet<>();
+
+    private final List<Validator<? super BEAN>> validators = new ArrayList<>();
 
     /**
      * Returns an {@code Optional} of the bean that has been bound with
@@ -683,6 +719,14 @@ public class Binder<BEAN> implements Serializable {
      * corresponding getter functions. Any changes to field values are reflected
      * back to their corresponding property values of the bean as long as the
      * bean is bound.
+     * <p>
+     * Any change made in the fields also runs validation for the field
+     * {@link Binding} and bean level validation for this binder (bean level
+     * validators are added using {@link Binder#withValidator(Validator)}.
+     *
+     * @see #load(Object)
+     * @see #save(Object)
+     * @see #saveIfValid(Object)
      *
      * @param bean
      *            the bean to edit, not null
@@ -692,24 +736,6 @@ public class Binder<BEAN> implements Serializable {
         unbind();
         this.bean = bean;
         bindings.forEach(b -> b.bind(bean));
-    }
-
-    /**
-     * Validates the values of all bound fields and returns the result of the
-     * validation as a set of validation errors.
-     * <p>
-     * Validation is successful if the resulting set is empty.
-     *
-     * @return the validation result.
-     */
-    public List<ValidationError<?>> validate() {
-
-        List<ValidationError<?>> resultErrors = new ArrayList<>();
-        for (BindingImpl<?, ?, ?> binding : bindings) {
-            binding.validate().ifError(errorMessage -> resultErrors.add(
-                    new ValidationError<>(binding.getField(), errorMessage)));
-        }
-        return resultErrors;
     }
 
     /**
@@ -725,9 +751,15 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Reads the bound property values from the given bean to the corresponding
-     * fields. The bean is not otherwise associated with this binder; in
-     * particular its property values are not bound to the field value changes.
-     * To achieve that, use {@link #bind(BEAN)}.
+     * fields.
+     * <p>
+     * The bean is not otherwise associated with this binder; in particular its
+     * property values are not bound to the field value changes. To achieve
+     * that, use {@link #bind(BEAN)}.
+     *
+     * @see #bind(Object)
+     * @see #saveIfValid(Object)
+     * @see #save(Object)
      *
      * @param bean
      *            the bean whose property values to read, not null
@@ -739,10 +771,15 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Saves changes from the bound fields to the given bean if all validators
-     * pass.
+     * (binding and bean level) pass.
      * <p>
-     * If any field binding validator fails, no values are saved and an
-     * exception is thrown.
+     * If any field binding validator fails, no values are saved and a
+     * {@code ValidationException} is thrown.
+     * <p>
+     * If all field level validators pass, the given bean is updated and bean
+     * level validators are run on the updated item. If any bean level validator
+     * fails, the bean updates are reverted and a {@code ValidationException} is
+     * thrown.
      *
      * @see #saveIfValid(Object)
      * @see #load(Object)
@@ -762,12 +799,16 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Saves changes from the bound fields to the given bean if all validators
-     * pass.
+     * (binding and bean level) pass.
      * <p>
      * If any field binding validator fails, no values are saved and
      * <code>false</code> is returned.
+     * <p>
+     * If all field level validators pass, the given bean is updated and bean
+     * level validators are run on the updated item. If any bean level validator
+     * fails, the bean updates are reverted and <code>false</code> is returned.
      *
-     * @see #saveIfValid(Object)
+     * @see #save(Object)
      * @see #load(Object)
      * @see #bind(Object)
      *
@@ -782,21 +823,128 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Saves the field values into the given bean if all field level validators
-     * pass.
+     * pass. Runs bean level validators on the bean after saving.
      *
      * @param bean
      *            the bean to save field values into
-     * @return a list of field validation errors
+     * @return a list of field validation errors if such occur, otherwise a list
+     *         of bean validation errors.
      */
     private List<ValidationError<?>> doSaveIfValid(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
         // First run fields level validation
-        List<ValidationError<?>> errors = validate();
+        List<ValidationError<?>> errors = validateBindings();
         // If no validation errors then update bean
-        if (errors.isEmpty()) {
-            bindings.forEach(binding -> binding.storeFieldValue(bean));
+        if (!errors.isEmpty()) {
+            return errors;
         }
-        return errors;
+
+        // Save old bean values so we can restore them if validators fail
+        Map<Binding<BEAN, ?, ?>, Object> oldValues = new HashMap<>();
+        bindings.forEach(binding -> oldValues.put(binding,
+                binding.convertDataToFieldType(bean)));
+
+        bindings.forEach(binding -> binding.storeFieldValue(bean, false));
+        // Now run bean level validation against the updated bean
+        List<ValidationError<?>> itemValidatorErrors = validateItem(bean);
+        if (!itemValidatorErrors.isEmpty()) {
+            // Item validator failed, revert values
+            bindings.forEach((BindingImpl binding) -> binding.setBeanValue(bean,
+                    oldValues.get(binding)));
+        }
+        return itemValidatorErrors;
+    }
+
+    /**
+     * Adds an item level validator.
+     * <p>
+     * Item level validators are applied on the item instance after the item is
+     * updated. If the validators fail, the item instance is reverted to its
+     * previous state.
+     *
+     * @see #save(Object)
+     * @see #saveIfValid(Object)
+     *
+     * @param validator
+     *            the validator to add, not null
+     * @return this binder, for chaining
+     */
+    public Binder<BEAN> withValidator(Validator<? super BEAN> validator) {
+        Objects.requireNonNull(validator, "validator cannot be null");
+        validators.add(validator);
+        return this;
+    }
+
+    /**
+     * Validates the values of all bound fields and returns the result of the
+     * validation as a list of validation errors.
+     * <p>
+     * If all field level validators pass, and {@link #bind(Object)} has been
+     * used to bind to an item, item level validators are run for that bean.
+     * Item level validators are ignored if there is no bound item or if any
+     * field level validator fails.
+     * <p>
+     * Validation is successful if the returned list is empty.
+     *
+     * @return a list of validation errors or an empty list if validation
+     *         succeeded
+     */
+    public List<ValidationError<?>> validate() {
+        List<ValidationError<?>> errors = validateBindings();
+        if (!errors.isEmpty()) {
+            return errors;
+        }
+
+        if (bean != null) {
+            return validateItem(bean);
+        }
+
+        return Collections.emptyList();
+    }
+
+    /**
+     * Validates the bindings and returns the result of the validation as a list
+     * of validation errors.
+     * <p>
+     * If all validators pass, the resulting list is empty.
+     * <p>
+     * Does not run bean validators.
+     *
+     * @see #validateItem(Object)
+     *
+     * @return a list of validation errors or an empty list if validation
+     *         succeeded
+     */
+    private List<ValidationError<?>> validateBindings() {
+        List<ValidationError<?>> resultErrors = new ArrayList<>();
+        for (BindingImpl<?, ?, ?> binding : bindings) {
+            binding.validate().ifError(errorMessage -> resultErrors
+                    .add(new ValidationError<>(binding,
+                            binding.getField().getValue(), errorMessage)));
+        }
+        return resultErrors;
+    }
+
+    /**
+     * Validates the {@code item} using item validators added using
+     * {@link #withValidator(Validator)} and returns the result of the
+     * validation as a list of validation errors.
+     * <p>
+     * If all validators pass, the resulting list is empty.
+     *
+     * @see #withValidator(Validator)
+     *
+     * @param bean
+     *            the bean to validate
+     * @return a list of validation errors or an empty list if validation
+     *         succeeded
+     */
+    private List<ValidationError<?>> validateItem(BEAN bean) {
+        Objects.requireNonNull(bean, "bean cannot be null");
+        return validators.stream().map(validator -> validator.apply(bean))
+                .filter(Result::isError).map(res -> new ValidationError<>(this,
+                        bean, res.getMessage().get()))
+                .collect(Collectors.toList());
     }
 
     /**

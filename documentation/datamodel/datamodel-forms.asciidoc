@@ -584,29 +584,40 @@ binder.setStatusHandler((List<BinderResult> results) -> {
 });
 ----
 
-[classname]#BeanBinder# will automatically run bean-level validation based on the used bean instance if it has been bound using the [methodname]#bind# method.
+We can add custom form validators to [classname]#Binder#. These will be run on the updated item instance (bean) after field validators have succeeded and the item has been updated. If item level validators fail, the values updated in the item instance will be reverted, i.e. the bean will temporarily contain new values but after a call to [methodname]#save# or [methodname]#saveIfValid#, the bean will only contain the new values if all validators passed.
 
-If we are using the [methodname]#load# and [methodname]#save# methods, then the binder will not have any bean instance to use for bean-level validation.
-We must use a copy of the bean for running bean-level validation if we want to make sure no changes are done to the original bean before we know that validation passes.
+[classname]#BeanBinder# will automatically add bean-level validation based on the used bean instance and its annotations.
 
 [source, java]
 ----
+BeanBinder<Person> binder = new BeanBinder<Person>(
+        Person.class);
+
+// Phone or email has to be specified for the bean
+Validator<Person> phoneOrEmail = Validator.from(
+        personBean -> !"".equals(personBean.getPhone())
+        || !"".equals(personBean.getEmail()),
+        "A person must have either a phone number or an email address");
+binder.withValidator(phoneOrEmail);
+
+binder.forField(emailField).bind("email");
+binder.forField(phoneField).bind("phone");
+
+Person person = // e.g. JPA entity or bean from Grid
+// Load person data to a form
+binder.load(person);
+
 Button saveButton = new Button("Save", event -> {
-  // Create non-shared copy to use for validation
-  Person copy = new Person(person);
-
-  List<ValidationError<?>> errors = binder.validateWithBean(copy);
-  if (errors.isEmpty()) {
-    // Write new values to the actual bean
-
-    // Using saveIfValid to avoid the try-catch block that is
-    // needed if using the regular save method
-    binder.saveIfValid(person);
-
-    // TODO: Do something with the updated person instance
+  // Using saveIfValid to avoid the try-catch block that is
+  // needed if using the regular save method
+  if (binder.saveIfValid(person)) {
+    // Person is valid and updated
+    // TODO Store in the database
   }
-})
+});
 ----
+
+If we want to ensure that the [classname]#Person# instance is not even temporarily updated, we should make a clone and use that with [methodname]#saveIfValid#.
 
 == Using Binder with Vaadin Designer
 We can use [classname]#Binder# to connect data to a form that is designed using Vaadin Designer.

@@ -311,6 +311,11 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
     }
 
     @Override
+    public BeanBinder<BEAN> withValidator(Validator<? super BEAN> validator) {
+        return (BeanBinder<BEAN>) super.withValidator(validator);
+    }
+
+    @Override
     protected <FIELDVALUE, TARGET> BeanBindingImpl<BEAN, FIELDVALUE, TARGET> createBinding(
             HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
             StatusChangeHandler handler) {
@@ -318,4 +323,5 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         Objects.requireNonNull(converter, "converter cannot be null");
         return new BeanBindingImpl<>(this, field, converter, handler);
     }
+
 }

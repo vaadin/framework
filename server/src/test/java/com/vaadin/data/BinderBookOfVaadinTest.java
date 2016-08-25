@@ -28,10 +28,11 @@ import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.server.AbstractErrorMessage;
-import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Slider;
+import com.vaadin.ui.TextField;
 
 /**
  * Book of Vaadin tests.
@@ -41,25 +42,23 @@ import com.vaadin.ui.Slider;
  */
 public class BinderBookOfVaadinTest {
 
-    static class TextField extends AbstractField<String> {
-
-        String value = "";
-
-        @Override
-        public String getValue() {
-            return value;
-        }
-
-        @Override
-        protected void doSetValue(String value) {
-            this.value = value;
-        }
-    }
-
     private static class BookPerson {
         private String lastName;
-        private String email;
+        private String email, phone, title;
         private int yearOfBirth, salaryLevel;
+
+        public BookPerson(int yearOfBirth, int salaryLevel) {
+            this.yearOfBirth = yearOfBirth;
+            this.salaryLevel = salaryLevel;
+        }
+
+        public BookPerson(BookPerson origin) {
+            this(origin.yearOfBirth, origin.salaryLevel);
+            lastName = origin.lastName;
+            email = origin.email;
+            phone = origin.phone;
+            title = origin.title;
+        }
 
         public String getLastName() {
             return lastName;
@@ -67,11 +66,6 @@ public class BinderBookOfVaadinTest {
 
         public void setLastName(String lastName) {
             this.lastName = lastName;
-        }
-
-        public BookPerson(int yearOfBirth, int salaryLevel) {
-            this.yearOfBirth = yearOfBirth;
-            this.salaryLevel = salaryLevel;
         }
 
         public int getYearOfBirth() {
@@ -98,6 +92,22 @@ public class BinderBookOfVaadinTest {
             this.email = email;
         }
 
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
     }
 
     public static class Trip {
@@ -115,11 +125,15 @@ public class BinderBookOfVaadinTest {
     private Binder<BookPerson> binder;
 
     private TextField field;
+    private TextField phoneField;
+    private TextField emailField;
 
     @Before
     public void setUp() {
         binder = new Binder<>();
         field = new TextField();
+        phoneField = new TextField();
+        emailField = new TextField();
     }
 
     @Test
@@ -419,6 +433,47 @@ public class BinderBookOfVaadinTest {
         Assert.assertEquals(ValidationStatus.OK, evt.getStatus());
         Assert.assertFalse(evt.getMessage().isPresent());
         Assert.assertEquals(field, evt.getSource());
+    }
+
+    @Test
+    public void binder_saveIfValid() {
+        BeanBinder<BookPerson> binder = new BeanBinder<BookPerson>(
+                BookPerson.class);
+
+        // Phone or email has to be specified for the bean
+        Validator<BookPerson> phoneOrEmail = Validator.from(
+                personBean -> !"".equals(personBean.getPhone())
+                        || !"".equals(personBean.getEmail()),
+                "A person must have either a phone number or an email address");
+        binder.withValidator(phoneOrEmail);
+
+        binder.forField(emailField).bind("email");
+        binder.forField(phoneField).bind("phone");
+
+        // Person person = // e.g. JPA entity or bean from Grid
+        BookPerson person = new BookPerson(1900, 5);
+        person.setEmail("Old Email");
+        // Load person data to a form
+        binder.load(person);
+
+        Button saveButton = new Button("Save", event -> {
+            // Using saveIfValid to avoid the try-catch block that is
+            // needed if using the regular save method
+            if (binder.saveIfValid(person)) {
+                // Person is valid and updated
+                // TODO Store in the database
+            }
+        });
+
+        emailField.setValue("foo@bar.com");
+        Assert.assertTrue(binder.saveIfValid(person));
+        // Person updated
+        Assert.assertEquals("foo@bar.com", person.getEmail());
+
+        emailField.setValue("");
+        Assert.assertFalse(binder.saveIfValid(person));
+        // Person updated because phone and email are both empty
+        Assert.assertEquals("foo@bar.com", person.getEmail());
     }
 
 }

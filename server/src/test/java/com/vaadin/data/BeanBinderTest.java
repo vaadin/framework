@@ -13,12 +13,12 @@ import com.vaadin.ui.TextField;
 
 public class BeanBinderTest {
 
-    BeanBinder<BeanToValidate> binder;
+    private BeanBinder<BeanToValidate> binder;
 
-    TextField nameField;
-    TextField ageField;
+    private TextField nameField;
+    private TextField ageField;
 
-    BeanToValidate p = new BeanToValidate();
+    private BeanToValidate p = new BeanToValidate();
 
     @Before
     public void setUp() {
@@ -165,7 +165,7 @@ public class BeanBinderTest {
     private void assertInvalid(HasValue<?> field, String message) {
         List<ValidationError<?>> errors = binder.validate();
         assertEquals(1, errors.size());
-        assertSame(field, errors.get(0).getField());
+        assertSame(field, errors.get(0).getField().get());
         assertEquals(message, errors.get(0).getMessage());
     }
 }

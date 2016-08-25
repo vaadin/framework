@@ -5,7 +5,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -217,8 +219,44 @@ public class BinderTest {
         try {
             binder.save(person);
         } finally {
+            // Bean should not have been updated
             Assert.assertEquals(firstName, person.getFirstName());
         }
+    }
+
+    @Test(expected = ValidationException.class)
+    public void save_beanValidationErrors() throws ValidationException {
+        Binder<Person> binder = new Binder<>();
+        binder.forField(nameField).withValidator(new NotEmptyValidator<>("a"))
+                .bind(Person::getFirstName, Person::setFirstName);
+
+        binder.withValidator(Validator.from(person -> false, "b"));
+
+        Person person = new Person();
+        nameField.setValue("foo");
+        try {
+            binder.save(person);
+        } finally {
+            // Bean should have been updated for item validation but reverted
+            Assert.assertNull(person.getFirstName());
+        }
+    }
+
+    @Test
+    public void save_fieldsAndBeanLevelValidation() throws ValidationException {
+        Binder<Person> binder = new Binder<>();
+        binder.forField(nameField).withValidator(new NotEmptyValidator<>("a"))
+                .bind(Person::getFirstName, Person::setFirstName);
+
+        binder.withValidator(
+                Validator.from(person -> person.getLastName() != null, "b"));
+
+        Person person = new Person();
+        person.setLastName("bar");
+        nameField.setValue("foo");
+        binder.save(person);
+        Assert.assertEquals(nameField.getValue(), person.getFirstName());
+        Assert.assertEquals("bar", person.getLastName());
     }
 
     @Test
@@ -248,6 +286,60 @@ public class BinderTest {
 
         Assert.assertTrue(binder.saveIfValid(person));
         Assert.assertEquals("bar", person.getFirstName());
+    }
+
+    @Test
+    public void saveIfValid_beanValidationErrors() {
+        Binder<Person> binder = new Binder<>();
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+
+        String msg = "foo";
+        binder.withValidator(Validator.<Person> from(
+                prsn -> prsn.getAddress() != null || prsn.getEmail() != null,
+                msg));
+
+        Person person = new Person();
+        person.setFirstName("foo");
+        nameField.setValue("");
+        Assert.assertFalse(binder.saveIfValid(person));
+
+        Assert.assertEquals("foo", person.getFirstName());
+    }
+
+    @Test
+    public void save_validationErrors_exceptionContainsErrors()
+            throws ValidationException {
+        Binder<Person> binder = new Binder<>();
+        String msg = "foo";
+        Binding<Person, String, String> nameBinding = binder.forField(nameField)
+                .withValidator(new NotEmptyValidator<>(msg));
+        nameBinding.bind(Person::getFirstName, Person::setFirstName);
+
+        Binding<Person, String, Integer> ageBinding = binder.forField(ageField)
+                .withConverter(stringToInteger).withValidator(notNegative);
+        ageBinding.bind(Person::getAge, Person::setAge);
+
+        Person person = new Person();
+        nameField.setValue("");
+        ageField.setValue("-1");
+        try {
+            binder.save(person);
+            Assert.fail();
+        } catch (ValidationException exception) {
+            List<ValidationError<?>> validationErrors = exception
+                    .getValidationError();
+            Assert.assertEquals(2, validationErrors.size());
+            ValidationError<?> error = validationErrors.get(0);
+            Assert.assertEquals(nameField, error.getField().get());
+            Assert.assertEquals(msg, error.getMessage());
+            Assert.assertEquals("", error.getValue());
+
+            error = validationErrors.get(1);
+            Assert.assertEquals(ageField, error.getField().get());
+            Assert.assertEquals("Value must be positive", error.getMessage());
+            Assert.assertEquals(ageField.getValue(), error.getValue());
+        }
     }
 
     @Test
@@ -328,6 +420,7 @@ public class BinderTest {
         Assert.assertTrue(errorMessages.contains(msg1));
 
         Set<?> fields = errors.stream().map(ValidationError::getField)
+                .filter(Optional::isPresent).map(Optional::get)
                 .collect(Collectors.toSet());
         Assert.assertEquals(1, fields.size());
         Assert.assertTrue(fields.contains(nameField));
@@ -635,6 +728,141 @@ public class BinderTest {
 
         binding.withStatusChangeHandler(event -> {
         });
+    }
+
+    @Test
+    public void validate_failedBeanValidatorWithoutFieldValidators() {
+        Binder<Person> binder = new Binder<>();
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+
+        String msg = "foo";
+        binder.withValidator(Validator.from(bean -> false, msg));
+        Person person = new Person();
+        binder.bind(person);
+
+        List<ValidationError<?>> errors = binder.validate();
+        Assert.assertEquals(1, errors.size());
+        Assert.assertFalse(errors.get(0).getField().isPresent());
+    }
+
+    @Test
+    public void validate_failedBeanValidatorWithFieldValidator() {
+        String msg = "foo";
+
+        Binder<Person> binder = new Binder<>();
+        Binding<Person, String, String> binding = binder.forField(nameField)
+                .withValidator(new NotEmptyValidator<>(msg));
+        binding.bind(Person::getFirstName, Person::setFirstName);
+
+        binder.withValidator(Validator.from(bean -> false, msg));
+        Person person = new Person();
+        binder.bind(person);
+
+        List<ValidationError<?>> errors = binder.validate();
+        Assert.assertEquals(1, errors.size());
+        ValidationError<?> error = errors.get(0);
+        Assert.assertEquals(msg, error.getMessage());
+        Assert.assertTrue(error.getField().isPresent());
+        Assert.assertEquals(nameField.getValue(), error.getValue());
+    }
+
+    @Test
+    public void validate_failedBothBeanValidatorAndFieldValidator() {
+        String msg1 = "foo";
+
+        Binder<Person> binder = new Binder<>();
+        Binding<Person, String, String> binding = binder.forField(nameField)
+                .withValidator(new NotEmptyValidator<>(msg1));
+        binding.bind(Person::getFirstName, Person::setFirstName);
+
+        String msg2 = "bar";
+        binder.withValidator(Validator.from(bean -> false, msg2));
+        Person person = new Person();
+        binder.bind(person);
+
+        List<ValidationError<?>> errors = binder.validate();
+        Assert.assertEquals(1, errors.size());
+
+        ValidationError<?> error = errors.get(0);
+
+        Assert.assertEquals(msg1, error.getMessage());
+        Assert.assertEquals(nameField, error.getField().get());
+        Assert.assertEquals(nameField.getValue(), error.getValue());
+    }
+
+    @Test
+    public void validate_okBeanValidatorWithoutFieldValidators() {
+        Binder<Person> binder = new Binder<>();
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+
+        String msg = "foo";
+        binder.withValidator(Validator.from(bean -> true, msg));
+        Person person = new Person();
+        binder.bind(person);
+
+        List<ValidationError<?>> errors = binder.validate();
+        Assert.assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void binder_saveIfValid() {
+        String msg1 = "foo";
+        Binder<Person> binder = new Binder<>();
+        Binding<Person, String, String> binding = binder.forField(nameField)
+                .withValidator(new NotEmptyValidator<>(msg1));
+        binding.bind(Person::getFirstName, Person::setFirstName);
+
+        String beanValidatorErrorMessage = "bar";
+        binder.withValidator(
+                Validator.from(bean -> false, beanValidatorErrorMessage));
+        Person person = new Person();
+        String firstName = "first name";
+        person.setFirstName(firstName);
+        binder.load(person);
+
+        nameField.setValue("");
+        Assert.assertFalse(binder.saveIfValid(person));
+        // check that field level-validation failed and bean is not updated
+        Assert.assertEquals(firstName, person.getFirstName());
+
+        nameField.setValue("new name");
+
+        Assert.assertFalse(binder.saveIfValid(person));
+        // Bean is updated but reverted
+        Assert.assertEquals(firstName, person.getFirstName());
+    }
+
+    @Test
+    public void updateBoundField_bindingValdationFails_beanLevelValidationIsNotRun() {
+        bindAgeWithValidatorConverterValidator();
+        bindName();
+
+        AtomicBoolean beanLevelValidationRun = new AtomicBoolean();
+        binder.withValidator(Validator.<Person> from(
+                bean -> beanLevelValidationRun.getAndSet(true), ""));
+
+        ageField.setValue("not a number");
+
+        Assert.assertFalse(beanLevelValidationRun.get());
+
+        nameField.setValue("foo");
+        Assert.assertFalse(beanLevelValidationRun.get());
+    }
+
+    @Test
+    public void updateBoundField_bindingValdationSuccess_beanLevelValidationIsRun() {
+        bindAgeWithValidatorConverterValidator();
+        bindName();
+
+        AtomicBoolean beanLevelValidationRun = new AtomicBoolean();
+        binder.withValidator(Validator.<Person> from(
+                bean -> beanLevelValidationRun.getAndSet(true), ""));
+
+        ageField.setValue(String.valueOf(12));
+
+        Assert.assertTrue(beanLevelValidationRun.get());
     }
 
 }
