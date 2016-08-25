@@ -79,6 +79,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             params.put(UIConstants.UI_ID_PARAMETER, uI.getUIId());
             String initialUIDL = getInitialUidl(request, uI);
             params.put("uidl", initialUIDL);
+            params.put("theme", uI.getTheme());
 
             return commitJsonResponse(request, response,
                     JsonUtil.stringify(params));

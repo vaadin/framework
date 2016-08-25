@@ -17,23 +17,60 @@
     	//In IE, its a native function for which apply is not defined, but it works without a proper 'this' reference
     	log = console.log;
     }
+
+    var replaceClass = function(e, oldClass, newClass) {
+        if (e.classList) {
+            if (oldClass) {
+                e.classList.remove(oldClass);
+            }
+            if (newClass) {
+                e.classList.add(newClass);
+            }
+        } else {
+            // For old browsers and IE9 and older.
+            var classes = e.className.split(' ');
+            for(var i = 0; i < classes.length; i++) {
+                if (classes[i] === oldClass) {
+                    classes.splice(i, 1);
+                }
+            }
+            if (newClass) {
+                classes[classes.length] = newClass;
+            }
+            e.className = classes.join(' ');
+        }
+    };
 	
-	var loadTheme = function(url, version) {
+	var loadTheme = function(url, appId, themeName, version) {
 		if(!themesLoaded[url]) {
 			log("loadTheme", url, version);
-			
+
 			var href = url + '/styles.css';
 			if (version) {
 				href += '?v=' + version;
 			}
-			
+
 			var stylesheet = document.createElement('link');
 			stylesheet.setAttribute('rel', 'stylesheet');
 			stylesheet.setAttribute('type', 'text/css');
 			stylesheet.setAttribute('href', href);
 			document.getElementsByTagName('head')[0].appendChild(stylesheet);
 			themesLoaded[url] = true;
-		}		
+		}
+
+        var appDiv = document.getElementById(appId);
+        var oldTheme = appDiv.getAttribute("themeName");
+        replaceClass(appDiv, oldTheme, themeName);
+        appDiv.setAttribute("themeName", themeName);
+
+        var expectedUrl = '/themes/' + oldTheme + '/favicon.ico';
+        var links = document.getElementsByTagName("link");
+        for (var i = 0; i < links.length; i++) {
+            var link = links[i];
+            if (link.rel.indexOf("icon") >= 0 && link.href.indexOf(expectedUrl) >= 0) {
+                link.href = url + '/favicon.ico';
+            }
+        }
 	};
 		
 	var isWidgetsetLoaded = function(widgetset) {
@@ -216,9 +253,10 @@
 				var vaadinDir = getConfig('vaadinDir');
 				
 				var versionInfo = getConfig('versionInfo');
-				
-				var themeUri = vaadinDir + 'themes/' + getConfig('theme');
-				loadTheme(themeUri, versionInfo && versionInfo['vaadinVersion']);
+
+                var themeName = getConfig('theme');
+                var themeUri = vaadinDir + 'themes/' + themeName;
+                loadTheme(themeUri, appId, themeName, versionInfo && versionInfo['vaadinVersion']);
 				
 				var widgetset = getConfig('widgetset');
 				var widgetsetUrl = getConfig('widgetsetUrl');
