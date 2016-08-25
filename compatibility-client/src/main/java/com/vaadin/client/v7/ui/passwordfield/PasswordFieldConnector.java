@@ -23,7 +23,7 @@ import com.vaadin.v7.ui.PasswordField;
 
 @Deprecated
 @Connect(PasswordField.class)
-public class LegacyPasswordFieldConnector extends LegacyTextFieldConnector {
+public class PasswordFieldConnector extends LegacyTextFieldConnector {
 
     @Override
     public VLegacyPasswordField getWidget() {
