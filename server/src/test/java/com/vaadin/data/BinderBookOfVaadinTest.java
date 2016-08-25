@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -399,7 +400,7 @@ public class BinderBookOfVaadinTest {
     }
 
     @Test
-    public void withStatusChangeHandlerExample() {
+    public void withBindingStatusChangeHandlerExample() {
         Label nameStatus = new Label();
         AtomicReference<ValidationStatusChangeEvent> event = new AtomicReference<>();
 
@@ -554,5 +555,130 @@ public class BinderBookOfVaadinTest {
         p.setYearOfBirth(12500);
         binder.load(p);
         Assert.assertEquals("12500", yearOfBirthField.getValue());
+    }
+
+    @Test
+    public void withBinderStatusLabelExample() {
+        Label formStatusLabel = new Label();
+
+        BeanBinder<BookPerson> binder = new BeanBinder<>(BookPerson.class);
+
+        binder.setStatusLabel(formStatusLabel);
+
+        final String message = "Too young, son";
+        final String message2 = "Y2K error";
+        TextField yearOfBirth = new TextField();
+        BookPerson p = new BookPerson(1500, 12);
+        binder.forField(yearOfBirth)
+                .withConverter(new StringToIntegerConverter("err"))
+                .bind(BookPerson::getYearOfBirth, BookPerson::setYearOfBirth);
+        binder.withValidator(bean -> bean.yearOfBirth < 2000 ? Result.ok(bean)
+                : Result.error(message))
+                .withValidator(bean -> bean.yearOfBirth == 2000
+                        ? Result.error(message2) : Result.ok(bean));
+
+        binder.bind(p);
+
+        // first bean validator fails and passes error message to status label
+        yearOfBirth.setValue("2001");
+
+        List<ValidationError<?>> errors = binder.validate();
+        Assert.assertEquals(1, errors.size());
+        Assert.assertEquals(errors.get(0).getMessage(), message);
+
+        Assert.assertEquals(message, formStatusLabel.getValue());
+
+        // value is correct, status label is cleared
+        yearOfBirth.setValue("1999");
+
+        errors = binder.validate();
+        Assert.assertEquals(0, errors.size());
+
+        Assert.assertEquals("", formStatusLabel.getValue());
+
+        // both bean validators fail, should be two error messages chained
+        yearOfBirth.setValue("2000");
+
+        errors = binder.validate();
+        Assert.assertEquals(2, errors.size());
+
+        // only first error is shown
+        Assert.assertEquals(message, formStatusLabel.getValue());
+    }
+
+    @Test
+    public void withBinderStatusChangeHandlerExample() {
+        Label formStatusLabel = new Label();
+
+        BinderStatusHandler defaultHandler = binder.getStatusHandler();
+
+        binder.setStatusHandler(results -> {
+            String errorMessage = results.stream()
+                    // Ignore confirmation messages
+                    .filter(BinderResult::isError)
+                    // Ignore messages that belong to a specific field
+                    .filter(error -> !error.getField().isPresent())
+                    // Create a string out of the remaining messages
+                    .map(Result::getMessage).map(o -> o.get())
+                    .collect(Collectors.joining("\n"));
+
+            formStatusLabel.setValue(errorMessage);
+            formStatusLabel.setVisible(!errorMessage.isEmpty());
+
+            // Let the default handler show messages for each field
+            defaultHandler.accept(results);
+        });
+
+        final String bindingMessage = "uneven";
+        final String message = "Too young, son";
+        final String message2 = "Y2K error";
+        TextField yearOfBirth = new TextField();
+        BookPerson p = new BookPerson(1500, 12);
+        binder.forField(yearOfBirth)
+                .withConverter(new StringToIntegerConverter("err"))
+                .withValidator(value -> value % 2 == 0 ? Result.ok(value)
+                        : Result.error(bindingMessage))
+                .bind(BookPerson::getYearOfBirth, BookPerson::setYearOfBirth);
+        binder.withValidator(bean -> bean.yearOfBirth < 2000 ? Result.ok(bean)
+                : Result.error(message))
+                .withValidator(bean -> bean.yearOfBirth == 2000
+                        ? Result.error(message2) : Result.ok(bean));
+
+        binder.bind(p);
+
+        // first binding validation fails, no bean level validation is done
+        yearOfBirth.setValue("2001");
+        List<ValidationError<?>> errors = binder.validate();
+        Assert.assertEquals(1, errors.size());
+        Assert.assertEquals(errors.get(0).getMessage(), bindingMessage);
+
+        Assert.assertEquals("", formStatusLabel.getValue());
+
+        // first bean validator fails and passes error message to status label
+        yearOfBirth.setValue("2002");
+
+        errors = binder.validate();
+        Assert.assertEquals(1, errors.size());
+        Assert.assertEquals(errors.get(0).getMessage(), message);
+
+        Assert.assertEquals(message, formStatusLabel.getValue());
+
+        // value is correct, status label is cleared
+        yearOfBirth.setValue("1998");
+
+        errors = binder.validate();
+        Assert.assertEquals(0, errors.size());
+
+        Assert.assertEquals("", formStatusLabel.getValue());
+
+        // both bean validators fail, should be two error messages chained
+        yearOfBirth.setValue("2000");
+
+        errors = binder.validate();
+        Assert.assertEquals(2, errors.size());
+
+        Assert.assertEquals(message + "\n" + message2,
+                formStatusLabel.getValue());
+
     }
 }

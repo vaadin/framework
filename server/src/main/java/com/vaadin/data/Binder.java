@@ -17,6 +17,7 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -505,22 +506,25 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public Result<TARGET> validate() {
-            Result<TARGET> dataValue = getTargetValue();
-            fireStatusChangeEvent(dataValue);
-            return dataValue;
+            BinderResult<FIELDVALUE, TARGET> bindingResult = getTargetValue();
+            getBinder().getStatusHandler().accept(Arrays.asList(bindingResult));
+            return bindingResult;
         }
 
         /**
-         * Returns the field value run through all converters and validators.
+         * Returns the field value run through all converters and validators,
+         * but doesn't fire a {@link ValidationStatusChangeEvent status change
+         * event}.
          *
          * @return a result containing the validated and converted value or
          *         describing an error
          */
-        private Result<TARGET> getTargetValue() {
+        private BinderResult<FIELDVALUE, TARGET> getTargetValue() {
             FIELDVALUE fieldValue = field.getValue();
             Result<TARGET> dataValue = converterValidatorChain.convertToModel(
                     fieldValue, ((AbstractComponent) field).getLocale());
-            return dataValue;
+            return dataValue.biMap((value, message) -> new BinderResult<>(this,
+                    value, message));
         }
 
         private void unbind() {
@@ -561,14 +565,15 @@ public class Binder<BEAN> implements Serializable {
                 boolean runBeanLevelValidation) {
             assert bean != null;
             if (setter != null) {
-                getTargetValue().ifOk(value -> setBeanValue(bean, value));
+                BinderResult<FIELDVALUE, TARGET> validationResult = getTargetValue();
+                getBinder().getStatusHandler()
+                        .accept(Arrays.asList(validationResult));
+                validationResult.ifOk(value -> setter.accept(bean, value));
             }
             if (runBeanLevelValidation && !getBinder().bindings.stream()
                     .map(BindingImpl::getTargetValue)
                     .anyMatch(Result::isError)) {
-                List<ValidationError<?>> errors = binder.validateItem(bean);
-                // TODO: Pass errors to Binder statusChangeHandler once that is
-                // available
+                binder.validateItem(bean);
             }
         }
 
@@ -576,7 +581,7 @@ public class Binder<BEAN> implements Serializable {
             setter.accept(bean, value);
         }
 
-        private void fireStatusChangeEvent(Result<TARGET> result) {
+        private void fireStatusChangeEvent(Result<?> result) {
             ValidationStatusChangeEvent event = new ValidationStatusChangeEvent(
                     getField(),
                     result.isError() ? ValidationStatus.ERROR
@@ -631,6 +636,10 @@ public class Binder<BEAN> implements Serializable {
     private final Set<BindingImpl<BEAN, ?, ?>> bindings = new LinkedHashSet<>();
 
     private final List<Validator<? super BEAN>> validators = new ArrayList<>();
+
+    private Label statusLabel;
+
+    private BinderStatusHandler statusHandler;
 
     /**
      * Returns an {@code Optional} of the bean that has been bound with
@@ -909,6 +918,9 @@ public class Binder<BEAN> implements Serializable {
      * If all validators pass, the resulting list is empty.
      * <p>
      * Does not run bean validators.
+     * <p>
+     * All results are passed to the {@link #getStatusHandler() status change
+     * handler.}
      *
      * @see #validateItem(Object)
      *
@@ -916,13 +928,17 @@ public class Binder<BEAN> implements Serializable {
      *         succeeded
      */
     private List<ValidationError<?>> validateBindings() {
-        List<ValidationError<?>> resultErrors = new ArrayList<>();
+        List<BinderResult<?, ?>> results = new ArrayList<>();
         for (BindingImpl<?, ?, ?> binding : bindings) {
-            binding.validate().ifError(errorMessage -> resultErrors
-                    .add(new ValidationError<>(binding,
-                            binding.getField().getValue(), errorMessage)));
+            results.add(binding.getTargetValue());
         }
-        return resultErrors;
+
+        getStatusHandler().accept(Collections.unmodifiableList(results));
+
+        return results.stream().filter(r -> r.isError())
+                .map(r -> new ValidationError<>(r.getBinding().get(),
+                        r.getField().get().getValue(), r.getMessage().get()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -941,10 +957,97 @@ public class Binder<BEAN> implements Serializable {
      */
     private List<ValidationError<?>> validateItem(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
-        return validators.stream().map(validator -> validator.apply(bean))
+        List<BinderResult<?, ?>> results = Collections.unmodifiableList(
+                validators.stream().map(validator -> validator.apply(bean))
+                        .map(dataValue -> dataValue.biMap(
+                                (value, message) -> new BinderResult<>(null,
+                                        value, message)))
+                        .collect(Collectors.toList()));
+        getStatusHandler().accept(results);
+
+        return results.stream()
                 .filter(Result::isError).map(res -> new ValidationError<>(this,
                         bean, res.getMessage().get()))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Sets the label to show the binder level validation errors not related to
+     * any specific field.
+     * <p>
+     * Only the one validation error message is shown in this label at a time.
+     * <p>
+     * This is a convenience method for
+     * {@link #setStatusHandler(BinderStatusHandler)}, which means that this
+     * method cannot be used after the handler has been set. Also the handler
+     * cannot be set after this label has been set.
+     *
+     * @param statusLabel
+     *            the status label to set
+     * @see #setStatusHandler(BinderStatusHandler)
+     * @see Binding#withStatusLabel(Label)
+     */
+    public void setStatusLabel(Label statusLabel) {
+        if (statusHandler != null) {
+            throw new IllegalStateException("Cannot set status label if a "
+                    + BinderStatusHandler.class.getSimpleName()
+                    + " has already been set.");
+        }
+        this.statusLabel = statusLabel;
+    }
+
+    /**
+     * Gets the status label or an empty optional if none has been set.
+     *
+     * @return the optional status label
+     * @see #setStatusLabel(Label)
+     */
+    public Optional<Label> getStatusLabel() {
+        return Optional.ofNullable(statusLabel);
+    }
+
+    /**
+     * Sets the status handler to track form status changes.
+     * <p>
+     * Setting this handler will override the default behavior, which is to let
+     * fields show their validation status messages and show binder level
+     * validation errors or OK status in the label set with
+     * {@link #setStatusLabel(Label)}.
+     * <p>
+     * This handler cannot be set after the status label has been set with
+     * {@link #setStatusLabel(Label)}, or {@link #setStatusLabel(Label)} cannot
+     * be used after this handler has been set.
+     *
+     * @param statusHandler
+     *            the status handler to set, not <code>null</code>
+     * @throws NullPointerException
+     *             for <code>null</code> status handler
+     * @see #setStatusLabel(Label)
+     * @see Binding#withStatusChangeHandler(StatusChangeHandler)
+     */
+    public void setStatusHandler(BinderStatusHandler statusHandler) {
+        Objects.requireNonNull(statusHandler, "Cannot set a null "
+                + BinderStatusHandler.class.getSimpleName());
+        if (statusLabel != null) {
+            throw new IllegalStateException(
+                    "Cannot set " + BinderStatusHandler.class.getSimpleName()
+                            + " if a status label has already been set.");
+        }
+        this.statusHandler = statusHandler;
+    }
+
+    /**
+     * Gets the status handler of this form.
+     * <p>
+     * If none has been set with {@link #setStatusHandler(BinderStatusHandler)},
+     * the default implementation is returned.
+     *
+     * @return the status handler used, never <code>null</code>
+     * @see #setStatusHandler(BinderStatusHandler)
+     */
+    public BinderStatusHandler getStatusHandler() {
+        return Optional.ofNullable(statusHandler)
+                .orElse(this::defaultHandleBinderStatusChange);
     }
 
     /**
@@ -1014,6 +1117,35 @@ public class Binder<BEAN> implements Serializable {
         clearError(source);
         if (Objects.equals(ValidationStatus.ERROR, event.getStatus())) {
             handleError(source, event.getMessage().get());
+        }
+    }
+
+    /**
+     * The default binder level status handler.
+     * <p>
+     * Passes all field related results to the Binding status handlers. All
+     * other status changes are displayed in the status label, if one has been
+     * set with {@link #setStatusLabel(Label)}.
+     *
+     * @param results
+     *            a list of validation results from binding and/or item level
+     *            validators
+     */
+    @SuppressWarnings("unchecked")
+    protected void defaultHandleBinderStatusChange(
+            List<BinderResult<?, ?>> results) {
+        // let field events go to binding status handlers
+        results.stream().filter(br -> br.getField().isPresent())
+                .forEach(br -> ((BindingImpl<BEAN, ?, ?>) br.getBinding().get())
+                        .fireStatusChangeEvent(br));
+
+        // show first possible error or OK status in the label if set
+        if (getStatusLabel().isPresent()) {
+            String statusMessage = results.stream()
+                    .filter(r -> !r.getField().isPresent())
+                    .map(Result::getMessage).map(m -> m.orElse("")).findFirst()
+                    .orElse("");
+            getStatusLabel().get().setValue(statusMessage);
         }
     }
 

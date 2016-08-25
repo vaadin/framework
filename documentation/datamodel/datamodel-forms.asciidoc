@@ -566,21 +566,21 @@ We can also define our own status handler to provide a custom way of handling st
 ----
 BinderStatusHandler defaultHandler = binder.getStatusHandler();
 
-binder.setStatusHandler((List<BinderResult> results) -> {
+binder.setStatusHandler(results -> {
   String errorMessage = results.stream()
     // Ignore helper and confirmation messages
     .filter(BinderResult::isError)
     // Ignore messages that belong to a specific field
     .filter(error -> !error.getField().isPresent())
     // Create a string out of the remaining messages
-    .map(BinderResult::getMessage)
+    .map(Result::getMessage).map(o -> o.get())
     .collect(Collectors.joining("\n"));
 
   formStatusLabel.setValue(errorMessage);
   formStatusLabel.setVisible(!errorMessage.isEmpty());
 
   // Let the default handler show messages for each field
-  defaultHandler.handleStatus(results);
+  defaultHandler.accept(event);
 });
 ----
 

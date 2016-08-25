@@ -19,6 +19,7 @@ package com.vaadin.data;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -103,7 +104,7 @@ public interface Result<R> extends Serializable {
      *            the mapping function
      * @return the mapped result
      */
-    public default <S> Result<S> map(Function<R, S> mapper) {
+    default <S> Result<S> map(Function<R, S> mapper) {
         return flatMap(value -> ok(mapper.apply(value)));
     }
 
@@ -119,7 +120,20 @@ public interface Result<R> extends Serializable {
      *            the mapping function
      * @return the mapped result
      */
-    public <S> Result<S> flatMap(Function<R, Result<S>> mapper);
+    <S> Result<S> flatMap(Function<R, Result<S>> mapper);
+
+    /**
+     * Applies the given function to this result, regardless if this is an error
+     * or not. Passes the value and the message to the given function as
+     * parameters.
+     *
+     * @param <S>
+     *            the type of the mapped value
+     * @param mapper
+     *            the mapping function
+     * @return the mapped result
+     */
+    <S> S biMap(BiFunction<R, String, S> mapper);
 
     /**
      * Invokes either the first callback or the second one, depending on whether
@@ -130,7 +144,7 @@ public interface Result<R> extends Serializable {
      * @param ifError
      *            the function to call if failure
      */
-    public void handle(Consumer<R> ifOk, Consumer<String> ifError);
+    void handle(Consumer<R> ifOk, Consumer<String> ifError);
 
     /**
      * Applies the {@code consumer} if result is not an error.
@@ -138,7 +152,7 @@ public interface Result<R> extends Serializable {
      * @param consumer
      *            consumer to apply in case it's not an error
      */
-    public default void ifOk(Consumer<R> consumer) {
+    default void ifOk(Consumer<R> consumer) {
         handle(consumer, error -> {
         });
     }
@@ -149,7 +163,7 @@ public interface Result<R> extends Serializable {
      * @param consumer
      *            consumer to apply in case it's an error
      */
-    public default void ifError(Consumer<String> consumer) {
+    default void ifError(Consumer<String> consumer) {
         handle(value -> {
         }, consumer);
     }
@@ -160,14 +174,14 @@ public interface Result<R> extends Serializable {
      * @return <code>true</code> if the result denotes an error,
      *         <code>false</code> otherwise
      */
-    public boolean isError();
+    boolean isError();
 
     /**
      * Returns an Optional of the result message, or an empty Optional if none.
      *
      * @return the optional message
      */
-    public Optional<String> getMessage();
+    Optional<String> getMessage();
 
     /**
      * Return the value, if the result denotes success, otherwise throw an
@@ -182,6 +196,6 @@ public interface Result<R> extends Serializable {
      * @throws X
      *             if this result denotes an error
      */
-    public <X extends Throwable> R getOrThrow(
+    <X extends Throwable> R getOrThrow(
             Function<String, ? extends X> exceptionProvider) throws X;
 }
