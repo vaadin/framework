@@ -20,9 +20,10 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.v7.ui.ProgressBar;
-import com.vaadin.v7.ui.ProgressIndicator;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.ProgressBar;
+import com.vaadin.v7.ui.ProgressIndicator;
 
 public class ProgressBarTest extends AbstractTestUI {
 
@@ -48,7 +49,7 @@ public class ProgressBarTest extends AbstractTestUI {
             }
         }
     };
-    private ProgressBar progressBar;
+    private Component progressBar;
     private int counter = 0;
 
     @Override
@@ -84,7 +85,7 @@ public class ProgressBarTest extends AbstractTestUI {
         updateThread.start();
     }
 
-    private void useComponent(ProgressBar progressBar) {
+    private void useComponent(Component progressBar) {
         if (this.progressBar != null) {
             removeComponent(this.progressBar);
         }

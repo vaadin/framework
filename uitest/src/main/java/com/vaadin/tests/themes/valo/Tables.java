@@ -28,13 +28,13 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.OptionGroup;
-import com.vaadin.v7.ui.ProgressBar;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.Align;
 import com.vaadin.v7.ui.Table.ColumnGenerator;
@@ -178,8 +178,7 @@ public class Tables extends VerticalLayout implements View {
         table.removeGeneratedColumn("progress");
 
         if (componentsInRows) {
-            table.addContainerProperty("textfield", TextField.class,
-                    null);
+            table.addContainerProperty("textfield", TextField.class, null);
             table.addGeneratedColumn("textfield", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
@@ -194,8 +193,7 @@ public class Tables extends VerticalLayout implements View {
                 }
             });
 
-            table.addContainerProperty("datefield", TextField.class,
-                    null);
+            table.addContainerProperty("datefield", TextField.class, null);
             table.addGeneratedColumn("datefield", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,
@@ -257,8 +255,7 @@ public class Tables extends VerticalLayout implements View {
                 }
             });
 
-            table.addContainerProperty("optiongroup", TextField.class,
-                    null);
+            table.addContainerProperty("optiongroup", TextField.class, null);
             table.addGeneratedColumn("optiongroup", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,

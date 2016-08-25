@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.testbench.customelements;
+package com.vaadin.testbench.customelements;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elementsbase.ServerClass;
 
-@ServerClass("com.vaadin.v7.ui.ProgressBar")
+@ServerClass("com.vaadin.ui.ProgressBar")
 public class ProgressBarElement
         extends com.vaadin.testbench.elements.ProgressBarElement {
 

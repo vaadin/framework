@@ -3,9 +3,9 @@ package com.vaadin.tests.components.slider;
 import com.vaadin.data.Binder;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.Slider;
 import com.vaadin.v7.data.util.BeanItem;
-import com.vaadin.v7.ui.ProgressBar;
 
 public class SliderValueFromDataSource extends AbstractTestUI {
 
@@ -35,12 +35,14 @@ public class SliderValueFromDataSource extends AbstractTestUI {
                 (b, doubleValue) -> item.getItemProperty("floatValue")
                         .setValue((float) (doubleValue / 10.0)));
         binder.bind(bean);
-        addComponent(slider);
 
-        ProgressBar pi = new ProgressBar();
-        pi.setWidth("200px");
-        pi.setPropertyDataSource(item.getItemProperty("floatValue"));
-        addComponent(pi);
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setWidth("200px");
+
+        slider.addValueChangeListener(
+                event -> progressBar.setValue(event.getValue().floatValue()));
+
+        addComponents(slider, progressBar);
     }
 
     @Override

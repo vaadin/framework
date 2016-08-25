@@ -34,6 +34,6 @@ public class ProgressBarState extends AbstractFieldState {
     }
     public boolean indeterminate = false;
     @NoLayout
-    public Float state = 0.0f;
+    public float state = 0.0f;
 
 }

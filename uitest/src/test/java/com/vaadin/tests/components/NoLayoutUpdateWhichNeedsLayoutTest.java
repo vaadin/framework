@@ -19,9 +19,9 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
+import com.vaadin.testbench.customelements.ProgressBarElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.v7.testbench.customelements.ProgressBarElement;
 
 public class NoLayoutUpdateWhichNeedsLayoutTest extends SingleBrowserTest {
 
@@ -30,8 +30,7 @@ public class NoLayoutUpdateWhichNeedsLayoutTest extends SingleBrowserTest {
         openTestURL("debug");
         ButtonElement open = $(ButtonElement.class).id("openWindow");
         open.click();
-        final ProgressBarElement progress = $(
-                ProgressBarElement.class).first();
+        final ProgressBarElement progress = $(ProgressBarElement.class).first();
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver input) {
