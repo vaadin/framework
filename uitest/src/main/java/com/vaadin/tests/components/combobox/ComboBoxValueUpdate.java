@@ -1,9 +1,11 @@
 package com.vaadin.tests.components.combobox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxValueUpdate extends TestBase {
 
@@ -19,23 +21,17 @@ public class ComboBoxValueUpdate extends TestBase {
 
     @Override
     protected void setup() {
-        ComboBox select = new ComboBox("");
-        select.setImmediate(true);
+        List<String> items = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            select.addItem("item " + i);
+            items.add("item " + i);
         }
+        ComboBox<String> select = new ComboBox<>("", items);
 
         final Label value = new Label();
 
-        select.addListener(new ComboBox.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                System.err
-                        .println("Selected " + event.getProperty().getValue());
-                value.setValue("Selected " + event.getProperty().getValue());
-
-            }
+        select.addValueChangeListener(event -> {
+            System.err.println("Selected " + event.getValue());
+            value.setValue("Selected " + event.getValue());
         });
 
         getLayout().addComponent(select);

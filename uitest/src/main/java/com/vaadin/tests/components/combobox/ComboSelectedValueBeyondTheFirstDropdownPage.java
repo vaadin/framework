@@ -1,11 +1,12 @@
 package com.vaadin.tests.components.combobox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
-import com.vaadin.v7.ui.ComboBox;
 
 @SuppressWarnings("serial")
 public class ComboSelectedValueBeyondTheFirstDropdownPage
@@ -17,7 +18,7 @@ public class ComboSelectedValueBeyondTheFirstDropdownPage
     @Override
     protected void setup(VaadinRequest request) {
         Label value = getLabel();
-        ComboBox combobox = getComboBox(value);
+        ComboBox<String> combobox = getComboBox(value);
 
         addComponent(combobox);
         addComponent(value);
@@ -30,23 +31,19 @@ public class ComboSelectedValueBeyondTheFirstDropdownPage
         return value;
     }
 
-    private ComboBox getComboBox(final Label value) {
-        final ComboBox combobox = new ComboBox("MyCaption");
+    private ComboBox<String> getComboBox(final Label value) {
+        final ComboBox<String> combobox = new ComboBox<>("MyCaption");
         combobox.setDescription(
                 "ComboBox with more than 10 elements in it's dropdown list.");
 
-        combobox.setImmediate(true);
-
+        List<String> items = new ArrayList<>();
         for (int i = 1; i <= ITEM_COUNT; i++) {
-            combobox.addItem(String.format(ITEM_NAME_TEMPLATE, i));
+            items.add(String.format(ITEM_NAME_TEMPLATE, i));
         }
+        combobox.setItems(items);
 
-        combobox.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                value.setValue(String.valueOf(event.getProperty().getValue()));
-            }
-        });
+        combobox.addValueChangeListener(
+                event -> value.setValue(String.valueOf(event.getValue())));
 
         return combobox;
     }

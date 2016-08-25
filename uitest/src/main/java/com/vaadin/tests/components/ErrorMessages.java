@@ -6,8 +6,8 @@ import java.util.List;
 import com.vaadin.server.CompositeErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
-import com.vaadin.v7.ui.ComboBox;
-import com.vaadin.v7.ui.TextField;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.TextField;
 
 public class ErrorMessages extends TestBase {
 
@@ -24,7 +24,8 @@ public class ErrorMessages extends TestBase {
         tf.setComponentError(new UserError("This is a failure"));
         addComponent(tf);
 
-        ComboBox cb = new ComboBox("ComboBox with description and UserError");
+        ComboBox<String> cb = new ComboBox<>(
+                "ComboBox with description and UserError");
         cb.setDescription("This is a combobox");
         cb.setComponentError(new UserError("This is a failure"));
         addComponent(cb);

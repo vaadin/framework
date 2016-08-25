@@ -21,9 +21,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.ComboBoxElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 
 /**
  * Test for identical item captions in ComboBox.

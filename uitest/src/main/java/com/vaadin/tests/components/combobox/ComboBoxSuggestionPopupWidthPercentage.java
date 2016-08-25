@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 
 public class ComboBoxSuggestionPopupWidthPercentage extends AbstractTestUI {
 
@@ -16,7 +16,7 @@ public class ComboBoxSuggestionPopupWidthPercentage extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        ComboBox percentage = new ComboBox(
+        ComboBox<String> percentage = new ComboBox<>(
                 "200px wide ComboBox with 200% wide suggestion popup", items);
         percentage.addStyleName("percentage");
         percentage.setWidth("200px");

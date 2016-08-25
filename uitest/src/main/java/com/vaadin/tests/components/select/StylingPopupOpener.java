@@ -26,7 +26,7 @@ public class StylingPopupOpener extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "VFilterSelect popup opener width is not updated when the style or theme changes";
+        return "ComboBox popup opener width is not updated when the style or theme changes";
     }
 
     @Override

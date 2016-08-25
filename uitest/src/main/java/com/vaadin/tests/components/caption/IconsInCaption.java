@@ -5,13 +5,11 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
-import com.vaadin.v7.ui.ComboBox;
 
 public class IconsInCaption extends TestBase {
 
@@ -35,38 +33,20 @@ public class IconsInCaption extends TestBase {
 
     private Log log = new Log(5);
 
-    private ComboBox containerSelect;
+    private ComboBox<Class<? extends ComponentContainer>> containerSelect;
 
-    private ComboBox iconTypeSelect;
+    private ComboBox<String> iconTypeSelect;
 
     @Override
     protected void setup() {
-        iconTypeSelect = new ComboBox("Icon container");
-        iconTypeSelect.addItem(TYPE_EMBEDDED);
-        iconTypeSelect.addItem(TYPE_CAPTION);
-        iconTypeSelect.setImmediate(true);
-        iconTypeSelect.setNullSelectionAllowed(false);
-        iconTypeSelect.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                updateContainer();
-            }
-        });
+        iconTypeSelect = new ComboBox<>("Icon container");
+        iconTypeSelect.setItems(TYPE_EMBEDDED, TYPE_CAPTION);
+        iconTypeSelect.setEmptySelectionAllowed(false);
+        iconTypeSelect.addValueChangeListener(event -> updateContainer());
 
-        containerSelect = new ComboBox("Container");
-        for (Class<? extends ComponentContainer> cc : VaadinClasses
-                .getComponentContainersSupportingUnlimitedNumberOfComponents()) {
-            containerSelect.addItem(cc);
-        }
-        containerSelect.setImmediate(true);
-        containerSelect.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                updateContainer();
-
-            }
-        });
+        containerSelect = new ComboBox<>("Container", VaadinClasses
+                .getComponentContainersSupportingUnlimitedNumberOfComponents());
+        containerSelect.addValueChangeListener(event -> updateContainer());
 
         addComponent(log);
         addComponent(iconTypeSelect);
@@ -78,7 +58,7 @@ public class IconsInCaption extends TestBase {
     }
 
     protected void updateContainer() {
-        Class<? extends ComponentContainer> containerClass = (Class<? extends ComponentContainer>) containerSelect
+        Class<? extends ComponentContainer> containerClass = containerSelect
                 .getValue();
         if (containerClass == null) {
             return;

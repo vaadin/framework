@@ -15,9 +15,12 @@
  */
 package com.vaadin.tests.components.combobox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 
 /**
  * Tests mousewheel handling in ComboBox.
@@ -36,12 +39,12 @@ public class ComboBoxMousewheel extends AbstractTestUI {
     }
 
     private ComboBox createComboBox(String caption) {
-        ComboBox cb = new ComboBox(caption);
-        cb.setId(caption);
-        cb.setImmediate(true);
+        List<String> data = new ArrayList<>();
         for (int i = 1; i < 100; i++) {
-            cb.addItem("Item " + i);
+            data.add("Item " + i);
         }
+        ComboBox<String> cb = new ComboBox<>(caption, data);
+        cb.setId(caption);
         return cb;
     }
 

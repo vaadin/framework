@@ -21,8 +21,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 
 public class FilteringTurkishLocaleTest extends MultiBrowserTest {
@@ -49,7 +49,7 @@ public class FilteringTurkishLocaleTest extends MultiBrowserTest {
 
         Assert.assertEquals("There should be only one suggestion", 1,
                 suggestions.size());
-        Assert.assertEquals("İ with dot", suggestions.get(0));
+        Assert.assertEquals("İ dotted", suggestions.get(0));
     }
 
     @Test
@@ -62,7 +62,7 @@ public class FilteringTurkishLocaleTest extends MultiBrowserTest {
 
         Assert.assertEquals("There should be only one suggestion", 1,
                 suggestions.size());
-        Assert.assertEquals("I without dot", suggestions.get(0));
+        Assert.assertEquals("I dotless", suggestions.get(0));
     }
 
     private List<String> getFilterSuggestions(String string) {

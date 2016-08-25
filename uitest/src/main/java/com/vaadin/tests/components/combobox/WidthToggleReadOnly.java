@@ -2,7 +2,7 @@ package com.vaadin.tests.components.combobox;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 
 public class WidthToggleReadOnly extends TestBase {
 
@@ -16,9 +16,9 @@ public class WidthToggleReadOnly extends TestBase {
         addComponent(createReadOnlyForComboBox(combo));
     }
 
-    private ComboBox createNewComboBoxA(String caption) {
-        ComboBox combo = new ComboBox(caption);
-        combo.addItem("first");
+    private ComboBox<String> createNewComboBoxA(String caption) {
+        ComboBox<String> combo = new ComboBox<>(caption);
+        combo.setItems("first");
         combo.setValue("first");
 
         addComponent(combo);
@@ -31,7 +31,6 @@ public class WidthToggleReadOnly extends TestBase {
         readonly.setValue(combo.isReadOnly());
         readonly.addValueChangeListener(
                 event -> combo.setReadOnly(event.getValue()));
-        readonly.setImmediate(true);
         addComponent(readonly);
         return readonly;
     }

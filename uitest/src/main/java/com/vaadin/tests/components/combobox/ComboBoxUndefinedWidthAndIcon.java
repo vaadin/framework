@@ -1,25 +1,22 @@
 package com.vaadin.tests.components.combobox;
 
-import com.vaadin.server.Resource;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.v7.data.Item;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 
 public class ComboBoxUndefinedWidthAndIcon extends TestBase {
     @Override
     protected void setup() {
-        ComboBox cb = new ComboBox();
-        cb.addContainerProperty("caption", String.class, null);
-        cb.addContainerProperty("icon", Resource.class, null);
+        List<String> data = new ArrayList<>();
         for (int i = 1; i < 200 + 1; i++) {
-            Item item = cb.addItem(i);
-            item.getItemProperty("caption").setValue("Item " + i);
-            item.getItemProperty("icon")
-                    .setValue(new ThemeResource("../runo/icons/16/users.png"));
+            data.add("Item " + i);
         }
-        cb.setItemIconPropertyId("icon");
-        cb.setItemCaptionPropertyId("caption");
+        ComboBox<String> cb = new ComboBox<>(null, data);
+        cb.setItemIconProvider(
+                item -> new ThemeResource("../runo/icons/16/users.png"));
 
         addComponent(cb);
     }

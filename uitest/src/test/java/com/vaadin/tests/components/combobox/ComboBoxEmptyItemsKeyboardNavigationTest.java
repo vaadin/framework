@@ -10,8 +10,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.ComboBoxElement;
 import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
-import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 
 public class ComboBoxEmptyItemsKeyboardNavigationTest
         extends SingleBrowserTestPhantomJS2 {

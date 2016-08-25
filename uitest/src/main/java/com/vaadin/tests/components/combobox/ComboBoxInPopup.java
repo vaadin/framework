@@ -1,13 +1,14 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.server.data.DataSource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxInPopup extends TestBase {
 
@@ -34,12 +35,8 @@ public class ComboBoxInPopup extends TestBase {
     }
 
     private Component createComboBox() {
-        ComboBox cb = new ComboBox("A combo box");
-
-        cb.addItem("Yes");
-        cb.addItem("No");
-        cb.addItem("Maybe");
-        return cb;
+        return new ComboBox<String>("A combo box",
+                DataSource.create("Yes", "No", "Maybe"));
     }
 
     @Override

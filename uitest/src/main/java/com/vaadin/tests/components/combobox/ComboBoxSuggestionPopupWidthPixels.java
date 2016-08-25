@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 
 public class ComboBoxSuggestionPopupWidthPixels extends AbstractTestUI {
 
@@ -16,7 +16,7 @@ public class ComboBoxSuggestionPopupWidthPixels extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        ComboBox pixels = new ComboBox(
+        ComboBox<String> pixels = new ComboBox<>(
                 "200px wide ComboBox with 300px wide suggestion popup", items);
         pixels.addStyleName("pixels");
         pixels.setWidth("200px");

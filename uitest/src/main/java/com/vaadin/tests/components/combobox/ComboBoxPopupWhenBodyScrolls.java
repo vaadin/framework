@@ -15,10 +15,13 @@
  */
 package com.vaadin.tests.components.combobox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxPopupWhenBodyScrolls extends AbstractTestUI {
 
@@ -28,10 +31,11 @@ public class ComboBoxPopupWhenBodyScrolls extends AbstractTestUI {
                 .add("body.v-generated-body { overflow: auto;height:auto;}");
         getPage().getStyles().add(
                 "body.v-generated-body .v-ui.v-scrollable{ overflow: visible;height:auto !important;}");
-        ComboBox cb = new ComboBox();
+        List<String> data = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            cb.addItem("Item " + i);
+            data.add("Item " + i);
         }
+        ComboBox<String> cb = new ComboBox<>(null, data);
 
         Label spacer = new Label("foo");
         spacer.setHeight("2000px");

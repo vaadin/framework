@@ -28,10 +28,10 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.ComboBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 
 public class ComboBoxMouseSelectEnterTest extends MultiBrowserTest {
 

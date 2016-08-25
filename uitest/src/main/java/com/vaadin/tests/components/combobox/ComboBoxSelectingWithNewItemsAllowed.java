@@ -16,27 +16,27 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.data.Query;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.data.Property;
 
 public class ComboBoxSelectingWithNewItemsAllowed extends ComboBoxSelecting {
 
     @Override
     protected void setup(VaadinRequest request) {
         super.setup(request);
-        comboBox.setNewItemsAllowed(true);
-
-        final Label label = new Label(
-                String.valueOf(comboBox.getItemIds().size()));
+        final Label label = new Label(String.valueOf(items.size()));
         label.setCaption("Item count:");
         label.setId("count");
-        comboBox.addValueChangeListener(new Property.ValueChangeListener() {
 
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                label.setValue(String.valueOf(comboBox.getItemIds().size()));
-            }
+        comboBox.setNewItemHandler(text -> {
+            items.add(text);
+            comboBox.setItems(items);
+            comboBox.select(text);
+            label.setValue(String.valueOf(items.size()));
         });
+
+        comboBox.addValueChangeListener(event -> label.setValue(
+                String.valueOf(comboBox.getDataSource().size(new Query()))));
         addComponent(label);
     }
 

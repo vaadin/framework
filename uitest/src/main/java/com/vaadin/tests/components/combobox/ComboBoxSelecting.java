@@ -1,41 +1,38 @@
 package com.vaadin.tests.components.combobox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.ui.ComboBox;
-import com.vaadin.v7.ui.TextField;
+import com.vaadin.ui.TextField;
 
 public class ComboBoxSelecting extends AbstractTestUI {
-    protected ComboBox comboBox;
+    protected ComboBox<String> comboBox;
+    protected List<String> items = new ArrayList<>();
 
     @Override
     protected void setup(VaadinRequest request) {
-        comboBox = new ComboBox();
+        for (char c = 'a'; c <= 'z'; c++) {
+            for (int i = 0; i < 100; i++) {
+                items.add("" + c + i);
+            }
+        }
+        comboBox = new ComboBox<>(null, items);
         final Label label = new Label();
         label.setId("value");
 
         comboBox.setTextInputAllowed(true);
-        comboBox.setNullSelectionAllowed(true);
-        comboBox.setNullSelectionItemId(null);
+        comboBox.setEmptySelectionAllowed(true);
 
-        for (char c = 'a'; c <= 'z'; c++) {
-            for (int i = 0; i < 100; i++) {
-                comboBox.addItem("" + c + i);
-            }
-        }
-
-        comboBox.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                Object value = event.getProperty().getValue();
-                if (value != null) {
-                    label.setValue(value.toString());
-                } else {
-                    label.setValue("null");
-                }
-
+        comboBox.addValueChangeListener(event -> {
+            String value = event.getValue();
+            if (value != null) {
+                label.setValue(value);
+            } else {
+                label.setValue("null");
             }
         });
 

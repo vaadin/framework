@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 
 public class ComboBoxSuggestionPopupWidthLegacy extends AbstractTestUI {
 
@@ -16,7 +16,7 @@ public class ComboBoxSuggestionPopupWidthLegacy extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        ComboBox legacy = new ComboBox(
+        ComboBox<String> legacy = new ComboBox<>(
                 "200px wide ComboBox with legacy mode suggestion popup setPopupWidth(null)",
                 items);
         legacy.addStyleName("legacy");

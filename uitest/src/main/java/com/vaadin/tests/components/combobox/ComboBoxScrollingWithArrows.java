@@ -15,11 +15,14 @@
  */
 package com.vaadin.tests.components.combobox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractLayout;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.ComboBox;
 
 /**
  * Test UI verifying navigating in combobox via arrow keys.
@@ -61,12 +64,14 @@ public class ComboBoxScrollingWithArrows extends AbstractTestUI {
     }
 
     private void addComboBox(AbstractLayout layout) {
-        ComboBox box = new ComboBox();
+        ComboBox<String> box = new ComboBox<>();
+        List<String> items = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            box.addItem("item " + i);
+            items.add("item " + i);
         }
+        box.setItems(items);
         box.setPageLength(10);
-        box.setNullSelectionAllowed(false);
+        box.setEmptySelectionAllowed(false);
         layout.addComponent(box);
     }
 }

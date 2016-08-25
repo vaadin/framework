@@ -12,6 +12,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DateField;
@@ -23,7 +24,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
-import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.OptionGroup;
 import com.vaadin.v7.ui.PasswordField;
@@ -209,8 +209,8 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
 
         components.add(new CheckBox("Default CheckBox"));
 
-        ComboBox comboBox = new ComboBox("Default ComboBox");
-        comboBox.addItem("Item1");
+        ComboBox<String> comboBox = new ComboBox<>("Default ComboBox");
+        comboBox.setItems("Item1");
         components.add(comboBox);
 
         OptionGroup radioGroup = new OptionGroup("Single Items");

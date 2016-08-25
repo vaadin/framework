@@ -20,8 +20,7 @@ import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.v7.shared.ui.combobox.FilteringMode;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 
 public class ComboBoxSuggestionPageLength extends AbstractTestUI {
 
@@ -30,14 +29,12 @@ public class ComboBoxSuggestionPageLength extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        ComboBox cb = new ComboBox("Page length 0", items);
+        ComboBox<String> cb = new ComboBox<>("Page length 0", items);
         cb.setPageLength(0);
-        cb.setFilteringMode(FilteringMode.CONTAINS);
         addComponent(cb);
 
-        cb = new ComboBox("Page length 2", items);
+        cb = new ComboBox<>("Page length 2", items);
         cb.setPageLength(2);
-        cb.setFilteringMode(FilteringMode.CONTAINS);
         addComponent(cb);
     }
 

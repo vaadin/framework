@@ -1,20 +1,17 @@
 package com.vaadin.tests.components.combobox;
 
+import com.vaadin.server.data.DataSource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
-import com.vaadin.v7.data.util.IndexedContainer;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 
 public class ComboBoxInvalidNullSelection extends TestBase {
 
     private static final Object CAPTION = "C";
-    private IndexedContainer ds1;
-    private IndexedContainer ds2;
-    private ComboBox combo;
+    private DataSource<String> ds1;
+    private DataSource<String> ds2;
+    private ComboBox<String> combo;
     private Log log = new Log(5);
 
     @Override
@@ -23,28 +20,19 @@ public class ComboBoxInvalidNullSelection extends TestBase {
         createDataSources();
 
         Button b = new Button("Swap data source");
-        b.addListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (combo.getContainerDataSource() == ds1) {
-                    combo.setContainerDataSource(ds2);
-                } else {
-                    combo.setContainerDataSource(ds1);
-                }
-                combo.setValue("Item 3");
+        b.addClickListener(event -> {
+            if (combo.getDataSource() == ds1) {
+                combo.setDataSource(ds2);
+            } else {
+                combo.setDataSource(ds1);
             }
+            combo.setValue("Item 3");
         });
 
-        combo = new ComboBox();
-        combo.setImmediate(true);
-        combo.setContainerDataSource(ds1);
-        combo.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                log.log("Value is now: " + combo.getValue());
-            }
-        });
+        combo = new ComboBox<>();
+        combo.setDataSource(ds1);
+        combo.addValueChangeListener(
+                event -> log.log("Value is now: " + combo.getValue()));
         addComponent(log);
         addComponent(b);
         addComponent(combo);
@@ -52,16 +40,9 @@ public class ComboBoxInvalidNullSelection extends TestBase {
     }
 
     private void createDataSources() {
-        ds1 = new IndexedContainer();
-        ds1.addContainerProperty(CAPTION, String.class, "");
-        ds1.addItem("Item 1");
-        ds1.addItem("Item 2");
-        ds1.addItem("Item 3");
-        ds1.addItem("Item 4");
+        ds1 = DataSource.create("Item 1", "Item 2", "Item 3", "Item 4");
 
-        ds2 = new IndexedContainer();
-        ds2.addContainerProperty(CAPTION, String.class, "");
-        ds2.addItem("Item 3");
+        ds2 = DataSource.create("Item 3");
 
     }
 

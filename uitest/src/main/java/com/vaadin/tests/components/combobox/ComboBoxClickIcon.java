@@ -15,13 +15,11 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.data.DataSource;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 
 /**
  * Test UI to check click on icon in the combobox.
@@ -32,16 +30,9 @@ public class ComboBoxClickIcon extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final List<String> items = new ArrayList<>();
-        items.add("A");
-        items.add("B");
-        items.add("C");
-        final ComboBox combo = new ComboBox();
-        combo.setImmediate(true);
-        combo.setItemIcon(items.get(0), FontAwesome.ALIGN_CENTER);
-        combo.setItemIcon(items.get(1), FontAwesome.ALIGN_CENTER);
-        combo.setItemIcon(items.get(2), FontAwesome.ALIGN_CENTER);
-        combo.addItems(items);
+        final ComboBox<String> combo = new ComboBox<>(null,
+                DataSource.create("A", "B", "C"));
+        combo.setItemIconProvider(item -> FontAwesome.ALIGN_CENTER);
         combo.setTextInputAllowed(false);
         addComponent(combo);
     }

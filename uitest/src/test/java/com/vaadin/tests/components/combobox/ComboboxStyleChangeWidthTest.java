@@ -19,9 +19,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.customelements.ComboBoxElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 
 /**
  * Tests that changing a stylename will not cause the width parameter to be

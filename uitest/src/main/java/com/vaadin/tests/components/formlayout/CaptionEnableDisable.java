@@ -4,10 +4,10 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.TextField;
 import com.vaadin.v7.ui.NativeSelect;
-import com.vaadin.v7.ui.TextField;
 
 public class CaptionEnableDisable extends AbstractTestUI {
 
@@ -23,7 +23,7 @@ public class CaptionEnableDisable extends AbstractTestUI {
         textField.setEnabled(false);
         layout.addComponent(textField);
 
-        final ComboBox combobox = new ComboBox("Combobox");
+        final ComboBox<String> combobox = new ComboBox<>("Combobox");
         combobox.setEnabled(false);
         layout.addComponent(combobox);
 
@@ -35,16 +35,12 @@ public class CaptionEnableDisable extends AbstractTestUI {
         checkBox.setEnabled(false);
         layout.addComponent(checkBox);
 
-        layout.addComponent(new Button("Toggle components enabled",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        combobox.setEnabled(!combobox.isEnabled());
-                        textField.setEnabled(!textField.isEnabled());
-                        checkBox.setEnabled(!checkBox.isEnabled());
-                        nativeSelect.setEnabled(!nativeSelect.isEnabled());
-                    }
-                }));
+        layout.addComponent(new Button("Toggle components enabled", event -> {
+            combobox.setEnabled(!combobox.isEnabled());
+            textField.setEnabled(!textField.isEnabled());
+            checkBox.setEnabled(!checkBox.isEnabled());
+            nativeSelect.setEnabled(!nativeSelect.isEnabled());
+        }));
         return layout;
     }
 

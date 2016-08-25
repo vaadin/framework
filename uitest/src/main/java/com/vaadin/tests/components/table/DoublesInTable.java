@@ -2,6 +2,7 @@ package com.vaadin.tests.components.table;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
@@ -12,12 +13,12 @@ import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.StringToDoubleConverter;
-import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.Table;
 
 public class DoublesInTable extends TestBase {
@@ -56,20 +57,10 @@ public class DoublesInTable extends TestBase {
     }
 
     private ComboBox createLocaleSelect() {
-        ComboBox cb = new ComboBox();
-        cb.setNullSelectionAllowed(false);
-        for (Locale l : Locale.getAvailableLocales()) {
-            cb.addItem(l);
-        }
-        cb.setImmediate(true);
+        ComboBox<Locale> cb = new ComboBox<>(null,
+                Arrays.asList(Locale.getAvailableLocales()));
         cb.setValue(Locale.US);
-        cb.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                recreateTable();
-            }
-        });
+        cb.addListener(event -> recreateTable());
         return cb;
     }
 

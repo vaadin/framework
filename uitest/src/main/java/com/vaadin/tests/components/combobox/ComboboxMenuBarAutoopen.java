@@ -15,17 +15,16 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import java.util.ArrayList;
-
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.data.DataSource;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.v7.ui.ComboBox;
 
 /**
  * Test UI for combobox popup which should be closed on any click outside it.
@@ -38,11 +37,8 @@ public class ComboboxMenuBarAutoopen extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setSpacing(true);
-        ArrayList<String> options = new ArrayList<>();
-        options.add("1");
-        options.add("2");
-        options.add("3");
-        ComboBox combo = new ComboBox(null, options);
+        ComboBox<String> combo = new ComboBox<>(null,
+                DataSource.create("1", "2", "3"));
         layout.addComponent(combo);
 
         MenuBar menubar = getMenubar();

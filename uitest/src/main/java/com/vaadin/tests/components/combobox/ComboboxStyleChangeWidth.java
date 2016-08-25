@@ -16,10 +16,10 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.data.DataSource;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 
 /**
  * Test UI for adding a stylename to a combobox with an undefined width.
@@ -30,20 +30,12 @@ public class ComboboxStyleChangeWidth extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final ComboBox cbFoo = new ComboBox();
-        cbFoo.setImmediate(true);
+        final ComboBox<String> cbFoo = new ComboBox<>(null, DataSource.create(
+                "A really long string that causes an inline width to be set"));
         cbFoo.setSizeUndefined();
-        cbFoo.addItem(
-                "A really long string that causes an inline width to be set");
 
         Button btn = new Button("Click to break CB",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        cbFoo.addStyleName("foofoo");
-
-                    }
-                });
+                event -> cbFoo.addStyleName("foofoo"));
 
         addComponent(cbFoo);
         addComponent(btn);

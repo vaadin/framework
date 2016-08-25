@@ -1,33 +1,22 @@
 package com.vaadin.tests.components.combobox;
 
+import com.vaadin.server.data.DataSource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 
 public class ComboboxPrimaryStyleNames extends TestBase {
 
     @Override
     protected void setup() {
-        final ComboBox box = new ComboBox();
+        final ComboBox<String> box = new ComboBox(null,
+                DataSource.create("Value 1", "Value 2", "Value 3", "Value 4"));
         box.setImmediate(true);
-        box.addContainerProperty("caption", String.class, "");
-        box.setItemCaptionPropertyId("caption");
         box.setPrimaryStyleName("my-combobox");
 
-        addItem(box, "Value 1");
-        addItem(box, "Value 2");
-        addItem(box, "Value 3");
-        addItem(box, "Value 4");
-
         addComponent(box);
-        addComponent(
-                new Button("Set primary style", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        box.setPrimaryStyleName("my-second-combobox");
-                    }
-                }));
+        addComponent(new Button("Set primary style",
+                event -> box.setPrimaryStyleName("my-second-combobox")));
 
     }
 
@@ -39,11 +28,6 @@ public class ComboboxPrimaryStyleNames extends TestBase {
     @Override
     protected Integer getTicketNumber() {
         return 9901;
-    }
-
-    private void addItem(ComboBox s, String string) {
-        Object id = s.addItem();
-        s.getItem(id).getItemProperty("caption").setValue(string);
     }
 
 }

@@ -68,10 +68,10 @@ public class ComboboxSelectedItemTextTest extends MultiBrowserTest {
 
         WebElement comboBox = vaadinElement(
                 "/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot["
-                        + indexToTest + "]/VFilterSelect[0]");
+                        + indexToTest + "]/VComboBox[0]");
         WebElement comboBoxFocus = vaadinElement(
                 "/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot["
-                        + indexToFocus + "]/VFilterSelect[0]");
+                        + indexToFocus + "]/VComboBox[0]");
 
         // Select an element from the first (to test) combobox.
 
@@ -79,7 +79,7 @@ public class ComboboxSelectedItemTextTest extends MultiBrowserTest {
         waitForPopup(comboBox);
         WebElement comboBoxPopup = vaadinElement(
                 "/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot["
-                        + indexToTest + "]/VFilterSelect[0]#popup");
+                        + indexToTest + "]/VComboBox[0]#popup");
         comboBoxPopup.findElements(By.tagName("td")).get(2).click();
 
         // Select an element from the second (to focus) combobox to remove
@@ -90,7 +90,7 @@ public class ComboboxSelectedItemTextTest extends MultiBrowserTest {
         waitForPopup(comboBoxFocus);
         comboBoxPopup = vaadinElement(
                 "/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot["
-                        + indexToFocus + "]/VFilterSelect[0]#popup");
+                        + indexToFocus + "]/VComboBox[0]#popup");
         comboBoxPopup.findElements(By.tagName("td")).get(2).click();
 
         // click the button of the first combobox. This would reveal the

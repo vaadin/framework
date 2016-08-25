@@ -3,11 +3,9 @@ package com.vaadin.tests.components.combobox;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.ui.ComboBox;
 
 /**
  * The Application's "main" class
@@ -23,21 +21,14 @@ public class ComboBoxParentDisable extends AbstractTestUIWithLog {
 
         final FormLayout formLayout = new FormLayout();
 
-        final ComboBox combo = new ComboBox("Item:");
-        combo.addItem("Item 1");
-        combo.addItem("Item 2");
-        combo.addItem("Item 3");
-        combo.addItem("Item 4");
-        combo.addValueChangeListener(new MyValueChangeListener());
+        final ComboBox<String> combo = new ComboBox<>("Item:");
+        combo.setItems("Item 1", "Item 2", "Item 3", "Item 4");
+        combo.addValueChangeListener(
+                event -> log.log("you made a selection change"));
         combo.setImmediate(true);
 
         Button btn1 = new Button("Click me");
-        btn1.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                log.log("you clicked me");
-            }
-        });
+        btn1.addClickListener(event -> log.log("you clicked me"));
 
         formLayout.addComponent(combo);
         formLayout.addComponent(btn1);
@@ -45,29 +36,12 @@ public class ComboBoxParentDisable extends AbstractTestUIWithLog {
         layout.addComponent(formLayout);
 
         Button btn = new Button("Enable/Disable combobox",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        combo.setEnabled(!combo.isEnabled());
-                    }
-                });
+                event -> combo.setEnabled(!combo.isEnabled()));
         layout.addComponent(btn);
-        btn = new Button("Enable/Disable parent", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                formLayout.setEnabled(!formLayout.isEnabled());
-            }
-        });
+        btn = new Button("Enable/Disable parent",
+                event -> formLayout.setEnabled(!formLayout.isEnabled()));
         layout.addComponent(btn);
 
-    }
-
-    private class MyValueChangeListener
-            implements Property.ValueChangeListener {
-        @Override
-        public void valueChange(Property.ValueChangeEvent event) {
-            log.log("you made a selection change");
-        }
     }
 
     @Override

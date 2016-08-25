@@ -1,9 +1,10 @@
 package com.vaadin.tests.components.combobox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 
 public class ComboBoxEnablesComboBox extends TestBase {
 
@@ -11,19 +12,10 @@ public class ComboBoxEnablesComboBox extends TestBase {
 
     @Override
     protected void setup() {
-        ComboBox cb = new ComboBox("Always enabled");
-        cb.setImmediate(true);
+        ComboBox<String> cb = new ComboBox<>("Always enabled");
         populate(cb);
-        cb.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                cb2.setEnabled(true);
-            }
-
-        });
-        cb2 = new ComboBox("Initially disabled");
-        cb2.setImmediate(true);
+        cb.addValueChangeListener(event -> cb2.setEnabled(true));
+        cb2 = new ComboBox<String>("Initially disabled");
         cb2.setEnabled(false);
         populate(cb2);
 
@@ -31,10 +23,12 @@ public class ComboBoxEnablesComboBox extends TestBase {
         addComponent(cb2);
     }
 
-    private void populate(ComboBox cb) {
+    private void populate(ComboBox<String> cb) {
+        List<String> items = new ArrayList<>();
         for (int i = 1; i < 10; i++) {
-            cb.addItem("Item " + i);
+            items.add("Item " + i);
         }
+        cb.setItems(items);
     }
 
     @Override

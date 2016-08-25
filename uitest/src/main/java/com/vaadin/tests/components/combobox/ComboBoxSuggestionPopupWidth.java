@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 
 public class ComboBoxSuggestionPopupWidth extends AbstractTestUI {
 
@@ -16,7 +16,7 @@ public class ComboBoxSuggestionPopupWidth extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        ComboBox cb = new ComboBox(
+        ComboBox<String> cb = new ComboBox<>(
                 "200px wide ComboBox with 100% wide suggestion popup", items);
         cb.setPopupWidth("100%");
         cb.setWidth("200px");

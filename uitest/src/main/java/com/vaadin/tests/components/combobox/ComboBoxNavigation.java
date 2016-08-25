@@ -1,8 +1,10 @@
 package com.vaadin.tests.components.combobox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.v7.shared.ui.combobox.FilteringMode;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 
 public class ComboBoxNavigation extends TestBase {
 
@@ -18,12 +20,12 @@ public class ComboBoxNavigation extends TestBase {
 
     @Override
     protected void setup() {
-        ComboBox cb = new ComboBox();
+        List<String> items = new ArrayList<>();
         for (int i = 1; i < 100; i++) {
-            cb.addItem("Item " + i);
+            items.add("Item " + i);
         }
+        ComboBox cb = new ComboBox(null, items);
 
-        cb.setFilteringMode(FilteringMode.CONTAINS);
         addComponent(cb);
 
     }

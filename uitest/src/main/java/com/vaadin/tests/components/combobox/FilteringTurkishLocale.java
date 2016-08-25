@@ -20,9 +20,7 @@ import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.v7.ui.NativeSelect;
 
 public class FilteringTurkishLocale extends AbstractTestUI {
@@ -30,18 +28,14 @@ public class FilteringTurkishLocale extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
 
-        final ComboBox comboBox = new ComboBox("Box",
-                Arrays.asList("I without dot", "İ with dot"));
-        comboBox.setNullSelectionAllowed(false);
+        final ComboBox<String> comboBox = new ComboBox<>("Box",
+                Arrays.asList("I dotless", "İ dotted"));
+        comboBox.setEmptySelectionAllowed(false);
 
         NativeSelect localeSelect = new NativeSelect("Locale",
                 Arrays.asList(Locale.ENGLISH, new Locale("tr")));
-        localeSelect.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                comboBox.setLocale((Locale) event.getProperty().getValue());
-            }
-        });
+        localeSelect.addValueChangeListener(event -> comboBox
+                .setLocale((Locale) event.getProperty().getValue()));
         localeSelect.setValue(Locale.ENGLISH);
 
         addComponents(localeSelect, comboBox);

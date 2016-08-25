@@ -21,9 +21,9 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.commands.TestBenchElementCommands;
+import com.vaadin.testbench.customelements.ComboBoxElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 
 public class ComboBoxNoTextInputTest extends MultiBrowserTest {
 
@@ -38,8 +38,7 @@ public class ComboBoxNoTextInputTest extends MultiBrowserTest {
         ComboBoxElement cb = $(ComboBoxElement.class).first();
         click(cb);
         // popup is opened lazily
-        waitForElementPresent(
-                By.vaadin("//com.vaadin.v7.ui.ComboBox[0]#popup"));
+        waitForElementPresent(By.vaadin("//com.vaadin.ui.ComboBox[0]#popup"));
     }
 
     @Test

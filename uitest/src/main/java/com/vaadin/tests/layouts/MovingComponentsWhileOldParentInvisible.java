@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.vaadin.server.data.Query;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
@@ -22,9 +24,6 @@ import com.vaadin.ui.SingleComponentContainer;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
-import com.vaadin.v7.ui.ComboBox;
 
 public class MovingComponentsWhileOldParentInvisible extends TestBase {
 
@@ -37,37 +36,24 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
         lab = new Label("Label inside the component container");
         lab.setWidth(null);
 
-        ComboBox componentContainerSelect = new ComboBox("Container") {
-            {
-                setPageLength(0);
-            }
-        };
+        ComboBox<Class<? extends HasComponents>> componentContainerSelect = new ComboBox<>(
+                "Container");
+        componentContainerSelect.setPageLength(0);
         componentContainerSelect.setId("componentContainerSelect");
         componentContainerSelect.setWidth("300px");
-        componentContainerSelect.setImmediate(true);
-        componentContainerSelect.setNullSelectionAllowed(false);
         // componentContainer.addContainerProperty(CAPTION, String.class, "");
         // componentContainer.addContainerProperty(CLASS, Class.class, "");
 
-        for (Class<? extends HasComponents> cls : getComponentContainers()) {
-            componentContainerSelect.addItem(cls);
-        }
-        componentContainerSelect.addListener(new ValueChangeListener() {
-
-            @Override
-            @SuppressWarnings("unchecked")
-            public void valueChange(ValueChangeEvent event) {
-                HasComponents oldCC = cc;
-                cc = createComponentContainer(
-                        (Class<? extends HasComponents>) event.getProperty()
-                                .getValue());
-                addToCC(lab);
-                replaceComponent(oldCC, cc);
-            }
+        componentContainerSelect.setItems(getComponentContainers());
+        componentContainerSelect.addValueChangeListener(event -> {
+            HasComponents oldCC = cc;
+            cc = createComponentContainer(event.getValue());
+            addToCC(lab);
+            replaceComponent(oldCC, cc);
         });
 
-        componentContainerSelect.setValue(
-                componentContainerSelect.getItemIds().iterator().next());
+        componentContainerSelect.setValue(componentContainerSelect
+                .getDataSource().apply(new Query()).iterator().next());
         Button but1 = new Button("Move in and out of component container",
                 new Button.ClickListener() {
 

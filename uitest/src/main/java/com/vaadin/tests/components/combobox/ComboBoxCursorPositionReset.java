@@ -17,9 +17,9 @@ package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxCursorPositionReset extends AbstractTestUI {
 
@@ -29,11 +29,10 @@ public class ComboBoxCursorPositionReset extends AbstractTestUI {
         root.setSizeFull();
         setContent(root);
 
-        ComboBox combo = new ComboBox();
+        ComboBox<String> combo = new ComboBox<>();
         combo.setImmediate(true);
         root.addComponent(combo);
-        combo.addItem("Hello World");
-        combo.addItem("Please click on the text");
+        combo.setItems("Hello World", "Please click on the text");
 
         combo.setValue("Please click on the text");
         Label gap = new Label();

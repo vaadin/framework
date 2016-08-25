@@ -18,10 +18,10 @@ package com.vaadin.tests.components.panel;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.TextField;
 
 public class UndefinedSizeScrollbars extends AbstractTestUI {
@@ -44,7 +44,7 @@ public class UndefinedSizeScrollbars extends AbstractTestUI {
         text2.setCaption("Text2");
         text2.setRequired(true);
 
-        ComboBox combo = new ComboBox();
+        ComboBox<String> combo = new ComboBox<>();
         combo.setCaption("Combo1");
 
         CheckBox check = new CheckBox();

@@ -15,12 +15,13 @@
  */
 package com.vaadin.tests.components.select;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.v7.shared.ui.combobox.FilteringMode;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.data.util.converter.StringToEnumConverter;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.Tree;
 
@@ -34,11 +35,10 @@ public class EnumSelect extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
 
         setLocale(new Locale("fi", "FI"));
-        ComboBox cb = new ComboBox();
-        cb.setFilteringMode(FilteringMode.CONTAINS);
-        for (Constant c : Constant.values()) {
-            cb.addItem(c);
-        }
+        ComboBox<Constant> cb = new ComboBox<>(null,
+                Arrays.asList(Constant.values()));
+        cb.setItemCaptionProvider(value -> StringToEnumConverter
+                .enumToString(value, getLocale()));
         addComponent(cb);
 
         NativeSelect ns = new NativeSelect();

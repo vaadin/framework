@@ -9,10 +9,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.ComboBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 
 public class ComboBoxSelectingTest extends MultiBrowserTest {
 
@@ -111,7 +111,11 @@ public class ComboBoxSelectingTest extends MultiBrowserTest {
         assertThatSelectedValueIs("z5");
         // longer delay for this one because otherwise it keeps failing when run
         // on local machine
-        comboBoxElement.sendKeys(200, Keys.BACK_SPACE, Keys.BACK_SPACE,
+        int delay = 200;
+        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+            delay = 500;
+        }
+        comboBoxElement.sendKeys(delay, Keys.BACK_SPACE, Keys.BACK_SPACE,
                 Keys.TAB);
         assertThatSelectedValueIs("", "null");
 
