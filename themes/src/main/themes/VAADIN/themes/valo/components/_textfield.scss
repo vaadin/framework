@@ -211,8 +211,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
   }
 
   // TODO allow parent selector to be used in interpolation
-  &[class*="prompt"],
-  &[placeholder] {
+  &[class*="prompt"] {
     @include valo-textfield-prompt-style($background-color);
   }
 
@@ -309,8 +308,7 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
     @include box-shadow(none);
   }
 
-  &[class*="prompt"],
-  &[placeholder] {
+  &[class*="prompt"] {
     @include valo-textfield-prompt-style($background-color);
   }
 }

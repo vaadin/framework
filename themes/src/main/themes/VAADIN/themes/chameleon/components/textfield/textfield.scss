@@ -48,9 +48,7 @@ input.v-widget.#{$primaryStyleName}[type="text"],
 	}
 
 &.v-app input.#{$primaryStyleName}-prompt,
-&.v-app textarea.v-textarea-prompt,
-&.v-app input[placeholder],
-&.v-app textarea[placeholder] {
+&.v-app textarea.v-textarea-prompt {
 	font-style: normal;
 	color: #999;
 	}

@@ -13,9 +13,7 @@
 .v-textarea-focus {
 }
 input.#{$primaryStyleName}-prompt,
-textarea.v-textarea-prompt,
-input[placeholder],
-textarea[placeholder] {
+textarea.v-textarea-prompt {
 	color: #999;
 	font-style: italic;
 }
