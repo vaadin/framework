@@ -18,7 +18,7 @@ package com.vaadin.shared.ui.textfield;
 
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 
-public interface TextFieldServerRpc extends FocusAndBlurServerRpc {
+public interface AbstractTextFieldServerRpc extends FocusAndBlurServerRpc {
 
-    public void setText(String text, int cursorPosition);
+    void setText(String text, int cursorPosition);
 }

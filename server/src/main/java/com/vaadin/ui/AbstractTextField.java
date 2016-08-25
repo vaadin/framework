@@ -26,7 +26,7 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.ui.textfield.TextFieldServerRpc;
+import com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc;
 import com.vaadin.shared.ui.textfield.TextFieldState;
 import com.vaadin.shared.ui.textfield.ValueChangeMode;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -40,30 +40,31 @@ import com.vaadin.ui.declarative.DesignContext;
  */
 public abstract class AbstractTextField extends AbstractField<String> {
 
+    private final class TextFieldServerRpcImpl
+            implements AbstractTextFieldServerRpc {
+        @Override
+        public void blur() {
+            fireEvent(new BlurEvent(AbstractTextField.this));
+        }
+
+        @Override
+        public void focus() {
+            fireEvent(new FocusEvent(AbstractTextField.this));
+        }
+
+        @Override
+        public void setText(String text, int cursorPosition) {
+            getUI().getConnectorTracker().getDiffState(AbstractTextField.this)
+                    .put("text", text);
+            getUI().getConnectorTracker().getDiffState(AbstractTextField.this)
+                    .put("cursorPosition", cursorPosition);
+            getState(false).cursorPosition = cursorPosition;
+            setValue(text, true);
+        }
+    }
+
     protected AbstractTextField() {
-        registerRpc(new TextFieldServerRpc() {
-
-            @Override
-            public void blur() {
-                fireEvent(new BlurEvent(AbstractTextField.this));
-            }
-
-            @Override
-            public void focus() {
-                fireEvent(new FocusEvent(AbstractTextField.this));
-            }
-
-            @Override
-            public void setText(String text, int cursorPosition) {
-                getUI().getConnectorTracker()
-                        .getDiffState(AbstractTextField.this).put("text", text);
-                getUI().getConnectorTracker()
-                        .getDiffState(AbstractTextField.this)
-                        .put("cursorPosition", cursorPosition);
-                getState(false).cursorPosition = cursorPosition;
-                setValue(text, true);
-            }
-        });
+        registerRpc(new TextFieldServerRpcImpl());
     }
 
     @Override
@@ -261,9 +262,10 @@ public abstract class AbstractTextField extends AbstractField<String> {
      * @see ValueChangeMode
      */
     public void setValueChangeTimeout(int timeout) {
-        if (timeout < 0)
+        if (timeout < 0) {
             throw new IllegalArgumentException(
                     "Timeout must be greater than 0");
+        }
         getState().valueChangeTimeout = timeout;
     }
 

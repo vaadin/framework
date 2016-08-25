@@ -17,58 +17,43 @@
 package com.vaadin.client.ui.textfield;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.event.InputEvent;
-import com.vaadin.client.event.InputHandler;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.VTextField;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
-import com.vaadin.shared.ui.textfield.TextFieldServerRpc;
+import com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc;
 import com.vaadin.shared.ui.textfield.TextFieldState;
 import com.vaadin.shared.ui.textfield.ValueChangeMode;
 import com.vaadin.ui.TextField;
 
+/**
+ * Connector class for TextField.
+ */
 @Connect(value = TextField.class, loadStyle = LoadStyle.EAGER)
 public class TextFieldConnector extends AbstractComponentConnector {
-
-    @Override
-    protected void init() {
-        ConnectorFocusAndBlurHandler.addHandlers(this);
-        getWidget().addChangeHandler(new ChangeHandler() {
-
-            @Override
-            public void onChange(ChangeEvent event) {
-                sendValueChange();
-            }
-        });
-        getWidget().addDomHandler(new InputHandler() {
-
-            @Override
-            public void onInput(InputEvent event) {
-                if (getState().valueChangeMode != ValueChangeMode.BLUR) {
-                    scheduleValueChange();
-                }
-            }
-        }, InputEvent.getType());
-    }
 
     private Timer valueChangeTrigger = new Timer() {
         @Override
         public void run() {
-            Scheduler.get().scheduleDeferred(new Command() {
-                @Override
-                public void execute() {
-                    sendValueChange();
-                }
-            });
+            Scheduler.get().scheduleDeferred(() -> sendValueChange());
         }
     };
+
+    @Override
+    protected void init() {
+        ConnectorFocusAndBlurHandler.addHandlers(this);
+        getWidget().addChangeHandler(event -> sendValueChange());
+        getWidget().addDomHandler(event -> {
+            if (getState().valueChangeMode != ValueChangeMode.BLUR) {
+                scheduleValueChange();
+            }
+        }, InputEvent.getType());
+    }
 
     private void scheduleValueChange() {
         switch (getState().valueChangeMode) {
@@ -81,6 +66,9 @@ public class TextFieldConnector extends AbstractComponentConnector {
         case EAGER:
             eagerTextChange();
             break;
+        case BLUR:
+            // Nothing to schedule for this mode
+            break;
         }
     }
 
@@ -89,8 +77,9 @@ public class TextFieldConnector extends AbstractComponentConnector {
     }
 
     private void timeoutTextChange() {
-        if (valueChangeTrigger.isRunning())
+        if (valueChangeTrigger.isRunning()) {
             return;
+        }
         valueChangeTrigger.schedule(getState().valueChangeTimeout);
     }
 
@@ -147,8 +136,8 @@ public class TextFieldConnector extends AbstractComponentConnector {
         if (!hasStateChanged()) {
             return;
         }
-        getRpcProxy(TextFieldServerRpc.class).setText(getWidget().getValue(),
-                getWidget().getCursorPos());
+        getRpcProxy(AbstractTextFieldServerRpc.class)
+                .setText(getWidget().getValue(), getWidget().getCursorPos());
         getState().text = getWidget().getValue();
         getState().cursorPosition = getWidget().getCursorPos();
     }
