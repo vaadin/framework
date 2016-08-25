@@ -187,7 +187,7 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
                 getWidget().mimetype = "flash";
                 // Handle embedding of Flash
                 getWidget().addStyleName(VEmbedded.CLASSNAME + "-flash");
-                getWidget().setHTML(getWidget().createFlashEmbed(uidl));
+                getWidget().setHTML(getWidget().createEmbed(uidl));
 
             } else if (mime.equals("image/svg+xml")) {
                 getWidget().mimetype = "svg";
@@ -239,7 +239,10 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
                             .getStringAttribute(EmbeddedConstants.ALTERNATE_TEXT));
                 }
             } else {
-                VConsole.error("Unknown Embedded mimetype '" + mime + "'");
+                getWidget().mimetype = "embed";
+                // Handle embedding of Flash
+                getWidget().addStyleName(VEmbedded.CLASSNAME + "-embed");
+                getWidget().setHTML(getWidget().createEmbed(uidl));
             }
         } else {
             VConsole.error("Unknown Embedded; no type or mimetype attribute");
