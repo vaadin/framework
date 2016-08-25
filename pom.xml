@@ -28,6 +28,14 @@
 		<vaadin.gwt.version>2.8.0-rc2</vaadin.gwt.version>
 		<vaadin.plugin.version>8.0-SNAPSHOT</vaadin.plugin.version>
 
+		<!-- Used in OSGi manifests -->
+		<javax.validation.version>1.0.0.GA</javax.validation.version>
+		<jsoup.version>1.8.3</jsoup.version>
+		<javax.portlet.version>2.0</javax.portlet.version>
+		<vaadin.sass.version>0.9.13</vaadin.sass.version>
+		<!-- Note that this should be kept in sync with the class Constants -->
+		<atmosphere.runtime.version>2.4.5.vaadin1</atmosphere.runtime.version>
+
 		<!-- OSGi -->
 		<osgi.javax.servlet.version>3.0.0</osgi.javax.servlet.version>
 		<osgi.execution.environment>JavaSE-1.8</osgi.execution.environment>
@@ -126,7 +134,7 @@
 			<dependency>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-sass-compiler</artifactId>
-				<version>0.9.13</version>
+				<version>${vaadin.sass.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.carrotsearch</groupId>
@@ -151,8 +159,7 @@
 			<dependency>
 				<groupId>com.vaadin.external.atmosphere</groupId>
 				<artifactId>atmosphere-runtime</artifactId>
-				<!-- Note that this should be kept in sync with the class Constants -->
-				<version>2.4.5.vaadin1</version>
+				<version>${atmosphere.runtime.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.vaadin.external.atmosphere.client</groupId>
@@ -178,7 +185,7 @@
 			<dependency>
 				<groupId>javax.portlet</groupId>
 				<artifactId>portlet-api</artifactId>
-				<version>2.0</version>
+				<version>${javax.portlet.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.appengine</groupId>
@@ -188,7 +195,7 @@
 			<dependency>
 				<groupId>javax.validation</groupId>
 				<artifactId>validation-api</artifactId>
-				<version>1.0.0.GA</version>
+				<version>${javax.validation.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
@@ -198,7 +205,7 @@
 			<dependency>
 				<groupId>org.jsoup</groupId>
 				<artifactId>jsoup</artifactId>
-				<version>1.8.3</version>
+				<version>${jsoup.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mockito</groupId>
