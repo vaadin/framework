@@ -13,15 +13,8 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.combobox;
+package com.vaadin.v7.shared.ui.combobox;
 
-import java.io.Serializable;
-
-@Deprecated
-public class ComboBoxConstants implements Serializable {
-    @Deprecated
-    public static final String ATTR_INPUTPROMPT = "prompt";
-    @Deprecated
-    public static final String ATTR_NO_TEXT_INPUT = "noInput";
-
+public enum FilteringMode {
+    OFF, STARTSWITH, CONTAINS;
 }

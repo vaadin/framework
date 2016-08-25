@@ -18,8 +18,8 @@ package com.vaadin.tests.components.select;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.Tree;

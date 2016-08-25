@@ -33,12 +33,12 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
-import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
-import com.vaadin.shared.ui.combobox.ComboBoxState;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.Component;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.util.filter.SimpleStringFilter;
+import com.vaadin.v7.shared.ui.combobox.ComboBoxServerRpc;
+import com.vaadin.v7.shared.ui.combobox.ComboBoxState;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 
 /**
  * A filtering dropdown single-select. Suitable for newItemsAllowed, but it's

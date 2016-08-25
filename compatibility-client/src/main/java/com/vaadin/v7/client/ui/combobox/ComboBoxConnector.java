@@ -29,12 +29,12 @@ import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
-import com.vaadin.shared.ui.combobox.ComboBoxState;
 import com.vaadin.v7.client.ui.AbstractFieldConnector;
 import com.vaadin.v7.client.ui.VFilterSelect;
 import com.vaadin.v7.client.ui.VFilterSelect.DataReceivedHandler;
 import com.vaadin.v7.client.ui.VFilterSelect.FilterSelectSuggestion;
+import com.vaadin.v7.shared.ui.combobox.ComboBoxServerRpc;
+import com.vaadin.v7.shared.ui.combobox.ComboBoxState;
 import com.vaadin.v7.ui.ComboBox;
 
 @Connect(ComboBox.class)

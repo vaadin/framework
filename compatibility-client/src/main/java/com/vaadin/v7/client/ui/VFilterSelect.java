@@ -84,9 +84,9 @@ import com.vaadin.client.ui.menubar.MenuBar;
 import com.vaadin.client.ui.menubar.MenuItem;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ui.ComponentStateUtil;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.client.ui.combobox.ComboBoxConnector;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 
 /**
  * Client side implementation of the Select component.

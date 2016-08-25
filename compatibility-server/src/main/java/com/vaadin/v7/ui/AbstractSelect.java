@@ -43,7 +43,6 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.select.AbstractSelectState;
 import com.vaadin.ui.Component;
@@ -60,6 +59,7 @@ import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.Converter.ConversionException;
 import com.vaadin.v7.event.DataBoundTransferable;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 import com.vaadin.v7.data.util.converter.ConverterUtil;
 
 /**

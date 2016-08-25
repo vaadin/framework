@@ -16,11 +16,11 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 import com.vaadin.v7.ui.TextField;
 
 /**

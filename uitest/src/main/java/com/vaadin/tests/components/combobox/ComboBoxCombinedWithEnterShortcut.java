@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxCombinedWithEnterShortcut extends TestBase {

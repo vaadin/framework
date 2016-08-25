@@ -19,8 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxSuggestionPageLength extends AbstractTestUI {

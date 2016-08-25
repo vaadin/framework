@@ -3,8 +3,8 @@ package com.vaadin.tests.components.combobox;
 import java.util.LinkedHashMap;
 
 import com.vaadin.server.Resource;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.ComboBox.ItemStyleGenerator;
 

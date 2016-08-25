@@ -18,7 +18,7 @@ package com.vaadin.v7.tests.server.component.combobox;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.shared.ui.combobox.ComboBoxState;
+import com.vaadin.v7.shared.ui.combobox.ComboBoxState;
 import com.vaadin.v7.ui.ComboBox;
 
 /**

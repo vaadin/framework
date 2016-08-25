@@ -1,8 +1,8 @@
 package com.vaadin.tests.containers.sqlcontainer;
 
 import com.vaadin.server.LegacyApplication;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.LegacyWindow;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 import com.vaadin.v7.ui.ComboBox;
 
 /**

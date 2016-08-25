@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.combobox;
+package com.vaadin.v7.shared.ui.combobox;
 
 import com.vaadin.shared.communication.ServerRpc;
 

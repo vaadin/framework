@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.LegacyApplication;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
@@ -9,6 +8,7 @@ import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 import com.vaadin.v7.ui.ComboBox;
 
 @SuppressWarnings("serial")
