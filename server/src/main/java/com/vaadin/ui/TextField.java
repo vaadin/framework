@@ -21,7 +21,6 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
-import com.vaadin.v7.data.Property;
 
 /**
  * A component for editing textual data that fits on a single line. For a
@@ -52,10 +51,7 @@ public class TextField extends AbstractTextField {
 
     /**
      * Constructs a new <code>TextField</code> with the given caption and
-     * initial text contents. The editor constructed this way will not be bound
-     * to a Property unless
-     * {@link com.vaadin.v7.data.Property.Viewer#setPropertyDataSource(Property)}
-     * is called to bind it.
+     * initial text contents.
      *
      * @param caption
      *            the caption <code>String</code> for the editor.
