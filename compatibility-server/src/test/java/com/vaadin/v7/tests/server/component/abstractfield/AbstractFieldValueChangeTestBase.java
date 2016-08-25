@@ -1,4 +1,4 @@
-package com.vaadin.tests.server.components;
+package com.vaadin.v7.tests.server.component.abstractfield;
 
 import org.easymock.EasyMock;
 import org.junit.Test;

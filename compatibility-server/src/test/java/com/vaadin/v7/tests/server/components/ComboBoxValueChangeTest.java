@@ -4,8 +4,8 @@ import org.junit.Before;
 
 import com.vaadin.server.ServerRpcManager;
 import com.vaadin.server.ServerRpcMethodInvocation;
-import com.vaadin.tests.server.components.AbstractFieldValueChangeTestBase;
 import com.vaadin.v7.shared.ui.combobox.ComboBoxServerRpc;
+import com.vaadin.v7.tests.server.component.abstractfield.AbstractFieldValueChangeTestBase;
 import com.vaadin.v7.ui.AbstractField;
 import com.vaadin.v7.ui.ComboBox;
 

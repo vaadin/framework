@@ -8,9 +8,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.tests.server.components.AbstractFieldValueChangeTestBase;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.tests.server.component.abstractfield.AbstractFieldValueChangeTestBase;
 import com.vaadin.v7.ui.AbstractField;
 import com.vaadin.v7.ui.TextField;
 

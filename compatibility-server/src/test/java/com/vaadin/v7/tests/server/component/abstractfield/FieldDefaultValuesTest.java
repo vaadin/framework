@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.server.component;
+package com.vaadin.v7.tests.server.component.abstractfield;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +21,8 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.tests.VaadinClasses;
 import com.vaadin.ui.Slider;
+import com.vaadin.v7.tests.VaadinClasses;
 import com.vaadin.v7.ui.Field;
 
 public class FieldDefaultValuesTest {
@@ -67,8 +67,7 @@ public class FieldDefaultValuesTest {
             throws InstantiationException, IllegalAccessException {
         List<Field<?>> fieldInstances = new ArrayList<Field<?>>();
 
-        for (Class<? extends Field> fieldType : VaadinClasses
-                .getFields()) {
+        for (Class<? extends Field> fieldType : VaadinClasses.getFields()) {
             fieldInstances.add(fieldType.newInstance());
         }
         return fieldInstances;

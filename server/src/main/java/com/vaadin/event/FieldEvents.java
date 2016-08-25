@@ -24,7 +24,6 @@ import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.util.ReflectTools;
-import com.vaadin.v7.ui.Field;
 
 /**
  * Interface that serves as a wrapper for {@link Field} related events.
@@ -43,7 +42,7 @@ public interface FieldEvents {
     public interface FocusNotifier extends Serializable {
         /**
          * Adds a <code>FocusListener</code> to the Component which gets fired
-         * when a <code>LegacyField</code> receives keyboard focus.
+         * when a <code>Field</code> receives keyboard focus.
          *
          * @param listener
          * @see FocusListener
@@ -74,7 +73,7 @@ public interface FieldEvents {
     public interface BlurNotifier extends Serializable {
         /**
          * Adds a <code>BlurListener</code> to the Component which gets fired
-         * when a <code>LegacyField</code> loses keyboard focus.
+         * when a <code>Field</code> loses keyboard focus.
          *
          * @param listener
          * @see BlurListener
@@ -95,7 +94,7 @@ public interface FieldEvents {
 
     /**
      * <code>FocusEvent</code> class for holding additional event information.
-     * Fired when a <code>LegacyField</code> receives keyboard focus.
+     * Fired when a <code>Field</code> receives keyboard focus.
      *
      * @since 6.2
      */
@@ -114,7 +113,7 @@ public interface FieldEvents {
 
     /**
      * <code>FocusListener</code> interface for listening for
-     * <code>FocusEvent</code> fired by a <code>LegacyField</code>.
+     * <code>FocusEvent</code> fired by a <code>Field</code>.
      *
      * @see FocusEvent
      * @since 6.2
@@ -135,7 +134,7 @@ public interface FieldEvents {
 
     /**
      * <code>BlurEvent</code> class for holding additional event information.
-     * Fired when a <code>LegacyField</code> loses keyboard focus.
+     * Fired when a <code>Field</code> loses keyboard focus.
      *
      * @since 6.2
      */
@@ -154,7 +153,7 @@ public interface FieldEvents {
 
     /**
      * <code>BlurListener</code> interface for listening for
-     * <code>BlurEvent</code> fired by a <code>LegacyField</code>.
+     * <code>BlurEvent</code> fired by a <code>Field</code>.
      *
      * @see BlurEvent
      * @since 6.2

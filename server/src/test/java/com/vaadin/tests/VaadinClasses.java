@@ -29,7 +29,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
-import com.vaadin.v7.ui.Field;
 
 @SuppressWarnings("deprecation")
 public class VaadinClasses {
@@ -57,15 +56,6 @@ public class VaadinClasses {
     public static List<Class<? extends Component>> getComponents() {
         try {
             return findClasses(Component.class, "com.vaadin.ui");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static List<Class<? extends Field>> getFields() {
-        try {
-            return findClasses(Field.class, "com.vaadin.ui");
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -136,7 +126,7 @@ public class VaadinClasses {
 
     }
 
-    private static <T> List<Class<? extends T>> findClasses(Class<T> baseClass,
+    public static <T> List<Class<? extends T>> findClasses(Class<T> baseClass,
             String basePackage) throws IOException {
         return findClasses(baseClass, basePackage, new String[] {});
     }
