@@ -14,19 +14,21 @@
  * the License.
  */
 
-package com.vaadin.v7.client.ui.passwordfield;
+package com.vaadin.v7.client.ui;
 
-import com.vaadin.shared.ui.Connect;
-import com.vaadin.v7.client.ui.VPasswordField;
-import com.vaadin.v7.client.ui.textfield.TextFieldConnector;
-import com.vaadin.v7.ui.PasswordField;
+import com.google.gwt.user.client.DOM;
 
+/**
+ * This class represents a password field.
+ *
+ * @author Vaadin Ltd.
+ *
+ */
 @Deprecated
-@Connect(PasswordField.class)
-public class PasswordFieldConnector extends TextFieldConnector {
+public class VPasswordField extends VTextField {
 
-    @Override
-    public VPasswordField getWidget() {
-        return (VPasswordField) super.getWidget();
+    public VPasswordField() {
+        super(DOM.createInputPassword());
     }
+
 }

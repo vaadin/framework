@@ -111,7 +111,6 @@ import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.client.ui.dd.VTransferable;
-import com.vaadin.client.v7.ui.VLegacyTextField;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
@@ -6494,8 +6493,8 @@ public class VScrollTable extends FlowPanel
 
                     if (!(widget instanceof VLabel)
                             && !(widget instanceof VEmbedded)
-                            && !(widget instanceof VLegacyTextField
-                                    && ((VLegacyTextField) widget)
+                            && !(widget instanceof VTextField
+                                    && ((VTextField) widget)
                                             .isReadOnly())) {
                         return null;
                     }

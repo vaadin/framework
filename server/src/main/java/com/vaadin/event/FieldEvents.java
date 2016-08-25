@@ -25,8 +25,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.util.ReflectTools;
 import com.vaadin.v7.ui.Field;
-import com.vaadin.v7.ui.Field.ValueChangeEvent;
-import com.vaadin.v7.ui.TextField;
 
 /**
  * Interface that serves as a wrapper for {@link Field} related events.
@@ -173,81 +171,6 @@ public interface FieldEvents {
          *            Component blur event.
          */
         public void blur(BlurEvent event);
-    }
-
-    /**
-     * TextChangeEvents are fired when the user is editing the text content of a
-     * field. Most commonly text change events are triggered by typing text with
-     * keyboard, but e.g. pasting content from clip board to a text field also
-     * triggers an event.
-     * <p>
-     * TextChangeEvents differ from {@link ValueChangeEvent}s so that they are
-     * triggered repeatedly while the end user is filling the field.
-     * ValueChangeEvents are not fired until the user for example hits enter or
-     * focuses another field. Also note the difference that TextChangeEvents are
-     * only fired if the change is triggered from the user, while
-     * ValueChangeEvents are also fired if the field value is set by the
-     * application code.
-     * <p>
-     * The {@link TextChangeNotifier}s implementation may decide when exactly
-     * TextChangeEvents are fired. TextChangeEvents are not necessary fire for
-     * example on each key press, but buffered with a small delay. The
-     * {@link TextField} component supports different modes for triggering
-     * TextChangeEvents.
-     *
-     * @see TextChangeListener
-     * @see TextChangeNotifier
-     * @see TextField#setTextChangeEventMode(com.vaadin.ui.TextField.TextChangeEventMode)
-     * @since 6.5
-     */
-    public static abstract class TextChangeEvent extends Component.Event {
-
-        public TextChangeEvent(Component source) {
-            super(source);
-        }
-
-        /**
-         * @return the text content of the field after the
-         *         {@link TextChangeEvent}
-         */
-        public abstract String getText();
-
-        /**
-         * @return the cursor position during after the {@link TextChangeEvent}
-         */
-        public abstract int getCursorPosition();
-    }
-
-    /**
-     * A listener for {@link TextChangeEvent}s.
-     *
-     * @since 6.5
-     */
-    public interface TextChangeListener extends ConnectorEventListener {
-
-        public static String EVENT_ID = "ie";
-        public static Method EVENT_METHOD = ReflectTools.findMethod(
-                TextChangeListener.class, "textChange", TextChangeEvent.class);
-
-        /**
-         * This method is called repeatedly while the text is edited by a user.
-         *
-         * @param event
-         *            the event providing details of the text change
-         */
-        public void textChange(TextChangeEvent event);
-    }
-
-    /**
-     * An interface implemented by a {@link Field} supporting
-     * {@link TextChangeEvent}s. An example a {@link TextField} supports
-     * {@link TextChangeListener}s.
-     */
-    public interface TextChangeNotifier extends Serializable {
-        public void addTextChangeListener(TextChangeListener listener);
-
-        public void removeTextChangeListener(TextChangeListener listener);
-
     }
 
     public static abstract class FocusAndBlurServerRpcImpl

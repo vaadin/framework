@@ -33,7 +33,6 @@ import com.google.gwt.user.client.Event;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.dd.DragImageModifier;
-import com.vaadin.client.v7.ui.VLegacyTextField;
 
 /**
  * This class represents a multiline textfield (textarea).
@@ -45,7 +44,7 @@ import com.vaadin.client.v7.ui.VLegacyTextField;
  *
  */
 @Deprecated
-public class VTextArea extends VLegacyTextField implements DragImageModifier {
+public class VTextArea extends VTextField implements DragImageModifier {
 
     public static final String CLASSNAME = "v-textarea";
     private boolean wordwrap = true;

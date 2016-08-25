@@ -38,7 +38,6 @@ import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
 import com.vaadin.client.ui.aria.HandlesAriaRequired;
-import com.vaadin.client.v7.ui.VLegacyTextField;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.datefield.Resolution;
 
@@ -74,8 +73,8 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         text.addFocusHandler(new FocusHandler() {
             @Override
             public void onFocus(FocusEvent event) {
-                text.addStyleName(VLegacyTextField.CLASSNAME + "-"
-                        + VLegacyTextField.CLASSNAME_FOCUS);
+                text.addStyleName(VTextField.CLASSNAME + "-"
+                        + VTextField.CLASSNAME_FOCUS);
                 if (prompting) {
                     text.setText("");
                     setPrompting(false);
@@ -93,8 +92,8 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         text.addBlurHandler(new BlurHandler() {
             @Override
             public void onBlur(BlurEvent event) {
-                text.removeStyleName(VLegacyTextField.CLASSNAME + "-"
-                        + VLegacyTextField.CLASSNAME_FOCUS);
+                text.removeStyleName(VTextField.CLASSNAME + "-"
+                        + VTextField.CLASSNAME_FOCUS);
                 String value = getText();
                 setPrompting(inputPrompt != null
                         && (value == null || "".equals(value)));
@@ -118,7 +117,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
 
     protected void updateStyleNames() {
         if (text != null) {
-            text.setStyleName(VLegacyTextField.CLASSNAME);
+            text.setStyleName(VTextField.CLASSNAME);
             text.addStyleName(getStylePrimaryName() + "-textfield");
         }
     }
@@ -364,8 +363,8 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
 
     protected void setText(String text) {
         if (inputPrompt != null && (text == null || "".equals(text))
-                && !this.text.getStyleName().contains(VLegacyTextField.CLASSNAME
-                        + "-" + VLegacyTextField.CLASSNAME_FOCUS)) {
+                && !this.text.getStyleName().contains(VTextField.CLASSNAME + "-"
+                        + VTextField.CLASSNAME_FOCUS)) {
             text = readonly ? "" : inputPrompt;
             setPrompting(true);
         } else {

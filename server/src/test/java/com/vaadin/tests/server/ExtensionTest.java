@@ -20,7 +20,7 @@ import org.junit.Test;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.TextField;
+import com.vaadin.ui.TextField;
 
 public class ExtensionTest {
 

@@ -35,7 +35,6 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.Field;
 import com.vaadin.client.ui.VNativeButton;
-import com.vaadin.client.v7.ui.VLegacyTextField;
 
 public abstract class VOptionGroupBase extends Composite implements Field,
         ClickHandler, ChangeHandler, KeyPressHandler, Focusable, HasEnabled {
@@ -86,7 +85,7 @@ public abstract class VOptionGroupBase extends Composite implements Field,
     public final Panel container;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public VLegacyTextField newItemField;
+    public VTextField newItemField;
 
     /** For internal use only. May be removed or replaced in the future. */
     public VNativeButton newItemButton;
