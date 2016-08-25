@@ -7,28 +7,14 @@ import java.util.List;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 
-public class LabelTest extends AbstractComponentTest<Label>
-        implements ValueChangeListener {
+public class LabelTest extends AbstractComponentTest<Label> {
 
     private Command<Label, String> setValueCommand = new Command<Label, String>() {
 
         @Override
         public void execute(Label c, String value, Object data) {
             c.setValue(value);
-        }
-    };
-
-    private Command<Label, Boolean> valueChangeListenerCommand = new Command<Label, Boolean>() {
-        @Override
-        public void execute(Label c, Boolean value, Object data) {
-            if (value) {
-                c.addListener(LabelTest.this);
-            } else {
-                c.removeListener(LabelTest.this);
-
-            }
         }
     };
 
@@ -50,7 +36,6 @@ public class LabelTest extends AbstractComponentTest<Label>
 
         createContentModeSelect(CATEGORY_FEATURES);
         createValueSelect(CATEGORY_FEATURES);
-        createValueChangeListener(CATEGORY_LISTENERS);
     }
 
     private void createValueSelect(String category) {
@@ -77,32 +62,10 @@ public class LabelTest extends AbstractComponentTest<Label>
         LinkedHashMap<String, ContentMode> options = new LinkedHashMap<String, ContentMode>();
         options.put("Text", ContentMode.TEXT);
         options.put("Preformatted", ContentMode.PREFORMATTED);
-        options.put("Raw", ContentMode.RAW);
-        options.put("UIDL", ContentMode.XML); // Deprecated UIDL mode still used
-                                              // to avoid breaking old tests
         options.put("XHTML", ContentMode.HTML);
-        options.put("XML", ContentMode.XML);
 
         createSelectAction("Content mode", category, options, "Text",
                 contentModeCommand);
-    }
-
-    private void createValueChangeListener(String category) {
-        createBooleanAction("Value change listener", category, false,
-                valueChangeListenerCommand);
-    }
-
-    @Override
-    public void valueChange(com.vaadin.v7.data.Property.ValueChangeEvent event) {
-        Object o = event.getProperty().getValue();
-
-        // Distinguish between null and 'null'
-        String value = "null";
-        if (o != null) {
-            value = "'" + o.toString() + "'";
-        }
-
-        log(event.getClass().getSimpleName() + ", new value: " + value);
     }
 
 }

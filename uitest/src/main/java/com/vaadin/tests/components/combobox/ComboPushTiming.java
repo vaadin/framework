@@ -10,11 +10,11 @@ import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Label;
 import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.Label;
 import com.vaadin.v7.ui.ProgressIndicator;
 import com.vaadin.v7.ui.TextField;
 
@@ -75,6 +75,7 @@ public class ComboPushTiming extends TestBase {
 
     private void changeValue(final ComboBox cb) {
         executor.execute(new Runnable() {
+            @Override
             public void run() {
                 VaadinSession.getCurrent().lock();
                 try {

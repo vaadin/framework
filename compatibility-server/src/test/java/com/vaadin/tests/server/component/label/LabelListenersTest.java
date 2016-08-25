@@ -10,10 +10,10 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 import com.vaadin.tests.server.component.AbstractListenerMethodsTestBase;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ValueChangeEvent;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.Label;
+import com.vaadin.v7.ui.Label.ValueChangeEvent;
 
 public class LabelListenersTest extends AbstractListenerMethodsTestBase {
 

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui;
+package com.vaadin.v7.ui;
 
 import java.util.Locale;
 
@@ -24,6 +24,7 @@ import org.junit.Test;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.tests.util.MockUI;
+import com.vaadin.ui.UI;
 import com.vaadin.v7.data.util.ObjectProperty;
 
 public class LabelDataSourceTest {

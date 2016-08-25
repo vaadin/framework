@@ -1,7 +1,7 @@
 package com.vaadin.tests.widgetset.client;
 
-import com.vaadin.client.ui.label.LabelConnector;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.v7.client.ui.label.LabelConnector;
 
 /**
  * Connects server-side <code>IdTestLabel</code> component to client-side

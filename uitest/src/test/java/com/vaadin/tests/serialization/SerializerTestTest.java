@@ -38,7 +38,7 @@ public class SerializerTestTest extends MultiBrowserTest {
         Assert.assertEquals("sendDate: January 1, 1970 12:00:00 AM UTC",
                 getLogRow(logRow++));
         Assert.assertEquals(
-                "sendEnum: PREFORMATTED, [HTML, RAW], [PREFORMATTED, XML]",
+                "sendEnum: PREFORMATTED, [HTML, TEXT], [PREFORMATTED, TEXT]",
                 getLogRow(logRow++));
         Assert.assertEquals(
                 "sendWrappedGenerics: {[SimpleTestBean(1)]={1=[SimpleTestBean(42)]}}",

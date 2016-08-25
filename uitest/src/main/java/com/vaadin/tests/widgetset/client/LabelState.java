@@ -20,7 +20,7 @@ import com.vaadin.shared.AbstractComponentState;
 
 /**
  * State class with the same simple name as
- * {@link com.vaadin.shared.ui.label.LabelState} to test #8683
+ * {@link com.vaadin.v7.shared.ui.label.LabelState} to test #8683
  *
  * @author Vaadin Ltd
  * @version @VERSION@

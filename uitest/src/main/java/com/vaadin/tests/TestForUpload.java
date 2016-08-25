@@ -29,7 +29,6 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 
 import com.vaadin.server.StreamResource;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
@@ -45,6 +44,7 @@ import com.vaadin.ui.Upload.StartedEvent;
 import com.vaadin.ui.Upload.StartedListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.AbstractField;
 import com.vaadin.v7.ui.ProgressIndicator;
 import com.vaadin.v7.ui.Select;

@@ -4,15 +4,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Label;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.DateField;
+import com.vaadin.v7.ui.Label;
 import com.vaadin.v7.ui.PopupDateField;
 
 public class ValueThroughProperty extends TestBase {

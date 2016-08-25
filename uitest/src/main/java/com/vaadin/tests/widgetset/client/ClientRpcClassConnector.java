@@ -15,10 +15,10 @@
  */
 package com.vaadin.tests.widgetset.client;
 
-import com.vaadin.client.ui.label.LabelConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.MediaControl;
 import com.vaadin.tests.widgetset.server.ClientRpcClassComponent;
+import com.vaadin.v7.client.ui.label.LabelConnector;
 
 @Connect(ClientRpcClassComponent.class)
 public class ClientRpcClassConnector extends LabelConnector {

@@ -41,6 +41,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -151,7 +152,8 @@ public class AbstractComponentDeclarativeTest
 
     @Test
     public void testSizeAuto() {
-        String design = "<vaadin-label size-auto />";
+        component = new Panel();
+        String design = "<vaadin-panel size-auto />";
         component.setSizeUndefined();
         testRead(design, component);
         testWrite(design, component);
@@ -191,7 +193,8 @@ public class AbstractComponentDeclarativeTest
 
     @Test
     public void testWidthAuto() {
-        String design = "<vaadin-label height=\"20px\"/ width-auto />";
+        component = new Panel();
+        String design = "<vaadin-panel height=\"20px\"/ width-auto />";
         component.setCaptionAsHtml(false);
         component.setHeight("20px");
         component.setWidth(null);

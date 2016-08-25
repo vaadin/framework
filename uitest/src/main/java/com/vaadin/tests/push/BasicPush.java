@@ -24,8 +24,8 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.data.util.ObjectProperty;
 
 @Push
 public class BasicPush extends AbstractTestUI {
@@ -40,10 +40,8 @@ public class BasicPush extends AbstractTestUI {
 
     public static final String INCREMENT_BUTTON_ID = "incrementCounter";
 
-    private ObjectProperty<Integer> counter = new ObjectProperty<Integer>(0);
-
-    private ObjectProperty<Integer> counter2 = new ObjectProperty<Integer>(0);
-
+    private int clientCounter = 0;
+    private int serverCounter = 0;
     private final Timer timer = new Timer(true);
 
     private TimerTask task;
@@ -56,7 +54,7 @@ public class BasicPush extends AbstractTestUI {
         /*
          * Client initiated push.
          */
-        Label lbl = new Label(counter);
+        Label lbl = new Label("0");
         lbl.setCaption("Client counter (click 'increment' to update):");
         lbl.setId(CLIENT_COUNTER_ID);
         addComponent(lbl);
@@ -66,7 +64,8 @@ public class BasicPush extends AbstractTestUI {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        counter.setValue(counter.getValue() + 1);
+                        clientCounter++;
+                        lbl.setValue(String.valueOf(clientCounter));
                     }
                 });
         incrementButton.setId(INCREMENT_BUTTON_ID);
@@ -77,36 +76,31 @@ public class BasicPush extends AbstractTestUI {
         /*
          * Server initiated push.
          */
-        lbl = new Label(counter2);
-        lbl.setCaption("Server counter (updates each 3s by server thread) :");
-        lbl.setId(SERVER_COUNTER_ID);
-        addComponent(lbl);
+        Label serverCounterLabel = new Label("0");
+        serverCounterLabel.setCaption(
+                "Server counter (updates each 3s by server thread) :");
+        serverCounterLabel.setId(SERVER_COUNTER_ID);
+        addComponent(serverCounterLabel);
 
-        Button startTimer = new Button("Start timer",
-                new Button.ClickListener() {
+        Button startTimer = new Button("Start timer", (ClickListener) event -> {
+            serverCounter = 0;
+            serverCounterLabel.setValue(String.valueOf(serverCounter));
+            if (task != null) {
+                task.cancel();
+            }
+            task = new TimerTask() {
 
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        counter2.setValue(0);
-                        if (task != null) {
-                            task.cancel();
-                        }
-                        task = new TimerTask() {
-
-                            @Override
-                            public void run() {
-                                access(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        counter2.setValue(
-                                                counter2.getValue() + 1);
-                                    }
-                                });
-                            }
-                        };
-                        timer.scheduleAtFixedRate(task, 3000, 3000);
-                    }
-                });
+                @Override
+                public void run() {
+                    access(() -> {
+                        serverCounter++;
+                        serverCounterLabel
+                                .setValue(String.valueOf(serverCounter));
+                    });
+                }
+            };
+            timer.scheduleAtFixedRate(task, 3000, 3000);
+        });
         startTimer.setId(START_TIMER_ID);
         addComponent(startTimer);
 

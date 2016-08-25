@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.treetable;
 
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -32,7 +33,7 @@ public class ComponentsInTreeTable extends TestBase {
         tt.addItem(new Object[] { l, "VerticalLayout" }, 2);
 
         Label lbl = new Label("<b>foo</b><br/><i>bar</i>");
-        lbl.setContentMode(Label.CONTENT_XHTML);
+        lbl.setContentMode(ContentMode.HTML);
         tt.addItem(new Object[] { lbl, "Label" }, 3);
 
         tt.addItem(new Object[] { new Button("Test"), "Button" }, 4);

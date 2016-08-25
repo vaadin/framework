@@ -25,10 +25,10 @@ import org.junit.Test;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
-import com.vaadin.ui.Label;
 import com.vaadin.util.CurrentInstance;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.util.MethodProperty;
+import com.vaadin.v7.ui.Label;
 
 public class LabelConvertersTest {
     @Before

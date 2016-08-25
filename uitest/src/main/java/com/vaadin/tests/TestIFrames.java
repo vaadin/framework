@@ -16,10 +16,10 @@
 
 package com.vaadin.tests;
 
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.shared.ui.label.ContentMode;
 
 public class TestIFrames extends CustomComponent {
 

@@ -28,7 +28,6 @@ import java.lang.management.MemoryMXBean;
 
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.StreamResource;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
@@ -46,6 +45,7 @@ import com.vaadin.ui.Upload.StartedListener;
 import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.ProgressIndicator;
 
 public class TestForStyledUpload extends LegacyApplication

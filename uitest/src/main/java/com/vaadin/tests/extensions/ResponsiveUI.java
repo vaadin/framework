@@ -19,11 +19,11 @@ package com.vaadin.tests.extensions;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
+import com.vaadin.shared.ui.label.ContentMode;
 
 @Theme("tests-responsive")
 public class ResponsiveUI extends AbstractTestUI {

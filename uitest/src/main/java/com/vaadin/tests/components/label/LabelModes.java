@@ -37,12 +37,6 @@ public class LabelModes extends ComponentTestCase<Label> {
         l.setWidth(null);
         addTestComponent(l);
 
-        l = createLabel(
-                "This label                       contains\nnewlines and spaces\nand is in\nraw mode");
-        l.setContentMode(ContentMode.RAW);
-        l.setWidth(null);
-        addTestComponent(l);
-
     }
 
     private Label createLabel(String text, String caption) {

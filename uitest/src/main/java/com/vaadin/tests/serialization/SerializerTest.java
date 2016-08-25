@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -258,13 +258,13 @@ public class SerializerTest extends AbstractTestUI {
         };
 
         rpc.sendEnum(ContentMode.TEXT,
-                new ContentMode[] { ContentMode.PREFORMATTED, ContentMode.XML },
-                Arrays.asList(ContentMode.HTML, ContentMode.RAW));
+                new ContentMode[] { ContentMode.PREFORMATTED,
+                        ContentMode.TEXT },
+                Arrays.asList(ContentMode.HTML, ContentMode.TEXT));
 
         state.contentMode = ContentMode.TEXT;
-        state.array = new ContentMode[] { ContentMode.PREFORMATTED,
-                ContentMode.XML };
-        state.list = Arrays.asList(ContentMode.HTML, ContentMode.RAW);
+        state.array = new ContentMode[] { ContentMode.PREFORMATTED };
+        state.list = Arrays.asList(ContentMode.HTML);
 
         rpc.sendDate(new Date(1));
         rpc.sendDate(new Date(2013 - 1900, 5 - 1, 31, 11, 12, 13));

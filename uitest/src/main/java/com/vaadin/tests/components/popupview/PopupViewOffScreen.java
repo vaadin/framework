@@ -3,7 +3,6 @@ package com.vaadin.tests.components.popupview;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.Button;
@@ -16,6 +15,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.BaseTheme;
+import com.vaadin.shared.ui.label.ContentMode;
 
 public class PopupViewOffScreen extends TestBase {
 

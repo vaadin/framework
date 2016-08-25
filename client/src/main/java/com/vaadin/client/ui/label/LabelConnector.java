@@ -55,15 +55,9 @@ public class LabelConnector extends AbstractComponentConnector {
             break;
 
         case HTML:
-        case RAW:
             sinkOnloads = true;
-        case XML:
             getWidget().setHTML(getState().text);
             break;
-        default:
-            getWidget().setText("");
-            break;
-
         }
         Profiler.leave("LabelConnector.onStateChanged update content");
 

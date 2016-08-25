@@ -20,7 +20,6 @@ import java.util.Map;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Alignment;
@@ -44,6 +43,7 @@ import com.vaadin.v7.data.fieldgroup.PropertyId;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.data.validator.IntegerRangeValidator;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.TextField;

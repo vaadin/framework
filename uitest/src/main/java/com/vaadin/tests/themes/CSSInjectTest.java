@@ -7,11 +7,11 @@ import java.util.UUID;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.Styles;
 import com.vaadin.server.StreamResource;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.TextArea;
 
 public class CSSInjectTest extends TestBase {

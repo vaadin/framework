@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.optiongroup;
 
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.OptionGroup;
 
 public class OptionGroupMultipleValueChange extends TestBase {

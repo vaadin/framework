@@ -113,22 +113,6 @@ public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
         Assert.assertEquals("&amp; Test", root.html());
     }
 
-    @Test
-    public void testNullValue() {
-        Label label = new Label();
-        label.setValue(null);
-
-        label.setContentMode(ContentMode.TEXT);
-        Element root = new Element(Tag.valueOf("vaadin-label"), "");
-        label.writeDesign(root, new DesignContext());
-        Assert.assertEquals("", root.html());
-
-        label.setContentMode(ContentMode.HTML);
-        root = new Element(Tag.valueOf("vaadin-label"), "");
-        label.writeDesign(root, new DesignContext());
-        Assert.assertEquals("", root.html());
-    }
-
     /**
      * FIXME Using another content mode than TEXT OR HTML is currently not
      * supported and will cause the content mode to fallback without the users

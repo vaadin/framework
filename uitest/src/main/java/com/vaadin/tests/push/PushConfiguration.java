@@ -25,14 +25,11 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.data.util.ObjectProperty;
 
 public class PushConfiguration extends AbstractTestUI {
 
-    private ObjectProperty<Integer> counter = new ObjectProperty<Integer>(0);
-
-    private ObjectProperty<Integer> counter2 = new ObjectProperty<Integer>(0);
-
+    private int counter = 0;
+    private int counter2 = 0;
     private final Timer timer = new Timer(true);
 
     private final TimerTask task = new TimerTask() {
@@ -42,11 +39,13 @@ public class PushConfiguration extends AbstractTestUI {
             access(new Runnable() {
                 @Override
                 public void run() {
-                    counter2.setValue(counter2.getValue() + 1);
+                    counter2++;
+                    serverCounterLabel.setValue("" + counter2);
                 }
             });
         }
     };
+    private Label serverCounterLabel;
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -56,32 +55,32 @@ public class PushConfiguration extends AbstractTestUI {
         /*
          * Client initiated push.
          */
-        Label lbl = new Label(counter);
-        lbl.setCaption("Client counter (click 'increment' to update):");
-        addComponent(lbl);
+        Label clientCounterLabel = new Label("0");
+        clientCounterLabel
+                .setCaption("Client counter (click 'increment' to update):");
+        addComponent(clientCounterLabel);
 
         addComponent(new Button("Increment", new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                counter.setValue(counter.getValue() + 1);
+                clientCounterLabel.setValue("" + counter++);
             }
         }));
 
         spacer();
 
-        /*
-         * Server initiated push.
-         */
-        lbl = new Label(counter2);
-        lbl.setCaption("Server counter (updates each 1s by server thread) :");
-        addComponent(lbl);
+        serverCounterLabel = new Label(String.valueOf(counter2));
+        serverCounterLabel.setCaption(
+                "Server counter (updates each 1s by server thread) :");
+        addComponent(serverCounterLabel);
 
         addComponent(new Button("Reset", new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                counter2.setValue(0);
+                counter2 = 0;
+                serverCounterLabel.setValue("0");
             }
         }));
     }
