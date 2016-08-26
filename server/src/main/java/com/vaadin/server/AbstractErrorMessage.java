@@ -21,9 +21,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.v7.data.Buffered;
-import com.vaadin.v7.data.Validator;
-
 /**
  * Base class for component error messages.
  *
@@ -86,7 +83,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
         return level;
     }
 
-    protected void setErrorLevel(ErrorLevel level) {
+    public void setErrorLevel(ErrorLevel level) {
         this.level = level;
     }
 
@@ -102,7 +99,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
         return causes;
     }
 
-    protected void addCause(ErrorMessage cause) {
+    public void addCause(ErrorMessage cause) {
         causes.add(cause);
     }
 
@@ -143,34 +140,14 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
         return result;
     }
 
-    // TODO replace this with a helper method elsewhere?
     public static ErrorMessage getErrorMessageForException(Throwable t) {
         if (null == t) {
             return null;
         } else if (t instanceof ErrorMessage) {
             // legacy case for custom error messages
             return (ErrorMessage) t;
-        } else if (t instanceof Validator.InvalidValueException) {
-            UserError error = new UserError(
-                    ((Validator.InvalidValueException) t).getHtmlMessage(),
-                    ContentMode.HTML, ErrorLevel.ERROR);
-            for (Validator.InvalidValueException nestedException : ((Validator.InvalidValueException) t)
-                    .getCauses()) {
-                error.addCause(getErrorMessageForException(nestedException));
-            }
-            return error;
-        } else if (t instanceof Buffered.SourceException) {
-            // no message, only the causes to be painted
-            UserError error = new UserError(null);
-            // in practice, this was always ERROR in Vaadin 6 unless tweaked in
-            // custom exceptions implementing ErrorMessage
-            error.setErrorLevel(ErrorLevel.ERROR);
-            // causes
-            for (Throwable nestedException : ((Buffered.SourceException) t)
-                    .getCauses()) {
-                error.addCause(getErrorMessageForException(nestedException));
-            }
-            return error;
+        } else if (t instanceof ErrorMessageProducer) {
+            return ((ErrorMessageProducer) t).getErrorMessage();
         } else {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);

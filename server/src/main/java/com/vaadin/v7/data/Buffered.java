@@ -18,6 +18,11 @@ package com.vaadin.v7.data;
 
 import java.io.Serializable;
 
+import com.vaadin.server.AbstractErrorMessage;
+import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.ErrorMessage.ErrorLevel;
+import com.vaadin.server.ErrorMessageProducer;
+import com.vaadin.server.UserError;
 import com.vaadin.v7.data.Validator.InvalidValueException;
 
 /**
@@ -111,7 +116,7 @@ public interface Buffered extends Serializable {
      */
     @SuppressWarnings("serial")
     public class SourceException extends RuntimeException
-            implements Serializable {
+            implements Serializable, ErrorMessageProducer {
 
         /** Source class implementing the buffered interface */
         private final Buffered source;
@@ -171,6 +176,21 @@ public interface Buffered extends Serializable {
          */
         public Buffered getSource() {
             return source;
+        }
+
+        @Override
+        public ErrorMessage getErrorMessage() {
+            // no message, only the causes to be painted
+            UserError error = new UserError(null);
+            // in practice, this was always ERROR in Vaadin 6 unless tweaked in
+            // custom exceptions implementing ErrorMessage
+            error.setErrorLevel(ErrorLevel.ERROR);
+            // causes
+            for (Throwable nestedException : getCauses()) {
+                error.addCause(AbstractErrorMessage
+                        .getErrorMessageForException(nestedException));
+            }
+            return error;
         }
 
     }

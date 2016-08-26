@@ -18,6 +18,12 @@ package com.vaadin.v7.data;
 
 import java.io.Serializable;
 
+import com.vaadin.server.AbstractErrorMessage;
+import com.vaadin.server.AbstractErrorMessage.ContentMode;
+import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.ErrorMessage.ErrorLevel;
+import com.vaadin.server.ErrorMessageProducer;
+import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinServlet;
 
 /**
@@ -25,8 +31,8 @@ import com.vaadin.server.VaadinServlet;
  * valid or not.
  * <p>
  * Implementors of this class can be added to any
- * {@link com.vaadin.v7.data.Validatable Validatable} implementor to verify
- * its value.
+ * {@link com.vaadin.v7.data.Validatable Validatable} implementor to verify its
+ * value.
  * </p>
  * <p>
  * {@link #validate(Object)} can be used to check if a value is valid. An
@@ -74,7 +80,8 @@ public interface Validator extends Serializable {
      * @since 3.0
      */
     @SuppressWarnings("serial")
-    public class InvalidValueException extends RuntimeException {
+    public class InvalidValueException extends RuntimeException
+            implements ErrorMessageProducer {
 
         /**
          * Array of one or more validation errors that are causing this
@@ -157,6 +164,17 @@ public interface Validator extends Serializable {
          */
         public InvalidValueException[] getCauses() {
             return causes;
+        }
+
+        @Override
+        public ErrorMessage getErrorMessage() {
+            UserError error = new UserError(getHtmlMessage(), ContentMode.HTML,
+                    ErrorLevel.ERROR);
+            for (Validator.InvalidValueException nestedException : getCauses()) {
+                error.addCause(AbstractErrorMessage
+                        .getErrorMessageForException(nestedException));
+            }
+            return error;
         }
 
     }
