@@ -16,9 +16,9 @@
 package com.vaadin.v7.client.connectors;
 
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.vaadin.client.renderers.ButtonRenderer;
-import com.vaadin.client.renderers.ClickableRenderer.RendererClickHandler;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.v7.client.renderers.ButtonRenderer;
+import com.vaadin.v7.client.renderers.ClickableRenderer.RendererClickHandler;
 
 import elemental.json.JsonObject;
 

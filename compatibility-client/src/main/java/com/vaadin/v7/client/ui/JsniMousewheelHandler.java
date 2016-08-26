@@ -19,7 +19,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.widgets.Escalator;
+import com.vaadin.v7.client.widgets.Escalator;
 
 /**
  * A mousewheel handling class to get around the limits of

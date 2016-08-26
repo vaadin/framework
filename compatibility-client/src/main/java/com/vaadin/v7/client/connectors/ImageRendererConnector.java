@@ -18,10 +18,10 @@ package com.vaadin.v7.client.connectors;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.communication.JsonDecoder;
 import com.vaadin.client.metadata.TypeDataStore;
-import com.vaadin.client.renderers.ClickableRenderer.RendererClickHandler;
-import com.vaadin.client.renderers.ImageRenderer;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.v7.client.renderers.ImageRenderer;
+import com.vaadin.v7.client.renderers.ClickableRenderer.RendererClickHandler;
 
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;

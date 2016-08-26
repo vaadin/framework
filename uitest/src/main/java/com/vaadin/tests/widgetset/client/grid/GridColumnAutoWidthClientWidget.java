@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.vaadin.client.renderers.HtmlRenderer;
-import com.vaadin.client.widget.grid.datasources.ListDataSource;
-import com.vaadin.client.widgets.Grid;
-import com.vaadin.client.widgets.Grid.SelectionMode;
+import com.vaadin.v7.client.renderers.HtmlRenderer;
+import com.vaadin.v7.client.widget.grid.datasources.ListDataSource;
+import com.vaadin.v7.client.widgets.Grid;
+import com.vaadin.v7.client.widgets.Grid.SelectionMode;
 
 public class GridColumnAutoWidthClientWidget
         extends PureGWTTestApplication<Grid<List<String>>> {

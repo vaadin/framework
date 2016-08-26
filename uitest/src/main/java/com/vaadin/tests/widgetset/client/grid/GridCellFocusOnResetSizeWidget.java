@@ -23,10 +23,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
-import com.vaadin.client.renderers.HtmlRenderer;
-import com.vaadin.client.widgets.Grid;
-import com.vaadin.client.widgets.Grid.SelectionMode;
 import com.vaadin.shared.Registration;
+import com.vaadin.v7.client.renderers.HtmlRenderer;
+import com.vaadin.v7.client.widgets.Grid;
+import com.vaadin.v7.client.widgets.Grid.SelectionMode;
 
 public class GridCellFocusOnResetSizeWidget
         extends PureGWTTestApplication<Grid<String[]>> {

@@ -57,6 +57,8 @@ import elemental.json.JsonValue;
 public class ConnectorBundle {
     private static final String FAIL_IF_NOT_SERIALIZABLE = "vFailIfNotSerializable";
 
+    static final String OLD_RENDERER_CONNECTOR_NAME = "com.vaadin.v7.client.connectors.AbstractRendererConnector";
+
     public static final Comparator<JClassType> jClassComparator = new Comparator<JClassType>() {
         @Override
         public int compare(JClassType o1, JClassType o2) {
@@ -475,8 +477,7 @@ public class ConnectorBundle {
     }
 
     public static boolean isConnectedRendererConnector(JClassType type) {
-        return isConnected(type)
-                && isType(type, AbstractRendererConnector.class);
+        return isConnected(type) && isRendererType(type);
     }
 
     private static boolean isInterfaceType(JClassType type, Class<?> class1) {
@@ -490,6 +491,22 @@ public class ConnectorBundle {
         } catch (NotFoundException e) {
             throw new RuntimeException("Could not find " + class1.getName(), e);
         }
+    }
+
+    private static boolean isRendererType(JClassType type) {
+        TypeOracle oracle = type.getOracle();
+        boolean isNew = false, isOld = false;
+        try {
+            isNew = oracle.getType(AbstractRendererConnector.class.getName())
+                    .isAssignableFrom(type);
+        } catch (NotFoundException e) {
+        }
+        try {
+            isOld = oracle.getType(OLD_RENDERER_CONNECTOR_NAME)
+                    .isAssignableFrom(type);
+        } catch (NotFoundException e) {
+        }
+        return isNew || isOld;
     }
 
     public void setNeedsInvoker(JClassType type, JMethod method) {

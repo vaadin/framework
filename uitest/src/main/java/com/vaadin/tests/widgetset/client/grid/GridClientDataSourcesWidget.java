@@ -21,9 +21,9 @@ import java.util.List;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.data.AbstractRemoteDataSource;
-import com.vaadin.client.renderers.TextRenderer;
-import com.vaadin.client.widgets.Grid;
-import com.vaadin.client.widgets.Grid.SelectionMode;
+import com.vaadin.v7.client.renderers.TextRenderer;
+import com.vaadin.v7.client.widgets.Grid;
+import com.vaadin.v7.client.widgets.Grid.SelectionMode;
 
 public class GridClientDataSourcesWidget
         extends PureGWTTestApplication<Grid<String[]>> {

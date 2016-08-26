@@ -24,9 +24,9 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.client.data.AbstractRemoteDataSource;
-import com.vaadin.client.widget.grid.datasources.ListDataSource;
-import com.vaadin.client.widgets.Grid;
-import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.v7.client.widget.grid.datasources.ListDataSource;
+import com.vaadin.v7.client.widgets.Grid;
+import com.vaadin.v7.client.widgets.Grid.Column;
 
 public class GridDataChangeHandlerWidget extends Composite {
 

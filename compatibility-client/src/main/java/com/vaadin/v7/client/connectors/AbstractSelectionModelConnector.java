@@ -19,9 +19,9 @@ import java.util.Collection;
 
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
-import com.vaadin.client.widget.grid.selection.SelectionModel;
-import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.v7.client.widget.grid.selection.SelectionModel;
+import com.vaadin.v7.client.widgets.Grid;
 
 import elemental.json.JsonObject;
 

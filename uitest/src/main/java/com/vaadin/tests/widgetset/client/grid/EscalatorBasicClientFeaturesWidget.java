@@ -9,15 +9,15 @@ import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
-import com.vaadin.client.widget.escalator.EscalatorUpdater;
-import com.vaadin.client.widget.escalator.FlyweightCell;
-import com.vaadin.client.widget.escalator.Row;
-import com.vaadin.client.widget.escalator.RowContainer;
-import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
-import com.vaadin.client.widget.escalator.Spacer;
-import com.vaadin.client.widget.escalator.SpacerUpdater;
-import com.vaadin.client.widgets.Escalator;
 import com.vaadin.shared.ui.grid.ScrollDestination;
+import com.vaadin.v7.client.widget.escalator.EscalatorUpdater;
+import com.vaadin.v7.client.widget.escalator.FlyweightCell;
+import com.vaadin.v7.client.widget.escalator.Row;
+import com.vaadin.v7.client.widget.escalator.RowContainer;
+import com.vaadin.v7.client.widget.escalator.Spacer;
+import com.vaadin.v7.client.widget.escalator.SpacerUpdater;
+import com.vaadin.v7.client.widget.escalator.RowContainer.BodyRowContainer;
+import com.vaadin.v7.client.widgets.Escalator;
 
 public class EscalatorBasicClientFeaturesWidget
         extends PureGWTTestApplication<Escalator> {

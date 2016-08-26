@@ -16,9 +16,8 @@
 package com.vaadin.v7.client.connectors;
 
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.connectors.AbstractRendererConnector;
-import com.vaadin.client.renderers.Renderer;
-import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.v7.client.renderers.Renderer;
+import com.vaadin.v7.client.widgets.Grid.Column;
 
 import elemental.json.JsonObject;
 

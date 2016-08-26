@@ -15,8 +15,8 @@
  */
 package com.vaadin.v7.client.connectors;
 
-import com.vaadin.client.renderers.TextRenderer;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.v7.client.renderers.TextRenderer;
 
 /**
  * A connector for {@link TextRenderer}.

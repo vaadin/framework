@@ -16,13 +16,13 @@
 package com.vaadin.tests.widgetset.client.grid;
 
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.renderers.ComplexRenderer;
-import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
-import com.vaadin.client.widget.grid.selection.SelectionModel.Multi;
-import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.components.grid.GridCustomSelectionModel.MySelectionModel;
 import com.vaadin.v7.client.connectors.MultiSelectionModelConnector;
+import com.vaadin.v7.client.renderers.ComplexRenderer;
+import com.vaadin.v7.client.widget.grid.selection.ClickSelectHandler;
+import com.vaadin.v7.client.widget.grid.selection.SelectionModel.Multi;
+import com.vaadin.v7.client.widgets.Grid;
 
 import elemental.json.JsonObject;
 

@@ -15,9 +15,9 @@
  */
 package com.vaadin.v7.client.connectors;
 
-import com.vaadin.client.renderers.Renderer;
-import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.v7.client.renderers.Renderer;
+import com.vaadin.v7.client.widget.grid.RendererCellReference;
 
 /**
  * A connector for {@link UnsafeHtmlRenderer}

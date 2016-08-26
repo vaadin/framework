@@ -24,12 +24,12 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.vaadin.client.JavaScriptConnectorHelper;
 import com.vaadin.client.Util;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
-import com.vaadin.client.renderers.ComplexRenderer;
-import com.vaadin.client.renderers.Renderer;
-import com.vaadin.client.widget.grid.CellReference;
-import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.JavaScriptExtensionState;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.v7.client.renderers.ComplexRenderer;
+import com.vaadin.v7.client.renderers.Renderer;
+import com.vaadin.v7.client.widget.grid.CellReference;
+import com.vaadin.v7.client.widget.grid.RendererCellReference;
 import com.vaadin.v7.ui.renderers.AbstractJavaScriptRenderer;
 
 import elemental.json.JsonObject;

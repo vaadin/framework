@@ -15,11 +15,11 @@
  */
 package com.vaadin.tests.widgetset.client.grid;
 
-import com.vaadin.client.renderers.Renderer;
-import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.widgetset.client.SimpleTestBean;
 import com.vaadin.v7.client.connectors.AbstractGridRendererConnector;
+import com.vaadin.v7.client.renderers.Renderer;
+import com.vaadin.v7.client.widget.grid.RendererCellReference;
 
 @Connect(com.vaadin.tests.components.grid.BeanRenderer.class)
 public class PojoRendererConnector

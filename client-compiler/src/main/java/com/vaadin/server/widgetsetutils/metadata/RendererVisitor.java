@@ -61,13 +61,15 @@ public class RendererVisitor extends TypeVisitor {
                 .findInheritedMethod(type, "createRenderer").getEnclosingType();
 
         // Needs GWT constructor if createRenderer is not overridden
-        if (createRendererClass.getQualifiedSourceName()
-                .equals(AbstractRendererConnector.class.getCanonicalName())) {
+        String connectorSrcName = createRendererClass.getQualifiedSourceName();
+
+        if (isAbstractRendererConnector(connectorSrcName)) {
             // createRenderer not overridden
             JMethod getRenderer = ConnectorBundle.findInheritedMethod(type,
                     "getRenderer");
-            if (getRenderer.getEnclosingType().getQualifiedSourceName().equals(
-                    AbstractRendererConnector.class.getCanonicalName())) {
+            String rendererSrcName = getRenderer.getEnclosingType()
+                    .getQualifiedSourceName();
+            if (isAbstractRendererConnector(rendererSrcName)) {
                 // getRenderer not overridden
                 logger.log(Type.ERROR, type.getQualifiedSourceName()
                         + " must override either createRenderer or getRenderer");
@@ -108,8 +110,9 @@ public class RendererVisitor extends TypeVisitor {
                 throw new NotFoundException();
             }
 
-            return !decodeMethod.getEnclosingType().getQualifiedSourceName()
-                    .equals(AbstractRendererConnector.class.getName());
+            String decodeSrcName = decodeMethod.getEnclosingType()
+                    .getQualifiedSourceName();
+            return !isAbstractRendererConnector(decodeSrcName);
         } catch (NotFoundException e) {
             logger.log(Type.ERROR,
                     "Can't find decode method for renderer " + type, e);
@@ -121,8 +124,8 @@ public class RendererVisitor extends TypeVisitor {
             throws UnableToCompleteException {
         JClassType originalType = type;
         while (type != null) {
-            if (type.getQualifiedBinaryName()
-                    .equals(AbstractRendererConnector.class.getName())) {
+            String typeBinName = type.getQualifiedBinaryName();
+            if (isAbstractRendererConnector(typeBinName)) {
                 JParameterizedType parameterized = type.isParameterized();
                 if (parameterized == null) {
                     logger.log(Type.ERROR, type.getQualifiedSourceName()
@@ -137,5 +140,12 @@ public class RendererVisitor extends TypeVisitor {
         throw new IllegalArgumentException("The type "
                 + originalType.getQualifiedSourceName() + " does not extend "
                 + AbstractRendererConnector.class.getName());
+    }
+
+    private static boolean isAbstractRendererConnector(String connectorSrcName) {
+        return connectorSrcName
+                .equals(AbstractRendererConnector.class.getName())
+                || connectorSrcName
+                        .equals(ConnectorBundle.OLD_RENDERER_CONNECTOR_NAME);
     }
 }

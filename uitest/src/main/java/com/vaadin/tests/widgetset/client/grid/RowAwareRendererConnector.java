@@ -22,13 +22,13 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.DOM;
-import com.vaadin.client.renderers.ComplexRenderer;
-import com.vaadin.client.renderers.Renderer;
-import com.vaadin.client.widget.grid.CellReference;
-import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.v7.client.connectors.AbstractGridRendererConnector;
+import com.vaadin.v7.client.renderers.ComplexRenderer;
+import com.vaadin.v7.client.renderers.Renderer;
+import com.vaadin.v7.client.widget.grid.CellReference;
+import com.vaadin.v7.client.widget.grid.RendererCellReference;
 
 import elemental.json.JsonObject;
 
