@@ -1,5 +1,7 @@
 package com.vaadin.tests.server.component.button;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -7,7 +9,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.data.util.ObjectProperty;
 import com.vaadin.ui.UI;
 
 /**
@@ -19,17 +20,17 @@ public class ButtonClickTest {
     @Test
     public void clickDetachedButton() {
         Button b = new Button();
-        final ObjectProperty<Integer> counter = new ObjectProperty<Integer>(0);
+        AtomicInteger counter = new AtomicInteger(0);
         b.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                counter.setValue(counter.getValue() + 1);
+                counter.incrementAndGet();
             }
         });
 
         b.click();
-        Assert.assertEquals(Integer.valueOf(1), counter.getValue());
+        Assert.assertEquals(1, counter.get());
     }
 
     @Test
