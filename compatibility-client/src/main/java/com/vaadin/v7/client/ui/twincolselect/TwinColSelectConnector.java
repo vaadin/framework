@@ -19,9 +19,9 @@ package com.vaadin.v7.client.ui.twincolselect;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DirectionalManagedLayout;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.ui.VTwinColSelect;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.twincolselect.TwinColSelectState;
+import com.vaadin.v7.client.ui.VTwinColSelect;
 import com.vaadin.v7.client.ui.optiongroup.OptionGroupBaseConnector;
 import com.vaadin.v7.ui.TwinColSelect;
 

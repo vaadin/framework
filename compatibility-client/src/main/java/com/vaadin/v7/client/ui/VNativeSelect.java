@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.ui;
+package com.vaadin.v7.client.ui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.ui.ListBox;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.ui.Field;
 
 public class VNativeSelect extends VOptionGroupBase implements Field {
 

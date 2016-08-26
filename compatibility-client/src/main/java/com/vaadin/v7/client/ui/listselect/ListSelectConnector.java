@@ -16,8 +16,8 @@
 
 package com.vaadin.v7.client.ui.listselect;
 
-import com.vaadin.client.ui.VListSelect;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.v7.client.ui.VListSelect;
 import com.vaadin.v7.client.ui.optiongroup.OptionGroupBaseConnector;
 import com.vaadin.v7.ui.ListSelect;
 

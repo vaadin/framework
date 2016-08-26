@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.ui;
+package com.vaadin.v7.client.ui;
 
 import java.util.Set;
 
@@ -33,6 +33,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.ui.Field;
+import com.vaadin.client.ui.VNativeButton;
 import com.vaadin.client.v7.ui.VLegacyTextField;
 
 public abstract class VOptionGroupBase extends Composite implements Field,

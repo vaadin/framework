@@ -17,8 +17,8 @@
 package com.vaadin.v7.client.ui.nativeselect;
 
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
-import com.vaadin.client.ui.VNativeSelect;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.v7.client.ui.VNativeSelect;
 import com.vaadin.v7.client.ui.optiongroup.OptionGroupBaseConnector;
 import com.vaadin.v7.ui.NativeSelect;
 

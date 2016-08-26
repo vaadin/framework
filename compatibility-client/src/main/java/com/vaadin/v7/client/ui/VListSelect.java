@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.ui;
+package com.vaadin.v7.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashSet;

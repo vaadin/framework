@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.ui;
+package com.vaadin.v7.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +45,8 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.ui.Icon;
+import com.vaadin.client.ui.VCheckBox;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.optiongroup.OptionGroupConstants;
 

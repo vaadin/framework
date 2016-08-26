@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.ui;
+package com.vaadin.v7.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,6 +40,8 @@ import com.google.gwt.user.client.ui.Panel;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.ui.SubPartAware;
+import com.vaadin.client.ui.VButton;
 import com.vaadin.shared.ui.twincolselect.TwinColSelectConstants;
 
 public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
