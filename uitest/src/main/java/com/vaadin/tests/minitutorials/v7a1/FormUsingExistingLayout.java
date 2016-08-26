@@ -1,10 +1,10 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
+import com.vaadin.annotations.PropertyId;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.v7.data.fieldgroup.FieldGroup;
-import com.vaadin.v7.data.fieldgroup.PropertyId;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.ui.TextArea;
 import com.vaadin.v7.ui.TextField;

@@ -80,6 +80,13 @@
             <artifactId>jsoup</artifactId>
         </dependency>
 
+        <!-- Small reflection library -->
+        <dependency>
+            <groupId>com.googlecode.gentyref</groupId>
+            <artifactId>gentyref</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+
         <!-- TESTING DEPENDENCIES -->
 
         <!-- Test dependencies -->

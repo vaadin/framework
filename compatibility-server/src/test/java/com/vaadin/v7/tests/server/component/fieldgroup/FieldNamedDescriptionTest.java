@@ -4,9 +4,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.vaadin.annotations.PropertyId;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.v7.data.fieldgroup.FieldGroup;
-import com.vaadin.v7.data.fieldgroup.PropertyId;
 import com.vaadin.v7.data.util.ObjectProperty;
 import com.vaadin.v7.data.util.PropertysetItem;
 import com.vaadin.v7.ui.TextField;

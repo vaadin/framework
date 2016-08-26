@@ -18,10 +18,21 @@ package com.vaadin.data;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiConsumer;
 
+import com.googlecode.gentyref.GenericTypeReflector;
+import com.vaadin.annotations.PropertyId;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.validator.BeanValidator;
@@ -184,6 +195,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
             getter = descriptor.getReadMethod();
             setter = descriptor.getWriteMethod();
             finalBinding.bind(this::getValue, this::setValue);
+            getBinder().boundProperties.add(propertyName);
         }
 
         @Override
@@ -253,6 +265,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
     }
 
     private final Class<? extends BEAN> beanType;
+    private final Set<String> boundProperties;
 
     /**
      * Creates a new {@code BeanBinder} supporting beans of the given type.
@@ -263,6 +276,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
     public BeanBinder(Class<? extends BEAN> beanType) {
         BeanUtil.checkBeanValidationAvailable();
         this.beanType = beanType;
+        boundProperties = new HashSet<>();
     }
 
     @Override
@@ -315,6 +329,225 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         Objects.requireNonNull(field, "field cannot be null");
         Objects.requireNonNull(converter, "converter cannot be null");
         return new BeanBindingImpl<>(this, field, converter, handler);
+    }
+
+    /**
+     * Binds member fields found in the given object.
+     * <p>
+     * This method processes all (Java) member fields whose type extends
+     * {@link HasValue} and that can be mapped to a property id. Property id
+     * mapping is done based on the field name or on a @{@link PropertyId}
+     * annotation on the field. All non-null unbound fields for which a property
+     * id can be determined are bound to the property id.
+     * </p>
+     * <p>
+     * For example:
+     *
+     * <pre>
+     * public class MyForm extends VerticalLayout {
+     * private TextField firstName = new TextField("First name");
+     * &#64;PropertyId("last")
+     * private TextField lastName = new TextField("Last name");
+     *
+     * MyForm myForm = new MyForm();
+     * ...
+     * binder.bindMemberFields(myForm);
+     * </pre>
+     *
+     * </p>
+     * This binds the firstName TextField to a "firstName" property in the item,
+     * lastName TextField to a "last" property.
+     * <p>
+     * It's not always possible to bind a field to a property because their
+     * types are incompatible. E.g. custom converter is required to bind
+     * {@code HasValue<String>} and {@code Integer} property (that would be a
+     * case of "age" property). In such case {@link IllegalStateException} will
+     * be thrown unless the field has been configured manually before calling
+     * the {@link #bindInstanceFields(Object)} method.
+     * <p>
+     * It's always possible to do custom binding for any field: the
+     * {@link #bindInstanceFields(Object)} method doesn't override existing
+     * bindings.
+     *
+     * @param objectWithMemberFields
+     *            The object that contains (Java) member fields to bind
+     * @throws IllegalStateException
+     *             if there are incompatible HasValue<T> and property types
+     */
+    public void bindInstanceFields(Object objectWithMemberFields) {
+        Class<?> objectClass = objectWithMemberFields.getClass();
+
+        getFieldsInDeclareOrder(objectClass).stream()
+                .filter(memberField -> HasValue.class
+                        .isAssignableFrom(memberField.getType()))
+                .forEach(memberField -> handleProperty(memberField,
+                        (property, type) -> bindProperty(objectWithMemberFields,
+                                memberField, property, type)));
+    }
+
+    /**
+     * Binds {@code property} with {@code propertyType} to the field in the
+     * {@code objectWithMemberFields} instance using {@code memberField} as a
+     * reference to a member.
+     * 
+     * @param objectWithMemberFields
+     *            the object that contains (Java) member fields to build and
+     *            bind
+     * @param memberField
+     *            reference to a member field to bind
+     * @param property
+     *            property name to bind
+     * @param propertyType
+     *            type of the property
+     */
+    protected void bindProperty(Object objectWithMemberFields,
+            Field memberField, String property, Class<?> propertyType) {
+        Type valueType = GenericTypeReflector.getTypeParameter(
+                memberField.getGenericType(),
+                HasValue.class.getTypeParameters()[0]);
+        if (valueType == null) {
+            throw new IllegalStateException(String.format(
+                    "Unable to detect value type for the member '%s' in the "
+                            + "class '%s'.",
+                    memberField.getName(),
+                    objectWithMemberFields.getClass().getName()));
+        }
+        if (propertyType.equals(valueType)) {
+            HasValue<?> field;
+            // Get the field from the object
+            try {
+                field = (HasValue<?>) ReflectTools.getJavaFieldValue(
+                        objectWithMemberFields, memberField, HasValue.class);
+            } catch (IllegalArgumentException | IllegalAccessException
+                    | InvocationTargetException e) {
+                // If we cannot determine the value, just skip the field
+                return;
+            }
+            if (field == null) {
+                field = makeFieldInstance(
+                        (Class<? extends HasValue<?>>) memberField.getType());
+                initializeField(objectWithMemberFields, memberField, field);
+            }
+            forField(field).bind(property);
+        } else {
+            throw new IllegalStateException(String.format(
+                    "Property type '%s' doesn't "
+                            + "match the field type '%s'. "
+                            + "Binding should be configured manulaly using converter.",
+                    propertyType.getName(), valueType.getTypeName()));
+        }
+    }
+
+    /**
+     * Makes an instance of the field type {@code fieldClass}.
+     * <p>
+     * The resulting field instance is used to bind a property to it using the
+     * {@link #bindInstanceFields(Object)} method.
+     * <p>
+     * The default implementation relies on the default constructor of the
+     * class. If there is no suitable default constructor or you want to
+     * configure the instantiated class then override this method and provide
+     * your own implementation.
+     * 
+     * @see #bindInstanceFields(Object)
+     * @param fieldClass
+     *            type of the field
+     * @return a {@code fieldClass} instance object
+     */
+    protected HasValue<?> makeFieldInstance(
+            Class<? extends HasValue<?>> fieldClass) {
+        try {
+            return fieldClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalStateException(
+                    String.format("Couldn't create an '%s' type instance",
+                            fieldClass.getName()),
+                    e);
+        }
+    }
+
+    /**
+     * Returns an array containing {@link Field} objects reflecting all the
+     * fields of the class or interface represented by this Class object. The
+     * elements in the array returned are sorted in declare order from sub class
+     * to super class.
+     *
+     * @param searchClass
+     *            class to introspect
+     * @return list of all fields in the class considering hierarchy
+     */
+    protected List<Field> getFieldsInDeclareOrder(Class<?> searchClass) {
+        ArrayList<Field> memberFieldInOrder = new ArrayList<>();
+
+        while (searchClass != null) {
+            for (Field memberField : searchClass.getDeclaredFields()) {
+                memberFieldInOrder.add(memberField);
+            }
+            searchClass = searchClass.getSuperclass();
+        }
+        return memberFieldInOrder;
+    }
+
+    private void initializeField(Object objectWithMemberFields,
+            Field memberField, HasValue<?> value) {
+        try {
+            ReflectTools.setJavaFieldValue(objectWithMemberFields, memberField,
+                    value);
+        } catch (IllegalArgumentException | IllegalAccessException
+                | InvocationTargetException e) {
+            throw new IllegalStateException(
+                    String.format("Could not assign value to field '%s'",
+                            memberField.getName()),
+                    e);
+        }
+    }
+
+    private void handleProperty(Field field,
+            BiConsumer<String, Class<?>> propertyHandler) {
+        Optional<PropertyDescriptor> descriptor = getPropertyDescriptor(field);
+
+        if (!descriptor.isPresent()) {
+            return;
+        }
+
+        String propertyName = descriptor.get().getName();
+        if (boundProperties.contains(propertyName)) {
+            return;
+        }
+
+        propertyHandler.accept(propertyName,
+                descriptor.get().getPropertyType());
+        boundProperties.add(propertyName);
+    }
+
+    private Optional<PropertyDescriptor> getPropertyDescriptor(Field field) {
+        PropertyId propertyIdAnnotation = field.getAnnotation(PropertyId.class);
+
+        String propertyId;
+        if (propertyIdAnnotation != null) {
+            // @PropertyId(propertyId) always overrides property id
+            propertyId = propertyIdAnnotation.value();
+        } else {
+            propertyId = field.getName();
+        }
+
+        List<PropertyDescriptor> descriptors;
+        try {
+            descriptors = BeanUtil.getBeanPropertyDescriptors(beanType);
+        } catch (IntrospectionException e) {
+            throw new IllegalArgumentException(String.format(
+                    "Could not resolve bean '%s' properties (see the cause):",
+                    beanType.getName()), e);
+        }
+        Optional<PropertyDescriptor> propertyDescitpor = descriptors.stream()
+                .filter(descriptor -> minifyFieldName(descriptor.getName())
+                        .equals(minifyFieldName(propertyId)))
+                .findFirst();
+        return propertyDescitpor;
+    }
+
+    private String minifyFieldName(String fieldName) {
+        return fieldName.toLowerCase(Locale.ENGLISH).replace("_", "");
     }
 
 }

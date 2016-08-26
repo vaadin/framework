@@ -1200,7 +1200,7 @@ public class Binder<BEAN> implements Serializable {
      *            the handler to notify of status changes, not null
      * @return the new incomplete binding
      */
-    protected <FIELDVALUE, TARGET> BindingImpl<BEAN, FIELDVALUE, TARGET> createBinding(
+    protected <FIELDVALUE, TARGET> Binding<BEAN, FIELDVALUE, TARGET> createBinding(
             HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
             ValidationStatusHandler handler) {
         return new BindingImpl<>(this, field, converter, handler);

@@ -13,25 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.data.fieldgroup;
+package com.vaadin.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.vaadin.v7.ui.Field;
+import com.vaadin.data.BeanBinder;
+import com.vaadin.data.Binder;
+import com.vaadin.data.HasValue;
 
 /**
  * Defines the custom property name to be bound to a {@link Field} using
- * {@link FieldGroup} or {@link BeanFieldGroup}.
+ * {@link Binder} or {@link BeanBinder}.
  * <p>
- * The automatic data binding in FieldGroup and BeanFieldGroup relies on a
- * naming convention by default: properties of an item are bound to similarly
- * named field components in given a editor object. If you want to map a
- * property with a different name (ID) to a {@link com.vaadin.client.ui.Field},
- * you can use this annotation for the member fields, with the name (ID) of the
- * desired property as the parameter.
+ * The automatic data binding in Binder and BeanBinder relies on a naming
+ * convention by default: properties of an item are bound to similarly named
+ * field components in given a editor object. If you want to map a property with
+ * a different name (ID) to a {@link HasValue}, you can use this annotation for
+ * the member fields, with the name (ID) of the desired property as the
+ * parameter.
  * <p>
  * In following usage example, the text field would be bound to property "foo"
  * in the Entity class. <code>
@@ -46,8 +48,9 @@ import com.vaadin.v7.ui.Field;
     }
 
     {
-        Editor e = new Editor();
-        BeanFieldGroup.bindFieldsUnbuffered(new Entity(), e);
+        Editor editor = new Editor();
+        BeanBinder<Entity> binder = new BeanBinder(Entity.class);
+        binder.bindInstanceFields(editor);
     }
    </pre>
  * </code>
@@ -57,7 +60,6 @@ import com.vaadin.v7.ui.Field;
  */
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-@Deprecated
 public @interface PropertyId {
     String value();
 }

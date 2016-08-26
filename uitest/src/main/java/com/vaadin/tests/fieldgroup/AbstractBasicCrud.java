@@ -18,6 +18,7 @@ package com.vaadin.tests.fieldgroup;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.vaadin.annotations.PropertyId;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.util.SharedUtil;
@@ -39,7 +40,6 @@ import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.Validator.InvalidValueException;
 import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.v7.data.fieldgroup.PropertyId;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.data.validator.IntegerRangeValidator;

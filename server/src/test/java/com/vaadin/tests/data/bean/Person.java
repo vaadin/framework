@@ -1,7 +1,7 @@
 package com.vaadin.tests.data.bean;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Person {
     private String firstName;
@@ -11,7 +11,7 @@ public class Person {
     private Sex sex;
     private Address address;
     private boolean deceased;
-    private Date birthDate;
+    private LocalDate birthDate;
 
     private Integer salary; // null if unknown
     private Double salaryDouble; // null if unknown
@@ -122,11 +122,11 @@ public class Person {
         this.salaryDouble = salaryDouble;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 

@@ -16,11 +16,11 @@
 package com.vaadin.tests.declarative;
 
 import com.vaadin.annotations.DesignRoot;
+import com.vaadin.annotations.PropertyId;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
-import com.vaadin.v7.data.fieldgroup.PropertyId;
 import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.TextField;
 

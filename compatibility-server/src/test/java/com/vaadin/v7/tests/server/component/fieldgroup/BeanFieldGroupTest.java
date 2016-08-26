@@ -5,10 +5,10 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.annotations.PropertyId;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.v7.data.fieldgroup.PropertyId;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.RichTextArea;

@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.annotations.PropertyId;
 import com.vaadin.util.ReflectTools;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;

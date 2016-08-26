@@ -3,6 +3,7 @@ package com.vaadin.tests.fieldgroup;
 import java.util.Date;
 import java.util.Locale;
 
+import com.vaadin.annotations.PropertyId;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.Person;
@@ -12,7 +13,6 @@ import com.vaadin.ui.Notification;
 import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.v7.data.fieldgroup.FieldGroup;
 import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.v7.data.fieldgroup.PropertyId;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.ui.DateField;
 import com.vaadin.v7.ui.InlineDateField;
