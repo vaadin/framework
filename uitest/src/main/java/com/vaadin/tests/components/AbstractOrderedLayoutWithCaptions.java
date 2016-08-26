@@ -37,6 +37,8 @@ public class AbstractOrderedLayoutWithCaptions extends AbstractTestUI {
         TextField textField = new TextField("Input Text:");
         Label label1 = new Label("LABEL 1");
         Label label2 = new Label("LABEL 2");
+        label1.setWidth("100%"); // Only to make test backwards compatible
+        label2.setWidth("100%"); // Only to make test backwards compatible
 
         layout.addComponent(textField);
 

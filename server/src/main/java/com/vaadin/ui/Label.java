@@ -65,7 +65,6 @@ public class Label extends AbstractComponent {
     public Label(String text, ContentMode contentMode) {
         setValue(text);
         setContentMode(contentMode);
-        setWidth("100%");
     }
 
     @Override

@@ -24,6 +24,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Position;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
@@ -44,7 +45,6 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.AbstractSelect;
 import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.ListSelect;
@@ -131,8 +131,8 @@ public class FontIcons extends AbstractTestUI {
         tabs.setCaption("TabSheet");
         tabs.setIcon(icon);
         tabs.addStyleName("myTabs");
-        tabs.addTab(new Label("Content 1"), "Tab 1", icon);
-        tabs.addTab(new Label("Content 2"), "Tab 2", icon);
+        tabs.addTab(createLabel("Content 1"), "Tab 1", icon);
+        tabs.addTab(createLabel("Content 2"), "Tab 2", icon);
         tabs.setWidth("150px");
         gl.addComponent(tabs);
 
@@ -140,8 +140,8 @@ public class FontIcons extends AbstractTestUI {
         Accordion acc = new Accordion();
         acc.setCaption("Accordion");
         acc.setIcon(icon);
-        acc.addTab(new Label(), "Section 1", icon);
-        acc.addTab(new Label(), "Section 2", icon);
+        acc.addTab(createLabel(""), "Section 1", icon);
+        acc.addTab(createLabel(""), "Section 2", icon);
         gl.addComponent(acc);
 
         // Table, caption + column + row + action icons
@@ -205,7 +205,15 @@ public class FontIcons extends AbstractTestUI {
         for (FontIcon ic : FontAwesome.values()) {
             allIcons += ic.getHtml() + " ";
         }
-        layout.addComponent(new Label(allIcons, ContentMode.HTML));
+        Label label = new Label(allIcons, ContentMode.HTML);
+        label.setWidth("100%");
+        layout.addComponent(label);
+    }
+
+    private Label createLabel(String caption) {
+        Label label = new Label(caption);
+        label.setWidth("100%");
+        return label;
     }
 
     @Override

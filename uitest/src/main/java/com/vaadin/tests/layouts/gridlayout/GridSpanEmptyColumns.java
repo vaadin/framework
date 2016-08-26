@@ -34,8 +34,10 @@ public class GridSpanEmptyColumns extends AbstractTestUI {
 
         Label bigCell = new Label("big cell");
         bigCell.setId("bigCell");
+        bigCell.setWidth("100%"); // Only to make test backwards compatible
         Label smallCell = new Label("small cell");
         smallCell.setId("smallCell");
+        smallCell.setWidth("100%"); // Only to make test backwards compatible
         gridLayout.addComponent(bigCell, 0, 0, 1, 0); // spans first two columns
         gridLayout.addComponent(smallCell, 2, 0, 2, 0); // last column only
 

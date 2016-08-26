@@ -41,6 +41,7 @@ public class TestTooSmallSubwindowSize extends AbstractTestUI {
                 + " disabled for this window. Additionally, this text label"
                 + " is intentionally too large to fit the window. You can"
                 + " use the scrollbars to view different parts of the window content.");
+        desc.setWidth("100%");
         layout.addComponent(desc);
 
         // Set window position
@@ -94,6 +95,7 @@ public class TestTooSmallSubwindowSize extends AbstractTestUI {
                 + " disabled for this window. Additionally, this text label"
                 + " is intentionally too large to fit the window. You can resize or"
                 + " use the scrollbars to view different parts of the window content.");
+        desc.setWidth("100%");
         layout.addComponent(desc);
 
         // Set window position

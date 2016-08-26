@@ -53,6 +53,7 @@ public class LabelsCssTest extends GridLayout {
             String primaryStyleName, String iconUrl) {
 
         Label l = new Label();
+        l.setWidth("100%"); // Only to make test backwards compatible
         l.setId("label" + debugIdCounter++);
         if (caption != null) {
             l.setCaption(caption);

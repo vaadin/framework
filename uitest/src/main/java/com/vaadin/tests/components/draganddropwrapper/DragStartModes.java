@@ -32,7 +32,10 @@ public class DragStartModes extends TestBase {
         parent.setSpacing(true);
 
         CssLayout header = new CssLayout();
-        header.addComponent(new Label("Drag start mode : COMPONENT_OTHER"));
+        Label dragStartModeLabel = new Label(
+                "Drag start mode : COMPONENT_OTHER");
+        dragStartModeLabel.setWidth("100%");
+        header.addComponent(dragStartModeLabel);
         header.setSizeUndefined();
 
         DragAndDropWrapper wrapper = new DragAndDropWrapper(header);
@@ -43,6 +46,7 @@ public class DragStartModes extends TestBase {
 
         Label extra = new Label(
                 "Extra label that is not part of the wrapper. This should be dragged along with COMPONENT_OTHER.");
+        extra.setWidth("100%");
         extra.addStyleName("extra");
         parent.addComponent(extra);
 

@@ -19,6 +19,7 @@ public class GridLayoutMoveComponent extends AbstractTestUI {
         addComponent(grid);
 
         final Label l = new Label("100% label");
+        l.setWidth("100%");
         final Button b = new Button("100px button");
         b.setWidth("100px");
         final TextField tf = new TextField("Undef textfield");
@@ -52,7 +53,9 @@ public class GridLayoutMoveComponent extends AbstractTestUI {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         grid.removeComponent(tf);
-                        grid.addComponent(new Label("I'm on left"), 0, 2);
+                        Label label = new Label("I'm on left");
+                        label.setWidth("100%");
+                        grid.addComponent(label, 0, 2);
                         grid.addComponent(tf, 1, 2);
                     }
                 }));
