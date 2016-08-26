@@ -52,9 +52,7 @@ import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
-import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.ConverterFactory;
-import com.vaadin.v7.data.util.converter.DefaultConverterFactory;
 
 /**
  * Contains everything that Vaadin needs to store for a specific user. This is
@@ -226,7 +224,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * The converter factory that is used to provide default converters for the
      * session.
      */
-    private ConverterFactory converterFactory = new DefaultConverterFactory();
+    @Deprecated
+    private ConverterFactory converterFactory;
 
     private LinkedList<RequestHandler> requestHandlers = new LinkedList<RequestHandler>();
 
@@ -278,6 +277,18 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     public VaadinSession(VaadinService service) {
         this.service = service;
+        try {
+            // This is to avoid having DefaultConverterFactory in the server
+            // package
+            Class<? extends ConverterFactory> cls = (Class<? extends ConverterFactory>) getClass()
+                    .getClassLoader().loadClass(
+                            "com.vaadin.v7.data.util.converter.DefaultConverterFactory");
+            ConverterFactory factory = cls.newInstance();
+            converterFactory = factory;
+        } catch (Exception e) {
+            // DefaultConverterFactory not found, go on without and warn later
+            // if it is used
+        }
     }
 
     /**
@@ -592,14 +603,19 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     /**
      * Gets the {@link ConverterFactory} used to locate a suitable
-     * {@link Converter} for fields in the session.
+     * {@code Converter} for fields in the session.
      *
      * See {@link #setConverterFactory(ConverterFactory)} for more details
      *
      * @return The converter factory used in the session
      */
+    @Deprecated
     public ConverterFactory getConverterFactory() {
         assert hasLock();
+        if (converterFactory == null) {
+            throw new IllegalStateException(
+                    "No converter factory has been set and com.vaadin.v7.data.util.converter.DefaultConverterFactory could not be found when creating the session");
+        }
         return converterFactory;
     }
 
@@ -607,10 +623,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * Sets the {@link ConverterFactory} used to locate a suitable
      * {@link Converter} for fields in the session.
      * <p>
-     * The {@link ConverterFactory} is used to find a suitable converter
-     * when binding data to a UI component and the data type does not match the
-     * UI component type, e.g. binding a Double to a TextField (which is based
-     * on a String).
+     * The {@link ConverterFactory} is used to find a suitable converter when
+     * binding data to a UI component and the data type does not match the UI
+     * component type, e.g. binding a Double to a TextField (which is based on a
+     * String).
      * </p>
      * <p>
      * The converter factory must never be set to null.
@@ -618,6 +634,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @param converterFactory
      *            The converter factory used in the session
      */
+    @Deprecated
     public void setConverterFactory(ConverterFactory converterFactory) {
         assert hasLock();
         this.converterFactory = converterFactory;

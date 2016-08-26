@@ -47,6 +47,7 @@ import java.util.Locale;
  * @author Vaadin Ltd.
  * @since 7.0
  */
+@Deprecated
 public interface Converter<PRESENTATION, MODEL> extends Serializable {
 
     /**
@@ -122,8 +123,8 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
     /**
      * An exception that signals that the value passed to
      * {@link Converter#convertToPresentation(Object, Class, Locale)} or
-     * {@link Converter#convertToModel(Object, Class, Locale)} could not
-     * be converted.
+     * {@link Converter#convertToModel(Object, Class, Locale)} could not be
+     * converted.
      *
      * @author Vaadin Ltd
      * @since 7.0

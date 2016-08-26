@@ -26,6 +26,7 @@ import java.io.Serializable;
  * @since 7.0
  *
  */
+@Deprecated
 public interface ConverterFactory extends Serializable {
     public <PRESENTATION, MODEL> Converter<PRESENTATION, MODEL> createConverter(
             Class<PRESENTATION> presentationType, Class<MODEL> modelType);
