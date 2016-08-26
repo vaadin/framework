@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.v7.ui.passwordfield;
+package com.vaadin.v7.client.ui.passwordfield;
 
 import com.vaadin.client.v7.ui.VLegacyPasswordField;
 import com.vaadin.client.v7.ui.textfield.LegacyTextFieldConnector;
