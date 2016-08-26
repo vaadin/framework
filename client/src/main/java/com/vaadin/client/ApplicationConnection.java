@@ -42,6 +42,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.ConnectionStateHandler;
@@ -560,7 +561,8 @@ public class ApplicationConnection implements HasHandlers {
                 if (oldSync) {
                         oldSync();
                 }
-                app.@com.vaadin.client.ApplicationConnection::sendPendingVariableChanges()();
+                var sender = app.@com.vaadin.client.ApplicationConnection::messageSender;
+                sender.@com.vaadin.client.communication.MessageSender::resynchronize()();
         });
         var oldForceLayout;
         if ($wnd.vaadin.forceLayout) {
