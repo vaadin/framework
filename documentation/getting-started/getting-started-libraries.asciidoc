@@ -44,6 +44,10 @@ This library is not needed if you compile the application widget set with the Va
 Vaadin built-in themes both as SCSS source files and precompiled CSS files.
 The library is required both for basic use with CSS themes and for compiling custom Sass themes.
 
+[filename]#vaadin-push-8.x.x.jar#::
+The implementation of server push for Vaadin.
+This is needed for web applications which use server push (e.g. using the @Push annotation in a Servlet class).
+
 Some of the libraries depend on each other as well as on the dependency libraries provided in the [filename]#lib# folder of the installation package, especially the [filename]#lib/vaadin-shared-deps.jar#.
 
 The different ways to install the libraries are described in the subsequent sections.
