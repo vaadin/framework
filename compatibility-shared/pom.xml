@@ -48,7 +48,7 @@
 						<Bundle-Version>${osgi.bundle.version}</Bundle-Version>
 						<Export-Package>com.vaadin.*;version="${osgi.bundle.version}"</Export-Package>
 						<Require-Bundle>
-							com.vaadin.shared;bundle-version="${osgi.bundle.version}",
+							com.vaadin.shared;bundle-version="${osgi.bundle.version}"
 						</Require-Bundle>
 					</instructions>
 				</configuration>

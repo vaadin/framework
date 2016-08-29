@@ -53,6 +53,7 @@
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 
@@ -80,10 +81,10 @@
 						<Bundle-RequiredExecutionEnvironment>${osgi.execution.environment}</Bundle-RequiredExecutionEnvironment>
 						<Bundle-Version>${osgi.bundle.version}</Bundle-Version>
 						<Export-Package>com.vaadin.v7.*;version="${osgi.bundle.version}"</Export-Package>
-						<Import-Package>javax.validation;version="${javax.validation.version}";resolution:=optional</Import-Package>
 
 						<Require-Bundle>
-							com.vaadin.server;bundle-version="${osgi.bundle.version}"
+							com.vaadin.server;bundle-version="${osgi.bundle.version}",
+							com.vaadin.shared;bundle-version="${osgi.bundle.version}"
 						</Require-Bundle>
 					</instructions>
 				</configuration>

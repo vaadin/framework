@@ -51,6 +51,7 @@
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<!-- Sass compiler -->
