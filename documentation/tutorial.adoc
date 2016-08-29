@@ -274,7 +274,7 @@ The actual implementation of these classes is not relevant for this tutorial, bu
 [[framework.tutorial.grid]]
 == Listing entities in a Grid
 
-TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step2.zip[Download the project] for this step, extract the zip file and choose "Import... > Maven > Existing Maven project".
+TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step3.zip[Download the project] for this step, extract the zip file and choose "Import... > Maven > Existing Maven project".
 
 Often when you start building a UI for a data-centric application, the first
 thing you want to do is to list your data from your back-end.
@@ -391,7 +391,7 @@ You can do this at any point during the rest of the tutorial as well.
 [[framework.tutorial.filtering]]
 == Creating live filtering for entities
 
-TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step3.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
+TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step4.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
 
 A search functionality is expected in every modern application and it is
 also a nice Vaadin development exercise. Let's add a filtering functionality to
@@ -502,7 +502,7 @@ that. Pick either of them.
 [[framework.tutorial.form.designer]]
 === Creating a form using Vaadin Designer
 
-TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step4.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
+TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step5.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
 
 The form to edit Customer objects can be built using several methods of which
 the visual composition by drag 'n' drop is the most intuitive. Vaadin
@@ -574,7 +574,7 @@ basic constructor that accepts MyUI as a parameter to the CustomerForm class:
 
 [source,java]
 ----
-CustomerService service = CustomerService.getInstance();
+private CustomerService service = CustomerService.getInstance();
 private Customer customer;
 private MyUI myUI;
 
@@ -588,7 +588,7 @@ looks like at this point. Add it as a field to the _MyUI_ class:
 
 [source,java]
 ----
-    CustomerForm form = new CustomerForm(this);
+private CustomerForm form = new CustomerForm(this);
 ----
 
 Now let's modify the init method in MyUI to show the form. Let's wrap both the
@@ -617,7 +617,7 @@ following line to the constructor:
 
 [source,java]
 ----
-    status.addItems(CustomerStatus.values());
+status.addItems(CustomerStatus.values());
 ----
 
 Let's also improve the UX a bit. When building the design, we already
@@ -764,7 +764,7 @@ class:
 
 [source,java]
 ----
-    CustomerForm form = new CustomerForm(this);
+private CustomerForm form = new CustomerForm(this);
 ----
 
 Now let's modify the init method in MyUI to show the form. Let's wrap both the
@@ -793,7 +793,7 @@ following line to the constructor:
 
 [source,java]
 ----
-   status.addItems(CustomerStatus.values());
+status.addItems(CustomerStatus.values());
 ----
 
 Let's also improve the UX a bit. The most common thing your users will want to
@@ -880,7 +880,7 @@ simplicity.
 [[framework.tutorial.form-connection]]
 == Connecting the form to the application
 
-TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step5.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
+TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step6.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
 
 In this part, we'll use the CustomerForm class, which we created in the
 previous step, from the MyUI class. We will use it for both editing the existing
