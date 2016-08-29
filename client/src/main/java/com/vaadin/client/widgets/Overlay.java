@@ -21,7 +21,6 @@ import java.util.List;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
@@ -396,8 +395,6 @@ public class Overlay extends PopupPanel {
         current = null;
     }
 
-    private JavaScriptObject animateInListener;
-
     private boolean fitInWindow = false;
 
     private boolean maybeShowWithAnimation() {
@@ -422,16 +419,18 @@ public class Overlay extends PopupPanel {
             if (animationName.contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
                 // Disable GWT PopupPanel animation if used
                 setAnimationEnabled(false);
-                animateInListener = AnimationUtil.addAnimationEndListener(
-                        getElement(), new AnimationEndListener() {
+                AnimationUtil.addAnimationEndListener(getElement(),
+                        new AnimationEndListener() {
                             @Override
                             public void onAnimationEnd(NativeEvent event) {
                                 String animationName = AnimationUtil
                                         .getAnimationName(event);
                                 if (animationName.contains(
                                         ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
-                                    AnimationUtil.removeAnimationEndListener(
-                                            getElement(), animateInListener);
+                                    boolean removed = AnimationUtil
+                                            .removeAnimationEndListener(
+                                                    getElement(), this);
+                                    assert removed : "Animation end listener was not removed";
                                     removeStyleDependentName(
                                             ADDITIONAL_CLASSNAME_ANIMATE_IN);
                                 }
@@ -720,6 +719,10 @@ public class Overlay extends PopupPanel {
                         public void onAnimationEnd(NativeEvent event) {
                             if (AnimationUtil.getAnimationName(event).contains(
                                     ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                                boolean removed = AnimationUtil
+                                        .removeAnimationEndListener(
+                                                getElement(), this);
+                                assert removed : "Animation end listener was not removed";
                                 reallyHide(autoClosed);
                             }
                         }
@@ -746,11 +749,12 @@ public class Overlay extends PopupPanel {
                                         .getAnimationName(event);
                                 if (animationName.contains(
                                         ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
-                                    AnimationUtil
-                                            .removeAllAnimationEndListeners(
-                                                    getElement());
-                                    // Remove both animation styles just in
-                                    // case
+                                    boolean removed = AnimationUtil
+                                            .removeAnimationEndListener(
+                                                    getElement(), this);
+                                    assert removed : "Animation end listener was not removed";
+
+                                    // Remove both animation styles just in case
                                     removeStyleDependentName(
                                             ADDITIONAL_CLASSNAME_ANIMATE_IN);
                                     removeStyleDependentName(
