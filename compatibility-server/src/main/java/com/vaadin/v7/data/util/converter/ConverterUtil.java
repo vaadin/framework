@@ -51,7 +51,13 @@ public class ConverterUtil implements Serializable {
         }
 
         if (session != null) {
-            ConverterFactory factory = session.getConverterFactory();
+            ConverterFactory factory = (ConverterFactory) session
+                    .getConverterFactory();
+            if (factory == null) {
+                // Assume DefaultConverterFactory should be in session
+                factory = new DefaultConverterFactory();
+                session.setConverterFactory(factory);
+            }
             converter = factory.createConverter(presentationType, modelType);
         }
         return converter;
@@ -84,8 +90,8 @@ public class ConverterUtil implements Serializable {
     public static <PRESENTATIONTYPE, MODELTYPE> PRESENTATIONTYPE convertFromModel(
             MODELTYPE modelValue,
             Class<? extends PRESENTATIONTYPE> presentationType,
-            Converter<PRESENTATIONTYPE, MODELTYPE> converter,
-            Locale locale) throws Converter.ConversionException {
+            Converter<PRESENTATIONTYPE, MODELTYPE> converter, Locale locale)
+            throws Converter.ConversionException {
         if (converter != null) {
             /*
              * If there is a converter, always use it. It must convert or throw
@@ -145,8 +151,8 @@ public class ConverterUtil implements Serializable {
      */
     public static <MODELTYPE, PRESENTATIONTYPE> MODELTYPE convertToModel(
             PRESENTATIONTYPE presentationValue, Class<MODELTYPE> modelType,
-            Converter<PRESENTATIONTYPE, MODELTYPE> converter,
-            Locale locale) throws Converter.ConversionException {
+            Converter<PRESENTATIONTYPE, MODELTYPE> converter, Locale locale)
+            throws Converter.ConversionException {
         if (converter != null) {
             /*
              * If there is a converter, always use it. It must convert or throw
@@ -233,9 +239,8 @@ public class ConverterUtil implements Serializable {
      * @return true if the converter possibly support conversion between the
      *         given presentation and model type, false otherwise
      */
-    public static boolean canConverterPossiblyHandle(
-            Converter<?, ?> converter, Class<?> presentationType,
-            Class<?> modelType) {
+    public static boolean canConverterPossiblyHandle(Converter<?, ?> converter,
+            Class<?> presentationType, Class<?> modelType) {
         if (converter == null) {
             return false;
         }

@@ -32,7 +32,6 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
-import com.vaadin.v7.data.util.converter.Converter.ConversionException;
 
 /**
  * A converter for {@link Resource} implementations supported by
@@ -106,14 +105,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
                 final int codepoint = Integer.valueOf(familyAndCode[1], 16);
 
                 if (FontAwesome.FONT_FAMILY.equals(familyAndCode[0])) {
-                    try {
-                        return FontAwesome.fromCodepoint(codepoint);
-                    } catch (IllegalArgumentException iae) {
-                        throw new ConversionException(
-                                "Unknown codepoint in FontAwesome: "
-                                        + codepoint,
-                                iae);
-                    }
+                    return FontAwesome.fromCodepoint(codepoint);
                 }
 
                 FontIcon generic = new GenericFontIcon(familyAndCode[0],
@@ -136,13 +128,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
                 // Deprecated, 7.4 syntax is
                 // font://"+FontAwesome.valueOf(foo) eg. "font://AMBULANCE"
                 final String iconName = (value.split("://", 2))[1];
-
-                try {
-                    return FontAwesome.valueOf(iconName);
-                } catch (IllegalArgumentException iae) {
-                    throw new ConversionException(
-                            "Unknown FontIcon constant: " + iconName, iae);
-                }
+                return FontAwesome.valueOf(iconName);
             }
 
             @Override
