@@ -35,7 +35,7 @@ By listening to the event, we can find out the new value of the field and whethe
 [source,java]
 ----
 TextField nameField = new TextField("Enter your name");
-nameField.addValueChangeListener(clickEvent -> {
+nameField.addValueChangeListener(event -> {
   String origin = event.isUserOriginated()
     ? "by the user"
     : "from code";
