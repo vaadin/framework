@@ -19,6 +19,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
+import com.vaadin.client.AnimationUtil.AnimationEndListener;
 
 /**
  * Utility methods for working with CSS transitions and animations.
@@ -65,6 +66,7 @@ public class AnimationUtil {
       var callbackFunc = $entry(function(e) {
         listener.@com.vaadin.client.AnimationUtil.AnimationEndListener::onAnimationEnd(Lcom/google/gwt/dom/client/NativeEvent;)(e);
       });
+      callbackFunc.listener = listener;
 
       elem.addEventListener(@com.vaadin.client.AnimationUtil::ANIMATION_END_EVENT_NAME, callbackFunc, false);
       
@@ -82,6 +84,31 @@ public class AnimationUtil {
             JavaScriptObject listener)
     /*-{
       elem.removeEventListener(@com.vaadin.client.AnimationUtil::ANIMATION_END_EVENT_NAME, listener, false);
+    }-*/;
+
+    /**
+     * Removes the given animation listener.
+     *
+     * @param element
+     *            the element which has the listener
+     * @param animationEndListener
+     *            the listener to remove
+     * @return <code>true</code> if the listener was removed, <code>false</code>
+     *         if the listener was not registered to the given element
+     */
+    public static native boolean removeAnimationEndListener(Element elem,
+            AnimationEndListener animationEndListener)
+    /*-{
+      if(elem._vaadin_animationend_callbacks) {
+        var callbacks = elem._vaadin_animationend_callbacks;
+        for(var i=0; i < callbacks.length; i++) {
+          if (callbacks[i].listener == animationEndListener) {
+              elem.removeEventListener(@com.vaadin.client.AnimationUtil::ANIMATION_END_EVENT_NAME, callbacks[i], false);
+              return true;
+          }
+        }
+        return false;
+      }
     }-*/;
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -149,7 +176,7 @@ public class AnimationUtil {
           'MozAnimation': 'animationend',
           'WebkitAnimation': 'webkitAnimationEnd'
         }
-    
+
         for(var a in anims){
             if( el.style[a] !== undefined ){
                 return anims[a];
@@ -168,7 +195,7 @@ public class AnimationUtil {
           'mozAnimation',
           'webkitAnimation'
         ]
-    
+
         for(var i=0; i < anims.length; i++) {
             if( el.style[anims[i]] !== undefined ){
                 return anims[i];

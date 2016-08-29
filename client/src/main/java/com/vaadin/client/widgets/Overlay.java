@@ -545,8 +545,6 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
         current = null;
     }
 
-    private JavaScriptObject animateInListener;
-
     private boolean fitInWindow = false;
 
     private boolean maybeShowWithAnimation() {
@@ -577,7 +575,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
             if (animationName.contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
                 // Disable GWT PopupPanel animation if used
                 setAnimationEnabled(false);
-                animateInListener = AnimationUtil.addAnimationEndListener(
+                AnimationUtil.addAnimationEndListener(
                         getElement(), new AnimationEndListener() {
                             @Override
                             public void onAnimationEnd(NativeEvent event) {
@@ -585,8 +583,8 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
                                         .getAnimationName(event);
                                 if (animationName
                                         .contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
-                                    AnimationUtil.removeAnimationEndListener(
-                                            getElement(), animateInListener);
+                                    boolean removed = AnimationUtil.removeAnimationEndListener(getElement(), this);
+                                    assert removed: "Animation end listener was not removed";
                                     removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_IN);
                                     if (isShadowEnabled()) {
                                         shadow.removeClassName(CLASSNAME_SHADOW
@@ -1029,6 +1027,8 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
                                         .getAnimationName(event)
                                         .contains(
                                                 ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                                    boolean removed = AnimationUtil.removeAnimationEndListener(getElement(), this);
+                                    assert removed: "Animation end listener was not removed";
                                     reallyHide(autoClosed);
                                 }
                             }
@@ -1060,8 +1060,8 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
                                             .getAnimationName(event);
                                     if (animationName
                                             .contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
-                                        AnimationUtil
-                                                .removeAllAnimationEndListeners(getElement());
+                                        boolean removed = AnimationUtil.removeAnimationEndListener(getElement(), this);
+                                        assert removed: "Animation end listener was not removed";
                                         // Remove both animation styles just in
                                         // case
                                         removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_IN);
