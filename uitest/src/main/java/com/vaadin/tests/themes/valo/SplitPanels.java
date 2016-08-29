@@ -33,8 +33,10 @@ public class SplitPanels extends VerticalLayout implements View {
         h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
-        addComponent(new Label(
-                "Outlines are just to show the areas of the SplitPanels. They are not part of the actual component style."));
+        Label label = new Label(
+                "Outlines are just to show the areas of the SplitPanels. They are not part of the actual component style.");
+        label.setWidth("100%");
+        addComponent(label);
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
@@ -81,8 +83,10 @@ public class SplitPanels extends VerticalLayout implements View {
         return new VerticalLayout() {
             {
                 setMargin(true);
-                addComponent(new Label(
-                        "Fictum,  deserunt mollit anim laborum astutumque!"));
+                Label label = new Label(
+                        "Fictum,  deserunt mollit anim laborum astutumque!");
+                label.setWidth("100%");
+                addComponent(label);
             }
         };
     }

@@ -51,29 +51,37 @@ public class Accordions extends VerticalLayout implements View {
         ac.addTab(new VerticalLayout() {
             {
                 setMargin(true);
-                addComponent(new Label(
-                        "Fabio vel iudice vincam, sunt in culpa qui officia. Ut enim ad minim veniam, quis nostrud exercitation."));
+                Label label = new Label(
+                        "Fabio vel iudice vincam, sunt in culpa qui officia. Ut enim ad minim veniam, quis nostrud exercitation.");
+                label.setWidth("100%");
+                addComponent(label);
             }
         }, "First Caption", testIcon.get());
         ac.addTab(new VerticalLayout() {
             {
                 setMargin(true);
-                addComponent(new Label(
-                        "Gallia est omnis divisa in partes tres, quarum."));
+                Label label = new Label(
+                        "Gallia est omnis divisa in partes tres, quarum.");
+                label.setWidth("100%");
+                addComponent(label);
             }
         }, "Second Caption", testIcon.get());
         ac.addTab(new VerticalLayout() {
             {
                 setMargin(true);
-                addComponent(new Label(
-                        "Nihil hic munitissimus habendi senatus locus, nihil horum? Sed haec quis possit intrepidus aestimare tellus."));
+                Label label = new Label(
+                        "Nihil hic munitissimus habendi senatus locus, nihil horum? Sed haec quis possit intrepidus aestimare tellus.");
+                label.setWidth("100%");
+                addComponent(label);
             }
         }, "Third Caption", testIcon.get());
         ac.addTab(new VerticalLayout() {
             {
                 setMargin(true);
-                addComponent(new Label(
-                        "Inmensae subtilitatis, obscuris et malesuada fames. Quisque ut dolor gravida, placerat libero vel, euismod."));
+                Label label = new Label(
+                        "Inmensae subtilitatis, obscuris et malesuada fames. Quisque ut dolor gravida, placerat libero vel, euismod.");
+                label.setWidth("100%");
+                addComponent(label);
             }
         }, "Custom Caption Style", testIcon.get()).setStyleName("color1");
         return ac;

@@ -126,6 +126,7 @@ public class CommonParts extends VerticalLayout implements View {
 
         Label spinnerDesc = new Label(
                 "The theme also provides a mixin that you can use to include a spinner anywhere in your application. Below is a Label with a custom style name, for which the spinner mixin is added.");
+        spinnerDesc.setWidth("100%");
         spinnerDesc.addStyleName(ValoTheme.LABEL_SMALL);
         spinnerDesc.setCaption("Spinner");
         content.addComponent(spinnerDesc);
