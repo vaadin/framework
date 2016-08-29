@@ -25,6 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -183,6 +184,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     private Range pushRows = Range.withLength(0, 40);
 
     private Comparator<T> inMemorySorting;
+    private Predicate<T> inMemoryFilter;
     private List<SortOrder<String>> backEndSorting = new ArrayList<>();
     private DataCommunicatorClientRpc rpc;
 
@@ -209,7 +211,13 @@ public class DataCommunicator<T> extends AbstractExtension {
         Set<Object> filters = Collections.emptySet();
 
         if (initial || reset) {
-            int dataSourceSize = getDataSource().size(new Query(filters));
+            int dataSourceSize;
+            if (getDataSource().isInMemory() && inMemoryFilter != null) {
+                dataSourceSize = (int) getDataSource().apply(new Query())
+                        .filter(inMemoryFilter).count();
+            } else {
+                dataSourceSize = getDataSource().size(new Query(filters));
+            }
             rpc.reset(dataSourceSize);
         }
 
@@ -221,8 +229,10 @@ public class DataCommunicator<T> extends AbstractExtension {
 
             if (getDataSource().isInMemory()) {
                 // We can safely request all the data when in memory
-                // FIXME: filter.
                 rowsToPush = getDataSource().apply(new Query());
+                if (inMemoryFilter != null) {
+                    rowsToPush = rowsToPush.filter(inMemoryFilter);
+                }
                 if (inMemorySorting != null) {
                     rowsToPush = rowsToPush.sorted(inMemorySorting);
                 }
@@ -368,6 +378,17 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
 
         updatedData.add(data);
+    }
+
+    /**
+     * Sets the {@link Predicate} to use with in-memory filtering.
+     *
+     * @param predicate
+     *            predicate used to filter data
+     */
+    public void setInMemoryFilter(Predicate<T> predicate) {
+        inMemoryFilter = predicate;
+        reset();
     }
 
     /**
