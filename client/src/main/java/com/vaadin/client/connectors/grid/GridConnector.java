@@ -38,6 +38,7 @@ import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.GridServerRpc;
+import com.vaadin.shared.ui.grid.GridState;
 
 import elemental.json.JsonObject;
 
@@ -170,5 +171,10 @@ public class GridConnector extends AbstractListingConnector
             ConnectorHierarchyChangeHandler handler) {
         return ensureHandlerManager()
                 .addHandler(ConnectorHierarchyChangeEvent.TYPE, handler);
+    }
+
+    @Override
+    public GridState getState() {
+        return (GridState) super.getState();
     }
 }

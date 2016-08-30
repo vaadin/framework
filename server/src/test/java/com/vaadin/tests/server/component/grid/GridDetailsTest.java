@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.grid;
+package com.vaadin.tests.server.component.grid;
 
 import java.util.ArrayList;
 import java.util.Arrays;

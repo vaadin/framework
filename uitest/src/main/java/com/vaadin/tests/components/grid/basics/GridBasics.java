@@ -1,12 +1,17 @@
 package com.vaadin.tests.components.grid.basics;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -20,6 +25,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridBasics extends AbstractTestUIWithLog {
 
     private static class DetailedDetailsGenerator
@@ -121,8 +127,40 @@ public class GridBasics extends AbstractTestUIWithLog {
     private Component createMenu() {
         MenuBar menu = new MenuBar();
         MenuItem componentMenu = menu.addItem("Component", null);
+        createStateMenu(componentMenu.addItem("State", null));
+        createSizeMenu(componentMenu.addItem("Size", null));
         createDetailsMenu(componentMenu.addItem("Details", null));
         return menu;
+    }
+
+    private void createSizeMenu(MenuItem sizeMenu) {
+        MenuItem heightByRows = sizeMenu.addItem("Height by Rows", null);
+        DecimalFormat df = new DecimalFormat("0.00");
+        Stream.of(0.33, 0.67, 1.00, 1.33, 1.67, 2.00, 2.33, 2.67, 3.00, 3.33,
+                3.67, 4.00, 4.33, 4.67)
+                .forEach(d -> addGridMethodMenu(heightByRows,
+                        df.format(d) + " rows", d, grid::setHeightByRows));
+        sizeMenu.addItem("HeightMode Row", item -> {
+            grid.setHeightMode(
+                    item.isChecked() ? HeightMode.ROW : HeightMode.CSS);
+        }).setCheckable(true);
+
+        MenuItem heightMenu = sizeMenu.addItem("Height", null);
+        Stream.of(50, 100, 200, 400).map(i -> i + "px").forEach(
+                i -> addGridMethodMenu(heightMenu, i, i, grid::setHeight));
+    }
+
+    private void createStateMenu(MenuItem stateMenu) {
+        MenuItem frozenColMenu = stateMenu.addItem("Frozen column count", null);
+        for (int i = -1; i < 3; ++i) {
+            addGridMethodMenu(frozenColMenu, "" + i, i,
+                    grid::setFrozenColumnCount);
+        }
+    }
+
+    private <T> void addGridMethodMenu(MenuItem parent, String name, T value,
+            Consumer<T> method) {
+        parent.addItem(name, menuItem -> method.accept(value));
     }
 
     /* DetailsGenerator related things */
