@@ -32,8 +32,8 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.tests.widgetset.server.SerializerTestExtension;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.tests.widgetset.server.SerializerTestExtension;
 
 import elemental.json.Json;
 import elemental.json.JsonBoolean;

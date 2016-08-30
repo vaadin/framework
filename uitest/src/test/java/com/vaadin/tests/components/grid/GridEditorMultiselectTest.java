@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
-
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.v7.testbench.customelements.GridElement;

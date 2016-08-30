@@ -25,8 +25,8 @@ import com.vaadin.v7.client.widget.escalator.Cell;
 import com.vaadin.v7.client.widget.escalator.ColumnConfiguration;
 import com.vaadin.v7.client.widget.escalator.EscalatorUpdater;
 import com.vaadin.v7.client.widget.escalator.RowContainer;
-import com.vaadin.v7.client.widget.escalator.SpacerUpdater;
 import com.vaadin.v7.client.widget.escalator.RowContainer.BodyRowContainer;
+import com.vaadin.v7.client.widget.escalator.SpacerUpdater;
 import com.vaadin.v7.client.widgets.Escalator;
 
 public class EscalatorProxy extends Escalator {

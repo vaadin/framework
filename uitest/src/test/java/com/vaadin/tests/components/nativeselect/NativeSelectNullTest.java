@@ -3,8 +3,8 @@ package com.vaadin.tests.components.nativeselect;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
+import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 
 public class NativeSelectNullTest extends SingleBrowserTestPhantomJS2 {
     @Test

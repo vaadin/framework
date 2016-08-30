@@ -18,8 +18,8 @@ package com.vaadin.v7.data.util.filter;
 import java.util.Arrays;
 
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Container.Filter;
+import com.vaadin.v7.data.Item;
 
 public class Between implements Filter {
 

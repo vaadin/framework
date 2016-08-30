@@ -40,8 +40,8 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.ui.Field;
 import com.vaadin.client.ui.ShortcutActionHandler;
-import com.vaadin.client.ui.TouchScrollDelegate;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
+import com.vaadin.client.ui.TouchScrollDelegate;
 import com.vaadin.v7.client.ui.richtextarea.VRichTextToolbar;
 
 /**

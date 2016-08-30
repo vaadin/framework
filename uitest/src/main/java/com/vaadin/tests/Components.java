@@ -13,6 +13,7 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
@@ -26,7 +27,6 @@ import com.vaadin.v7.data.util.DefaultItemSorter;
 import com.vaadin.v7.data.util.HierarchicalContainer;
 import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.Tree;
 import com.vaadin.v7.ui.Tree.ItemStyleGenerator;
 

@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.label;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Accordion;
@@ -8,7 +9,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.shared.ui.label.ContentMode;
 
 public class MarginsInLabels extends AbstractTestUI {
 

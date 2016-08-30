@@ -22,8 +22,8 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.vaadin.v7.testbench.customelements.ColorPickerElement;
 import com.vaadin.tests.components.colorpicker.DefaultCaptionWidthTest;
+import com.vaadin.v7.testbench.customelements.ColorPickerElement;
 
 /**
  * Test for default caption behavior in color picker using Valo theme.

@@ -21,8 +21,8 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.v7.testbench.customelements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.TableElement;
 
 /**
  * Test to see if the correct row gets the focus when the row is selected from

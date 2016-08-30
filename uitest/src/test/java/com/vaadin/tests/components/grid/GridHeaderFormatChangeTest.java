@@ -20,7 +20,6 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 
 import com.vaadin.testbench.elements.ButtonElement;
-
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.v7.testbench.customelements.GridElement;

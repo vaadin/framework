@@ -31,8 +31,8 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
-import com.vaadin.v7.shared.ui.grid.GridConstants;
 import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.v7.shared.ui.grid.GridConstants;
 
 public class GridEditorBufferedTest extends GridEditorTest {
 

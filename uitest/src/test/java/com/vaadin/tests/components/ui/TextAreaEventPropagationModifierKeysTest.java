@@ -24,9 +24,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.v7.testbench.customelements.TextAreaElement;
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.TextAreaElement;
 
 public class TextAreaEventPropagationModifierKeysTest extends MultiBrowserTest {
     @Test

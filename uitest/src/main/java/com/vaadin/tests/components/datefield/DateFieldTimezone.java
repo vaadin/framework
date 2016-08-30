@@ -8,13 +8,13 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.DateField;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.shared.ui.combobox.FilteringMode;
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.v7.ui.ComboBox;
 
 public class DateFieldTimezone extends TestBase {

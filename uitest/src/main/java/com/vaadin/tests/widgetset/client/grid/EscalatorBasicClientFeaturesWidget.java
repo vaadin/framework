@@ -13,9 +13,9 @@ import com.vaadin.v7.client.widget.escalator.EscalatorUpdater;
 import com.vaadin.v7.client.widget.escalator.FlyweightCell;
 import com.vaadin.v7.client.widget.escalator.Row;
 import com.vaadin.v7.client.widget.escalator.RowContainer;
+import com.vaadin.v7.client.widget.escalator.RowContainer.BodyRowContainer;
 import com.vaadin.v7.client.widget.escalator.Spacer;
 import com.vaadin.v7.client.widget.escalator.SpacerUpdater;
-import com.vaadin.v7.client.widget.escalator.RowContainer.BodyRowContainer;
 import com.vaadin.v7.client.widgets.Escalator;
 import com.vaadin.v7.shared.ui.grid.ScrollDestination;
 

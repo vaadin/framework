@@ -16,10 +16,10 @@
 
 package com.vaadin.v7.tests.components.textfield;
 
-import com.vaadin.v7.event.FieldEvents.TextChangeEvent;
-import com.vaadin.v7.event.FieldEvents.TextChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
+import com.vaadin.v7.event.FieldEvents.TextChangeEvent;
+import com.vaadin.v7.event.FieldEvents.TextChangeListener;
 import com.vaadin.v7.ui.AbstractTextField;
 import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.TextArea;

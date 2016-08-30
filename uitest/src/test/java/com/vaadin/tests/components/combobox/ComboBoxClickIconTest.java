@@ -19,8 +19,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 
 /**
  * Test to check whether combobox is expanded when icon is clicked.

@@ -22,8 +22,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.v7.testbench.customelements.TreeTableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.TreeTableElement;
 
 /**
  * Tests that TreeTable with ContainerHierarchicalWrapper is updated correctly

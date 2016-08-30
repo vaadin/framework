@@ -21,7 +21,6 @@ import org.junit.Test;
 import org.openqa.selenium.Dimension;
 
 import com.vaadin.testbench.elements.ButtonElement;
-
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;

@@ -3,9 +3,9 @@ package com.vaadin.tests.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.shared.ui.label.ContentMode;
 
 public class Log extends VerticalLayout {
     List<Label> eventLabels = new ArrayList<Label>();

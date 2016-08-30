@@ -1,9 +1,9 @@
 package com.vaadin.tests.components.label;
 
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.Label;
-import com.vaadin.shared.ui.label.ContentMode;
 
 public class Labels extends ComponentTestCase<Label> {
 

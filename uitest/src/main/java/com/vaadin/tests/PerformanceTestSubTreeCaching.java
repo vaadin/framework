@@ -18,12 +18,12 @@ package com.vaadin.tests;
 
 import java.util.Date;
 
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.Table;
 
 public class PerformanceTestSubTreeCaching extends CustomComponent {

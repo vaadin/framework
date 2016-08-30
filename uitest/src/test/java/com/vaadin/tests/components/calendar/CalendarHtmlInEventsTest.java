@@ -20,10 +20,10 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.v7.testbench.customelements.CalendarElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
-import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.CalendarElement;
+import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 
 public class CalendarHtmlInEventsTest extends SingleBrowserTest {
 

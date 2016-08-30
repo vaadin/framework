@@ -16,6 +16,7 @@
 
 package com.vaadin.tests;
 
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component.Event;
@@ -27,7 +28,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.Tree;
 

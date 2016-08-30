@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -12,7 +13,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.themes.Reindeer;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.Table;
 
 public class LayoutResizeTest extends TestBase {

@@ -21,8 +21,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.v7.testbench.customelements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.TableElement;
 
 public class TableWithPollingTest extends MultiBrowserTest {
 

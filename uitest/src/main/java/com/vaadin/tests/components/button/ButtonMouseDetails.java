@@ -1,9 +1,9 @@
 package com.vaadin.tests.components.button;
 
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 
 public class ButtonMouseDetails extends TestBase {

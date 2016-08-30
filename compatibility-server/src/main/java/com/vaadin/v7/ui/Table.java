@@ -77,9 +77,9 @@ import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickNotifier;
 import com.vaadin.v7.shared.ui.table.CollapseMenuContent;
 import com.vaadin.v7.shared.ui.table.TableConstants;
+import com.vaadin.v7.shared.ui.table.TableConstants.Section;
 import com.vaadin.v7.shared.ui.table.TableServerRpc;
 import com.vaadin.v7.shared.ui.table.TableState;
-import com.vaadin.v7.shared.ui.table.TableConstants.Section;
 
 /**
  * <p>

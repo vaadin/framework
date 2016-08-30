@@ -21,8 +21,8 @@ import static org.hamcrest.number.IsCloseTo.closeTo;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.v7.testbench.customelements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.TableElement;
 
 /**
  * Scroll position should be restored when removing and re-adding all rows in

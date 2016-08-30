@@ -16,11 +16,11 @@
 package com.vaadin.tests.components.datefield;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;

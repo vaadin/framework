@@ -12,11 +12,11 @@ import com.vaadin.server.StreamVariable;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
-import com.vaadin.v7.event.DataBoundTransferable;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Html5File;
 import com.vaadin.ui.Label;
+import com.vaadin.v7.event.DataBoundTransferable;
 
 /**
  * replacement for a proto class to keep tests working

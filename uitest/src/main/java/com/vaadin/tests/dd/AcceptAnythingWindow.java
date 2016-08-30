@@ -14,9 +14,9 @@ import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.DragAndDropWrapper.WrapperTargetDetails;
 import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
-import com.vaadin.v7.event.DataBoundTransferable;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.event.DataBoundTransferable;
 
 public class AcceptAnythingWindow extends Window {
 

@@ -15,8 +15,8 @@
  */
 package com.vaadin.v7.data.util.filter;
 
-import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Container.Filter;
+import com.vaadin.v7.data.Item;
 
 public class Like implements Filter {
     private final Object propertyId;

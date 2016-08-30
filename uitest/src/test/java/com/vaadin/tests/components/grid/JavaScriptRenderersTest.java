@@ -18,7 +18,6 @@ package com.vaadin.tests.components.grid;
 import org.junit.Assert;
 import org.junit.Test;
 
-
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;

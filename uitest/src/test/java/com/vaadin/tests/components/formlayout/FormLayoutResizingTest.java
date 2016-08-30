@@ -24,9 +24,9 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.FormLayoutElement;
-import com.vaadin.v7.testbench.customelements.TableElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserThemeTest;
+import com.vaadin.v7.testbench.customelements.TableElement;
 
 public class FormLayoutResizingTest extends MultiBrowserThemeTest {
     @Test

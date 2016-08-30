@@ -7,9 +7,9 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.ui.DateField;
-import com.vaadin.shared.ui.datefield.Resolution;
 
 public class DateFieldTest<T extends DateField>
         extends AbstractFieldTest<T, Date> {

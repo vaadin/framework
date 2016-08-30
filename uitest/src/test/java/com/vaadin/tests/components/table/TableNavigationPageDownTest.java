@@ -29,9 +29,9 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import com.vaadin.v7.testbench.customelements.TableElement;
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.TableElement;
 
 /**
  * Tests that navigation with PageDown/PageUp/Home/End in Table works

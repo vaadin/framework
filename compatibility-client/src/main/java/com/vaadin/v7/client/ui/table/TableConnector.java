@@ -47,9 +47,9 @@ import com.vaadin.v7.client.ui.VScrollTable.FooterCell;
 import com.vaadin.v7.client.ui.VScrollTable.HeaderCell;
 import com.vaadin.v7.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.v7.shared.ui.table.TableConstants;
+import com.vaadin.v7.shared.ui.table.TableConstants.Section;
 import com.vaadin.v7.shared.ui.table.TableServerRpc;
 import com.vaadin.v7.shared.ui.table.TableState;
-import com.vaadin.v7.shared.ui.table.TableConstants.Section;
 
 @Connect(com.vaadin.v7.ui.Table.class)
 public class TableConnector extends AbstractFieldConnector

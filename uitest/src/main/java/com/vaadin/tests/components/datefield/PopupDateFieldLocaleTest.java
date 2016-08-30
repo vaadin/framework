@@ -4,9 +4,9 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.PopupDateField;
-import com.vaadin.shared.ui.datefield.Resolution;
 
 public class PopupDateFieldLocaleTest extends AbstractTestUI {
 

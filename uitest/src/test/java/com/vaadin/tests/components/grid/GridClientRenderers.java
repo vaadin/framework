@@ -31,13 +31,13 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NativeButtonElement;
-import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.widgetset.client.grid.GridClientColumnRendererConnector.Renderers;
 import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
 import com.vaadin.v7.testbench.customelements.GridElement;
+import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 
 /**
  * Tests Grid client side renderers

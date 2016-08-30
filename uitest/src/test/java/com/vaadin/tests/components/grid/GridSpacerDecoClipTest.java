@@ -21,7 +21,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 
 import com.vaadin.testbench.TestBenchElement;
-
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.minitutorials.v7_5.ShowingExtraDataForRows;
 import com.vaadin.tests.tb3.MultiBrowserTest;

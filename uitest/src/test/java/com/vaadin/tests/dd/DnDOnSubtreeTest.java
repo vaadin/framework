@@ -8,8 +8,8 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.v7.testbench.customelements.TreeElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.TreeElement;
 
 public class DnDOnSubtreeTest extends MultiBrowserTest {
 

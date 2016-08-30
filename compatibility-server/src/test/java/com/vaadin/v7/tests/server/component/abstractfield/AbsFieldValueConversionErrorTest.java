@@ -10,8 +10,8 @@ import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.v7.data.Validator.InvalidValueException;
-import com.vaadin.v7.data.util.converter.Converter.ConversionException;
 import com.vaadin.v7.data.util.MethodProperty;
+import com.vaadin.v7.data.util.converter.Converter.ConversionException;
 import com.vaadin.v7.data.util.converter.StringToIntegerConverter;
 import com.vaadin.v7.ui.TextField;
 

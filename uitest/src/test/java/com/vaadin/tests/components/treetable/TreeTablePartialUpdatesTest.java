@@ -27,8 +27,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.commands.TestBenchElementCommands;
-import com.vaadin.v7.testbench.customelements.TreeTableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.TreeTableElement;
 
 /**
  * Tests partial updates of a TreeTable.

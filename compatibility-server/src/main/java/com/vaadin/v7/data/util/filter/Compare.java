@@ -15,9 +15,9 @@
  */
 package com.vaadin.v7.data.util.filter;
 
+import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Container.Filter;
 
 /**
  * Simple container filter comparing an item property value against a given

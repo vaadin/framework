@@ -20,13 +20,13 @@ import java.util.Date;
 import java.util.Map;
 
 import com.vaadin.server.UserError;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextField;

@@ -2,6 +2,7 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.server.Page.BrowserWindowResizeEvent;
 import com.vaadin.server.Page.BrowserWindowResizeListener;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.LoremIpsum;
@@ -12,7 +13,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.ResizeEvent;
 import com.vaadin.ui.Window.ResizeListener;
-import com.vaadin.shared.ui.label.ContentMode;
 
 public class LazyWindowResize extends AbstractTestCase {
 

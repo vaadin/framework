@@ -27,6 +27,7 @@ import com.vaadin.server.VaadinPortletService;
 import com.vaadin.server.VaadinPortletSession;
 import com.vaadin.server.VaadinPortletSession.PortletListener;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
@@ -36,7 +37,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.TextField;
 
 /**

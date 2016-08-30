@@ -19,6 +19,7 @@ package com.vaadin.tests;
 import java.util.Locale;
 
 import com.vaadin.server.Sizeable;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -30,7 +31,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.v7.ui.Table;
 
 public class TestForBasicApplicationLayout extends CustomComponent {

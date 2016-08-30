@@ -24,8 +24,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 
 public class ComboBoxInputPromptTest extends MultiBrowserTest {
 

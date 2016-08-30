@@ -17,6 +17,7 @@
 package com.vaadin.tests;
 
 import com.vaadin.server.ClassResource;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
@@ -27,7 +28,6 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.shared.ui.label.ContentMode;
 
 /**
  * This example demonstrates layouts. Layouts are populated with sample Vaadin

@@ -8,10 +8,10 @@ import org.junit.Test;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.v7.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.TableRowElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.TableElement;
 
 public class NavigationTest extends SingleBrowserTest {
 

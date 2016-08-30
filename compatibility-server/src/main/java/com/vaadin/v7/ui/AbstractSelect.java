@@ -57,10 +57,10 @@ import com.vaadin.v7.data.Validator.InvalidValueException;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.Converter.ConversionException;
+import com.vaadin.v7.data.util.converter.ConverterUtil;
 import com.vaadin.v7.event.DataBoundTransferable;
 import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 import com.vaadin.v7.shared.ui.select.AbstractSelectState;
-import com.vaadin.v7.data.util.converter.ConverterUtil;
 
 /**
  * <p>

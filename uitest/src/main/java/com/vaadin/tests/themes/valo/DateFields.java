@@ -21,6 +21,7 @@ import java.util.Locale;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.UserError;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -35,7 +36,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.v7.data.fieldgroup.FieldGroup;
 import com.vaadin.v7.data.util.ObjectProperty;
 import com.vaadin.v7.data.util.PropertysetItem;
-import com.vaadin.shared.ui.datefield.Resolution;
 
 public class DateFields extends VerticalLayout implements View {
     public DateFields() {

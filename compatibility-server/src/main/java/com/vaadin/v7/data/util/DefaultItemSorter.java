@@ -22,9 +22,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Container.Sortable;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Container.Sortable;
 
 /**
  * Provides a default implementation of an ItemSorter. The

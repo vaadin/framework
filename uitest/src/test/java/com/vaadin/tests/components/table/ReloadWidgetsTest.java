@@ -9,8 +9,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
-import com.vaadin.v7.testbench.customelements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.TableElement;
 
 public class ReloadWidgetsTest extends MultiBrowserTest {
 

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import com.vaadin.shared.communication.PushMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -35,7 +36,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.TextField;
 

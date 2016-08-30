@@ -22,9 +22,9 @@ import org.junit.Test;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 import com.vaadin.v7.testbench.customelements.NativeSelectElement;
-import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class EnumSelectTest extends SingleBrowserTest {
 

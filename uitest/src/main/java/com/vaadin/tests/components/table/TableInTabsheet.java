@@ -3,6 +3,7 @@ package com.vaadin.tests.components.table;
 import java.net.MalformedURLException;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -10,7 +11,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.Align;
 

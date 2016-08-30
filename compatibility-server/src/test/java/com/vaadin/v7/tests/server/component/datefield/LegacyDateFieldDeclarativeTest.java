@@ -21,8 +21,8 @@ import java.util.TimeZone;
 
 import org.junit.Test;
 
-import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.v7.ui.DateField;
 
 /**

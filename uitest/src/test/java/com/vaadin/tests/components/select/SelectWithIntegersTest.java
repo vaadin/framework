@@ -18,8 +18,8 @@ package com.vaadin.tests.components.select;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.v7.testbench.customelements.ListSelectElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.ListSelectElement;
 
 public class SelectWithIntegersTest extends SingleBrowserTest {
     @Test

@@ -88,13 +88,13 @@ import com.vaadin.v7.shared.ui.grid.EditorServerRpc;
 import com.vaadin.v7.shared.ui.grid.GridClientRpc;
 import com.vaadin.v7.shared.ui.grid.GridColumnState;
 import com.vaadin.v7.shared.ui.grid.GridConstants;
+import com.vaadin.v7.shared.ui.grid.GridConstants.Section;
 import com.vaadin.v7.shared.ui.grid.GridServerRpc;
 import com.vaadin.v7.shared.ui.grid.GridState;
 import com.vaadin.v7.shared.ui.grid.GridStaticSectionState;
-import com.vaadin.v7.shared.ui.grid.ScrollDestination;
-import com.vaadin.v7.shared.ui.grid.GridConstants.Section;
 import com.vaadin.v7.shared.ui.grid.GridStaticSectionState.CellState;
 import com.vaadin.v7.shared.ui.grid.GridStaticSectionState.RowState;
+import com.vaadin.v7.shared.ui.grid.ScrollDestination;
 
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;

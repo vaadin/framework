@@ -1,13 +1,13 @@
 package com.vaadin.v7.tests.components.textfield;
 
-import com.vaadin.v7.event.FieldEvents.TextChangeEvent;
-import com.vaadin.v7.event.FieldEvents.TextChangeListener;
 import com.vaadin.shared.ui.textfield.ValueChangeMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.v7.event.FieldEvents.TextChangeEvent;
+import com.vaadin.v7.event.FieldEvents.TextChangeListener;
 
 public class TextChangeEvents extends TestBase {
     Log l = new Log(10);

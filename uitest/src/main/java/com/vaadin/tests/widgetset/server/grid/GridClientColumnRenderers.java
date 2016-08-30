@@ -19,6 +19,7 @@ import java.util.Arrays;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.client.grid.GridClientColumnRendererConnector.Renderers;
 import com.vaadin.tests.widgetset.client.grid.GridClientColumnRendererRpc;
@@ -31,7 +32,6 @@ import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.AbstractSelect.ItemCaptionMode;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.NativeSelect;
 
 @Widgetset(TestingWidgetSet.NAME)

@@ -21,9 +21,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.v7.testbench.customelements.ComboBoxElement;
 import com.vaadin.v7.testbench.customelements.NativeSelectElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class FilteringTurkishLocaleTest extends MultiBrowserTest {
 

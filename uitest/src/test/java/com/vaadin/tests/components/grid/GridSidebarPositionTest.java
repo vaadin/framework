@@ -24,7 +24,6 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 
-
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.v7.testbench.customelements.GridElement;
 

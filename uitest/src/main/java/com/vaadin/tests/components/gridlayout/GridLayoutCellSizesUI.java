@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.gridlayout;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Label;
-import com.vaadin.shared.ui.datefield.Resolution;
 
 @SuppressWarnings("serial")
 public class GridLayoutCellSizesUI extends AbstractTestUI {

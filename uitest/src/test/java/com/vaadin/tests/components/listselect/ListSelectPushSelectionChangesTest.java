@@ -24,9 +24,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
 import com.vaadin.v7.testbench.customelements.ListSelectElement;
 import com.vaadin.v7.testbench.customelements.OptionGroupElement;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
 
 public class ListSelectPushSelectionChangesTest
         extends SingleBrowserTestPhantomJS2 {

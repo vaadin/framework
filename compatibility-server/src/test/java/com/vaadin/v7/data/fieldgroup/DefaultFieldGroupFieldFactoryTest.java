@@ -24,11 +24,11 @@ import org.junit.Test;
 
 import com.vaadin.v7.ui.AbstractSelect;
 import com.vaadin.v7.ui.ComboBox;
-import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.DateField;
+import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.InlineDateField;
-import com.vaadin.v7.ui.PopupDateField;
 import com.vaadin.v7.ui.ListSelect;
+import com.vaadin.v7.ui.PopupDateField;
 import com.vaadin.v7.ui.TextField;
 
 public class DefaultFieldGroupFieldFactoryTest {

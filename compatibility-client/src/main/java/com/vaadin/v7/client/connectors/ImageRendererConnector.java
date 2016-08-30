@@ -20,8 +20,8 @@ import com.vaadin.client.communication.JsonDecoder;
 import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.v7.client.renderers.ImageRenderer;
 import com.vaadin.v7.client.renderers.ClickableRenderer.RendererClickHandler;
+import com.vaadin.v7.client.renderers.ImageRenderer;
 
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;

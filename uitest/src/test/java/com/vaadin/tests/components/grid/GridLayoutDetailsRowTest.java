@@ -21,7 +21,6 @@ import static org.hamcrest.number.IsCloseTo.closeTo;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-
 import com.vaadin.testbench.elements.GridLayoutElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.parallel.TestCategory;

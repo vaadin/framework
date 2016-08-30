@@ -3,11 +3,11 @@ package com.vaadin.tests.components.datefield;
 import java.util.Date;
 import java.util.Locale;
 
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.DateField;
 
 public class DateFieldLocale extends TestBase {

@@ -24,8 +24,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.v7.testbench.customelements.ListSelectElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.v7.testbench.customelements.ListSelectElement;
 
 public class ListSelectNoDomRebuildTest extends SingleBrowserTest {
     @Override

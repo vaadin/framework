@@ -21,7 +21,6 @@ import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
-
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.TabSheetElement;
 import com.vaadin.testbench.parallel.TestCategory;

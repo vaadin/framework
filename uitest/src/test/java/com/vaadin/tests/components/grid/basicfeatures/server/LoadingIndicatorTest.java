@@ -22,7 +22,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 import com.vaadin.v7.testbench.customelements.GridElement;
 

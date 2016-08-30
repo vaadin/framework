@@ -15,8 +15,8 @@
  */
 package com.vaadin.v7.data.util.filter;
 
-import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Container.Filter;
+import com.vaadin.v7.data.Item;
 
 /**
  * A compound {@link Filter} that accepts an item if all of its filters accept
