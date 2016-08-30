@@ -31,9 +31,9 @@ import com.vaadin.client.ui.VCheckBox;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
-import com.vaadin.shared.ui.checkbox.CheckBoxState;
 import com.vaadin.v7.client.ui.AbstractFieldConnector;
+import com.vaadin.v7.shared.ui.checkbox.CheckBoxServerRpc;
+import com.vaadin.v7.shared.ui.checkbox.CheckBoxState;
 import com.vaadin.v7.ui.CheckBox;
 
 @Connect(CheckBox.class)

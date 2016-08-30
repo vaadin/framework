@@ -13,21 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.widgetset.client;
 
-import com.vaadin.shared.ui.MediaControl;
-import com.vaadin.v7.client.ui.VLabel;
+package com.vaadin.v7.client.ui;
 
-public class ClientRpcClassWidget extends VLabel implements MediaControl {
+import com.google.gwt.user.client.ui.SimplePanel;
 
-    @Override
-    public void play() {
-        setText("play");
-    }
+public class VCustomComponent extends SimplePanel {
 
-    @Override
-    public void pause() {
-        setText("pause");
+    private static final String CLASSNAME = "v-customcomponent";
+
+    public VCustomComponent() {
+        super();
+        setStyleName(CLASSNAME);
     }
 
 }

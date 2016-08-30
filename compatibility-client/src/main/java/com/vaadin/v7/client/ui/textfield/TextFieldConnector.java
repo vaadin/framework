@@ -25,9 +25,9 @@ import com.vaadin.client.Util;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
-import com.vaadin.shared.v7.ui.textfield.LegacyAbstractTextFieldState;
-import com.vaadin.shared.v7.ui.textfield.LegacyTextFieldConstants;
 import com.vaadin.v7.client.ui.VTextField;
+import com.vaadin.v7.shared.ui.textfield.AbstractTextFieldState;
+import com.vaadin.v7.shared.ui.textfield.LegacyTextFieldConstants;
 import com.vaadin.v7.ui.TextField;
 
 @Deprecated
@@ -36,8 +36,8 @@ public class TextFieldConnector extends AbstractFieldConnector
         implements Paintable {
 
     @Override
-    public LegacyAbstractTextFieldState getState() {
-        return (LegacyAbstractTextFieldState) super.getState();
+    public AbstractTextFieldState getState() {
+        return (AbstractTextFieldState) super.getState();
     }
 
     @Override

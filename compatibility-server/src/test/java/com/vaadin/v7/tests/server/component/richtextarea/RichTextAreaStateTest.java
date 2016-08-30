@@ -18,7 +18,7 @@ package com.vaadin.v7.tests.server.component.richtextarea;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.shared.ui.textarea.RichTextAreaState;
+import com.vaadin.v7.shared.ui.textarea.RichTextAreaState;
 import com.vaadin.v7.ui.RichTextArea;
 
 /**

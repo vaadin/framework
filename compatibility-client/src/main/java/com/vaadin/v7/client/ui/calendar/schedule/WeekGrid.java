@@ -32,8 +32,8 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.WidgetUtil;
-import com.vaadin.shared.ui.calendar.DateConstants;
 import com.vaadin.v7.client.ui.VCalendar;
+import com.vaadin.v7.shared.ui.calendar.DateConstants;
 
 /**
  *

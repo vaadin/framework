@@ -22,10 +22,10 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.shared.ui.textarea.RichTextAreaState;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.v7.data.Property;
+import com.vaadin.v7.shared.ui.textarea.RichTextAreaState;
 
 /**
  * A simple RichTextArea to edit HTML format text.

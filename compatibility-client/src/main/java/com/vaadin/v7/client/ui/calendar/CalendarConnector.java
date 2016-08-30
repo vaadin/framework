@@ -45,11 +45,6 @@ import com.vaadin.client.ui.ActionOwner;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
-import com.vaadin.shared.ui.calendar.CalendarClientRpc;
-import com.vaadin.shared.ui.calendar.CalendarEventId;
-import com.vaadin.shared.ui.calendar.CalendarServerRpc;
-import com.vaadin.shared.ui.calendar.CalendarState;
-import com.vaadin.shared.ui.calendar.DateConstants;
 import com.vaadin.v7.client.ui.VCalendar;
 import com.vaadin.v7.client.ui.VCalendar.BackwardListener;
 import com.vaadin.v7.client.ui.VCalendar.DateClickListener;
@@ -72,6 +67,11 @@ import com.vaadin.v7.client.ui.calendar.schedule.DateCell.DateCellSlot;
 import com.vaadin.v7.client.ui.calendar.schedule.dd.CalendarDropHandler;
 import com.vaadin.v7.client.ui.calendar.schedule.dd.CalendarMonthDropHandler;
 import com.vaadin.v7.client.ui.calendar.schedule.dd.CalendarWeekDropHandler;
+import com.vaadin.v7.shared.ui.calendar.CalendarClientRpc;
+import com.vaadin.v7.shared.ui.calendar.CalendarEventId;
+import com.vaadin.v7.shared.ui.calendar.CalendarServerRpc;
+import com.vaadin.v7.shared.ui.calendar.CalendarState;
+import com.vaadin.v7.shared.ui.calendar.DateConstants;
 import com.vaadin.v7.ui.Calendar;
 
 /**

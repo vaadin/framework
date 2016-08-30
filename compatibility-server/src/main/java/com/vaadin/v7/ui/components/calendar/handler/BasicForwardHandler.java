@@ -18,7 +18,7 @@ package com.vaadin.v7.ui.components.calendar.handler;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.vaadin.shared.ui.calendar.DateConstants;
+import com.vaadin.v7.shared.ui.calendar.DateConstants;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.ForwardEvent;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.ForwardHandler;
 

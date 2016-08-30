@@ -31,7 +31,6 @@ import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.dd.VHasDropHandler;
-import com.vaadin.shared.ui.calendar.DateConstants;
 import com.vaadin.v7.client.ui.calendar.schedule.CalendarDay;
 import com.vaadin.v7.client.ui.calendar.schedule.CalendarEvent;
 import com.vaadin.v7.client.ui.calendar.schedule.DayToolbar;
@@ -42,6 +41,7 @@ import com.vaadin.v7.client.ui.calendar.schedule.SimpleWeekToolbar;
 import com.vaadin.v7.client.ui.calendar.schedule.WeekGrid;
 import com.vaadin.v7.client.ui.calendar.schedule.WeeklyLongEvents;
 import com.vaadin.v7.client.ui.calendar.schedule.dd.CalendarDropHandler;
+import com.vaadin.v7.shared.ui.calendar.DateConstants;
 
 /**
  * Client side implementation for Calendar

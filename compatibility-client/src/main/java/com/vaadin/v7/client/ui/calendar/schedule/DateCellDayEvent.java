@@ -42,7 +42,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.vaadin.client.WidgetUtil;
-import com.vaadin.shared.ui.calendar.DateConstants;
+import com.vaadin.v7.shared.ui.calendar.DateConstants;
 
 /**
  * Internally used by the calendar

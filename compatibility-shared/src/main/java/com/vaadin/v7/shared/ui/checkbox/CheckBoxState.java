@@ -13,37 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.v7.ui.textfield;
+package com.vaadin.v7.shared.ui.checkbox;
 
 import com.vaadin.shared.AbstractFieldState;
-import com.vaadin.shared.annotations.NoLayout;
 
-@Deprecated
-public class LegacyAbstractTextFieldState extends AbstractFieldState {
+public class CheckBoxState extends AbstractFieldState {
     {
-        primaryStyleName = "v-textfield";
+        primaryStyleName = "v-checkbox";
     }
 
-    /**
-     * Maximum character count in text field.
-     */
-    @NoLayout
-    public int maxLength = -1;
-
-    /**
-     * Number of visible columns in the TextField.
-     */
-    public int columns = 0;
-
-    /**
-     * The prompt to display in an empty field. Null when disabled.
-     */
-    @NoLayout
-    public String inputPrompt = null;
-
-    /**
-     * The text in the field
-     */
-    @NoLayout
-    public String text = null;
+    public boolean checked = false;
 }

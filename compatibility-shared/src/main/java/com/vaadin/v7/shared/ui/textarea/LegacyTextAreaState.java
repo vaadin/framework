@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.v7.ui.textarea;
+package com.vaadin.v7.shared.ui.textarea;
 
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.annotations.NoLayout;
-import com.vaadin.shared.v7.ui.textfield.LegacyAbstractTextFieldState;
+import com.vaadin.v7.shared.ui.textfield.AbstractTextFieldState;
 
 @Deprecated
-public class LegacyTextAreaState extends LegacyAbstractTextFieldState {
+public class LegacyTextAreaState extends AbstractTextFieldState {
     {
         primaryStyleName = "v-textarea";
     }

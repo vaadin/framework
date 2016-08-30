@@ -102,7 +102,6 @@ import com.vaadin.client.ui.TouchScrollDelegate;
 import com.vaadin.client.ui.TreeAction;
 import com.vaadin.client.ui.VContextMenu;
 import com.vaadin.client.ui.VEmbedded;
-import com.vaadin.client.ui.VLabel;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.dd.DDUtil;
 import com.vaadin.client.ui.dd.VAbstractDropHandler;

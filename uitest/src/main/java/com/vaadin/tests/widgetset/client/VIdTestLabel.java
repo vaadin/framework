@@ -1,6 +1,6 @@
 package com.vaadin.tests.widgetset.client;
 
-import com.vaadin.client.ui.VLabel;
+import com.vaadin.v7.client.ui.VLabel;
 
 /**
  * Client-side implementation for IdTestLabel (#10179).

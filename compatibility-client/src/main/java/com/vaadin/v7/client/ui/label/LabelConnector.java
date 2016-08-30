@@ -21,9 +21,9 @@ import com.vaadin.client.Profiler;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.client.ui.VLabel;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.v7.client.ui.VLabel;
 import com.vaadin.v7.shared.ui.label.LabelState;
 import com.vaadin.v7.ui.Label;
 

@@ -30,14 +30,14 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.shared.v7.ui.textfield.LegacyAbstractTextFieldState;
-import com.vaadin.shared.v7.ui.textfield.LegacyTextFieldConstants;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.v7.event.FieldEvents.TextChangeEvent;
 import com.vaadin.v7.event.FieldEvents.TextChangeListener;
 import com.vaadin.v7.event.FieldEvents.TextChangeNotifier;
+import com.vaadin.v7.shared.ui.textfield.AbstractTextFieldState;
+import com.vaadin.v7.shared.ui.textfield.LegacyTextFieldConstants;
 
 @Deprecated
 public abstract class AbstractTextField extends AbstractField<String> implements
@@ -99,13 +99,13 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     }
 
     @Override
-    protected LegacyAbstractTextFieldState getState() {
-        return (LegacyAbstractTextFieldState) super.getState();
+    protected AbstractTextFieldState getState() {
+        return (AbstractTextFieldState) super.getState();
     }
 
     @Override
-    protected LegacyAbstractTextFieldState getState(boolean markAsDirty) {
-        return (LegacyAbstractTextFieldState) super.getState(markAsDirty);
+    protected AbstractTextFieldState getState(boolean markAsDirty) {
+        return (AbstractTextFieldState) super.getState(markAsDirty);
     }
 
     @Override

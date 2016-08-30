@@ -20,8 +20,8 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.EventListener;
 
-import com.vaadin.shared.ui.calendar.CalendarEventId;
 import com.vaadin.util.ReflectTools;
+import com.vaadin.v7.shared.ui.calendar.CalendarEventId;
 import com.vaadin.v7.ui.Calendar;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
 

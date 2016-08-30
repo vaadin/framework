@@ -27,11 +27,11 @@ import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
-import com.vaadin.shared.ui.checkbox.CheckBoxState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.v7.data.Property;
+import com.vaadin.v7.shared.ui.checkbox.CheckBoxServerRpc;
+import com.vaadin.v7.shared.ui.checkbox.CheckBoxState;
 
 public class CheckBox extends AbstractField<Boolean> {
 

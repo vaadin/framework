@@ -13,17 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.v7.ui.textfield;
+package com.vaadin.v7.shared.ui.checkbox;
 
-import java.io.Serializable;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.annotations.Delayed;
+import com.vaadin.shared.communication.ServerRpc;
 
-@Deprecated
-public class LegacyTextFieldConstants implements Serializable {
-    public static final String VAR_CUR_TEXT = "curText";
-    public static final String ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS = "nvc";
-    public static final String ATTR_TEXTCHANGE_TIMEOUT = "iet";
-    public static final String VAR_CURSOR = "c";
-    public static final String ATTR_TEXTCHANGE_EVENTMODE = "iem";
-    public static final String TEXTCHANGE_MODE_EAGER = "EAGER";
-
+public interface CheckBoxServerRpc extends ServerRpc {
+    @Delayed
+    public void setChecked(boolean checked,
+            MouseEventDetails mouseEventDetails);
 }

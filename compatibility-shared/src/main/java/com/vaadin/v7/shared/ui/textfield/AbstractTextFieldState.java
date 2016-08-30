@@ -13,29 +13,37 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.shared.ui.textarea;
+package com.vaadin.v7.shared.ui.textfield;
 
-import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.annotations.NoLayout;
-import com.vaadin.v7.shared.ui.textfield.AbstractTextFieldState;
 
 @Deprecated
-public class TextAreaState extends AbstractTextFieldState {
+public class AbstractTextFieldState extends AbstractFieldState {
     {
-        primaryStyleName = "v-textarea";
+        primaryStyleName = "v-textfield";
     }
 
     /**
-     * Number of visible rows in the text area. The default is 5.
+     * Maximum character count in text field.
      */
-    @DelegateToWidget
-    public int rows = 5;
+    @NoLayout
+    public int maxLength = -1;
 
     /**
-     * Tells if word-wrapping should be used in the text area.
+     * Number of visible columns in the TextField.
      */
-    @DelegateToWidget
-    @NoLayout
-    public boolean wordwrap = true;
+    public int columns = 0;
 
+    /**
+     * The prompt to display in an empty field. Null when disabled.
+     */
+    @NoLayout
+    public String inputPrompt = null;
+
+    /**
+     * The text in the field
+     */
+    @NoLayout
+    public String text = null;
 }

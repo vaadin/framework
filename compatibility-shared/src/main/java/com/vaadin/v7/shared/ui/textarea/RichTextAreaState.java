@@ -13,16 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.calendar;
+package com.vaadin.v7.shared.ui.textarea;
 
-import com.vaadin.shared.communication.ClientRpc;
+import com.vaadin.v7.shared.ui.textfield.AbstractTextFieldState;
 
 /**
  *
- * @since 7.1
- * @author Vaadin Ltd.
+ * Shared state for the RichTextArea component.
  *
+ * @since 7.6
  */
-public interface CalendarClientRpc extends ClientRpc {
-    void scroll(int scrollPosition);
+public class RichTextAreaState extends AbstractTextFieldState {
+
+    {
+        primaryStyleName = "v-richtextarea";
+    }
 }

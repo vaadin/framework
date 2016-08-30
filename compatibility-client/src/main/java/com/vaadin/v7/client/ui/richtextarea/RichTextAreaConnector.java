@@ -23,10 +23,10 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
-import com.vaadin.shared.ui.textarea.RichTextAreaState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.client.ui.AbstractFieldConnector;
 import com.vaadin.v7.client.ui.VRichTextArea;
+import com.vaadin.v7.shared.ui.textarea.RichTextAreaState;
 import com.vaadin.v7.ui.RichTextArea;
 
 @Connect(value = RichTextArea.class, loadStyle = LoadStyle.LAZY)

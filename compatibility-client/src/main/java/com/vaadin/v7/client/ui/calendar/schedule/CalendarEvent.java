@@ -18,7 +18,7 @@ package com.vaadin.v7.client.ui.calendar.schedule;
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.vaadin.shared.ui.calendar.DateConstants;
+import com.vaadin.v7.shared.ui.calendar.DateConstants;
 
 /**
  * A client side implementation of a calendar event

@@ -37,7 +37,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.Field;
 import com.vaadin.shared.EventId;
-import com.vaadin.shared.v7.ui.textfield.LegacyTextFieldConstants;
+import com.vaadin.v7.shared.ui.textfield.LegacyTextFieldConstants;
 
 /**
  * This class represents a basic text input field with one row.

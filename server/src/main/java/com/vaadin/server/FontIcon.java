@@ -16,8 +16,8 @@
 
 package com.vaadin.server;
 
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.shared.ui.label.ContentMode;
 
 /**
  * A font icon is a type of icon that is made by displaying one character from a

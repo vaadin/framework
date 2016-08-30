@@ -13,21 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.widgetset.client;
+package com.vaadin.v7.shared.ui.textfield;
 
-import com.vaadin.shared.ui.MediaControl;
-import com.vaadin.v7.client.ui.VLabel;
+import java.io.Serializable;
 
-public class ClientRpcClassWidget extends VLabel implements MediaControl {
-
-    @Override
-    public void play() {
-        setText("play");
-    }
-
-    @Override
-    public void pause() {
-        setText("pause");
-    }
+@Deprecated
+public class LegacyTextFieldConstants implements Serializable {
+    public static final String VAR_CUR_TEXT = "curText";
+    public static final String ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS = "nvc";
+    public static final String ATTR_TEXTCHANGE_TIMEOUT = "iet";
+    public static final String VAR_CURSOR = "c";
+    public static final String ATTR_TEXTCHANGE_EVENTMODE = "iem";
+    public static final String TEXTCHANGE_MODE_EAGER = "EAGER";
 
 }

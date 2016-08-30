@@ -38,8 +38,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.FocusableFlowPanel;
-import com.vaadin.shared.ui.calendar.DateConstants;
 import com.vaadin.v7.client.ui.VCalendar;
+import com.vaadin.v7.shared.ui.calendar.DateConstants;
 
 /**
  * A class representing a single cell within the calendar in month-view
