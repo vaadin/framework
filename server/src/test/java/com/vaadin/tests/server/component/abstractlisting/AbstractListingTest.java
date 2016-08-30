@@ -13,10 +13,10 @@ import org.junit.Test;
 
 import com.vaadin.data.selection.SelectionModel;
 import com.vaadin.server.data.BackEndDataSource;
+import com.vaadin.server.data.DataGenerator;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.server.data.ListDataSource;
 import com.vaadin.server.data.Query;
-import com.vaadin.server.data.TypedDataGenerator;
 import com.vaadin.ui.AbstractListing;
 import com.vaadin.ui.AbstractListing.AbstractListingExtension;
 
@@ -48,12 +48,12 @@ public class AbstractListingTest {
         }
 
         @Override
-        public void addDataGenerator(TypedDataGenerator<String> generator) {
+        public void addDataGenerator(DataGenerator<String> generator) {
             super.addDataGenerator(generator);
         }
 
         @Override
-        public void removeDataGenerator(TypedDataGenerator<String> generator) {
+        public void removeDataGenerator(DataGenerator<String> generator) {
             super.removeDataGenerator(generator);
         }
 

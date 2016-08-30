@@ -36,7 +36,7 @@ import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.server.data.SortOrder;
-import com.vaadin.server.data.TypedDataGenerator;
+import com.vaadin.server.data.DataGenerator;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.sort.SortDirection;
@@ -301,7 +301,7 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
      *            the column value type
      */
     public static class Column<T, V> extends AbstractExtension
-            implements TypedDataGenerator<T> {
+            implements DataGenerator<T> {
 
         private Function<T, V> valueProvider;
         private Function<SortDirection, Stream<SortOrder<String>>> sortOrderProvider;

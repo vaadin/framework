@@ -42,7 +42,7 @@ import elemental.json.JsonObject;
 
 /**
  * DataProvider base class. This class is the base for all DataProvider
- * communication implementations. It uses {@link TypedDataGenerator}s to write
+ * communication implementations. It uses {@link DataGenerator}s to write
  * {@link JsonObject}s representing each data object to be sent to the
  * client-side.
  *
@@ -81,10 +81,10 @@ public class DataCommunicator<T> extends AbstractExtension {
      * {@link #addActiveData(Collection)} and {@link #cleanUp(Collection)} are
      * called with the same parameter. In the clean up method any dropped data
      * objects that are not in the given collection will be cleaned up and
-     * {@link TypedDataGenerator#destroyData(Object)} will be called for them.
+     * {@link DataGenerator#destroyData(Object)} will be called for them.
      */
     protected class ActiveDataHandler
-            implements Serializable, TypedDataGenerator<T> {
+            implements Serializable, DataGenerator<T> {
 
         /**
          * Set of key strings for currently active data objects
@@ -173,7 +173,7 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
     }
 
-    private Collection<TypedDataGenerator<T>> generators = new LinkedHashSet<>();
+    private Collection<DataGenerator<T>> generators = new LinkedHashSet<>();
     private ActiveDataHandler handler = new ActiveDataHandler();
 
     private DataSource<T> dataSource;
@@ -266,7 +266,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @param generator
      *            the data generator to add, not null
      */
-    public void addDataGenerator(TypedDataGenerator<T> generator) {
+    public void addDataGenerator(DataGenerator<T> generator) {
         Objects.requireNonNull(generator, "generator cannot be null");
         generators.add(generator);
     }
@@ -278,7 +278,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @param generator
      *            the data generator to remove, not null
      */
-    public void removeDataGenerator(TypedDataGenerator<T> generator) {
+    public void removeDataGenerator(DataGenerator<T> generator) {
         Objects.requireNonNull(generator, "generator cannot be null");
         generators.remove(generator);
     }
@@ -327,7 +327,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     protected JsonObject getDataObject(T data) {
         JsonObject dataObject = Json.createObject();
 
-        for (TypedDataGenerator<T> generator : generators) {
+        for (DataGenerator<T> generator : generators) {
             generator.generateData(data, dataObject);
         }
 
@@ -336,7 +336,7 @@ public class DataCommunicator<T> extends AbstractExtension {
 
     /**
      * Drops data objects identified by given keys from memory. This will invoke
-     * {@link TypedDataGenerator#destroyData} for each of those objects.
+     * {@link DataGenerator#destroyData} for each of those objects.
      *
      * @param droppedKeys
      *            collection of dropped keys
@@ -348,7 +348,7 @@ public class DataCommunicator<T> extends AbstractExtension {
             T data = getKeyMapper().get(key);
             assert data != null : "Bookkeepping failure. No data object to match key";
 
-            for (TypedDataGenerator<T> g : generators) {
+            for (DataGenerator<T> g : generators) {
                 g.destroyData(data);
             }
         }

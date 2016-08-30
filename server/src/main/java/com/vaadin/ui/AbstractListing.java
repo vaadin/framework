@@ -21,8 +21,8 @@ import com.vaadin.data.Listing;
 import com.vaadin.data.selection.SelectionModel;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.data.DataCommunicator;
+import com.vaadin.server.data.DataGenerator;
 import com.vaadin.server.data.DataSource;
-import com.vaadin.server.data.TypedDataGenerator;
 
 /**
  * A base class for listing components. Provides common handling for fetching
@@ -45,7 +45,7 @@ public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T
      *            the listing item type
      */
     public abstract static class AbstractListingExtension<T>
-            extends AbstractExtension implements TypedDataGenerator<T> {
+            extends AbstractExtension implements DataGenerator<T> {
 
         /**
          * Adds this extension to the given parent listing.
@@ -154,7 +154,7 @@ public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T
      * @param generator
      *            the data generator to add, not null
      */
-    protected void addDataGenerator(TypedDataGenerator<T> generator) {
+    protected void addDataGenerator(DataGenerator<T> generator) {
         getDataCommunicator().addDataGenerator(generator);
     }
 
@@ -165,7 +165,7 @@ public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T
      * @param generator
      *            the data generator to remove, not null
      */
-    protected void removeDataGenerator(TypedDataGenerator<T> generator) {
+    protected void removeDataGenerator(DataGenerator<T> generator) {
         getDataCommunicator().removeDataGenerator(generator);
     }
 
