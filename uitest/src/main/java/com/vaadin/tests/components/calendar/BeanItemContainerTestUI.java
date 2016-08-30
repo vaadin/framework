@@ -21,7 +21,6 @@ import java.util.GregorianCalendar;
 
 import com.vaadin.event.Action;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalSplitPanel;
@@ -31,6 +30,7 @@ import com.vaadin.v7.data.fieldgroup.FieldGroup;
 import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.v7.ui.Calendar;
 import com.vaadin.v7.ui.DateField;
 import com.vaadin.v7.ui.Table;

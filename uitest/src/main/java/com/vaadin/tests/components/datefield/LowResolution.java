@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.PopupDateField;
+import com.vaadin.shared.ui.datefield.Resolution;
 
 @SuppressWarnings("serial")
 public class LowResolution extends TestBase {

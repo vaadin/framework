@@ -3,11 +3,11 @@ package com.vaadin.tests.components.datefield;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Label;
+import com.vaadin.shared.ui.datefield.Resolution;
 
 public class DateFieldMinResolution extends TestBase {
 

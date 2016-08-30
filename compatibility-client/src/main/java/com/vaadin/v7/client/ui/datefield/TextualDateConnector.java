@@ -18,9 +18,9 @@ package com.vaadin.v7.client.ui.datefield;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.ui.VTextualDate;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.shared.ui.datefield.TextualDateFieldState;
+import com.vaadin.v7.client.ui.VTextualDate;
+import com.vaadin.v7.shared.ui.datefield.TextualDateFieldState;
 
 public class TextualDateConnector extends AbstractDateFieldConnector {
 

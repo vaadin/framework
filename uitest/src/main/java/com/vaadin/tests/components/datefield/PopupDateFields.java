@@ -5,10 +5,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.PopupDateField;
+import com.vaadin.shared.ui.datefield.Resolution;
 
 @SuppressWarnings("serial")
 public class PopupDateFields extends ComponentTestCase<PopupDateField> {

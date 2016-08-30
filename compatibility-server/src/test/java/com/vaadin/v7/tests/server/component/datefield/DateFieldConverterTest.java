@@ -22,10 +22,10 @@ import java.util.Locale;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.util.ObjectProperty;
 import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.v7.ui.DateField;
 
 public class DateFieldConverterTest {

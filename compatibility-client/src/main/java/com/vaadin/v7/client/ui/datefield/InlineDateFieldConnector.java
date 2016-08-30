@@ -21,12 +21,12 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.VCalendarPanel.FocusChangeListener;
-import com.vaadin.client.ui.VCalendarPanel.TimeChangeListener;
-import com.vaadin.client.ui.VDateFieldCalendar;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.datefield.InlineDateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.v7.client.ui.VCalendarPanel.FocusChangeListener;
+import com.vaadin.v7.client.ui.VCalendarPanel.TimeChangeListener;
+import com.vaadin.v7.client.ui.VDateFieldCalendar;
+import com.vaadin.v7.shared.ui.datefield.InlineDateFieldState;
 import com.vaadin.v7.ui.InlineDateField;
 
 @Connect(InlineDateField.class)

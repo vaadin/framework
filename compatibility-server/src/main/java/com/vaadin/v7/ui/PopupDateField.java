@@ -20,8 +20,8 @@ import java.util.Date;
 
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.shared.ui.datefield.PopupDateFieldState;
 import com.vaadin.v7.data.Property;
+import com.vaadin.v7.shared.ui.datefield.PopupDateFieldState;
 
 /**
  * <p>

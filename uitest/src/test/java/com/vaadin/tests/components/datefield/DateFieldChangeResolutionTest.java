@@ -24,9 +24,9 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.shared.ui.datefield.Resolution;
 
 public class DateFieldChangeResolutionTest extends MultiBrowserTest {
 

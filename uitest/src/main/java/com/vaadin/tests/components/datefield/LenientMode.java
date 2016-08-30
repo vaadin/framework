@@ -5,10 +5,10 @@ import java.util.Locale;
 
 import com.vaadin.data.HasValue.ValueChange;
 import com.vaadin.data.HasValue.ValueChangeListener;
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
+import com.vaadin.shared.ui.datefield.Resolution;
 
 public class LenientMode extends TestBase implements ValueChangeListener<Date> {
 
