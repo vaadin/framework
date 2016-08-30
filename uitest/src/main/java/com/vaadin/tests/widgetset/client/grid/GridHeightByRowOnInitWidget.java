@@ -4,10 +4,10 @@ import java.util.Arrays;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.v7.client.widget.grid.datasources.ListDataSource;
 import com.vaadin.v7.client.widgets.Grid;
 import com.vaadin.v7.client.widgets.Grid.Column;
+import com.vaadin.v7.shared.ui.grid.HeightMode;
 
 public class GridHeightByRowOnInitWidget extends Composite {
     private final SimplePanel panel = new SimplePanel();

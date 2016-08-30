@@ -19,14 +19,14 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.shared.ui.grid.selection.SingleSelectionModelServerRpc;
-import com.vaadin.shared.ui.grid.selection.SingleSelectionModelState;
 import com.vaadin.v7.client.renderers.Renderer;
 import com.vaadin.v7.client.widget.grid.selection.ClickSelectHandler;
 import com.vaadin.v7.client.widget.grid.selection.SelectionModel;
 import com.vaadin.v7.client.widget.grid.selection.SpaceSelectHandler;
 import com.vaadin.v7.client.widget.grid.selection.SelectionModel.Single;
+import com.vaadin.v7.shared.ui.grid.GridState;
+import com.vaadin.v7.shared.ui.grid.selection.SingleSelectionModelServerRpc;
+import com.vaadin.v7.shared.ui.grid.selection.SingleSelectionModelState;
 import com.vaadin.v7.ui.Grid.SingleSelectionModel;
 
 import elemental.json.JsonObject;

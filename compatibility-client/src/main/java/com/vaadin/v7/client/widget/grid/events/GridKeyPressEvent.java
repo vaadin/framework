@@ -16,11 +16,11 @@
 package com.vaadin.v7.client.widget.grid.events;
 
 import com.google.gwt.dom.client.BrowserEvents;
-import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.v7.client.widget.grid.CellReference;
 import com.vaadin.v7.client.widget.grid.events.AbstractGridKeyEventHandler.GridKeyPressHandler;
 import com.vaadin.v7.client.widgets.Grid;
 import com.vaadin.v7.client.widgets.Grid.AbstractGridKeyEvent;
+import com.vaadin.v7.shared.ui.grid.GridConstants.Section;
 
 /**
  * Represents native key press event in Grid.

@@ -19,8 +19,8 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
-import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.v7.shared.ui.grid.HeightMode;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.MultiSelectionModel;
 import com.vaadin.v7.ui.Grid.NoSelectionModel;

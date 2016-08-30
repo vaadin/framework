@@ -47,7 +47,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.ui.VLabel;
-import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget.Data;
 import com.vaadin.v7.client.renderers.DateRenderer;
 import com.vaadin.v7.client.renderers.HtmlRenderer;
@@ -89,6 +88,7 @@ import com.vaadin.v7.client.widgets.Grid.Column;
 import com.vaadin.v7.client.widgets.Grid.FooterRow;
 import com.vaadin.v7.client.widgets.Grid.HeaderRow;
 import com.vaadin.v7.client.widgets.Grid.SelectionMode;
+import com.vaadin.v7.shared.ui.grid.ScrollDestination;
 
 /**
  * Grid basic client features test application.

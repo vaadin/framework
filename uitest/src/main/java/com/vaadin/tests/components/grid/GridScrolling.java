@@ -16,7 +16,6 @@
 package com.vaadin.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -25,6 +24,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.shared.ui.grid.ScrollDestination;
 import com.vaadin.v7.ui.Grid;
 
 @SuppressWarnings("serial")

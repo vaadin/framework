@@ -17,7 +17,6 @@ package com.vaadin.v7.client.widget.grid.selection;
 
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.v7.client.widget.grid.DataAvailableEvent;
 import com.vaadin.v7.client.widget.grid.DataAvailableHandler;
 import com.vaadin.v7.client.widget.grid.events.BodyKeyDownHandler;
@@ -25,6 +24,7 @@ import com.vaadin.v7.client.widget.grid.events.BodyKeyUpHandler;
 import com.vaadin.v7.client.widget.grid.events.GridKeyDownEvent;
 import com.vaadin.v7.client.widget.grid.events.GridKeyUpEvent;
 import com.vaadin.v7.client.widgets.Grid;
+import com.vaadin.v7.shared.ui.grid.ScrollDestination;
 
 /**
  * Generic class to perform selections when pressing space key.

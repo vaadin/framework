@@ -18,7 +18,7 @@ package com.vaadin.v7.tests.server.component.grid;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.v7.shared.ui.grid.GridState;
 import com.vaadin.v7.ui.Grid;
 
 /**

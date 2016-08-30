@@ -16,10 +16,10 @@
 package com.vaadin.v7.client.widget.grid;
 
 import com.google.gwt.dom.client.TableCellElement;
-import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.v7.client.widget.escalator.Cell;
 import com.vaadin.v7.client.widgets.Grid;
 import com.vaadin.v7.client.widgets.Grid.Column;
+import com.vaadin.v7.shared.ui.grid.GridConstants.Section;
 
 /**
  * A data class which contains information which identifies a cell being the

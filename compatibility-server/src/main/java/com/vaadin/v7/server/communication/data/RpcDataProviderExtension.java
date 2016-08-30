@@ -31,7 +31,6 @@ import com.vaadin.server.ClientConnector;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataRequestRpc;
-import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.Indexed;
@@ -45,6 +44,7 @@ import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.Property.ValueChangeNotifier;
+import com.vaadin.v7.shared.ui.grid.GridState;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.Column;
 

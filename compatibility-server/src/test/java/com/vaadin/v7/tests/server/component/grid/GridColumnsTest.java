@@ -40,10 +40,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.server.KeyMapper;
-import com.vaadin.shared.ui.grid.GridColumnState;
-import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.shared.ui.grid.GridColumnState;
+import com.vaadin.v7.shared.ui.grid.GridState;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.Column;
 import com.vaadin.v7.ui.Grid.ColumnResizeEvent;

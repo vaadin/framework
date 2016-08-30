@@ -32,12 +32,12 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
+import com.vaadin.v7.shared.ui.grid.GridConstants;
 
 public class GridEditorClientTest extends GridBasicClientFeaturesTest {
 

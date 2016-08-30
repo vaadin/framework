@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
@@ -31,6 +30,7 @@ import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.v7.shared.ui.grid.HeightMode;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.DetailsGenerator;
 import com.vaadin.v7.ui.Grid.RowReference;

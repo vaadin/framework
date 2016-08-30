@@ -31,12 +31,12 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.shared.ui.grid.Range;
-import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.ElementQuery;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.customelements.FixedNotificationElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
+import com.vaadin.v7.shared.ui.grid.ScrollDestination;
 
 public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
 

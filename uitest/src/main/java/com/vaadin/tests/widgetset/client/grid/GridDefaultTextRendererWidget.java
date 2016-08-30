@@ -15,11 +15,11 @@
  */
 package com.vaadin.tests.widgetset.client.grid;
 
-import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.v7.client.widget.grid.datasources.ListDataSource;
 import com.vaadin.v7.client.widgets.Grid;
 import com.vaadin.v7.client.widgets.Grid.Column;
 import com.vaadin.v7.client.widgets.Grid.SelectionMode;
+import com.vaadin.v7.shared.ui.grid.HeightMode;
 
 public class GridDefaultTextRendererWidget
         extends PureGWTTestApplication<Grid<String>> {

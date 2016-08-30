@@ -17,10 +17,10 @@ package com.vaadin.v7.client.connectors;
 
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;
 import com.vaadin.v7.client.renderers.ClickableRenderer;
 import com.vaadin.v7.client.renderers.ClickableRenderer.RendererClickEvent;
 import com.vaadin.v7.client.renderers.ClickableRenderer.RendererClickHandler;
+import com.vaadin.v7.shared.ui.grid.renderers.RendererClickRpc;
 
 import elemental.json.JsonObject;
 

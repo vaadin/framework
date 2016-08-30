@@ -92,12 +92,7 @@ import com.vaadin.client.ui.dd.DragHandle.DragHandleCallback;
 import com.vaadin.client.widgets.Overlay;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.sort.SortDirection;
-import com.vaadin.shared.ui.grid.GridConstants;
-import com.vaadin.shared.ui.grid.GridConstants.Section;
-import com.vaadin.shared.ui.grid.GridStaticCellType;
-import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.Range;
-import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.client.renderers.ComplexRenderer;
 import com.vaadin.v7.client.renderers.Renderer;
@@ -184,6 +179,11 @@ import com.vaadin.v7.client.widgets.Escalator.SubPartArguments;
 import com.vaadin.v7.client.widgets.Grid.Editor.State;
 import com.vaadin.v7.client.widgets.Grid.StaticSection.StaticCell;
 import com.vaadin.v7.client.widgets.Grid.StaticSection.StaticRow;
+import com.vaadin.v7.shared.ui.grid.GridConstants;
+import com.vaadin.v7.shared.ui.grid.GridStaticCellType;
+import com.vaadin.v7.shared.ui.grid.HeightMode;
+import com.vaadin.v7.shared.ui.grid.ScrollDestination;
+import com.vaadin.v7.shared.ui.grid.GridConstants.Section;
 
 /**
  * A data grid view that supports columns and lazy loading of data rows from a

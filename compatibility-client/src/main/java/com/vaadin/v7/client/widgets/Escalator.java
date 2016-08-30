@@ -65,9 +65,7 @@ import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.SubPartAware;
-import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.Range;
-import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.client.widget.escalator.Cell;
 import com.vaadin.v7.client.widget.escalator.ColumnConfiguration;
@@ -93,6 +91,8 @@ import com.vaadin.v7.client.widget.escalator.events.RowHeightChangedEvent;
 import com.vaadin.v7.client.widget.grid.events.ScrollEvent;
 import com.vaadin.v7.client.widget.grid.events.ScrollHandler;
 import com.vaadin.v7.client.widgets.Escalator.JsniUtil.TouchHandlerBundle;
+import com.vaadin.v7.shared.ui.grid.HeightMode;
+import com.vaadin.v7.shared.ui.grid.ScrollDestination;
 
 /*-
 
