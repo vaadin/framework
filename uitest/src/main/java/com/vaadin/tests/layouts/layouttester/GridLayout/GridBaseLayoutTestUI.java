@@ -16,12 +16,12 @@
 package com.vaadin.tests.layouts.layouttester.GridLayout;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.layouts.layouttester.BaseLayoutTestUI;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 
@@ -86,14 +86,17 @@ public abstract class GridBaseLayoutTestUI extends BaseLayoutTestUI {
         Button btn3 = new SetSizeButton("75%");
         Button btn4 = new SetSizeButton("100%");
 
+        Label spacer = new Label(
+                "<div style='height: 1px'></div><hr /><div style='height: 1px'></div>",
+                ContentMode.HTML);
+        spacer.setWidth("100%");
+
         layout.addComponent(btn1);
         layout.addComponent(btn2);
         layout.addComponent(btn3);
         layout.addComponent(btn4);
         layout.addComponent(c1);
-        layout.addComponent(new Label(
-                "<div style='height: 1px'></div><hr /><div style='height: 1px'></div>",
-                ContentMode.HTML));
+        layout.addComponent(spacer);
         layout.addComponent(c2);
         btn2.addClickListener(new ClickListener() {
 

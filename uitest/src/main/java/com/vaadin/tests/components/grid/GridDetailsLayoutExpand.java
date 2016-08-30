@@ -70,10 +70,12 @@ public class GridDetailsLayoutExpand extends AbstractTestUI {
 
                 // 2 Labels added to the layout2
                 final Label lbl2 = new Label("test2");
+                lbl2.setWidth("100%");
                 lbl2.setId("lbl2");
                 layout2.addComponent(lbl2);
 
                 final Label lbl3 = new Label("test3");
+                lbl3.setWidth("100%");
                 lbl3.setId("lbl3");
                 layout2.addComponent(lbl3);
 

@@ -16,12 +16,12 @@
 package com.vaadin.tests.layouts.layouttester;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.Table;
 
 /**
@@ -54,9 +54,11 @@ public class BaseLayoutForSpacingMargin extends BaseLayoutTestUI {
         l2.setMargin(false);
         l2.setSpacing(false);
         // Must add something around the hr to avoid the margins collapsing
-        l2.addComponent(new Label(
+        Label spacer = new Label(
                 "<div style='height: 1px'></div><hr /><div style='height: 1px'></div>",
-                ContentMode.HTML));
+                ContentMode.HTML);
+        spacer.setWidth("100%");
+        l2.addComponent(spacer);
         l2.addComponent(t2);
         final Button btn1 = new Button("Toggle margin on/off");
         btn1.addClickListener(new ClickListener() {

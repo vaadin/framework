@@ -16,11 +16,11 @@
 package com.vaadin.tests.layouts.layouttester.GridLayout;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.Table;
 
 /**
@@ -66,9 +66,11 @@ public class GridLayoutMarginSpacing extends GridBaseLayoutTestUI {
         layout.setMargin(false);
         layout.setSpacing(false);
         // Must add something around the hr to avoid the margins collapsing
-        layout.addComponent(new Label(
+        Label spacer = new Label(
                 "<div style='height: 1px'></div><hr /><div style='height: 1px'></div>",
-                ContentMode.HTML));
+                ContentMode.HTML);
+        spacer.setWidth("100%");
+        layout.addComponent(spacer);
         layout.addComponent(t2);
     }
 }

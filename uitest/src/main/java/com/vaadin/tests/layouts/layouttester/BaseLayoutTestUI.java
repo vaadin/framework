@@ -19,6 +19,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractLayout;
@@ -32,7 +33,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextField;
 
@@ -141,14 +141,17 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
         Button btn3 = new SetSizeButton("75%");
         Button btn4 = new SetSizeButton("100%");
 
+        Label spacer = new Label(
+                "<div style='height: 1px'></div><hr /><div style='height: 1px'></div>",
+                ContentMode.HTML);
+        spacer.setWidth("100%");
+
         l1.addComponent(btn1);
         l1.addComponent(btn2);
         l1.addComponent(btn3);
         l1.addComponent(btn4);
         l2.addComponent(c1);
-        l2.addComponent(new Label(
-                "<div style='height: 1px'></div><hr /><div style='height: 1px'></div>",
-                ContentMode.HTML));
+        l2.addComponent(spacer);
         l2.addComponent(c2);
         l2.setExpandRatio(c1, 0.5f);
         l2.setExpandRatio(c2, 0.5f);
