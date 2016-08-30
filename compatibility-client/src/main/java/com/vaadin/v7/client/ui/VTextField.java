@@ -37,7 +37,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.Field;
 import com.vaadin.shared.EventId;
-import com.vaadin.v7.shared.ui.textfield.LegacyTextFieldConstants;
+import com.vaadin.v7.shared.ui.textfield.TextFieldConstants;
 
 /**
  * This class represents a basic text input field with one row.
@@ -158,7 +158,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
             } else {
                 // Default case - just send an immediate text change message
                 client.updateVariable(paintableId,
-                        LegacyTextFieldConstants.VAR_CUR_TEXT, text, true);
+                        TextFieldConstants.VAR_CUR_TEXT, text, true);
 
                 // Shouldn't investigate valueBeforeEdit to avoid duplicate text
                 // change events as the states are not in sync any more
@@ -428,7 +428,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
             int cursorPos = prompting ? 0 : getCursorPos();
             if (lastCursorPos != cursorPos) {
                 client.updateVariable(paintableId,
-                        LegacyTextFieldConstants.VAR_CURSOR, cursorPos, false);
+                        TextFieldConstants.VAR_CURSOR, cursorPos, false);
                 lastCursorPos = cursorPos;
                 return true;
             }

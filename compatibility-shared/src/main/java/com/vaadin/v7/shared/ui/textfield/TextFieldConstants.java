@@ -13,29 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.shared.ui.textarea;
+package com.vaadin.v7.shared.ui.textfield;
 
-import com.vaadin.shared.annotations.DelegateToWidget;
-import com.vaadin.shared.annotations.NoLayout;
-import com.vaadin.v7.shared.ui.textfield.AbstractTextFieldState;
+import java.io.Serializable;
 
 @Deprecated
-public class LegacyTextAreaState extends AbstractTextFieldState {
-    {
-        primaryStyleName = "v-textarea";
-    }
-
-    /**
-     * Number of visible rows in the text area. The default is 5.
-     */
-    @DelegateToWidget
-    public int rows = 5;
-
-    /**
-     * Tells if word-wrapping should be used in the text area.
-     */
-    @DelegateToWidget
-    @NoLayout
-    public boolean wordwrap = true;
+public class TextFieldConstants implements Serializable {
+    public static final String VAR_CUR_TEXT = "curText";
+    public static final String ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS = "nvc";
+    public static final String ATTR_TEXTCHANGE_TIMEOUT = "iet";
+    public static final String VAR_CURSOR = "c";
+    public static final String ATTR_TEXTCHANGE_EVENTMODE = "iem";
+    public static final String TEXTCHANGE_MODE_EAGER = "EAGER";
 
 }

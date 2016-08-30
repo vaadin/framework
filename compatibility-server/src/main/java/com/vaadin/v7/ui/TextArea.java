@@ -21,7 +21,7 @@ import org.jsoup.nodes.Element;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.v7.data.Property;
-import com.vaadin.v7.shared.ui.textarea.LegacyTextAreaState;
+import com.vaadin.v7.shared.ui.textarea.TextAreaState;
 
 /**
  * A text field that supports multi line editing.
@@ -85,13 +85,13 @@ public class TextArea extends AbstractTextField {
     }
 
     @Override
-    protected LegacyTextAreaState getState() {
-        return (LegacyTextAreaState) super.getState();
+    protected TextAreaState getState() {
+        return (TextAreaState) super.getState();
     }
 
     @Override
-    protected LegacyTextAreaState getState(boolean markAsDirty) {
-        return (LegacyTextAreaState) super.getState(markAsDirty);
+    protected TextAreaState getState(boolean markAsDirty) {
+        return (TextAreaState) super.getState(markAsDirty);
     }
 
     /**

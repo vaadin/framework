@@ -27,7 +27,7 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.v7.client.ui.VTextField;
 import com.vaadin.v7.shared.ui.textfield.AbstractTextFieldState;
-import com.vaadin.v7.shared.ui.textfield.LegacyTextFieldConstants;
+import com.vaadin.v7.shared.ui.textfield.TextFieldConstants;
 import com.vaadin.v7.ui.TextField;
 
 @Deprecated
@@ -59,13 +59,13 @@ public class TextFieldConnector extends AbstractFieldConnector
         getWidget().listenTextChangeEvents = hasEventListener("ie");
         if (getWidget().listenTextChangeEvents) {
             getWidget().textChangeEventMode = uidl.getStringAttribute(
-                    LegacyTextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE);
+                    TextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE);
             if (getWidget().textChangeEventMode
-                    .equals(LegacyTextFieldConstants.TEXTCHANGE_MODE_EAGER)) {
+                    .equals(TextFieldConstants.TEXTCHANGE_MODE_EAGER)) {
                 getWidget().textChangeEventTimeout = 1;
             } else {
                 getWidget().textChangeEventTimeout = uidl.getIntAttribute(
-                        LegacyTextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT);
+                        TextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT);
                 if (getWidget().textChangeEventTimeout < 1) {
                     // Sanitize and allow lazy/timeout with timeout set to 0 to
                     // work as eager
@@ -90,7 +90,7 @@ public class TextFieldConnector extends AbstractFieldConnector
          */
         if (!(Util.getFocusedElement() == getWidget().getElement())
                 || !uidl.getBooleanAttribute(
-                        LegacyTextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
+                        TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
                 || getWidget().valueBeforeEdit == null
                 || !text.equals(getWidget().valueBeforeEdit)) {
             getWidget().updateFieldContent(text);

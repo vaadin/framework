@@ -37,7 +37,7 @@ import com.vaadin.v7.event.FieldEvents.TextChangeEvent;
 import com.vaadin.v7.event.FieldEvents.TextChangeListener;
 import com.vaadin.v7.event.FieldEvents.TextChangeNotifier;
 import com.vaadin.v7.shared.ui.textfield.AbstractTextFieldState;
-import com.vaadin.v7.shared.ui.textfield.LegacyTextFieldConstants;
+import com.vaadin.v7.shared.ui.textfield.TextFieldConstants;
 
 @Deprecated
 public abstract class AbstractTextField extends AbstractField<String> implements
@@ -130,10 +130,10 @@ public abstract class AbstractTextField extends AbstractField<String> implements
 
         if (hasListeners(TextChangeEvent.class)) {
             target.addAttribute(
-                    LegacyTextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE,
+                    TextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE,
                     getTextChangeEventMode().toString());
             target.addAttribute(
-                    LegacyTextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT,
+                    TextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT,
                     getTextChangeTimeout());
             if (lastKnownTextContent != null) {
                 /*
@@ -144,7 +144,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
                  * the actual value, depending on its state.
                  */
                 target.addAttribute(
-                        LegacyTextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS,
+                        TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS,
                         true);
             }
         }
@@ -169,13 +169,13 @@ public abstract class AbstractTextField extends AbstractField<String> implements
                 setWidth(newWidth);
             }
 
-            if (variables.containsKey(LegacyTextFieldConstants.VAR_CURSOR)) {
+            if (variables.containsKey(TextFieldConstants.VAR_CURSOR)) {
                 Integer object = (Integer) variables
-                        .get(LegacyTextFieldConstants.VAR_CURSOR);
+                        .get(TextFieldConstants.VAR_CURSOR);
                 lastKnownCursorPosition = object.intValue();
             }
 
-            if (variables.containsKey(LegacyTextFieldConstants.VAR_CUR_TEXT)) {
+            if (variables.containsKey(TextFieldConstants.VAR_CUR_TEXT)) {
                 /*
                  * NOTE, we might want to develop this further so that on a
                  * value change event the whole text content don't need to be
@@ -478,7 +478,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
          * Also on value change events we could use the mechanism.
          */
         String object = (String) variables
-                .get(LegacyTextFieldConstants.VAR_CUR_TEXT);
+                .get(TextFieldConstants.VAR_CUR_TEXT);
         lastKnownTextContent = object;
         textChangeEventPending = true;
     }
