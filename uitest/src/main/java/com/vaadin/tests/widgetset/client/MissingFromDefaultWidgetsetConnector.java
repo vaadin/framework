@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,9 +16,9 @@
 package com.vaadin.tests.widgetset.client;
 
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.VLabel;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.widgetset.server.MissingFromDefaultWidgetsetComponent;
-import com.vaadin.v7.client.ui.VLabel;
 
 @Connect(MissingFromDefaultWidgetsetComponent.class)
 public class MissingFromDefaultWidgetsetConnector
