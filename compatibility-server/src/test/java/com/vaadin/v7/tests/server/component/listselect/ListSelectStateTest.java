@@ -18,7 +18,7 @@ package com.vaadin.v7.tests.server.component.listselect;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.shared.ui.select.AbstractSelectState;
+import com.vaadin.v7.shared.ui.select.AbstractSelectState;
 import com.vaadin.v7.ui.ListSelect;
 
 /**

@@ -17,10 +17,10 @@
 package com.vaadin.v7.client.ui.progressindicator;
 
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.VProgressBar;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.progressindicator.ProgressBarState;
 import com.vaadin.v7.client.ui.AbstractFieldConnector;
+import com.vaadin.v7.client.ui.VProgressBar;
+import com.vaadin.v7.shared.ui.progressindicator.ProgressBarState;
 import com.vaadin.v7.ui.ProgressBar;
 
 /**

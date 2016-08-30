@@ -18,7 +18,7 @@ package com.vaadin.v7.tests.server.component.optiongroup;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.shared.ui.optiongroup.OptionGroupState;
+import com.vaadin.v7.shared.ui.optiongroup.OptionGroupState;
 import com.vaadin.v7.ui.OptionGroup;
 
 /**

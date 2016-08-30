@@ -13,15 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.twincolselect;
+package com.vaadin.v7.shared.ui.treetable;
 
 import java.io.Serializable;
 
 @Deprecated
-public class TwinColSelectConstants implements Serializable {
+public class TreeTableConstants implements Serializable {
     @Deprecated
-    public static final String ATTRIBUTE_LEFT_CAPTION = "lc";
-    @Deprecated
-    public static final String ATTRIBUTE_RIGHT_CAPTION = "rc";
+    public static final String ATTRIBUTE_HIERARCHY_COLUMN_INDEX = "hci";
 
 }

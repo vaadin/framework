@@ -13,21 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.optiongroup;
 
-import com.vaadin.shared.annotations.DelegateToWidget;
-import com.vaadin.shared.ui.select.AbstractSelectState;
+package com.vaadin.v7.client.ui;
+
+import com.vaadin.v7.shared.ui.progressindicator.ProgressIndicatorState;
 
 /**
- * Shared state for the OptionGroup component.
  *
- * @since 7.0
+ * @author Vaadin Ltd
+ *
+ * @deprecated as of 7.1, renamed to VProgressBar
  */
-public class OptionGroupState extends AbstractSelectState {
-    {
-        primaryStyleName = "v-select-optiongroup";
-    }
+@Deprecated
+public class VProgressIndicator extends VProgressBar {
 
-    @DelegateToWidget
-    public boolean htmlContentAllowed = false;
+    public VProgressIndicator() {
+        super();
+        setStylePrimaryName(ProgressIndicatorState.PRIMARY_STYLE_NAME);
+    }
 }

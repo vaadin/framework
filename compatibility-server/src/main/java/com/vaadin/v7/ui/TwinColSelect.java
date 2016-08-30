@@ -20,9 +20,9 @@ import java.util.Collection;
 
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.shared.ui.twincolselect.TwinColSelectConstants;
-import com.vaadin.shared.ui.twincolselect.TwinColSelectState;
 import com.vaadin.v7.data.Container;
+import com.vaadin.v7.shared.ui.twincolselect.TwinColSelectConstants;
+import com.vaadin.v7.shared.ui.twincolselect.TwinColSelectState;
 
 /**
  * Multiselect component with two lists: left side for available items and right

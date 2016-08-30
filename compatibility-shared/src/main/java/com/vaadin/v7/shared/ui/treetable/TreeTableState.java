@@ -13,19 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.table;
+package com.vaadin.v7.shared.ui.treetable;
 
-import com.vaadin.shared.ui.select.AbstractSelectState;
+import com.vaadin.v7.shared.ui.table.TableState;
 
-/**
- * Shared state for the Table component.
- *
- * @since 7.0
- */
-public class TableState extends AbstractSelectState {
+public class TreeTableState extends TableState {
     {
         primaryStyleName = "v-table";
     }
-
-    public CollapseMenuContent collapseMenuContent = TableConstants.DEFAULT_COLLAPSE_MENU_CONTENT;
 }

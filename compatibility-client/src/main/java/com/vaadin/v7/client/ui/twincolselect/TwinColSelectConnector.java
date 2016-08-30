@@ -20,9 +20,9 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DirectionalManagedLayout;
 import com.vaadin.client.UIDL;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.twincolselect.TwinColSelectState;
 import com.vaadin.v7.client.ui.VTwinColSelect;
 import com.vaadin.v7.client.ui.optiongroup.OptionGroupBaseConnector;
+import com.vaadin.v7.shared.ui.twincolselect.TwinColSelectState;
 import com.vaadin.v7.ui.TwinColSelect;
 
 @Connect(TwinColSelect.class)

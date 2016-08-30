@@ -40,16 +40,16 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.table.TableConstants;
-import com.vaadin.shared.ui.table.TableConstants.Section;
 import com.vaadin.v7.client.ui.AbstractFieldConnector;
 import com.vaadin.v7.client.ui.VScrollTable;
 import com.vaadin.v7.client.ui.VScrollTable.ContextMenuDetails;
 import com.vaadin.v7.client.ui.VScrollTable.FooterCell;
 import com.vaadin.v7.client.ui.VScrollTable.HeaderCell;
 import com.vaadin.v7.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
-import com.vaadin.shared.ui.table.TableServerRpc;
-import com.vaadin.shared.ui.table.TableState;
+import com.vaadin.v7.shared.ui.table.TableConstants;
+import com.vaadin.v7.shared.ui.table.TableServerRpc;
+import com.vaadin.v7.shared.ui.table.TableState;
+import com.vaadin.v7.shared.ui.table.TableConstants.Section;
 
 @Connect(com.vaadin.v7.ui.Table.class)
 public class TableConnector extends AbstractFieldConnector

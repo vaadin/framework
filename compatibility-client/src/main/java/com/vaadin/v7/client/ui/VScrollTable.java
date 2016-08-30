@@ -113,9 +113,9 @@ import com.vaadin.client.ui.dd.VTransferable;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-import com.vaadin.shared.ui.table.CollapseMenuContent;
-import com.vaadin.shared.ui.table.TableConstants;
 import com.vaadin.v7.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
+import com.vaadin.v7.shared.ui.table.CollapseMenuContent;
+import com.vaadin.v7.shared.ui.table.TableConstants;
 
 /**
  * VScrollTable

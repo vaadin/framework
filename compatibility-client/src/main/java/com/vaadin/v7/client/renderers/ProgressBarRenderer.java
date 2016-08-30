@@ -16,7 +16,7 @@
 package com.vaadin.v7.client.renderers;
 
 import com.google.gwt.core.shared.GWT;
-import com.vaadin.client.ui.VProgressBar;
+import com.vaadin.v7.client.ui.VProgressBar;
 import com.vaadin.v7.client.widget.grid.RendererCellReference;
 
 /**

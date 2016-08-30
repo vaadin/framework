@@ -13,11 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.optiongroup;
+package com.vaadin.v7.shared.ui.progressindicator;
 
-import java.io.Serializable;
+import com.vaadin.shared.annotations.NoLayout;
 
-public class OptionGroupConstants implements Serializable {
-    public static final String ATTRIBUTE_OPTION_DISABLED = "disabled";
+@Deprecated
+public class ProgressIndicatorState extends ProgressBarState {
+    public static final String PRIMARY_STYLE_NAME = "v-progressindicator";
 
+    {
+        primaryStyleName = PRIMARY_STYLE_NAME;
+    }
+
+    @NoLayout
+    public int pollingInterval = 1000;
 }

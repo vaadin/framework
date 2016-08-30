@@ -20,8 +20,8 @@ import java.util.EnumSet;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.shared.ui.treetable.TreeTableState;
 import com.vaadin.v7.ui.Table.RowHeaderMode;
+import com.vaadin.v7.shared.ui.treetable.TreeTableState;
 import com.vaadin.v7.ui.TreeTable;
 
 /**

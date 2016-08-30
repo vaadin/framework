@@ -15,7 +15,7 @@
  */
 package com.vaadin.v7.shared.ui.combobox;
 
-import com.vaadin.shared.ui.select.AbstractSelectState;
+import com.vaadin.v7.shared.ui.select.AbstractSelectState;
 
 /**
  * Shared state for the ComboBox component.

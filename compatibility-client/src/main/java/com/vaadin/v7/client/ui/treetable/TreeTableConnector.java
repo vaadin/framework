@@ -22,13 +22,13 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.FocusableScrollPanel;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.treetable.TreeTableConstants;
-import com.vaadin.shared.ui.treetable.TreeTableState;
 import com.vaadin.v7.client.ui.VTreeTable;
 import com.vaadin.v7.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.v7.client.ui.VTreeTable.PendingNavigationEvent;
 import com.vaadin.v7.client.ui.VTreeTable.VTreeTableScrollBody.VTreeTableRow;
 import com.vaadin.v7.client.ui.table.TableConnector;
+import com.vaadin.v7.shared.ui.treetable.TreeTableConstants;
+import com.vaadin.v7.shared.ui.treetable.TreeTableState;
 import com.vaadin.v7.ui.TreeTable;
 
 @Connect(TreeTable.class)

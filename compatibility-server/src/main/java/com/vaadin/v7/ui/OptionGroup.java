@@ -30,11 +30,11 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.shared.ui.optiongroup.OptionGroupConstants;
-import com.vaadin.shared.ui.optiongroup.OptionGroupState;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.v7.data.Container;
+import com.vaadin.v7.shared.ui.optiongroup.OptionGroupConstants;
+import com.vaadin.v7.shared.ui.optiongroup.OptionGroupState;
 
 /**
  * Configures select to be used as an option group.

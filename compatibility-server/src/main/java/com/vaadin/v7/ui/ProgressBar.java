@@ -18,10 +18,10 @@ package com.vaadin.v7.ui;
 
 import org.jsoup.nodes.Element;
 
-import com.vaadin.shared.ui.progressindicator.ProgressBarState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.v7.data.Property;
+import com.vaadin.v7.shared.ui.progressindicator.ProgressBarState;
 import com.vaadin.v7.ui.AbstractField;
 
 /**

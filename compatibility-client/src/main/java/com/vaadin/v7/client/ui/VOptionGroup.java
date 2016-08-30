@@ -48,7 +48,7 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VCheckBox;
 import com.vaadin.shared.EventId;
-import com.vaadin.shared.ui.optiongroup.OptionGroupConstants;
+import com.vaadin.v7.shared.ui.optiongroup.OptionGroupConstants;
 
 public class VOptionGroup extends VOptionGroupBase
         implements FocusHandler, BlurHandler {

@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.ContextClickEvent.ContextClickListener;
-import com.vaadin.shared.ui.table.TableConstants.Section;
+import com.vaadin.v7.shared.ui.table.TableConstants.Section;
 import com.vaadin.v7.ui.Table;
 
 public class TableContextClickTest extends Table {

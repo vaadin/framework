@@ -20,8 +20,8 @@ import java.util.Collections;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.shared.ui.select.AbstractSelectState;
 import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.shared.ui.select.AbstractSelectState;
 
 public class NativeSelectTest {
 

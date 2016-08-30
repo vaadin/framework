@@ -13,13 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.treetable;
+package com.vaadin.v7.shared.ui.twincolselect;
 
-import java.io.Serializable;
+import com.vaadin.v7.shared.ui.select.AbstractSelectState;
 
-@Deprecated
-public class TreeTableConstants implements Serializable {
-    @Deprecated
-    public static final String ATTRIBUTE_HIERARCHY_COLUMN_INDEX = "hci";
-
+/**
+ * Shared state for the TwinColSelect component.
+ *
+ * @since 7.0
+ */
+public class TwinColSelectState extends AbstractSelectState {
+    {
+        primaryStyleName = "v-select-twincol";
+    }
 }

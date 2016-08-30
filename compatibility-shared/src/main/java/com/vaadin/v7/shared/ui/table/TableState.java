@@ -13,28 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.v7.shared.ui.table;
 
-package com.vaadin.shared.ui.table;
+import com.vaadin.v7.shared.ui.select.AbstractSelectState;
 
 /**
- * Defines whether only collapsible columns should be shown to the user in the
- * column collapse menu.
+ * Shared state for the Table component.
  *
- * @see com.vaadin.ui.Table#setCollapseMenuContent(CollapseMenuContent)
- *
- * @since 7.6
- * @author Vaadin Ltd
+ * @since 7.0
  */
-public enum CollapseMenuContent {
-    /**
-     * All columns are shown in the collapse menu. Columns that are not
-     * collapsible are shown as disabled in the menu. This is the default
-     * setting.
-     */
-    ALL_COLUMNS,
+public class TableState extends AbstractSelectState {
+    {
+        primaryStyleName = "v-table";
+    }
 
-    /**
-     * Only collapsible columns are shown in the collapse menu.
-     */
-    COLLAPSIBLE_COLUMNS;
+    public CollapseMenuContent collapseMenuContent = TableConstants.DEFAULT_COLLAPSE_MENU_CONTENT;
 }

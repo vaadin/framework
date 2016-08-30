@@ -42,7 +42,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.VButton;
-import com.vaadin.shared.ui.twincolselect.TwinColSelectConstants;
+import com.vaadin.v7.shared.ui.twincolselect.TwinColSelectConstants;
 
 public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         MouseDownHandler, DoubleClickHandler, SubPartAware {

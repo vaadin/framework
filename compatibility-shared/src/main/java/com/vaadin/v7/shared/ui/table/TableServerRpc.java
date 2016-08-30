@@ -13,26 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.select;
+package com.vaadin.v7.shared.ui.table;
 
-import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.v7.shared.ui.table.TableConstants.Section;
 
 /**
- * Shared state for the AbstractSelect component.
+ * Client-to-server RPC interface for the Table component
  *
  * @since 7.6
+ * @author Vaadin Ltd
  */
-public class AbstractSelectState extends AbstractFieldState {
-
-    {
-        primaryStyleName = "v-select";
-    }
+public interface TableServerRpc extends ServerRpc {
 
     /**
-     * Is the select in multiselect mode?
-     *
-     * Note that Table and Tree still use the old communication mechanism for
-     * multi-mode support.
+     * Informs the server that a context click happened inside of Table
      */
-    public boolean multiSelect;
+    public void contextClick(String rowKey, String colKey, Section section,
+            MouseEventDetails details);
+
 }

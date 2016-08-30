@@ -18,11 +18,11 @@ package com.vaadin.v7.client.ui.progressindicator;
 
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.VProgressBar;
-import com.vaadin.client.ui.VProgressIndicator;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.progressindicator.ProgressIndicatorServerRpc;
-import com.vaadin.shared.ui.progressindicator.ProgressIndicatorState;
+import com.vaadin.v7.client.ui.VProgressBar;
+import com.vaadin.v7.client.ui.VProgressIndicator;
+import com.vaadin.v7.shared.ui.progressindicator.ProgressIndicatorServerRpc;
+import com.vaadin.v7.shared.ui.progressindicator.ProgressIndicatorState;
 import com.vaadin.v7.ui.ProgressIndicator;
 
 /**

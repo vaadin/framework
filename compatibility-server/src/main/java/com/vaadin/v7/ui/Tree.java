@@ -51,9 +51,6 @@ import com.vaadin.server.Resource;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-import com.vaadin.shared.ui.tree.TreeConstants;
-import com.vaadin.shared.ui.tree.TreeServerRpc;
-import com.vaadin.shared.ui.tree.TreeState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -67,6 +64,9 @@ import com.vaadin.v7.event.DataBoundTransferable;
 import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickNotifier;
+import com.vaadin.v7.shared.ui.tree.TreeConstants;
+import com.vaadin.v7.shared.ui.tree.TreeServerRpc;
+import com.vaadin.v7.shared.ui.tree.TreeState;
 
 /**
  * Tree component. A Tree can be used to select an item (or multiple items) from

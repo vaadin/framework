@@ -13,17 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.twincolselect;
+package com.vaadin.v7.shared.ui.select;
 
-import com.vaadin.shared.ui.select.AbstractSelectState;
+import com.vaadin.shared.AbstractFieldState;
 
 /**
- * Shared state for the TwinColSelect component.
+ * Shared state for the AbstractSelect component.
  *
- * @since 7.0
+ * @since 7.6
  */
-public class TwinColSelectState extends AbstractSelectState {
+public class AbstractSelectState extends AbstractFieldState {
+
     {
-        primaryStyleName = "v-select-twincol";
+        primaryStyleName = "v-select";
     }
+
+    /**
+     * Is the select in multiselect mode?
+     *
+     * Note that Table and Tree still use the old communication mechanism for
+     * multi-mode support.
+     */
+    public boolean multiSelect;
 }

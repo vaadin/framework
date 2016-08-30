@@ -12,10 +12,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.shared.ui.tree.TreeState;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.util.HierarchicalContainer;
 import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.shared.ui.tree.TreeState;
 import com.vaadin.v7.ui.Tree;
 
 public class TreeTest {

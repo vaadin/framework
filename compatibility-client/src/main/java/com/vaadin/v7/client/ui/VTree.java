@@ -82,8 +82,8 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-import com.vaadin.shared.ui.tree.TreeConstants;
 import com.vaadin.v7.client.ui.tree.TreeConnector;
+import com.vaadin.v7.shared.ui.tree.TreeConstants;
 
 /**
  *

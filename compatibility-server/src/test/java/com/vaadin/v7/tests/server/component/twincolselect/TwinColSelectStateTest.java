@@ -18,7 +18,7 @@ package com.vaadin.v7.tests.server.component.twincolselect;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.shared.ui.twincolselect.TwinColSelectState;
+import com.vaadin.v7.shared.ui.twincolselect.TwinColSelectState;
 import com.vaadin.v7.ui.TwinColSelect;
 
 /**

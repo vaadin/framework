@@ -13,24 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.table;
+package com.vaadin.v7.shared.ui.optiongroup;
 
-import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.communication.ServerRpc;
-import com.vaadin.shared.ui.table.TableConstants.Section;
+import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.v7.shared.ui.select.AbstractSelectState;
 
 /**
- * Client-to-server RPC interface for the Table component
+ * Shared state for the OptionGroup component.
  *
- * @since 7.6
- * @author Vaadin Ltd
+ * @since 7.0
  */
-public interface TableServerRpc extends ServerRpc {
+public class OptionGroupState extends AbstractSelectState {
+    {
+        primaryStyleName = "v-select-optiongroup";
+    }
 
-    /**
-     * Informs the server that a context click happened inside of Table
-     */
-    public void contextClick(String rowKey, String colKey, Section section,
-            MouseEventDetails details);
-
+    @DelegateToWidget
+    public boolean htmlContentAllowed = false;
 }

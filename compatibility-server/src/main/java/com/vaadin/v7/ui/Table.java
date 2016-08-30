@@ -54,11 +54,6 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.MultiSelectMode;
-import com.vaadin.shared.ui.table.CollapseMenuContent;
-import com.vaadin.shared.ui.table.TableConstants;
-import com.vaadin.shared.ui.table.TableConstants.Section;
-import com.vaadin.shared.ui.table.TableServerRpc;
-import com.vaadin.shared.ui.table.TableState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HasChildMeasurementHint;
@@ -80,6 +75,11 @@ import com.vaadin.v7.event.DataBoundTransferable;
 import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickNotifier;
+import com.vaadin.v7.shared.ui.table.CollapseMenuContent;
+import com.vaadin.v7.shared.ui.table.TableConstants;
+import com.vaadin.v7.shared.ui.table.TableServerRpc;
+import com.vaadin.v7.shared.ui.table.TableState;
+import com.vaadin.v7.shared.ui.table.TableConstants.Section;
 
 /**
  * <p>

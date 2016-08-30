@@ -13,18 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.progressindicator;
+package com.vaadin.v7.shared.ui.twincolselect;
 
-import com.vaadin.shared.annotations.NoLayout;
+import java.io.Serializable;
 
 @Deprecated
-public class ProgressIndicatorState extends ProgressBarState {
-    public static final String PRIMARY_STYLE_NAME = "v-progressindicator";
+public class TwinColSelectConstants implements Serializable {
+    @Deprecated
+    public static final String ATTRIBUTE_LEFT_CAPTION = "lc";
+    @Deprecated
+    public static final String ATTRIBUTE_RIGHT_CAPTION = "rc";
 
-    {
-        primaryStyleName = PRIMARY_STYLE_NAME;
-    }
-
-    @NoLayout
-    public int pollingInterval = 1000;
 }

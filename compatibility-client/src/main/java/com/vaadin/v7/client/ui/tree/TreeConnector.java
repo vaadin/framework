@@ -35,11 +35,11 @@ import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.MultiSelectMode;
-import com.vaadin.shared.ui.tree.TreeConstants;
-import com.vaadin.shared.ui.tree.TreeServerRpc;
-import com.vaadin.shared.ui.tree.TreeState;
 import com.vaadin.v7.client.ui.VTree;
 import com.vaadin.v7.client.ui.VTree.TreeNode;
+import com.vaadin.v7.shared.ui.tree.TreeConstants;
+import com.vaadin.v7.shared.ui.tree.TreeServerRpc;
+import com.vaadin.v7.shared.ui.tree.TreeState;
 import com.vaadin.v7.ui.Tree;
 
 @Connect(Tree.class)
