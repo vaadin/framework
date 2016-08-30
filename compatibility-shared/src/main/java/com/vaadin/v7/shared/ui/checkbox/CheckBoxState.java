@@ -15,7 +15,7 @@
  */
 package com.vaadin.v7.shared.ui.checkbox;
 
-import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.v7.shared.AbstractFieldState;
 
 public class CheckBoxState extends AbstractFieldState {
     {

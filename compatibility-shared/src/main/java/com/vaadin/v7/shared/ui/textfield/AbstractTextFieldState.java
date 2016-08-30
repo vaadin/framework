@@ -15,8 +15,8 @@
  */
 package com.vaadin.v7.shared.ui.textfield;
 
-import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.annotations.NoLayout;
+import com.vaadin.v7.shared.AbstractFieldState;
 
 @Deprecated
 public class AbstractTextFieldState extends AbstractFieldState {

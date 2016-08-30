@@ -16,9 +16,9 @@
 
 package com.vaadin.v7.shared.ui.progressindicator;
 
-import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.SharedState;
+import com.vaadin.v7.shared.AbstractFieldState;
 
 /**
  * {@link SharedState} for {@link com.vaadin.ui.ProgressBar}

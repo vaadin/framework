@@ -15,7 +15,7 @@
  */
 package com.vaadin.v7.shared.ui.select;
 
-import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.v7.shared.AbstractFieldState;
 
 /**
  * Shared state for the AbstractSelect component.

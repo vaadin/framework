@@ -36,7 +36,6 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.CompositeErrorMessage;
 import com.vaadin.server.ErrorMessage;
-import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
@@ -49,6 +48,7 @@ import com.vaadin.v7.data.Validator;
 import com.vaadin.v7.data.Validator.InvalidValueException;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.Converter.ConversionException;
+import com.vaadin.v7.shared.AbstractFieldState;
 import com.vaadin.v7.data.util.converter.ConverterUtil;
 
 /**

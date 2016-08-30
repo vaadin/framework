@@ -13,29 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.shared.ui.datefield;
+package com.vaadin.v7.shared;
 
-import java.util.Date;
+import com.vaadin.shared.ui.TabIndexState;
 
-import com.vaadin.shared.annotations.NoLayout;
-import com.vaadin.v7.shared.AbstractFieldState;
-
-public class TextualDateFieldState extends AbstractFieldState {
-    {
-        primaryStyleName = "v-datefield";
-    }
-
-    /*
-     * Start range that has been cleared, depending on the resolution of the
-     * date field
-     */
-    @NoLayout
-    public Date rangeStart = null;
-
-    /*
-     * End range that has been cleared, depending on the resolution of the date
-     * field
-     */
-    @NoLayout
-    public Date rangeEnd = null;
+/**
+ * Shared state for {@link com.vaadin.ui.AbstractField}.
+ *
+ * @author Vaadin Ltd
+ * @since 7.0.0
+ *
+ */
+public class AbstractFieldState extends TabIndexState {
+    public boolean propertyReadOnly = false;
+    public boolean hideErrors = false;
+    public boolean required = false;
+    public boolean modified = false;
 }
