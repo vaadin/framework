@@ -738,18 +738,65 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Saves changes from the bound fields to the edited bean. If any value
-     * fails validation, no values are saved and an {@code BindingException} is
-     * thrown.
+     * Saves changes from the bound fields to the given bean if all validators
+     * pass.
+     * <p>
+     * If any field binding validator fails, no values are saved and an
+     * exception is thrown.
+     *
+     * @see #saveIfValid(Object)
+     * @see #load(Object)
+     * @see #bind(Object)
      *
      * @param bean
      *            the object to which to save the field values, not null
-     * @throws BindingException
+     * @throws ValidationException
      *             if some of the bound field values fail to validate
      */
-    public void save(BEAN bean) {
+    public void save(BEAN bean) throws ValidationException {
+        List<ValidationError<?>> errors = doSaveIfValid(bean);
+        if (!errors.isEmpty()) {
+            throw new ValidationException(errors);
+        }
+    }
+
+    /**
+     * Saves changes from the bound fields to the given bean if all validators
+     * pass.
+     * <p>
+     * If any field binding validator fails, no values are saved and
+     * <code>false</code> is returned.
+     *
+     * @see #saveIfValid(Object)
+     * @see #load(Object)
+     * @see #bind(Object)
+     *
+     * @param bean
+     *            the object to which to save the field values, not null
+     * @return {@code true} if there was no validation errors and the bean was
+     *         updated, {@code false} otherwise
+     */
+    public boolean saveIfValid(BEAN bean) {
+        return doSaveIfValid(bean).isEmpty();
+    }
+
+    /**
+     * Saves the field values into the given bean if all field level validators
+     * pass.
+     *
+     * @param bean
+     *            the bean to save field values into
+     * @return a list of field validation errors
+     */
+    private List<ValidationError<?>> doSaveIfValid(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
-        bindings.forEach(binding -> binding.storeFieldValue(bean));
+        // First run fields level validation
+        List<ValidationError<?>> errors = validate();
+        // If no validation errors then update bean
+        if (errors.isEmpty()) {
+            bindings.forEach(binding -> binding.storeFieldValue(bean));
+        }
+        return errors;
     }
 
     /**

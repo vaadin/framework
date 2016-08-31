@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.validator.NotEmptyValidator;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
@@ -150,7 +151,7 @@ public class BinderTest {
     }
 
     @Test
-    public void save_unbound_noChanges() {
+    public void save_unbound_noChanges() throws ValidationException {
         Binder<Person> binder = new Binder<>();
         Person person = new Person();
 
@@ -163,7 +164,7 @@ public class BinderTest {
     }
 
     @Test
-    public void save_bound_beanIsUpdated() {
+    public void save_bound_beanIsUpdated() throws ValidationException {
         Binder<Person> binder = new Binder<>();
         binder.bind(nameField, Person::getFirstName, Person::setFirstName);
 
@@ -180,7 +181,7 @@ public class BinderTest {
     }
 
     @Test
-    public void save_null_beanIsUpdated() {
+    public void save_null_beanIsUpdated() throws ValidationException {
         Binder<Person> binder = new Binder<>();
         binder.forField(nameField).withConverter(fieldValue -> {
             if ("null".equals(fieldValue)) {
@@ -200,6 +201,53 @@ public class BinderTest {
         binder.save(person);
 
         Assert.assertNull(person.getFirstName());
+    }
+
+    @Test(expected = ValidationException.class)
+    public void save_fieldValidationErrors() throws ValidationException {
+        Binder<Person> binder = new Binder<>();
+        String msg = "foo";
+        binder.forField(nameField).withValidator(new NotEmptyValidator<>(msg))
+                .bind(Person::getFirstName, Person::setFirstName);
+
+        Person person = new Person();
+        String firstName = "foo";
+        person.setFirstName(firstName);
+        nameField.setValue("");
+        try {
+            binder.save(person);
+        } finally {
+            Assert.assertEquals(firstName, person.getFirstName());
+        }
+    }
+
+    @Test
+    public void saveIfValid_fieldValidationErrors() {
+        Binder<Person> binder = new Binder<>();
+        String msg = "foo";
+        binder.forField(nameField).withValidator(new NotEmptyValidator<>(msg))
+                .bind(Person::getFirstName, Person::setFirstName);
+
+        Person person = new Person();
+        person.setFirstName("foo");
+        nameField.setValue("");
+        Assert.assertFalse(binder.saveIfValid(person));
+        Assert.assertEquals("foo", person.getFirstName());
+    }
+
+    @Test
+    public void saveIfValid_noValidationErrors() {
+        Binder<Person> binder = new Binder<>();
+        String msg = "foo";
+        binder.forField(nameField).withValidator(new NotEmptyValidator<>(msg))
+                .bind(Person::getFirstName, Person::setFirstName);
+
+        Person person = new Person();
+        person.setFirstName("foo");
+        nameField.setValue("bar");
+
+        Assert.assertTrue(binder.saveIfValid(person));
+        Assert.assertEquals("bar", person.getFirstName());
     }
 
     @Test

@@ -8,6 +8,7 @@ import java.util.TimeZone;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Binder;
+import com.vaadin.data.ValidationException;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.datefield.Resolution;
@@ -903,7 +904,7 @@ public class CalendarTest extends GridLayout implements View {
             public void buttonClick(ClickEvent event) {
                 try {
                     commitCalendarEvent();
-                } catch (CommitException e) {
+                } catch (CommitException | ValidationException e) {
                     e.printStackTrace();
                 }
             }
@@ -968,7 +969,7 @@ public class CalendarTest extends GridLayout implements View {
     }
 
     private void updateCalendarEventForm(CalendarEvent event) {
-        BeanItem<CalendarEvent> item = new BeanItem<CalendarEvent>(event);
+        BeanItem<CalendarEvent> item = new BeanItem<>(event);
         scheduleEventFieldLayout.removeAllComponents();
         scheduleEventFieldGroup = new FieldGroup();
         initFormFields(scheduleEventFieldLayout, event.getClass());
@@ -1003,7 +1004,8 @@ public class CalendarTest extends GridLayout implements View {
     }
 
     /* Adds/updates the event in the data source and fires change event. */
-    private void commitCalendarEvent() throws CommitException {
+    private void commitCalendarEvent()
+            throws ValidationException, CommitException {
         scheduleEventFieldGroup.commit();
         BasicEvent event = getFormCalendarEvent();
         scheduledEventBinder.save(event);
