@@ -98,8 +98,7 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
 
     }
 
-    private TextField createIntegerTextField(String caption,
-            int initialValue) {
+    private TextField createIntegerTextField(String caption, int initialValue) {
         TextField tf = new TextField(caption);
         tf.setId(caption);
         tf.setConverter(Integer.class);

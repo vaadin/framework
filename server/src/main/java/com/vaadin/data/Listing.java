@@ -32,8 +32,8 @@ import com.vaadin.shared.data.selection.SelectionModel;
  *            the selection logic supported by this listing
  * @since
  */
-public interface Listing<T, SELECTIONMODEL extends SelectionModel<T>> extends
-        Serializable {
+public interface Listing<T, SELECTIONMODEL extends SelectionModel<T>>
+        extends Serializable {
 
     /**
      * Returns the source of data items used by this listing.
@@ -53,7 +53,7 @@ public interface Listing<T, SELECTIONMODEL extends SelectionModel<T>> extends
 
     /**
      * Returns the selection model for this listing.
-     * 
+     *
      * @return the selection model, not null
      */
     SELECTIONMODEL getSelectionModel();
@@ -63,7 +63,7 @@ public interface Listing<T, SELECTIONMODEL extends SelectionModel<T>> extends
      *
      * @param items
      *            the data items to display
-     * 
+     *
      */
     default void setItems(Collection<T> items) {
         setDataSource(DataSource.create(items));
@@ -85,9 +85,9 @@ public interface Listing<T, SELECTIONMODEL extends SelectionModel<T>> extends
      * Returns an immutable set of the currently selected items. The iteration
      * order of the items in the returned set is specified by the
      * {@linkplain #getSelectionModel() selection model} used.
-     * 
+     *
      * @return the current selection
-     * 
+     *
      * @see SelectionModel#getSelectedItems
      */
     default Set<T> getSelectedItems() {
@@ -96,10 +96,10 @@ public interface Listing<T, SELECTIONMODEL extends SelectionModel<T>> extends
 
     /**
      * Selects the given item. If the item is already selected, does nothing.
-     * 
+     *
      * @param item
      *            the item to select, not null
-     * 
+     *
      * @see SelectionModel#select
      */
     default void select(T item) {
@@ -109,10 +109,10 @@ public interface Listing<T, SELECTIONMODEL extends SelectionModel<T>> extends
     /**
      * Deselects the given item. If the item is not currently selected, does
      * nothing.
-     * 
+     *
      * @param item
      *            the item to deselect, not null
-     * 
+     *
      * @see SelectionModel#deselect
      */
     default void deselect(T item) {
@@ -121,7 +121,7 @@ public interface Listing<T, SELECTIONMODEL extends SelectionModel<T>> extends
 
     /**
      * Returns whether the given item is currently selected.
-     * 
+     *
      * @param item
      *            the item to check, not null
      * @return {@code true} if the item is selected, {@code false} otherwise

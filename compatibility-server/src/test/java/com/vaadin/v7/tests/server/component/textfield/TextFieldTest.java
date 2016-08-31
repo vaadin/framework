@@ -31,8 +31,7 @@ public class TextFieldTest {
 
     @Test
     public void emptyAfterClearUsingPDS() {
-        TextField tf = new TextField(
-                new ObjectProperty<String>("foo"));
+        TextField tf = new TextField(new ObjectProperty<String>("foo"));
         Assert.assertFalse(tf.isEmpty());
         tf.clear();
         Assert.assertTrue(tf.isEmpty());

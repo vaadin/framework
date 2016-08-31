@@ -536,7 +536,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
     /**
      * Adds the bean after the given bean.
      *
-     * @see com.com.vaadin.v7.data.Container.Ordered#addItemAfter(Object, Object)
+     * @see com.com.vaadin.v7.data.Container.Ordered#addItemAfter(Object,
+     *      Object)
      */
     protected BeanItem<BEANTYPE> addItemAfter(IDTYPE previousItemId,
             IDTYPE newItemId, BEANTYPE bean) {

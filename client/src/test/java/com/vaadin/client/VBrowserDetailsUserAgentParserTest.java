@@ -568,4 +568,3 @@ public class VBrowserDetailsUserAgentParserTest {
     }
 
 }
-

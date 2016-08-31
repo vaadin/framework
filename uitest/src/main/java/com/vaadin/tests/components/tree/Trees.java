@@ -388,8 +388,8 @@ public class Trees extends AbstractSelectTestCase<Tree>
     private Command<Tree, com.vaadin.v7.ui.Tree.ItemStyleGenerator> itemStyleGeneratorCommand = new Command<Tree, com.vaadin.v7.ui.Tree.ItemStyleGenerator>() {
 
         @Override
-        public void execute(Tree c, com.vaadin.v7.ui.Tree.ItemStyleGenerator value,
-                Object data) {
+        public void execute(Tree c,
+                com.vaadin.v7.ui.Tree.ItemStyleGenerator value, Object data) {
             c.setItemStyleGenerator(value);
 
         }

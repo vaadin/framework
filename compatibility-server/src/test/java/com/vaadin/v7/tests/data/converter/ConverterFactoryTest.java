@@ -28,8 +28,7 @@ import com.vaadin.v7.ui.TextField;
 
 public class ConverterFactoryTest {
 
-    public static class ConvertTo42
-            implements Converter<String, Integer> {
+    public static class ConvertTo42 implements Converter<String, Integer> {
 
         @Override
         public Integer convertToModel(String value,
@@ -57,8 +56,7 @@ public class ConverterFactoryTest {
 
     }
 
-    public static class ConverterFactory42
-            extends DefaultConverterFactory {
+    public static class ConverterFactory42 extends DefaultConverterFactory {
         @Override
         public <PRESENTATION, MODEL> Converter<PRESENTATION, MODEL> createConverter(
                 Class<PRESENTATION> presentationType, Class<MODEL> modelType) {

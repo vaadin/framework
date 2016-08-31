@@ -39,8 +39,7 @@ public class TabSheetIcons extends TestBase {
         tab[0] = new Label("This is tab 1");
         tab[0].setIcon(new ThemeResource("../runo/icons/32/folder-add.png"));
         tab[0].setCaption("tab number 1");
-        tab[1] = new TextField("This is tab 2",
-                "Contents of tab 2 textfield");
+        tab[1] = new TextField("This is tab 2", "Contents of tab 2 textfield");
         tab[2] = new Label("This is tab 3");
         tab[2].setIcon(new ThemeResource("../runo/icons/16/folder-add.png"));
         tab[2].setCaption("tab number 3");

@@ -122,10 +122,9 @@ public class ValoThemeUITest extends MultiBrowserTest {
     }
 
     private void selectTreeNodeByCaption(String string) {
-        WebElement e = $(TreeElement.class).first()
-                .findElement(By
-                        .xpath("//div[@class='v-tree-node-caption']//span[text()='"
-                                + string + "']"));
+        WebElement e = $(TreeElement.class).first().findElement(
+                By.xpath("//div[@class='v-tree-node-caption']//span[text()='"
+                        + string + "']"));
         e.click();
     }
 

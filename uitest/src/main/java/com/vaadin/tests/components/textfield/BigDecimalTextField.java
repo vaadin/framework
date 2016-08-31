@@ -58,8 +58,7 @@ public class BigDecimalTextField extends AbstractTestUIWithLog {
         Button setValue = new Button("Set value to 15,2", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                ((TextField) fieldGroup.getField("decimal"))
-                        .setValue("15,2");
+                ((TextField) fieldGroup.getField("decimal")).setValue("15,2");
             }
         });
 

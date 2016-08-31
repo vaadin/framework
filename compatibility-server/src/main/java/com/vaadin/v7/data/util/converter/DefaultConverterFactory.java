@@ -24,8 +24,8 @@ import java.util.logging.Logger;
 import com.vaadin.server.VaadinSession;
 
 /**
- * Default implementation of {@link ConverterFactory}. Provides converters
- * for standard types like {@link String}, {@link Double} and {@link Date}.
+ * Default implementation of {@link ConverterFactory}. Provides converters for
+ * standard types like {@link String}, {@link Double} and {@link Date}.
  * </p>
  * <p>
  * Custom converters can be provided by extending this class and using
@@ -57,8 +57,7 @@ public class DefaultConverterFactory implements ConverterFactory {
         if (reverseConverter != null) {
             log.finest(getClass().getName() + " created a reverse "
                     + reverseConverter.getClass());
-            return new ReverseConverter<PRESENTATION, MODEL>(
-                    reverseConverter);
+            return new ReverseConverter<PRESENTATION, MODEL>(reverseConverter);
         }
 
         log.finest(getClass().getName() + " could not find a converter for "
@@ -90,8 +89,7 @@ public class DefaultConverterFactory implements ConverterFactory {
 
     }
 
-    protected Converter<Date, ?> createDateConverter(
-            Class<?> sourceType) {
+    protected Converter<Date, ?> createDateConverter(Class<?> sourceType) {
         if (Long.class.isAssignableFrom(sourceType)) {
             return new DateToLongConverter();
         } else if (java.sql.Date.class.isAssignableFrom(sourceType)) {
@@ -101,8 +99,7 @@ public class DefaultConverterFactory implements ConverterFactory {
         }
     }
 
-    protected Converter<String, ?> createStringConverter(
-            Class<?> sourceType) {
+    protected Converter<String, ?> createStringConverter(Class<?> sourceType) {
         if (Double.class.isAssignableFrom(sourceType)) {
             return new StringToDoubleConverter();
         } else if (Float.class.isAssignableFrom(sourceType)) {

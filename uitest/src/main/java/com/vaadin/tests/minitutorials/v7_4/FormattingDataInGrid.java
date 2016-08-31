@@ -58,22 +58,20 @@ public class FormattingDataInGrid extends UI {
         NumberRenderer poundRenderer = new NumberRenderer(poundformat);
         grid.getColumn("amount").setRenderer(poundRenderer);
 
-        grid.getColumn("count")
-                .setConverter(new StringToIntegerConverter() {
-                    @Override
-                    public String convertToPresentation(Integer value,
-                            Class<? extends String> targetType, Locale locale)
-                            throws Converter.ConversionException {
-                        String stringRepresentation = super.convertToPresentation(
-                                value, targetType, locale);
-                        if (value.intValue() % 2 == 0) {
-                            return "<strong>" + stringRepresentation
-                                    + "</strong>";
-                        } else {
-                            return "<em>" + stringRepresentation + "</em>";
-                        }
-                    }
-                });
+        grid.getColumn("count").setConverter(new StringToIntegerConverter() {
+            @Override
+            public String convertToPresentation(Integer value,
+                    Class<? extends String> targetType, Locale locale)
+                    throws Converter.ConversionException {
+                String stringRepresentation = super.convertToPresentation(value,
+                        targetType, locale);
+                if (value.intValue() % 2 == 0) {
+                    return "<strong>" + stringRepresentation + "</strong>";
+                } else {
+                    return "<em>" + stringRepresentation + "</em>";
+                }
+            }
+        });
 
         grid.getColumn("count").setRenderer(new HtmlRenderer());
     }

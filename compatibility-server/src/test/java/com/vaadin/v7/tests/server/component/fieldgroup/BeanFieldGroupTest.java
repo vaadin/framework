@@ -87,8 +87,7 @@ public class BeanFieldGroupTest {
         BeanFieldGroup<MyBean> bindFields = BeanFieldGroup
                 .bindFieldsUnbuffered(myBean, viewStub);
 
-        Field<String> field = (Field<String>) bindFields
-                .getField("basicField");
+        Field<String> field = (Field<String>) bindFields.getField("basicField");
         Assert.assertEquals(DEFAULT_FOR_BASIC_FIELD, myBean.basicField);
         field.setValue("Foo");
         Assert.assertEquals("Foo", myBean.basicField);
@@ -132,8 +131,8 @@ public class BeanFieldGroupTest {
         BeanFieldGroup<MyBean> bfg = new BeanFieldGroup<MyBean>(MyBean.class);
         bfg.setItemDataSource(bean);
 
-        com.vaadin.v7.ui.Field<?> helloField = bfg
-                .buildAndBind("Hello string", "nestedBean.hello");
+        com.vaadin.v7.ui.Field<?> helloField = bfg.buildAndBind("Hello string",
+                "nestedBean.hello");
         assertEquals(bean.nestedBean.hello, helloField.getValue().toString());
     }
 

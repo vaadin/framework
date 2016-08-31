@@ -24,8 +24,8 @@ package com.vaadin.v7.data.validator;
  * {@link IntegerRangeValidator}, {@link DoubleRangeValidator} or
  * {@link DateRangeValidator} in applications.
  * <p>
- * Note that {@link RangeValidator} always accept null values. Make a
- * field required to ensure that no empty values are accepted or override
+ * Note that {@link RangeValidator} always accept null values. Make a field
+ * required to ensure that no empty values are accepted or override
  * {@link #isValidValue(Comparable)}.
  * </p>
  *
@@ -35,8 +35,7 @@ package com.vaadin.v7.data.validator;
  * @author Vaadin Ltd.
  * @since 7.0
  */
-public class RangeValidator<T extends Comparable>
-        extends AbstractValidator<T> {
+public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
 
     private T minValue = null;
     private boolean minValueIncluded = true;

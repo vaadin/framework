@@ -121,8 +121,7 @@ public class VerticalLayoutWithEmptyLabel extends AbstractTestUI {
         private final Label myLabel = new Label("");
         private final TextField filterPhoneField = new TextField(
                 "Foobar Number");
-        private final TextField filterFoobarField = new TextField(
-                "Foobar ID");
+        private final TextField filterFoobarField = new TextField("Foobar ID");
         private final CheckBox incomingOnlyField = new CheckBox(
                 "Incoming foobar only");
 
@@ -147,8 +146,7 @@ public class VerticalLayoutWithEmptyLabel extends AbstractTestUI {
             this.addComponent(topLayout);
 
             // Foobar phone #
-            final TextField smsNumber = new TextField(
-                    "Foobar Phone #");
+            final TextField smsNumber = new TextField("Foobar Phone #");
             smsNumber.setSizeUndefined();
             smsNumber.setColumns(12);
             smsNumber.setMaxLength(16);

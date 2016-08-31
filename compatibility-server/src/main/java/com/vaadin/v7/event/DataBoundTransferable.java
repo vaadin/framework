@@ -62,8 +62,8 @@ public abstract class DataBoundTransferable extends TransferableImpl {
     /**
      * Returns the container data source from which the transfer occurs.
      *
-     * {@link com.vaadin.v7.data.Container.Viewer#getContainerDataSource()} is used
-     * to obtain the underlying container of the source component.
+     * {@link com.vaadin.v7.data.Container.Viewer#getContainerDataSource()} is
+     * used to obtain the underlying container of the source component.
      *
      * @return Container
      */

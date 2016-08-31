@@ -56,8 +56,8 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      * @param <TARGET>
      *            the target property type
      */
-    public interface BeanBinding<BEAN, FIELDVALUE, TARGET> extends
-            Binding<BEAN, FIELDVALUE, TARGET> {
+    public interface BeanBinding<BEAN, FIELDVALUE, TARGET>
+            extends Binding<BEAN, FIELDVALUE, TARGET> {
 
         @Override
         public BeanBinding<BEAN, FIELDVALUE, TARGET> withValidator(
@@ -127,8 +127,8 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      * @param <TARGET>
      *            the target property type
      */
-    protected static class BeanBindingImpl<BEAN, FIELDVALUE, TARGET> extends
-            BindingImpl<BEAN, FIELDVALUE, TARGET>
+    protected static class BeanBindingImpl<BEAN, FIELDVALUE, TARGET>
+            extends BindingImpl<BEAN, FIELDVALUE, TARGET>
             implements BeanBinding<BEAN, FIELDVALUE, TARGET> {
 
         private Method getter;
@@ -218,7 +218,8 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
             } catch (IntrospectionException ie) {
                 throw new IllegalArgumentException(
                         "Could not resolve bean property name (see the cause): "
-                                + beanType.getName() + "." + propertyName, ie);
+                                + beanType.getName() + "." + propertyName,
+                        ie);
             }
             if (descriptor == null) {
                 throw new IllegalArgumentException(
@@ -237,8 +238,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         private Converter<TARGET, Object> createConverter() {
             return Converter.from(
                     fieldValue -> getter.getReturnType().cast(fieldValue),
-                    propertyValue -> (TARGET) propertyValue,
-                    exception -> {
+                    propertyValue -> (TARGET) propertyValue, exception -> {
                         throw new RuntimeException(exception);
                     });
         }
@@ -312,8 +312,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
 
     @Override
     protected <FIELDVALUE, TARGET> BeanBindingImpl<BEAN, FIELDVALUE, TARGET> createBinding(
-            HasValue<FIELDVALUE> field,
-            Converter<FIELDVALUE, TARGET> converter,
+            HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
             StatusChangeHandler handler) {
         Objects.requireNonNull(field, "field cannot be null");
         Objects.requireNonNull(converter, "converter cannot be null");

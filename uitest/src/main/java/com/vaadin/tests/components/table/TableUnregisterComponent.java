@@ -50,8 +50,8 @@ public class TableUnregisterComponent extends TestBase {
         table.setColumnCollapsingAllowed(true);
         table.setTableFieldFactory(new DefaultFieldFactory() {
             @Override
-            public Field<?> createField(Container container,
-                    Object itemId, Object propertyId, Component uiContext) {
+            public Field<?> createField(Container container, Object itemId,
+                    Object propertyId, Component uiContext) {
                 if (COL_B.equals(propertyId)) {
                     Field<String> field = new TextField() {
                         @Override

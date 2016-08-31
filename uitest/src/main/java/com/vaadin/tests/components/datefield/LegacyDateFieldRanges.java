@@ -201,11 +201,11 @@ public class LegacyDateFieldRanges extends AbstractTestUI {
         endCal.add(Calendar.DATE, 30);
         GridLayout gl = new GridLayout(2, 2);
         gl.setSpacing(true);
-        DateField df = createDateField(startCal.getTime(),
-                endCal.getTime(), null, Resolution.DAY, false);
+        DateField df = createDateField(startCal.getTime(), endCal.getTime(),
+                null, Resolution.DAY, false);
         gl.addComponent(df);
-        DateField inline = createDateField(startCal.getTime(),
-                endCal.getTime(), null, Resolution.DAY, true);
+        DateField inline = createDateField(startCal.getTime(), endCal.getTime(),
+                null, Resolution.DAY, true);
         gl.addComponent(inline);
         inline.setId("staticInline");
         VerticalLayout vl = new VerticalLayout();

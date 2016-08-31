@@ -10,10 +10,8 @@ import com.vaadin.v7.data.validator.NullValidator;
 
 public class NullValidatorTest {
 
-    NullValidator notNull = new NullValidator("Null not accepted",
-            false);
-    NullValidator onlyNull = new NullValidator("Only null accepted",
-            true);
+    NullValidator notNull = new NullValidator("Null not accepted", false);
+    NullValidator onlyNull = new NullValidator("Only null accepted", true);
 
     @Test
     public void testNullValue() {

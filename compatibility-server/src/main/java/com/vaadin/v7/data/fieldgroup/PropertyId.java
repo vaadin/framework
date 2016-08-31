@@ -29,9 +29,9 @@ import com.vaadin.v7.ui.Field;
  * The automatic data binding in FieldGroup and BeanFieldGroup relies on a
  * naming convention by default: properties of an item are bound to similarly
  * named field components in given a editor object. If you want to map a
- * property with a different name (ID) to a
- * {@link com.vaadin.client.ui.Field}, you can use this annotation for the
- * member fields, with the name (ID) of the desired property as the parameter.
+ * property with a different name (ID) to a {@link com.vaadin.client.ui.Field},
+ * you can use this annotation for the member fields, with the name (ID) of the
+ * desired property as the parameter.
  * <p>
  * In following usage example, the text field would be bound to property "foo"
  * in the Entity class. <code>

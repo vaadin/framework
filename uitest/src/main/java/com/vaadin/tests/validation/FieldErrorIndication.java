@@ -49,22 +49,20 @@ public class FieldErrorIndication extends AbstractTestUI {
         ComboBox comboBox = new ComboBox("ComboBox");
         comboBox.addItem("ok");
         comboBox.addItem("error");
-        comboBox.addValidator(
-                new StringLengthValidator("fail", 0, 2, false));
+        comboBox.addValidator(new StringLengthValidator("fail", 0, 2, false));
         comboBox.setValue("error");
 
         ListSelect listSelect = new ListSelect("ListSelect");
         listSelect.addItem("ok");
         listSelect.addItem("error");
-        listSelect.addValidator(
-                new StringLengthValidator("fail", 0, 2, false));
+        listSelect.addValidator(new StringLengthValidator("fail", 0, 2, false));
         listSelect.setValue("error");
 
         NativeSelect nativeSelect = new NativeSelect("NativeSelect");
         nativeSelect.addItem("ok");
         nativeSelect.addItem("error");
-        nativeSelect.addValidator(
-                new StringLengthValidator("fail", 0, 2, false));
+        nativeSelect
+                .addValidator(new StringLengthValidator("fail", 0, 2, false));
         nativeSelect.setValue("error");
         TwinColSelect twinColSelect = new TwinColSelect("TwinColSelect");
         twinColSelect.addItem("ok");

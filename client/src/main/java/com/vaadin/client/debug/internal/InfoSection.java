@@ -312,4 +312,3 @@ public class InfoSection implements Section {
     }
 
 }
-

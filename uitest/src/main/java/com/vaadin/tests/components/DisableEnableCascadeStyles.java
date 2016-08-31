@@ -36,8 +36,7 @@ public class DisableEnableCascadeStyles extends TestBase {
 
         button = new Button("Button, enabled");
         nativeButton = new NativeButton("NativeButton, enabled");
-        textField = new TextField(
-                "TextField with caption and value, enabled");
+        textField = new TextField("TextField with caption and value, enabled");
         textField.setValue("Text");
         textArea = new TextArea("TextArea with caption and value, enabled");
         textArea.setValue("Text");

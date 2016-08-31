@@ -31,16 +31,14 @@ public class RoundTripTest extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         final RoundTripTester roundTripTester = new RoundTripTester();
-        final TextField payloadSize = new TextField(
-                "Payload size (bytes)");
+        final TextField payloadSize = new TextField("Payload size (bytes)");
         payloadSize.setConverter(Integer.class);
         payloadSize.setConvertedValue(10000);
         if (request.getParameter("payload") != null) {
             payloadSize.setValue(request.getParameter("payload"));
         }
         addComponent(payloadSize);
-        final TextField testDuration = new TextField(
-                "Test duration (ms)");
+        final TextField testDuration = new TextField("Test duration (ms)");
         testDuration.setConverter(Integer.class);
         testDuration.setConvertedValue(10000);
         addComponent(testDuration);

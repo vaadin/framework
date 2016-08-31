@@ -65,8 +65,7 @@ public class RendererTest {
         }
     }
 
-    private static class TestConverter
-            implements Converter<String, TestBean> {
+    private static class TestConverter implements Converter<String, TestBean> {
 
         @Override
         public TestBean convertToModel(String value,

@@ -122,9 +122,8 @@ public class TextChangeEvents2 extends TestBase {
         }
 
         {
-            final TextField[] tfs = new TextField[] {
-                    new TextField(), new TextField(),
-                    new TextField(), new TextField() };
+            final TextField[] tfs = new TextField[] { new TextField(),
+                    new TextField(), new TextField(), new TextField() };
             HorizontalLayout hl = new HorizontalLayout();
             hl.setCaption("Blää");
             getLayout().addComponent(hl);
@@ -163,8 +162,7 @@ public class TextChangeEvents2 extends TestBase {
 
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        TextField tf = (TextField) event
-                                .getProperty();
+                        TextField tf = (TextField) event.getProperty();
                         String val = tf.getValue();
                         if (val != null && val.length() > 4) {
                             tf.setValue(val.substring(0, 4));

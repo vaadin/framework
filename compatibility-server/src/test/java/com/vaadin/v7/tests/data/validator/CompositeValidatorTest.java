@@ -16,10 +16,10 @@ import com.vaadin.v7.data.validator.RegexpValidator;
 
 public class CompositeValidatorTest {
 
-    CompositeValidator and = new CompositeValidator(
-            CombinationMode.AND, "One validator not valid");
-    CompositeValidator or = new CompositeValidator(
-            CombinationMode.OR, "No validators are valid");
+    CompositeValidator and = new CompositeValidator(CombinationMode.AND,
+            "One validator not valid");
+    CompositeValidator or = new CompositeValidator(CombinationMode.OR,
+            "No validators are valid");
     EmailValidator email = new EmailValidator("Faulty email");
     RegexpValidator regex = new RegexpValidator("@mail.com", false,
             "Partial match validator error");

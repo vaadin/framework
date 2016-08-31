@@ -4172,8 +4172,8 @@ public class Table extends AbstractSelect implements Action.Container,
         if (hasConverter(colId)) {
             converter = getConverter(colId);
         } else {
-            converter = (Converter) ConverterUtil.getConverter(
-                    String.class, property.getType(), getSession());
+            converter = (Converter) ConverterUtil.getConverter(String.class,
+                    property.getType(), getSession());
         }
         Object value = property.getValue();
         if (converter != null) {

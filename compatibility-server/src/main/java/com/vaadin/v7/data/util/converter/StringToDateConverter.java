@@ -34,8 +34,7 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.0
  */
-public class StringToDateConverter
-        implements Converter<String, Date> {
+public class StringToDateConverter implements Converter<String, Date> {
 
     /**
      * Returns the format used by

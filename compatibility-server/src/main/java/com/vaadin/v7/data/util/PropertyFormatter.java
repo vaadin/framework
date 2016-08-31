@@ -239,7 +239,8 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
      * This should not be called directly.
      */
     @Override
-    public void valueChange(com.vaadin.v7.data.Property.ValueChangeEvent event) {
+    public void valueChange(
+            com.vaadin.v7.data.Property.ValueChangeEvent event) {
         fireValueChange();
     }
 

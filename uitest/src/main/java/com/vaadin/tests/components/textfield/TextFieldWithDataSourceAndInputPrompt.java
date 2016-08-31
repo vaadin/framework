@@ -35,8 +35,7 @@ public class TextFieldWithDataSourceAndInputPrompt extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        TextField textField = new TextField(
-                "TextField with null value");
+        TextField textField = new TextField("TextField with null value");
         textField.setInputPrompt("Me is input prompt");
         textField.setNullRepresentation(null);
         textField.setValue(null);

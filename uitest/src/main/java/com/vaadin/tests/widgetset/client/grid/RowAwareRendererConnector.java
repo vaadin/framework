@@ -33,7 +33,8 @@ import com.vaadin.v7.client.widget.grid.RendererCellReference;
 import elemental.json.JsonObject;
 
 @Connect(com.vaadin.tests.components.grid.RowAwareRenderer.class)
-public class RowAwareRendererConnector extends AbstractGridRendererConnector<Void> {
+public class RowAwareRendererConnector
+        extends AbstractGridRendererConnector<Void> {
     public interface RowAwareRendererRpc extends ServerRpc {
         void clicky(String key);
     }

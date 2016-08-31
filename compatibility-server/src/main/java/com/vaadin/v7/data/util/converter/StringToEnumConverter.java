@@ -36,8 +36,7 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.4
  */
-public class StringToEnumConverter
-        implements Converter<String, Enum> {
+public class StringToEnumConverter implements Converter<String, Enum> {
 
     @Override
     public Enum convertToModel(String value, Class<? extends Enum> targetType,

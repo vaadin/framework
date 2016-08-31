@@ -25,7 +25,8 @@ import com.vaadin.v7.client.renderers.TextRenderer;
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.v7.ui.renderers.TextRenderer.class)
-public class TextRendererConnector extends AbstractGridRendererConnector<String> {
+public class TextRendererConnector
+        extends AbstractGridRendererConnector<String> {
 
     @Override
     public TextRenderer getRenderer() {

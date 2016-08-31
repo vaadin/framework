@@ -110,8 +110,7 @@ public class GridLayoutRequiredIndicatorLocation extends AbstractTestUI {
         layout.addComponent(label);
 
         // TODO also test with captions
-        TextField field = new TextField(
-                useCaption ? "caption" : null);
+        TextField field = new TextField(useCaption ? "caption" : null);
         field.setRequired(true);
         field.setWidth(width);
         layout.addComponent(field);
@@ -120,8 +119,7 @@ public class GridLayoutRequiredIndicatorLocation extends AbstractTestUI {
 
     private void addLabel(VerticalLayout layout, String width,
             Alignment alignment, boolean useCaption) {
-        TextField field = new TextField(
-                useCaption ? "caption" : null);
+        TextField field = new TextField(useCaption ? "caption" : null);
         field.setRequired(true);
         field.setWidth(width);
         layout.addComponent(field);

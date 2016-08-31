@@ -146,8 +146,8 @@ public class BeanBinderTest {
 
     @Test
     public void fieldWithConverterBound_bindBean_fieldValueUpdated() {
-        binder.forField(ageField).withConverter(Integer::valueOf,
-                String::valueOf).bind("age");
+        binder.forField(ageField)
+                .withConverter(Integer::valueOf, String::valueOf).bind("age");
         binder.bind(p);
 
         assertEquals("32", ageField.getValue());
@@ -155,8 +155,8 @@ public class BeanBinderTest {
 
     @Test(expected = ClassCastException.class)
     public void fieldWithInvalidConverterBound_bindBean_fieldValueUpdated() {
-        binder.forField(ageField).withConverter(Float::valueOf,
-                String::valueOf).bind("age");
+        binder.forField(ageField).withConverter(Float::valueOf, String::valueOf)
+                .bind("age");
         binder.bind(p);
 
         assertEquals("32", ageField.getValue());

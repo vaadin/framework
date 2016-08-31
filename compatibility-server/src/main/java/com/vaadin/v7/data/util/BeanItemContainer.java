@@ -186,7 +186,8 @@ public class BeanItemContainer<BEANTYPE>
      * @param newItemId
      *            the bean (of type BT) to add (not null)
      *
-     * @see com.com.vaadin.v7.data.Container.Ordered#addItemAfter(Object, Object)
+     * @see com.com.vaadin.v7.data.Container.Ordered#addItemAfter(Object,
+     *      Object)
      */
     @Override
     @SuppressWarnings("unchecked")

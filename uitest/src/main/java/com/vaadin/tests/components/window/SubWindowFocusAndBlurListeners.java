@@ -73,8 +73,7 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
 
         main.addWindow(window);
 
-        ((ComponentContainer) main.getContent())
-                .addComponent(new TextField());
+        ((ComponentContainer) main.getContent()).addComponent(new TextField());
 
         Button button = new Button("Bring to front (should focus too)",
                 new Button.ClickListener() {

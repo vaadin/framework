@@ -22,8 +22,7 @@ public class SerializationTest {
 
     @Test
     public void testValidators() throws Exception {
-        RegexpValidator validator = new RegexpValidator(".*",
-                "Error");
+        RegexpValidator validator = new RegexpValidator(".*", "Error");
         validator.validate("aaa");
         RegexpValidator validator2 = serializeAndDeserialize(validator);
         validator2.validate("aaa");

@@ -28,8 +28,7 @@ import com.vaadin.v7.data.Property;
  * a value that the user can change through the user interface.
  *
  * LegacyField components are built upon the framework defined in the
- * LegacyField interface and the {@link com.vaadin.AbstractField} base
- * class.
+ * LegacyField interface and the {@link com.vaadin.AbstractField} base class.
  *
  * The LegacyField interface inherits the {@link com.vaadin.ui.Component}
  * superinterface and also the {@link com.vaadin.ui.Property} interface to have
@@ -47,8 +46,8 @@ import com.vaadin.v7.data.Property;
  *             extend {@link com.vaadin.ui.AbstractField} instead.
  */
 @Deprecated
-public interface Field<T> extends Component, BufferedValidatable,
-        Property<T>, Property.ValueChangeNotifier, Property.ValueChangeListener,
+public interface Field<T> extends Component, BufferedValidatable, Property<T>,
+        Property.ValueChangeNotifier, Property.ValueChangeListener,
         Property.Editor, Focusable, HasRequired {
     /**
      * Is this field required.

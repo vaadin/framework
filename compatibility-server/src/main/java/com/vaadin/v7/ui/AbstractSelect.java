@@ -80,9 +80,8 @@ import com.vaadin.v7.shared.ui.select.AbstractSelectState;
  */
 @SuppressWarnings("serial")
 // TODO currently cannot specify type more precisely in case of multi-select
-public abstract class AbstractSelect extends AbstractField<Object>
-        implements Container, Container.Viewer,
-        Container.PropertySetChangeListener,
+public abstract class AbstractSelect extends AbstractField<Object> implements
+        Container, Container.Viewer, Container.PropertySetChangeListener,
         Container.PropertySetChangeNotifier, Container.ItemSetChangeNotifier,
         Container.ItemSetChangeListener, LegacyComponent {
 

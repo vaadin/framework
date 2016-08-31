@@ -389,4 +389,3 @@ public class TreeConnector extends AbstractComponentConnector
         WidgetUtil.clearTextSelection();
     }
 }
-

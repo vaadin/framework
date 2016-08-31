@@ -31,8 +31,8 @@ import com.vaadin.v7.ui.components.colorpicker.ColorPickerGrid;
 /**
  * A class that defines the default implementation for a color picker grid
  * connector. Connects the server side
- * {@link com.vaadin.v7.ui.components.colorpicker.ColorPickerGrid} with the client
- * side counterpart {@link VColorPickerGrid}
+ * {@link com.vaadin.v7.ui.components.colorpicker.ColorPickerGrid} with the
+ * client side counterpart {@link VColorPickerGrid}
  *
  * @since 7.0.0
  */

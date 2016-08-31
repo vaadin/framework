@@ -68,8 +68,8 @@ import com.vaadin.v7.data.util.converter.ConverterUtil;
  * </p>
  *
  * <p>
- * The class also supports {@link com.vaadin.v7.data.Validator validators}
- * to make sure the value contained in the field is valid.
+ * The class also supports {@link com.vaadin.v7.data.Validator validators} to
+ * make sure the value contained in the field is valid.
  * </p>
  *
  * @author Vaadin Ltd.
@@ -424,8 +424,8 @@ public abstract class AbstractField<T> extends AbstractComponent
      * @throws Property.ReadOnlyException
      */
     @Override
-    public void setValue(T newFieldValue) throws Property.ReadOnlyException,
-            Converter.ConversionException {
+    public void setValue(T newFieldValue)
+            throws Property.ReadOnlyException, Converter.ConversionException {
         setValue(newFieldValue, false);
     }
 
@@ -585,10 +585,10 @@ public abstract class AbstractField<T> extends AbstractComponent
      * <p>
      * If the data source implements
      * {@link com.vaadin.v7.data.Property.ValueChangeNotifier} and/or
-     * {@link com.vaadin.v7.data.Property.ReadOnlyStatusChangeNotifier}, the field
-     * registers itself as a listener and updates itself according to the events
-     * it receives. To avoid memory leaks caused by references to a field no
-     * longer in use, the listener registrations are removed on
+     * {@link com.vaadin.v7.data.Property.ReadOnlyStatusChangeNotifier}, the
+     * field registers itself as a listener and updates itself according to the
+     * events it receives. To avoid memory leaks caused by references to a field
+     * no longer in use, the listener registrations are removed on
      * {@link AbstractField#detach() detach} and re-added on
      * {@link AbstractField#attach() attach}.
      * </p>
@@ -621,8 +621,8 @@ public abstract class AbstractField<T> extends AbstractComponent
 
         // Check if the current converter is compatible.
         if (newDataSource != null
-                && !ConverterUtil.canConverterPossiblyHandle(
-                        getConverter(), getType(), newDataSource.getType())) {
+                && !ConverterUtil.canConverterPossiblyHandle(getConverter(),
+                        getType(), newDataSource.getType())) {
             // There is no converter set or there is no way the current
             // converter can be compatible.
             setConverter(newDataSource.getType());
@@ -805,9 +805,9 @@ public abstract class AbstractField<T> extends AbstractComponent
      * Returns the current value (as returned by {@link #getValue()}) converted
      * to the data source type.
      * <p>
-     * This returns the same as {@link AbstractField#getValue()} if no
-     * converter has been set. The value is not necessarily the same as the data
-     * source value e.g. if the field is in buffered mode and has been modified.
+     * This returns the same as {@link AbstractField#getValue()} if no converter
+     * has been set. The value is not necessarily the same as the data source
+     * value e.g. if the field is in buffered mode and has been modified.
      * </p>
      *
      * @return The converted value that is compatible with the data source type
@@ -1584,8 +1584,8 @@ public abstract class AbstractField<T> extends AbstractComponent
 
     /**
      * A ready-made {@link ShortcutListener} that focuses the given
-     * {@link Focusable} (usually a {@link Field}) when the keyboard
-     * shortcut is invoked.
+     * {@link Focusable} (usually a {@link Field}) when the keyboard shortcut is
+     * invoked.
      *
      */
     public static class FocusShortcut extends ShortcutListener {

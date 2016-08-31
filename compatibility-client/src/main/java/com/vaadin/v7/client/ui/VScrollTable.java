@@ -6493,8 +6493,7 @@ public class VScrollTable extends FlowPanel
                     if (!(widget instanceof VLabel)
                             && !(widget instanceof VEmbedded)
                             && !(widget instanceof VTextField
-                                    && ((VTextField) widget)
-                                            .isReadOnly())) {
+                                    && ((VTextField) widget).isReadOnly())) {
                         return null;
                     }
                 }
@@ -8419,4 +8418,3 @@ public class VScrollTable extends FlowPanel
     }
 
 }
-

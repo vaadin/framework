@@ -42,8 +42,7 @@ public class PopupDateField extends DateField {
         super();
     }
 
-    public PopupDateField(Property dataSource)
-            throws IllegalArgumentException {
+    public PopupDateField(Property dataSource) throws IllegalArgumentException {
         super(dataSource);
     }
 

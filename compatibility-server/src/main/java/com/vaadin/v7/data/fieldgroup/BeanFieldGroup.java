@@ -156,8 +156,8 @@ public class BeanFieldGroup<T> extends FieldGroup {
     }
 
     @Override
-    public <T extends Field> T buildAndBind(String caption,
-            Object propertyId, Class<T> fieldType) throws BindException {
+    public <T extends Field> T buildAndBind(String caption, Object propertyId,
+            Class<T> fieldType) throws BindException {
         ensureNestedPropertyAdded(propertyId);
         return super.buildAndBind(caption, propertyId, fieldType);
     }
@@ -227,8 +227,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
      * @param bean
      *            the bean to be bound
      * @param objectWithMemberFields
-     *            the class that contains {@link Field}s for bean
-     *            properties
+     *            the class that contains {@link Field}s for bean properties
      * @return the bean field group used to make binding
      */
     public static <T> BeanFieldGroup<T> bindFieldsUnbuffered(T bean,
@@ -249,8 +248,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
      * @param bean
      *            the bean to be bound
      * @param objectWithMemberFields
-     *            the class that contains {@link Field}s for bean
-     *            properties
+     *            the class that contains {@link Field}s for bean properties
      * @return the bean field group used to make binding
      */
     public static <T> BeanFieldGroup<T> bindFieldsBuffered(T bean,

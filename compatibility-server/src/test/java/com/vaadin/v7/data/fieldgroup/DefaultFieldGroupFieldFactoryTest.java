@@ -65,24 +65,21 @@ public class DefaultFieldGroupFieldFactoryTest {
 
     @Test
     public void testDateGenerationForPopupDateField() {
-        Field f = fieldFactory.createField(Date.class,
-                DateField.class);
+        Field f = fieldFactory.createField(Date.class, DateField.class);
         Assert.assertNotNull(f);
         Assert.assertEquals(PopupDateField.class, f.getClass());
     }
 
     @Test
     public void testDateGenerationForInlineDateField() {
-        Field f = fieldFactory.createField(Date.class,
-                InlineDateField.class);
+        Field f = fieldFactory.createField(Date.class, InlineDateField.class);
         Assert.assertNotNull(f);
         Assert.assertEquals(InlineDateField.class, f.getClass());
     }
 
     @Test
     public void testDateGenerationForTextField() {
-        Field f = fieldFactory.createField(Date.class,
-                TextField.class);
+        Field f = fieldFactory.createField(Date.class, TextField.class);
         Assert.assertNotNull(f);
         Assert.assertEquals(TextField.class, f.getClass());
     }
@@ -100,8 +97,7 @@ public class DefaultFieldGroupFieldFactoryTest {
 
     @Test
     public void testEnumComboBox() {
-        Field f = fieldFactory.createField(SomeEnum.class,
-                ComboBox.class);
+        Field f = fieldFactory.createField(SomeEnum.class, ComboBox.class);
         Assert.assertNotNull(f);
         Assert.assertEquals(ComboBox.class, f.getClass());
     }
@@ -116,8 +112,7 @@ public class DefaultFieldGroupFieldFactoryTest {
 
     @Test
     public void testEnumAnyField() {
-        Field f = fieldFactory.createField(SomeEnum.class,
-                Field.class);
+        Field f = fieldFactory.createField(SomeEnum.class, Field.class);
         Assert.assertNotNull(f);
         Assert.assertEquals(ListSelect.class, f.getClass());
     }

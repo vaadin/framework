@@ -228,13 +228,11 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         hl.setSpacing(true);
         hl.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
         Label l1 = new Label("Respond to " + type + " requests with code");
-        final TextField responseCode = new TextField(null,
-                "" + response.code);
+        final TextField responseCode = new TextField(null, "" + response.code);
         responseCode.setConverter(Integer.class);
         responseCode.setWidth("5em");
         Label l2 = new Label("for the following");
-        final TextField timeField = new TextField(null,
-                "" + response.time);
+        final TextField timeField = new TextField(null, "" + response.time);
         timeField.setConverter(Integer.class);
         timeField.setWidth("5em");
         Label l3 = new Label("seconds");

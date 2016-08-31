@@ -50,7 +50,7 @@ public interface TableFieldFactory extends Serializable {
      * @return A field suitable for editing the specified data or null if the
      *         property should not be editable.
      */
-    Field<?> createField(Container container, Object itemId,
-            Object propertyId, Component uiContext);
+    Field<?> createField(Container container, Object itemId, Object propertyId,
+            Component uiContext);
 
 }

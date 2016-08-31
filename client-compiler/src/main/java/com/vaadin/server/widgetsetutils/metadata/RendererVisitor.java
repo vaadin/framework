@@ -142,7 +142,8 @@ public class RendererVisitor extends TypeVisitor {
                 + AbstractRendererConnector.class.getName());
     }
 
-    private static boolean isAbstractRendererConnector(String connectorSrcName) {
+    private static boolean isAbstractRendererConnector(
+            String connectorSrcName) {
         return connectorSrcName
                 .equals(AbstractRendererConnector.class.getName())
                 || connectorSrcName

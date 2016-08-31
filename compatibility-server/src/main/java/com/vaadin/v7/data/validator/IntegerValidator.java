@@ -20,14 +20,14 @@ import com.vaadin.v7.data.util.converter.StringToIntegerConverter;
 
 /**
  * String validator for integers. See
- * {@link com.vaadin.v7.data.validator.AbstractStringValidator} for
- * more information.
+ * {@link com.vaadin.v7.data.validator.AbstractStringValidator} for more
+ * information.
  *
  * @author Vaadin Ltd.
  * @since 5.4
- * @deprecated As of 7.0. Use a {@link StringToIntegerConverter} converter
- *             on the field instead or bind the field to a {@link Property} of
- *             type {@link Integer}.
+ * @deprecated As of 7.0. Use a {@link StringToIntegerConverter} converter on
+ *             the field instead or bind the field to a {@link Property} of type
+ *             {@link Integer}.
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -40,8 +40,8 @@ public class IntegerValidator extends AbstractStringValidator {
      * @param errorMessage
      *            the message to display in case the value does not validate.
      * @deprecated As of 7.0. Use an Integer converter on the field instead
-     *             and/or use an {@link IntegerRangeValidator} for
-     *             validating that the value is inside a given range.
+     *             and/or use an {@link IntegerRangeValidator} for validating
+     *             that the value is inside a given range.
      */
     @Deprecated
     public IntegerValidator(String errorMessage) {

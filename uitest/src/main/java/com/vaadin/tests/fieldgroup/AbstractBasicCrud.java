@@ -115,13 +115,11 @@ public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
         private TextField address_streetAddress = new TextField(
                 "Street address");
         @PropertyId("address.postalCode")
-        private TextField address_postalCode = new TextField(
-                "Postal code");
+        private TextField address_postalCode = new TextField("Postal code");
         @PropertyId("address.city")
         private TextField address_city = new TextField("City");
         @PropertyId("address.country")
-        private TextField address_country = new TextField(
-                "Country");
+        private TextField address_country = new TextField("Country");
 
         public CustomForm() {
             fieldGroup.bindMemberFields(this);
@@ -201,8 +199,7 @@ public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
         protected BeanFieldGroup<ComplexPerson> fieldGroup = new BeanFieldGroup<ComplexPerson>(
                 ComplexPerson.class) {
             @Override
-            protected void configureField(
-                    com.vaadin.v7.ui.Field<?> field) {
+            protected void configureField(com.vaadin.v7.ui.Field<?> field) {
                 super.configureField(field);
                 if (field.getCaption().equals("Postal code")) {
                     // Last name editing is disabled through property.

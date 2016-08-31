@@ -53,8 +53,8 @@ public class DateRangeValidator extends RangeValidator<Date> {
      * @param maxValue
      *            The maximum value to accept or null for no limit
      */
-    public DateRangeValidator(String errorMessage, Date minValue,
-            Date maxValue, Resolution resolution) {
+    public DateRangeValidator(String errorMessage, Date minValue, Date maxValue,
+            Resolution resolution) {
         super(errorMessage, Date.class, minValue, maxValue);
     }
 

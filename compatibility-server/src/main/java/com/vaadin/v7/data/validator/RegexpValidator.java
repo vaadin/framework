@@ -27,8 +27,8 @@ import java.util.regex.Pattern;
  * {@link java.util.regex.Pattern#sum}
  * </p>
  * <p>
- * See {@link com.vaadin.v7.data.validator.AbstractStringValidator}
- * for more information.
+ * See {@link com.vaadin.v7.data.validator.AbstractStringValidator} for more
+ * information.
  * </p>
  * <p>
  * An empty string or a null is always accepted - use the required flag on

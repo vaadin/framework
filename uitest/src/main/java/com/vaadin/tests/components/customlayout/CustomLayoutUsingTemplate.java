@@ -61,8 +61,7 @@ public class CustomLayoutUsingTemplate extends TestBase
         if (event.getButton() == button1) {
             layout.addComponent(button2, "location1");
         } else {
-            layout.addComponent(new TextField("A text field!"),
-                    "location2");
+            layout.addComponent(new TextField("A text field!"), "location2");
         }
     }
 }

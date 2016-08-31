@@ -33,8 +33,7 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.0
  */
-public class StringToBooleanConverter
-        implements Converter<String, Boolean> {
+public class StringToBooleanConverter implements Converter<String, Boolean> {
 
     private final String trueString;
 
@@ -58,8 +57,7 @@ public class StringToBooleanConverter
      * @param trueString
      *            string representation for <code>true</code>
      */
-    public StringToBooleanConverter(String trueString,
-            String falseString) {
+    public StringToBooleanConverter(String trueString, String falseString) {
         this.trueString = trueString;
         this.falseString = falseString;
     }

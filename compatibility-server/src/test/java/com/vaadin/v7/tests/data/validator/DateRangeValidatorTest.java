@@ -30,16 +30,14 @@ public class DateRangeValidatorTest {
         startDate.set(2000, Calendar.JANUARY, 1, 12, 0, 0);
         endDate.set(2000, Calendar.FEBRUARY, 20, 12, 0, 0);
 
-        cleanValidator = new DateRangeValidator(
-                "Given date outside range", null, null, Resolution.DAY);
-        minValidator = new DateRangeValidator(
-                "Given date before startDate", startDate.getTime(), null,
-                Resolution.DAY);
-        maxValidator = new DateRangeValidator("Given date after endDate",
-                null, endDate.getTime(), Resolution.DAY);
-        minMaxValidator = new DateRangeValidator(
-                "Given date outside range", startDate.getTime(),
+        cleanValidator = new DateRangeValidator("Given date outside range",
+                null, null, Resolution.DAY);
+        minValidator = new DateRangeValidator("Given date before startDate",
+                startDate.getTime(), null, Resolution.DAY);
+        maxValidator = new DateRangeValidator("Given date after endDate", null,
                 endDate.getTime(), Resolution.DAY);
+        minMaxValidator = new DateRangeValidator("Given date outside range",
+                startDate.getTime(), endDate.getTime(), Resolution.DAY);
     }
 
     @Test

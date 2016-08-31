@@ -409,4 +409,3 @@ public class ResponsiveConnector extends AbstractExtensionConnector
     }-*/;
 
 }
-

@@ -28,10 +28,10 @@ import com.vaadin.shared.Registration;
  * changed, either by the user or programmatically.
  *
  * @author Vaadin Ltd.
- * 
+ *
  * @param <V>
  *            the value type
- * 
+ *
  * @since
  */
 public interface HasValue<V> extends Serializable {
@@ -67,7 +67,7 @@ public interface HasValue<V> extends Serializable {
         /**
          * Creates a new {@code ValueChange} event containing the given value,
          * originating from the given source connector.
-         * 
+         *
          * @param source
          *            the source connector, not null
          * @param value

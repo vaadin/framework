@@ -19,8 +19,8 @@ package com.vaadin.v7.data.util.converter;
 import java.util.Locale;
 
 /**
- * A converter that wraps another {@link Converter} and reverses source
- * and target types.
+ * A converter that wraps another {@link Converter} and reverses source and
+ * target types.
  *
  * @param <MODEL>
  *            The source type
@@ -42,8 +42,7 @@ public class ReverseConverter<PRESENTATION, MODEL>
      * @param converter
      *            The converter to use in a reverse fashion
      */
-    public ReverseConverter(
-            Converter<MODEL, PRESENTATION> converter) {
+    public ReverseConverter(Converter<MODEL, PRESENTATION> converter) {
         this.realConverter = converter;
     }
 

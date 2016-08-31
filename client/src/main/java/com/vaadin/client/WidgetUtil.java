@@ -1775,4 +1775,3 @@ public class WidgetUtil {
         return integerPart + ((int) nrFractions) / divisor;
     }
 }
-

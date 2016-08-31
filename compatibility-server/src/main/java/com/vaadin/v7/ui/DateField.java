@@ -58,8 +58,8 @@ import com.vaadin.v7.shared.ui.datefield.TextualDateFieldState;
  * </p>
  * <p>
  * A <code>DateField</code> is in write-through mode by default, so
- * {@link com.vaadin.v7.ui.AbstractField#setWriteThrough(boolean)}must
- * be called to enable buffering.
+ * {@link com.vaadin.v7.ui.AbstractField#setWriteThrough(boolean)}must be called
+ * to enable buffering.
  * </p>
  *
  * @author Vaadin Ltd.
@@ -214,8 +214,7 @@ public class DateField extends AbstractField<Date> implements
      * @param dataSource
      *            the Property to be edited with this editor.
      */
-    public DateField(Property dataSource)
-            throws IllegalArgumentException {
+    public DateField(Property dataSource) throws IllegalArgumentException {
         if (!Date.class.isAssignableFrom(dataSource.getType())) {
             throw new IllegalArgumentException(
                     "Can't use " + dataSource.getType().getName()

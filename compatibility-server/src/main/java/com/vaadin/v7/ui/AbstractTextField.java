@@ -129,11 +129,9 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         }
 
         if (hasListeners(TextChangeEvent.class)) {
-            target.addAttribute(
-                    TextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE,
+            target.addAttribute(TextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE,
                     getTextChangeEventMode().toString());
-            target.addAttribute(
-                    TextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT,
+            target.addAttribute(TextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT,
                     getTextChangeTimeout());
             if (lastKnownTextContent != null) {
                 /*
@@ -477,8 +475,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
          * some sort of diffs instead of always sending the whole text content.
          * Also on value change events we could use the mechanism.
          */
-        String object = (String) variables
-                .get(TextFieldConstants.VAR_CUR_TEXT);
+        String object = (String) variables.get(TextFieldConstants.VAR_CUR_TEXT);
         lastKnownTextContent = object;
         textChangeEventPending = true;
     }

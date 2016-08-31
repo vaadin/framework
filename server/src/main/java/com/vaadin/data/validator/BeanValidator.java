@@ -73,8 +73,8 @@ public class BeanValidator implements Validator<Object> {
                 Class.forName(Validation.class.getName());
                 beanValidationAvailable = true;
             } catch (ClassNotFoundException e) {
-                Logger.getLogger(BeanValidator.class.getName()).fine(
-                        "A JSR-303 bean validation implementation not found on the classpath. "
+                Logger.getLogger(BeanValidator.class.getName())
+                        .fine("A JSR-303 bean validation implementation not found on the classpath. "
                                 + BeanValidator.class.getSimpleName()
                                 + " cannot be used.");
                 beanValidationAvailable = false;

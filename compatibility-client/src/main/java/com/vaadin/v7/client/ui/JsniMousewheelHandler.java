@@ -72,4 +72,3 @@ abstract class JsniMousewheelHandler {
     }-*/;
 
 }
-

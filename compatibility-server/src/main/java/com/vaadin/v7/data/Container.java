@@ -839,8 +839,8 @@ public interface Container extends Serializable {
      * Adding items (if supported) to a filtered {@link Ordered} or
      * {@link Indexed} container should insert them immediately after the
      * indicated visible item. The unfiltered position of items added at index
-     * 0, at index {@link com.vaadin.v7.data.Container#size()} or at an undefined
-     * position is up to the implementation.
+     * 0, at index {@link com.vaadin.v7.data.Container#size()} or at an
+     * undefined position is up to the implementation.
      * </p>
      * <p>
      * The functionality of SimpleFilterable can be implemented using the

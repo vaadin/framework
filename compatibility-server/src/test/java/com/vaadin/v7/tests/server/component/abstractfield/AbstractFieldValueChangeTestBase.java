@@ -18,8 +18,8 @@ import com.vaadin.v7.ui.AbstractField;
  *
  * Subclasses should implement {@link #setValue()} and call
  * <code>super.setValue(LegacyAbstractField)</code>. Also, subclasses should
- * typically override {@link #setValue(AbstractField)} to set the field
- * value via <code>changeVariables()</code>.
+ * typically override {@link #setValue(AbstractField)} to set the field value
+ * via <code>changeVariables()</code>.
  */
 public abstract class AbstractFieldValueChangeTestBase<T> {
 

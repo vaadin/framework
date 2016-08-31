@@ -52,8 +52,7 @@ public class BasicCrudGridEditorRow extends AbstractBasicCrud {
         grid.setEditorEnabled(true);
         grid.setSizeFull();
         grid.getColumn("age").getEditorField().addValidator(
-                new IntegerRangeValidator("Must be between 0 and 100", 0,
-                        100));
+                new IntegerRangeValidator("Must be between 0 and 100", 0, 100));
         grid.getColumn("birthDate").setRenderer(new DateRenderer(
                 DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US)));
         addComponent(grid);

@@ -34,8 +34,8 @@ import com.vaadin.v7.data.Property;
  * Since <code>TextField</code> extends <code>LegacyAbstractField</code> it
  * implements the {@link com.vaadin.v7.data.Buffered} interface. A
  * <code>TextField</code> is in write-through mode by default, so
- * {@link com.vaadin.v7.ui.AbstractField#setWriteThrough(boolean)}
- * must be called to enable buffering.
+ * {@link com.vaadin.v7.ui.AbstractField#setWriteThrough(boolean)} must be
+ * called to enable buffering.
  * </p>
  *
  * @author Vaadin Ltd.

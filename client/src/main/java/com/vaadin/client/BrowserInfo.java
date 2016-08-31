@@ -520,4 +520,3 @@ public class BrowserInfo {
         return (getBrowserMajorVersion() > majorVersion);
     }
 }
-

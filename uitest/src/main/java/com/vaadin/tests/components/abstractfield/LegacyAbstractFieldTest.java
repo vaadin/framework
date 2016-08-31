@@ -141,7 +141,8 @@ public abstract class LegacyAbstractFieldTest<T extends AbstractField>
     };
 
     @Override
-    public void valueChange(com.vaadin.v7.data.Property.ValueChangeEvent event) {
+    public void valueChange(
+            com.vaadin.v7.data.Property.ValueChangeEvent event) {
         log(event.getClass().getSimpleName() + ", new value: "
                 + getValue(event.getProperty()));
     }

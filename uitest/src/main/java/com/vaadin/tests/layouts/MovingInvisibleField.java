@@ -15,10 +15,10 @@ public class MovingInvisibleField extends TestBase {
         final VerticalLayout layout1 = new VerticalLayout();
         final VerticalLayout layout2 = new VerticalLayout();
 
-        final TextField tfHidden = new TextField(
-                "Hidden text field caption", "A hidden text field");
-        final TextField tfVisible = new TextField(
-                "Visible text field caption", "A visible text field");
+        final TextField tfHidden = new TextField("Hidden text field caption",
+                "A hidden text field");
+        final TextField tfVisible = new TextField("Visible text field caption",
+                "A visible text field");
         tfHidden.setVisible(false);
         Button b = new Button("Move hidden textfield to other layout");
         b.addListener(new ClickListener() {

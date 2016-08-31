@@ -27,14 +27,14 @@ import com.vaadin.shared.data.selection.SelectionModel;
 /**
  * A base class for listing components. Provides common handling for fetching
  * backend data items, selection logic, and server-client communication.
- * 
+ *
  * @author Vaadin Ltd.
- * 
+ *
  * @param <T>
  *            the item data type
  * @param <SELECTIONMODEL>
  *            the selection logic supported by this listing
- * 
+ *
  * @since
  */
 public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T>>
@@ -53,7 +53,7 @@ public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T
 
         /**
          * Adds this extension to the given parent listing.
-         * 
+         *
          * @param listing
          *            the parent component to add to
          */
@@ -124,7 +124,7 @@ public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T
      * <strong>Note:</strong> This constructor does not set a selection model
      * for the new listing. The invoking constructor must explicitly call
      * {@link #setSelectionModel(SelectionModel)}.
-     * 
+     *
      * @param dataCommunicator
      *            the data communicator to use, not null
      */
@@ -155,7 +155,7 @@ public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T
 
     /**
      * Sets the selection model for this listing.
-     * 
+     *
      * @param model
      *            the selection model to use, not null
      */

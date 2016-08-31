@@ -77,8 +77,8 @@ public class StringToCollectionConverter
      * @param tokenType
      *            expected token model type
      */
-    public StringToCollectionConverter(
-            Converter<String, ?> tokenConverter, Class<?> tokenType) {
+    public StringToCollectionConverter(Converter<String, ?> tokenConverter,
+            Class<?> tokenType) {
         this(", ", tokenConverter, tokenType);
     }
 

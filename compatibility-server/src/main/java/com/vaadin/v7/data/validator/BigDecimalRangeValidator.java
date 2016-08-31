@@ -24,8 +24,7 @@ import java.math.BigDecimal;
  * @since 7.4
  */
 @SuppressWarnings("serial")
-public class BigDecimalRangeValidator
-        extends RangeValidator<BigDecimal> {
+public class BigDecimalRangeValidator extends RangeValidator<BigDecimal> {
 
     /**
      * Creates a validator for checking that an BigDecimal is within a given
@@ -43,8 +42,8 @@ public class BigDecimalRangeValidator
      * @param maxValue
      *            The maximum value to accept or null for no limit
      */
-    public BigDecimalRangeValidator(String errorMessage,
-            BigDecimal minValue, BigDecimal maxValue) {
+    public BigDecimalRangeValidator(String errorMessage, BigDecimal minValue,
+            BigDecimal maxValue) {
         super(errorMessage, BigDecimal.class, minValue, maxValue);
     }
 

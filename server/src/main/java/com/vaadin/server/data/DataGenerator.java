@@ -24,10 +24,10 @@ import elemental.json.JsonObject;
  * data items sent to the client for extension purposes.
  *
  * @author Vaadin Ltd.
- * 
+ *
  * @param <T>
  *            the data type
- * 
+ *
  * @since
  */
 @FunctionalInterface

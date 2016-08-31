@@ -800,4 +800,3 @@ public class Slot extends SimplePanel {
         }
     }
 }
-

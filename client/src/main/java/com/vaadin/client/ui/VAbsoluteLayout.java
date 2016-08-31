@@ -497,4 +497,3 @@ public class VAbsoluteLayout extends ComplexPanel {
         }
     }
 }
-

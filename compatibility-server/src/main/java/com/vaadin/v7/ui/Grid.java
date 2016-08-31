@@ -137,9 +137,9 @@ import elemental.json.JsonValue;
  * <p>
  * Each column has its own {@link Renderer} that displays data into something
  * that can be displayed in the browser. That data is first converted with a
- * {@link com.vaadin.v7.data.util.converter.Converter Converter} into
- * something that the Renderer can process. This can also be an implicit step -
- * if a column has a simple data type, like a String, no explicit assignment is
+ * {@link com.vaadin.v7.data.util.converter.Converter Converter} into something
+ * that the Renderer can process. This can also be an implicit step - if a
+ * column has a simple data type, like a String, no explicit assignment is
  * needed.
  * <p>
  * Usually a renderer takes some kind of object, and converts it into a
@@ -544,8 +544,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         @Override
-        protected <T extends Field> T build(String caption,
-                Class<?> dataType, Class<T> fieldType) throws BindException {
+        protected <T extends Field> T build(String caption, Class<?> dataType,
+                Class<T> fieldType) throws BindException {
             T field = super.build(caption, dataType, fieldType);
             if (field instanceof CheckBox) {
                 field.setCaption(null);
@@ -3218,8 +3218,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * A check for allowing the
          * {@link #Column(Grid, GridColumnState, Object) constructor} to call
-         * {@link #setConverter(Converter)} with a <code>null</code>, even
-         * if model and renderer aren't compatible.
+         * {@link #setConverter(Converter)} with a <code>null</code>, even if
+         * model and renderer aren't compatible.
          */
         private boolean isFirstConverterAssignment = true;
 

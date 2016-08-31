@@ -65,8 +65,7 @@ public class TransactionalPropertyWrapperTest {
 
     private final TextField nameField = new TextField("Name");
     private final TextField ageField = new TextField("Age");
-    private final TextField unboundField = new TextField(
-            "No FieldGroup");
+    private final TextField unboundField = new TextField("No FieldGroup");
     private final TestingProperty<String> unboundProp = new TestingProperty<String>(
             "Hello World");
     private final PropertysetItem item = new PropertysetItem();

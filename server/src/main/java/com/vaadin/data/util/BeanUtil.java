@@ -96,8 +96,7 @@ public final class BeanUtil implements Serializable {
      *             if the introspection fails
      */
     public static Class<?> getPropertyType(Class<?> beanType,
-            String propertyName)
-            throws IntrospectionException {
+            String propertyName) throws IntrospectionException {
         PropertyDescriptor descriptor = getPropertyDescriptor(beanType,
                 propertyName);
         if (descriptor != null) {

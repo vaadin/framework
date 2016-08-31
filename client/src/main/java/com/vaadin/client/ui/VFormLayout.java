@@ -303,7 +303,8 @@ public class VFormLayout extends SimplePanel {
             }
 
             boolean required = owner instanceof HasRequiredIndicator
-                    && ((HasRequiredIndicator) owner).isRequiredIndicatorVisible();
+                    && ((HasRequiredIndicator) owner)
+                            .isRequiredIndicatorVisible();
 
             AriaHelper.handleInputRequired(owner.getWidget(), required);
 

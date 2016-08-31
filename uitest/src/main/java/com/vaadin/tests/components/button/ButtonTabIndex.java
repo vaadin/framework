@@ -26,8 +26,7 @@ public class ButtonTabIndex extends TestBase {
     protected void setup() {
         TextField tf1 = new TextField("Tab index 0");
         tf1.setTabIndex(0);
-        TextField tf2 = new TextField(
-                "Tab index -1, focused initially");
+        TextField tf2 = new TextField("Tab index -1, focused initially");
         tf2.setTabIndex(-1);
         tf2.focus();
         addComponent(tf1);

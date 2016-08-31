@@ -33,11 +33,10 @@ public interface FieldGroupFieldFactory extends Serializable {
      * @param dataType
      *            The type that we want to edit using the field
      * @param fieldType
-     *            The type of field we want to create. If set to
-     *            {@link Field} then any type of field is accepted
+     *            The type of field we want to create. If set to {@link Field}
+     *            then any type of field is accepted
      * @return A field that can be assigned to the given fieldType and that is
      *         capable of editing the given type of data
      */
-    <T extends Field> T createField(Class<?> dataType,
-            Class<T> fieldType);
+    <T extends Field> T createField(Class<?> dataType, Class<T> fieldType);
 }

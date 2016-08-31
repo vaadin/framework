@@ -24,8 +24,7 @@ public class LoginView extends Panel implements View {
         final TextField email = new TextField("Email");
         layout.addComponent(email);
 
-        final PasswordField password = new PasswordField(
-                "Password");
+        final PasswordField password = new PasswordField("Password");
         layout.addComponent(password);
 
         final Button login = new Button("Login", new Button.ClickListener() {

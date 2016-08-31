@@ -31,8 +31,7 @@ import com.vaadin.v7.ui.TextField;
 
 public class AnyEnumToStringConverterTest {
 
-    public class AnyEnumToStringConverter
-            implements Converter<Enum, String> {
+    public class AnyEnumToStringConverter implements Converter<Enum, String> {
 
         public AnyEnumToStringConverter() {
         }

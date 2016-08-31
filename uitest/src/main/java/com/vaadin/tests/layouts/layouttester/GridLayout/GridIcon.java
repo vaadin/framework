@@ -31,8 +31,7 @@ import com.vaadin.v7.ui.TextField;
 public class GridIcon extends GridBaseLayoutTestUI {
     @Override
     protected void setup(VaadinRequest request) {
-        layout.addComponent(
-                createLabelsFields(TextField.class, true, ""));
+        layout.addComponent(createLabelsFields(TextField.class, true, ""));
         layout.addComponent(createLabelsFields(Label.class, true, ""));
         layout.addComponent(createLabelsFields(Button.class, true, ""));
         layout.addComponent(createLabelsFields(ComboBox.class, true, ""));

@@ -2271,4 +2271,3 @@ public class VTree extends FocusElementPanel
         Util.notifyParentOfSizeChange(this, false);
     }
 }
-

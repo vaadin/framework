@@ -55,8 +55,7 @@ public class TableWithCustomConverterFactory extends AbstractTestUI {
 
     }
 
-    public static class MyConverterFactory
-            extends DefaultConverterFactory {
+    public static class MyConverterFactory extends DefaultConverterFactory {
         @Override
         protected Converter<String, ?> createStringConverter(
                 Class<?> sourceType) {

@@ -25,12 +25,10 @@ import com.vaadin.v7.ui.TextField;
 public class HtmlCaptionInFormLayout extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
-        final TextField asHtml = new TextField(
-                "Contains <b>HTML</b>");
+        final TextField asHtml = new TextField("Contains <b>HTML</b>");
         asHtml.setCaptionAsHtml(true);
 
-        final TextField asText = new TextField(
-                "Contains <b>HTML</b>");
+        final TextField asText = new TextField("Contains <b>HTML</b>");
 
         addComponent(new FormLayout(asHtml, asText));
 

@@ -468,4 +468,3 @@ public class VButton extends FocusWidget implements ClickHandler {
     }-*/;
 
 }
-

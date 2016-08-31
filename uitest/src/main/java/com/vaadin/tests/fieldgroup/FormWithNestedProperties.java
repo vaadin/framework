@@ -21,8 +21,7 @@ public class FormWithNestedProperties extends AbstractBeanFieldGroupTest {
     private TextField age = new TextField("Age");
 
     @PropertyId("address.streetAddress")
-    private TextField streetAddress = new TextField(
-            "Street address");
+    private TextField streetAddress = new TextField("Street address");
     private NativeSelect country;
 
     private CheckBox deceased = new CheckBox("Deceased");

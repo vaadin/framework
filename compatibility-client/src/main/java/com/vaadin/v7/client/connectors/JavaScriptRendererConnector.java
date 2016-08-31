@@ -275,4 +275,3 @@ public class JavaScriptRendererConnector
         return helper;
     }
 }
-

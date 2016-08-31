@@ -201,9 +201,9 @@ import com.vaadin.v7.shared.ui.grid.ScrollDestination;
  * might have a {@link com.vaadin.v7.client.renderers.TextRenderer TextRenderer}
  * that simply takes in a {@code String} and displays it as the cell's content.
  * A more complex renderer might be
- * {@link com.vaadin.v7.client.renderers.ProgressBarRenderer ProgressBarRenderer}
- * that takes in a floating point number, and displays a progress bar instead,
- * based on the given number.
+ * {@link com.vaadin.v7.client.renderers.ProgressBarRenderer
+ * ProgressBarRenderer} that takes in a floating point number, and displays a
+ * progress bar instead, based on the given number.
  * <p>
  * <em>See:</em> {@link #addColumn(Column)}, {@link #addColumn(Column, int)} and
  * {@link #addColumns(Column...)}. <em>Also</em>

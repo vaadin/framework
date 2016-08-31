@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2016 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,12 +31,12 @@ import com.vaadin.util.ReflectTools;
  * A {@code SelectionModel} for selecting a single value. Implements
  * {@code Extension} to provide the communication logic for single selection for
  * the listing it extends.
- * 
+ *
  * @author Vaadin Ltd.
- * 
+ *
  * @param <T>
  *            the type of the items to select
- * 
+ *
  * @since
  */
 public class SingleSelection<T> extends AbstractSelectionModel<T>
@@ -52,7 +52,7 @@ public class SingleSelection<T> extends AbstractSelectionModel<T>
 
         /**
          * Creates a new selection change event.
-         * 
+         *
          * @param source
          *            the listing that fired the event
          * @param selectedItem
@@ -69,7 +69,7 @@ public class SingleSelection<T> extends AbstractSelectionModel<T>
         /**
          * Returns an optional of the item that was selected, or an empty
          * optional if a previously selected item was deselected.
-         * 
+         *
          * @return the selected item or an empty optional if deselected
          *
          * @see SelectionModel.Single#getSelectedItem()
@@ -81,10 +81,10 @@ public class SingleSelection<T> extends AbstractSelectionModel<T>
 
     /**
      * A listener for selection events.
-     * 
+     *
      * @param <T>
      *            the type of the selected item
-     * 
+     *
      * @see SingleSelectionChange
      */
     @FunctionalInterface
@@ -102,7 +102,7 @@ public class SingleSelection<T> extends AbstractSelectionModel<T>
 
     /**
      * Creates a new {@code SingleSelection} extending the given parent listing.
-     * 
+     *
      * @param parent
      *            the parent listing
      */
@@ -170,7 +170,7 @@ public class SingleSelection<T> extends AbstractSelectionModel<T>
     /**
      * Selects the given item or deselects the current one if given
      * {@code null}.
-     * 
+     *
      * @param value
      *            the item to select or {@code null} to deselect
      * @param userOriginated

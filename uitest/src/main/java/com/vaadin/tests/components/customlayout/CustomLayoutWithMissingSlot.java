@@ -35,8 +35,7 @@ public class CustomLayoutWithMissingSlot extends AbstractTestUIWithLog {
             cl = new CustomLayout(new ByteArrayInputStream(
                     "<div>First: <div location='first'></div><p>Second: <div location='second'></div><p>"
                             .getBytes("UTF-8")));
-            cl.addComponent(new TextField("This should be visible"),
-                    "first");
+            cl.addComponent(new TextField("This should be visible"), "first");
             Button button = new Button(
                     "This button is visible, together with one label");
             button.addClickListener(new ClickListener() {

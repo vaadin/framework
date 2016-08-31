@@ -245,8 +245,7 @@ public class FieldGroup implements Serializable {
      *             If the field is null or the property id is already bound to
      *             another field by this field binder
      */
-    public void bind(Field<?> field, Object propertyId)
-            throws BindException {
+    public void bind(Field<?> field, Object propertyId) throws BindException {
         throwIfFieldIsNull(field, propertyId);
         throwIfPropertyIdAlreadyBound(field, propertyId);
 
@@ -745,8 +744,8 @@ public class FieldGroup implements Serializable {
     /**
      * Checks the validity of the bound fields.
      * <p>
-     * Call the {@link Field#validate()} for the fields to get the
-     * individual error messages.
+     * Call the {@link Field#validate()} for the fields to get the individual
+     * error messages.
      *
      * @return true if all bound fields are valid, false otherwise.
      */
@@ -841,9 +840,9 @@ public class FieldGroup implements Serializable {
      * that have not been initialized.
      * <p>
      * This method processes all (Java) member fields whose type extends
-     * {@link Field} and that can be mapped to a property id. Property ids
-     * are searched in the following order: @{@link PropertyId} annotations,
-     * exact field name matches and the case-insensitive matching that ignores
+     * {@link Field} and that can be mapped to a property id. Property ids are
+     * searched in the following order: @{@link PropertyId} annotations, exact
+     * field name matches and the case-insensitive matching that ignores
      * underscores. Fields that are not initialized (null) are built using the
      * field factory. All non-null fields for which a property id can be
      * determined are bound to the property id.
@@ -886,9 +885,9 @@ public class FieldGroup implements Serializable {
      * member fields that have not been initialized.
      * <p>
      * This method processes all (Java) member fields whose type extends
-     * {@link Field} and that can be mapped to a property id. Property ids
-     * are searched in the following order: @{@link PropertyId} annotations,
-     * exact field name matches and the case-insensitive matching that ignores
+     * {@link Field} and that can be mapped to a property id. Property ids are
+     * searched in the following order: @{@link PropertyId} annotations, exact
+     * field name matches and the case-insensitive matching that ignores
      * underscores. Fields that are not initialized (null) are built using the
      * field factory is buildFields is true. All non-null fields for which a
      * property id can be determined are bound to the property id.
@@ -1154,8 +1153,7 @@ public class FieldGroup implements Serializable {
      *            finder.
      * @throws BindException
      *             If there is a problem while building or binding
-     * @return The created and bound field. Can be any type of
-     *         {@link Field}.
+     * @return The created and bound field. Can be any type of {@link Field}.
      */
     public Field<?> buildAndBind(String caption, Object propertyId)
             throws BindException {
@@ -1173,12 +1171,11 @@ public class FieldGroup implements Serializable {
      *            finder.
      * @throws BindException
      *             If the field could not be created
-     * @return The created and bound field. Can be any type of
-     *         {@link Field}.
+     * @return The created and bound field. Can be any type of {@link Field}.
      */
 
-    public <T extends Field> T buildAndBind(String caption,
-            Object propertyId, Class<T> fieldType) throws BindException {
+    public <T extends Field> T buildAndBind(String caption, Object propertyId,
+            Class<T> fieldType) throws BindException {
         Class<?> type = getPropertyType(propertyId);
 
         T field = build(caption, type, fieldType);
@@ -1191,8 +1188,8 @@ public class FieldGroup implements Serializable {
      * Creates a field based on the given data type.
      * <p>
      * The data type is the type that we want to edit using the field. The field
-     * type is the type of field we want to create, can be {@link Field}
-     * if any LegacyField is good.
+     * type is the type of field we want to create, can be {@link Field} if any
+     * LegacyField is good.
      * </p>
      *
      * @param caption

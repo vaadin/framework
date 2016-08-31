@@ -92,7 +92,8 @@ public class BeanContainer<IDTYPE, BEANTYPE>
     /**
      * Adds the bean after the given item id.
      *
-     * @see com.com.vaadin.v7.data.Container.Ordered#addItemAfter(Object, Object)
+     * @see com.com.vaadin.v7.data.Container.Ordered#addItemAfter(Object,
+     *      Object)
      */
     @Override
     public BeanItem<BEANTYPE> addItemAfter(IDTYPE previousItemId,

@@ -112,64 +112,60 @@ public class TablePropertyValueConverterTest {
             }
 
         });
-        customTable.setConverter("col2",
-                new Converter<String, BaseClass>() {
-                    private static final long serialVersionUID = 1L;
+        customTable.setConverter("col2", new Converter<String, BaseClass>() {
+            private static final long serialVersionUID = 1L;
 
-                    @Override
-                    public BaseClass convertToModel(String value,
-                            Class<? extends BaseClass> targetType,
-                            Locale locale)
-                            throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
-                        return new BaseClass("model");
-                    }
+            @Override
+            public BaseClass convertToModel(String value,
+                    Class<? extends BaseClass> targetType, Locale locale)
+                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                return new BaseClass("model");
+            }
 
-                    @Override
-                    public Class<BaseClass> getModelType() {
-                        return BaseClass.class;
-                    }
+            @Override
+            public Class<BaseClass> getModelType() {
+                return BaseClass.class;
+            }
 
-                    @Override
-                    public Class<String> getPresentationType() {
-                        return String.class;
-                    }
+            @Override
+            public Class<String> getPresentationType() {
+                return String.class;
+            }
 
-                    @Override
-                    public String convertToPresentation(BaseClass value,
-                            Class<? extends String> targetType, Locale locale)
-                            throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
-                        return null;
-                    }
-                });
-        customTable.setConverter("col3",
-                new Converter<String, DerivedClass>() {
-                    private static final long serialVersionUID = 1L;
+            @Override
+            public String convertToPresentation(BaseClass value,
+                    Class<? extends String> targetType, Locale locale)
+                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                return null;
+            }
+        });
+        customTable.setConverter("col3", new Converter<String, DerivedClass>() {
+            private static final long serialVersionUID = 1L;
 
-                    @Override
-                    public DerivedClass convertToModel(String value,
-                            Class<? extends DerivedClass> targetType,
-                            Locale locale)
-                            throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
-                        return new DerivedClass("derived" + 1001);
-                    }
+            @Override
+            public DerivedClass convertToModel(String value,
+                    Class<? extends DerivedClass> targetType, Locale locale)
+                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                return new DerivedClass("derived" + 1001);
+            }
 
-                    @Override
-                    public Class<DerivedClass> getModelType() {
-                        return DerivedClass.class;
-                    }
+            @Override
+            public Class<DerivedClass> getModelType() {
+                return DerivedClass.class;
+            }
 
-                    @Override
-                    public Class<String> getPresentationType() {
-                        return String.class;
-                    }
+            @Override
+            public Class<String> getPresentationType() {
+                return String.class;
+            }
 
-                    @Override
-                    public String convertToPresentation(DerivedClass value,
-                            Class<? extends String> targetType, Locale locale)
-                            throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
-                        return null;
-                    }
-                });
+            @Override
+            public String convertToPresentation(DerivedClass value,
+                    Class<? extends String> targetType, Locale locale)
+                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                return null;
+            }
+        });
         customTable.setContainerDataSource(
                 createContainer(new String[] { "col1", "col2", "col3" },
                         new Class[] { DerivedClass.class, DerivedClass.class,
@@ -191,34 +187,33 @@ public class TablePropertyValueConverterTest {
                 createContainer(new String[] { "col1", "col2", "col3" },
                         new Class[] { int.class, BaseClass.class,
                                 DerivedClass.class }));
-        customTable.setConverter("col1",
-                new Converter<String, Integer>() {
-                    private static final long serialVersionUID = 1L;
+        customTable.setConverter("col1", new Converter<String, Integer>() {
+            private static final long serialVersionUID = 1L;
 
-                    @Override
-                    public Integer convertToModel(String value,
-                            Class<? extends Integer> targetType, Locale locale)
-                            throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
-                        return 11;
-                    }
+            @Override
+            public Integer convertToModel(String value,
+                    Class<? extends Integer> targetType, Locale locale)
+                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                return 11;
+            }
 
-                    @Override
-                    public String convertToPresentation(Integer value,
-                            Class<? extends String> targetType, Locale locale)
-                            throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
-                        return "presentation";
-                    }
+            @Override
+            public String convertToPresentation(Integer value,
+                    Class<? extends String> targetType, Locale locale)
+                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                return "presentation";
+            }
 
-                    @Override
-                    public Class<Integer> getModelType() {
-                        return Integer.class;
-                    }
+            @Override
+            public Class<Integer> getModelType() {
+                return Integer.class;
+            }
 
-                    @Override
-                    public Class<String> getPresentationType() {
-                        return String.class;
-                    }
-                });
+            @Override
+            public Class<String> getPresentationType() {
+                return String.class;
+            }
+        });
         Set<Object> converters = customTable.getCurrentConverters();
         assertTrue("Converter was not set.", converters.size() > 0);
     }

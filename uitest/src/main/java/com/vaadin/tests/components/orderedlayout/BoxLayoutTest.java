@@ -403,8 +403,8 @@ public class BoxLayoutTest extends AbstractTestUI {
                 componentIcon.setEnabled(target != null);
                 componentDescription.setEnabled(target != null);
                 componentError.setEnabled(target != null);
-                componentRequired.setEnabled(target != null
-                        && target instanceof AbstractField);
+                componentRequired.setEnabled(
+                        target != null && target instanceof AbstractField);
                 align.setEnabled(target != null);
                 expand.setEnabled(target != null);
                 if (target != null) {
