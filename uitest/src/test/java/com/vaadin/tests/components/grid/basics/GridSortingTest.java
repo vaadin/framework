@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.grid.basics;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,6 +9,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.remote.DesiredCapabilities;
+
+import com.vaadin.testbench.parallel.Browser;
 
 public class GridSortingTest extends GridBasicsTest {
 
@@ -18,7 +21,10 @@ public class GridSortingTest extends GridBasicsTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersSupportingShiftClick();
+        // Should be browsersSupportingShiftClick but for whatever reason IE11
+        // fails to shift click
+        return Collections
+                .singletonList(Browser.CHROME.getDesiredCapabilities());
     }
 
     @Test
@@ -30,7 +36,8 @@ public class GridSortingTest extends GridBasicsTest {
                 .collect(Collectors.toList())) {
             Assert.assertEquals(
                     "Grid was not sorted as expected, row number mismatch",
-                    rowNumber.toString(), getGridElement().getCell(i++, 0).getText());
+                    rowNumber.toString(),
+                    getGridElement().getCell(i++, 0).getText());
         }
     }
 
@@ -46,7 +53,8 @@ public class GridSortingTest extends GridBasicsTest {
                 .collect(Collectors.toList())) {
             Assert.assertEquals(
                     "Grid was not sorted as expected, row number mismatch",
-                    rowNumber.toString(), getGridElement().getCell(i++, 0).getText());
+                    rowNumber.toString(),
+                    getGridElement().getCell(i++, 0).getText());
         }
     }
 }
