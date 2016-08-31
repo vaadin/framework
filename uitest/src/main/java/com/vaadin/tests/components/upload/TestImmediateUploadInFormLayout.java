@@ -8,6 +8,7 @@ import java.util.List;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
 
@@ -15,7 +16,7 @@ public class TestImmediateUploadInFormLayout
         extends ComponentTestCase<FormLayout> implements Receiver {
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "On Firefox 3.5 and Opera 10.10, clicking on an immediate upload in a wide FormLayout has no effect";
     }
 
@@ -48,7 +49,7 @@ public class TestImmediateUploadInFormLayout
 
     @Override
     public OutputStream receiveUpload(String filename, String MIMEType) {
-        getMainWindow().showNotification("Receiving upload");
+        Notification.show("Receiving upload");
         return new ByteArrayOutputStream();
     }
 }

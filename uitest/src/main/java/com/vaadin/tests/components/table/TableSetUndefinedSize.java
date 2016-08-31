@@ -111,7 +111,7 @@ public class TableSetUndefinedSize extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Table width and height changing to undefined doesn't update table size";
     }
 

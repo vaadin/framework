@@ -60,7 +60,7 @@ public class ComboBoxScrollingToPageDisabled
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Test that selected value appears on the client "
                 + "side even though setScrollToSelectedItem(false) "
                 + "has been called. Textbox should contain 'Item 50'.";

@@ -84,7 +84,7 @@ public class GridDetailsWidth extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Tests that Escalator will not set explicit widths to the TD element in a details row.";
     }
 

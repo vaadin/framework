@@ -99,7 +99,7 @@ public class NativeSelects extends ComponentTestCase<NativeSelect> {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A generic test for Labels in different configurations";
     }
 

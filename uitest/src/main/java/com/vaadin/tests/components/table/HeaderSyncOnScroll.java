@@ -13,8 +13,8 @@ public class HeaderSyncOnScroll extends AbstractTestUI {
     private Table table;
 
     @Override
-    public String getDescription() {
-        return "Header's should be in sync when scrolling";
+    protected String getTestDescription() {
+        return "Headers should be in sync when scrolling";
     }
 
     @Override

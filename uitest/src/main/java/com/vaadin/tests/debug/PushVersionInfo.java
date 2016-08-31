@@ -40,7 +40,7 @@ public class PushVersionInfo extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Debug window shows Push version in info Tab.";
     }
 

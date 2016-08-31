@@ -14,7 +14,7 @@ public class TableVisibleColumnsUpdate extends AbstractTestUI {
     private Table table;
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Columns should change between p1,p2,p3 and p1,p4,p3";
     }
 

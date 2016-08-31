@@ -20,9 +20,9 @@ public class MenuBarHtmlItems extends ComponentTestCase<MenuBar> {
     @Override
     protected void initializeComponents() {
         MenuBar m = new MenuBar();
-        MenuItem submenu = m.addItem("Item <u>1</u>", getIcon(), null);
+        MenuItem submenu = m.addItem("Item <u>1</u>", getMenuIcon(), null);
         MenuItem subsubmenu = submenu.addItem("<b>Bold</b> item", null);
-        subsubmenu.addItem("<i><u>I</u>talic</i> item", getIcon(), null);
+        subsubmenu.addItem("<i><u>I</u>talic</i> item", getMenuIcon(), null);
         submenu.addItem(
                 "<span style='font-size: 30px'>Big</span> <span style='font-size: 8px'>disabled</span> item",
                 null).setEnabled(false);
@@ -32,7 +32,7 @@ public class MenuBarHtmlItems extends ComponentTestCase<MenuBar> {
         addTestComponent(m);
     }
 
-    private Resource getIcon() {
+    private Resource getMenuIcon() {
         return new ThemeResource("../runo/icons/16/user.png");
     }
 
@@ -57,7 +57,7 @@ public class MenuBarHtmlItems extends ComponentTestCase<MenuBar> {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A menu containing items with embedded html. Items should chould either render the html or show it as plain text depending on the setting.";
     }
 

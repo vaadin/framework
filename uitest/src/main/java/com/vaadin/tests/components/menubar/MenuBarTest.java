@@ -301,7 +301,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
 
     private void updateIcons(MenuItem item, int idx) {
         if (iconInterval > 0 && idx % iconInterval == 0) {
-            item.setIcon(getIcon());
+            item.setIcon(getMenuIcon());
         } else {
             item.setIcon(null);
         }
@@ -315,7 +315,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
 
     private long iconCacheIndex = new Date().getTime();
 
-    private Resource getIcon() {
+    private Resource getMenuIcon() {
         String resourceID = null;
         if (iconSize == 16) {
             resourceID = "../runo/icons/16/user.png";

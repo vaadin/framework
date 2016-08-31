@@ -43,7 +43,7 @@ public class VetoTabChange extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Tests the behavior when there's a listener that always changes back to the first tab.";
     }
 

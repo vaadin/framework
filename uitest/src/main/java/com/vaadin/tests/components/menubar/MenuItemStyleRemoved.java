@@ -48,7 +48,7 @@ public class MenuItemStyleRemoved extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "MenuItem's custom class names removed when hovering";
     }
 }

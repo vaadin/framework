@@ -26,7 +26,7 @@
         <servlet-class>com.vaadin.server.LegacyVaadinServlet</servlet-class>
         <init-param>
             <param-name>application</param-name>
-            <param-value>com.vaadin.tests.components.button.Buttons</param-value>
+            <param-value>com.vaadin.tests.components.button.ButtonHtml</param-value>
         </init-param>
         <async-supported>true</async-supported>
     </servlet>

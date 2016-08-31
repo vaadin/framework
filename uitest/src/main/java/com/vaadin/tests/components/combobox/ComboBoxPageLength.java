@@ -33,9 +33,8 @@ public class ComboBoxPageLength extends ComboBoxes2<ComboBox> {
     }
 
     @Override
-    protected String getDescription() {
-        return super.getDescription()
+    protected String getTestDescription() {
+        return super.getTestDescription()
                 + ", changing ComboBox value will change the ComboBox pageLength to the # of the selected item, or to 0 in null selection.";
     }
-
 }

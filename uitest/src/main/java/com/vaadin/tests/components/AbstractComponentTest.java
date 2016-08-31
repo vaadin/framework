@@ -9,23 +9,24 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.BlurNotifier;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
-import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.themes.BaseTheme;
 
+@Theme("tests-components")
 public abstract class AbstractComponentTest<T extends AbstractComponent> extends
         AbstractComponentTestCase<T> implements FocusListener, BlurListener {
 
@@ -81,15 +82,14 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
     protected static final String CATEGORY_DECORATIONS = "Decorations";
 
     @Override
-    protected final void setup() {
-        setTheme("tests-components");
+    protected final void setup(VaadinRequest request) {
 
         // Create menu here so it appears before the components
         addComponent(createMainMenu());
 
         getLayout().setSizeFull();
         createLog();
-        super.setup();
+        super.setup(request);
 
         // Create menu actions and trigger default actions
         createActions();
@@ -745,16 +745,6 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
             log("Command: " + commandName + "(" + value + ")");
         }
         super.doCommand(commandName, command, value, data);
-    }
-
-    @Override
-    public void error(com.vaadin.server.ErrorEvent event) {
-        final Throwable throwable = DefaultErrorHandler
-                .findRelevantThrowable(event.getThrowable());
-
-        log.log("Exception occured, " + throwable.getClass().getName() + ": "
-                + throwable.getMessage());
-        throwable.printStackTrace();
     }
 
     @Override

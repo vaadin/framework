@@ -26,7 +26,7 @@ public class ChromeBottomNotification extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Bottom notification on Chrome goes up to top";
     }
 }

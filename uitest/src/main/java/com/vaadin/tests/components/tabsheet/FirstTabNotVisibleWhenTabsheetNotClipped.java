@@ -129,7 +129,7 @@ public class FirstTabNotVisibleWhenTabsheetNotClipped extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "TabSheet should display re-shown tab if there's room for it";
     }
 }

@@ -111,8 +111,10 @@ public class HeaderPositionWhenSorting extends AbstractTestUI
     }
 
     @Override
-    public String getDescription() {
-        return "Table should only prevent the browser context menu when the right click is used for some Table specific operation. In practice these are either action handlers/context menu or item click listeners (right click). Note that item click listeners affects rows only, not the body.";
+    protected String getTestDescription() {
+        return "Table should only prevent the browser context menu when the right click is used for some Table specific operation. "
+                + "In practice these are either action handlers/context menu or item click listeners (right click). "
+                + "Note that item click listeners affects rows only, not the body.";
     }
 
     @Override

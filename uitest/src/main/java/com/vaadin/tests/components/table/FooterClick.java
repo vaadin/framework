@@ -62,7 +62,7 @@ public class FooterClick extends AbstractTestUIWithLog {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Tests the footer click handler";
     }
 

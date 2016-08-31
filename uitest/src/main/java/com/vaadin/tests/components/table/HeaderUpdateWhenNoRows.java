@@ -35,7 +35,7 @@ public class HeaderUpdateWhenNoRows extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "The header should be updated when toggling column header mode";
     }
 

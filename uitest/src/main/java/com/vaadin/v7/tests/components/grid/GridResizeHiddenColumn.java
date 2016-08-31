@@ -56,9 +56,4 @@ public class GridResizeHiddenColumn extends AbstractTestUIWithLog {
     protected Integer getTicketNumber() {
         return 19826;
     }
-
-    @Override
-    public String getDescription() {
-        return "Tests resize when columns with undefined width (-1) are hidden";
-    }
 }

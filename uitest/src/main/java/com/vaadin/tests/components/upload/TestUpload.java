@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.Receiver;
@@ -31,10 +32,10 @@ public class TestUpload extends ComponentTestCase<Upload> implements Receiver {
         u.setSizeUndefined();
         addTestComponent(u);
 
-        u.addListener(new Upload.FinishedListener() {
+        u.addFinishedListener(new Upload.FinishedListener() {
             @Override
             public void uploadFinished(FinishedEvent event) {
-                getMainWindow().showNotification("Done");
+                Notification.show("Done");
             }
         });
 
@@ -54,7 +55,7 @@ public class TestUpload extends ComponentTestCase<Upload> implements Receiver {
 
     @Override
     public OutputStream receiveUpload(String filename, String MIMEType) {
-        getMainWindow().showNotification("Receiving upload");
+        Notification.show("Receiving upload");
         return new ByteArrayOutputStream();
     }
 

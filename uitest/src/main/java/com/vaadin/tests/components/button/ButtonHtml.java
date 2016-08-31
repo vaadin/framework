@@ -4,6 +4,12 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 
+/*
+ * NOTE This class is arbitrarily picked to represent a legacy application in
+ * MultipleServletConfigurationTest and the corresponding "Embed App 1" servlet
+ * configuration. The test will break if this class is refactored to extend UI
+ * instead of LegacyApplication. Just a friendly warning.
+ */
 public class ButtonHtml extends TestBase {
 
     @Override

@@ -118,7 +118,7 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Tests the header click listener";
     }
 

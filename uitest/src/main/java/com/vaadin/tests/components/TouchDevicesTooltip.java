@@ -62,7 +62,7 @@ public class TouchDevicesTooltip extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Unable to dismiss a tooltip on touch devices";
     }
 }

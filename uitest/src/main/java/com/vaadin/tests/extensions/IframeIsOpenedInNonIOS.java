@@ -41,7 +41,7 @@ public class IframeIsOpenedInNonIOS extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "IFrame with a file is not shown in iOS";
     }
 }

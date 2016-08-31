@@ -57,7 +57,7 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A generic test for InlineDateFields in different configurations";
     }
 

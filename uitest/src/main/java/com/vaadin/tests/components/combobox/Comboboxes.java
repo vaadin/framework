@@ -115,7 +115,7 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A generic test for ComboBoxes in different configurations";
     }
 

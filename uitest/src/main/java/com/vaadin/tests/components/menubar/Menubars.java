@@ -72,7 +72,7 @@ public class Menubars extends ComponentTestCase<MenuBar> {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A generic test for MenuBars in different configurations";
     }
 

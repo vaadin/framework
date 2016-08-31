@@ -4,16 +4,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.NativeSelect;
 
@@ -25,12 +23,12 @@ public abstract class ComponentTestCase<T extends AbstractComponent>
     private HorizontalLayout actionLayout;
 
     @Override
-    protected final void setup() {
+    protected final void setup(VaadinRequest request) {
         // Create action layout so it appears before the components
         actionLayout = createActionLayout();
         addComponent(actionLayout);
 
-        super.setup();
+        super.setup(request);
 
         // Create actions and add to layout
         populateActionLayout();
@@ -129,14 +127,11 @@ public abstract class ComponentTestCase<T extends AbstractComponent>
 
         Button button = new Button(caption);
         button.setData(Boolean.FALSE);
-        button.addListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Button b = event.getButton();
-                boolean state = (Boolean) b.getData();
-                b.setData(!state);
-                doCommand(command, state);
-            }
+        button.addClickListener(event -> {
+            Button b = event.getButton();
+            boolean state = (Boolean) b.getData();
+            b.setData(!state);
+            doCommand(command, state);
         });
 
         button.setId("buttonaction-" + caption);
@@ -156,17 +151,12 @@ public abstract class ComponentTestCase<T extends AbstractComponent>
         select.addContainerProperty(VALUE, Object.class, "");
         select.setItemCaptionPropertyId(CAPTION);
         select.setNullSelectionAllowed(false);
-        select.addListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Object itemId = event.getProperty().getValue();
-                Item item = select.getItem(itemId);
-                @SuppressWarnings("unchecked")
-                TYPE value = (TYPE) item.getItemProperty(VALUE).getValue();
-                doCommand(command, value);
-
-            }
+        select.addValueChangeListener(event -> {
+            Object itemId = event.getProperty().getValue();
+            Item item = select.getItem(itemId);
+            @SuppressWarnings("unchecked")
+            TYPE value = (TYPE) item.getItemProperty(VALUE).getValue();
+            doCommand(command, value);
         });
 
         for (String itemCaption : options.keySet()) {
@@ -177,7 +167,6 @@ public abstract class ComponentTestCase<T extends AbstractComponent>
             if (itemCaption.equals(initialValue)) {
                 select.setValue(itemId);
             }
-
         }
 
         select.setId("selectaction-" + caption);

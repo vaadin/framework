@@ -55,7 +55,7 @@ public class ContextMenuSize extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "If context menu original position doesn't allow to show it then "
                 + "its bottom should be aligned with the window bottom and height "
                 + "should be reset after repositioning.";

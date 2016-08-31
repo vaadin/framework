@@ -14,12 +14,12 @@ public class MenuBarNavigation extends AbstractTestUIWithLog
     private MenuItem export;
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Test case for mouse and keyboard navigation in MenuBar";
     }
 
     @Override
-    public Integer getTicketNumber() {
+    protected Integer getTicketNumber() {
         return 5174;
     }
 

@@ -53,7 +53,7 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A generic test for PopupDateFields in different configurations";
     }
 

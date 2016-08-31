@@ -8,6 +8,7 @@ import java.util.List;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.Receiver;
@@ -17,7 +18,7 @@ public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
         implements Receiver {
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "If upload is detached and attached during upload, the client side componenent never receives information that the upload has finished. Second update will not be successful.";
     }
 
@@ -49,7 +50,7 @@ public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
         l = new Label(getUploadcount());
         addComponent(l);
 
-        u.addListener(new Upload.StartedListener() {
+        u.addStartedListener(new Upload.StartedListener() {
 
             @Override
             public void uploadStarted(StartedEvent event) {
@@ -63,10 +64,10 @@ public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
             }
         });
 
-        u.addListener(new Upload.FinishedListener() {
+        u.addFinishedListener(new Upload.FinishedListener() {
             @Override
             public void uploadFinished(FinishedEvent event) {
-                getMainWindow().showNotification("Done");
+                Notification.show("Done");
                 l.setValue(getUploadcount());
             }
         });

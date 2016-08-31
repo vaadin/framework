@@ -101,7 +101,7 @@ public class HtmlOptionGroupItems extends ComponentTestCase<OptionGroup> {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Test case for html items in an OptionGroup";
     }
 }

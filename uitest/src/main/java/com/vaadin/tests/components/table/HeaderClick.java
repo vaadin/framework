@@ -60,7 +60,7 @@ public class HeaderClick extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Tests the header click listener";
     }
 

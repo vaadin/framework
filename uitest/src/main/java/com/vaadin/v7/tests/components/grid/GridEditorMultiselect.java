@@ -29,7 +29,7 @@ public class GridEditorMultiselect extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Grid Multiselect: Edit mode allows invalid selection";
     }
 }

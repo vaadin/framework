@@ -67,7 +67,7 @@ public class Labels extends ComponentTestCase<Label> {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A generic test for Labels in different configurations";
     }
 

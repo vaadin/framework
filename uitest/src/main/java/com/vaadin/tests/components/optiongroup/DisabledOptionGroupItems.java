@@ -87,7 +87,7 @@ public class DisabledOptionGroupItems extends ComponentTestCase<OptionGroup> {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Test case for disabled items in an OptionGroup";
     }
 }
