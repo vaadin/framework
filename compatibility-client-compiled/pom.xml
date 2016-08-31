@@ -92,6 +92,7 @@
 					<webappDirectory>${project.build.outputDirectory}/VAADIN/widgetsets</webappDirectory>
 					<persistentunitcachedir>${project.build.directory}/gwt-unitCache</persistentunitcachedir>
 					<style>${widgetset.style}</style>
+					<extraJvmArgs>-Xmx1G</extraJvmArgs>
 				</configuration>
 				<executions>
 					<execution>
