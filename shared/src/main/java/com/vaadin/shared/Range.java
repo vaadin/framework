@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.shared.ui.grid;
+package com.vaadin.shared;
 
 import java.io.Serializable;
 

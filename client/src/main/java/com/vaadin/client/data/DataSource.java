@@ -16,6 +16,9 @@
 
 package com.vaadin.client.data;
 
+import java.util.function.Consumer;
+
+import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
 
 /**
@@ -104,7 +107,7 @@ public interface DataSource<T> {
          * override of an existing method, we're defining a new method for that
          * instead.
          *
-         * @param rowHandle
+         * @param obj
          *            the reference object with which to compare
          * @return {@code true} if this object is the same as the obj argument;
          *         {@code false} otherwise.
@@ -182,9 +185,26 @@ public interface DataSource<T> {
      *
      * @param dataChangeHandler
      *            the data change handler
+     *
+     * @return registration for removing the handler
      */
     public Registration addDataChangeHandler(
             DataChangeHandler dataChangeHandler);
+
+    /**
+     * Sets a simple data change handler for a widget without lazy loading.
+     * Refresh method should reset all the data in the widget.
+     *
+     * @param refreshMethod
+     *            a method to refresh all data in the widget
+     *
+     * @return registration for removing the handler
+     */
+    public default Registration addDataChangeHandler(
+            Consumer<Range> refreshMethod) {
+        return addDataChangeHandler(
+                new SimpleDataChangeHandler(this, refreshMethod));
+    }
 
     /**
      * Gets a {@link RowHandle} of a row object in the cache.

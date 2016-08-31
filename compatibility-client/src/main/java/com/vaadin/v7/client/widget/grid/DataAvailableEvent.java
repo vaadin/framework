@@ -16,7 +16,7 @@
 package com.vaadin.v7.client.widget.grid;
 
 import com.google.gwt.event.shared.GwtEvent;
-import com.vaadin.shared.ui.grid.Range;
+import com.vaadin.shared.Range;
 
 /**
  * Event object describing a change of row availability in DataSource of a Grid.

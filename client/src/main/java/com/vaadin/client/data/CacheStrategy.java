@@ -16,7 +16,7 @@
 
 package com.vaadin.client.data;
 
-import com.vaadin.shared.ui.grid.Range;
+import com.vaadin.shared.Range;
 
 /**
  * Determines what data an {@link AbstractRemoteDataSource} should fetch and

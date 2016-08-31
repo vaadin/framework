@@ -28,8 +28,8 @@ import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.Profiler;
+import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.ui.grid.Range;
 
 /**
  * Base implementation for data sources that fetch data from a remote system.

@@ -65,7 +65,7 @@ import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.SubPartAware;
-import com.vaadin.shared.ui.grid.Range;
+import com.vaadin.shared.Range;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.client.widget.escalator.Cell;
 import com.vaadin.v7.client.widget.escalator.ColumnConfiguration;

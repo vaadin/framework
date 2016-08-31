@@ -17,7 +17,7 @@
 package com.vaadin.v7.client.widget.escalator;
 
 import com.google.gwt.event.shared.GwtEvent;
-import com.vaadin.shared.ui.grid.Range;
+import com.vaadin.shared.Range;
 
 /**
  * Event fired when the range of visible rows changes e.g. because of scrolling.

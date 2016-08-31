@@ -23,10 +23,10 @@ import java.util.List;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
+import com.vaadin.shared.Range;
 import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.v7.shared.ui.grid.GridState;
 
 import elemental.json.Json;

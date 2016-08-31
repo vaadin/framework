@@ -89,8 +89,8 @@ import com.vaadin.client.widget.escalator.events.RowHeightChangedEvent;
 import com.vaadin.client.widget.grid.events.ScrollEvent;
 import com.vaadin.client.widget.grid.events.ScrollHandler;
 import com.vaadin.client.widgets.Escalator.JsniUtil.TouchHandlerBundle;
+import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.grid.HeightMode;
-import com.vaadin.shared.ui.grid.Range;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
 

@@ -33,7 +33,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.client.WidgetUtil;
-import com.vaadin.shared.ui.grid.Range;
+import com.vaadin.shared.Range;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.parallel.BrowserUtil;

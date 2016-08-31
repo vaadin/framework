@@ -31,10 +31,10 @@ import java.util.stream.Stream;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.KeyMapper;
+import com.vaadin.shared.Range;
 import com.vaadin.shared.data.DataCommunicatorClientRpc;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.DataRequestRpc;
-import com.vaadin.shared.ui.grid.Range;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
