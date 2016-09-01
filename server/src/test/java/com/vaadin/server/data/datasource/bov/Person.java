@@ -38,4 +38,9 @@ public class Person implements Serializable {
     public int getBorn() {
         return born;
     }
+
+    @Override
+    public String toString() {
+        return name + "(" + born + ")";
+    }
 }

@@ -139,7 +139,8 @@ public class SingleSelection<T> extends AbstractSelectionModel<T>
 
     @Override
     public void deselect(T value) {
-        this.selectedItem = null;
+        if(Objects.equals(selectedItem,value))
+            doSelect(null, false);
     }
 
     @Override
