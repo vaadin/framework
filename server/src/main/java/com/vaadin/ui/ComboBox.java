@@ -264,7 +264,7 @@ public class ComboBox extends AbstractSelect implements
                 // filtering
                 options = getFilteredOptions();
                 filteredSize = options.size();
-                options = sanitetizeList(options, nullOptionVisible);
+                options = sanitizeList(options, nullOptionVisible);
             }
 
             final boolean paintNullSelection = needNullSelectOption
@@ -408,7 +408,7 @@ public class ComboBox extends AbstractSelect implements
      * {@link #canUseContainerFilter()}).
      * 
      * Use {@link #getFilteredOptions()} and
-     * {@link #sanitetizeList(List, boolean)} if this is not the case.
+     * {@link #sanitizeList(List, boolean)} if this is not the case.
      * 
      * @param needNullSelectOption
      * @return filtered list of options (may be empty) or null if cannot use
@@ -524,22 +524,25 @@ public class ComboBox extends AbstractSelect implements
 
     /**
      * Makes correct sublist of given list of options.
-     * 
+     * <p>
      * If paint is not an option request (affected by page or filter change),
      * page will be the one where possible selection exists.
-     * 
+     * <p>
      * Detects proper first and last item in list to return right page of
      * options. Also, if the current page is beyond the end of the list, it will
      * be adjusted.
+     * <p>
+     * Package private only for testing purposes.
      * 
      * @param options
      * @param needNullSelectOption
      *            flag to indicate if nullselect option needs to be taken into
      *            consideration
      */
-    private List<?> sanitetizeList(List<?> options, boolean needNullSelectOption) {
-
-        if (pageLength != 0 && options.size() > pageLength) {
+    List<?> sanitizeList(List<?> options, boolean needNullSelectOption) {
+        int totalRows = options.size() + (needNullSelectOption ? 1 : 0);
+        if (pageLength != 0 && totalRows > pageLength) {
+            // options will not fit on one page
 
             int indexToEnsureInView = -1;
 
