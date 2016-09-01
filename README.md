@@ -46,12 +46,12 @@ The following preferences need to be set to keep the project consistent. You nee
 1. Go to XML -> XML Files -> Editor
  1. Ensure the settings are follows:
  
-    Line width: 72
-    Format comments: true
-    Join lines: true
-    Insert whitespace before closing empty end-tags: true
-    Indent-using spaces: true
-    Indentation size: 4
+  * Line width: 72
+  * Format comments: true
+  * Join lines: true
+  * Insert whitespace before closing empty end-tags: true
+  * Indent-using spaces: true
+  * Indentation size: 4
 
 
 ### Running a UI test
