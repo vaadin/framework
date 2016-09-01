@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.data.selection.SingleSelection;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -112,12 +113,19 @@ public class GridBasics extends AbstractTestUIWithLog {
         grid = new Grid<>();
         grid.setItems(data);
 
+        grid.addColumn("Column 0", String.class,
+                dataObj -> "(" + dataObj.getRowNumber() + ", 0)");
+        grid.addColumn("Column 1", String.class,
+                dataObj -> "(" + dataObj.getRowNumber() + ", 1)");
         grid.addColumn("Row Number", Integer.class, DataObject::getRowNumber);
         grid.addColumn("Date", Date.class, DataObject::getDate);
         grid.addColumn("HTML String", String.class, DataObject::getHtmlString);
         grid.addColumn("Big Random", Integer.class, DataObject::getBigRandom);
         grid.addColumn("Small Random", Integer.class,
                 DataObject::getSmallRandom);
+
+        ((SingleSelection<DataObject>) grid.getSelectionModel())
+                .addSelectionListener(e -> log("Selected: " + e.getValue()));
 
         layout.addComponent(createMenu());
         layout.addComponent(grid);
@@ -130,6 +138,7 @@ public class GridBasics extends AbstractTestUIWithLog {
         createStateMenu(componentMenu.addItem("State", null));
         createSizeMenu(componentMenu.addItem("Size", null));
         createDetailsMenu(componentMenu.addItem("Details", null));
+        createBodyMenu(componentMenu.addItem("Body rows", null));
         return menu;
     }
 
@@ -161,6 +170,17 @@ public class GridBasics extends AbstractTestUIWithLog {
     private <T> void addGridMethodMenu(MenuItem parent, String name, T value,
             Consumer<T> method) {
         parent.addItem(name, menuItem -> method.accept(value));
+    }
+
+    private void createBodyMenu(MenuItem rowMenu) {
+        rowMenu.addItem("Toggle first row selection", menuItem -> {
+            DataObject item = data.get(0);
+            if (grid.isSelected(item)) {
+                grid.deselect(item);
+            } else {
+                grid.select(item);
+            }
+        });
     }
 
     /* DetailsGenerator related things */

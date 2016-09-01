@@ -44,7 +44,6 @@ import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.events.GridEnabledEvent;
 import com.vaadin.client.widget.grid.events.GridEnabledHandler;
-import com.vaadin.client.widget.grid.selection.SelectionModel.Multi.Batched;
 import com.vaadin.client.widgets.Grid;
 
 /**
@@ -523,13 +522,6 @@ public class MultiSelectionRenderer<T>
         private int gradientArea;
 
         public void start(int logicalRowIndex) {
-
-            SelectionModel<T> model = grid.getSelectionModel();
-            if (model instanceof Batched) {
-                Batched<?> batchedModel = (Batched<?>) model;
-                batchedModel.startBatchSelect();
-            }
-
             /*
              * bounds are updated whenever the autoscroll cycle starts, to make
              * sure that the widget hasn't changed in size, moved around, or
@@ -574,12 +566,6 @@ public class MultiSelectionRenderer<T>
             if (autoScroller != null) {
                 autoScroller.stop();
                 autoScroller = null;
-            }
-
-            SelectionModel<T> model = grid.getSelectionModel();
-            if (model instanceof Batched) {
-                Batched<?> batchedModel = (Batched<?>) model;
-                batchedModel.commitBatchSelect();
             }
 
             removeNativeHandler();

@@ -160,6 +160,11 @@ public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T
      *            the selection model to use, not null
      */
     protected void setSelectionModel(SELECTIONMODEL model) {
+        if (selectionModel != null) {
+            throw new IllegalStateException(
+                    "A selection model can't be changed.");
+        }
+
         Objects.requireNonNull(model, "selection model cannot be null");
         selectionModel = model;
     }

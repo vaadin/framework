@@ -31,10 +31,13 @@ import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
+import com.vaadin.client.widget.grid.selection.SpaceSelectHandler;
 import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.shared.data.selection.SelectionModel;
+import com.vaadin.shared.data.selection.SelectionModel.Single;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.GridServerRpc;
@@ -56,6 +59,8 @@ public class GridConnector extends AbstractListingConnector
     private Map<Column<?, JsonObject>, String> columnToIdMap = new HashMap<>();
     /* Child component list for HasComponentsConnector */
     private List<ComponentConnector> childComponents;
+    private SpaceSelectHandler<JsonObject> spaceSelectHandler;
+    private ClickSelectHandler<JsonObject> clickSelectHandler;
 
     @Override
     public Grid<JsonObject> getWidget() {
@@ -66,7 +71,8 @@ public class GridConnector extends AbstractListingConnector
     protected void init() {
         super.init();
 
-        new ClickSelectHandler<>(getWidget());
+        // Default selection style is space key.
+        spaceSelectHandler = new SpaceSelectHandler<JsonObject>(getWidget());
         getWidget().addSortHandler(this::handleSortEvent);
 
         layout();
@@ -74,7 +80,21 @@ public class GridConnector extends AbstractListingConnector
 
     @Override
     public void setDataSource(DataSource<JsonObject> dataSource) {
+        super.setDataSource(dataSource);
         getWidget().setDataSource(dataSource);
+    }
+
+    @Override
+    public void setSelectionModel(SelectionModel<JsonObject> selectionModel) {
+        removeClickHandler();
+
+        super.setSelectionModel(selectionModel);
+        getWidget().setSelectionModel(selectionModel);
+
+        if (selectionModel instanceof Single) {
+            // Single selection should be moved by a click.
+            clickSelectHandler = new ClickSelectHandler<>(getWidget());
+        }
     }
 
     /**
@@ -112,6 +132,12 @@ public class GridConnector extends AbstractListingConnector
         super.onUnregister();
 
         columnToIdMap.clear();
+        removeClickHandler();
+
+        if (spaceSelectHandler != null) {
+            spaceSelectHandler.removeHandler();
+            spaceSelectHandler = null;
+        }
     }
 
     @Override
@@ -176,5 +202,12 @@ public class GridConnector extends AbstractListingConnector
     @Override
     public GridState getState() {
         return (GridState) super.getState();
+    }
+
+    private void removeClickHandler() {
+        if (clickSelectHandler != null) {
+            clickSelectHandler.removeHandler();
+            clickSelectHandler = null;
+        }
     }
 }

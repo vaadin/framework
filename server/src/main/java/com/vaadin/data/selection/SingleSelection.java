@@ -88,8 +88,8 @@ public class SingleSelection<T> extends AbstractSelectionModel<T>
      * @see SingleSelectionChange
      */
     @FunctionalInterface
-    public interface SingleSelectionListener<T> extends
-            EventListener<SingleSelectionChange<T>> {
+    public interface SingleSelectionListener<T>
+            extends EventListener<SingleSelectionChange<T>> {
 
         @Override
         public void accept(SingleSelectionChange<T> event);
@@ -112,12 +112,14 @@ public class SingleSelection<T> extends AbstractSelectionModel<T>
 
             @Override
             public void select(String key) {
-                doSelect(getData(key), true);
+                if (!Objects.equals(selectedItem, getData(key))) {
+                    doSelect(getData(key), true);
+                }
             }
 
             @Override
             public void deselect(String key) {
-                if (getData(key).equals(selectedItem)) {
+                if (Objects.equals(selectedItem, getData(key))) {
                     doSelect(null, true);
                 }
             }
@@ -133,14 +135,15 @@ public class SingleSelection<T> extends AbstractSelectionModel<T>
     }
 
     @Override
-    public void select(T value) {
-        doSelect(value, false);
+    public void select(T item) {
+        doSelect(item, false);
     }
 
     @Override
     public void deselect(T value) {
-        if(Objects.equals(selectedItem,value))
+        if (Objects.equals(selectedItem, value)) {
             doSelect(null, false);
+        }
     }
 
     @Override
@@ -172,16 +175,22 @@ public class SingleSelection<T> extends AbstractSelectionModel<T>
      * Selects the given item or deselects the current one if given
      * {@code null}.
      *
-     * @param value
+     * @param item
      *            the item to select or {@code null} to deselect
      * @param userOriginated
      *            {@code true} if this event originates from the client,
      *            {@code false} otherwise.
      */
-    protected void doSelect(T value, boolean userOriginated) {
-        if (!Objects.equals(value, this.selectedItem)) {
-            this.selectedItem = value;
-            fireEvent(new SingleSelectionChange<>(getParent(), value,
+    protected void doSelect(T item, boolean userOriginated) {
+        if (!Objects.equals(item, selectedItem)) {
+            if (selectedItem != null) {
+                refresh(selectedItem);
+            }
+            selectedItem = item;
+            if (selectedItem != null) {
+                refresh(selectedItem);
+            }
+            fireEvent(new SingleSelectionChange<>(getParent(), selectedItem,
                     userOriginated));
         }
     }

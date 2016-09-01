@@ -452,7 +452,7 @@ public class ListDataSource<T> implements DataSource<T> {
         return new SelectAllHandler<T>() {
             @Override
             public void onSelectAll(SelectAllEvent<T> event) {
-                event.getSelectionModel().select(asList());
+                asList().forEach(event.getSelectionModel()::select);
             }
         };
     }
@@ -461,5 +461,4 @@ public class ListDataSource<T> implements DataSource<T> {
         Set<DataChangeHandler> copy = new LinkedHashSet<>(changeHandlers);
         return copy.stream();
     }
-
 }

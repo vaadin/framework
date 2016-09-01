@@ -159,12 +159,7 @@ import com.vaadin.client.widget.grid.selection.HasSelectionHandlers;
 import com.vaadin.client.widget.grid.selection.MultiSelectionRenderer;
 import com.vaadin.client.widget.grid.selection.SelectionEvent;
 import com.vaadin.client.widget.grid.selection.SelectionHandler;
-import com.vaadin.client.widget.grid.selection.SelectionModel;
-import com.vaadin.client.widget.grid.selection.SelectionModel.Multi;
-import com.vaadin.client.widget.grid.selection.SelectionModel.Single;
-import com.vaadin.client.widget.grid.selection.SelectionModelMulti;
-import com.vaadin.client.widget.grid.selection.SelectionModelNone;
-import com.vaadin.client.widget.grid.selection.SelectionModelSingle;
+import com.vaadin.client.widget.grid.selection.SelectionModelWithSelectionColumn;
 import com.vaadin.client.widget.grid.sort.Sort;
 import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortHandler;
@@ -176,6 +171,8 @@ import com.vaadin.client.widgets.Grid.StaticSection.StaticCell;
 import com.vaadin.client.widgets.Grid.StaticSection.StaticRow;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.data.selection.SelectionModel;
+import com.vaadin.shared.data.selection.SelectionModel.Multi;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
@@ -4445,7 +4442,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private int getSelectionAndFrozenColumnCount() {
             // no matter if selection column is frozen or not, it is considered
             // frozen for column dnd reorder
-            if (getSelectionModel().getSelectionColumnRenderer() != null) {
+            if (getSelectionModel() instanceof SelectionModelWithSelectionColumn) {
                 return Math.max(0, getFrozenColumnCount()) + 1;
             } else {
                 return Math.max(0, getFrozenColumnCount());
@@ -4562,47 +4559,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
     };
-
-    /**
-     * Enumeration for easy setting of selection mode.
-     */
-    public enum SelectionMode {
-
-        /**
-         * Shortcut for {@link SelectionModelSingle}.
-         */
-        SINGLE {
-
-            @Override
-            protected <T> SelectionModel<T> createModel() {
-                return GWT.create(SelectionModelSingle.class);
-            }
-        },
-
-        /**
-         * Shortcut for {@link SelectionModelMulti}.
-         */
-        MULTI {
-
-            @Override
-            protected <T> SelectionModel<T> createModel() {
-                return GWT.create(SelectionModelMulti.class);
-            }
-        },
-
-        /**
-         * Shortcut for {@link SelectionModelNone}.
-         */
-        NONE {
-
-            @Override
-            protected <T> SelectionModel<T> createModel() {
-                return GWT.create(SelectionModelNone.class);
-            }
-        };
-
-        protected abstract <T> SelectionModel<T> createModel();
-    }
 
     /**
      * Base class for grid columns internally used by the Grid. The user should
@@ -4776,7 +4732,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         /**
-         * Returns the current header caption for this column
+         * Returns the current header caption for this column.
          *
          * @since 7.6
          * @return the header caption string
@@ -4888,6 +4844,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *
          * @param pixels
          *            the width in pixels or negative for auto sizing
+         * @return this column
          */
         public Column<C, T> setWidth(double pixels) {
             if (!WidgetUtil.pixelValuesEqual(widthUser, pixels)) {
@@ -4990,6 +4947,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * @param resizable
          *            {@code true} if this column should be resizable,
          *            {@code false} otherwise
+         * @return this column
          */
         public Column<C, T> setResizable(boolean resizable) {
             if (this.resizable != resizable) {
@@ -5026,6 +4984,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * @param hidden
          *            <code>true</code> to hide the column, <code>false</code>
          *            to show
+         * @return this column
          */
         public Column<C, T> setHidden(boolean hidden) {
             setHidden(hidden, false);
@@ -5089,6 +5048,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * @param hidable
          *            {@code true} the user can hide this column, {@code false}
          *            otherwise
+         * @return this column
          */
         public Column<C, T> setHidable(boolean hidable) {
             if (this.hidable != hidable) {
@@ -5124,6 +5084,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * @since 7.5.0
          * @param hidingToggleCaption
          *            the caption for the hiding toggle for this column
+         * @return this column
          */
         public Column<C, T> setHidingToggleCaption(String hidingToggleCaption) {
             this.hidingToggleCaption = hidingToggleCaption;
@@ -5211,11 +5172,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *
          * @param pixels
          *            the maximum width
-         * @param immediately
-         *            <code>true</code> if the widths should be executed
-         *            immediately (ignoring lazy loading completely), or
-         *            <code>false</code> if the command should be run after a
-         *            while (duplicate non-immediately invocations are ignored).
          * @return this column
          */
         public Column<C, T> setMaximumWidth(double pixels) {
@@ -5257,7 +5213,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * returns. This is done to reduce overhead of unintentionally always
          * recalculate all columns, when modifying several columns at once.
          *
-         * @param expandRatio
+         * @param ratio
          *            the expand ratio of this column. {@code 0} to not have it
          *            expand at all. A negative number to clear the expand
          *            value.
@@ -5919,7 +5875,22 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         editor.setGrid(this);
 
-        setSelectionMode(SelectionMode.SINGLE);
+        setSelectionModel(new SelectionModel<T>() {
+
+            @Override
+            public Set<T> getSelectedItems() {
+                return Collections.emptySet();
+            }
+
+            @Override
+            public void select(T item) {
+            }
+
+            @Override
+            public void deselect(T item) {
+            }
+
+        });
 
         escalator.getBody().setSpacerUpdater(gridSpacerUpdater);
 
@@ -6478,7 +6449,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Removes the row at the given position from the header section.
      *
-     * @param index
+     * @param rowIndex
      *            the position of the row
      *
      * @throws IllegalArgumentException
@@ -6627,7 +6598,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Removes the row at the given position from the footer section.
      *
-     * @param index
+     * @param rowIndex
      *            the position of the row
      *
      * @throws IllegalArgumentException
@@ -6699,8 +6670,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         if (dataSource == null) {
             throw new IllegalArgumentException("dataSource can't be null.");
         }
-
-        selectionModel.reset();
 
         if (changeHandler != null) {
             changeHandler.remove();
@@ -6990,7 +6959,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Gets the vertical scroll offset
+     * Gets the vertical scroll offset.
      *
      * @return the number of pixels this grid is scrolled down
      */
@@ -6999,7 +6968,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Sets the horizontal scroll offset
+     * Sets the horizontal scroll offset.
      *
      * @since 7.5.0
      * @param px
@@ -7010,7 +6979,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Gets the horizontal scroll offset
+     * Gets the horizontal scroll offset.
      *
      * @return the number of pixels this grid is scrolled to the right
      */
@@ -7622,15 +7591,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             throw new IllegalArgumentException("Selection model can't be null");
         }
 
-        if (this.selectionModel != null) {
-            // Detach selection model from Grid.
-            this.selectionModel.setGrid(null);
-        }
-
         this.selectionModel = selectionModel;
-        selectionModel.setGrid(this);
-        setSelectColumnRenderer(
-                this.selectionModel.getSelectionColumnRenderer());
+        if (selectionModel instanceof SelectionModelWithSelectionColumn) {
+            setSelectColumnRenderer(
+                    ((SelectionModelWithSelectionColumn<T>) selectionModel)
+                            .getRenderer());
+        } else {
+            setSelectColumnRenderer(null);
+        }
 
         // Refresh rendered rows to update selection, if it has changed
         refreshBody();
@@ -7646,33 +7614,19 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Sets current selection mode.
-     * <p>
-     * This is a shorthand method for {@link Grid#setSelectionModel}.
-     *
-     * @param mode
-     *            a selection mode value
-     * @see {@link SelectionMode}.
-     */
-    public void setSelectionMode(SelectionMode mode) {
-        SelectionModel<T> model = mode.createModel();
-        setSelectionModel(model);
-    }
-
-    /**
-     * Test if a row is selected.
+     * Returns if a row is selected.
      *
      * @param row
      *            a row object
-     * @return true, if the current selection model considers the provided row
-     *         object selected.
+     * @return {@code true}, if the current selection model considers the
+     *         provided row object selected.
      */
     public boolean isSelected(T row) {
         return selectionModel.isSelected(row);
     }
 
     /**
-     * Select a row using the current selection model.
+     * Selects a row using the current selection model.
      * <p>
      * Only selection models implementing {@link SelectionModel.Single} and
      * {@link SelectionModel.Multi} are supported; for anything else, an
@@ -7680,24 +7634,16 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *
      * @param row
      *            a row object
-     * @return <code>true</code> iff the current selection changed
      * @throws IllegalStateException
      *             if the current selection model is not an instance of
      *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
      */
-    public boolean select(T row) {
-        if (selectionModel instanceof SelectionModel.Single<?>) {
-            return ((SelectionModel.Single<T>) selectionModel).select(row);
-        } else if (selectionModel instanceof SelectionModel.Multi<?>) {
-            return ((SelectionModel.Multi<T>) selectionModel)
-                    .select(Collections.singleton(row));
-        } else {
-            throw new IllegalStateException("Unsupported selection model");
-        }
+    public void select(T row) {
+        getSelectionModel().select(row);
     }
 
     /**
-     * Deselect a row using the current selection model.
+     * Deselects a row using the current selection model.
      * <p>
      * Only selection models implementing {@link SelectionModel.Single} and
      * {@link SelectionModel.Multi} are supported; for anything else, an
@@ -7705,45 +7651,23 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *
      * @param row
      *            a row object
-     * @return <code>true</code> iff the current selection changed
      * @throws IllegalStateException
      *             if the current selection model is not an instance of
      *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
      */
-    public boolean deselect(T row) {
-        if (selectionModel instanceof SelectionModel.Single<?>) {
-            return ((SelectionModel.Single<T>) selectionModel).deselect(row);
-        } else if (selectionModel instanceof SelectionModel.Multi<?>) {
-            return ((SelectionModel.Multi<T>) selectionModel)
-                    .deselect(Collections.singleton(row));
-        } else {
-            throw new IllegalStateException("Unsupported selection model");
-        }
+    public void deselect(T row) {
+        getSelectionModel().deselect(row);
     }
 
     /**
-     * Deselect all rows using the current selection model.
+     * Deselects all rows using the current selection model.
      *
-     * @param row
-     *            a row object
-     * @return <code>true</code> iff the current selection changed
      * @throws IllegalStateException
      *             if the current selection model is not an instance of
      *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
      */
-    public boolean deselectAll() {
-        if (selectionModel instanceof SelectionModel.Single<?>) {
-            Single<T> single = ((SelectionModel.Single<T>) selectionModel);
-            if (single.getSelectedRow() != null) {
-                return single.deselect(single.getSelectedRow());
-            } else {
-                return false;
-            }
-        } else if (selectionModel instanceof SelectionModel.Multi<?>) {
-            return ((SelectionModel.Multi<T>) selectionModel).deselectAll();
-        } else {
-            throw new IllegalStateException("Unsupported selection model");
-        }
+    public void deselectAll() {
+        getSelectionModel().deselectAll();
     }
 
     /**
@@ -7759,12 +7683,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *             {@link SelectionModel.Single}
      */
     public T getSelectedRow() {
-        if (selectionModel instanceof SelectionModel.Single<?>) {
-            return ((SelectionModel.Single<T>) selectionModel).getSelectedRow();
-        } else {
-            throw new IllegalStateException(
-                    "Unsupported selection model; can not get single selected row");
-        }
+        return getSelectionModel().getSelectedItems().stream().findFirst()
+                .orElse(null);
     }
 
     /**
@@ -7773,7 +7693,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @return a non-null collection containing all currently selected rows.
      */
     public Collection<T> getSelectedRows() {
-        return selectionModel.getSelectedRows();
+        return getSelectionModel().getSelectedItems();
     }
 
     @Override
@@ -7884,6 +7804,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *
      * @param handler
      *            a select all event handler
+     * @return the registration for the event
      */
     public HandlerRegistration addSelectAllHandler(
             SelectAllHandler<T> handler) {
@@ -8318,7 +8239,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Sets the style generator that is used for generating styles for cells
+     * Sets the style generator that is used for generating styles for cells.
      *
      * @param cellStyleGenerator
      *            the cell style generator to set, or <code>null</code> to
@@ -8331,7 +8252,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Gets the style generator that is used for generating styles for cells
+     * Gets the style generator that is used for generating styles for cells.
      *
      * @return the cell style generator, or <code>null</code> if no generator is
      *         set
@@ -8341,7 +8262,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Sets the style generator that is used for generating styles for rows
+     * Sets the style generator that is used for generating styles for rows.
      *
      * @param rowStyleGenerator
      *            the row style generator to set, or <code>null</code> to remove
@@ -8353,7 +8274,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Gets the style generator that is used for generating styles for rows
+     * Gets the style generator that is used for generating styles for rows.
      *
      * @return the row style generator, or <code>null</code> if no generator is
      *         set
@@ -8443,7 +8364,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Sets the handler responsible for binding data and editor widgets to the
      * editor.
      *
-     * @param rowHandler
+     * @param handler
      *            the new editor handler
      *
      * @throws IllegalStateException
@@ -8802,9 +8723,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         if (visible && !isVisible) {
             escalator.getBody().setSpacer(rowIndex, DETAILS_ROW_INITIAL_HEIGHT);
             visibleDetails.add(rowIndexInteger);
-        }
-
-        else if (!visible && isVisible) {
+        } else if (!visible && isVisible) {
             escalator.getBody().setSpacer(rowIndex, -1);
             visibleDetails.remove(rowIndexInteger);
         }
@@ -8911,7 +8830,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Sets the buffered editor mode.
      *
      * @since 7.6
-     * @param editorUnbuffered
+     * @param editorBuffered
      *            <code>true</code> to enable buffered editor,
      *            <code>false</code> to disable it
      */

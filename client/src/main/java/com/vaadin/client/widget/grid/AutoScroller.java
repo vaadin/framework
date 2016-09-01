@@ -27,6 +27,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.widget.grid.selection.SelectionModelWithSelectionColumn;
 import com.vaadin.client.widgets.Grid;
 
 /**
@@ -625,8 +626,8 @@ public class AutoScroller {
     private int getRealFrozenColumnCount() {
         if (grid.getFrozenColumnCount() < 0) {
             return 0;
-        } else if (grid.getSelectionModel()
-                .getSelectionColumnRenderer() != null) {
+        } else if (grid
+                .getSelectionModel() instanceof SelectionModelWithSelectionColumn) {
             // includes the selection column
             return grid.getFrozenColumnCount() + 1;
         } else {

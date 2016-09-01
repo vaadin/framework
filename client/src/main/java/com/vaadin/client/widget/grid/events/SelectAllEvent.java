@@ -16,7 +16,7 @@
 package com.vaadin.client.widget.grid.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import com.vaadin.client.widget.grid.selection.SelectionModel;
+import com.vaadin.shared.data.selection.SelectionModel;
 
 /**
  * A select all event, fired by the Grid when it needs all rows in data source

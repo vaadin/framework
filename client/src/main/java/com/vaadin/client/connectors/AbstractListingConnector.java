@@ -33,7 +33,7 @@ public abstract class AbstractListingConnector
 
     private DataSource<JsonObject> dataSource = null;
 
-    private SelectionModel<String> selectionModel = null;
+    private SelectionModel<JsonObject> selectionModel = null;
 
     @Override
     public void setDataSource(DataSource<JsonObject> dataSource) {
@@ -47,15 +47,15 @@ public abstract class AbstractListingConnector
 
     /**
      * Sets the selection model to use. Passing {@code null} disables selection.
-     * 
+     *
      * @param selectionModel
      *            the selection model or null to disable
      */
-    public void setSelectionModel(SelectionModel<String> selectionModel) {
+    public void setSelectionModel(SelectionModel<JsonObject> selectionModel) {
         this.selectionModel = selectionModel;
     }
 
-    public SelectionModel<String> getSelectionModel() {
+    public SelectionModel<JsonObject> getSelectionModel() {
         return selectionModel;
     }
 }

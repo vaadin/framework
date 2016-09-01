@@ -64,6 +64,11 @@ class DataObject {
         this.date = date;
     }
 
+    @Override
+    public String toString() {
+        return "DataObject[" + rowNumber + "]";
+    }
+
     static List<DataObject> generateObjects() {
         List<DataObject> data = new ArrayList<>();
 
