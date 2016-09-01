@@ -25,7 +25,6 @@ import com.vaadin.client.ui.textfield.AbstractTextFieldConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.textarea.TextAreaServerRpc;
 import com.vaadin.shared.ui.textarea.TextAreaState;
-import com.vaadin.shared.ui.textfield.ValueChangeMode;
 import com.vaadin.ui.TextArea;
 
 @Connect(TextArea.class)
@@ -46,10 +45,9 @@ public class TextAreaConnector extends AbstractTextFieldConnector {
         super.init();
         getWidget().addChangeHandler(event -> sendValueChange());
         getWidget().addDomHandler(event -> {
-            if (getState().valueChangeMode != ValueChangeMode.BLUR) {
-                scheduleValueChange();
-            }
+            getValueChangeHandler().scheduleValueChange();
         }, InputEvent.getType());
+
         getWidget().addMouseUpHandler(new ResizeMouseUpHandler());
     }
 

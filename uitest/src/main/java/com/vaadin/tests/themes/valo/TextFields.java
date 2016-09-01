@@ -28,7 +28,7 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
-import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.ui.RichTextArea;
 
 public class TextFields extends VerticalLayout implements View {
     private TestIcon testIcon = new TestIcon(140);

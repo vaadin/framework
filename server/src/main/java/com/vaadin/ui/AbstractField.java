@@ -142,21 +142,26 @@ public abstract class AbstractField<T> extends AbstractComponent
      *
      * @param value
      *            the new value to set
-     * @return {@code true} if this event originates from the client,
-     *         {@code false} otherwise.
+     * @param userOriginated
+     *            {@code true} if this event originates from the client,
+     *            {@code false} otherwise.
+     * @return <code>true</code> if the value was updated, <code>false</code>
+     *         otherwise
      */
-    protected void setValue(T value, boolean userOriginated) {
+    protected boolean setValue(T value, boolean userOriginated) {
         if (userOriginated && isReadOnly()) {
-            return;
+            return false;
         }
         if (Objects.equals(value, getValue())) {
-            return;
+            return false;
         }
         doSetValue(value);
         if (!userOriginated) {
             markAsDirty();
         }
         fireEvent(createValueChange(userOriginated));
+
+        return true;
     }
 
     /**

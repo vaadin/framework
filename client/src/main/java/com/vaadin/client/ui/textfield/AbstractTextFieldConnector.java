@@ -15,8 +15,6 @@
  */
 package com.vaadin.client.ui.textfield;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -25,14 +23,13 @@ import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldClientRpc;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
-import com.vaadin.shared.ui.textfield.ValueChangeMode;
 import com.vaadin.ui.AbstractTextField;
 
 /**
  * Connector class for AbstractTextField.
  */
 public abstract class AbstractTextFieldConnector
-        extends AbstractComponentConnector {
+        extends AbstractComponentConnector implements ValueChangeHandler.Owner {
 
     private class AbstractTextFieldClientRpcImpl
             implements AbstractTextFieldClientRpc {
@@ -62,19 +59,18 @@ public abstract class AbstractTextFieldConnector
     }
 
     private int lastSentCursorPosition = -1;
-
-    private Timer valueChangeTrigger = new Timer() {
-        @Override
-        public void run() {
-            Scheduler.get().scheduleDeferred(() -> sendValueChange());
-        }
-    };
+    private ValueChangeHandler valueChangeHandler;
 
     @Override
     protected void init() {
         registerRpc(AbstractTextFieldClientRpc.class,
                 new AbstractTextFieldClientRpcImpl());
         ConnectorFocusAndBlurHandler.addHandlers(this);
+        valueChangeHandler = new ValueChangeHandler(this);
+    }
+
+    protected ValueChangeHandler getValueChangeHandler() {
+        return valueChangeHandler;
     }
 
     /**
@@ -88,50 +84,19 @@ public abstract class AbstractTextFieldConnector
         return (AbstractTextFieldWidget) getWidget();
     }
 
-    /**
-     * Called whenever a change in the value has been detected. Schedules a
-     * value change to be sent to the server, depending on the current value
-     * change mode.
-     * <p>
-     * Note that this method does not consider the {@link ValueChangeMode#BLUR}
-     * mode but assumes that {@link #sendValueChange()} is called directly for
-     * this mode.
-     */
-    protected void scheduleValueChange() {
-        switch (getState().valueChangeMode) {
-        case LAZY:
-            lazyTextChange();
-            break;
-        case TIMEOUT:
-            timeoutTextChange();
-            break;
-        case EAGER:
-            eagerTextChange();
-            break;
-        case BLUR:
-            // Nothing to schedule for this mode
-            break;
-        }
-    }
-
-    private void lazyTextChange() {
-        valueChangeTrigger.schedule(getState().valueChangeTimeout);
-    }
-
-    private void timeoutTextChange() {
-        if (valueChangeTrigger.isRunning()) {
-            return;
-        }
-        valueChangeTrigger.schedule(getState().valueChangeTimeout);
-    }
-
-    private void eagerTextChange() {
-        valueChangeTrigger.run();
-    }
-
     @Override
     public AbstractTextFieldState getState() {
         return (AbstractTextFieldState) super.getState();
+    }
+
+    @OnStateChange("valueChangeMode")
+    private void updateValueChangeMode() {
+        valueChangeHandler.setValueChangeMode(getState().valueChangeMode);
+    }
+
+    @OnStateChange("valueChangeTimeout")
+    private void updateValueChangeTimeout() {
+        valueChangeHandler.setValueChangeTimeout(getState().valueChangeTimeout);
     }
 
     @OnStateChange("readOnly")
@@ -151,10 +116,12 @@ public abstract class AbstractTextFieldConnector
      * Sends the updated value and cursor position to the server, if either one
      * has changed.
      */
-    protected void sendValueChange() {
+    @Override
+    public void sendValueChange() {
         if (!hasStateChanged()) {
             return;
         }
+
         lastSentCursorPosition = getAbstractTextField().getCursorPos();
         getRpcProxy(AbstractTextFieldServerRpc.class).setText(
                 getAbstractTextField().getValue(), lastSentCursorPosition);

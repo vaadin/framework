@@ -1,6 +1,6 @@
 package com.vaadin.v7.tests.components.textarea;
 
-import com.vaadin.shared.ui.textfield.ValueChangeMode;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.AbstractTextField;

@@ -41,7 +41,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.OptionGroup;
 import com.vaadin.v7.ui.ProgressIndicator;
-import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.ui.RichTextArea;
 import com.vaadin.v7.ui.Select;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextField;

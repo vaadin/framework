@@ -16,7 +16,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.ui.RichTextArea;
 import com.vaadin.v7.ui.Table;
 
 public class NavigatorTest extends UI {

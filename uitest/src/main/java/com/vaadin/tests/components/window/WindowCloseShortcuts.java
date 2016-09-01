@@ -39,7 +39,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
-import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.ui.RichTextArea;
 
 @Theme("valo")
 @SuppressWarnings("serial")

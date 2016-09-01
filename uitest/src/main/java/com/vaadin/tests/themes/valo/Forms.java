@@ -34,7 +34,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.OptionGroup;
-import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.ui.RichTextArea;
 import com.vaadin.v7.ui.TextArea;
 import com.vaadin.v7.ui.TextField;
 

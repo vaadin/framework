@@ -2,7 +2,7 @@ package com.vaadin.tests.components.splitpanel;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.textfield.ValueChangeMode;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;

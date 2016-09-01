@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.richtextarea;
 
 import com.vaadin.tests.components.ComponentTestCase;
-import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.ui.RichTextArea;
 
 public class RichTextAreas extends ComponentTestCase<RichTextArea> {
 

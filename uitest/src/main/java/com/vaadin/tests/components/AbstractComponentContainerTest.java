@@ -17,7 +17,7 @@ import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.ui.RichTextArea;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextArea;
 import com.vaadin.v7.ui.TextField;

@@ -2,7 +2,7 @@ package com.vaadin.tests.components.notification;
 
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.textfield.ValueChangeMode;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.shared.ui.ui.NotificationRole;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;

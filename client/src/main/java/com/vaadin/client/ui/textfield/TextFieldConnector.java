@@ -20,7 +20,6 @@ import com.vaadin.client.ui.VTextField;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.textfield.TextFieldState;
-import com.vaadin.shared.ui.textfield.ValueChangeMode;
 import com.vaadin.ui.TextField;
 
 /**
@@ -34,9 +33,7 @@ public class TextFieldConnector extends AbstractTextFieldConnector {
         super.init();
         getWidget().addChangeHandler(event -> sendValueChange());
         getWidget().addDomHandler(event -> {
-            if (getState().valueChangeMode != ValueChangeMode.BLUR) {
-                scheduleValueChange();
-            }
+            getValueChangeHandler().scheduleValueChange();
         }, InputEvent.getType());
     }
 

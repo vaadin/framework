@@ -3,7 +3,7 @@ package com.vaadin.tests.components.richtextarea;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.ui.RichTextArea;
 
 public class RichTextAreaSize extends TestBase {
 

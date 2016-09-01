@@ -18,6 +18,7 @@ package com.vaadin.shared.ui.textfield;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.annotations.NoLayout;
+import com.vaadin.shared.ui.ValueChangeMode;
 
 /**
  * State class for AbstractTextField.

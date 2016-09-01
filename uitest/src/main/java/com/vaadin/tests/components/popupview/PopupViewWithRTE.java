@@ -5,7 +5,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.PopupView.Content;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.ui.RichTextArea;
 
 public class PopupViewWithRTE extends TestBase {
 

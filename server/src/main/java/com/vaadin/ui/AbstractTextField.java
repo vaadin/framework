@@ -27,10 +27,10 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldClientRpc;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
-import com.vaadin.shared.ui.textfield.ValueChangeMode;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -40,7 +40,8 @@ import com.vaadin.ui.declarative.DesignContext;
  * @author Vaadin Ltd.
  * @since 8.0
  */
-public abstract class AbstractTextField extends AbstractField<String> {
+public abstract class AbstractTextField extends AbstractField<String>
+        implements HasValueChangeMode {
 
     private final class AbstractTextFieldServerRpcImpl
             implements AbstractTextFieldServerRpc {
@@ -173,6 +174,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
     /**
      * Returns the last known cursor position of the field.
      *
+     * @return the last known cursor position
      */
     public int getCursorPosition() {
         return lastKnownCursorPosition;
@@ -212,41 +214,17 @@ public abstract class AbstractTextField extends AbstractField<String> {
                 listener);
     }
 
-    /**
-     * Sets the mode how the TextField triggers {@link ValueChange}s.
-     *
-     * @param mode
-     *            the new mode
-     *
-     * @see ValueChangeMode
-     */
+    @Override
     public void setValueChangeMode(ValueChangeMode mode) {
         getState().valueChangeMode = mode;
     }
 
-    /**
-     * Returns the currently set {@link ValueChangeMode}.
-     *
-     * @return the mode used to trigger {@link ValueChange}s.
-     *
-     * @see ValueChangeMode
-     */
+    @Override
     public ValueChangeMode getValueChangeMode() {
         return getState(false).valueChangeMode;
     }
 
-    /**
-     * Sets how often {@link ValueChange}s are triggered when the
-     * {@link ValueChangeMode} is set to either {@link ValueChangeMode#LAZY} or
-     * {@link ValueChangeMode#TIMEOUT}.
-     *
-     * @param timeout
-     *            timeout in milliseconds, must be greater or equal to 0
-     * @throws IllegalArgumentException
-     *             if given timeout is smaller than 0
-     *
-     * @see ValueChangeMode
-     */
+    @Override
     public void setValueChangeTimeout(int timeout) {
         if (timeout < 0) {
             throw new IllegalArgumentException(
@@ -255,15 +233,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
         getState().valueChangeTimeout = timeout;
     }
 
-    /**
-     * Returns the currently set timeout, in milliseconds, for how often
-     * {@link ValueChange}s are triggered if the current {@link ValueChangeMode}
-     * is set to either {@link ValueChangeMode#LAZY} or
-     * {@link ValueChangeMode#TIMEOUT}.
-     *
-     * @return the timeout in milliseconds of how often {@link ValueChange}s are
-     *         triggered.
-     */
+    @Override
     public int getValueChangeTimeout() {
         return getState(false).valueChangeTimeout;
     }
@@ -303,7 +273,8 @@ public abstract class AbstractTextField extends AbstractField<String> {
     /**
      * Checks if the field is empty.
      *
-     * @return true if the field value is an empty string, false otherwise
+     * @return <code>true</code> if the field value is an empty string,
+     *         <code>false</code> otherwise
      */
     public boolean isEmpty() {
         return "".equals(getValue());

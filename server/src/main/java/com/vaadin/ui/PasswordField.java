@@ -59,12 +59,6 @@ public class PasswordField extends TextField {
         setCaption(caption);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.ui.AbstractField#readDesign(org.jsoup.nodes.Element ,
-     * com.vaadin.ui.declarative.DesignContext)
-     */
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
@@ -75,12 +69,6 @@ public class PasswordField extends TextField {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.ui.AbstractTextField#writeDesign(org.jsoup.nodes.Element
-     * , com.vaadin.ui.declarative.DesignContext)
-     */
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);

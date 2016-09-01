@@ -17,7 +17,7 @@ package com.vaadin.tests.server.component.abstracttextfield;
 
 import org.junit.Test;
 
-import com.vaadin.shared.ui.textfield.ValueChangeMode;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.TextField;

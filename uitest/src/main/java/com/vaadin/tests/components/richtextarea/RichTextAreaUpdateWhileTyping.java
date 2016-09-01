@@ -4,7 +4,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.v7.shared.ui.progressindicator.ProgressIndicatorServerRpc;
 import com.vaadin.v7.ui.ProgressIndicator;
-import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.ui.RichTextArea;
 
 public class RichTextAreaUpdateWhileTyping extends AbstractTestUI {
 

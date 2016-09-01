@@ -3,7 +3,7 @@ package com.vaadin.tests.components.splitpanel;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.ui.RichTextArea;
 
 public class SplitPanelWithRichTextArea extends TestBase {
 

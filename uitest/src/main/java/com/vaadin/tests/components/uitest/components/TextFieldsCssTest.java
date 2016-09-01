@@ -7,7 +7,7 @@ import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ChameleonTheme;
 import com.vaadin.ui.themes.Reindeer;
-import com.vaadin.v7.ui.RichTextArea;
+import com.vaadin.ui.RichTextArea;
 import com.vaadin.v7.ui.TextArea;
 
 public class TextFieldsCssTest extends GridLayout {

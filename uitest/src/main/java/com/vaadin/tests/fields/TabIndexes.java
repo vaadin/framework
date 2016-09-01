@@ -14,13 +14,13 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Slider;
 import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.ListSelect;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.OptionGroup;
 import com.vaadin.v7.ui.PasswordField;
-import com.vaadin.v7.ui.RichTextArea;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextArea;
 import com.vaadin.v7.ui.TextField;
@@ -28,7 +28,6 @@ import com.vaadin.v7.ui.Tree;
 import com.vaadin.v7.ui.TreeTable;
 import com.vaadin.v7.ui.TwinColSelect;
 
-@SuppressWarnings("rawtypes")
 public class TabIndexes extends AbstractTestUIWithLog {
 
     private List<Focusable> fields;

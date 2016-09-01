@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.shared.ui.textfield;
+package com.vaadin.shared.ui;
 
 /**
  * Different modes for when and how often field value changes are transmitted
