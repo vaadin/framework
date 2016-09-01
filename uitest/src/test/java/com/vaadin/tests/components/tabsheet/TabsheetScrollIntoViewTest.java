@@ -21,12 +21,23 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TabSheetElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TabsheetScrollIntoViewTest extends MultiBrowserTest {
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
+        // For whatever reason, IE8 never returns from the
+        // $(TabSheetElement.class).first() call
+        browsers.remove(Browser.IE8.getDesiredCapabilities());
+        return browsers;
+    }
 
     @Test
     public void scrollIntoView() {
