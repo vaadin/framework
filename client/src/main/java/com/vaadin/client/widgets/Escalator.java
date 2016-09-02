@@ -4166,6 +4166,11 @@ public class Escalator extends Widget implements RequiresResize,
                 frozenColumns += numberOfColumns;
             }
 
+            // Add to DOM
+            header.paintInsertColumns(index, numberOfColumns, frozen);
+            body.paintInsertColumns(index, numberOfColumns, frozen);
+            footer.paintInsertColumns(index, numberOfColumns, frozen);
+
             // this needs to be before the scrollbar adjustment.
             boolean scrollbarWasNeeded = horizontalScrollbar.getOffsetSize() < horizontalScrollbar
                     .getScrollSize();
@@ -4173,13 +4178,11 @@ public class Escalator extends Widget implements RequiresResize,
             boolean scrollbarIsNowNeeded = horizontalScrollbar.getOffsetSize() < horizontalScrollbar
                     .getScrollSize();
             if (!scrollbarWasNeeded && scrollbarIsNowNeeded) {
+                // This might as a side effect move rows around (when scrolled
+                // all the way down) and require the DOM to be up to date, i.e.
+                // the column to be added
                 body.verifyEscalatorCount();
             }
-
-            // Add to DOM
-            header.paintInsertColumns(index, numberOfColumns, frozen);
-            body.paintInsertColumns(index, numberOfColumns, frozen);
-            footer.paintInsertColumns(index, numberOfColumns, frozen);
 
             // fix initial width
             if (header.getRowCount() > 0 || body.getRowCount() > 0
