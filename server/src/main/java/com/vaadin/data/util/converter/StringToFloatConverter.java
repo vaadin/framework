@@ -27,10 +27,8 @@ import com.vaadin.data.Result;
  * parsing.
  * <p>
  * Leading and trailing white spaces are ignored when converting from a String.
- * </p>
  * <p>
  * Override and overwrite {@link #getFormat(Locale)} to use a different format.
- * </p>
  *
  * @author Vaadin Ltd
  * @since 8.0
@@ -38,10 +36,27 @@ import com.vaadin.data.Result;
 public class StringToFloatConverter
         extends AbstractStringToNumberConverter<Float> {
 
+    /**
+     * Creates a new converter instance with the given error message.
+     *
+     * @param errorMessage
+     *            the error message to use if conversion fails
+     */
+    public StringToFloatConverter(String errorMessage) {
+        super(errorMessage);
+    }
+
     @Override
     public Result<Float> convertToModel(String value, Locale locale) {
-        Number n = convertToNumber(value, locale);
-        return n == null ? Result.ok(null) : Result.ok(n.floatValue());
+        Result<Number> n = convertToNumber(value, locale);
+
+        return n.map(number -> {
+            if (number == null) {
+                return null;
+            } else {
+                return number.floatValue();
+            }
+        });
     }
 
 }

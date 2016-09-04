@@ -35,8 +35,6 @@ import com.vaadin.data.Result;
 public class StringToIntegerConverter
         extends AbstractStringToNumberConverter<Integer> {
 
-    private final String errorMessage;
-
     /**
      * Creates a new converter instance with the given error message.
      *
@@ -44,7 +42,7 @@ public class StringToIntegerConverter
      *            the error message to use if conversion fails
      */
     public StringToIntegerConverter(String errorMessage) {
-        this.errorMessage = errorMessage;
+        super(errorMessage);
     }
 
     /**
@@ -66,22 +64,23 @@ public class StringToIntegerConverter
 
     @Override
     public Result<Integer> convertToModel(String value, Locale locale) {
-        Number n = convertToNumber(value, locale);
-
-        if (n == null) {
-            return Result.ok(null);
-        }
-
-        int intValue = n.intValue();
-        if (intValue == n.longValue()) {
-            // If the value of n is outside the range of long, the return value
-            // of longValue() is either Long.MIN_VALUE or Long.MAX_VALUE. The
-            // above comparison promotes int to long and thus does not need to
-            // consider wrap-around.
-            return Result.ok(intValue);
-        } else {
-            return Result.error(errorMessage);
-        }
+        Result<Number> n = convertToNumber(value, locale);
+        return n.flatMap(number -> {
+            if (number == null) {
+                return Result.ok(null);
+            } else {
+                int intValue = number.intValue();
+                if (intValue == number.longValue()) {
+                    // If the value of n is outside the range of long, the
+                    // return value of longValue() is either Long.MIN_VALUE or
+                    // Long.MAX_VALUE. The/ above comparison promotes int to
+                    // long and thus does not need to consider wrap-around.
+                    return Result.ok(intValue);
+                } else {
+                    return Result.error(getErrorMessage());
+                }
+            }
+        });
     }
 
 }

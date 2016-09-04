@@ -39,6 +39,15 @@ import com.vaadin.data.Result;
  */
 public class StringToBigIntegerConverter
         extends AbstractStringToNumberConverter<BigInteger> {
+    /**
+     * Creates a new converter instance with the given error message.
+     *
+     * @param errorMessage
+     *            the error message to use if conversion fails
+     */
+    public StringToBigIntegerConverter(String errorMessage) {
+        super(errorMessage);
+    }
 
     @Override
     protected NumberFormat getFormat(Locale locale) {
@@ -52,12 +61,13 @@ public class StringToBigIntegerConverter
 
     @Override
     public Result<BigInteger> convertToModel(String value, Locale locale) {
-
-        BigDecimal bigDecimalValue = (BigDecimal) convertToNumber(value,
-                locale);
-
-        return (bigDecimalValue != null)
-                ? Result.ok(bigDecimalValue.toBigInteger()) : Result.ok(null);
+        return convertToNumber(value, locale).map(number -> {
+            if (number == null) {
+                return null;
+            } else {
+                return ((BigDecimal) number).toBigInteger();
+            }
+        });
     }
 
 }

@@ -18,7 +18,7 @@ public class DateToSqlDateConverterTest extends AbstractConverterTest {
     public void testValueConversion() {
         Date testDate = new Date(100, 0, 1);
         long time = testDate.getTime();
-        assertResult(testDate, getConverter()
+        assertValue(testDate, getConverter()
                 .convertToModel(new java.sql.Date(time), Locale.ENGLISH));
     }
 }

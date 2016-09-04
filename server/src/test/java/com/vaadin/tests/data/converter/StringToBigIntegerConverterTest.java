@@ -18,24 +18,18 @@ package com.vaadin.tests.data.converter;
 import java.math.BigInteger;
 import java.util.Locale;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.StringToBigIntegerConverter;
 
-import junit.framework.Assert;
-
-public class StringToBigIntegerConverterTest extends AbstractConverterTest {
+public class StringToBigIntegerConverterTest
+        extends AbstractStringConverterTest {
 
     @Override
     protected StringToBigIntegerConverter getConverter() {
-        return new StringToBigIntegerConverter();
-    }
-
-    @Test
-    public void testEmptyStringConversion() {
-        assertResult("Empty value was converted incorrectly", null,
-                getConverter().convertToModel("", null));
+        return new StringToBigIntegerConverter(getErrorMessage());
     }
 
     @Test
@@ -44,7 +38,7 @@ public class StringToBigIntegerConverterTest extends AbstractConverterTest {
         Result<BigInteger> converted = getConverter().convertToModel(bigInt,
                 null);
         BigInteger expected = new BigInteger(bigInt);
-        assertResult("Value bigger than max long was converted incorrectly",
+        assertValue("Value bigger than max long was converted incorrectly",
                 expected, converted);
     }
 

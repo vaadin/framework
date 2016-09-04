@@ -38,6 +38,17 @@ import com.vaadin.data.Result;
  */
 public class StringToBigDecimalConverter
         extends AbstractStringToNumberConverter<BigDecimal> {
+
+    /**
+     * Creates a new converter instance with the given error message.
+     *
+     * @param errorMessage
+     *            the error message to use if conversion fails
+     */
+    public StringToBigDecimalConverter(String errorMessage) {
+        super(errorMessage);
+    }
+
     @Override
     protected NumberFormat getFormat(Locale locale) {
         NumberFormat numberFormat = super.getFormat(locale);
@@ -50,7 +61,8 @@ public class StringToBigDecimalConverter
 
     @Override
     public Result<BigDecimal> convertToModel(String value, Locale locale) {
-        return Result.ok((BigDecimal) convertToNumber(value, locale));
+        return convertToNumber(value, locale)
+                .map(number -> (BigDecimal) number);
     }
 
 }

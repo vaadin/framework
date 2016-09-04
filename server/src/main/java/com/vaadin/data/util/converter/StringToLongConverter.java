@@ -36,6 +36,16 @@ public class StringToLongConverter
         extends AbstractStringToNumberConverter<Long> {
 
     /**
+     * Creates a new converter instance with the given error message.
+     *
+     * @param errorMessage
+     *            the error message to use if conversion fails
+     */
+    public StringToLongConverter(String errorMessage) {
+        super(errorMessage);
+    }
+
+    /**
      * Returns the format used by {@link #convertToPresentation(Long, Locale)}
      * and {@link #convertToModel(String, Locale)}.
      *
@@ -53,9 +63,14 @@ public class StringToLongConverter
 
     @Override
     public Result<Long> convertToModel(String value, Locale locale) {
-        Number n = convertToNumber(value, locale);
-        return n == null ? Result.ok(null) : Result.ok(n.longValue());
-
+        Result<Number> n = convertToNumber(value, locale);
+        return n.map(number -> {
+            if (number == null) {
+                return null;
+            } else {
+                return number.longValue();
+            }
+        });
     }
 
 }

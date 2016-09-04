@@ -109,7 +109,8 @@ public class DesignFormatter implements Serializable {
         final DecimalFormat fmt = new DecimalFormat("0.###", symbols);
         fmt.setGroupingUsed(false);
 
-        Converter<String, ?> floatConverter = new StringToFloatConverter() {
+        Converter<String, ?> floatConverter = new StringToFloatConverter(
+                "Error converting value") {
             @Override
             protected NumberFormat getFormat(Locale locale) {
                 return fmt;
@@ -118,7 +119,8 @@ public class DesignFormatter implements Serializable {
         converterMap.put(Float.class, floatConverter);
         converterMap.put(float.class, floatConverter);
 
-        Converter<String, ?> doubleConverter = new StringToDoubleConverter() {
+        Converter<String, ?> doubleConverter = new StringToDoubleConverter(
+                "Error converting value") {
             @Override
             protected NumberFormat getFormat(Locale locale) {
                 return fmt;
@@ -130,12 +132,13 @@ public class DesignFormatter implements Serializable {
         final DecimalFormat bigDecimalFmt = new DecimalFormat("0.###", symbols);
         bigDecimalFmt.setGroupingUsed(false);
         bigDecimalFmt.setParseBigDecimal(true);
-        converterMap.put(BigDecimal.class, new StringToBigDecimalConverter() {
-            @Override
-            protected NumberFormat getFormat(Locale locale) {
-                return bigDecimalFmt;
-            };
-        });
+        converterMap.put(BigDecimal.class,
+                new StringToBigDecimalConverter("Error converting value") {
+                    @Override
+                    protected NumberFormat getFormat(Locale locale) {
+                        return bigDecimalFmt;
+                    };
+                });
 
         // strings do nothing
         converterMap.put(String.class, new Converter<String, String>() {

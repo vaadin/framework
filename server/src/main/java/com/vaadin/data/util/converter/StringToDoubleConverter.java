@@ -38,10 +38,27 @@ import com.vaadin.data.Result;
 public class StringToDoubleConverter
         extends AbstractStringToNumberConverter<Double> {
 
+    /**
+     * Creates a new converter instance with the given error message.
+     *
+     * @param errorMessage
+     *            the error message to use if conversion fails
+     */
+    public StringToDoubleConverter(String errorMessage) {
+        super(errorMessage);
+    }
+
     @Override
     public Result<Double> convertToModel(String value, Locale locale) {
-        Number n = convertToNumber(value, locale);
-        return n == null ? Result.ok(null) : Result.ok(n.doubleValue());
+        Result<Number> n = convertToNumber(value, locale);
+
+        return n.map(number -> {
+            if (number == null) {
+                return null;
+            } else {
+                return number.doubleValue();
+            }
+        });
     }
 
 }

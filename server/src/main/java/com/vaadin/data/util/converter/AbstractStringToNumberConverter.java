@@ -20,6 +20,8 @@ import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.util.Locale;
 
+import com.vaadin.data.Result;
+
 /**
  * A converter that converts from the number type T to {@link String} and back.
  * Uses the given locale and {@link NumberFormat} for formatting and parsing.
@@ -34,6 +36,18 @@ import java.util.Locale;
  */
 public abstract class AbstractStringToNumberConverter<T>
         implements Converter<String, T> {
+
+    private final String errorMessage;
+
+    /**
+     * Creates a new converter instance with the given error message.
+     *
+     * @param errorMessage
+     *            the error message to use if conversion fails
+     */
+    protected AbstractStringToNumberConverter(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 
     /**
      * Returns the format used by {@link #convertToPresentation(Object, Locale)}
@@ -61,9 +75,9 @@ public abstract class AbstractStringToNumberConverter<T>
      *            The locale to use for conversion
      * @return The converted value
      */
-    protected Number convertToNumber(String value, Locale locale) {
+    protected Result<Number> convertToNumber(String value, Locale locale) {
         if (value == null) {
-            return null;
+            return Result.ok(null);
         }
 
         // Remove leading and trailing white space
@@ -74,16 +88,24 @@ public abstract class AbstractStringToNumberConverter<T>
         ParsePosition parsePosition = new ParsePosition(0);
         Number parsedValue = getFormat(locale).parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
-            throw new IllegalArgumentException(
-                    "Could not convert '" + value + "'");
+            return Result.error(getErrorMessage());
         }
 
         if (parsedValue == null) {
             // Convert "" to null
-            return null;
+            return Result.ok(null);
         }
 
-        return parsedValue;
+        return Result.ok(parsedValue);
+    }
+
+    /**
+     * Gets the error message to use when conversion fails.
+     *
+     * @return the error message
+     */
+    protected String getErrorMessage() {
+        return errorMessage;
     }
 
     @Override

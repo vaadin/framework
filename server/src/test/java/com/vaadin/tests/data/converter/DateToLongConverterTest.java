@@ -16,13 +16,13 @@ public class DateToLongConverterTest extends AbstractConverterTest {
     @Override
     @Test
     public void testNullConversion() {
-        assertResult(null, getConverter().convertToModel(null, null));
+        assertValue(null, getConverter().convertToModel(null, null));
     }
 
     @Test
     public void testValueConversion() {
         Date d = new Date(100, 0, 1);
-        assertResult(
+        assertValue(
                 Long.valueOf(946677600000l
                         + (d.getTimezoneOffset() + 120) * 60 * 1000L),
                 getConverter().convertToModel(d, null));

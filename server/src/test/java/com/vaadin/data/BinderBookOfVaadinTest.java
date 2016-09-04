@@ -476,4 +476,36 @@ public class BinderBookOfVaadinTest {
         Assert.assertEquals("foo@bar.com", person.getEmail());
     }
 
+    @Test
+    public void manyConvertersAndValidators() throws ValidationException {
+        TextField yearOfBirthField = new TextField();
+        binder.forField(yearOfBirthField)
+                // Validator will be run with the String value of the field
+                .withValidator(text -> text.length() == 4,
+                        "Doesn't look like a year")
+                // Converter will only be run for strings with 4 characters
+                .withConverter(
+                        new StringToIntegerConverter("Must enter a number"))
+                // Validator will be run with the converted value
+                .withValidator(year -> year >= 1900 && year <= 2000,
+                        "Person must be born in the 20th century")
+                .bind(BookPerson::getYearOfBirth, BookPerson::setYearOfBirth);
+
+        yearOfBirthField.setValue("abc");
+        Assert.assertEquals("Doesn't look like a year",
+                binder.validate().get(0).getMessage());
+        yearOfBirthField.setValue("abcd");
+        Assert.assertEquals("Must enter a number",
+                binder.validate().get(0).getMessage());
+        yearOfBirthField.setValue("1200");
+        Assert.assertEquals("Person must be born in the 20th century",
+                binder.validate().get(0).getMessage());
+
+        yearOfBirthField.setValue("1950");
+        Assert.assertTrue(binder.validate().isEmpty());
+        BookPerson person = new BookPerson(1500, 12);
+        binder.save(person);
+        Assert.assertEquals(1950, person.getYearOfBirth());
+    }
+
 }

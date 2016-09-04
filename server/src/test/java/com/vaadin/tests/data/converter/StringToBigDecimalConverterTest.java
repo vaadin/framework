@@ -24,16 +24,12 @@ import org.junit.Test;
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.StringToBigDecimalConverter;
 
-public class StringToBigDecimalConverterTest extends AbstractConverterTest {
+public class StringToBigDecimalConverterTest
+        extends AbstractStringConverterTest {
 
     @Override
     protected StringToBigDecimalConverter getConverter() {
-        return new StringToBigDecimalConverter();
-    }
-
-    @Test
-    public void testEmptyStringConversion() {
-        assertResult(null, getConverter().convertToModel("", null));
+        return new StringToBigDecimalConverter(getErrorMessage());
     }
 
     @Test
@@ -41,7 +37,7 @@ public class StringToBigDecimalConverterTest extends AbstractConverterTest {
         Result<BigDecimal> converted = getConverter().convertToModel("10",
                 null);
         BigDecimal expected = new BigDecimal(10);
-        assertResult(expected, converted);
+        assertValue(expected, converted);
     }
 
     @Test

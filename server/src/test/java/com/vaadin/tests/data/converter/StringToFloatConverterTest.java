@@ -4,27 +4,28 @@ import org.junit.Test;
 
 import com.vaadin.data.util.converter.StringToFloatConverter;
 
-public class StringToFloatConverterTest extends AbstractConverterTest {
+public class StringToFloatConverterTest extends AbstractStringConverterTest {
 
     @Override
     protected StringToFloatConverter getConverter() {
-        return new StringToFloatConverter();
+        return new StringToFloatConverter(getErrorMessage());
     }
 
     @Override
     @Test
     public void testNullConversion() {
-        assertResult(null, getConverter().convertToModel(null, null));
+        assertValue(null, getConverter().convertToModel(null, null));
     }
 
+    @Override
     @Test
     public void testEmptyStringConversion() {
-        assertResult(null, getConverter().convertToModel("", null));
+        assertValue(null, getConverter().convertToModel("", null));
     }
 
     @Test
     public void testValueConversion() {
-        assertResult(Float.valueOf(10),
+        assertValue(Float.valueOf(10),
                 getConverter().convertToModel("10", null));
     }
 }

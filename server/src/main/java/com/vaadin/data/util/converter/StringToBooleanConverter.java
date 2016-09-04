@@ -41,31 +41,39 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
 
     private final String falseString;
 
+    private String errorMessage;
+
     /**
      * Creates converter with default string representations - "true" and
      * "false".
      *
+     * @param errorMessage
+     *            the error message to use if conversion fails
      */
-    public StringToBooleanConverter() {
-        this(Boolean.TRUE.toString(), Boolean.FALSE.toString());
+    public StringToBooleanConverter(String errorMessage) {
+        this(errorMessage, Boolean.TRUE.toString(), Boolean.FALSE.toString());
     }
 
     /**
      * Creates converter with custom string representation.
      *
+     * @param errorMessage
+     *            the error message to use if conversion fails
      * @param falseString
      *            string representation for <code>false</code>
      * @param trueString
      *            string representation for <code>true</code>
      */
-    public StringToBooleanConverter(String trueString, String falseString) {
+    public StringToBooleanConverter(String errorMessage, String trueString,
+            String falseString) {
+        this.errorMessage = errorMessage;
         this.trueString = trueString;
         this.falseString = falseString;
     }
 
     @Override
     public Result<Boolean> convertToModel(String value, Locale locale) {
-        if (value == null || value.isEmpty()) {
+        if (value == null) {
             return Result.ok(null);
         }
 
@@ -76,8 +84,10 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
             return Result.ok(true);
         } else if (getFalseString(locale).equals(value)) {
             return Result.ok(false);
+        } else if (value.isEmpty()) {
+            return Result.ok(null);
         } else {
-            throw new IllegalArgumentException("Cannot convert " + value);
+            return Result.error(errorMessage);
         }
     }
 

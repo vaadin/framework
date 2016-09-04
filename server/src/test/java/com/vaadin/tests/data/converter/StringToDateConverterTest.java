@@ -16,12 +16,12 @@ public class StringToDateConverterTest extends AbstractConverterTest {
 
     @Test
     public void testEmptyStringConversion() {
-        assertResult(null, getConverter().convertToModel("", null));
+        assertValue(null, getConverter().convertToModel("", null));
     }
 
     @Test
     public void testValueConversion() {
-        assertResult(new Date(100, 0, 1), getConverter()
+        assertValue(new Date(100, 0, 1), getConverter()
                 .convertToModel("Jan 1, 2000 12:00:00 AM", Locale.ENGLISH));
     }
 }

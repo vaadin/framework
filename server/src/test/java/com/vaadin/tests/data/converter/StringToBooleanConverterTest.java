@@ -9,16 +9,19 @@ import org.junit.Test;
 
 import com.vaadin.data.util.converter.StringToBooleanConverter;
 
-public class StringToBooleanConverterTest extends AbstractConverterTest {
+public class StringToBooleanConverterTest extends AbstractStringConverterTest {
 
     @Override
     protected StringToBooleanConverter getConverter() {
-        return new StringToBooleanConverter();
+        return new StringToBooleanConverter(getErrorMessage());
     }
 
-    StringToBooleanConverter yesNoConverter = new StringToBooleanConverter(
-            "yes", "no");
-    StringToBooleanConverter localeConverter = new StringToBooleanConverter() {
+    private StringToBooleanConverter yesNoConverter = new StringToBooleanConverter(
+            getErrorMessage(), "yes", "no");
+    private StringToBooleanConverter emptyTrueConverter = new StringToBooleanConverter(
+            getErrorMessage(), "", "ABSENT");
+    private StringToBooleanConverter localeConverter = new StringToBooleanConverter(
+            getErrorMessage()) {
         @Override
         public String getFalseString(Locale locale) {
             Date d = new Date(3000000000000L);
@@ -39,25 +42,31 @@ public class StringToBooleanConverterTest extends AbstractConverterTest {
     };
 
     @Test
-    public void testEmptyStringConversion() {
-        assertResult(null, getConverter().convertToModel("", null));
-    }
-
-    @Test
     public void testValueConversion() {
-        assertResult(true, getConverter().convertToModel("true", null));
-        assertResult(false, getConverter().convertToModel("false", null));
+        assertValue(true, getConverter().convertToModel("true", null));
+        assertValue(false, getConverter().convertToModel("false", null));
     }
 
     @Test
     public void testYesNoValueConversion() {
-        assertResult(true, yesNoConverter.convertToModel("yes", null));
-        assertResult(false, yesNoConverter.convertToModel("no", null));
+        assertValue(true, yesNoConverter.convertToModel("yes", null));
+        assertValue(false, yesNoConverter.convertToModel("no", null));
 
         Assert.assertEquals("yes",
                 yesNoConverter.convertToPresentation(true, null));
         Assert.assertEquals("no",
                 yesNoConverter.convertToPresentation(false, null));
+    }
+
+    @Test
+    public void testEmptyTrueValueConversion() {
+        assertValue(true, emptyTrueConverter.convertToModel("", null));
+        assertValue(false, emptyTrueConverter.convertToModel("ABSENT", null));
+
+        Assert.assertEquals("",
+                emptyTrueConverter.convertToPresentation(true, null));
+        Assert.assertEquals("ABSENT",
+                emptyTrueConverter.convertToPresentation(false, null));
     }
 
     @Test
