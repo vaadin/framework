@@ -242,7 +242,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
     @Override
     public List<Element> getElementsByPath(String path) {
         // This type of search is not supported in LegacyLocator
-        List<Element> array = new ArrayList<Element>();
+        List<Element> array = new ArrayList<>();
         Element e = getElementByPath(path);
         if (e != null) {
             array.add(e);
@@ -257,7 +257,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
     public List<Element> getElementsByPathStartingAt(String path,
             Element root) {
         // This type of search is not supported in LegacyLocator
-        List<Element> array = new ArrayList<Element>();
+        List<Element> array = new ArrayList<>();
         Element e = getElementByPathStartingAt(path, root);
         if (e != null) {
             array.add(e);
@@ -647,7 +647,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                 if (widgetClassName.equals("VWindow")) {
                     List<WindowConnector> windows = client.getUIConnector()
                             .getSubWindows();
-                    List<VWindow> windowWidgets = new ArrayList<VWindow>(
+                    List<VWindow> windowWidgets = new ArrayList<>(
                             windows.size());
                     for (WindowConnector wc : windows) {
                         windowWidgets.add(wc.getWidget());

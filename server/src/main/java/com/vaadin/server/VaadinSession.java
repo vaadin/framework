@@ -226,12 +226,12 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     @Deprecated
     private Object converterFactory;
 
-    private LinkedList<RequestHandler> requestHandlers = new LinkedList<RequestHandler>();
+    private LinkedList<RequestHandler> requestHandlers = new LinkedList<>();
 
     private int nextUIId = 0;
-    private Map<Integer, UI> uIs = new HashMap<Integer, UI>();
+    private Map<Integer, UI> uIs = new HashMap<>();
 
-    private final Map<String, Integer> embedIdMap = new HashMap<String, Integer>();
+    private final Map<String, Integer> embedIdMap = new HashMap<>();
 
     private final EventRouter eventRouter = new EventRouter();
 
@@ -253,9 +253,9 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     private transient WrappedSession session;
 
-    private final Map<String, Object> attributes = new HashMap<String, Object>();
+    private final Map<String, Object> attributes = new HashMap<>();
 
-    private LinkedList<UIProvider> uiProviders = new LinkedList<UIProvider>();
+    private LinkedList<UIProvider> uiProviders = new LinkedList<>();
 
     private transient VaadinService service;
 
@@ -266,7 +266,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * session is serialized as long as it doesn't happen while some other
      * thread has the lock.
      */
-    private transient ConcurrentLinkedQueue<FutureAccess> pendingAccessQueue = new ConcurrentLinkedQueue<FutureAccess>();
+    private transient ConcurrentLinkedQueue<FutureAccess> pendingAccessQueue = new ConcurrentLinkedQueue<>();
 
     /**
      * Creates a new VaadinSession tied to a VaadinService.
@@ -465,7 +465,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     public static Collection<VaadinSession> getAllSessions(
             HttpSession httpSession) {
-        Set<VaadinSession> sessions = new HashSet<VaadinSession>();
+        Set<VaadinSession> sessions = new HashSet<>();
         Enumeration<String> attributeNames = httpSession.getAttributeNames();
 
         while (attributeNames.hasMoreElements()) {
@@ -1426,7 +1426,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         Map<Class<?>, CurrentInstance> old = CurrentInstance.setCurrent(this);
         try {
             stream.defaultReadObject();
-            pendingAccessQueue = new ConcurrentLinkedQueue<FutureAccess>();
+            pendingAccessQueue = new ConcurrentLinkedQueue<>();
         } finally {
             CurrentInstance.restoreInstances(old);
         }

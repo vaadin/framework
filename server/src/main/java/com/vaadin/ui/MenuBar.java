@@ -162,7 +162,7 @@ public class MenuBar extends AbstractComponent
     /** Deserialize changes received from client. */
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        Stack<MenuItem> items = new Stack<MenuItem>();
+        Stack<MenuItem> items = new Stack<>();
         boolean found = false;
 
         if (variables.containsKey("clickedId")) {
@@ -205,7 +205,7 @@ public class MenuBar extends AbstractComponent
      * Constructs an empty, horizontal menu
      */
     public MenuBar() {
-        menuItems = new ArrayList<MenuItem>();
+        menuItems = new ArrayList<>();
         setMoreMenuItem(null);
     }
 
@@ -554,7 +554,7 @@ public class MenuBar extends AbstractComponent
             }
 
             if (itsChildren == null) {
-                itsChildren = new ArrayList<MenuItem>();
+                itsChildren = new ArrayList<>();
             }
 
             MenuItem newItem = new MenuItem(caption, icon, command);
@@ -1005,7 +1005,7 @@ public class MenuBar extends AbstractComponent
         }
 
         String caption = "";
-        List<Element> subMenus = new ArrayList<Element>();
+        List<Element> subMenus = new ArrayList<>();
         for (Node node : menuElement.childNodes()) {
             if (node instanceof Element
                     && ((Element) node).tagName().equals("menu")) {
@@ -1051,7 +1051,7 @@ public class MenuBar extends AbstractComponent
         }
 
         if (!subMenus.isEmpty()) {
-            menu.itsChildren = new ArrayList<MenuItem>();
+            menu.itsChildren = new ArrayList<>();
         }
 
         for (Element subMenu : subMenus) {

@@ -82,7 +82,7 @@ public abstract class LegacyAbstractFieldTest<T extends AbstractField>
     }
 
     private void createRequiredErrorSelect(String category) {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         options.put("-", null);
         options.put(TEXT_SHORT, TEXT_SHORT);
         options.put("Medium", TEXT_MEDIUM);
@@ -191,7 +191,7 @@ public abstract class LegacyAbstractFieldTest<T extends AbstractField>
     protected void createSetTextValueAction(String category) {
         String subCategory = "Set text value";
         createCategory(subCategory, category);
-        List<String> values = new ArrayList<String>();
+        List<String> values = new ArrayList<>();
         values.add("Test");
         values.add("A little longer value");
         values.add(

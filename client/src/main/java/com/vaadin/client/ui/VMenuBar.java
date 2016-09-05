@@ -138,7 +138,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     public VMenuBar(boolean subMenu, VMenuBar parentMenu) {
 
-        items = new ArrayList<CustomMenuItem>();
+        items = new ArrayList<>();
         popup = null;
         visibleChildMenu = null;
         this.subMenu = subMenu;
@@ -928,7 +928,7 @@ public class VMenuBar extends SimpleFocusablePanel
             }
 
             String currentStyles = super.getStyleName();
-            List<String> customStyles = new ArrayList<String>();
+            List<String> customStyles = new ArrayList<>();
             for (String style : currentStyles.split(" ")) {
                 if (!style.isEmpty() && !style.startsWith(primaryStyleName)) {
                     customStyles.add(style);
@@ -1594,7 +1594,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
             return item.getElement();
         } else {
-            Queue<CustomMenuItem> submenuItems = new LinkedList<CustomMenuItem>();
+            Queue<CustomMenuItem> submenuItems = new LinkedList<>();
             for (CustomMenuItem item : getItems()) {
                 if (isItemNamed(item, subPart)) {
                     return item.getElement();

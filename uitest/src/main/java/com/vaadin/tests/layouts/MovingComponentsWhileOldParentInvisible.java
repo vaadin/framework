@@ -103,7 +103,7 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
     }
 
     private Collection<Class<? extends HasComponents>> getComponentContainers() {
-        List<Class<? extends HasComponents>> list = new ArrayList<Class<? extends HasComponents>>();
+        List<Class<? extends HasComponents>> list = new ArrayList<>();
         list.add(AbsoluteLayout.class);
         list.add(Accordion.class);
         list.add(CssLayout.class);

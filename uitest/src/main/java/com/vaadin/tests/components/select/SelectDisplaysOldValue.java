@@ -27,9 +27,9 @@ public class SelectDisplaysOldValue extends TestBase {
         private Select controllerComboBox;
         private Select slaveComboBox;
 
-        private Map<Integer, String> controllerOptionMap = new HashMap<Integer, String>();
+        private Map<Integer, String> controllerOptionMap = new HashMap<>();
 
-        private Map<String, List<String>> slaveOptionMapping = new HashMap<String, List<String>>();
+        private Map<String, List<String>> slaveOptionMapping = new HashMap<>();
         private final Object NAME_PROPERTY_ID = "name";
 
         public DynamicSelectTestCase() {
@@ -46,7 +46,7 @@ public class SelectDisplaysOldValue extends TestBase {
 
         private void populateSlaveOptionMappings() {
             for (String controllerOption : controllerOptionMap.values()) {
-                List<String> slaveOptions = new ArrayList<String>();
+                List<String> slaveOptions = new ArrayList<>();
 
                 for (int i = 1; i <= 3; i++) {
                     slaveOptions.add(controllerOption + " - Slave " + i);

@@ -70,7 +70,7 @@ public class FirstTabNotVisibleWhenTabsheetNotClipped extends AbstractTestUI {
 
         TabSheet tabsheet = new TabSheet();
         String[] letters = { "A", "B", "C", "D" };
-        HashMap<String, TabSheet.Tab> tabMap = new HashMap<String, TabSheet.Tab>();
+        HashMap<String, TabSheet.Tab> tabMap = new HashMap<>();
 
         for (String letter : letters) {
             VerticalLayout vLayout = new VerticalLayout();

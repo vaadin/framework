@@ -52,18 +52,18 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
             @Override
             public void sendWrappedGenerics(
                     Map<Set<SimpleTestBean>, Map<Integer, List<SimpleTestBean>>> generics) {
-                Map<Set<SimpleTestBean>, Map<Integer, List<SimpleTestBean>>> updated = new HashMap<Set<SimpleTestBean>, Map<Integer, List<SimpleTestBean>>>();
+                Map<Set<SimpleTestBean>, Map<Integer, List<SimpleTestBean>>> updated = new HashMap<>();
 
                 SimpleTestBean firstValue = generics.values().iterator().next()
                         .get(Integer.valueOf(1)).get(0);
-                Set<SimpleTestBean> key = new HashSet<SimpleTestBean>(
+                Set<SimpleTestBean> key = new HashSet<>(
                         Arrays.asList(firstValue));
 
-                Map<Integer, List<SimpleTestBean>> value = new HashMap<Integer, List<SimpleTestBean>>();
+                Map<Integer, List<SimpleTestBean>> value = new HashMap<>();
                 Set<SimpleTestBean> firstKeyValue = generics.keySet().iterator()
                         .next();
                 value.put(Integer.valueOf(1),
-                        new ArrayList<SimpleTestBean>(firstKeyValue));
+                        new ArrayList<>(firstKeyValue));
 
                 updated.put(key, value);
 
@@ -83,7 +83,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                     Set<Connector> connectorSet, Set<SimpleTestBean> beanSet) {
 
                 beanSet.iterator().next().setValue(intSet.size());
-                Set<Integer> updatedIntSet = new HashSet<Integer>();
+                Set<Integer> updatedIntSet = new HashSet<>();
 
                 for (Integer integer : intSet) {
                     updatedIntSet.add(Integer.valueOf(-integer.intValue()));
@@ -107,7 +107,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                     Map<Connector, SimpleTestBean> connectorMap,
                     Map<Integer, Connector> intMap,
                     Map<SimpleTestBean, SimpleTestBean> beanMap) {
-                Map<SimpleTestBean, SimpleTestBean> updatedBeanMap = new HashMap<SimpleTestBean, SimpleTestBean>();
+                Map<SimpleTestBean, SimpleTestBean> updatedBeanMap = new HashMap<>();
                 for (Entry<SimpleTestBean, SimpleTestBean> entry : beanMap
                         .entrySet()) {
                     updatedBeanMap.put(entry.getValue(), entry.getKey());
@@ -208,7 +208,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                         Arrays.asList(simpleBean, updatedSimpleBean));
                 updatedComplexBean.setPrivimite(complexBean.getPrivimite() + 1);
 
-                ArrayList<SimpleTestBean> arrayList = new ArrayList<SimpleTestBean>(
+                ArrayList<SimpleTestBean> arrayList = new ArrayList<>(
                         Arrays.asList(array));
                 Collections.reverse(arrayList);
 
@@ -221,7 +221,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                     List<Integer[]> objectArrayList,
                     List<SimpleTestBean[]> beanArrayList) {
                 Collections.reverse(beanArrayList);
-                List<Integer[]> updatedObjectArrayList = new ArrayList<Integer[]>();
+                List<Integer[]> updatedObjectArrayList = new ArrayList<>();
                 for (int[] array : primitiveArrayList) {
                     updatedObjectArrayList
                             .add(new Integer[] { Integer.valueOf(array.length),

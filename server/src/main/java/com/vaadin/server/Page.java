@@ -273,7 +273,7 @@ public class Page implements Serializable {
      * Resources to be opened automatically on next repaint. The list is
      * automatically cleared when it has been sent to the client.
      */
-    private final LinkedList<OpenResource> openList = new LinkedList<OpenResource>();
+    private final LinkedList<OpenResource> openList = new LinkedList<>();
 
     /**
      * A list of notifications that are waiting to be sent to the client.
@@ -388,9 +388,9 @@ public class Page implements Serializable {
      */
     public static class Styles implements Serializable {
 
-        private LinkedHashSet<InjectedStyle> injectedStyles = new LinkedHashSet<InjectedStyle>();
+        private LinkedHashSet<InjectedStyle> injectedStyles = new LinkedHashSet<>();
 
-        private LinkedHashSet<InjectedStyle> pendingInjections = new LinkedHashSet<InjectedStyle>();
+        private LinkedHashSet<InjectedStyle> pendingInjections = new LinkedHashSet<>();
 
         private final UI ui;
 
@@ -440,7 +440,7 @@ public class Page implements Serializable {
             if (target.isFullRepaint()) {
                 injectedStyles.addAll(pendingInjections);
                 pendingInjections = injectedStyles;
-                injectedStyles = new LinkedHashSet<InjectedStyle>();
+                injectedStyles = new LinkedHashSet<>();
             }
 
             if (!pendingInjections.isEmpty()) {
@@ -1161,7 +1161,7 @@ public class Page implements Serializable {
      */
     private void addNotification(Notification notification) {
         if (notifications == null) {
-            notifications = new LinkedList<Notification>();
+            notifications = new LinkedList<>();
         }
         notifications.add(notification);
         uI.markAsDirty();

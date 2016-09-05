@@ -1387,7 +1387,7 @@ public class WidgetUtil {
         /*
          * Map the size units with their type.
          */
-        private static Map<String, Unit> type2Unit = new HashMap<String, Style.Unit>();
+        private static Map<String, Unit> type2Unit = new HashMap<>();
         static {
             for (Unit unit : Unit.values()) {
                 type2Unit.put(unit.getType(), unit);

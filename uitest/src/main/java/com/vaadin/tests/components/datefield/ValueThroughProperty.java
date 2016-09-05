@@ -16,7 +16,7 @@ import com.vaadin.v7.ui.Label;
 import com.vaadin.v7.ui.PopupDateField;
 
 public class ValueThroughProperty extends TestBase {
-    private final Property<Date> dateProperty = new ObjectProperty<Date>(null,
+    private final Property<Date> dateProperty = new ObjectProperty<>(null,
             Date.class);
 
     @Override

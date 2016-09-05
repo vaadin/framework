@@ -61,7 +61,7 @@ class ComponentDetail {
             additionalTooltips.remove(key);
         } else {
             if (additionalTooltips == null) {
-                additionalTooltips = new HashMap<Object, TooltipInfo>();
+                additionalTooltips = new HashMap<>();
             }
             additionalTooltips.put(key, tooltip);
         }

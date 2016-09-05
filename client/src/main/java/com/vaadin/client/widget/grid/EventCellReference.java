@@ -38,7 +38,7 @@ public class EventCellReference<T> extends CellReference<T> {
     private TableCellElement element;
 
     public EventCellReference(Grid<T> grid) {
-        super(new RowReference<T>(grid));
+        super(new RowReference<>(grid));
     }
 
     /**

@@ -141,7 +141,7 @@ public class Sort {
      */
     public List<SortOrder> build() {
 
-        List<SortOrder> order = new ArrayList<SortOrder>(count);
+        List<SortOrder> order = new ArrayList<>(count);
 
         Sort s = this;
         for (int i = count - 1; i >= 0; --i) {

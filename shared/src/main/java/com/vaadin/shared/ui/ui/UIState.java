@@ -32,7 +32,7 @@ public class UIState extends TabIndexState {
     // Informing users of assistive devices, that the content of this container
     // is announced automatically and does not need to be navigated into
     public String overlayContainerLabel = "This content is announced automatically and does not need to be navigated into.";
-    public Map<String, NotificationTypeConfiguration> notificationConfigurations = new HashMap<String, NotificationTypeConfiguration>();
+    public Map<String, NotificationTypeConfiguration> notificationConfigurations = new HashMap<>();
     {
         notificationConfigurations.put("error",
                 new NotificationTypeConfiguration("Error: ",
@@ -117,7 +117,7 @@ public class UIState extends TabIndexState {
         public boolean alwaysUseXhrForServerRequests = false;
         public PushMode mode = PushMode.DISABLED;
         public String pushUrl = null;
-        public Map<String, String> parameters = new HashMap<String, String>();
+        public Map<String, String> parameters = new HashMap<>();
         {
             parameters.put(TRANSPORT_PARAM,
                     Transport.WEBSOCKET.getIdentifier());
@@ -137,7 +137,7 @@ public class UIState extends TabIndexState {
     }
 
     public static class LocaleServiceState implements Serializable {
-        public List<LocaleData> localeData = new ArrayList<LocaleData>();
+        public List<LocaleData> localeData = new ArrayList<>();
     }
 
     public static class LocaleData implements Serializable {

@@ -63,7 +63,7 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
                     String receiverUrl = uidl.getStringVariable(fileId);
                     fileId = fileId.substring(4);
                     if (getWidget().fileIdToReceiver == null) {
-                        getWidget().fileIdToReceiver = new HashMap<String, String>();
+                        getWidget().fileIdToReceiver = new HashMap<>();
                     }
                     if ("".equals(receiverUrl)) {
                         Integer id = Integer.parseInt(fileId);

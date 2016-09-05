@@ -98,7 +98,7 @@ public class ActionManager
     @Override
     public <T extends Action & Action.Listener> void addAction(T action) {
         if (ownActions == null) {
-            ownActions = new LinkedHashSet<Action>();
+            ownActions = new LinkedHashSet<>();
         }
         if (ownActions.add(action)) {
             requestRepaint();
@@ -123,7 +123,7 @@ public class ActionManager
         if (actionHandler != null) {
 
             if (actionHandlers == null) {
-                actionHandlers = new LinkedHashSet<Handler>();
+                actionHandlers = new LinkedHashSet<>();
             }
 
             if (actionHandlers.add(actionHandler)) {
@@ -165,7 +165,7 @@ public class ActionManager
          * removed but still exist on client side
          */
         if (!actions.isEmpty() || clientHasActions) {
-            actionMapper = new KeyMapper<Action>();
+            actionMapper = new KeyMapper<>();
 
             paintTarget.addVariable((VariableOwner) viewer, "action", "");
             paintTarget.startTag("actions");
@@ -240,7 +240,7 @@ public class ActionManager
     }
 
     private LinkedHashSet<Action> getActionSet(Object target, Object sender) {
-        LinkedHashSet<Action> actions = new LinkedHashSet<Action>();
+        LinkedHashSet<Action> actions = new LinkedHashSet<>();
         if (ownActions != null) {
             actions.addAll(ownActions);
 

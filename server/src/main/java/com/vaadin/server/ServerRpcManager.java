@@ -69,7 +69,7 @@ public class ServerRpcManager<T extends ServerRpc> implements Serializable {
 
     }
 
-    private static final Map<Class<?>, Class<?>> boxedTypes = new HashMap<Class<?>, Class<?>>();
+    private static final Map<Class<?>, Class<?>> boxedTypes = new HashMap<>();
     static {
         try {
             Class<?>[] boxClasses = new Class<?>[] { Boolean.class, Byte.class,

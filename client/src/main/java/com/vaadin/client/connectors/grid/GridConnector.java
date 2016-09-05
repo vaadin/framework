@@ -66,7 +66,7 @@ public class GridConnector extends AbstractListingConnector
     protected void init() {
         super.init();
 
-        new ClickSelectHandler<JsonObject>(getWidget());
+        new ClickSelectHandler<>(getWidget());
         getWidget().addSortHandler(this::handleSortEvent);
 
         layout();

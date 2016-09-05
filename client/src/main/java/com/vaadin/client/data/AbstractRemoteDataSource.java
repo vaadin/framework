@@ -178,8 +178,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     private Range cached = Range.between(0, 0);
 
-    private final HashMap<Integer, T> indexToRowMap = new HashMap<Integer, T>();
-    private final HashMap<Object, Integer> keyToIndexMap = new HashMap<Object, Integer>();
+    private final HashMap<Integer, T> indexToRowMap = new HashMap<>();
+    private final HashMap<Object, Integer> keyToIndexMap = new HashMap<>();
 
     private Set<DataChangeHandler> dataChangeHandlers = new LinkedHashSet<>();
 
@@ -193,8 +193,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         }
     };
 
-    private Map<Object, Integer> pinnedCounts = new HashMap<Object, Integer>();
-    private Map<Object, RowHandleImpl> pinnedRows = new HashMap<Object, RowHandleImpl>();
+    private Map<Object, Integer> pinnedCounts = new HashMap<>();
+    private Map<Object, RowHandleImpl> pinnedRows = new HashMap<>();
 
     // Size not yet known
     private int size = -1;
@@ -374,7 +374,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         if (range.isEmpty()) {
             return;
         }
-        currentRequestCallback = new RequestRowsCallback<T>(this, range);
+        currentRequestCallback = new RequestRowsCallback<>(this, range);
         requestRows(range.getStart(), range.length(), currentRequestCallback);
     }
 

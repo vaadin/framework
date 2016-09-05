@@ -68,7 +68,7 @@ public class WindowShouldRemoveActionHandler extends AbstractTestUI {
         removeActionHandler(actionHandlers.remove(actionHandlers.size() - 1));
     }
 
-    private List<Handler> actionHandlers = new ArrayList<Handler>();
+    private List<Handler> actionHandlers = new ArrayList<>();
 
     public void add() {
         Handler actionHandler = new Handler() {

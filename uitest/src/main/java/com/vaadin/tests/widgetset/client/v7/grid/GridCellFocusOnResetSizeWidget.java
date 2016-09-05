@@ -34,7 +34,7 @@ public class GridCellFocusOnResetSizeWidget
     private Grid<String[]> grid;
 
     private final class MyDataSource implements DataSource<String[]> {
-        List<String[]> rows = new ArrayList<String[]>();
+        List<String[]> rows = new ArrayList<>();
         int ROWS_MAX = 10;
         int size = ROWS_MAX;
         DataChangeHandler handler = null;

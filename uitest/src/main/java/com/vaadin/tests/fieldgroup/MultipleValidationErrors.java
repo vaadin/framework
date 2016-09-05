@@ -22,7 +22,7 @@ public class MultipleValidationErrors extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        BeanItem<PersonBeanWithValidationAnnotations> item = new BeanItem<PersonBeanWithValidationAnnotations>(
+        BeanItem<PersonBeanWithValidationAnnotations> item = new BeanItem<>(
                 new PersonBeanWithValidationAnnotations());
         final FieldGroup fieldGroup = new FieldGroup(item);
 

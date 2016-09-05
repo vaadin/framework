@@ -33,7 +33,7 @@ public abstract class DeclarativeTestBase<T extends Component>
 
     private static boolean debug = false;
 
-    private final Map<Class<?>, EqualsAsserter<?>> comparators = new HashMap<Class<?>, EqualsAsserter<?>>();
+    private final Map<Class<?>, EqualsAsserter<?>> comparators = new HashMap<>();
     private static EqualsAsserter standardEqualsComparator = new EqualsAsserter<Object>() {
 
         @Override

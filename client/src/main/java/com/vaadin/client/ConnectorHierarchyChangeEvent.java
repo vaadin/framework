@@ -39,7 +39,7 @@ public class ConnectorHierarchyChangeEvent
     /**
      * Type of this event, used by the event bus.
      */
-    public static final Type<ConnectorHierarchyChangeHandler> TYPE = new Type<ConnectorHierarchyChangeHandler>();
+    public static final Type<ConnectorHierarchyChangeHandler> TYPE = new Type<>();
 
     List<ComponentConnector> oldChildren;
 

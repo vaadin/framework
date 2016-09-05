@@ -80,7 +80,7 @@ public class HierarchicalContainerSorting extends TestBase {
     }
 
     private static int index = 0;
-    private static Map<String, Integer> nameToId = new HashMap<String, Integer>();
+    private static Map<String, Integer> nameToId = new HashMap<>();
 
     public static void addItem(IndexedContainer container, String string,
             String parent) {

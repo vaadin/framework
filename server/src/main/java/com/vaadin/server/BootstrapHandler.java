@@ -303,7 +303,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                 .getBootstrapResponse();
 
         if (vaadinService.isStandalone(request)) {
-            Map<String, Object> headers = new LinkedHashMap<String, Object>();
+            Map<String, Object> headers = new LinkedHashMap<>();
             Document document = Document.createShell("");
             BootstrapPageResponse pageResponse = new BootstrapPageResponse(this,
                     request, context.getSession(), context.getUIClass(),

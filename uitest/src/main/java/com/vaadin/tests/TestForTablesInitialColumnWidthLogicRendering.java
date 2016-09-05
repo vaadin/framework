@@ -135,7 +135,7 @@ public class TestForTablesInitialColumnWidthLogicRendering
         }
         t.addContainerProperty("button", Button.class, null);
         for (int i = 0; i < rows; i++) {
-            final Vector<Object> content = new Vector<Object>();
+            final Vector<Object> content = new Vector<>();
             for (int j = 0; j < cols; j++) {
                 content.add(rndString());
             }

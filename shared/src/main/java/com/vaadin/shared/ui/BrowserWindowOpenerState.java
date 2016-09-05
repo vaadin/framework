@@ -30,6 +30,6 @@ public class BrowserWindowOpenerState extends AbstractComponentState {
 
     public String uriFragment;
 
-    public Map<String, String> parameters = new HashMap<String, String>();
+    public Map<String, String> parameters = new HashMap<>();
 
 }

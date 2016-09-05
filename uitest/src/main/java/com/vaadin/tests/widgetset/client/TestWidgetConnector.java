@@ -66,7 +66,7 @@ public class TestWidgetConnector extends AbstractComponentConnector {
             .create(TestWidgetRegistry.class);
 
     public static abstract class TestWidgetRegistry {
-        private Map<String, Invoker> creators = new HashMap<String, Invoker>();
+        private Map<String, Invoker> creators = new HashMap<>();
 
         // Called by generated sub class
         protected void register(String widgetClass, Invoker creator) {

@@ -61,7 +61,7 @@ public class TestForMultipleStyleNames extends CustomComponent
                 + " on the browser. Currently changes are"
                 + " visible only by inspecting DOM."));
 
-        styleNames2 = new ArrayList<String>();
+        styleNames2 = new ArrayList<>();
 
         styleNames2.add("red");
         styleNames2.add("bold");
@@ -82,7 +82,7 @@ public class TestForMultipleStyleNames extends CustomComponent
 
         final String currentStyle = l.getStyleName();
         final String[] tmp = currentStyle.split(" ");
-        final ArrayList<String> curStyles = new ArrayList<String>();
+        final ArrayList<String> curStyles = new ArrayList<>();
         for (int i = 0; i < tmp.length; i++) {
             if (tmp[i] != "") {
                 curStyles.add(tmp[i]);

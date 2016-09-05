@@ -69,7 +69,7 @@ public class PushConfigurator extends VerticalLayout {
     private void refreshStatus() {
         PushConfiguration pc = ui.getPushConfiguration();
         String value = "";
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<>();
         names.addAll(pc.getParameterNames());
         Collections.sort(names);
         for (String param : names) {

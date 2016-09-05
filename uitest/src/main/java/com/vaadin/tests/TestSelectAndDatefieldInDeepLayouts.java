@@ -103,7 +103,7 @@ public class TestSelectAndDatefieldInDeepLayouts extends CustomComponent {
     }
 
     private Collection<String> getSelectOptions() {
-        final Collection<String> opts = new Vector<String>(3);
+        final Collection<String> opts = new Vector<>(3);
         opts.add(getCaption("opt 1"));
         opts.add(getCaption("opt 2"));
         opts.add(getCaption("opt 3"));

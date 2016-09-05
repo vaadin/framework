@@ -94,7 +94,7 @@ public class TestForGridLayoutChildComponentRendering extends CustomComponent {
 
     public void randomReorder() {
         final Iterator<Component> it = main.getComponentIterator();
-        final ArrayList<Component> components = new ArrayList<Component>();
+        final ArrayList<Component> components = new ArrayList<>();
         while (it.hasNext()) {
             components.add(it.next());
         }
@@ -118,7 +118,7 @@ public class TestForGridLayoutChildComponentRendering extends CustomComponent {
 
     public void removeRandomComponent() {
         final Iterator<Component> it = main.getComponentIterator();
-        final ArrayList<Component> components = new ArrayList<Component>();
+        final ArrayList<Component> components = new ArrayList<>();
         while (it.hasNext()) {
             components.add(it.next());
         }

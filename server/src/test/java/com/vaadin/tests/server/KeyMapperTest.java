@@ -15,7 +15,7 @@ public class KeyMapperTest {
 
     @Test
     public void testAdd() {
-        KeyMapper<Object> mapper = new KeyMapper<Object>();
+        KeyMapper<Object> mapper = new KeyMapper<>();
         Object o1 = new Object();
         Object o2 = new Object();
         Object o3 = new Object();
@@ -47,7 +47,7 @@ public class KeyMapperTest {
 
     @Test
     public void testRemoveAll() {
-        KeyMapper<Object> mapper = new KeyMapper<Object>();
+        KeyMapper<Object> mapper = new KeyMapper<>();
         Object o1 = new Object();
         Object o2 = new Object();
         Object o3 = new Object();
@@ -65,7 +65,7 @@ public class KeyMapperTest {
 
     @Test
     public void testRemove() {
-        KeyMapper<Object> mapper = new KeyMapper<Object>();
+        KeyMapper<Object> mapper = new KeyMapper<>();
         Object o1 = new Object();
         Object o2 = new Object();
         Object o3 = new Object();

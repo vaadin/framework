@@ -66,8 +66,8 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
 
         this.grid = grid;
         if (this.grid != null) {
-            spaceSelectHandler = new SpaceSelectHandler<T>(grid);
-            clickSelectHandler = new ClickSelectHandler<T>(grid);
+            spaceSelectHandler = new SpaceSelectHandler<>(grid);
+            clickSelectHandler = new ClickSelectHandler<>(grid);
             updateHandlerDeselectAllowed();
         } else {
             spaceSelectHandler.removeHandler();
@@ -86,7 +86,7 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
 
         T removed = getSelectedRow();
         if (selectByHandle(grid.getDataSource().getHandle(row))) {
-            grid.fireEvent(new SelectionEvent<T>(grid, row, removed, false));
+            grid.fireEvent(new SelectionEvent<>(grid, row, removed, false));
 
             return true;
         }
@@ -102,7 +102,7 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
 
         if (isSelected(row)) {
             deselectByHandle(selectedRow);
-            grid.fireEvent(new SelectionEvent<T>(grid, null, row, false));
+            grid.fireEvent(new SelectionEvent<>(grid, null, row, false));
             return true;
         }
 

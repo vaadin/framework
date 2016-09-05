@@ -58,7 +58,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
     /**
      * Custom layout slots containing the components.
      */
-    protected LinkedList<Component> components = new LinkedList<Component>();
+    protected LinkedList<Component> components = new LinkedList<>();
 
     private Alignment defaultComponentAlignment = Alignment.TOP_LEFT;
 

@@ -100,7 +100,7 @@ public class SASSAddonImportFileCreator {
 
             // Sort addon styles so that CSS imports are first and SCSS import
             // last
-            List<String> paths = new ArrayList<String>(addonThemes.keySet());
+            List<String> paths = new ArrayList<>(addonThemes.keySet());
             Collections.sort(paths, new Comparator<String>() {
 
                 @Override
@@ -117,7 +117,7 @@ public class SASSAddonImportFileCreator {
                 }
             });
 
-            List<String> mixins = new ArrayList<String>();
+            List<String> mixins = new ArrayList<>();
             for (String path : paths) {
                 mixins.addAll(
                         addImport(printStream, path, addonThemes.get(path)));
@@ -142,7 +142,7 @@ public class SASSAddonImportFileCreator {
         // Add import comment
         printImportComment(stream, location);
 
-        List<String> foundMixins = new ArrayList<String>();
+        List<String> foundMixins = new ArrayList<>();
 
         if (file.endsWith(".css")) {
             stream.print("@import url(\"../../../" + file + "\");\n");

@@ -344,7 +344,7 @@ public class ListDataSource<T> implements DataSource<T> {
         if (datasource == null) {
             throw new IllegalArgumentException("datasource cannot be null");
         }
-        ds = new ArrayList<T>(datasource);
+        ds = new ArrayList<>(datasource);
         wrapper = new ListWrapper();
     }
 
@@ -358,9 +358,9 @@ public class ListDataSource<T> implements DataSource<T> {
      */
     public ListDataSource(T... rows) {
         if (rows == null) {
-            ds = new ArrayList<T>();
+            ds = new ArrayList<>();
         } else {
-            ds = new ArrayList<T>(Arrays.asList(rows));
+            ds = new ArrayList<>(Arrays.asList(rows));
         }
         wrapper = new ListWrapper();
     }

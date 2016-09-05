@@ -50,7 +50,7 @@ public class ListSorter<T> {
         }
 
         this.grid = grid;
-        comparators = new HashMap<Grid.Column<?, T>, Comparator<?>>();
+        comparators = new HashMap<>();
 
         sortHandlerRegistration = grid.addSortHandler(new SortHandler<T>() {
             @Override

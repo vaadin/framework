@@ -21,7 +21,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Broadcaster {
 
-    private static final List<BroadcastListener> listeners = new CopyOnWriteArrayList<BroadcastListener>();
+    private static final List<BroadcastListener> listeners = new CopyOnWriteArrayList<>();
 
     public static void register(BroadcastListener listener) {
         listeners.add(listener);

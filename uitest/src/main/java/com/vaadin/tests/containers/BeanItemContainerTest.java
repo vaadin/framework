@@ -15,16 +15,16 @@ public class BeanItemContainerTest {
      */
     public static void main(String[] args)
             throws InstantiationException, IllegalAccessException {
-        BeanItemContainer<Hello> c = new BeanItemContainer<Hello>(Hello.class);
+        BeanItemContainer<Hello> c = new BeanItemContainer<>(Hello.class);
         c.addItem(new Hello());
 
-        Collection<Hello> col = new LinkedList<Hello>();
+        Collection<Hello> col = new LinkedList<>();
         for (int i = 0; i < 100; i++) {
             col.add(new Hello());
         }
         col.add(new Hello2());
 
-        c = new BeanItemContainer<Hello>(col);
+        c = new BeanItemContainer<>(col);
 
         System.out.println(c + " contains " + c.size() + " objects");
 

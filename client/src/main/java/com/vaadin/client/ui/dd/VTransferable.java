@@ -30,7 +30,7 @@ public class VTransferable {
 
     private ComponentConnector component;
 
-    private final Map<String, Object> variables = new HashMap<String, Object>();
+    private final Map<String, Object> variables = new HashMap<>();
 
     /**
      * Returns the component from which the transferable is created (eg. a tree

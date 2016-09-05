@@ -79,7 +79,7 @@ public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
 
     @Override
     protected List<Component> createActions() {
-        List<Component> actions = new ArrayList<Component>();
+        List<Component> actions = new ArrayList<>();
         actions.add(createButtonAction("Toggle Enabled",
                 new Command<Upload, Boolean>() {
 

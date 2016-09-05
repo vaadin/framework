@@ -70,7 +70,7 @@ public class ComponentSizeValidator implements Serializable {
                     parent.addError(error);
                 } else {
                     if (errors == null) {
-                        errors = new LinkedList<InvalidLayout>();
+                        errors = new LinkedList<>();
                     }
                     errors.add(error);
                 }
@@ -168,7 +168,7 @@ public class ComponentSizeValidator implements Serializable {
         private final boolean invalidHeight;
         private final boolean invalidWidth;
 
-        private final Vector<InvalidLayout> subErrors = new Vector<InvalidLayout>();
+        private final Vector<InvalidLayout> subErrors = new Vector<>();
 
         public InvalidLayout(Component component, boolean height,
                 boolean width) {
@@ -281,7 +281,7 @@ public class ComponentSizeValidator implements Serializable {
 
     private static Stack<ComponentInfo> getHeightAttributes(
             Component component) {
-        Stack<ComponentInfo> attributes = new Stack<ComponentInfo>();
+        Stack<ComponentInfo> attributes = new Stack<>();
         attributes
                 .add(new ComponentInfo(component, getHeightString(component)));
         Component parent = component.getParent();
@@ -296,7 +296,7 @@ public class ComponentSizeValidator implements Serializable {
 
     private static Stack<ComponentInfo> getWidthAttributes(
             Component component) {
-        Stack<ComponentInfo> attributes = new Stack<ComponentInfo>();
+        Stack<ComponentInfo> attributes = new Stack<>();
         attributes.add(new ComponentInfo(component, getWidthString(component)));
         Component parent = component.getParent();
         attributes.add(new ComponentInfo(parent, getWidthString(parent)));
@@ -581,9 +581,9 @@ public class ComponentSizeValidator implements Serializable {
 
     }
 
-    private static Map<Object, FileLocation> creationLocations = new HashMap<Object, FileLocation>();
-    private static Map<Object, FileLocation> widthLocations = new HashMap<Object, FileLocation>();
-    private static Map<Object, FileLocation> heightLocations = new HashMap<Object, FileLocation>();
+    private static Map<Object, FileLocation> creationLocations = new HashMap<>();
+    private static Map<Object, FileLocation> widthLocations = new HashMap<>();
+    private static Map<Object, FileLocation> heightLocations = new HashMap<>();
 
     public static class FileLocation implements Serializable {
         public String method;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Millionaire extends Person {
-    private List<Address> secondaryResidences = new ArrayList<Address>();
+    private List<Address> secondaryResidences = new ArrayList<>();
 
     public Millionaire() {
     }

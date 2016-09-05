@@ -35,9 +35,9 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
     protected ApplicationConnection client;
 
     /** For internal use only. May be removed or replaced in the future. */
-    protected final ArrayList<String> tabKeys = new ArrayList<String>();
+    protected final ArrayList<String> tabKeys = new ArrayList<>();
     /** For internal use only. May be removed or replaced in the future. */
-    protected Set<String> disabledTabKeys = new HashSet<String>();
+    protected Set<String> disabledTabKeys = new HashSet<>();
 
     /** For internal use only. May be removed or replaced in the future. */
     protected int activeTabIndex = 0;

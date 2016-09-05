@@ -35,7 +35,7 @@ import com.vaadin.ui.Window;
 public class TestSampler extends TabSheet {
     public static final String ICON_URL = "../runo/icons/16/help.png";
 
-    private List<Component> components = new ArrayList<Component>();
+    private List<Component> components = new ArrayList<>();
 
     private ComponentContainer currentTab;
 

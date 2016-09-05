@@ -67,7 +67,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
     }
 
     private void createMenuIconsSizeSelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         options.put("16x16", 16);
         options.put("32x32", 32);
         options.put("64x64", 64);
@@ -75,7 +75,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
     }
 
     private void createMenuItemIconIntervalSelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         options.put("None", 0);
         options.put("All", 1);
         options.put("Every second", 2);
@@ -85,7 +85,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
     }
 
     private void createSubMenuDensitySelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         options.put("All", 1);
         options.put("Every second", 2);
         options.put("Every third", 3);
@@ -95,7 +95,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
     }
 
     private void createSubMenuSeparatorDensitySelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         options.put("No separators", null);
         options.put("Between all", 1);
         options.put("Between every second", 2);
@@ -106,7 +106,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
     }
 
     private void createMenuItemDisabledDensitySelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         options.put("All enabled", null);
         options.put("All disabled", 1);
         options.put("Every second", 2);
@@ -117,7 +117,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
     }
 
     private void createMenuItemInvisibleDensitySelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         options.put("All visible", null);
         options.put("All invisible", 1);
         options.put("Every second", 2);
@@ -128,7 +128,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
     }
 
     private void createMenuItemCheckableDensitySelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         options.put("No items checkable", null);
         options.put("All checkable", 1);
         options.put("Every second", 2);

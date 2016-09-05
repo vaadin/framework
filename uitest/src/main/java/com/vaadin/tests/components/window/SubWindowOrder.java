@@ -16,7 +16,7 @@ import com.vaadin.v7.ui.ComboBox;
 
 public class SubWindowOrder extends TestBase {
 
-    private BeanItemContainer<Window> windowlist = new BeanItemContainer<Window>(
+    private BeanItemContainer<Window> windowlist = new BeanItemContainer<>(
             Window.class);
 
     @Override

@@ -174,7 +174,7 @@ public class AttachDetachListenersTest {
     }
 
     public static <E extends ConnectorEvent> E eventEquals(E expected) {
-        EasyMock.reportMatcher(new EventEquals<E>(expected));
+        EasyMock.reportMatcher(new EventEquals<>(expected));
         return null;
     }
 

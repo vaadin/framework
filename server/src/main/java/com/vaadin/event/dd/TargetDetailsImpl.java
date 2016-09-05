@@ -30,7 +30,7 @@ import com.vaadin.shared.MouseEventDetails;
 @SuppressWarnings("serial")
 public class TargetDetailsImpl implements TargetDetails {
 
-    private HashMap<String, Object> data = new HashMap<String, Object>();
+    private HashMap<String, Object> data = new HashMap<>();
     private DropTarget dropTarget;
 
     protected TargetDetailsImpl(Map<String, Object> rawDropData) {

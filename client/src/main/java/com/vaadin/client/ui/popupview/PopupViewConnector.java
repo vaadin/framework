@@ -40,7 +40,7 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
 
     private boolean centerAfterLayout = false;
 
-    private final List<HandlerRegistration> handlerRegistration = new ArrayList<HandlerRegistration>();
+    private final List<HandlerRegistration> handlerRegistration = new ArrayList<>();
 
     @Override
     protected void init() {

@@ -88,7 +88,7 @@ public class TabIndexes extends AbstractTestUIWithLog {
                 updateCaptions();
             }
         });
-        fields = new ArrayList<Focusable>();
+        fields = new ArrayList<>();
         Table t = new Table();
         t.setSelectable(true);
         t.addContainerProperty("foo", String.class, "bar");

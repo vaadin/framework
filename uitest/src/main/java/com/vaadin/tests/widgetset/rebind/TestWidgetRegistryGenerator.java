@@ -118,7 +118,7 @@ public class TestWidgetRegistryGenerator extends Generator {
 
     private List<JClassType> findTestWidgets(TreeLogger logger,
             TypeOracle typeOracle) {
-        List<JClassType> testWidgetTypes = new ArrayList<JClassType>();
+        List<JClassType> testWidgetTypes = new ArrayList<>();
 
         JClassType[] widgetTypes = typeOracle.findType(Widget.class.getName())
                 .getSubtypes();

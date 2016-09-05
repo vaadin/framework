@@ -26,7 +26,7 @@ public class OrderedLayoutBasics extends TestBase {
 
     String valignName[] = new String[] { "top", "middle", "bottom" };
 
-    Set<AbstractOrderedLayout> layouts = new HashSet<AbstractOrderedLayout>();
+    Set<AbstractOrderedLayout> layouts = new HashSet<>();
     private AbstractOrderedLayout layoutContainer;
     private int suffix = 0;
 

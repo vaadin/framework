@@ -203,7 +203,7 @@ public class JsonDecoder {
         if (jsonMap.getType() == JsonType.ARRAY) {
             JsonArray array = (JsonArray) jsonMap;
             if (array.length() == 0) {
-                return new HashMap<Object, Object>();
+                return new HashMap<>();
             }
         }
 
@@ -228,7 +228,7 @@ public class JsonDecoder {
     private static Map<Object, Object> decodeObjectMap(Type keyType,
             Type valueType, JsonArray jsonValue,
             ApplicationConnection connection) {
-        Map<Object, Object> map = new HashMap<Object, Object>();
+        Map<Object, Object> map = new HashMap<>();
 
         JsonArray keys = jsonValue.get(0);
         JsonArray values = jsonValue.get(1);
@@ -249,7 +249,7 @@ public class JsonDecoder {
 
     private static Map<Object, Object> decodeConnectorMap(Type valueType,
             JsonObject jsonMap, ApplicationConnection connection) {
-        Map<Object, Object> map = new HashMap<Object, Object>();
+        Map<Object, Object> map = new HashMap<>();
 
         ConnectorMap connectorMap = ConnectorMap.get(connection);
 
@@ -264,7 +264,7 @@ public class JsonDecoder {
 
     private static Map<Object, Object> decodeStringMap(Type valueType,
             JsonObject jsonMap, ApplicationConnection connection) {
-        Map<Object, Object> map = new HashMap<Object, Object>();
+        Map<Object, Object> map = new HashMap<>();
 
         for (String key : jsonMap.keys()) {
             Object value = decodeValue(valueType, jsonMap.get(key), null,
@@ -277,7 +277,7 @@ public class JsonDecoder {
 
     private static List<Object> decodeList(Type type, JsonArray jsonArray,
             ApplicationConnection connection) {
-        List<Object> tokens = new ArrayList<Object>();
+        List<Object> tokens = new ArrayList<>();
         decodeIntoCollection(type.getParameterTypes()[0], jsonArray, connection,
                 tokens);
         return tokens;
@@ -285,7 +285,7 @@ public class JsonDecoder {
 
     private static Set<Object> decodeSet(Type type, JsonArray jsonArray,
             ApplicationConnection connection) {
-        Set<Object> tokens = new HashSet<Object>();
+        Set<Object> tokens = new HashSet<>();
         decodeIntoCollection(type.getParameterTypes()[0], jsonArray, connection,
                 tokens);
         return tokens;

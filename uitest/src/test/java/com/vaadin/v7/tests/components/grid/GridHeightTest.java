@@ -67,7 +67,7 @@ public class GridHeightTest extends MultiBrowserTest {
 
     private Map<AssertionError, Object[]> testGridHeightAndResizing(
             Object gridHeight) throws InterruptedException {
-        Map<AssertionError, Object[]> errors = new HashMap<AssertionError, Object[]>();
+        Map<AssertionError, Object[]> errors = new HashMap<>();
         String caption;
         if (GridHeight.ROW3.equals(gridHeight)) {
             caption = gridHeight + " rows";

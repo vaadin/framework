@@ -55,7 +55,7 @@ import com.vaadin.ui.declarative.converters.DesignToStringConverter;
  */
 public class DesignFormatter implements Serializable {
 
-    private final Map<Class<?>, Converter<String, ?>> converterMap = new ConcurrentHashMap<Class<?>, Converter<String, ?>>();
+    private final Map<Class<?>, Converter<String, ?>> converterMap = new ConcurrentHashMap<>();
     private final Converter<String, Object> stringObjectConverter = new DesignObjectConverter();
 
     /**

@@ -48,7 +48,7 @@ public class JSONSerializerTest {
     public void testStringToBeanMapSerialization() throws Exception {
         Type mapType = getClass().getDeclaredField("stringToStateMap")
                 .getGenericType();
-        stringToStateMap = new HashMap<String, AbstractSplitPanelState>();
+        stringToStateMap = new HashMap<>();
         AbstractSplitPanelState s = new AbstractSplitPanelState();
         AbstractSplitPanelState s2 = new AbstractSplitPanelState();
         s.caption = "State 1";
@@ -69,7 +69,7 @@ public class JSONSerializerTest {
     public void testBeanToStringMapSerialization() throws Exception {
         Type mapType = getClass().getDeclaredField("stateToStringMap")
                 .getGenericType();
-        stateToStringMap = new HashMap<AbstractSplitPanelState, String>();
+        stateToStringMap = new HashMap<>();
         AbstractSplitPanelState s = new AbstractSplitPanelState();
         AbstractSplitPanelState s2 = new AbstractSplitPanelState();
         s.caption = "State 1";

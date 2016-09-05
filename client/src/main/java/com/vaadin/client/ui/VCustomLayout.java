@@ -50,13 +50,13 @@ public class VCustomLayout extends ComplexPanel {
     public static final String CLASSNAME = "v-customlayout";
 
     /** Location-name to containing element in DOM map */
-    private final HashMap<String, Element> locationToElement = new HashMap<String, Element>();
+    private final HashMap<String, Element> locationToElement = new HashMap<>();
 
     /** Location-name to contained widget map */
-    final HashMap<String, Widget> locationToWidget = new HashMap<String, Widget>();
+    final HashMap<String, Widget> locationToWidget = new HashMap<>();
 
     /** Widget to captionwrapper map */
-    private final HashMap<Widget, VCaptionWrapper> childWidgetToCaptionWrapper = new HashMap<Widget, VCaptionWrapper>();
+    private final HashMap<Widget, VCaptionWrapper> childWidgetToCaptionWrapper = new HashMap<>();
 
     /**
      * Unexecuted scripts loaded from the template.

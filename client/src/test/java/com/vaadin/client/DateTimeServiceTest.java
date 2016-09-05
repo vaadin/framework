@@ -12,7 +12,7 @@ public class DateTimeServiceTest {
 
     final long MILLISECONDS_PER_DAY = 24 * 3600 * 1000;
 
-    static Map<Date, Integer> isoWeekNumbers = new HashMap<Date, Integer>();
+    static Map<Date, Integer> isoWeekNumbers = new HashMap<>();
     static {
         isoWeekNumbers.put(getDate(2005, 02, 02), 5);
 

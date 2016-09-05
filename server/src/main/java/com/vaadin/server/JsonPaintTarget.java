@@ -65,7 +65,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     private int changes = 0;
 
-    private final Set<Object> usedResources = new HashSet<Object>();
+    private final Set<Object> usedResources = new HashSet<>();
 
     private boolean customLayoutArgumentsOpen = false;
 
@@ -73,7 +73,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     private boolean cacheEnabled = false;
 
-    private final Set<Class<? extends ClientConnector>> usedClientConnectors = new HashSet<Class<? extends ClientConnector>>();
+    private final Set<Class<? extends ClientConnector>> usedClientConnectors = new HashSet<>();
 
     /**
      * Creates a new JsonPaintTarget.
@@ -96,11 +96,11 @@ public class JsonPaintTarget implements PaintTarget {
         uidlBuffer = new PrintWriter(outWriter);
 
         // Initialize tag-writing
-        mOpenTags = new Stack<String>();
-        openJsonTags = new Stack<JsonTag>();
+        mOpenTags = new Stack<>();
+        openJsonTags = new Stack<>();
 
-        openPaintables = new Stack<ClientConnector>();
-        openPaintableTags = new Stack<String>();
+        openPaintables = new Stack<>();
+        openPaintableTags = new Stack<>();
 
         cacheEnabled = cachingRequired;
     }
@@ -728,11 +728,11 @@ public class JsonPaintTarget implements PaintTarget {
     class JsonTag implements Serializable {
         boolean firstField = false;
 
-        Vector<Object> variables = new Vector<Object>();
+        Vector<Object> variables = new Vector<>();
 
-        Vector<Object> children = new Vector<Object>();
+        Vector<Object> children = new Vector<>();
 
-        Vector<Object> attr = new Vector<Object>();
+        Vector<Object> attr = new Vector<>();
 
         StringBuilder data = new StringBuilder();
 

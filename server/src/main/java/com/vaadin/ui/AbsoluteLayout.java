@@ -63,7 +63,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
     };
     // Maps each component to a position
-    private LinkedHashMap<Component, ComponentPosition> componentToCoordinates = new LinkedHashMap<Component, ComponentPosition>();
+    private LinkedHashMap<Component, ComponentPosition> componentToCoordinates = new LinkedHashMap<>();
 
     /**
      * Creates an AbsoluteLayout with full size.
@@ -191,7 +191,7 @@ public class AbsoluteLayout extends AbstractLayout
         // Map<Connector,String> was supported. We cannot get the child
         // connectorId unless the component is attached to the application so
         // the String->String map cannot be populated in internal* either.
-        Map<String, String> connectorToPosition = new HashMap<String, String>();
+        Map<String, String> connectorToPosition = new HashMap<>();
         for (Iterator<Component> ci = getComponentIterator(); ci.hasNext();) {
             Component c = ci.next();
             connectorToPosition.put(c.getConnectorId(),

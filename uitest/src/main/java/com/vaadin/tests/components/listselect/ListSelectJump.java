@@ -22,7 +22,7 @@ public class ListSelectJump extends AbstractTestUI {
                         + "<li>Leave the Option #10 visible in the scroll window</li><li>Press the button</li></ol>"
                         + "You will see the <code>ListSelect</code> scroll window jump back to the top.",
                 ContentMode.HTML));
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         for (int i = 1; i <= 25; i++) {
             list.add("Option #" + i);
         }

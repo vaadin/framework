@@ -60,7 +60,7 @@ public class PushErrorHandling extends AbstractTestUI {
                         AbstractInMemoryContainer.class) {
                     @Override
                     public Collection<String> getContainerPropertyIds() {
-                        List<String> cpropIds = new ArrayList<String>(
+                        List<String> cpropIds = new ArrayList<>(
                                 super.getContainerPropertyIds());
                         cpropIds.add("testid");
                         return cpropIds;

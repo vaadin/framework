@@ -34,7 +34,7 @@ public class MySelectionModelConnector extends MultiSelectionModelConnector {
     @Override
     protected void extend(ServerConnector target) {
         super.extend(target);
-        handler = new ClickSelectHandler<JsonObject>(getGrid());
+        handler = new ClickSelectHandler<>(getGrid());
     }
 
     @Override

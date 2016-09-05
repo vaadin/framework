@@ -67,7 +67,7 @@ public class TB3TestLocator {
      */
     protected <T> List<Class<? extends T>> findClasses(Class<T> baseClass,
             String basePackage, String[] ignoredPackages) throws IOException {
-        List<Class<? extends T>> classes = new ArrayList<Class<? extends T>>();
+        List<Class<? extends T>> classes = new ArrayList<>();
         String basePackageDirName = "/" + basePackage.replace('.', '/');
         URL location = baseClass.getResource(basePackageDirName);
         if (location.getProtocol().equals("file")) {

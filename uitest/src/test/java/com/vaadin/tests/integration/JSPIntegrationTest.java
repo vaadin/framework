@@ -57,8 +57,8 @@ public class JSPIntegrationTest extends PrivateTB3Configuration {
         // Should now have two services with 2 + 1 UIs
         List<UIData> threeUIs = getUIs();
         assertEquals(3, threeUIs.size());
-        Set<String> serviceNames = new HashSet<String>();
-        Set<Integer> uiIds = new HashSet<Integer>();
+        Set<String> serviceNames = new HashSet<>();
+        Set<Integer> uiIds = new HashSet<>();
         for (UIData uiData : threeUIs) {
             serviceNames.add(uiData.serviceName);
             uiIds.add(uiData.uiId);
@@ -76,7 +76,7 @@ public class JSPIntegrationTest extends PrivateTB3Configuration {
     }
 
     private List<UIData> getUIs() {
-        List<UIData> uis = new ArrayList<UIData>();
+        List<UIData> uis = new ArrayList<>();
 
         getDriver().get(jspUrl);
         List<WebElement> rows = getDriver()

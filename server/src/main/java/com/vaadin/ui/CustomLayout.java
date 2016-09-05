@@ -67,7 +67,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
     /**
      * Custom layout slots containing the components.
      */
-    private final HashMap<String, Component> slots = new HashMap<String, Component>();
+    private final HashMap<String, Component> slots = new HashMap<>();
 
     /**
      * Default constructor only used by subclasses. Subclasses are responsible

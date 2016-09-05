@@ -20,7 +20,7 @@ public class PopupDateFieldTest extends DateFieldTest<PopupDateField> {
     }
 
     private void createInputPromptSelectAction(String category) {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         options.put("<none>", null);
         options.put("Please enter date", "Please enter date");
         options.put("åäöÅÄÖ", "åäöÅÄÖ");

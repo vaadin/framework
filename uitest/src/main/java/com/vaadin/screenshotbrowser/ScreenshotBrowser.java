@@ -385,7 +385,7 @@ public class ScreenshotBrowser extends UI {
             }
         });
 
-        BeanItemContainer<ComparisonFailure> container = new BeanItemContainer<ComparisonFailure>(
+        BeanItemContainer<ComparisonFailure> container = new BeanItemContainer<>(
                 ComparisonFailure.class);
         for (File failure : failures) {
             container.addBean(new ComparisonFailure(failure));

@@ -217,7 +217,7 @@ public class DevelopmentServerLauncher {
                 interval = Integer.parseInt(serverArgs.get("scaninterval"));
             }
 
-            List<File> classFolders = new ArrayList<File>();
+            List<File> classFolders = new ArrayList<>();
             String[] paths = serverArgs.get("autoreload").split(",");
             if (paths.length == 1 && "all".equals(paths[0])) {
                 ClassLoader cl = server.getClass().getClassLoader();
@@ -370,7 +370,7 @@ public class DevelopmentServerLauncher {
      * @return map of arguments key value pairs.
      */
     protected static Map<String, String> parseArguments(String[] args) {
-        final Map<String, String> map = new HashMap<String, String>();
+        final Map<String, String> map = new HashMap<>();
         for (int i = 0; i < args.length; i++) {
             final int d = args[i].indexOf("=");
             if (d > 0 && d < args[i].length() && args[i].startsWith("--")) {

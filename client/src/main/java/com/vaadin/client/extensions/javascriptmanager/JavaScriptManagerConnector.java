@@ -34,7 +34,7 @@ import com.vaadin.ui.JavaScript;
 
 @Connect(JavaScript.class)
 public class JavaScriptManagerConnector extends AbstractExtensionConnector {
-    private Set<String> currentNames = new HashSet<String>();
+    private Set<String> currentNames = new HashSet<>();
 
     @Override
     protected void init() {
@@ -59,7 +59,7 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
             removeCallback(name);
         }
 
-        currentNames = new HashSet<String>(newNames);
+        currentNames = new HashSet<>(newNames);
         for (String name : newNames) {
             addCallback(name);
         }

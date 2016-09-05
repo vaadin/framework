@@ -209,7 +209,7 @@ public abstract class VaadinService implements Serializable {
      */
     protected List<RequestHandler> createRequestHandlers()
             throws ServiceException {
-        ArrayList<RequestHandler> handlers = new ArrayList<RequestHandler>();
+        ArrayList<RequestHandler> handlers = new ArrayList<>();
         handlers.add(new SessionRequestHandler());
         handlers.add(new PublishedFileHandler());
         handlers.add(new HeartbeatHandler());
@@ -466,7 +466,7 @@ public abstract class VaadinService implements Serializable {
                 if (session.getState() == State.OPEN) {
                     closeSession(session);
                 }
-                ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
+                ArrayList<UI> uis = new ArrayList<>(session.getUIs());
                 for (final UI ui : uis) {
                     ui.accessSynchronously(new Runnable() {
                         @Override
@@ -1050,7 +1050,7 @@ public abstract class VaadinService implements Serializable {
         // Stores all attributes (security key, reference to this context
         // instance) so they can be added to the new session
         Set<String> attributeNames = oldSession.getAttributeNames();
-        HashMap<String, Object> attrs = new HashMap<String, Object>(
+        HashMap<String, Object> attrs = new HashMap<>(
                 attributeNames.size() * 2);
         for (String name : attributeNames) {
             Object value = oldSession.getAttribute(name);
@@ -1190,7 +1190,7 @@ public abstract class VaadinService implements Serializable {
      * @param session
      */
     private void removeClosedUIs(final VaadinSession session) {
-        ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
+        ArrayList<UI> uis = new ArrayList<>(session.getUIs());
         for (final UI ui : uis) {
             if (ui.isClosing()) {
                 ui.accessSynchronously(new Runnable() {

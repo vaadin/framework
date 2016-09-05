@@ -97,7 +97,7 @@ public class GridHeaderFormatChange extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        BeanItemContainer<Person> datasource = new BeanItemContainer<Person>(
+        BeanItemContainer<Person> datasource = new BeanItemContainer<>(
                 Person.class);
         final Grid grid;
 

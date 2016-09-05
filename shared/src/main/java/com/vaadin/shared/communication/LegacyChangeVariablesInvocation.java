@@ -21,7 +21,7 @@ import java.util.Map;
 import com.vaadin.shared.ApplicationConstants;
 
 public class LegacyChangeVariablesInvocation extends MethodInvocation {
-    private Map<String, Object> variableChanges = new HashMap<String, Object>();
+    private Map<String, Object> variableChanges = new HashMap<>();
 
     public LegacyChangeVariablesInvocation(String connectorId,
             String variableName, Object value) {

@@ -35,7 +35,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
     protected static final ThemeResource ICON_64_EMAIL_REPLY_PNG_UNCACHEABLE = uncacheableThemeResource(
             "../runo/icons/64/email-reply.png");
 
-    private List<T> testComponents = new ArrayList<T>();
+    private List<T> testComponents = new ArrayList<>();
 
     abstract protected Class<T> getTestClass();
 

@@ -102,7 +102,7 @@ public class GridClientDataSourcesWidget
 
             private List<String[]> fetchRows(int firstRowIndex,
                     int numberOfRows) {
-                List<String[]> rows = new ArrayList<String[]>();
+                List<String[]> rows = new ArrayList<>();
                 for (int i = 0; i < numberOfRows; i++) {
                     String id = String.valueOf(firstRowIndex + i);
                     rows.add(new String[] { id,

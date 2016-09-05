@@ -67,21 +67,21 @@ import elemental.json.JsonObject;
  */
 public class ConnectorTracker implements Serializable {
 
-    private final HashMap<String, ClientConnector> connectorIdToConnector = new HashMap<String, ClientConnector>();
-    private Set<ClientConnector> dirtyConnectors = new HashSet<ClientConnector>();
-    private Set<ClientConnector> uninitializedConnectors = new HashSet<ClientConnector>();
+    private final HashMap<String, ClientConnector> connectorIdToConnector = new HashMap<>();
+    private Set<ClientConnector> dirtyConnectors = new HashSet<>();
+    private Set<ClientConnector> uninitializedConnectors = new HashSet<>();
 
     /**
      * Connectors that have been unregistered and should be cleaned up the next
      * time {@link #cleanConnectorMap()} is invoked unless they have been
      * registered again.
      */
-    private final Set<ClientConnector> unregisteredConnectors = new HashSet<ClientConnector>();
+    private final Set<ClientConnector> unregisteredConnectors = new HashSet<>();
 
     private boolean writingResponse = false;
 
     private UI uI;
-    private transient Map<ClientConnector, JsonObject> diffStates = new HashMap<ClientConnector, JsonObject>();
+    private transient Map<ClientConnector, JsonObject> diffStates = new HashMap<>();
 
     /** Maps connectorIds to a map of named StreamVariables */
     private Map<String, Map<String, StreamVariable>> pidToNameToStreamVariable;
@@ -96,7 +96,7 @@ public class ConnectorTracker implements Serializable {
      * @see #getCurrentSyncId()
      * @see #cleanConcurrentlyRemovedConnectorIds(long)
      */
-    private TreeMap<Integer, Set<String>> syncIdToUnregisteredConnectorIds = new TreeMap<Integer, Set<String>>();
+    private TreeMap<Integer, Set<String>> syncIdToUnregisteredConnectorIds = new TreeMap<>();
 
     /**
      * Gets a logger for this class
@@ -185,7 +185,7 @@ public class ConnectorTracker implements Serializable {
         Set<String> unregisteredConnectorIds = syncIdToUnregisteredConnectorIds
                 .get(currentSyncId);
         if (unregisteredConnectorIds == null) {
-            unregisteredConnectorIds = new HashSet<String>();
+            unregisteredConnectorIds = new HashSet<>();
             syncIdToUnregisteredConnectorIds.put(currentSyncId,
                     unregisteredConnectorIds);
         }
@@ -438,10 +438,10 @@ public class ConnectorTracker implements Serializable {
     private boolean isHierarchyComplete() {
         boolean noErrors = true;
 
-        Set<ClientConnector> danglingConnectors = new HashSet<ClientConnector>(
+        Set<ClientConnector> danglingConnectors = new HashSet<>(
                 connectorIdToConnector.values());
 
-        LinkedList<ClientConnector> stack = new LinkedList<ClientConnector>();
+        LinkedList<ClientConnector> stack = new LinkedList<>();
         stack.add(uI);
         while (!stack.isEmpty()) {
             ClientConnector connector = stack.pop();
@@ -623,7 +623,7 @@ public class ConnectorTracker implements Serializable {
      */
     public ArrayList<ClientConnector> getDirtyVisibleConnectors() {
         Collection<ClientConnector> dirtyConnectors = getDirtyConnectors();
-        ArrayList<ClientConnector> dirtyVisibleConnectors = new ArrayList<ClientConnector>(
+        ArrayList<ClientConnector> dirtyVisibleConnectors = new ArrayList<>(
                 dirtyConnectors.size());
         for (ClientConnector c : dirtyConnectors) {
             if (LegacyCommunicationManager.isConnectorVisibleToClient(c)) {
@@ -706,7 +706,7 @@ public class ConnectorTracker implements Serializable {
         out.defaultWriteObject();
         // Convert JsonObjects in diff state to String representation as
         // JsonObject is not serializable
-        HashMap<ClientConnector, String> stringDiffStates = new HashMap<ClientConnector, String>(
+        HashMap<ClientConnector, String> stringDiffStates = new HashMap<>(
                 diffStates.size() * 2);
         for (ClientConnector key : diffStates.keySet()) {
             stringDiffStates.put(key, diffStates.get(key).toString());
@@ -721,11 +721,11 @@ public class ConnectorTracker implements Serializable {
 
         // Read String versions of JsonObjects and parse into JsonObjects as
         // JsonObject is not serializable
-        diffStates = new HashMap<ClientConnector, JsonObject>();
+        diffStates = new HashMap<>();
         @SuppressWarnings("unchecked")
         HashMap<ClientConnector, String> stringDiffStates = (HashMap<ClientConnector, String>) in
                 .readObject();
-        diffStates = new HashMap<ClientConnector, JsonObject>(
+        diffStates = new HashMap<>(
                 stringDiffStates.size() * 2);
         for (ClientConnector key : stringDiffStates.keySet()) {
             try {
@@ -770,18 +770,18 @@ public class ConnectorTracker implements Serializable {
             StreamVariable variable) {
         assert getConnector(connectorId) != null;
         if (pidToNameToStreamVariable == null) {
-            pidToNameToStreamVariable = new HashMap<String, Map<String, StreamVariable>>();
+            pidToNameToStreamVariable = new HashMap<>();
         }
         Map<String, StreamVariable> nameToStreamVariable = pidToNameToStreamVariable
                 .get(connectorId);
         if (nameToStreamVariable == null) {
-            nameToStreamVariable = new HashMap<String, StreamVariable>();
+            nameToStreamVariable = new HashMap<>();
             pidToNameToStreamVariable.put(connectorId, nameToStreamVariable);
         }
         nameToStreamVariable.put(variableName, variable);
 
         if (streamVariableToSeckey == null) {
-            streamVariableToSeckey = new HashMap<StreamVariable, String>();
+            streamVariableToSeckey = new HashMap<>();
         }
         String seckey = streamVariableToSeckey.get(variable);
         if (seckey == null) {

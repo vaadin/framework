@@ -56,7 +56,7 @@ public class FetchReleaseNotesAuthors {
                 new InputStreamReader(p.getInputStream()));
         String line = "";
 
-        List<String> authors = new ArrayList<String>();
+        List<String> authors = new ArrayList<>();
         while ((line = b.readLine()) != null) {
             String author = line;
             if (authorMap.containsKey(author)) {

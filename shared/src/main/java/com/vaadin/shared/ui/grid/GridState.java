@@ -102,7 +102,7 @@ public class GridState extends TabIndexState {
     /**
      * Column order in grid.
      */
-    public List<String> columnOrder = new ArrayList<String>();
+    public List<String> columnOrder = new ArrayList<>();
 
     /** The number of frozen columns. */
     @DelegateToWidget

@@ -28,7 +28,7 @@ public class IntegerTextFieldDataSource extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         final MyBean myBean = new MyBean();
-        BeanItem<MyBean> beanItem = new BeanItem<MyBean>(myBean);
+        BeanItem<MyBean> beanItem = new BeanItem<>(myBean);
 
         final Property<Integer> integerProperty = beanItem
                 .getItemProperty("value");

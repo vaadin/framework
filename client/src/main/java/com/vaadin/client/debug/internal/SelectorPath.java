@@ -38,8 +38,8 @@ public class SelectorPath {
     private final String path;
     private final Element element;
     private final ComponentLocator locator;
-    private static Map<String, Integer> counter = new HashMap<String, Integer>();
-    private static Map<String, String> legacyNames = new HashMap<String, String>();
+    private static Map<String, Integer> counter = new HashMap<>();
+    private static Map<String, String> legacyNames = new HashMap<>();
 
     static {
         legacyNames.put("FilterSelect", "ComboBox");

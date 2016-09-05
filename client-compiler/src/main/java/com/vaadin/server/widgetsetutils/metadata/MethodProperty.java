@@ -48,9 +48,9 @@ public class MethodProperty extends Property {
     }
 
     public static Collection<MethodProperty> findProperties(JClassType type) {
-        Collection<MethodProperty> properties = new ArrayList<MethodProperty>();
+        Collection<MethodProperty> properties = new ArrayList<>();
 
-        Set<String> getters = new HashSet<String>();
+        Set<String> getters = new HashSet<>();
         List<JMethod> setters = getSetters(type, getters);
         for (JMethod setter : setters) {
             String getter = findGetter(type, setter);
@@ -72,7 +72,7 @@ public class MethodProperty extends Property {
      */
     private static List<JMethod> getSetters(JClassType beanType,
             Set<String> getters) {
-        List<JMethod> setterMethods = new ArrayList<JMethod>();
+        List<JMethod> setterMethods = new ArrayList<>();
 
         while (beanType != null && !beanType.getQualifiedSourceName()
                 .equals(Object.class.getName())) {

@@ -15,7 +15,7 @@ public class HeaderRightClickAfterDrag extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         Table table = new Table();
         table.setContainerDataSource(
-                new BeanItemContainer<TestBean>(TestBean.class));
+                new BeanItemContainer<>(TestBean.class));
         for (int i = 0; i < 10; i++) {
             table.addItem(new TestBean(i));
         }

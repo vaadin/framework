@@ -78,7 +78,7 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
     }
 
     public static Collection<Param> parameters() {
-        List<Param> data = new ArrayList<Param>();
+        List<Param> data = new ArrayList<>();
 
         int[] params = new int[] { 0, 500, 999 };
 

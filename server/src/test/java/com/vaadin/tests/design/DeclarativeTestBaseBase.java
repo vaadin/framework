@@ -136,7 +136,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
     }
 
     private List<EqualsAsserter<Object>> getComparators(Object o1) {
-        List<EqualsAsserter<Object>> result = new ArrayList<EqualsAsserter<Object>>();
+        List<EqualsAsserter<Object>> result = new ArrayList<>();
         getComparators(o1.getClass(), result);
         return result;
     }
@@ -169,7 +169,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
     }
 
     public static class TestLogHandler {
-        final List<String> messages = new ArrayList<String>();
+        final List<String> messages = new ArrayList<>();
         Handler handler = new Handler() {
             @Override
             public void publish(LogRecord record) {
@@ -258,8 +258,8 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
      * include close tags
      */
     private String elementToHtml(Element producedElem, StringBuilder sb) {
-        HashSet<String> booleanAttributes = new HashSet<String>();
-        ArrayList<String> names = new ArrayList<String>();
+        HashSet<String> booleanAttributes = new HashSet<>();
+        ArrayList<String> names = new ArrayList<>();
         for (Attribute a : producedElem.attributes().asList()) {
             names.add(a.getKey());
             if (a instanceof BooleanAttribute) {

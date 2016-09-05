@@ -18,7 +18,7 @@ public class MockDeploymentConfiguration
     private boolean closeIdleSessions = false;
     private PushMode pushMode = PushMode.DISABLED;
     private Properties initParameters = new Properties();
-    private Map<String, String> applicationOrSystemProperty = new HashMap<String, String>();
+    private Map<String, String> applicationOrSystemProperty = new HashMap<>();
     private boolean syncIdCheckEnabled = true;
     private boolean sendUrlsAsParameters = true;
 

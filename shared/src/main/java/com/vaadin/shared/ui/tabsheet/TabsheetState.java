@@ -36,7 +36,7 @@ public class TabsheetState extends AbstractComponentState {
     @NoLayout
     public int tabIndex;
 
-    public List<TabState> tabs = new ArrayList<TabState>();
+    public List<TabState> tabs = new ArrayList<>();
 
     /** true to show the tab bar, false to only show the contained component */
     public boolean tabsVisible = true;

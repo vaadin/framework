@@ -37,7 +37,7 @@ public class GridDataSourceReset extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         persons = createPersons(10, new Random(1));
-        container = new BeanItemContainer<ComplexPerson>(ComplexPerson.class,
+        container = new BeanItemContainer<>(ComplexPerson.class,
                 persons);
 
         grid = new Grid(container);
@@ -57,7 +57,7 @@ public class GridDataSourceReset extends AbstractTestUI {
     }
 
     public static List<ComplexPerson> createPersons(int count, Random r) {
-        List<ComplexPerson> c = new ArrayList<ComplexPerson>();
+        List<ComplexPerson> c = new ArrayList<>();
         for (int i = 0; i < count; ++i) {
             c.add(ComplexPerson.create(r));
         }

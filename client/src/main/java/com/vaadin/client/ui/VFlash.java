@@ -32,7 +32,7 @@ public class VFlash extends HTML {
     protected String codetype;
     protected String standby;
     protected String archive;
-    protected Map<String, String> embedParams = new HashMap<String, String>();
+    protected Map<String, String> embedParams = new HashMap<>();
     protected boolean needsRebuild = false;
     protected String width;
     protected String height;
@@ -131,7 +131,7 @@ public class VFlash extends HTML {
         }
 
         if (!embedParams.equals(params)) {
-            embedParams = new HashMap<String, String>(params);
+            embedParams = new HashMap<>(params);
             needsRebuild = true;
         }
     }

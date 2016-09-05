@@ -106,12 +106,12 @@ public class TabSheet extends AbstractComponentContainer
      * there is a {@link Tab} object in tabs for each tab with meta-data about
      * the tab.
      */
-    private final ArrayList<Component> components = new ArrayList<Component>();
+    private final ArrayList<Component> components = new ArrayList<>();
 
     /**
      * Map containing information related to the tabs (caption, icon etc).
      */
-    private final HashMap<Component, Tab> tabs = new HashMap<Component, Tab>();
+    private final HashMap<Component, Tab> tabs = new HashMap<>();
 
     /**
      * Selected tab content component.
@@ -122,7 +122,7 @@ public class TabSheet extends AbstractComponentContainer
      * Mapper between server-side component instances (tab contents) and keys
      * given to the client that identify tabs.
      */
-    private final KeyMapper<Component> keyMapper = new KeyMapper<Component>();
+    private final KeyMapper<Component> keyMapper = new KeyMapper<>();
 
     /**
      * Handler to be called when a tab is closed.

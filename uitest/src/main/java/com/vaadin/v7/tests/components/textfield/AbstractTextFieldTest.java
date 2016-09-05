@@ -128,7 +128,7 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
     }
 
     private void createNullRepresentationAction(String category) {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         options.put("-", null);
         options.put("null", "null");
         options.put("This is empty", "This is empty");
@@ -169,7 +169,7 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
     }
 
     private void createSelectionRangeAction(String category) {
-        List<Range> options = new ArrayList<Range>();
+        List<Range> options = new ArrayList<>();
         options.add(new Range(0, 10));
         options.add(new Range(0, 1));
         options.add(new Range(0, 2));
@@ -198,7 +198,7 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
     }
 
     private void createTextChangeEventTimeoutAction(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         options.put("0", 0);
         options.put("100ms", 100);
         options.put("500ms", 500);
@@ -211,7 +211,7 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
     }
 
     private void createTextChangeEventModeAction(String category) {
-        LinkedHashMap<String, TextChangeEventMode> options = new LinkedHashMap<String, AbstractTextField.TextChangeEventMode>();
+        LinkedHashMap<String, TextChangeEventMode> options = new LinkedHashMap<>();
         for (TextChangeEventMode m : TextChangeEventMode.values()) {
             options.put(m.toString(), m);
         }
@@ -234,7 +234,7 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
     }
 
     private void createInputPromptAction(String category) {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         options.put("-", null);
         options.put("Enter a value", "Enter a value");
         options.put("- Click here -", "- Click here -");

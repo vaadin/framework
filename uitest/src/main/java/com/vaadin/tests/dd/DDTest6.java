@@ -79,7 +79,7 @@ public class DDTest6 extends TestBase {
         tree1 = new Tree("Volume 1");
         tree1.setImmediate(true);
 
-        fs1 = new BeanItemContainer<File>(File.class);
+        fs1 = new BeanItemContainer<>(File.class);
         tree1.setContainerDataSource(fs1);
         for (int i = 0; i < files.length; i++) {
             fs1.addBean(files[i]);
@@ -297,7 +297,7 @@ public class DDTest6 extends TestBase {
 
     static class FolderView extends DragAndDropWrapper implements DropHandler {
 
-        static final HashMap<Folder, FolderView> views = new HashMap<Folder, FolderView>();
+        static final HashMap<Folder, FolderView> views = new HashMap<>();
 
         public static FolderView get(Folder f) {
 
@@ -342,7 +342,7 @@ public class DDTest6 extends TestBase {
                 // make modifiable
                 children = new HashSet<Object>(children);
             }
-            Set<Component> removed = new HashSet<Component>();
+            Set<Component> removed = new HashSet<>();
             for (Iterator<Component> componentIterator = l
                     .getComponentIterator(); componentIterator.hasNext();) {
                 FileIcon next = (FileIcon) componentIterator.next();

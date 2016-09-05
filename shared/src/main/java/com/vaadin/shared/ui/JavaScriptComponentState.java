@@ -27,8 +27,8 @@ import com.vaadin.shared.JavaScriptConnectorState;
 public class JavaScriptComponentState extends AbstractComponentState
         implements JavaScriptConnectorState {
 
-    private Set<String> callbackNames = new HashSet<String>();
-    private Map<String, Set<String>> rpcInterfaces = new HashMap<String, Set<String>>();
+    private Set<String> callbackNames = new HashSet<>();
+    private Map<String, Set<String>> rpcInterfaces = new HashMap<>();
 
     @Override
     public Set<String> getCallbackNames() {

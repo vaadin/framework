@@ -228,7 +228,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         }
     };
 
-    private Map<Object, Panel> detailsMap = new HashMap<Object, Panel>();
+    private Map<Object, Panel> detailsMap = new HashMap<>();
 
     private final DetailsGenerator persistingDetailsGenerator = new DetailsGenerator() {
 
@@ -474,7 +474,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
     protected void createGridActions() {
 
-        LinkedHashMap<String, String> primaryStyleNames = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> primaryStyleNames = new LinkedHashMap<>();
         primaryStyleNames.put("v-grid", "v-grid");
         primaryStyleNames.put("v-escalator", "v-escalator");
         primaryStyleNames.put("my-grid", "my-grid");
@@ -489,7 +489,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 }, primaryStyleNames.get("v-grid"));
 
-        LinkedHashMap<String, SelectionMode> selectionModes = new LinkedHashMap<String, Grid.SelectionMode>();
+        LinkedHashMap<String, SelectionMode> selectionModes = new LinkedHashMap<>();
         selectionModes.put("single", SelectionMode.SINGLE);
         selectionModes.put("multi", SelectionMode.MULTI);
         selectionModes.put("none", SelectionMode.NONE);
@@ -511,7 +511,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
 
-        LinkedHashMap<String, Integer> selectionLimits = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> selectionLimits = new LinkedHashMap<>();
         selectionLimits.put("2", Integer.valueOf(2));
         selectionLimits.put("1000", Integer.valueOf(1000));
         selectionLimits.put("Integer.MAX_VALUE",
@@ -530,7 +530,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
 
-        LinkedHashMap<String, List<SortOrder>> sortableProperties = new LinkedHashMap<String, List<SortOrder>>();
+        LinkedHashMap<String, List<SortOrder>> sortableProperties = new LinkedHashMap<>();
         for (Object propertyId : ds.getSortableContainerPropertyIds()) {
             sortableProperties.put(propertyId + ", ASC",
                     Sort.by(propertyId).build());
@@ -551,7 +551,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                     @Override
                     public void execute(Grid c, Boolean value, Object data) {
-                        List<Object> ids = new ArrayList<Object>();
+                        List<Object> ids = new ArrayList<>();
                         ids.addAll(ds.getContainerPropertyIds());
                         if (!value) {
                             c.setColumnOrder(ids.toArray());
@@ -565,8 +565,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
 
-        LinkedHashMap<String, CellStyleGenerator> cellStyleGenerators = new LinkedHashMap<String, CellStyleGenerator>();
-        LinkedHashMap<String, RowStyleGenerator> rowStyleGenerators = new LinkedHashMap<String, RowStyleGenerator>();
+        LinkedHashMap<String, CellStyleGenerator> cellStyleGenerators = new LinkedHashMap<>();
+        LinkedHashMap<String, RowStyleGenerator> rowStyleGenerators = new LinkedHashMap<>();
         rowStyleGenerators.put(ROW_STYLE_GENERATOR_NONE, null);
         rowStyleGenerators.put(ROW_STYLE_GENERATOR_ROW_NUMBERS,
                 new RowStyleGenerator() {
@@ -684,7 +684,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
 
-        LinkedHashMap<String, Integer> frozenOptions = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> frozenOptions = new LinkedHashMap<>();
         for (int i = -1; i <= COLUMNS; i++) {
             frozenOptions.put(String.valueOf(i), Integer.valueOf(i));
         }
@@ -701,7 +701,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
 
-        LinkedHashMap<String, Integer> containerDelayValues = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> containerDelayValues = new LinkedHashMap<>();
         for (int delay : new int[] { 0, 500, 2000, 10000 }) {
             containerDelayValues.put(String.valueOf(delay),
                     Integer.valueOf(delay));
@@ -845,7 +845,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
 
-        LinkedHashMap<String, String> defaultRows = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> defaultRows = new LinkedHashMap<>();
         defaultRows.put("Top", "Top");
         defaultRows.put("Bottom", "Bottom");
         defaultRows.put("Unset", "Unset");
@@ -997,7 +997,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             final String columnProperty = getColumnProperty(
                                     (Integer) data);
                             List<Column> cols = grid.getColumns();
-                            List<Object> reordered = new ArrayList<Object>();
+                            List<Object> reordered = new ArrayList<>();
                             boolean addAsLast = false;
                             for (int i = 0; i < cols.size(); i++) {
                                 Column col = cols.get(i);
@@ -1131,7 +1131,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         }, w, c);
             }
 
-            LinkedHashMap<String, GridStaticCellType> defaultRows = new LinkedHashMap<String, GridStaticCellType>();
+            LinkedHashMap<String, GridStaticCellType> defaultRows = new LinkedHashMap<>();
             defaultRows.put("Text Header", GridStaticCellType.TEXT);
             defaultRows.put("Html Header ", GridStaticCellType.HTML);
             defaultRows.put("Widget Header", GridStaticCellType.WIDGET);
@@ -1170,7 +1170,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                     }, c);
 
-            defaultRows = new LinkedHashMap<String, GridStaticCellType>();
+            defaultRows = new LinkedHashMap<>();
             defaultRows.put("Text Footer", GridStaticCellType.TEXT);
             defaultRows.put("Html Footer", GridStaticCellType.HTML);
             defaultRows.put("Widget Footer", GridStaticCellType.WIDGET);

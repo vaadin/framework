@@ -57,7 +57,7 @@ public class TableMoveFocusWithSelection extends AbstractTestUI {
                 @Override
                 public void layoutClick(LayoutClickEvent event) {
                     if (t.isMultiSelect()) {
-                        Set<Object> values = new HashSet<Object>(
+                        Set<Object> values = new HashSet<>(
                                 (Set<Object>) t.getValue());
                         values.add(l.getData());
                         t.setValue(values);

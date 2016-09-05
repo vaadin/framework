@@ -36,7 +36,7 @@ public class ComponentFactoryTest {
     private static final ComponentFactory defaultFactory = Design
             .getComponentFactory();
 
-    private static final ThreadLocal<ComponentFactory> currentComponentFactory = new ThreadLocal<ComponentFactory>();
+    private static final ThreadLocal<ComponentFactory> currentComponentFactory = new ThreadLocal<>();
 
     // Set static component factory that delegate to a thread local factory
     static {
@@ -62,7 +62,7 @@ public class ComponentFactoryTest {
 
     @Test
     public void testComponentFactoryLogging() {
-        final List<String> messages = new ArrayList<String>();
+        final List<String> messages = new ArrayList<>();
         currentComponentFactory.set(new ComponentFactory() {
             @Override
             public Component createComponent(String fullyQualifiedClassName,
@@ -111,7 +111,7 @@ public class ComponentFactoryTest {
 
     @Test
     public void testGetDefaultInstanceUsesComponentFactory() {
-        final List<String> classes = new ArrayList<String>();
+        final List<String> classes = new ArrayList<>();
         currentComponentFactory.set(new ComponentFactory() {
             @Override
             public Component createComponent(String fullyQualifiedClassName,

@@ -19,7 +19,7 @@ import com.vaadin.ui.themes.BaseTheme;
 
 public class PopupViewOffScreen extends TestBase {
 
-    private List<PopupView> popupViews = new ArrayList<PopupView>();
+    private List<PopupView> popupViews = new ArrayList<>();
 
     @Override
     protected String getDescription() {

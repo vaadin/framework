@@ -26,5 +26,5 @@ public class AbsoluteLayoutState extends AbstractLayoutState {
     }
 
     // Maps each component to a position
-    public Map<String, String> connectorToCssPosition = new HashMap<String, String>();
+    public Map<String, String> connectorToCssPosition = new HashMap<>();
 }

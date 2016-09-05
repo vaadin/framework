@@ -62,7 +62,7 @@ public interface Result<R> extends Serializable {
      */
     public static <R> Result<R> error(String message) {
         Objects.requireNonNull(message, "message cannot be null");
-        return new SimpleResult<R>(null, message);
+        return new SimpleResult<>(null, message);
     }
 
     /**

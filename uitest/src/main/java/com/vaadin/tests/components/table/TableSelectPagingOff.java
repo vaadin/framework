@@ -12,7 +12,7 @@ public class TableSelectPagingOff extends TestBase {
     @Override
     protected void setup() {
         Table table = new Table();
-        BeanItemContainer<MyBean> dataSource = new BeanItemContainer<MyBean>(
+        BeanItemContainer<MyBean> dataSource = new BeanItemContainer<>(
                 getBeans());
         table.setContainerDataSource(dataSource);
         table.setSelectable(true);

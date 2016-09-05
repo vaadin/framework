@@ -53,7 +53,7 @@ public class ServerRpcQueue {
      * invocation. Without lastonly, an incremental id based on
      * {@link #lastInvocationTag} is used to get unique values.
      */
-    private LinkedHashMap<String, MethodInvocation> pendingInvocations = new LinkedHashMap<String, MethodInvocation>();
+    private LinkedHashMap<String, MethodInvocation> pendingInvocations = new LinkedHashMap<>();
 
     private int lastInvocationTag = 0;
 

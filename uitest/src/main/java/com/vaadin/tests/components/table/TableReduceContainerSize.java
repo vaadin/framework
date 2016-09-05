@@ -105,7 +105,7 @@ public class TableReduceContainerSize extends TestBase {
     }
 
     private static List<TestObject> createData(int count) {
-        ArrayList<TestObject> data = new ArrayList<TestObject>(count);
+        ArrayList<TestObject> data = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             data.add(new TestObject("string-" + i, new Date(), i));
         }

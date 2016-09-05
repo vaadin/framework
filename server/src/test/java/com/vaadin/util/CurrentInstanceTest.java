@@ -223,7 +223,7 @@ public class CurrentInstanceTest {
                 .setCurrent(session2);
 
         // Use weak ref to verify object is collected
-        WeakReference<VaadinSession> ref = new WeakReference<VaadinSession>(
+        WeakReference<VaadinSession> ref = new WeakReference<>(
                 session1);
 
         session1 = null;

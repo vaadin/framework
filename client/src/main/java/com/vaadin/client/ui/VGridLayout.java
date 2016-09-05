@@ -52,7 +52,7 @@ public class VGridLayout extends ComplexPanel {
     public ApplicationConnection client;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public HashMap<Widget, Cell> widgetToCell = new HashMap<Widget, Cell>();
+    public HashMap<Widget, Cell> widgetToCell = new HashMap<>();
 
     /** For internal use only. May be removed or replaced in the future. */
     public int[] columnWidths;
@@ -586,12 +586,12 @@ public class VGridLayout extends ComplexPanel {
         }
     }
 
-    private LinkedList<SpanList> colSpans = new LinkedList<SpanList>();
-    private LinkedList<SpanList> rowSpans = new LinkedList<SpanList>();
+    private LinkedList<SpanList> colSpans = new LinkedList<>();
+    private LinkedList<SpanList> rowSpans = new LinkedList<>();
 
     private class SpanList {
         final int span;
-        List<Cell> cells = new LinkedList<Cell>();
+        List<Cell> cells = new LinkedList<>();
 
         public SpanList(int span) {
             this.span = span;

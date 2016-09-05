@@ -33,7 +33,7 @@ public class TextFieldConversions extends AbstractComponentDataBindingTest {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                tf.setPropertyDataSource(new ObjectProperty<Object>(o,
+                tf.setPropertyDataSource(new ObjectProperty<>(o,
                         (Class<Object>) dataType.getValue()));
             }
         });

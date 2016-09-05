@@ -306,7 +306,7 @@ public abstract class AbstractConnector
         if (handlers != null) {
             Profiler.enter("AbstractConnector.onStateChanged @OnStateChange");
 
-            HashSet<OnStateChangeMethod> invokedMethods = new HashSet<OnStateChangeMethod>();
+            HashSet<OnStateChangeMethod> invokedMethods = new HashSet<>();
 
             JsArrayString propertyNames = handlers.getKeys();
             for (int i = 0; i < propertyNames.length(); i++) {

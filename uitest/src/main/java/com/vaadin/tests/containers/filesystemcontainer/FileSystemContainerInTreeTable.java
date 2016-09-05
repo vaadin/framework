@@ -120,7 +120,7 @@ public class FileSystemContainerInTreeTable extends TestBase {
         if (c instanceof Container.Indexed) {
             return ((Container.Indexed) source).indexOfId(itemId);
         } else {
-            ArrayList<Object> list = new ArrayList<Object>(source.getItemIds());
+            ArrayList<Object> list = new ArrayList<>(source.getItemIds());
             return list.indexOf(itemId);
         }
     }

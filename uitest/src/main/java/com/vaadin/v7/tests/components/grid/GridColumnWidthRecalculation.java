@@ -68,7 +68,7 @@ public class GridColumnWidthRecalculation extends AbstractTestUI {
         Indexed dataSource = grid.getContainerDataSource();
         Object itemId = dataSource.getItemIds().iterator().next();
         Item item = dataSource.getItem(itemId);
-        ArrayList<Object> pIds = new ArrayList<Object>(
+        ArrayList<Object> pIds = new ArrayList<>(
                 item.getItemPropertyIds());
         for (int i = 0; i < pIds.size() / 2; i++) {
             int j = pIds.size() - 1 - i;

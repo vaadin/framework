@@ -34,7 +34,7 @@ public class ProgressBarGenericTest
      * @since
      */
     protected void createPrimaryStyleNameSelect() {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         String primaryStyle = getComponent().getPrimaryStyleName();
         options.put(primaryStyle, primaryStyle);
         options.put(primaryStyle + "-foo", primaryStyle + "-foo");
@@ -45,7 +45,7 @@ public class ProgressBarGenericTest
     }
 
     private void createValueSelection(String categorySelection) {
-        LinkedHashMap<String, Object> options = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> options = new LinkedHashMap<>();
         options.put("null", null);
         for (float f = 0; f <= 1; f += 0.1) {
             options.put("" + f, f);

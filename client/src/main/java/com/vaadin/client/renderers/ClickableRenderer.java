@@ -152,7 +152,7 @@ public abstract class ClickableRenderer<T, W extends Widget>
                 return null;
             }
             Cell cell = container.getCell(e);
-            EventCellReference<T> cellReference = new EventCellReference<T>(
+            EventCellReference<T> cellReference = new EventCellReference<>(
                     grid);
             // FIXME: Section is currently always body. Might be useful for the
             // future to have an actual check.

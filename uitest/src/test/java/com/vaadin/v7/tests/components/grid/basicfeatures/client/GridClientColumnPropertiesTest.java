@@ -154,7 +154,7 @@ public class GridClientColumnPropertiesTest
         GridElement gridElement = getGridElement();
         List<GridCellElement> headerCells = gridElement.getHeaderCells(0);
 
-        final List<Integer> columnWidths = new ArrayList<Integer>();
+        final List<Integer> columnWidths = new ArrayList<>();
         for (GridCellElement cell : headerCells) {
             columnWidths.add(cell.getSize().getWidth());
         }

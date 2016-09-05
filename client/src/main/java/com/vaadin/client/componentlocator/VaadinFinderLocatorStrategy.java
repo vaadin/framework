@@ -98,7 +98,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
         List<ConnectorPath> hierarchy = getConnectorHierarchyForElement(
                 targetElement);
-        List<String> path = new ArrayList<String>();
+        List<String> path = new ArrayList<>();
 
         // Assemble longname path components back-to-forth with useful
         // predicates - first try ID, then caption.
@@ -182,7 +182,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      */
     private List<String> generateQueries(List<String> components) {
         // Prepare to loop through all the elements.
-        List<String> paths = new ArrayList<String>();
+        List<String> paths = new ArrayList<>();
         int compIdx = 0;
         String basePath = components.get(compIdx).replace("com.vaadin.ui.", "");
         // Add a basic search for the first element (eg. //Button)
@@ -243,7 +243,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
     private List<ConnectorPath> getConnectorHierarchyForElement(Element elem) {
         Element e = elem;
         ComponentConnector c = Util.findPaintable(client, e);
-        List<ConnectorPath> connectorHierarchy = new ArrayList<ConnectorPath>();
+        List<ConnectorPath> connectorHierarchy = new ArrayList<>();
 
         while (c != null) {
 
@@ -281,7 +281,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             path = path.substring(1, path.lastIndexOf(')'));
         }
 
-        List<Element> elements = new ArrayList<Element>();
+        List<Element> elements = new ArrayList<>();
         if (LocatorUtil.isNotificationElement(path)) {
 
             for (VNotification n : findNotificationsByPath(path)) {
@@ -385,7 +385,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      */
     private List<VNotification> findNotificationsByPath(String path) {
 
-        List<VNotification> notifications = new ArrayList<VNotification>();
+        List<VNotification> notifications = new ArrayList<>();
         for (Widget w : RootPanel.get()) {
             if (w instanceof VNotification) {
                 notifications.add((VNotification) w);
@@ -431,7 +431,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             connectors = Arrays.asList(root);
         }
 
-        List<Element> output = new ArrayList<Element>();
+        List<Element> output = new ArrayList<>();
         if (null != connectors && !connectors.isEmpty()) {
             for (ComponentConnector connector : connectors) {
                 if (!actualRoot
@@ -474,7 +474,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
         String[] fragments = splitFirstFragmentFromTheRest(path);
 
-        List<ComponentConnector> connectors = new ArrayList<ComponentConnector>();
+        List<ComponentConnector> connectors = new ArrayList<>();
         for (ComponentConnector parent : parents) {
             connectors.addAll(filterMatches(
                     collectPotentialMatches(parent, fragments[0],
@@ -557,7 +557,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
     private List<ComponentConnector> collectPotentialMatches(
             ComponentConnector parent, String pathFragment,
             boolean collectRecursively) {
-        ArrayList<ComponentConnector> potentialMatches = new ArrayList<ComponentConnector>();
+        ArrayList<ComponentConnector> potentialMatches = new ArrayList<>();
         String widgetName = getWidgetName(pathFragment);
         // Special case when searching for UIElement.
         if (LocatorUtil.isUIElement(pathFragment)) {
@@ -585,7 +585,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
     private List<String> getIDsForConnector(ComponentConnector connector) {
         Class<?> connectorClass = connector.getClass();
-        List<String> ids = new ArrayList<String>();
+        List<String> ids = new ArrayList<>();
 
         TypeDataStore.get().findIdentifiersFor(connectorClass).addAllTo(ids);
 
@@ -732,7 +732,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      */
     private final <T> List<T> eliminateDuplicates(List<T> list) {
 
-        LinkedHashSet<T> set = new LinkedHashSet<T>(list);
+        LinkedHashSet<T> set = new LinkedHashSet<>(list);
         list.clear();
         list.addAll(set);
         return list;

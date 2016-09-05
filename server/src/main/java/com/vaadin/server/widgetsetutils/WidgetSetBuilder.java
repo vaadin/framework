@@ -168,7 +168,7 @@ public class WidgetSetBuilder {
 
     private static Collection<String> getCurrentInheritedWidgetsets(
             String content) {
-        HashSet<String> hashSet = new HashSet<String>();
+        HashSet<String> hashSet = new HashSet<>();
         Pattern inheritsPattern = Pattern.compile(" name=\"([^\"]*)\"");
 
         Matcher matcher = inheritsPattern.matcher(content);

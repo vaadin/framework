@@ -22,7 +22,7 @@ public class FinalMethodTest {
 
     @Test
     public void testThatComponentsHaveNoFinalMethods() {
-        HashSet<Class<?>> tested = new HashSet<Class<?>>();
+        HashSet<Class<?>> tested = new HashSet<>();
         for (Class<? extends Component> c : VaadinClasses.getComponents()) {
             ensureNoFinalMethods(c, tested);
         }

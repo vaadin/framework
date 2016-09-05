@@ -32,7 +32,7 @@ public class CollapsibleTableColumn extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         Table table = new Table();
-        BeanItemContainer<Bean> container = new BeanItemContainer<Bean>(
+        BeanItemContainer<Bean> container = new BeanItemContainer<>(
                 Bean.class);
         Bean bean = new Bean();
         bean.setName("name");

@@ -33,7 +33,7 @@ public class ComponentMapperTest {
     private static final ComponentMapper defaultMapper = Design
             .getComponentMapper();
 
-    private static final ThreadLocal<ComponentMapper> currentMapper = new ThreadLocal<ComponentMapper>();
+    private static final ThreadLocal<ComponentMapper> currentMapper = new ThreadLocal<>();
 
     static {
         Design.setComponentMapper(new ComponentMapper() {

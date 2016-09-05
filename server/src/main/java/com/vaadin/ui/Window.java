@@ -106,7 +106,7 @@ public class Window extends Panel
     /**
      * Holds registered CloseShortcut instances for query and later removal
      */
-    private List<CloseShortcut> closeShortcuts = new ArrayList<CloseShortcut>(
+    private List<CloseShortcut> closeShortcuts = new ArrayList<>(
             4);
 
     /**
@@ -1398,7 +1398,7 @@ public class Window extends Panel
     @Override
     protected void readDesignChildren(Elements children,
             DesignContext context) {
-        List<Component> descriptions = new ArrayList<Component>();
+        List<Component> descriptions = new ArrayList<>();
         Elements content = new Elements();
 
         for (Element child : children) {

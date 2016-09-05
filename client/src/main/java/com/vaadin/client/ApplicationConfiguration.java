@@ -249,20 +249,20 @@ public class ApplicationConfiguration implements EntryPoint {
 
     private HashMap<Integer, String> unknownComponents;
 
-    private Map<Integer, Class<? extends ServerConnector>> classes = new HashMap<Integer, Class<? extends ServerConnector>>();
+    private Map<Integer, Class<? extends ServerConnector>> classes = new HashMap<>();
 
     private boolean widgetsetVersionSent = false;
     private static boolean moduleLoaded = false;
 
     static// TODO consider to make this hashmap per application
-    LinkedList<Command> callbacks = new LinkedList<Command>();
+    LinkedList<Command> callbacks = new LinkedList<>();
 
     private static int dependenciesLoading;
 
-    private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<ApplicationConnection>();
+    private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<>();
 
-    private Map<Integer, Integer> componentInheritanceMap = new HashMap<Integer, Integer>();
-    private Map<Integer, String> tagToServerSideClassName = new HashMap<Integer, String>();
+    private Map<Integer, Integer> componentInheritanceMap = new HashMap<>();
+    private Map<Integer, String> tagToServerSideClassName = new HashMap<>();
 
     /**
      * Checks whether path info in requests to the server-side service should be
@@ -528,7 +528,7 @@ public class ApplicationConfiguration implements EntryPoint {
             if (type == null) {
                 type = UnknownComponentConnector.class;
                 if (unknownComponents == null) {
-                    unknownComponents = new HashMap<Integer, String>();
+                    unknownComponents = new HashMap<>();
                 }
                 unknownComponents.put(tag, getServerSideClassNameForTag(tag));
             }
@@ -572,7 +572,7 @@ public class ApplicationConfiguration implements EntryPoint {
      * @return Integer array of tags pointing to this classname
      */
     public Integer[] getTagsForServerSideClassName(String classname) {
-        List<Integer> tags = new ArrayList<Integer>();
+        List<Integer> tags = new ArrayList<>();
 
         for (Map.Entry<Integer, String> entry : tagToServerSideClassName
                 .entrySet()) {

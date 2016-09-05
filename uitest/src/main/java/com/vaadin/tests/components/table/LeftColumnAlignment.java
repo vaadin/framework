@@ -37,7 +37,7 @@ public class LeftColumnAlignment extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         final Table table = new Table();
 
-        BeanItemContainer<Bean> container = new BeanItemContainer<Bean>(
+        BeanItemContainer<Bean> container = new BeanItemContainer<>(
                 Bean.class);
         Bean bean = new Bean();
         bean.setName("property");

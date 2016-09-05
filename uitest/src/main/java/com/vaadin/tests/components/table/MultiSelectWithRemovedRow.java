@@ -34,7 +34,7 @@ public class MultiSelectWithRemovedRow extends TestBase {
         final Log log = new Log(5);
         addComponent(log);
 
-        final BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+        final BeanItemContainer<Person> container = new BeanItemContainer<>(
                 Person.class,
                 Arrays.asList(new Person("Joe"), new Person("William"),
                         new Person("Jack"), new Person("Averell"),

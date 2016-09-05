@@ -62,7 +62,7 @@ public class GeneratePackageExports {
         }
 
         // Accepted packages
-        List<String> acceptedPackagePrefixes = new ArrayList<String>();
+        List<String> acceptedPackagePrefixes = new ArrayList<>();
         for (int i = 1; i < args.length; i++) {
             acceptedPackagePrefixes.add(args[i]);
         }
@@ -179,7 +179,7 @@ public class GeneratePackageExports {
     private static HashSet<String> getPackages(JarFile jar,
             List<String> acceptedPackagePrefixes,
             boolean includeNumberPackages) {
-        HashSet<String> packages = new HashSet<String>();
+        HashSet<String> packages = new HashSet<>();
 
         Pattern startsWithNumber = Pattern.compile("\\.\\d");
 

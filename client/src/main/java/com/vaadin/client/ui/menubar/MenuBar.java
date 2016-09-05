@@ -76,7 +76,7 @@ public class MenuBar extends Widget implements PopupListener {
     private final Element table;
     private final Element outer;
 
-    private final ArrayList<MenuItem> items = new ArrayList<MenuItem>();
+    private final ArrayList<MenuItem> items = new ArrayList<>();
     private MenuBar parentMenu;
     private PopupPanel popup;
     private MenuItem selectedItem;

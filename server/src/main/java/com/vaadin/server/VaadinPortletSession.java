@@ -64,13 +64,13 @@ import com.vaadin.util.CurrentInstance;
 @SuppressWarnings("serial")
 public class VaadinPortletSession extends VaadinSession {
 
-    private final Set<PortletListener> portletListeners = new LinkedHashSet<PortletListener>();
+    private final Set<PortletListener> portletListeners = new LinkedHashSet<>();
 
-    private final Map<String, QName> eventActionDestinationMap = new HashMap<String, QName>();
-    private final Map<String, Serializable> eventActionValueMap = new HashMap<String, Serializable>();
+    private final Map<String, QName> eventActionDestinationMap = new HashMap<>();
+    private final Map<String, Serializable> eventActionValueMap = new HashMap<>();
 
-    private final Map<String, String> sharedParameterActionNameMap = new HashMap<String, String>();
-    private final Map<String, String> sharedParameterActionValueMap = new HashMap<String, String>();
+    private final Map<String, String> sharedParameterActionNameMap = new HashMap<>();
+    private final Map<String, String> sharedParameterActionValueMap = new HashMap<>();
 
     /**
      * Create a portlet service session for the given portlet service
@@ -143,7 +143,7 @@ public class VaadinPortletSession extends VaadinSession {
      */
     public void firePortletRenderRequest(UI uI, RenderRequest request,
             RenderResponse response) {
-        for (PortletListener l : new ArrayList<PortletListener>(
+        for (PortletListener l : new ArrayList<>(
                 portletListeners)) {
             l.handleRenderRequest(request,
                     new RestrictedRenderResponse(response), uI);
@@ -172,7 +172,7 @@ public class VaadinPortletSession extends VaadinSession {
             sharedParameterActionValueMap.remove(key);
         } else {
             // normal action request, notify listeners
-            for (PortletListener l : new ArrayList<PortletListener>(
+            for (PortletListener l : new ArrayList<>(
                     portletListeners)) {
                 l.handleActionRequest(request, response, uI);
             }
@@ -184,7 +184,7 @@ public class VaadinPortletSession extends VaadinSession {
      */
     public void firePortletEventRequest(UI uI, EventRequest request,
             EventResponse response) {
-        for (PortletListener l : new ArrayList<PortletListener>(
+        for (PortletListener l : new ArrayList<>(
                 portletListeners)) {
             l.handleEventRequest(request, response, uI);
         }
@@ -195,7 +195,7 @@ public class VaadinPortletSession extends VaadinSession {
      */
     public void firePortletResourceRequest(UI uI, ResourceRequest request,
             ResourceResponse response) {
-        for (PortletListener l : new ArrayList<PortletListener>(
+        for (PortletListener l : new ArrayList<>(
                 portletListeners)) {
             l.handleResourceRequest(request, response, uI);
         }

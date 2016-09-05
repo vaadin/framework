@@ -41,13 +41,13 @@ public class GridSortIndicator extends AbstractTestUI {
 
             @Override
             public void sort(SortEvent event) {
-                List<SortOrder> currentSortOrder = new ArrayList<SortOrder>(
+                List<SortOrder> currentSortOrder = new ArrayList<>(
                         event.getSortOrder());
                 if (currentSortOrder.size() == 1) {
                     // If the name column was clicked, set a new sort order for
                     // both columns. Otherwise, revert to oldSortDirection if it
                     // is not null.
-                    List<SortOrder> newSortOrder = new ArrayList<SortOrder>();
+                    List<SortOrder> newSortOrder = new ArrayList<>();
                     SortDirection newSortDirection = oldSortDirection;
                     if (currentSortOrder.get(0).getPropertyId()
                             .equals("Name")) {

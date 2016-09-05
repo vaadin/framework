@@ -49,7 +49,7 @@ import com.vaadin.client.ValueMap;
  */
 public class AnalyzeLayoutsPanel extends FlowPanel {
 
-    private List<SelectConnectorListener> listeners = new ArrayList<SelectConnectorListener>();
+    private List<SelectConnectorListener> listeners = new ArrayList<>();
 
     public void update() {
         clear();
@@ -79,8 +79,8 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
             add(new Label("Layouts analyzed, no top level problems"));
         }
 
-        Set<ComponentConnector> zeroHeightComponents = new HashSet<ComponentConnector>();
-        Set<ComponentConnector> zeroWidthComponents = new HashSet<ComponentConnector>();
+        Set<ComponentConnector> zeroHeightComponents = new HashSet<>();
+        Set<ComponentConnector> zeroWidthComponents = new HashSet<>();
         findZeroSizeComponents(zeroHeightComponents, zeroWidthComponents,
                 ac.getUIConnector());
         if (zeroHeightComponents.size() > 0 || zeroWidthComponents.size() > 0) {
@@ -106,7 +106,7 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
             Set<ComponentConnector> zeroSized, ApplicationConnection ac) {
 
         // keep track of already highlighted parents
-        HashSet<String> parents = new HashSet<String>();
+        HashSet<String> parents = new HashSet<>();
 
         for (final ComponentConnector connector : zeroSized) {
             final ServerConnector parent = connector.getParent();

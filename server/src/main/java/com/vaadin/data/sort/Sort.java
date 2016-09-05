@@ -140,7 +140,7 @@ public class Sort implements Serializable {
             ++count;
         }
 
-        List<SortOrder> order = new ArrayList<SortOrder>(count);
+        List<SortOrder> order = new ArrayList<>(count);
 
         s = this;
         do {

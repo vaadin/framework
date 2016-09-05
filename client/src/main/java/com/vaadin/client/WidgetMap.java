@@ -26,7 +26,7 @@ import java.util.HashMap;
  */
 abstract class WidgetMap {
 
-    protected static HashMap<Class<? extends ServerConnector>, WidgetInstantiator> instmap = new HashMap<Class<? extends ServerConnector>, WidgetInstantiator>();
+    protected static HashMap<Class<? extends ServerConnector>, WidgetInstantiator> instmap = new HashMap<>();
 
     /**
      * Create a new instance of a connector based on its type.

@@ -31,7 +31,7 @@ public class ColumnReorderEvent<T> extends GwtEvent<ColumnReorderHandler<T>> {
     /**
      * Handler type.
      */
-    private final static Type<ColumnReorderHandler<?>> TYPE = new Type<ColumnReorderHandler<?>>();
+    private final static Type<ColumnReorderHandler<?>> TYPE = new Type<>();
 
     public static final Type<ColumnReorderHandler<?>> getType() {
         return TYPE;

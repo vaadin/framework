@@ -38,7 +38,7 @@ public class SelectorPredicate {
         if (path.startsWith("(")) {
             return extractPredicates(path.substring(path.lastIndexOf(')')));
         }
-        return new ArrayList<SelectorPredicate>();
+        return new ArrayList<>();
     }
 
     /**
@@ -49,7 +49,7 @@ public class SelectorPredicate {
      * @return a List of Predicate objects
      */
     public static List<SelectorPredicate> extractPredicates(String path) {
-        List<SelectorPredicate> predicates = new ArrayList<SelectorPredicate>();
+        List<SelectorPredicate> predicates = new ArrayList<>();
 
         String predicateStr = extractPredicateString(path);
         if (null == predicateStr || predicateStr.length() == 0) {
@@ -114,7 +114,7 @@ public class SelectorPredicate {
      * @return List of predicate strings
      */
     private static List<String> readPredicatesFromString(String predicateStr) {
-        List<String> predicates = new ArrayList<String>();
+        List<String> predicates = new ArrayList<>();
         int prevIdx = 0;
         int idx = LocatorUtil.indexOfIgnoringQuoted(predicateStr, ',', prevIdx);
 

@@ -38,7 +38,7 @@ import elemental.json.JsonException;
  * @since 7.0.0
  */
 public class JavaScript extends AbstractExtension {
-    private Map<String, JavaScriptFunction> functions = new HashMap<String, JavaScriptFunction>();
+    private Map<String, JavaScriptFunction> functions = new HashMap<>();
 
     // Can not be defined in client package as this JSONArray is not available
     // in GWT

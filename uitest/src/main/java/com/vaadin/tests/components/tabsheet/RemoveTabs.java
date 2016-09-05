@@ -133,7 +133,7 @@ public class RemoveTabs extends TestBase {
         AbstractComponentContainer container = tabsheet;
 
         if (container != null) {
-            List<Component> c = new ArrayList<Component>();
+            List<Component> c = new ArrayList<>();
             Iterator<Component> i = container.getComponentIterator();
             while (i.hasNext()) {
                 Component comp = i.next();

@@ -49,7 +49,7 @@ public class AffectedTB3TestLocator extends TB3TestLocator {
         testClasses
                 .addAll(getTestClassesWithAffectedPackageName(allTestClasses));
 
-        List<Class<? extends T>> affectedTestClasses = new ArrayList<Class<? extends T>>();
+        List<Class<? extends T>> affectedTestClasses = new ArrayList<>();
         affectedTestClasses.addAll(testClasses);
 
         return affectedTestClasses;
@@ -57,7 +57,7 @@ public class AffectedTB3TestLocator extends TB3TestLocator {
 
     private <T> List<Class<? extends T>> getTestClassesWithAffectedPackageName(
             List<Class<? extends T>> classes) {
-        List<Class<? extends T>> affectedTestClasses = new ArrayList<Class<? extends T>>();
+        List<Class<? extends T>> affectedTestClasses = new ArrayList<>();
         List<String> affectedFiles = getAffectedFiles();
 
         for (Class c : classes) {
@@ -79,7 +79,7 @@ public class AffectedTB3TestLocator extends TB3TestLocator {
     }
 
     private List<String> getAffectedFiles() {
-        List<String> affectedFilePaths = new ArrayList<String>();
+        List<String> affectedFilePaths = new ArrayList<>();
 
         for (String path : changedTB3TestLocator.getChangedFilePaths()) {
             if (!path.toLowerCase().contains("test")) {

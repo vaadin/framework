@@ -32,8 +32,8 @@ public class CurrentUiRetained extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final ArrayList<UI> uiLog = new ArrayList<UI>();
-        final ArrayList<Boolean> probeLog = new ArrayList<Boolean>();
+        final ArrayList<UI> uiLog = new ArrayList<>();
+        final ArrayList<Boolean> probeLog = new ArrayList<>();
 
         final Thread thread = new Thread(new Runnable() {
             @Override

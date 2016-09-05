@@ -77,7 +77,7 @@ import com.vaadin.shared.ui.window.WindowRole;
 public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         ScrollHandler, KeyDownHandler, FocusHandler, BlurHandler, Focusable {
 
-    private static ArrayList<VWindow> windowOrder = new ArrayList<VWindow>();
+    private static ArrayList<VWindow> windowOrder = new ArrayList<>();
 
     private static boolean orderingDefered;
 

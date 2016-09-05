@@ -97,10 +97,10 @@ public class GridLayout extends AbstractLayout
      */
     private int cursorY = 0;
 
-    private final LinkedList<Component> components = new LinkedList<Component>();
+    private final LinkedList<Component> components = new LinkedList<>();
 
-    private Map<Integer, Float> columnExpandRatio = new HashMap<Integer, Float>();
-    private Map<Integer, Float> rowExpandRatio = new HashMap<Integer, Float>();
+    private Map<Integer, Float> columnExpandRatio = new HashMap<>();
+    private Map<Integer, Float> rowExpandRatio = new HashMap<>();
     private Alignment defaultComponentAlignment = Alignment.TOP_LEFT;
 
     /**
@@ -1290,8 +1290,8 @@ public class GridLayout extends AbstractLayout
 
         setMargin(readMargin(design, getMargin(), designContext));
 
-        List<Element> rowElements = new ArrayList<Element>();
-        List<Map<Integer, Component>> rows = new ArrayList<Map<Integer, Component>>();
+        List<Element> rowElements = new ArrayList<>();
+        List<Map<Integer, Component>> rows = new ArrayList<>();
         // Prepare a 2D map for reading column contents
         for (Element e : design.children()) {
             if (e.tagName().equalsIgnoreCase("row")) {
@@ -1301,8 +1301,8 @@ public class GridLayout extends AbstractLayout
             }
         }
         setRows(Math.max(rows.size(), 1));
-        Map<Component, Alignment> alignments = new HashMap<Component, Alignment>();
-        List<Integer> columnExpandRatios = new ArrayList<Integer>();
+        Map<Component, Alignment> alignments = new HashMap<>();
+        List<Integer> columnExpandRatios = new ArrayList<>();
         for (int row = 0; row < rowElements.size(); ++row) {
             Element rowElement = rowElements.get(row);
 
@@ -1386,7 +1386,7 @@ public class GridLayout extends AbstractLayout
         }
 
         // Reiterate through the 2D map and add components to GridLayout
-        Set<Component> visited = new HashSet<Component>();
+        Set<Component> visited = new HashSet<>();
 
         // Ignore any missing components
         visited.add(null);
@@ -1457,7 +1457,7 @@ public class GridLayout extends AbstractLayout
         }
 
         // Go through the map and write only needed column tags
-        Set<Connector> visited = new HashSet<Connector>();
+        Set<Connector> visited = new HashSet<>();
 
         // Skip the dummy placeholder
         visited.add(dummyComponent);

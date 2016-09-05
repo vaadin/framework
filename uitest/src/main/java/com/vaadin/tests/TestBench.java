@@ -70,7 +70,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
     VerticalLayout bodyLayout = new VerticalLayout();
 
     // TODO this could probably be a simple Set
-    HashMap<Class<?>, String> itemCaptions = new HashMap<Class<?>, String>();
+    HashMap<Class<?>, String> itemCaptions = new HashMap<>();
 
     @Override
     public void init() {
@@ -278,7 +278,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
      */
     public static List<Class<?>> getTestableClassesForPackage(
             String packageName) throws Exception {
-        final ArrayList<File> directories = new ArrayList<File>();
+        final ArrayList<File> directories = new ArrayList<>();
         try {
             final ClassLoader cld = Thread.currentThread()
                     .getContextClassLoader();
@@ -297,7 +297,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                     packageName + " does not appear to be a valid package.");
         }
 
-        final ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
+        final ArrayList<Class<?>> classes = new ArrayList<>();
         // For every directory identified capture all the .class files
         for (final Iterator<File> it = directories.iterator(); it.hasNext();) {
             final File directory = it.next();

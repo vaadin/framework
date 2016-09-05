@@ -71,7 +71,7 @@ public class FlyweightRow implements Row {
 
         private CellIterator(final Collection<FlyweightCell> cells,
                 final boolean attached) {
-            this.cells = new ArrayList<FlyweightCell>(cells);
+            this.cells = new ArrayList<>(cells);
             cellsAttached = attached;
         }
 
@@ -142,7 +142,7 @@ public class FlyweightRow implements Row {
     private int row;
     private TableRowElement element;
     private double[] columnWidths = null;
-    private final List<FlyweightCell> cells = new ArrayList<FlyweightCell>();
+    private final List<FlyweightCell> cells = new ArrayList<>();
 
     public void setup(final TableRowElement e, final int row,
             double[] columnWidths) {

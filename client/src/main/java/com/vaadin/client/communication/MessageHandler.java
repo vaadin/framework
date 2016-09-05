@@ -123,12 +123,12 @@ public class MessageHandler {
      * If responseHandlingLocks contains any objects, response handling is
      * suspended until the collection is empty or a timeout has occurred.
      */
-    private Set<Object> responseHandlingLocks = new HashSet<Object>();
+    private Set<Object> responseHandlingLocks = new HashSet<>();
 
     /**
      * Contains all UIDL messages received while response handling is suspended
      */
-    private List<PendingUIDLMessage> pendingUIDLMessages = new ArrayList<PendingUIDLMessage>();
+    private List<PendingUIDLMessage> pendingUIDLMessages = new ArrayList<>();
 
     // will hold the CSRF token once received
     private String csrfToken = ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE;
@@ -1227,8 +1227,8 @@ public class MessageHandler {
                     Profiler.enter(
                             "updateConnectorHierarchy find new connectors");
 
-                    List<ServerConnector> newChildren = new ArrayList<ServerConnector>();
-                    List<ComponentConnector> newComponents = new ArrayList<ComponentConnector>();
+                    List<ServerConnector> newChildren = new ArrayList<>();
+                    List<ComponentConnector> newComponents = new ArrayList<>();
                     for (int connectorIndex = 0; connectorIndex < childConnectorSize; connectorIndex++) {
                         String childConnectorId = childConnectorIds
                                 .get(connectorIndex);

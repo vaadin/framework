@@ -69,7 +69,7 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         List<WebElement> headerElements = popup
                 .findElement(By.className("v-datefield-calendarpanel-weekdays"))
                 .findElements(By.tagName("td"));
-        List<WebElement> weekdays = new ArrayList<WebElement>();
+        List<WebElement> weekdays = new ArrayList<>();
         for (WebElement headerElement : headerElements) {
             if ("columnheader".equals(headerElement.getAttribute("role"))) {
                 weekdays.add(headerElement);
@@ -176,7 +176,7 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         List<WebElement> headerElements = popup
                 .findElement(By.className("v-datefield-calendarpanel-weekdays"))
                 .findElements(By.tagName("td"));
-        List<WebElement> weekdays = new ArrayList<WebElement>();
+        List<WebElement> weekdays = new ArrayList<>();
         for (WebElement headerElement : headerElements) {
             if ("columnheader".equals(headerElement.getAttribute("role"))) {
                 weekdays.add(headerElement);
@@ -303,7 +303,7 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         List<WebElement> headerElements = popup
                 .findElement(By.className("v-datefield-calendarpanel-weekdays"))
                 .findElements(By.tagName("td"));
-        List<WebElement> weekdays = new ArrayList<WebElement>();
+        List<WebElement> weekdays = new ArrayList<>();
         for (WebElement headerElement : headerElements) {
             if ("columnheader".equals(headerElement.getAttribute("role"))) {
                 weekdays.add(headerElement);

@@ -85,7 +85,7 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
         Panel confPanel = new ConfigurationPanel();
         addComponent(confPanel);
 
-        final FieldGroup fieldGroup = new BeanFieldGroup<Person>(Person.class);
+        final FieldGroup fieldGroup = new BeanFieldGroup<>(Person.class);
         fieldGroup.addCommitHandler(new CommitHandler() {
 
             @Override
@@ -181,7 +181,7 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
         });
         Person p = new Person("John", "Doe", "john@doe.com", 64, Sex.MALE,
                 new Address("John street", 11223, "John's town", Country.USA));
-        fieldGroup.setItemDataSource(new BeanItem<Person>(p));
+        fieldGroup.setItemDataSource(new BeanItem<>(p));
     }
 
     @SuppressWarnings("unchecked")

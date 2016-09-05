@@ -67,7 +67,7 @@ public abstract class ComponentTestCase<T extends AbstractComponent>
      * @return A List with actions to which more actions can be added.
      */
     protected List<Component> createActions() {
-        ArrayList<Component> actions = new ArrayList<Component>();
+        ArrayList<Component> actions = new ArrayList<>();
 
         actions.add(createEnabledAction(true));
         actions.add(createReadonlyAction(false));

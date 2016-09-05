@@ -14,7 +14,7 @@ public class ErrorMessages extends TestBase {
     @Override
     protected void setup() {
         Button bb = new Button("Button with CompositeError");
-        List<UserError> errors = new ArrayList<UserError>();
+        List<UserError> errors = new ArrayList<>();
         errors.add(new UserError("Error 1"));
         errors.add(new UserError("Error 2"));
         bb.setComponentError(new CompositeErrorMessage(errors));

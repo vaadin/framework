@@ -31,7 +31,7 @@ public class FieldBinderWithBeanValidation extends TestBase {
     protected void setup() {
         addComponent(log);
 
-        final BeanFieldGroup<PersonWithBeanValidationAnnotations> fieldGroup = new BeanFieldGroup<PersonWithBeanValidationAnnotations>(
+        final BeanFieldGroup<PersonWithBeanValidationAnnotations> fieldGroup = new BeanFieldGroup<>(
                 PersonWithBeanValidationAnnotations.class);
 
         fieldGroup.buildAndBindMemberFields(this);
@@ -85,7 +85,7 @@ public class FieldBinderWithBeanValidation extends TestBase {
                 "John", "Doe", "john@doe.com", 64, Sex.MALE,
                 new Address("John street", 11223, "John's town", Country.USA));
         fieldGroup.setItemDataSource(
-                new BeanItem<PersonWithBeanValidationAnnotations>(p));
+                new BeanItem<>(p));
     }
 
     public static PersonWithBeanValidationAnnotations getPerson(

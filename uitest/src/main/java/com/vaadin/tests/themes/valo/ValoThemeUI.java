@@ -65,7 +65,7 @@ public class ValoThemeUI extends UI {
 
     private boolean testMode = false;
 
-    private static LinkedHashMap<String, String> themeVariants = new LinkedHashMap<String, String>();
+    private static LinkedHashMap<String, String> themeVariants = new LinkedHashMap<>();
     static {
         themeVariants.put("tests-valo", "Default");
         themeVariants.put("tests-valo-dark", "Dark");
@@ -80,7 +80,7 @@ public class ValoThemeUI extends UI {
         menu.setId("testMenu");
     }
     private Navigator navigator;
-    private LinkedHashMap<String, String> menuItems = new LinkedHashMap<String, String>();
+    private LinkedHashMap<String, String> menuItems = new LinkedHashMap<>();
 
     @Override
     protected void init(VaadinRequest request) {

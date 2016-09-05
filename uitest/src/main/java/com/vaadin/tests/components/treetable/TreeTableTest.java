@@ -158,7 +158,7 @@ public class TreeTableTest extends Tables<TreeTable>
             secondLevel++;
         }
 
-        List<Object> itemIds = new ArrayList<Object>(c.getItemIds());
+        List<Object> itemIds = new ArrayList<>(c.getItemIds());
 
         int nextItemId = roots;
         for (int rootIndex = 0; rootIndex < roots; rootIndex++) {
@@ -195,7 +195,7 @@ public class TreeTableTest extends Tables<TreeTable>
     }
 
     private void createRootItemSelectAction(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         for (int i = 1; i <= 10; i++) {
             options.put(String.valueOf(i), i);
         }
@@ -208,7 +208,7 @@ public class TreeTableTest extends Tables<TreeTable>
     }
 
     private void createExpandCollapseActions(String category) {
-        LinkedHashMap<String, Object> options = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> options = new LinkedHashMap<>();
 
         for (Object id : getComponent().getItemIds()) {
             options.put(id.toString(), id);
@@ -223,7 +223,7 @@ public class TreeTableTest extends Tables<TreeTable>
     }
 
     private void createChildrenAllowedAction(String category) {
-        LinkedHashMap<String, Object> options = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> options = new LinkedHashMap<>();
 
         for (Object id : getComponent().getItemIds()) {
             options.put(id.toString(), id);

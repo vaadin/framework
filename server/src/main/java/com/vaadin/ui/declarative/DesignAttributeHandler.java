@@ -55,7 +55,7 @@ public class DesignAttributeHandler implements Serializable {
         return Logger.getLogger(DesignAttributeHandler.class.getName());
     }
 
-    private static Map<Class<?>, AttributeCacheEntry> cache = new ConcurrentHashMap<Class<?>, AttributeCacheEntry>();
+    private static Map<Class<?>, AttributeCacheEntry> cache = new ConcurrentHashMap<>();
 
     // translates string <-> object
     private static DesignFormatter FORMATTER = new DesignFormatter();
@@ -81,7 +81,7 @@ public class DesignAttributeHandler implements Serializable {
         for (Attribute a : attr.asList()) {
             attr.remove(a.getKey());
         }
-        List<Node> children = new ArrayList<Node>();
+        List<Node> children = new ArrayList<>();
         children.addAll(design.childNodes());
         for (Node node : children) {
             node.remove();
@@ -428,7 +428,7 @@ public class DesignAttributeHandler implements Serializable {
      * @author Vaadin Ltd
      */
     private static class AttributeCacheEntry implements Serializable {
-        private Map<String, Method[]> accessMethods = new ConcurrentHashMap<String, Method[]>();
+        private Map<String, Method[]> accessMethods = new ConcurrentHashMap<>();
 
         private void addAttribute(String attribute, Method getter,
                 Method setter) {
@@ -439,7 +439,7 @@ public class DesignAttributeHandler implements Serializable {
         }
 
         private Collection<String> getAttributes() {
-            ArrayList<String> attributes = new ArrayList<String>();
+            ArrayList<String> attributes = new ArrayList<>();
             attributes.addAll(accessMethods.keySet());
             return attributes;
         }

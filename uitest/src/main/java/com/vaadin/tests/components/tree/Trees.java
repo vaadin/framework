@@ -130,7 +130,7 @@ public class Trees extends AbstractSelectTestCase<Tree>
     }
 
     private void createContextMenuAction(String category) {
-        LinkedHashMap<String, ContextMenu> options = new LinkedHashMap<String, ContextMenu>();
+        LinkedHashMap<String, ContextMenu> options = new LinkedHashMap<>();
         options.put("None", null);
         options.put("Item without icon", new ContextMenu("No icon", null));
         ContextMenu cm = new ContextMenu();
@@ -146,7 +146,7 @@ public class Trees extends AbstractSelectTestCase<Tree>
 
     private void createItemStyleGenerator(String category) {
 
-        LinkedHashMap<String, com.vaadin.v7.ui.Tree.ItemStyleGenerator> options = new LinkedHashMap<String, com.vaadin.v7.ui.Tree.ItemStyleGenerator>();
+        LinkedHashMap<String, com.vaadin.v7.ui.Tree.ItemStyleGenerator> options = new LinkedHashMap<>();
 
         options.put("-", null);
         options.put(rootGreenSecondLevelRed.toString(),
@@ -173,7 +173,7 @@ public class Trees extends AbstractSelectTestCase<Tree>
     }
 
     protected void createSelectionModeSelect(String category) {
-        LinkedHashMap<String, SelectMode> options = new LinkedHashMap<String, SelectMode>();
+        LinkedHashMap<String, SelectMode> options = new LinkedHashMap<>();
         options.put("None", SelectMode.NONE);
         options.put("Single", SelectMode.SINGLE);
         options.put("Multi - simple", SelectMode.MULTI_SIMPLE);
@@ -245,7 +245,7 @@ public class Trees extends AbstractSelectTestCase<Tree>
             secondLevel++;
         }
 
-        List<Object> itemIds = new ArrayList<Object>(c.getItemIds());
+        List<Object> itemIds = new ArrayList<>(c.getItemIds());
 
         int nextItemId = roots;
         for (int rootIndex = 0; rootIndex < roots; rootIndex++) {
@@ -282,7 +282,7 @@ public class Trees extends AbstractSelectTestCase<Tree>
     }
 
     private void createRootItemSelectAction(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         for (int i = 1; i <= 10; i++) {
             options.put(String.valueOf(i), i);
         }
@@ -295,7 +295,7 @@ public class Trees extends AbstractSelectTestCase<Tree>
     }
 
     private void createExpandCollapseActions(String category) {
-        LinkedHashMap<String, Object> options = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> options = new LinkedHashMap<>();
 
         for (Object id : getComponent().getItemIds()) {
             options.put(id.toString(), id);
@@ -310,7 +310,7 @@ public class Trees extends AbstractSelectTestCase<Tree>
     }
 
     private void createChildrenAllowedAction(String category) {
-        LinkedHashMap<String, Object> options = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> options = new LinkedHashMap<>();
 
         for (Object id : getComponent().getItemIds()) {
             options.put(id.toString(), id);

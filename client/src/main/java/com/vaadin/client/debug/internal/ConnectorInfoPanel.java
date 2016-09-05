@@ -48,7 +48,7 @@ public class ConnectorInfoPanel extends FlowPanel {
     public void update(ServerConnector connector) {
         SharedState state = connector.getState();
 
-        Set<String> ignoreProperties = new HashSet<String>();
+        Set<String> ignoreProperties = new HashSet<>();
         ignoreProperties.add("id");
 
         String html = getRowHTML("Id", connector.getConnectorId());

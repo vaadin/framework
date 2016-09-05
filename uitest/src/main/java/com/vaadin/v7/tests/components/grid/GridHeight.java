@@ -54,7 +54,7 @@ public class GridHeight extends AbstractTestUI {
     static final String[] detailsRowHeights = { FULL, UNDEFINED, PX100 };
 
     private Grid grid;
-    private Map<Object, VerticalLayout> detailsLayouts = new HashMap<Object, VerticalLayout>();
+    private Map<Object, VerticalLayout> detailsLayouts = new HashMap<>();
     private OptionGroup detailsHeightSelector;
 
     @Override

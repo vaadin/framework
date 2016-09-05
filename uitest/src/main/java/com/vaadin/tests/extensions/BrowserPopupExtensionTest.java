@@ -48,7 +48,7 @@ public class BrowserPopupExtensionTest extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        List<Class<? extends Component>> components = new ArrayList<Class<? extends Component>>();
+        List<Class<? extends Component>> components = new ArrayList<>();
         components.add(Button.class);
         components.add(NativeButton.class);
         components.add(Link.class);

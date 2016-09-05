@@ -38,7 +38,7 @@ public class CaptionsInLayouts extends AbstractTestUI {
     private HorizontalLayout horizontalLayout;
     private GridLayout gridLayout;
     private FormLayout formLayout;
-    private List<AbstractField<?>> components = new ArrayList<AbstractField<?>>();
+    private List<AbstractField<?>> components = new ArrayList<>();
     private CssLayout cssLayout;
     private HorizontalLayout layoutParent = new HorizontalLayout();
 

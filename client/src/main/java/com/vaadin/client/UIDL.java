@@ -121,7 +121,7 @@ public final class UIDL extends JavaScriptObject {
      */
     public Set<String> getVariableNames() {
         if (!hasVariables()) {
-            return new HashSet<String>();
+            return new HashSet<>();
         } else {
             Set<String> keySet = var().getKeySet();
             return keySet;
@@ -453,7 +453,7 @@ public final class UIDL extends JavaScriptObject {
      * @return the value of the variable
      */
     public Set<String> getStringArrayVariableAsSet(final String name) {
-        final HashSet<String> s = new HashSet<String>();
+        final HashSet<String> s = new HashSet<>();
         JsArrayString a = var().getJSStringArray(name);
         for (int i = 0; i < a.length(); i++) {
             s.add(a.get(i));

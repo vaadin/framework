@@ -233,7 +233,7 @@ public class TestSizeableIncomponents extends LegacyApplication {
     class Testable {
 
         private Class<?> classToTest;
-        private ArrayList<Configuration> configurations = new ArrayList<Configuration>();
+        private ArrayList<Configuration> configurations = new ArrayList<>();
 
         Testable(Class<?> c) {
             classToTest = c;

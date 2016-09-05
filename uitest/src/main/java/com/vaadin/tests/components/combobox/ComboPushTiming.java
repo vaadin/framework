@@ -26,7 +26,7 @@ public class ComboPushTiming extends TestBase {
     @Override
     protected void setup() {
 
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             list.add("Item " + i);
         }
@@ -37,7 +37,7 @@ public class ComboPushTiming extends TestBase {
         cb.setDescription("Some Combobox");
         addComponent(cb);
 
-        final ObjectProperty<String> log = new ObjectProperty<String>("");
+        final ObjectProperty<String> log = new ObjectProperty<>("");
 
         cb.addFocusListener(new FieldEvents.FocusListener() {
             @Override

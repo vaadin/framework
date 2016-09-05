@@ -47,7 +47,7 @@ public class ContextMenuSize extends AbstractTestUI {
                         new Action("action4") };
             }
         });
-        BeanItemContainer<Bean> container = new BeanItemContainer<Bean>(
+        BeanItemContainer<Bean> container = new BeanItemContainer<>(
                 Bean.class);
         container.addBean(new Bean());
         table.setContainerDataSource(container);

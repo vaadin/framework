@@ -52,7 +52,7 @@ public class EventRouter implements MethodEventSource {
     @Override
     public void addListener(Class<?> eventType, Object object, Method method) {
         if (listenerList == null) {
-            listenerList = new LinkedHashSet<ListenerMethod>();
+            listenerList = new LinkedHashSet<>();
         }
         listenerList.add(new ListenerMethod(eventType, object, method));
     }
@@ -66,7 +66,7 @@ public class EventRouter implements MethodEventSource {
     public void addListener(Class<?> eventType, Object object,
             String methodName) {
         if (listenerList == null) {
-            listenerList = new LinkedHashSet<ListenerMethod>();
+            listenerList = new LinkedHashSet<>();
         }
         listenerList.add(new ListenerMethod(eventType, object, methodName));
     }
@@ -232,7 +232,7 @@ public class EventRouter implements MethodEventSource {
      *         are found.
      */
     public Collection<?> getListeners(Class<?> eventType) {
-        List<Object> listeners = new ArrayList<Object>();
+        List<Object> listeners = new ArrayList<>();
         if (listenerList != null) {
             for (ListenerMethod lm : listenerList) {
                 if (lm.isOrExtendsType(eventType)) {

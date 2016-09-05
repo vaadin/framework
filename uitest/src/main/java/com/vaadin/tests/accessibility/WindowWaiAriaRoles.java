@@ -31,7 +31,7 @@ import com.vaadin.ui.Window;
  * @author Vaadin Ltd
  */
 public class WindowWaiAriaRoles extends AbstractTestUI {
-    Stack<Window> windows = new Stack<Window>();
+    Stack<Window> windows = new Stack<>();
 
     /*
      * (non-Javadoc)

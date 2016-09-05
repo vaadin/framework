@@ -19,14 +19,14 @@ public class ColumnWidthsAfterChangeTableColumnsCountOrOrder
 
     @Override
     protected void setup(VaadinRequest request) {
-        List<TestBean> beanList = new ArrayList<TestBean>();
+        List<TestBean> beanList = new ArrayList<>();
         beanList.add(new TestBean(1, "name1", "descr1"));
         beanList.add(new TestBean(2, "name2", "descr2"));
         beanList.add(new TestBean(3, "name3", "descr3"));
         beanList.add(new TestBean(4, "name4", "descr4"));
         beanList.add(new TestBean(5, "name5", "descr5"));
 
-        BeanItemContainer<TestBean> container = new BeanItemContainer<TestBean>(
+        BeanItemContainer<TestBean> container = new BeanItemContainer<>(
                 TestBean.class, beanList);
 
         VerticalLayout layout = new VerticalLayout();

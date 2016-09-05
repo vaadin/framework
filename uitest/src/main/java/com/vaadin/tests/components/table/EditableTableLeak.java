@@ -58,7 +58,7 @@ public class EditableTableLeak extends TestBase {
     }
 
     private static class CachingFieldFactory extends DefaultFieldFactory {
-        private final HashMap<Object, HashMap<Object, Field<?>>> cache = new HashMap<Object, HashMap<Object, Field<?>>>();
+        private final HashMap<Object, HashMap<Object, Field<?>>> cache = new HashMap<>();
 
         @Override
         public Field<?> createField(Container container, Object itemId,

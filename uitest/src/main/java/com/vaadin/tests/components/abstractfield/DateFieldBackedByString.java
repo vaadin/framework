@@ -11,7 +11,7 @@ public class DateFieldBackedByString extends AbstractComponentDataBindingTest {
         DateField df = new DateField("Date field");
         addComponent(df);
         df.setPropertyDataSource(
-                new com.vaadin.v7.data.util.ObjectProperty<String>(s,
+                new com.vaadin.v7.data.util.ObjectProperty<>(s,
                         String.class));
 
     }

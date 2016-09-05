@@ -28,7 +28,7 @@ public class NotselectablePaintSelections extends TestBase {
         t.setMultiSelect(true);
         t.setPageLength(5);
         t.addContainerProperty("Name", String.class, null);
-        Set<Object> selected = new HashSet<Object>();
+        Set<Object> selected = new HashSet<>();
         for (int i = 0; i < 30; i++) {
             Item item = t.addItem(i);
             item.getItemProperty("Name").setValue("Name " + i);

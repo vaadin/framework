@@ -477,10 +477,10 @@ public class VDragAndDropWrapper extends VCustomComponent
     }
 
     /** For internal use only. May be removed or replaced in the future. */
-    public List<Integer> fileIds = new ArrayList<Integer>();
+    public List<Integer> fileIds = new ArrayList<>();
 
     /** For internal use only. May be removed or replaced in the future. */
-    public List<VHtml5File> files = new ArrayList<VHtml5File>();
+    public List<VHtml5File> files = new ArrayList<>();
 
     private void queueFilePost(final int fileId, final VHtml5File file) {
         fileIds.add(fileId);

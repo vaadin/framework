@@ -260,7 +260,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * {@link #isPush()}.
      */
     protected void openTestURL(Class<?> uiClass, String... parameters) {
-        openTestURL(uiClass, new HashSet<String>(Arrays.asList(parameters)));
+        openTestURL(uiClass, new HashSet<>(Arrays.asList(parameters)));
     }
 
     private void openTestURL(Class<?> uiClass, Set<String> parameters) {
@@ -979,7 +979,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     protected List<String> getLogs() {
         VerticalLayoutElement log = $(VerticalLayoutElement.class).id("Log");
         List<LabelElement> logLabels = log.$(LabelElement.class).all();
-        List<String> logTexts = new ArrayList<String>();
+        List<String> logTexts = new ArrayList<>();
 
         for (LabelElement label : logLabels) {
             logTexts.add(label.getText());

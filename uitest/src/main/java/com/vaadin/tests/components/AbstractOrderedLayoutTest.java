@@ -55,7 +55,7 @@ public abstract class AbstractOrderedLayoutTest<T extends AbstractOrderedLayout>
         String expandRatioCategory = "Component expand ratio";
         createCategory(expandRatioCategory, category);
 
-        LinkedHashMap<String, Float> options = new LinkedHashMap<String, Float>();
+        LinkedHashMap<String, Float> options = new LinkedHashMap<>();
         options.put("0", 0f);
         options.put("0.5", 0.5f);
         for (float f = 1; f <= 5; f++) {

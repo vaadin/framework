@@ -60,13 +60,13 @@ public abstract class AbstractClientConnector
      * A map from client to server RPC interface class name to the RPC call
      * manager that handles incoming RPC calls for that interface.
      */
-    private Map<String, ServerRpcManager<?>> rpcManagerMap = new HashMap<String, ServerRpcManager<?>>();
+    private Map<String, ServerRpcManager<?>> rpcManagerMap = new HashMap<>();
 
     /**
      * A map from server to client RPC interface class to the RPC proxy that
      * sends ourgoing RPC calls for that interface.
      */
-    private Map<Class<?>, ClientRpc> rpcProxyMap = new HashMap<Class<?>, ClientRpc>();
+    private Map<Class<?>, ClientRpc> rpcProxyMap = new HashMap<>();
 
     /**
      * Shared state object to be communicated from the server to the client when
@@ -79,11 +79,11 @@ public abstract class AbstractClientConnector
     /**
      * Pending RPC method invocations to be sent.
      */
-    private ArrayList<ClientMethodInvocation> pendingInvocations = new ArrayList<ClientMethodInvocation>();
+    private ArrayList<ClientMethodInvocation> pendingInvocations = new ArrayList<>();
 
     private String connectorId;
 
-    private ArrayList<Extension> extensions = new ArrayList<Extension>();
+    private ArrayList<Extension> extensions = new ArrayList<>();
 
     /**
      * The EventRouter used for the event model.
@@ -92,7 +92,7 @@ public abstract class AbstractClientConnector
 
     private ErrorHandler errorHandler = null;
 
-    private static final ConcurrentHashMap<Class<? extends AbstractClientConnector>, Class<? extends SharedState>> stateTypeCache = new ConcurrentHashMap<Class<? extends AbstractClientConnector>, Class<? extends SharedState>>();
+    private static final ConcurrentHashMap<Class<? extends AbstractClientConnector>, Class<? extends SharedState>> stateTypeCache = new ConcurrentHashMap<>();
 
     @Override
     public void addAttachListener(AttachListener listener) {
@@ -170,7 +170,7 @@ public abstract class AbstractClientConnector
     protected <T extends ServerRpc> void registerRpc(T implementation,
             Class<T> rpcInterfaceType) {
         rpcManagerMap.put(rpcInterfaceType.getName(),
-                new ServerRpcManager<T>(implementation, rpcInterfaceType));
+                new ServerRpcManager<>(implementation, rpcInterfaceType));
     }
 
     /**
@@ -425,7 +425,7 @@ public abstract class AbstractClientConnector
             return Collections.emptyList();
         } else {
             List<ClientMethodInvocation> result = pendingInvocations;
-            pendingInvocations = new ArrayList<ClientMethodInvocation>();
+            pendingInvocations = new ArrayList<>();
             return Collections.unmodifiableList(result);
         }
     }

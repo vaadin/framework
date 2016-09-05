@@ -54,7 +54,7 @@ public class SessionRequestHandler implements RequestHandler {
         session.lock();
         ArrayList<RequestHandler> requestHandlers;
         try {
-            requestHandlers = new ArrayList<RequestHandler>(
+            requestHandlers = new ArrayList<>(
                     session.getRequestHandlers());
         } finally {
             session.unlock();

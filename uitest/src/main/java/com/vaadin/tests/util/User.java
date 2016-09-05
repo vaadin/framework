@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class User implements Serializable {
     private String name = "";
-    private Set<Role> roles = new HashSet<Role>();
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
     }

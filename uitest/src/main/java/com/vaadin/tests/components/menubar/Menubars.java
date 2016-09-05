@@ -78,7 +78,7 @@ public class Menubars extends ComponentTestCase<MenuBar> {
 
     @Override
     protected List<Component> createActions() {
-        ArrayList<Component> actions = new ArrayList<Component>();
+        ArrayList<Component> actions = new ArrayList<>();
         actions.add(createErrorIndicatorAction(false));
         actions.add(createEnabledAction(true));
 

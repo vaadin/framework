@@ -129,7 +129,7 @@ public class Dragging extends VerticalLayout implements View {
     }
 
     private List<Component> createComponents() {
-        final List<Component> components = new ArrayList<Component>();
+        final List<Component> components = new ArrayList<>();
 
         final Label label = new Label(
                 "This is a long text block that will wrap.");

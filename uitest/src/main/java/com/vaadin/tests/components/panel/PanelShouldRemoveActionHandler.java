@@ -74,7 +74,7 @@ public class PanelShouldRemoveActionHandler extends TestBase {
                 actionHandlers.remove(actionHandlers.size() - 1));
     }
 
-    private List<Handler> actionHandlers = new ArrayList<Handler>();
+    private List<Handler> actionHandlers = new ArrayList<>();
 
     public void add() {
         panel.setCaption(panel.getCaption() + " - Added handler");

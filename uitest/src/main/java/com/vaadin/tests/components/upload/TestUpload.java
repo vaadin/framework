@@ -46,7 +46,7 @@ public class TestUpload extends ComponentTestCase<Upload> implements Receiver {
 
     @Override
     protected List<Component> createActions() {
-        List<Component> actions = new ArrayList<Component>();
+        List<Component> actions = new ArrayList<>();
         actions.add(createEnabledAction(true));
 
         return actions;

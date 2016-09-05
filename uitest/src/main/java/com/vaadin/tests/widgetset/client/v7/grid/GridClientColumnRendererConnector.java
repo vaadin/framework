@@ -125,7 +125,7 @@ public class GridClientColumnRendererConnector
         grid.setSelectionMode(Grid.SelectionMode.NONE);
 
         // Generated some column data
-        List<String> columnData = new ArrayList<String>();
+        List<String> columnData = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             columnData.add(String.valueOf(i));
         }
@@ -133,10 +133,10 @@ public class GridClientColumnRendererConnector
         // Provide data as data source
         if (Location.getParameter("latency") != null) {
             grid.setDataSource(new DelayedDataSource(
-                    new ListDataSource<String>(columnData),
+                    new ListDataSource<>(columnData),
                     Integer.parseInt(Location.getParameter("latency"))));
         } else {
-            grid.setDataSource(new ListDataSource<String>(columnData));
+            grid.setDataSource(new ListDataSource<>(columnData));
         }
 
         // Add a column to display the data in
@@ -211,7 +211,7 @@ public class GridClientColumnRendererConnector
                     @SuppressWarnings("unchecked")
                     public void triggerClientSortingTest() {
                         Grid<String> grid = getWidget();
-                        ListSorter<String> sorter = new ListSorter<String>(
+                        ListSorter<String> sorter = new ListSorter<>(
                                 grid);
 
                         // Make sorter sort the numbers in natural order
@@ -236,7 +236,7 @@ public class GridClientColumnRendererConnector
                     @SuppressWarnings("unchecked")
                     public void shuffle() {
                         Grid<String> grid = getWidget();
-                        ListSorter<String> shuffler = new ListSorter<String>(
+                        ListSorter<String> shuffler = new ListSorter<>(
                                 grid);
 
                         // Make shuffler return random order

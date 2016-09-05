@@ -60,7 +60,7 @@ public class LegacyUidlWriter implements Serializable {
         Collection<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();
 
-        List<Component> legacyComponents = new ArrayList<Component>(
+        List<Component> legacyComponents = new ArrayList<>(
                 dirtyVisibleConnectors.size());
         for (ClientConnector connector : dirtyVisibleConnectors) {
             // All Components that want to use paintContent must implement

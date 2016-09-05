@@ -85,7 +85,7 @@ public class GridReplaceContainer extends AbstractTestUIWithLog {
     }
 
     private Indexed createContainer() {
-        BeanItemContainer<Bean> bic = new BeanItemContainer<Bean>(Bean.class);
+        BeanItemContainer<Bean> bic = new BeanItemContainer<>(Bean.class);
         bic.addBean(new Bean(1, "First item"));
         bic.addBean(new Bean(2, "Second item"));
         bic.addBean(new Bean(3, "Third item"));

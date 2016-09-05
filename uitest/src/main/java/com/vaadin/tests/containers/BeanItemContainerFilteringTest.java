@@ -64,7 +64,7 @@ public class BeanItemContainerFilteringTest extends TestBase {
     protected void setup() {
         table = new Table();
         try {
-            container = new BeanItemContainer<TestBean>(TestBean.class);
+            container = new BeanItemContainer<>(TestBean.class);
             table.setContainerDataSource(container);
 
             table.setWidth(300, Sizeable.UNITS_PIXELS);

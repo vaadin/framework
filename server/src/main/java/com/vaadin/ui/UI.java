@@ -116,7 +116,7 @@ public abstract class UI extends AbstractSingleComponentContainer
     /**
      * List of windows in this UI.
      */
-    private final LinkedHashSet<Window> windows = new LinkedHashSet<Window>();
+    private final LinkedHashSet<Window> windows = new LinkedHashSet<>();
 
     /**
      * The component that should be scrolled into view after the next repaint.
@@ -415,7 +415,7 @@ public abstract class UI extends AbstractSingleComponentContainer
     public Iterator<Component> iterator() {
         // TODO could directly create some kind of combined iterator instead of
         // creating a new ArrayList
-        ArrayList<Component> components = new ArrayList<Component>();
+        ArrayList<Component> components = new ArrayList<>();
 
         if (getContent() != null) {
             components.add(getContent());

@@ -54,8 +54,8 @@ public interface ShortcutKeyMapper extends Serializable {
      */
     public static final ShortcutKeyMapper DEFAULT = new ShortcutKeyMapper() {
 
-        private final Map<Integer, String> keyCodeMap = new ConcurrentHashMap<Integer, String>();
-        private final Map<String, Integer> presentationMap = new ConcurrentHashMap<String, Integer>();
+        private final Map<Integer, String> keyCodeMap = new ConcurrentHashMap<>();
+        private final Map<String, Integer> presentationMap = new ConcurrentHashMap<>();
 
         {
             // map modifiers

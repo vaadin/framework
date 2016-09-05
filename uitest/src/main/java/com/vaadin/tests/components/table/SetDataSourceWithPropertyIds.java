@@ -72,7 +72,7 @@ public class SetDataSourceWithPropertyIds extends AbstractTestUI {
             table.setVisibleColumns(new String[] { "jobId" });
             label.setValue("no Exception");
         } catch (CacheUpdateException e) {
-            ArrayList<String> propertyIds = new ArrayList<String>();
+            ArrayList<String> propertyIds = new ArrayList<>();
             propertyIds.add("jobId");
             table.setContainerDataSource(jobContainer, propertyIds);
             label.setValue("Exception caught");
@@ -81,7 +81,7 @@ public class SetDataSourceWithPropertyIds extends AbstractTestUI {
 
     private List<JobsBean> getBeanList() {
 
-        List<JobsBean> list = new ArrayList<JobsBean>();
+        List<JobsBean> list = new ArrayList<>();
         JobsBean jobsBean = new JobsBean();
         jobsBean.setJobId("1");
         list.add(jobsBean);

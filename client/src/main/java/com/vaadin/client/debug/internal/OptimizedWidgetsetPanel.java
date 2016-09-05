@@ -76,7 +76,7 @@ public class OptimizedWidgetsetPanel extends FlowPanel {
     private Set<String> getUsedConnectorNames(
             ApplicationConfiguration configuration) {
         int tag = 0;
-        Set<String> usedConnectors = new HashSet<String>();
+        Set<String> usedConnectors = new HashSet<>();
         while (true) {
             String serverSideClass = configuration
                     .getServerSideClassNameForTag(tag);

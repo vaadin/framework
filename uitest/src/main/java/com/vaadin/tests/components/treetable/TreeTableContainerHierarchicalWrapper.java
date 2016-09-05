@@ -12,7 +12,7 @@ import com.vaadin.v7.ui.TreeTable;
 public class TreeTableContainerHierarchicalWrapper extends AbstractTestUI {
 
     TreeTable treetable = new TreeTable();
-    BeanItemContainer<Bean> beanContainer = new BeanItemContainer<Bean>(
+    BeanItemContainer<Bean> beanContainer = new BeanItemContainer<>(
             Bean.class);
     ContainerHierarchicalWrapper hierarchicalWrapper = new ContainerHierarchicalWrapper(
             beanContainer);

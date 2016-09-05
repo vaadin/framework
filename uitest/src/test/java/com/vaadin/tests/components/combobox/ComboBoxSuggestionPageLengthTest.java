@@ -59,7 +59,7 @@ public class ComboBoxSuggestionPageLengthTest extends MultiBrowserTest {
                 .findElements(By.cssSelector(
                         ".v-filterselect-suggestpopup .gwt-MenuItem span"));
 
-        List<String> suggestions = new ArrayList<String>();
+        List<String> suggestions = new ArrayList<>();
         for (WebElement suggestion : suggestionElements) {
             suggestions.add(suggestion.getText());
         }

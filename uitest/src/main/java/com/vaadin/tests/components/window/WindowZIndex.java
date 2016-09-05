@@ -25,7 +25,7 @@ public class WindowZIndex extends AbstractTestUI {
     }
 
     int windowCount = 0;
-    Queue<Window> windows = new ArrayDeque<Window>();
+    Queue<Window> windows = new ArrayDeque<>();
 
     @Override
     protected void setup(VaadinRequest request) {

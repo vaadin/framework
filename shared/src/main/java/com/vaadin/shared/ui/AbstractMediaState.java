@@ -36,7 +36,7 @@ public class AbstractMediaState extends AbstractComponentState {
     @NoLayout
     public boolean muted;
 
-    public List<URLReference> sources = new ArrayList<URLReference>();
+    public List<URLReference> sources = new ArrayList<>();
 
-    public List<String> sourceTypes = new ArrayList<String>();
+    public List<String> sourceTypes = new ArrayList<>();
 }

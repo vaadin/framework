@@ -28,7 +28,7 @@ public class PointerDownEvent extends PointerEvent<PointerDownHandler> {
      * Event type for PointerDownEvent. Represents the meta-data associated with
      * this event.
      */
-    private static final Type<PointerDownHandler> TYPE = new Type<PointerDownHandler>(
+    private static final Type<PointerDownHandler> TYPE = new Type<>(
             EventType.PointerDown.getNativeEventName(), new PointerDownEvent());
 
     /**

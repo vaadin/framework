@@ -32,8 +32,8 @@ import com.vaadin.tests.tb3.ServletIntegrationTests.ServletIntegrationTestSuite;
 @RunWith(ServletIntegrationTestSuite.class)
 public class ServletIntegrationTests {
 
-    public static Set<String> notJSR356Compatible = new HashSet<String>();
-    public static Set<String> notWebsocketCompatible = new HashSet<String>();
+    public static Set<String> notJSR356Compatible = new HashSet<>();
+    public static Set<String> notWebsocketCompatible = new HashSet<>();
     static {
 
         notJSR356Compatible.add("jetty8");

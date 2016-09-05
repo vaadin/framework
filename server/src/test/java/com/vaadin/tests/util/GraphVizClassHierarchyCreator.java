@@ -26,12 +26,12 @@ public class GraphVizClassHierarchyCreator {
 
         StringBuilder sb = new StringBuilder();
 
-        Set<Class> classesAndParents = new HashSet<Class>();
+        Set<Class> classesAndParents = new HashSet<>();
         for (Class<?> cls : classes) {
             addClassAndParents(classesAndParents, cls, packageToInclude);
         }
 
-        Set<Class> interfaces = new HashSet<Class>();
+        Set<Class> interfaces = new HashSet<>();
         for (Object cls : classesAndParents.toArray()) {
             for (Class<?> c : ((Class) cls).getInterfaces()) {
                 addClassAndParentInterfaces(classesAndParents, c,

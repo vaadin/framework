@@ -99,7 +99,7 @@ public class ExpandingContainer extends AbstractContainer implements
             return null;
         }
         final int index = ((Integer) itemId).intValue();
-        return new BeanItem<MyBean>(new MyBean(index));
+        return new BeanItem<>(new MyBean(index));
     }
 
     @Override

@@ -60,7 +60,7 @@ public class CustomLayoutTest {
 
     private Integer getBufferSize() throws IllegalAccessException {
         Field[] fields = CustomLayout.class.getDeclaredFields();
-        List<Field> list = new ArrayList<Field>(fields.length);
+        List<Field> list = new ArrayList<>(fields.length);
         for (Field field : fields) {
             if ((field.getModifiers() & Modifier.STATIC) > 0) {
                 list.add(field);

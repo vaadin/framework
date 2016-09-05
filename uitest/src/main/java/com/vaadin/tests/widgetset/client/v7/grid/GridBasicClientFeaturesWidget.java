@@ -112,7 +112,7 @@ public class GridBasicClientFeaturesWidget
 
     private class TestEditorHandler implements EditorHandler<List<Data>> {
 
-        private Map<Grid.Column<?, ?>, TextBox> widgets = new HashMap<Grid.Column<?, ?>, TextBox>();
+        private Map<Grid.Column<?, ?>, TextBox> widgets = new HashMap<>();
 
         private Label log = new Label();
 
@@ -220,7 +220,7 @@ public class GridBasicClientFeaturesWidget
      * @return
      */
     private List<List<Data>> createData(int rowCount) {
-        List<List<Data>> dataList = new ArrayList<List<Data>>();
+        List<List<Data>> dataList = new ArrayList<>();
         Random rand = new Random();
         rand.setSeed(13334);
         long timestamp = 0;
@@ -266,7 +266,7 @@ public class GridBasicClientFeaturesWidget
      * @return
      */
     private List<Data> createDataRow(int cols) {
-        List<Data> list = new ArrayList<Data>(cols);
+        List<Data> list = new ArrayList<>(cols);
         for (int i = 0; i < cols; ++i) {
             list.add(new Data());
         }
@@ -280,7 +280,7 @@ public class GridBasicClientFeaturesWidget
         // Initialize data source
         data = createData(ROWS);
 
-        ds = new ListDataSource<List<Data>>(data);
+        ds = new ListDataSource<>(data);
         grid = getTestedWidget();
         grid.getElement().setId("testComponent");
         grid.setDataSource(ds);
@@ -288,7 +288,7 @@ public class GridBasicClientFeaturesWidget
         grid.setSelectionMode(SelectionMode.NONE);
         grid.setEditorHandler(new TestEditorHandler());
 
-        sorter = new ListSorter<List<Data>>(grid);
+        sorter = new ListSorter<>(grid);
 
         // Create a bunch of grid columns
 
@@ -774,7 +774,7 @@ public class GridBasicClientFeaturesWidget
 
             @Override
             public void execute() {
-                List<Column> columns = new ArrayList<Column>(grid.getColumns());
+                List<Column> columns = new ArrayList<>(grid.getColumns());
                 Collections.reverse(columns);
                 grid.setColumnOrder(
                         columns.toArray(new Column[columns.size()]));
@@ -980,7 +980,7 @@ public class GridBasicClientFeaturesWidget
                 @Override
                 public void execute() {
                     List<Column<?, List<Data>>> cols = grid.getColumns();
-                    ArrayList<Column> reordered = new ArrayList<Column>(cols);
+                    ArrayList<Column> reordered = new ArrayList<>(cols);
                     final int index = cols.indexOf(column);
                     if (index == 0) {
                         Column<?, List<Data>> col = reordered.remove(0);
@@ -1332,7 +1332,7 @@ public class GridBasicClientFeaturesWidget
      * Creates a collection of handlers for all the grid key events
      */
     private void createKeyHandlers() {
-        final List<VLabel> labels = new ArrayList<VLabel>();
+        final List<VLabel> labels = new ArrayList<>();
         for (int i = 0; i < 9; ++i) {
             VLabel tmp = new VLabel();
             addNorth(tmp, 20);
@@ -1534,8 +1534,8 @@ public class GridBasicClientFeaturesWidget
     private void createSidebarMenu() {
         String[] menupath = new String[] { "Component", "Sidebar" };
 
-        final List<MenuItem> customMenuItems = new ArrayList<MenuItem>();
-        final List<MenuItemSeparator> separators = new ArrayList<MenuItemSeparator>();
+        final List<MenuItem> customMenuItems = new ArrayList<>();
+        final List<MenuItemSeparator> separators = new ArrayList<>();
 
         addMenuCommand("Add item to end", new ScheduledCommand() {
             @Override

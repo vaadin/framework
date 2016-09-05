@@ -40,7 +40,7 @@ public class FieldBinder implements Serializable {
     // the instance containing the bound fields
     private Object bindTarget;
     // mapping between field names and Fields
-    private Map<String, Field> fieldMap = new HashMap<String, Field>();
+    private Map<String, Field> fieldMap = new HashMap<>();
 
     /**
      * Creates a new instance of LayoutFieldBinder.
@@ -79,7 +79,7 @@ public class FieldBinder implements Serializable {
      * @return a collection of fields assignable to Component that are not bound
      */
     public Collection<String> getUnboundFields() throws FieldBindingException {
-        List<String> unboundFields = new ArrayList<String>();
+        List<String> unboundFields = new ArrayList<>();
         for (Field f : fieldMap.values()) {
             try {
                 Object value = getFieldValue(bindTarget, f);
@@ -252,7 +252,7 @@ public class FieldBinder implements Serializable {
      */
     protected static List<java.lang.reflect.Field> getFields(
             Class<?> searchClass) {
-        ArrayList<java.lang.reflect.Field> memberFields = new ArrayList<java.lang.reflect.Field>();
+        ArrayList<java.lang.reflect.Field> memberFields = new ArrayList<>();
 
         for (java.lang.reflect.Field memberField : searchClass
                 .getDeclaredFields()) {

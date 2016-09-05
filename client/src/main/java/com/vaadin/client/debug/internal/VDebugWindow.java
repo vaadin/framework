@@ -133,7 +133,7 @@ public final class VDebugWindow extends VOverlay {
     protected SimplePanel content = new SimplePanel();
 
     // sections
-    protected ArrayList<Section> sections = new ArrayList<Section>();
+    protected ArrayList<Section> sections = new ArrayList<>();
 
     // handles resize/move
     protected HandlerRegistration mouseDownHandler = null;

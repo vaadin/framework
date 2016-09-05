@@ -115,7 +115,7 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
         if (c instanceof Container.Indexed) {
             return ((Container.Indexed) source).indexOfId(itemId);
         } else {
-            ArrayList<Object> list = new ArrayList<Object>(source.getItemIds());
+            ArrayList<Object> list = new ArrayList<>(source.getItemIds());
             return list.indexOf(itemId);
 
         }
@@ -160,9 +160,9 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
         addComponent(cacheRateSelect);
         treeTable = new TreeTable();
         treeTable.addStyleName("table-equal-rowheight");
-        testBeanContainer = new BeanItemContainer<TestBean>(TestBean.class);
+        testBeanContainer = new BeanItemContainer<>(TestBean.class);
 
-        Map<String, Integer> hasChildren = new HashMap<String, Integer>();
+        Map<String, Integer> hasChildren = new HashMap<>();
         hasChildren.put("1", 5);
         hasChildren.put("3", 10);
         hasChildren.put("5", 20);

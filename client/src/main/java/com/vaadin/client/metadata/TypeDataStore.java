@@ -260,7 +260,7 @@ public class TypeDataStore {
             throws NoDataException {
         JsArrayObject<Property> propertiesArray = getPropertiesAsArray(type);
         int size = propertiesArray.size();
-        ArrayList<Property> properties = new ArrayList<Property>(size);
+        ArrayList<Property> properties = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             properties.add(propertiesArray.get(i));
         }

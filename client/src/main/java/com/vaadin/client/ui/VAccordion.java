@@ -42,7 +42,7 @@ public class VAccordion extends VTabsheetBase {
 
     public static final String CLASSNAME = AccordionState.PRIMARY_STYLE_NAME;
 
-    private Set<Widget> widgets = new HashSet<Widget>();
+    private Set<Widget> widgets = new HashSet<>();
 
     private StackItem openTab;
 

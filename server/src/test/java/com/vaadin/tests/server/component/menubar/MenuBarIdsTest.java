@@ -23,7 +23,7 @@ public class MenuBarIdsTest implements Command {
     private MenuItem menuFileOpen;
     private MenuItem menuFileSave;
     private MenuItem menuFileExit;
-    private Set<MenuItem> menuItems = new HashSet<MenuItem>();
+    private Set<MenuItem> menuItems = new HashSet<>();
 
     private MenuBar menuBar;
 
@@ -71,7 +71,7 @@ public class MenuBarIdsTest implements Command {
 
     private static void assertUniqueIds(MenuBar menuBar) {
 
-        Set<Object> ids = new HashSet<Object>();
+        Set<Object> ids = new HashSet<>();
 
         for (MenuItem item : menuBar.getItems()) {
             assertUniqueIds(ids, item);

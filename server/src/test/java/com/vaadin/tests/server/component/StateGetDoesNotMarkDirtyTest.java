@@ -19,7 +19,7 @@ import com.vaadin.ui.UI;
 
 public class StateGetDoesNotMarkDirtyTest {
 
-    private Set<String> excludedMethods = new HashSet<String>();
+    private Set<String> excludedMethods = new HashSet<>();
 
     @Before
     public void setUp() {
@@ -33,7 +33,7 @@ public class StateGetDoesNotMarkDirtyTest {
             Component newInstance = construct(c);
             prepareMockUI(newInstance);
 
-            Set<Method> methods = new HashSet<Method>();
+            Set<Method> methods = new HashSet<>();
             methods.addAll(Arrays.asList(c.getMethods()));
             methods.addAll(Arrays.asList(c.getDeclaredMethods()));
             for (Method method : methods) {

@@ -37,7 +37,7 @@ public class OrderedLayoutSwapComponents extends CustomComponent {
 
     private final AbstractOrderedLayout main;
 
-    ArrayList<MyComponent> order = new ArrayList<MyComponent>();
+    ArrayList<MyComponent> order = new ArrayList<>();
 
     public OrderedLayoutSwapComponents() {
 

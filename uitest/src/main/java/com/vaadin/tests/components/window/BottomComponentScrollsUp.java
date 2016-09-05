@@ -79,7 +79,7 @@ public class BottomComponentScrollsUp extends AbstractTestUI {
         p.setContent(content);
         content.setHeight("500px");
 
-        List<String> items = new ArrayList<String>();
+        List<String> items = new ArrayList<>();
         items.add("1");
         items.add("2");
         items.add("3");

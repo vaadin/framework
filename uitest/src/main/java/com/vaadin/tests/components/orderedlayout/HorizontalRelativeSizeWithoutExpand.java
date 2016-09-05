@@ -26,7 +26,7 @@ public class HorizontalRelativeSizeWithoutExpand extends UI {
         Tree tree = new Tree();
         tree.setSizeFull();
         tree.setContainerDataSource(
-                new BeanItemContainer<String>(String.class));
+                new BeanItemContainer<>(String.class));
         String a = "aaaaaaaaaaaaaaaaaaaaaaaa";
         String b = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
         String c = "ccccccccccccccccccccccccccccccccccccccccccccccccc";

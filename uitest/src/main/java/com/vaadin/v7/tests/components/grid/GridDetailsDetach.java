@@ -71,7 +71,7 @@ public class GridDetailsDetach extends AbstractTestUI {
     }
 
     private Grid generateGrid() {
-        BeanItemContainer<GridExampleBean> container = new BeanItemContainer<GridExampleBean>(
+        BeanItemContainer<GridExampleBean> container = new BeanItemContainer<>(
                 GridExampleBean.class);
         for (int i = 0; i < 1000; i++) {
             container.addItem(new GridExampleBean("Bean " + i, i * i, i / 10d));

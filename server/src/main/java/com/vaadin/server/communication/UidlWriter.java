@@ -80,7 +80,7 @@ public class UidlWriter implements Serializable {
         // to write out
         service.runPendingAccessTasks(session);
 
-        Set<ClientConnector> processedConnectors = new HashSet<ClientConnector>();
+        Set<ClientConnector> processedConnectors = new HashSet<>();
 
         LegacyCommunicationManager manager = session.getCommunicationManager();
         ClientCache clientCache = manager.getClientCache(ui);
@@ -90,7 +90,7 @@ public class UidlWriter implements Serializable {
         getLogger().log(Level.FINE, "* Creating response to client");
 
         while (true) {
-            ArrayList<ClientConnector> connectorsToProcess = new ArrayList<ClientConnector>();
+            ArrayList<ClientConnector> connectorsToProcess = new ArrayList<>();
             for (ClientConnector c : uiConnectorTracker.getDirtyConnectors()) {
                 if (!processedConnectors.contains(c)
                         && LegacyCommunicationManager
@@ -209,7 +209,7 @@ public class UidlWriter implements Serializable {
                     .getUsedClientConnectors();
             boolean typeMappingsOpen = false;
 
-            List<Class<? extends ClientConnector>> newConnectorTypes = new ArrayList<Class<? extends ClientConnector>>();
+            List<Class<? extends ClientConnector>> newConnectorTypes = new ArrayList<>();
 
             for (Class<? extends ClientConnector> class1 : usedClientConnectors) {
                 if (clientCache.cache(class1)) {
@@ -284,8 +284,8 @@ public class UidlWriter implements Serializable {
                 }
             });
 
-            List<String> scriptDependencies = new ArrayList<String>();
-            List<String> styleDependencies = new ArrayList<String>();
+            List<String> scriptDependencies = new ArrayList<>();
+            List<String> styleDependencies = new ArrayList<>();
 
             for (Class<? extends ClientConnector> class1 : newConnectorTypes) {
                 JavaScript jsAnnotation = class1

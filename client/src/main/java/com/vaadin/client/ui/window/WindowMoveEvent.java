@@ -25,7 +25,7 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class WindowMoveEvent extends GwtEvent<WindowMoveHandler> {
 
-    private static final Type<WindowMoveHandler> TYPE = new Type<WindowMoveHandler>();
+    private static final Type<WindowMoveHandler> TYPE = new Type<>();
 
     private final int newX;
     private final int newY;

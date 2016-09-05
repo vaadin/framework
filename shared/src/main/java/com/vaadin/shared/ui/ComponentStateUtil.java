@@ -78,7 +78,7 @@ public final class ComponentStateUtil implements Serializable {
     public static final void addRegisteredEventListener(SharedState state,
             String eventListenerId) {
         if (state.registeredEventListeners == null) {
-            state.registeredEventListeners = new HashSet<String>();
+            state.registeredEventListeners = new HashSet<>();
         }
         state.registeredEventListeners.add(eventListenerId);
     }

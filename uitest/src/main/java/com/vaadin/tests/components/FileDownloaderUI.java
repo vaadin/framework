@@ -54,7 +54,7 @@ public class FileDownloaderUI extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        List<Class<? extends Component>> components = new ArrayList<Class<? extends Component>>();
+        List<Class<? extends Component>> components = new ArrayList<>();
         components.add(Button.class);
         components.add(NativeButton.class);
         components.add(CssLayout.class);

@@ -39,7 +39,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
     private static final Resource SELECTED_ICON = new ThemeResource(
             "../runo/icons/16/ok.png");
 
-    private static final LinkedHashMap<String, String> sizeOptions = new LinkedHashMap<String, String>();
+    private static final LinkedHashMap<String, String> sizeOptions = new LinkedHashMap<>();
     static {
         sizeOptions.put("auto", null);
         sizeOptions.put("50%", "50%");
@@ -61,13 +61,13 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
 
     // Used to determine if a menuItem should be selected and the other
     // unselected on click
-    private Set<MenuItem> parentOfSelectableMenuItem = new HashSet<MenuItem>();
+    private Set<MenuItem> parentOfSelectableMenuItem = new HashSet<>();
 
     /**
      * Maps the category name to a menu item
      */
-    private Map<String, MenuItem> categoryToMenuItem = new HashMap<String, MenuItem>();
-    private Map<MenuItem, String> menuItemToCategory = new HashMap<MenuItem, String>();
+    private Map<String, MenuItem> categoryToMenuItem = new HashMap<>();
+    private Map<MenuItem, String> menuItemToCategory = new HashMap<>();
 
     // Logging
     private Log log;
@@ -292,7 +292,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
             createBlurListener(CATEGORY_LISTENERS);
         }
         if (Focusable.class.isAssignableFrom(getTestClass())) {
-            LinkedHashMap<String, Integer> tabIndexes = new LinkedHashMap<String, Integer>();
+            LinkedHashMap<String, Integer> tabIndexes = new LinkedHashMap<>();
             tabIndexes.put("0", 0);
             tabIndexes.put("-1", -1);
             tabIndexes.put("10", 10);
@@ -315,7 +315,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
     }
 
     private void createStyleNameSelect(String category) {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         options.put("-", null);
         options.put("Light blue background (background-lightblue)",
                 "background-lightblue");
@@ -333,7 +333,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
     }
 
     private void createErrorMessageSelect(String category) {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         options.put("-", null);
         options.put(TEXT_SHORT, TEXT_SHORT);
         options.put("Medium", TEXT_MEDIUM);
@@ -345,7 +345,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
     }
 
     private void createDescriptionSelect(String category) {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         options.put("-", null);
         options.put(TEXT_SHORT, TEXT_SHORT);
         options.put("Medium", TEXT_MEDIUM);
@@ -363,7 +363,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
     }
 
     protected LinkedHashMap<String, String> createCaptionOptions() {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         options.put("-", null);
         options.put("Short", TEXT_SHORT);
         options.put("Medium", TEXT_MEDIUM);
@@ -394,7 +394,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
     }
 
     private void createIconSelect(String category) {
-        LinkedHashMap<String, Resource> options = new LinkedHashMap<String, Resource>();
+        LinkedHashMap<String, Resource> options = new LinkedHashMap<>();
         options.put("-", null);
         options.put("16x16", ICON_16_USER_PNG_CACHEABLE);
         options.put("32x32", ICON_32_ATTENTION_PNG_CACHEABLE);
@@ -404,7 +404,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
     }
 
     private void createLocaleSelect(String category) {
-        LinkedHashMap<String, Locale> options = new LinkedHashMap<String, Locale>();
+        LinkedHashMap<String, Locale> options = new LinkedHashMap<>();
         options.put("-", null);
         options.put("fi_FI", new Locale("fi", "FI"));
         options.put("en_US", Locale.US);
@@ -605,7 +605,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
     protected <TYPE extends Enum<TYPE>> void createSelectAction(String caption,
             String category, Class<TYPE> enumType, TYPE initialValue,
             com.vaadin.tests.components.ComponentTestCase.Command<T, TYPE> command) {
-        LinkedHashMap<String, TYPE> options = new LinkedHashMap<String, TYPE>();
+        LinkedHashMap<String, TYPE> options = new LinkedHashMap<>();
         for (TYPE value : EnumSet.allOf(enumType)) {
             options.put(value.toString(), value);
         }
@@ -633,7 +633,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
             com.vaadin.tests.components.ComponentTestCase.Command<T, Boolean> command,
             boolean defaultValue) {
 
-        LinkedHashMap<String, Boolean> defaultValues = new LinkedHashMap<String, Boolean>();
+        LinkedHashMap<String, Boolean> defaultValues = new LinkedHashMap<>();
 
         for (String option : options.keySet()) {
             defaultValues.put(option, defaultValue);
@@ -677,7 +677,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
     }
 
     protected LinkedHashMap<String, Integer> createIntegerOptions(int max) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         for (int i = 0; i <= 9 && i <= max; i++) {
             options.put(String.valueOf(i), i);
         }
@@ -695,7 +695,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
     }
 
     protected LinkedHashMap<String, Double> createDoubleOptions(double max) {
-        LinkedHashMap<String, Double> options = new LinkedHashMap<String, Double>();
+        LinkedHashMap<String, Double> options = new LinkedHashMap<>();
         for (double d = 0; d <= max && d < 10; d += 0.5) {
             options.put(String.valueOf(d), d);
         }
@@ -714,7 +714,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
 
     protected LinkedHashMap<String, Resource> createIconOptions(
             boolean cacheable) {
-        LinkedHashMap<String, Resource> options = new LinkedHashMap<String, Resource>();
+        LinkedHashMap<String, Resource> options = new LinkedHashMap<>();
         options.put("-", null);
         if (cacheable) {
             options.put("16x16", ICON_16_USER_PNG_CACHEABLE);

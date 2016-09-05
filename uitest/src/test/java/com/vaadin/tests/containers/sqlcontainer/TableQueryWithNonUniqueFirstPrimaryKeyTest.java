@@ -26,7 +26,7 @@ public class TableQueryWithNonUniqueFirstPrimaryKeyTest
         $(ComboBoxElement.class).first().findElement(By.vaadin("#textbox"))
                 .sendKeys("rus", Keys.ENTER);
 
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         // pick list items that are shown in suggestion popup
         List<WebElement> elems = findElements(

@@ -72,7 +72,7 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
     }
 
     protected List<TestBenchElement> getGridHeaderRowCells() {
-        List<TestBenchElement> headerCells = new ArrayList<TestBenchElement>();
+        List<TestBenchElement> headerCells = new ArrayList<>();
         for (int i = 0; i < getGridElement().getHeaderCount(); ++i) {
             headerCells.addAll(getGridElement().getHeaderCells(i));
         }
@@ -80,7 +80,7 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
     }
 
     protected List<TestBenchElement> getGridFooterRowCells() {
-        List<TestBenchElement> footerCells = new ArrayList<TestBenchElement>();
+        List<TestBenchElement> footerCells = new ArrayList<>();
         for (int i = 0; i < getGridElement().getFooterCount(); ++i) {
             footerCells.addAll(getGridElement().getFooterCells(i));
         }

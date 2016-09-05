@@ -625,7 +625,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * @return
      */
     public List<WindowConnector> getSubWindows() {
-        ArrayList<WindowConnector> windows = new ArrayList<WindowConnector>();
+        ArrayList<WindowConnector> windows = new ArrayList<>();
         for (ComponentConnector child : getChildComponents()) {
             if (child instanceof WindowConnector) {
                 windows.add((WindowConnector) child);

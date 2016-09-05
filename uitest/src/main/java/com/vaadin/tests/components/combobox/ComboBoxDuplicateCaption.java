@@ -18,7 +18,7 @@ public class ComboBoxDuplicateCaption extends TestBase {
 
     @Override
     protected void setup() {
-        List<Person> list = new ArrayList<Person>();
+        List<Person> list = new ArrayList<>();
         Person p1 = new Person();
         p1.setFirstName("John");
         p1.setLastName("Doe");
@@ -29,7 +29,7 @@ public class ComboBoxDuplicateCaption extends TestBase {
         p2.setLastName("Doe");
         list.add(p2);
 
-        BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+        BeanItemContainer<Person> container = new BeanItemContainer<>(
                 Person.class);
         container.addAll(list);
 

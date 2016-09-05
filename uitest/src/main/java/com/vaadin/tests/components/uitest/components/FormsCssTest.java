@@ -20,8 +20,8 @@ public class FormsCssTest extends HorizontalLayout {
         setWidth("100%");
 
         VerticalLayout vl = new VerticalLayout();
-        FieldGroup fg = new BeanFieldGroup<Person>(Person.class);
-        fg.setItemDataSource(new BeanItem<Person>(new Person()));
+        FieldGroup fg = new BeanFieldGroup<>(Person.class);
+        fg.setItemDataSource(new BeanItem<>(new Person()));
         for (Object propId : fg.getUnboundPropertyIds()) {
             if (!"address".equals(propId)) {
                 vl.addComponent(fg.buildAndBind(propId));

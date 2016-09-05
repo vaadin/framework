@@ -120,7 +120,7 @@ public class DragAndDropWrapper extends CustomComponent
         }
     };
 
-    private Map<String, ProxyReceiver> receivers = new HashMap<String, ProxyReceiver>();
+    private Map<String, ProxyReceiver> receivers = new HashMap<>();
 
     public class WrapperTargetDetails extends TargetDetailsImpl {
 
@@ -191,11 +191,11 @@ public class DragAndDropWrapper extends CustomComponent
         COMPONENT_OTHER,
     }
 
-    private final Map<String, Object> html5DataFlavors = new LinkedHashMap<String, Object>();
+    private final Map<String, Object> html5DataFlavors = new LinkedHashMap<>();
     private DragStartMode dragStartMode = DragStartMode.NONE;
     private Component dragImageComponent = null;
 
-    private Set<String> sentIds = new HashSet<String>();
+    private Set<String> sentIds = new HashSet<>();
 
     /**
      * This is an internal constructor. Use

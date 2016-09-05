@@ -36,7 +36,7 @@ public class PotusCrud extends VerticalLayout {
 
     private FieldGroup fg;
 
-    private BeanItemContainer<Potus> potusContainer = new BeanItemContainer<Potus>(
+    private BeanItemContainer<Potus> potusContainer = new BeanItemContainer<>(
             Potus.class);
 
     public PotusCrud() {

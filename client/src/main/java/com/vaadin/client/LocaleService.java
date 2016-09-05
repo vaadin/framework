@@ -33,7 +33,7 @@ import com.vaadin.shared.ui.ui.UIState.LocaleData;
  */
 public class LocaleService {
 
-    private static Map<String, LocaleData> cache = new HashMap<String, LocaleData>();
+    private static Map<String, LocaleData> cache = new HashMap<>();
 
     private static String defaultLocale;
 

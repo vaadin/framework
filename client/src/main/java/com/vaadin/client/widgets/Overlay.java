@@ -175,7 +175,7 @@ public class Overlay extends PopupPanel {
      */
     private static final int POPUP_PANEL_ANIMATION_DURATION = 200;
 
-    private List<Command> runOnClose = new ArrayList<Command>();
+    private List<Command> runOnClose = new ArrayList<>();
 
     public Overlay() {
         super();

@@ -25,7 +25,7 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect>
 
     protected static class ContextMenu {
 
-        private List<Action> items = new ArrayList<Action>();
+        private List<Action> items = new ArrayList<>();
 
         public ContextMenu(String caption, Resource icon) {
             addItem(caption, icon);
@@ -73,7 +73,7 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect>
     }
 
     protected void createNullSelectItemId(String category) {
-        LinkedHashMap<String, Object> options = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> options = new LinkedHashMap<>();
         options.put("- None -", null);
         for (Object id : (getComponent()).getContainerDataSource()
                 .getContainerPropertyIds()) {
@@ -110,7 +110,7 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect>
     }
 
     protected void createItemsInContainerSelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         for (int i = 0; i <= 10; i++) {
             options.put(String.valueOf(i), i);
         }
@@ -125,7 +125,7 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect>
     }
 
     protected void createPropertiesInContainerSelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         options.put("0", 0);
         for (int i = 0; i <= 10; i++) {
             options.put(String.valueOf(i), i);

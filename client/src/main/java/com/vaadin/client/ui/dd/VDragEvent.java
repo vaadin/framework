@@ -52,7 +52,7 @@ public class VDragEvent {
 
     private int id;
 
-    private HashMap<String, Object> dropDetails = new HashMap<String, Object>();
+    private HashMap<String, Object> dropDetails = new HashMap<>();
 
     private Element elementOver;
 

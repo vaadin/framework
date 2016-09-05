@@ -89,7 +89,7 @@ public class Profiler {
      */
     public static class Node {
         private final String name;
-        private final LinkedHashMap<String, Node> children = new LinkedHashMap<String, Node>();
+        private final LinkedHashMap<String, Node> children = new LinkedHashMap<>();
         private double time = 0;
         private int count = 0;
         private double enterTime = 0;
@@ -462,7 +462,7 @@ public class Profiler {
             return;
         }
 
-        LinkedList<Node> stack = new LinkedList<Node>();
+        LinkedList<Node> stack = new LinkedList<>();
         Node rootNode = new Node(null);
         stack.add(rootNode);
         JsArray<GwtStatsEvent> gwtStatsEvents = getGwtStatsEvents();
@@ -472,7 +472,7 @@ public class Profiler {
             return;
         }
 
-        Set<Node> extendedTimeNodes = new HashSet<Node>();
+        Set<Node> extendedTimeNodes = new HashSet<>();
         for (int i = 0; i < gwtStatsEvents.length(); i++) {
             GwtStatsEvent gwtStatsEvent = gwtStatsEvents.get(i);
             String eventName = gwtStatsEvent.getEventName();
@@ -540,10 +540,10 @@ public class Profiler {
             return;
         }
 
-        Map<String, Node> totals = new HashMap<String, Node>();
+        Map<String, Node> totals = new HashMap<>();
         rootNode.sumUpTotals(totals);
 
-        ArrayList<Node> totalList = new ArrayList<Node>(totals.values());
+        ArrayList<Node> totalList = new ArrayList<>(totals.values());
         Collections.sort(totalList, new Comparator<Node>() {
             @Override
             public int compare(Node o1, Node o2) {
@@ -584,7 +584,7 @@ public class Profiler {
                     "domContentLoadedEventStart", "domContentLoadedEventEnd",
                     "domComplete", "loadEventStart", "loadEventEnd" };
 
-            LinkedHashMap<String, Double> timings = new LinkedHashMap<String, Double>();
+            LinkedHashMap<String, Double> timings = new LinkedHashMap<>();
 
             for (String key : keys) {
                 double value = getPerformanceTiming(key);

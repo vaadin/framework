@@ -35,7 +35,7 @@ public class UsingObjectsInSelect extends com.vaadin.server.LegacyApplication
     private final Label selectedTask = new Label("Selected task",
             ContentMode.HTML);
 
-    public LinkedList<?> exampleTasks = new LinkedList<Object>();
+    public LinkedList<?> exampleTasks = new LinkedList<>();
 
     public static Random random = new Random(1);
 

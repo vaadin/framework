@@ -152,7 +152,7 @@ public abstract class AbstractMedia extends AbstractComponent {
      * @return The sources pointed to in this media.
      */
     public List<Resource> getSources() {
-        ArrayList<Resource> sources = new ArrayList<Resource>();
+        ArrayList<Resource> sources = new ArrayList<>();
         for (URLReference ref : getState(false).sources) {
             sources.add(((ResourceReference) ref).getResource());
         }

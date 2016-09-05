@@ -28,7 +28,7 @@ public class PointerMoveEvent extends PointerEvent<PointerMoveHandler> {
      * Event type for PointerMoveEvent. Represents the meta-data associated with
      * this event.
      */
-    private static final Type<PointerMoveHandler> TYPE = new Type<PointerMoveHandler>(
+    private static final Type<PointerMoveHandler> TYPE = new Type<>(
             EventType.PointerMove.getNativeEventName(), new PointerMoveEvent());
 
     /**

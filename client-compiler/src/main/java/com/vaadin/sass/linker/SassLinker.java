@@ -63,7 +63,7 @@ public class SassLinker extends AbstractLinker {
             ArtifactSet toReturn = new ArtifactSet(artifacts);
 
             // The temporary scss files provided from the artefacts
-            List<FileInfo> scssFiles = new ArrayList<FileInfo>();
+            List<FileInfo> scssFiles = new ArrayList<>();
 
             // The public files are provided as inputstream, but the compiler
             // needs real files, as they can contain references to other

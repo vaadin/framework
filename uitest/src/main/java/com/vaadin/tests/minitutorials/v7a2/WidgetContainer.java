@@ -9,7 +9,7 @@ import com.vaadin.ui.Component;
 
 public class WidgetContainer extends AbstractComponentContainer {
 
-    List<Component> children = new ArrayList<Component>();
+    List<Component> children = new ArrayList<>();
 
     @Override
     public void addComponent(Component c) {

@@ -30,20 +30,20 @@ import com.vaadin.ui.UI;
 @JavaScript("complex_types_connector.js")
 public class ComplexTypesComponent extends AbstractJavaScriptComponent {
     public void sendComplexTypes() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.add("First string");
         list.add(null);
         list.add("Another string");
 
-        Map<String, Integer> stringMap = new HashMap<String, Integer>();
+        Map<String, Integer> stringMap = new HashMap<>();
         stringMap.put("one", 1);
         stringMap.put("two", 2);
 
-        Map<Integer, String> otherMap = new HashMap<Integer, String>();
+        Map<Integer, String> otherMap = new HashMap<>();
         otherMap.put(3, "3");
         otherMap.put(4, "4");
 
-        Map<Connector, String> connectorMap = new HashMap<Connector, String>();
+        Map<Connector, String> connectorMap = new HashMap<>();
         connectorMap.put(this, "this");
         connectorMap.put(UI.getCurrent(), "root");
 

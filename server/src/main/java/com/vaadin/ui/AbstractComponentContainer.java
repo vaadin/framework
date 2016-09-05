@@ -62,7 +62,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      */
     @Override
     public void removeAllComponents() {
-        final LinkedList<Component> l = new LinkedList<Component>();
+        final LinkedList<Component> l = new LinkedList<>();
 
         // Adds all components
         for (final Iterator<Component> i = getComponentIterator(); i
@@ -83,7 +83,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      */
     @Override
     public void moveComponentsFrom(ComponentContainer source) {
-        final LinkedList<Component> components = new LinkedList<Component>();
+        final LinkedList<Component> components = new LinkedList<>();
         for (final Iterator<Component> i = source.getComponentIterator(); i
                 .hasNext();) {
             components.add(i.next());
@@ -301,7 +301,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
                     : ComponentSizeValidator.checkWidths(component);
             if (!valid) {
                 if (components == null) {
-                    components = new HashSet<Component>();
+                    components = new HashSet<>();
                 }
                 components.add(component);
             }

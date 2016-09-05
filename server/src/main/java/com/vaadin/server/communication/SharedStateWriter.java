@@ -58,7 +58,7 @@ public class SharedStateWriter implements Serializable {
         Collection<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();
 
-        Set<String> writtenConnectors = new HashSet<String>();
+        Set<String> writtenConnectors = new HashSet<>();
         JsonObject sharedStates = Json.createObject();
         for (ClientConnector connector : dirtyVisibleConnectors) {
             // encode and send shared state

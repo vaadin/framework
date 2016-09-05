@@ -64,7 +64,7 @@ public class DesignContext implements Serializable {
     private static final String VAADIN7_UI_PACKAGE = "com.vaadin.v7.ui";
 
     // cache for object instances
-    private static Map<Class<?>, Component> instanceCache = new ConcurrentHashMap<Class<?>, Component>();
+    private static Map<Class<?>, Component> instanceCache = new ConcurrentHashMap<>();
 
     // The root component of the component hierarchy
     private Component rootComponent = null;
@@ -74,20 +74,20 @@ public class DesignContext implements Serializable {
     public static final String CAPTION_ATTRIBUTE = "caption";
     public static final String LOCAL_ID_ATTRIBUTE = "_id";
     // Mappings from ids to components. Modified when reading from design.
-    private Map<String, Component> idToComponent = new HashMap<String, Component>();
-    private Map<String, Component> localIdToComponent = new HashMap<String, Component>();
-    private Map<String, Component> captionToComponent = new HashMap<String, Component>();
+    private Map<String, Component> idToComponent = new HashMap<>();
+    private Map<String, Component> localIdToComponent = new HashMap<>();
+    private Map<String, Component> captionToComponent = new HashMap<>();
     // Mapping from components to local ids. Accessed when writing to
     // design. Modified when reading from design.
-    private Map<Component, String> componentToLocalId = new HashMap<Component, String>();
+    private Map<Component, String> componentToLocalId = new HashMap<>();
     private Document doc; // required for calling createElement(String)
     // namespace mappings
-    private Map<String, String> packageToPrefix = new HashMap<String, String>();
-    private Map<String, String> prefixToPackage = new HashMap<String, String>();
-    private final Map<Component, Map<String, String>> customAttributes = new HashMap<Component, Map<String, String>>();
+    private Map<String, String> packageToPrefix = new HashMap<>();
+    private Map<String, String> prefixToPackage = new HashMap<>();
+    private final Map<Component, Map<String, String>> customAttributes = new HashMap<>();
 
     // component creation listeners
-    private List<ComponentCreationListener> listeners = new ArrayList<ComponentCreationListener>();
+    private List<ComponentCreationListener> listeners = new ArrayList<>();
 
     private ShouldWriteDataDelegate shouldWriteDataDelegate = ShouldWriteDataDelegate.DEFAULT;
 
@@ -828,7 +828,7 @@ public class DesignContext implements Serializable {
         Map<String, String> map = customAttributes.get(component);
         if (map == null) {
             customAttributes.put(component,
-                    map = new HashMap<String, String>());
+                    map = new HashMap<>());
         }
         map.put(attribute, value);
     }

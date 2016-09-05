@@ -210,12 +210,12 @@ public class FileTypeResolver implements Serializable {
     /**
      * File extension to MIME type mapping. All extensions are in lower case.
      */
-    static private Hashtable<String, String> extToMIMEMap = new Hashtable<String, String>();
+    static private Hashtable<String, String> extToMIMEMap = new Hashtable<>();
 
     /**
      * MIME type to Icon mapping.
      */
-    static private Hashtable<String, Resource> MIMEToIconMap = new Hashtable<String, Resource>();
+    static private Hashtable<String, Resource> MIMEToIconMap = new Hashtable<>();
 
     static {
 

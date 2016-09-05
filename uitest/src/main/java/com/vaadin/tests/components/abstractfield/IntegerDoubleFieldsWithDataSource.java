@@ -23,14 +23,14 @@ public class IntegerDoubleFieldsWithDataSource extends TestBase {
 
         tf = createIntegerTextField();
         tf.setCaption("Enter a double");
-        tf.setPropertyDataSource(new ObjectProperty<Double>(2.1));
+        tf.setPropertyDataSource(new ObjectProperty<>(2.1));
         tf.addValidator(new DoubleValidator("Must be a Double"));
         addComponent(tf);
     }
 
     private TextField createIntegerTextField() {
         final TextField tf = new TextField("Enter an integer");
-        tf.setPropertyDataSource(new ObjectProperty<Integer>(new Integer(2)));
+        tf.setPropertyDataSource(new ObjectProperty<>(new Integer(2)));
         tf.setImmediate(true);
         tf.addListener(new ValueChangeListener() {
 

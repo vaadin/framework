@@ -44,7 +44,7 @@ public class BeanItemContainerTestUI extends UI {
 
     private Table table;
 
-    private BeanItemContainer<BasicEvent> events = new BeanItemContainer<BasicEvent>(
+    private BeanItemContainer<BasicEvent> events = new BeanItemContainer<>(
             BasicEvent.class);
 
     @SuppressWarnings("deprecation")
@@ -157,7 +157,7 @@ public class BeanItemContainerTestUI extends UI {
         fieldGroup.bind(startField, ContainerEventProvider.STARTDATE_PROPERTY);
         fieldGroup.bind(endField, ContainerEventProvider.ENDDATE_PROPERTY);
 
-        fieldGroup.setItemDataSource(new BeanItem<BasicEvent>(event,
+        fieldGroup.setItemDataSource(new BeanItem<>(event,
                 Arrays.asList(ContainerEventProvider.CAPTION_PROPERTY,
                         ContainerEventProvider.DESCRIPTION_PROPERTY,
                         ContainerEventProvider.STARTDATE_PROPERTY,

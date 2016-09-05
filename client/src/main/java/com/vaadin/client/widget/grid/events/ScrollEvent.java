@@ -26,7 +26,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ScrollEvent extends GwtEvent<ScrollHandler> {
 
     /** The type of this event */
-    public static final Type<ScrollHandler> TYPE = new Type<ScrollHandler>();
+    public static final Type<ScrollHandler> TYPE = new Type<>();
 
     @Override
     public Type<ScrollHandler> getAssociatedType() {

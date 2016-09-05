@@ -84,7 +84,7 @@ public final class CvalAddonsChecker {
      * generate nag messages in the UI.
      */
     public List<CValUiInfo> run() throws InvalidCvalException {
-        List<CValUiInfo> ret = new ArrayList<CValUiInfo>();
+        List<CValUiInfo> ret = new ArrayList<>();
         try {
             // Visit all MANIFEST in our classpath
             Enumeration<URL> manifests = Thread.currentThread()

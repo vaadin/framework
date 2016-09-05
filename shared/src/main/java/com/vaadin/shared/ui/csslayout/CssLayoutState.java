@@ -25,5 +25,5 @@ public class CssLayoutState extends AbstractLayoutState {
     {
         primaryStyleName = "v-csslayout";
     }
-    public Map<Connector, String> childCss = new HashMap<Connector, String>();
+    public Map<Connector, String> childCss = new HashMap<>();
 }

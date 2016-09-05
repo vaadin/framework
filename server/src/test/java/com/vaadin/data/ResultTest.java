@@ -91,7 +91,7 @@ public class ResultTest {
 
             @Override
             public <S> Result<S> flatMap(Function<String, Result<S>> mapper) {
-                return new SimpleResult<S>(null, "bar");
+                return new SimpleResult<>(null, "bar");
             }
         };
         Result<String> mapResult = result.map(value -> {

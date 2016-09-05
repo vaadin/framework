@@ -30,7 +30,7 @@ public class SelectAllEvent<T> extends GwtEvent<SelectAllHandler<T>> {
     /**
      * Handler type.
      */
-    private final static Type<SelectAllHandler<?>> TYPE = new Type<SelectAllHandler<?>>();;
+    private final static Type<SelectAllHandler<?>> TYPE = new Type<>();;
 
     private SelectionModel.Multi<T> selectionModel;
 

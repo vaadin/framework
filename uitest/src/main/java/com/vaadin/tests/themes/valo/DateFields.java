@@ -202,7 +202,7 @@ public class DateFields extends VerticalLayout implements View {
 
         PropertysetItem item = new PropertysetItem();
         item.addItemProperty("date",
-                new ObjectProperty<Date>(getDefaultDate()));
+                new ObjectProperty<>(getDefaultDate()));
 
         FormLayout form = new FormLayout();
         form.setMargin(false);

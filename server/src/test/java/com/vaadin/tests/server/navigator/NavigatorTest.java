@@ -114,9 +114,9 @@ public class NavigatorTest {
     }
 
     public static class ViewChangeTestListener implements ViewChangeListener {
-        private final LinkedList<ViewChangeEvent> referenceEvents = new LinkedList<ViewChangeListener.ViewChangeEvent>();
-        private final LinkedList<Boolean> referenceIsCheck = new LinkedList<Boolean>();
-        private final LinkedList<Boolean> checkReturnValues = new LinkedList<Boolean>();
+        private final LinkedList<ViewChangeEvent> referenceEvents = new LinkedList<>();
+        private final LinkedList<Boolean> referenceIsCheck = new LinkedList<>();
+        private final LinkedList<Boolean> checkReturnValues = new LinkedList<>();
 
         public void addExpectedIsViewChangeAllowed(ViewChangeEvent event,
                 boolean returnValue) {

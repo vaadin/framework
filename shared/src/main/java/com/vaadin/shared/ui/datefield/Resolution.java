@@ -56,7 +56,7 @@ public enum Resolution {
      */
     public static Iterable<Resolution> getResolutionsHigherOrEqualTo(
             Resolution r) {
-        List<Resolution> resolutions = new ArrayList<Resolution>();
+        List<Resolution> resolutions = new ArrayList<>();
         Resolution[] values = Resolution.values();
         for (int i = r.ordinal(); i < values.length; i++) {
             resolutions.add(values[i]);
@@ -74,7 +74,7 @@ public enum Resolution {
      * @return An iterable for the resolutions lower than r
      */
     public static List<Resolution> getResolutionsLowerThan(Resolution r) {
-        List<Resolution> resolutions = new ArrayList<Resolution>();
+        List<Resolution> resolutions = new ArrayList<>();
         Resolution[] values = Resolution.values();
         for (int i = r.ordinal() - 1; i >= 0; i--) {
             resolutions.add(values[i]);

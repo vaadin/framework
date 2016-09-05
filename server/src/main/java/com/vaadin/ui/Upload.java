@@ -783,7 +783,7 @@ public class Upload extends AbstractComponent
      */
     public void addProgressListener(ProgressListener listener) {
         if (progressListeners == null) {
-            progressListeners = new LinkedHashSet<ProgressListener>();
+            progressListeners = new LinkedHashSet<>();
         }
         progressListeners.add(listener);
     }

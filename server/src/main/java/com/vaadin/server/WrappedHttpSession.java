@@ -76,7 +76,7 @@ public class WrappedHttpSession implements WrappedSession {
 
     // Helper shared with WrappedPortletSession
     static <T> Set<T> enumerationToSet(Enumeration<T> values) {
-        HashSet<T> set = new HashSet<T>();
+        HashSet<T> set = new HashSet<>();
         while (values.hasMoreElements()) {
             set.add(values.nextElement());
         }

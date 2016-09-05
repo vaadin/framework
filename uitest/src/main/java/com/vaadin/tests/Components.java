@@ -33,13 +33,13 @@ import com.vaadin.v7.ui.Tree.ItemStyleGenerator;
 public class Components extends LegacyApplication {
 
     private static final Object CAPTION = "c";
-    private Map<Class<? extends AbstractComponentTest>, String> tests = new HashMap<Class<? extends AbstractComponentTest>, String>();
+    private Map<Class<? extends AbstractComponentTest>, String> tests = new HashMap<>();
     private Tree naviTree;
     private HorizontalSplitPanel sp;
     private LegacyWindow mainWindow;
     private final Embedded applicationEmbedder = new Embedded();
     private String baseUrl;
-    private List<Class<? extends Component>> componentsWithoutTests = new ArrayList<Class<? extends Component>>();
+    private List<Class<? extends Component>> componentsWithoutTests = new ArrayList<>();
 
     {
         for (Class<?> c : VaadinClasses.getBasicComponentTests()) {
@@ -49,7 +49,7 @@ public class Components extends LegacyApplication {
 
         List<Class<? extends Component>> componentsWithoutTest = VaadinClasses
                 .getComponents();
-        Set<String> availableTests = new HashSet<String>();
+        Set<String> availableTests = new HashSet<>();
         for (String testName : tests.values()) {
             availableTests.add(testName);
         }

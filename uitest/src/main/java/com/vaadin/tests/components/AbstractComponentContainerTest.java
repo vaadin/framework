@@ -294,7 +294,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         String subCategory = "Add component";
         createCategory(subCategory, category);
 
-        LinkedHashMap<String, Command<T, ComponentSize>> addCommands = new LinkedHashMap<String, AbstractComponentTestCase.Command<T, ComponentSize>>();
+        LinkedHashMap<String, Command<T, ComponentSize>> addCommands = new LinkedHashMap<>();
         addCommands.put("Button", addButtonCommand);
         addCommands.put("NativeButton", addNativeButtonCommand);
         addCommands.put("TextField", addTextFieldCommand);
@@ -307,7 +307,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         addCommands.put("VerticalSplitPanel", addVerticalSplitPanelCommand);
         addCommands.put("HorizontalSplitPanel", addHorizontalSplitPanelCommand);
 
-        HashSet<String> noVerticalSize = new HashSet<String>();
+        HashSet<String> noVerticalSize = new HashSet<>();
         noVerticalSize.add("TextField");
         noVerticalSize.add("Button");
 

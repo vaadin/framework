@@ -36,9 +36,9 @@ public class GridLayoutState extends AbstractLayoutState {
     public int columns = 0;
     public int marginsBitmask = 0;
     // Set of indexes of implicitly Ratios rows and columns
-    public Set<Integer> explicitRowRatios = new HashSet<Integer>();;
-    public Set<Integer> explicitColRatios = new HashSet<Integer>();
-    public Map<Connector, ChildComponentData> childData = new HashMap<Connector, GridLayoutState.ChildComponentData>();
+    public Set<Integer> explicitRowRatios = new HashSet<>();;
+    public Set<Integer> explicitColRatios = new HashSet<>();
+    public Map<Connector, ChildComponentData> childData = new HashMap<>();
     public boolean hideEmptyRowsAndColumns = false;
     public float[] rowExpand;
     public float[] colExpand;

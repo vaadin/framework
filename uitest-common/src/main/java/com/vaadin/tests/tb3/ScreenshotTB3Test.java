@@ -98,7 +98,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      */
     @Before
     public void setupScreenComparisonParameters() {
-        screenshotFailures = new ArrayList<String>();
+        screenshotFailures = new ArrayList<>();
 
         Parameters.setScreenshotErrorDirectory(getScreenshotErrorDirectory());
         Parameters.setScreenshotReferenceDirectory(
@@ -133,7 +133,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
         File mainReference = getScreenshotReferenceFile(identifier);
 
         List<File> referenceFiles = findReferenceAndAlternatives(mainReference);
-        List<File> failedReferenceFiles = new ArrayList<File>();
+        List<File> failedReferenceFiles = new ArrayList<>();
 
         for (File referenceFile : referenceFiles) {
             boolean match = false;
@@ -275,7 +275,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      *         given files, including the given reference
      */
     private List<File> findReferenceAndAlternatives(File reference) {
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         files.add(reference);
 
         File screenshotDir = reference.getParentFile();

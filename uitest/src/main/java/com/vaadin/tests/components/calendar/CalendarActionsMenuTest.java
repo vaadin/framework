@@ -49,7 +49,7 @@ public class CalendarActionsMenuTest extends AbstractTestUI {
             public List<com.vaadin.v7.ui.components.calendar.event.CalendarEvent> getEvents(
                     Date startDate, Date endDate) {
 
-                List<CalendarEvent> events = new ArrayList<CalendarEvent>();
+                List<CalendarEvent> events = new ArrayList<>();
 
                 CalendarEvent event = null;
                 try {

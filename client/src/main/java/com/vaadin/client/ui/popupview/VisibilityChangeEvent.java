@@ -38,7 +38,7 @@ public class VisibilityChangeEvent extends GwtEvent<VisibilityChangeHandler> {
 
     public static Type<VisibilityChangeHandler> getType() {
         if (TYPE == null) {
-            TYPE = new Type<VisibilityChangeHandler>();
+            TYPE = new Type<>();
         }
         return TYPE;
     }

@@ -44,7 +44,7 @@ public class RichTextAreaTest extends LegacyAbstractFieldTest<RichTextArea> {
     }
 
     private void createNullRepresentationAction(String category) {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         options.put("-", null);
         options.put("null", "null");
         options.put("This is empty", "This is empty");

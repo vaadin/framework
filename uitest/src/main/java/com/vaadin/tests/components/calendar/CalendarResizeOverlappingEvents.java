@@ -49,7 +49,7 @@ public class CalendarResizeOverlappingEvents extends AbstractTestUI {
             public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 DateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
-                List<CalendarEvent> events = new ArrayList<CalendarEvent>();
+                List<CalendarEvent> events = new ArrayList<>();
                 try {
                     java.util.Calendar today = java.util.Calendar.getInstance();
 

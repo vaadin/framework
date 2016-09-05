@@ -55,7 +55,7 @@ public class DesignReadInConstructorTest {
     private void assertJsoupTreeEquals(Element expected, Element actual) {
         Assert.assertEquals(expected.tagName(), actual.tagName());
 
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
 
         for (Attribute attr : expected.attributes().asList()) {
             keys.add(attr.getKey());

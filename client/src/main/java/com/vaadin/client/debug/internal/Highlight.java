@@ -180,7 +180,7 @@ public class Highlight {
     static Element show(Element element, String color) {
         if (element != null) {
             if (highlights == null) {
-                highlights = new HashSet<Element>();
+                highlights = new HashSet<>();
             }
 
             Element highlight = DOM.createDiv();

@@ -736,7 +736,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         public static class SplitterMoveEvent
                 extends GwtEvent<SplitterMoveHandler> {
 
-            public static final Type<SplitterMoveHandler> TYPE = new Type<SplitterMoveHandler>();
+            public static final Type<SplitterMoveHandler> TYPE = new Type<>();
 
             private Widget splitPanel;
 

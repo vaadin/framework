@@ -70,7 +70,7 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
     }
 
     private Component createResolutionSelectAction() {
-        LinkedHashMap<String, Resolution> options = new LinkedHashMap<String, Resolution>();
+        LinkedHashMap<String, Resolution> options = new LinkedHashMap<>();
         options.put("Year", Resolution.YEAR);
         options.put("Month", Resolution.MONTH);
         options.put("Day", Resolution.DAY);
@@ -90,7 +90,7 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
     }
 
     private Component createLocaleSelectAction() {
-        LinkedHashMap<String, Locale> options = new LinkedHashMap<String, Locale>();
+        LinkedHashMap<String, Locale> options = new LinkedHashMap<>();
         for (Locale locale : LOCALES) {
             options.put(locale.toString(), locale);
         }

@@ -25,7 +25,7 @@ public class LargeContainer extends AbstractContainer
 
         @Override
         public Property<?> getItemProperty(Object propertyId) {
-            ObjectProperty<String> property = new ObjectProperty<String>(
+            ObjectProperty<String> property = new ObjectProperty<>(
                     containerPropertyIdDefaults.get(propertyId) + " (item "
                             + itemId + ")");
             return property;
@@ -55,8 +55,8 @@ public class LargeContainer extends AbstractContainer
 
     private int size = 1000;
 
-    private Map<Object, Class<?>> containerPropertyIdTypes = new HashMap<Object, Class<?>>();
-    private Map<Object, Object> containerPropertyIdDefaults = new HashMap<Object, Object>();
+    private Map<Object, Class<?>> containerPropertyIdTypes = new HashMap<>();
+    private Map<Object, Object> containerPropertyIdDefaults = new HashMap<>();
 
     @Override
     public Object nextItemId(Object itemId) {

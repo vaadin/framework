@@ -14,7 +14,7 @@ public class BeanItemContainerGenerator {
     public static BeanItemContainer<TestBean> createContainer(int size,
             long seed) {
 
-        BeanItemContainer<TestBean> container = new BeanItemContainer<TestBean>(
+        BeanItemContainer<TestBean> container = new BeanItemContainer<>(
                 TestBean.class);
         PortableRandom r = new PortableRandom(seed);
         for (int i = 0; i < size; i++) {

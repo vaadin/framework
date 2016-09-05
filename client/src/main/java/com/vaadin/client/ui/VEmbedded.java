@@ -206,7 +206,7 @@ public class VEmbedded extends HTML {
      * @return
      */
     public static Map<String, String> getParameters(UIDL uidl) {
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<>();
 
         Iterator<Object> childIterator = uidl.getChildIterator();
         while (childIterator.hasNext()) {

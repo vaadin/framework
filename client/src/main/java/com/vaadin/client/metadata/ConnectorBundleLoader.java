@@ -143,7 +143,7 @@ public abstract class ConnectorBundleLoader {
 
     public abstract void init();
 
-    protected List<CValUiInfo> cvals = new ArrayList<CValUiInfo>();
+    protected List<CValUiInfo> cvals = new ArrayList<>();
 
     public void cval(String typeName) {
         if (!cvals.isEmpty()) {

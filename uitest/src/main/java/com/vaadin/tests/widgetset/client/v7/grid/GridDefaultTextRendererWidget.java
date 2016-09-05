@@ -35,7 +35,7 @@ public class GridDefaultTextRendererWidget
         super(new Grid<String>());
         grid = getTestedWidget();
 
-        grid.setDataSource(new ListDataSource<String>(NULL_STRING, "string"));
+        grid.setDataSource(new ListDataSource<>(NULL_STRING, "string"));
         grid.addColumn(new Column<String, String>() {
             @Override
             public String getValue(String row) {

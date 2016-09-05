@@ -22,5 +22,5 @@ import java.util.Set;
 import com.vaadin.shared.communication.SharedState;
 
 public class JavaScriptManagerState extends SharedState {
-    public Set<String> names = new HashSet<String>();
+    public Set<String> names = new HashSet<>();
 }

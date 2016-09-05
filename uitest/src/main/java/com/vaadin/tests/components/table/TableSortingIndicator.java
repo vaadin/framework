@@ -56,7 +56,7 @@ public class TableSortingIndicator extends AbstractTestUI {
     }
 
     private Container buildContainer() {
-        BeanItemContainer<TestBean> container = new BeanItemContainer<TestBean>(
+        BeanItemContainer<TestBean> container = new BeanItemContainer<>(
                 TestBean.class);
         for (int i = 0; i < 100; ++i) {
             TestBean item = new TestBean();

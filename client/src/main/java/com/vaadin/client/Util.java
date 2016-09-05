@@ -777,7 +777,7 @@ public class Util {
         try {
             getLogger().info("RPC invocations to be sent to the server:");
             String curId = null;
-            ArrayList<MethodInvocation> invocations = new ArrayList<MethodInvocation>();
+            ArrayList<MethodInvocation> invocations = new ArrayList<>();
             for (MethodInvocation methodInvocation : methodInvocations) {
                 String id = methodInvocation.getConnectorId();
 

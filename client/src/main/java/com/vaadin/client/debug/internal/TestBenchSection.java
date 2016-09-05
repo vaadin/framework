@@ -94,7 +94,7 @@ public class TestBenchSection implements Section {
 
     private final FlowPanel selectorPanel = new FlowPanel();
     // map from full path to SelectorWidget to enable reuse of old selectors
-    private Map<SelectorPath, SelectorWidget> selectorWidgets = new HashMap<SelectorPath, SelectorWidget>();
+    private Map<SelectorPath, SelectorWidget> selectorWidgets = new HashMap<>();
 
     private final FlowPanel controls = new FlowPanel();
 

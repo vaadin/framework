@@ -53,7 +53,7 @@ public class TableJumpUI extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
 
-        BeanItemContainer<TestObj> container = new BeanItemContainer<TestObj>(
+        BeanItemContainer<TestObj> container = new BeanItemContainer<>(
                 TestObj.class);
         for (int i = 0; i < 2; i++) {
             container.addBean(new TestObj(i));

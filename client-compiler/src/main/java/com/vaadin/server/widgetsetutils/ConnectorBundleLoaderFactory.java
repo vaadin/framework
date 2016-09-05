@@ -100,7 +100,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
             this.target = target;
             this.baseName = baseName;
             this.splitSize = splitSize;
-            methodNames = new ArrayList<String>();
+            methodNames = new ArrayList<>();
             methodNames.add(baseName);
         }
 
@@ -421,13 +421,13 @@ public class ConnectorBundleLoaderFactory extends Generator {
 
     private void detectBadProperties(ConnectorBundle bundle, TreeLogger logger)
             throws UnableToCompleteException {
-        Map<JClassType, Set<String>> definedProperties = new HashMap<JClassType, Set<String>>();
+        Map<JClassType, Set<String>> definedProperties = new HashMap<>();
 
         for (Property property : bundle.getNeedsProperty()) {
             JClassType beanType = property.getBeanType();
             Set<String> usedPropertyNames = definedProperties.get(beanType);
             if (usedPropertyNames == null) {
-                usedPropertyNames = new HashSet<String>();
+                usedPropertyNames = new HashSet<>();
                 definedProperties.put(beanType, usedPropertyNames);
             }
 
@@ -532,7 +532,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
                             + connector.getName());
 
             // Build map to speed up error checking
-            HashMap<String, Property> stateProperties = new HashMap<String, Property>();
+            HashMap<String, Property> stateProperties = new HashMap<>();
             JClassType stateType = ConnectorBundle
                     .findInheritedMethod(connector, "getState").getReturnType()
                     .isClassOrInterface();
@@ -603,7 +603,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
 
     private void writeSuperClasses(SplittingSourceWriter w,
             ConnectorBundle bundle) {
-        List<JClassType> needsSuperclass = new ArrayList<JClassType>(
+        List<JClassType> needsSuperclass = new ArrayList<>(
                 bundle.getNeedsSuperclass());
         // Emit in hierarchy order to ensure superclass is defined when
         // referenced
@@ -1092,7 +1092,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
             TypeOracle typeOracle)
             throws NotFoundException, UnableToCompleteException {
 
-        Map<LoadStyle, Collection<JClassType>> connectorsByLoadStyle = new HashMap<LoadStyle, Collection<JClassType>>();
+        Map<LoadStyle, Collection<JClassType>> connectorsByLoadStyle = new HashMap<>();
         for (LoadStyle loadStyle : LoadStyle.values()) {
             connectorsByLoadStyle.put(loadStyle, new ArrayList<JClassType>());
         }
@@ -1109,7 +1109,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
             }
         }
 
-        List<ConnectorBundle> bundles = new ArrayList<ConnectorBundle>();
+        List<ConnectorBundle> bundles = new ArrayList<>();
 
         Collection<TypeVisitor> visitors = getVisitors(typeOracle);
 
@@ -1187,10 +1187,10 @@ public class ConnectorBundleLoaderFactory extends Generator {
 
         JClassType[] types = serverConnectorType.getSubtypes();
 
-        Map<String, JClassType> mappings = new TreeMap<String, JClassType>();
+        Map<String, JClassType> mappings = new TreeMap<>();
 
         // Keep track of what has happened to avoid logging intermediate state
-        Map<JClassType, List<JClassType>> replaced = new TreeMap<JClassType, List<JClassType>>(
+        Map<JClassType, List<JClassType>> replaced = new TreeMap<>(
                 ConnectorBundle.jClassComparator);
 
         for (JClassType type : types) {
@@ -1229,7 +1229,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
                 List<JClassType> previousReplacements = replaced
                         .remove(superclass);
                 if (previousReplacements == null) {
-                    previousReplacements = new ArrayList<JClassType>();
+                    previousReplacements = new ArrayList<>();
                 }
 
                 previousReplacements.add(superclass);

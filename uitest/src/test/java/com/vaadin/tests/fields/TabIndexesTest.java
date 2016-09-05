@@ -73,7 +73,7 @@ public class TabIndexesTest extends MultiBrowserTest {
     }
 
     private List<WebElement> getFieldElements() {
-        List<WebElement> fieldElements = new ArrayList<WebElement>();
+        List<WebElement> fieldElements = new ArrayList<>();
         fieldElements.add(getElement1());
         fieldElements.add(getElement2());
         fieldElements.add(getElement3());

@@ -31,7 +31,7 @@ public class OptionGroups extends AbstractSelectTestCase<OptionGroup> {
     }
 
     private void createIconToggle(String string) {
-        LinkedHashMap<String, ThemeResource> options = new LinkedHashMap<String, ThemeResource>();
+        LinkedHashMap<String, ThemeResource> options = new LinkedHashMap<>();
         options.put("-", null);
         options.put("16x16", ICON_16_USER_PNG_CACHEABLE);
         options.put("32x32", ICON_32_ATTENTION_PNG_CACHEABLE);

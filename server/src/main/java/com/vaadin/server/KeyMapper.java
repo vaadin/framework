@@ -32,9 +32,9 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
 
     private int lastKey = 0;
 
-    private final HashMap<V, String> objectKeyMap = new HashMap<V, String>();
+    private final HashMap<V, String> objectKeyMap = new HashMap<>();
 
-    private final HashMap<String, V> keyObjectMap = new HashMap<String, V>();
+    private final HashMap<String, V> keyObjectMap = new HashMap<>();
 
     /**
      * Gets key for an object.

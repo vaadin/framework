@@ -374,8 +374,8 @@ public class Navigator implements Serializable {
     private NavigationStateManager stateManager;
     private ViewDisplay display;
     private View currentView = null;
-    private List<ViewChangeListener> listeners = new LinkedList<ViewChangeListener>();
-    private List<ViewProvider> providers = new LinkedList<ViewProvider>();
+    private List<ViewChangeListener> listeners = new LinkedList<>();
+    private List<ViewProvider> providers = new LinkedList<>();
     private String currentNavigationState = null;
     private ViewProvider errorProvider;
 
@@ -722,7 +722,7 @@ public class Navigator implements Serializable {
         // a copy of the listener list is needed to avoid
         // ConcurrentModificationException as a listener can add/remove
         // listeners
-        for (ViewChangeListener l : new ArrayList<ViewChangeListener>(
+        for (ViewChangeListener l : new ArrayList<>(
                 listeners)) {
             if (!l.beforeViewChange(event)) {
                 return false;
@@ -786,7 +786,7 @@ public class Navigator implements Serializable {
         // a copy of the listener list is needed to avoid
         // ConcurrentModificationException as a listener can add/remove
         // listeners
-        for (ViewChangeListener l : new ArrayList<ViewChangeListener>(
+        for (ViewChangeListener l : new ArrayList<>(
                 listeners)) {
             l.afterViewChange(event);
         }

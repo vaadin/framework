@@ -100,9 +100,9 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
      * The name of the application class currently used. Only valid within one
      * request.
      */
-    private LinkedHashSet<String> defaultPackages = new LinkedHashSet<String>();
+    private LinkedHashSet<String> defaultPackages = new LinkedHashSet<>();
 
-    private transient final ThreadLocal<HttpServletRequest> request = new ThreadLocal<HttpServletRequest>();
+    private transient final ThreadLocal<HttpServletRequest> request = new ThreadLocal<>();
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -339,7 +339,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
 
         File uitestDir = new File("uitest/src");
         if (uitestDir.isDirectory()) {
-            LinkedList<File> stack = new LinkedList<File>();
+            LinkedList<File> stack = new LinkedList<>();
             stack.add(uitestDir);
 
             long lastModifiedTimestamp = Long.MIN_VALUE;

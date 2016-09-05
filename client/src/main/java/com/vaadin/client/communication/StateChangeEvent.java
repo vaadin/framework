@@ -38,7 +38,7 @@ public class StateChangeEvent
     /**
      * Type of this event, used by the event bus.
      */
-    public static final Type<StateChangeHandler> TYPE = new Type<StateChangeHandler>();
+    public static final Type<StateChangeHandler> TYPE = new Type<>();
 
     /**
      * Used to cache a FastStringSet representation of the properties that have
@@ -158,7 +158,7 @@ public class StateChangeEvent
     public Set<String> getChangedProperties() {
         if (changedPropertiesSet == null) {
             Profiler.enter("StateChangeEvent.getChangedProperties populate");
-            changedPropertiesSet = new HashSet<String>();
+            changedPropertiesSet = new HashSet<>();
             getChangedPropertiesFastSet().addAllTo(changedPropertiesSet);
             Profiler.leave("StateChangeEvent.getChangedProperties populate");
         }

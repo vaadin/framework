@@ -55,7 +55,7 @@ public class ScrollCausesRequestLoop extends AbstractTestCase {
 
     private static List<Person> createData() {
         int count = 500;
-        List<Person> data = new ArrayList<Person>(count);
+        List<Person> data = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             data.add(new Person("Person", "" + i, "Email", "Phone", "Street",
                     12345, "City"));

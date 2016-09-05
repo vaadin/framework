@@ -15,11 +15,11 @@ public class KeyboardNavigationWithChangingContent extends TestBase {
 
     @Override
     protected void setup() {
-        ValueHolder<String> v1 = new ValueHolder<String>("test1");
-        ValueHolder<String> v2 = new ValueHolder<String>("test2");
-        ValueHolder<String> v3 = new ValueHolder<String>("test3");
+        ValueHolder<String> v1 = new ValueHolder<>("test1");
+        ValueHolder<String> v2 = new ValueHolder<>("test2");
+        ValueHolder<String> v3 = new ValueHolder<>("test3");
         @SuppressWarnings("unchecked")
-        final BeanItemContainer<ValueHolder<String>> bic = new BeanItemContainer<ValueHolder<String>>(
+        final BeanItemContainer<ValueHolder<String>> bic = new BeanItemContainer<>(
                 Arrays.asList(v1, v2, v3));
         final Table t = new Table(null, bic);
         t.setSelectable(true);
@@ -40,7 +40,7 @@ public class KeyboardNavigationWithChangingContent extends TestBase {
                         bic.removeAllItems();
                         ValueHolder<String> v4 = null;
                         for (int i = 4; i < 30; i++) {
-                            v4 = new ValueHolder<String>("test" + i);
+                            v4 = new ValueHolder<>("test" + i);
                             bic.addBean(v4);
 
                         }

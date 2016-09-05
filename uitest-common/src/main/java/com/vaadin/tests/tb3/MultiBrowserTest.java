@@ -97,7 +97,7 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
     protected List<DesiredCapabilities> getBrowserCapabilities(
             Browser... browsers) {
-        List<DesiredCapabilities> capabilities = new ArrayList<DesiredCapabilities>();
+        List<DesiredCapabilities> capabilities = new ArrayList<>();
         for (Browser browser : browsers) {
             capabilities.add(browser.getDesiredCapabilities());
         }

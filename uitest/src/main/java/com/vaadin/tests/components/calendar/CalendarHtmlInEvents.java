@@ -72,7 +72,7 @@ public class CalendarHtmlInEvents extends AbstractTestUIWithLog {
             @Override
             public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
                 Date d = startDate;
-                ArrayList<CalendarEvent> events = new ArrayList<CalendarEvent>();
+                ArrayList<CalendarEvent> events = new ArrayList<>();
                 while (d.before(endDate)) {
                     BasicEvent ce = new BasicEvent();
                     ce.setAllDay(false);

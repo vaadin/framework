@@ -137,7 +137,7 @@ public class JsonCodec implements Serializable {
         public static Collection<FieldProperty> find(Class<?> type)
                 throws IntrospectionException {
             Field[] fields = type.getFields();
-            Collection<FieldProperty> properties = new ArrayList<FieldProperty>(
+            Collection<FieldProperty> properties = new ArrayList<>(
                     fields.length);
             for (Field field : fields) {
                 if (!Modifier.isStatic(field.getModifiers())) {
@@ -178,7 +178,7 @@ public class JsonCodec implements Serializable {
 
         public static Collection<MethodProperty> find(Class<?> type)
                 throws IntrospectionException {
-            Collection<MethodProperty> properties = new ArrayList<MethodProperty>();
+            Collection<MethodProperty> properties = new ArrayList<>();
 
             for (PropertyDescriptor pd : Introspector.getBeanInfo(type)
                     .getPropertyDescriptors()) {
@@ -204,17 +204,17 @@ public class JsonCodec implements Serializable {
      * happens to process Vaadin requests, so it must be protected from
      * corruption caused by concurrent access.
      */
-    private static ConcurrentMap<Class<?>, Collection<BeanProperty>> typePropertyCache = new ConcurrentHashMap<Class<?>, Collection<BeanProperty>>();
+    private static ConcurrentMap<Class<?>, Collection<BeanProperty>> typePropertyCache = new ConcurrentHashMap<>();
 
-    private static Map<Class<?>, String> typeToTransportType = new HashMap<Class<?>, String>();
+    private static Map<Class<?>, String> typeToTransportType = new HashMap<>();
 
     /**
      * Note! This does not contain primitives.
      * <p>
      */
-    private static Map<String, Class<?>> transportTypeToType = new HashMap<String, Class<?>>();
+    private static Map<String, Class<?>> transportTypeToType = new HashMap<>();
 
-    private static Map<Class<?>, JSONSerializer<?>> customSerializers = new HashMap<Class<?>, JSONSerializer<?>>();
+    private static Map<Class<?>, JSONSerializer<?>> customSerializers = new HashMap<>();
     static {
         customSerializers.put(Date.class, new DateSerializer());
     }
@@ -464,7 +464,7 @@ public class JsonCodec implements Serializable {
             // See #8906.
             JsonArray jsonArray = (JsonArray) jsonMap;
             if (jsonArray.length() == 0) {
-                return new HashMap<Object, Object>();
+                return new HashMap<>();
             }
         }
 
@@ -499,7 +499,7 @@ public class JsonCodec implements Serializable {
 
         assert (keys.length() == values.length());
 
-        Map<Object, Object> map = new HashMap<Object, Object>(
+        Map<Object, Object> map = new HashMap<>(
                 keys.length() * 2);
         for (int i = 0; i < keys.length(); i++) {
             Object key = decodeInternalOrCustomType(keyType, keys.get(i),
@@ -515,7 +515,7 @@ public class JsonCodec implements Serializable {
 
     private static Map<Object, Object> decodeConnectorMap(Type valueType,
             JsonObject jsonMap, ConnectorTracker connectorTracker) {
-        Map<Object, Object> map = new HashMap<Object, Object>();
+        Map<Object, Object> map = new HashMap<>();
 
         for (String key : jsonMap.keys()) {
             Object value = decodeInternalOrCustomType(valueType,
@@ -531,7 +531,7 @@ public class JsonCodec implements Serializable {
 
     private static Map<Object, Object> decodeStringMap(Type valueType,
             JsonObject jsonMap, ConnectorTracker connectorTracker) {
-        Map<Object, Object> map = new HashMap<Object, Object>();
+        Map<Object, Object> map = new HashMap<>();
 
         for (String key : jsonMap.keys()) {
             Object value = decodeInternalOrCustomType(valueType,
@@ -590,7 +590,7 @@ public class JsonCodec implements Serializable {
             boolean restrictToInternalTypes, JsonArray jsonArray,
             ConnectorTracker connectorTracker) {
         int arrayLength = jsonArray.length();
-        List<Object> list = new ArrayList<Object>(arrayLength);
+        List<Object> list = new ArrayList<>(arrayLength);
         for (int i = 0; i < arrayLength; ++i) {
             // each entry always has two elements: type and value
             JsonValue encodedValue = jsonArray.get(i);
@@ -604,7 +604,7 @@ public class JsonCodec implements Serializable {
     private static Set<Object> decodeSet(Type targetType,
             boolean restrictToInternalTypes, JsonArray jsonArray,
             ConnectorTracker connectorTracker) {
-        HashSet<Object> set = new HashSet<Object>();
+        HashSet<Object> set = new HashSet<>();
         set.addAll(decodeList(targetType, restrictToInternalTypes, jsonArray,
                 connectorTracker));
         return set;
@@ -702,7 +702,7 @@ public class JsonCodec implements Serializable {
         if (cachedProperties != null) {
             return cachedProperties;
         }
-        Collection<BeanProperty> properties = new ArrayList<BeanProperty>();
+        Collection<BeanProperty> properties = new ArrayList<>();
 
         properties.addAll(MethodProperty.find(type));
         properties.addAll(FieldProperty.find(type));

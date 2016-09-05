@@ -31,7 +31,7 @@ import org.junit.runners.model.RunnerScheduler;
  * @author Vaadin Ltd
  */
 public class ParallelScheduler implements RunnerScheduler {
-    private final List<Future<Object>> fResults = new ArrayList<Future<Object>>();
+    private final List<Future<Object>> fResults = new ArrayList<>();
     private ExecutorService fService;
 
     /**

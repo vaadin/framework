@@ -639,7 +639,7 @@ public class MultiSelectionRenderer<T>
 
     @Override
     public Collection<String> getConsumedEvents() {
-        final HashSet<String> events = new HashSet<String>();
+        final HashSet<String> events = new HashSet<>();
 
         /*
          * this column's first interest is only to attach a NativePreventHandler

@@ -61,7 +61,7 @@ public class DateFieldRangeValidation extends TestBase {
 
     @Override
     protected void setup() {
-        BeanItem<Range> bi = new BeanItem<Range>(range);
+        BeanItem<Range> bi = new BeanItem<>(range);
         range.setFrom(new Date(2011 - 1900, 12 - 1, 4));
         range.setTo(new Date(2011 - 1900, 12 - 1, 15));
 

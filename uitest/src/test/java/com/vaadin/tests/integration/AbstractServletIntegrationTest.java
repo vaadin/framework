@@ -59,7 +59,7 @@ public abstract class AbstractServletIntegrationTest
     @Parameters
     public static Collection<String> getContextPaths() {
         if (getServerName().equals("wildfly9-nginx")) {
-            ArrayList<String> paths = new ArrayList<String>();
+            ArrayList<String> paths = new ArrayList<>();
             paths.add("/buffering/demo");
             paths.add("/nonbuffering/demo");
             paths.add("/buffering-timeout/demo");

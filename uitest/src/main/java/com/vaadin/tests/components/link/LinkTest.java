@@ -40,7 +40,7 @@ public class LinkTest extends AbstractComponentTest<Link> {
     }
 
     private void createTargetSelect(String category) {
-        LinkedHashMap<String, Resource> options = new LinkedHashMap<String, Resource>();
+        LinkedHashMap<String, Resource> options = new LinkedHashMap<>();
         options.put("-", null);
         options.put("https://vaadin.com",
                 new ExternalResource("https://vaadin.com"));

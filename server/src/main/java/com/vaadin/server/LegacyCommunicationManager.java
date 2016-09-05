@@ -56,7 +56,7 @@ import elemental.json.JsonValue;
 public class LegacyCommunicationManager implements Serializable {
 
     // TODO Refactor (#11410)
-    private final HashMap<Integer, ClientCache> uiToClientCache = new HashMap<Integer, ClientCache>();
+    private final HashMap<Integer, ClientCache> uiToClientCache = new HashMap<>();
 
     /**
      * The session this communication manager is used for
@@ -67,7 +67,7 @@ public class LegacyCommunicationManager implements Serializable {
     private String requestThemeName;
 
     // TODO Refactor (#11413)
-    private Map<String, Class<?>> publishedFileContexts = new HashMap<String, Class<?>>();
+    private Map<String, Class<?>> publishedFileContexts = new HashMap<>();
 
     /**
      * TODO New constructor - document me!
@@ -82,7 +82,7 @@ public class LegacyCommunicationManager implements Serializable {
         return session;
     }
 
-    private static final ConcurrentHashMap<Class<? extends SharedState>, JsonValue> referenceDiffStates = new ConcurrentHashMap<Class<? extends SharedState>, JsonValue>();
+    private static final ConcurrentHashMap<Class<? extends SharedState>, JsonValue> referenceDiffStates = new ConcurrentHashMap<>();
 
     /**
      * @deprecated As of 7.1. See #11411.
@@ -307,7 +307,7 @@ public class LegacyCommunicationManager implements Serializable {
         }
     }
 
-    private final HashMap<Class<? extends ClientConnector>, Integer> typeToKey = new HashMap<Class<? extends ClientConnector>, Integer>();
+    private final HashMap<Class<? extends ClientConnector>, Integer> typeToKey = new HashMap<>();
     private int nextTypeKey = 0;
 
     /**
@@ -338,7 +338,7 @@ public class LegacyCommunicationManager implements Serializable {
     @Deprecated
     public class ClientCache implements Serializable {
 
-        private final Set<Object> res = new HashSet<Object>();
+        private final Set<Object> res = new HashSet<>();
 
         /**
          *

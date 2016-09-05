@@ -72,7 +72,7 @@ public class UsingBeanValidation extends UI {
     @Override
     protected void init(VaadinRequest request) {
         Person person = new Person("John", 26);
-        BeanItem<Person> item = new BeanItem<Person>(person);
+        BeanItem<Person> item = new BeanItem<>(person);
 
         TextField firstName = new TextField("First name",
                 item.getItemProperty("name"));

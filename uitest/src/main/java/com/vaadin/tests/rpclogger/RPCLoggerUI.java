@@ -36,7 +36,7 @@ import com.vaadin.v7.ui.ListSelect;
 
 public class RPCLoggerUI extends AbstractTestUIWithLog implements ErrorHandler {
 
-    private List<Action> lastActions = new ArrayList<Action>();
+    private List<Action> lastActions = new ArrayList<>();
 
     public static class Action {
         public Action(ClientConnector connector, MethodInvocation invocation) {

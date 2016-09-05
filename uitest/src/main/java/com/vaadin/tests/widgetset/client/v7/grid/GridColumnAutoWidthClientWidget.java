@@ -48,10 +48,10 @@ public class GridColumnAutoWidthClientWidget
         grid.setSelectionMode(SelectionMode.NONE);
         grid.setWidth("750px");
 
-        List<List<String>> list = new ArrayList<List<String>>();
+        List<List<String>> list = new ArrayList<>();
         list.add(Arrays.asList("equal length", "a very long cell content",
                 "short", "fixed width narrow", "fixed width wide"));
-        grid.setDataSource(new ListDataSource<List<String>>(list));
+        grid.setDataSource(new ListDataSource<>(list));
 
         addColumn("equal length");
         addColumn("short");

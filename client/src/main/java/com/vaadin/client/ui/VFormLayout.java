@@ -68,7 +68,7 @@ public class VFormLayout extends SimplePanel {
      */
     private String[] getStylesFromState(AbstractComponentState state,
             boolean enabled) {
-        List<String> styles = new ArrayList<String>();
+        List<String> styles = new ArrayList<>();
         if (ComponentStateUtil.hasStyles(state)) {
             for (String name : state.styles) {
                 styles.add(name);
@@ -88,8 +88,8 @@ public class VFormLayout extends SimplePanel {
         private static final int COLUMN_ERRORFLAG = 1;
         public static final int COLUMN_WIDGET = 2;
 
-        private HashMap<Widget, Caption> widgetToCaption = new HashMap<Widget, Caption>();
-        private HashMap<Widget, ErrorFlag> widgetToError = new HashMap<Widget, ErrorFlag>();
+        private HashMap<Widget, Caption> widgetToCaption = new HashMap<>();
+        private HashMap<Widget, ErrorFlag> widgetToError = new HashMap<>();
 
         public VFormLayoutTable() {
             DOM.setElementProperty(getElement(), "cellPadding", "0");

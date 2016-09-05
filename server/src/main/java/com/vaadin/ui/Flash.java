@@ -201,7 +201,7 @@ public class Flash extends AbstractEmbedded {
      */
     public void setParameter(String name, String value) {
         if (getState().embedParams == null) {
-            getState().embedParams = new HashMap<String, String>();
+            getState().embedParams = new HashMap<>();
         }
         getState().embedParams.put(name, value);
         requestRepaint();
@@ -238,7 +238,7 @@ public class Flash extends AbstractEmbedded {
         super.writeDesign(design, designContext);
 
         // Parameters, in alphabetic order
-        ArrayList<String> paramNames = new ArrayList<String>();
+        ArrayList<String> paramNames = new ArrayList<>();
         for (String param : getParameterNames()) {
             paramNames.add(param);
         }

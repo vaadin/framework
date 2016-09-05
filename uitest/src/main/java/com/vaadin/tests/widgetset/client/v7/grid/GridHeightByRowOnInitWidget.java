@@ -11,13 +11,13 @@ import com.vaadin.v7.shared.ui.grid.HeightMode;
 
 public class GridHeightByRowOnInitWidget extends Composite {
     private final SimplePanel panel = new SimplePanel();
-    private final Grid<String> grid = new Grid<String>();
+    private final Grid<String> grid = new Grid<>();
 
     public GridHeightByRowOnInitWidget() {
         initWidget(panel);
 
         panel.setWidget(grid);
-        grid.setDataSource(new ListDataSource<String>(
+        grid.setDataSource(new ListDataSource<>(
                 Arrays.asList("A", "B", "C", "D", "E")));
         grid.addColumn(new Column<String, String>("letter") {
             @Override

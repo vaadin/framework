@@ -19,7 +19,7 @@ public abstract class AbstractListenerMethodsTestBase {
     }
 
     private static void findAllListenerMethods() {
-        Set<Class<?>> classes = new HashSet<Class<?>>();
+        Set<Class<?>> classes = new HashSet<>();
         for (Class<?> c : VaadinClasses.getAllServerSideClasses()) {
             while (c != null && c.getName().startsWith("com.vaadin.")) {
                 classes.add(c);

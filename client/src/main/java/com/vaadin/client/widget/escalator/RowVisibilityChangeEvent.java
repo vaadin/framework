@@ -30,7 +30,7 @@ public class RowVisibilityChangeEvent
     /**
      * The type of this event.
      */
-    public static final Type<RowVisibilityChangeHandler> TYPE = new Type<RowVisibilityChangeHandler>();
+    public static final Type<RowVisibilityChangeHandler> TYPE = new Type<>();
 
     private final Range visibleRows;
 

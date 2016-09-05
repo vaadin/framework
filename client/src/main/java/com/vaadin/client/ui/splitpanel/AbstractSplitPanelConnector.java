@@ -133,7 +133,7 @@ public abstract class AbstractSplitPanelConnector extends
         if (ComponentStateUtil.hasStyles(getState())) {
             getWidget().componentStyleNames = getState().styles;
         } else {
-            getWidget().componentStyleNames = new LinkedList<String>();
+            getWidget().componentStyleNames = new LinkedList<>();
         }
 
         // Splitter updates

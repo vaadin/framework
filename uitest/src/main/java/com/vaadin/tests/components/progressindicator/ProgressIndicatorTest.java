@@ -59,7 +59,7 @@ public class ProgressIndicatorTest
     }
 
     private void createPollingIntervalAction() {
-        LinkedHashMap<String, Integer> valueOptions = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> valueOptions = new LinkedHashMap<>();
         for (int i = 100; i <= 3000; i += 200) {
             valueOptions.put(String.valueOf(i), i);
         }
@@ -69,7 +69,7 @@ public class ProgressIndicatorTest
     }
 
     private void createSetValueAction() {
-        LinkedHashMap<String, Float> valueOptions = new LinkedHashMap<String, Float>();
+        LinkedHashMap<String, Float> valueOptions = new LinkedHashMap<>();
         for (float f = 0.0f; f <= 1.0f; f += 0.1) {
             valueOptions.put(String.valueOf(f), f);
         }

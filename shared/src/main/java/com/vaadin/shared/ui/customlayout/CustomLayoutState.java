@@ -25,7 +25,7 @@ public class CustomLayoutState extends AbstractLayoutState {
     {
         primaryStyleName = "v-customlayout";
     }
-    public Map<Connector, String> childLocations = new HashMap<Connector, String>();
+    public Map<Connector, String> childLocations = new HashMap<>();
     public String templateContents;
     public String templateName;
 }

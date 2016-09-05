@@ -42,7 +42,7 @@ public class DndTableTargetDetails extends AbstractTestUI {
         createSourceTable();
 
         Table target = new Table();
-        BeanItemContainer<TestBean> container = new BeanItemContainer<TestBean>(
+        BeanItemContainer<TestBean> container = new BeanItemContainer<>(
                 TestBean.class);
         container.addBean(new TestBean("target-item"));
         target.setContainerDataSource(container);
@@ -58,7 +58,7 @@ public class DndTableTargetDetails extends AbstractTestUI {
         table.setPageLength(1);
         table.setDragMode(TableDragMode.ROW);
         table.setWidth(100, Unit.PERCENTAGE);
-        BeanItemContainer<TestBean> container = new BeanItemContainer<TestBean>(
+        BeanItemContainer<TestBean> container = new BeanItemContainer<>(
                 TestBean.class);
         container.addBean(new TestBean("item"));
         table.setContainerDataSource(container);

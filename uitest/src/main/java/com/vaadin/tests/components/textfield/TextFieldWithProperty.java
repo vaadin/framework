@@ -15,7 +15,7 @@ public class TextFieldWithProperty extends TestBase {
 
         final TextField tf1 = new TextField();
 
-        final ObjectProperty<String> op = new ObjectProperty<String>("FOO");
+        final ObjectProperty<String> op = new ObjectProperty<>("FOO");
 
         tf1.setPropertyDataSource(op);
 

@@ -24,7 +24,7 @@ public class ListenerOrder extends com.vaadin.server.LegacyApplication
 
     Select s1;
 
-    HashMap<String, Integer> buttonListeners = new HashMap<String, Integer>();
+    HashMap<String, Integer> buttonListeners = new HashMap<>();
 
     @Override
     public void init() {

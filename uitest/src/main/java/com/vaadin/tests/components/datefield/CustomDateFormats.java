@@ -132,7 +132,7 @@ public class CustomDateFormats extends TestBase {
 
     }
 
-    private Set<String> usedDebugIds = new HashSet<String>();
+    private Set<String> usedDebugIds = new HashSet<>();
 
     private void addDateField(GridLayout gridLayout, String pattern,
             Locale locale, String expectedDateFormat) {

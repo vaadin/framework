@@ -21,7 +21,7 @@ import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.Table;
 
 public class DoublesInTable extends TestBase {
-    BeanItemContainer<Person> personBeanItemContainer = new BeanItemContainer<Person>(
+    BeanItemContainer<Person> personBeanItemContainer = new BeanItemContainer<>(
             Person.class);
 
     private Table table;
@@ -86,7 +86,7 @@ public class DoublesInTable extends TestBase {
     }
 
     private static BeanItemContainer<Person> createContainer(int nr) {
-        BeanItemContainer<Person> bic = new BeanItemContainer<Person>(
+        BeanItemContainer<Person> bic = new BeanItemContainer<>(
                 Person.class);
         for (int i = 1; i <= nr; i++) {
             Person p = new Person();

@@ -102,8 +102,8 @@ public class MenuBarConnector extends AbstractComponentConnector
 
         UIDL uidlItems = uidl.getChildUIDL(1);
         Iterator<Object> itr = uidlItems.getChildIterator();
-        Stack<Iterator<Object>> iteratorStack = new Stack<Iterator<Object>>();
-        Stack<VMenuBar> menuStack = new Stack<VMenuBar>();
+        Stack<Iterator<Object>> iteratorStack = new Stack<>();
+        Stack<VMenuBar> menuStack = new Stack<>();
         VMenuBar currentMenu = getWidget();
 
         while (itr.hasNext()) {

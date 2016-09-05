@@ -29,7 +29,7 @@ public class DateFieldTimezone extends TestBase {
     protected void setup() {
         dateField.setResolution(Resolution.SECOND);
 
-        ArrayList<String> timeZoneCodes = new ArrayList<String>();
+        ArrayList<String> timeZoneCodes = new ArrayList<>();
         timeZoneCodes.add(nullValue);
         timeZoneCodes.addAll(Arrays.asList(TimeZone.getAvailableIDs()));
         ComboBox timezoneSelector = new ComboBox("Select time zone",

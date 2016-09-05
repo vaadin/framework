@@ -133,7 +133,7 @@ public class VaadinClasses {
 
     private static <T> List<Class<? extends T>> findClasses(Class<T> baseClass,
             String basePackage, String[] ignoredPackages) throws IOException {
-        List<Class<? extends T>> classes = new ArrayList<Class<? extends T>>();
+        List<Class<? extends T>> classes = new ArrayList<>();
         String basePackageDirName = "/" + basePackage.replace('.', '/');
         URL location = VaadinSession.class.getResource(basePackageDirName);
         if (location.getProtocol().equals("file")) {
@@ -169,7 +169,7 @@ public class VaadinClasses {
             throws IOException {
         List<Class<? extends T>> classes = findClasses(baseClass, basePackage,
                 ignoredPackages);
-        List<Class<? extends T>> classesNoTests = new ArrayList<Class<? extends T>>();
+        List<Class<? extends T>> classesNoTests = new ArrayList<>();
         for (Class<? extends T> clazz : classes) {
             if (!clazz.getName().contains("Test")) {
                 boolean testPresent = false;

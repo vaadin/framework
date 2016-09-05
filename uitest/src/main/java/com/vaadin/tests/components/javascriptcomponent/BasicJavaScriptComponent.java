@@ -48,7 +48,7 @@ public class BasicJavaScriptComponent extends AbstractTestUI {
     }
 
     public static class TestState extends JavaScriptComponentState {
-        private List<String> messages = new ArrayList<String>();
+        private List<String> messages = new ArrayList<>();
         private URLReference url;
 
         public List<String> getMessages() {

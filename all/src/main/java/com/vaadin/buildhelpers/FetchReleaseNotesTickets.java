@@ -39,7 +39,7 @@ public class FetchReleaseNotesTickets {
         }
         String milestone = "";
 
-        List<String> versions = new ArrayList<String>();
+        List<String> versions = new ArrayList<>();
         for (String version : versionsProperty.split(" ")) {
             if (version.endsWith(".0") || version.matches(".*\\.rc\\d+")) {
                 // Find all prerelease versions for final or rc
@@ -63,7 +63,7 @@ public class FetchReleaseNotesTickets {
     }
 
     private static List<String> findPrereleaseVersions(String baseVersion) {
-        List<String> versions = new ArrayList<String>();
+        List<String> versions = new ArrayList<>();
 
         for (int i = 0; i < 50; i++) {
             versions.add(baseVersion + ".alpha" + i);

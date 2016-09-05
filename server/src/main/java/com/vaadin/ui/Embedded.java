@@ -88,7 +88,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
     /**
      * Hash of object parameters.
      */
-    private final Map<String, String> parameters = new HashMap<String, String>();
+    private final Map<String, String> parameters = new HashMap<>();
 
     /**
      * Applet or other client side runnable properties.

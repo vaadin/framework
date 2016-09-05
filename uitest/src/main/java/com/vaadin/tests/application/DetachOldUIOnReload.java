@@ -54,7 +54,7 @@ public class DetachOldUIOnReload extends AbstractTestUIWithLog {
         List<String> messages = (List<String>) getSession()
                 .getAttribute(PERSISTENT_MESSAGES_ATTRIBUTE);
         if (messages == null) {
-            messages = new ArrayList<String>();
+            messages = new ArrayList<>();
             if (storeIfNeeded) {
                 getSession().setAttribute(PERSISTENT_MESSAGES_ATTRIBUTE,
                         messages);

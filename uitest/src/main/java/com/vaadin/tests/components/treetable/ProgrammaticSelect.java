@@ -65,7 +65,7 @@ public class ProgrammaticSelect extends TestBase {
             secondLevel++;
         }
 
-        List<Object> itemIds = new ArrayList<Object>(c.getItemIds());
+        List<Object> itemIds = new ArrayList<>(c.getItemIds());
 
         int nextItemId = roots;
         for (int rootIndex = 0; rootIndex < roots; rootIndex++) {

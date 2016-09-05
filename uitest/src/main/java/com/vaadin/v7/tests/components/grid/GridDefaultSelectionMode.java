@@ -38,11 +38,11 @@ public class GridDefaultSelectionMode extends AbstractTestUI {
         person2.setFirstName("person");
         person2.setLastName("two");
 
-        ArrayList<Person> items = new ArrayList<Person>();
+        ArrayList<Person> items = new ArrayList<>();
         items.add(person1);
         items.add(person2);
 
-        final BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+        final BeanItemContainer<Person> container = new BeanItemContainer<>(
                 Person.class, items);
 
         final Grid grid = new Grid();

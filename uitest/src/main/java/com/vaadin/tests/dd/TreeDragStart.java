@@ -99,7 +99,7 @@ public class TreeDragStart extends TestBase {
                 if (sourceItemId instanceof BeanItem<?>) {
                     beanItem = (BeanItem<?>) sourceItemId;
                 } else if (sourceItemId instanceof InventoryObject) {
-                    beanItem = new BeanItem<InventoryObject>(
+                    beanItem = new BeanItem<>(
                             (InventoryObject) sourceItemId);
                 }
 
@@ -137,9 +137,9 @@ public class TreeDragStart extends TestBase {
         table.setDragMode(TableDragMode.ROW);
 
         // Initialize the table container
-        ArrayList<InventoryObject> collection = new ArrayList<InventoryObject>();
+        ArrayList<InventoryObject> collection = new ArrayList<>();
         collection.add(new InventoryObject("Dummy Item", 0.0, false));
-        final BeanItemContainer<InventoryObject> tableContainer = new BeanItemContainer<InventoryObject>(
+        final BeanItemContainer<InventoryObject> tableContainer = new BeanItemContainer<>(
                 collection);
         table.setContainerDataSource(tableContainer);
         table.setVisibleColumns(new String[] { "name", "weight" });
@@ -242,7 +242,7 @@ public class TreeDragStart extends TestBase {
         }
     }
 
-    HashMap<String, InventoryObject> inventoryStore = new HashMap<String, InventoryObject>();
+    HashMap<String, InventoryObject> inventoryStore = new HashMap<>();
 
     public HierarchicalContainer createTreeContent() {
         final Object[] inventory = new Object[] {
@@ -281,14 +281,14 @@ public class TreeDragStart extends TestBase {
                     BeanItem<InventoryObject> item;
                     if (data[i].getClass() == InventoryObject.class) {
                         InventoryObject object = (InventoryObject) data[i];
-                        item = new BeanItem<InventoryObject>(object);
+                        item = new BeanItem<>(object);
                         container.addItem(item);
                         container.setParent(item, parent);
                         container.setChildrenAllowed(item, false);
                     } else {// It's an Object[]
                         Object[] sub = (Object[]) data[i];
                         InventoryObject object = (InventoryObject) sub[0];
-                        item = new BeanItem<InventoryObject>(object);
+                        item = new BeanItem<>(object);
                         container.addItem(item);
                         container.setParent(item, parent);
 

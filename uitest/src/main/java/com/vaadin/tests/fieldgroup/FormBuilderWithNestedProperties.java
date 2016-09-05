@@ -20,14 +20,14 @@ public class FormBuilderWithNestedProperties extends TestBase {
 
     @Override
     protected void setup() {
-        FieldGroup fieldGroup = new BeanFieldGroup<Person>(Person.class);
+        FieldGroup fieldGroup = new BeanFieldGroup<>(Person.class);
         fieldGroup.buildAndBindMemberFields(this);
 
         addComponent(firstName);
         addComponent(lastName);
         addComponent(streetAddress);
 
-        fieldGroup.setItemDataSource(new BeanItem<Person>(new Person("Who",
+        fieldGroup.setItemDataSource(new BeanItem<>(new Person("Who",
                 "me?", "email", 1, Sex.MALE,
                 new Address("street name", 202020, "City", Country.FINLAND))));
     }

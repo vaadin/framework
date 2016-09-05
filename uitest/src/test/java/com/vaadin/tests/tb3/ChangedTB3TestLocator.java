@@ -54,7 +54,7 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
     }
 
     protected List<String> getChangedFilePaths() {
-        List<String> filePaths = new ArrayList<String>();
+        List<String> filePaths = new ArrayList<>();
 
         for (DiffEntry diff : getDiffs()) {
             if (diff.getChangeType() != ChangeType.DELETE) {
@@ -100,7 +100,7 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
         Git git = new Git(repository);
         DiffCommand diffCommand = git.diff();
 
-        List<DiffEntry> diffsInWorkingTree = new ArrayList<DiffEntry>();
+        List<DiffEntry> diffsInWorkingTree = new ArrayList<>();
 
         for (DiffEntry diff : diffCommand.call()) {
             if (pathIsExcluded(diff.getNewPath())) {
@@ -143,7 +143,7 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
     private <T> List<Class<? extends T>> getChangedTestClasses(
             Class<T> baseClass) {
         List<String> changedTestFilePaths = getTestFilePaths();
-        List<Class<? extends T>> testClasses = new ArrayList<Class<? extends T>>();
+        List<Class<? extends T>> testClasses = new ArrayList<>();
 
         for (String filePath : changedTestFilePaths) {
             String path = filePath.replace("uitest/src/", "").replace(".java",
@@ -156,7 +156,7 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
     }
 
     private List<String> getTestFilePaths() {
-        List<String> changedTestFilePaths = new ArrayList<String>();
+        List<String> changedTestFilePaths = new ArrayList<>();
 
         for (String filePath : getChangedFilePaths()) {
             if (filePath.toLowerCase().startsWith("uitest")

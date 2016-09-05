@@ -80,14 +80,14 @@ public class WindowTest {
     }
 
     private void sendResize(Window window2) {
-        Map<String, Object> variables = new HashMap<String, Object>();
+        Map<String, Object> variables = new HashMap<>();
         variables.put("height", 1234);
         window.changeVariables(window, variables);
 
     }
 
     private static void sendClose(Window window) {
-        Map<String, Object> variables = new HashMap<String, Object>();
+        Map<String, Object> variables = new HashMap<>();
         variables.put("close", true);
         window.changeVariables(window, variables);
     }

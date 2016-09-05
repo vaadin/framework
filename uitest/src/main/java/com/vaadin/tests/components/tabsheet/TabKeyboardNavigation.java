@@ -32,7 +32,7 @@ import com.vaadin.v7.ui.TextField;
 public class TabKeyboardNavigation extends AbstractTestUI {
 
     int index = 1;
-    ArrayList<Component> tabs = new ArrayList<Component>();
+    ArrayList<Component> tabs = new ArrayList<>();
     TabSheet ts = new TabSheet();
     Log focusblur = new Log(10);
 

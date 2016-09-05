@@ -39,7 +39,7 @@ public class SettingsView extends Panel implements View {
         date.setImmediate(true);
         layout.addComponent(date);
         // pretend we have a datasource:
-        date.setPropertyDataSource(new ObjectProperty<Date>(new Date()));
+        date.setPropertyDataSource(new ObjectProperty<>(new Date()));
         date.setBuffered(true);
         // show buttons when date is changed
         date.addValueChangeListener(new ValueChangeListener() {

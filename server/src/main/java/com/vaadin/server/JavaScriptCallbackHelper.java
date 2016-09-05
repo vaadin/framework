@@ -49,7 +49,7 @@ public class JavaScriptCallbackHelper implements Serializable {
             JavaScriptCallbackRpc.class, "call", String.class, JsonArray.class);
     private AbstractClientConnector connector;
 
-    private Map<String, JavaScriptFunction> callbacks = new HashMap<String, JavaScriptFunction>();
+    private Map<String, JavaScriptFunction> callbacks = new HashMap<>();
     private JavaScriptCallbackRpc javascriptCallbackRpc;
 
     public JavaScriptCallbackHelper(AbstractClientConnector connector) {
@@ -109,7 +109,7 @@ public class JavaScriptCallbackHelper implements Serializable {
                 .getRpcInterfaces();
         String interfaceName = rpcInterfaceType.getName();
         if (!rpcInterfaces.containsKey(interfaceName)) {
-            Set<String> methodNames = new HashSet<String>();
+            Set<String> methodNames = new HashSet<>();
 
             for (Method method : rpcInterfaceType.getMethods()) {
                 methodNames.add(method.getName());

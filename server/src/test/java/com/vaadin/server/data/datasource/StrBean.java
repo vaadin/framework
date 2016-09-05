@@ -32,7 +32,7 @@ class StrBean implements Serializable {
     }
 
     public static List<StrBean> generateRandomBeans(int max) {
-        List<StrBean> data = new ArrayList<StrBean>();
+        List<StrBean> data = new ArrayList<>();
         Random r = new Random(13337);
         data.add(new StrBean("Xyz", 10, max));
         for (int i = 0; i < max - 1; ++i) {

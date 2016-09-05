@@ -39,7 +39,7 @@ public class NotificationTestUI extends UI {
     private static class DummyEventProvider implements CalendarEventProvider {
 
         private int index;
-        private List<CalendarEvent> events = new ArrayList<CalendarEvent>();
+        private List<CalendarEvent> events = new ArrayList<>();
 
         public void addEvent(Date date) {
             BasicEvent e = new BasicEvent();

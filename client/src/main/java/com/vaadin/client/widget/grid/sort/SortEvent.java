@@ -29,7 +29,7 @@ import com.vaadin.client.widgets.Grid;
  */
 public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
 
-    private static final Type<SortHandler<?>> TYPE = new Type<SortHandler<?>>();
+    private static final Type<SortHandler<?>> TYPE = new Type<>();
 
     private final Grid<T> grid;
     private final List<SortOrder> order;

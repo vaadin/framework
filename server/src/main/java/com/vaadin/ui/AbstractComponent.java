@@ -197,7 +197,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
             return;
         }
         if (getState().styles == null) {
-            getState().styles = new ArrayList<String>();
+            getState().styles = new ArrayList<>();
         }
         List<String> styles = getState().styles;
         styles.clear();
@@ -232,7 +232,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
 
         if (getState().styles == null) {
-            getState().styles = new ArrayList<String>();
+            getState().styles = new ArrayList<>();
         }
         List<String> styles = getState().styles;
         if (!styles.contains(style)) {
@@ -1027,7 +1027,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
 
         // check for unsupported attributes
-        Set<String> supported = new HashSet<String>();
+        Set<String> supported = new HashSet<>();
         supported.addAll(getDefaultAttributes());
         supported.addAll(getCustomAttributes());
         for (Attribute a : attr) {
@@ -1084,7 +1084,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
             }
         } else {
             // remove responsive extensions
-            List<Extension> extensions = new ArrayList<Extension>(
+            List<Extension> extensions = new ArrayList<>(
                     getExtensions());
             for (Extension e : extensions) {
                 if (e instanceof Responsive) {
@@ -1263,7 +1263,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *         implementation
      */
     protected Collection<String> getCustomAttributes() {
-        ArrayList<String> l = new ArrayList<String>(
+        ArrayList<String> l = new ArrayList<>(
                 Arrays.asList(customAttributes));
         if (this instanceof Focusable) {
             l.add("tab-index");

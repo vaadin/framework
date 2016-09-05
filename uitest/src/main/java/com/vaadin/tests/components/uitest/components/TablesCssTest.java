@@ -42,7 +42,7 @@ public class TablesCssTest extends GridLayout {
     }
 
     private void createTableWith(String caption, String primaryStyleName) {
-        final HashSet<Object> markedRows = new HashSet<Object>();
+        final HashSet<Object> markedRows = new HashSet<>();
 
         final Table t;
         if (caption != null) {

@@ -19,7 +19,7 @@ public class TwinColSelects extends AbstractSelectTestCase<TwinColSelect> {
     }
 
     private void createRowSelectAction() {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         options.put("-", 0);
         for (int i = 1; i <= 10; i++) {
             options.put(String.valueOf(i), i);

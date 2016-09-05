@@ -117,7 +117,7 @@ public class ApplicationConnection implements HasHandlers {
      */
     public static final String UIDL_REFRESH_TOKEN = "Vaadin-Refresh";
 
-    private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
+    private final HashMap<String, String> resourcesMap = new HashMap<>();
 
     private WidgetSet widgetSet;
 
@@ -159,7 +159,7 @@ public class ApplicationConnection implements HasHandlers {
     public static class RequestStartingEvent
             extends ApplicationConnectionEvent {
 
-        public static Type<CommunicationHandler> TYPE = new Type<CommunicationHandler>();
+        public static Type<CommunicationHandler> TYPE = new Type<>();
 
         public RequestStartingEvent(ApplicationConnection connection) {
             super(connection);
@@ -179,7 +179,7 @@ public class ApplicationConnection implements HasHandlers {
     public static class ResponseHandlingEndedEvent
             extends ApplicationConnectionEvent {
 
-        public static Type<CommunicationHandler> TYPE = new Type<CommunicationHandler>();
+        public static Type<CommunicationHandler> TYPE = new Type<>();
 
         public ResponseHandlingEndedEvent(ApplicationConnection connection) {
             super(connection);
@@ -218,7 +218,7 @@ public class ApplicationConnection implements HasHandlers {
             super(connection);
         }
 
-        public static Type<CommunicationHandler> TYPE = new Type<CommunicationHandler>();
+        public static Type<CommunicationHandler> TYPE = new Type<>();
 
         @Override
         public Type<CommunicationHandler> getAssociatedType() {
@@ -246,7 +246,7 @@ public class ApplicationConnection implements HasHandlers {
     public static class ApplicationStoppedEvent
             extends GwtEvent<ApplicationStoppedHandler> {
 
-        public static Type<ApplicationStoppedHandler> TYPE = new Type<ApplicationStoppedHandler>();
+        public static Type<ApplicationStoppedHandler> TYPE = new Type<>();
 
         @Override
         public Type<ApplicationStoppedHandler> getAssociatedType() {

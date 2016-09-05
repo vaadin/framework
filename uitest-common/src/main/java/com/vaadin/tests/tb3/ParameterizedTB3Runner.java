@@ -48,7 +48,7 @@ public class ParameterizedTB3Runner extends TB3Runner {
     protected List<FrameworkMethod> computeTestMethods() {
         List<FrameworkMethod> methods = super.computeTestMethods();
 
-        Map<Method, Collection<String>> parameters = new LinkedHashMap<Method, Collection<String>>();
+        Map<Method, Collection<String>> parameters = new LinkedHashMap<>();
 
         // Find all @Parameters methods and invoke them to find out permutations
 
@@ -108,7 +108,7 @@ public class ParameterizedTB3Runner extends TB3Runner {
 
         // Add method permutations for all @Parameters
         for (Method setter : parameters.keySet()) {
-            List<FrameworkMethod> newMethods = new ArrayList<FrameworkMethod>();
+            List<FrameworkMethod> newMethods = new ArrayList<>();
             for (FrameworkMethod m : methods) {
 
                 if (!(m instanceof TBMethod)) {

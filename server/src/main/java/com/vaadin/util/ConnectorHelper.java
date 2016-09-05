@@ -66,7 +66,7 @@ public class ConnectorHelper {
      */
     public static void writeHierarchyInformation(ClientConnector connector,
             StringBuilder builder) {
-        LinkedList<ClientConnector> h = new LinkedList<ClientConnector>();
+        LinkedList<ClientConnector> h = new LinkedList<>();
         h.add(connector);
         ClientConnector parent = connector.getParent();
         while (parent != null) {

@@ -51,7 +51,7 @@ public class LargeSelectionCausesNPE extends TestBase {
         Button button = new Button("Update the first item");
         Label nameLabel = new Label();
 
-        HashSet<Object> markedRows = new HashSet<Object>();
+        HashSet<Object> markedRows = new HashSet<>();
         Label selected = new Label();
 
         public SelectionExample() {

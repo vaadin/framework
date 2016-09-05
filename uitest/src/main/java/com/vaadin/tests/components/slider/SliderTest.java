@@ -57,7 +57,7 @@ public class SliderTest extends AbstractFieldTest<Slider, Double> {
     }
 
     private void createOrientationSelect(String category) {
-        LinkedHashMap<String, SliderOrientation> options = new LinkedHashMap<String, SliderOrientation>();
+        LinkedHashMap<String, SliderOrientation> options = new LinkedHashMap<>();
         options.put("Horizontal", SliderOrientation.HORIZONTAL);
         options.put("Vertical", SliderOrientation.VERTICAL);
         createSelectAction("Orientation", category, options, "Horizontal",

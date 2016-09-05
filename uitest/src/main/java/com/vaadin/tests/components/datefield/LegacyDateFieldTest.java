@@ -42,7 +42,7 @@ public class LegacyDateFieldTest<T extends DateField>
     }
 
     private void createSetValueAction(String category) {
-        LinkedHashMap<String, Date> options = new LinkedHashMap<String, Date>();
+        LinkedHashMap<String, Date> options = new LinkedHashMap<>();
         options.put("(null)", null);
         options.put("(current time)", new Date());
         Calendar c = Calendar.getInstance(new Locale("fi", "FI"));
@@ -58,7 +58,7 @@ public class LegacyDateFieldTest<T extends DateField>
     }
 
     private void createDateFormatSelectAction(String category) {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
 
         options.put("-", null);
         options.put("d M yyyy", "d M yyyy");
@@ -98,7 +98,7 @@ public class LegacyDateFieldTest<T extends DateField>
     }
 
     private void createResolutionSelectAction(String category) {
-        LinkedHashMap<String, Resolution> options = new LinkedHashMap<String, Resolution>();
+        LinkedHashMap<String, Resolution> options = new LinkedHashMap<>();
         options.put("Year", Resolution.YEAR);
         options.put("Month", Resolution.MONTH);
         options.put("Day", Resolution.DAY);

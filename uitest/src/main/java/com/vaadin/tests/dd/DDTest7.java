@@ -77,7 +77,7 @@ public class DDTest7 extends TestBase {
                             .getItem(draggedItemId).getItemProperty("Weight")
                             .getValue();
 
-                    HashSet<Object> accepted = new HashSet<Object>();
+                    HashSet<Object> accepted = new HashSet<>();
                     for (Object itemId : visibleItemIds) {
                         Item item = table.getItem(itemId);
                         Integer w = (Integer) item.getItemProperty("Weight")

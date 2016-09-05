@@ -62,7 +62,7 @@ public final class ValueMap extends JavaScriptObject {
     }-*/;
 
     public Set<String> getKeySet() {
-        final HashSet<String> attrs = new HashSet<String>();
+        final HashSet<String> attrs = new HashSet<>();
         JsArrayString attributeNamesArray = getKeyArray();
         for (int i = 0; i < attributeNamesArray.length(); i++) {
             attrs.add(attributeNamesArray.get(i));

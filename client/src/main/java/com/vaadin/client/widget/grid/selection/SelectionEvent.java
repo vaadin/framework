@@ -32,7 +32,7 @@ import com.vaadin.client.widgets.Grid;
 @SuppressWarnings("rawtypes")
 public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
 
-    private static final Type<SelectionHandler> eventType = new Type<SelectionHandler>();
+    private static final Type<SelectionHandler> eventType = new Type<>();
 
     private final Grid<T> grid;
     private final List<T> added;
@@ -92,13 +92,13 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
         this.batched = batched;
 
         if (added != null) {
-            this.added = new ArrayList<T>(added);
+            this.added = new ArrayList<>(added);
         } else {
             this.added = Collections.emptyList();
         }
 
         if (removed != null) {
-            this.removed = new ArrayList<T>(removed);
+            this.removed = new ArrayList<>(removed);
         } else {
             this.removed = Collections.emptyList();
         }

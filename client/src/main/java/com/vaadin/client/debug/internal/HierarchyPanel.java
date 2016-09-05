@@ -45,7 +45,7 @@ import com.vaadin.client.Util;
 public class HierarchyPanel extends FlowPanel {
 
     // TODO separate click listeners for simple selection and doubleclick
-    private List<SelectConnectorListener> listeners = new ArrayList<SelectConnectorListener>();
+    private List<SelectConnectorListener> listeners = new ArrayList<>();
 
     public void update() {
         // Try to keep track of currently open nodes and reopen them

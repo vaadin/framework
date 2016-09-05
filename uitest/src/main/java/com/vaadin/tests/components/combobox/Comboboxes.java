@@ -126,7 +126,7 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
 
     private Component createIconSelect() {
 
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         options.put("<None>", null);
         options.put("16x16", "../runo/icons/16/user.png");
         options.put("32x32", "../runo/icons/32/attention.png");

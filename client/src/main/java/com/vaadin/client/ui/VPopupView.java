@@ -240,7 +240,7 @@ public class VPopupView extends HTML
 
         private boolean hasHadMouseOver = false;
         private boolean hideOnMouseOut = true;
-        private final Set<Element> activeChildren = new HashSet<Element>();
+        private final Set<Element> activeChildren = new HashSet<>();
 
         private ShortcutActionHandler shortcutActionHandler;
 

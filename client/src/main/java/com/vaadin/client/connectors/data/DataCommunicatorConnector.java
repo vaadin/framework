@@ -48,7 +48,7 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
      */
     public class VaadinDataSource extends AbstractRemoteDataSource<JsonObject> {
 
-        private Set<String> droppedKeys = new HashSet<String>();
+        private Set<String> droppedKeys = new HashSet<>();
 
         protected VaadinDataSource() {
             registerRpc(DataCommunicatorClientRpc.class,
@@ -61,7 +61,7 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
 
                         @Override
                         public void setData(int firstIndex, JsonArray data) {
-                            ArrayList<JsonObject> rows = new ArrayList<JsonObject>(
+                            ArrayList<JsonObject> rows = new ArrayList<>(
                                     data.length());
                             for (int i = 0; i < data.length(); i++) {
                                 JsonObject rowObject = data.getObject(i);

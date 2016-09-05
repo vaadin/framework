@@ -24,12 +24,12 @@ public class TestBeanItemContainerUsage extends TestBase {
         Table t = new Table("Table containing Persons");
         t.setPageLength(5);
         t.setWidth("100%");
-        List<Person> persons = new ArrayList<Person>();
+        List<Person> persons = new ArrayList<>();
         persons.add(new Person("Jones", "Birchman", 35));
         persons.add(new Person("Marc", "Smith", 30));
         persons.add(new Person("Greg", "Sandman", 75));
 
-        BeanItemContainer<Person> bic = new BeanItemContainer<Person>(persons);
+        BeanItemContainer<Person> bic = new BeanItemContainer<>(persons);
         t.setContainerDataSource(bic);
 
         addComponent(t);

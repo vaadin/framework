@@ -8,7 +8,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 public class Log extends VerticalLayout {
-    List<Label> eventLabels = new ArrayList<Label>();
+    List<Label> eventLabels = new ArrayList<>();
     private boolean numberLogRows = true;
     private int nextLogNr = 1;
 

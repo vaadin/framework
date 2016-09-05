@@ -31,7 +31,7 @@ import com.vaadin.v7.client.widgets.Grid.Column;
 public class GridDataChangeHandlerWidget extends Composite {
 
     private final SimplePanel panel = new SimplePanel();
-    private final Grid<String> grid = new Grid<String>();
+    private final Grid<String> grid = new Grid<>();
 
     public static class DelayedDataSource extends ListDataSource<String> {
 

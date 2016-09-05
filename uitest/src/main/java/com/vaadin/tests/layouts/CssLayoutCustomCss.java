@@ -15,7 +15,7 @@ import com.vaadin.ui.NativeButton;
 
 public class CssLayoutCustomCss extends TestBase implements ClickListener {
 
-    protected Map<Component, String> css = new HashMap<Component, String>();
+    protected Map<Component, String> css = new HashMap<>();
     private CssLayout layout;
 
     @Override

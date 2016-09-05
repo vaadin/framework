@@ -419,7 +419,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
     public static ArrayList<Element> getElements(Element scrolledElement2) {
         NodeList<Node> childNodes = scrolledElement2.getChildNodes();
-        ArrayList<Element> l = new ArrayList<Element>();
+        ArrayList<Element> l = new ArrayList<>();
         for (int i = 0; i < childNodes.getLength(); i++) {
             Node item = childNodes.getItem(i);
             if (item.getNodeType() == Node.ELEMENT_NODE) {
@@ -707,7 +707,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     public void setElements(Element[] elements) {
-        scrollableElements = new HashSet<Element>(Arrays.asList(elements));
+        scrollableElements = new HashSet<>(Arrays.asList(elements));
     }
 
     /**

@@ -120,7 +120,7 @@ public class GridThemeUI extends AbstractTestUIWithLog {
                 @Override
                 public void buttonClick(ClickEvent event) {
                     HeaderRow row = addHeaderRowAt(0);
-                    List<Object> pids = new ArrayList<Object>();
+                    List<Object> pids = new ArrayList<>();
                     for (Column c : getColumns()) {
                         pids.add(c.getPropertyId());
                     }

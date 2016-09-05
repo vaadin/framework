@@ -167,7 +167,7 @@ public class BoxLayoutTest extends AbstractTestUI {
         controls.addComponent(layout);
         layout.addComponent(new Label("Layout"));
 
-        ArrayList<String> sizes = new ArrayList<String>();
+        ArrayList<String> sizes = new ArrayList<>();
         sizes.addAll(Arrays.asList("100px", "30em", "100%"));
 
         final NativeSelect width = new NativeSelect(null, sizes);
@@ -216,7 +216,7 @@ public class BoxLayoutTest extends AbstractTestUI {
         controls.addComponent(cell);
         cell.addComponent(new Label("Cell"));
 
-        ArrayList<Alignment> alignments = new ArrayList<Alignment>();
+        ArrayList<Alignment> alignments = new ArrayList<>();
         alignments.addAll(Arrays.asList(Alignment.TOP_LEFT,
                 Alignment.MIDDLE_LEFT, Alignment.BOTTOM_LEFT,
                 Alignment.TOP_CENTER, Alignment.MIDDLE_CENTER,
@@ -260,7 +260,7 @@ public class BoxLayoutTest extends AbstractTestUI {
         root.addComponent(component);
         component.addComponent(new Label("Component"));
 
-        sizes = new ArrayList<String>();
+        sizes = new ArrayList<>();
         sizes.addAll(Arrays.asList("50px", "200px", "10em", "50%", "100%"));
 
         componentWidth = new NativeSelect(null, sizes);

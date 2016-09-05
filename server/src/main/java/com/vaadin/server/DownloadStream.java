@@ -148,7 +148,7 @@ public class DownloadStream implements Serializable {
      */
     public void setParameter(String name, String value) {
         if (params == null) {
-            params = new HashMap<String, String>();
+            params = new HashMap<>();
         }
         params.put(name, value);
     }

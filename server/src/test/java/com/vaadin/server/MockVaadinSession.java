@@ -31,7 +31,7 @@ public class MockVaadinSession extends VaadinSession {
      * chance of leaking memory if the session is not unlocked in the right way,
      * but it should be acceptable for testing use.
      */
-    private static final ThreadLocal<MockVaadinSession> referenceKeeper = new ThreadLocal<MockVaadinSession>();
+    private static final ThreadLocal<MockVaadinSession> referenceKeeper = new ThreadLocal<>();
 
     public MockVaadinSession(VaadinService service) {
         super(service);

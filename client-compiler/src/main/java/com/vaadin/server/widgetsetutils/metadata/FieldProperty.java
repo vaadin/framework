@@ -61,7 +61,7 @@ public class FieldProperty extends Property {
     }
 
     public static Collection<FieldProperty> findProperties(JClassType type) {
-        Collection<FieldProperty> properties = new ArrayList<FieldProperty>();
+        Collection<FieldProperty> properties = new ArrayList<>();
 
         List<JField> fields = getPublicFields(type);
         for (JField field : fields) {
@@ -72,8 +72,8 @@ public class FieldProperty extends Property {
     }
 
     private static List<JField> getPublicFields(JClassType type) {
-        Set<String> names = new HashSet<String>();
-        ArrayList<JField> fields = new ArrayList<JField>();
+        Set<String> names = new HashSet<>();
+        ArrayList<JField> fields = new ArrayList<>();
         for (JClassType subType : type.getFlattenedSupertypeHierarchy()) {
             JField[] subFields = subType.getFields();
             for (JField field : subFields) {

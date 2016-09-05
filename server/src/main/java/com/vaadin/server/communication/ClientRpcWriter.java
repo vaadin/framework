@@ -116,7 +116,7 @@ public class ClientRpcWriter implements Serializable {
      */
     private Collection<ClientMethodInvocation> collectPendingRpcCalls(
             Collection<ClientConnector> rpcPendingQueue) {
-        List<ClientMethodInvocation> pendingInvocations = new ArrayList<ClientMethodInvocation>();
+        List<ClientMethodInvocation> pendingInvocations = new ArrayList<>();
         for (ClientConnector connector : rpcPendingQueue) {
             List<ClientMethodInvocation> paintablePendingRpc = connector
                     .retrievePendingRpcCalls();
@@ -124,7 +124,7 @@ public class ClientRpcWriter implements Serializable {
                 List<ClientMethodInvocation> oldPendingRpc = pendingInvocations;
                 int totalCalls = pendingInvocations.size()
                         + paintablePendingRpc.size();
-                pendingInvocations = new ArrayList<ClientMethodInvocation>(
+                pendingInvocations = new ArrayList<>(
                         totalCalls);
 
                 // merge two ordered comparable lists

@@ -32,7 +32,7 @@ public class ComboBoxClickIcon extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final List<String> items = new ArrayList<String>();
+        final List<String> items = new ArrayList<>();
         items.add("A");
         items.add("B");
         items.add("C");

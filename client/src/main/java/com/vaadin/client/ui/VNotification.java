@@ -81,7 +81,7 @@ public class VNotification extends VOverlay {
     private static final int Z_INDEX_BASE = 20000;
     public static final String STYLE_SYSTEM = "system";
 
-    private static final ArrayList<VNotification> notifications = new ArrayList<VNotification>();
+    private static final ArrayList<VNotification> notifications = new ArrayList<>();
 
     private boolean infiniteDelay = false;
     private int hideDelay = 0;
@@ -464,7 +464,7 @@ public class VNotification extends VOverlay {
 
     public void addEventListener(EventListener listener) {
         if (listeners == null) {
-            listeners = new ArrayList<EventListener>();
+            listeners = new ArrayList<>();
         }
         listeners.add(listener);
     }

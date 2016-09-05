@@ -13,7 +13,7 @@ import com.vaadin.ui.VerticalLayout;
 
 public class UIsInMultipleTabs extends AbstractTestUIProvider {
     // No cleanup -> will leak, but shouldn't matter for tests
-    private static ConcurrentHashMap<VaadinSession, AtomicInteger> numberOfUIsOpened = new ConcurrentHashMap<VaadinSession, AtomicInteger>();
+    private static ConcurrentHashMap<VaadinSession, AtomicInteger> numberOfUIsOpened = new ConcurrentHashMap<>();
 
     public static class TabUI extends UI {
         @Override

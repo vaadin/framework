@@ -54,7 +54,7 @@ public class RequiredInvalidDateField extends TestBase {
         };
 
         // not required
-        Property<Date> dateProperty1 = new ObjectProperty<Date>(date);
+        Property<Date> dateProperty1 = new ObjectProperty<>(date);
         DateField dateField1 = new DateField("Not required", dateProperty1);
         dateField1.setLocale(new Locale("fi", "FI"));
         dateField1.setResolution(DateField.RESOLUTION_DAY);
@@ -64,7 +64,7 @@ public class RequiredInvalidDateField extends TestBase {
         addComponent(dateField1);
 
         // required
-        Property<Date> dateProperty2 = new ObjectProperty<Date>(date);
+        Property<Date> dateProperty2 = new ObjectProperty<>(date);
         DateField dateField2 = new DateField("Required", dateProperty2);
         dateField2.setLocale(new Locale("fi", "FI"));
         dateField2.setResolution(DateField.RESOLUTION_DAY);

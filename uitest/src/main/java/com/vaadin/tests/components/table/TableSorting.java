@@ -16,7 +16,7 @@ public class TableSorting extends TestBase {
         final Label showID = new Label("");
         final Table testTable = new Table();
 
-        BeanItemContainer<TestItem> cont = new BeanItemContainer<TestItem>(
+        BeanItemContainer<TestItem> cont = new BeanItemContainer<>(
                 TestItem.class);
 
         for (int i = 0; i < 20; i++) {

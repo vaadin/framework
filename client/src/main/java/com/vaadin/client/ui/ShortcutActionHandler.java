@@ -58,7 +58,7 @@ public class ShortcutActionHandler {
         ShortcutActionHandler getShortcutActionHandler();
     }
 
-    private final ArrayList<ShortcutAction> actions = new ArrayList<ShortcutAction>();
+    private final ArrayList<ShortcutAction> actions = new ArrayList<>();
     private ApplicationConnection client;
     private String paintableId;
 

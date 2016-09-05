@@ -30,7 +30,7 @@ public abstract class AsyncBundleLoader {
 
     private Throwable error = null;
 
-    private List<BundleLoadCallback> callbacks = new ArrayList<BundleLoadCallback>();
+    private List<BundleLoadCallback> callbacks = new ArrayList<>();
 
     private final String packageName;
 

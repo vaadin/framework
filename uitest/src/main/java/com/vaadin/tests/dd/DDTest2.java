@@ -83,7 +83,7 @@ public class DDTest2 extends TestBase {
             @Override
             protected Set<Object> getAllowedItemIds(DragAndDropEvent dragEvent,
                     Tree tree) {
-                return new HashSet<Object>(tree.getItemIds());
+                return new HashSet<>(tree.getItemIds());
             }
         };
 

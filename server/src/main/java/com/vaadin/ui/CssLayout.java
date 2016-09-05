@@ -85,7 +85,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     /**
      * Custom layout slots containing the components.
      */
-    protected LinkedList<Component> components = new LinkedList<Component>();
+    protected LinkedList<Component> components = new LinkedList<>();
 
     /**
      * Constructs an empty CssLayout.

@@ -24,7 +24,7 @@ import com.vaadin.shared.communication.ServerRpc;
 
 public class ServerRpcMethodInvocation extends MethodInvocation {
 
-    private static final Map<String, Method> invocationMethodCache = new ConcurrentHashMap<String, Method>(
+    private static final Map<String, Method> invocationMethodCache = new ConcurrentHashMap<>(
             128, 0.75f, 1);
 
     private final Method method;

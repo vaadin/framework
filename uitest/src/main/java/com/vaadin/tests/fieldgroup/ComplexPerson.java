@@ -78,7 +78,7 @@ public class ComplexPerson {
     }
 
     public static BeanItemContainer<ComplexPerson> createContainer(int size) {
-        BeanItemContainer<ComplexPerson> bic = new BeanItemContainer<ComplexPerson>(
+        BeanItemContainer<ComplexPerson> bic = new BeanItemContainer<>(
                 ComplexPerson.class);
         Random r = new Random(size);
 

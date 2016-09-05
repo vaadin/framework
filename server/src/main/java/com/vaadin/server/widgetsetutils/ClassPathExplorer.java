@@ -145,8 +145,8 @@ public class ClassPathExplorer {
      */
     public static LocationInfo getAvailableWidgetSetsAndStylesheets() {
         long start = System.currentTimeMillis();
-        Map<String, URL> widgetsets = new HashMap<String, URL>();
-        Map<String, URL> themes = new HashMap<String, URL>();
+        Map<String, URL> widgetsets = new HashMap<>();
+        Map<String, URL> themes = new HashMap<>();
         Set<String> keySet = classpathLocations.keySet();
         for (String location : keySet) {
             searchForWidgetSetsAndAddonStyles(location, widgetsets, themes);
@@ -298,7 +298,7 @@ public class ClassPathExplorer {
      */
     private final static List<String> getRawClasspathEntries() {
         // try to keep the order of the classpath
-        List<String> locations = new ArrayList<String>();
+        List<String> locations = new ArrayList<>();
 
         String pathSep = System.getProperty("path.separator");
         String classpath = System.getProperty("java.class.path");
@@ -338,7 +338,7 @@ public class ClassPathExplorer {
             List<String> rawClasspathEntries) {
         long start = System.currentTimeMillis();
         // try to keep the order of the classpath
-        Map<String, URL> locations = new LinkedHashMap<String, URL>();
+        Map<String, URL> locations = new LinkedHashMap<>();
         for (String classpathEntry : rawClasspathEntries) {
             File file = new File(classpathEntry);
             include(null, file, locations);
@@ -520,7 +520,7 @@ public class ClassPathExplorer {
     public static URL getWidgetsetSourceDirectory(String widgetsetFileName) {
         if (debug) {
             debug("classpathLocations values:");
-            ArrayList<String> locations = new ArrayList<String>(
+            ArrayList<String> locations = new ArrayList<>(
                     classpathLocations.keySet());
             for (String location : locations) {
                 debug(String.valueOf(classpathLocations.get(location)));

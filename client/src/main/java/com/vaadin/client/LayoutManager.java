@@ -46,7 +46,7 @@ public class LayoutManager {
     private static final boolean debugLogging = false;
 
     private ApplicationConnection connection;
-    private final Set<Element> measuredNonConnectorElements = new HashSet<Element>();
+    private final Set<Element> measuredNonConnectorElements = new HashSet<>();
     private final MeasuredSize nullSize = new MeasuredSize();
 
     private LayoutDependencyTree currentDependencyTree;
@@ -58,8 +58,8 @@ public class LayoutManager {
 
     private FastStringSet pendingOverflowFixes = FastStringSet.create();
 
-    private final Map<Element, Collection<ElementResizeListener>> elementResizeListeners = new HashMap<Element, Collection<ElementResizeListener>>();
-    private final Set<Element> listenersToFire = new HashSet<Element>();
+    private final Map<Element, Collection<ElementResizeListener>> elementResizeListeners = new HashMap<>();
+    private final Set<Element> listenersToFire = new HashSet<>();
 
     private boolean layoutPending = false;
     private Timer layoutTimer = new Timer() {
@@ -618,7 +618,7 @@ public class LayoutManager {
         int pendingOverflowCount = pendingOverflowConnectorsIds.length();
         ConnectorMap connectorMap = ConnectorMap.get(connection);
         if (pendingOverflowCount > 0) {
-            HashMap<Element, String> originalOverflows = new HashMap<Element, String>();
+            HashMap<Element, String> originalOverflows = new HashMap<>();
 
             FastStringSet delayedOverflowFixes = FastStringSet.create();
 
@@ -1724,7 +1724,7 @@ public class LayoutManager {
         Collection<ElementResizeListener> listeners = elementResizeListeners
                 .get(element);
         if (listeners == null) {
-            listeners = new HashSet<ElementResizeListener>();
+            listeners = new HashSet<>();
             elementResizeListeners.put(element, listeners);
             ensureMeasured(element);
         }

@@ -59,7 +59,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     private Command<T, Boolean> columnVisibleCommand = new Command<T, Boolean>() {
         @Override
         public void execute(Table c, Boolean visible, Object propertyId) {
-            List<Object> visibleColumns = new ArrayList<Object>(
+            List<Object> visibleColumns = new ArrayList<>(
                     Arrays.asList(c.getVisibleColumns()));
             if (visible) {
                 // Table should really check this... Completely fails without
@@ -491,7 +491,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     }
 
     private void createCellStyleAction(String categoryFeatures) {
-        LinkedHashMap<String, CellStyleInfo> options = new LinkedHashMap<String, CellStyleInfo>();
+        LinkedHashMap<String, CellStyleInfo> options = new LinkedHashMap<>();
         options.put("None", null);
         options.put("Red row", new CellStyleInfo(
                 "tables-test-cell-style-red-row", "Item 2", null));
@@ -502,7 +502,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     }
 
     private void createGeneratedRowAction(String categoryFeatures) {
-        LinkedHashMap<String, GeneratedRowInfo> options = new LinkedHashMap<String, GeneratedRowInfo>();
+        LinkedHashMap<String, GeneratedRowInfo> options = new LinkedHashMap<>();
         options.put("None", null);
         options.put("Every fifth row, spanned", new GeneratedRowInfo(5, false,
                 "foobarbaz this is a long one that should span."));
@@ -523,7 +523,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     }
 
     private void createColumnHeaderMode(String category) {
-        LinkedHashMap<String, ColumnHeaderMode> columnHeaderModeOptions = new LinkedHashMap<String, ColumnHeaderMode>();
+        LinkedHashMap<String, ColumnHeaderMode> columnHeaderModeOptions = new LinkedHashMap<>();
         columnHeaderModeOptions.put("Hidden", ColumnHeaderMode.HIDDEN);
         columnHeaderModeOptions.put("Id", ColumnHeaderMode.ID);
         columnHeaderModeOptions.put("Explicit", ColumnHeaderMode.EXPLICIT);
@@ -536,7 +536,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     }
 
     private void createValueSelection(String categorySelection) {
-        LinkedHashMap<String, Object> options = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> options = new LinkedHashMap<>();
         options.put("null", null);
         for (int i = 1; i <= 10; i++) {
             options.put("Item " + i, "Item " + i);
@@ -546,7 +546,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     }
 
     private void createContextMenuAction(String category) {
-        LinkedHashMap<String, ContextMenu> options = new LinkedHashMap<String, ContextMenu>();
+        LinkedHashMap<String, ContextMenu> options = new LinkedHashMap<>();
         options.put("None", null);
         options.put("Item without icon", new ContextMenu("No icon", null));
         ContextMenu cm = new ContextMenu();
@@ -663,7 +663,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         createBooleanAction("Collapsed", category, false, columnCollapsed,
                 propertyId);
         t.log("Collapsed");
-        LinkedHashMap<String, Align> options = new LinkedHashMap<String, Align>();
+        LinkedHashMap<String, Align> options = new LinkedHashMap<>();
         options.put("Left", Align.LEFT);
         options.put("Center", Align.CENTER);
         options.put("Right", Align.RIGHT);
@@ -671,7 +671,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         createSelectAction("Alignment", category, options, "Left",
                 columnAlignmentCommand, propertyId);
         t.log("Alignment");
-        LinkedHashMap<String, Integer> widthOptions = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> widthOptions = new LinkedHashMap<>();
         widthOptions.put("- remove -", -1);
         for (int i : new int[] { 0, 1, 10, 100, 200, 400 }) {
             widthOptions.put(i + "px", i);
@@ -680,7 +680,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                 columnWidthCommand, propertyId);
         t.log("Width");
 
-        LinkedHashMap<String, Resource> iconOptions = new LinkedHashMap<String, Resource>();
+        LinkedHashMap<String, Resource> iconOptions = new LinkedHashMap<>();
         iconOptions.put("- none -", null);
         iconOptions.put("ok 16x16", ICON_16_USER_PNG_CACHEABLE);
         iconOptions.put("help 16x16", ICON_16_HELP_PNG_CACHEABLE);
@@ -690,7 +690,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                 columnIconCommand, propertyId);
 
         t.log("Icon");
-        LinkedHashMap<String, String> columnHeaderOptions = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> columnHeaderOptions = new LinkedHashMap<>();
         columnHeaderOptions.put("- none -", null);
         columnHeaderOptions.put("A", "A");
         columnHeaderOptions.put("A nice column", "A nice column");
@@ -698,7 +698,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         createSelectAction("Column header", category, columnHeaderOptions,
                 "- none -", columnHeaderCommand, propertyId);
         t.log("Header");
-        LinkedHashMap<String, Float> expandOptions = new LinkedHashMap<String, Float>();
+        LinkedHashMap<String, Float> expandOptions = new LinkedHashMap<>();
         expandOptions.put("- remove -", -1f);
         for (float i : new float[] { 0, 1, 2, 3, 4, 5 }) {
             expandOptions.put(i + "", i);
@@ -715,7 +715,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     }
 
     private void createRowHeaderModeSelect(String category) {
-        LinkedHashMap<String, RowHeaderMode> options = new LinkedHashMap<String, RowHeaderMode>();
+        LinkedHashMap<String, RowHeaderMode> options = new LinkedHashMap<>();
         options.put("Explicit", RowHeaderMode.EXPLICIT);
         options.put("Explicit defaults id", RowHeaderMode.EXPLICIT_DEFAULTS_ID);
         options.put("Hidden", RowHeaderMode.HIDDEN);
@@ -730,7 +730,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     }
 
     private void createFooterTextSelect(String category) {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         options.put("None", null);
         options.put("Footer X", "Footer {id}");
         options.put("X", "{id}");
@@ -740,7 +740,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     }
 
     private void createHeaderTextCheckbox(String category) {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         options.put("None", null);
         options.put("Col: {id}", "Col: {id}");
         options.put("Header {id} - every second", "Header {id}");
@@ -803,7 +803,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     }
 
     protected void createHeaderVisibilitySelect(String category) {
-        LinkedHashMap<String, ColumnHeaderMode> options = new LinkedHashMap<String, ColumnHeaderMode>();
+        LinkedHashMap<String, ColumnHeaderMode> options = new LinkedHashMap<>();
         options.put("Explicit", ColumnHeaderMode.EXPLICIT);
         options.put("Explicit defaults id",
                 ColumnHeaderMode.EXPLICIT_DEFAULTS_ID);
@@ -823,7 +823,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     }
 
     protected void createPageLengthSelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         options.put("0", 0);
         options.put("5", 5);
         options.put("10", 10);
@@ -845,7 +845,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     }
 
     protected void createSelectionModeSelect(String category) {
-        LinkedHashMap<String, SelectMode> options = new LinkedHashMap<String, SelectMode>();
+        LinkedHashMap<String, SelectMode> options = new LinkedHashMap<>();
         options.put("None", SelectMode.NONE);
         options.put("Single", SelectMode.SINGLE);
         options.put("Multi - simple", SelectMode.MULTI_SIMPLE);

@@ -27,7 +27,7 @@ public class EscalatorBasicClientFeaturesWidget
         private static final int MAX_LOG = 9;
 
         private final HTML html = new HTML();
-        private final List<String> logs = new ArrayList<String>();
+        private final List<String> logs = new ArrayList<>();
         private Escalator escalator;
 
         public LogWidget() {
@@ -153,12 +153,12 @@ public class EscalatorBasicClientFeaturesWidget
     private class Data {
         private int columnCounter = 0;
         private int rowCounter = 0;
-        private final List<Integer> columns = new ArrayList<Integer>();
-        private final List<Integer> rows = new ArrayList<Integer>();
+        private final List<Integer> columns = new ArrayList<>();
+        private final List<Integer> rows = new ArrayList<>();
 
         @SuppressWarnings("boxing")
         public void insertRows(final int offset, final int amount) {
-            final List<Integer> newRows = new ArrayList<Integer>();
+            final List<Integer> newRows = new ArrayList<>();
             for (int i = 0; i < amount; i++) {
                 newRows.add(rowCounter++);
             }
@@ -167,7 +167,7 @@ public class EscalatorBasicClientFeaturesWidget
 
         @SuppressWarnings("boxing")
         public void insertColumns(final int offset, final int amount) {
-            final List<Integer> newColumns = new ArrayList<Integer>();
+            final List<Integer> newColumns = new ArrayList<>();
             for (int i = 0; i < amount; i++) {
                 newColumns.add(columnCounter++);
             }

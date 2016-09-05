@@ -41,7 +41,7 @@ public class LabelTest extends AbstractComponentTest<Label> {
     private void createValueSelect(String category) {
         String subCategory = "Set text value";
         createCategory(subCategory, category);
-        List<String> values = new ArrayList<String>();
+        List<String> values = new ArrayList<>();
         values.add("Test");
         values.add("A little longer value");
         values.add(
@@ -59,7 +59,7 @@ public class LabelTest extends AbstractComponentTest<Label> {
 
     @SuppressWarnings("deprecation")
     private void createContentModeSelect(String category) {
-        LinkedHashMap<String, ContentMode> options = new LinkedHashMap<String, ContentMode>();
+        LinkedHashMap<String, ContentMode> options = new LinkedHashMap<>();
         options.put("Text", ContentMode.TEXT);
         options.put("Preformatted", ContentMode.PREFORMATTED);
         options.put("XHTML", ContentMode.HTML);

@@ -11,7 +11,7 @@ public class RowHeightWithoutRows extends TestBase {
 
     private TreeTable treeTable = new TreeTable();
 
-    private BeanItemContainer<User> container = new BeanItemContainer<User>(
+    private BeanItemContainer<User> container = new BeanItemContainer<>(
             User.class);
 
     @Override

@@ -37,8 +37,8 @@ public class SelectionEvent extends EventObject {
     public SelectionEvent(Object source, Collection<Object> oldSelection,
             Collection<Object> newSelection) {
         super(source);
-        this.oldSelection = new LinkedHashSet<Object>(oldSelection);
-        this.newSelection = new LinkedHashSet<Object>(newSelection);
+        this.oldSelection = new LinkedHashSet<>(oldSelection);
+        this.newSelection = new LinkedHashSet<>(newSelection);
     }
 
     /**
@@ -79,7 +79,7 @@ public class SelectionEvent extends EventObject {
         if (set2.isEmpty()) {
             return set1;
         } else {
-            LinkedHashSet<T> set = new LinkedHashSet<T>(set1);
+            LinkedHashSet<T> set = new LinkedHashSet<>(set1);
             set.removeAll(set2);
             return set;
         }

@@ -48,7 +48,7 @@ public abstract class MultiBrowserThemeTestWithProxy
 
     @Override
     protected void openTestURL(Class<?> uiClass, String... parameters) {
-        Set<String> params = new HashSet<String>(Arrays.asList(parameters));
+        Set<String> params = new HashSet<>(Arrays.asList(parameters));
         params.add("theme=" + theme);
         super.openTestURL(uiClass, params.toArray(new String[params.size()]));
     }

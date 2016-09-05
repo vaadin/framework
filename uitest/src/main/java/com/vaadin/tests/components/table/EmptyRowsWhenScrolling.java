@@ -79,7 +79,7 @@ public class EmptyRowsWhenScrolling extends UI {
             setCompositionRoot(mainLayout);
 
             // Container with sample data
-            BeanContainer<Integer, SimpleBean> container = new BeanContainer<Integer, SimpleBean>(
+            BeanContainer<Integer, SimpleBean> container = new BeanContainer<>(
                     SimpleBean.class);
             container.setBeanIdProperty("id");
             for (int i = 1; i <= 50; ++i) {

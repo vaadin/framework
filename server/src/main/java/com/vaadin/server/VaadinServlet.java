@@ -87,7 +87,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             css = json.getString("css");
             timestamp = Long.parseLong(json.getString("timestamp"));
 
-            sourceUris = new ArrayList<String>();
+            sourceUris = new ArrayList<>();
 
             JsonArray uris = json.getArray("uris");
             for (int i = 0; i < uris.length(); i++) {
@@ -661,7 +661,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         return sb.toString();
     }
 
-    private static final Collection<Character> CHAR_BLACKLIST = new HashSet<Character>(
+    private static final Collection<Character> CHAR_BLACKLIST = new HashSet<>(
             Arrays.asList(new Character[] { '&', '"', '\'', '<', '>', '(', ')',
                     ';' }));
 
@@ -678,7 +678,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * Global cache of scss compilation results. This map is protected from
      * concurrent access by {@link #SCSS_MUTEX}.
      */
-    private final Map<String, ScssCacheEntry> scssCache = new HashMap<String, ScssCacheEntry>();
+    private final Map<String, ScssCacheEntry> scssCache = new HashMap<>();
 
     /**
      * Keeps track of whether a warning about not being able to persist cache

@@ -54,7 +54,7 @@ public class TestIcon {
                 "../runo/icons/" + imageSize + "/document.png");
     }
 
-    static List<FontAwesome> ICONS = new ArrayList<FontAwesome>();
+    static List<FontAwesome> ICONS = new ArrayList<>();
     static {
         ICONS.add(FontAwesome.ADJUST);
         ICONS.add(FontAwesome.ADN);

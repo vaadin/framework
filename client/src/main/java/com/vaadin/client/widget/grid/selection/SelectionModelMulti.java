@@ -40,8 +40,8 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
     private Grid<T> grid;
 
     private boolean batchStarted = false;
-    private final LinkedHashSet<RowHandle<T>> selectionBatch = new LinkedHashSet<RowHandle<T>>();
-    private final LinkedHashSet<RowHandle<T>> deselectionBatch = new LinkedHashSet<RowHandle<T>>();
+    private final LinkedHashSet<RowHandle<T>> selectionBatch = new LinkedHashSet<>();
+    private final LinkedHashSet<RowHandle<T>> deselectionBatch = new LinkedHashSet<>();
 
     /* Event handling for selection with space key */
     private SpaceSelectHandler<T> spaceSelectHandler;
@@ -49,7 +49,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
     public SelectionModelMulti() {
         grid = null;
         renderer = null;
-        selectedRows = new LinkedHashSet<RowHandle<T>>();
+        selectedRows = new LinkedHashSet<>();
     }
 
     @Override
@@ -74,8 +74,8 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
 
         this.grid = grid;
         if (this.grid != null) {
-            spaceSelectHandler = new SpaceSelectHandler<T>(grid);
-            this.renderer = new MultiSelectionRenderer<T>(grid);
+            spaceSelectHandler = new SpaceSelectHandler<>(grid);
+            this.renderer = new MultiSelectionRenderer<>(grid);
         } else {
             spaceSelectHandler.removeHandler();
             spaceSelectHandler = null;
@@ -107,7 +107,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
             @SuppressWarnings("unchecked")
             final LinkedHashSet<RowHandle<T>> selectedRowsClone = (LinkedHashSet<RowHandle<T>>) selectedRows
                     .clone();
-            SelectionEvent<T> event = new SelectionEvent<T>(grid, null,
+            SelectionEvent<T> event = new SelectionEvent<>(grid, null,
                     getSelectedRows(), isBeingBatchSelected());
             selectedRows.clear();
 
@@ -129,7 +129,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
             throw new IllegalArgumentException("Rows cannot be null");
         }
 
-        Set<T> added = new LinkedHashSet<T>();
+        Set<T> added = new LinkedHashSet<>();
 
         for (T row : rows) {
             RowHandle<T> handle = grid.getDataSource().getHandle(row);
@@ -139,7 +139,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
         }
 
         if (added.size() > 0) {
-            grid.fireEvent(new SelectionEvent<T>(grid, added, null,
+            grid.fireEvent(new SelectionEvent<>(grid, added, null,
                     isBeingBatchSelected()));
 
             return true;
@@ -153,7 +153,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
             throw new IllegalArgumentException("Rows cannot be null");
         }
 
-        Set<T> removed = new LinkedHashSet<T>();
+        Set<T> removed = new LinkedHashSet<>();
 
         for (T row : rows) {
             RowHandle<T> handle = grid.getDataSource().getHandle(row);
@@ -163,7 +163,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
         }
 
         if (removed.size() > 0) {
-            grid.fireEvent(new SelectionEvent<T>(grid, null, removed,
+            grid.fireEvent(new SelectionEvent<>(grid, null, removed,
                     isBeingBatchSelected()));
             return true;
         }
@@ -206,7 +206,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
 
     @Override
     public Collection<T> getSelectedRows() {
-        Set<T> selected = new LinkedHashSet<T>();
+        Set<T> selected = new LinkedHashSet<>();
         for (RowHandle<T> handle : selectedRows) {
             selected.add(handle.getRow());
         }
@@ -244,7 +244,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
         }
         deselectionBatch.clear();
 
-        grid.fireEvent(new SelectionEvent<T>(grid, added, removed,
+        grid.fireEvent(new SelectionEvent<>(grid, added, removed,
                 isBeingBatchSelected()));
     }
 
@@ -264,7 +264,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
     }
 
     private ArrayList<T> rowHandlesToRows(Collection<RowHandle<T>> rowHandles) {
-        ArrayList<T> rows = new ArrayList<T>(rowHandles.size());
+        ArrayList<T> rows = new ArrayList<>(rowHandles.size());
         for (RowHandle<T> handle : rowHandles) {
             rows.add(handle.getRow());
         }

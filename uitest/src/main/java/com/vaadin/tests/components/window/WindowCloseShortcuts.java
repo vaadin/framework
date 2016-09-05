@@ -167,7 +167,7 @@ public class WindowCloseShortcuts extends AbstractTestUI {
     }
 
     private String elementToHtml(Element producedElem, StringBuilder sb) {
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<>();
         for (Attribute a : producedElem.attributes().asList()) {
             names.add(a.getKey());
         }

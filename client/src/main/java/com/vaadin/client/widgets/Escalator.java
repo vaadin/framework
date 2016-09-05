@@ -388,7 +388,7 @@ public class Escalator extends Widget
 
             // The object to deal with one direction scrolling
             private class Movement {
-                final List<Double> speeds = new ArrayList<Double>();
+                final List<Double> speeds = new ArrayList<>();
                 final ScrollbarBundle scroll;
                 double position, offset, velocity, prevPos, prevTime, delta;
                 boolean run, vertical;
@@ -1277,7 +1277,7 @@ public class Escalator extends Widget
                      * potentially need to set the widths for the cells for the
                      * first time.
                      */
-                    Map<Integer, Double> colWidths = new HashMap<Integer, Double>();
+                    Map<Integer, Double> colWidths = new HashMap<>();
                     for (int i = 0; i < getColumnConfiguration()
                             .getColumnCount(); i++) {
                         Double width = Double.valueOf(
@@ -1307,7 +1307,7 @@ public class Escalator extends Widget
                 final int visualIndex, final int numberOfRows) {
             assert isAttached() : "Can't paint rows if Escalator is not attached";
 
-            final List<TableRowElement> addedRows = new ArrayList<TableRowElement>();
+            final List<TableRowElement> addedRows = new ArrayList<>();
 
             if (numberOfRows < 1) {
                 return addedRows;
@@ -2325,7 +2325,7 @@ public class Escalator extends Widget
          *
          * @see #sortDomElements()
          */
-        private final LinkedList<TableRowElement> visualRowOrder = new LinkedList<TableRowElement>();
+        private final LinkedList<TableRowElement> visualRowOrder = new LinkedList<>();
 
         /**
          * The logical index of the topmost row.
@@ -2792,7 +2792,7 @@ public class Escalator extends Widget
                  * it's faster to just move idx[9] to the beginning.
                  */
 
-                final List<TableRowElement> removedRows = new ArrayList<TableRowElement>(
+                final List<TableRowElement> removedRows = new ArrayList<>(
                         visualSourceRange.length());
                 for (int i = 0; i < visualSourceRange.length(); i++) {
                     final TableRowElement tr = visualRowOrder
@@ -3756,7 +3756,7 @@ public class Escalator extends Widget
              * the first child.
              */
 
-            List<TableRowElement> orderedBodyRows = new ArrayList<TableRowElement>(
+            List<TableRowElement> orderedBodyRows = new ArrayList<>(
                     visualRowOrder);
             Map<Integer, SpacerContainer.SpacerImpl> spacers = body.spacerContainer
                     .getSpacers();
@@ -4011,7 +4011,7 @@ public class Escalator extends Widget
             }
         }
 
-        private final List<Column> columns = new ArrayList<Column>();
+        private final List<Column> columns = new ArrayList<>();
         private int frozenColumns = 0;
 
         /*
@@ -4209,7 +4209,7 @@ public class Escalator extends Widget
             if (header.getRowCount() > 0 || body.getRowCount() > 0
                     || footer.getRowCount() > 0) {
 
-                Map<Integer, Double> colWidths = new HashMap<Integer, Double>();
+                Map<Integer, Double> colWidths = new HashMap<>();
                 Double width = Double.valueOf(Column.DEFAULT_COLUMN_WIDTH_PX);
                 for (int i = index; i < index + numberOfColumns; i++) {
                     Integer col = Integer.valueOf(i);
@@ -4747,7 +4747,7 @@ public class Escalator extends Widget
             }
         }
 
-        private final TreeMap<Integer, SpacerImpl> rowIndexToSpacer = new TreeMap<Integer, SpacerImpl>();
+        private final TreeMap<Integer, SpacerImpl> rowIndexToSpacer = new TreeMap<>();
 
         private SpacerUpdater spacerUpdater = SpacerUpdater.NULL;
 
@@ -4885,7 +4885,7 @@ public class Escalator extends Widget
         }
 
         public Map<Integer, SpacerImpl> getSpacers() {
-            return new HashMap<Integer, SpacerImpl>(rowIndexToSpacer);
+            return new HashMap<>(rowIndexToSpacer);
         }
 
         /**
@@ -4908,7 +4908,7 @@ public class Escalator extends Widget
         @SuppressWarnings("boxing")
         public Collection<SpacerImpl> getSpacersForRowAndAfter(
                 int logicalRowIndex) {
-            return new ArrayList<SpacerImpl>(
+            return new ArrayList<>(
                     rowIndexToSpacer.tailMap(logicalRowIndex, true).values());
         }
 
@@ -4936,7 +4936,7 @@ public class Escalator extends Widget
         public Collection<SpacerImpl> getSpacersAfterPx(final double px,
                 final SpacerInclusionStrategy strategy) {
 
-            ArrayList<SpacerImpl> spacers = new ArrayList<SpacerImpl>(
+            ArrayList<SpacerImpl> spacers = new ArrayList<>(
                     rowIndexToSpacer.values());
 
             for (int i = 0; i < spacers.size(); i++) {
@@ -5344,8 +5344,8 @@ public class Escalator extends Widget
         /**
          * A map containing cached values of an element's current top position.
          */
-        private final Map<Element, Double> elementTopPositionMap = new HashMap<Element, Double>();
-        private final Map<Element, Double> elementLeftPositionMap = new HashMap<Element, Double>();
+        private final Map<Element, Double> elementTopPositionMap = new HashMap<>();
+        private final Map<Element, Double> elementLeftPositionMap = new HashMap<>();
 
         public void set(final Element e, final double x, final double y) {
             assert e != null : "Element was null";

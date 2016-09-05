@@ -65,7 +65,7 @@ public abstract class AbstractComponentDataBindingTest extends TestBase
 
     protected abstract void createFields();
 
-    private Set<Component> fields = new HashSet<Component>();
+    private Set<Component> fields = new HashSet<>();
 
     @Override
     protected void addComponent(Component c) {

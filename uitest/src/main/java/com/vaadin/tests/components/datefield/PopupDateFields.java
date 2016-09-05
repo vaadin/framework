@@ -66,7 +66,7 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
     }
 
     private Component createResolutionSelectAction() {
-        LinkedHashMap<String, Resolution> options = new LinkedHashMap<String, Resolution>();
+        LinkedHashMap<String, Resolution> options = new LinkedHashMap<>();
         options.put("Year", Resolution.YEAR);
         options.put("Month", Resolution.MONTH);
         options.put("Day", Resolution.DAY);
@@ -86,7 +86,7 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
     }
 
     private Component createInputPromptSelectAction() {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         options.put("<none>", null);
         options.put("Please enter date", "Please enter date");
         options.put("åäöÅÄÖ", "åäöÅÄÖ");

@@ -77,7 +77,7 @@ public class GridSubPixelProblemWrapping extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         addComponent(button);
-        container = new BeanItemContainer<DataObject>(DataObject.class);
+        container = new BeanItemContainer<>(DataObject.class);
         container.addBean(new DataObject("Foo", "Bar"));
         Grid grid = new Grid(container);
         grid.getColumn("foo").setWidth(248.525);

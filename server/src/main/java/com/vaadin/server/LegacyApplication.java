@@ -42,7 +42,7 @@ public abstract class LegacyApplication implements ErrorHandler {
     private LegacyWindow mainWindow;
     private String theme;
 
-    private Map<String, LegacyWindow> legacyUINames = new HashMap<String, LegacyWindow>();
+    private Map<String, LegacyWindow> legacyUINames = new HashMap<>();
 
     private boolean isRunning = true;
 

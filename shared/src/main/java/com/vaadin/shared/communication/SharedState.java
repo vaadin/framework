@@ -59,7 +59,7 @@ public class SharedState implements Serializable {
      *      com.vaadin.server.Resource)
      * @see com.vaadin.client.ui.AbstractConnector#getResourceUrl(String)
      */
-    public Map<String, URLReference> resources = new HashMap<String, URLReference>();
+    public Map<String, URLReference> resources = new HashMap<>();
 
     public boolean enabled = true;
     /**

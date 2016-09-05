@@ -49,15 +49,15 @@ public class GlobalResourceHandler implements RequestHandler {
     /**
      * Used to detect when a resource is no longer used by any connector.
      */
-    private final Map<Resource, Set<ClientConnector>> resourceUsers = new HashMap<Resource, Set<ClientConnector>>();
+    private final Map<Resource, Set<ClientConnector>> resourceUsers = new HashMap<>();
     /**
      * Used to find the resources that might not be needed any more when a
      * connector is unregistered.
      */
-    private final Map<ClientConnector, Set<Resource>> usedResources = new HashMap<ClientConnector, Set<Resource>>();
+    private final Map<ClientConnector, Set<Resource>> usedResources = new HashMap<>();
 
-    private final Map<ConnectorResource, String> legacyResourceKeys = new HashMap<ConnectorResource, String>();
-    private final Map<String, ConnectorResource> legacyResources = new HashMap<String, ConnectorResource>();
+    private final Map<ConnectorResource, String> legacyResourceKeys = new HashMap<>();
+    private final Map<String, ConnectorResource> legacyResources = new HashMap<>();
     private int nextLegacyId = 0;
 
     // APP/global/[uiid]/[type]/[id]
@@ -173,7 +173,7 @@ public class GlobalResourceHandler implements RequestHandler {
     private <K, V> void ensureInSet(Map<K, Set<V>> map, K key, V value) {
         Set<V> set = map.get(key);
         if (set == null) {
-            set = new HashSet<V>();
+            set = new HashSet<>();
             map.put(key, set);
         }
         set.add(value);

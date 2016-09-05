@@ -41,7 +41,7 @@ public class DragAndDropServiceTest {
 
     @Test
     public void changeVariables_isSourceConnectorEnabledCalled() {
-        final List<Level> levels = new ArrayList<Level>();
+        final List<Level> levels = new ArrayList<>();
         Logger.getLogger(DragAndDropService.class.getName())
                 .addHandler(new StreamHandler() {
                     @Override
@@ -49,7 +49,7 @@ public class DragAndDropServiceTest {
                         levels.add(record.getLevel());
                     }
                 });
-        Map<String, Object> variables = new HashMap<String, Object>();
+        Map<String, Object> variables = new HashMap<>();
         final boolean[] isConnectorEnabledCalled = new boolean[1];
         AbstractComponent component = new AbstractComponent() {
             @Override
@@ -73,7 +73,7 @@ public class DragAndDropServiceTest {
 
     @Test
     public void changeVariables_isTargetConnectorEnabledCalled() {
-        final List<Level> levels = new ArrayList<Level>();
+        final List<Level> levels = new ArrayList<>();
         Logger.getLogger(DragAndDropService.class.getName())
                 .addHandler(new StreamHandler() {
                     @Override
@@ -81,7 +81,7 @@ public class DragAndDropServiceTest {
                         levels.add(record.getLevel());
                     }
                 });
-        Map<String, Object> variables = new HashMap<String, Object>();
+        Map<String, Object> variables = new HashMap<>();
         TestDropTarget target = new TestDropTarget();
         variables.put("dhowner", target);
 

@@ -51,7 +51,7 @@ public class Flot extends AbstractJavaScriptComponent {
     }
 
     public void addSeries(double... points) {
-        List<List<Double>> pointList = new ArrayList<List<Double>>();
+        List<List<Double>> pointList = new ArrayList<>();
         for (int i = 0; i < points.length; i++) {
             pointList.add(Arrays.asList(Double.valueOf(i),
                     Double.valueOf(points[i])));

@@ -7,7 +7,7 @@ import com.vaadin.ui.Button.ClickEvent;
 
 public class TestClickListener implements Button.ClickListener {
 
-    private static final HashMap<String, Integer> buttonListeners = new HashMap<String, Integer>();
+    private static final HashMap<String, Integer> buttonListeners = new HashMap<>();
 
     String name = "";
     int count = 0;

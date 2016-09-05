@@ -18,7 +18,7 @@ import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.TextField;
 
 public class RequiredIndicatorForFieldsWithoutCaption extends AbstractTestUI {
-    private Set<Field> fields = new HashSet<Field>();
+    private Set<Field> fields = new HashSet<>();
 
     @Override
     protected void setup(VaadinRequest request) {

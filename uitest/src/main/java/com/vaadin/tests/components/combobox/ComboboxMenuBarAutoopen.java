@@ -38,7 +38,7 @@ public class ComboboxMenuBarAutoopen extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setSpacing(true);
-        ArrayList<String> options = new ArrayList<String>();
+        ArrayList<String> options = new ArrayList<>();
         options.add("1");
         options.add("2");
         options.add("3");

@@ -32,7 +32,7 @@ public class ColumnResizeEvent<T> extends GwtEvent<ColumnResizeHandler<T>> {
     /**
      * Handler type.
      */
-    private final static Type<ColumnResizeHandler<?>> TYPE = new Type<ColumnResizeHandler<?>>();
+    private final static Type<ColumnResizeHandler<?>> TYPE = new Type<>();
 
     private Column<?, T> column;
 

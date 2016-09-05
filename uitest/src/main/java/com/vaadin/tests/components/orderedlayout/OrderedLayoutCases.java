@@ -80,7 +80,7 @@ public class OrderedLayoutCases extends AbstractTestUI {
 
             // Why is Alignment not an enum? Now we have to use reflection just
             // to get the different values as hardcoding is never an option! ;)
-            List<String> alignmentValues = new ArrayList<String>();
+            List<String> alignmentValues = new ArrayList<>();
             Field[] fields = Alignment.class.getDeclaredFields();
             for (Field field : fields) {
                 if (field.getType() == Alignment.class) {

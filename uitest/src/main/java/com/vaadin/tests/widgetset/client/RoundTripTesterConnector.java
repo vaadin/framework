@@ -29,7 +29,7 @@ public class RoundTripTesterConnector extends AbstractComponentConnector {
 
     private double lastPrintedTime = -1;
     private int receivedPings = 0;
-    private List<Double> throughputData = new ArrayList<Double>();
+    private List<Double> throughputData = new ArrayList<>();
     private int payloadSize = 0;
 
     @Override

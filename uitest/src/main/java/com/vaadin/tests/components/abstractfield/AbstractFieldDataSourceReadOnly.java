@@ -10,7 +10,7 @@ import com.vaadin.v7.ui.TextField;
 public class AbstractFieldDataSourceReadOnly extends TestBase {
 
     private static class StateHolder {
-        private ObjectProperty<String> textField = new ObjectProperty<String>(
+        private ObjectProperty<String> textField = new ObjectProperty<>(
                 "");
 
         public ObjectProperty<String> getTextField() {

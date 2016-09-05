@@ -99,8 +99,8 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
             title = "";
             menubar = new MenuBar();
             menubar.getElement().setId("menu");
-            children = new ArrayList<Menu>();
-            items = new ArrayList<Command>();
+            children = new ArrayList<>();
+            items = new ArrayList<>();
         }
 
         /**
@@ -111,8 +111,8 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
         public Menu(String title) {
             this.title = title;
             menubar = new MenuBar(true);
-            children = new ArrayList<Menu>();
-            items = new ArrayList<Command>();
+            children = new ArrayList<>();
+            items = new ArrayList<>();
         }
 
         /**

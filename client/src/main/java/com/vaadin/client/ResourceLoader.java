@@ -142,11 +142,11 @@ public class ResourceLoader {
 
     private ApplicationConnection connection;
 
-    private final Set<String> loadedResources = new HashSet<String>();
-    private final Set<String> preloadedResources = new HashSet<String>();
+    private final Set<String> loadedResources = new HashSet<>();
+    private final Set<String> preloadedResources = new HashSet<>();
 
-    private final Map<String, Collection<ResourceLoadListener>> loadListeners = new HashMap<String, Collection<ResourceLoadListener>>();
-    private final Map<String, Collection<ResourceLoadListener>> preloadListeners = new HashMap<String, Collection<ResourceLoadListener>>();
+    private final Map<String, Collection<ResourceLoadListener>> loadListeners = new HashMap<>();
+    private final Map<String, Collection<ResourceLoadListener>> preloadListeners = new HashMap<>();
 
     private final Element head;
 
@@ -555,7 +555,7 @@ public class ResourceLoader {
             Map<String, Collection<ResourceLoadListener>> listenerMap) {
         Collection<ResourceLoadListener> listeners = listenerMap.get(url);
         if (listeners == null) {
-            listeners = new HashSet<ResourceLoader.ResourceLoadListener>();
+            listeners = new HashSet<>();
             listeners.add(listener);
             listenerMap.put(url, listeners);
             return true;

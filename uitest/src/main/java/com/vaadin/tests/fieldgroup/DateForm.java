@@ -79,7 +79,7 @@ public class DateForm extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         setLocale(Locale.US);
         addComponent(log);
-        final FieldGroup fieldGroup = new BeanFieldGroup<DateObject>(
+        final FieldGroup fieldGroup = new BeanFieldGroup<>(
                 DateObject.class);
         fieldGroup.setBuffered(true);
 
@@ -130,7 +130,7 @@ public class DateForm extends AbstractTestUIWithLog {
         DateObject d = new DateObject(new Date(443457289789L),
                 new Date(443457289789L), new Date(443457289789L),
                 new Date(443457289789L));
-        fieldGroup.setItemDataSource(new BeanItem<DateObject>(d));
+        fieldGroup.setItemDataSource(new BeanItem<>(d));
     }
 
     @SuppressWarnings("unchecked")

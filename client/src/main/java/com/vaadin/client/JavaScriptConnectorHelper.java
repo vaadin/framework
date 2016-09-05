@@ -45,9 +45,9 @@ public class JavaScriptConnectorHelper {
             .createObject();
     private final JavaScriptObject rpcMap = JavaScriptObject.createObject();
 
-    private final Map<String, JavaScriptObject> rpcObjects = new HashMap<String, JavaScriptObject>();
-    private final Map<String, Set<String>> rpcMethods = new HashMap<String, Set<String>>();
-    private final Map<Element, Map<JavaScriptObject, ElementResizeListener>> resizeListeners = new HashMap<Element, Map<JavaScriptObject, ElementResizeListener>>();
+    private final Map<String, JavaScriptObject> rpcObjects = new HashMap<>();
+    private final Map<String, Set<String>> rpcMethods = new HashMap<>();
+    private final Map<Element, Map<JavaScriptObject, ElementResizeListener>> resizeListeners = new HashMap<>();
 
     private JavaScriptObject connectorWrapper;
     private int tag;
@@ -120,7 +120,7 @@ public class JavaScriptConnectorHelper {
                     JavaScriptObject wildcardRpcObject = rpcObjects.get("");
                     Set<String> interfaces = rpcMethods.get(method);
                     if (interfaces == null) {
-                        interfaces = new HashSet<String>();
+                        interfaces = new HashSet<>();
                         rpcMethods.put(method, interfaces);
                         attachRpcMethod(wildcardRpcObject, null, method);
                     }
@@ -155,7 +155,7 @@ public class JavaScriptConnectorHelper {
     protected boolean initJavaScript() {
         ApplicationConfiguration conf = connector.getConnection()
                 .getConfiguration();
-        ArrayList<String> attemptedNames = new ArrayList<String>();
+        ArrayList<String> attemptedNames = new ArrayList<>();
         Integer tag = Integer.valueOf(this.tag);
         while (tag != null) {
             String serverSideClassName = conf.getServerSideClassNameForTag(tag);
@@ -260,7 +260,7 @@ public class JavaScriptConnectorHelper {
         Map<JavaScriptObject, ElementResizeListener> elementListeners = resizeListeners
                 .get(element);
         if (elementListeners == null) {
-            elementListeners = new HashMap<JavaScriptObject, ElementResizeListener>();
+            elementListeners = new HashMap<>();
             resizeListeners.put(element, elementListeners);
         }
 

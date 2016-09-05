@@ -39,7 +39,7 @@ public class ShortcutActionTest {
 
     @Test
     public void testHashCodeUniqueness() {
-        HashSet<ShortcutAction> set = new HashSet<ShortcutAction>();
+        HashSet<ShortcutAction> set = new HashSet<>();
         for (String modifier : new String[] { "^", "&", "_", "&^", "&_", "_^",
                 "&^_" }) {
             for (String key : KEYS) {
@@ -98,7 +98,7 @@ public class ShortcutActionTest {
                 && SharedUtil.equals(other.getIcon(), act.getIcon())
                 && act.getKeyCode() == other.getKeyCode()
                 && act.getModifiers().length == other.getModifiers().length) {
-            HashSet<Integer> thisSet = new HashSet<Integer>(
+            HashSet<Integer> thisSet = new HashSet<>(
                     act.getModifiers().length);
             // this is a bit tricky comparison, but there is no nice way of
             // making int[] into a Set

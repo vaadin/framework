@@ -48,7 +48,7 @@ public class VLazyInitItemIdentifiers extends VAcceptCriterion {
 
                 @Override
                 public void handleResponse(boolean accepted, UIDL response) {
-                    hashSet = new HashSet<String>();
+                    hashSet = new HashSet<>();
                     String[] stringArrayAttribute = response
                             .getStringArrayAttribute("allowedIds");
                     for (int i = 0; i < stringArrayAttribute.length; i++) {

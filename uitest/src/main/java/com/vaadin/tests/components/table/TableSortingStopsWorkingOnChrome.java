@@ -32,7 +32,7 @@ public class TableSortingStopsWorkingOnChrome extends AbstractTestUI {
         table.setColumnReorderingAllowed(true);
         table.setSizeFull();
 
-        BeanItemContainer<TestItem> cont = new BeanItemContainer<TestItem>(
+        BeanItemContainer<TestItem> cont = new BeanItemContainer<>(
                 TestItem.class);
 
         for (int i = 0; i < ROW_COUNT; i++) {

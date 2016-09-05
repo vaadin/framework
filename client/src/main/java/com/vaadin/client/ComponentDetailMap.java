@@ -80,7 +80,7 @@ final class ComponentDetailMap extends JavaScriptObject {
     }-*/;
 
     final Collection<ComponentDetail> values() {
-        ArrayList<ComponentDetail> list = new ArrayList<ComponentDetail>();
+        ArrayList<ComponentDetail> list = new ArrayList<>();
         fillWithValues(list);
         return list;
     }

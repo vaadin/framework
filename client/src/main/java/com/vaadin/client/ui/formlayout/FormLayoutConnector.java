@@ -121,7 +121,7 @@ public class FormLayoutConnector extends AbstractLayoutConnector
                 targetWidth = Math.max(0, targetWidth);
 
                 if (oldMaxWidths == null) {
-                    oldMaxWidths = new HashMap<ComponentConnector, String>();
+                    oldMaxWidths = new HashMap<>();
                 }
 
                 for (ComponentConnector child : getChildComponents()) {
