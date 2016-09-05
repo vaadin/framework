@@ -27,15 +27,18 @@ import elemental.json.JsonObject;
  * The client-side connector for selection extensions.
  *
  * @author Vaadin Ltd.
- *
- * @since
+ * 
+ * @param <SELECTIONMODEL>
+ *            the supported client-side selection model
+ * @since 8.0
  */
-public abstract class AbstractSelectionConnector
+public abstract class AbstractSelectionConnector<SELECTIONMODEL extends SelectionModel<?>>
         extends AbstractExtensionConnector {
 
-    private SelectionModel<JsonObject> model = null;
+    private SELECTIONMODEL model = null;
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void extend(ServerConnector target) {
         if (!(target instanceof AbstractListingConnector)) {
             throw new IllegalArgumentException(
@@ -43,7 +46,8 @@ public abstract class AbstractSelectionConnector
                             + AbstractListingConnector.class.getSimpleName());
         }
         model = createSelectionModel();
-        ((AbstractListingConnector) target).setSelectionModel(model);
+        ((AbstractListingConnector<SELECTIONMODEL>) target)
+                .setSelectionModel(model);
     }
 
     /**
@@ -51,11 +55,12 @@ public abstract class AbstractSelectionConnector
      *
      * @return created selection model
      */
-    protected abstract SelectionModel<JsonObject> createSelectionModel();
+    protected abstract SELECTIONMODEL createSelectionModel();
 
     @Override
-    public AbstractListingConnector getParent() {
-        return (AbstractListingConnector) super.getParent();
+    @SuppressWarnings("unchecked")
+    public AbstractListingConnector<SELECTIONMODEL> getParent() {
+        return (AbstractListingConnector<SELECTIONMODEL>) super.getParent();
     }
 
     /**
@@ -63,7 +68,7 @@ public abstract class AbstractSelectionConnector
      *
      * @return the selection model in use
      */
-    protected SelectionModel<JsonObject> getSelectionModel() {
+    protected SELECTIONMODEL getSelectionModel() {
         return model;
     }
 

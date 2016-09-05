@@ -31,7 +31,8 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd.
  */
 @Connect(com.vaadin.data.selection.SingleSelection.class)
-public class SingleSelectionConnector extends AbstractSelectionConnector {
+public class SingleSelectionConnector extends
+        AbstractSelectionConnector<SelectionModel.Single<JsonObject>> {
 
     private static class SingleSelection
             implements SelectionModel.Single<JsonObject> {
@@ -68,7 +69,7 @@ public class SingleSelectionConnector extends AbstractSelectionConnector {
         }
     }
 
-    private AbstractListingConnector parent;
+    private AbstractListingConnector<?> parent;
 
     @Override
     public void onUnregister() {
@@ -85,7 +86,7 @@ public class SingleSelectionConnector extends AbstractSelectionConnector {
     }
 
     @Override
-    protected SelectionModel<JsonObject> createSelectionModel() {
+    protected SingleSelection createSelectionModel() {
         return new SingleSelection(getRpcProxy(SelectionServerRpc.class));
     }
 }

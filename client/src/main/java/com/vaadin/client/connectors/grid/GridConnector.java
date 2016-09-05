@@ -52,7 +52,8 @@ import elemental.json.JsonObject;
  * @since
  */
 @Connect(com.vaadin.ui.Grid.class)
-public class GridConnector extends AbstractListingConnector
+public class GridConnector
+        extends AbstractListingConnector<SelectionModel<JsonObject>>
         implements HasComponentsConnector, SimpleManagedLayout, DeferredWorker {
 
     /* Map to keep track of all added columns */
@@ -63,6 +64,7 @@ public class GridConnector extends AbstractListingConnector
     private ClickSelectHandler<JsonObject> clickSelectHandler;
 
     @Override
+    @SuppressWarnings("unchecked")
     public Grid<JsonObject> getWidget() {
         return (Grid<JsonObject>) super.getWidget();
     }

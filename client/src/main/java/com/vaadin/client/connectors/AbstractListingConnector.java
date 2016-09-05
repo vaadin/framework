@@ -18,22 +18,29 @@ package com.vaadin.client.connectors;
 import com.vaadin.client.connectors.data.HasDataSource;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.ui.AbstractListing;
 
 import elemental.json.JsonObject;
+import elemental.json.JsonValue;
 
 /**
- * Base connector class for {@link AbstractListing}.
+ * A base connector class for {@link AbstractListing}.
  *
- * @since
+ * @author Vaadin Ltd.
+ *
+ * @param <SELECTIONMODEL>
+ *            the client-side selection model type
+ *
+ * @since 8.0
  */
-public abstract class AbstractListingConnector
+public abstract class AbstractListingConnector<SELECTIONMODEL extends SelectionModel<?>>
         extends AbstractComponentConnector implements HasDataSource {
 
     private DataSource<JsonObject> dataSource = null;
 
-    private SelectionModel<JsonObject> selectionModel = null;
+    private SELECTIONMODEL selectionModel = null;
 
     @Override
     public void setDataSource(DataSource<JsonObject> dataSource) {
@@ -51,11 +58,49 @@ public abstract class AbstractListingConnector
      * @param selectionModel
      *            the selection model or null to disable
      */
-    public void setSelectionModel(SelectionModel<JsonObject> selectionModel) {
+    public void setSelectionModel(SELECTIONMODEL selectionModel) {
         this.selectionModel = selectionModel;
     }
 
-    public SelectionModel<JsonObject> getSelectionModel() {
+    /**
+     * Returns the selection model instance used.
+     * 
+     * @return the selection model
+     */
+    public SELECTIONMODEL getSelectionModel() {
         return selectionModel;
+    }
+
+    /**
+     * Returns the key of the given data row.
+     * 
+     * @param row
+     *            the row
+     * @return the row key
+     */
+    protected static String getRowKey(JsonObject row) {
+        return row.getString(DataCommunicatorConstants.KEY);
+    }
+
+    /**
+     * Returns the data of the given data row.
+     * 
+     * @param row
+     *            the row
+     * @return the row data
+     */
+    protected static JsonValue getRowData(JsonObject row) {
+        return row.get(DataCommunicatorConstants.DATA);
+    }
+
+    /**
+     * Returns whether the given row is selected.
+     * 
+     * @param row
+     *            the row
+     * @return {@code true} if the row is selected, {@code false} otherwise
+     */
+    protected boolean isRowSelected(JsonObject row) {
+        return row.hasKey(DataCommunicatorConstants.SELECTED);
     }
 }
