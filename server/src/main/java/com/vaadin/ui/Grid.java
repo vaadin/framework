@@ -46,9 +46,12 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.ui.renderers.Renderer;
+import com.vaadin.ui.renderers.TextRenderer;
 
 import elemental.json.Json;
 import elemental.json.JsonObject;
+import elemental.json.JsonValue;
 
 /**
  * A grid component for displaying tabular data.
@@ -305,31 +308,43 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
     public static class Column<T, V> extends AbstractExtension
             implements DataGenerator<T> {
 
-        private Function<T, V> valueProvider;
+        private final Function<T, ? extends V> valueProvider;
+
         private Function<SortDirection, Stream<SortOrder<String>>> sortOrderProvider;
         private Comparator<T> comparator;
 
         /**
-         * Constructs a new Column configuration with given header caption and
-         * value provider.
+         * Constructs a new Column configuration with given header caption,
+         * renderer and value provider.
          *
          * @param caption
          *            the header caption
-         * @param valueType
-         *            the type of value
          * @param valueProvider
          *            the function to get values from items
+         * @param renderer
+         *            the type of value
          */
-        protected Column(String caption, Class<V> valueType,
-                Function<T, V> valueProvider) {
+        protected Column(String caption, Function<T, ? extends V> valueProvider,
+                Renderer<V> renderer) {
             Objects.requireNonNull(caption, "Header caption can't be null");
             Objects.requireNonNull(valueProvider,
                     "Value provider can't be null");
-            Objects.requireNonNull(valueType, "Value type can't be null");
+            Objects.requireNonNull(renderer, "Renderer can't be null");
+
+            ColumnState state = getState();
 
             this.valueProvider = valueProvider;
-            getState().caption = caption;
+            state.renderer = renderer;
+
+            state.caption = caption;
             sortOrderProvider = d -> Stream.of();
+
+            // Add the renderer as a child extension of this extension, thus
+            // ensuring the renderer will be unregistered when this column is
+            // removed
+            addExtension(renderer);
+
+            Class<V> valueType = renderer.getPresentationType();
 
             if (Comparable.class.isAssignableFrom(valueType)) {
                 comparator = (a, b) -> {
@@ -337,17 +352,55 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
                     Comparable<V> comp = (Comparable<V>) valueProvider.apply(a);
                     return comp.compareTo(valueProvider.apply(b));
                 };
-                getState().sortable = true;
+                state.sortable = true;
+            } else if (Number.class.isAssignableFrom(valueType)) {
+                /*
+                 * Value type will be Number whenever using NumberRenderer.
+                 * Provide explicit comparison support in this case even though
+                 * Number itself isn't Comparable.
+                 */
+                comparator = (a, b) -> {
+                    return compareNumbers((Number) valueProvider.apply(a),
+                            (Number) valueProvider.apply(b));
+                };
+                state.sortable = true;
             } else {
-                getState().sortable = false;
+                state.sortable = false;
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        private static int compareNumbers(Number a, Number b) {
+            assert a.getClass() == b.getClass();
+
+            // Most Number implementations are Comparable
+            if (a instanceof Comparable && a.getClass().isInstance(b)) {
+                return ((Comparable<Number>) a).compareTo(b);
+            } else if (a.equals(b)) {
+                return 0;
+            } else {
+                // Fall back to comparing based on potentially truncated values
+                int compare = Long.compare(a.longValue(), b.longValue());
+                if (compare == 0) {
+                    // This might still produce 0 even though the values are not
+                    // equals, but there's nothing more we can do about that
+                    compare = Double.compare(a.doubleValue(), b.doubleValue());
+                }
+                return compare;
             }
         }
 
         @Override
         public void generateData(T data, JsonObject jsonObject) {
-            assert getState(
-                    false).id != null : "No communication ID set for column "
-                            + getState(false).caption;
+            ColumnState state = getState(false);
+
+            String communicationId = state.id;
+
+            assert communicationId != null : "No communication ID set for column "
+                    + state.caption;
+
+            @SuppressWarnings("unchecked")
+            Renderer<V> renderer = (Renderer<V>) state.renderer;
 
             if (!jsonObject.hasKey(DataCommunicatorConstants.DATA)) {
                 jsonObject.put(DataCommunicatorConstants.DATA,
@@ -355,9 +408,12 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
             }
             JsonObject obj = jsonObject
                     .getObject(DataCommunicatorConstants.DATA);
-            // Since we dont' have renderers yet, use a dummy toString for
-            // data.
-            obj.put(getState(false).id, valueProvider.apply(data).toString());
+
+            V providerValue = valueProvider.apply(data);
+
+            JsonValue rendererValue = renderer.encode(providerValue);
+
+            obj.put(communicationId, rendererValue);
         }
 
         @Override
@@ -538,23 +594,23 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
     }
 
     /**
-     * Adds a new column to this {@link Grid} with given header caption and
-     * value provider.
+     * Adds a new column to this {@link Grid} with given header caption,
+     * renderer and value provider.
      *
      * @param caption
      *            the header caption
-     * @param valueType
-     *            the column value class
      * @param valueProvider
      *            the value provider
+     * @param renderer
+     *            the column value class
      * @param <V>
      *            the column value type
      *
      * @return the new column
      */
-    public <V> Column<T, V> addColumn(String caption, Class<V> valueType,
-            Function<T, V> valueProvider) {
-        Column<T, V> c = new Column<>(caption, valueType, valueProvider);
+    public <V> Column<T, V> addColumn(String caption, Function<T, ? extends V> valueProvider,
+            Renderer<V> renderer) {
+        Column<T, V> c = new Column<>(caption, valueProvider, renderer);
 
         c.extend(this);
         c.setId(columnKeys.key(c));
@@ -562,6 +618,22 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
         addDataGenerator(c);
 
         return c;
+    }
+
+    /**
+     * Adds a new text column to this {@link Grid} with given header caption
+     * string value provider. The column will use a {@link TextRenderer}.
+     *
+     * @param caption
+     *            the header caption
+     * @param valueProvider
+     *            the value provider
+     *
+     * @return the new column
+     */
+    public Column<T, String> addColumn(String caption,
+            Function<T, String> valueProvider) {
+        return addColumn(caption, valueProvider, new TextRenderer());
     }
 
     /**

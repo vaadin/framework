@@ -13,16 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.grid;
+package com.vaadin.client.connectors.grid;
 
-import com.vaadin.shared.Connector;
-import com.vaadin.shared.communication.SharedState;
+import com.vaadin.client.renderers.TextRenderer;
+import com.vaadin.shared.ui.Connect;
 
-public class ColumnState extends SharedState {
+/**
+ * A connector for {@link TextRenderer}.
+ *
+ * @since 7.4
+ * @author Vaadin Ltd
+ */
+@Connect(com.vaadin.ui.renderers.TextRenderer.class)
+public class TextRendererConnector
+        extends AbstractGridRendererConnector<String> {
 
-    public String caption;
-    public String id;
-    public boolean sortable;
-
-    public Connector renderer;
+    @Override
+    public TextRenderer getRenderer() {
+        return (TextRenderer) super.getRenderer();
+    }
 }

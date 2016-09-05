@@ -17,7 +17,7 @@ public class GridTest {
     @Before
     public void setUp() {
         grid = new Grid<>();
-        grid.addColumn("foo", String.class, Function.identity());
+        grid.addColumn("foo", Function.identity());
     }
 
     @Test

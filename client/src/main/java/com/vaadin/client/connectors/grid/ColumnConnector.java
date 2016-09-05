@@ -17,6 +17,7 @@ package com.vaadin.client.connectors.grid;
 
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
+import com.vaadin.client.connectors.AbstractRendererConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -35,7 +36,7 @@ import elemental.json.JsonValue;
 @Connect(com.vaadin.ui.Grid.Column.class)
 public class ColumnConnector extends AbstractExtensionConnector {
 
-    private Column<JsonValue, JsonObject> column;
+    private Column<Object, JsonObject> column;
 
     /* This parent is needed because it's no longer available in onUnregister */
     private GridConnector parent;
@@ -43,15 +44,30 @@ public class ColumnConnector extends AbstractExtensionConnector {
     @Override
     protected void extend(ServerConnector target) {
         parent = getParent();
-        column = new Column<JsonValue, JsonObject>() {
+        String columnId = getState().id;
+        column = new Column<Object, JsonObject>() {
 
             @Override
-            public JsonValue getValue(JsonObject row) {
-                return row.getObject(DataCommunicatorConstants.DATA)
-                        .get(getState().id);
+            public Object getValue(JsonObject row) {
+                final JsonObject rowData = row
+                        .getObject(DataCommunicatorConstants.DATA);
+
+                if (rowData.hasKey(columnId)) {
+                    final JsonValue columnValue = rowData.get(columnId);
+
+                    return getRendererConnector().decode(columnValue);
+                }
+
+                return null;
             }
         };
-        getParent().addColumn(column, getState().id);
+        column.setRenderer(getRendererConnector().getRenderer());
+        getParent().addColumn(column, columnId);
+    }
+
+    @SuppressWarnings("unchecked")
+    private AbstractRendererConnector<Object> getRendererConnector() {
+        return (AbstractRendererConnector<Object>) getState().renderer;
     }
 
     @OnStateChange("caption")

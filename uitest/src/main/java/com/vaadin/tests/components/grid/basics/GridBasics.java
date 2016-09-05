@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.grid.basics;
 
 import java.text.DecimalFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,6 +24,10 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.renderers.DateRenderer;
+import com.vaadin.ui.renderers.HtmlRenderer;
+import com.vaadin.ui.renderers.NumberRenderer;
+import com.vaadin.ui.renderers.ProgressBarRenderer;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridBasics extends AbstractTestUIWithLog {
@@ -113,16 +116,20 @@ public class GridBasics extends AbstractTestUIWithLog {
         grid = new Grid<>();
         grid.setItems(data);
 
-        grid.addColumn("Column 0", String.class,
+        grid.addColumn("Column 0",
                 dataObj -> "(" + dataObj.getRowNumber() + ", 0)");
-        grid.addColumn("Column 1", String.class,
+        grid.addColumn("Column 1",
                 dataObj -> "(" + dataObj.getRowNumber() + ", 1)");
-        grid.addColumn("Row Number", Integer.class, DataObject::getRowNumber);
-        grid.addColumn("Date", Date.class, DataObject::getDate);
-        grid.addColumn("HTML String", String.class, DataObject::getHtmlString);
-        grid.addColumn("Big Random", Integer.class, DataObject::getBigRandom);
-        grid.addColumn("Small Random", Integer.class,
-                DataObject::getSmallRandom);
+
+        grid.addColumn("Row Number", DataObject::getRowNumber,
+                new NumberRenderer());
+        grid.addColumn("Date", DataObject::getDate, new DateRenderer());
+        grid.addColumn("HTML String", DataObject::getHtmlString,
+                new HtmlRenderer());
+        grid.addColumn("Big Random", DataObject::getBigRandom,
+                new NumberRenderer());
+        grid.addColumn("Small Random", data -> data.getSmallRandom() / 5d,
+                new ProgressBarRenderer());
 
         ((SingleSelection<DataObject>) grid.getSelectionModel())
                 .addSelectionListener(e -> log("Selected: " + e.getValue()));
