@@ -282,19 +282,19 @@ Another option is to directly implement the [interfacename]#Converter# interface
 ----
 class MyConverter implements Converter<String, Integer> {
   @Override
-  public Result<Integer> fromField(String fieldValue) {
+  public Result<Integer> convertToModel(String fieldValue, Locale locale) {
     // Produces a converted value or an error
     try {
       // ok is a static helper method that creates a Result
-      return ok(Integer.valueOf(fieldValue));
+      return Result.ok(Integer.valueOf(fieldValue));
     } catch (NumberFormatException e) {
       // error is a static helper method that creates a Result
-      return error("Please enter a number");
+      return Result.error("Please enter a number");
     }
   }
 
   @Override
-  public String toField(Integer integer) {
+  public String convertToPresentation(Integer integer, Locale locale) {
     // Converting to the field type should always succeed,
     // so there is no support for returning an error Result.
     return String.valueOf(integer);

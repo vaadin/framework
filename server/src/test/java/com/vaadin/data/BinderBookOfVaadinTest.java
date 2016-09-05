@@ -18,6 +18,7 @@ package com.vaadin.data;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Assert;
@@ -25,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Binder.Binding;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.server.AbstractErrorMessage;
@@ -508,4 +510,49 @@ public class BinderBookOfVaadinTest {
         Assert.assertEquals(1950, person.getYearOfBirth());
     }
 
+    class MyConverter implements Converter<String, Integer> {
+        @Override
+        public Result<Integer> convertToModel(String fieldValue,
+                Locale locale) {
+            // Produces a converted value or an error
+            try {
+                // ok is a static helper method that creates a Result
+                return Result.ok(Integer.valueOf(fieldValue));
+            } catch (NumberFormatException e) {
+                // error is a static helper method that creates a Result
+                return Result.error("Please enter a number");
+            }
+        }
+
+        @Override
+        public String convertToPresentation(Integer integer, Locale locale) {
+            // Converting to the field type should always succeed,
+            // so there is no support for returning an error Result.
+            return String.valueOf(integer);
+        }
+    }
+
+    @Test
+    public void bindUsingCustomConverter() {
+        Binder<BookPerson> binder = new Binder<>();
+        TextField yearOfBirthField = new TextField();
+
+        // Using the converter
+        binder.forField(yearOfBirthField).withConverter(new MyConverter())
+                .bind(BookPerson::getYearOfBirth, BookPerson::setYearOfBirth);
+
+        BookPerson p = new BookPerson(1500, 12);
+        binder.bind(p);
+
+        yearOfBirthField.setValue("abc");
+        Assert.assertEquals("Please enter a number",
+                binder.validate().get(0).getMessage());
+
+        yearOfBirthField.setValue("123");
+        Assert.assertTrue(binder.validate().isEmpty());
+
+        p.setYearOfBirth(12500);
+        binder.load(p);
+        Assert.assertEquals("12500", yearOfBirthField.getValue());
+    }
 }
