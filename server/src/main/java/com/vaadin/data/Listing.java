@@ -26,6 +26,7 @@ import com.vaadin.shared.data.selection.SelectionModel;
  * A generic interface for components that show a list of data.
  *
  * @author Vaadin Ltd.
+ * 
  * @param <T>
  *            the item data type
  * @param <SELECTIONMODEL>
@@ -62,7 +63,7 @@ public interface Listing<T, SELECTIONMODEL extends SelectionModel<T>>
      * Sets the collection of data items of this listing.
      *
      * @param items
-     *            the data items to display
+     *            the data items to display, not null
      *
      */
     default void setItems(Collection<T> items) {
@@ -75,7 +76,7 @@ public interface Listing<T, SELECTIONMODEL extends SelectionModel<T>>
      * @param items
      *            the data items to display
      */
-    default void setItems(T... items) {
+    default void setItems(@SuppressWarnings("unchecked") T... items) {
         setDataSource(DataSource.create(items));
     }
 

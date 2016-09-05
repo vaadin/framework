@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -38,11 +39,12 @@ public class ListDataSource<T> implements DataSource<T> {
      * Constructs a new ListDataSource. This method makes a protective copy of
      * the contents of the Collection.
      *
-     * @param collection
-     *            initial data
+     * @param items
+     *            the initial data, not null
      */
-    public ListDataSource(Collection<T> collection) {
-        final List<T> backend = new ArrayList<>(collection);
+    public ListDataSource(Collection<T> items) {
+        Objects.requireNonNull(items, "items cannot be null");
+        final List<T> backend = new ArrayList<>(items);
         request = query -> backend.stream();
         size = backend.size();
     }

@@ -20,7 +20,11 @@ import com.vaadin.client.data.DataSource;
 import elemental.json.JsonObject;
 
 /**
- * Marker interface for Connectors that have a {@link DataSource}.
+ * A marker interface for connectors that have a data source.
+ * 
+ * @author Vaadin Ltd.
+ * @see DataSource
+ * @since 8.0
  */
 public interface HasDataSource {
 
@@ -28,14 +32,14 @@ public interface HasDataSource {
      * Sets the data source for this Connector.
      *
      * @param dataSource
-     *            new data source
+     *            the new data source, not null
      */
     void setDataSource(DataSource<JsonObject> dataSource);
 
     /**
      * Gets the current data source for this Connector.
      *
-     * @return data source
+     * @return the data source, not null
      */
     DataSource<JsonObject> getDataSource();
 }

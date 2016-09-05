@@ -25,12 +25,15 @@ import java.util.stream.Stream;
  * Minimal DataSource API for communication between the DataProvider and a back
  * end service.
  *
- * @since
+ * @author Vaadin Ltd.
+ * 
  * @param <T>
  *            data type
  *
  * @see ListDataSource
  * @see BackEndDataSource
+ *
+ * @since
  */
 public interface DataSource<T>
         extends Function<Query, Stream<T>>, Serializable {
@@ -56,26 +59,30 @@ public interface DataSource<T>
      * This method creates a new {@link ListDataSource} from a given Collection.
      * The ListDataSource creates a protective List copy of all the contents in
      * the Collection.
-     *
-     * @param data
-     *            collection of data
-     * @return in-memory data source
+     * 
+     * @param <T>
+     *            the data item type
+     * @param items
+     *            the collection of data, not null
+     * @return a new list data source
      */
-    public static <T> ListDataSource<T> create(Collection<T> data) {
-        return new ListDataSource<>(data);
+    public static <T> ListDataSource<T> create(Collection<T> items) {
+        return new ListDataSource<>(items);
     }
 
     /**
      * This method creates a new {@link ListDataSource} from given objects.The
      * ListDataSource creates a protective List copy of all the contents in the
      * array.
-     *
-     * @param data
-     *            data objects
-     * @return in-memory data source
+     * 
+     * @param <T>
+     *            the data item type
+     * @param items
+     *            the data items
+     * @return a new list data source
      */
     @SafeVarargs
-    public static <T> ListDataSource<T> create(T... data) {
-        return new ListDataSource<>(Arrays.asList(data));
+    public static <T> ListDataSource<T> create(T... items) {
+        return new ListDataSource<>(Arrays.asList(items));
     }
 }
