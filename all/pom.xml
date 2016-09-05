@@ -340,9 +340,8 @@
 								</goals>
 								<configuration>
 									<failOnError>false</failOnError>
-									<excludePackageNames>com.vaadin.builhelpers</excludePackageNames>
+									<excludePackageNames>com.vaadin.buildhelpers</excludePackageNames>
 									<skip>false</skip>
-									<stylesheetfile>javadoc.css</stylesheetfile>
 									<links>
 										<link>http://docs.oracle.com/javase/6/docs/api/</link>
 										<link>http://docs.oracle.com/j2ee/1.4/docs/api/</link>
