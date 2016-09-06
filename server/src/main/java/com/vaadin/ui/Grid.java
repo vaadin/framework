@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -70,6 +71,17 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
      */
     @FunctionalInterface
     public interface StyleGenerator<T>
+            extends Function<T, String>, Serializable {
+    }
+
+    /**
+     * A callback interface for generating description texts for an item.
+     *
+     * @param <T>
+     *            the grid bean type
+     */
+    @FunctionalInterface
+    public interface DescriptionGenerator<T>
             extends Function<T, String>, Serializable {
     }
 
@@ -320,6 +332,7 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
         private Function<SortDirection, Stream<SortOrder<String>>> sortOrderProvider;
         private Comparator<T> comparator;
         private StyleGenerator<T> styleGenerator;
+        private DescriptionGenerator<T> descriptionGenerator;
 
         /**
          * Constructs a new Column configuration with given header caption,
@@ -424,7 +437,15 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
                 if (style != null && !style.isEmpty()) {
                     JsonObject styleObj = getDataObject(jsonObject,
                             GridState.JSONKEY_CELLSTYLES);
-                    styleObj.put(getState(false).id, style);
+                    styleObj.put(communicationId, style);
+                }
+            }
+            if (descriptionGenerator != null) {
+                String description = descriptionGenerator.apply(data);
+                if (description != null && !description.isEmpty()) {
+                    JsonObject descriptionObj = getDataObject(jsonObject,
+                            GridState.JSONKEY_CELLDESCRIPTION);
+                    descriptionObj.put(communicationId, description);
                 }
             }
         }
@@ -627,14 +648,42 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
         public StyleGenerator<T> getStyleGenerator() {
             return styleGenerator;
         }
+
+        /**
+         * Sets the description generator that is used for generating
+         * descriptions for cells in this column.
+         *
+         * @param cellDescriptionGenerator
+         *            the cell description generator to set, or
+         *            <code>null</code> to remove a previously set generator
+         * @return this column
+         */
+        public Column<T, V> setDescriptionGenerator(
+                DescriptionGenerator<T> cellDescriptionGenerator) {
+            this.descriptionGenerator = cellDescriptionGenerator;
+            getParent().getDataCommunicator().reset();
+            return this;
+        }
+
+        /**
+         * Gets the description generator that is used for generating
+         * descriptions for cells.
+         *
+         * @return the cell description generator, or <code>null</code> if no
+         *         generator is set
+         */
+        public DescriptionGenerator<T> getDescriptionGenerator() {
+            return descriptionGenerator;
+        }
     }
 
     private KeyMapper<Column<T, ?>> columnKeys = new KeyMapper<>();
-    private Set<Column<T, ?>> columnSet = new HashSet<>();
+    private Set<Column<T, ?>> columnSet = new LinkedHashSet<>();
     private List<SortOrder<Column<T, ?>>> sortOrder = new ArrayList<>();
     private DetailsManager<T> detailsManager;
     private Set<Component> extensionComponents = new HashSet<>();
     private StyleGenerator<T> styleGenerator;
+    private DescriptionGenerator<T> descriptionGenerator;
 
     /**
      * Constructor for the {@link Grid} component.
@@ -650,6 +699,12 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
                 String styleName = styleGenerator.apply(item);
                 if (styleName != null && !styleName.isEmpty()) {
                     json.put(GridState.JSONKEY_ROWSTYLE, styleName);
+                }
+            }
+            if (descriptionGenerator != null) {
+                String description = descriptionGenerator.apply(item);
+                if (description != null && !description.isEmpty()) {
+                    json.put(GridState.JSONKEY_ROWDESCRIPTION, description);
                 }
             }
         });
@@ -920,6 +975,31 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
      */
     public StyleGenerator<T> getStyleGenerator() {
         return styleGenerator;
+    }
+
+    /**
+     * Sets the description generator that is used for generating descriptions
+     * for rows.
+     *
+     * @param descriptionGenerator
+     *            the row description generator to set, or <code>null</code> to
+     *            remove a previously set generator
+     */
+    public void setDescriptionGenerator(
+            DescriptionGenerator<T> descriptionGenerator) {
+        this.descriptionGenerator = descriptionGenerator;
+        getDataCommunicator().reset();
+    }
+
+    /**
+     * Gets the description generator that is used for generating descriptions
+     * for rows.
+     *
+     * @return the row description generator, or <code>null</code> if no
+     *         generator is set
+     */
+    public DescriptionGenerator<T> getDescriptionGenerator() {
+        return descriptionGenerator;
     }
 
     @Override

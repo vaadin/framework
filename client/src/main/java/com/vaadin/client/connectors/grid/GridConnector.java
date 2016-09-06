@@ -21,15 +21,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.HasComponentsConnector;
+import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
 import com.vaadin.client.widget.grid.selection.SpaceSelectHandler;
 import com.vaadin.client.widget.grid.sort.SortEvent;
@@ -233,6 +236,46 @@ public class GridConnector
         if (clickSelectHandler != null) {
             clickSelectHandler.removeHandler();
             clickSelectHandler = null;
+        }
+    }
+
+    @Override
+    public boolean hasTooltip() {
+        // Always check for generated descriptions.
+        return true;
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(Element element) {
+        CellReference<JsonObject> cell = getWidget().getCellReference(element);
+
+        if (cell != null) {
+            JsonObject row = cell.getRow();
+
+            if (row != null && (row.hasKey(GridState.JSONKEY_ROWDESCRIPTION)
+                    || row.hasKey(GridState.JSONKEY_CELLDESCRIPTION))) {
+
+                Column<?, JsonObject> column = cell.getColumn();
+                if (columnToIdMap.containsKey(column)) {
+                    JsonObject cellDescriptions = row
+                            .getObject(GridState.JSONKEY_CELLDESCRIPTION);
+
+                    String id = columnToIdMap.get(column);
+                    if (cellDescriptions != null
+                            && cellDescriptions.hasKey(id)) {
+                        return new TooltipInfo(cellDescriptions.getString(id));
+                    } else if (row.hasKey(GridState.JSONKEY_ROWDESCRIPTION)) {
+                        return new TooltipInfo(row
+                                .getString(GridState.JSONKEY_ROWDESCRIPTION));
+                    }
+                }
+            }
+        }
+
+        if (super.hasTooltip()) {
+            return super.getTooltipInfo(element);
+        } else {
+            return null;
         }
     }
 }

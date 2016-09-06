@@ -188,6 +188,19 @@ public class GridBasics extends AbstractTestUIWithLog {
         }
         createRowStyleMenu(stateMenu.addItem("Row style generator", null));
         createCellStyleMenu(stateMenu.addItem("Cell style generator", null));
+        stateMenu.addItem("Row description generator",
+                item -> grid.setDescriptionGenerator(item.isChecked()
+                        ? t -> "Row tooltip for row " + t.getRowNumber()
+                        : null))
+                .setCheckable(true);
+        stateMenu
+                .addItem("Cell description generator", item -> grid.getColumns()
+                        .stream().findFirst()
+                        .ifPresent(c -> c.setDescriptionGenerator(
+                                item.isChecked() ? t -> "Cell tooltip for row "
+                                        + t.getRowNumber() + ", Column 0"
+                                        : null)))
+                .setCheckable(true);
     }
 
     private void createRowStyleMenu(MenuItem rowStyleMenu) {
