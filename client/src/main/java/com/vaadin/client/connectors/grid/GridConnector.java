@@ -76,6 +76,29 @@ public class GridConnector
         // Default selection style is space key.
         spaceSelectHandler = new SpaceSelectHandler<JsonObject>(getWidget());
         getWidget().addSortHandler(this::handleSortEvent);
+        getWidget().setRowStyleGenerator(rowRef -> {
+            JsonObject json = rowRef.getRow();
+            return json.hasKey(GridState.JSONKEY_ROWSTYLE)
+                    ? json.getString(GridState.JSONKEY_ROWSTYLE) : null;
+        });
+        getWidget().setCellStyleGenerator(cellRef -> {
+            JsonObject row = cellRef.getRow();
+            if (!row.hasKey(GridState.JSONKEY_CELLSTYLES)) {
+                return null;
+            }
+
+            Column<?, JsonObject> column = cellRef.getColumn();
+            if (columnToIdMap.containsKey(column)) {
+                String id = columnToIdMap.get(column);
+                JsonObject cellStyles = row
+                        .getObject(GridState.JSONKEY_CELLSTYLES);
+                if (cellStyles.hasKey(id)) {
+                    return cellStyles.getString(id);
+                }
+            }
+
+            return null;
+        });
 
         layout();
     }

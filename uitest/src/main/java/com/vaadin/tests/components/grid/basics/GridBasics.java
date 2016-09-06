@@ -18,6 +18,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.DetailsGenerator;
+import com.vaadin.ui.Grid.StyleGenerator;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -31,6 +32,17 @@ import com.vaadin.ui.renderers.ProgressBarRenderer;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridBasics extends AbstractTestUIWithLog {
+
+    public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4 = "Row numbers for 3/4";
+    public static final String ROW_STYLE_GENERATOR_NONE = "None";
+    public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS = "Row numbers";
+    public static final String ROW_STYLE_GENERATOR_EMPTY = "Empty string";
+    public static final String ROW_STYLE_GENERATOR_NULL = "Null";
+    public static final String CELL_STYLE_GENERATOR_NONE = "None";
+    public static final String CELL_STYLE_GENERATOR_PROPERTY_TO_STRING = "Property to string";
+    public static final String CELL_STYLE_GENERATOR_SPECIAL = "Special for 1/4 Column 1";
+    public static final String CELL_STYLE_GENERATOR_EMPTY = "Empty string";
+    public static final String CELL_STYLE_GENERATOR_NULL = "Null";
 
     private static class DetailedDetailsGenerator
             implements DetailsGenerator<DataObject> {
@@ -120,6 +132,8 @@ public class GridBasics extends AbstractTestUIWithLog {
                 dataObj -> "(" + dataObj.getRowNumber() + ", 0)");
         grid.addColumn("Column 1",
                 dataObj -> "(" + dataObj.getRowNumber() + ", 1)");
+        grid.addColumn("Column 2",
+                dataObj -> "(" + dataObj.getRowNumber() + ", 2)");
 
         grid.addColumn("Row Number", DataObject::getRowNumber,
                 new NumberRenderer());
@@ -172,6 +186,50 @@ public class GridBasics extends AbstractTestUIWithLog {
             addGridMethodMenu(frozenColMenu, "" + i, i,
                     grid::setFrozenColumnCount);
         }
+        createRowStyleMenu(stateMenu.addItem("Row style generator", null));
+        createCellStyleMenu(stateMenu.addItem("Cell style generator", null));
+    }
+
+    private void createRowStyleMenu(MenuItem rowStyleMenu) {
+        addGridMethodMenu(rowStyleMenu, ROW_STYLE_GENERATOR_NONE, null,
+                grid::setStyleGenerator);
+        addGridMethodMenu(rowStyleMenu, ROW_STYLE_GENERATOR_ROW_NUMBERS,
+                t -> "row" + t.getRowNumber(), grid::setStyleGenerator);
+        addGridMethodMenu(rowStyleMenu,
+                ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4,
+                t -> t.getRowNumber() % 4 != 0 ? "row" + t.getRowNumber()
+                        : null,
+                grid::setStyleGenerator);
+        addGridMethodMenu(rowStyleMenu, ROW_STYLE_GENERATOR_EMPTY, t -> "",
+                grid::setStyleGenerator);
+        addGridMethodMenu(rowStyleMenu, ROW_STYLE_GENERATOR_NULL, t -> null,
+                grid::setStyleGenerator);
+    }
+
+    private void createCellStyleMenu(MenuItem cellStyleMenu) {
+        addGridMethodMenu(cellStyleMenu, CELL_STYLE_GENERATOR_NONE,
+                (StyleGenerator<DataObject>) null,
+                sg -> grid.getColumns().forEach(c -> c.setStyleGenerator(sg)));
+        addGridMethodMenu(cellStyleMenu, CELL_STYLE_GENERATOR_EMPTY,
+                (StyleGenerator<DataObject>) t -> "",
+                sg -> grid.getColumns().forEach(c -> c.setStyleGenerator(sg)));
+        addGridMethodMenu(cellStyleMenu,
+                CELL_STYLE_GENERATOR_PROPERTY_TO_STRING, null,
+                sg -> grid.getColumns().forEach(c -> c.setStyleGenerator(
+                        t -> c.getCaption().replaceAll(" ", "-"))));
+        addGridMethodMenu(cellStyleMenu, CELL_STYLE_GENERATOR_SPECIAL, null,
+                sg -> grid.getColumns().forEach(c -> c.setStyleGenerator(t -> {
+                    if (t.getRowNumber() % 4 == 1) {
+                        return null;
+                    } else if (t.getRowNumber() % 4 == 3
+                            && c.getCaption().equals("Column 1")) {
+                        return null;
+                    }
+                    return c.getCaption().replaceAll(" ", "_");
+                })));
+        addGridMethodMenu(cellStyleMenu, CELL_STYLE_GENERATOR_NULL,
+                (StyleGenerator<DataObject>) t -> null,
+                sg -> grid.getColumns().forEach(c -> c.setStyleGenerator(sg)));
     }
 
     private <T> void addGridMethodMenu(MenuItem parent, String name, T value,

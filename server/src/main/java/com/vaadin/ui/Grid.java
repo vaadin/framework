@@ -32,9 +32,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.vaadin.data.selection.SingleSelection;
-import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.KeyMapper;
-import com.vaadin.server.data.DataGenerator;
 import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -63,6 +61,17 @@ import elemental.json.JsonValue;
  */
 public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
         implements HasComponents {
+
+    /**
+     * A callback interface for generating style names for an item.
+     *
+     * @param <T>
+     *            the grid bean type
+     */
+    @FunctionalInterface
+    public interface StyleGenerator<T>
+            extends Function<T, String>, Serializable {
+    }
 
     /**
      * A callback interface for generating details for a particular row in Grid.
@@ -304,13 +313,13 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
      * @param <V>
      *            the column value type
      */
-    public static class Column<T, V> extends AbstractExtension
-            implements DataGenerator<T> {
+    public static class Column<T, V> extends AbstractGridExtension<T> {
 
         private final Function<T, ? extends V> valueProvider;
 
         private Function<SortDirection, Stream<SortOrder<String>>> sortOrderProvider;
         private Comparator<T> comparator;
+        private StyleGenerator<T> styleGenerator;
 
         /**
          * Constructs a new Column configuration with given header caption,
@@ -401,22 +410,41 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
             @SuppressWarnings("unchecked")
             Renderer<V> renderer = (Renderer<V>) state.renderer;
 
-            if (!jsonObject.hasKey(DataCommunicatorConstants.DATA)) {
-                jsonObject.put(DataCommunicatorConstants.DATA,
-                        Json.createObject());
-            }
-            JsonObject obj = jsonObject
-                    .getObject(DataCommunicatorConstants.DATA);
+            JsonObject obj = getDataObject(jsonObject,
+                    DataCommunicatorConstants.DATA);
 
             V providerValue = valueProvider.apply(data);
 
             JsonValue rendererValue = renderer.encode(providerValue);
 
             obj.put(communicationId, rendererValue);
+
+            if (styleGenerator != null) {
+                String style = styleGenerator.apply(data);
+                if (style != null && !style.isEmpty()) {
+                    JsonObject styleObj = getDataObject(jsonObject,
+                            GridState.JSONKEY_CELLSTYLES);
+                    styleObj.put(getState(false).id, style);
+                }
+            }
         }
 
-        @Override
-        public void destroyData(T data) {
+        /**
+         * Gets a data object with the given key from the given JsonObject. If
+         * there is no object with the key, this method creates a new
+         * JsonObject.
+         *
+         * @param jsonObject
+         *            the json object
+         * @param key
+         *            the key where the desired data object is stored
+         * @return data object for the given key
+         */
+        private JsonObject getDataObject(JsonObject jsonObject, String key) {
+            if (!jsonObject.hasKey(key)) {
+                jsonObject.put(key, Json.createObject());
+            }
+            return jsonObject.getObject(key);
         }
 
         @Override
@@ -572,6 +600,33 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
         public Stream<SortOrder<String>> getSortOrder(SortDirection direction) {
             return sortOrderProvider.apply(direction);
         }
+
+        /**
+         * Sets the style generator that is used for generating styles for cells
+         * in this column.
+         *
+         * @param cellStyleGenerator
+         *            the cell style generator to set, or <code>null</code> to
+         *            remove a previously set generator
+         * @return this column
+         */
+        public Column<T, V> setStyleGenerator(
+                StyleGenerator<T> cellStyleGenerator) {
+            this.styleGenerator = cellStyleGenerator;
+            getParent().getDataCommunicator().reset();
+            return this;
+        }
+
+        /**
+         * Gets the style generator that is used for generating styles for
+         * cells.
+         *
+         * @return the cell style generator, or <code>null</code> if no
+         *         generator is set
+         */
+        public StyleGenerator<T> getStyleGenerator() {
+            return styleGenerator;
+        }
     }
 
     private KeyMapper<Column<T, ?>> columnKeys = new KeyMapper<>();
@@ -579,6 +634,7 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
     private List<SortOrder<Column<T, ?>>> sortOrder = new ArrayList<>();
     private DetailsManager<T> detailsManager;
     private Set<Component> extensionComponents = new HashSet<>();
+    private StyleGenerator<T> styleGenerator;
 
     /**
      * Constructor for the {@link Grid} component.
@@ -589,6 +645,14 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
         detailsManager = new DetailsManager<>();
         addExtension(detailsManager);
         addDataGenerator(detailsManager);
+        addDataGenerator((item, json) -> {
+            if (styleGenerator != null) {
+                String styleName = styleGenerator.apply(item);
+                if (styleName != null && !styleName.isEmpty()) {
+                    json.put(GridState.JSONKEY_ROWSTYLE, styleName);
+                }
+            }
+        });
     }
 
     /**
@@ -834,6 +898,28 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
      */
     public HeightMode getHeightMode() {
         return getState(false).heightMode;
+    }
+
+    /**
+     * Sets the style generator that is used for generating styles for rows.
+     *
+     * @param styleGenerator
+     *            the row style generator to set, or <code>null</code> to remove
+     *            a previously set generator
+     */
+    public void setStyleGenerator(StyleGenerator<T> styleGenerator) {
+        this.styleGenerator = styleGenerator;
+        getDataCommunicator().reset();
+    }
+
+    /**
+     * Gets the style generator that is used for generating styles for rows.
+     *
+     * @return the row style generator, or <code>null</code> if no generator is
+     *         set
+     */
+    public StyleGenerator<T> getStyleGenerator() {
+        return styleGenerator;
     }
 
     @Override

@@ -10,8 +10,8 @@ public class GridContentTest extends GridBasicsTest {
         DataObject first = getTestData().findFirst().orElse(null);
         Assert.assertEquals("Text content should match row number",
                 first.getRowNumber().toString(),
-                getGridElement().getCell(0, 4).getText());
+                getGridElement().getCell(0, 5).getText());
         Assert.assertEquals("HTML content did not match", first.getHtmlString(),
-                getGridElement().getCell(0, 4).getAttribute("innerHTML"));
+                getGridElement().getCell(0, 5).getAttribute("innerHTML"));
     }
 }

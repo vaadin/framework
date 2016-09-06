@@ -357,7 +357,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     /**
      * Informs the DataProvider that the collection has changed.
      */
-    protected void reset() {
+    public void reset() {
         if (reset) {
             return;
         }
