@@ -112,6 +112,9 @@ public class DummyData extends AbstractTestUIWithLog {
         controls.addComponent(new Button("Reset data source", e -> {
             dummy.setDataSource(new LoggingDataSource(items));
         }));
+        controls.addComponent(new Button("Remove all data", e -> {
+            dummy.setDataSource(new LoggingDataSource(Collections.emptyList()));
+        }));
         addComponent(dummy);
     }
 }

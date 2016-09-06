@@ -287,7 +287,14 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             dropFromCache(cached);
             cached = Range.between(0, 0);
 
-            handleMissingRows(getMaxCacheRange());
+            Range maxCacheRange = getMaxCacheRange();
+            if (!maxCacheRange.isEmpty()) {
+                handleMissingRows(maxCacheRange);
+            } else {
+                // There is nothing to fetch. We're done here.
+                getHandlers().forEach(dch -> dch
+                        .dataAvailable(cached.getStart(), cached.length()));
+            }
         } else {
             discardStaleCacheEntries();
 

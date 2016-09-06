@@ -10,10 +10,16 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.AbstractComponentElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elementsbase.ServerClass;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class DummyDataTest extends SingleBrowserTest {
+
+    @ServerClass("com.vaadin.tests.data.DummyData.DummyComponent")
+    public static class DummyElement extends AbstractComponentElement {
+    }
 
     @Before
     public void setUp() {
@@ -57,4 +63,22 @@ public class DummyDataTest extends SingleBrowserTest {
         assertEquals("DataSource change should only cause 1 request",
                 "3. Backend request #0", getLogRow(0));
     }
+
+    @Test
+    public void testEmptyAndRestoreContent() {
+        assertEquals("Unexpected amount of content on init.", 300,
+                $(DummyElement.class).first()
+                        .findElements(By.className("v-label")).size());
+        // Change to an empty data source
+        $(ButtonElement.class).get(2).click();
+        assertEquals("Empty data source did not work as expected.", 0,
+                $(DummyElement.class).first()
+                        .findElements(By.className("v-label")).size());
+        // Change back to logging data source
+        $(ButtonElement.class).get(1).click();
+        assertEquals("Data was not correctly restored.", 300,
+                $(DummyElement.class).first()
+                        .findElements(By.className("v-label")).size());
+    }
+
 }
