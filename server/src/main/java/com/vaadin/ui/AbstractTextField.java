@@ -29,7 +29,7 @@ import com.vaadin.shared.Registration;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldClientRpc;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc;
-import com.vaadin.shared.ui.textfield.TextFieldState;
+import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
 import com.vaadin.shared.ui.textfield.ValueChangeMode;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -42,7 +42,7 @@ import com.vaadin.ui.declarative.DesignContext;
  */
 public abstract class AbstractTextField extends AbstractField<String> {
 
-    private final class TextFieldServerRpcImpl
+    private final class AbstractTextFieldServerRpcImpl
             implements AbstractTextFieldServerRpc {
 
         @Override
@@ -54,7 +54,7 @@ public abstract class AbstractTextField extends AbstractField<String> {
         }
     }
 
-    private final class TextFieldFocusAndBlurRpcImpl
+    private final class AbstractTextFieldFocusAndBlurRpcImpl
             implements FocusAndBlurServerRpc {
         @Override
         public void blur() {
@@ -73,8 +73,8 @@ public abstract class AbstractTextField extends AbstractField<String> {
      * Creates a new instance.
      */
     protected AbstractTextField() {
-        registerRpc(new TextFieldServerRpcImpl());
-        registerRpc(new TextFieldFocusAndBlurRpcImpl());
+        registerRpc(new AbstractTextFieldServerRpcImpl());
+        registerRpc(new AbstractTextFieldFocusAndBlurRpcImpl());
     }
 
     @Override
@@ -305,13 +305,13 @@ public abstract class AbstractTextField extends AbstractField<String> {
     }
 
     @Override
-    protected TextFieldState getState() {
-        return (TextFieldState) super.getState();
+    protected AbstractTextFieldState getState() {
+        return (AbstractTextFieldState) super.getState();
     }
 
     @Override
-    protected TextFieldState getState(boolean markAsDirty) {
-        return (TextFieldState) super.getState(markAsDirty);
+    protected AbstractTextFieldState getState(boolean markAsDirty) {
+        return (AbstractTextFieldState) super.getState(markAsDirty);
     }
 
     @Override

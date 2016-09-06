@@ -15,44 +15,11 @@
  */
 package com.vaadin.shared.ui.textfield;
 
-import com.vaadin.shared.AbstractFieldState;
-import com.vaadin.shared.annotations.DelegateToWidget;
-import com.vaadin.shared.annotations.NoLayout;
-
-public class TextFieldState extends AbstractFieldState {
+/**
+ * State class for TextField.
+ */
+public class TextFieldState extends AbstractTextFieldState {
     {
         primaryStyleName = "v-textfield";
     }
-
-    /**
-     * Maximum character count in text field.
-     */
-    @DelegateToWidget
-    @NoLayout
-    public int maxLength = -1;
-
-    /**
-     * Number of visible columns in the TextField.
-     */
-    public int columns = 0;
-
-    /**
-     * The prompt to display in an empty field. Null when disabled.
-     */
-    @DelegateToWidget
-    @NoLayout
-    public String placeholder = null;
-
-    /**
-     * The text in the field
-     */
-    @DelegateToWidget
-    @NoLayout
-    public String text = "";
-
-    @NoLayout
-    public ValueChangeMode valueChangeMode = ValueChangeMode.LAZY;
-
-    @NoLayout
-    public int valueChangeTimeout = 400;
 }

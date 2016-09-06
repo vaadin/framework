@@ -19,6 +19,7 @@ package com.vaadin.ui;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
+import com.vaadin.shared.ui.textfield.TextFieldState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -61,6 +62,11 @@ public class TextField extends AbstractTextField {
     public TextField(String caption, String value) {
         setValue(value);
         setCaption(caption);
+    }
+
+    @Override
+    protected TextFieldState getState() {
+        return (TextFieldState) super.getState();
     }
 
     @Override

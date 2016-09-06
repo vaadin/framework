@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.TextBoxBase;
  *
  */
 public class VTextField extends TextBoxBase
-        implements Field, FocusHandler, BlurHandler {
+        implements Field, FocusHandler, BlurHandler, AbstractTextFieldWidget {
 
     public static final String CLASSNAME = "v-textfield";
     public static final String CLASSNAME_FOCUS = "focus";

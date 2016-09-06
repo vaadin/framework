@@ -19,15 +19,17 @@ package com.vaadin.client.ui.textarea;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.vaadin.client.event.InputEvent;
 import com.vaadin.client.ui.VTextArea;
-import com.vaadin.client.ui.textfield.TextFieldConnector;
+import com.vaadin.client.ui.textfield.AbstractTextFieldConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.textarea.TextAreaServerRpc;
 import com.vaadin.shared.ui.textarea.TextAreaState;
+import com.vaadin.shared.ui.textfield.ValueChangeMode;
 import com.vaadin.ui.TextArea;
 
 @Connect(TextArea.class)
-public class TextAreaConnector extends TextFieldConnector {
+public class TextAreaConnector extends AbstractTextFieldConnector {
 
     @Override
     public TextAreaState getState() {
@@ -42,6 +44,12 @@ public class TextAreaConnector extends TextFieldConnector {
     @Override
     protected void init() {
         super.init();
+        getWidget().addChangeHandler(event -> sendValueChange());
+        getWidget().addDomHandler(event -> {
+            if (getState().valueChangeMode != ValueChangeMode.BLUR) {
+                scheduleValueChange();
+            }
+        }, InputEvent.getType());
         getWidget().addMouseUpHandler(new ResizeMouseUpHandler());
     }
 

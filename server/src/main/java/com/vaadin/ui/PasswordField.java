@@ -26,7 +26,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * A field that is used to enter secret text information like passwords. The
  * entered text is not displayed on the screen.
  */
-public class PasswordField extends AbstractTextField {
+public class PasswordField extends TextField {
 
     /**
      * Constructs an empty PasswordField.
