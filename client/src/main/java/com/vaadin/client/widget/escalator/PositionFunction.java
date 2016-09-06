@@ -17,7 +17,6 @@
 package com.vaadin.client.widget.escalator;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style.Unit;
 
 /**
  * A functional interface that can be used for positioning elements in the DOM.
@@ -74,24 +73,6 @@ public interface PositionFunction {
         @Override
         public void reset(Element e) {
             e.getStyle().clearProperty("webkitTransform");
-        }
-    }
-
-    /**
-     * A position function using "left: x" and "top: y" to position elements in
-     * the DOM.
-     */
-    public static class AbsolutePosition implements PositionFunction {
-        @Override
-        public void set(Element e, double x, double y) {
-            e.getStyle().setLeft(x, Unit.PX);
-            e.getStyle().setTop(y, Unit.PX);
-        }
-
-        @Override
-        public void reset(Element e) {
-            e.getStyle().clearLeft();
-            e.getStyle().clearTop();
         }
     }
 

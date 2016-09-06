@@ -71,7 +71,6 @@ import com.vaadin.client.widget.escalator.EscalatorUpdater;
 import com.vaadin.client.widget.escalator.FlyweightCell;
 import com.vaadin.client.widget.escalator.FlyweightRow;
 import com.vaadin.client.widget.escalator.PositionFunction;
-import com.vaadin.client.widget.escalator.PositionFunction.AbsolutePosition;
 import com.vaadin.client.widget.escalator.PositionFunction.Translate3DPosition;
 import com.vaadin.client.widget.escalator.PositionFunction.TranslatePosition;
 import com.vaadin.client.widget.escalator.PositionFunction.WebkitTranslate3DPosition;
@@ -846,26 +845,7 @@ public class Escalator extends Widget
                 }
 
                 position.set(headElem, -scrollLeft, 0);
-
-                /*
-                 * TODO [[optimize]]: cache this value in case the instanceof
-                 * check has undesirable overhead. This could also be a
-                 * candidate for some deferred binding magic so that e.g.
-                 * AbsolutePosition is not even considered in permutations that
-                 * we know support something better. That would let the compiler
-                 * completely remove the entire condition since it knows that
-                 * the if will never be true.
-                 */
-                if (position instanceof AbsolutePosition) {
-                    /*
-                     * we don't want to put "top: 0" on the footer, since it'll
-                     * render wrong, as we already have
-                     * "bottom: $footer-height".
-                     */
-                    footElem.getStyle().setLeft(-scrollLeft, Unit.PX);
-                } else {
-                    position.set(footElem, -scrollLeft, 0);
-                }
+                position.set(footElem, -scrollLeft, 0);
 
                 lastScrollLeft = scrollLeft;
             }
@@ -5757,15 +5737,6 @@ public class Escalator extends Widget
     }
 
     private void detectAndApplyPositionFunction() {
-        /*
-         * firefox has a bug in its translate operation, showing white space
-         * when adjusting the scrollbar in BodyRowContainer.paintInsertRows
-         */
-        if (Window.Navigator.getUserAgent().contains("Firefox")) {
-            position = new AbsolutePosition();
-            return;
-        }
-
         final Style docStyle = Document.get().getBody().getStyle();
         if (hasProperty(docStyle, "transform")) {
             if (hasProperty(docStyle, "transformStyle")) {
@@ -5775,8 +5746,6 @@ public class Escalator extends Widget
             }
         } else if (hasProperty(docStyle, "webkitTransform")) {
             position = new WebkitTranslate3DPosition();
-        } else {
-            position = new AbsolutePosition();
         }
     }
 
