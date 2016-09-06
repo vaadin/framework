@@ -16,7 +16,12 @@
 
 package com.vaadin.client.connectors.grid;
 
+import com.vaadin.client.ServerConnector;
 import com.vaadin.client.connectors.AbstractRendererConnector;
+import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.shared.data.DataCommunicatorConstants;
+
+import elemental.json.JsonObject;
 
 /**
  * An abstract base class for renderer connectors. A renderer connector is used
@@ -35,5 +40,42 @@ import com.vaadin.client.connectors.AbstractRendererConnector;
  */
 public abstract class AbstractGridRendererConnector<T>
         extends AbstractRendererConnector<T> {
-    // getRowKey and getColumnId will be needed here later on
+
+    /**
+     * Gets the row key for a row object.
+     * <p>
+     * In case this renderer wants be able to identify a row in such a way that
+     * the server also understands it, the row key is used for that. Rows are
+     * identified by unified keys between the client and the server.
+     *
+     * @param row
+     *            the row object
+     * @return the row key for the given row
+     */
+    protected String getRowKey(JsonObject row) {
+        return row.getString(DataCommunicatorConstants.KEY);
+    }
+
+    /**
+     * Gets the column id for a column.
+     * <p>
+     * In case this renderer wants be able to identify a column in such a way
+     * that the server also understands it, the column id is used for that.
+     * Columns are identified by unified ids between the client and the server.
+     *
+     * @param column
+     *            the column object
+     * @return the column id for the given column
+     */
+    protected String getColumnId(Column<?, JsonObject> column) {
+        final ServerConnector parent = getParent();
+        if (parent instanceof ColumnConnector) {
+            final ServerConnector parentGrid = parent.getParent();
+            if (parentGrid instanceof GridConnector) {
+                return ((GridConnector) parentGrid).getColumnId(column);
+            }
+        }
+        throw new IllegalStateException(
+                "Renderers can only be used with a Grid.");
+    }
 }

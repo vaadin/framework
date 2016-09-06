@@ -66,6 +66,17 @@ public class GridConnector
     private SpaceSelectHandler<JsonObject> spaceSelectHandler;
     private ClickSelectHandler<JsonObject> clickSelectHandler;
 
+    /**
+     * Gets the string identifier of a {@link Column} in this grid.
+     *
+     * @param column
+     *            the column for which the identifier is to be retrieved for
+     * @return the string identifying the given column in this grid
+     */
+    public String getColumnId(Grid.Column<?, ?> column) {
+        return columnToIdMap.get(column);
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public Grid<JsonObject> getWidget() {
@@ -216,7 +227,7 @@ public class GridConnector
 
     @Override
     public void setChildComponents(List<ComponentConnector> children) {
-        this.childComponents = children;
+        childComponents = children;
 
     }
 

@@ -20,23 +20,29 @@ import java.util.Objects;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.JsonCodec;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.renderers.ClickableRenderer.RendererClickEvent;
 
 import elemental.json.JsonValue;
 
 /**
  * An abstract base class for server-side
- * {@link com.vaadin.ui.renderers.Renderer Grid renderers}. This class currently
- * extends the AbstractExtension superclass, but this fact should be regarded as
- * an implementation detail and subject to change in a future major or minor
- * Vaadin version.
+ * {@link com.vaadin.ui.renderers.Renderer Grid renderers}.
+ *
+ * <p>
+ * This class currently extends the AbstractExtension superclass, but this fact
+ * should be regarded as an implementation detail and subject to change in a
+ * future major or minor Vaadin version.
  *
  * @param <T>
+ *            the grid type this renderer can be attached to
+ * @param <V>
  *            the type this renderer knows how to present
  */
-public abstract class AbstractRenderer<T> extends AbstractExtension
-        implements Renderer<T> {
-    private final Class<T> presentationType;
+public abstract class AbstractRenderer<T, V> extends AbstractExtension
+        implements Renderer<V> {
+    private final Class<V> presentationType;
 
     private final String nullRepresentation;
 
@@ -52,7 +58,7 @@ public abstract class AbstractRenderer<T> extends AbstractExtension
      *            value in case the actual cell value is <code>null</code>. May
      *            be <code>null</code>.
      */
-    protected AbstractRenderer(Class<T> presentationType,
+    protected AbstractRenderer(Class<V> presentationType,
             String nullRepresentation) {
         Objects.requireNonNull(presentationType,
                 "Presentation type cannot be null");
@@ -68,7 +74,7 @@ public abstract class AbstractRenderer<T> extends AbstractExtension
      *            the data type that this renderer displays, not
      *            <code>null</code>
      */
-    protected AbstractRenderer(Class<T> presentationType) {
+    protected AbstractRenderer(Class<V> presentationType) {
         this(presentationType, null);
     }
 
@@ -94,12 +100,12 @@ public abstract class AbstractRenderer<T> extends AbstractExtension
     }
 
     @Override
-    public Class<T> getPresentationType() {
+    public Class<V> getPresentationType() {
         return presentationType;
     }
 
     @Override
-    public JsonValue encode(T value) {
+    public JsonValue encode(V value) {
         if (value == null) {
             return encode(getNullRepresentation(), String.class);
         } else {
@@ -135,5 +141,20 @@ public abstract class AbstractRenderer<T> extends AbstractExtension
         return JsonCodec
                 .encode(value, null, type, getUI().getConnectorTracker())
                 .getEncodedValue();
+    }
+
+    /**
+     * Gets the {@link Grid} this renderer is attached to. Used internally for
+     * indicating the source grid of possible events emitted by this renderer,
+     * such as {@link RendererClickEvent}s.
+     *
+     * @return the grid this renderer is attached to or null if unattached
+     */
+    @SuppressWarnings("unchecked")
+    protected Grid<T> getParentGrid() {
+        if (super.getParent() == null) {
+            return null;
+        }
+        return (Grid<T>) super.getParent().getParent();
     }
 }

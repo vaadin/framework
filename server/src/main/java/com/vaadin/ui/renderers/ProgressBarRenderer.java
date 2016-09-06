@@ -24,7 +24,7 @@ import elemental.json.JsonValue;
  * @author Vaadin Ltd
  * @since 7.4
  */
-public class ProgressBarRenderer extends AbstractRenderer<Double> {
+public class ProgressBarRenderer extends AbstractRenderer<Object, Double> {
 
     /**
      * Creates a new text renderer

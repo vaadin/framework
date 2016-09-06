@@ -21,7 +21,7 @@ package com.vaadin.ui.renderers;
  * @author Vaadin Ltd
  * @since 7.4
  */
-public class HtmlRenderer extends AbstractRenderer<String> {
+public class HtmlRenderer extends AbstractRenderer<Object, String> {
     /**
      * Creates a new HTML renderer.
      *

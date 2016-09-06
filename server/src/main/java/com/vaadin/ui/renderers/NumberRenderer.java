@@ -26,7 +26,7 @@ import elemental.json.JsonValue;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class NumberRenderer extends AbstractRenderer<Number> {
+public class NumberRenderer extends AbstractRenderer<Object, Number> {
     private final Locale locale;
     private final NumberFormat numberFormat;
     private final String formatString;
@@ -127,8 +127,8 @@ public class NumberRenderer extends AbstractRenderer<Number> {
      * @throws IllegalArgumentException
      *             if {@code formatString} is {@code null}
      * @see <a href=
-     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
-     *      String Syntax</a>
+     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">
+     *      Format String Syntax</a>
      */
     public NumberRenderer(String formatString) throws IllegalArgumentException {
         this(formatString, Locale.getDefault(), "");
@@ -147,8 +147,8 @@ public class NumberRenderer extends AbstractRenderer<Number> {
      * @throws IllegalArgumentException
      *             if either argument is {@code null}
      * @see <a href=
-     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
-     *      String Syntax</a>
+     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">
+     *      Format String Syntax</a>
      */
     public NumberRenderer(String formatString, Locale locale,
             String nullRepresentation) {

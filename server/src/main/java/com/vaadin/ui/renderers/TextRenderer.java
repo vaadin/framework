@@ -21,7 +21,7 @@ package com.vaadin.ui.renderers;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class TextRenderer extends AbstractRenderer<String> {
+public class TextRenderer extends AbstractRenderer<Object, String> {
 
     /**
      * Creates a new text renderer

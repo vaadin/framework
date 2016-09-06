@@ -27,7 +27,7 @@ import elemental.json.JsonValue;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class DateRenderer extends AbstractRenderer<Date> {
+public class DateRenderer extends AbstractRenderer<Object, Date> {
     private final Locale locale;
     private final String formatString;
     private final DateFormat dateFormat;
@@ -86,8 +86,8 @@ public class DateRenderer extends AbstractRenderer<Date> {
      * @throws IllegalArgumentException
      *             if {@code formatString} is {@code null}
      * @see <a href=
-     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
-     *      String Syntax</a>
+     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">
+     *      Format String Syntax</a>
      */
     public DateRenderer(String formatString) throws IllegalArgumentException {
         this(formatString, "");
@@ -106,8 +106,8 @@ public class DateRenderer extends AbstractRenderer<Date> {
      * @throws IllegalArgumentException
      *             if {@code formatString} is {@code null}
      * @see <a href=
-     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
-     *      String Syntax</a>
+     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">
+     *      Format String Syntax</a>
      */
     public DateRenderer(String formatString, String nullRepresentation)
             throws IllegalArgumentException {
@@ -127,8 +127,8 @@ public class DateRenderer extends AbstractRenderer<Date> {
      * @throws IllegalArgumentException
      *             if either argument is {@code null}
      * @see <a href=
-     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
-     *      String Syntax</a>
+     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">
+     *      Format String Syntax</a>
      */
     public DateRenderer(String formatString, Locale locale)
             throws IllegalArgumentException {
@@ -150,8 +150,8 @@ public class DateRenderer extends AbstractRenderer<Date> {
      * @throws IllegalArgumentException
      *             if either argument is {@code null}
      * @see <a href=
-     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
-     *      String Syntax</a>
+     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">
+     *      Format String Syntax</a>
      */
     public DateRenderer(String formatString, Locale locale,
             String nullRepresentation) throws IllegalArgumentException {

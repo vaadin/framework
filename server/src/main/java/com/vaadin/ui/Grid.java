@@ -44,6 +44,7 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.ui.renderers.Renderer;
 import com.vaadin.ui.renderers.TextRenderer;
 
@@ -711,7 +712,7 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
     }
 
     /**
-     * Adds a new column to this {@link Grid} with given header caption,
+     * Adds a new column to this {@link Grid} with given header caption, typed
      * renderer and value provider.
      *
      * @param caption
@@ -720,21 +721,26 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
      *            the value provider
      * @param renderer
      *            the column value class
+     * @param <T>
+     *            the type of this grid
      * @param <V>
      *            the column value type
      *
      * @return the new column
+     *
+     * @see {@link AbstractRenderer}
      */
     public <V> Column<T, V> addColumn(String caption,
-            Function<T, ? extends V> valueProvider, Renderer<V> renderer) {
-        Column<T, V> c = new Column<>(caption, valueProvider, renderer);
+            Function<T, ? extends V> valueProvider,
+            AbstractRenderer<? super T, V> renderer) {
+        Column<T, V> column = new Column<>(caption, valueProvider, renderer);
 
-        c.extend(this);
-        c.setId(columnKeys.key(c));
-        columnSet.add(c);
-        addDataGenerator(c);
+        column.extend(this);
+        column.setId(columnKeys.key(column));
+        columnSet.add(column);
+        addDataGenerator(column);
 
-        return c;
+        return column;
     }
 
     /**
@@ -811,6 +817,17 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
      */
     public Collection<Column<T, ?>> getColumns() {
         return Collections.unmodifiableSet(columnSet);
+    }
+
+    /**
+     * Gets a {@link Column} of this grid by its identifying string.
+     *
+     * @param columnId
+     *            the identifier of the column to get
+     * @return the column corresponding to the given column id
+     */
+    public Column<T, ?> getColumn(String columnId) {
+        return columnKeys.get(columnId);
     }
 
     @Override
