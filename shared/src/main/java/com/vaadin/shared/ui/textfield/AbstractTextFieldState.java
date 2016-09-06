@@ -32,11 +32,6 @@ public abstract class AbstractTextFieldState extends AbstractFieldState {
     public int maxLength = -1;
 
     /**
-     * Number of visible columns in the TextField.
-     */
-    public int columns = 0;
-
-    /**
      * The prompt to display in an empty field. Null when disabled.
      */
     @DelegateToWidget

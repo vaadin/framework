@@ -213,32 +213,6 @@ public abstract class AbstractTextField extends AbstractField<String> {
     }
 
     /**
-     * Gets the number of columns in the editor. If the number of columns is set
-     * 0, the actual number of displayed columns is determined implicitly by the
-     * adapter.
-     *
-     * @return the number of columns in the editor.
-     */
-    public int getColumns() {
-        return getState(false).columns;
-    }
-
-    /**
-     * Sets the number of columns in the editor. If the number of columns is set
-     * 0, the actual number of displayed columns is determined implicitly by the
-     * adapter.
-     *
-     * @param columns
-     *            the number of columns to set.
-     */
-    public void setColumns(int columns) {
-        if (columns < 0) {
-            columns = 0;
-        }
-        getState().columns = columns;
-    }
-
-    /**
      * Sets the mode how the TextField triggers {@link ValueChange}s.
      *
      * @param mode

@@ -33,7 +33,7 @@ public class FormLayoutWithInvisibleComponent extends TestBase {
 
         messages = new TextArea("Messages hidden");
         messages.setRows(10);
-        messages.setColumns(40);
+        messages.setWidth("40em");
         messages.setVisible(false);
         messages.setEnabled(false);
         formLayout.addComponent(messages);

@@ -12,7 +12,7 @@ public class InputPromptAndCursorPosition extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         final TextField tf = new TextField();
-        tf.setColumns(40);
+        tf.setWidth("40em");
         tf.setValue(
                 "Delete this text to reveal input prompt and update cursor position.");
         tf.setPlaceholder("This is an input prompt");

@@ -123,7 +123,7 @@ public class GridHeaderFooterComponents extends AbstractTestUIWithLog {
 
     private TextField createTextField(final Object pid) {
         TextField filterField = new TextField();
-        filterField.setColumns(8);
+        filterField.setWidth("8em");
         filterField.setValue("Filter: " + pid);
         filterField.addValueChangeListener(listener -> {
             log("value change for field in " + pid + " to "

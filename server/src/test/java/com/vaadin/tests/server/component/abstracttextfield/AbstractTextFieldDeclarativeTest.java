@@ -36,15 +36,13 @@ public class AbstractTextFieldDeclarativeTest
         String design = "<vaadin-text-field "
                 // + "null-representation=this-is-null "
                 // + "null-setting-allowed "
-                + "maxlength=5 columns=3 "
-                + "placeholder=input value-change-mode=eager "
+                + "maxlength=5 " + "placeholder=input value-change-mode=eager "
                 + "value-change-timeout=100 />";
         AbstractTextField tf = new TextField();
         // FIXME
         // tf.setNullRepresentation("this-is-null");
         // tf.setNullSettingAllowed(true);
         tf.setMaxLength(5);
-        tf.setColumns(3);
         tf.setPlaceholder("input");
         tf.setValueChangeMode(ValueChangeMode.EAGER);
         tf.setValueChangeTimeout(100);
