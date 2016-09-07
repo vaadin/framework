@@ -176,7 +176,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     private Collection<DataGenerator<T>> generators = new LinkedHashSet<>();
     private ActiveDataHandler handler = new ActiveDataHandler();
 
-    private DataSource<T> dataSource;
+    private DataSource<T> dataSource = DataSource.create();
     private DataKeyMapper<T> keyMapper;
 
     private boolean reset = false;

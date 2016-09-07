@@ -35,7 +35,6 @@ import com.vaadin.data.selection.SingleSelection;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.data.DataGenerator;
-import com.vaadin.server.data.DataSource;
 import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -586,7 +585,6 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
      */
     public Grid() {
         setSelectionModel(new SingleSelection<>(this));
-        setDataSource(DataSource.create());
         registerRpc(new GridServerRpcImpl());
         detailsManager = new DetailsManager<>();
         addExtension(detailsManager);
@@ -608,8 +606,8 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
      *
      * @return the new column
      */
-    public <V> Column<T, V> addColumn(String caption, Function<T, ? extends V> valueProvider,
-            Renderer<V> renderer) {
+    public <V> Column<T, V> addColumn(String caption,
+            Function<T, ? extends V> valueProvider, Renderer<V> renderer) {
         Column<T, V> c = new Column<>(caption, valueProvider, renderer);
 
         c.extend(this);
