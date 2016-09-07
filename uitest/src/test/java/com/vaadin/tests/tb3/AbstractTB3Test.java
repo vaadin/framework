@@ -1015,15 +1015,20 @@ public abstract class AbstractTB3Test extends ParallelTest {
         return loadingIndicator.isDisplayed();
     }
 
-    protected void waitUntilLoadingIndicatorNotVisible() {
+    protected void waitUntilLoadingIndicatorVisible() {
         waitUntil(new ExpectedCondition<Boolean>() {
-
             @Override
             public Boolean apply(WebDriver input) {
-                WebElement loadingIndicator = input.findElement(By
-                        .className("v-loading-indicator"));
+                return isLoadingIndicatorVisible();
+            }
+        });
+    }
 
-                return !loadingIndicator.isDisplayed();
+    protected void waitUntilLoadingIndicatorNotVisible() {
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver input) {
+                return !isLoadingIndicatorVisible();
             }
         });
     }
