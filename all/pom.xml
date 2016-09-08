@@ -13,7 +13,6 @@
 
 	<properties>
 		<relnotes.tickets.file>${project.build.directory}/generated-resources/releasenotes/release-notes-tickets.html</relnotes.tickets.file>
-		<relnotes.authors.file>${project.build.directory}/generated-resources/releasenotes/release-notes-authors.html</relnotes.authors.file>
 		<webcontent.dir>${project.build.outputDirectory}/WebContent/</webcontent.dir>
 		<maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
 	</properties>
@@ -114,8 +113,6 @@
 							<target>
 								<loadfile property="release-notes-tickets" srcFile="${relnotes.tickets.file}"
 									failonerror="false" />
-								<loadfile property="release-notes-authors" srcFile="${relnotes.authors.file}"
-									failonerror="false" />
 								<copy todir="${webcontent.dir}">
 									<fileset dir="src/main/templates/">
 										<patternset>
@@ -131,7 +128,6 @@
 											<token key="gwt-version" value="${vaadin.gwt.version}" />
 											<token key="builddate" value="${maven.build.timestamp}" />
 											<token key="release-notes-tickets" value="${release-notes-tickets}" />
-											<token key="release-notes-authors" value="${release-notes-authors}" />
 										</replacetokens>
 									</filterchain>
 								</copy>
@@ -248,26 +244,6 @@
 										</argument>
 									</arguments>
 									<outputFile>${relnotes.tickets.file}</outputFile>
-								</configuration>
-							</execution>
-							<execution>
-								<id>fetch-release-notes-authors</id>
-								<phase>process-classes</phase>
-								<goals>
-									<goal>exec</goal>
-								</goals>
-								<configuration>
-									<classpathScope>compile</classpathScope>
-									<executable>${java.home}/bin/java</executable>
-									<arguments>
-										<argument>-Dvaadin.version=${project.version}</argument>
-										<argument>-classpath</argument>
-										<classpath />
-
-										<argument>com.vaadin.buildhelpers.FetchReleaseNotesAuthors
-										</argument>
-									</arguments>
-									<outputFile>${relnotes.authors.file}</outputFile>
 								</configuration>
 							</execution>
 						</executions>
