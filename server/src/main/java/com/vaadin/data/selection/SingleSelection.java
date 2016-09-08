@@ -19,8 +19,8 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.vaadin.data.HasValue.ValueChange;
-import com.vaadin.event.EventListener;
+import com.vaadin.event.selection.SingleSelectionChange;
+import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionModel.Single;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
@@ -41,59 +41,6 @@ import com.vaadin.util.ReflectTools;
  */
 public class SingleSelection<T> extends AbstractSelectionModel<T>
         implements Single<T> {
-
-    /**
-     * Fired when the selection changes.
-     *
-     * @param <T>
-     *            the type of the selected item
-     */
-    public static class SingleSelectionChange<T> extends ValueChange<T> {
-
-        /**
-         * Creates a new selection change event.
-         *
-         * @param source
-         *            the listing that fired the event
-         * @param selectedItem
-         *            the selected item or {@code null} if deselected
-         * @param userOriginated
-         *            {@code true} if this event originates from the client,
-         *            {@code false} otherwise.
-         */
-        public SingleSelectionChange(AbstractListing<T, ?> source,
-                T selectedItem, boolean userOriginated) {
-            super(source, selectedItem, userOriginated);
-        }
-
-        /**
-         * Returns an optional of the item that was selected, or an empty
-         * optional if a previously selected item was deselected.
-         *
-         * @return the selected item or an empty optional if deselected
-         *
-         * @see SelectionModel.Single#getSelectedItem()
-         */
-        public Optional<T> getSelectedItem() {
-            return Optional.ofNullable(getValue());
-        }
-    }
-
-    /**
-     * A listener for selection events.
-     *
-     * @param <T>
-     *            the type of the selected item
-     *
-     * @see SingleSelectionChange
-     */
-    @FunctionalInterface
-    public interface SingleSelectionListener<T>
-            extends EventListener<SingleSelectionChange<T>> {
-
-        @Override
-        public void accept(SingleSelectionChange<T> event);
-    }
 
     @Deprecated
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
