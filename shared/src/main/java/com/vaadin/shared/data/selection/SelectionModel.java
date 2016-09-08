@@ -28,7 +28,7 @@ import java.util.Set;
  *
  * @param <T>
  *            the type of the items to select
- * @since
+ * @since 8.0
  */
 public interface SelectionModel<T> extends Serializable {
 

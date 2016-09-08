@@ -12,7 +12,7 @@ public class GridElement extends com.vaadin.testbench.elements.GridElement {
     /**
      * Gets the element that contains the details of a row.
      *
-     * @since
+     * @since 8.0
      * @param rowIndex
      *            the index of the row for the details
      * @return the element that contains the details of a row. <code>null</code>

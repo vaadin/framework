@@ -35,7 +35,7 @@ import com.vaadin.shared.data.selection.SelectionModel;
  * @param <SELECTIONMODEL>
  *            the selection logic supported by this listing
  *
- * @since
+ * @since 8.0
  */
 public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T>>
         extends AbstractComponent implements Listing<T, SELECTIONMODEL> {

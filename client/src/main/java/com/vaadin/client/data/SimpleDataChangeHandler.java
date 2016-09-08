@@ -25,7 +25,7 @@ import com.vaadin.shared.Range;
  * not support lazy loading.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.0
  */
 public class SimpleDataChangeHandler implements DataChangeHandler {
 

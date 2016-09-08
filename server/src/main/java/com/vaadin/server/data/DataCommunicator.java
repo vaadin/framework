@@ -46,7 +46,7 @@ import elemental.json.JsonObject;
  * {@link JsonObject}s representing each data object to be sent to the
  * client-side.
  *
- * @since
+ * @since 8.0
  */
 public class DataCommunicator<T> extends AbstractExtension {
 

@@ -28,7 +28,7 @@ import elemental.json.JsonObject;
  * @param <T>
  *            the data type
  *
- * @since
+ * @since 8.0
  */
 @FunctionalInterface
 public interface DataGenerator<T> extends Serializable {

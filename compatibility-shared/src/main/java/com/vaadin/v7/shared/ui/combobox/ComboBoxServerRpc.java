@@ -20,7 +20,7 @@ import com.vaadin.shared.communication.ServerRpc;
 /**
  * Client to server RPC interface for ComboBox.
  *
- * @since
+ * @since 8.0
  */
 public interface ComboBoxServerRpc extends ServerRpc {
     /**

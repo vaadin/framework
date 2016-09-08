@@ -21,7 +21,7 @@ import com.vaadin.ui.Component;
  * Interface implemented by field which can be marked as required. A required
  * status is handled by the parent layout.
  *
- * @since
+ * @since 8.0
  * @author Vaadin Ltd
  */
 public interface HasRequired extends Component {

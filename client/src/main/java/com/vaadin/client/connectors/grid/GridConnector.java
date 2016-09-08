@@ -49,7 +49,7 @@ import elemental.json.JsonObject;
  * A connector class for the typed Grid component.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.0
  */
 @Connect(com.vaadin.ui.Grid.class)
 public class GridConnector

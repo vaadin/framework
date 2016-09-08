@@ -39,7 +39,7 @@ import elemental.json.JsonObject;
  * Connector class for {@link DetailsManager} of the Grid component.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.0
  */
 @Connect(DetailsManager.class)
 public class DetailsManagerConnector extends AbstractExtensionConnector {

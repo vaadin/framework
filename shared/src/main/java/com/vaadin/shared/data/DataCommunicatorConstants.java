@@ -21,7 +21,7 @@ import java.io.Serializable;
  * Set of contants used by DataCommunicator. These are commonly used JsonObject
  * keys which are considered to be reserved for internal use.
  *
- * @since
+ * @since 8.0
  */
 public final class DataCommunicatorConstants implements Serializable {
     public static final String KEY = "k";

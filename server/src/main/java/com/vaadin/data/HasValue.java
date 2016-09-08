@@ -32,7 +32,7 @@ import com.vaadin.shared.Registration;
  * @param <V>
  *            the value type
  *
- * @since
+ * @since 8.0
  */
 public interface HasValue<V> extends Serializable {
 

@@ -21,7 +21,7 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 /**
  * TestBench Element API for Grid
  *
- * @since
+ * @since 8.0
  * @author Vaadin Ltd
  */
 @ServerClass("com.vaadin.v7.ui.Grid")
@@ -30,7 +30,7 @@ public class GridElement extends com.vaadin.testbench.elements.GridElement {
     /**
      * Gets the element that contains the details of a row.
      *
-     * @since
+     * @since 8.0
      * @param rowIndex
      *            the index of the row for the details
      * @return the element that contains the details of a row. <code>null</code>

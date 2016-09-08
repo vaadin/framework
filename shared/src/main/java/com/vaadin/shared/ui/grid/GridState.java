@@ -26,7 +26,7 @@ import com.vaadin.shared.ui.TabIndexState;
 /**
  * The shared state for the {@link com.vaadin.ui.Grid} component.
  *
- * @since
+ * @since 8.0
  * @author Vaadin Ltd
  */
 public class GridState extends TabIndexState {

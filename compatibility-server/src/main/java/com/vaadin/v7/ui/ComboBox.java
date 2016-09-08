@@ -227,7 +227,7 @@ public class ComboBox extends AbstractSelect
      * A class representing an item in a ComboBox for server to client
      * communication. This class is for internal use only and subject to change.
      *
-     * @since
+     * @since 8.0
      */
     private static class ComboBoxItem implements Serializable {
         String key = "";

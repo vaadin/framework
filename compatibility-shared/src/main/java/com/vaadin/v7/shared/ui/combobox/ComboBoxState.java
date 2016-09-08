@@ -32,7 +32,7 @@ public class ComboBoxState extends AbstractSelectState {
      * NativeSelect - the user can not enter any text and clicking the text
      * field opens the drop down with options.
      *
-     * @since
+     * @since 8.0
      */
     public boolean textInputAllowed = true;
 
@@ -40,7 +40,7 @@ public class ComboBoxState extends AbstractSelectState {
      * A textual prompt that is displayed when the select would otherwise be
      * empty, to prompt the user for input.
      *
-     * @since
+     * @since 8.0
      */
     public String inputPrompt = null;
 

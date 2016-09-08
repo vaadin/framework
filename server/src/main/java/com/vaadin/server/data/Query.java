@@ -24,7 +24,7 @@ import java.util.Set;
  * Query object used to request data from a backend. Contains index limits,
  * sorting and filtering information.
  *
- * @since
+ * @since 8.0
  */
 public class Query implements Serializable {
 

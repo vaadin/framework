@@ -31,7 +31,7 @@ import elemental.json.JsonValue;
  * A connector class for columns of the Grid component.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.0
  */
 @Connect(com.vaadin.ui.Grid.Column.class)
 public class ColumnConnector extends AbstractExtensionConnector {

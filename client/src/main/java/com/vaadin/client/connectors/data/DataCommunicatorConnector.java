@@ -37,7 +37,7 @@ import elemental.json.JsonObject;
 /**
  * A connector for DataCommunicator class.
  *
- * @since
+ * @since 8.0
  */
 @Connect(DataCommunicator.class)
 public class DataCommunicatorConnector extends AbstractExtensionConnector {

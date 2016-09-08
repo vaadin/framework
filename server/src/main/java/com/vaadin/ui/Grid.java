@@ -56,7 +56,7 @@ import elemental.json.JsonValue;
  * A grid component for displaying tabular data.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.0
  *
  * @param <T>
  *            the grid bean type

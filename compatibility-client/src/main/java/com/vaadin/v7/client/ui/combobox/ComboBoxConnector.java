@@ -274,7 +274,7 @@ public class ComboBoxConnector extends AbstractFieldConnector
      * This method is for internal use only and may be removed in future
      * versions.
      *
-     * @since
+     * @since 8.0
      * @param itemValue
      *            user entered string value for the new item
      */
@@ -290,7 +290,7 @@ public class ComboBoxConnector extends AbstractFieldConnector
      * This method is for internal use only and may be removed in future
      * versions.
      *
-     * @since
+     * @since 8.0
      */
     public void requestFirstPage() {
         sendSelection(null);
@@ -304,7 +304,7 @@ public class ComboBoxConnector extends AbstractFieldConnector
      * This method is for internal use only and may be removed in future
      * versions.
      *
-     * @since
+     * @since 8.0
      * @param filter
      *            the current filter string
      * @param page
@@ -321,7 +321,7 @@ public class ComboBoxConnector extends AbstractFieldConnector
      * This method is for internal use only and may be removed in future
      * versions.
      *
-     * @since
+     * @since 8.0
      * @param selection
      *            the current selection
      */
@@ -339,7 +339,7 @@ public class ComboBoxConnector extends AbstractFieldConnector
      * This method is for internal use only and may be removed in future
      * versions.
      *
-     * @since
+     * @since 8.0
      */
     public void sendFocusEvent() {
         boolean registeredListeners = hasEventListener(EventId.FOCUS);
@@ -358,7 +358,7 @@ public class ComboBoxConnector extends AbstractFieldConnector
      * This method is for internal use only and may be removed in future
      * versions.
      *
-     * @since
+     * @since 8.0
      */
     public void sendBlurEvent() {
         boolean registeredListeners = hasEventListener(EventId.BLUR);

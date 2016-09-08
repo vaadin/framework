@@ -37,7 +37,7 @@ import com.vaadin.util.ReflectTools;
  * @param <T>
  *            the type of the items to select
  *
- * @since
+ * @since 8.0
  */
 public class SingleSelection<T> extends AbstractSelectionModel<T>
         implements Single<T> {

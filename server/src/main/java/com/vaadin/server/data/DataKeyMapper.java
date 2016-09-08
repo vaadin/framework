@@ -20,7 +20,7 @@ import java.io.Serializable;
 /**
  * DataKeyMapper to map data objects to key strings.
  *
- * @since
+ * @since 8.0
  * @param <T>
  *            data type
  */

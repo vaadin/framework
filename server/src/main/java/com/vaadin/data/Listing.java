@@ -31,7 +31,7 @@ import com.vaadin.shared.data.selection.SelectionModel;
  *            the item data type
  * @param <SELECTIONMODEL>
  *            the selection logic supported by this listing
- * @since
+ * @since 8.0
  */
 public interface Listing<T, SELECTIONMODEL extends SelectionModel<T>>
         extends Serializable {

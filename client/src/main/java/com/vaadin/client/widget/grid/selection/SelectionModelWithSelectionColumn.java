@@ -22,7 +22,7 @@ import com.vaadin.shared.data.selection.SelectionModel;
  * Interface for SelectionModels that wants Grid to display a selection column.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.0
  *
  * @param <T>
  *            selected item type

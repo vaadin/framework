@@ -42,7 +42,7 @@ import com.vaadin.ui.UI;
  * @param <BEAN>
  *            the bean type
  *
- * @since
+ * @since 8.0
  */
 public class BeanBinder<BEAN> extends Binder<BEAN> {
 

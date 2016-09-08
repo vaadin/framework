@@ -22,7 +22,7 @@ import elemental.json.JsonArray;
 /**
  * RPC interface used by DataProvider to send data to the client-side.
  *
- * @since
+ * @since 8.0
  */
 public interface DataCommunicatorClientRpc extends ClientRpc {
 

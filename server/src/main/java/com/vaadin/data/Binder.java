@@ -75,7 +75,7 @@ import com.vaadin.ui.Label;
  * @see Binding
  * @see HasValue
  *
- * @since
+ * @since 8.0
  */
 public class Binder<BEAN> implements Serializable {
 

@@ -29,7 +29,7 @@ import elemental.json.JsonObject;
  * @param <T>
  *            type of selected data
  *
- * @since
+ * @since 8.0
  */
 public abstract class AbstractSelectionModel<T> extends
         AbstractListingExtension<T> implements SelectionModel<T> {
