@@ -31,6 +31,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.widget.grid.events.ScrollEvent;
@@ -447,13 +448,26 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * set either <code>overflow-x</code> or <code>overflow-y</code> to "
      * <code>scroll</code>" in the scrollbar's direction.
      * <p>
-     * This is an IE8 workaround, since it doesn't always show scrollbars with
-     * <code>overflow: auto</code> enabled.
+     * This method is an IE8 workaround, since it doesn't always show scrollbars
+     * with <code>overflow: auto</code> enabled.
+     * <p>
+     * Firefox on the other hand loses pending scroll events when the scrollbar
+     * is hidden, so the event must be fired manually.
+     * <p>
+     * When IE8 support is dropped, this should really be simplified.
      */
     protected void forceScrollbar(boolean enable) {
         if (enable) {
             root.getStyle().clearDisplay();
         } else {
+            if (BrowserInfo.get().isFirefox()) {
+                /*
+                 * This is related to the Firefox workaround in setScrollSize
+                 * for setScrollPos(0)
+                 */
+                scrollEventFirer.scheduleEvent();
+            }
+
             root.getStyle().setDisplay(Display.NONE);
         }
         internalForceScrollbar(enable);
@@ -601,20 +615,38 @@ public abstract class ScrollbarBundle implements DeferredWorker {
          * This needs to be made step-by-step because IE8 flat-out refuses to
          * fire a scroll event when the scroll size becomes smaller than the
          * offset size. All other browser need to suffer alongside.
+         *
+         * This really should be changed to not use any temporary scroll
+         * handlers at all once IE8 support is dropped, like now done only for
+         * Firefox.
          */
 
         boolean newScrollSizeIsSmallerThanOffsetSize = px <= getOffsetSize();
         boolean scrollSizeBecomesSmallerThanOffsetSize = showsScrollHandle()
                 && newScrollSizeIsSmallerThanOffsetSize;
         if (scrollSizeBecomesSmallerThanOffsetSize && getScrollPos() != 0) {
+            /*
+             * For whatever reason, Firefox loses the scroll event in this case
+             * and the onscroll handler is never called (happens when reducing
+             * size from 1000 items to 1 while being scrolled a bit down, see
+             * #19802). Based on the comment above, only IE8 should really use
+             * 'delayedSizeSet'
+             */
+            boolean delayedSizeSet = !BrowserInfo.get().isFirefox();
             // must be a field because Java insists.
-            scrollSizeTemporaryScrollHandler = addScrollHandler(new ScrollHandler() {
-                @Override
-                public void onScroll(ScrollEvent event) {
-                    setScrollSizeNow(px);
-                }
-            });
+            if (delayedSizeSet) {
+                scrollSizeTemporaryScrollHandler = addScrollHandler(
+                        new ScrollHandler() {
+                            @Override
+                            public void onScroll(ScrollEvent event) {
+                                setScrollSizeNow(px);
+                            }
+                        });
+            }
             setScrollPos(0);
+            if (!delayedSizeSet) {
+                setScrollSizeNow(px);
+            }
         } else {
             setScrollSizeNow(px);
         }
