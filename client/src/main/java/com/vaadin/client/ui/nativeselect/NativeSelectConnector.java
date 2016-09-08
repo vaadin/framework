@@ -16,6 +16,7 @@
 
 package com.vaadin.client.ui.nativeselect;
 
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.data.DataSource;
@@ -23,7 +24,9 @@ import com.vaadin.client.ui.VNativeSelect;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionModel;
+import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.nativeselect.NativeSelectState;
 
 import elemental.json.JsonObject;
 
@@ -39,9 +42,28 @@ import elemental.json.JsonObject;
  */
 @Connect(com.vaadin.ui.NativeSelect.class)
 public class NativeSelectConnector extends
-        AbstractListingConnector<SelectionModel<?>> {
+        AbstractListingConnector<SelectionModel.Single<?>> {
 
+    private HandlerRegistration selectionChangeRegistration;
     private Registration dataChangeRegistration;
+
+    private final SelectionServerRpc selectionRpc = getRpcProxy(
+            SelectionServerRpc.class);
+
+    @Override
+    protected void init() {
+        super.init();
+
+        selectionChangeRegistration = getWidget().addChangeHandler(
+                e -> selectionRpc.select(getWidget().getSelectedValue()));
+    }
+
+    @Override
+    public void onUnregister() {
+        super.onUnregister();
+        selectionChangeRegistration.removeHandler();
+        selectionChangeRegistration = null;
+    }
 
     @Override
     public VNativeSelect getWidget() {
@@ -62,6 +84,16 @@ public class NativeSelectConnector extends
     @SuppressWarnings("deprecation")
     void updateWidgetReadOnly() {
         getWidget().setEnabled(isEnabled() && !isReadOnly());
+    }
+
+    @OnStateChange("selectedItemKey")
+    void updateSelectedItem() {
+        getWidget().setSelectedItem(getState().selectedItemKey);
+    }
+
+    @Override
+    public NativeSelectState getState() {
+        return (NativeSelectState) super.getState();
     }
 
     /**

@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui;
 
+import java.util.Objects;
+
 import com.google.gwt.user.client.ui.ListBox;
 import com.vaadin.shared.ui.nativeselect.NativeSelectState;
 
@@ -30,5 +32,26 @@ public class VNativeSelect extends ListBox {
      */
     public VNativeSelect() {
         setStyleName(NativeSelectState.STYLE_NAME);
+    }
+
+    /**
+     * Sets the selected item by its value. If given {@code null}, removes
+     * selection.
+     * 
+     * @param value
+     *            the value of the item to select or {@code null} to select
+     *            nothing
+     */
+    public void setSelectedItem(String value) {
+        if (value == null) {
+            setSelectedIndex(-1);
+        } else {
+            for (int i = 0; i < getItemCount(); i++) {
+                if (Objects.equals(value, getValue(i))) {
+                    setSelectedIndex(i);
+                    break;
+                }
+            }
+        }
     }
 }

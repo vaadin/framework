@@ -11,4 +11,16 @@ public class NativeSelects extends
     protected Class<NativeSelect<Object>> getTestClass() {
         return (Class) NativeSelect.class;
     }
+
+    @Override
+    protected void createActions() {
+        super.createActions();
+        createListenerMenu();
+    }
+
+    protected void createListenerMenu() {
+        createListenerAction("Selection listener", "Listeners",
+                c -> c.addSelectionListener(
+                        e -> log("Selected: " + e.getValue())));
+    }
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -19,6 +20,7 @@ import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.Registration;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.AbstractComponent;
@@ -674,6 +676,26 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
                 cmd.menuSelected(item);
             }
         }
+    }
+
+    protected void createListenerAction(String caption, String category,
+            Function<T, Registration> addListener) {
+
+        createBooleanAction(caption, category, false,
+                new Command<T, Boolean>() {
+                    Registration registration;
+
+                    @Override
+                    public void execute(T c, Boolean enabled,
+                            Object data) {
+                        if (enabled) {
+                            registration = addListener.apply(c);
+                        } else if (registration != null) {
+                            registration.remove();
+                            registration = null;
+                        }
+                    }
+                });
     }
 
     protected LinkedHashMap<String, Integer> createIntegerOptions(int max) {

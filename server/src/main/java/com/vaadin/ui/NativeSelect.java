@@ -17,12 +17,9 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
 
 import com.vaadin.server.data.DataSource;
 import com.vaadin.shared.data.DataCommunicatorConstants;
-import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.ui.nativeselect.NativeSelectState;
 
 /**
@@ -37,7 +34,7 @@ import com.vaadin.shared.ui.nativeselect.NativeSelectState;
  * 
  * @see com.vaadin.ui.ComboBox
  */
-public class NativeSelect<T> extends AbstractListing<T, SelectionModel<T>> {
+public class NativeSelect<T> extends AbstractSingleSelect<T> {
 
     /**
      * Creates a new {@code NativeSelect} with an empty caption and no items.
@@ -46,21 +43,7 @@ public class NativeSelect<T> extends AbstractListing<T, SelectionModel<T>> {
         addDataGenerator((item, json) -> json.put(
                 DataCommunicatorConstants.DATA, String.valueOf(item)));
 
-        setSelectionModel(new SelectionModel<T>() {
-
-            @Override
-            public Set<T> getSelectedItems() {
-                return Collections.emptySet();
-            }
-
-            @Override
-            public void select(T item) {
-            }
-
-            @Override
-            public void deselect(T item) {
-            }
-        });
+        setSelectionModel(new SimpleSingleSelection());
     }
 
     /**
