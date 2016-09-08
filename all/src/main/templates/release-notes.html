@@ -48,7 +48,7 @@
             <li><a href="#gwtdep">GWT Dependency Changes</a></li>
             <li><a href="#vaadin">Vaadin Installation</a></li>
             <li><a href="#package">Package Contents</a></li>
-            <li><a href="#migrating">Migrating from Vaadin 6</a></li>
+            <li><a href="#migrating">Migrating from Vaadin 7</a></li>
             <li><a href="#dependencies">Vaadin @version@
                     dependencies</a></li>
             <li><a href="#upgrading">Upgrading to Vaadin
@@ -95,7 +95,19 @@
         <ul>
             <li>New, simpler data binding API</li>
             <li>Vaadin is now based on Java 8</li>
+            <li>Vaadin is using GWT 2.8, allowing client side code to use Java 8</li>
+            <li>Other Vaadin dependencies including Atmosphere have been upgraded</li>
         </ul>
+        
+        <p>
+            The new data binding API replaces the old Container, Item, Property, FieldGroup,
+            Validator, Converter and related classes with new mechanisms.
+            Also components using those are replaced with updated implementations using the
+            new API, and the old data binding API and components have been moved to separate
+            compatibility packages for ease of migration.
+            For more details, see the Book of Vaadin and <a href="#migrating">how to migrate
+            to Vaadin 8</a>.
+        </p>
 
         <p>
             For enhancements introduced in Vaadin 7.7, see the <a
@@ -106,7 +118,16 @@
         <h3 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h3>
         <ul>
             <li>Vaadin now requires Java 8 or later and Servlet 3.0 or later</li>
-            <li>Support for older browsers has been dropped</li>
+            <li>Support for older browsers (including Microsoft IE 8-10) and Windows Phone has been dropped</li>
+            <li>A new data binding API replaces the old API (including Container, Item, Property, FieldGroup, Validator, Converter and components using those).</li>
+            <li>The default width of Label is now undefined, matching other components</li>
+            <li>Immediate mode is the default for all components except Upload</li>
+            <li>Some deprecated/obsolete parts of API (including the Form component) have been removed</li>
+            <li>Most addListener/removeListener methods have been removed - use the Java 8 friendly addClickListener(), addValueChangeListener() etc. instead</li>
+            <li>Many new listeners are unregistered using a Registration object returned by addXyzListener() rather than with a separate removeXyzListener()</li>
+            <li>Old input prompts have been replaced with placeholders utilizing the related browser functionality</li>
+            <li>The old liferay theme (Liferay 6.0 look) has been removed</li>
+            <li>Components in the compatibility packages now use the prefix "vaadin7-" in declarative design files</li>
         </ul>
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
@@ -247,7 +268,26 @@
 
         <p>
             Most Vaadin 7 applications need some changes when migrating
-            to Vaadin 8.
+            to Vaadin 8. In addition to updating dependencies, all references to
+            Vaadin 7 style data binding and components using it need to be
+            updated either to use new Vaadin 8 style data binding or to use the
+            compatibility versions in separate packages.
+        </p>
+
+        <p>
+            Vaadin 7 compatible versions of the old data binding API and
+            components (with the exception of Form) are available in the package
+            com.vaadin.v7 in modules vaadin-compatibility-server,
+            vaadin-compatibility-shared etc. that can be used instead of
+            vaadin-server, vaadin-shared etc. The package
+            vaadin-compatibility-client-compiled contains the widgetset
+            com.vaadin.v7.Vaadin7WidgetSet which can be used instead of
+            DefaultWidgetSet.
+        </p>
+
+        <p>
+            There is a <a href="https://github.com/vaadin/vaadin8-migration-tool/">
+            migration tool</a> which helps with some of the migration steps.
         </p>
 
         <p>
