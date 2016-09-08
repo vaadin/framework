@@ -11,16 +11,17 @@ import java.util.stream.Stream;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.selection.SingleSelection;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.DetailsGenerator;
 import com.vaadin.ui.Grid.StyleGenerator;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
@@ -49,7 +50,7 @@ public class GridBasics extends AbstractTestUIWithLog {
 
         @Override
         public Component apply(DataObject dataObj) {
-            CssLayout cssLayout = new CssLayout();
+            VerticalLayout cssLayout = new VerticalLayout();
             cssLayout.setHeight("200px");
             cssLayout.setWidth("100%");
 
@@ -201,6 +202,33 @@ public class GridBasics extends AbstractTestUIWithLog {
                                         + t.getRowNumber() + ", Column 0"
                                         : null)))
                 .setCheckable(true);
+        stateMenu.addItem("Item click listener", new Command() {
+
+            private Registration registration = null;
+
+            @Override
+            public void menuSelected(MenuItem selectedItem) {
+                removeRegistration();
+                if (selectedItem.isChecked()) {
+                    registration = grid.addItemClickListener(e -> {
+                        grid.setDetailsVisible(e.getItem(),
+                                !grid.isDetailsVisible(e.getItem()));
+                        log("Item click on row " + e.getItem().getRowNumber()
+                                + ", Column '" + e.getColumn().getCaption()
+                                + "'");
+                    });
+                    log("Registered an item click listener.");
+                }
+            }
+
+            private void removeRegistration() {
+                if (registration != null) {
+                    registration.remove();
+                    registration = null;
+                    log("Removed an item click listener.");
+                }
+            }
+        }).setCheckable(true);
     }
 
     private void createRowStyleMenu(MenuItem rowStyleMenu) {

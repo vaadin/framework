@@ -298,4 +298,26 @@ public class GridBasicDetailsTest extends GridBasicsTest {
         assertFalse(logContainsText("AssertionError"));
     }
 
+    @Test
+    public void testOpenDetailsWithItemClickHandler() {
+        selectMenuPath(DETAILS_GENERATOR_PERSISTING);
+        selectMenuPath("Component", "State", "Item click listener");
+        assertTrue("No item click listener registered",
+                logContainsText("Registered an item click listener."));
+        getGridElement().getCell(0, 1).click();
+        assertTrue("Details should open on click",
+                getGridElement().getDetails(0).getText().contains("One"));
+        assertTrue("Item click listener should log itself",
+                logContainsText("Item click on row 0, Column 'Column 1'"));
+
+        selectMenuPath("Component", "State", "Item click listener");
+        assertTrue("No removal of item click listener logged",
+                logContainsText("Removed an item click listener."));
+
+        getGridElement().getCell(0, 1).click();
+        assertTrue(
+                "Details should remain open, no item click listener to hide it",
+                getGridElement().getDetails(0).getText().contains("One"));
+    }
+
 }

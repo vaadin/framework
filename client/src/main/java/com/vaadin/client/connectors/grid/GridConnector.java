@@ -22,17 +22,23 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.HasComponentsConnector;
+import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.widget.grid.CellReference;
+import com.vaadin.client.widget.grid.events.BodyClickHandler;
+import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
+import com.vaadin.client.widget.grid.events.GridClickEvent;
+import com.vaadin.client.widget.grid.events.GridDoubleClickEvent;
 import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
 import com.vaadin.client.widget.grid.selection.SpaceSelectHandler;
 import com.vaadin.client.widget.grid.sort.SortEvent;
@@ -43,6 +49,7 @@ import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.data.selection.SelectionModel.Single;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 
@@ -59,12 +66,40 @@ public class GridConnector
         extends AbstractListingConnector<SelectionModel<JsonObject>>
         implements HasComponentsConnector, SimpleManagedLayout, DeferredWorker {
 
+    private class ItemClickHandler
+            implements BodyClickHandler, BodyDoubleClickHandler {
+
+        @Override
+        public void onClick(GridClickEvent event) {
+            if (hasEventListener(GridConstants.ITEM_CLICK_EVENT_ID)) {
+                fireItemClick(event.getTargetCell(), event.getNativeEvent());
+            }
+        }
+
+        @Override
+        public void onDoubleClick(GridDoubleClickEvent event) {
+            if (hasEventListener(GridConstants.ITEM_CLICK_EVENT_ID)) {
+                fireItemClick(event.getTargetCell(), event.getNativeEvent());
+            }
+        }
+
+        private void fireItemClick(CellReference<?> cell,
+                NativeEvent mouseEvent) {
+            String rowKey = getRowKey((JsonObject) cell.getRow());
+            String columnId = columnToIdMap.get(cell.getColumn());
+            getRpcProxy(GridServerRpc.class).itemClick(rowKey, columnId,
+                    MouseEventDetailsBuilder
+                            .buildMouseEventDetails(mouseEvent));
+        }
+    }
+
     /* Map to keep track of all added columns */
     private Map<Column<?, JsonObject>, String> columnToIdMap = new HashMap<>();
     /* Child component list for HasComponentsConnector */
     private List<ComponentConnector> childComponents;
     private SpaceSelectHandler<JsonObject> spaceSelectHandler;
     private ClickSelectHandler<JsonObject> clickSelectHandler;
+    private ItemClickHandler itemClickHandler = new ItemClickHandler();
 
     /**
      * Gets the string identifier of a {@link Column} in this grid.
@@ -113,6 +148,10 @@ public class GridConnector
 
             return null;
         });
+
+        /* Item click events */
+        getWidget().addBodyClickHandler(itemClickHandler);
+        getWidget().addBodyDoubleClickHandler(itemClickHandler);
 
         layout();
     }

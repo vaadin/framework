@@ -16,6 +16,7 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,13 +34,17 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.vaadin.data.selection.SingleSelection;
+import com.vaadin.event.ConnectorEvent;
+import com.vaadin.event.EventListener;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.ColumnState;
+import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
@@ -47,6 +52,7 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.ui.renderers.Renderer;
 import com.vaadin.ui.renderers.TextRenderer;
+import com.vaadin.util.ReflectTools;
 
 import elemental.json.Json;
 import elemental.json.JsonObject;
@@ -63,6 +69,95 @@ import elemental.json.JsonValue;
  */
 public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
         implements HasComponents {
+
+    @Deprecated
+    private static final Method ITEM_CLICK_METHOD = ReflectTools
+            .findMethod(ItemClickListener.class, "accept", ItemClick.class);
+
+    /**
+     * An event fired when an item in the Grid has been clicked.
+     *
+     * @param <T>
+     *            the grid bean type
+     */
+    public static class ItemClick<T> extends ConnectorEvent {
+
+        private final T item;
+        private final Column<T, ?> column;
+        private final MouseEventDetails mouseEventDetails;
+
+        /**
+         * Creates a new {@code ItemClick} event containing the given item and
+         * Column originating from the given Grid.
+         *
+         */
+        public ItemClick(Grid<T> source, Column<T, ?> column, T item,
+                MouseEventDetails mouseEventDetails) {
+            super(source);
+            this.column = column;
+            this.item = item;
+            this.mouseEventDetails = mouseEventDetails;
+        }
+
+        /**
+         * Returns the clicked item.
+         *
+         * @return the clicked item
+         */
+        public T getItem() {
+            return item;
+        }
+
+        /**
+         * Returns the clicked column.
+         *
+         * @return the clicked column
+         */
+        public Column<T, ?> getColumn() {
+            return column;
+        }
+
+        /**
+         * Returns the source Grid.
+         *
+         * @return the grid
+         */
+        @Override
+        public Grid<T> getSource() {
+            return (Grid<T>) super.getSource();
+        }
+
+        /**
+         * Returns the mouse event details.
+         *
+         * @return the mouse event details
+         */
+        public MouseEventDetails getMouseEventDetails() {
+            return mouseEventDetails;
+        }
+    }
+
+    /**
+     * A listener for item click events.
+     *
+     * @param <T>
+     *            the grid bean type
+     *
+     * @see ItemClick
+     * @see Registration
+     */
+    @FunctionalInterface
+    public interface ItemClickListener<T> extends EventListener<ItemClick<T>> {
+        /**
+         * Invoked when this listener receives a item click event from a Grid to
+         * which it has been added.
+         *
+         * @param event
+         *            the received event, not null
+         */
+        @Override
+        public void accept(ItemClick<T> event);
+    }
 
     /**
      * A callback interface for generating style names for an item.
@@ -179,7 +274,10 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
         @Override
         public void itemClick(String rowKey, String columnId,
                 MouseEventDetails details) {
-            // TODO Auto-generated method stub
+            Column<T, ?> column = columnKeys.containsKey(columnId)
+                    ? columnKeys.get(columnId) : null;
+            T item = getDataCommunicator().getKeyMapper().get(rowKey);
+            fireEvent(new ItemClick<>(Grid.this, column, item, details));
         }
 
         @Override
@@ -1017,6 +1115,22 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
      */
     public DescriptionGenerator<T> getDescriptionGenerator() {
         return descriptionGenerator;
+    }
+
+    /**
+     * Adds an item click listener. The listener is called when an item of this
+     * {@code Grid} is clicked.
+     *
+     * @param listener
+     *            the item click listener, not null
+     * @return a registration for the listener
+     */
+    public Registration addItemClickListener(
+            ItemClickListener<? super T> listener) {
+        Objects.requireNonNull(listener, "listener cannot be null");
+        addListener(GridConstants.ITEM_CLICK_EVENT_ID, ItemClick.class,
+                listener, ITEM_CLICK_METHOD);
+        return () -> removeListener(ItemClick.class, listener);
     }
 
     @Override
