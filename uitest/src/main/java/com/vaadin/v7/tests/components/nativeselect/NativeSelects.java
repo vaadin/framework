@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.nativeselect;
+package com.vaadin.v7.tests.components.nativeselect;
 
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.v7.ui.NativeSelect;

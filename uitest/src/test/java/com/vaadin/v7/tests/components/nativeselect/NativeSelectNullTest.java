@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.nativeselect;
+package com.vaadin.v7.tests.components.nativeselect;
 
 import org.junit.Assert;
 import org.junit.Test;

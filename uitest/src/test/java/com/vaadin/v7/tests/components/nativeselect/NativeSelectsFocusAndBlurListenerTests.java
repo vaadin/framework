@@ -13,51 +13,48 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.nativeselect;
-
-import java.util.List;
+package com.vaadin.v7.tests.components.nativeselect;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.testbench.parallel.BrowserUtil;
+import com.vaadin.tests.components.nativeselect.NativeSelects;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 
-public class NativeSelectsAndChromeKeyboardNavigationTest
-        extends MultiBrowserTest {
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowserCapabilities(Browser.CHROME);
-    }
+public class NativeSelectsFocusAndBlurListenerTests extends MultiBrowserTest {
 
     @Test
-    public void testValueChangeListenerWithKeyboardNavigation()
-            throws InterruptedException {
+    public void testFocusAndBlurListener() throws InterruptedException {
         setDebug(true);
         openTestURL();
-        Thread.sleep(1000);
+        Thread.sleep(200);
         menu("Component");
         menuSub("Listeners");
-        menuSub("Value change listener");
+        menuSub("Focus listener");
+        menu("Component");
+        menuSub("Listeners");
+        menuSub("Blur listener");
 
+        findElement(By.tagName("body")).click();
+
+        NativeSelectElement s = $(NativeSelectElement.class).first();
+        s.selectByText("Item 3");
         getDriver().findElement(By.tagName("body")).click();
 
-        WebElement select = getDriver().findElement(By.tagName("select"));
-        select.sendKeys(Keys.ARROW_DOWN);
-        select.sendKeys(Keys.ARROW_DOWN);
-        select.sendKeys(Keys.ARROW_DOWN);
-
-        String bodytext = getDriver().findElement(By.tagName("body")).getText();
-
-        Assert.assertTrue(bodytext.contains("new value: 'Item 1'"));
-        Assert.assertTrue(bodytext.contains("new value: 'Item 2'"));
-        Assert.assertTrue(bodytext.contains("new value: 'Item 3'"));
+        // Somehow selectByText causes focus + blur + focus + blur on
+        // Chrome/PhantomJS
+        if (BrowserUtil.isChrome(getDesiredCapabilities())
+                || BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+            Assert.assertEquals("4. FocusEvent", getLogRow(1));
+            Assert.assertEquals("5. BlurEvent", getLogRow(0));
+        } else {
+            Assert.assertEquals("2. FocusEvent", getLogRow(1));
+            Assert.assertEquals("3. BlurEvent", getLogRow(0));
+        }
 
     }
 
