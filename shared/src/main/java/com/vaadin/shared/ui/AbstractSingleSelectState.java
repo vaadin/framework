@@ -15,8 +15,6 @@
  */
 package com.vaadin.shared.ui;
 
-import com.vaadin.shared.AbstractComponentState;
-
 /**
  * Shared state for {@code AbstractSingleSelect}.
  *
@@ -24,7 +22,7 @@ import com.vaadin.shared.AbstractComponentState;
  *
  * @since 8.0
  */
-public class AbstractSingleSelectState extends AbstractComponentState {
+public class AbstractSingleSelectState extends TabIndexState {
 
     /**
      * The key of the currently selected item or {@code null} if no item is

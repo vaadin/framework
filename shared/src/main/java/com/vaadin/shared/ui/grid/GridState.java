@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.data.sort.SortDirection;
-import com.vaadin.shared.ui.TabIndexState;
+import com.vaadin.shared.ui.AbstractSingleSelectState;
 
 /**
  * The shared state for the {@link com.vaadin.ui.Grid} component.
@@ -29,7 +29,7 @@ import com.vaadin.shared.ui.TabIndexState;
  * @since 8.0
  * @author Vaadin Ltd
  */
-public class GridState extends TabIndexState {
+public class GridState extends AbstractSingleSelectState {
 
     /**
      * The default value for height-by-rows for both GWT widgets

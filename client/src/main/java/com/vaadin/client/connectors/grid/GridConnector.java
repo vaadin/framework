@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -45,8 +46,9 @@ import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.selection.SelectionModel;
-import com.vaadin.shared.data.selection.SelectionModel.Single;
+import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.GridConstants;
@@ -123,7 +125,8 @@ public class GridConnector
         super.init();
 
         // Default selection style is space key.
-        spaceSelectHandler = new SpaceSelectHandler<JsonObject>(getWidget());
+        spaceSelectHandler = new SpaceSelectHandler<>(getWidget());
+        clickSelectHandler = new ClickSelectHandler<>(getWidget());
         getWidget().addSortHandler(this::handleSortEvent);
         getWidget().setRowStyleGenerator(rowRef -> {
             JsonObject json = rowRef.getRow();
@@ -152,6 +155,32 @@ public class GridConnector
         /* Item click events */
         getWidget().addBodyClickHandler(itemClickHandler);
         getWidget().addBodyDoubleClickHandler(itemClickHandler);
+        getWidget().setSelectionModel(new SelectionModel.Single<JsonObject>() {
+
+            @Override
+            public void select(JsonObject item) {
+                getRpcProxy(SelectionServerRpc.class)
+                        .select(item.getString(DataCommunicatorConstants.KEY));
+            }
+
+            @Override
+            public void deselect(JsonObject item) {
+                getRpcProxy(SelectionServerRpc.class).deselect(
+                        item.getString(DataCommunicatorConstants.KEY));
+            }
+
+            @Override
+            public Optional<JsonObject> getSelectedItem() {
+                throw new UnsupportedOperationException(
+                        "Selected item not known on the client side");
+            }
+
+            @Override
+            public boolean isSelected(JsonObject item) {
+                return item.hasKey(DataCommunicatorConstants.SELECTED)
+                        && item.getBoolean(DataCommunicatorConstants.SELECTED);
+            }
+        });
 
         layout();
     }
@@ -164,15 +193,8 @@ public class GridConnector
 
     @Override
     public void setSelectionModel(SelectionModel<JsonObject> selectionModel) {
-        removeClickHandler();
-
-        super.setSelectionModel(selectionModel);
-        getWidget().setSelectionModel(selectionModel);
-
-        if (selectionModel instanceof Single) {
-            // Single selection should be moved by a click.
-            clickSelectHandler = new ClickSelectHandler<>(getWidget());
-        }
+        throw new UnsupportedOperationException(
+                "Cannot set a selection model for GridConnector");
     }
 
     /**

@@ -9,7 +9,6 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.data.selection.SingleSelection;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -146,8 +145,7 @@ public class GridBasics extends AbstractTestUIWithLog {
         grid.addColumn("Small Random", data -> data.getSmallRandom() / 5d,
                 new ProgressBarRenderer());
 
-        ((SingleSelection<DataObject>) grid.getSelectionModel())
-                .addSelectionListener(e -> log("Selected: " + e.getValue()));
+        grid.addSelectionListener(e -> log("Selected: " + e.getValue()));
 
         layout.addComponent(createMenu());
         layout.addComponent(grid);

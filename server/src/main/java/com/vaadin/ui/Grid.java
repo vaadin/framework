@@ -29,11 +29,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import com.vaadin.data.selection.SingleSelection;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.EventListener;
 import com.vaadin.server.KeyMapper;
@@ -41,7 +41,6 @@ import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
-import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.ColumnState;
 import com.vaadin.shared.ui.grid.GridConstants;
@@ -67,8 +66,7 @@ import elemental.json.JsonValue;
  * @param <T>
  *            the grid bean type
  */
-public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
-        implements HasComponents {
+public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
 
     @Deprecated
     private static final Method ITEM_CLICK_METHOD = ReflectTools
@@ -197,7 +195,7 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
      *
      * @param <T>
      */
-    public static abstract class AbstractGridExtension<T>
+    public abstract static class AbstractGridExtension<T>
             extends AbstractListingExtension<T> {
 
         @Override
@@ -776,6 +774,44 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
         }
     }
 
+    private final class SingleSelection extends AbstractSingleSelection {
+        private T selectedItem = null;
+
+        SingleSelection() {
+            addDataGenerator((item, json) -> {
+                if (isSelected(item)) {
+                    json.put(DataCommunicatorConstants.SELECTED, true);
+                }
+            });
+        }
+
+        @Override
+        public Optional<T> getSelectedItem() {
+            return Optional.ofNullable(selectedItem);
+        }
+
+        @Override
+        protected boolean isKeySelected(String key) {
+            return Objects.equals(key, getSelectedKey());
+        }
+
+        @Override
+        protected String getSelectedKey() {
+            return itemToKey(selectedItem);
+        }
+
+        @Override
+        protected void doSetSelectedKey(String key) {
+            if (selectedItem != null) {
+                getDataCommunicator().refresh(selectedItem);
+            }
+            selectedItem = keyToItem(key);
+            if (selectedItem != null) {
+                getDataCommunicator().refresh(selectedItem);
+            }
+        }
+    }
+
     private KeyMapper<Column<T, ?>> columnKeys = new KeyMapper<>();
     private Set<Column<T, ?>> columnSet = new LinkedHashSet<>();
     private List<SortOrder<Column<T, ?>>> sortOrder = new ArrayList<>();
@@ -788,7 +824,7 @@ public class Grid<T> extends AbstractListing<T, SelectionModel<T>>
      * Constructor for the {@link Grid} component.
      */
     public Grid() {
-        setSelectionModel(new SingleSelection<>(this));
+        setSelectionModel(new SingleSelection());
         registerRpc(new GridServerRpcImpl());
         detailsManager = new DetailsManager<>();
         addExtension(detailsManager);
