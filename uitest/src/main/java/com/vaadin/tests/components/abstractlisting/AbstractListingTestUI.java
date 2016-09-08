@@ -3,20 +3,22 @@ package com.vaadin.tests.components.abstractlisting;
 import java.util.LinkedHashMap;
 import java.util.stream.IntStream;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.AbstractListing;
 
-public abstract class AbstractListingTestUI<T extends AbstractListing<Object, ?>, V>
+@Widgetset("com.vaadin.DefaultWidgetSet")
+public abstract class AbstractListingTestUI<T extends AbstractListing<Object, ?>>
         extends AbstractComponentTest<T> {
 
     @Override
     protected void createActions() {
         super.createActions();
-        createItemsSelect();
-        createSelectionSelect();
+        createItemsMenu();
+        createSelectionMenu();
     }
 
-    protected void createItemsSelect() {
+    protected void createItemsMenu() {
         LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         for (int i = 0; i <= 10; i++) {
             options.put(String.valueOf(i), i);
@@ -33,7 +35,7 @@ public abstract class AbstractListingTestUI<T extends AbstractListing<Object, ?>
                 });
     }
 
-    protected void createSelectionSelect() {
+    protected void createSelectionMenu() {
         LinkedHashMap<String, String> options = new LinkedHashMap<>();
         options.put("None", null);
         options.put("Item 0", "Item 0");
@@ -53,7 +55,7 @@ public abstract class AbstractListingTestUI<T extends AbstractListing<Object, ?>
     }
 
     protected Object[] createItems(int number) {
-        return IntStream.rangeClosed(0, number)
+        return IntStream.range(0, number)
                 .mapToObj(i -> "Item " + i)
                 .toArray();
     }
