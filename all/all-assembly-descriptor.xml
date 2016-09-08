@@ -28,6 +28,10 @@
 				<exclude>${project.groupId}:vaadin-client</exclude>
 				<exclude>${project.groupId}:vaadin-client-compiler</exclude>
 				<exclude>${project.groupId}:vaadin-client-compiled</exclude>
+				<exclude>${project.groupId}:vaadin-compatibility-shared</exclude>
+				<exclude>${project.groupId}:vaadin-compatibility-server</exclude>
+				<exclude>${project.groupId}:vaadin-compatibility-client</exclude>
+				<exclude>${project.groupId}:vaadin-compatibility-client-compiled</exclude>
 				<exclude>${project.groupId}:vaadin-widgets</exclude>
 			</excludes>
 		</dependencySet>

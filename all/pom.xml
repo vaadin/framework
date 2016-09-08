@@ -65,6 +65,30 @@
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>vaadin-compatibility-shared</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>vaadin-compatibility-server</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>vaadin-compatibility-client</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>vaadin-compatibility-client-compiled</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>vaadin-widgets</artifactId>
 			<version>${project.version}</version>
 		</dependency>
