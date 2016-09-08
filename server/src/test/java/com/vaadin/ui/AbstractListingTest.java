@@ -9,7 +9,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.selection.SingleSelection;
 import com.vaadin.server.data.BackEndDataSource;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.server.data.ListDataSource;
@@ -21,10 +20,10 @@ import elemental.json.JsonObject;
 public class AbstractListingTest {
 
     private final class TestListing extends
-            AbstractListing<String, SingleSelection<String>> {
+            AbstractSingleSelect<String> {
 
         protected TestListing() {
-            setSelectionModel(new SingleSelection<>(this));
+            setSelectionModel(new SimpleSingleSelection());
         }
 
         /**
