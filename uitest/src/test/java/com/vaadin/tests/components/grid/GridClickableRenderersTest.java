@@ -26,12 +26,11 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class GridClickableRenderersTest extends MultiBrowserTest {
 
     @Test
-    public void buttonAndImageRenderersPresent() {
+    public void clickableRenderersPresent() {
         openTestURL();
-
         Assert.assertTrue(isElementPresent(By.className("v-nativebutton")));
-
         Assert.assertTrue(isElementPresent(By.className("gwt-Image")));
+        Assert.assertTrue(isElementPresent(By.className("v-checkbox")));
     }
 
     @Test
@@ -44,9 +43,26 @@ public class GridClickableRenderersTest extends MultiBrowserTest {
         LabelElement label = $(LabelElement.class).get(1);
 
         firstButton.click();
-        Assert.assertEquals("first button clicked", label.getText());
+        Assert.assertEquals("first row clicked", label.getText());
 
         secondButton.click();
-        Assert.assertEquals("second button clicked", label.getText());
+        Assert.assertEquals("second row clicked", label.getText());
+    }
+
+    @Test
+    public void checkBoxRendererClick() {
+        openTestURL();
+        WebElement firstCheckBox = findElements(
+                By.cssSelector("input[type='checkbox']")).get(0);
+        WebElement secondCheckBox = findElements(
+                By.cssSelector("input[type='checkbox']")).get(1);
+
+        LabelElement label = $(LabelElement.class).get(2);
+
+        firstCheckBox.click();
+        Assert.assertEquals("first row false", label.getText());
+
+        secondCheckBox.click();
+        Assert.assertEquals("second row true", label.getText());
     }
 }
