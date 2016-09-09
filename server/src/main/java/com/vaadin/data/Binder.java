@@ -500,8 +500,10 @@ public class Binder<BEAN> implements Serializable {
 
         private void bind(BEAN bean) {
             setFieldValue(bean);
-            onValueChange = getField()
-                    .addValueChangeListener(e -> storeFieldValue(bean, true));
+            onValueChange = getField().addValueChangeListener(e -> {
+                binder.setHasChanges(true);
+                storeFieldValue(bean, true);
+            });
         }
 
         @Override
@@ -641,6 +643,8 @@ public class Binder<BEAN> implements Serializable {
 
     private BinderStatusHandler statusHandler;
 
+    private boolean hasChanges = false;
+
     /**
      * Returns an {@code Optional} of the bean that has been bound with
      * {@link #bind}, or an empty optional if a bean is not currently bound.
@@ -752,6 +756,7 @@ public class Binder<BEAN> implements Serializable {
      * nothing.
      */
     public void unbind() {
+        setHasChanges(false);
         if (bean != null) {
             bean = null;
             bindings.forEach(BindingImpl::unbind);
@@ -775,6 +780,7 @@ public class Binder<BEAN> implements Serializable {
      */
     public void load(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
+        setHasChanges(false);
         bindings.forEach(binding -> binding.setFieldValue(bean));
     }
 
@@ -860,6 +866,9 @@ public class Binder<BEAN> implements Serializable {
             // Item validator failed, revert values
             bindings.forEach((BindingImpl binding) -> binding.setBeanValue(bean,
                     oldValues.get(binding)));
+        } else {
+            // Save successful, reset hasChanges to false
+            setHasChanges(false);
         }
         return itemValidatorErrors;
     }
@@ -1149,4 +1158,26 @@ public class Binder<BEAN> implements Serializable {
         }
     }
 
+    /**
+     * Sets whether the values of the fields this binder is bound to have
+     * changed since the last explicit call to either bind, save or load.
+     *
+     * @param hasChanges
+     *            whether this binder should be marked to have changes
+     */
+    private void setHasChanges(boolean hasChanges) {
+        this.hasChanges = hasChanges;
+    }
+
+    /**
+     * Check whether any of the bound fields' values have changed since last
+     * explicit call to bind, save or load. Unsuccessful save operations will
+     * not affect this value.
+     *
+     * @return whether any bound field's value has changed since last call to
+     *         bind, save or load
+     */
+    public boolean hasChanges() {
+        return hasChanges;
+    }
 }

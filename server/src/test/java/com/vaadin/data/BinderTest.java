@@ -1059,4 +1059,31 @@ public class BinderTest {
         Assert.assertEquals(1, results.size());
     }
 
+    @Test
+    public void binderHasChanges() throws ValidationException {
+        binder.forField(nameField)
+                .withValidator(Validator.from(name -> !"".equals(name),
+                        "Name can't be empty"))
+                .bind(Person::getFirstName, Person::setFirstName);
+        Assert.assertFalse(binder.hasChanges());
+        binder.bind(p);
+        Assert.assertFalse(binder.hasChanges());
+
+        nameField.setValue("foo");
+        Assert.assertTrue(binder.hasChanges());
+        binder.load(p);
+        Assert.assertFalse(binder.hasChanges());
+
+        nameField.setValue("bar");
+        binder.saveIfValid(new Person());
+        Assert.assertFalse(binder.hasChanges());
+
+        nameField.setValue("baz");
+        binder.save(new Person());
+        Assert.assertFalse(binder.hasChanges());
+
+        nameField.setValue("");
+        binder.saveIfValid(new Person());
+        Assert.assertTrue(binder.hasChanges());
+    }
 }
