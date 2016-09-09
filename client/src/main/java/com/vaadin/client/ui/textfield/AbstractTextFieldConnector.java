@@ -161,4 +161,10 @@ public abstract class AbstractTextFieldConnector
         getState().text = getAbstractTextField().getValue();
     }
 
+    @Override
+    public void flush() {
+        super.flush();
+        sendValueChange();
+    }
+
 }
