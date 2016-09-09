@@ -1,244 +1,245 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.vaadin</groupId>
-		<artifactId>vaadin-root</artifactId>
-		<version>8.0-SNAPSHOT</version>
-	</parent>
-	<artifactId>vaadin-server</artifactId>
-	<name>vaadin-server</name>
-	<packaging>jar</packaging>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-root</artifactId>
+        <version>8.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>vaadin-server</artifactId>
+    <name>vaadin-server</name>
+    <packaging>jar</packaging>
 
-	<url>https://vaadin.com/</url>
-	<description>Vaadin server</description>
+    <url>https://vaadin.com/</url>
+    <description>Vaadin server</description>
 
-	<dependencies>
-		<!-- API DEPENDENCIES -->
+    <dependencies>
+        <!-- API DEPENDENCIES -->
 
-		<!-- Liferay Portal Service -->
-		<dependency>
-			<groupId>com.liferay.portal</groupId>
-			<artifactId>portal-service</artifactId>
-			<version>${liferay.portal.version}</version>
-			<scope>provided</scope>
-		</dependency>
+        <!-- Liferay Portal Service -->
+        <dependency>
+            <groupId>com.liferay.portal</groupId>
+            <artifactId>portal-service</artifactId>
+            <version>${liferay.portal.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<!--Servlet API -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
+        <!--Servlet API -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-		<!--Portlet API -->
-		<dependency>
-			<groupId>javax.portlet</groupId>
-			<artifactId>portlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
+        <!--Portlet API -->
+        <dependency>
+            <groupId>javax.portlet</groupId>
+            <artifactId>portlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-		<!-- Google App Engine -->
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-api-1.0-sdk</artifactId>
-			<scope>provided</scope>
-		</dependency>
+        <!-- Google App Engine -->
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-api-1.0-sdk</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-		<!-- Bean Validation API -->
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
+        <!-- Bean Validation API -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
 
-		<!-- Sass compiler -->
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>vaadin-sass-compiler</artifactId>
-		</dependency>
+        <!-- Sass compiler -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>vaadin-sass-compiler</artifactId>
+        </dependency>
 
-		<!-- LIBRARY DEPENDENCIES (compile time) -->
-		<!-- Project modules -->
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>vaadin-shared</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>vaadin-push</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
+        <!-- LIBRARY DEPENDENCIES (compile time) -->
+        <!-- Project modules -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>vaadin-shared</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>vaadin-push</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<!-- Jsoup for BootstrapHandler -->
-		<dependency>
-			<groupId>org.jsoup</groupId>
-			<artifactId>jsoup</artifactId>
-		</dependency>
+        <!-- Jsoup for BootstrapHandler -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+        </dependency>
 
-		<!-- TESTING DEPENDENCIES -->
+        <!-- TESTING DEPENDENCIES -->
 
-		<!-- Test dependencies -->
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-		<!-- For manual testing with PostgreSQL (see SQLTestConstants) -->
-		<!-- <dependency><groupId>postgresql</groupId><artifactId>postgresql</artifactId><version>9.1-901.jdbc3</version></dependency> -->
-	</dependencies>
+        <!-- For manual testing with PostgreSQL (see SQLTestConstants) -->
+        <!-- <dependency><groupId>postgresql</groupId><artifactId>postgresql</artifactId><version>9.1-901.jdbc3</version></dependency> -->
+    </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<executions>
-					<!-- Copy .java files to package -->
-					<execution>
-						<id>copy-sources</id>
-						<!-- here the phase you need -->
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/main/resources</directory>
-									<filtering>false</filtering>
-								</resource>
-								<resource>
-									<directory>src/main/java</directory>
-									<filtering>false</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <!-- Copy .java files to package -->
+                    <execution>
+                        <id>copy-sources</id>
+                        <!-- here the phase you need -->
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                                <resource>
+                                    <directory>src/main/java</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>checkstyle</goal>
-						</goals>
-						<phase>process-sources</phase>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>checkstyle</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>compressbootstrap</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<target>
-								<property name="vaadinBootstrap.js"
-									location="${project.build.outputDirectory}/VAADIN/vaadinBootstrap.js" />
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>compressbootstrap</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <property name="vaadinBootstrap.js"
+                                    location="${project.build.outputDirectory}/VAADIN/vaadinBootstrap.js" />
 
-								<!-- Gzipped version -->
-								<gzip src="${vaadinBootstrap.js}" destfile="${vaadinBootstrap.js}.gz" />
-							</target>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+                                <!-- Gzipped version -->
+                                <gzip src="${vaadinBootstrap.js}"
+                                    destfile="${vaadinBootstrap.js}.gz" />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<extensions>true</extensions>
-				<configuration>
-					<instructions>
-						<Bundle-RequiredExecutionEnvironment>${osgi.execution.environment}</Bundle-RequiredExecutionEnvironment>
-						<Bundle-Version>${osgi.bundle.version}</Bundle-Version>
-						<Export-Package>com.vaadin.*;version="${osgi.bundle.version}"</Export-Package>
-						<Import-Package>javax.servlet;version="${osgi.javax.servlet.version}",
-							javax.servlet.http;version="${osgi.javax.servlet.version}",
-							javax.validation;version="${javax.validation.version}";resolution:=optional,
-							org.jsoup;version="${jsoup.version}",
-							org.jsoup.parser;version="${jsoup.version}",
-							org.jsoup.nodes;version="${jsoup.version}",
-							org.jsoup.helper;version="${jsoup.version}",
-							org.jsoup.safety;version="${jsoup.version}",
-							org.jsoup.select;version="${jsoup.version}",
-							javax.portlet;version="[${javax.portlet.version},3)";resolution:=optional,
-							javax.portlet.filter;version="[${javax.portlet.version},3)";resolution:=optional,
-							com.liferay.portal.kernel.util;resolution:=optional</Import-Package>
-						<Require-Bundle>
-							com.vaadin.shared;bundle-version="${osgi.bundle.version}",
-							com.vaadin.push;bundle-version="${osgi.bundle.version}";resolution:=optional,
-							com.vaadin.sass-compiler;bundle-version="${vaadin.sass.version}";resolution:=optional</Require-Bundle>
-					</instructions>
-				</configuration>
-				<executions>
-					<execution>
-						<id>bundle-manifest</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>manifest</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-RequiredExecutionEnvironment>${osgi.execution.environment}</Bundle-RequiredExecutionEnvironment>
+                        <Bundle-Version>${osgi.bundle.version}</Bundle-Version>
+                        <Export-Package>com.vaadin.*;version="${osgi.bundle.version}"</Export-Package>
+                        <Import-Package>javax.servlet;version="${osgi.javax.servlet.version}",
+                            javax.servlet.http;version="${osgi.javax.servlet.version}",
+                            javax.validation;version="${javax.validation.version}";resolution:=optional,
+                            org.jsoup;version="${jsoup.version}",
+                            org.jsoup.parser;version="${jsoup.version}",
+                            org.jsoup.nodes;version="${jsoup.version}",
+                            org.jsoup.helper;version="${jsoup.version}",
+                            org.jsoup.safety;version="${jsoup.version}",
+                            org.jsoup.select;version="${jsoup.version}",
+                            javax.portlet;version="[${javax.portlet.version},3)";resolution:=optional,
+                            javax.portlet.filter;version="[${javax.portlet.version},3)";resolution:=optional,
+                            com.liferay.portal.kernel.util;resolution:=optional</Import-Package>
+                        <Require-Bundle>
+                            com.vaadin.shared;bundle-version="${osgi.bundle.version}",
+                            com.vaadin.push;bundle-version="${osgi.bundle.version}";resolution:=optional,
+                            com.vaadin.sass-compiler;bundle-version="${vaadin.sass.version}";resolution:=optional</Require-Bundle>
+                    </instructions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>bundle-manifest</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-						<index>false</index>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-					</archive>
-				</configuration>
-				<!-- Package src/test into a jar so that compatbility-server can use
-					the same test classes, e.g. test beans -->
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                        <index>false</index>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <!-- Package src/test into a jar so that compatbility-server 
+                    can use the same test classes, e.g. test beans -->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
