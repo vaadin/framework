@@ -35,6 +35,23 @@
 
 	<build>
 		<plugins>
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-jar-plugin</artifactId>
+                                <configuration>
+                                        <archive>
+                                                <index>false</index>
+                                                <manifest>
+                                                        <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                                </manifest>
+                                                <manifestEntries>
+                                                        <Vaadin-Package-Version>1</Vaadin-Package-Version>
+                                                        <Vaadin-Widgetsets>com.vaadin.v7.Vaadin7WidgetSet</Vaadin-Widgetsets>
+                                                </manifestEntries>
+                                        </archive>
+                                </configuration>
+                        </plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
