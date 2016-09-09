@@ -786,12 +786,15 @@ public abstract class AbstractTB3Test extends ParallelTest {
      *
      * @param timeoutMillis
      *            Number of ms to wait
-     * @throws InterruptedException
      */
-    protected void sleep(int timeoutMillis) throws InterruptedException {
+    protected void sleep(int timeoutMillis) {
         while (timeoutMillis > 0) {
             int d = Math.min(BROWSER_TIMEOUT_IN_MS, timeoutMillis);
-            Thread.sleep(d);
+            try {
+                Thread.sleep(d);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             timeoutMillis -= d;
 
             // Do something to keep the connection alive

@@ -81,10 +81,7 @@ public class PanelRemoveShortcutListenerTest extends MultiBrowserTest {
         attemptShortcut("A on");
 
         // add a bit more delay to make sure the caption doesn't change later
-        try {
-            sleep(2000);
-        } catch (InterruptedException ignore) {
-        }
+        sleep(2000);
 
         assertThat(panel.findElement(By.className("v-panel-caption"))
                 .findElement(By.tagName("span")).getText(), is("A on"));

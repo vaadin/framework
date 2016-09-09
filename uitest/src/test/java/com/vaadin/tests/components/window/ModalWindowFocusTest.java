@@ -93,10 +93,7 @@ public class ModalWindowFocusTest extends MultiBrowserTest {
 
     private void pressEscAndWait() {
         new Actions(driver).sendKeys(Keys.ESCAPE).build().perform();
-        try {
-            sleep(100);
-        } catch (InterruptedException e) {
-        }
+        sleep(100);
     }
 
 }

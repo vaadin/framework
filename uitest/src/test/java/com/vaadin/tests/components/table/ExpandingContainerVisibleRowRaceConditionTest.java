@@ -49,15 +49,6 @@ public class ExpandingContainerVisibleRowRaceConditionTest
         assertScrollPositionIsNotVisible();
     }
 
-    @Override
-    protected void sleep(int milliseconds) {
-        try {
-            super.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void assertFirstRowIdIs(String expected) {
         List<WebElement> cellsOfFirstColumn = getCellsOfFirstColumn();
         WebElement first = cellsOfFirstColumn.get(0);

@@ -267,10 +267,7 @@ public class ComboBoxSelectingWithNewItemsAllowedTest extends MultiBrowserTest {
 
     private void assertInitialItemCount() {
         // wait for a bit in case the count is updating
-        try {
-            sleep(1000);
-        } catch (InterruptedException ignore) {
-        }
+        sleep(1000);
         assertThat("Wrong initial item count.", labelElement.getText(),
                 is("2600"));
     }

@@ -87,10 +87,7 @@ public abstract class MultiBrowserTestWithProxy extends MultiBrowserTest {
                 createProxy(getProxyPort());
                 break;
             } catch (JSchException e) {
-                try {
-                    sleep(500);
-                } catch (InterruptedException e1) {
-                }
+                sleep(500);
                 if (i == 9) {
                     throw new RuntimeException(
                             "All 10 attempts to connect a proxy failed", e);
