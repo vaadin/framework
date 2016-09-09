@@ -3177,7 +3177,9 @@ public class Grid<T> extends ResizeComposite implements
                         rescheduleCount = 0;
                         Scheduler.get().scheduleDeferred(this);
                     }
-                } else if (dataIsBeingFetched) {
+                } else if (currentDataAvailable.isEmpty()
+                        && dataIsBeingFetched) {
+                    // No data available yet but something is incoming soon
                     Scheduler.get().scheduleDeferred(this);
                 } else {
                     calculate();
