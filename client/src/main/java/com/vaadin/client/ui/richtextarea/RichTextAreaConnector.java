@@ -33,7 +33,7 @@ import com.vaadin.ui.RichTextArea;
 /**
  * Connector for RichTextArea.
  */
-@Connect(value = RichTextArea.class, loadStyle = LoadStyle.EAGER)
+@Connect(value = RichTextArea.class, loadStyle = LoadStyle.LAZY)
 public class RichTextAreaConnector extends AbstractFieldConnector
         implements SimpleManagedLayout, ValueChangeHandler.Owner {
 
