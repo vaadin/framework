@@ -25,13 +25,13 @@ public class ComboBoxTest {
     public void options_noFilter() {
         ComboBox comboBox = new ComboBox();
         for (int i = 0; i < 10; i++) {
-            comboBox.addItem(i);
+            comboBox.addItem("" + i);
         }
 
         List<?> options = comboBox.getFilteredOptions();
         Assert.assertEquals(10, options.size());
         for (int i = 0; i < 10; i++) {
-            Assert.assertEquals(i, options.get(i));
+            Assert.assertEquals("" + i, options.get(i));
         }
 
     }
@@ -39,7 +39,7 @@ public class ComboBoxTest {
     @Test
     public void options_inMemoryFilteringStartsWith() {
         for (int i = 0; i < 21; i++) {
-            comboBox.addItem(i);
+            comboBox.addItem("" + i);
         }
 
         setFilterAndCurrentPage(comboBox, "1", 0);
@@ -53,7 +53,7 @@ public class ComboBoxTest {
     public void options_inMemoryFilteringContains() {
         comboBox.setFilteringMode(FilteringMode.CONTAINS);
         for (int i = 0; i < 21; i++) {
-            comboBox.addItem(i);
+            comboBox.addItem("" + i);
         }
 
         setFilterAndCurrentPage(comboBox, "2", 0);
@@ -75,7 +75,7 @@ public class ComboBoxTest {
     public void getOptions_moreThanOnePage_noNullItem() {
         int nrOptions = comboBox.getPageLength() * 2;
         for (int i = 0; i < nrOptions; i++) {
-            comboBox.addItem(i);
+            comboBox.addItem("" + i);
         }
         setFilterAndCurrentPage(comboBox, "", 0);
 
@@ -89,7 +89,7 @@ public class ComboBoxTest {
     public void getOptions_moreThanOnePage_nullItem() {
         int nrOptions = comboBox.getPageLength() * 2;
         for (int i = 0; i < nrOptions; i++) {
-            comboBox.addItem(i);
+            comboBox.addItem("" + i);
         }
 
         setFilterAndCurrentPage(comboBox, "", 0);
@@ -110,7 +110,7 @@ public class ComboBoxTest {
     public void getOptions_lessThanOnePage_noNullItem() {
         int nrOptions = comboBox.getPageLength() / 2;
         for (int i = 0; i < nrOptions; i++) {
-            comboBox.addItem(i);
+            comboBox.addItem("" + i);
         }
         setFilterAndCurrentPage(comboBox, "", 0);
 
@@ -124,7 +124,7 @@ public class ComboBoxTest {
     public void getOptions_lessThanOnePage_withNullItem() {
         int nrOptions = comboBox.getPageLength() / 2;
         for (int i = 0; i < nrOptions; i++) {
-            comboBox.addItem(i);
+            comboBox.addItem("" + i);
         }
         setFilterAndCurrentPage(comboBox, "", 0);
 
@@ -139,7 +139,7 @@ public class ComboBoxTest {
     public void getOptions_exactlyOnePage_withNullItem() {
         int nrOptions = comboBox.getPageLength();
         for (int i = 0; i < nrOptions; i++) {
-            comboBox.addItem(i);
+            comboBox.addItem("" + i);
         }
         setFilterAndCurrentPage(comboBox, "", 0);
 
