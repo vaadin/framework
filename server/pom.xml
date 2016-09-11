@@ -1,276 +1,285 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.vaadin</groupId>
-		<artifactId>vaadin-root</artifactId>
-		<version>7.7.0-SNAPSHOT</version>
-	</parent>
-	<groupId>com.vaadin</groupId>
-	<artifactId>vaadin-server</artifactId>
-	<name>vaadin-server</name>
-	<packaging>jar</packaging>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-root</artifactId>
+        <version>7.7.0-SNAPSHOT</version>
+    </parent>
+    <groupId>com.vaadin</groupId>
+    <artifactId>vaadin-server</artifactId>
+    <name>vaadin-server</name>
+    <packaging>jar</packaging>
 
-	<url>https://vaadin.com/</url>
-	<description>Vaadin server</description>
+    <url>https://vaadin.com/</url>
+    <description>Vaadin server</description>
 
-	<dependencies>
-		<!-- API DEPENDENCIES -->
+    <dependencies>
+        <!-- API DEPENDENCIES -->
 
-		<!-- Liferay Portal Service -->
-		<dependency>
-			<groupId>com.liferay.portal</groupId>
-			<artifactId>portal-service</artifactId>
-			<version>${liferay.portal.version}</version>
-			<scope>provided</scope>
-		</dependency>
+        <!-- Liferay Portal Service -->
+        <dependency>
+            <groupId>com.liferay.portal</groupId>
+            <artifactId>portal-service</artifactId>
+            <version>${liferay.portal.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<!--Servlet API version 3.0 -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>${javax.servlet.version}</version>
-			<scope>provided</scope>
-		</dependency>
+        <!--Servlet API version 3.0 -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<!--Portlet API version 2.0 (JSR-286) -->
-		<dependency>
-			<groupId>javax.portlet</groupId>
-			<artifactId>portlet-api</artifactId>
-			<version>${javax.portlet.version}</version>
-			<scope>provided</scope>
-		</dependency>
+        <!--Portlet API version 2.0 (JSR-286) -->
+        <dependency>
+            <groupId>javax.portlet</groupId>
+            <artifactId>portlet-api</artifactId>
+            <version>${javax.portlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<!-- Google App Engine -->
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-api-1.0-sdk</artifactId>
-			<version>${google.appengine.version}</version>
-			<scope>provided</scope>
-		</dependency>
+        <!-- Google App Engine -->
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-api-1.0-sdk</artifactId>
+            <version>${google.appengine.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<!-- Bean Validation API -->
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>${javax.validation.version}</version>
-			<scope>provided</scope>
-		</dependency>
+        <!-- Bean Validation API -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax.validation.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<!-- Sass compiler -->
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-sass-compiler</artifactId>
-			<version>${vaadin.sass.version}</version>
-		</dependency>
+        <!-- Sass compiler -->
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-sass-compiler</artifactId>
+            <version>${vaadin.sass.version}</version>
+            <exclusions>
+                <!-- No need to have the minifier included for development 
+                    mode on-the-fly compilation -->
+                <exclusion>
+                    <groupId>com.yahoo.platform.yui</groupId>
+                    <artifactId>yuicompressor</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-		<!-- LIBRARY DEPENDENCIES (compile time) -->
-		<!-- Project modules -->
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-shared</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-push</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
+        <!-- LIBRARY DEPENDENCIES (compile time) -->
+        <!-- Project modules -->
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-shared</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-push</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<!-- Jsoup for BootstrapHandler -->
-		<dependency>
-			<groupId>org.jsoup</groupId>
-			<artifactId>jsoup</artifactId>
-			<version>${jsoup.version}</version>
-		</dependency>
+        <!-- Jsoup for BootstrapHandler -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        </dependency>
 
-		<!-- TESTING DEPENDENCIES -->
+        <!-- TESTING DEPENDENCIES -->
 
-		<!-- Test frameworks & related -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.9.5</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-all</artifactId>
-			<version>1.3</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.easymock</groupId>
-			<artifactId>easymock</artifactId>
-			<version>3.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<version>2.2.6</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>${commons-io.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.6</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- Bean Validation implementation -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>4.2.0.Final</version>
-			<scope>test</scope>
-		</dependency>
+        <!-- Test frameworks & related -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.2.6</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Bean Validation implementation -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>4.2.0.Final</version>
+            <scope>test</scope>
+        </dependency>
 
-		<!-- For manual testing with PostgreSQL (see SQLTestConstants) -->
-		<!-- <dependency><groupId>postgresql</groupId><artifactId>postgresql</artifactId><version>9.1-901.jdbc3</version></dependency> -->
-	</dependencies>
+        <!-- For manual testing with PostgreSQL (see SQLTestConstants) -->
+        <!-- <dependency><groupId>postgresql</groupId><artifactId>postgresql</artifactId><version>9.1-901.jdbc3</version></dependency> -->
+    </dependencies>
 
-	<build>
-		<plugins>		
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<executions>
-					<!-- Copy .java files to package -->
-					<execution>
-						<id>copy-sources</id>
-						<!-- here the phase you need -->
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/main/resources</directory>
-									<filtering>false</filtering>
-								</resource>
-								<resource>
-									<directory>src/main/java</directory>
-									<filtering>false</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <!-- Copy .java files to package -->
+                    <execution>
+                        <id>copy-sources</id>
+                        <!-- here the phase you need -->
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                                <resource>
+                                    <directory>src/main/java</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>checkstyle</goal>
-						</goals>
-						<phase>process-sources</phase>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>checkstyle</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>compressbootstrap</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<target>
-								<property name="vaadinBootstrap.js"
-									location="${project.build.outputDirectory}/VAADIN/vaadinBootstrap.js" />
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>compressbootstrap</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <property name="vaadinBootstrap.js"
+                                    location="${project.build.outputDirectory}/VAADIN/vaadinBootstrap.js" />
 
-								<!-- Gzipped version -->
-								<gzip src="${vaadinBootstrap.js}" destfile="${vaadinBootstrap.js}.gz" />
-							</target>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+                                <!-- Gzipped version -->
+                                <gzip src="${vaadinBootstrap.js}"
+                                    destfile="${vaadinBootstrap.js}.gz" />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<extensions>true</extensions>
-				<configuration>
-					<instructions>
-						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
-						<Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</Bundle-Version>
-						<Export-Package>com.vaadin.*;version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}"</Export-Package>
-						<Import-Package>javax.servlet;version="2.4",
-							javax.servlet.http;version="2.4",
-							javax.validation;version="${javax.validation.version}";resolution:=optional,
-							org.jsoup;version="${jsoup.version}",
-							org.jsoup.parser;version="${jsoup.version}",
-							org.jsoup.nodes;version="${jsoup.version}",
-							org.jsoup.helper;version="${jsoup.version}",
-							org.jsoup.safety;version="${jsoup.version}",
-							org.jsoup.select;version="${jsoup.version}",
-							javax.portlet;version="[${javax.portlet.version},3)";resolution:=optional,
-							javax.portlet.filter;version="[${javax.portlet.version},3)";resolution:=optional,
-							com.liferay.portal.kernel.util;resolution:=optional</Import-Package>
-						<Require-Bundle>
-							com.vaadin.shared;bundle-version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}",
-							com.vaadin.push;bundle-version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}";resolution:=optional,
-							com.vaadin.sass-compiler;bundle-version="${vaadin.sass.version}";resolution:=optional</Require-Bundle>
-					</instructions>
-				</configuration>
-				<executions>
-					<execution>
-						<id>bundle-manifest</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>manifest</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
+                        <Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</Bundle-Version>
+                        <Export-Package>com.vaadin.*;version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}"</Export-Package>
+                        <Import-Package>javax.servlet;version="2.4",
+                            javax.servlet.http;version="2.4",
+                            javax.validation;version="${javax.validation.version}";resolution:=optional,
+                            org.jsoup;version="${jsoup.version}",
+                            org.jsoup.parser;version="${jsoup.version}",
+                            org.jsoup.nodes;version="${jsoup.version}",
+                            org.jsoup.helper;version="${jsoup.version}",
+                            org.jsoup.safety;version="${jsoup.version}",
+                            org.jsoup.select;version="${jsoup.version}",
+                            javax.portlet;version="[${javax.portlet.version},3)";resolution:=optional,
+                            javax.portlet.filter;version="[${javax.portlet.version},3)";resolution:=optional,
+                            com.liferay.portal.kernel.util;resolution:=optional</Import-Package>
+                        <Require-Bundle>
+                            com.vaadin.shared;bundle-version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}",
+                            com.vaadin.push;bundle-version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}";resolution:=optional,
+                            com.vaadin.sass-compiler;bundle-version="${vaadin.sass.version}";resolution:=optional</Require-Bundle>
+                    </instructions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>bundle-manifest</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-						<index>false</index>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                        <index>false</index>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
