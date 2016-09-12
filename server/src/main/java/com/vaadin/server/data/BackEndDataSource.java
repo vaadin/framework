@@ -27,7 +27,7 @@ import java.util.stream.Stream;
  * @param <T>
  *            data source data type
  */
-public class BackEndDataSource<T> implements DataSource<T> {
+public class BackEndDataSource<T> extends AbstractDataSource<T> {
 
     private Function<Query, Stream<T>> request;
     private Function<Query, Integer> sizeCallback;

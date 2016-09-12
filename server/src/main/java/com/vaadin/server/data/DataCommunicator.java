@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.Range;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorClientRpc;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.DataRequestRpc;
@@ -49,6 +50,8 @@ import elemental.json.JsonObject;
  * @since 8.0
  */
 public class DataCommunicator<T> extends AbstractExtension {
+
+    private Registration dataSourceUpdateRegistration;
 
     /**
      * Simple implementation of collection data provider communication. All data
@@ -193,6 +196,18 @@ public class DataCommunicator<T> extends AbstractExtension {
         rpc = getRpcProxy(DataCommunicatorClientRpc.class);
         registerRpc(createRpc());
         keyMapper = createKeyMapper();
+    }
+
+    @Override
+    public void attach() {
+        super.attach();
+        attachDataSourceListener();
+    }
+
+    @Override
+    public void detach() {
+        super.detach();
+        detachDataSourceListener();
     }
 
     /**
@@ -459,6 +474,22 @@ public class DataCommunicator<T> extends AbstractExtension {
     public void setDataSource(DataSource<T> dataSource) {
         Objects.requireNonNull(dataSource, "data source cannot be null");
         this.dataSource = dataSource;
+        detachDataSourceListener();
+        if (isAttached()) {
+            attachDataSourceListener();
+        }
         reset();
+    }
+
+    private void attachDataSourceListener() {
+        dataSourceUpdateRegistration = getDataSource()
+                .addDataSourceListener(event -> reset());
+    }
+
+    private void detachDataSourceListener() {
+        if (dataSourceUpdateRegistration != null) {
+            dataSourceUpdateRegistration.remove();
+            dataSourceUpdateRegistration = null;
+        }
     }
 }

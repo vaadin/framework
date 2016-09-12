@@ -31,6 +31,10 @@ class StrBean implements Serializable {
         return randomNumber;
     }
 
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     public static List<StrBean> generateRandomBeans(int max) {
         List<StrBean> data = new ArrayList<>();
         Random r = new Random(13337);

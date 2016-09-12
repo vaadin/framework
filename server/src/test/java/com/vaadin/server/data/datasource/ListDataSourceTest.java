@@ -3,6 +3,7 @@ package com.vaadin.server.data.datasource;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,12 +28,13 @@ public class ListDataSourceTest {
 
     @Test
     public void testListContainsAllData() {
+        List<StrBean> list = new LinkedList<>(data);
         dataSource.apply(new Query())
                 .forEach(str -> assertTrue(
                         "Data source contained values not in original data",
-                        data.remove(str)));
+                        list.remove(str)));
         assertTrue("Not all values from original data were in data source",
-                data.isEmpty());
+                list.isEmpty());
     }
 
     @Test
@@ -101,5 +103,93 @@ public class ListDataSourceTest {
             // Test default sort
             Assert.assertTrue(prev.getValue().compareTo(cur.getValue()) <= 0);
         }
+    }
+
+    @Test
+    public void refreshAll_changeBeanInstance() {
+        StrBean bean = new StrBean("foo", -1, hashCode());
+        Query query = new Query();
+        int size = dataSource.size(query);
+
+        data.set(0, bean);
+        dataSource.refreshAll();
+
+        List<StrBean> list = dataSource.apply(query)
+                .collect(Collectors.toList());
+        StrBean first = list.get(0);
+        Assert.assertEquals(bean.getValue(), first.getValue());
+        Assert.assertEquals(bean.getRandomNumber(), first.getRandomNumber());
+        Assert.assertEquals(bean.getId(), first.getId());
+
+        Assert.assertEquals(size, dataSource.size(query));
+    }
+
+    @Test
+    public void refreshAll_updateBean() {
+        Query query = new Query();
+        int size = dataSource.size(query);
+
+        StrBean bean = data.get(0);
+        bean.setValue("foo");
+        dataSource.refreshAll();
+
+        List<StrBean> list = dataSource.apply(query)
+                .collect(Collectors.toList());
+        StrBean first = list.get(0);
+        Assert.assertEquals("foo", first.getValue());
+
+        Assert.assertEquals(size, dataSource.size(query));
+    }
+
+    @Test
+    public void refreshAll_sortingBy_changeBeanInstance() {
+        StrBean bean = new StrBean("foo", -1, hashCode());
+        Query query = new Query();
+        int size = dataSource.size(query);
+
+        data.set(0, bean);
+
+        ListDataSource<StrBean> dSource = dataSource
+                .sortingBy(Comparator.comparing(StrBean::getId));
+        dSource.refreshAll();
+
+        List<StrBean> list = dSource.apply(query).collect(Collectors.toList());
+        StrBean first = list.get(0);
+        Assert.assertEquals(bean.getValue(), first.getValue());
+        Assert.assertEquals(bean.getRandomNumber(), first.getRandomNumber());
+        Assert.assertEquals(bean.getId(), first.getId());
+
+        Assert.assertEquals(size, dataSource.size(query));
+    }
+
+    @Test
+    public void refreshAll_addBeanInstance() {
+        StrBean bean = new StrBean("foo", -1, hashCode());
+
+        Query query = new Query();
+        int size = dataSource.size(query);
+
+        data.add(0, bean);
+        dataSource.refreshAll();
+
+        List<StrBean> list = dataSource.apply(query)
+                .collect(Collectors.toList());
+        StrBean first = list.get(0);
+        Assert.assertEquals(bean.getValue(), first.getValue());
+        Assert.assertEquals(bean.getRandomNumber(), first.getRandomNumber());
+        Assert.assertEquals(bean.getId(), first.getId());
+
+        Assert.assertEquals(size + 1, dataSource.size(query));
+    }
+
+    @Test
+    public void refreshAll_removeBeanInstance() {
+        Query query = new Query();
+        int size = dataSource.size(query);
+
+        data.remove(0);
+        dataSource.refreshAll();
+
+        Assert.assertEquals(size - 1, dataSource.size(query));
     }
 }

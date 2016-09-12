@@ -15,10 +15,8 @@
  */
 package com.vaadin.server.data;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -30,10 +28,10 @@ import java.util.stream.Stream;
  * @param <T>
  *            data type
  */
-public class ListDataSource<T> implements DataSource<T> {
+public class ListDataSource<T> extends AbstractDataSource<T> {
 
-    private Function<Query, Stream<T>> request;
-    private int size;
+    private Comparator<T> sortOrder;
+    private final Collection<T> backend;
 
     /**
      * Constructs a new ListDataSource. This method makes a protective copy of
@@ -44,26 +42,33 @@ public class ListDataSource<T> implements DataSource<T> {
      */
     public ListDataSource(Collection<T> items) {
         Objects.requireNonNull(items, "items cannot be null");
-        final List<T> backend = new ArrayList<>(items);
-        request = query -> backend.stream();
-        size = backend.size();
+        backend = items;
+        sortOrder = null;
     }
 
     /**
      * Chaining constructor for making modified {@link ListDataSource}s. This
      * Constructor is used internally for making sorted and filtered variants of
      * a base data source with actual data.
+     * 
+     * @param items
+     *            the backend data from the original list data source
+     * @param sortOrder
+     *            a {@link Comparator} providing the needed sorting order
      *
-     * @param request
-     *            request for the new data source
      */
-    protected ListDataSource(Function<Query, Stream<T>> request) {
-        this.request = request;
+    protected ListDataSource(Collection<T> items, Comparator<T> sortOrder) {
+        this(items);
+        this.sortOrder = sortOrder;
     }
 
     @Override
     public Stream<T> apply(Query query) {
-        return request.apply(query);
+        Stream<T> stream = backend.stream();
+        if (sortOrder != null) {
+            stream = stream.sorted(sortOrder);
+        }
+        return stream;
     }
 
     /**
@@ -77,7 +82,7 @@ public class ListDataSource<T> implements DataSource<T> {
      * @return new data source with modified sorting
      */
     public ListDataSource<T> sortingBy(Comparator<T> sortOrder) {
-        return new ListDataSource<>(q -> request.apply(q).sorted(sortOrder));
+        return new ListDataSource<>(backend, sortOrder);
     }
 
     /**
@@ -113,6 +118,7 @@ public class ListDataSource<T> implements DataSource<T> {
      */
     @Override
     public int size(Query t) {
-        return size;
+        return backend.size();
     }
+
 }

@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import com.vaadin.shared.Registration;
+
 /**
  * Minimal DataSource API for communication between the DataProvider and a back
  * end service.
@@ -54,6 +56,27 @@ public interface DataSource<T>
      * @return the size of the data source
      */
     int size(Query t);
+
+    /**
+     * Refreshes all data based on currently available data in the underlying
+     * provider.
+     */
+    void refreshAll();
+
+    /**
+     * Adds a data source listener. The listener is called when some piece of
+     * data is updated.
+     * <p>
+     * The {@link #refreshAll()} method fires {@link DataChangeEvent} each time
+     * when it's called. It allows to update UI components when user changes
+     * something in the underlying data.
+     *
+     * @see #refreshAll()
+     * @param listener
+     *            the data change listener, not null
+     * @return a registration for the listener
+     */
+    Registration addDataSourceListener(DataSourceListener listener);
 
     /**
      * This method creates a new {@link ListDataSource} from a given Collection.

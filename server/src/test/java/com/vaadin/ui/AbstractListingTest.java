@@ -2,6 +2,7 @@ package com.vaadin.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -19,8 +20,7 @@ import elemental.json.JsonObject;
 
 public class AbstractListingTest {
 
-    private final class TestListing extends
-            AbstractSingleSelect<String> {
+    private final class TestListing extends AbstractSingleSelect<String> {
 
         protected TestListing() {
             setSelectionModel(new SimpleSingleSelection());
@@ -69,11 +69,12 @@ public class AbstractListingTest {
     @Test
     public void testSetItemsWithCollection() {
         listing.setItems(items);
+        List<String> list = new LinkedList<>(items);
         listing.getDataSource().apply(new Query()).forEach(
                 str -> Assert.assertTrue("Unexpected item in data source",
-                        items.remove(str)));
+                        list.remove(str)));
         Assert.assertTrue("Not all items from list were in data source",
-                items.isEmpty());
+                list.isEmpty());
     }
 
     @Test
