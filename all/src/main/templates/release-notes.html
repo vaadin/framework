@@ -45,14 +45,11 @@
             <li><a href="#incompatible">Incompatible or Behavior-altering Changes in
                     @version-minor@</a></li>
             <li><a href="#knownissues">Known Issues and Limitations</a></li>
-            <li><a href="#gwtdep">GWT Dependency Changes</a></li>
             <li><a href="#vaadin">Vaadin Installation</a></li>
             <li><a href="#package">Package Contents</a></li>
-            <li><a href="#migrating">Migrating from Vaadin 7</a></li>
+            <li><a href="#migrating">Migrating from Vaadin 7.7</a></li>
             <li><a href="#dependencies">Vaadin @version@
                     dependencies</a></li>
-            <li><a href="#upgrading">Upgrading to Vaadin
-                    @version-minor@</a></li>
             <li><a href="#supportedversions">Supported
                     Technologies</a></li>
             <li><a href="#vaadinontheweb">Vaadin on the Web</a></li>
@@ -62,7 +59,7 @@
 
         <p>
             Vaadin @version@ is a
-<!--            feature release that includes --> 
+<!--            feature release that includes -->
             pre-release for evaluating
             a number of new features and bug fixes, as listed in the <a
                 href="#enhancements">list of enhancements</a> and <a
@@ -83,8 +80,8 @@
         <br/>
         <p>
             You can also view the <a
-                href="http://dev.vaadin.com/query?status=pending-release&status=released&resolution=fixed&milestone=Vaadin+@version@&order=id">list
-                of the closed issues</a> at the Vaadin developer's site.
+                href="https://github.com/vaadin/vaadin/compare/7.7.0...@version@">list
+                of all changes </a>.
         </p>
 
         <h2 id="enhancements">Enhancements in Vaadin @version-minor@</h2>
@@ -98,10 +95,10 @@
             <li>Vaadin is using GWT 2.8, allowing client side code to use Java 8</li>
             <li>Other Vaadin dependencies including Atmosphere have been upgraded</li>
         </ul>
-        
+
         <p>
-            The new data binding API replaces the old Container, Item, Property, FieldGroup,
-            Validator, Converter and related classes with new mechanisms.
+            The new data binding API replaces the old <tt>Container</tt>, <tt>Item</tt>, <tt>Property</tt>, <tt>FieldGroup</tt>,
+            <tt>Validator</tt>, <tt>Converter</tt> and related classes with new mechanisms.
             Also components using those are replaced with updated implementations using the
             new API, and the old data binding API and components have been moved to separate
             compatibility packages for ease of migration.
@@ -132,7 +129,6 @@
         </ul>
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
-            <li>Vaadin TouchKit versions prior to 4.1.0 do not work with Vaadin 7.7+. Please use version 4.1.0 or above.</li>
             <li>Context click events are not generated on iOS devices
                 (<a href="http://dev.vaadin.com/ticket/19367">#19367</a>)</li>
             <li>Drag'n'drop in a Table doesn't work on touch devices running
@@ -142,9 +138,9 @@
             <li><p>It is currently not possible to specify <tt>font-size</tt>
                 as <tt>em</tt> or <tt>%</tt>, or layout component sizes
                 with <tt>em</tt> (<a
-                href="http://dev.vaadin.com/ticket/10634">#10634</a>).</p><p>This 
-                does not apply to Valo, but using em sizes to size layouts is discouraged, 
-                because it results in fractional component sizes in many cases, which 
+                href="http://dev.vaadin.com/ticket/10634">#10634</a>).</p><p>This
+                does not apply to Valo, but using em sizes to size layouts is discouraged,
+                because it results in fractional component sizes in many cases, which
                 might cause unwanted 1px gaps between components.</p>
             </li>
             <li>Up-to-date information about configuration needed for push and compatibility issues are available in
@@ -156,7 +152,7 @@
                     href="http://dev.vaadin.com/ticket/11493">#11493</a>)
                 </li>
                 <li>>Transport mode WEBSOCKET does not support invalidating the session on Tomcat 7,
-                     nor setting cookies for the session. The new transport mode WEBSOCKET_XHR can be 
+                     nor setting cookies for the session. The new transport mode WEBSOCKET_XHR can be
                      used to bypass these limitations.
                      <br />
                      See tickets <a href="https://dev.vaadin.com/ticket/11808">#11808</a> and
@@ -189,13 +185,13 @@
 
         <ul>
             <li><strong>Maven dependency.</strong>If using Maven, define it as a dependency or use
-                any of the available archetypes to create a new project. More information at 
+                any of the available archetypes to create a new project. More information at
                 <a href="https://vaadin.com/maven">https://vaadin.com/maven</a>
             </li>
 
-            <li><strong>IDE Plugins.</strong>If using Eclipse, use the 
-                <a href="http://vaadin.com/eclipse">Vaadin Plugin for Eclipse</a>, which automatically 
-                downloads the Vaadin libraries. For NetBeans 8.0 and 7.4, use the 
+            <li><strong>IDE Plugins.</strong>If using Eclipse, use the
+                <a href="http://vaadin.com/eclipse">Vaadin Plugin for Eclipse</a>, which automatically
+                downloads the Vaadin libraries. For NetBeans 8.0 and 7.4, use the
                 <a href="http://plugins.netbeans.org/plugin/50531/vaadin-plug-in-for-netbeans">official Vaadin plugin</a>
                 that provides Maven based wizards and code completion support for Vaadin development.
             </li>
@@ -227,15 +223,16 @@
             <li>Dependency libraries provided under the <tt>lib/</tt>
                 folder
             </li>
+            <li>Vaadin 7 compatible classes for server-side (<tt>vaadin-compatibility-server</tt>,
+                <tt>vaadin-compatibility-shared</tt>) and client-side (<tt>vaadin-compatibility-client</tt>)
+            </li>
         </ul>
 
         <p>
             See the
             <tt>README.TXT</tt>
             in the installation package for detailed information about
-            the package contents. <a href="http://vaadin.com/book">Book
-                of Vaadin</a> (for Vaadin 7) gives more detailed
-            instructions.
+            the package contents.
         </p>
 
         <p>
@@ -258,14 +255,7 @@
             components.)
         </p>
 
-        <h4 id="package.updates">Updates to the Packaging</h4>
-        <p>
-            Since Vaadin 7.2.0, the old vaadin-theme-compiler has been moved into
-            a separate project and renamed to vaadin-sass-compiler. It is now included
-            along with the other 3rd party dependencies in the ZIP package.
-        </p>
-
-        <h2 id="migrating">Migrating from Vaadin 7</h2>
+        <h2 id="migrating">Migrating from Vaadin 7.7</h2>
 
         <p>
             Most Vaadin 7 applications need some changes when migrating
@@ -282,7 +272,7 @@
             vaadin-compatibility-shared etc. that can be used instead of
             vaadin-server, vaadin-shared etc. The package
             vaadin-compatibility-client-compiled contains the widgetset
-            com.vaadin.v7.Vaadin7WidgetSet which can be used instead of
+            <tt>com.vaadin.v7.Vaadin7WidgetSet</tt> which can be used instead of
             DefaultWidgetSet.
         </p>
 
@@ -295,6 +285,42 @@
             Some Vaadin 7 add-ons do not work in Vaadin 8 - please check the add-ons in <a
                 href="http://vaadin.com/directory/">Vaadin Directory</a>
             for Vaadin 8 support.
+        </p>
+
+        <h3 id="upgrading">Common Upgrade Steps</h3>
+
+        <p>Always when upgrading from an earlier Vaadin version, you
+            must:</p>
+
+        <ul>
+            <li>Recompile your classes using the new Vaadin
+                version. Binary compatibility is only guaranteed for
+                maintenance releases of Vaadin.</li>
+
+            <li>Unless using the precompiled widget set, recompile
+                your widget set using the new Vaadin version.</li>
+        </ul>
+
+        <p>Remember also to refresh the project in your IDE to
+            ensure that the new version of everything is in use.</p>
+
+        <p>
+            By using the "
+            <tt>?debug</tt>
+            " URL parameter, you can verify that the version of the
+            servlet, the theme, and the widget set all match.
+        </p>
+
+        <p>
+            <b>Eclipse</b> users should always check if there is a new
+            version of the Eclipse Plug-in available.
+        </p>
+
+        <p>
+            <b>Maven</b> users should update the Vaadin dependency
+            version in the
+            <tt>pom.xml</tt>
+            .
         </p>
 
         <h2 id="dependencies">Vaadin @version@ Dependencies</h2>
@@ -323,66 +349,11 @@
         <h3>Bean Validation</h3>
 
         <p>
-            If you use the bean validation feature in Vaadin 7, you need
+            If you use the bean validation feature, you need
             a Bean Validation API implementation. You need to install
             the implementation JAR in the
             <tt>WEB-INF/lib</tt>
             directory of the web application that uses validation.
-        </p>
-
-        <h2 id="upgrading">Upgrading to Vaadin @version-minor@</h2>
-
-        <p>When upgrading from an earlier Vaadin version, you must:
-        </p>
-
-        <ul>
-            <li>Recompile your classes using the new Vaadin
-                version. Binary compatibility is only guaranteed for
-                maintenance releases of Vaadin.</li>
-
-            <li>Unless using the precompiled widget set, recompile
-                your widget set using the new Vaadin version.</li>
-        </ul>
-
-        <p>Remember also to refresh the project in your IDE to
-            ensure that the new version of everything is in use.</p>
-
-        <p>
-            By using the "
-            <tt>?debug</tt>
-            " URL parameter, you can verify that the version of the
-            servlet, the theme, and the widget set all match.
-        </p>
-
-        <p>
-            <b>Eclipse</b> users should always check if there is a new
-            version of the Eclipse Plug-in available. The Eclipse
-            Plug-in can be used to update the Vaadin version in the
-            project (Project properties &raquo; Vaadin).
-        </p>
-
-        <p>
-            <b>Maven</b> users should update the Vaadin dependency
-            version in the
-            <tt>pom.xml</tt>
-            unless it is defined as
-            <tt>LATEST</tt>
-            . You must also ensure that the GWT dependency uses the
-            correct version and recompile your project and your widget
-            set.
-        </p>
-
-        <p>
-            <b>Liferay and other portal</b> users must install the
-            Vaadin libraries in
-            <t>ROOT/WEB-INF/lib/</b> in the portal (and remove a
-            possibly obsolete older <tt>vaadin.jar</tt>). Additionally,
-            the contents of the <tt>vaadin-client-compiled</tt> and <tt>vaadin-themes</tt>
-            must be extracted to the <tt>ROOT/html/VAADIN</tt> directory
-            in the Liferay installation. If your portal uses custom
-            widgets, you can use <a
-                href="http://vaadin.com/directory#addon/liferay-control-panel-plugin-for-vaadin:vaadin">
-                    Liferay Control Panel for Vaadin</a> for easy widget set compilation.</t>
         </p>
 
         <h2 id="supportedversions">Supported Technologies</h2>
