@@ -1196,4 +1196,78 @@ public class BinderTest {
         binder.saveIfValid(new Person());
         Assert.assertTrue(binder.hasChanges());
     }
+
+    @Test
+    public void binderLoad_clearsErrors() {
+        Binding<Person, String, String> binding = binder.forField(nameField)
+                .withValidator(notEmpty);
+        binding.bind(Person::getFirstName, Person::setFirstName);
+        binder.withValidator(bean -> bean.getFirstName().contains("error")
+                ? Result.error("error") : Result.ok(bean));
+        Person person = new Person();
+        person.setFirstName("");
+        binder.bind(person);
+
+        // initial value is invalid but no error
+        Assert.assertNull(nameField.getComponentError());
+
+        // make error show
+        nameField.setValue("foo");
+        nameField.setValue("");
+        Assert.assertNotNull(nameField.getComponentError());
+
+        // bind to another person to see that error is cleared
+        person = new Person();
+        person.setFirstName("");
+        binder.bind(person);
+        // error has been cleared
+        Assert.assertNull(nameField.getComponentError());
+
+        // make show error
+        nameField.setValue("foo");
+        nameField.setValue("");
+        Assert.assertNotNull(nameField.getComponentError());
+
+        // load should also clear error
+        binder.load(person);
+        Assert.assertNull(nameField.getComponentError());
+
+        // bind a new field that has invalid value in bean
+        TextField lastNameField = new TextField();
+        person.setLastName("");
+        Binding<Person, String, String> binding2 = binder
+                .forField(lastNameField).withValidator(notEmpty);
+        binding2.bind(Person::getLastName, Person::setLastName);
+
+        // should not have error shown
+        Assert.assertNull(lastNameField.getComponentError());
+
+        // add status label to show bean level error
+        Label statusLabel = new Label();
+        binder.setStatusLabel(statusLabel);
+        nameField.setValue("error");
+
+        // no error shown yet because second field validation doesn't pass
+        Assert.assertEquals("", statusLabel.getValue());
+
+        // make second field validation pass to get bean validation error
+        lastNameField.setValue("foo");
+        Assert.assertEquals("error", statusLabel.getValue());
+
+        // reload bean to clear error
+        binder.load(person);
+        Assert.assertEquals("", statusLabel.getValue());
+
+        // unbind() should clear all errors and status label
+        nameField.setValue("");
+        lastNameField.setValue("");
+        Assert.assertNotNull(nameField.getComponentError());
+        Assert.assertNotNull(lastNameField.getComponentError());
+        statusLabel.setComponentError(new UserError("ERROR"));
+
+        binder.unbind();
+        Assert.assertNull(nameField.getComponentError());
+        Assert.assertNull(lastNameField.getComponentError());
+        Assert.assertEquals("", statusLabel.getValue());
+    }
 }

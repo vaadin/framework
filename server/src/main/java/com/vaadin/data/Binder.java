@@ -677,6 +677,10 @@ public class Binder<BEAN> implements Serializable {
     public <FIELDVALUE> Binding<BEAN, FIELDVALUE, FIELDVALUE> forField(
             HasValue<FIELDVALUE> field) {
         Objects.requireNonNull(field, "field cannot be null");
+        // clear previous errors for this field and any bean level validation
+        clearError(field);
+        getStatusLabel().ifPresent(label -> label.setValue(""));
+
         return createBinding(field, Converter.identity(),
                 this::handleValidationStatusChange);
     }
@@ -767,6 +771,8 @@ public class Binder<BEAN> implements Serializable {
             bean = null;
             bindings.forEach(BindingImpl::unbind);
         }
+        getStatusHandler()
+                .accept(BinderValidationStatus.createUnresolvedStatus(this));
     }
 
     /**
@@ -788,6 +794,9 @@ public class Binder<BEAN> implements Serializable {
         Objects.requireNonNull(bean, "bean cannot be null");
         setHasChanges(false);
         bindings.forEach(binding -> binding.setFieldValue(bean));
+
+        getStatusHandler()
+                .accept(BinderValidationStatus.createUnresolvedStatus(this));
     }
 
     /**

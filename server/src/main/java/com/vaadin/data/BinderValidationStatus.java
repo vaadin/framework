@@ -55,6 +55,28 @@ public class BinderValidationStatus<BEAN> implements Serializable {
     private final List<Result<?>> binderStatuses;
 
     /**
+     * Convenience method for creating a unresolved validation status for the
+     * given binder.
+     * <p>
+     * In practice this status means that the values might not be valid, but
+     * validation errors should be hidden.
+     *
+     * @param source
+     *            the source binder
+     * @return a unresolved validation status
+     * @param <BEAN>
+     *            the bean type of the binder
+     */
+    public static <BEAN> BinderValidationStatus<BEAN> createUnresolvedStatus(
+            Binder<BEAN> source) {
+        return new BinderValidationStatus<>(source,
+                source.getBindings().stream()
+                        .map(b -> ValidationStatus.createUnresolvedStatus(b))
+                        .collect(Collectors.toList()),
+                Collections.emptyList());
+    }
+
+    /**
      * Creates a new binder validation status for the given binder and
      * validation results.
      *

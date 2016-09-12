@@ -46,18 +46,43 @@ public class ValidationStatus<TARGET> implements Serializable {
      * Status of the validation.
      * <p>
      * The status is the part of {@link ValidationStatus} which indicates
-     * whether the validation failed or not.
+     * whether the validation failed or not, or whether it is in unresolved
+     * state (e.g. after clear or reset).
      */
     public enum Status {
         /** Validation passed. */
         OK,
         /** Validation failed. */
-        ERROR
+        ERROR,
+        /**
+         * Unresolved status, e.g field has not yet been validated because value
+         * was cleared.
+         * <p>
+         * In practice this status means that the value might be invalid, but
+         * validation errors should be hidden.
+         */
+        UNRESOLVED;
     }
 
     private final Status status;
     private final Result<TARGET> result;
     private final Binding<?, ?, TARGET> binding;
+
+    /**
+     * Convenience method for creating a {@link Status#UNRESOLVED} validation
+     * status for the given binding.
+     *
+     * @param source
+     *            the source binding
+     * @return unresolved validation status
+     * @param <TARGET>
+     *            the target data type of the binding for which the validation
+     *            status was reset
+     */
+    public static <TARGET> ValidationStatus<TARGET> createUnresolvedStatus(
+            Binding<?, ?, TARGET> source) {
+        return new ValidationStatus<>(source, Status.UNRESOLVED, null);
+    }
 
     /**
      * Creates a new validation status for the given binding and validation
@@ -91,7 +116,9 @@ public class ValidationStatus<TARGET> implements Serializable {
         Objects.requireNonNull(source, "Event source may not be null");
         Objects.requireNonNull(status, "Status may not be null");
         if (Objects.equals(status, Status.OK) && result.isError()
-                || Objects.equals(status, Status.ERROR) && !result.isError()) {
+                || Objects.equals(status, Status.ERROR) && !result.isError()
+                || Objects.equals(status, Status.UNRESOLVED)
+                        && result != null) {
             throw new IllegalStateException(
                     "Invalid validation status " + status + " for given result "
                             + (result == null ? "null" : result.toString()));
