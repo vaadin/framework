@@ -13,40 +13,39 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.client.ui.colorpicker;
+package com.vaadin.client.ui.colorpicker;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.VCaption;
 import com.vaadin.client.communication.RpcProxy;
-import com.vaadin.client.ui.VColorPickerArea;
+import com.vaadin.client.ui.VColorPicker;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.colorpicker.ColorPickerServerRpc;
-import com.vaadin.v7.ui.ColorPickerArea;
+import com.vaadin.ui.ColorPicker;
 
 /**
- * A class that defines an implementation for a color picker connector. Connects
- * the server side {@link com.vaadin.v7.ui.ColorPickerArea} with the client side
- * counterpart {@link VColorPickerArea}
+ * A class that defines default implementation for a color picker connector.
+ * Connects the server side {@link com.vaadin.ui.ColorPicker} with the client
+ * side counterpart {@link VColorPicker}
  *
  * @since 7.0.0
  */
-@Connect(value = ColorPickerArea.class, loadStyle = LoadStyle.LAZY)
-public class ColorPickerAreaConnector extends AbstractColorPickerConnector {
+@Connect(value = ColorPicker.class, loadStyle = LoadStyle.LAZY)
+public class ColorPickerConnector extends AbstractColorPickerConnector {
 
     private ColorPickerServerRpc rpc = RpcProxy
             .create(ColorPickerServerRpc.class, this);
 
     @Override
     protected Widget createWidget() {
-        return GWT.create(VColorPickerArea.class);
+        return GWT.create(VColorPicker.class);
     }
 
     @Override
-    public VColorPickerArea getWidget() {
-        return (VColorPickerArea) super.getWidget();
+    public VColorPicker getWidget() {
+        return (VColorPicker) super.getWidget();
     }
 
     @Override
@@ -56,12 +55,15 @@ public class ColorPickerAreaConnector extends AbstractColorPickerConnector {
 
     @Override
     protected void setCaption(String caption) {
-        VCaption.setCaptionText(getWidget(), getState());
+        if (getState().captionAsHtml) {
+            getWidget().setHtml(caption);
+        } else {
+            getWidget().setText(caption);
+        }
     }
 
     @Override
     protected void refreshColor() {
         getWidget().refreshColor();
     }
-
 }

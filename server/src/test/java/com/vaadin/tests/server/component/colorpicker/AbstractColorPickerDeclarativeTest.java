@@ -13,23 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.server.component.colorpicker;
+package com.vaadin.tests.server.component.colorpicker;
 
 import org.junit.Test;
 
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.tests.design.DeclarativeTestBase;
-import com.vaadin.v7.ui.AbstractColorPicker;
-import com.vaadin.v7.ui.AbstractColorPicker.PopupStyle;
-import com.vaadin.v7.ui.ColorPicker;
-import com.vaadin.v7.ui.ColorPickerArea;
+import com.vaadin.ui.AbstractColorPicker;
+import com.vaadin.ui.AbstractColorPicker.PopupStyle;
+import com.vaadin.ui.ColorPicker;
+import com.vaadin.ui.ColorPickerArea;
 
 public class AbstractColorPickerDeclarativeTest
         extends DeclarativeTestBase<AbstractColorPicker> {
 
     @Test
     public void testAllAbstractColorPickerFeatures() {
-        String design = "<vaadin7-color-picker color='#fafafa' default-caption-enabled position='100,100'"
+        String design = "<vaadin-color-picker color='#fafafa' default-caption-enabled position='100,100'"
                 + " popup-style='simple' rgb-visibility='false' hsv-visibility='false'"
                 + " history-visibility=false textfield-visibility=false />";
         ColorPicker colorPicker = new ColorPicker();
@@ -50,7 +50,7 @@ public class AbstractColorPickerDeclarativeTest
 
     @Test
     public void testEmptyColorPicker() {
-        String design = "<vaadin7-color-picker />";
+        String design = "<vaadin-color-picker />";
         ColorPicker colorPicker = new ColorPicker();
         testRead(design, colorPicker);
         testWrite(design, colorPicker);
@@ -58,7 +58,7 @@ public class AbstractColorPickerDeclarativeTest
 
     @Test
     public void testAllAbstractColorPickerAreaFeatures() {
-        String design = "<vaadin7-color-picker-area color='#fafafa' default-caption-enabled position='100,100'"
+        String design = "<vaadin-color-picker-area color='#fafafa' default-caption-enabled position='100,100'"
                 + " popup-style='simple' rgb-visibility='false' hsv-visibility='false'"
                 + " history-visibility=false textfield-visibility=false />";
         AbstractColorPicker colorPicker = new ColorPickerArea();
@@ -79,7 +79,7 @@ public class AbstractColorPickerDeclarativeTest
 
     @Test
     public void testEmptyColorPickerArea() {
-        String design = "<vaadin7-color-picker-area />";
+        String design = "<vaadin-color-picker-area />";
         AbstractColorPicker colorPicker = new ColorPickerArea();
         testRead(design, colorPicker);
         testWrite(design, colorPicker);

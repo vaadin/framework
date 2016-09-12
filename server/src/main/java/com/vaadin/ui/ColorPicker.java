@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.ui;
+package com.vaadin.ui;
 
 import com.vaadin.shared.ui.colorpicker.Color;
 

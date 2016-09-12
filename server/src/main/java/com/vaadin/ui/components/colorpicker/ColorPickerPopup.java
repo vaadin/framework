@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.ui.components.colorpicker;
+package com.vaadin.ui.components.colorpicker;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ import com.vaadin.ui.Slider.ValueOutOfBoundsException;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.ui.AbstractColorPicker.Coordinates2Color;
+import com.vaadin.ui.AbstractColorPicker.Coordinates2Color;
 
 /**
  * A component that represents color selection popup within a color picker.

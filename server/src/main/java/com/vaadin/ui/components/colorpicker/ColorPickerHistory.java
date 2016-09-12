@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.ui.components.colorpicker;
+package com.vaadin.ui.components.colorpicker;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.client.ui.colorpicker;
+package com.vaadin.client.ui.colorpicker;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -26,12 +26,12 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGradientServerRpc;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGradientState;
-import com.vaadin.v7.ui.components.colorpicker.ColorPickerGradient;
+import com.vaadin.ui.components.colorpicker.ColorPickerGradient;
 
 /**
  * A class that defines the default implementation for a color picker gradient
  * connector. Connects the server side
- * {@link com.vaadin.v7.ui.components.colorpicker.ColorPickerGradient} with the
+ * {@link com.vaadin.ui.components.colorpicker.ColorPickerGradient} with the
  * client side counterpart {@link VColorPickerGradient}
  *
  * @since 7.0.0

@@ -13,14 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.ui.components.colorpicker;
+package com.vaadin.ui.components.colorpicker;
 
+import java.util.EnumSet;
+
+import com.vaadin.data.HasValue.ValueChange;
 import com.vaadin.shared.ui.colorpicker.Color;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
-import com.vaadin.v7.ui.ComboBox;
 
 /**
  * A component that represents color selection swatches within a color picker.
@@ -28,10 +29,10 @@ import com.vaadin.v7.ui.ComboBox;
  * @since 7.0.0
  */
 public class ColorPickerSelect extends CustomComponent
-        implements ColorSelector, ValueChangeListener {
+        implements ColorSelector {
 
     /** The range. */
-    private final ComboBox range;
+    private final ComboBox<ColorRangePropertyId> range;
 
     /** The grid. */
     private final ColorPickerGrid grid;
@@ -78,17 +79,11 @@ public class ColorPickerSelect extends CustomComponent
         setStyleName("colorselect");
         setWidth("100%");
 
-        range = new ComboBox();
-        range.setImmediate(true);
-        range.setImmediate(true);
-        range.setNullSelectionAllowed(false);
-        range.setNewItemsAllowed(false);
+        range = new ComboBox<>(null, EnumSet.allOf(ColorRangePropertyId.class));
+        range.setEmptySelectionAllowed(false);
         range.setWidth("100%");
-        range.addValueChangeListener(this);
+        range.addValueChangeListener(this::valueChange);
 
-        for (ColorRangePropertyId id : ColorRangePropertyId.values()) {
-            range.addItem(id);
-        }
         range.select(ColorRangePropertyId.ALL);
 
         layout.addComponent(range);
@@ -201,7 +196,7 @@ public class ColorPickerSelect extends CustomComponent
 
     @Override
     public void setColor(Color color) {
-        grid.getColor();
+        grid.setColor(color);
     }
 
     @Override
@@ -214,21 +209,18 @@ public class ColorPickerSelect extends CustomComponent
         grid.removeColorChangeListener(listener);
     }
 
-    @Override
-    public void valueChange(ValueChangeEvent event) {
+    public void valueChange(ValueChange<ColorRangePropertyId> event) {
         if (grid == null) {
             return;
         }
 
-        if (event.getProperty().getValue() == ColorRangePropertyId.ALL) {
+        if (event.getValue() == ColorRangePropertyId.ALL) {
             grid.setColorGrid(createAllColors(14, 10));
-        } else if (event.getProperty().getValue() == ColorRangePropertyId.RED) {
+        } else if (event.getValue() == ColorRangePropertyId.RED) {
             grid.setColorGrid(createColors(new Color(0xFF, 0, 0), 14, 10));
-        } else if (event.getProperty()
-                .getValue() == ColorRangePropertyId.GREEN) {
+        } else if (event.getValue() == ColorRangePropertyId.GREEN) {
             grid.setColorGrid(createColors(new Color(0, 0xFF, 0), 14, 10));
-        } else if (event.getProperty()
-                .getValue() == ColorRangePropertyId.BLUE) {
+        } else if (event.getValue() == ColorRangePropertyId.BLUE) {
             grid.setColorGrid(createColors(new Color(0, 0, 0xFF), 14, 10));
         }
     }

@@ -13,24 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.ui.components.colorpicker;
+package com.vaadin.ui.components.colorpicker;
 
 import java.io.Serializable;
 
-public interface HasColorChangeListener extends Serializable {
+import com.vaadin.shared.ui.colorpicker.Color;
+
+/**
+ * An interface for a color selector.
+ *
+ * @since 7.0.0
+ */
+public interface ColorSelector extends Serializable, HasColorChangeListener {
 
     /**
-     * Adds a {@link ColorChangeListener} to the component.
+     * Sets the color.
      *
-     * @param listener
+     * @param color
+     *            the new color
      */
-    void addColorChangeListener(ColorChangeListener listener);
+    public void setColor(Color color);
 
     /**
-     * Removes a {@link ColorChangeListener} from the component.
+     * Gets the color.
      *
-     * @param listener
+     * @return the color
      */
-    void removeColorChangeListener(ColorChangeListener listener);
-
+    public Color getColor();
 }

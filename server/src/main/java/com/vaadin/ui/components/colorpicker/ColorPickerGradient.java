@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.ui.components.colorpicker;
+package com.vaadin.ui.components.colorpicker;
 
 import java.lang.reflect.Method;
 
@@ -21,7 +21,7 @@ import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGradientServerRpc;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGradientState;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.v7.ui.AbstractColorPicker.Coordinates2Color;
+import com.vaadin.ui.AbstractColorPicker.Coordinates2Color;
 
 /**
  * A component that represents a color gradient within a color picker.

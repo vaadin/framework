@@ -21,6 +21,8 @@ import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ColorPicker;
+import com.vaadin.ui.ColorPickerArea;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.GridLayout;
@@ -30,8 +32,6 @@ import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.ui.ColorPicker;
-import com.vaadin.v7.ui.ColorPickerArea;
 import com.vaadin.v7.ui.TextField;
 
 /**

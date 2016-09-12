@@ -13,24 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.ui.components.colorpicker;
+package com.vaadin.ui.components.colorpicker;
 
 import java.lang.reflect.Method;
 
+import com.vaadin.data.HasValue.ValueChange;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
-import com.vaadin.v7.ui.TextField;
+import com.vaadin.ui.TextField;
 
 /**
  * A component that represents color selection preview within a color picker.
  *
  * @since 7.0.0
  */
-public class ColorPickerPreview extends CssLayout
-        implements ColorSelector, ValueChangeListener {
+public class ColorPickerPreview extends CssLayout implements ColorSelector {
 
     private static final String STYLE_DARK_COLOR = "v-textfield-dark";
     private static final String STYLE_LIGHT_COLOR = "v-textfield-light";
@@ -55,6 +54,7 @@ public class ColorPickerPreview extends CssLayout
 
     /** The old value. */
     private String oldValue;
+    private Registration valueChangeListenerRegistration = null;
 
     private ColorPickerPreview() {
         setStyleName("v-colorpicker-preview");
@@ -64,7 +64,8 @@ public class ColorPickerPreview extends CssLayout
         field.setSizeFull();
         field.setStyleName("v-colorpicker-preview-textfield");
         field.setData(this);
-        field.addValueChangeListener(this);
+        valueChangeListenerRegistration = field
+                .addValueChangeListener(this::valueChange);
         addComponent(field);
     }
 
@@ -81,19 +82,16 @@ public class ColorPickerPreview extends CssLayout
         this.color = color;
 
         // Unregister listener
-        field.removeValueChangeListener(this);
+        valueChangeListenerRegistration.remove();
 
         String colorCSS = color.getCSS();
         field.setValue(colorCSS);
 
-        if (field.isValid()) {
-            oldValue = colorCSS;
-        } else {
-            field.setValue(oldValue);
-        }
+        oldValue = colorCSS;
 
         // Re-register listener
-        field.addValueChangeListener(this);
+        valueChangeListenerRegistration = field
+                .addValueChangeListener(this::valueChange);
 
         // Set the text color
         field.removeStyleName(STYLE_DARK_COLOR);
@@ -123,9 +121,8 @@ public class ColorPickerPreview extends CssLayout
         removeListener(ColorChangeEvent.class, listener);
     }
 
-    @Override
-    public void valueChange(ValueChangeEvent event) {
-        String value = (String) event.getProperty().getValue();
+    public void valueChange(ValueChange<String> event) {
+        String value = event.getValue();
         try {
             if (value != null) {
                 /*

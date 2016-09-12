@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.ui;
+package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -25,16 +25,14 @@ import org.jsoup.nodes.Element;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.shared.ui.colorpicker.ColorPickerServerRpc;
 import com.vaadin.shared.ui.colorpicker.ColorPickerState;
-import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
+import com.vaadin.ui.components.colorpicker.ColorChangeEvent;
+import com.vaadin.ui.components.colorpicker.ColorChangeListener;
+import com.vaadin.ui.components.colorpicker.ColorPickerPopup;
+import com.vaadin.ui.components.colorpicker.ColorSelector;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
-import com.vaadin.v7.ui.components.colorpicker.ColorChangeEvent;
-import com.vaadin.v7.ui.components.colorpicker.ColorChangeListener;
-import com.vaadin.v7.ui.components.colorpicker.ColorPickerPopup;
-import com.vaadin.v7.ui.components.colorpicker.ColorSelector;
 
 /**
  * An abstract class that defines default implementation for a color picker
