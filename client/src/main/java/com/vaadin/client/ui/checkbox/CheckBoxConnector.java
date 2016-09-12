@@ -36,6 +36,12 @@ import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.shared.ui.checkbox.CheckBoxState;
 import com.vaadin.ui.CheckBox;
 
+/**
+ * The client-side connector for the {@code CheckBoxGroup} component.
+ *
+ * @author Vaadin Ltd.
+ * @since 8.0
+ */
 @Connect(CheckBox.class)
 public class CheckBoxConnector extends AbstractFieldConnector
         implements ClickHandler {
