@@ -29,7 +29,7 @@ public class GridSortingTest extends GridBasicsTest {
 
     @Test
     public void testSortBySingleColumnByUser() {
-        getGridElement().getHeaderCell(0, 3).click();
+        getGridElement().getHeaderCell(0, 6).click();
         int i = 0;
         for (Integer rowNumber : getTestData().sorted(BIG_RANDOM)
                 .map(DataObject::getRowNumber).limit(5)
@@ -37,14 +37,14 @@ public class GridSortingTest extends GridBasicsTest {
             Assert.assertEquals(
                     "Grid was not sorted as expected, row number mismatch",
                     rowNumber.toString(),
-                    getGridElement().getCell(i++, 0).getText());
+                    getGridElement().getCell(i++, 3).getText());
         }
     }
 
     @Test
     public void testSortByMultipleColumnsByUser() {
-        getGridElement().getHeaderCell(0, 4).click();
-        getGridElement().getHeaderCell(0, 3).click(15, 15, Keys.SHIFT);
+        getGridElement().getHeaderCell(0, 7).click();
+        getGridElement().getHeaderCell(0, 6).click(15, 15, Keys.SHIFT);
 
         int i = 0;
         for (Integer rowNumber : getTestData()
@@ -54,7 +54,7 @@ public class GridSortingTest extends GridBasicsTest {
             Assert.assertEquals(
                     "Grid was not sorted as expected, row number mismatch",
                     rowNumber.toString(),
-                    getGridElement().getCell(i++, 0).getText());
+                    getGridElement().getCell(i++, 3).getText());
         }
     }
 }
