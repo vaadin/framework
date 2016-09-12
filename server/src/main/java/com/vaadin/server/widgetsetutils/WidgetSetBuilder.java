@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.Reader;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
@@ -44,7 +45,8 @@ import java.util.regex.Pattern;
  */
 public class WidgetSetBuilder {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)
+            throws IOException, URISyntaxException {
         if (args.length == 0) {
             printUsage();
         } else {
@@ -55,7 +57,7 @@ public class WidgetSetBuilder {
     }
 
     public static void updateWidgetSet(final String widgetset)
-            throws IOException, FileNotFoundException {
+            throws IOException, FileNotFoundException, URISyntaxException {
         boolean changed = false;
 
         Map<String, URL> availableWidgetSets = ClassPathExplorer
@@ -69,9 +71,8 @@ public class WidgetSetBuilder {
                     .getWidgetsetSourceDirectory(widgetsetFileName);
         }
 
-        String wsFullPath = sourceUrl.getFile() + "/" + widgetsetFileName;
-
-        File widgetsetFile = new File(wsFullPath);
+        File widgetsetFile = new File(new File(sourceUrl.toURI()),
+                widgetsetFileName);
         if (!widgetsetFile.exists()) {
             // create empty gwt module file
             File parent = widgetsetFile.getParentFile();
@@ -138,7 +139,7 @@ public class WidgetSetBuilder {
 
             changed = changed || !content.equals(originalContent);
             if (changed) {
-                commitChanges(wsFullPath, content);
+                commitChanges(widgetsetFile, content);
             }
         } else {
             System.out
@@ -154,10 +155,10 @@ public class WidgetSetBuilder {
         return content.replaceFirst("<inherits name=\"" + ws + "\"[^/]*/>", "");
     }
 
-    private static void commitChanges(String widgetsetfilename, String content)
+    private static void commitChanges(File widgetsetFile, String content)
             throws IOException {
         BufferedWriter bufferedWriter = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(widgetsetfilename)));
+                new OutputStreamWriter(new FileOutputStream(widgetsetFile)));
         bufferedWriter.write(content);
         bufferedWriter.close();
     }
