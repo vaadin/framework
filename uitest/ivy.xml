@@ -122,7 +122,7 @@
         <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"
             conf="build -> default" />
         <dependency org="com.vaadin" name="vaadin-testbench"
-            rev="4.0.3" conf="build-provided -> default" />
+            rev="4.1.0" conf="build-provided -> default" />
         <!-- This should be removed once tests have been updated to use lang3 -->
         <dependency org="commons-lang" name="commons-lang"
             rev="2.6" conf="build -> default" />

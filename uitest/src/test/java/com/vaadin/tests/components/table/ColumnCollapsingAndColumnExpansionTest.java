@@ -24,8 +24,8 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.customelements.TableElement;
-import com.vaadin.testbench.customelements.TableElement.ContextMenuElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement.ContextMenuElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ColumnCollapsingAndColumnExpansionTest extends MultiBrowserTest {

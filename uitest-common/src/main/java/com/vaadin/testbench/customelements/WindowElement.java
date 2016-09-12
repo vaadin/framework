@@ -16,6 +16,7 @@ public class WindowElement extends com.vaadin.testbench.elements.WindowElement {
     private final String maximizeBoxClass = "v-window-maximizebox";
     private final String closeBoxClass = "v-window-closebox";
 
+    @Override
     public void restore() {
         if (isMaximized()) {
             getRestoreButton().click();
@@ -25,14 +26,11 @@ public class WindowElement extends com.vaadin.testbench.elements.WindowElement {
         }
     }
 
-    private boolean isMaximized() {
-        return isElementPresent(By.className(restoreBoxClass));
-    }
-
     private WebElement getRestoreButton() {
         return findElement(By.className("v-window-restorebox"));
     }
 
+    @Override
     public void maximize() {
         if (!isMaximized()) {
             getMaximizeButton().click();
@@ -69,6 +67,7 @@ public class WindowElement extends com.vaadin.testbench.elements.WindowElement {
         return findElement(By.className(closeBoxClass));
     }
 
+    @Override
     public void close() {
         getCloseButton().click();
 

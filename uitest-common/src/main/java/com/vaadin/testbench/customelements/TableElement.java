@@ -3,7 +3,6 @@ package com.vaadin.testbench.customelements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.elementsbase.AbstractElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.Table")
@@ -20,21 +19,6 @@ public class TableElement extends com.vaadin.testbench.elements.TableElement {
 
     public WebElement getCollapseMenuToggle() {
         return findElement(By.className("v-table-column-selector"));
-    }
-
-    public static class ContextMenuElement extends AbstractElement {
-
-        public WebElement getItem(int index) {
-            return findElement(
-                    By.xpath(".//table//tr[" + (index + 1) + "]//td/*"));
-        }
-
-    }
-
-    public ContextMenuElement getContextMenu() {
-        WebElement cm = getDriver().findElement(By.className("v-contextmenu"));
-        return wrapElement(cm, getCommandExecutor())
-                .wrap(ContextMenuElement.class);
     }
 
 }

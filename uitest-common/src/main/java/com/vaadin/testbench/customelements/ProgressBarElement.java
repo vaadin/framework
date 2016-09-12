@@ -24,6 +24,7 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 public class ProgressBarElement
         extends com.vaadin.testbench.elements.ProgressBarElement {
 
+    @Override
     public double getValue() {
         WebElement indicator = findElement(
                 By.className("v-progressbar-indicator"));
@@ -33,24 +34,6 @@ public class ProgressBarElement
         }
 
         return Double.parseDouble(width.replace("%", "")) / 100.0;
-    }
-
-    /**
-     * @since 7.5.6
-     * @param indicator
-     * @param string
-     * @return
-     */
-    private String getStyleAttribute(WebElement element, String styleName) {
-        String style = element.getAttribute("style");
-        String[] styles = style.split(";");
-        for (String s : styles) {
-            if (s.startsWith(styleName + ":")) {
-                return s.substring(styleName.length() + 1).trim();
-            }
-        }
-
-        return null;
     }
 
 }
