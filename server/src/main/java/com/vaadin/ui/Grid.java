@@ -35,6 +35,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.vaadin.event.ConnectorEvent;
+import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.EventListener;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.data.SortOrder;
@@ -155,6 +156,90 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
          */
         @Override
         public void accept(ItemClick<T> event);
+    }
+
+    /**
+     * ContextClickEvent for the Grid Component.
+     *
+     * @param <T>
+     *            the grid bean type
+     */
+    public static class GridContextClickEvent<T> extends ContextClickEvent {
+
+        private final T item;
+        private final int rowIndex;
+        private final Column<?, ?> column;
+        private final Section section;
+
+        /**
+         * Creates a new context click event.
+         *
+         * @param source
+         *            the grid where the context click occurred
+         * @param mouseEventDetails
+         *            details about mouse position
+         * @param section
+         *            the section of the grid which was clicked
+         * @param rowIndex
+         *            the index of the row which was clicked
+         * @param item
+         *            the item which was clicked
+         * @param column
+         *            the column which was clicked
+         */
+        public GridContextClickEvent(Grid<T> source,
+                MouseEventDetails mouseEventDetails, Section section,
+                int rowIndex, T item, Column<?, ?> column) {
+            super(source, mouseEventDetails);
+            this.item = item;
+            this.section = section;
+            this.column = column;
+            this.rowIndex = rowIndex;
+        }
+
+        /**
+         * Returns the item of context clicked row.
+         *
+         * @return item of clicked row; <code>null</code> if header or footer
+         */
+        public T getItem() {
+            return item;
+        }
+
+        /**
+         * Returns the clicked column.
+         *
+         * @return the clicked column
+         */
+        public Column<?, ?> getColumn() {
+            return column;
+        }
+
+        /**
+         * Return the clicked section of Grid.
+         *
+         * @return section of grid
+         */
+        public Section getSection() {
+            return section;
+        }
+
+        /**
+         * Returns the clicked row index.
+         * <p>
+         * Header and Footer rows for index can be fetched with
+         * {@link Grid#getHeaderRow(int)} and {@link Grid#getFooterRow(int)}.
+         *
+         * @return row index in section
+         */
+        public int getRowIndex() {
+            return rowIndex;
+        }
+
+        @Override
+        public Grid<T> getComponent() {
+            return (Grid<T>) super.getComponent();
+        }
     }
 
     /**
@@ -281,7 +366,12 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         @Override
         public void contextClick(int rowIndex, String rowKey, String columnId,
                 Section section, MouseEventDetails details) {
-            // TODO Auto-generated method stub
+            T item = null;
+            if (rowKey != null) {
+                item = getDataCommunicator().getKeyMapper().get(rowKey);
+            }
+            fireEvent(new GridContextClickEvent<T>(Grid.this, details, section,
+                    rowIndex, item, getColumn(columnId)));
         }
 
         @Override

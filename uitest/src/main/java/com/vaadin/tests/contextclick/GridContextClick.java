@@ -15,27 +15,44 @@
  */
 package com.vaadin.tests.contextclick;
 
+import java.util.Collections;
+
+import com.vaadin.shared.ui.grid.GridConstants.Section;
+import com.vaadin.tests.util.Person;
 import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.GridContextClickEvent;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.v7.data.Item;
-import com.vaadin.v7.shared.ui.grid.GridConstants.Section;
-import com.vaadin.v7.ui.Grid;
-import com.vaadin.v7.ui.Grid.GridContextClickEvent;
 
-public class GridContextClick
-        extends AbstractContextClickUI<Grid, GridContextClickEvent> {
+public class GridContextClick extends
+        AbstractContextClickUI<Grid<Person>, GridContextClickEvent<Person>> {
 
     @Override
-    protected Grid createTestComponent() {
-        Grid grid = new Grid(PersonContainer.createWithTestData());
-        grid.setFooterVisible(true);
-        grid.appendFooterRow();
+    protected Grid<Person> createTestComponent() {
+        Grid<Person> grid = new Grid<>();
+        grid.setItems(PersonContainer.createTestData());
+        grid.addColumn("Address",
+                person -> String.valueOf(person.getAddress()));
+        grid.addColumn("Email", person -> String.valueOf(person.getEmail()));
+        grid.addColumn("First Name",
+                person -> String.valueOf(person.getFirstName()));
+        grid.addColumn("Last Name",
+                person -> String.valueOf(person.getLastName()));
+        grid.addColumn("Phone Number",
+                person -> String.valueOf(person.getPhoneNumber()));
+        grid.addColumn("Street Address", person -> String
+                .valueOf(person.getAddress().getStreetAddress()));
+        grid.addColumn("City",
+                person -> String.valueOf(person.getAddress().getCity()));
 
-        grid.setColumnOrder("address", "email", "firstName", "lastName",
-                "phoneNumber", "address.streetAddress", "address.postalCode",
-                "address.city");
+        // grid.setFooterVisible(true);
+        // grid.appendFooterRow();
+
+        // grid.setColumnOrder("address", "email", "firstName", "lastName",
+        // "phoneNumber", "address.streetAddress", "address.postalCode",
+        // "address.city");
 
         grid.setWidth("100%");
         grid.setHeight("400px");
@@ -44,23 +61,27 @@ public class GridContextClick
     }
 
     @Override
-    protected void handleContextClickEvent(GridContextClickEvent event) {
+    protected void handleContextClickEvent(
+            GridContextClickEvent<Person> event) {
         String value = "";
-        Object propertyId = event.getPropertyId();
-        if (event.getItemId() != null) {
-            Item item = event.getComponent().getContainerDataSource()
-                    .getItem(event.getItemId());
-            value += item.getItemProperty("firstName").getValue();
-            value += " " + item.getItemProperty("lastName").getValue();
+        Person person = event.getItem();
+        if (event.getItem() != null) {
+            value = person.getFirstName() + " " + person.getLastName();
         } else if (event.getSection() == Section.HEADER) {
-            value = event.getComponent().getHeaderRow(event.getRowIndex())
-                    .getCell(propertyId).getText();
+            value = event.getColumn().getCaption();
         } else if (event.getSection() == Section.FOOTER) {
-            value = event.getComponent().getFooterRow(event.getRowIndex())
-                    .getCell(propertyId).getText();
+            value = event.getColumn().getCaption();
         }
-        log("ContextClickEvent value: " + value + ", propertyId: " + propertyId
-                + ", section: " + event.getSection());
+
+        if (event.getColumn() != null) {
+            log("ContextClickEvent value: " + value + ", column: "
+                    + event.getColumn().getCaption() + ", section: "
+                    + event.getSection());
+        } else {
+            log("ContextClickEvent value: " + value + ", section: "
+                    + event.getSection());
+
+        }
     }
 
     @Override
@@ -71,7 +92,7 @@ public class GridContextClick
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        testComponent.getContainerDataSource().removeAllItems();
+                        testComponent.setItems(Collections.emptyList());
                     }
                 }));
         return controls;

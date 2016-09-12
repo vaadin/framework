@@ -17,6 +17,7 @@ package com.vaadin.tests.contextclick;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -32,13 +33,13 @@ public class GridContextClickTest extends AbstractContextClickTest {
         contextClick($(GridElement.class).first().getCell(0, 0));
 
         assertEquals(
-                "1. ContextClickEvent value: Lisa Schneider, propertyId: address, section: BODY",
+                "1. ContextClickEvent value: Lisa Schneider, column: Address, section: BODY",
                 getLogRow(0));
 
         contextClick($(GridElement.class).first().getCell(0, 3));
 
         assertEquals(
-                "2. ContextClickEvent value: Lisa Schneider, propertyId: lastName, section: BODY",
+                "2. ContextClickEvent value: Lisa Schneider, column: Last Name, section: BODY",
                 getLogRow(0));
     }
 
@@ -49,30 +50,31 @@ public class GridContextClickTest extends AbstractContextClickTest {
         contextClick($(GridElement.class).first().getHeaderCell(0, 0));
 
         assertEquals(
-                "1. ContextClickEvent value: Address, propertyId: address, section: HEADER",
+                "1. ContextClickEvent value: Address, column: Address, section: HEADER",
                 getLogRow(0));
 
         contextClick($(GridElement.class).first().getHeaderCell(0, 3));
 
         assertEquals(
-                "2. ContextClickEvent value: Last Name, propertyId: lastName, section: HEADER",
+                "2. ContextClickEvent value: Last Name, column: Last Name, section: HEADER",
                 getLogRow(0));
     }
 
     @Test
+    @Ignore("Footer is not currently implemented in grid")
     public void testFooterContextClickWithTypedListener() {
         addOrRemoveTypedListener();
 
         contextClick($(GridElement.class).first().getFooterCell(0, 0));
 
         assertEquals(
-                "1. ContextClickEvent value: , propertyId: address, section: FOOTER",
+                "1. ContextClickEvent value: , column: Address, section: FOOTER",
                 getLogRow(0));
 
         contextClick($(GridElement.class).first().getFooterCell(0, 3));
 
         assertEquals(
-                "2. ContextClickEvent value: , propertyId: lastName, section: FOOTER",
+                "2. ContextClickEvent value: , column: Last Name, section: FOOTER",
                 getLogRow(0));
     }
 
@@ -84,8 +86,7 @@ public class GridContextClickTest extends AbstractContextClickTest {
 
         contextClick($(GridElement.class).first(), 100, 100);
 
-        assertEquals(
-                "1. ContextClickEvent value: , propertyId: null, section: BODY",
+        assertEquals("1. ContextClickEvent value: , section: BODY",
                 getLogRow(0));
 
     }

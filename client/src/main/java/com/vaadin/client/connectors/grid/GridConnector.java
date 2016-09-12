@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.ComponentConnector;
@@ -32,10 +33,12 @@ import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.TooltipInfo;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.widget.grid.CellReference;
+import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
 import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.GridClickEvent;
@@ -46,12 +49,14 @@ import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.GridConstants;
+import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 
@@ -269,7 +274,6 @@ public class GridConnector
                 sortDirections.toArray(new SortDirection[0]),
                 event.isUserOriginated());
     }
-
     /* HasComponentsConnector */
 
     @Override
@@ -349,5 +353,25 @@ public class GridConnector
         } else {
             return null;
         }
+    }
+
+    @Override
+    protected void sendContextClickEvent(MouseEventDetails details,
+            EventTarget eventTarget) {
+
+        EventCellReference<JsonObject> eventCell = getWidget().getEventCell();
+
+        Section section = eventCell.getSection();
+        String rowKey = null;
+        if (eventCell.isBody() && eventCell.getRow() != null) {
+            rowKey = getRowKey(eventCell.getRow());
+        }
+
+        String columnId = getColumnId(eventCell.getColumn());
+
+        getRpcProxy(GridServerRpc.class).contextClick(eventCell.getRowIndex(),
+                rowKey, columnId, section, details);
+
+        WidgetUtil.clearTextSelection();
     }
 }
