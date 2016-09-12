@@ -24,8 +24,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.tests.tb3.ParameterizedTB3Runner;
-import com.vaadin.v7.testbench.customelements.TableElement;
 
 /**
  * Base class for servlet integration tests. Automatically prepends "/demo" to

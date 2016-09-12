@@ -19,7 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.v7.testbench.customelements.GridElement;
+import com.vaadin.testbench.customelements.GridElement;
 
 public class NullHeadersTest extends SingleBrowserTest {
 

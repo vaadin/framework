@@ -28,11 +28,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.GridElement;
-import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeatures;
 
 @TestCategory("grid")
 public abstract class GridBasicFeaturesTest extends MultiBrowserTest {

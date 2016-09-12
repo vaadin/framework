@@ -1,4 +1,4 @@
-package com.vaadin.v7.testbench.customelements;
+package com.vaadin.testbench.customelements;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.elementsbase.AbstractElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
-@ServerClass("com.vaadin.v7.ui.Table")
+@ServerClass("com.vaadin.ui.Table")
 public class TableElement extends com.vaadin.testbench.elements.TableElement {
     public CollapseMenu openCollapseMenu() {
         getCollapseMenuToggle().click();

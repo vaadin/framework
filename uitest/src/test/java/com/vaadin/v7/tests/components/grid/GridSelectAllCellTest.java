@@ -11,7 +11,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.GridElement;
+import com.vaadin.testbench.customelements.GridElement;
 
 public class GridSelectAllCellTest extends MultiBrowserTest {
 

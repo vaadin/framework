@@ -21,15 +21,15 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.customelements.DateFieldElement;
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
+import com.vaadin.testbench.elements.NativeSelectElement;
+import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserThemeTest;
-import com.vaadin.v7.testbench.customelements.DateFieldElement;
-import com.vaadin.v7.testbench.customelements.GridElement;
-import com.vaadin.v7.testbench.customelements.NativeSelectElement;
-import com.vaadin.v7.testbench.customelements.TextFieldElement;
 
 @TestCategory("grid")
 public class GridThemeUITest extends MultiBrowserThemeTest {

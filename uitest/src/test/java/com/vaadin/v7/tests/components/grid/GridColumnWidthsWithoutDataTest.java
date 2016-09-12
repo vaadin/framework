@@ -20,13 +20,13 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
+import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.v7.testbench.customelements.GridElement;
-import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 
 @TestCategory("grid")
 public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {

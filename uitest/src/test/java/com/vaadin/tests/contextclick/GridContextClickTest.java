@@ -20,8 +20,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.v7.testbench.customelements.GridElement;
 
 public class GridContextClickTest extends AbstractContextClickTest {
 

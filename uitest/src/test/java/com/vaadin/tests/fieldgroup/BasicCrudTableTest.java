@@ -21,10 +21,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.AbstractHasTestBenchCommandExecutor;
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.AbstractComponentElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.v7.testbench.customelements.TableElement;
 
 public class BasicCrudTableTest extends SingleBrowserTest {
 

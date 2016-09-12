@@ -21,8 +21,8 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.elements.TreeTableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.TreeTableElement;
 
 /**
  * Tests that expanded cells with component contents aren't empty.

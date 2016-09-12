@@ -22,7 +22,7 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.v7.testbench.customelements.GridElement;
+import com.vaadin.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class ProgrammaticEditorControlTest extends SingleBrowserTest {

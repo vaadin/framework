@@ -21,8 +21,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.ListSelectElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.v7.testbench.customelements.ListSelectElement;
 
 public class ListSelectAddRemoveItemsTest extends SingleBrowserTest {
     @Test

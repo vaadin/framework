@@ -1,4 +1,4 @@
-package com.vaadin.v7.testbench.customelements;
+package com.vaadin.testbench.customelements;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
-@ServerClass("com.vaadin.v7.ui.Calendar")
+@ServerClass("com.vaadin.ui.Calendar")
 public class CalendarElement
         extends com.vaadin.testbench.elements.CalendarElement {
     public List<WebElement> getWeekNumbers() {

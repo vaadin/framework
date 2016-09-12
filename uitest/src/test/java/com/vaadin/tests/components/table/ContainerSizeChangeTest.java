@@ -10,9 +10,9 @@ import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.TableElement;
 
 public class ContainerSizeChangeTest extends MultiBrowserTest {
 

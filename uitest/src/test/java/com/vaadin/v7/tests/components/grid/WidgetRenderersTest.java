@@ -31,7 +31,7 @@ import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.GridElement;
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.v7.tests.components.grid.WidgetRenderers;
 
 /**

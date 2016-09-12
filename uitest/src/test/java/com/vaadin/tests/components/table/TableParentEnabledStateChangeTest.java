@@ -18,10 +18,10 @@ package com.vaadin.tests.components.table;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TableRowElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.v7.testbench.customelements.TableElement;
 
 public class TableParentEnabledStateChangeTest extends SingleBrowserTest {
 

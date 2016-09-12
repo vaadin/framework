@@ -11,9 +11,9 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.testbench.elements.VerticalLayoutElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.TextFieldElement;
 
 public class ValidationOfRequiredEmptyFieldsTest extends MultiBrowserTest {
 

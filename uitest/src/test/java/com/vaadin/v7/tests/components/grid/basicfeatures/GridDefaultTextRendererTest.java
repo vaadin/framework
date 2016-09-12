@@ -23,10 +23,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.GridElement;
 import com.vaadin.v7.tests.components.grid.GridCellFocusOnResetSizeTest.MyGridElement;
 
 @TestCategory("grid")

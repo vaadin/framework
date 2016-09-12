@@ -18,9 +18,9 @@ package com.vaadin.v7.tests.components.grid;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.testbench.elements.OptionGroupElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.v7.testbench.customelements.GridElement;
-import com.vaadin.v7.testbench.customelements.OptionGroupElement;
 
 public class SortableHeaderStylesTest extends SingleBrowserTest {
     @Test

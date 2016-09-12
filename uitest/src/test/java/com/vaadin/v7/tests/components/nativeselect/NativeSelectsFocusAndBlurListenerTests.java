@@ -20,10 +20,10 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.components.nativeselect.NativeSelects;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 
 public class NativeSelectsFocusAndBlurListenerTests extends MultiBrowserTest {
 

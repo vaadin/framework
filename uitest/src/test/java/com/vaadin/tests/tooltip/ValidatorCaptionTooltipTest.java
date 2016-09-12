@@ -17,8 +17,8 @@ package com.vaadin.tests.tooltip;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.TooltipTest;
-import com.vaadin.v7.testbench.customelements.TextFieldElement;
 
 /**
  * Test to see if validators create error tooltips correctly.

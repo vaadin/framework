@@ -5,11 +5,11 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.DateFieldElement;
+import com.vaadin.testbench.elements.InlineDateFieldElement;
+import com.vaadin.testbench.elements.PopupDateFieldElement;
+import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.DateFieldElement;
-import com.vaadin.v7.testbench.customelements.InlineDateFieldElement;
-import com.vaadin.v7.testbench.customelements.PopupDateFieldElement;
-import com.vaadin.v7.testbench.customelements.TextFieldElement;
 
 public class DateFormTest extends MultiBrowserTest {
 

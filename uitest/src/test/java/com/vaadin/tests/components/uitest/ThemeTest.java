@@ -8,15 +8,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.ComboBoxElement;
 import com.vaadin.testbench.customelements.DateFieldElement;
 import com.vaadin.testbench.customelements.FixedNotificationElement;
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.testbench.customelements.WindowElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TabSheetElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.ComboBoxElement;
-import com.vaadin.v7.testbench.customelements.TableElement;
 
 public abstract class ThemeTest extends MultiBrowserTest {
 

@@ -25,13 +25,13 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.customelements.DateFieldElement;
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.DateFieldElement;
-import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class BasicCrudGridEditorRowTest extends MultiBrowserTest {

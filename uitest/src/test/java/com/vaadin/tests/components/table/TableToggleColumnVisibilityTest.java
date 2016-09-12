@@ -19,10 +19,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TableHeaderElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.TableElement;
 
 /**
  * Tests that column keeps its header, icon, alignment after toggling visibility

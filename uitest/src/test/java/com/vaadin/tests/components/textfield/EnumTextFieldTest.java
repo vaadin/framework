@@ -19,8 +19,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
+import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.v7.testbench.customelements.TextFieldElement;
 
 public class EnumTextFieldTest extends SingleBrowserTest {
     @Test

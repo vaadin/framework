@@ -3,8 +3,8 @@ package com.vaadin.tests.components.ui;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.TextFieldElement;
 
 public class UIPollingTest extends MultiBrowserTest {
 

@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.v7.testbench.customelements.GridElement;
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 public class GridScrollTest extends GridBasicFeaturesTest {

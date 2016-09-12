@@ -21,8 +21,7 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.v7.testbench.customelements.GridElement;
-import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicClientFeatures;
+import com.vaadin.testbench.customelements.GridElement;
 
 /**
  * GridBasicClientFeatures.

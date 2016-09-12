@@ -4,8 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.customelements.CalendarElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.CalendarElement;
 
 public class CalendarDisabledTest extends MultiBrowserTest {
 

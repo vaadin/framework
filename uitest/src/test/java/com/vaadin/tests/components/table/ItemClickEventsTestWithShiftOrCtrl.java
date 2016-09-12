@@ -26,11 +26,11 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.TableElement;
 
 public class ItemClickEventsTestWithShiftOrCtrl extends MultiBrowserTest {
 

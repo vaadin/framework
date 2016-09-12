@@ -22,10 +22,10 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.TableElement;
 
 /**
  * Tests Table Footer ClickListener

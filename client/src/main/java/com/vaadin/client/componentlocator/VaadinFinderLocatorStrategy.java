@@ -609,12 +609,11 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
         List<String> ids = getIDsForConnector(connector);
 
-        Integer[] widgetTags = client.getConfiguration()
-                .getTagsForServerSideClassName(getFullClassName(widgetName));
-        if (widgetTags.length == 0) {
-            widgetTags = client.getConfiguration()
-                    .getTagsForServerSideClassName(
-                            getFullClassName("com.vaadin.ui." + widgetName));
+        List<Integer> widgetTags = new ArrayList<>();
+        widgetTags.addAll(getTags(widgetName));
+
+        if (widgetTags.size() == 0) {
+            widgetTags.addAll(getTags("com.vaadin.ui" + widgetName));
         }
 
         for (int i = 0, l = ids.size(); i < l; ++i) {
@@ -627,7 +626,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             final String simpleName = getSimpleClassName(name);
             final String fullName = getFullClassName(name);
 
-            if (widgetTags.length > 0) {
+            if (widgetTags.size() > 0) {
                 Integer[] foundTags = client.getConfiguration()
                         .getTagsForServerSideClassName(fullName);
                 for (int tag : foundTags) {
@@ -653,6 +652,28 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         return widgetName.equals(widget)
                 || widgetName.equals(widget + ".class");
 
+    }
+
+    /**
+     * Gets the tags for server side class name. Also includes tags for older
+     * components in v7 package.
+     *
+     * @param widgetName
+     *            the server side class name for widget
+     * @return list of tags
+     */
+    private List<Integer> getTags(String widgetName) {
+        List<Integer> widgetTags = new ArrayList<>();
+        Arrays.stream(client.getConfiguration()
+                .getTagsForServerSideClassName(getFullClassName(widgetName)))
+                .forEach(widgetTags::add);
+        if (widgetName.startsWith("com.vaadin.ui")) {
+            Arrays.stream(client.getConfiguration()
+                    .getTagsForServerSideClassName(getFullClassName(widgetName
+                            .replace("com.vaadin.ui", "com.vaadin.v7.ui"))))
+                    .forEach(widgetTags::add);
+        }
+        return widgetTags;
     }
 
     /**
@@ -738,9 +759,9 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         return list;
     }
 
-    private boolean tagsMatch(Integer[] targets, Integer tag) {
-        for (int i = 0; i < targets.length; ++i) {
-            if (targets[i].equals(tag)) {
+    private boolean tagsMatch(List<Integer> targets, Integer tag) {
+        for (int i = 0; i < targets.size(); ++i) {
+            if (targets.get(i).equals(tag)) {
                 return true;
             }
         }

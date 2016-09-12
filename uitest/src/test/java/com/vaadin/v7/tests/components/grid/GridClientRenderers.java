@@ -28,16 +28,16 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NativeButtonElement;
+import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.widgetset.client.v7.grid.GridClientColumnRendererConnector.Renderers;
 import com.vaadin.tests.widgetset.server.v7.grid.GridClientColumnRenderers;
-import com.vaadin.v7.testbench.customelements.GridElement;
-import com.vaadin.v7.testbench.customelements.NativeSelectElement;
 
 /**
  * Tests Grid client side renderers

@@ -25,7 +25,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.GridElement;
+import com.vaadin.testbench.customelements.GridElement;
 
 public class GridInWindowResizeTest extends MultiBrowserTest {
     @Override

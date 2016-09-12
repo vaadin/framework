@@ -2,9 +2,9 @@ package com.vaadin.v7.tests.components.grid.basicfeatures;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.GridElement;
 
 @SuppressWarnings("all")
 @TestCategory("grid")

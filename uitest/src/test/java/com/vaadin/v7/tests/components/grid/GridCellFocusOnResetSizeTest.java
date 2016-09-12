@@ -22,10 +22,10 @@ import java.io.IOException;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridCellFocusOnResetSizeTest extends MultiBrowserTest {

@@ -19,14 +19,14 @@ import org.junit.Assert;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.customelements.FixedNotificationElement;
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.TableRowElement;
+import com.vaadin.testbench.elements.TextAreaElement;
+import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.customelements.TableElement;
-import com.vaadin.v7.testbench.customelements.TextAreaElement;
-import com.vaadin.v7.testbench.customelements.TextFieldElement;
 
 public abstract class BasicPersonFormTest extends MultiBrowserTest {
 

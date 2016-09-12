@@ -18,9 +18,9 @@ package com.vaadin.tests.components.table;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 import com.vaadin.v7.shared.ui.table.CollapseMenuContent;
-import com.vaadin.v7.testbench.customelements.TableElement;
 
 public class OnlyCollapsibleInMenu extends SingleBrowserTest {
 
