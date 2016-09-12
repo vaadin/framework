@@ -19,22 +19,25 @@ import java.io.Serializable;
 import java.util.function.Consumer;
 
 import com.vaadin.data.Binder.Binding;
+import com.vaadin.ui.AbstractComponent;
 
 /**
- * Validation status change handler.
+ * Handler for {@link ValidationStatus} changes.
  * <p>
- * Register an instance of this class using
- * {@link Binding#withStatusChangeHandler(StatusChangeHandler) to be able to
- * listen to validation status updates.
- *
- * @see Binding#withStatusChangeHandler(StatusChangeHandler)
- * @see ValidationStatusChangeEvent
+ * {@link Binding#withStatusHandler(StatusChangeHandler) Register} an instance
+ * of this class to be able to override the default handling, which is to show
+ * {@link AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage) an
+ * error message} for failed field validations.
  *
  * @author Vaadin Ltd
+ *
+ * @see Binding#withStatusHandler(StatusChangeHandler)
+ * @see ValidationStatus
+ *
  * @since 8.0
  *
  */
-public interface StatusChangeHandler
-        extends Consumer<ValidationStatusChangeEvent>, Serializable {
+public interface ValidationStatusHandler
+        extends Consumer<ValidationStatus<?>>, Serializable {
 
 }

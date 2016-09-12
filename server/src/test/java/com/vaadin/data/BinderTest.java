@@ -5,17 +5,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Binder.Binding;
+import com.vaadin.data.ValidationStatus.Status;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.validator.NotEmptyValidator;
 import com.vaadin.server.AbstractErrorMessage;
@@ -26,6 +24,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 
 public class BinderTest {
+
+    private static final String EMPTY_ERROR_MESSAGE = "Value cannot be empty";
 
     private static class StatusBean {
         private String status;
@@ -48,7 +48,7 @@ public class BinderTest {
     Person p = new Person();
 
     Validator<String> notEmpty = Validator.from(val -> !val.isEmpty(),
-            "Value cannot be empty");
+            EMPTY_ERROR_MESSAGE);
     Converter<String, Integer> stringToInteger = Converter.from(
             Integer::valueOf, String::valueOf, e -> "Value must be a number");
     Validator<Integer> notNegative = Validator.from(x -> x >= 0,
@@ -327,18 +327,17 @@ public class BinderTest {
             binder.save(person);
             Assert.fail();
         } catch (ValidationException exception) {
-            List<ValidationError<?>> validationErrors = exception
-                    .getValidationError();
+            List<ValidationStatus<?>> validationErrors = exception
+                    .getFieldValidationErrors();
             Assert.assertEquals(2, validationErrors.size());
-            ValidationError<?> error = validationErrors.get(0);
-            Assert.assertEquals(nameField, error.getField().get());
-            Assert.assertEquals(msg, error.getMessage());
-            Assert.assertEquals("", error.getValue());
+            ValidationStatus<?> error = validationErrors.get(0);
+            Assert.assertEquals(nameField, error.getField());
+            Assert.assertEquals(msg, error.getMessage().get());
 
             error = validationErrors.get(1);
-            Assert.assertEquals(ageField, error.getField().get());
-            Assert.assertEquals("Value must be positive", error.getMessage());
-            Assert.assertEquals(ageField.getValue(), error.getValue());
+            Assert.assertEquals(ageField, error.getField());
+            Assert.assertEquals("Value must be positive",
+                    error.getMessage().get());
         }
     }
 
@@ -375,9 +374,9 @@ public class BinderTest {
     public void validate_notBound_noErrors() {
         Binder<Person> binder = new Binder<>();
 
-        List<ValidationError<?>> errors = binder.validate();
+        BinderValidationStatus<Person> status = binder.validate();
 
-        Assert.assertTrue(errors.isEmpty());
+        Assert.assertTrue(status.isOk());
     }
 
     @Test
@@ -388,9 +387,9 @@ public class BinderTest {
                 Person::setFirstName);
 
         nameField.setComponentError(new UserError(""));
-        List<ValidationError<?>> errors = binder.validate();
+        BinderValidationStatus<Person> status = binder.validate();
 
-        Assert.assertTrue(errors.isEmpty());
+        Assert.assertTrue(status.isOk());
         Assert.assertNull(nameField.getComponentError());
     }
 
@@ -411,19 +410,19 @@ public class BinderTest {
         binding.withValidator(value -> false, msg2);
         binding.bind(Person::getFirstName, Person::setFirstName);
 
-        List<ValidationError<?>> errors = binder.validate();
+        BinderValidationStatus<Person> status = binder.validate();
+        List<ValidationStatus<?>> errors = status.getFieldValidationErrors();
 
         Assert.assertEquals(1, errors.size());
 
-        Set<String> errorMessages = errors.stream()
-                .map(ValidationError::getMessage).collect(Collectors.toSet());
-        Assert.assertTrue(errorMessages.contains(msg1));
+        ValidationStatus<?> validationStatus = errors.stream().findFirst()
+                .get();
+        String msg = validationStatus.getMessage().get();
+        Assert.assertEquals(msg1, msg);
 
-        Set<?> fields = errors.stream().map(ValidationError::getField)
-                .filter(Optional::isPresent).map(Optional::get)
-                .collect(Collectors.toSet());
-        Assert.assertEquals(1, fields.size());
-        Assert.assertTrue(fields.contains(nameField));
+        HasValue<?> field = validationStatus.getField();
+
+        Assert.assertEquals(nameField, field);
 
         ErrorMessage componentError = nameField.getComponentError();
         Assert.assertNotNull(componentError);
@@ -490,17 +489,23 @@ public class BinderTest {
 
         ageField.setValue("");
         assertEquals(32, p.getAge());
-        assertValidationErrors(binder.validate(), "Value cannot be empty");
+        assertValidationErrors(binder.validate(), EMPTY_ERROR_MESSAGE);
     }
 
     private void assertValidationErrors(
-            List<ValidationError<?>> validationErrors,
+            List<ValidationStatus<?>> validationErrors,
             String... errorMessages) {
         Assert.assertEquals(errorMessages.length, validationErrors.size());
         for (int i = 0; i < errorMessages.length; i++) {
             Assert.assertEquals(errorMessages[i],
-                    validationErrors.get(i).getMessage());
+                    validationErrors.get(i).getMessage().get());
         }
+    }
+
+    private void assertValidationErrors(BinderValidationStatus<Person> status,
+            String... errorMessages) {
+        assertValidationErrors(status.getFieldValidationErrors(),
+                errorMessages);
     }
 
     @Test
@@ -571,11 +576,11 @@ public class BinderTest {
 
     @Test
     public void bindingWithStatusChangeHandler_handlerGetsEvents() {
-        AtomicReference<ValidationStatusChangeEvent> event = new AtomicReference<>();
+        AtomicReference<ValidationStatus<?>> statusCapture = new AtomicReference<>();
         Binding<Person, String, String> binding = binder.forField(nameField)
-                .withValidator(notEmpty).withStatusChangeHandler(evt -> {
-                    Assert.assertNull(event.get());
-                    event.set(evt);
+                .withValidator(notEmpty).withStatusHandler(evt -> {
+                    Assert.assertNull(statusCapture.get());
+                    statusCapture.set(evt);
                 });
         binding.bind(Person::getFirstName, Person::setFirstName);
 
@@ -585,30 +590,30 @@ public class BinderTest {
         // message
         binder.validate();
 
-        Assert.assertNotNull(event.get());
-        ValidationStatusChangeEvent evt = event.get();
-        Assert.assertEquals(ValidationStatus.ERROR, evt.getStatus());
-        Assert.assertEquals("Value cannot be empty", evt.getMessage().get());
-        Assert.assertEquals(nameField, evt.getSource());
+        Assert.assertNotNull(statusCapture.get());
+        ValidationStatus<?> evt = statusCapture.get();
+        Assert.assertEquals(Status.ERROR, evt.getStatus());
+        Assert.assertEquals(EMPTY_ERROR_MESSAGE, evt.getMessage().get());
+        Assert.assertEquals(nameField, evt.getField());
 
         nameField.setValue("foo");
 
-        event.set(null);
+        statusCapture.set(null);
         // Second validation succeeds => should be event with OK status and
         // no message
         binder.validate();
 
-        evt = event.get();
+        evt = statusCapture.get();
         Assert.assertNotNull(evt);
-        Assert.assertEquals(ValidationStatus.OK, evt.getStatus());
+        Assert.assertEquals(Status.OK, evt.getStatus());
         Assert.assertFalse(evt.getMessage().isPresent());
-        Assert.assertEquals(nameField, evt.getSource());
+        Assert.assertEquals(nameField, evt.getField());
     }
 
     @Test
     public void bindingWithStatusChangeHandler_defaultStatusChangeHandlerIsReplaced() {
         Binding<Person, String, String> binding = binder.forField(nameField)
-                .withValidator(notEmpty).withStatusChangeHandler(evt -> {
+                .withValidator(notEmpty).withStatusHandler(evt -> {
                 });
         binding.bind(Person::getFirstName, Person::setFirstName);
 
@@ -639,7 +644,7 @@ public class BinderTest {
         binding.validate();
 
         Assert.assertTrue(label.isVisible());
-        Assert.assertEquals("Value cannot be empty", label.getValue());
+        Assert.assertEquals(EMPTY_ERROR_MESSAGE, label.getValue());
 
         nameField.setValue("foo");
 
@@ -677,7 +682,7 @@ public class BinderTest {
                 .withValidator(notEmpty);
         binding.bind(Person::getFirstName, Person::setFirstName);
 
-        binding.withStatusChangeHandler(evt -> Assert.fail());
+        binding.withStatusHandler(evt -> Assert.fail());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -697,7 +702,7 @@ public class BinderTest {
 
         Binding<Person, String, String> binding = binder.forField(nameField);
 
-        binding.withStatusChangeHandler(event -> {
+        binding.withStatusHandler(event -> {
         });
 
         binding.withStatusLabel(label);
@@ -711,7 +716,7 @@ public class BinderTest {
 
         binding.withStatusLabel(label);
 
-        binding.withStatusChangeHandler(event -> {
+        binding.withStatusHandler(event -> {
         });
     }
 
@@ -720,10 +725,10 @@ public class BinderTest {
 
         Binding<Person, String, String> binding = binder.forField(nameField);
 
-        binding.withStatusChangeHandler(event -> {
+        binding.withStatusHandler(event -> {
         });
 
-        binding.withStatusChangeHandler(event -> {
+        binding.withStatusHandler(event -> {
         });
     }
 
@@ -738,9 +743,9 @@ public class BinderTest {
         Person person = new Person();
         binder.bind(person);
 
-        List<ValidationError<?>> errors = binder.validate();
-        Assert.assertEquals(1, errors.size());
-        Assert.assertFalse(errors.get(0).getField().isPresent());
+        List<ValidationStatus<?>> errors = binder.validate()
+                .getFieldValidationErrors();
+        Assert.assertEquals(0, errors.size());
     }
 
     @Test
@@ -756,12 +761,12 @@ public class BinderTest {
         Person person = new Person();
         binder.bind(person);
 
-        List<ValidationError<?>> errors = binder.validate();
+        List<ValidationStatus<?>> errors = binder.validate()
+                .getFieldValidationErrors();
         Assert.assertEquals(1, errors.size());
-        ValidationError<?> error = errors.get(0);
-        Assert.assertEquals(msg, error.getMessage());
-        Assert.assertTrue(error.getField().isPresent());
-        Assert.assertEquals(nameField.getValue(), error.getValue());
+        ValidationStatus<?> error = errors.get(0);
+        Assert.assertEquals(msg, error.getMessage().get());
+        Assert.assertEquals(nameField, error.getField());
     }
 
     @Test
@@ -778,14 +783,14 @@ public class BinderTest {
         Person person = new Person();
         binder.bind(person);
 
-        List<ValidationError<?>> errors = binder.validate();
+        List<ValidationStatus<?>> errors = binder.validate()
+                .getFieldValidationErrors();
         Assert.assertEquals(1, errors.size());
 
-        ValidationError<?> error = errors.get(0);
+        ValidationStatus<?> error = errors.get(0);
 
-        Assert.assertEquals(msg1, error.getMessage());
-        Assert.assertEquals(nameField, error.getField().get());
-        Assert.assertEquals(nameField.getValue(), error.getValue());
+        Assert.assertEquals(msg1, error.getMessage().get());
+        Assert.assertEquals(nameField, error.getField());
     }
 
     @Test
@@ -799,8 +804,8 @@ public class BinderTest {
         Person person = new Person();
         binder.bind(person);
 
-        List<ValidationError<?>> errors = binder.validate();
-        Assert.assertEquals(0, errors.size());
+        Assert.assertFalse(binder.validate().hasErrors());
+        Assert.assertTrue(binder.validate().isOk());
     }
 
     @Test
@@ -863,25 +868,21 @@ public class BinderTest {
     }
 
     @Test
-    public void binderWithStatusChangeHandler_handlerGetsEvents() {
-        AtomicReference<List<BinderResult<?, ?>>> resultsCapture = new AtomicReference<>();
+    public void binderWithStatusHandler_fieldValidationNoBeanValidation_handlerGetsStatusUpdates() {
+        AtomicReference<BinderValidationStatus<?>> statusCapture = new AtomicReference<>();
         binder.forField(nameField).withValidator(notEmpty)
-                .withStatusChangeHandler(evt -> {
+                .withStatusHandler(evt -> {
                     Assert.fail(
                             "Using a custom status change handler so no change should end up here");
                 }).bind(Person::getFirstName, Person::setFirstName);
         binder.forField(ageField).withConverter(stringToInteger)
-                .withValidator(notNegative).withStatusChangeHandler(evt -> {
+                .withValidator(notNegative).withStatusHandler(evt -> {
                     Assert.fail(
                             "Using a custom status change handler so no change should end up here");
                 }).bind(Person::getAge, Person::setAge);
-        binder.withValidator(
-                bean -> !bean.getFirstName().isEmpty() && bean.getAge() > 0
-                        ? Result.ok(bean)
-                        : Result.error("Need first name and age"));
 
         binder.setStatusHandler(r -> {
-            resultsCapture.set(r);
+            statusCapture.set(r);
         });
         binder.bind(p);
         Assert.assertNull(nameField.getComponentError());
@@ -891,65 +892,172 @@ public class BinderTest {
 
         // First binding validation fails => should be result with ERROR status
         // and message
-        binder.validate();
+        BinderValidationStatus<Person> status2 = binder.validate();
+        BinderValidationStatus<?> status = statusCapture.get();
+        Assert.assertSame(status2, status);
 
         Assert.assertNull(nameField.getComponentError());
 
-        List<BinderResult<?, ?>> results = resultsCapture.get();
-        Assert.assertNotNull(results);
-        Assert.assertEquals(2, results.size());
+        List<ValidationStatus<?>> bindingStatuses = status
+                .getFieldValidationStatuses();
+        Assert.assertNotNull(bindingStatuses);
+        Assert.assertEquals(1, status.getFieldValidationErrors().size());
+        Assert.assertEquals(2, bindingStatuses.size());
 
-        BinderResult<?, ?> r = results.get(0);
+        ValidationStatus<?> r = bindingStatuses.get(0);
         Assert.assertTrue(r.isError());
-        Assert.assertEquals("Value cannot be empty", r.getMessage().get());
-        Assert.assertEquals(nameField, r.getField().get());
+        Assert.assertEquals(EMPTY_ERROR_MESSAGE, r.getMessage().get());
+        Assert.assertEquals(nameField, r.getField());
 
-        r = results.get(1);
+        r = bindingStatuses.get(1);
         Assert.assertFalse(r.isError());
         Assert.assertFalse(r.getMessage().isPresent());
-        Assert.assertEquals(ageField, r.getField().get());
+        Assert.assertEquals(ageField, r.getField());
+
+        Assert.assertEquals(0, status.getBeanValidationResults().size());
+        Assert.assertEquals(0, status.getBeanValidationErrors().size());
 
         nameField.setValue("foo");
         ageField.setValue("");
 
-        resultsCapture.set(null);
+        statusCapture.set(null);
         // Second validation succeeds => should be result with OK status and
         // no message, and error result for age
         binder.validate();
 
-        results = resultsCapture.get();
-        Assert.assertNotNull(results);
-        Assert.assertEquals(2, results.size());
+        status = statusCapture.get();
+        bindingStatuses = status.getFieldValidationStatuses();
+        Assert.assertEquals(1, status.getFieldValidationErrors().size());
+        Assert.assertEquals(2, bindingStatuses.size());
 
-        r = results.get(0);
+        r = bindingStatuses.get(0);
         Assert.assertFalse(r.isError());
         Assert.assertFalse(r.getMessage().isPresent());
-        Assert.assertEquals(nameField, r.getField().get());
+        Assert.assertEquals(nameField, r.getField());
 
-        r = results.get(1);
+        r = bindingStatuses.get(1);
         Assert.assertTrue(r.isError());
         Assert.assertEquals("Value must be a number", r.getMessage().get());
-        Assert.assertEquals(ageField, r.getField().get());
+        Assert.assertEquals(ageField, r.getField());
 
-        resultsCapture.set(null);
+        Assert.assertEquals(0, status.getBeanValidationResults().size());
+        Assert.assertEquals(0, status.getBeanValidationErrors().size());
+
+        statusCapture.set(null);
         // binding validations pass, binder validation fails
         ageField.setValue("0");
         binder.validate();
 
-        results = resultsCapture.get();
-        Assert.assertNotNull(results);
-        Assert.assertEquals(1, results.size());
+        status = statusCapture.get();
+        bindingStatuses = status.getFieldValidationStatuses();
+        Assert.assertEquals(0, status.getFieldValidationErrors().size());
+        Assert.assertEquals(2, bindingStatuses.size());
 
-        r = results.get(0);
+        Assert.assertEquals(0, status.getBeanValidationResults().size());
+        Assert.assertEquals(0, status.getBeanValidationErrors().size());
+    }
+
+    @Test
+    public void binderWithStatusHandler_fieldAndBeanLevelValidation_handlerGetsStatusUpdates() {
+        AtomicReference<BinderValidationStatus<?>> statusCapture = new AtomicReference<>();
+        binder.forField(nameField).withValidator(notEmpty)
+                .withStatusHandler(evt -> {
+                    Assert.fail(
+                            "Using a custom status change handler so no change should end up here");
+                }).bind(Person::getFirstName, Person::setFirstName);
+        binder.forField(ageField).withConverter(stringToInteger)
+                .withValidator(notNegative).withStatusHandler(evt -> {
+                    Assert.fail(
+                            "Using a custom status change handler so no change should end up here");
+                }).bind(Person::getAge, Person::setAge);
+        binder.withValidator(
+                bean -> !bean.getFirstName().isEmpty() && bean.getAge() > 0
+                        ? Result.ok(bean)
+                        : Result.error("Need first name and age"));
+
+        binder.setStatusHandler(r -> {
+            statusCapture.set(r);
+        });
+        binder.bind(p);
+        Assert.assertNull(nameField.getComponentError());
+
+        nameField.setValue("");
+        ageField.setValue("5");
+
+        // First binding validation fails => should be result with ERROR status
+        // and message
+        BinderValidationStatus<Person> status2 = binder.validate();
+        BinderValidationStatus<?> status = statusCapture.get();
+        Assert.assertSame(status2, status);
+
+        Assert.assertNull(nameField.getComponentError());
+
+        List<ValidationStatus<?>> bindingStatuses = status
+                .getFieldValidationStatuses();
+        Assert.assertNotNull(bindingStatuses);
+        Assert.assertEquals(1, status.getFieldValidationErrors().size());
+        Assert.assertEquals(2, bindingStatuses.size());
+
+        ValidationStatus<?> r = bindingStatuses.get(0);
         Assert.assertTrue(r.isError());
-        Assert.assertTrue(r.getMessage().isPresent());
-        Assert.assertFalse(r.getField().isPresent());
+        Assert.assertEquals(EMPTY_ERROR_MESSAGE, r.getMessage().get());
+        Assert.assertEquals(nameField, r.getField());
+
+        r = bindingStatuses.get(1);
+        Assert.assertFalse(r.isError());
+        Assert.assertFalse(r.getMessage().isPresent());
+        Assert.assertEquals(ageField, r.getField());
+
+        Assert.assertEquals(0, status.getBeanValidationResults().size());
+        Assert.assertEquals(0, status.getBeanValidationErrors().size());
+
+        nameField.setValue("foo");
+        ageField.setValue("");
+
+        statusCapture.set(null);
+        // Second validation succeeds => should be result with OK status and
+        // no message, and error result for age
+        binder.validate();
+
+        status = statusCapture.get();
+        bindingStatuses = status.getFieldValidationStatuses();
+        Assert.assertEquals(1, status.getFieldValidationErrors().size());
+        Assert.assertEquals(2, bindingStatuses.size());
+
+        r = bindingStatuses.get(0);
+        Assert.assertFalse(r.isError());
+        Assert.assertFalse(r.getMessage().isPresent());
+        Assert.assertEquals(nameField, r.getField());
+
+        r = bindingStatuses.get(1);
+        Assert.assertTrue(r.isError());
+        Assert.assertEquals("Value must be a number", r.getMessage().get());
+        Assert.assertEquals(ageField, r.getField());
+
+        Assert.assertEquals(0, status.getBeanValidationResults().size());
+        Assert.assertEquals(0, status.getBeanValidationErrors().size());
+
+        statusCapture.set(null);
+        // binding validations pass, binder validation fails
+        ageField.setValue("0");
+        binder.validate();
+
+        status = statusCapture.get();
+        bindingStatuses = status.getFieldValidationStatuses();
+        Assert.assertEquals(0, status.getFieldValidationErrors().size());
+        Assert.assertEquals(2, bindingStatuses.size());
+
+        Assert.assertEquals(1, status.getBeanValidationResults().size());
+        Assert.assertEquals(1, status.getBeanValidationErrors().size());
+
+        Assert.assertEquals("Need first name and age",
+                status.getBeanValidationErrors().get(0).getMessage().get());
     }
 
     @Test
     public void binderWithStatusChangeHandler_defaultStatusChangeHandlerIsReplaced() {
         Binding<Person, String, String> binding = binder.forField(nameField)
-                .withValidator(notEmpty).withStatusChangeHandler(evt -> {
+                .withValidator(notEmpty).withStatusHandler(evt -> {
                 });
         binding.bind(Person::getFirstName, Person::setFirstName);
 
@@ -991,7 +1099,7 @@ public class BinderTest {
                 .withValidator(notEmpty);
         binding.bind(Person::getFirstName, Person::setFirstName);
 
-        binding.withStatusChangeHandler(evt -> Assert.fail());
+        binding.withStatusHandler(evt -> Assert.fail());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -1038,7 +1146,7 @@ public class BinderTest {
 
     @Test
     public void binderWithStatusChangeHandler_replaceHandler() {
-        AtomicReference<List<BinderResult<?, ?>>> capture = new AtomicReference<>();
+        AtomicReference<BinderValidationStatus<?>> capture = new AtomicReference<>();
 
         Binding<Person, String, String> binding = binder.forField(nameField);
         binding.bind(Person::getFirstName, Person::setFirstName);
@@ -1054,9 +1162,11 @@ public class BinderTest {
         nameField.setValue("foo");
         binder.validate();
 
-        List<BinderResult<?, ?>> results = capture.get();
+        List<ValidationStatus<?>> results = capture.get()
+                .getFieldValidationStatuses();
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
+        Assert.assertFalse(results.get(0).isError());
     }
 
     @Test

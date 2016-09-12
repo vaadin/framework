@@ -323,11 +323,11 @@ Even if the user has not edited a field, all validation error will be shown if w
 binder.load(new Person());
 
 // This will make all current validation errors visible
-List<ValidationError<?>> validationErrors = binder.validate();
+ValidationStatus<Person> status = binder.validate();
 
-if (!validationErrors.isEmpty()) {
+if (status.hasErrors()) {
   Notification.show("Validation error count: "
-    + validationErrors.size());
+    + status.getValidationErrors().size());
 }
 ----
 
@@ -341,7 +341,7 @@ Handling a checked exception::
 ----
 try {
   binder.save(person);
-} catch (BindingException e) {
+} catch (ValidationException e) {
   Notification.show("Validation error count: "
     + e.getValidationErrors().size());
 }
@@ -566,21 +566,17 @@ We can also define our own status handler to provide a custom way of handling st
 ----
 BinderStatusHandler defaultHandler = binder.getStatusHandler();
 
-binder.setStatusHandler(results -> {
-  String errorMessage = results.stream()
-    // Ignore helper and confirmation messages
-    .filter(BinderResult::isError)
-    // Ignore messages that belong to a specific field
-    .filter(error -> !error.getField().isPresent())
-    // Create a string out of the remaining messages
-    .map(Result::getMessage).map(o -> o.get())
-    .collect(Collectors.joining("\n"));
+binder.setStatusHandler(status -> {
+    // create an error message on failed bean level validations
+    List<Result<?>> errors = status.getBeanValidationErrors();
+    String errorMessage = errors.stream().map(Result::getMessage)
+        .map(o -> o.get()).collect(Collectors.joining("\n"));
+    // show error in a label
+    formStatusLabel.setValue(errorMessage);
+    formStatusLabel.setVisible(!errorMessage.isEmpty());
 
-  formStatusLabel.setValue(errorMessage);
-  formStatusLabel.setVisible(!errorMessage.isEmpty());
-
-  // Let the default handler show messages for each field
-  defaultHandler.accept(event);
+    // Let the default handler show messages for each field
+    defaultHandler.accept(status);
 });
 ----
 

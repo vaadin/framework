@@ -16,7 +16,6 @@
 package com.vaadin.data;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.function.Consumer;
 
 import com.vaadin.data.Binder.Binding;
@@ -34,13 +33,13 @@ import com.vaadin.data.Binder.Binding;
  *
  * @see Binder#setStatusHandler(BinderStatusHandler)
  * @see Binder#setStatusLabel(com.vaadin.ui.Label)
- * @see Binding#withStatusChangeHandler(StatusChangeHandler)
+ * @see Binding#withStatusHandler(StatusChangeHandler)
  *
  * @author Vaadin Ltd
  * @since 8.0
  *
  */
 public interface BinderStatusHandler
-        extends Consumer<List<BinderResult<?, ?>>>, Serializable {
+        extends Consumer<BinderValidationStatus<?>>, Serializable {
 
 }

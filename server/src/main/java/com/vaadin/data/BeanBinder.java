@@ -149,7 +149,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         protected BeanBindingImpl(BeanBinder<BEAN> binder,
                 HasValue<FIELDVALUE> field,
                 Converter<FIELDVALUE, TARGET> converter,
-                StatusChangeHandler statusChangeHandler) {
+                ValidationStatusHandler statusChangeHandler) {
             super(binder, field, converter, statusChangeHandler);
         }
 
@@ -318,7 +318,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
     @Override
     protected <FIELDVALUE, TARGET> BeanBindingImpl<BEAN, FIELDVALUE, TARGET> createBinding(
             HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
-            StatusChangeHandler handler) {
+            ValidationStatusHandler handler) {
         Objects.requireNonNull(field, "field cannot be null");
         Objects.requireNonNull(converter, "converter cannot be null");
         return new BeanBindingImpl<>(this, field, converter, handler);
