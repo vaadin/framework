@@ -15,7 +15,6 @@ public abstract class AbstractListingTestUI<T extends AbstractListing<Object, ?>
     protected void createActions() {
         super.createActions();
         createItemsMenu();
-        createSelectionMenu();
     }
 
     protected void createItemsMenu() {
@@ -35,28 +34,7 @@ public abstract class AbstractListingTestUI<T extends AbstractListing<Object, ?>
                 });
     }
 
-    protected void createSelectionMenu() {
-        LinkedHashMap<String, String> options = new LinkedHashMap<>();
-        options.put("None", null);
-        options.put("Item 0", "Item 0");
-        options.put("Item 1", "Item 1");
-        options.put("Item 2", "Item 2");
-        options.put("Item 10", "Item 10");
-        options.put("Item 100", "Item 100");
-
-        createSelectAction("Select", "Selection", options, "None",
-                (c, selected, data) -> {
-                    if (selected != null) {
-                        c.select(selected);
-                    } else {
-                        c.getSelectedItems().forEach(c::deselect);
-                    }
-                });
-    }
-
     protected Object[] createItems(int number) {
-        return IntStream.range(0, number)
-                .mapToObj(i -> "Item " + i)
-                .toArray();
+        return IntStream.range(0, number).mapToObj(i -> "Item " + i).toArray();
     }
 }
