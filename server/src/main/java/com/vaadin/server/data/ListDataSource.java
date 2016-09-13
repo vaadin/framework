@@ -67,7 +67,10 @@ public class ListDataSource<T> implements DataSource<T> {
     }
 
     /**
-     * Sets a default sorting order to the data source.
+     * Creates a new list data source based on this list data source with the
+     * given sort order.
+     * <p>
+     * <b>NOTE</b>: this data source is not modified in any way.
      *
      * @param sortOrder
      *            a {@link Comparator} providing the needed sorting order
@@ -78,8 +81,13 @@ public class ListDataSource<T> implements DataSource<T> {
     }
 
     /**
-     * Sets a default sorting order to the data source. This method is a
-     * short-hand for {@code sortingBy(Comparator.comparing(sortOrder))}.
+     * Creates a new list data source based on this list data source with the
+     * given sort order.
+     * <p>
+     * <b>NOTE</b>: this data source is not modified in any way.
+     * <p>
+     * This method is a short-hand for
+     * {@code sortingBy(Comparator.comparing(sortOrder))}.
      *
      * @param sortOrder
      *            function to sort by
