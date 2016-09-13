@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2016 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import com.vaadin.event.selection.SingleSelectionChange;
 import com.vaadin.event.selection.SingleSelectionListener;
+import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
@@ -35,9 +36,9 @@ import com.vaadin.util.ReflectTools;
  *
  * @param <T>
  *            the item date type
- * 
+ *
  * @see com.vaadin.shared.data.selection.SelectionModel.Single
- * 
+ *
  * @since
  */
 public abstract class AbstractSingleSelect<T> extends
@@ -49,8 +50,8 @@ public abstract class AbstractSingleSelect<T> extends
      * client. Maintaining the selection state and communicating it from the
      * server to the client is the responsibility of the implementing class.
      */
-    public abstract class AbstractSingleSelection implements
-            SelectionModel.Single<T> {
+    public abstract class AbstractSingleSelection
+            implements SelectionModel.Single<T> {
 
         /**
          * Creates a new {@code SimpleSingleSelection} instance.
@@ -89,7 +90,7 @@ public abstract class AbstractSingleSelect<T> extends
         /**
          * Returns the communication key of the selected item or {@code null} if
          * no item is selected.
-         * 
+         *
          * @return the key of the selected item if any, {@code null} otherwise.
          */
         protected abstract String getSelectedKey();
@@ -97,7 +98,7 @@ public abstract class AbstractSingleSelect<T> extends
         /**
          * Sets the selected item based on the given communication key. If the
          * key is {@code null}, clears the current selection if any.
-         * 
+         *
          * @param key
          *            the key of the selected item or {@code null} to clear
          *            selection
@@ -109,7 +110,7 @@ public abstract class AbstractSingleSelect<T> extends
          * select component is {@linkplain Component#isReadOnly()} or if the
          * selection would not change. Otherwise updates the selection and fires
          * a selection change event with {@code isUserOriginated == true}.
-         * 
+         *
          * @param key
          *            the key of the item to select or {@code null} to clear
          *            selection
@@ -131,7 +132,7 @@ public abstract class AbstractSingleSelect<T> extends
          * Sets the selection based on server API call. Does nothing if the
          * selection would not change; otherwise updates the selection and fires
          * a selection change event with {@code isUserOriginated == false}.
-         * 
+         *
          * @param item
          *            the item to select or {@code null} to clear selection
          */
@@ -150,7 +151,7 @@ public abstract class AbstractSingleSelect<T> extends
 
         /**
          * Returns whether the given key maps to the currently selected item.
-         * 
+         *
          * @param key
          *            the key to test or {@code null} to test whether nothing is
          *            selected
@@ -164,7 +165,7 @@ public abstract class AbstractSingleSelect<T> extends
 
         /**
          * Returns the communication key assigned to the given item.
-         * 
+         *
          * @param item
          *            the item whose key to return
          * @return the assigned key
@@ -181,7 +182,7 @@ public abstract class AbstractSingleSelect<T> extends
         /**
          * Returns the item that the given key is assigned to, or {@code null}
          * if there is no such item.
-         * 
+         *
          * @param key
          *            the key whose item to return
          * @return the associated item if any, {@code null} otherwise.
@@ -228,6 +229,37 @@ public abstract class AbstractSingleSelect<T> extends
                     SingleSelectionChange.class);
 
     /**
+     * Creates a new {@code AbstractListing} with a default data communicator.
+     * <p>
+     * <strong>Note:</strong> This constructor does not set a selection model
+     * for the new listing. The invoking constructor must explicitly call
+     * {@link #setSelectionModel(SelectionModel)} with an
+     * {@link AbstractSingleSelect.AbstractSingleSelection} .
+     */
+    protected AbstractSingleSelect() {
+    }
+
+    /**
+     * Creates a new {@code AbstractSingleSelect} with the given custom data
+     * communicator.
+     * <p>
+     * <strong>Note:</strong> This method is for creating an
+     * {@code AbstractSingleSelect} with a custom communicator. In the common
+     * case {@link AbstractSingleSelect#AbstractSingleSelect()} should be used.
+     * <p>
+     * <strong>Note:</strong> This constructor does not set a selection model
+     * for the new listing. The invoking constructor must explicitly call
+     * {@link #setSelectionModel(SelectionModel)} with an
+     * {@link AbstractSingleSelect.AbstractSingleSelection} .
+     *
+     * @param dataCommunicator
+     *            the data communicator to use, not null
+     */
+    protected AbstractSingleSelect(DataCommunicator<T> dataCommunicator) {
+        super(dataCommunicator);
+    }
+
+    /**
      * Adds a selection listener to this select. The listener is called when the
      * value of this select is changed either by the user or programmatically.
      *
@@ -246,7 +278,7 @@ public abstract class AbstractSingleSelect<T> extends
     /**
      * Returns the currently selected item, or an empty optional if no item is
      * selected.
-     * 
+     *
      * @return an optional of the selected item if any, an empty optional
      *         otherwise
      */
@@ -257,7 +289,7 @@ public abstract class AbstractSingleSelect<T> extends
     /**
      * Sets the current selection to the given item or clears selection if given
      * {@code null}.
-     * 
+     *
      * @param item
      *            the item to select or {@code null} to clear selection
      */

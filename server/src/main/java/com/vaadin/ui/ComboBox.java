@@ -17,11 +17,8 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -33,8 +30,6 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.event.selection.SingleSelectionChange;
-import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
@@ -43,7 +38,6 @@ import com.vaadin.server.data.DataKeyMapper;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
-import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.ui.combobox.ComboBoxClientRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
@@ -60,90 +54,27 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")
-public class ComboBox<T> extends
-        AbstractListing<T, ComboBox<T>.ComboBoxSelectionModel> implements
-        HasValue<T>, FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
+public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
+        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
     /**
      * Custom single selection model for ComboBox.
      */
-    protected class ComboBoxSelectionModel implements SelectionModel.Single<T> {
-        private Optional<T> selectedItem = Optional.empty();
-        private List<SingleSelectionListener<T>> listeners = new ArrayList<>(2);
-
+    protected class ComboBoxSelectionModel extends SimpleSingleSelection {
         @Override
-        public void deselect(T item) {
-            selectedItem.ifPresent(selected -> {
-                if (selected.equals(item)) {
-                    setValue(Optional.empty(), false);
-                }
-            });
-        }
+        protected void doSetSelectedKey(String key) {
+            super.doSetSelectedKey(key);
 
-        /**
-         * Sets the selection. This method is primarily for internal use.
-         *
-         * @param value
-         *            optional new value
-         * @param userOriginated
-         *            true if the value comes from user input, false otherwise
-         */
-        protected void setValue(Optional<T> value, boolean userOriginated) {
-            if (selectedItem.equals(value)) {
-                return;
+            String selectedCaption = null;
+            T value = getDataCommunicator().getKeyMapper().get(key);
+            if (value != null) {
+                selectedCaption = getItemCaptionProvider().apply(value);
             }
-            selectedItem = value;
-            String key = value
-                    .map(v -> getDataCommunicator().getKeyMapper().key(v))
-                    .orElse(null);
-            String selectedCaption = value
-                    .map(v -> getItemCaptionProvider().apply(v)).orElse(null);
+            // FIXME now overlap between state and RPC
             getRpcProxy(ComboBoxClientRpc.class).setSelectedItem(key,
                     selectedCaption);
-
-            fireEvent(userOriginated);
         }
 
-        /**
-         * Adds a selection listener to this select. The listener is called when
-         * the value of this select is changed either by the user or
-         * programmatically.
-         *
-         * @param listener
-         *            the value change listener, not null
-         * @return a registration for the listener
-         */
-        public Registration addSelectionListener(
-                SingleSelectionListener<T> listener) {
-            Objects.requireNonNull(listener, "listener cannot be null");
-            listeners.add(listener);
-            return () -> listeners.remove(listener);
-        }
-
-        @Override
-        public void select(T item) {
-            Objects.requireNonNull(item);
-            setValue(Optional.of(item), false);
-        }
-
-        @Override
-        public Optional<T> getSelectedItem() {
-            return selectedItem;
-        }
-
-        /**
-         * Fires a selection change event to all listeners.
-         *
-         * @param userOriginated
-         *            true to indicate that the change was caused directly by a
-         *            user action, false for programmatically set values
-         */
-        protected void fireEvent(boolean userOriginated) {
-            for (SingleSelectionListener<T> listener : listeners) {
-                listener.accept(new SingleSelectionChange<T>(ComboBox.this,
-                        getSelectedItem().orElse(null), userOriginated));
-            }
-        }
     }
 
     /**
@@ -223,10 +154,9 @@ public class ComboBox<T> extends
         public void setSelectedItem(String key) {
             // it seems both of these happen, and mean empty selection...
             if (key == null || "".equals(key)) {
-                getSelectionModel().setValue(Optional.empty(), true);
+                getSelectionModel().setSelectedFromClient(null);
             } else {
-                T item = getDataCommunicator().getKeyMapper().get(key);
-                getSelectionModel().setValue(Optional.ofNullable(item), true);
+                getSelectionModel().setSelectedFromClient(key);
             }
         }
 
@@ -657,7 +587,7 @@ public class ComboBox<T> extends
 
     @Override
     public void setValue(T value) {
-        getSelectionModel().setValue(Optional.ofNullable(value), false);
+        getSelectionModel().setSelectedFromServer(value);
 
     }
 
@@ -670,7 +600,7 @@ public class ComboBox<T> extends
     @Override
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<? super T> listener) {
-        return getSelectionModel().addSelectionListener(event -> {
+        return addSelectionListener(event -> {
             ((ValueChangeListener<T>) listener)
                     .accept(new ValueChange<T>(event.getConnector(),
                             event.getValue(), event.isUserOriginated()));

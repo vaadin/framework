@@ -17,14 +17,14 @@ package com.vaadin.shared.ui.combobox;
 
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.annotations.NoLayout;
-import com.vaadin.shared.ui.TabIndexState;
+import com.vaadin.shared.ui.AbstractSingleSelectState;
 
 /**
  * Shared state for the ComboBox component.
  *
  * @since 7.0
  */
-public class ComboBoxState extends TabIndexState {
+public class ComboBoxState extends AbstractSingleSelectState {
     {
         // TODO ideally this would be v-combobox, but that would affect a lot of
         // themes
