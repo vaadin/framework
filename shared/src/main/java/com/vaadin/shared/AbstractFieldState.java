@@ -25,7 +25,6 @@ import com.vaadin.shared.ui.TabIndexState;
  *
  */
 public class AbstractFieldState extends TabIndexState {
-    public boolean propertyReadOnly = false;
     public boolean hideErrors = false;
     public boolean required = false;
     public boolean modified = false;

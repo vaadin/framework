@@ -26,11 +26,6 @@ public abstract class AbstractFieldConnector extends AbstractComponentConnector
         return (AbstractFieldState) super.getState();
     }
 
-    @Override
-    public boolean isReadOnly() {
-        return super.isReadOnly() || getState().propertyReadOnly;
-    }
-
     public boolean isModified() {
         return getState().modified;
     }
