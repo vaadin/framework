@@ -1,6 +1,6 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -15,13 +15,17 @@
  */
 package com.vaadin.tests.components.checkboxgroup;
 
-import com.vaadin.testbench.customelements.CheckBoxGroupElement;
-import com.vaadin.tests.components.checkbox.CheckBoxGroupTestUI;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import static org.junit.Assert.assertEquals;
+
+import java.util.Arrays;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import com.vaadin.testbench.customelements.CheckBoxGroupElement;
+import com.vaadin.tests.components.checkbox.CheckBoxGroupTestUI;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Test for CheckBoxGroup
@@ -51,6 +55,45 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
     public void initialItems_increaseItemCount_containsCorrectItems() {
         selectMenuPath("Component", "Data source", "Items", "100");
         assertItems(100);
+    }
+
+    @Test
+    public void clickToSelect() {
+        selectMenuPath("Component", "Listeners", "Selection listener");
+
+        getSelect().selectByText("Item 4");
+        Assert.assertEquals("1. Selected: [Item 4]", getLogRow(0));
+
+        getSelect().selectByText("Item 2");
+        // Selection order (most recently selected is last)
+        Assert.assertEquals("2. Selected: [Item 4, Item 2]", getLogRow(0));
+
+        getSelect().selectByText("Item 4");
+        Assert.assertEquals("3. Selected: [Item 2]", getLogRow(0));
+    }
+
+    @Test
+    public void selectProgramatically() {
+        selectMenuPath("Component", "Listeners", "Selection listener");
+
+        selectMenuPath("Component", "Selection", "Toggle Item 5");
+        Assert.assertEquals("2. Selected: [Item 5]", getLogRow(0));
+        assertSelected("Item 5");
+
+        selectMenuPath("Component", "Selection", "Toggle Item 1");
+        // Selection order (most recently selected is last)
+        Assert.assertEquals("4. Selected: [Item 5, Item 1]", getLogRow(0));
+        // DOM order
+        assertSelected("Item 1", "Item 5");
+
+        selectMenuPath("Component", "Selection", "Toggle Item 5");
+        Assert.assertEquals("6. Selected: [Item 1]", getLogRow(0));
+        assertSelected("Item 1");
+    }
+
+    private void assertSelected(String... expectedSelection) {
+        Assert.assertEquals(Arrays.asList(expectedSelection),
+                getSelect().getSelection());
     }
 
     @Override

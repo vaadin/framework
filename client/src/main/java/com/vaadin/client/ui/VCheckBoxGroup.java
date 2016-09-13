@@ -16,9 +16,16 @@
 
 package com.vaadin.client.ui;
 
+import static com.vaadin.shared.ui.optiongroup.CheckBoxGroupConstants.JSONKEY_ITEM_DISABLED;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+
 import com.google.gwt.aria.client.Roles;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
@@ -32,16 +39,8 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.optiongroup.CheckBoxGroupConstants;
+
 import elemental.json.JsonObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-
-import static com.vaadin.shared.ui.optiongroup.CheckBoxGroupConstants.JSONKEY_ITEM_DISABLED;
 
 /**
  * The client-side widget for the {@code CheckBoxGroup} component.
@@ -49,8 +48,7 @@ import static com.vaadin.shared.ui.optiongroup.CheckBoxGroupConstants.JSONKEY_IT
  * @author Vaadin Ltd.
  * @since 8.0
  */
-public class VCheckBoxGroup extends Composite
-        implements Field, ClickHandler, ChangeHandler,
+public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
         com.vaadin.client.Focusable, HasEnabled {
 
     public static final String CLASSNAME = "v-select-optiongroup";
@@ -62,10 +60,7 @@ public class VCheckBoxGroup extends Composite
      * For internal use only. May be removed or replaced in the future.
      */
     public ApplicationConnection client;
-    /**
-     * For internal use only. May be removed or replaced in the future.
-     */
-    public JsonObject selected; //TODO replace with SelectionModel
+
     /**
      * Widget holding the different options (e.g. ListBox or Panel for radio
      * buttons) (optional, fallbacks to container Panel)
@@ -78,7 +73,7 @@ public class VCheckBoxGroup extends Composite
 
     private boolean enabled;
     private boolean readonly;
-    private List<Consumer<JsonObject>> selectionChangeListeners;
+    private List<BiConsumer<JsonObject, Boolean>> selectionChangeListeners;
 
     public VCheckBoxGroup() {
         optionsContainer = new FlowPanel();
@@ -102,15 +97,15 @@ public class VCheckBoxGroup extends Composite
         Roles.getRadiogroupRole().set(getElement());
         optionsContainer.clear();
         for (JsonObject item : items) {
-            String itemHtml =
-                    item.getString(CheckBoxGroupConstants.JSONKEY_ITEM_VALUE);
+            String itemHtml = item
+                    .getString(CheckBoxGroupConstants.JSONKEY_ITEM_VALUE);
             if (!isHtmlContentAllowed()) {
                 itemHtml = WidgetUtil.escapeHTML(itemHtml);
             }
             VCheckBox checkBox = new VCheckBox();
 
-            String iconUrl =
-                    item.getString(CheckBoxGroupConstants.JSONKEY_ITEM_ICON);
+            String iconUrl = item
+                    .getString(CheckBoxGroupConstants.JSONKEY_ITEM_ICON);
             if (iconUrl != null && iconUrl.length() != 0) {
                 checkBox.icon = client.getIcon(iconUrl);
             }
@@ -118,7 +113,8 @@ public class VCheckBoxGroup extends Composite
             checkBox.addStyleName(CLASSNAME_OPTION);
             checkBox.addClickHandler(this);
             checkBox.setHTML(itemHtml);
-            checkBox.setValue(true);//TODO selection model here
+            checkBox.setValue(item
+                    .getBoolean(CheckBoxGroupConstants.JSONKEY_ITEM_SELECTED));
             boolean optionEnabled = !item.getBoolean(JSONKEY_ITEM_DISABLED);
             boolean enabled = optionEnabled && !isReadonly() && isEnabled();
             checkBox.setEnabled(enabled);
@@ -138,13 +134,13 @@ public class VCheckBoxGroup extends Composite
                 return;
             }
 
-            final boolean selected = source.getValue();
-            JsonObject item = optionsToItems.get(source);  //TODO SelectionModel
-            if (selected) {
-                this.selected = item;
-            } else {
-                this.selected = null;
-            }
+            Boolean selected = source.getValue();
+
+            JsonObject item = optionsToItems.get(source);
+            assert item != null;
+
+            new ArrayList<>(selectionChangeListeners)
+                    .forEach(listener -> listener.accept(item, selected));
         }
     }
 
@@ -163,8 +159,8 @@ public class VCheckBoxGroup extends Composite
                 .entrySet()) {
             VCheckBox checkBox = entry.getKey();
             JsonObject value = entry.getValue();
-            Boolean isOptionEnabled = !value.getBoolean(
-                    CheckBoxGroupConstants.JSONKEY_ITEM_DISABLED);
+            Boolean isOptionEnabled = !value
+                    .getBoolean(CheckBoxGroupConstants.JSONKEY_ITEM_DISABLED);
             checkBox.setEnabled(optionGroupEnabled && isOptionEnabled);
         }
     }
@@ -194,11 +190,6 @@ public class VCheckBoxGroup extends Composite
         return readonly;
     }
 
-    @Override
-    public void onChange(ChangeEvent event) {
-        //TODO selectionModel
-    }
-
     public void setReadonly(boolean readonly) {
         if (this.readonly != readonly) {
             this.readonly = readonly;
@@ -214,8 +205,8 @@ public class VCheckBoxGroup extends Composite
         }
     }
 
-    public Registration addNotifyHandler(
-            Consumer<JsonObject> selectionChanged) {
+    public Registration addSelectionChangeHandler(
+            BiConsumer<JsonObject, Boolean> selectionChanged) {
         selectionChangeListeners.add(selectionChanged);
         return (Registration) () -> selectionChangeListeners
                 .remove(selectionChanged);

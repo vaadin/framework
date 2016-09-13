@@ -13,18 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.optiongroup;
+package com.vaadin.event.selection;
 
-import java.io.Serializable;
+import com.vaadin.event.EventListener;
 
-public class CheckBoxGroupConstants implements Serializable {
-    public static final String JSONKEY_ITEM_DISABLED = "d";
-
-    public static final String JSONKEY_ITEM_ICON = "i";
-
-    public static final String JSONKEY_ITEM_VALUE = "v";
-
-    public static final String JSONKEY_ITEM_KEY = "k";
-
-    public static final String JSONKEY_ITEM_SELECTED = "s";
+/**
+ * Listens to changes from a
+ * {@link com.vaadin.shared.data.selection.SelectionModel.Multi}.
+ *
+ * @author Vaadin Ltd
+ *
+ * @since 8.0
+ *
+ * @param <T>
+ *            the data type of the selection model
+ */
+public interface MultiSelectionListener<T>
+        extends EventListener<MultiSelectionEvent<T>> {
+    @Override
+    // Explicitly defined to make reflection logic happy
+    void accept(MultiSelectionEvent<T> event);
 }

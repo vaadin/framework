@@ -23,8 +23,8 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.VCheckBoxGroup;
-import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionModel;
+import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.optiongroup.CheckBoxGroupState;
 import com.vaadin.ui.CheckBoxGroup;
@@ -32,20 +32,25 @@ import com.vaadin.ui.CheckBoxGroup;
 import elemental.json.JsonObject;
 
 @Connect(CheckBoxGroup.class)
+// We don't care about the framework-provided selection model at this point
 public class CheckBoxGroupConnector
-        extends AbstractListingConnector<SelectionModel.Multi<JsonObject>> {
-
-    private Registration selectionChangeRegistration;
+        extends AbstractListingConnector<SelectionModel<?>> {
 
     @Override
     protected void init() {
         super.init();
-        selectionChangeRegistration =
-                getWidget().addNotifyHandler(this::selectionChanged);
+        getWidget().addSelectionChangeHandler(this::selectionChanged);
     }
 
-    private void selectionChanged(JsonObject newSelection) {
-        getSelectionModel().select(newSelection);
+    private void selectionChanged(JsonObject changedItem, Boolean selected) {
+        SelectionServerRpc rpc = getRpcProxy(SelectionServerRpc.class);
+        String key = getRowKey(changedItem);
+
+        if (Boolean.TRUE.equals(selected)) {
+            rpc.select(key);
+        } else {
+            rpc.deselect(key);
+        }
     }
 
     @Override

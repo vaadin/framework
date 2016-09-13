@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,13 +32,13 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.CheckBoxGroup")
 public class CheckBoxGroupElement extends AbstractSelectElement {
-    private static org.openqa.selenium.By byButtonSpan =
-            By.className("v-select-option");
+    private static org.openqa.selenium.By byButtonSpan = By
+            .className("v-select-option");
     private static org.openqa.selenium.By byLabel = By.tagName("label");
     private static org.openqa.selenium.By byInput = By.tagName("input");
 
     public List<String> getOptions() {
-        List<String> optionTexts = new ArrayList<String>();
+        List<String> optionTexts = new ArrayList<>();
         List<WebElement> options = findElements(byButtonSpan);
         for (WebElement option : options) {
             optionTexts.add(option.findElement(byLabel).getText());
@@ -51,9 +51,17 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
             throw new ReadOnlyException();
         }
         List<WebElement> options = findElements(byButtonSpan);
-        for (WebElement option : options) {
+        for (int i = 0; i < options.size(); i++) {
+            WebElement option = options.get(i);
             if (text.equals(option.findElement(byLabel).getText())) {
                 option.findElement(byInput).click();
+
+                // Seems like this is needed because of #19753
+                waitForVaadin();
+
+                // Toggling selection causes the DOM to be rebuilt, so fetch new
+                // items and continue iterating from the same index
+                options = findElements(byButtonSpan);
             }
         }
     }
@@ -70,8 +78,8 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
             WebElement checkedItem;
             checkedItem = option.findElement(By.tagName("input"));
             String checked = checkedItem.getAttribute("checked");
-            if (checked != null &&
-                    checkedItem.getAttribute("checked").equals("true")) {
+            if (checked != null
+                    && checkedItem.getAttribute("checked").equals("true")) {
                 values.add(option.findElement(By.tagName("label")).getText());
             }
         }
@@ -82,7 +90,8 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
      * Select option in the checkbox group with the specified value
      *
      * @param chars
-     *         value of the option in the checkbox group which will be selected
+     *            value of the option in the checkbox group which will be
+     *            selected
      */
     public void selectOption(CharSequence chars) throws ReadOnlyException {
         selectByText((String) chars);
@@ -91,8 +100,7 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
     @Override
     public void clear() {
         throw new UnsupportedOperationException(
-                "Clear operation is not supported for CheckBoxGroup." +
-                        " This operation has no effect on the element.");
+                "Clear operation is not supported for CheckBoxGroup."
+                        + " This operation has no effect on the element.");
     }
 }
-

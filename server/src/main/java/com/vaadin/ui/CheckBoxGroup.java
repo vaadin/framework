@@ -16,33 +16,103 @@
 
 package com.vaadin.ui;
 
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 import com.vaadin.data.Listing;
+import com.vaadin.event.selection.MultiSelectionEvent;
+import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.data.DataGenerator;
 import com.vaadin.server.data.DataSource;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionModel;
+import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.optiongroup.CheckBoxGroupConstants;
 import com.vaadin.shared.ui.optiongroup.CheckBoxGroupState;
+import com.vaadin.util.ReflectTools;
+
 import elemental.json.JsonObject;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 /**
- * A group of Checkboxes. Individual checkboxes are made from items given to
- * supplied by {@code Datasource}. Checkboxes my have captions and icons.
+ * A group of Checkboxes. Individual checkboxes are made from items supplied by
+ * a {@link DataSource}. Checkboxes may have captions and icons.
  *
  * @param <T>
- *         item type
+ *            item type
  * @author Vaadin Ltd
  * @since 8.0
  */
-public class CheckBoxGroup<T> extends AbstractListing<T, SelectionModel<T>> {
+public class CheckBoxGroup<T>
+        extends AbstractListing<T, SelectionModel.Multi<T>> {
+
+    private final class SimpleMultiSelectModel
+            implements SelectionModel.Multi<T> {
+
+        private Set<T> selection = new LinkedHashSet<>();
+
+        @Override
+        public void select(T item) {
+            if (selection.contains(item)) {
+                return;
+            }
+
+            updateSelection(set -> set.add(item));
+        }
+
+        @Override
+        public Set<T> getSelectedItems() {
+            return Collections.unmodifiableSet(selection);
+        }
+
+        @Override
+        public void deselect(T item) {
+            if (!selection.contains(item)) {
+                return;
+            }
+
+            updateSelection(set -> set.remove(item));
+        }
+
+        @Override
+        public void deselectAll() {
+            if (selection.isEmpty()) {
+                return;
+            }
+
+            updateSelection(Set::clear);
+        }
+
+        private void updateSelection(Consumer<Set<T>> handler) {
+            LinkedHashSet<T> oldSelection = new LinkedHashSet<>(selection);
+            handler.accept(selection);
+            LinkedHashSet<T> newSelection = new LinkedHashSet<>(selection);
+
+            fireEvent(new MultiSelectionEvent<>(CheckBoxGroup.this,
+                    oldSelection, newSelection));
+
+            getDataCommunicator().reset();
+        }
+
+        @Override
+        public boolean isSelected(T item) {
+            return selection.contains(item);
+        }
+    }
+
+    @Deprecated
+    private static final Method SELECTION_CHANGE_METHOD = ReflectTools
+            .findMethod(MultiSelectionListener.class, "accept",
+                    MultiSelectionEvent.class);
 
     private Function<T, Resource> itemIconProvider = item -> null;
 
@@ -54,7 +124,7 @@ public class CheckBoxGroup<T> extends AbstractListing<T, SelectionModel<T>> {
      * Constructs a new CheckBoxGroup with caption.
      *
      * @param caption
-     *         caption text
+     *            caption text
      * @see Listing#setDataSource(DataSource)
      */
     public CheckBoxGroup(String caption) {
@@ -66,9 +136,9 @@ public class CheckBoxGroup<T> extends AbstractListing<T, SelectionModel<T>> {
      * Constructs a new CheckBoxGroup with caption and DataSource.
      *
      * @param caption
-     *         the caption text
+     *            the caption text
      * @param dataSource
-     *         the data source, not null
+     *            the data source, not null
      * @see Listing#setDataSource(DataSource)
      */
     public CheckBoxGroup(String caption, DataSource<T> dataSource) {
@@ -81,9 +151,9 @@ public class CheckBoxGroup<T> extends AbstractListing<T, SelectionModel<T>> {
      * given items.
      *
      * @param caption
-     *         the caption text
+     *            the caption text
      * @param items
-     *         the data items to use, not null
+     *            the data items to use, not null
      * @see Listing#setDataSource(DataSource)
      */
     public CheckBoxGroup(String caption, Collection<T> items) {
@@ -96,51 +166,52 @@ public class CheckBoxGroup<T> extends AbstractListing<T, SelectionModel<T>> {
      * @see Listing#setDataSource(DataSource)
      */
     public CheckBoxGroup() {
-        //TODO Fix when MultiSelection is ready
-        //            SingleSelection<T> model = new SingleSelection<>(this);
-        //            setSelectionModel(model);
-        //            model.addSelectionListener(event -> beforeClientResponse(false));
-        setSelectionModel(new SelectionModel.Multi<T>() {
-            @Override
-            public void select(T item) {
+        setSelectionModel(new SimpleMultiSelectModel());
 
+        registerRpc(new SelectionServerRpc() {
+
+            @Override
+            public void select(String key) {
+                getItemForSelectionChange(key)
+                        .ifPresent(getSelectionModel()::select);
             }
 
             @Override
-            public Set<T> getSelectedItems() {
-                return Collections.emptySet();
+            public void deselect(String key) {
+                getItemForSelectionChange(key)
+                        .ifPresent(getSelectionModel()::deselect);
             }
 
-            @Override
-            public void deselect(T item) {
+            private Optional<T> getItemForSelectionChange(String key) {
+                T item = getDataCommunicator().getKeyMapper().get(key);
+                if (item == null || !itemEnabledProvider.test(item)) {
+                    return Optional.empty();
+                }
 
-            }
-
-            @Override
-            public void deselectAll() {
-
-            }
-
-            @Override
-            public boolean isSelected(T item) {
-                return false;
+                return Optional.of(item);
             }
         });
+
         addDataGenerator(new DataGenerator<T>() {
             @Override
             public void generateData(T data, JsonObject jsonObject) {
                 jsonObject.put(CheckBoxGroupConstants.JSONKEY_ITEM_VALUE,
-                               itemCaptionProvider.apply(data));
+                        itemCaptionProvider.apply(data));
                 Resource icon = itemIconProvider.apply(data);
                 if (icon != null) {
                     String iconUrl = ResourceReference
                             .create(icon, CheckBoxGroup.this, null).getURL();
                     jsonObject.put(CheckBoxGroupConstants.JSONKEY_ITEM_ICON,
-                                   iconUrl);
+                            iconUrl);
                 }
                 if (!itemEnabledProvider.test(data)) {
                     jsonObject.put(CheckBoxGroupConstants.JSONKEY_ITEM_DISABLED,
-                                   true);
+                            true);
+                }
+
+                if (getSelectionModel().isSelected(data)) {
+                    jsonObject.put(CheckBoxGroupConstants.JSONKEY_ITEM_SELECTED,
+                            true);
                 }
             }
 
@@ -158,8 +229,8 @@ public class CheckBoxGroup<T> extends AbstractListing<T, SelectionModel<T>> {
      * content is passed to the browser as plain text.
      *
      * @param htmlContentAllowed
-     *         true if the captions are used as html, false if used as plain
-     *         text
+     *            true if the captions are used as html, false if used as plain
+     *            text
      */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
         getState().htmlContentAllowed = htmlContentAllowed;
@@ -169,7 +240,7 @@ public class CheckBoxGroup<T> extends AbstractListing<T, SelectionModel<T>> {
      * Checks whether captions are interpreted as html or plain text.
      *
      * @return true if the captions are used as html, false if used as plain
-     * text
+     *         text
      * @see #setHtmlContentAllowed(boolean)
      */
     public boolean isHtmlContentAllowed() {
@@ -197,13 +268,13 @@ public class CheckBoxGroup<T> extends AbstractListing<T, SelectionModel<T>> {
     }
 
     /**
-     * Sets the item icon provider for this checkbox group. The icon provider
-     * is queried for each item to optionally display an icon next to
-     * the item caption. If the provider returns null for an item, no icon is
-     * displayed. The default provider always returns null (no icons).
+     * Sets the item icon provider for this checkbox group. The icon provider is
+     * queried for each item to optionally display an icon next to the item
+     * caption. If the provider returns null for an item, no icon is displayed.
+     * The default provider always returns null (no icons).
      *
      * @param itemIconProvider
-     *         icons provider, not null
+     *            icons provider, not null
      */
     public void setItemIconProvider(Function<T, Resource> itemIconProvider) {
         Objects.nonNull(itemIconProvider);
@@ -222,12 +293,12 @@ public class CheckBoxGroup<T> extends AbstractListing<T, SelectionModel<T>> {
 
     /**
      * Sets the item caption provider for this checkbox group. The caption
-     * provider is queried for each item to optionally display an item
-     * textual representation. The default provider returns
+     * provider is queried for each item to optionally display an item textual
+     * representation. The default provider returns
      * {@code String.valueOf(item)}.
      *
      * @param itemCaptionProvider
-     *         the item caption provider, not null
+     *            the item caption provider, not null
      */
     public void setItemCaptionProvider(
             Function<T, String> itemCaptionProvider) {
@@ -246,17 +317,33 @@ public class CheckBoxGroup<T> extends AbstractListing<T, SelectionModel<T>> {
     }
 
     /**
-     * Sets the item enabled predicate for this checkbox group. The predicate
-     * is applied to each item to determine whether the item should be
-     * enabled  (true) or disabled (false). Disabled items are displayed as
-     * grayed out and the user cannot select them. The default predicate
-     * always returns true (all the items are enabled).
+     * Sets the item enabled predicate for this checkbox group. The predicate is
+     * applied to each item to determine whether the item should be enabled
+     * (true) or disabled (false). Disabled items are displayed as grayed out
+     * and the user cannot select them. The default predicate always returns
+     * true (all the items are enabled).
      *
      * @param itemEnabledProvider
-     *         the item enable predicate, not null
+     *            the item enable predicate, not null
      */
     public void setItemEnabledProvider(Predicate<T> itemEnabledProvider) {
         Objects.nonNull(itemEnabledProvider);
         this.itemEnabledProvider = itemEnabledProvider;
+    }
+
+    /**
+     * Adds a selection listener that will be called when the selection is
+     * changed either by the user or programmatically.
+     *
+     * @param listener
+     *            the value change listener, not <code>null</code>
+     * @return a registration for the listener
+     */
+    public Registration addSelectionListener(
+            MultiSelectionListener<T> listener) {
+        Objects.requireNonNull(listener, "listener cannot be null");
+        addListener(MultiSelectionEvent.class, listener,
+                SELECTION_CHANGE_METHOD);
+        return () -> removeListener(MultiSelectionEvent.class, listener);
     }
 }
