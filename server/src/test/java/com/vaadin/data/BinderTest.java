@@ -7,6 +7,7 @@ import static org.junit.Assert.assertSame;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -1198,7 +1199,7 @@ public class BinderTest {
     }
 
     @Test
-    public void binderLoad_clearsErrors() {
+    public void binderBindAndLoad_clearsErrors() {
         Binding<Person, String, String> binding = binder.forField(nameField)
                 .withValidator(notEmpty);
         binding.bind(Person::getFirstName, Person::setFirstName);
@@ -1269,5 +1270,42 @@ public class BinderTest {
         Assert.assertNull(nameField.getComponentError());
         Assert.assertNull(lastNameField.getComponentError());
         Assert.assertEquals("", statusLabel.getValue());
+    }
+
+    @Test
+    public void binderLoad_withCrossFieldValidation_clearsErrors() {
+        TextField lastNameField = new TextField();
+        final Predicate<String> lengthPredicate = v -> v.length() > 2;
+
+        Binding<Person, String, String> firstNameBinding = binder
+                .forField(nameField).withValidator(lengthPredicate, "length");
+        firstNameBinding.bind(Person::getFirstName, Person::setFirstName);
+
+        Binding<Person, String, String> lastNameBinding = binder
+                .forField(lastNameField)
+                .withValidator(v -> !nameField.getValue().isEmpty()
+                        || lengthPredicate.test(v), "err")
+                .withValidator(lengthPredicate, "length");
+        lastNameBinding.bind(Person::getLastName, Person::setLastName);
+
+        // this will be triggered as a new bean is bound with binder.bind(),
+        // causing a validation error to be visible until reset is done
+        nameField.addValueChangeListener(v -> lastNameBinding.validate());
+
+        Person person = new Person();
+        binder.bind(person);
+
+        Assert.assertNull(nameField.getComponentError());
+        Assert.assertNull(lastNameField.getComponentError());
+
+        nameField.setValue("x");
+
+        Assert.assertNotNull(nameField.getComponentError());
+        Assert.assertNotNull(lastNameField.getComponentError());
+
+        binder.bind(person);
+
+        Assert.assertNull(nameField.getComponentError());
+        Assert.assertNull(lastNameField.getComponentError());
     }
 }

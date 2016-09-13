@@ -759,6 +759,10 @@ public class Binder<BEAN> implements Serializable {
         unbind();
         this.bean = bean;
         bindings.forEach(b -> b.bind(bean));
+        // if there has been field value change listeners that trigger
+        // validation, need to make sure the validation errors are cleared
+        getValidationStatusHandler()
+                .accept(BinderValidationStatus.createUnresolvedStatus(this));
     }
 
     /**
