@@ -38,7 +38,6 @@ import com.vaadin.server.data.DataKeyMapper;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
-import com.vaadin.shared.ui.combobox.ComboBoxClientRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
@@ -70,9 +69,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
             if (value != null) {
                 selectedCaption = getItemCaptionProvider().apply(value);
             }
-            // FIXME now overlap between state and RPC
-            getRpcProxy(ComboBoxClientRpc.class).setSelectedItem(key,
-                    selectedCaption);
+            getState().selectedItemCaption = selectedCaption;
         }
 
     }
@@ -147,16 +144,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
                 getNewItemHandler().accept(itemValue);
                 // rebuild list
                 filterstring = null;
-            }
-        }
-
-        @Override
-        public void setSelectedItem(String key) {
-            // it seems both of these happen, and mean empty selection...
-            if (key == null || "".equals(key)) {
-                getSelectionModel().setSelectedFromClient(null);
-            } else {
-                getSelectionModel().setSelectedFromClient(key);
             }
         }
 

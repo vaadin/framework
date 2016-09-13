@@ -82,4 +82,10 @@ public class ComboBoxState extends AbstractSingleSelectState {
      */
     public boolean scrollToSelectedItem = false;
 
+    /**
+     * The caption of the currently selected item or {@code null} if no item is
+     * selected.
+     */
+    public String selectedItemCaption;
+
 }

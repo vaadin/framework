@@ -16,7 +16,7 @@
 package com.vaadin.client.ui.combobox;
 
 import com.vaadin.client.Profiler;
-import com.vaadin.client.communication.RpcProxy;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.connectors.data.HasDataSource;
@@ -30,8 +30,8 @@ import com.vaadin.shared.Registration;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.selection.SelectionModel;
+import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.combobox.ComboBoxClientRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
@@ -44,11 +44,12 @@ public class ComboBoxConnector
         extends AbstractListingConnector<SelectionModel.Single<?>>
         implements HasDataSource, SimpleManagedLayout, HasErrorIndicator {
 
-    protected ComboBoxServerRpc rpc = RpcProxy.create(ComboBoxServerRpc.class,
-            this);
+    private ComboBoxServerRpc rpc = getRpcProxy(ComboBoxServerRpc.class);
+    private SelectionServerRpc selectionRpc = getRpcProxy(
+            SelectionServerRpc.class);
 
-    protected FocusAndBlurServerRpc focusAndBlurRpc = RpcProxy
-            .create(FocusAndBlurServerRpc.class, this);
+    private FocusAndBlurServerRpc focusAndBlurRpc = getRpcProxy(
+            FocusAndBlurServerRpc.class);
 
     private Registration dataChangeHandlerRegistration;
 
@@ -56,14 +57,6 @@ public class ComboBoxConnector
     protected void init() {
         super.init();
         getWidget().connector = this;
-        registerRpc(ComboBoxClientRpc.class, new ComboBoxClientRpc() {
-            @Override
-            public void setSelectedItem(String selectedKey,
-                    String selectedCaption) {
-                getDataReceivedHandler().updateSelectionFromServer(selectedKey,
-                        selectedCaption);
-            }
-        });
     }
 
     @Override
@@ -92,6 +85,12 @@ public class ComboBoxConnector
         getDataReceivedHandler().serverReplyHandled();
 
         Profiler.leave("ComboBoxConnector.onStateChanged update content");
+    }
+
+    @OnStateChange({ "selectedItemKey", "selectedItemCaption" })
+    private void onSelectionChange() {
+        getDataReceivedHandler().updateSelectionFromServer(
+                getState().selectedItemKey, getState().selectedItemCaption);
     }
 
     @Override
@@ -202,7 +201,9 @@ public class ComboBoxConnector
      *            the current selected item key
      */
     public void sendSelection(String selectionKey) {
-        rpc.setSelectedItem(selectionKey);
+        // map also the special empty string option key (from data change
+        // handler below) to null
+        selectionRpc.select("".equals(selectionKey) ? null : selectionKey);
         getDataReceivedHandler().clearPendingNavigation();
     }
 
