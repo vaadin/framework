@@ -60,6 +60,7 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.buildhelpers.*", //
             "com\\.vaadin\\.util\\.ReflectTools.*", //
             "com\\.vaadin\\.data\\.util\\.ReflectTools.*", //
+            "com\\.vaadin\\.data\\.util\\.JsonUtil.*", //
             "com\\.vaadin\\.data\\.util.BeanItemContainerGenerator.*",
             "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.connection\\.MockInitialContextFactory",
             "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.DataGenerator",
