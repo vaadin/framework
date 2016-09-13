@@ -18,9 +18,10 @@ package com.vaadin.client.ui.combobox;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.connectors.data.HasDataSource;
 import com.vaadin.client.data.DataSource;
-import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.HasErrorIndicator;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VComboBox;
 import com.vaadin.client.ui.VComboBox.DataReceivedHandler;
@@ -28,6 +29,7 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.data.DataCommunicatorConstants;
+import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.combobox.ComboBoxClientRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
@@ -38,16 +40,15 @@ import com.vaadin.ui.ComboBox;
 import elemental.json.JsonObject;
 
 @Connect(ComboBox.class)
-public class ComboBoxConnector extends AbstractFieldConnector
-        implements HasDataSource, SimpleManagedLayout {
+public class ComboBoxConnector
+        extends AbstractListingConnector<SelectionModel.Single<?>>
+        implements HasDataSource, SimpleManagedLayout, HasErrorIndicator {
 
     protected ComboBoxServerRpc rpc = RpcProxy.create(ComboBoxServerRpc.class,
             this);
 
     protected FocusAndBlurServerRpc focusAndBlurRpc = RpcProxy
             .create(FocusAndBlurServerRpc.class, this);
-
-    private DataSource<JsonObject> dataSource;
 
     private Registration dataChangeHandlerRegistration;
 
@@ -245,7 +246,7 @@ public class ComboBoxConnector extends AbstractFieldConnector
 
     @Override
     public void setDataSource(DataSource<JsonObject> dataSource) {
-        this.dataSource = dataSource;
+        super.setDataSource(dataSource);
         dataChangeHandlerRegistration = dataSource
                 .addDataChangeHandler(range -> {
                     // try to find selected item if requested
@@ -258,8 +259,7 @@ public class ComboBoxConnector extends AbstractFieldConnector
                         for (int i = 0; i < getDataSource().size(); ++i) {
                             JsonObject row = getDataSource().getRow(i);
                             if (row != null) {
-                                String key = row.getString(
-                                        DataCommunicatorConstants.KEY);
+                                String key = getRowKey(row);
                                 if (getWidget().selectedOptionKey.equals(key)) {
                                     if (getWidget().nullSelectionAllowed) {
                                         getWidget().currentPage = (i + 1)
@@ -304,8 +304,7 @@ public class ComboBoxConnector extends AbstractFieldConnector
                         JsonObject row = getDataSource().getRow(i);
 
                         if (row != null) {
-                            String key = row
-                                    .getString(DataCommunicatorConstants.KEY);
+                            String key = getRowKey(row);
                             String caption = row
                                     .getString(DataCommunicatorConstants.NAME);
                             String style = row
@@ -329,11 +328,6 @@ public class ComboBoxConnector extends AbstractFieldConnector
     public void onUnregister() {
         super.onUnregister();
         dataChangeHandlerRegistration.remove();
-    }
-
-    @Override
-    public DataSource<JsonObject> getDataSource() {
-        return dataSource;
     }
 
 }
