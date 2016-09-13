@@ -9,37 +9,29 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.tests.data.bean.BeanToValidate;
-import com.vaadin.ui.TextField;
 
-public class BeanBinderTest {
-
-    private BeanBinder<BeanToValidate> binder;
-
-    private TextField nameField;
-    private TextField ageField;
-
-    private BeanToValidate p = new BeanToValidate();
+public class BeanBinderTest extends
+        BinderTestBase<BeanBinder<BeanToValidate>, BeanToValidate> {
 
     @Before
     public void setUp() {
         binder = new BeanBinder<>(BeanToValidate.class);
-        p.setFirstname("Johannes");
-        p.setAge(32);
-        nameField = new TextField();
-        ageField = new TextField();
+        item = new BeanToValidate();
+        item.setFirstname("Johannes");
+        item.setAge(32);
     }
 
     @Test
     public void fieldBound_bindBean_fieldValueUpdated() {
         binder.bind(nameField, "firstname");
-        binder.bind(p);
+        binder.bind(item);
 
         assertEquals("Johannes", nameField.getValue());
     }
 
     @Test
     public void beanBound_bindField_fieldValueUpdated() {
-        binder.bind(p);
+        binder.bind(item);
         binder.bind(nameField, "firstname");
 
         assertEquals("Johannes", nameField.getValue());
@@ -62,33 +54,33 @@ public class BeanBinderTest {
 
     @Test
     public void beanBound_setValidFieldValue_propertyValueChanged() {
-        binder.bind(p);
+        binder.bind(item);
         binder.bind(nameField, "firstname");
 
         nameField.setValue("Henri");
 
-        assertEquals("Henri", p.getFirstname());
+        assertEquals("Henri", item.getFirstname());
     }
 
     @Test
     public void readOnlyPropertyBound_setFieldValue_ignored() {
         binder.bind(nameField, "readOnlyProperty");
-        binder.bind(p);
+        binder.bind(item);
 
-        String propertyValue = p.getReadOnlyProperty();
+        String propertyValue = item.getReadOnlyProperty();
         nameField.setValue("Foo");
 
-        assertEquals(propertyValue, p.getReadOnlyProperty());
+        assertEquals(propertyValue, item.getReadOnlyProperty());
     }
 
     @Test
     public void beanBound_setInvalidFieldValue_validationError() {
-        binder.bind(p);
+        binder.bind(item);
         binder.bind(nameField, "firstname");
 
         nameField.setValue("H"); // too short
 
-        assertEquals("Johannes", p.getFirstname());
+        assertEquals("Johannes", item.getFirstname());
         assertInvalid(nameField, "size must be between 3 and 16");
     }
 
@@ -124,13 +116,13 @@ public class BeanBinderTest {
     @Test(expected = ClassCastException.class)
     public void fieldWithIncompatibleTypeBound_bindBean_throws() {
         binder.bind(ageField, "age");
-        binder.bind(p);
+        binder.bind(item);
     }
 
     @Test(expected = ClassCastException.class)
     public void fieldWithIncompatibleTypeBound_loadBean_throws() {
         binder.bind(ageField, "age");
-        binder.load(p);
+        binder.load(item);
     }
 
     @Test(expected = ClassCastException.class)
@@ -138,7 +130,7 @@ public class BeanBinderTest {
             throws Throwable {
         try {
             binder.bind(ageField, "age");
-            binder.save(p);
+            binder.save(item);
         } catch (RuntimeException e) {
             throw e.getCause();
         }
@@ -148,7 +140,7 @@ public class BeanBinderTest {
     public void fieldWithConverterBound_bindBean_fieldValueUpdated() {
         binder.forField(ageField)
                 .withConverter(Integer::valueOf, String::valueOf).bind("age");
-        binder.bind(p);
+        binder.bind(item);
 
         assertEquals("32", ageField.getValue());
     }
@@ -157,7 +149,7 @@ public class BeanBinderTest {
     public void fieldWithInvalidConverterBound_bindBean_fieldValueUpdated() {
         binder.forField(ageField).withConverter(Float::valueOf, String::valueOf)
                 .bind("age");
-        binder.bind(p);
+        binder.bind(item);
 
         assertEquals("32", ageField.getValue());
     }
