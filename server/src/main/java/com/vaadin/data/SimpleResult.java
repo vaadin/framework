@@ -17,7 +17,6 @@ package com.vaadin.data;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -63,11 +62,6 @@ class SimpleResult<R> implements Result<R> {
         } else {
             return mapper.apply(value);
         }
-    }
-
-    @Override
-    public <S> S biMap(BiFunction<R, String, S> mapper) {
-        return mapper.apply(value, message);
     }
 
     @Override

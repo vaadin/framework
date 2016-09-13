@@ -150,11 +150,10 @@ binder.forField(nameField)
   .withValidator(
     name -> name.length() >= 3,
     "Full name must contain at least three characters")
-  .withStatusChangeHandler(statusChange -> {
-      nameStatus.setValue(statusChange.getMessage().orElse(""));
+  .withValidationStatusHandler(status -> {
+      nameStatus.setValue(status.getMessage().orElse(""));
       // Only show the label when validation has failed
-      boolean error = statusChange.getStatus() == ValidationStatus.ERROR;
-      nameStatus.setVisible(error);
+      nameStatus.setVisible(status.isError());
     })
   .bind(Person::getName, Person::setName);
 ----
@@ -564,9 +563,9 @@ We can also define our own status handler to provide a custom way of handling st
 
 [source, java]
 ----
-BinderStatusHandler defaultHandler = binder.getStatusHandler();
+BinderValidationStatusHandler defaultHandler = binder.getValidationStatusHandler();
 
-binder.setStatusHandler(status -> {
+binder.setValidationStatusHandler(status -> {
     // create an error message on failed bean level validations
     List<Result<?>> errors = status.getBeanValidationErrors();
     String errorMessage = errors.stream().map(Result::getMessage)

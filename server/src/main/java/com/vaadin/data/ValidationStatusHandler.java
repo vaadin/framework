@@ -24,14 +24,15 @@ import com.vaadin.ui.AbstractComponent;
 /**
  * Handler for {@link ValidationStatus} changes.
  * <p>
- * {@link Binding#withStatusHandler(StatusChangeHandler) Register} an instance
- * of this class to be able to override the default handling, which is to show
+ * {@link Binding#withValidationStatusHandler(withValidationStatusHandler)
+ * Register} an instance of this class to be able to override the default
+ * handling, which is to show
  * {@link AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage) an
  * error message} for failed field validations.
  *
  * @author Vaadin Ltd
  *
- * @see Binding#withStatusHandler(StatusChangeHandler)
+ * @see Binding#withValidationStatusHandler(withValidationStatusHandler)
  * @see ValidationStatus
  *
  * @since 8.0

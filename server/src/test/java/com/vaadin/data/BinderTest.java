@@ -575,10 +575,10 @@ public class BinderTest {
     }
 
     @Test
-    public void bindingWithStatusChangeHandler_handlerGetsEvents() {
+    public void bindingWithStatusHandler_handlerGetsEvents() {
         AtomicReference<ValidationStatus<?>> statusCapture = new AtomicReference<>();
         Binding<Person, String, String> binding = binder.forField(nameField)
-                .withValidator(notEmpty).withStatusHandler(evt -> {
+                .withValidator(notEmpty).withValidationStatusHandler(evt -> {
                     Assert.assertNull(statusCapture.get());
                     statusCapture.set(evt);
                 });
@@ -611,9 +611,9 @@ public class BinderTest {
     }
 
     @Test
-    public void bindingWithStatusChangeHandler_defaultStatusChangeHandlerIsReplaced() {
+    public void bindingWithStatusHandler_defaultStatusHandlerIsReplaced() {
         Binding<Person, String, String> binding = binder.forField(nameField)
-                .withValidator(notEmpty).withStatusHandler(evt -> {
+                .withValidator(notEmpty).withValidationStatusHandler(evt -> {
                 });
         binding.bind(Person::getFirstName, Person::setFirstName);
 
@@ -657,7 +657,7 @@ public class BinderTest {
     }
 
     @Test
-    public void bindingWithStatusLabel_defaultStatusChangeHandlerIsReplaced() {
+    public void bindingWithStatusLabel_defaultStatusHandlerIsReplaced() {
         Label label = new Label();
 
         Binding<Person, String, String> binding = binder.forField(nameField)
@@ -677,12 +677,12 @@ public class BinderTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void bindingWithStatusChangeHandler_addAfterBound() {
+    public void bindingWithStatusHandler_addAfterBound() {
         Binding<Person, String, String> binding = binder.forField(nameField)
                 .withValidator(notEmpty);
         binding.bind(Person::getFirstName, Person::setFirstName);
 
-        binding.withStatusHandler(evt -> Assert.fail());
+        binding.withValidationStatusHandler(evt -> Assert.fail());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -702,33 +702,33 @@ public class BinderTest {
 
         Binding<Person, String, String> binding = binder.forField(nameField);
 
-        binding.withStatusHandler(event -> {
+        binding.withValidationStatusHandler(event -> {
         });
 
         binding.withStatusLabel(label);
     }
 
     @Test(expected = IllegalStateException.class)
-    public void bindingWithStatusChangeHandler_setAfterLabel() {
+    public void bindingWithStatusHandler_setAfterLabel() {
         Label label = new Label();
 
         Binding<Person, String, String> binding = binder.forField(nameField);
 
         binding.withStatusLabel(label);
 
-        binding.withStatusHandler(event -> {
+        binding.withValidationStatusHandler(event -> {
         });
     }
 
     @Test(expected = IllegalStateException.class)
-    public void bingingWithStatusChangeHandler_setAfterOtherHandler() {
+    public void bingingWithStatusHandler_setAfterOtherHandler() {
 
         Binding<Person, String, String> binding = binder.forField(nameField);
 
-        binding.withStatusHandler(event -> {
+        binding.withValidationStatusHandler(event -> {
         });
 
-        binding.withStatusHandler(event -> {
+        binding.withValidationStatusHandler(event -> {
         });
     }
 
@@ -871,17 +871,17 @@ public class BinderTest {
     public void binderWithStatusHandler_fieldValidationNoBeanValidation_handlerGetsStatusUpdates() {
         AtomicReference<BinderValidationStatus<?>> statusCapture = new AtomicReference<>();
         binder.forField(nameField).withValidator(notEmpty)
-                .withStatusHandler(evt -> {
+                .withValidationStatusHandler(evt -> {
                     Assert.fail(
                             "Using a custom status change handler so no change should end up here");
                 }).bind(Person::getFirstName, Person::setFirstName);
         binder.forField(ageField).withConverter(stringToInteger)
-                .withValidator(notNegative).withStatusHandler(evt -> {
+                .withValidator(notNegative).withValidationStatusHandler(evt -> {
                     Assert.fail(
                             "Using a custom status change handler so no change should end up here");
                 }).bind(Person::getAge, Person::setAge);
 
-        binder.setStatusHandler(r -> {
+        binder.setValidationStatusHandler(r -> {
             statusCapture.set(r);
         });
         binder.bind(p);
@@ -961,12 +961,12 @@ public class BinderTest {
     public void binderWithStatusHandler_fieldAndBeanLevelValidation_handlerGetsStatusUpdates() {
         AtomicReference<BinderValidationStatus<?>> statusCapture = new AtomicReference<>();
         binder.forField(nameField).withValidator(notEmpty)
-                .withStatusHandler(evt -> {
+                .withValidationStatusHandler(evt -> {
                     Assert.fail(
                             "Using a custom status change handler so no change should end up here");
                 }).bind(Person::getFirstName, Person::setFirstName);
         binder.forField(ageField).withConverter(stringToInteger)
-                .withValidator(notNegative).withStatusHandler(evt -> {
+                .withValidator(notNegative).withValidationStatusHandler(evt -> {
                     Assert.fail(
                             "Using a custom status change handler so no change should end up here");
                 }).bind(Person::getAge, Person::setAge);
@@ -975,7 +975,7 @@ public class BinderTest {
                         ? Result.ok(bean)
                         : Result.error("Need first name and age"));
 
-        binder.setStatusHandler(r -> {
+        binder.setValidationStatusHandler(r -> {
             statusCapture.set(r);
         });
         binder.bind(p);
@@ -1055,9 +1055,9 @@ public class BinderTest {
     }
 
     @Test
-    public void binderWithStatusChangeHandler_defaultStatusChangeHandlerIsReplaced() {
+    public void binderWithStatusHandler_defaultStatusHandlerIsReplaced() {
         Binding<Person, String, String> binding = binder.forField(nameField)
-                .withValidator(notEmpty).withStatusHandler(evt -> {
+                .withValidator(notEmpty).withValidationStatusHandler(evt -> {
                 });
         binding.bind(Person::getFirstName, Person::setFirstName);
 
@@ -1074,7 +1074,7 @@ public class BinderTest {
     }
 
     @Test
-    public void binderWithStatusLabel_defaultStatusChangeHandlerIsReplaced() {
+    public void binderWithStatusLabel_defaultStatusHandlerIsReplaced() {
         Label label = new Label();
 
         Binding<Person, String, String> binding = binder.forField(nameField)
@@ -1094,12 +1094,12 @@ public class BinderTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void binderWithStatusChangeHandler_addAfterBound() {
+    public void binderWithStatusHandler_addAfterBound() {
         Binding<Person, String, String> binding = binder.forField(nameField)
                 .withValidator(notEmpty);
         binding.bind(Person::getFirstName, Person::setFirstName);
 
-        binding.withStatusHandler(evt -> Assert.fail());
+        binding.withValidationStatusHandler(evt -> Assert.fail());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -1120,14 +1120,14 @@ public class BinderTest {
         Binding<Person, String, String> binding = binder.forField(nameField);
         binding.bind(Person::getFirstName, Person::setFirstName);
 
-        binder.setStatusHandler(event -> {
+        binder.setValidationStatusHandler(event -> {
         });
 
         binder.setStatusLabel(label);
     }
 
     @Test(expected = IllegalStateException.class)
-    public void binderWithStatusChangeHandler_setAfterLabel() {
+    public void binderWithStatusHandler_setAfterLabel() {
         Label label = new Label();
 
         Binding<Person, String, String> binding = binder.forField(nameField);
@@ -1135,27 +1135,27 @@ public class BinderTest {
 
         binder.setStatusLabel(label);
 
-        binder.setStatusHandler(event -> {
+        binder.setValidationStatusHandler(event -> {
         });
     }
 
     @Test(expected = NullPointerException.class)
-    public void binderWithNullStatusChangeHandler_throws() {
-        binder.setStatusHandler(null);
+    public void binderWithNullStatusHandler_throws() {
+        binder.setValidationStatusHandler(null);
     }
 
     @Test
-    public void binderWithStatusChangeHandler_replaceHandler() {
+    public void binderWithStatusHandler_replaceHandler() {
         AtomicReference<BinderValidationStatus<?>> capture = new AtomicReference<>();
 
         Binding<Person, String, String> binding = binder.forField(nameField);
         binding.bind(Person::getFirstName, Person::setFirstName);
 
-        binder.setStatusHandler(results -> {
+        binder.setValidationStatusHandler(results -> {
             Assert.fail();
         });
 
-        binder.setStatusHandler(results -> {
+        binder.setValidationStatusHandler(results -> {
             capture.set(results);
         });
 

@@ -31,25 +31,24 @@ import java.util.stream.Collectors;
  */
 public class ValidationException extends Exception {
 
-    private final List<ValidationStatus<?>> bindingValidationErrors;
-    private final List<Result<?>> binderValidationErrors;
+    private final List<ValidationStatus<?>> fieldValidationErrors;
+    private final List<Result<?>> beanValidationErrors;
 
     /**
      * Constructs a new exception with validation {@code errors} list.
      *
-     * @param bindingValidationErrors
+     * @param fieldValidationErrors
      *            binding validation errors list
-     * @param binderValidationErrors
+     * @param beanValidationErrors
      *            binder validation errors list
      */
-    public ValidationException(
-            List<ValidationStatus<?>> bindingValidationErrors,
-            List<Result<?>> binderValidationErrors) {
+    public ValidationException(List<ValidationStatus<?>> fieldValidationErrors,
+            List<Result<?>> beanValidationErrors) {
         super("Validation has failed for some fields");
-        this.bindingValidationErrors = Collections
-                .unmodifiableList(bindingValidationErrors);
-        this.binderValidationErrors = Collections
-                .unmodifiableList(binderValidationErrors);
+        this.fieldValidationErrors = Collections
+                .unmodifiableList(fieldValidationErrors);
+        this.beanValidationErrors = Collections
+                .unmodifiableList(beanValidationErrors);
     }
 
     /**
@@ -66,24 +65,24 @@ public class ValidationException extends Exception {
     }
 
     /**
-     * Returns a list of the binding level validation errors which caused the
-     * exception, or an empty list if was caused by
-     * {@link #getBeanValidationErrors() binder level validation errors}.
+     * Returns a list of the field level validation errors which caused the
+     * exception, or an empty list if the exception was caused by
+     * {@link #getBeanValidationErrors() bean level validation errors}.
      *
      * @return binding validation errors list
      */
     public List<ValidationStatus<?>> getFieldValidationErrors() {
-        return bindingValidationErrors;
+        return fieldValidationErrors;
     }
 
     /**
-     * Returns a list of the binding level validation errors which caused the
-     * exception, or an empty list if was caused by
-     * {@link #getBeanValidationErrors() binder level validation errors}.
+     * Returns a list of the bean level validation errors which caused the
+     * exception, or an empty list if the exception was caused by
+     * {@link #getBindingValidationErrors() binder level validation errors}.
      *
      * @return binder validation errors list
      */
     public List<Result<?>> getBeanValidationErrors() {
-        return binderValidationErrors;
+        return beanValidationErrors;
     }
 }

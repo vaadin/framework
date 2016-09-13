@@ -143,14 +143,14 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
          *            the field to use, not null
          * @param converter
          *            the initial converter to use, not null
-         * @param statusChangeHandler
+         * @param statusHandler
          *            the handler to notify of status changes, not null
          */
         protected BeanBindingImpl(BeanBinder<BEAN> binder,
                 HasValue<FIELDVALUE> field,
                 Converter<FIELDVALUE, TARGET> converter,
-                ValidationStatusHandler statusChangeHandler) {
-            super(binder, field, converter, statusChangeHandler);
+                ValidationStatusHandler statusHandler) {
+            super(binder, field, converter, statusHandler);
         }
 
         @Override
@@ -275,7 +275,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
     public <FIELDVALUE> BeanBinding<BEAN, FIELDVALUE, FIELDVALUE> forField(
             HasValue<FIELDVALUE> field) {
         return createBinding(field, Converter.identity(),
-                this::handleValidationStatusChange);
+                this::handleValidationStatus);
     }
 
     /**

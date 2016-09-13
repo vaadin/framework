@@ -426,18 +426,18 @@ public class BinderBookOfVaadinTest {
     }
 
     @Test
-    public void withBindingStatusChangeHandlerExample() {
+    public void withBindingStatusHandlerExample() {
         Label nameStatus = new Label();
         AtomicReference<ValidationStatus<?>> statusCapture = new AtomicReference<>();
 
         String msg = "Full name must contain at least three characters";
         binder.forField(field).withValidator(name -> name.length() >= 3, msg)
-                .withStatusHandler(statusChange -> {
-                    nameStatus.setValue(statusChange.getMessage().orElse(""));
+                .withValidationStatusHandler(status -> {
+                    nameStatus.setValue(status.getMessage().orElse(""));
                     // Only show the label when validation has failed
-                    boolean error = statusChange.getStatus() == Status.ERROR;
+                    boolean error = status.getStatus() == Status.ERROR;
                     nameStatus.setVisible(error);
-                    statusCapture.set(statusChange);
+                    statusCapture.set(status);
                 }).bind(BookPerson::getLastName, BookPerson::setLastName);
 
         field.setValue("aa");
@@ -640,12 +640,13 @@ public class BinderBookOfVaadinTest {
     }
 
     @Test
-    public void withBinderStatusChangeHandlerExample() {
+    public void withBinderStatusHandlerExample() {
         Label formStatusLabel = new Label();
 
-        BinderStatusHandler defaultHandler = binder.getStatusHandler();
+        BinderValidationStatusHandler defaultHandler = binder
+                .getValidationStatusHandler();
 
-        binder.setStatusHandler(status -> {
+        binder.setValidationStatusHandler(status -> {
             // create an error message on failed bean level validations
             List<Result<?>> errors = status.getBeanValidationErrors();
             String errorMessage = errors.stream().map(Result::getMessage)

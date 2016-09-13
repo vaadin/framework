@@ -19,7 +19,6 @@ package com.vaadin.data;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -121,19 +120,6 @@ public interface Result<R> extends Serializable {
      * @return the mapped result
      */
     <S> Result<S> flatMap(Function<R, Result<S>> mapper);
-
-    /**
-     * Applies the given function to this result, regardless if this is an error
-     * or not. Passes the value and the message to the given function as
-     * parameters.
-     *
-     * @param <S>
-     *            the type of the mapped value
-     * @param mapper
-     *            the mapping function
-     * @return the mapped result
-     */
-    <S> S biMap(BiFunction<R, String, S> mapper);
 
     /**
      * Invokes either the first callback or the second one, depending on whether

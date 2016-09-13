@@ -23,7 +23,7 @@ import com.vaadin.ui.AbstractComponent;
 /**
  * Handler for {@link BinderValidationStatus} changes.
  * <p>
- * {{@link Binder#setStatusHandler(BinderStatusHandler) Register} an instance of
+ * {{@link Binder#setValidationStatusHandler(BinderStatusHandler) Register} an instance of
  * this class to be able to customize validation status handling.
  * <p>
  * The default handler will show
@@ -35,16 +35,13 @@ import com.vaadin.ui.AbstractComponent;
  *
  * @author Vaadin Ltd
  *
- * @param <BEAN>
- *            the bean type of the binder
- *
  * @see BinderValidationStatus
  * @see Binder#validate()
  * @see ValidationStatus
  *
  * @since 8.0
  */
-public interface BinderValidationStatusHandler<BEAN>
-        extends Consumer<BinderValidationStatus<BEAN>>, Serializable {
+public interface BinderValidationStatusHandler
+        extends Consumer<BinderValidationStatus<?>>, Serializable {
 
 }

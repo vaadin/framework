@@ -23,17 +23,17 @@ import com.vaadin.data.Binder.Binding;
 
 /**
  * Represents the outcome of field level validation. Use
- * {@link Binding#withStatusChangeHandler(ValidationStatusHandler)} to register
- * a handler for field level validation status changes.
+ * {@link Binding#withValidationStatusHandler(ValidationStatusHandler)} to
+ * register a handler for field level validation status changes.
  *
  * @author Vaadin Ltd
  *
  * @param <TARGET>
  *            the target data type of the binding for which the validation
- *            status changed, matches the field type until a converter has been
+ *            status changed, matches the field type unless a converter has been
  *            set
  *
- * @see Binding#withStatusChangeHandler(ValidationStatusHandler)
+ * @see Binding#withValidationStatusHandler(ValidationStatusHandler)
  * @see Binding#validate()
  * @see ValidationStatusHandler
  * @see BinderValidationStatus
