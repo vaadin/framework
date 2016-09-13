@@ -58,11 +58,28 @@ public interface SelectionModel<T> extends Serializable {
         public Optional<T> getSelectedItem();
 
         /**
+         * Sets the current selection to the given item, or clears selection if
+         * given {@code null}.
+         * 
+         * @param item
+         *            the item to select or {@code null} to clear selection
+         */
+        public default void setSelectedItem(T item) {
+            if (item != null) {
+                select(item);
+            } else {
+                deselectAll();
+            }
+        }
+
+        /**
          * Returns a singleton set of the currently selected item or an empty
          * set if no item is selected.
          *
          * @return a singleton set of the selected item if any, an empty set
          *         otherwise
+         * 
+         * @see #getSelectedItem()
          */
         @Override
         default Set<T> getSelectedItems() {
@@ -85,13 +102,13 @@ public interface SelectionModel<T> extends Serializable {
          */
         @Override
         public void select(T item);
-
     }
 
     /**
-     * Returns an immutable set of the currently selected items.
+     * Returns an immutable set of the currently selected items. It is safe to
+     * invoke other {@code SelectionModel} methods while iterating over the set.
      * <p>
-     * <i>Implementation note:</i> the iteration order of the items in the
+     * <em>Implementation note:</em> the iteration order of the items in the
      * returned set should be well-defined and documented by the implementing
      * class.
      *

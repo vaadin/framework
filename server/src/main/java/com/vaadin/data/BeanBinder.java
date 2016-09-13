@@ -20,7 +20,6 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -28,8 +27,6 @@ import java.util.function.Predicate;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.validator.BeanValidator;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.UI;
 
 /**
  * A {@code Binder} subclass specialized for binding <em>beans</em>: classes
@@ -177,7 +174,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
 
             if (BeanValidator.checkBeanValidationAvailable()) {
                 finalBinding = finalBinding.withValidator(new BeanValidator(
-                        getBinder().beanType, propertyName, getLocale()));
+                        getBinder().beanType, propertyName, findLocale()));
             }
 
             PropertyDescriptor descriptor = getDescriptor(propertyName);
@@ -241,20 +238,6 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
                     propertyValue -> (TARGET) propertyValue, exception -> {
                         throw new RuntimeException(exception);
                     });
-        }
-
-        private Locale getLocale() {
-            Locale l = null;
-            if (getField() instanceof Component) {
-                l = ((Component) getField()).getLocale();
-            }
-            if (l == null && UI.getCurrent() != null) {
-                l = UI.getCurrent().getLocale();
-            }
-            if (l == null) {
-                l = Locale.getDefault();
-            }
-            return l;
         }
     }
 

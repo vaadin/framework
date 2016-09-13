@@ -254,6 +254,17 @@ public abstract class AbstractSingleSelect<T> extends
         return getSelectionModel().getSelectedItem();
     }
 
+    /**
+     * Sets the current selection to the given item or clears selection if given
+     * {@code null}.
+     * 
+     * @param item
+     *            the item to select or {@code null} to clear selection
+     */
+    public void setSelectedItem(T item) {
+        getSelectionModel().setSelectedItem(item);
+    }
+
     @Override
     protected AbstractSingleSelectState getState() {
         return (AbstractSingleSelectState) super.getState();
