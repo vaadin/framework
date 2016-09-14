@@ -16,10 +16,10 @@ from xml.etree.ElementTree import ElementTree
 
 # Validated demos. name -> git url
 demos = {
-	"dashboard" : "https://github.com/vaadin/dashboard-demo.git",
-	"parking" : "https://github.com/vaadin/parking-demo.git",
-	"addressbook" : "https://github.com/vaadin/addressbook.git",
-	"grid-gwt" : "https://github.com/vaadin/grid-gwt.git",
+	"dashboard" : ("https://github.com/vaadin/dashboard-demo.git","7.7"),
+	"parking" : ("https://github.com/vaadin/parking-demo.git", "7.7"),
+	"addressbook" : ("https://github.com/vaadin/addressbook.git", "7.7"),
+	"grid-gwt" : ("https://github.com/vaadin/grid-gwt.git", "7.7"),
 	"sampler" : "demos/sampler"
 #	"my-demo" : ("my_demo_url_or_path", "my-demo-dev-branch")
 }
