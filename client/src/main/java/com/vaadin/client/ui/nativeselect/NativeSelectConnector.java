@@ -41,8 +41,8 @@ import elemental.json.JsonObject;
  * @since 8.0
  */
 @Connect(com.vaadin.ui.NativeSelect.class)
-public class NativeSelectConnector extends
-        AbstractListingConnector<SelectionModel.Single<?>> {
+public class NativeSelectConnector
+        extends AbstractListingConnector<SelectionModel.Single<?>> {
 
     private HandlerRegistration selectionChangeRegistration;
     private Registration dataChangeRegistration;
@@ -75,8 +75,8 @@ public class NativeSelectConnector extends
         if (dataChangeRegistration != null) {
             dataChangeRegistration.remove();
         }
-        dataChangeRegistration = dataSource.addDataChangeHandler(
-                this::onDataChange);
+        dataChangeRegistration = dataSource
+                .addDataChangeHandler(this::onDataChange);
         super.setDataSource(dataSource);
     }
 
@@ -130,5 +130,6 @@ public class NativeSelectConnector extends
             // Remove extra items if the new dataset is smaller than the old
             select.removeItem(i);
         }
+        updateSelectedItem();
     }
 }
