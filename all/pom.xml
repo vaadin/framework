@@ -12,7 +12,6 @@
     <packaging>jar</packaging>
 
     <properties>
-        <relnotes.tickets.file>${project.build.directory}/generated-resources/releasenotes/release-notes-tickets.html</relnotes.tickets.file>
         <webcontent.dir>${project.build.outputDirectory}/WebContent/</webcontent.dir>
         <maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
     </properties>
@@ -135,9 +134,6 @@
                         </goals>
                         <configuration>
                             <target>
-                                <loadfile property="release-notes-tickets"
-                                    srcFile="${relnotes.tickets.file}"
-                                    failonerror="false" />
                                 <copy todir="${webcontent.dir}">
                                     <fileset dir="src/main/templates/">
                                         <patternset>
@@ -157,9 +153,6 @@
                                                 value="${vaadin.gwt.version}" />
                                             <token key="builddate"
                                                 value="${maven.build.timestamp}" />
-                                            <token
-                                                key="release-notes-tickets"
-                                                value="${release-notes-tickets}" />
                                         </replacetokens>
                                     </filterchain>
                                 </copy>
@@ -254,33 +247,6 @@
             </activation>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>fetch-release-notes-tickets</id>
-                                <phase>process-classes</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <classpathScope>compile</classpathScope>
-                                    <executable>${java.home}/bin/java</executable>
-                                    <arguments>
-                                        <argument>-Dvaadin.version=${project.version}</argument>
-                                        <argument>-classpath</argument>
-                                        <classpath />
-
-                                        <argument>com.vaadin.buildhelpers.FetchReleaseNotesTickets
-                                        </argument>
-                                    </arguments>
-                                    <outputFile>${relnotes.tickets.file}</outputFile>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
                     <!-- Extract sources for JavaDoc -->
                     <plugin>
                         <artifactId>maven-dependency-plugin</artifactId>
