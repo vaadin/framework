@@ -25,7 +25,7 @@ import com.vaadin.ui.TextField;
  *
  * @author Vaadin Ltd.
  *
- * @since
+ * @since 8.0
  */
 public abstract class BinderTestBase<BINDER extends Binder<ITEM>, ITEM> {
 

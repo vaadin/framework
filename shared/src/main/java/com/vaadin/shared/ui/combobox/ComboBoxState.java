@@ -36,7 +36,7 @@ public class ComboBoxState extends AbstractSingleSelectState {
      * NativeSelect - the user can not enter any text and clicking the text
      * field opens the drop down with options.
      *
-     * @since
+     * @since 8.0
      */
     @DelegateToWidget
     public boolean textInputAllowed = true;

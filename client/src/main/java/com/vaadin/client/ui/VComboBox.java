@@ -1329,7 +1329,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
      * This class is still subject to change and should not be considered as
      * public stable API.
      *
-     * @since
+     * @since 8.0
      */
     public class DataReceivedHandler {
 

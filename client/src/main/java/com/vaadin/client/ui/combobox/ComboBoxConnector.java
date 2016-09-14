@@ -133,7 +133,7 @@ public class ComboBoxConnector
      * This method is for internal use only and may be removed in future
      * versions.
      *
-     * @since
+     * @since 8.0
      * @param itemValue
      *            user entered string value for the new item
      */
@@ -148,7 +148,7 @@ public class ComboBoxConnector
      * This method is for internal use only and may be removed in future
      * versions.
      *
-     * @since
+     * @since 8.0
      * @param filter
      *            the current filter string
      */
@@ -166,7 +166,7 @@ public class ComboBoxConnector
      * This method is for internal use only and may be removed in future
      * versions.
      *
-     * @since
+     * @since 8.0
      * @param page
      *            the page number to get or -1 to let the server/connector
      *            decide based on current selection (possibly loading more data
@@ -196,7 +196,7 @@ public class ComboBoxConnector
      * This method is for internal use only and may be removed in future
      * versions.
      *
-     * @since
+     * @since 8.0
      * @param selectionKey
      *            the current selected item key
      */
@@ -216,7 +216,7 @@ public class ComboBoxConnector
      * This method is for internal use only and may be removed in future
      * versions.
      *
-     * @since
+     * @since 8.0
      */
     public void sendFocusEvent() {
         boolean registeredListeners = hasEventListener(EventId.FOCUS);
@@ -235,7 +235,7 @@ public class ComboBoxConnector
      * This method is for internal use only and may be removed in future
      * versions.
      *
-     * @since
+     * @since 8.0
      */
     public void sendBlurEvent() {
         boolean registeredListeners = hasEventListener(EventId.BLUR);

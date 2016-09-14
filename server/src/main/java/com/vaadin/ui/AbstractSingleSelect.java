@@ -39,7 +39,7 @@ import com.vaadin.util.ReflectTools;
  *
  * @see com.vaadin.shared.data.selection.SelectionModel.Single
  *
- * @since
+ * @since 8.0
  */
 public abstract class AbstractSingleSelect<T> extends
         AbstractListing<T, AbstractSingleSelect<T>.AbstractSingleSelection> {
