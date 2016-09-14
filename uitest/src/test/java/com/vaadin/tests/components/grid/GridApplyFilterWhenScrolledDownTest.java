@@ -34,7 +34,11 @@ public class GridApplyFilterWhenScrolledDownTest extends MultiBrowserTest {
                 .get(0);
         Assert.assertEquals("Test", cell.getText());
 
+        int gridHeight = grid.getSize().getHeight();
+        int scrollerHeight = grid.getVerticalScroller().getSize().getHeight();
         Assert.assertTrue(
-                grid.getVerticalScroller().getSize().getHeight() < 100);
+                "Scroller height is " + scrollerHeight
+                        + ", should be smaller than grid height: " + gridHeight,
+                scrollerHeight < gridHeight);
     }
 }
