@@ -46,6 +46,30 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
         return optionTexts;
     }
 
+    public List<String> getOptionsCssClasses() {
+        List<String> optionTexts = new ArrayList<>();
+        List<WebElement> options = findElements(byButtonSpan);
+        for (WebElement option : options) {
+            optionTexts.add(option.getAttribute("class"));
+        }
+        return optionTexts;
+    }
+
+    public List<String> getOptionsIconUrls() {
+        List<String> icons = new ArrayList<>();
+        List<WebElement> options = findElements(byButtonSpan);
+        for (WebElement option : options) {
+            List<WebElement> images = option.findElements(By.tagName("img"));
+            if (images != null && images.size() > 0) {
+                icons.add(images.get(0).getAttribute("src"));
+            } else {
+                icons.add(null);
+            }
+
+        }
+        return icons;
+    }
+
     public void selectByText(String text) throws ReadOnlyException {
         if (isReadOnly()) {
             throw new ReadOnlyException();
@@ -103,4 +127,5 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
                 "Clear operation is not supported for CheckBoxGroup."
                         + " This operation has no effect on the element.");
     }
+
 }

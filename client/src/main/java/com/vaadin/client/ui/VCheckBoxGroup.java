@@ -107,7 +107,8 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
             String iconUrl = item
                     .getString(CheckBoxGroupConstants.JSONKEY_ITEM_ICON);
             if (iconUrl != null && iconUrl.length() != 0) {
-                checkBox.icon = client.getIcon(iconUrl);
+                Icon icon = client.getIcon(iconUrl);
+                itemHtml = icon.getElement().getString() + itemHtml;
             }
 
             checkBox.addStyleName(CLASSNAME_OPTION);

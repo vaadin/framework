@@ -37,6 +37,17 @@ public class CheckBoxGroupTestUI
         return (Class) CheckBoxGroup.class;
     }
 
+
+    @Override
+    protected CheckBoxGroup<Object> constructComponent() {
+        CheckBoxGroup<Object> checkBoxGroup = super.constructComponent();
+        checkBoxGroup.setItemIconProvider(
+                item -> "Item 2".equals(item) ? ICON_16_HELP_PNG_CACHEABLE :
+                        null);
+        checkBoxGroup.setItemEnabledProvider(item -> !"Item 10".equals(item));
+        return checkBoxGroup;
+    }
+
     @Override
     protected void createActions() {
         super.createActions();

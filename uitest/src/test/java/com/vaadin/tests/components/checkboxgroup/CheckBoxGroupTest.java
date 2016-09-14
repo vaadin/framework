@@ -1,6 +1,6 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -26,6 +26,16 @@ import org.junit.Test;
 import com.vaadin.testbench.customelements.CheckBoxGroupElement;
 import com.vaadin.tests.components.checkbox.CheckBoxGroupTestUI;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test for CheckBoxGroup
@@ -112,5 +122,33 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
             i++;
         }
         assertEquals("Number of items", count, i);
+    }
+
+    @Test
+    public void testDisabled() {
+        List<String> optionsCssClasses = getSelect().getOptionsCssClasses();
+        for (int i = 0; i < optionsCssClasses.size(); i++) {
+            String cssClassList = optionsCssClasses.get(i);
+            if (i == 10) {
+                assertTrue("10th item should be disabled",
+                           cssClassList.toLowerCase().contains("disabled"));
+            } else {
+                assertFalse("Only 10th item should be disabled",
+                            cssClassList.toLowerCase().contains("disabled"));
+            }
+        }
+    }
+
+    @Test
+    public void testIconUrl() {
+        List<String> optionsIcons = getSelect().getOptionsIconUrls();
+        for (int i = 0; i < optionsIcons.size(); i++) {
+            String icon = optionsIcons.get(i);
+            if (i == 2) {
+                assertNotNull("2nd item should have icon", icon);
+            } else {
+                assertNull("Only 2nd item should have icon", icon);
+            }
+        }
     }
 }
