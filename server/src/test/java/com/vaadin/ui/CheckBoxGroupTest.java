@@ -17,22 +17,31 @@ package com.vaadin.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.server.data.DataSource;
 import com.vaadin.shared.data.selection.SelectionModel.Multi;
+import com.vaadin.shared.data.selection.SelectionServerRpc;
 
 public class CheckBoxGroupTest {
-    @Test
-    public void stableSelectionOrder() {
-        CheckBoxGroup<String> checkBoxGroup = new CheckBoxGroup<>();
+    private CheckBoxGroup<String> checkBoxGroup;
+    private Multi<String> selectionModel;
+
+    @Before
+    public void setUp() {
+        checkBoxGroup = new CheckBoxGroup<>();
         // Intentional deviation from upcoming selection order
         checkBoxGroup
                 .setDataSource(DataSource.create("Third", "Second", "First"));
-        Multi<String> selectionModel = checkBoxGroup.getSelectionModel();
+        selectionModel = checkBoxGroup.getSelectionModel();
+    }
 
+    @Test
+    public void stableSelectionOrder() {
         selectionModel.select("First");
         selectionModel.select("Second");
         selectionModel.select("Third");
@@ -44,6 +53,48 @@ public class CheckBoxGroupTest {
 
         selectionModel.select("First");
         assertSelectionOrder(selectionModel, "Second", "Third", "First");
+    }
+
+    @Test
+    public void apiSelectionChange_notUserOriginated() {
+        AtomicInteger listenerCount = new AtomicInteger(0);
+
+        checkBoxGroup.addSelectionListener(event -> {
+            listenerCount.incrementAndGet();
+            Assert.assertFalse(event.isUserOriginated());
+        });
+
+        checkBoxGroup.select("First");
+        checkBoxGroup.select("Second");
+
+        checkBoxGroup.deselect("Second");
+        checkBoxGroup.getSelectionModel().deselectAll();
+
+        Assert.assertEquals(4, listenerCount.get());
+    }
+
+    @Test
+    public void rpcSelectionChange_userOriginated() {
+        AtomicInteger listenerCount = new AtomicInteger(0);
+
+        checkBoxGroup.addSelectionListener(event -> {
+            listenerCount.incrementAndGet();
+            Assert.assertTrue(event.isUserOriginated());
+        });
+
+        SelectionServerRpc rpc = ComponentTest.getRpcProxy(checkBoxGroup,
+                SelectionServerRpc.class);
+
+        rpc.select(getItemKey("First"));
+        rpc.select(getItemKey("Second"));
+        rpc.deselect(getItemKey("Second"));
+
+        Assert.assertEquals(3, listenerCount.get());
+    }
+
+    private String getItemKey(String dataObject) {
+        return checkBoxGroup.getDataCommunicator().getKeyMapper()
+                .key(dataObject);
     }
 
     private static void assertSelectionOrder(Multi<String> selectionModel,

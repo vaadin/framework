@@ -16,7 +16,6 @@
 
 package com.vaadin.ui;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -29,17 +28,14 @@ import java.util.function.Predicate;
 
 import com.vaadin.data.Listing;
 import com.vaadin.event.selection.MultiSelectionEvent;
-import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.data.DataGenerator;
 import com.vaadin.server.data.DataSource;
-import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.optiongroup.CheckBoxGroupConstants;
 import com.vaadin.shared.ui.optiongroup.CheckBoxGroupState;
-import com.vaadin.util.ReflectTools;
 
 import elemental.json.JsonObject;
 
@@ -52,8 +48,7 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd
  * @since 8.0
  */
-public class CheckBoxGroup<T>
-        extends AbstractListing<T, SelectionModel.Multi<T>> {
+public class CheckBoxGroup<T> extends AbstractMultiSelect<T> {
 
     private final class SimpleMultiSelectModel
             implements SelectionModel.Multi<T> {
@@ -62,11 +57,16 @@ public class CheckBoxGroup<T>
 
         @Override
         public void select(T item) {
+            // Not user originated
+            select(item, false);
+        }
+
+        private void select(T item, boolean userOriginated) {
             if (selection.contains(item)) {
                 return;
             }
 
-            updateSelection(set -> set.add(item));
+            updateSelection(set -> set.add(item), userOriginated);
         }
 
         @Override
@@ -76,11 +76,16 @@ public class CheckBoxGroup<T>
 
         @Override
         public void deselect(T item) {
+            // Not user originated
+            deselect(item, false);
+        }
+
+        private void deselect(T item, boolean userOriginated) {
             if (!selection.contains(item)) {
                 return;
             }
 
-            updateSelection(set -> set.remove(item));
+            updateSelection(set -> set.remove(item), userOriginated);
         }
 
         @Override
@@ -89,16 +94,17 @@ public class CheckBoxGroup<T>
                 return;
             }
 
-            updateSelection(Set::clear);
+            updateSelection(Set::clear, false);
         }
 
-        private void updateSelection(Consumer<Set<T>> handler) {
+        private void updateSelection(Consumer<Set<T>> handler,
+                boolean userOriginated) {
             LinkedHashSet<T> oldSelection = new LinkedHashSet<>(selection);
             handler.accept(selection);
             LinkedHashSet<T> newSelection = new LinkedHashSet<>(selection);
 
             fireEvent(new MultiSelectionEvent<>(CheckBoxGroup.this,
-                    oldSelection, newSelection));
+                    oldSelection, newSelection, userOriginated));
 
             getDataCommunicator().reset();
         }
@@ -108,11 +114,6 @@ public class CheckBoxGroup<T>
             return selection.contains(item);
         }
     }
-
-    @Deprecated
-    private static final Method SELECTION_CHANGE_METHOD = ReflectTools
-            .findMethod(MultiSelectionListener.class, "accept",
-                    MultiSelectionEvent.class);
 
     private Function<T, Resource> itemIconProvider = item -> null;
 
@@ -172,14 +173,14 @@ public class CheckBoxGroup<T>
 
             @Override
             public void select(String key) {
-                getItemForSelectionChange(key)
-                        .ifPresent(getSelectionModel()::select);
+                getItemForSelectionChange(key).ifPresent(
+                        item -> getSelectionModel().select(item, true));
             }
 
             @Override
             public void deselect(String key) {
-                getItemForSelectionChange(key)
-                        .ifPresent(getSelectionModel()::deselect);
+                getItemForSelectionChange(key).ifPresent(
+                        item -> getSelectionModel().deselect(item, true));
             }
 
             private Optional<T> getItemForSelectionChange(String key) {
@@ -189,6 +190,11 @@ public class CheckBoxGroup<T>
                 }
 
                 return Optional.of(item);
+            }
+
+            private SimpleMultiSelectModel getSelectionModel() {
+                return (SimpleMultiSelectModel) CheckBoxGroup.this
+                        .getSelectionModel();
             }
         });
 
@@ -329,21 +335,5 @@ public class CheckBoxGroup<T>
     public void setItemEnabledProvider(Predicate<T> itemEnabledProvider) {
         Objects.nonNull(itemEnabledProvider);
         this.itemEnabledProvider = itemEnabledProvider;
-    }
-
-    /**
-     * Adds a selection listener that will be called when the selection is
-     * changed either by the user or programmatically.
-     *
-     * @param listener
-     *            the value change listener, not <code>null</code>
-     * @return a registration for the listener
-     */
-    public Registration addSelectionListener(
-            MultiSelectionListener<T> listener) {
-        Objects.requireNonNull(listener, "listener cannot be null");
-        addListener(MultiSelectionEvent.class, listener,
-                SELECTION_CHANGE_METHOD);
-        return () -> removeListener(MultiSelectionEvent.class, listener);
     }
 }

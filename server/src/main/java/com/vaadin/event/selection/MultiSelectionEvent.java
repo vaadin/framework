@@ -18,7 +18,7 @@ package com.vaadin.event.selection;
 import java.util.Collections;
 import java.util.Set;
 
-import com.vaadin.event.ConnectorEvent;
+import com.vaadin.data.HasValue.ValueChange;
 import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.ui.AbstractListing;
 
@@ -33,10 +33,9 @@ import com.vaadin.ui.AbstractListing;
  * @param <T>
  *            the data type of the selection model
  */
-public class MultiSelectionEvent<T> extends ConnectorEvent {
+public class MultiSelectionEvent<T> extends ValueChange<Set<T>> {
 
-    private Set<T> oldSelection;
-    private Set<T> newSelection;
+    private final Set<T> oldSelection;
 
     /**
      * Creates a new event.
@@ -47,13 +46,16 @@ public class MultiSelectionEvent<T> extends ConnectorEvent {
      *            the old set of selected items
      * @param newSelection
      *            the new set of selected items
+     * @param userOriginated
+     *            {@code true} if this event originates from the client,
+     *            {@code false} otherwise.
      */
     public MultiSelectionEvent(
             AbstractListing<T, SelectionModel.Multi<T>> source,
-            Set<T> oldSelection, Set<T> newSelection) {
-        super(source);
+            Set<T> oldSelection, Set<T> newSelection, boolean userOriginated) {
+        super(source, Collections.unmodifiableSet(newSelection),
+                userOriginated);
         this.oldSelection = oldSelection;
-        this.newSelection = newSelection;
     }
 
     /**
@@ -62,7 +64,7 @@ public class MultiSelectionEvent<T> extends ConnectorEvent {
      * @return a set of items selected after the selection was changed
      */
     public Set<T> getNewSelection() {
-        return Collections.unmodifiableSet(newSelection);
+        return getValue();
     }
 
     /**
@@ -73,5 +75,4 @@ public class MultiSelectionEvent<T> extends ConnectorEvent {
     public Set<T> getOldSelection() {
         return Collections.unmodifiableSet(oldSelection);
     }
-
 }

@@ -37,7 +37,9 @@ import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.data.selection.SelectionModel.Multi;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.AbstractMultiSelect;
 import com.vaadin.ui.AbstractSingleSelect;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
@@ -748,6 +750,45 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
+     * Creates a new binding for the given multi select component. The returned
+     * binding may be further configured before invoking
+     * {@link Binding#bind(Function, BiConsumer) Binding.bind} which completes
+     * the binding. Until {@code Binding.bind} is called, the binding has no
+     * effect.
+     *
+     * @param <SELECTVALUE>
+     *            the item type of the select
+     * @param select
+     *            the select to be bound, not null
+     * @return the new binding
+     */
+    public <SELECTVALUE> Binding<BEAN, Set<SELECTVALUE>, Set<SELECTVALUE>> forSelect(
+            AbstractMultiSelect<SELECTVALUE> select) {
+        return forField(new HasValue<Set<SELECTVALUE>>() {
+
+            @Override
+            public void setValue(Set<SELECTVALUE> value) {
+                Multi<SELECTVALUE> selectionModel = select.getSelectionModel();
+                selectionModel.deselectAll();
+                value.forEach(selectionModel::select);
+            }
+
+            @Override
+            public Set<SELECTVALUE> getValue() {
+                return select.getSelectionModel().getSelectedItems();
+            }
+
+            @Override
+            public Registration addValueChangeListener(
+                    ValueChangeListener<? super Set<SELECTVALUE>> listener) {
+                return select.addSelectionListener(
+                        e -> listener.accept(new ValueChange<>(select,
+                                getValue(), e.isUserOriginated())));
+            }
+        });
+    }
+
+    /**
      * Binds a field to a bean property represented by the given getter and
      * setter pair. The functions are used to update the field value from the
      * property and to store the field value to the property, respectively.
@@ -846,6 +887,58 @@ public class Binder<BEAN> implements Serializable {
     public <SELECTVALUE> void bind(AbstractSingleSelect<SELECTVALUE> select,
             Function<BEAN, SELECTVALUE> getter,
             BiConsumer<BEAN, SELECTVALUE> setter) {
+        forSelect(select).bind(getter, setter);
+    }
+
+    /**
+     * Binds a multi select to a bean property represented by the given getter
+     * and setter pair. The functions are used to update the set of selected
+     * items from the property and to store the selection to the property,
+     * respectively.
+     * <p>
+     * Use the {@link #forSelect(AbstractMultiSelect)} method instead if you
+     * want to further configure the new binding.
+     * <p>
+     * When a bean is bound with {@link Binder#bind(BEAN)}, the set of selected
+     * items are set to the return value of the given getter. The property value
+     * is then updated via the given setter whenever the selected items changes.
+     * The setter may be null; in that case the property value is never updated
+     * and the binding is said to be <i>read-only</i>.
+     * <p>
+     * If the Binder is already bound to some item, the newly bound select is
+     * associated with the corresponding bean property as described above.
+     * <p>
+     * The getter and setter can be arbitrary functions, for instance
+     * implementing user-defined conversion or validation. However, in the most
+     * basic use case you can simply pass a pair of method references to this
+     * method as follows:
+     *
+     * <pre>
+     * class Feature {
+     *     public enum Browser { CHROME, EDGE, FIREFOX, IE, OPERA, SAFARI }
+
+     *     public Set&lt;Browser> getSupportedBrowsers() { ... }
+     *     public void setSupportedBrowsers(Set&lt;Browser> title) { ... }
+     * }
+     *
+     * CheckBoxGroup<Title> browserSelect = new CheckBoxGroup<>();
+     * browserSelect.setItems(Browser.values());
+     * binder.bind(browserSelect, Feature::getSupportedBrowsers, Feature::setSupportedBrowsers);
+     * </pre>
+     *
+     * @param <SELECTVALUE>
+     *            the item type of the select
+     * @param select
+     *            the select to bind, not null
+     * @param getter
+     *            the function to get the set of selected items, not null
+     * @param setter
+     *            the function to save the set of selected items or null if
+     *            read-only
+     */
+    public <SELECTVALUE> void bind(AbstractMultiSelect<SELECTVALUE> select,
+            Function<BEAN, Set<SELECTVALUE>> getter,
+            BiConsumer<BEAN, Set<SELECTVALUE>> setter) {
         forSelect(select).bind(getter, setter);
     }
 

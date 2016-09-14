@@ -15,12 +15,10 @@
  */
 package com.vaadin.ui;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 
 import com.vaadin.server.ClientConnector;
-import com.vaadin.server.ServerRpcMethodInvocation;
+import com.vaadin.server.ServerRpcManager;
 import com.vaadin.shared.communication.ServerRpc;
 
 /**
@@ -67,32 +65,26 @@ public class ComponentTest {
     }
 
     /**
-     * Gets a proxy object which invokes ServerRpc methods.
+     * Gets the server rpc handler registered for a component.
      *
      * @param component
      *            the component which listens to the RPC
      * @param serverRpcClass
      *            the server RPC class
-     * @return a proxy which can be used to invoke RPC methods
+     * @return the server RPC handler
      */
-    @SuppressWarnings("unchecked")
     public static <T extends ServerRpc> T getRpcProxy(Component component,
             Class<T> serverRpcClass) {
-        return (T) Proxy.newProxyInstance(component.getClass().getClassLoader(),
-                new Class[] { serverRpcClass }, new InvocationHandler() {
-
-                    @Override
-                    public Object invoke(Object proxy, Method method,
-                            Object[] args) throws Throwable {
-                        ServerRpcMethodInvocation invocation = new ServerRpcMethodInvocation(
-                                component.getConnectorId(), serverRpcClass,
-                                method.getName(), args.length);
-                        invocation.setParameters(args);
-                        component.getRpcManager(serverRpcClass.getName())
-                                .applyInvocation(invocation);
-                        return null;
-                    }
-                });
+        try {
+            ServerRpcManager<?> rpcManager = component
+                    .getRpcManager(serverRpcClass.getName());
+            Method method = ServerRpcManager.class
+                    .getDeclaredMethod("getImplementation");
+            method.setAccessible(true);
+            return serverRpcClass.cast(method.invoke(rpcManager));
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
