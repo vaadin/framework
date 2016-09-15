@@ -178,15 +178,22 @@ public abstract class UIProvider implements Serializable {
             return new WidgetsetInfoImpl(uiWidgetset.value());
         }
 
+        // Second case: We might have an init parameter, use that
+        String initParameterWidgetSet = event.getService()
+                .getDeploymentConfiguration().getWidgetset(null);
+        if (initParameterWidgetSet != null) {
+            return new WidgetsetInfoImpl(initParameterWidgetSet);
+        }
+
         // Find the class AppWidgetset in the default package if one exists
         WidgetsetInfo info = getWidgetsetClassInfo();
 
-        // Second case: we have a generated class called APP_WIDGETSET_NAME
+        // Third case: we have a generated class called APP_WIDGETSET_NAME
         if (info != null) {
             return info;
         }
 
-        // third case: we have an AppWidgetset.gwt.xml file
+        // Fourth case: we have an AppWidgetset.gwt.xml file
         else {
             InputStream resource = event.getUIClass().getResourceAsStream(
                     "/" + APP_WIDGETSET_NAME + ".gwt.xml");
