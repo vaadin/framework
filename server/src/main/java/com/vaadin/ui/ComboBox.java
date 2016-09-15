@@ -83,19 +83,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
     }
 
     /**
-     * ItemIconProvider can be used to add custom icons to combo box items shown
-     * in the popup.
-     *
-     * @see ComboBox#setItemIconProvider(ItemIconProvider)
-     * @param <T>
-     *            item type in the combo box
-     */
-    @FunctionalInterface
-    public interface ItemIconProvider<T>
-            extends Function<T, Resource>, Serializable {
-    }
-
-    /**
      * Filter can be used to customize the filtering of items based on user
      * input.
      *
@@ -150,7 +137,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
     private ItemCaptionGenerator<T> itemCaptionGenerator = String::valueOf;
 
     private StyleGenerator<T> itemStyleGenerator = item -> null;
-    private ItemIconProvider<T> itemIconProvider = item -> null;
+    private IconGenerator<T> itemIconGenerator = item -> null;
 
     private ItemFilter<T> filter = (filterText, item) -> {
         if (filterText == null) {
@@ -241,7 +228,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
             if (style != null) {
                 jsonObject.put(ComboBoxConstants.STYLE, style);
             }
-            Resource icon = itemIconProvider.apply(data);
+            Resource icon = itemIconGenerator.apply(data);
             if (icon != null) {
                 String iconUrl = ResourceReference
                         .create(icon, ComboBox.this, null).getURL();
@@ -477,30 +464,35 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
     }
 
     /**
-     * Sets the item icon provider that is used to produce custom icons for
-     * showing items in the popup. The provider can return null for items with
+     * Sets the item icon generator that is used to produce custom icons for
+     * showing items in the popup. The generator can return null for items with
      * no icon.
      *
-     * @param itemIconProvider
-     *            the item icon provider to set, not null
+     * @see IconGenerator
+     *
+     * @param itemIconGenerator
+     *            the item icon generator to set, not null
+     * @throws NullPointerException
+     *             if {@code itemIconGenerator} is {@code null}
      */
-    public void setItemIconProvider(ItemIconProvider<T> itemIconProvider) {
-        Objects.requireNonNull(itemIconProvider,
-                "Item icon providers must not be null");
-        this.itemIconProvider = itemIconProvider;
+    public void setItemIconGenerator(IconGenerator<T> itemIconGenerator) {
+        Objects.requireNonNull(itemIconGenerator,
+                "Item icon generator must not be null");
+        this.itemIconGenerator = itemIconGenerator;
         getDataCommunicator().reset();
     }
 
     /**
-     * Gets the currently used item icon provider. The default item icon
+     * Gets the currently used item icon generator. The default item icon
      * provider returns null for all items, resulting in no icons being used.
      *
-     * @see #setItemIconProvider(ItemIconProvider)
+     * @see IconGenerator
+     * @see #setItemIconGenerator(IconGenerator)
      *
-     * @return the currently used item icon provider, not null
+     * @return the currently used item icon generator, not null
      */
-    public ItemIconProvider<T> getItemIconProvider() {
-        return itemIconProvider;
+    public IconGenerator<T> getItemIconGenerator() {
+        return itemIconGenerator;
     }
 
     /**

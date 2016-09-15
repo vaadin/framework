@@ -32,7 +32,7 @@ public class ComboBoxClickIcon extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         final ComboBox<String> combo = new ComboBox<>(null,
                 DataSource.create("A", "B", "C"));
-        combo.setItemIconProvider(item -> FontAwesome.ALIGN_CENTER);
+        combo.setItemIconGenerator(item -> FontAwesome.ALIGN_CENTER);
         combo.setTextInputAllowed(false);
         addComponent(combo);
     }

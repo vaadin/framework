@@ -29,7 +29,7 @@ public class ComboBoxLargeIcons extends TestBase {
                         "document-txt", "document-web", "document"));
         getLayout().addComponent(cb);
         // FIXME cb.setNullSelectionAllowed(false);
-        cb.setItemIconProvider(icon -> new ThemeResource(
+        cb.setItemIconGenerator(icon -> new ThemeResource(
                 "../runo/icons/32/" + icon + ".png?" + new Date().getTime()));
     }
 }

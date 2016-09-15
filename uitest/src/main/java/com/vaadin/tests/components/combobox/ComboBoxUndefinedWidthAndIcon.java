@@ -15,7 +15,7 @@ public class ComboBoxUndefinedWidthAndIcon extends TestBase {
             data.add("Item " + i);
         }
         ComboBox<String> cb = new ComboBox<>(null, data);
-        cb.setItemIconProvider(
+        cb.setItemIconGenerator(
                 item -> new ThemeResource("../runo/icons/16/users.png"));
 
         addComponent(cb);

@@ -21,7 +21,7 @@ public class ComboBoxItemIcon extends TestBase {
         {
             ComboBox<String> cb = new ComboBox<>();
             cb.setItems("FI", "SE");
-            cb.setItemIconProvider(item -> new ThemeResource(
+            cb.setItemIconGenerator(item -> new ThemeResource(
                     "../tests-tickets/icons/" + item.toLowerCase() + ".gif"));
 
             addComponent(cb);
@@ -29,7 +29,7 @@ public class ComboBoxItemIcon extends TestBase {
         {
             ComboBox<String> cb = new ComboBox<>();
             cb.setItems("Finland", "Australia", "Hungary");
-            cb.setItemIconProvider(
+            cb.setItemIconGenerator(
                     item -> new ThemeResource("../tests-tickets/icons/"
                             + item.substring(0, 2).toLowerCase() + ".gif"));
 

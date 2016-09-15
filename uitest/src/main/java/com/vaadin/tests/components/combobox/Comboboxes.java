@@ -137,9 +137,9 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
                     @Override
                     public void execute(ComboBox c, String value, Object data) {
                         if (value == null) {
-                            c.setItemIconProvider(item -> null);
+                            c.setItemIconGenerator(item -> null);
                         } else {
-                            c.setItemIconProvider(item -> new ThemeResource(
+                            c.setItemIconGenerator(item -> new ThemeResource(
                                     value + "?" + new Date().getTime()));
                         }
                     }
