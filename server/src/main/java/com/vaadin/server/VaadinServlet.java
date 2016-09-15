@@ -268,6 +268,15 @@ public class VaadinServlet extends HttpServlet implements Constants {
                         stringValue = value.toString();
                     }
 
+                    if (VaadinServlet.PARAMETER_WIDGETSET.equals(name.value())
+                            && method.getDefaultValue().equals(stringValue)) {
+                        // Do not set the widgetset to anything so that the
+                        // framework can fallback to the default. Setting
+                        // anything to the init parameter will force that into
+                        // use and e.g. AppWidgetset will not be used even
+                        // though it is found.
+                        continue;
+                    }
                     initParameters.setProperty(name.value(), stringValue);
                 } catch (Exception e) {
                     // This should never happen
