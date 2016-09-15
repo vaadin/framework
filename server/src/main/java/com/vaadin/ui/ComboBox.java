@@ -67,7 +67,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
             String selectedCaption = null;
             T value = getDataCommunicator().getKeyMapper().get(key);
             if (value != null) {
-                selectedCaption = getItemCaptionProvider().apply(value);
+                selectedCaption = getItemCaptionGenerator().apply(value);
             }
             getState().selectedItemCaption = selectedCaption;
         }
@@ -80,19 +80,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
      */
     @FunctionalInterface
     public interface NewItemHandler extends Consumer<String>, Serializable {
-    }
-
-    /**
-     * ItemCaptionProvider can be used to customize the string shown to the user
-     * for an item.
-     *
-     * @see ComboBox#setItemCaptionProvider(ItemCaptionProvider)
-     * @param <T>
-     *            item type in the combo box
-     */
-    @FunctionalInterface
-    public interface ItemCaptionProvider<T>
-            extends Function<T, String>, Serializable {
     }
 
     /**
@@ -160,7 +147,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
      */
     private NewItemHandler newItemHandler;
 
-    private ItemCaptionProvider<T> itemCaptionProvider = String::valueOf;
+    private ItemCaptionGenerator<T> itemCaptionGenerator = String::valueOf;
 
     private StyleGenerator<T> itemStyleGenerator = item -> null;
     private ItemIconProvider<T> itemIconProvider = item -> null;
@@ -169,7 +156,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
         if (filterText == null) {
             return true;
         } else {
-            return getItemCaptionProvider().apply(item).toLowerCase(getLocale())
+            return getItemCaptionGenerator().apply(item)
+                    .toLowerCase(getLocale())
                     .contains(filterText.toLowerCase(getLocale()));
         }
     };
@@ -248,7 +236,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
 
         addDataGenerator((T data, JsonObject jsonObject) -> {
             jsonObject.put(DataCommunicatorConstants.NAME,
-                    getItemCaptionProvider().apply(data));
+                    getItemCaptionGenerator().apply(data));
             String style = itemStyleGenerator.apply(data);
             if (style != null) {
                 jsonObject.put(ComboBoxConstants.STYLE, style);
@@ -429,28 +417,28 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
     }
 
     /**
-     * Gets the item caption provider that is used to produce the strings shown
+     * Gets the item caption generator that is used to produce the strings shown
      * in the combo box for each item.
      *
-     * @return the item caption provider used, not null
+     * @return the item caption generator used, not null
      */
-    public ItemCaptionProvider<T> getItemCaptionProvider() {
-        return itemCaptionProvider;
+    public ItemCaptionGenerator<T> getItemCaptionGenerator() {
+        return itemCaptionGenerator;
     }
 
     /**
-     * Sets the item caption provider that is used to produce the strings shown
+     * Sets the item caption generator that is used to produce the strings shown
      * in the combo box for each item. By default,
      * {@link String#valueOf(Object)} is used.
      *
-     * @param itemCaptionProvider
+     * @param itemCaptionGenerator
      *            the item caption provider to use, not null
      */
-    public void setItemCaptionProvider(
-            ItemCaptionProvider<T> itemCaptionProvider) {
-        Objects.requireNonNull(itemCaptionProvider,
-                "Item caption providers must not be null");
-        this.itemCaptionProvider = itemCaptionProvider;
+    public void setItemCaptionGenerator(
+            ItemCaptionGenerator<T> itemCaptionGenerator) {
+        Objects.requireNonNull(itemCaptionGenerator,
+                "Item caption generators must not be null");
+        this.itemCaptionGenerator = itemCaptionGenerator;
         getDataCommunicator().reset();
     }
 
@@ -580,7 +568,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
             HasValue.ValueChangeListener<? super T> listener) {
         return addSelectionListener(event -> {
             ((ValueChangeListener<T>) listener)
-                    .accept(new ValueChange<T>(event.getConnector(),
+                    .accept(new ValueChange<>(event.getConnector(),
                             event.getValue(), event.isUserOriginated()));
         });
     }

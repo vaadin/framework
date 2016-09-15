@@ -50,7 +50,7 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
                 "Undefined wide select with 50 items");
         s4.setWidth(null);
         populate(s4, 50);
-        s4.setItemCaptionProvider(StringBean::getValue);
+        s4.setItemCaptionGenerator(StringBean::getValue);
         s4.setScrollToSelectedItem(true);
         addTestComponent(s4);
 
@@ -72,14 +72,14 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
                 "200px wide select with 50 items");
         s8.setWidth("200px");
         populate(s8, 50);
-        s8.setItemCaptionProvider(StringBean::getValue);
+        s8.setItemCaptionGenerator(StringBean::getValue);
         addTestComponent(s8);
 
         ComboBox<StringBean> s9 = new PageLength0ComboBox();
         s9.setImmediate(true);
         s9.setCaption("Pagelength 0");
         populate(s9, 15);
-        s9.setItemCaptionProvider(StringBean::getValue);
+        s9.setItemCaptionGenerator(StringBean::getValue);
         addTestComponent(s9);
     }
 

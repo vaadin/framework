@@ -69,7 +69,7 @@ public class NotificationsWaiAria extends AbstractTestUI {
         items.put(Notification.Type.TRAY_NOTIFICATION, "Tray");
         items.put(Notification.Type.ASSISTIVE_NOTIFICATION, "Assistive");
 
-        type.setItemCaptionProvider(item -> items.get(item));
+        type.setItemCaptionGenerator(item -> items.get(item));
         type.setItems(items.keySet());
 
         type.setValue(items.keySet().iterator().next());

@@ -12,7 +12,7 @@ public class ComboBoxIdenticalItems extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         final ComboBox<String> select = new ComboBox<>("ComboBox");
-        select.setItemCaptionProvider(
+        select.setItemCaptionGenerator(
                 item -> item.startsWith("one") ? "One" : "Two");
         select.setItems("one-1", "one-2", "two");
         select.setEmptySelectionAllowed(false);

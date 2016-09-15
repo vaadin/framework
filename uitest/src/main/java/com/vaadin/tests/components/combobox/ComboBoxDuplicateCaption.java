@@ -33,7 +33,7 @@ public class ComboBoxDuplicateCaption extends TestBase {
             log.log("Person = " + p.getFirstName() + " " + p.getLastName());
         });
         box.setItems(list);
-        box.setItemCaptionProvider(Person::getLastName);
+        box.setItemCaptionGenerator(Person::getLastName);
 
         addComponent(log);
 

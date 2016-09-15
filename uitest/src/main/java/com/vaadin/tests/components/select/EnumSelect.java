@@ -37,7 +37,7 @@ public class EnumSelect extends AbstractTestUIWithLog {
         setLocale(new Locale("fi", "FI"));
         ComboBox<Constant> cb = new ComboBox<>(null,
                 Arrays.asList(Constant.values()));
-        cb.setItemCaptionProvider(value -> StringToEnumConverter
+        cb.setItemCaptionGenerator(value -> StringToEnumConverter
                 .enumToString(value, getLocale()));
         addComponent(cb);
 

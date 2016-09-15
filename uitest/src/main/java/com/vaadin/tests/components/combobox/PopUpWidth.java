@@ -26,7 +26,7 @@ public class PopUpWidth extends TestBase {
         cb.setItems(items);
         cb.setItemIconProvider(
                 item -> new ThemeResource("../runo/icons/16/users.png"));
-        cb.setItemCaptionProvider(item -> "Item " + item);
+        cb.setItemCaptionGenerator(item -> "Item " + item);
         return cb;
     }
 

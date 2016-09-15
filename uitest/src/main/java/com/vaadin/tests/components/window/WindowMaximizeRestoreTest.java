@@ -29,7 +29,7 @@ public class WindowMaximizeRestoreTest extends AbstractTestUI {
 
         addWindowAgain = new ComboBox<>("Add Window Again");
         addWindowAgain
-                .setItemCaptionProvider(window -> window.getData().toString());
+                .setItemCaptionGenerator(window -> window.getData().toString());
         addWindowAgain.addValueChangeListener(event -> {
             Object value = event.getValue();
             if (value != null && value instanceof Window) {
