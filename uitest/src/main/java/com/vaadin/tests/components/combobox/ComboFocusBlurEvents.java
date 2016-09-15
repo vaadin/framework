@@ -1,9 +1,7 @@
 package com.vaadin.tests.components.combobox;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.util.ItemDataSource;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import com.vaadin.v7.data.util.ObjectProperty;
@@ -17,12 +15,8 @@ public class ComboFocusBlurEvents extends TestBase {
     @Override
     protected void setup() {
 
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            list.add("Item " + i);
-        }
-
-        ComboBox<String> cb = new ComboBox<>("Combobox", list);
+        ComboBox<String> cb = new ComboBox<>("Combobox",
+                new ItemDataSource(100));
         cb.setPlaceholder("Enter text");
         cb.setDescription("Some Combobox");
         addComponent(cb);

@@ -1,9 +1,7 @@
 package com.vaadin.tests.components.combobox;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.util.ItemDataSource;
 import com.vaadin.ui.ComboBox;
 
 public class ComboBoxEnablesComboBox extends TestBase {
@@ -12,23 +10,15 @@ public class ComboBoxEnablesComboBox extends TestBase {
 
     @Override
     protected void setup() {
-        ComboBox<String> cb = new ComboBox<>("Always enabled");
-        populate(cb);
+        ComboBox<String> cb = new ComboBox<>("Always enabled",
+                new ItemDataSource(10));
         cb.addValueChangeListener(event -> cb2.setEnabled(true));
-        cb2 = new ComboBox<String>("Initially disabled");
+        cb2 = new ComboBox<String>("Initially disabled",
+                new ItemDataSource(10));
         cb2.setEnabled(false);
-        populate(cb2);
 
         addComponent(cb);
         addComponent(cb2);
-    }
-
-    private void populate(ComboBox<String> cb) {
-        List<String> items = new ArrayList<>();
-        for (int i = 1; i < 10; i++) {
-            items.add("Item " + i);
-        }
-        cb.setItems(items);
     }
 
     @Override

@@ -15,11 +15,9 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.util.ItemDataSource;
 import com.vaadin.ui.ComboBox;
 
 /**
@@ -33,17 +31,13 @@ public class ComboBoxMousewheel extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         addComponent(createComboBox("Paged"));
 
-        ComboBox cb = createComboBox("Unpaged");
+        ComboBox<String> cb = createComboBox("Unpaged");
         cb.setPageLength(0);
         addComponent(cb);
     }
 
-    private ComboBox createComboBox(String caption) {
-        List<String> data = new ArrayList<>();
-        for (int i = 1; i < 100; i++) {
-            data.add("Item " + i);
-        }
-        ComboBox<String> cb = new ComboBox<>(caption, data);
+    private ComboBox<String> createComboBox(String caption) {
+        ComboBox<String> cb = new ComboBox<>(caption, new ItemDataSource(100));
         cb.setId(caption);
         return cb;
     }

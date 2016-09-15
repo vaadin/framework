@@ -1,9 +1,7 @@
 package com.vaadin.tests.components.combobox;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.util.ItemDataSource;
 import com.vaadin.ui.ComboBox;
 
 public class ComboBoxNavigation extends TestBase {
@@ -20,11 +18,7 @@ public class ComboBoxNavigation extends TestBase {
 
     @Override
     protected void setup() {
-        List<String> items = new ArrayList<>();
-        for (int i = 1; i < 100; i++) {
-            items.add("Item " + i);
-        }
-        ComboBox cb = new ComboBox(null, items);
+        ComboBox<String> cb = new ComboBox<>(null, new ItemDataSource(100));
 
         addComponent(cb);
 
