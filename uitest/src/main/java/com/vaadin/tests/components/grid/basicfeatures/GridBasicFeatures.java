@@ -1211,6 +1211,16 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
                     }
                 });
+        createBooleanAction("Toggle all column hidden state", "Columns", false,
+                new Command<Grid, Boolean>() {
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        for (Column col : grid.getColumns()) {
+                            col.setHidden(!col.isHidden());
+                        }
+                    }
+                });
+
         createBooleanAction("All columns resizable", "Columns", false,
                 new Command<Grid, Boolean>() {
 

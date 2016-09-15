@@ -146,4 +146,26 @@ public class GridColumnResizeTest extends GridBasicFeaturesTest {
         assertGreaterOrEqual("Cell got too small.", cell.getSize().getWidth(),
                 10);
     }
+
+    @Test
+    public void testShrinkColumnToZeroWithHiddenColumn() {
+        openTestURL();
+        selectMenuPath("Component", "Columns",
+                "Toggle all column hidden state");
+        // Hides although already hidden
+        selectMenuPath("Component", "Columns", "Column 0", "Hidden");
+        // Shows
+        selectMenuPath("Component", "Columns", "Column 0", "Hidden");
+        // Hides although already hidden
+        selectMenuPath("Component", "Columns", "Column 2", "Hidden");
+        // Shows
+        selectMenuPath("Component", "Columns", "Column 2", "Hidden");
+        GridCellElement cell = getGridElement().getCell(0, 1);
+        dragResizeColumn(1, 0, -cell.getSize().getWidth());
+        assertGreaterOrEqual("Cell got too small.", cell.getSize().getWidth(),
+                10);
+        assertEquals(getGridElement().getCell(0, 0).getLocation().getY(),
+                getGridElement().getCell(0, 1).getLocation().getY());
+    }
+
 }

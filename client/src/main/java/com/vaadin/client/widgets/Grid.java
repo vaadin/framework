@@ -3214,7 +3214,6 @@ public class Grid<T> extends ResizeComposite implements
         private void calculate() {
             isScheduled = false;
             rescheduleCount = 0;
-
             assert !dataIsBeingFetched : "Trying to calculate column widths even though data is still being fetched.";
 
             if (columnsAreGuaranteedToBeWiderThanGrid()) {
@@ -5713,7 +5712,7 @@ public class Grid<T> extends ResizeComposite implements
                                     initialWidth = col.getWidthActual();
 
                                     minCellWidth = escalator
-                                            .getMinCellWidth(getColumns()
+                                            .getMinCellWidth(getVisibleColumns()
                                                     .indexOf(col));
                                     for (Column<?, T> c : getVisibleColumns()) {
                                         if (selectionColumn == c) {
