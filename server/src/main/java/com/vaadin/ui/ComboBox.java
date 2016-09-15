@@ -96,20 +96,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
     }
 
     /**
-     * ItemStyleProvider can be used to add custom styles to combo box items
-     * shown in the popup. The CSS class name that will be added to the item
-     * style names is <tt>v-filterselect-item-[style name]</tt>.
-     *
-     * @see ComboBox#setItemStyleProvider(ItemStyleProvider)
-     * @param <T>
-     *            item type in the combo box
-     */
-    @FunctionalInterface
-    public interface ItemStyleProvider<T>
-            extends Function<T, String>, Serializable {
-    }
-
-    /**
      * ItemIconProvider can be used to add custom icons to combo box items shown
      * in the popup.
      *
@@ -176,7 +162,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
 
     private ItemCaptionProvider<T> itemCaptionProvider = String::valueOf;
 
-    private ItemStyleProvider<T> itemStyleProvider = item -> null;
+    private StyleGenerator<T> itemStyleGenerator = item -> null;
     private ItemIconProvider<T> itemIconProvider = item -> null;
 
     private ItemFilter<T> filter = (filterText, item) -> {
@@ -263,7 +249,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
         addDataGenerator((T data, JsonObject jsonObject) -> {
             jsonObject.put(DataCommunicatorConstants.NAME,
                     getItemCaptionProvider().apply(data));
-            String style = itemStyleProvider.apply(data);
+            String style = itemStyleGenerator.apply(data);
             if (style != null) {
                 jsonObject.put(ComboBoxConstants.STYLE, style);
             }
@@ -469,32 +455,37 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
     }
 
     /**
-     * Sets the item style provider that is used to produce custom styles for
-     * showing items in the popup. The CSS class name that will be added to the
-     * item style names is <tt>v-filterselect-item-[style name]</tt>. Returning
-     * null from the provider results in no custom style name being set.
+     * Sets the style generator that is used to produce custom class names for
+     * items visible in the popup. The CSS class name that will be added to the
+     * item is <tt>v-filterselect-item-[style name]</tt>. Returning null from
+     * the generator results in no custom style name being set.
      *
-     * @param itemStyleProvider
-     *            the item style provider to set, not null
+     * @see StyleGenerator
+     *
+     * @param itemStyleGenerator
+     *            the item style generator to set, not null
+     * @throws NullPointerException
+     *             if {@code itemStyleGenerator} is {@code null}
      */
-    public void setItemStyleProvider(ItemStyleProvider<T> itemStyleProvider) {
-        Objects.requireNonNull(itemStyleProvider,
-                "Item style providers must not be null");
-        this.itemStyleProvider = itemStyleProvider;
+    public void setStyleGenerator(StyleGenerator<T> itemStyleGenerator) {
+        Objects.requireNonNull(itemStyleGenerator,
+                "Item style generator must not be null");
+        this.itemStyleGenerator = itemStyleGenerator;
         getDataCommunicator().reset();
     }
 
     /**
-     * Gets the currently used item style provider that is used to generate CSS
+     * Gets the currently used style generator that is used to generate CSS
      * class names for items. The default item style provider returns null for
      * all items, resulting in no custom item class names being set.
      *
-     * @see #setItemStyleProvider(ItemStyleProvider)
+     * @see StyleGenerator
+     * @see #setStyleGenerator(StyleGenerator)
      *
-     * @return the currently used item style provider, not null
+     * @return the currently used item style generator, not null
      */
-    public ItemStyleProvider<T> getItemStyleProvider() {
-        return itemStyleProvider;
+    public StyleGenerator<T> getStyleGenerator() {
+        return itemStyleGenerator;
     }
 
     /**

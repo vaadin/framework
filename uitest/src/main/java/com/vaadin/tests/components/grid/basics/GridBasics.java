@@ -17,13 +17,13 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.DetailsGenerator;
-import com.vaadin.ui.Grid.StyleGenerator;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.StyleGenerator;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
@@ -193,12 +193,15 @@ public class GridBasics extends AbstractTestUIWithLog {
                         : null))
                 .setCheckable(true);
         stateMenu
-                .addItem("Cell description generator", item -> grid.getColumns()
-                        .stream().findFirst()
-                        .ifPresent(c -> c.setDescriptionGenerator(
-                                item.isChecked() ? t -> "Cell tooltip for row "
-                                        + t.getRowNumber() + ", Column 0"
-                                        : null)))
+                .addItem("Cell description generator",
+                        item -> grid.getColumns().stream().findFirst()
+                                .ifPresent(
+                                        c -> c.setDescriptionGenerator(
+                                                item.isChecked()
+                                                        ? t -> "Cell tooltip for row "
+                                                                + t.getRowNumber()
+                                                                + ", Column 0"
+                                                        : null)))
                 .setCheckable(true);
         stateMenu.addItem("Item click listener", new Command() {
 
@@ -230,7 +233,8 @@ public class GridBasics extends AbstractTestUIWithLog {
     }
 
     private void createRowStyleMenu(MenuItem rowStyleMenu) {
-        addGridMethodMenu(rowStyleMenu, ROW_STYLE_GENERATOR_NONE, null,
+        addGridMethodMenu(rowStyleMenu, ROW_STYLE_GENERATOR_NONE,
+                (StyleGenerator<DataObject>) t -> null,
                 grid::setStyleGenerator);
         addGridMethodMenu(rowStyleMenu, ROW_STYLE_GENERATOR_ROW_NUMBERS,
                 t -> "row" + t.getRowNumber(), grid::setStyleGenerator);
@@ -247,16 +251,18 @@ public class GridBasics extends AbstractTestUIWithLog {
 
     private void createCellStyleMenu(MenuItem cellStyleMenu) {
         addGridMethodMenu(cellStyleMenu, CELL_STYLE_GENERATOR_NONE,
-                (StyleGenerator<DataObject>) null,
+                (StyleGenerator<DataObject>) t -> null,
                 sg -> grid.getColumns().forEach(c -> c.setStyleGenerator(sg)));
         addGridMethodMenu(cellStyleMenu, CELL_STYLE_GENERATOR_EMPTY,
                 (StyleGenerator<DataObject>) t -> "",
                 sg -> grid.getColumns().forEach(c -> c.setStyleGenerator(sg)));
         addGridMethodMenu(cellStyleMenu,
-                CELL_STYLE_GENERATOR_PROPERTY_TO_STRING, null,
+                CELL_STYLE_GENERATOR_PROPERTY_TO_STRING,
+                (StyleGenerator<DataObject>) t -> null,
                 sg -> grid.getColumns().forEach(c -> c.setStyleGenerator(
                         t -> c.getCaption().replaceAll(" ", "-"))));
-        addGridMethodMenu(cellStyleMenu, CELL_STYLE_GENERATOR_SPECIAL, null,
+        addGridMethodMenu(cellStyleMenu, CELL_STYLE_GENERATOR_SPECIAL,
+                (StyleGenerator<DataObject>) t -> null,
                 sg -> grid.getColumns().forEach(c -> c.setStyleGenerator(t -> {
                     if (t.getRowNumber() % 4 == 1) {
                         return null;

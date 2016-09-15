@@ -243,17 +243,6 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     }
 
     /**
-     * A callback interface for generating style names for an item.
-     *
-     * @param <T>
-     *            the grid bean type
-     */
-    @FunctionalInterface
-    public interface StyleGenerator<T>
-            extends Function<T, String>, Serializable {
-    }
-
-    /**
      * A callback interface for generating description texts for an item.
      *
      * @param <T>
@@ -518,7 +507,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
 
         private Function<SortDirection, Stream<SortOrder<String>>> sortOrderProvider;
         private Comparator<T> comparator;
-        private StyleGenerator<T> styleGenerator;
+        private StyleGenerator<T> styleGenerator = item -> null;
         private DescriptionGenerator<T> descriptionGenerator;
 
         /**
@@ -619,13 +608,11 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
 
             obj.put(communicationId, rendererValue);
 
-            if (styleGenerator != null) {
-                String style = styleGenerator.apply(data);
-                if (style != null && !style.isEmpty()) {
-                    JsonObject styleObj = getDataObject(jsonObject,
-                            GridState.JSONKEY_CELLSTYLES);
-                    styleObj.put(communicationId, style);
-                }
+            String style = styleGenerator.apply(data);
+            if (style != null && !style.isEmpty()) {
+                JsonObject styleObj = getDataObject(jsonObject,
+                        GridState.JSONKEY_CELLSTYLES);
+                styleObj.put(communicationId, style);
             }
             if (descriptionGenerator != null) {
                 String description = descriptionGenerator.apply(data);
@@ -810,16 +797,20 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         }
 
         /**
-         * Sets the style generator that is used for generating styles for cells
-         * in this column.
+         * Sets the style generator that is used for generating class names for
+         * cells in this column. Returning null from the generator results in no
+         * custom style name being set.
          *
          * @param cellStyleGenerator
-         *            the cell style generator to set, or <code>null</code> to
-         *            remove a previously set generator
+         *            the cell style generator to set, not null
          * @return this column
+         * @throws NullPointerException
+         *             if {@code cellStyleGenerator} is {@code null}
          */
         public Column<T, V> setStyleGenerator(
                 StyleGenerator<T> cellStyleGenerator) {
+            Objects.requireNonNull(cellStyleGenerator,
+                    "Cell style generator must not be null");
             this.styleGenerator = cellStyleGenerator;
             getParent().getDataCommunicator().reset();
             return this;
@@ -829,8 +820,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
          * Gets the style generator that is used for generating styles for
          * cells.
          *
-         * @return the cell style generator, or <code>null</code> if no
-         *         generator is set
+         * @return the cell style generator
          */
         public StyleGenerator<T> getStyleGenerator() {
             return styleGenerator;
@@ -907,7 +897,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     private List<SortOrder<Column<T, ?>>> sortOrder = new ArrayList<>();
     private DetailsManager<T> detailsManager;
     private Set<Component> extensionComponents = new HashSet<>();
-    private StyleGenerator<T> styleGenerator;
+    private StyleGenerator<T> styleGenerator = item -> null;
     private DescriptionGenerator<T> descriptionGenerator;
 
     /**
@@ -920,11 +910,9 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         addExtension(detailsManager);
         addDataGenerator(detailsManager);
         addDataGenerator((item, json) -> {
-            if (styleGenerator != null) {
-                String styleName = styleGenerator.apply(item);
-                if (styleName != null && !styleName.isEmpty()) {
-                    json.put(GridState.JSONKEY_ROWSTYLE, styleName);
-                }
+            String styleName = styleGenerator.apply(item);
+            if (styleName != null && !styleName.isEmpty()) {
+                json.put(GridState.JSONKEY_ROWSTYLE, styleName);
             }
             if (descriptionGenerator != null) {
                 String description = descriptionGenerator.apply(item);
@@ -1197,22 +1185,31 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     }
 
     /**
-     * Sets the style generator that is used for generating styles for rows.
+     * Sets the style generator that is used for generating class names for rows
+     * in this grid. Returning null from the generator results in no custom
+     * style name being set.
+     *
+     * @see StyleGenerator
      *
      * @param styleGenerator
-     *            the row style generator to set, or <code>null</code> to remove
-     *            a previously set generator
+     *            the row style generator to set, not null
+     * @throws NullPointerException
+     *             if {@code styleGenerator} is {@code null}
      */
     public void setStyleGenerator(StyleGenerator<T> styleGenerator) {
+        Objects.requireNonNull(styleGenerator,
+                "Style generator must not be null");
         this.styleGenerator = styleGenerator;
         getDataCommunicator().reset();
     }
 
     /**
-     * Gets the style generator that is used for generating styles for rows.
+     * Gets the style generator that is used for generating class names for
+     * rows.
      *
-     * @return the row style generator, or <code>null</code> if no generator is
-     *         set
+     * @see StyleGenerator
+     *
+     * @return the row style generator
      */
     public StyleGenerator<T> getStyleGenerator() {
         return styleGenerator;
