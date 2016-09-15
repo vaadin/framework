@@ -17,7 +17,7 @@ package com.vaadin.client.ui.textfield;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.annotations.OnStateChange;
-import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractTextFieldWidget;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldClientRpc;
@@ -28,8 +28,8 @@ import com.vaadin.ui.AbstractTextField;
 /**
  * Connector class for AbstractTextField.
  */
-public abstract class AbstractTextFieldConnector
-        extends AbstractComponentConnector implements ValueChangeHandler.Owner {
+public abstract class AbstractTextFieldConnector extends AbstractFieldConnector
+        implements ValueChangeHandler.Owner {
 
     private class AbstractTextFieldClientRpcImpl
             implements AbstractTextFieldClientRpc {

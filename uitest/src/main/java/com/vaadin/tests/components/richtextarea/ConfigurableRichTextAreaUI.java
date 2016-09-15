@@ -3,7 +3,8 @@ package com.vaadin.tests.components.richtextarea;
 import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.ui.RichTextArea;
 
-public class RichTextAreaTest extends AbstractFieldTest<RichTextArea, String> {
+public class ConfigurableRichTextAreaUI
+        extends AbstractFieldTest<RichTextArea, String> {
 
     @Override
     protected Class<RichTextArea> getTestClass() {
