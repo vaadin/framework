@@ -454,7 +454,7 @@ public class ClassPathExplorer {
                     String key = dirs[i].getCanonicalPath() + "/" + name
                             + dirs[i].getName();
                     locations.put(key,
-                            new URL("file://" + dirs[i].getCanonicalPath()));
+                            dirs[i].getCanonicalFile().toURI().toURL());
                 }
             } catch (Exception ioe) {
                 return;
