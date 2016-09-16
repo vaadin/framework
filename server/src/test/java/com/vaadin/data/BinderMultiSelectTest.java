@@ -118,6 +118,20 @@ public class BinderMultiSelectTest
     }
 
     @Test
+    public void bound_setSelection_beanValueIsACopy() {
+        bindEnum();
+
+        select.select(TestEnum.TWO);
+
+        Set<TestEnum> enums = item.getEnums();
+
+        binder.bind(new BeanWithEnums());
+        select.select(TestEnum.ONE);
+
+        assertEquals(Collections.singleton(TestEnum.TWO), enums);
+    }
+
+    @Test
     public void bound_deselect_beanValueUpdatedToNull() {
         item.setEnums(Collections.singleton(TestEnum.ONE));
         bindEnum();

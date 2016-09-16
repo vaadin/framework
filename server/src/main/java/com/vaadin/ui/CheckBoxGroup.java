@@ -71,7 +71,7 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T> {
 
         @Override
         public Set<T> getSelectedItems() {
-            return Collections.unmodifiableSet(selection);
+            return Collections.unmodifiableSet(new LinkedHashSet<>(selection));
         }
 
         @Override
