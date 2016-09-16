@@ -3214,7 +3214,8 @@ public class Grid<T> extends ResizeComposite implements
         private void calculate() {
             isScheduled = false;
             rescheduleCount = 0;
-            assert !dataIsBeingFetched : "Trying to calculate column widths even though data is still being fetched.";
+            assert !(currentDataAvailable.isEmpty()
+                    && dataIsBeingFetched) : "Trying to calculate column widths without data while data is still being fetched.";
 
             if (columnsAreGuaranteedToBeWiderThanGrid()) {
                 applyColumnWidths();
