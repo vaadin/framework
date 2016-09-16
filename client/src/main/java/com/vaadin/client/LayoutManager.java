@@ -600,6 +600,13 @@ public class LayoutManager {
         Profiler.leave("layout PostLayoutListener");
 
         cleanMeasuredSizes();
+        // Ensure temporary variables are cleaned
+        if (!pendingOverflowFixes.isEmpty()) {
+            getLogger().warning(
+                    "pendingOverflowFixes is not empty at the end of doLayout: "
+                            + pendingOverflowFixes.dump());
+            pendingOverflowFixes = FastStringSet.create();
+        }
 
         getLogger().info(
                 "Total layout phase time: " + totalDuration.elapsedMillis()
