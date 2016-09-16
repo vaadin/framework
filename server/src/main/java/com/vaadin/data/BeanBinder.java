@@ -30,6 +30,7 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.ui.AbstractMultiSelect;
 import com.vaadin.ui.AbstractSingleSelect;
+import com.vaadin.util.ReflectTools;
 
 /**
  * A {@code Binder} subclass specialized for binding <em>beans</em>: classes
@@ -237,10 +238,18 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         @SuppressWarnings("unchecked")
         private Converter<TARGET, Object> createConverter() {
             return Converter.from(
-                    fieldValue -> getter.getReturnType().cast(fieldValue),
+                    fieldValue -> cast(fieldValue, getter.getReturnType()),
                     propertyValue -> (TARGET) propertyValue, exception -> {
                         throw new RuntimeException(exception);
                     });
+        }
+
+        private <T> T cast(TARGET value, Class<T> clazz) {
+            if (clazz.isPrimitive()) {
+                return (T) ReflectTools.convertPrimitiveType(clazz).cast(value);
+            } else {
+                return clazz.cast(value);
+            }
         }
     }
 

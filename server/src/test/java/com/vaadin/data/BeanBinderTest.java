@@ -10,8 +10,8 @@ import org.junit.Test;
 
 import com.vaadin.tests.data.bean.BeanToValidate;
 
-public class BeanBinderTest extends
-        BinderTestBase<BeanBinder<BeanToValidate>, BeanToValidate> {
+public class BeanBinderTest
+        extends BinderTestBase<BeanBinder<BeanToValidate>, BeanToValidate> {
 
     @Before
     public void setUp() {
@@ -152,6 +152,16 @@ public class BeanBinderTest extends
         binder.bind(item);
 
         assertEquals("32", ageField.getValue());
+    }
+
+    @Test
+    public void beanBinderWithBoxedType() {
+        binder.forField(ageField)
+                .withConverter(Integer::valueOf, String::valueOf).bind("age");
+        binder.bind(item);
+
+        ageField.setValue(String.valueOf(20));
+        assertEquals(20, item.getAge());
     }
 
     private void assertInvalid(HasValue<?> field, String message) {
