@@ -12,7 +12,8 @@ public class TableShouldNotEatValueChanges extends TestBase {
 
     @Override
     protected void setup() {
-        Table t = new Table("Table with multiselection and item click listener");
+        Table t = new Table(
+                "Table with multiselection and item click listener");
         t.focus();
         t.setPageLength(3);
         t.addContainerProperty("foo", String.class, "bar");

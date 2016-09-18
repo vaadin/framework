@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -87,24 +87,26 @@ public class VDateFieldCalendar extends VDateField {
                         .getCalendarField()) {
                     getClient().updateVariable(getId(), "day", date2.getDate(),
                             false);
-                    if (getCurrentResolution().getCalendarField() > Resolution.DAY
-                            .getCalendarField()) {
+                    if (getCurrentResolution()
+                            .getCalendarField() > Resolution.DAY
+                                    .getCalendarField()) {
                         getClient().updateVariable(getId(), "hour",
                                 date2.getHours(), false);
-                        if (getCurrentResolution().getCalendarField() > Resolution.HOUR
-                                .getCalendarField()) {
+                        if (getCurrentResolution()
+                                .getCalendarField() > Resolution.HOUR
+                                        .getCalendarField()) {
                             getClient().updateVariable(getId(), "min",
                                     date2.getMinutes(), false);
-                            if (getCurrentResolution().getCalendarField() > Resolution.MINUTE
-                                    .getCalendarField()) {
+                            if (getCurrentResolution()
+                                    .getCalendarField() > Resolution.MINUTE
+                                            .getCalendarField()) {
                                 getClient().updateVariable(getId(), "sec",
                                         date2.getSeconds(), false);
-                                if (getCurrentResolution().getCalendarField() > Resolution.SECOND
-                                        .getCalendarField()) {
-                                    getClient().updateVariable(
-                                            getId(),
-                                            "msec",
-                                            DateTimeService
+                                if (getCurrentResolution()
+                                        .getCalendarField() > Resolution.SECOND
+                                                .getCalendarField()) {
+                                    getClient().updateVariable(getId(),
+                                            "msec", DateTimeService
                                                     .getMilliseconds(date2),
                                             false);
                                 }

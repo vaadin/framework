@@ -18,19 +18,22 @@ public class TableWithContainerRequiringEqualsForItemId extends AbstractTestUI {
     private MyEntityContainer container = new MyEntityContainer();
     private Log log = new Log(10);
 
-    public static class MyEntityContainer extends BeanContainer<Long, MyEntity> {
+    public static class MyEntityContainer
+            extends BeanContainer<Long, MyEntity> {
 
         public MyEntityContainer() {
             super(MyEntity.class);
-            setBeanIdResolver(new BeanIdResolver<Long, TableWithContainerRequiringEqualsForItemId.MyEntity>() {
+            setBeanIdResolver(
+                    new BeanIdResolver<Long, TableWithContainerRequiringEqualsForItemId.MyEntity>() {
 
-                @Override
-                public Long getIdForBean(MyEntity bean) {
-                    // Return a new instance every time to ensure Table can
-                    // handle it
-                    return new Long(bean.getId());
-                }
-            });
+                        @Override
+                        public Long getIdForBean(MyEntity bean) {
+                            // Return a new instance every time to ensure Table
+                            // can
+                            // handle it
+                            return new Long(bean.getId());
+                        }
+                    });
 
         }
 
@@ -66,14 +69,15 @@ public class TableWithContainerRequiringEqualsForItemId extends AbstractTestUI {
 
         for (int i = 0; i < 1000; i++) {
             MyEntity myEntity = new MyEntity(i + "st");
-            myEntity.setCreated(new Date(new Date().getTime() - 24 * 60 * 60
-                    * 1000L));
+            myEntity.setCreated(
+                    new Date(new Date().getTime() - 24 * 60 * 60 * 1000L));
             myEntity.setId(i);
             container.addBean(myEntity);
         }
 
         t.setContainerDataSource(container);
-        t.setVisibleColumns(new Object[] { "id", "created", "name", "Actions" });
+        t.setVisibleColumns(
+                new Object[] { "id", "created", "name", "Actions" });
 
         addComponent(t);
         addComponent(log);

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,17 +24,17 @@ import com.vaadin.util.ReflectTools;
 /**
  * Interface that must be implemented by all {@link Component}s that contain
  * other {@link Component}s.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
- * 
+ *
  */
 public interface HasComponents extends Component, Iterable<Component> {
     /**
      * Gets an iterator to the collection of contained components. Using this
      * iterator it is possible to step through all components contained in this
      * container.
-     * 
+     *
      * @return the component iterator.
      */
     @Override
@@ -43,21 +43,22 @@ public interface HasComponents extends Component, Iterable<Component> {
     /**
      * Interface for {@link HasComponents} implementations that support sending
      * attach and detach events for components.
-     * 
+     *
      * @since 7.0
      */
     public interface ComponentAttachDetachNotifier extends Serializable {
         /**
          * Listens the component attach events.
-         * 
+         *
          * @param listener
          *            the listener to add.
          */
-        public void addComponentAttachListener(ComponentAttachListener listener);
+        public void addComponentAttachListener(
+                ComponentAttachListener listener);
 
         /**
          * Stops the listening component attach events.
-         * 
+         *
          * @param listener
          *            the listener to removed.
          */
@@ -67,7 +68,8 @@ public interface HasComponents extends Component, Iterable<Component> {
         /**
          * Listens the component detach events.
          */
-        public void addComponentDetachListener(ComponentDetachListener listener);
+        public void addComponentDetachListener(
+                ComponentDetachListener listener);
 
         /**
          * Stops the listening component detach events.
@@ -87,7 +89,7 @@ public interface HasComponents extends Component, Iterable<Component> {
 
         /**
          * A new component is attached to container.
-         * 
+         *
          * @param event
          *            the component attach event.
          */
@@ -100,12 +102,12 @@ public interface HasComponents extends Component, Iterable<Component> {
     public interface ComponentDetachListener extends Serializable {
 
         public static final Method detachMethod = ReflectTools.findMethod(
-                ComponentDetachListener.class,
-                "componentDetachedFromContainer", ComponentDetachEvent.class);
+                ComponentDetachListener.class, "componentDetachedFromContainer",
+                ComponentDetachEvent.class);
 
         /**
          * A component has been detached from container.
-         * 
+         *
          * @param event
          *            the component detach event.
          */
@@ -122,7 +124,7 @@ public interface HasComponents extends Component, Iterable<Component> {
 
         /**
          * Creates a new attach event.
-         * 
+         *
          * @param container
          *            the container the component has been detached to.
          * @param attachedComponent
@@ -136,7 +138,7 @@ public interface HasComponents extends Component, Iterable<Component> {
 
         /**
          * Gets the component container.
-         * 
+         *
          * @param the
          *            component container.
          */
@@ -146,7 +148,7 @@ public interface HasComponents extends Component, Iterable<Component> {
 
         /**
          * Gets the attached component.
-         * 
+         *
          * @param the
          *            attach component.
          */
@@ -165,7 +167,7 @@ public interface HasComponents extends Component, Iterable<Component> {
 
         /**
          * Creates a new detach event.
-         * 
+         *
          * @param container
          *            the container the component has been detached from.
          * @param detachedComponent
@@ -179,7 +181,7 @@ public interface HasComponents extends Component, Iterable<Component> {
 
         /**
          * Gets the component container.
-         * 
+         *
          * @param the
          *            component container.
          */
@@ -189,7 +191,7 @@ public interface HasComponents extends Component, Iterable<Component> {
 
         /**
          * Gets the detached component.
-         * 
+         *
          * @return the detached component.
          */
         public Component getDetachedComponent() {

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -41,9 +41,9 @@ import com.vaadin.client.WidgetUtil;
 
 /**
  * Custom Layout implements complex layout defined with HTML template.
- * 
+ *
  * @author Vaadin Ltd
- * 
+ *
  */
 public class VCustomLayout extends ComplexPanel {
 
@@ -106,14 +106,14 @@ public class VCustomLayout extends ComplexPanel {
 
     /**
      * Sets widget to given location.
-     * 
+     *
      * If location already contains a widget it will be removed.
-     * 
+     *
      * @param widget
      *            Widget to be set into location.
      * @param location
      *            location name where widget will be added
-     * 
+     *
      * @throws IllegalArgumentException
      *             if no such location is found in the layout.
      */
@@ -126,8 +126,8 @@ public class VCustomLayout extends ComplexPanel {
         // If no given location is found in the layout, and exception is throws
         Element elem = locationToElement.get(location);
         if (elem == null && hasTemplate()) {
-            throw new IllegalArgumentException("No location " + location
-                    + " found");
+            throw new IllegalArgumentException(
+                    "No location " + location + " found");
         }
 
         // Get previous widget
@@ -168,15 +168,13 @@ public class VCustomLayout extends ComplexPanel {
                 "<((?:img)|(?:IMG))\\s([^>]*)src=\"((?![a-z]+:)[^/][^\"]+)\"",
                 "<$1 $2src=\"" + relImgPrefix + "$3\"");
         // also support src attributes without quotes
-        template = template
-                .replaceAll(
-                        "<((?:img)|(?:IMG))\\s([^>]*)src=[^\"]((?![a-z]+:)[^/][^ />]+)[ />]",
-                        "<$1 $2src=\"" + relImgPrefix + "$3\"");
+        template = template.replaceAll(
+                "<((?:img)|(?:IMG))\\s([^>]*)src=[^\"]((?![a-z]+:)[^/][^ />]+)[ />]",
+                "<$1 $2src=\"" + relImgPrefix + "$3\"");
         // also prefix relative style="...url(...)..."
-        template = template
-                .replaceAll(
-                        "(<[^>]+style=\"[^\"]*url\\()((?![a-z]+:)[^/][^\"]+)(\\)[^>]*>)",
-                        "$1 " + relImgPrefix + "$2 $3");
+        template = template.replaceAll(
+                "(<[^>]+style=\"[^\"]*url\\()((?![a-z]+:)[^/][^\"]+)(\\)[^>]*>)",
+                "$1 " + relImgPrefix + "$2 $3");
 
         getElement().setInnerHTML(template);
 
@@ -251,11 +249,11 @@ public class VCustomLayout extends ComplexPanel {
 
     /**
      * Extract body part and script tags from raw html-template.
-     * 
+     *
      * Saves contents of all script-tags to private property: scripts. Returns
      * contents of the body part for the html without script-tags. Also replaces
      * all _UID_ tags with an unique id-string.
-     * 
+     *
      * @param html
      *            Original HTML-template received from server
      * @return html that is used to create the HTMLPanel.
@@ -416,7 +414,7 @@ public class VCustomLayout extends ComplexPanel {
      * functions are to be run.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param el
      * @return true if layout function exists and was run successfully, else
      *         false.

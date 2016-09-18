@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -30,10 +30,10 @@ import com.vaadin.client.ui.VNotification.HideEvent;
 
 /**
  * Class that enables SuperDevMode using a ?superdevmode parameter in the url.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0
- * 
+ *
  */
 public class SuperDevMode {
 
@@ -53,9 +53,8 @@ public class SuperDevMode {
 
     private static void recompileWidgetsetAndStartInDevMode(
             final String serverUrl) {
-        getLogger().info(
-                "Recompiling widgetset using<br/>" + serverUrl
-                        + "<br/>and then reloading in super dev mode");
+        getLogger().info("Recompiling widgetset using<br/>" + serverUrl
+                + "<br/>and then reloading in super dev mode");
         VNotification n = new VNotification();
         n.show("<b>Recompiling widgetset, please wait</b>",
                 VNotification.CENTERED, VNotification.STYLE_SYSTEM);
@@ -63,8 +62,9 @@ public class SuperDevMode {
         JsonpRequestBuilder b = new JsonpRequestBuilder();
         b.setCallbackParam("_callback");
         b.setTimeout(COMPILE_TIMEOUT_IN_SECONDS * 1000);
-        b.requestObject(serverUrl + "recompile/" + GWT.getModuleName() + "?"
-                + getRecompileParameters(GWT.getModuleName()),
+        b.requestObject(
+                serverUrl + "recompile/" + GWT.getModuleName() + "?"
+                        + getRecompileParameters(GWT.getModuleName()),
                 new AsyncCallback<RecompileResult>() {
 
                     @Override
@@ -77,8 +77,7 @@ public class SuperDevMode {
                             return;
                         }
 
-                        setSession(
-                                getSuperDevModeHookKey(),
+                        setSession(getSuperDevModeHookKey(),
                                 getSuperDevWidgetSetUrl(GWT.getModuleName(),
                                         serverUrl));
                         setSession(SKIP_RECOMPILE, "1");
@@ -92,9 +91,8 @@ public class SuperDevMode {
                         getLogger().severe("JSONP compile call failed");
                         // Don't log exception as they are shown as
                         // notifications
-                        getLogger().severe(
-                                caught.getClass().getSimpleName() + ": "
-                                        + caught.getMessage());
+                        getLogger().severe(caught.getClass().getSimpleName()
+                                + ": " + caught.getMessage());
                         failed();
 
                     }
@@ -127,13 +125,13 @@ public class SuperDevMode {
     private native static String getRecompileParameters(String moduleName)
     /*-{
         var prop_map = $wnd.__gwt_activeModules[moduleName].bindings();
-        
+
         // convert map to URL parameter string
         var props = [];
         for (var key in prop_map) {
            props.push(encodeURIComponent(key) + '=' + encodeURIComponent(prop_map[key]))
         }
-        
+
         return props.join('&') + '&';
     }-*/;
 
@@ -179,7 +177,7 @@ public class SuperDevMode {
     /**
      * The URL of the code server. The default URL (http://localhost:9876/) will
      * be used if this is empty or null.
-     * 
+     *
      * @param serverUrl
      *            The url of the code server or null to use the default
      * @return true if recompile started, false if we are running in
@@ -243,7 +241,7 @@ public class SuperDevMode {
      * method returns true. The application will be restarted once compilation
      * is done and then this method will return false.
      * </p>
-     * 
+     *
      * @return true if a recompile operation has started and the page will be
      *         reloaded once it is done, false if no recompilation will be done.
      */
@@ -254,9 +252,10 @@ public class SuperDevMode {
             // in super dev mode, as a result of the recompile, the enabled
             // check will fail...
             if (!isSuperDevModeEnabledInModule()) {
-                showError("SuperDevMode is disabled for this module/widgetset.<br/>"
-                        + "Ensure that your module definition (.gwt.xml) does not contain <br/>"
-                        + "&lt;set-configuration-property name=&quot;devModeRedirectEnabled&quot; value=&quot;false&quot; /&gt;<br/>");
+                showError(
+                        "SuperDevMode is disabled for this module/widgetset.<br/>"
+                                + "Ensure that your module definition (.gwt.xml) does not contain <br/>"
+                                + "&lt;set-configuration-property name=&quot;devModeRedirectEnabled&quot; value=&quot;false&quot; /&gt;<br/>");
                 return false;
             }
             return SuperDevMode.recompileIfNeeded(superDevModeParameter);

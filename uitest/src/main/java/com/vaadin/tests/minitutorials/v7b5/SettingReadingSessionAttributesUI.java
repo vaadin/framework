@@ -1,12 +1,12 @@
 /*
  * Copyright 2012 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -42,17 +42,18 @@ public class SettingReadingSessionAttributesUI extends UI {
 
         layout.addComponent(statusHolder);
         layout.addComponent(textField);
-        layout.addComponent(new Button("Set new values",
-                new Button.ClickListener() {
+        layout.addComponent(
+                new Button("Set new values", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         String value = textField.getValue();
 
-                        saveValue(SettingReadingSessionAttributesUI.this, value);
+                        saveValue(SettingReadingSessionAttributesUI.this,
+                                value);
                     }
                 }));
-        layout.addComponent(new Button("Reload page",
-                new Button.ClickListener() {
+        layout.addComponent(
+                new Button("Reload page", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         getPage().setLocation(getPage().getLocation());
@@ -79,12 +80,11 @@ public class SettingReadingSessionAttributesUI extends UI {
     private static void showValue(SettingReadingSessionAttributesUI ui) {
         ui.statusHolder.removeAllComponents();
         ui.statusHolder.addComponent(new Label("Value in UI: " + ui.value));
+        ui.statusHolder.addComponent(new Label("Value in VaadinServiceSession: "
+                + ui.getSession().getAttribute("myValue")));
         ui.statusHolder.addComponent(new Label(
-                "Value in VaadinServiceSession: "
-                        + ui.getSession().getAttribute("myValue")));
-        ui.statusHolder.addComponent(new Label("Value in HttpSession: "
-                + VaadinService.getCurrentRequest().getWrappedSession()
-                        .getAttribute("myValue")));
+                "Value in HttpSession: " + VaadinService.getCurrentRequest()
+                        .getWrappedSession().getAttribute("myValue")));
     }
 
 }

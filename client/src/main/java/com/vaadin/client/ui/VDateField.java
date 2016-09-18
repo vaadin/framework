@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -188,7 +188,7 @@ public class VDateField extends FlowPanel implements Field, HasEnabled {
      * Returns whether ISO 8601 week numbers should be shown in the date
      * selector or not. ISO 8601 defines that a week always starts with a Monday
      * so the week numbers are only shown if this is the case.
-     * 
+     *
      * @return true if week number should be shown, false otherwise
      */
     public boolean isShowISOWeekNumbers() {
@@ -205,7 +205,7 @@ public class VDateField extends FlowPanel implements Field, HasEnabled {
      * the current date.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @return A copy of the current date
      */
     public Date getDate() {
@@ -219,7 +219,7 @@ public class VDateField extends FlowPanel implements Field, HasEnabled {
 
     /**
      * Sets the current date for this VDateField.
-     * 
+     *
      * @param date
      *            The new date to use
      */

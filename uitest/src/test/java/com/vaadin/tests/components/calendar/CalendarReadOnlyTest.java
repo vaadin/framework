@@ -27,7 +27,8 @@ public class CalendarReadOnlyTest extends MultiBrowserTest {
     public void weekViewCanBeOpenedFromMonthView() {
         openWeekView();
 
-        assertTrue("Calendar wasn't in week view.", getCalendar().hasWeekView());
+        assertTrue("Calendar wasn't in week view.",
+                getCalendar().hasWeekView());
     }
 
     @Test
@@ -100,16 +101,16 @@ public class CalendarReadOnlyTest extends MultiBrowserTest {
     public void hiddenEventsCanBeExpanded() {
         WebElement dayWithEvents = getFirstDayWithEvents();
 
-        assertThat("Incorrect event count.", getVisibleEvents(dayWithEvents)
-                .size(), is(2));
+        assertThat("Incorrect event count.",
+                getVisibleEvents(dayWithEvents).size(), is(2));
 
         toggleExpandEvents(dayWithEvents).click();
-        assertThat("Incorrect event count.", getVisibleEvents(dayWithEvents)
-                .size(), is(4));
+        assertThat("Incorrect event count.",
+                getVisibleEvents(dayWithEvents).size(), is(4));
 
         toggleExpandEvents(dayWithEvents).click();
-        assertThat("Incorrect event count.", getVisibleEvents(dayWithEvents)
-                .size(), is(2));
+        assertThat("Incorrect event count.",
+                getVisibleEvents(dayWithEvents).size(), is(2));
     }
 
     private CalendarElement getCalendar() {
@@ -139,8 +140,8 @@ public class CalendarReadOnlyTest extends MultiBrowserTest {
     }
 
     private WebElement toggleExpandEvents(WebElement dayWithEvents) {
-        return dayWithEvents.findElement(By
-                .className("v-calendar-bottom-spacer"));
+        return dayWithEvents
+                .findElement(By.className("v-calendar-bottom-spacer"));
     }
 
     private List<WebElement> getVisibleEvents(WebElement dayWithEvents) {

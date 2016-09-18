@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -43,8 +43,8 @@ public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
         getWidget().selectedKeys = uidl.getStringArrayVariableAsSet("selected");
 
         getWidget().setReadonly(isReadOnly());
-        getWidget().multiselect = "multi".equals(uidl
-                .getStringAttribute("selectmode"));
+        getWidget().multiselect = "multi"
+                .equals(uidl.getStringAttribute("selectmode"));
         getWidget().immediate = getState().immediate;
         getWidget().nullSelectionAllowed = uidl
                 .getBooleanAttribute("nullselect");
@@ -83,13 +83,13 @@ public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
                 getWidget().newItemField.addStyleName(StyleConstants.UI_WIDGET);
 
             }
-            getWidget().newItemField.setEnabled(getWidget().isEnabled()
-                    && !getWidget().isReadonly());
-            getWidget().newItemButton.setEnabled(getWidget().isEnabled()
-                    && !getWidget().isReadonly());
+            getWidget().newItemField.setEnabled(
+                    getWidget().isEnabled() && !getWidget().isReadonly());
+            getWidget().newItemButton.setEnabled(
+                    getWidget().isEnabled() && !getWidget().isReadonly());
 
-            if (getWidget().newItemField == null
-                    || getWidget().newItemField.getParent() != getWidget().container) {
+            if (getWidget().newItemField == null || getWidget().newItemField
+                    .getParent() != getWidget().container) {
                 getWidget().container.add(getWidget().newItemField);
                 getWidget().container.add(getWidget().newItemButton);
                 final int w = getWidget().container.getOffsetWidth()

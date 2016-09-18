@@ -44,12 +44,13 @@ public class SimpleJDBCConnectionPoolTest {
             connectionPool.reserveConnection();
         } catch (SQLException e) {
             e.printStackTrace();
-            Assert.fail("Exception before all connections used! "
-                    + e.getMessage());
+            Assert.fail(
+                    "Exception before all connections used! " + e.getMessage());
         }
 
         connectionPool.reserveConnection();
-        Assert.fail("Reserving connection didn't fail even though no connections are available!");
+        Assert.fail(
+                "Reserving connection didn't fail even though no connections are available!");
     }
 
     @Test
@@ -59,8 +60,8 @@ public class SimpleJDBCConnectionPoolTest {
             connectionPool.reserveConnection();
         } catch (SQLException e) {
             e.printStackTrace();
-            Assert.fail("Exception before all connections used! "
-                    + e.getMessage());
+            Assert.fail(
+                    "Exception before all connections used! " + e.getMessage());
         }
 
         Connection conn = connectionPool.reserveConnection();
@@ -76,8 +77,8 @@ public class SimpleJDBCConnectionPoolTest {
             conn2 = connectionPool.reserveConnection();
         } catch (SQLException e) {
             e.printStackTrace();
-            Assert.fail("Exception before all connections used! "
-                    + e.getMessage());
+            Assert.fail(
+                    "Exception before all connections used! " + e.getMessage());
         }
 
         connectionPool.releaseConnection(conn2);
@@ -101,7 +102,8 @@ public class SimpleJDBCConnectionPoolTest {
     public void construct_onlyDriverNameAndUrlGiven_shouldFail()
             throws SQLException {
         SimpleJDBCConnectionPool cp = new SimpleJDBCConnectionPool(
-                SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL, null, null);
+                SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL, null,
+                null);
     }
 
     @Test(expected = IllegalArgumentException.class)

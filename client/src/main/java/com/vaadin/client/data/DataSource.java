@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,7 +20,7 @@ package com.vaadin.client.data;
  * Source of data for widgets showing lazily loaded data based on indexable
  * items (e.g. rows) of a specified type. The data source is a lazy view into a
  * larger data set.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  * @param <T>
@@ -32,7 +32,7 @@ public interface DataSource<T> {
      * A handle that contains information on whether a row should be
      * {@link #pin() pinned} or {@link #unpin() unpinned}, and also always the
      * most recent representation for that particular row.
-     * 
+     *
      * @param <T>
      *            the row type
      */
@@ -40,7 +40,7 @@ public interface DataSource<T> {
         /**
          * Gets the most recent representation for the row this handle
          * represents.
-         * 
+         *
          * @return the most recent representation for the row this handle
          *         represents
          * @throws IllegalStateException
@@ -60,7 +60,7 @@ public interface DataSource<T> {
          * source is able to. Since the DataSource might create a new instance
          * of an object, object references aren't necessarily kept up-to-date.
          * This is a technical work-around for that.
-         * 
+         *
          * @see #unpin()
          */
         public abstract void pin();
@@ -76,7 +76,7 @@ public interface DataSource<T> {
          * source is able to. Since the DataSource might create a new instance
          * of an object, object references aren't necessarily kept up-to-date.
          * This is a technical work-around for that.
-         * 
+         *
          * @throws IllegalStateException
          *             if this row handle has not been pinned before
          * @see #pin()
@@ -87,7 +87,7 @@ public interface DataSource<T> {
          * Informs the DataSource that the row data represented by this
          * RowHandle has been updated. DataChangeHandler for the DataSource
          * should be informed that parts of data have been updated.
-         * 
+         *
          * @see DataChangeHandler#dataUpdated(int, int)
          */
         public abstract void updateRow();
@@ -101,7 +101,7 @@ public interface DataSource<T> {
          * RowHandle to function. Because Java has no mechanism to force an
          * override of an existing method, we're defining a new method for that
          * instead.
-         * 
+         *
          * @param rowHandle
          *            the reference object with which to compare
          * @return {@code true} if this object is the same as the obj argument;
@@ -118,7 +118,7 @@ public interface DataSource<T> {
          * RowHandle to function. Because Java has no mechanism to force an
          * override of an existing method, we're defining a new method for that
          * instead.
-         * 
+         *
          * @return a hash code value for this object
          */
         protected abstract int hashCodeExplicit();
@@ -145,7 +145,7 @@ public interface DataSource<T> {
      * <p>
      * After any possible lazy loading and updates are done, the change handler
      * is informed that new data is available.
-     * 
+     *
      * @param firstRowIndex
      *            the index of the first needed row
      * @param numberOfRows
@@ -160,7 +160,7 @@ public interface DataSource<T> {
      * This method does not trigger loading of unavailable data.
      * {@link #ensureAvailability(int, int)} should be used to signal what data
      * will be needed.
-     * 
+     *
      * @param rowIndex
      *            the index of the row to retrieve data for
      * @return data for the row; or <code>null</code> if no data is available
@@ -169,7 +169,7 @@ public interface DataSource<T> {
 
     /**
      * Returns the number of rows in the data source.
-     * 
+     *
      * @return the current size of the data source
      */
     public int size();
@@ -177,7 +177,7 @@ public interface DataSource<T> {
     /**
      * Sets a data change handler to inform when data is updated, added or
      * removed.
-     * 
+     *
      * @param dataChangeHandler
      *            the data change handler
      */
@@ -185,7 +185,7 @@ public interface DataSource<T> {
 
     /**
      * Gets a {@link RowHandle} of a row object in the cache.
-     * 
+     *
      * @param row
      *            the row object for which to retrieve a row handle
      * @return a non-<code>null</code> row handle of the given row object

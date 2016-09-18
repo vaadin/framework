@@ -29,7 +29,8 @@ public interface RowHeightChangedHandler extends EventHandler {
      * A row height changed event, fired by Escalator when the header, body or
      * footer row height has changed.
      *
-     * @param event Row height changed event
+     * @param event
+     *            Row height changed event
      */
     public void onRowHeightChanged(RowHeightChangedEvent event);
 }

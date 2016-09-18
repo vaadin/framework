@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -55,7 +55,8 @@ import com.vaadin.util.ReflectTools;
 /**
  * A component that represents a floating popup window that can be added to a
  * {@link UI}. A window is added to a {@code UI} using
- * {@link UI#addWindow(Window)}. </p>
+ * {@link UI#addWindow(Window)}.
+ * </p>
  * <p>
  * The contents of a window is set using {@link #setContent(Component)} or by
  * using the {@link #Window(String, Component)} constructor.
@@ -71,13 +72,13 @@ import com.vaadin.util.ReflectTools;
  * In Vaadin versions prior to 7.0.0, Window was also used as application level
  * windows. This function is now covered by the {@link UI} class.
  * </p>
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
 @SuppressWarnings({ "serial", "deprecation" })
-public class Window extends Panel implements FocusNotifier, BlurNotifier,
-        LegacyComponent {
+public class Window extends Panel
+        implements FocusNotifier, BlurNotifier, LegacyComponent {
 
     private WindowServerRpc rpc = new WindowServerRpc() {
 
@@ -105,7 +106,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     /**
      * Holds registered CloseShortcut instances for query and later removal
      */
-    private List<CloseShortcut> closeShortcuts = new ArrayList<CloseShortcut>(4);
+    private List<CloseShortcut> closeShortcuts = new ArrayList<CloseShortcut>(
+            4);
 
     /**
      * Creates a new, empty window
@@ -116,7 +118,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Creates a new, empty window with a given title.
-     * 
+     *
      * @param caption
      *            the title of the window.
      */
@@ -126,7 +128,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Creates a new, empty window with the given content and title.
-     * 
+     *
      * @param caption
      *            the title of the window.
      * @param content
@@ -143,7 +145,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Panel#paintContent(com.vaadin.server.PaintTarget)
      */
 
@@ -161,10 +163,9 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /*
      * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.ui.AbstractComponent#setParent(com.vaadin.server.ClientConnector
-     * )
+     *
+     * @see com.vaadin.ui.AbstractComponent#setParent(com.vaadin.server.
+     * ClientConnector )
      */
     @Override
     public void setParent(HasComponents parent) {
@@ -178,7 +179,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Panel#changeVariables(java.lang.Object, java.util.Map)
      */
 
@@ -189,14 +190,12 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         boolean sizeHasChanged = false;
         // size is handled in super class, but resize events only in windows ->
         // so detect if size change occurs before super.changeVariables()
-        if (variables.containsKey("height")
-                && (getHeightUnits() != Unit.PIXELS || (Integer) variables
-                        .get("height") != getHeight())) {
+        if (variables.containsKey("height") && (getHeightUnits() != Unit.PIXELS
+                || (Integer) variables.get("height") != getHeight())) {
             sizeHasChanged = true;
         }
-        if (variables.containsKey("width")
-                && (getWidthUnits() != Unit.PIXELS || (Integer) variables
-                        .get("width") != getWidth())) {
+        if (variables.containsKey("width") && (getWidthUnits() != Unit.PIXELS
+                || (Integer) variables.get("width") != getWidth())) {
             sizeHasChanged = true;
         }
 
@@ -241,12 +240,12 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Method that handles window closing (from UI).
-     * 
+     *
      * <p>
      * By default, windows are removed from their respective UIs and thus
      * visually closed on browser-side.
      * </p>
-     * 
+     *
      * <p>
      * To react to a window being closed (after it is closed), register a
      * {@link CloseListener}.
@@ -265,7 +264,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     /**
      * Gets the distance of Window left border in pixels from left border of the
      * containing (main window) when the window is in {@link WindowMode#NORMAL}.
-     * 
+     *
      * @return the Distance of Window left border in pixels from left border of
      *         the containing (main window).or -1 if unspecified
      * @since 4.0.0
@@ -277,7 +276,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     /**
      * Sets the position of the window on the screen using
      * {@link #setPositionX(int)} and {@link #setPositionY(int)}
-     * 
+     *
      * @since 7.5
      * @param x
      *            The new x coordinate for the window
@@ -293,7 +292,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Sets the distance of Window left border in pixels from left border of the
      * containing (main window). Has effect only if in {@link WindowMode#NORMAL}
      * mode.
-     * 
+     *
      * @param positionX
      *            the Distance of Window left border in pixels from left border
      *            of the containing (main window). or -1 if unspecified.
@@ -308,10 +307,10 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Gets the distance of Window top border in pixels from top border of the
      * containing (main window) when the window is in {@link WindowMode#NORMAL}
      * state, or when next set to that state.
-     * 
+     *
      * @return Distance of Window top border in pixels from top border of the
      *         containing (main window). or -1 if unspecified
-     * 
+     *
      * @since 4.0.0
      */
     public int getPositionY() {
@@ -322,11 +321,11 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Sets the distance of Window top border in pixels from top border of the
      * containing (main window). Has effect only if in {@link WindowMode#NORMAL}
      * mode.
-     * 
+     *
      * @param positionY
      *            the Distance of Window top border in pixels from top border of
      *            the containing (main window). or -1 if unspecified
-     * 
+     *
      * @since 4.0.0
      */
     public void setPositionY(int positionY) {
@@ -349,7 +348,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     public static class CloseEvent extends Component.Event {
 
         /**
-         * 
+         *
          * @param source
          */
         public CloseEvent(Component source) {
@@ -358,7 +357,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
         /**
          * Gets the Window.
-         * 
+         *
          * @return the window.
          */
         public Window getWindow() {
@@ -371,7 +370,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * CloseListener to a window and
      * {@link CloseListener#windowClose(CloseEvent)} will be called whenever the
      * user closes the window.
-     * 
+     *
      * <p>
      * Since Vaadin 6.5, removing a window using {@link #removeWindow(Window)}
      * fires the CloseListener.
@@ -382,7 +381,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
          * Called when the user closes a window. Use
          * {@link CloseEvent#getWindow()} to get a reference to the
          * {@link Window} that was closed.
-         * 
+         *
          * @param e
          *            Event containing
          */
@@ -391,21 +390,21 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Adds a CloseListener to the window.
-     * 
+     *
      * For a window the CloseListener is fired when the user closes it (clicks
      * on the close button).
-     * 
+     *
      * For a browser level window the CloseListener is fired when the browser
      * level window is closed. Note that closing a browser level window does not
      * mean it will be destroyed. Also note that Opera does not send events like
      * all other browsers and therefore the close listener might not be called
      * if Opera is used.
-     * 
+     *
      * <p>
      * Since Vaadin 6.5, removing windows using {@link #removeWindow(Window)}
      * does fire the CloseListener.
      * </p>
-     * 
+     *
      * @param listener
      *            the CloseListener to add.
      */
@@ -424,11 +423,11 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Removes the CloseListener from the window.
-     * 
+     *
      * <p>
      * For more information on CloseListeners see {@link CloseListener}.
      * </p>
-     * 
+     *
      * @param listener
      *            the CloseListener to remove.
      */
@@ -451,17 +450,17 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Event which is fired when the mode of the Window changes.
-     * 
+     *
      * @author Vaadin Ltd
      * @since 7.1
-     * 
+     *
      */
     public static class WindowModeChangeEvent extends Component.Event {
 
         private final WindowMode windowMode;
 
         /**
-         * 
+         *
          * @param source
          */
         public WindowModeChangeEvent(Component source, WindowMode windowMode) {
@@ -471,7 +470,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
         /**
          * Gets the Window.
-         * 
+         *
          * @return the window
          */
         public Window getWindow() {
@@ -480,7 +479,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
         /**
          * Gets the new window mode.
-         * 
+         *
          * @return the new mode
          */
         public WindowMode getWindowMode() {
@@ -498,8 +497,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     public interface WindowModeChangeListener extends Serializable {
 
         public static final Method windowModeChangeMethod = ReflectTools
-                .findMethod(WindowModeChangeListener.class,
-                        "windowModeChanged", WindowModeChangeEvent.class);
+                .findMethod(WindowModeChangeListener.class, "windowModeChanged",
+                        WindowModeChangeEvent.class);
 
         /**
          * Called when the user maximizes / restores a window. Use
@@ -507,7 +506,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
          * {@link Window} that was maximized / restored. Use
          * {@link WindowModeChangeEvent#getWindowMode()} to get a reference to
          * the new state.
-         * 
+         *
          * @param event
          */
         public void windowModeChanged(WindowModeChangeEvent event);
@@ -515,12 +514,12 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Adds a WindowModeChangeListener to the window.
-     * 
+     *
      * The WindowModeChangeEvent is fired when the user changed the display
      * state by clicking the maximize/restore button or by double clicking on
      * the window header. The event is also fired if the state is changed using
      * {@link #setWindowMode(WindowMode)}.
-     * 
+     *
      * @param listener
      *            the WindowModeChangeListener to add.
      */
@@ -531,17 +530,19 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Removes the WindowModeChangeListener from the window.
-     * 
+     *
      * @param listener
      *            the WindowModeChangeListener to remove.
      */
-    public void removeWindowModeChangeListener(WindowModeChangeListener listener) {
+    public void removeWindowModeChangeListener(
+            WindowModeChangeListener listener) {
         removeListener(WindowModeChangeEvent.class, listener,
                 WindowModeChangeListener.windowModeChangeMethod);
     }
 
     protected void fireWindowWindowModeChange() {
-        fireEvent(new Window.WindowModeChangeEvent(this, getState().windowMode));
+        fireEvent(
+                new Window.WindowModeChangeEvent(this, getState().windowMode));
     }
 
     /**
@@ -567,7 +568,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     public static class ResizeEvent extends Component.Event {
 
         /**
-         * 
+         *
          * @param source
          */
         public ResizeEvent(Component source) {
@@ -576,7 +577,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
         /**
          * Get the window form which this event originated
-         * 
+         *
          * @return the window
          */
         public Window getWindow() {
@@ -586,7 +587,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Listener for window resize events.
-     * 
+     *
      * @see com.vaadin.ui.Window.ResizeEvent
      */
     public interface ResizeListener extends Serializable {
@@ -595,7 +596,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Add a resize listener.
-     * 
+     *
      * @param listener
      */
     public void addResizeListener(ResizeListener listener) {
@@ -613,7 +614,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Remove a resize listener.
-     * 
+     *
      * @param listener
      */
     public void removeResizeListener(ResizeListener listener) {
@@ -680,7 +681,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * <p>
      * Keyboard navigation is restricted by blocking the tab key at the top and
      * bottom of the window by activating the tab stop function internally.
-     * 
+     *
      * @param modal
      *            true if modality is to be turned on
      */
@@ -698,7 +699,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Sets window resizable.
-     * 
+     *
      * @param resizable
      *            true if resizability is to be turned on
      */
@@ -707,7 +708,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * 
+     *
      * @return true if window is resizable by the end-user, otherwise false.
      */
     public boolean isResizable() {
@@ -715,7 +716,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * 
+     *
      * @return true if a delay is used before recalculating sizes, false if
      *         sizes are recalculated immediately.
      */
@@ -727,10 +728,10 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Should resize operations be lazy, i.e. should there be a delay before
      * layout sizes are recalculated. Speeds up resize operations in slow UIs
      * with the penalty of slightly decreased usability.
-     * 
+     *
      * Note, some browser send false resize events for the browser window and
      * are therefore always lazy.
-     * 
+     *
      * @param resizeLazy
      *            true to use a delay before recalculating sizes, false to
      *            calculate immediately.
@@ -757,12 +758,12 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * typically shows an X in the upper right corner. Clicking on the X sends a
      * close event to the server. Setting closable to false will remove the X
      * from the window and prevent the user from closing the window.
-     * 
+     *
      * Note! For historical reasons readonly controls the closability of the
      * window and therefore readonly and closable affect each other. Setting
      * readonly to true will set closable to false and vice versa.
      * <p/>
-     * 
+     *
      * @return true if the window can be closed by the user.
      */
     public boolean isClosable() {
@@ -774,12 +775,12 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * typically shows an X in the upper right corner. Clicking on the X sends a
      * close event to the server. Setting closable to false will remove the X
      * from the window and prevent the user from closing the window.
-     * 
+     *
      * Note! For historical reasons readonly controls the closability of the
      * window and therefore readonly and closable affect each other. Setting
      * readonly to true will set closable to false and vice versa.
      * <p/>
-     * 
+     *
      * @param closable
      *            determines if the window can be closed by the user.
      */
@@ -791,7 +792,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Indicates whether a window can be dragged or not. By default a window is
      * draggable.
      * <p/>
-     * 
+     *
      * @param draggable
      *            true if the window can be dragged by the user
      */
@@ -803,7 +804,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Enables or disables that a window can be dragged (moved) by the user. By
      * default a window is draggable.
      * <p/>
-     * 
+     *
      * @param draggable
      *            true if the window can be dragged by the user
      */
@@ -813,7 +814,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Gets the current mode of the window.
-     * 
+     *
      * @see WindowMode
      * @return the mode of the window.
      */
@@ -823,7 +824,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Sets the mode for the window
-     * 
+     *
      * @see WindowMode
      * @param windowMode
      *            The new mode
@@ -854,13 +855,13 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Note that this shortcut only reacts while the window has focus, closing
      * itself - if you want to close a window from a UI, use
      * {@link UI#addAction(com.vaadin.event.Action)} of the UI instead.
-     * 
+     *
      * @param keyCode
      *            the keycode for invoking the shortcut
      * @param modifiers
      *            the (optional) modifiers for invoking the shortcut. Can be set
      *            to null to be explicit about not having modifiers.
-     * 
+     *
      * @deprecated Use {@link #addCloseShortcut(int, int...)} instead.
      */
     @Deprecated
@@ -881,7 +882,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * {@link #removeCloseShortcut(int,int...)},
      * {@link #removeAllCloseShortcuts()}, {@link #hasCloseShortcut(int,int...)}
      * and {@link #getCloseShortcuts()}.
-     * 
+     *
      * @deprecated Use {@link #removeCloseShortcut(int, int...)} instead.
      */
     @Deprecated
@@ -897,7 +898,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     /**
      * Adds a close shortcut - pressing this key while holding down all (if any)
      * modifiers specified while this Window is in focus will close the Window.
-     * 
+     *
      * @since 7.6
      * @param keyCode
      *            the keycode for invoking the shortcut
@@ -921,7 +922,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     /**
      * Removes a close shortcut previously added with
      * {@link #addCloseShortcut(int, int...)}.
-     * 
+     *
      * @since 7.6
      * @param keyCode
      *            the keycode for invoking the shortcut
@@ -944,7 +945,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * It is up to the user to add back any and all keyboard close shortcuts
      * they may require. For more fine-grained control over shortcuts, use
      * {@link #removeCloseShortcut(int, int...)}.
-     * 
+     *
      * @since 7.6
      */
     public void removeAllCloseShortcuts() {
@@ -956,7 +957,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Checks if a close window shortcut key has already been registered.
-     * 
+     *
      * @since 7.6
      * @param keyCode
      *            the keycode for invoking the shortcut
@@ -980,7 +981,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * mainly so that users can implement their own serialization routines. To
      * check if a certain combination of keys has been registered as a close
      * shortcut, use the {@link #hasCloseShortcut(int, int...)} method instead.
-     * 
+     *
      * @since 7.6
      * @return an unmodifiable Collection of CloseShortcut objects.
      */
@@ -991,17 +992,17 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     /**
      * A {@link ShortcutListener} specifically made to define a keyboard
      * shortcut that closes the window.
-     * 
+     *
      * <pre>
      * <code>
      *  // within the window using helper
      *  window.setCloseShortcut(KeyCode.ESCAPE, null);
-     * 
+     *
      *  // or globally
      *  getUI().addAction(new Window.CloseShortcut(window, KeyCode.ESCAPE));
      * </code>
      * </pre>
-     * 
+     *
      */
     public static class CloseShortcut extends ShortcutListener {
         protected Window window;
@@ -1009,7 +1010,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         /**
          * Creates a keyboard shortcut for closing the given window using the
          * shorthand notation defined in {@link ShortcutAction}.
-         * 
+         *
          * @param window
          *            to be closed when the shortcut is invoked
          * @param shorthandCaption
@@ -1023,7 +1024,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         /**
          * Creates a keyboard shortcut for closing the given window using the
          * given {@link KeyCode} and {@link ModifierKey}s.
-         * 
+         *
          * @param window
          *            to be closed when the shortcut is invoked
          * @param keyCode
@@ -1039,7 +1040,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         /**
          * Creates a keyboard shortcut for closing the given window using the
          * given {@link KeyCode}.
-         * 
+         *
          * @param window
          *            to be closed when the shortcut is invoked
          * @param keyCode
@@ -1078,7 +1079,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.event.FieldEvents.FocusNotifier#addFocusListener(com.vaadin
      * .event.FieldEvents.FocusListener)
@@ -1116,7 +1117,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.event.FieldEvents.BlurNotifier#addBlurListener(com.vaadin.
      * event.FieldEvents.BlurListener)
@@ -1153,7 +1154,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Cause the window to be brought on top of other windows and gain keyboard
      * focus.
      */
@@ -1182,7 +1183,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Allows to specify which components contain the description for the
      * window. Text contained in these components will be read by assistive
      * devices when it is opened.
-     * 
+     *
      * @param components
      *            the components to use as description
      */
@@ -1199,7 +1200,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Gets the components that are used as assistive description. Text
      * contained in these components will be read by assistive devices when the
      * window is opened.
-     * 
+     *
      * @return array of previously set components
      */
     public Component[] getAssistiveDescription() {
@@ -1217,10 +1218,10 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Sets the accessibility prefix for the window caption.
-     * 
+     *
      * This prefix is read to assistive device users before the window caption,
      * but not visible on the page.
-     * 
+     *
      * @param prefix
      *            String that is placed before the window caption
      */
@@ -1230,10 +1231,10 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Gets the accessibility prefix for the window caption.
-     * 
+     *
      * This prefix is read to assistive device users before the window caption,
      * but not visible on the page.
-     * 
+     *
      * @return The accessibility prefix
      */
     public String getAssistivePrefix() {
@@ -1242,10 +1243,10 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Sets the accessibility postfix for the window caption.
-     * 
+     *
      * This postfix is read to assistive device users after the window caption,
      * but not visible on the page.
-     * 
+     *
      * @param prefix
      *            String that is placed after the window caption
      */
@@ -1255,10 +1256,10 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Gets the accessibility postfix for the window caption.
-     * 
+     *
      * This postfix is read to assistive device users after the window caption,
      * but not visible on the page.
-     * 
+     *
      * @return The accessibility postfix
      */
     public String getAssistivePostfix() {
@@ -1267,14 +1268,14 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Sets the WAI-ARIA role the window.
-     * 
+     *
      * This role defines how an assistive device handles a window. Available
-     * roles are alertdialog and dialog (@see <a
-     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * roles are alertdialog and dialog (@see
+     * <a href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
      * Model</a>).
-     * 
+     *
      * The default role is dialog.
-     * 
+     *
      * @param role
      *            WAI-ARIA role to set for the window
      */
@@ -1284,12 +1285,12 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Gets the WAI-ARIA role the window.
-     * 
+     *
      * This role defines how an assistive device handles a window. Available
-     * roles are alertdialog and dialog (@see <a
-     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * roles are alertdialog and dialog (@see
+     * <a href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
      * Model</a>).
-     * 
+     *
      * @return WAI-ARIA role set for the window
      */
     public WindowRole getAssistiveRole() {
@@ -1305,7 +1306,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * <p>
      * For modal windows, this function is activated automatically, while
      * preserving the stored value of tabStop.
-     * 
+     *
      * @param tabStop
      *            true to keep the focus inside the window when reaching the top
      *            or bottom, false (default) to allow leaving the window
@@ -1316,7 +1317,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Get if it is prevented to leave a window with the tab key.
-     * 
+     *
      * @return true when the focus is limited to inside the window, false when
      *         focus can leave the window
      */
@@ -1330,7 +1331,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * is prevented.
      * <p>
      * This message is not visible on the screen.
-     * 
+     *
      * @param topMessage
      *            String provided when the user navigates with Shift-Tab keys to
      *            the top of the window
@@ -1345,7 +1346,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * key is prevented.
      * <p>
      * This message is not visible on the screen.
-     * 
+     *
      * @param bottomMessage
      *            String provided when the user navigates with the Tab key to
      *            the bottom of the window
@@ -1358,7 +1359,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Gets the message that is provided to users of assistive devices when the
      * user reaches the top of the window when leaving a window with the tab key
      * is prevented.
-     * 
+     *
      * @return the top message
      */
     public String getTabStopTopAssistiveText() {
@@ -1369,7 +1370,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Gets the message that is provided to users of assistive devices when the
      * user reaches the bottom of the window when leaving a window with the tab
      * key is prevented.
-     * 
+     *
      * @return the bottom message
      */
     public String getTabStopBottomAssistiveText() {
@@ -1393,17 +1394,18 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         if (design.hasAttr("close-shortcut")) {
 
             // Parse shortcuts
-            String[] shortcutStrings = DesignAttributeHandler.readAttribute(
-                    "close-shortcut", design.attributes(), String.class).split(
-                    "\\s+");
+            String[] shortcutStrings = DesignAttributeHandler
+                    .readAttribute("close-shortcut", design.attributes(),
+                            String.class)
+                    .split("\\s+");
 
             removeAllCloseShortcuts();
 
             for (String part : shortcutStrings) {
                 if (!part.isEmpty()) {
                     ShortcutAction shortcut = DesignAttributeHandler
-                            .getFormatter().parse(part.trim(),
-                                    ShortcutAction.class);
+                            .getFormatter()
+                            .parse(part.trim(), ShortcutAction.class);
                     addCloseShortcut(shortcut.getKeyCode(),
                             shortcut.getModifiers());
                 }
@@ -1418,22 +1420,23 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * the list of components used as the assistive description of this Window.
      * Otherwise, sets the component as the content of this Window. If there are
      * multiple non-description elements, throws a DesignException.
-     * 
+     *
      * @param children
      *            child elements in a design
      * @param context
      *            the DesignContext instance used to parse the design
-     * 
+     *
      * @throws DesignException
      *             if there are multiple non-description child elements
      * @throws DesignException
      *             if a child element could not be parsed as a Component
-     * 
+     *
      * @see #setContent(Component)
      * @see #setAssistiveDescription(Component...)
      */
     @Override
-    protected void readDesignChildren(Elements children, DesignContext context) {
+    protected void readDesignChildren(Elements children,
+            DesignContext context) {
         List<Component> descriptions = new ArrayList<Component>();
         Elements content = new Elements();
 
@@ -1482,8 +1485,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         }
 
         for (Component c : getAssistiveDescription()) {
-            Element child = context.createElement(c).attr(
-                    ":assistive-description", true);
+            Element child = context.createElement(c)
+                    .attr(":assistive-description", true);
             design.appendChild(child);
         }
     }

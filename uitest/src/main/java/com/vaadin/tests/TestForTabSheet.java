@@ -7,8 +7,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 
-public class TestForTabSheet extends CustomComponent implements
-        Button.ClickListener, TabSheet.SelectedTabChangeListener {
+public class TestForTabSheet extends CustomComponent
+        implements Button.ClickListener, TabSheet.SelectedTabChangeListener {
     TabSheet tabsheet = new TabSheet();
     Button tab1_root = new Button("Push this button");
     Label tab2_root = new Label("Contents of Second Tab");

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -30,7 +30,7 @@ import com.vaadin.data.util.sqlcontainer.query.generator.filter.StringDecorator;
 
 /**
  * Generates generic SQL that is supported by HSQLDB, MySQL and PostgreSQL.
- * 
+ *
  * @author Jonatan Kronqvist / Vaadin Ltd
  */
 @SuppressWarnings("serial")
@@ -45,7 +45,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
     /**
      * Create a new DefaultSqlGenerator instance that uses the given
      * implementation of {@link StatementHelper}
-     * 
+     *
      * @param statementHelper
      */
     public DefaultSQLGenerator(
@@ -58,7 +58,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
      * Construct a DefaultSQLGenerator with the specified identifiers for start
      * and end of quoted strings. The identifiers may be different depending on
      * the database engine and it's settings.
-     * 
+     *
      * @param quoteStart
      *            the identifier (character) denoting the start of a quoted
      *            string
@@ -66,14 +66,14 @@ public class DefaultSQLGenerator implements SQLGenerator {
      *            the identifier (character) denoting the end of a quoted string
      */
     public DefaultSQLGenerator(String quoteStart, String quoteEnd) {
-        QueryBuilder.setStringDecorator(new StringDecorator(quoteStart,
-                quoteEnd));
+        QueryBuilder
+                .setStringDecorator(new StringDecorator(quoteStart, quoteEnd));
     }
 
     /**
      * Same as {@link #DefaultSQLGenerator(String, String)} but with support for
      * custom {@link StatementHelper} implementation.
-     * 
+     *
      * @param quoteStart
      * @param quoteEnd
      * @param statementHelperClazz
@@ -86,7 +86,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.sqlcontainer.query.generator.SQLGenerator#
      * generateSelectQuery(java.lang.String, java.util.List, java.util.List,
      * int, int, java.lang.String)
@@ -101,8 +101,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
         toSelect = toSelect == null ? "*" : toSelect;
         StatementHelper sh = getStatementHelper();
         StringBuffer query = new StringBuffer();
-        query.append("SELECT " + toSelect + " FROM ").append(
-                SQLUtil.escapeSQL(tableName));
+        query.append("SELECT " + toSelect + " FROM ")
+                .append(SQLUtil.escapeSQL(tableName));
         if (filters != null) {
             query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
         }
@@ -120,7 +120,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.sqlcontainer.query.generator.SQLGenerator#
      * generateUpdateQuery(java.lang.String,
      * com.vaadin.addon.sqlcontainer.RowItem)
@@ -148,8 +148,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
             } else {
                 query.append(", " + QueryBuilder.quote(column) + " = ?");
             }
-            sh.addParameterValue(columnToValueMap.get(column), item
-                    .getItemProperty(column).getType());
+            sh.addParameterValue(columnToValueMap.get(column),
+                    item.getItemProperty(column).getType());
             first = false;
         }
         /* Generate identifiers for the row to be updated */
@@ -160,8 +160,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
             } else {
                 query.append(" AND " + QueryBuilder.quote(column) + " = ?");
             }
-            sh.addParameterValue(rowIdentifiers.get(column), item
-                    .getItemProperty(column).getType());
+            sh.addParameterValue(rowIdentifiers.get(column),
+                    item.getItemProperty(column).getType());
             first = false;
         }
         sh.setQueryString(query.toString());
@@ -170,7 +170,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.sqlcontainer.query.generator.SQLGenerator#
      * generateInsertQuery(java.lang.String,
      * com.vaadin.addon.sqlcontainer.RowItem)
@@ -211,8 +211,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
                 query.append(", ");
             }
             query.append("?");
-            sh.addParameterValue(columnToValueMap.get(column), item
-                    .getItemProperty(column).getType());
+            sh.addParameterValue(columnToValueMap.get(column),
+                    item.getItemProperty(column).getType());
             first = false;
         }
         query.append(")");
@@ -222,14 +222,15 @@ public class DefaultSQLGenerator implements SQLGenerator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.sqlcontainer.query.generator.SQLGenerator#
      * generateDeleteQuery(java.lang.String,
      * com.vaadin.addon.sqlcontainer.RowItem)
      */
     @Override
     public StatementHelper generateDeleteQuery(String tableName,
-            List<String> primaryKeyColumns, String versionColumn, RowItem item) {
+            List<String> primaryKeyColumns, String versionColumn,
+            RowItem item) {
         if (tableName == null || tableName.trim().equals("")) {
             throw new IllegalArgumentException("Table name must be given.");
         }
@@ -246,7 +247,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
         query.append("DELETE FROM ").append(tableName).append(" WHERE ");
         int count = 1;
         for (String keyColName : primaryKeyColumns) {
-            if ((this instanceof MSSQLGenerator || this instanceof OracleGenerator)
+            if ((this instanceof MSSQLGenerator
+                    || this instanceof OracleGenerator)
                     && keyColName.equalsIgnoreCase("rownum")) {
                 count++;
                 continue;
@@ -256,8 +258,9 @@ public class DefaultSQLGenerator implements SQLGenerator {
             }
             if (item.getItemProperty(keyColName).getValue() != null) {
                 query.append(QueryBuilder.quote(keyColName) + " = ?");
-                sh.addParameterValue(item.getItemProperty(keyColName)
-                        .getValue(), item.getItemProperty(keyColName).getType());
+                sh.addParameterValue(
+                        item.getItemProperty(keyColName).getValue(),
+                        item.getItemProperty(keyColName).getType());
             }
             count++;
         }
@@ -270,9 +273,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
 
             query.append(String.format(" AND %s = ?",
                     QueryBuilder.quote(versionColumn)));
-            sh.addParameterValue(
-                    item.getItemProperty(versionColumn).getValue(), item
-                            .getItemProperty(versionColumn).getType());
+            sh.addParameterValue(item.getItemProperty(versionColumn).getValue(),
+                    item.getItemProperty(versionColumn).getType());
         }
 
         sh.setQueryString(query.toString());
@@ -281,7 +283,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
 
     /**
      * Generates sorting rules as an ORDER BY -clause
-     * 
+     *
      * @param sb
      *            StringBuffer to which the clause is appended.
      * @param o
@@ -308,7 +310,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
 
     /**
      * Generates the LIMIT and OFFSET clause.
-     * 
+     *
      * @param sb
      *            StringBuffer to which the clause is appended.
      * @param offset
@@ -329,7 +331,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
         for (Object id : item.getItemPropertyIds()) {
             ColumnProperty cp = (ColumnProperty) item.getItemProperty(id);
             /* Prevent "rownum" usage as a column name if MSSQL or ORACLE */
-            if ((this instanceof MSSQLGenerator || this instanceof OracleGenerator)
+            if ((this instanceof MSSQLGenerator
+                    || this instanceof OracleGenerator)
                     && cp.getPropertyId().equalsIgnoreCase("rownum")) {
                 continue;
             }
@@ -345,7 +348,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
         for (Object id : item.getItemPropertyIds()) {
             ColumnProperty cp = (ColumnProperty) item.getItemProperty(id);
             /* Prevent "rownum" usage as a column name if MSSQL or ORACLE */
-            if ((this instanceof MSSQLGenerator || this instanceof OracleGenerator)
+            if ((this instanceof MSSQLGenerator
+                    || this instanceof OracleGenerator)
                     && cp.getPropertyId().equalsIgnoreCase("rownum")) {
                 continue;
             }
@@ -368,7 +372,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
     /**
      * Returns the statement helper for the generator. Override this to handle
      * platform specific data types.
-     * 
+     *
      * @see http://dev.vaadin.com/ticket/9148
      * @return a new instance of the statement helper
      */

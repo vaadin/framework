@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,7 +23,7 @@ import elemental.json.JsonObject;
 /**
  * XhrConnectionError provides detail about an error which occured during an XHR
  * request to the server
- * 
+ *
  * @since 7.6
  * @author Vaadin Ltd
  */
@@ -36,7 +36,7 @@ public class XhrConnectionError {
 
     /**
      * Constructs an event from the given request, payload and exception
-     * 
+     *
      * @param request
      *            the request which failed
      * @param payload
@@ -53,7 +53,7 @@ public class XhrConnectionError {
 
     /**
      * Constructs an event from the given request, response and payload
-     * 
+     *
      * @param request
      *            the request which failed
      * @param payload
@@ -70,7 +70,7 @@ public class XhrConnectionError {
 
     /**
      * Returns the exception which caused the problem, if available
-     * 
+     *
      * @return the exception which caused the problem, or null if not available
      */
     public Throwable getException() {
@@ -79,7 +79,7 @@ public class XhrConnectionError {
 
     /**
      * Returns the request for which the problem occurred
-     * 
+     *
      * @return the request where the problem occurred
      */
     public Request getRequest() {
@@ -88,7 +88,7 @@ public class XhrConnectionError {
 
     /**
      * Returns the received response, if available
-     * 
+     *
      * @return the received response, or null if not available
      */
     public Response getResponse() {
@@ -97,7 +97,7 @@ public class XhrConnectionError {
 
     /**
      * Returns the payload which was sent to the server
-     * 
+     *
      * @return the payload which was sent, never null
      */
     public JsonObject getPayload() {

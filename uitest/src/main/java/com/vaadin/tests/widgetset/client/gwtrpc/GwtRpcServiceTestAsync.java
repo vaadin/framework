@@ -27,6 +27,7 @@ public interface GwtRpcServiceTestAsync {
     /*
      * Dummy async method to verify if RPC works.
      */
-    void giveMeThat(String that, String haveThis, AsyncCallback<String> callback);
+    void giveMeThat(String that, String haveThis,
+            AsyncCallback<String> callback);
 
 }

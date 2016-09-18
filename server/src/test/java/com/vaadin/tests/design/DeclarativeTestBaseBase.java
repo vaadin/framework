@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -42,8 +42,8 @@ import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.ShouldWriteDataDelegate;
 
 public abstract class DeclarativeTestBaseBase<T extends Component> {
-    private static final class AlwaysWriteDelegate implements
-            ShouldWriteDataDelegate {
+    private static final class AlwaysWriteDelegate
+            implements ShouldWriteDataDelegate {
         private static final long serialVersionUID = -6345914431997793599L;
 
         @Override
@@ -60,8 +60,8 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
 
     protected T read(String design) {
         try {
-            return (T) Design.read(new ByteArrayInputStream(design
-                    .getBytes("UTF-8")));
+            return (T) Design
+                    .read(new ByteArrayInputStream(design.getBytes("UTF-8")));
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -141,11 +141,13 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         return result;
     }
 
-    private void getComparators(Class<?> c, List<EqualsAsserter<Object>> result) {
+    private void getComparators(Class<?> c,
+            List<EqualsAsserter<Object>> result) {
         if (c == null || !isVaadin(c)) {
             return;
         }
-        EqualsAsserter<Object> comparator = (EqualsAsserter<Object>) getComparator(c);
+        EqualsAsserter<Object> comparator = (EqualsAsserter<Object>) getComparator(
+                c);
         if (c.getSuperclass() != Object.class) {
             getComparators(c.getSuperclass(), result);
         }

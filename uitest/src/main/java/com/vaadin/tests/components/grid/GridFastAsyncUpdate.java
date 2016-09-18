@@ -42,13 +42,14 @@ public class GridFastAsyncUpdate extends AbstractTestUI {
 
                             ++counter;
                             Item item = container.addItem(counter);
-                            item.getItemProperty("sequenceNumber").setValue(
-                                    String.valueOf(counter));
-                            item.getItemProperty("millis").setValue(
-                                    String.valueOf(Calendar.getInstance()
-                                            .getTimeInMillis() - loggingStart));
-                            item.getItemProperty("level").setValue(
-                                    Level.INFO.toString());
+                            item.getItemProperty("sequenceNumber")
+                                    .setValue(String.valueOf(counter));
+                            item.getItemProperty("millis")
+                                    .setValue(String.valueOf(Calendar
+                                            .getInstance().getTimeInMillis()
+                                            - loggingStart));
+                            item.getItemProperty("level")
+                                    .setValue(Level.INFO.toString());
                             item.getItemProperty("message").setValue("Message");
                             if (grid != null && !scrollLock) {
                                 grid.scrollToEnd();

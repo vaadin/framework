@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -22,7 +22,7 @@ import javax.portlet.PortletSession;
 
 /**
  * Wrapper for {@link PortletSession}.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  * @see WrappedSession
@@ -33,7 +33,7 @@ public class WrappedPortletSession implements WrappedSession {
 
     /**
      * Creates a new wrapped portlet session.
-     * 
+     *
      * @param session
      *            the portlet session to wrap.
      */
@@ -68,11 +68,11 @@ public class WrappedPortletSession implements WrappedSession {
      *                scope is unknown to the container.
      * @exception java.lang.IllegalArgumentException
      *                if name is <code>null</code>.
-     * 
+     *
      * @see PortletSession#getAttribute(String, int)
      * @see PortletSession#PORTLET_SCOPE
      * @see PortletSession#APPLICATION_SCOPE
-     * 
+     *
      * @since 7.6
      */
     public Object getAttribute(String name, int scope) {
@@ -108,11 +108,11 @@ public class WrappedPortletSession implements WrappedSession {
      * @exception java.lang.IllegalArgumentException
      *                if name is <code>null</code> or scope is unknown to the
      *                container.
-     * 
+     *
      * @see PortletSession#setAttribute(String, Object, int)
      * @see PortletSession#PORTLET_SCOPE
      * @see PortletSession#APPLICATION_SCOPE
-     * 
+     *
      * @since 7.6
      */
     public void setAttribute(String name, Object value, int scope) {
@@ -121,7 +121,7 @@ public class WrappedPortletSession implements WrappedSession {
 
     /**
      * Gets the wrapped {@link PortletSession}.
-     * 
+     *
      * @return the wrapped portlet session
      */
     public PortletSession getPortletSession() {
@@ -136,19 +136,19 @@ public class WrappedPortletSession implements WrappedSession {
     /**
      * Gets the current set of attribute names bound to this session in the
      * given scope.
-     * 
+     *
      * @param scope
      *            session scope of the attribute names
      * @return an unmodifiable set of the current attribute names in the given
      *         scope
-     * 
+     *
      * @see PortletSession#getAttributeNames()
-     * 
+     *
      * @since 7.6
      */
     public Set<String> getAttributeNames(int scope) {
-        return WrappedHttpSession.enumerationToSet(session
-                .getAttributeNames(scope));
+        return WrappedHttpSession
+                .enumerationToSet(session.getAttributeNames(scope));
     }
 
     @Override
@@ -185,7 +185,7 @@ public class WrappedPortletSession implements WrappedSession {
      * Removes the object bound with the specified name and the given scope from
      * this session. If the session does not have an object bound with the
      * specified name, this method does nothing.
-     * 
+     *
      * @param name
      *            the name of the object to be removed from this session
      * @param scope
@@ -199,7 +199,7 @@ public class WrappedPortletSession implements WrappedSession {
      * @see PortletSession#removeAttribute(String, int)
      * @see PortletSession#PORTLET_SCOPE
      * @see PortletSession#APPLICATION_SCOPE
-     * 
+     *
      * @since 7.6
      */
     public void removeAttribute(String name, int scope) {

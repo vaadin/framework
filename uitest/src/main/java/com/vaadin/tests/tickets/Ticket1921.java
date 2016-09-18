@@ -109,8 +109,8 @@ public class Ticket1921 extends LegacyApplication implements RequestHandler {
             int rr = Integer.parseInt(v[0]);
             int rs = Integer.parseInt(v[1]);
             if (rr < round || (rr == round && rs < state)) {
-                getMainWindow().showNotification(
-                        "Already past requested " + s[0]);
+                getMainWindow()
+                        .showNotification("Already past requested " + s[0]);
                 return false;
             }
             while (round < rr || state < rs) {

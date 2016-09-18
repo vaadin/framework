@@ -55,8 +55,8 @@ public class EmbeddedImageRefresh extends TestBase {
         button.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                ((StreamResource) embedded.getSource()).setFilename(new Date()
-                        .getTime() + ".png");
+                ((StreamResource) embedded.getSource())
+                        .setFilename(new Date().getTime() + ".png");
                 embedded.markAsDirty();
             }
         });
@@ -130,8 +130,8 @@ public class EmbeddedImageRefresh extends TestBase {
                     } else {
                         drawable.setColor(Color.black);
                     }
-                    drawable.fillRect(gridx + 1, gridy + 1, gridxnext - gridx
-                            - 1, gridynext - gridy - 1);
+                    drawable.fillRect(gridx + 1, gridy + 1,
+                            gridxnext - gridx - 1, gridynext - gridy - 1);
                 }
             }
 

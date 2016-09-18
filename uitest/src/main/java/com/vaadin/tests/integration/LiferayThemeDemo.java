@@ -80,10 +80,8 @@ public class LiferayThemeDemo extends LegacyApplication {
 
         @Override
         public Action[] getActions(Object target, Object sender) {
-            return new Action[] {
-                    new Action("Open"),
-                    new Action("Delete", new ThemeResource(
-                            "../runo/icons/16/trash.png")) };
+            return new Action[] { new Action("Open"), new Action("Delete",
+                    new ThemeResource("../runo/icons/16/trash.png")) };
         }
     };
 
@@ -153,10 +151,10 @@ public class LiferayThemeDemo extends LegacyApplication {
         l.addComponent(b);
 
         b = new NativeButton("Native Button");
-        b.setDescription("<h2><img src=\"/html/VAADIN/themes/runo/icons/16/globe.png\"/>A richtext tooltip</h2>"
-                + "<ul>"
-                + "<li>HTML formatting</li><li>Images<br/>"
-                + "</li><li>etc...</li></ul>");
+        b.setDescription(
+                "<h2><img src=\"/html/VAADIN/themes/runo/icons/16/globe.png\"/>A richtext tooltip</h2>"
+                        + "<ul>" + "<li>HTML formatting</li><li>Images<br/>"
+                        + "</li><li>etc...</li></ul>");
         l.addComponent(b);
 
         b = new CheckBox("Checkbox");
@@ -353,9 +351,9 @@ public class LiferayThemeDemo extends LegacyApplication {
         pl.addComponent(new Label("Panel content"));
         l.addComponent(p);
 
-        l.addComponent(new Label(
-                "Light Style (<code>LiferayTheme.PANEL_LIGHT</code>)",
-                ContentMode.HTML));
+        l.addComponent(
+                new Label("Light Style (<code>LiferayTheme.PANEL_LIGHT</code>)",
+                        ContentMode.HTML));
 
         VerticalLayout p2l = new VerticalLayout();
         p2l.setMargin(true);
@@ -381,8 +379,8 @@ public class LiferayThemeDemo extends LegacyApplication {
         t.setColumnReorderingAllowed(true);
         t.addActionHandler(handler);
 
-        t.addContainerProperty("First", String.class, null, "First",
-                ICON_GLOBE, Table.ALIGN_RIGHT);
+        t.addContainerProperty("First", String.class, null, "First", ICON_GLOBE,
+                Table.ALIGN_RIGHT);
         t.addContainerProperty("Second", String.class, null);
         t.addContainerProperty("Third", String.class, null);
         t.addContainerProperty("Fourth", TextField.class, null);
@@ -624,8 +622,8 @@ public class LiferayThemeDemo extends LegacyApplication {
             @Override
             public void buttonClick(ClickEvent event) {
                 new Notification(title.getValue(), message.getValue(),
-                        Notification.TYPE_WARNING_MESSAGE, true).show(Page
-                        .getCurrent());
+                        Notification.TYPE_WARNING_MESSAGE, true)
+                                .show(Page.getCurrent());
 
             }
         });
@@ -636,8 +634,8 @@ public class LiferayThemeDemo extends LegacyApplication {
             @Override
             public void buttonClick(ClickEvent event) {
                 new Notification(title.getValue(), message.getValue(),
-                        Notification.TYPE_ERROR_MESSAGE, true).show(Page
-                        .getCurrent());
+                        Notification.TYPE_ERROR_MESSAGE, true)
+                                .show(Page.getCurrent());
 
             }
         });
@@ -648,8 +646,8 @@ public class LiferayThemeDemo extends LegacyApplication {
             @Override
             public void buttonClick(ClickEvent event) {
                 new Notification(title.getValue(), message.getValue(),
-                        Notification.TYPE_TRAY_NOTIFICATION, true).show(Page
-                        .getCurrent());
+                        Notification.TYPE_TRAY_NOTIFICATION, true)
+                                .show(Page.getCurrent());
 
             }
         });
@@ -683,8 +681,8 @@ public class LiferayThemeDemo extends LegacyApplication {
         menubar.setWidth("100%");
         final MenuBar.MenuItem file = menubar.addItem("File", null);
         final MenuBar.MenuItem newItem = file.addItem("New", null);
-        file.addItem("Open file...", new ThemeResource(
-                "../runo/icons/16/folder.png"), null);
+        file.addItem("Open file...",
+                new ThemeResource("../runo/icons/16/folder.png"), null);
         file.addSeparator();
 
         newItem.addItem("File", null);
@@ -714,8 +712,8 @@ public class LiferayThemeDemo extends LegacyApplication {
         find.addItem("Google Search", new Command() {
             @Override
             public void menuSelected(MenuItem selectedItem) {
-                getMainWindow().open(
-                        new ExternalResource("http://www.google.com"));
+                getMainWindow()
+                        .open(new ExternalResource("http://www.google.com"));
             }
         });
         find.addSeparator();

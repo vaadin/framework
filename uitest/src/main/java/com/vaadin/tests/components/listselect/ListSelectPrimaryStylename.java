@@ -11,8 +11,8 @@ public class ListSelectPrimaryStylename extends TestBase {
 
     @Override
     protected void setup() {
-        final ListSelect list = new ListSelect("Caption", Arrays.asList(
-                "Option 1", "Option 2", "Option 3"));
+        final ListSelect list = new ListSelect("Caption",
+                Arrays.asList("Option 1", "Option 2", "Option 3"));
         list.setPrimaryStyleName("my-list");
         addComponent(list);
 

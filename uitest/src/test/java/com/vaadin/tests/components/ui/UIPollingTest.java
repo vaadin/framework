@@ -24,13 +24,13 @@ public class UIPollingTest extends MultiBrowserTest {
         getTextField().setValue("500");
         sleep(2000);
         /* Ensure polling has taken place */
-        Assert.assertTrue("Page does not contain the given text", driver
-                .getPageSource().contains("2. 1000ms has passed"));
+        Assert.assertTrue("Page does not contain the given text",
+                driver.getPageSource().contains("2. 1000ms has passed"));
         getTextField().setValue("-1");
         sleep(2000);
         /* Ensure polling has stopped */
-        Assert.assertFalse("Page contains the given text", driver
-                .getPageSource().contains("20. 10000ms has passed"));
+        Assert.assertFalse("Page contains the given text",
+                driver.getPageSource().contains("20. 10000ms has passed"));
     }
 
     public TextFieldElement getTextField() {

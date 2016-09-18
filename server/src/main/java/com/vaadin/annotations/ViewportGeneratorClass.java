@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,11 +31,11 @@ import com.vaadin.server.ViewportGenerator;
  * <p>
  * If you want to use the same viewport values for all requests, you can use the
  * simpler {@link Viewport} annotation instead.
- * 
+ *
  * @see ViewportGenerator
- * 
+ *
  * @since 7.4
- * 
+ *
  * @author Vaadin Ltd
  */
 @Target(ElementType.TYPE)
@@ -47,7 +47,7 @@ public @interface ViewportGeneratorClass {
      * Gets the viewport generator class to use. Please note that the class must
      * be public and have a default constructor. It must additionally be
      * declared as static if it's declared as an inner class.
-     * 
+     *
      * @return the viewport generator class
      */
     public Class<? extends ViewportGenerator> value();

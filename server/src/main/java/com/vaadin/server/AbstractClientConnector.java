@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -50,12 +50,12 @@ import elemental.json.JsonObject;
 /**
  * An abstract base class for ClientConnector implementations. This class
  * provides all the basic functionality required for connectors.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public abstract class AbstractClientConnector implements ClientConnector,
-        MethodEventSource {
+public abstract class AbstractClientConnector
+        implements ClientConnector, MethodEventSource {
     /**
      * A map from client to server RPC interface class name to the RPC call
      * manager that handles incoming RPC calls for that interface.
@@ -135,7 +135,9 @@ public abstract class AbstractClientConnector implements ClientConnector,
     /* Documentation copied from interface */
     @Override
     public void markAsDirty() {
-        assert getSession() == null || getSession().hasLock() : buildLockAssertMessage("markAsDirty()");
+        assert getSession() == null
+                || getSession().hasLock() : buildLockAssertMessage(
+                        "markAsDirty()");
         UI uI = getUI();
         if (uI != null) {
             uI.getConnectorTracker().markDirty(this);
@@ -153,12 +155,12 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     /**
      * Registers an RPC interface implementation for this component.
-     * 
+     *
      * A component can listen to multiple RPC interfaces, and subclasses can
      * register additional implementations.
-     * 
+     *
      * @since 7.0
-     * 
+     *
      * @param implementation
      *            RPC interface implementation
      * @param rpcInterfaceType
@@ -167,18 +169,18 @@ public abstract class AbstractClientConnector implements ClientConnector,
      */
     protected <T extends ServerRpc> void registerRpc(T implementation,
             Class<T> rpcInterfaceType) {
-        rpcManagerMap.put(rpcInterfaceType.getName(), new ServerRpcManager<T>(
-                implementation, rpcInterfaceType));
+        rpcManagerMap.put(rpcInterfaceType.getName(),
+                new ServerRpcManager<T>(implementation, rpcInterfaceType));
     }
 
     /**
      * Registers an RPC interface implementation for this component.
-     * 
+     *
      * A component can listen to multiple RPC interfaces, and subclasses can
      * register additional implementations.
-     * 
+     *
      * @since 7.0
-     * 
+     *
      * @param implementation
      *            RPC interface implementation. Also used to deduce the type.
      */
@@ -202,7 +204,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
     }
 
     @SuppressWarnings("unchecked")
-    private Class<ServerRpc> getServerRpcInterface(Class<?> implementationClass) {
+    private Class<ServerRpc> getServerRpcInterface(
+            Class<?> implementationClass) {
         Class<ServerRpc> serverRpcClass = null;
         if (implementationClass != null) {
             for (Class<?> candidateInterface : implementationClass
@@ -229,7 +232,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * state will be sent to the client. Use {@code getState(false)} to avoid
      * marking the connector as dirty.
      * </p>
-     * 
+     *
      * @return The shared state for this connector. Never null.
      */
     protected SharedState getState() {
@@ -238,16 +241,18 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     /**
      * Returns the shared state for this connector.
-     * 
+     *
      * @param markAsDirty
      *            true if the connector should automatically be marked dirty,
      *            false otherwise
-     * 
+     *
      * @return The shared state for this connector. Never null.
      * @see #getState()
      */
     protected SharedState getState(boolean markAsDirty) {
-        assert getSession() == null || getSession().hasLock() : buildLockAssertMessage("getState()");
+        assert getSession() == null
+                || getSession().hasLock() : buildLockAssertMessage(
+                        "getState()");
 
         if (null == sharedState) {
             sharedState = createState();
@@ -279,18 +284,18 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * <p>
      * No configuration of the values of the state should be performed in
      * {@link #createState()}.
-     * 
+     *
      * @since 7.0
-     * 
+     *
      * @return new shared state object
      */
     protected SharedState createState() {
         try {
             return getStateType().newInstance();
         } catch (Exception e) {
-            throw new RuntimeException(
-                    "Error creating state of type " + getStateType().getName()
-                            + " for " + getClass().getName(), e);
+            throw new RuntimeException("Error creating state of type "
+                    + getStateType().getName() + " for " + getClass().getName(),
+                    e);
         }
     }
 
@@ -326,23 +331,23 @@ public abstract class AbstractClientConnector implements ClientConnector,
                 // Try in superclass instead
                 class1 = class1.getSuperclass();
             }
-            throw new NoSuchMethodException(getClass().getCanonicalName()
-                    + ".getState()");
+            throw new NoSuchMethodException(
+                    getClass().getCanonicalName() + ".getState()");
         } catch (Exception e) {
-            throw new RuntimeException("Error finding state type for "
-                    + getClass().getName(), e);
+            throw new RuntimeException(
+                    "Error finding state type for " + getClass().getName(), e);
         }
     }
 
     /**
      * Returns an RPC proxy for a given server to client RPC interface for this
      * component.
-     * 
+     *
      * TODO more javadoc, subclasses, ...
-     * 
+     *
      * @param rpcInterface
      *            RPC interface type
-     * 
+     *
      * @since 7.0
      */
     protected <T extends ClientRpc> T getRpcProxy(final Class<T> rpcInterface) {
@@ -365,8 +370,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
         }
     }
 
-    private class RpcInvocationHandler implements InvocationHandler,
-            Serializable {
+    private class RpcInvocationHandler
+            implements InvocationHandler, Serializable {
 
         private String rpcInterfaceName;
 
@@ -390,14 +395,14 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     /**
      * For internal use: adds a method invocation to the pending RPC call queue.
-     * 
+     *
      * @param interfaceName
      *            RPC interface name
      * @param method
      *            RPC method
      * @param parameters
      *            RPC all parameters
-     * 
+     *
      * @since 7.0
      */
     protected void addMethodInvocationToQueue(String interfaceName,
@@ -440,7 +445,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
     /**
      * Finds the {@link VaadinSession} to which this connector belongs. If the
      * connector has not been attached, <code>null</code> is returned.
-     * 
+     *
      * @return The connector's session, or <code>null</code> if not attached
      */
     protected VaadinSession getSession() {
@@ -456,7 +461,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * Finds a UI ancestor of this connector. <code>null</code> is returned if
      * no UI ancestor is found (typically because the connector is not attached
      * to a proper hierarchy).
-     * 
+     *
      * @return the UI ancestor of this connector, or <code>null</code> if none
      *         is found.
      */
@@ -497,7 +502,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
     /**
      * Get an Iterable for iterating over all child connectors, including both
      * extensions and child components.
-     * 
+     *
      * @param connector
      *            the connector to get children for
      * @return an Iterable giving all child connectors.
@@ -568,7 +573,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
     /**
      * Add an extension to this connector. This method is protected to allow
      * extensions to select which targets they can extend.
-     * 
+     *
      * @param extension
      *            the extension to add
      */
@@ -601,7 +606,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.ClientConnector#isAttached()
      */
     @Override
@@ -624,7 +629,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * <p>
      * The {@link #getSession()} and {@link #getUI()} methods might return
      * <code>null</code> after this method is called.
@@ -681,12 +686,12 @@ public abstract class AbstractClientConnector implements ClientConnector,
     /**
      * Gets a resource defined using {@link #setResource(String, Resource)} with
      * the corresponding key.
-     * 
+     *
      * @param key
      *            the string identifier of the resource
      * @return a resource, or <code>null</code> if there's no resource
      *         associated with the given key
-     * 
+     *
      * @see #setResource(String, Resource)
      */
     protected Resource getResource(String key) {
@@ -700,7 +705,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * connector using
      * {@link com.vaadin.terminal.gwt.client.ui.AbstractConnector#getResourceUrl(String)}
      * with the same key.
-     * 
+     *
      * @param key
      *            the string key to associate the resource with
      * @param resource
@@ -708,8 +713,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
      *            association.
      */
     protected void setResource(String key, Resource resource) {
-        ResourceReference resourceReference = ResourceReference.create(
-                resource, this, key);
+        ResourceReference resourceReference = ResourceReference.create(resource,
+                this, key);
 
         if (resourceReference == null) {
             getState().resources.remove(key);
@@ -727,17 +732,17 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * have any arguments the event object will not be passed to it when it's
      * called.
      * </p>
-     * 
+     *
      * <p>
      * This method additionally informs the event-api to route events with the
      * given eventIdentifier to the components handleEvent function call.
      * </p>
-     * 
+     *
      * <p>
      * For more information on the inheritable event mechanism see the
      * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
-     * 
+     *
      * @param eventIdentifier
      *            the identifier of the event to listen for
      * @param eventType
@@ -747,7 +752,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      *            the object instance who owns the activation method.
      * @param method
      *            the activation method.
-     * 
+     *
      * @since 6.2
      */
     protected void addListener(String eventIdentifier, Class<?> eventType,
@@ -766,7 +771,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     /**
      * Checks if the given {@link Event} type is listened for this component.
-     * 
+     *
      * @param eventType
      *            the event type to be checked
      * @return true if a listener is registered for the given event type
@@ -781,18 +786,18 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * parameters, it will unregister all <code>object</code>'s methods that are
      * registered to listen to events of type <code>eventType</code> generated
      * by this component.
-     * 
+     *
      * <p>
      * This method additionally informs the event-api to stop routing events
      * with the given eventIdentifier to the components handleEvent function
      * call.
      * </p>
-     * 
+     *
      * <p>
      * For more information on the inheritable event mechanism see the
      * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
-     * 
+     *
      * @param eventIdentifier
      *            the identifier of the event to stop listening for
      * @param eventType
@@ -800,7 +805,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * @param target
      *            the target object that has registered to listen to events of
      *            type <code>eventType</code> with one or more methods.
-     * 
+     *
      * @since 6.2
      */
     protected void removeListener(String eventIdentifier, Class<?> eventType,
@@ -821,12 +826,12 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * have any arguments the event object will not be passed to it when it's
      * called.
      * </p>
-     * 
+     *
      * <p>
      * For more information on the inheritable event mechanism see the
      * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
-     * 
+     *
      * @param eventType
      *            the type of the listened event. Events of this type or its
      *            subclasses activate the listener.
@@ -834,7 +839,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      *            the object instance who owns the activation method.
      * @param method
      *            the activation method.
-     * 
+     *
      */
     @Override
     public void addListener(Class<?> eventType, Object target, Method method) {
@@ -851,25 +856,25 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * activation method does not have any arguments the event object will not
      * be passed to it when it's called.
      * </p>
-     * 
+     *
      * <p>
      * This version of <code>addListener</code> gets the name of the activation
      * method as a parameter. The actual method is reflected from
      * <code>object</code>, and unless exactly one match is found,
      * <code>java.lang.IllegalArgumentException</code> is thrown.
      * </p>
-     * 
+     *
      * <p>
      * For more information on the inheritable event mechanism see the
      * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
-     * 
+     *
      * <p>
      * Note: Using this method is discouraged because it cannot be checked
      * during compilation. Use {@link #addListener(Class, Object, Method)} or
      * {@link #addListener(com.vaadin.ui.Component.Listener)} instead.
      * </p>
-     * 
+     *
      * @param eventType
      *            the type of the listened event. Events of this type or its
      *            subclasses activate the listener.
@@ -883,7 +888,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
      */
     @Override
     @Deprecated
-    public void addListener(Class<?> eventType, Object target, String methodName) {
+    public void addListener(Class<?> eventType, Object target,
+            String methodName) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
@@ -896,12 +902,12 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * parameters, it will unregister all <code>object</code>'s methods that are
      * registered to listen to events of type <code>eventType</code> generated
      * by this component.
-     * 
+     *
      * <p>
      * For more information on the inheritable event mechanism see the
      * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
-     * 
+     *
      * @param eventType
      *            the exact event type the <code>object</code> listens to.
      * @param target
@@ -919,12 +925,12 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * Removes one registered listener method. The given method owned by the
      * given object will no longer be called when the specified events are
      * generated by this component.
-     * 
+     *
      * <p>
      * For more information on the inheritable event mechanism see the
      * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
-     * 
+     *
      * @param eventType
      *            the exact event type the <code>object</code> listens to.
      * @param target
@@ -935,7 +941,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
      *            listen to events of type <code>eventType</code>.
      */
     @Override
-    public void removeListener(Class<?> eventType, Object target, Method method) {
+    public void removeListener(Class<?> eventType, Object target,
+            Method method) {
         if (eventRouter != null) {
             eventRouter.removeListener(eventType, target, method);
         }
@@ -947,19 +954,19 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * given object will no longer be called when the specified events are
      * generated by this component.
      * </p>
-     * 
+     *
      * <p>
      * This version of <code>removeListener</code> gets the name of the
      * activation method as a parameter. The actual method is reflected from
      * <code>target</code>, and unless exactly one match is found,
      * <code>java.lang.IllegalArgumentException</code> is thrown.
      * </p>
-     * 
+     *
      * <p>
      * For more information on the inheritable event mechanism see the
      * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
-     * 
+     *
      * @param eventType
      *            the exact event type the <code>object</code> listens to.
      * @param target
@@ -983,7 +990,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
     /**
      * Returns all listeners that are registered for the given event type or one
      * of its subclasses.
-     * 
+     *
      * @param eventType
      *            The type of event to return listeners for.
      * @return A collection with all registered listeners. Empty if no listeners
@@ -999,7 +1006,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     /**
      * Sends the event to all listeners.
-     * 
+     *
      * @param event
      *            the Event to be sent to all listeners.
      */
@@ -1011,7 +1018,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.ClientConnector#getErrorHandler()
      */
     @Override
@@ -1021,7 +1028,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.ClientConnector#setErrorHandler(com.vaadin.server.
      * ErrorHandler)
      */
@@ -1032,7 +1039,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -1059,7 +1066,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * by the proxy to actually be called on the underlying instance.
      * <p>
      * See #14639
-     * 
+     *
      * @deprecated only defined for framework hacks, do not use.
      */
     @Deprecated
@@ -1069,7 +1076,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override

@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -56,14 +56,14 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
 
                 SimpleTestBean firstValue = generics.values().iterator().next()
                         .get(Integer.valueOf(1)).get(0);
-                Set<SimpleTestBean> key = new HashSet<SimpleTestBean>(Arrays
-                        .asList(firstValue));
+                Set<SimpleTestBean> key = new HashSet<SimpleTestBean>(
+                        Arrays.asList(firstValue));
 
                 Map<Integer, List<SimpleTestBean>> value = new HashMap<Integer, List<SimpleTestBean>>();
-                Set<SimpleTestBean> firstKeyValue = generics.keySet()
-                        .iterator().next();
-                value.put(Integer.valueOf(1), new ArrayList<SimpleTestBean>(
-                        firstKeyValue));
+                Set<SimpleTestBean> firstKeyValue = generics.keySet().iterator()
+                        .next();
+                value.put(Integer.valueOf(1),
+                        new ArrayList<SimpleTestBean>(firstKeyValue));
 
                 updated.put(key, value);
 
@@ -74,8 +74,8 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
             public void sendString(String value, String[] array) {
                 char[] chars = value.toCharArray();
                 Arrays.sort(chars);
-                rpc.sendString(new String(chars), new String[] { array[1],
-                        array[0] });
+                rpc.sendString(new String(chars),
+                        new String[] { array[1], array[0] });
             }
 
             @Override
@@ -95,9 +95,11 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
             @Override
             public void sendNestedArray(int[][] nestedIntArray,
                     SimpleTestBean[][] nestedBeanArray) {
-                rpc.sendNestedArray(new int[][] { { nestedIntArray[1][0],
-                        nestedIntArray[0][0] } }, new SimpleTestBean[][] {
-                        { nestedBeanArray[0][1] }, { nestedBeanArray[0][0] } });
+                rpc.sendNestedArray(
+                        new int[][] { { nestedIntArray[1][0],
+                                nestedIntArray[0][0] } },
+                        new SimpleTestBean[][] { { nestedBeanArray[0][1] },
+                                { nestedBeanArray[0][0] } });
             }
 
             @Override
@@ -116,18 +118,20 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                                 connectorMap.get(getUIConnector())),
                         Collections.singletonMap(
                                 Integer.valueOf(stringMap.size()),
-                                getThisConnector()), updatedBeanMap);
+                                getThisConnector()),
+                        updatedBeanMap);
             }
 
             @Override
             public void sendLong(long value, Long boxedValue, long[] array) {
-                rpc.sendLong(array[0], Long.valueOf(value), new long[] {
-                        array[1], boxedValue.longValue() });
+                rpc.sendLong(array[0], Long.valueOf(value),
+                        new long[] { array[1], boxedValue.longValue() });
             }
 
             @Override
             public void sendList(List<Integer> intList,
-                    List<Connector> connectorList, List<SimpleTestBean> beanList) {
+                    List<Connector> connectorList,
+                    List<SimpleTestBean> beanList) {
                 Collections.sort(intList);
                 Collections.reverse(beanList);
                 rpc.sendList(intList,
@@ -137,12 +141,13 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
 
             @Override
             public void sendInt(int value, Integer boxedValue, int[] array) {
-                rpc.sendInt(array.length, Integer.valueOf(array[0]), new int[] {
-                        value, boxedValue.intValue() });
+                rpc.sendInt(array.length, Integer.valueOf(array[0]),
+                        new int[] { value, boxedValue.intValue() });
             }
 
             @Override
-            public void sendFloat(float value, Float boxedValue, float[] array) {
+            public void sendFloat(float value, Float boxedValue,
+                    float[] array) {
                 Arrays.sort(array);
                 rpc.sendFloat(boxedValue.floatValue(), Float.valueOf(value),
                         array);
@@ -162,10 +167,11 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
             }
 
             @Override
-            public void sendChar(char value, Character boxedValue, char[] array) {
+            public void sendChar(char value, Character boxedValue,
+                    char[] array) {
                 rpc.sendChar(Character.toUpperCase(boxedValue.charValue()),
-                        Character.valueOf(value), new String(array)
-                                .toLowerCase().toCharArray());
+                        Character.valueOf(value),
+                        new String(array).toLowerCase().toCharArray());
             }
 
             @Override
@@ -191,15 +197,15 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
             public void sendBean(ComplexTestBean complexBean,
                     SimpleTestBean simpleBean, SimpleTestBean[] array) {
                 SimpleTestBean updatedSimpleBean = new SimpleTestBean();
-                updatedSimpleBean.setValue(complexBean.getInnerBean1()
-                        .getValue());
+                updatedSimpleBean
+                        .setValue(complexBean.getInnerBean1().getValue());
 
                 ComplexTestBean updatedComplexBean = new ComplexTestBean();
                 updatedComplexBean.setInnerBean1(complexBean.getInnerBean2());
-                updatedComplexBean.setInnerBean2(complexBean
-                        .getInnerBeanCollection().get(0));
-                updatedComplexBean.setInnerBeanCollection(Arrays.asList(
-                        simpleBean, updatedSimpleBean));
+                updatedComplexBean.setInnerBean2(
+                        complexBean.getInnerBeanCollection().get(0));
+                updatedComplexBean.setInnerBeanCollection(
+                        Arrays.asList(simpleBean, updatedSimpleBean));
                 updatedComplexBean.setPrivimite(complexBean.getPrivimite() + 1);
 
                 ArrayList<SimpleTestBean> arrayList = new ArrayList<SimpleTestBean>(
@@ -217,14 +223,14 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                 Collections.reverse(beanArrayList);
                 List<Integer[]> updatedObjectArrayList = new ArrayList<Integer[]>();
                 for (int[] array : primitiveArrayList) {
-                    updatedObjectArrayList.add(new Integer[] {
-                            Integer.valueOf(array.length),
-                            Integer.valueOf(array[0]) });
+                    updatedObjectArrayList
+                            .add(new Integer[] { Integer.valueOf(array.length),
+                                    Integer.valueOf(array[0]) });
                 }
 
-                rpc.sendArrayList(Arrays.asList(
-                        new int[] { primitiveArrayList.size() },
-                        new int[] { objectArrayList.get(0).length }),
+                rpc.sendArrayList(
+                        Arrays.asList(new int[] { primitiveArrayList.size() },
+                                new int[] { objectArrayList.get(0).length }),
                         updatedObjectArrayList, beanArrayList);
             }
 
@@ -236,16 +242,17 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
             @Override
             public void sendListArray(List<Integer>[] objectListArray,
                     List<SimpleTestBean>[] beanListArray) {
-                rpc.sendListArray(new List[] { objectListArray[1],
-                        objectListArray[0] }, new List[] { Collections
-                        .singletonList(beanListArray[0].get(0)) });
+                rpc.sendListArray(
+                        new List[] { objectListArray[1], objectListArray[0] },
+                        new List[] { Collections
+                                .singletonList(beanListArray[0].get(0)) });
             }
 
             @Override
             public void sendEnum(ContentMode contentMode, ContentMode[] array,
                     List<ContentMode> list) {
-                ContentMode nextContentMode = ContentMode.values()[contentMode
-                        .ordinal() + 1];
+                ContentMode nextContentMode = ContentMode
+                        .values()[contentMode.ordinal() + 1];
                 rpc.sendEnum(nextContentMode,
                         list.toArray(new ContentMode[list.size()]),
                         Arrays.asList(array));
@@ -275,13 +282,13 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
             public void sendJson(JsonValue value1, JsonValue value2,
                     JsonString string) {
                 if (value1.getType() != JsonType.BOOLEAN) {
-                    throw new RuntimeException("Expected boolean, got "
-                            + value1.toJson());
+                    throw new RuntimeException(
+                            "Expected boolean, got " + value1.toJson());
                 }
 
                 if (value2.getType() != JsonType.NULL) {
-                    throw new RuntimeException("Expected null, got "
-                            + value2.toJson());
+                    throw new RuntimeException(
+                            "Expected null, got " + value2.toJson());
                 }
 
                 JsonObject returnObject = Json.createObject();
@@ -343,10 +350,12 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
 
         rpc.log("state.doubleValue: " + getState().doubleValue);
         rpc.log("state.doubleObjectValue: " + getState().doubleObjectValue);
-        rpc.log("state.doubleArray: " + Arrays.toString(getState().doubleArray));
+        rpc.log("state.doubleArray: "
+                + Arrays.toString(getState().doubleArray));
 
         rpc.log("state.string: " + getState().string);
-        rpc.log("state.stringArray: " + Arrays.toString(getState().stringArray));
+        rpc.log("state.stringArray: "
+                + Arrays.toString(getState().stringArray));
 
         rpc.log("state.jsonNull: " + getState().jsonNull.getType().name());
         rpc.log("state.jsonString: "
@@ -364,41 +373,41 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
         /*
          * TODO public double doubleValue; public Double DoubleValue; public
          * double[] doubleArray; ;
-         * 
+         *
          * public String string;
-         * 
+         *
          * public String nullString;
-         * 
+         *
          * public Connector connector;
-         * 
+         *
          * public ComplexTestBean complexTestBean; public SimpleTestBean
          * simpleTestBean; public SimpleTestBean[] simpleTestBeanArray; public
          * int[][] nestedIntArray; public SimpleTestBean[][] nestedBeanArray;
-         * 
+         *
          * public List<Integer> intList; public List<Connector> connectorList;
          * public List<SimpleTestBean> simpleTestBeanList;
-         * 
+         *
          * public List<int[]> primitiveArrayList; public List<Integer[]>
          * objectArrayList; public List<SimpleTestBean[]> beanArrayList;
-         * 
+         *
          * public List<Integer>[] objectListArray; public List<SimpleTestBean>[]
          * beanListArray;
-         * 
+         *
          * public Set<Integer> intSet; public Set<Connector> connectorSet;
          * public Set<SimpleTestBean> beanSet;
-         * 
+         *
          * public Map<String, SimpleTestBean> stringMap; public Map<Connector,
          * SimpleTestBean> connectorMap; public Map<Integer, Connector> intMap;
          * public Map<SimpleTestBean, SimpleTestBean> beanMap;
-         * 
+         *
          * public Map<Set<SimpleTestBean>, Map<Integer, List<SimpleTestBean>>>
          * generics;
-         * 
+         *
          * public ContentMode contentMode; public ContentMode[] array; public
          * List<ContentMode> list;
-         * 
+         *
          * public SimpleTestBean bean;
-         * 
+         *
          * public Date date1; public Date date2;
          */
     }

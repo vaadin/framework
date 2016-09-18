@@ -49,8 +49,8 @@ public class PropertyValueChange extends TestBase {
                 Object columnId) {
             final Label l = new Label();
             @SuppressWarnings("unchecked")
-            final Property<Integer> integer = source.getContainerProperty(
-                    itemId, "integer");
+            final Property<Integer> integer = source
+                    .getContainerProperty(itemId, "integer");
             l.setValue(String.valueOf(getMultipliedValue(integer)));
 
             // we must hook value change listener to ensure updates in all use
@@ -107,8 +107,9 @@ public class PropertyValueChange extends TestBase {
         t2.setId("disabled table");
 
         Table reader = new Table("Reader table");
-        reader.setDescription("This table should be redrawn on container changes as container data is "
-                + "displayed directly in cells.");
+        reader.setDescription(
+                "This table should be redrawn on container changes as container data is "
+                        + "displayed directly in cells.");
         reader.setContainerDataSource(container);
         reader.addGeneratedColumn("integer x 3", multiplier);
         reader.setPageLength(0);

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -56,9 +56,9 @@ public class UnnecessaryScrollbarWhenZoomingTest extends MultiBrowserTest {
         zoomSetter.resetZoom();
         openTestURL();
         // IE sometimes has trouble waiting long enough.
-        new WebDriverWait(getDriver(), 30).until(ExpectedConditions
-                .presenceOfElementLocated(By
-                        .cssSelector(".v-table-body-wrapper")));
+        new WebDriverWait(getDriver(), 30)
+                .until(ExpectedConditions.presenceOfElementLocated(
+                        By.cssSelector(".v-table-body-wrapper")));
     }
 
     @Test
@@ -94,8 +94,8 @@ public class UnnecessaryScrollbarWhenZoomingTest extends MultiBrowserTest {
         } catch (InterruptedException e) {
             Assert.fail();
         }
-        WebElement element = findElement(By
-                .cssSelector(".v-table-body-wrapper"));
+        WebElement element = findElement(
+                By.cssSelector(".v-table-body-wrapper"));
         assertNotNull("There must be a table", element);
         String overflow = element.getCssValue("overflow");
         // As long as the overflow is hidden, there will not be scroll bars.
@@ -110,7 +110,8 @@ public class UnnecessaryScrollbarWhenZoomingTest extends MultiBrowserTest {
             String detectVerticalScroll = "return arguments[0].scrollHeight > arguments[0].clientHeight";
             Boolean vertical = (Boolean) ((TestBenchCommandExecutor) getDriver())
                     .executeScript(detectVerticalScroll, element);
-            assertEquals("there must be no vertical scrollbar", false, vertical);
+            assertEquals("there must be no vertical scrollbar", false,
+                    vertical);
         }
     }
 

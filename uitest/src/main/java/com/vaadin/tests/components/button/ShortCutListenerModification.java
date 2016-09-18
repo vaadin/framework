@@ -12,8 +12,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
-public class ShortCutListenerModification extends TestBase implements
-        ClickListener {
+public class ShortCutListenerModification extends TestBase
+        implements ClickListener {
 
     @Override
     protected String getDescription() {

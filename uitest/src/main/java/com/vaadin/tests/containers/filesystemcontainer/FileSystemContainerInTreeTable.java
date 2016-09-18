@@ -71,16 +71,16 @@ public class FileSystemContainerInTreeTable extends TestBase {
 
             HorizontalLayout buttonLayout = new HorizontalLayout();
             buttonLayout.setSpacing(true);
-            buttonLayout.addComponent(new Button("Create dir11",
-                    new Button.ClickListener() {
+            buttonLayout.addComponent(
+                    new Button("Create dir11", new Button.ClickListener() {
                         @Override
                         public void buttonClick(ClickEvent event) {
                             new File(folder, "dir11").mkdir();
                             log.log("Row dir11 created");
                         }
                     }));
-            buttonLayout.addComponent(new Button("Delete dir11",
-                    new Button.ClickListener() {
+            buttonLayout.addComponent(
+                    new Button("Delete dir11", new Button.ClickListener() {
                         @Override
                         public void buttonClick(ClickEvent event) {
                             new File(folder, "dir11").delete();
@@ -88,8 +88,8 @@ public class FileSystemContainerInTreeTable extends TestBase {
                         }
                     }));
             // to clean up explicitly before ending an automated test
-            buttonLayout.addComponent(new Button("Clean all files",
-                    new Button.ClickListener() {
+            buttonLayout.addComponent(
+                    new Button("Clean all files", new Button.ClickListener() {
                         @Override
                         public void buttonClick(ClickEvent event) {
                             folder.delete();

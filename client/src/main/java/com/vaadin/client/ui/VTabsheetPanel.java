@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,7 +29,7 @@ import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
  * A panel that displays all of its child widgets in a 'deck', where only one
  * can be visible at a time. It is used by
  * {@link com.vaadin.client.ui.VTabsheet}.
- * 
+ *
  * This class has the same basic functionality as the GWT DeckPanel
  * {@link com.google.gwt.user.client.ui.DeckPanel}, with the exception that it
  * doesn't manipulate the child widgets' width and height attributes.
@@ -50,7 +50,7 @@ public class VTabsheetPanel extends ComplexPanel {
 
     /**
      * Adds the specified widget to the deck.
-     * 
+     *
      * @param w
      *            the widget to be added
      */
@@ -71,7 +71,7 @@ public class VTabsheetPanel extends ComplexPanel {
 
     /**
      * Gets the index of the currently-visible widget.
-     * 
+     *
      * @return the visible widget's index
      */
     public int getVisibleWidget() {
@@ -80,7 +80,7 @@ public class VTabsheetPanel extends ComplexPanel {
 
     /**
      * Inserts a widget before the specified index.
-     * 
+     *
      * @param w
      *            the widget to be inserted
      * @param beforeIndex
@@ -117,7 +117,7 @@ public class VTabsheetPanel extends ComplexPanel {
     /**
      * Shows the widget at the specified index. This causes the currently-
      * visible widget to be hidden.
-     * 
+     *
      * @param index
      *            the index of the widget to be shown
      */
@@ -129,8 +129,8 @@ public class VTabsheetPanel extends ComplexPanel {
                 hide(DOM.getParent(visibleWidget.getElement()));
             }
             visibleWidget = newVisible;
-            touchScrollHandler.setElements(visibleWidget.getElement()
-                    .getParentElement());
+            touchScrollHandler
+                    .setElements(visibleWidget.getElement().getParentElement());
         }
         // Always ensure the selected tab is visible. If server prevents a tab
         // change we might end up here with visibleWidget == newVisible but its

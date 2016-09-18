@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,11 +32,11 @@ import com.vaadin.ui.VerticalLayout;
  * TODO: Note you need to add Theme under WebContent/VAADIN/Themes/mytheme in
  * order to see actual visible results on the browser. Currently changes are
  * visible only by inspecting DOM.
- * 
+ *
  * @author Vaadin Ltd.
  */
-public class TestForMultipleStyleNames extends CustomComponent implements
-        ValueChangeListener {
+public class TestForMultipleStyleNames extends CustomComponent
+        implements ValueChangeListener {
 
     private final VerticalLayout main = new VerticalLayout();
 
@@ -53,8 +53,8 @@ public class TestForMultipleStyleNames extends CustomComponent implements
 
     public void createNewView() {
         main.removeAllComponents();
-        main.addComponent(new Label(
-                "TK5 supports multiple stylenames for components."));
+        main.addComponent(
+                new Label("TK5 supports multiple stylenames for components."));
         main.addComponent(new Label("Note you need to add Theme under"
                 + " WebContent/VAADIN/Themes/mytheme"
                 + " in order to see actual visible results"
@@ -91,7 +91,8 @@ public class TestForMultipleStyleNames extends CustomComponent implements
 
         final Collection<?> styles = (Collection<?>) s.getValue();
 
-        for (final Iterator<?> iterator = styles.iterator(); iterator.hasNext();) {
+        for (final Iterator<?> iterator = styles.iterator(); iterator
+                .hasNext();) {
             final String styleName = (String) iterator.next();
             if (curStyles.contains(styleName)) {
                 // already added

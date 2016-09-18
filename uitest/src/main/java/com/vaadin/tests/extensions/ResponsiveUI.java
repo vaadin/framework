@@ -51,7 +51,8 @@ public class ResponsiveUI extends AbstractTestUI {
                         + "span the entire width of the container.</p><p>This label will "
                         + "adapt its font size and line height for different widths.</p>"
                         + "<p><a href=\"http://vaadin.com/download\">Download "
-                        + "Vaadin</a></p>", ContentMode.HTML);
+                        + "Vaadin</a></p>",
+                ContentMode.HTML);
         description.addStyleName("description");
         split.addComponent(description);
 

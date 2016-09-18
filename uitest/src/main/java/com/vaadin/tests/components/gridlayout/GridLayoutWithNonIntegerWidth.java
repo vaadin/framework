@@ -33,7 +33,7 @@ public class GridLayoutWithNonIntegerWidth extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -43,7 +43,7 @@ public class GridLayoutWithNonIntegerWidth extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override

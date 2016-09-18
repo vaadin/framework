@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -34,7 +34,7 @@ import com.vaadin.shared.util.SharedUtil;
 
 /**
  * Information section of the debug window
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd
  */
@@ -57,7 +57,7 @@ public class InfoSection implements Section {
     };
 
     /**
-     * 
+     *
      */
     public InfoSection() {
         createContent();
@@ -95,7 +95,7 @@ public class InfoSection implements Section {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.debug.internal.Section#getTabButton()
      */
     @Override
@@ -105,7 +105,7 @@ public class InfoSection implements Section {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.debug.internal.Section#getControls()
      */
     @Override
@@ -115,7 +115,7 @@ public class InfoSection implements Section {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.debug.internal.Section#getContent()
      */
     @Override
@@ -125,7 +125,7 @@ public class InfoSection implements Section {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.debug.internal.Section#show()
      */
     @Override
@@ -135,7 +135,7 @@ public class InfoSection implements Section {
 
     /**
      * Updates the information for all running applications
-     * 
+     *
      * @since 7.1
      */
     private void refresh() {
@@ -154,7 +154,7 @@ public class InfoSection implements Section {
 
     /**
      * Updates the information for a single running application
-     * 
+     *
      * @since 7.1
      */
     private void refresh(ApplicationConnection connection) {
@@ -165,8 +165,8 @@ public class InfoSection implements Section {
         addRow("Widget set", GWT.getModuleName());
         addRow("Theme", connection.getUIConnector().getActiveTheme());
 
-        String communicationMethodInfo = connection
-                .getMessageSender().getCommunicationMethodName();
+        String communicationMethodInfo = connection.getMessageSender()
+                .getCommunicationMethodName();
         int pollInterval = connection.getUIConnector().getState().pollInterval;
         if (pollInterval > 0) {
             communicationMethodInfo += " (poll interval " + pollInterval
@@ -185,7 +185,7 @@ public class InfoSection implements Section {
 
     /**
      * Logs version information for client/server/theme.
-     * 
+     *
      * @param applicationConfiguration
      * @since 7.1
      */
@@ -211,10 +211,10 @@ public class InfoSection implements Section {
                 themeVersion);
         boolean servletOk = equalsEither(servletVersion, clientVersion,
                 themeVersion);
-        addRow("Client engine version", clientVersion, clientOk ? null
-                : ERROR_STYLE);
-        addRow("Server engine version", servletVersion, servletOk ? null
-                : ERROR_STYLE);
+        addRow("Client engine version", clientVersion,
+                clientOk ? null : ERROR_STYLE);
+        addRow("Server engine version", servletVersion,
+                servletOk ? null : ERROR_STYLE);
         addRow("Theme version", themeVersion, themeOk ? null : ERROR_STYLE);
         if (jsVersion != null) {
             addRow("Push server version", atmosphereVersion);
@@ -225,7 +225,7 @@ public class InfoSection implements Section {
 
     /**
      * Checks if the target value equals one of the reference values
-     * 
+     *
      * @param target
      *            The value to compare
      * @param reference1
@@ -249,7 +249,7 @@ public class InfoSection implements Section {
     /**
      * Finds out the version of the current theme (i.e. the version of Vaadin
      * used to compile it)
-     * 
+     *
      * @since 7.1
      * @return The full version as a string
      */
@@ -279,7 +279,7 @@ public class InfoSection implements Section {
 
     /**
      * Removes all content
-     * 
+     *
      * @since 7.1
      */
     private void clear() {
@@ -288,7 +288,7 @@ public class InfoSection implements Section {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.debug.internal.Section#hide()
      */
     @Override
@@ -298,7 +298,7 @@ public class InfoSection implements Section {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.debug.internal.Section#meta(com.vaadin.client.
      * ApplicationConnection, com.vaadin.client.ValueMap)
      */
@@ -309,7 +309,7 @@ public class InfoSection implements Section {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.debug.internal.Section#uidl(com.vaadin.client.
      * ApplicationConnection, com.vaadin.client.ValueMap)
      */

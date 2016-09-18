@@ -68,7 +68,8 @@ public class AddressField extends CustomField<Address> {
      * commit changes of the address form
      */
     @Override
-    public void commit() throws Buffered.SourceException, InvalidValueException {
+    public void commit()
+            throws Buffered.SourceException, InvalidValueException {
         addressForm.commit();
         super.commit();
     }

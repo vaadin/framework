@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,14 +35,14 @@ import com.vaadin.shared.communication.SharedState;
 
 /**
  * Connector information view panel of the debug window.
- * 
+ *
  * @since 7.1.4
  */
 public class ConnectorInfoPanel extends FlowPanel {
 
     /**
      * Update the panel to show information about a connector.
-     * 
+     *
      * @param connector
      */
     public void update(ServerConnector connector) {
@@ -57,13 +57,13 @@ public class ConnectorInfoPanel extends FlowPanel {
         if (connector instanceof ComponentConnector) {
             ComponentConnector component = (ComponentConnector) connector;
 
-            ignoreProperties.addAll(Arrays.asList("caption", "description",
-                    "width", "height"));
+            ignoreProperties.addAll(
+                    Arrays.asList("caption", "description", "width", "height"));
 
             AbstractComponentState componentState = component.getState();
 
-            html += getRowHTML("Widget", component.getWidget().getClass()
-                    .getSimpleName());
+            html += getRowHTML("Widget",
+                    component.getWidget().getClass().getSimpleName());
             html += getRowHTML("Caption", componentState.caption);
             html += getRowHTML("Description", componentState.description);
             html += getRowHTML("Width", componentState.width + " (actual: "

@@ -84,7 +84,8 @@ public class JSR286Portlet extends UI {
         Upload upload = new Upload("Upload a file", new Receiver() {
 
             @Override
-            public OutputStream receiveUpload(String filename, String mimeType) {
+            public OutputStream receiveUpload(String filename,
+                    String mimeType) {
                 return new ByteArrayOutputStream();
             }
         });
@@ -114,18 +115,20 @@ public class JSR286Portlet extends UI {
 
         String censoredUserAgent = getPage().getWebBrowser()
                 .getBrowserApplication();
-        if (censoredUserAgent != null && censoredUserAgent.contains("Chrome/")) {
+        if (censoredUserAgent != null
+                && censoredUserAgent.contains("Chrome/")) {
             // Censor version info as it tends to change
             censoredUserAgent = censoredUserAgent.replaceAll("Chrome/[^ ]* ",
                     "Chrome/xyz ");
         }
         userAgent.setValue(censoredUserAgent);
         screenWidth.setValue(String.valueOf(getPage().getBrowserWindowWidth()));
-        screenHeight.setValue(String
-                .valueOf(getPage().getBrowserWindowHeight()));
+        screenHeight
+                .setValue(String.valueOf(getPage().getBrowserWindowHeight()));
 
         boolean inViewMode = (request.getPortletMode() == PortletMode.VIEW);
-        boolean inNormalState = (request.getWindowState() == WindowState.NORMAL);
+        boolean inNormalState = (request
+                .getWindowState() == WindowState.NORMAL);
         // Portlet up-and-running, enable stuff
         portletEdit.setEnabled(true);
         portletMax.setEnabled(true);
@@ -134,10 +137,10 @@ public class JSR286Portlet extends UI {
         tf.setEnabled(!inViewMode);
 
         // Show notification about current mode and state
-        getPage().showNotification(
-                new Notification("Portlet status", "Mode: "
-                        + request.getPortletMode() + " State: "
-                        + request.getWindowState(), Type.WARNING_MESSAGE));
+        getPage().showNotification(new Notification(
+                "Portlet status", "Mode: " + request.getPortletMode()
+                        + " State: " + request.getWindowState(),
+                Type.WARNING_MESSAGE));
 
         // Display current user info
         Map<?, ?> uinfo = (Map<?, ?>) request
@@ -195,8 +198,8 @@ public class JSR286Portlet extends UI {
         if (someAction == null) {
             url = getSession().generateActionURL("someAction");
             try {
-                someAction = new Link("An action", new ExternalResource(
-                        url.toString()));
+                someAction = new Link("An action",
+                        new ExternalResource(url.toString()));
                 main.addComponent(someAction);
             } catch (Exception e) {
                 // Oops
@@ -211,9 +214,9 @@ public class JSR286Portlet extends UI {
         @Override
         public void handleActionRequest(ActionRequest request,
                 ActionResponse response, UI window) {
-            main.addComponent(new Label("Action '"
-                    + request.getParameter("javax.portlet.action")
-                    + "' received"));
+            main.addComponent(new Label(
+                    "Action '" + request.getParameter("javax.portlet.action")
+                            + "' received"));
         }
 
         @Override

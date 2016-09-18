@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,7 +40,7 @@ import com.vaadin.client.widget.grid.events.ScrollHandler;
 /**
  * An element-like bundle representing a configurable and visual scrollbar in
  * one axis.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  * @see VerticalScrollbarBundle
@@ -60,16 +60,16 @@ public abstract class ScrollbarBundle implements DeferredWorker {
                  * The weird thing is, that happens only once, and if you drag
                  * scrollbar fast enough. After it has failed once, it never
                  * fails again.
-                 * 
+                 *
                  * Theory: the user drags the scrollbar, and this command is
                  * executed before the browser has a chance to fire a scroll
                  * event (which normally would correct this situation). This
                  * would explain why slow scrolling doesn't trigger the problem,
                  * while fast scrolling does.
-                 * 
+                 *
                  * To make absolutely sure that we have the latest scroll
                  * position, let's update the internal value.
-                 * 
+                 *
                  * This might lead to a slight performance hit (on my computer
                  * it was never more than 3ms on either of Chrome 38 or Firefox
                  * 31). It also _slightly_ counteracts the purpose of the
@@ -131,15 +131,15 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         /**
          * This method is called whenever the scrollbar handle's visibility is
          * changed in a {@link ScrollbarBundle}.
-         * 
+         *
          * @param event
          *            the {@link VisibilityChangeEvent}
          */
         void visibilityChanged(VisibilityChangeEvent event);
     }
 
-    public static class VisibilityChangeEvent extends
-            GwtEvent<VisibilityHandler> {
+    public static class VisibilityChangeEvent
+            extends GwtEvent<VisibilityHandler> {
         public static final Type<VisibilityHandler> TYPE = new Type<ScrollbarBundle.VisibilityHandler>() {
             @Override
             public String toString() {
@@ -155,7 +155,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
         /**
          * Checks whether the scroll handle is currently visible or not
-         * 
+         *
          * @return <code>true</code> if the scroll handle is currently visible.
          *         <code>false</code> if not.
          */
@@ -187,7 +187,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     /**
      * A representation of a single vertical scrollbar.
-     * 
+     *
      * @see VerticalScrollbarBundle#getElement()
      */
     public final static class VerticalScrollbarBundle extends ScrollbarBundle {
@@ -257,10 +257,11 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     /**
      * A representation of a single horizontal scrollbar.
-     * 
+     *
      * @see HorizontalScrollbarBundle#getElement()
      */
-    public final static class HorizontalScrollbarBundle extends ScrollbarBundle {
+    public final static class HorizontalScrollbarBundle
+            extends ScrollbarBundle {
 
         @Override
         public void setStylePrimaryName(String primaryStyleName) {
@@ -357,7 +358,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     /**
      * Sets the primary style name
-     * 
+     *
      * @param primaryStyleName
      *            The primary style name to use
      */
@@ -367,7 +368,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     /**
      * Gets the root element of this scrollbar-composition.
-     * 
+     *
      * @return the root element
      */
     public final Element getElement() {
@@ -381,7 +382,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * currently only used as integers as large {@code int} (or small but fast
      * {@code long}). This means, all values are truncated to zero decimal
      * places.
-     * 
+     *
      * @param delta
      *            the delta in pixels to change the scroll position by
      */
@@ -394,7 +395,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     /**
      * Modifies {@link #root root's} dimensions in the axis the scrollbar is
      * representing.
-     * 
+     *
      * @param px
      *            the new size of {@link #root} in the dimension this scrollbar
      *            is representing
@@ -403,7 +404,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     /**
      * Sets the length of the scrollbar.
-     * 
+     *
      * @param px
      *            the length of the scrollbar in pixels
      */
@@ -420,12 +421,13 @@ public abstract class ScrollbarBundle implements DeferredWorker {
                 && newOffsetSizeIsGreaterThanScrollSize;
         if (offsetSizeBecomesGreaterThanScrollSize && getScrollPos() != 0) {
             // must be a field because Java insists.
-            offsetSizeTemporaryScrollHandler = addScrollHandler(new ScrollHandler() {
-                @Override
-                public void onScroll(ScrollEvent event) {
-                    setOffsetSizeNow(px);
-                }
-            });
+            offsetSizeTemporaryScrollHandler = addScrollHandler(
+                    new ScrollHandler() {
+                        @Override
+                        public void onScroll(ScrollEvent event) {
+                            setOffsetSizeNow(px);
+                        }
+                    });
             setScrollPos(0);
         } else {
             setOffsetSizeNow(px);
@@ -477,7 +479,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     /**
      * Gets the length of the scrollbar
-     * 
+     *
      * @return the length of the scrollbar in pixels
      */
     public double getOffsetSize() {
@@ -494,7 +496,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * currently only used as integers as large {@code int} (or small but fast
      * {@code long}). This means, all values are truncated to zero decimal
      * places.
-     * 
+     *
      * @param px
      *            the new scroll position in pixels
      */
@@ -527,7 +529,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * Should be called whenever this bundle is attached to the DOM (typically,
      * from the onLoad of the containing widget). Used to ensure the DOM scroll
      * position is maintained when detaching and reattaching the bundle.
-     * 
+     *
      * @since 7.4.1
      */
     public void onLoad() {
@@ -538,7 +540,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * Truncates a double such that no decimal places are retained.
      * <p>
      * E.g. {@code trunc(2.3d) == 2.0d} and {@code trunc(-2.3d) == -2.0d}.
-     * 
+     *
      * @param num
      *            the double value to be truncated
      * @return the {@code num} value without any decimal digits
@@ -558,7 +560,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * double) by design. The browsers internally convert all double values into
      * an integer value. To make this fact explicit, this API has chosen to
      * force integers already at this level.
-     * 
+     *
      * @param px
      *            integer pixel value to scroll to
      */
@@ -567,14 +569,14 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     /**
      * Gets the scroll position of the scrollbar in the axis the scrollbar is
      * representing.
-     * 
+     *
      * @return the new scroll position in pixels
      */
     public final double getScrollPos() {
-        assert internalGetScrollPos() == toInt32(scrollPos) : "calculated scroll position ("
-                + scrollPos
-                + ") did not match the DOM element scroll position ("
-                + internalGetScrollPos() + ")";
+        assert internalGetScrollPos() == toInt32(
+                scrollPos) : "calculated scroll position (" + scrollPos
+                        + ") did not match the DOM element scroll position ("
+                        + internalGetScrollPos() + ")";
         return scrollPos;
     }
 
@@ -585,7 +587,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * double) by design. The browsers internally convert all double values into
      * an integer value. To make this fact explicit, this API has chosen to
      * force integers already at this level.
-     * 
+     *
      * @return integer pixel value of the scroll position
      */
     protected abstract int internalGetScrollPos();
@@ -594,7 +596,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * Modifies {@link #scrollSizeElement scrollSizeElement's} dimensions in
      * such a way that the scrollbar is able to scroll a certain number of
      * pixels in the axis it is representing.
-     * 
+     *
      * @param px
      *            the new size of {@link #scrollSizeElement} in the dimension
      *            this scrollbar is representing
@@ -604,7 +606,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     /**
      * Sets the amount of pixels the scrollbar needs to be able to scroll
      * through.
-     * 
+     *
      * @param px
      *            the number of pixels the scrollbar should be able to scroll
      *            through
@@ -666,7 +668,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     /**
      * Gets the amount of pixels the scrollbar needs to be able to scroll
      * through.
-     * 
+     *
      * @return the number of pixels the scrollbar should be able to scroll
      *         through
      */
@@ -677,7 +679,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     /**
      * Modifies {@link #scrollSizeElement scrollSizeElement's} dimensions in the
      * opposite axis to what the scrollbar is representing.
-     * 
+     *
      * @param px
      *            the dimension that {@link #scrollSizeElement} should take in
      *            the opposite axis to what the scrollbar is representing
@@ -691,7 +693,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * "invisible" scrollbar. This means, the DOM structure will be given a
      * non-zero size, but {@link #getScrollbarThickness()} will still return the
      * value 0.
-     * 
+     *
      * @param px
      *            the scrollbar's thickness in pixels
      */
@@ -718,7 +720,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     /**
      * Gets the scrollbar's thickness as defined in the DOM.
-     * 
+     *
      * @return the scrollbar's thickness as defined in the DOM, in pixels
      */
     protected abstract String internalGetScrollbarThickness();
@@ -729,7 +731,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * This value will differ from the value in the DOM, if the thickness was
      * set to 0 with {@link #setScrollbarThickness(double)}, as the scrollbar is
      * then treated as "invisible."
-     * 
+     *
      * @return the scrollbar's thickness in pixels
      */
     public final double getScrollbarThickness() {
@@ -745,7 +747,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * <p>
      * In other words, this method checks whether the contents is larger than
      * can visually fit in the element.
-     * 
+     *
      * @return <code>true</code> iff the scrollbar's handle is visible
      */
     public boolean showsScrollHandle() {
@@ -793,7 +795,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     /**
      * Adds handler for the scrollbar handle visibility.
-     * 
+     *
      * @param handler
      *            the {@link VisibilityHandler} to add
      * @return {@link HandlerRegistration} used to remove the handler
@@ -818,7 +820,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * Converts a double into an integer by JavaScript's terms.
      * <p>
      * Implementation copied from {@link Element#toInt32(double)}.
-     * 
+     *
      * @param val
      *            the double value to convert into an integer
      * @return the double value converted to an integer
@@ -833,7 +835,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * <p>
      * A locked scrollbar bundle will refuse to scroll, both programmatically
      * and via user-triggered events.
-     * 
+     *
      * @param isLocked
      *            <code>true</code> to lock, <code>false</code> to unlock
      */
@@ -843,7 +845,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     /**
      * Checks whether the scrollbar bundle is locked or not.
-     * 
+     *
      * @return <code>true</code> iff the scrollbar bundle is locked
      */
     public boolean isLocked() {
@@ -852,14 +854,14 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     /**
      * Returns the scroll direction of this scrollbar bundle.
-     * 
+     *
      * @return the scroll direction of this scrollbar bundle
      */
     public abstract Direction getDirection();
 
     /**
      * Adds a scroll handler to the scrollbar bundle.
-     * 
+     *
      * @param handler
      *            the handler to add
      * @return the registration object for the handler registration
@@ -875,7 +877,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
          * element.getOffset*() because those values are 0 whenever display:
          * none. Because we know that all elements have populated
          * CSS-dimensions, it's better to do it that way.
-         * 
+         *
          * Another solution would be to make the elements visible while
          * measuring and then re-hide them, but that would cause unnecessary
          * reflows that would probably kill the performance dead.

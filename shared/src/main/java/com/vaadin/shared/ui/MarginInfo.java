@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 /**
  * Describes the margin settings for each edge of a Component.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class MarginInfo implements Serializable {
@@ -36,7 +36,7 @@ public class MarginInfo implements Serializable {
     /**
      * Creates a MarginInfo object with all edges set to either enabled or
      * disabled.
-     * 
+     *
      * @param enabled
      *            the value to set for all edges
      */
@@ -46,7 +46,7 @@ public class MarginInfo implements Serializable {
 
     /**
      * Creates a MarginInfo object from a bit mask.
-     * 
+     *
      * @param bitMask
      *            bits to set
      * @deprecated use other constructors instead of this one
@@ -59,7 +59,7 @@ public class MarginInfo implements Serializable {
     /**
      * Creates a MarginInfo object by having each edge specified in clockwise
      * order (analogous to CSS).
-     * 
+     *
      * @param top
      *            enable or disable top margin
      * @param right
@@ -69,12 +69,14 @@ public class MarginInfo implements Serializable {
      * @param left
      *            enable or disable left margin
      */
-    public MarginInfo(boolean top, boolean right, boolean bottom, boolean left) {
+    public MarginInfo(boolean top, boolean right, boolean bottom,
+            boolean left) {
         doSetMargins(top, right, bottom, left);
     }
 
     /**
-     * Creates a MarginInfo object by having horizontal and vertical margins specified (analogous to CSS).
+     * Creates a MarginInfo object by having horizontal and vertical margins
+     * specified (analogous to CSS).
      *
      * @since 7.6.5
      *
@@ -89,7 +91,7 @@ public class MarginInfo implements Serializable {
 
     /**
      * Creates a MarginInfo with the same values as another MarginInfo object.
-     * 
+     *
      * @param other
      *            another MarginInfo object
      */
@@ -99,7 +101,7 @@ public class MarginInfo implements Serializable {
 
     /**
      * Enables or disables margins on all edges simultaneously.
-     * 
+     *
      * @param enabled
      *            if true, enables margins on all edges. If false, disables
      *            margins on all edges.
@@ -110,7 +112,7 @@ public class MarginInfo implements Serializable {
 
     /**
      * Sets margins on all edges individually.
-     * 
+     *
      * @param top
      *            enable or disable top margin
      * @param right
@@ -127,7 +129,7 @@ public class MarginInfo implements Serializable {
 
     /**
      * Copies margin values from another MarginInfo object.
-     * 
+     *
      * @param marginInfo
      *            another marginInfo object
      */
@@ -137,9 +139,9 @@ public class MarginInfo implements Serializable {
 
     /**
      * Checks if this MarginInfo object has margins on all edges enabled.
-     * 
+     *
      * @since 7.5.0
-     * 
+     *
      * @return true if all edges have margins enabled
      */
     public boolean hasAll() {
@@ -148,7 +150,7 @@ public class MarginInfo implements Serializable {
 
     /**
      * Checks if this MarginInfo object has the left edge margin enabled.
-     * 
+     *
      * @return true if left edge margin is enabled
      */
     public boolean hasLeft() {
@@ -157,7 +159,7 @@ public class MarginInfo implements Serializable {
 
     /**
      * Checks if this MarginInfo object has the right edge margin enabled.
-     * 
+     *
      * @return true if right edge margin is enabled
      */
     public boolean hasRight() {
@@ -166,7 +168,7 @@ public class MarginInfo implements Serializable {
 
     /**
      * Checks if this MarginInfo object has the top edge margin enabled.
-     * 
+     *
      * @return true if top edge margin is enabled
      */
     public boolean hasTop() {
@@ -175,7 +177,7 @@ public class MarginInfo implements Serializable {
 
     /**
      * Checks if this MarginInfo object has the bottom edge margin enabled.
-     * 
+     *
      * @return true if bottom edge margin is enabled
      */
     public boolean hasBottom() {
@@ -186,7 +188,7 @@ public class MarginInfo implements Serializable {
      * Returns the current bit mask that make up the margin settings.
      * <p>
      * This method is for internal use by the framework.
-     * 
+     *
      * @return an integer bit mask
      */
     @Deprecated
@@ -210,8 +212,8 @@ public class MarginInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "MarginInfo(" + hasTop() + ", " + hasRight() + ", "
-                + hasBottom() + ", " + hasLeft() + ")";
+        return "MarginInfo(" + hasTop() + ", " + hasRight() + ", " + hasBottom()
+                + ", " + hasLeft() + ")";
 
     }
 

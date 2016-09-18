@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -123,7 +123,7 @@ public class TreeTable extends Table implements Hierarchical {
     /**
      * This strategy is used if current container implements {@link Collapsible}
      * .
-     * 
+     *
      * open-collapsed logic diverted to container, otherwise use default
      * implementations.
      */
@@ -190,7 +190,7 @@ public class TreeTable extends Table implements Hierarchical {
     /**
      * Strategy for Hierarchical but not Collapsible container like
      * {@link HierarchicalContainer}.
-     * 
+     *
      * Store collapsed/open states internally, fool Table to use preorder when
      * accessing items from container via Ordered/Indexed methods.
      */
@@ -278,7 +278,7 @@ public class TreeTable extends Table implements Hierarchical {
 
         /**
          * Preorder of ids currently visible
-         * 
+         *
          * @return
          */
         private List<Object> getPreOrder() {
@@ -296,8 +296,8 @@ public class TreeTable extends Table implements Hierarchical {
 
         private void addVisibleChildTree(Object id) {
             if (isNodeOpen(id)) {
-                Collection<?> children = getContainerDataSource().getChildren(
-                        id);
+                Collection<?> children = getContainerDataSource()
+                        .getChildren(id);
                 if (children != null) {
                     for (Object childId : children) {
                         preOrder.add(childId);
@@ -336,7 +336,7 @@ public class TreeTable extends Table implements Hierarchical {
 
     /**
      * Creates an empty TreeTable with a default container.
-     * 
+     *
      * @param caption
      *            the caption for the TreeTable
      */
@@ -347,7 +347,7 @@ public class TreeTable extends Table implements Hierarchical {
 
     /**
      * Creates a TreeTable instance with given captions and data source.
-     * 
+     *
      * @param caption
      *            the caption for the component
      * @param dataSource
@@ -365,7 +365,7 @@ public class TreeTable extends Table implements Hierarchical {
      * The item id that was expanded or collapsed during this request. Reset at
      * the end of paint and only used for determining if a partial or full paint
      * should be done.
-     * 
+     *
      * Can safely be reset to null whenever a change occurs that would prevent a
      * partial update from rendering the correct result, e.g. rows added or
      * removed during an expand operation.
@@ -408,7 +408,8 @@ public class TreeTable extends Table implements Hierarchical {
             int indexInRowbuffer) throws PaintException {
         // always paint if present (in parent only if row headers visible)
         if (getRowHeaderMode() == ROW_HEADER_MODE_HIDDEN) {
-            Resource itemIcon = getItemIcon(cells[CELL_ITEMID][indexInRowbuffer]);
+            Resource itemIcon = getItemIcon(
+                    cells[CELL_ITEMID][indexInRowbuffer]);
             if (itemIcon != null) {
                 target.addAttribute("icon", itemIcon);
             }
@@ -531,7 +532,8 @@ public class TreeTable extends Table implements Hierarchical {
 
     @Override
     protected int getAddedRowCount() {
-        return countSubNodesRecursively(getContainerDataSource(), toggledItemId);
+        return countSubNodesRecursively(getContainerDataSource(),
+                toggledItemId);
     }
 
     private int countSubNodesRecursively(Hierarchical hc, Object itemId) {
@@ -567,7 +569,8 @@ public class TreeTable extends Table implements Hierarchical {
         return !getContainerStrategy().isNodeOpen(toggledItemId);
     }
 
-    private void toggleChildVisibility(Object itemId, boolean forceFullRefresh) {
+    private void toggleChildVisibility(Object itemId,
+            boolean forceFullRefresh) {
         getContainerStrategy().toggleChildVisibility(itemId);
         // ensure that page still has first item in page, DON'T clear the
         // caches.
@@ -604,7 +607,8 @@ public class TreeTable extends Table implements Hierarchical {
 
         // FIXME: This disables partial updates until TreeTable is fixed so it
         // does not change component hierarchy during paint
-        containerSupportsPartialUpdates = (newDataSource instanceof ItemSetChangeNotifier) && false;
+        containerSupportsPartialUpdates = (newDataSource instanceof ItemSetChangeNotifier)
+                && false;
 
         if (newDataSource != null && !(newDataSource instanceof Hierarchical)) {
             newDataSource = new ContainerHierarchicalWrapper(newDataSource);
@@ -709,7 +713,7 @@ public class TreeTable extends Table implements Hierarchical {
     /**
      * Sets the Item specified by given identifier as collapsed or expanded. If
      * the Item is collapsed, its children are not displayed to the user.
-     * 
+     *
      * @param itemId
      *            the identifier of the Item
      * @param collapsed
@@ -734,9 +738,9 @@ public class TreeTable extends Table implements Hierarchical {
 
     /**
      * Checks if Item with given identifier is collapsed in the UI.
-     * 
+     *
      * <p>
-     * 
+     *
      * @param itemId
      *            the identifier of the checked Item
      * @return true if the Item with given id is collapsed
@@ -750,7 +754,7 @@ public class TreeTable extends Table implements Hierarchical {
      * Explicitly sets the column in which the TreeTable visualizes the
      * hierarchy. If hierarchyColumnId is not set, the hierarchy is visualized
      * in the first visible column.
-     * 
+     *
      * @param hierarchyColumnId
      */
     public void setHierarchyColumn(Object hierarchyColumnId) {
@@ -767,7 +771,7 @@ public class TreeTable extends Table implements Hierarchical {
 
     /**
      * Adds an expand listener.
-     * 
+     *
      * @param listener
      *            the Listener to be added.
      */
@@ -786,7 +790,7 @@ public class TreeTable extends Table implements Hierarchical {
 
     /**
      * Removes an expand listener.
-     * 
+     *
      * @param listener
      *            the Listener to be removed.
      */
@@ -806,7 +810,7 @@ public class TreeTable extends Table implements Hierarchical {
 
     /**
      * Emits an expand event.
-     * 
+     *
      * @param itemId
      *            the item id.
      */
@@ -816,7 +820,7 @@ public class TreeTable extends Table implements Hierarchical {
 
     /**
      * Adds a collapse listener.
-     * 
+     *
      * @param listener
      *            the Listener to be added.
      */
@@ -836,7 +840,7 @@ public class TreeTable extends Table implements Hierarchical {
 
     /**
      * Removes a collapse listener.
-     * 
+     *
      * @param listener
      *            the Listener to be removed.
      */
@@ -856,7 +860,7 @@ public class TreeTable extends Table implements Hierarchical {
 
     /**
      * Emits a collapse event.
-     * 
+     *
      * @param itemId
      *            the item id.
      */
@@ -875,7 +879,7 @@ public class TreeTable extends Table implements Hierarchical {
      * Animations can be enabled by passing true to this method. Currently
      * expanding rows slide in from the top and collapsing rows slide out the
      * same way. NOTE! not supported in Internet Explorer 6 or 7.
-     * 
+     *
      * @param animationsEnabled
      *            true or false whether to enable animations or not.
      */
@@ -935,8 +939,8 @@ public class TreeTable extends Table implements Hierarchical {
         Object itemId = super.readItem(tr, selected, context);
 
         if (tr.hasAttr("collapsed")) {
-            boolean collapsed = DesignAttributeHandler.readAttribute(
-                    "collapsed", tr.attributes(), boolean.class);
+            boolean collapsed = DesignAttributeHandler
+                    .readAttribute("collapsed", tr.attributes(), boolean.class);
             setCollapsed(itemId, collapsed);
         }
 

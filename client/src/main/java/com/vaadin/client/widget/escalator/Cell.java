@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,7 @@ import com.google.gwt.dom.client.TableCellElement;
  * <p>
  * Unlike the {@link FlyweightRow}, an instance of {@link Cell} can be stored in
  * a field.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -39,7 +39,7 @@ public class Cell {
 
     /**
      * Constructs a new {@link Cell}.
-     * 
+     *
      * @param row
      *            The index of the row
      * @param column
@@ -56,9 +56,9 @@ public class Cell {
 
     /**
      * Returns the index of the row the cell resides in.
-     * 
+     *
      * @return the row index
-     * 
+     *
      */
     public int getRow() {
         return row;
@@ -66,7 +66,7 @@ public class Cell {
 
     /**
      * Returns the index of the column the cell resides in.
-     * 
+     *
      * @return the column index
      */
     public int getColumn() {
@@ -75,7 +75,7 @@ public class Cell {
 
     /**
      * Returns the element of the cell.
-     * 
+     *
      * @return the cell element
      */
     public TableCellElement getElement() {

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,8 +29,8 @@ import com.vaadin.shared.ui.accordion.AccordionState;
 import com.vaadin.ui.Accordion;
 
 @Connect(Accordion.class)
-public class AccordionConnector extends TabsheetBaseConnector implements
-        SimpleManagedLayout, MayScrollChildren {
+public class AccordionConnector extends TabsheetBaseConnector
+        implements SimpleManagedLayout, MayScrollChildren {
 
     @Override
     protected void init() {
@@ -47,8 +47,8 @@ public class AccordionConnector extends TabsheetBaseConnector implements
          * the content area is
          */
         if (getWidget().selectedItemIndex >= 0) {
-            StackItem selectedItem = getWidget().getStackItem(
-                    getWidget().selectedItemIndex);
+            StackItem selectedItem = getWidget()
+                    .getStackItem(getWidget().selectedItemIndex);
 
             ComponentConnector contentConnector = getChildComponents().get(0);
             if (contentConnector != null) {
@@ -106,12 +106,12 @@ public class AccordionConnector extends TabsheetBaseConnector implements
                     usedPixels += item.getCaptionHeight();
                 } else {
                     // This includes the captionNode borders
-                    usedPixels += WidgetUtil.getRequiredHeight(item
-                            .getElement());
+                    usedPixels += WidgetUtil
+                            .getRequiredHeight(item.getElement());
                 }
             }
-            int rootElementInnerHeight = getLayoutManager().getInnerHeight(
-                    getWidget().getElement());
+            int rootElementInnerHeight = getLayoutManager()
+                    .getInnerHeight(getWidget().getElement());
             int spaceForOpenItem = rootElementInnerHeight - usedPixels;
 
             if (spaceForOpenItem < 0) {
@@ -126,7 +126,7 @@ public class AccordionConnector extends TabsheetBaseConnector implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ConnectorHierarchyChangeEvent.
      * ConnectorHierarchyChangeHandler
      * #onConnectorHierarchyChange(com.vaadin.client

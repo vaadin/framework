@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,17 +28,17 @@ import java.util.Locale;
  * <p>
  * Override and overwrite {@link #getFormat(Locale)} to use a different format.
  * </p>
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
-public abstract class AbstractStringToNumberConverter<T> implements
-        Converter<String, T> {
+public abstract class AbstractStringToNumberConverter<T>
+        implements Converter<String, T> {
 
     /**
      * Returns the format used by {@link #convertToPresentation(Object, Locale)}
      * and {@link #convertToModel(Object, Locale)}.
-     * 
+     *
      * @param locale
      *            The locale to use
      * @return A NumberFormat instance
@@ -55,7 +55,7 @@ public abstract class AbstractStringToNumberConverter<T> implements
     /**
      * Convert the value to a Number using the given locale and
      * {@link #getFormat(Locale)}.
-     * 
+     *
      * @param value
      *            The value to convert
      * @param locale
@@ -94,7 +94,7 @@ public abstract class AbstractStringToNumberConverter<T> implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.data.util.converter.Converter#convertToPresentation(java.lang
      * .Object, java.util.Locale)
@@ -112,7 +112,7 @@ public abstract class AbstractStringToNumberConverter<T> implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.util.converter.Converter#getPresentationType()
      */
     @Override

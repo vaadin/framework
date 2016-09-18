@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -136,13 +136,13 @@ public class GridEditorTest {
     public void testEditItem() throws Exception {
         startEdit();
         assertEquals(ITEM_ID, grid.getEditedItemId());
-        assertEquals(getEditedItem(), grid.getEditorFieldGroup()
-                .getItemDataSource());
+        assertEquals(getEditedItem(),
+                grid.getEditorFieldGroup().getItemDataSource());
 
-        assertEquals(DEFAULT_NAME, grid.getColumn(PROPERTY_NAME)
-                .getEditorField().getValue());
-        assertEquals(String.valueOf(DEFAULT_AGE), grid.getColumn(PROPERTY_AGE)
-                .getEditorField().getValue());
+        assertEquals(DEFAULT_NAME,
+                grid.getColumn(PROPERTY_NAME).getEditorField().getValue());
+        assertEquals(String.valueOf(DEFAULT_AGE),
+                grid.getColumn(PROPERTY_AGE).getEditorField().getValue());
     }
 
     @Test
@@ -171,7 +171,8 @@ public class GridEditorTest {
             // Manual fail instead of @Test(expected=...) to check it is
             // saveEditor that fails and not setValue
             grid.saveEditor();
-            Assert.fail("CommitException expected when saving an invalid field value");
+            Assert.fail(
+                    "CommitException expected when saving an invalid field value");
         } catch (CommitException e) {
             // expected
         }

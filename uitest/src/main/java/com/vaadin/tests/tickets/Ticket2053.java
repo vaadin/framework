@@ -21,9 +21,10 @@ public class Ticket2053 extends LegacyApplication {
         setMainWindow(main);
         Button nothing = new Button("Do nothing");
         main.addComponent(nothing);
-        nothing.setDescription("Even though no action is taked, this window is refreshed to "
-                + "draw changes not originating from this window. Such changes include changes "
-                + "made by other browser-windows.");
+        nothing.setDescription(
+                "Even though no action is taked, this window is refreshed to "
+                        + "draw changes not originating from this window. Such changes include changes "
+                        + "made by other browser-windows.");
         Button add = new Button("Add a window", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
@@ -38,14 +39,14 @@ public class Ticket2053 extends LegacyApplication {
                 tf.addListener(new Property.ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        main.addComponent(new Label(name + " send text:"
-                                + tf.getValue()));
+                        main.addComponent(new Label(
+                                name + " send text:" + tf.getValue()));
                     }
                 });
                 for (int i = 0; i < 3; i++) {
                     final String caption = "Slow button " + i;
-                    c.addComponent(new Button(caption,
-                            new Button.ClickListener() {
+                    c.addComponent(
+                            new Button(caption, new Button.ClickListener() {
                                 @Override
                                 public synchronized void buttonClick(
                                         ClickEvent event) {
@@ -53,8 +54,8 @@ public class Ticket2053 extends LegacyApplication {
                                         this.wait(2000);
                                     } catch (InterruptedException e) {
                                     }
-                                    main.addComponent(new Label(caption
-                                            + " pressed"));
+                                    main.addComponent(
+                                            new Label(caption + " pressed"));
                                 }
                             }));
                 }
@@ -62,10 +63,11 @@ public class Ticket2053 extends LegacyApplication {
             }
         });
         main.addComponent(add);
-        add.setDescription("This button opens a new browser window. Closing the browser "
-                + "window should do two things: 1) submit all unsubmitted state to server "
-                + "(print any changes to textfield to main window) and 2) call window.close()"
-                + " on the child window (print closed on the main window)");
+        add.setDescription(
+                "This button opens a new browser window. Closing the browser "
+                        + "window should do two things: 1) submit all unsubmitted state to server "
+                        + "(print any changes to textfield to main window) and 2) call window.close()"
+                        + " on the child window (print closed on the main window)");
 
     }
 }

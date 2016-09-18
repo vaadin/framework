@@ -5,8 +5,8 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 
-public class CheckBoxes2 extends AbstractFieldTest<CheckBox> implements
-        ClickListener {
+public class CheckBoxes2 extends AbstractFieldTest<CheckBox>
+        implements ClickListener {
 
     @Override
     protected Class<CheckBox> getTestClass() {

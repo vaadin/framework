@@ -34,8 +34,8 @@ public class MenuItemStyleRemoved extends AbstractTestUI {
                         && webBrowser.getBrowserMajorVersion() == 8) {
                     method = "querySelectorAll('." + MENUITEM_CLASS + "')";
                 }
-                JavaScript.getCurrent().execute(
-                        "var x=document." + method + ";"
+                JavaScript.getCurrent()
+                        .execute("var x=document." + method + ";"
                                 + " var i; for(i=0; i < x.length; i++)"
                                 + " {x[i].className += ' custom-menu-item'};");
             }

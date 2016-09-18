@@ -3,8 +3,8 @@ package com.vaadin.data.util.filter;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class SimpleStringFilterTest extends
-        AbstractFilterTestBase<SimpleStringFilter> {
+public class SimpleStringFilterTest
+        extends AbstractFilterTestBase<SimpleStringFilter> {
 
     protected static TestItem<String, String> createTestItem() {
         return new TestItem<String, String>("abcde", "TeSt");
@@ -132,8 +132,8 @@ public class SimpleStringFilterTest extends
         TestItem<String, String> item = createTestItem();
         item.addItemProperty("other1", new NullProperty());
 
-        Assert.assertFalse(f("other1", "ab", false, true).passesFilter(null,
-                item));
+        Assert.assertFalse(
+                f("other1", "ab", false, true).passesFilter(null, item));
     }
 
 }

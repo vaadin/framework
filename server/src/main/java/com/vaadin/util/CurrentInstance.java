@@ -112,7 +112,7 @@ public class CurrentInstance implements Serializable {
                  * ThreadLocal should only outlive the referenced object on
                  * threads that are not doing anything related to Vaadin, which
                  * should thus never invoke CurrentInstance.get().
-                 * 
+                 *
                  * At this point, there might also be other values that have
                  * been collected, so we'll scan the entire map and remove stale
                  * CurrentInstance objects. Using a ReferenceQueue could make
@@ -134,7 +134,8 @@ public class CurrentInstance implements Serializable {
         }
     }
 
-    private static void removeStaleInstances(Map<Class<?>, CurrentInstance> map) {
+    private static void removeStaleInstances(
+            Map<Class<?>, CurrentInstance> map) {
         for (Iterator<Entry<Class<?>, CurrentInstance>> iterator = map
                 .entrySet().iterator(); iterator.hasNext();) {
             Entry<Class<?>, CurrentInstance> entry = iterator.next();
@@ -203,14 +204,12 @@ public class CurrentInstance implements Serializable {
                 instances.set(map);
             }
 
-            previousInstance = map.put(type, new CurrentInstance(instance,
-                    inheritable));
+            previousInstance = map.put(type,
+                    new CurrentInstance(instance, inheritable));
             if (previousInstance != null) {
                 assert previousInstance.inheritable == inheritable : "Inheritable status mismatch for "
-                        + type
-                        + " (previous was "
-                        + previousInstance.inheritable
-                        + ", new is "
+                        + type + " (previous was "
+                        + previousInstance.inheritable + ", new is "
                         + inheritable + ")";
             }
         }
@@ -250,7 +249,7 @@ public class CurrentInstance implements Serializable {
                  * CurrentInstance. Without this a reference to an already
                  * collected instance may be left in the CurrentInstance when it
                  * really should be restored to null.
-                 * 
+                 *
                  * One example case that this fixes:
                  * VaadinService.runPendingAccessTasks() clears all current
                  * instances and then sets everything but the UI. This makes

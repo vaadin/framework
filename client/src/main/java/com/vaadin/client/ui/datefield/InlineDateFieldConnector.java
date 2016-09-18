@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,12 +40,12 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
             return;
         }
 
-        getWidget().calendarPanel.setShowISOWeekNumbers(getWidget()
-                .isShowISOWeekNumbers());
-        getWidget().calendarPanel.setDateTimeService(getWidget()
-                .getDateTimeService());
-        getWidget().calendarPanel.setResolution(getWidget()
-                .getCurrentResolution());
+        getWidget().calendarPanel
+                .setShowISOWeekNumbers(getWidget().isShowISOWeekNumbers());
+        getWidget().calendarPanel
+                .setDateTimeService(getWidget().getDateTimeService());
+        getWidget().calendarPanel
+                .setResolution(getWidget().getCurrentResolution());
         Date currentDate = getWidget().getCurrentDate();
         if (currentDate != null) {
             getWidget().calendarPanel.setDate(new Date(currentDate.getTime()));
@@ -53,12 +53,13 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
             getWidget().calendarPanel.setDate(null);
         }
 
-        if (getWidget().getCurrentResolution().getCalendarField() > Resolution.DAY
-                .getCalendarField()) {
+        if (getWidget().getCurrentResolution()
+                .getCalendarField() > Resolution.DAY.getCalendarField()) {
             getWidget().calendarPanel
                     .setTimeChangeListener(new TimeChangeListener() {
                         @Override
-                        public void changed(int hour, int min, int sec, int msec) {
+                        public void changed(int hour, int min, int sec,
+                                int msec) {
                             Date d = getWidget().getDate();
                             if (d == null) {
                                 // date currently null, use the value from
@@ -79,8 +80,8 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
                     });
         }
 
-        if (getWidget().getCurrentResolution().getCalendarField() <= Resolution.MONTH
-                .getCalendarField()) {
+        if (getWidget().getCurrentResolution()
+                .getCalendarField() <= Resolution.MONTH.getCalendarField()) {
             getWidget().calendarPanel
                     .setFocusChangeListener(new FocusChangeListener() {
                         @Override

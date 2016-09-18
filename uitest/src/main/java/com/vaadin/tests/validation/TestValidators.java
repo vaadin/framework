@@ -37,7 +37,8 @@ public class TestValidators extends TestBase {
         // simple validators
 
         TextField tf = new TextField("A field, must contain 1-2 chars");
-        tf.addValidator(new StringLengthValidator("Invalid length", 1, 2, false));
+        tf.addValidator(
+                new StringLengthValidator("Invalid length", 1, 2, false));
         tf.setRequired(true);
         tf.setValue("ab");
         form.addField("a", tf);
@@ -67,7 +68,8 @@ public class TestValidators extends TestBase {
 
         // regular expressions
 
-        tf = new TextField("A field, must match the regular expression a.*b.*c");
+        tf = new TextField(
+                "A field, must match the regular expression a.*b.*c");
         tf.addValidator(new RegexpValidator("a.*b.*c",
                 "{0} does not match the regular expression"));
         tf.setValue("aagsabeqgc");
@@ -100,9 +102,10 @@ public class TestValidators extends TestBase {
         CompositeValidator cv = new CompositeValidator(CombinationMode.AND,
                 "The field must contain a floating point number with 4-5 characters");
         cv.addValidator(new StringLengthValidator(
-                "String length of '{0}' should be 4-5 characters", 4, 5, false));
-        cv.addValidator(new DoubleValidator(
-                "{0} must be a floating point number"));
+                "String length of '{0}' should be 4-5 characters", 4, 5,
+                false));
+        cv.addValidator(
+                new DoubleValidator("{0} must be a floating point number"));
         tf.addValidator(cv);
         tf.setValue("12.34");
         form.addField("j", tf);
@@ -112,9 +115,10 @@ public class TestValidators extends TestBase {
         cv = new CompositeValidator(CombinationMode.OR,
                 "The field must contain a floating point  or with 4-5 characters");
         cv.addValidator(new StringLengthValidator(
-                "String length of '{0}' should be 4-5 characters", 4, 5, false));
-        cv.addValidator(new DoubleValidator(
-                "{0} must be a floating point number"));
+                "String length of '{0}' should be 4-5 characters", 4, 5,
+                false));
+        cv.addValidator(
+                new DoubleValidator("{0} must be a floating point number"));
         tf.addValidator(cv);
         tf.setValue("12.34g");
         form.addField("jb", tf);

@@ -8,8 +8,8 @@ import com.vaadin.ui.Tree.CollapseEvent;
 import com.vaadin.ui.Tree.ExpandEvent;
 import com.vaadin.ui.TreeTable;
 
-public class DynamicallyModified extends TestBase implements
-        Tree.ExpandListener, Tree.CollapseListener {
+public class DynamicallyModified extends TestBase
+        implements Tree.ExpandListener, Tree.CollapseListener {
     protected static final String NAME_PROPERTY = "Name";
     protected static final String HOURS_PROPERTY = "Hours done";
     protected static final String MODIFIED_PROPERTY = "Last Modified";
@@ -36,22 +36,22 @@ public class DynamicallyModified extends TestBase implements
                 DEFAULT_DATE);
 
         // Populate table
-        Object allProjects = treetable.addItem(new Object[] { "All Projects",
-                18, DEFAULT_DATE }, null);
-        Object year2010 = treetable.addItem(new Object[] { "Year 2010", 18,
-                DEFAULT_DATE }, null);
-        Object customerProject1 = treetable.addItem(new Object[] {
-                "Customer Project 1", 13, DEFAULT_DATE }, null);
-        Object customerProject1Implementation = treetable.addItem(new Object[] {
-                "Implementation", 5, DEFAULT_DATE }, null);
-        Object customerProject1Planning = treetable.addItem(new Object[] {
-                "Planning", 2, DEFAULT_DATE }, null);
-        Object customerProject1Prototype = treetable.addItem(new Object[] {
-                "Prototype", 5, DEFAULT_DATE }, null);
-        Object customerProject2 = treetable.addItem(new Object[] {
-                "Customer Project 2", 5, DEFAULT_DATE }, null);
-        Object customerProject2Planning = treetable.addItem(new Object[] {
-                "Planning", 5, DEFAULT_DATE }, null);
+        Object allProjects = treetable.addItem(
+                new Object[] { "All Projects", 18, DEFAULT_DATE }, null);
+        Object year2010 = treetable
+                .addItem(new Object[] { "Year 2010", 18, DEFAULT_DATE }, null);
+        Object customerProject1 = treetable.addItem(
+                new Object[] { "Customer Project 1", 13, DEFAULT_DATE }, null);
+        Object customerProject1Implementation = treetable.addItem(
+                new Object[] { "Implementation", 5, DEFAULT_DATE }, null);
+        Object customerProject1Planning = treetable
+                .addItem(new Object[] { "Planning", 2, DEFAULT_DATE }, null);
+        Object customerProject1Prototype = treetable
+                .addItem(new Object[] { "Prototype", 5, DEFAULT_DATE }, null);
+        Object customerProject2 = treetable.addItem(
+                new Object[] { "Customer Project 2", 5, DEFAULT_DATE }, null);
+        Object customerProject2Planning = treetable
+                .addItem(new Object[] { "Planning", 5, DEFAULT_DATE }, null);
 
         // Set hierarchy
         treetable.setParent(year2010, allProjects);

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,7 +32,7 @@ import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 /**
  * Tests that Grid columns can be reordered by user with drag and drop #16643.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class GridColumnReorderTest extends GridBasicFeaturesTest {
@@ -331,21 +331,23 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Size", "Width", "900px");
         assertColumnHeaderOrder(0, 1, 2, 3);
 
-        GridCellElement draggedHeaderCell = getGridElement()
-                .getHeaderCell(0, 1);
+        GridCellElement draggedHeaderCell = getGridElement().getHeaderCell(0,
+                1);
         final int xOffset = 500;
         new Actions(getDriver()).moveToElement(draggedHeaderCell, 20, 10)
                 .clickAndHold().moveByOffset(xOffset, 0).build().perform();
 
-        WebElement floatingDragElement = findElement(By
-                .className("dragged-column-header"));
+        WebElement floatingDragElement = findElement(
+                By.className("dragged-column-header"));
 
-        int expectedLeft = draggedHeaderCell.getLocation().getX() + xOffset
-                + 20 - (floatingDragElement.getSize().getWidth() / 2);
+        int expectedLeft = draggedHeaderCell.getLocation().getX() + xOffset + 20
+                - (floatingDragElement.getSize().getWidth() / 2);
         int realLeft = floatingDragElement.getLocation().getX();
 
-        assertTrue("Dragged element location wrong, expected " + expectedLeft
-                + " was " + realLeft, Math.abs(expectedLeft - realLeft) < 10);
+        assertTrue(
+                "Dragged element location wrong, expected " + expectedLeft
+                        + " was " + realLeft,
+                Math.abs(expectedLeft - realLeft) < 10);
     }
 
     @Test
@@ -362,14 +364,15 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         new Actions(getDriver()).clickAndHold(getDefaultColumnHeader(10))
                 .moveByOffset(800, 0).build().perform();
 
-        WebElement dragDropMarker = findElement(By
-                .className("v-grid-drop-marker"));
+        WebElement dragDropMarker = findElement(
+                By.className("v-grid-drop-marker"));
         WebElement sidebar = findElement(By.className("v-grid-sidebar"));
 
         int dragDropMarkerX = dragDropMarker.getLocation().getX();
         int sidebarX = sidebar.getLocation().getX();
-        assertTrue("Drop marker misplaced " + dragDropMarkerX
-                + " compared to sidebar open button " + sidebarX,
+        assertTrue(
+                "Drop marker misplaced " + dragDropMarkerX
+                        + " compared to sidebar open button " + sidebarX,
                 dragDropMarkerX <= sidebarX);
     }
 
@@ -382,14 +385,14 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
     }
 
     private void moveColumnManuallyLeftByOne(int index) {
-        selectMenuPath(new String[] { "Component", "Columns",
-                "Column " + index, "Move left" });
+        selectMenuPath(new String[] { "Component", "Columns", "Column " + index,
+                "Move left" });
     }
 
     private void assertColumnReorderEvent(boolean userOriginated) {
         final String logRow = getLogRow(0);
-        assertTrue(logRow.contains("Columns reordered, userOriginated: "
-                + userOriginated));
+        assertTrue(logRow.contains(
+                "Columns reordered, userOriginated: " + userOriginated));
     }
 
     private void assertNoColumnReorderEvent() {

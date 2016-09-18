@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,14 +29,14 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
 /**
- * 
+ *
  * This Component contains some simple test to see that component updates its
  * contents propertly.
- * 
+ *
  * @author Vaadin Ltd.
  */
-public class TestForTablesInitialColumnWidthLogicRendering extends
-        CustomComponent {
+public class TestForTablesInitialColumnWidthLogicRendering
+        extends CustomComponent {
 
     private final VerticalLayout main = new VerticalLayout();
 
@@ -75,7 +75,8 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         main.addComponent(t);
 
         t = getTestTable(5, 5);
-        t.setCaption("Table with  some cols and rows rows, some col widths fixed");
+        t.setCaption(
+                "Table with  some cols and rows rows, some col widths fixed");
 
         Iterator<?> it = t.getContainerPropertyIds().iterator();
         it.next();
@@ -90,7 +91,8 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         main.addComponent(t);
 
         t = getTestTable(3, 40);
-        t.setCaption("Table with some columns and wide explicit width. (Ought to widen columns to use all space)");
+        t.setCaption(
+                "Table with some columns and wide explicit width. (Ought to widen columns to use all space)");
         t.setWidth("1000px");
         main.addComponent(t);
 
@@ -100,7 +102,8 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         main.addComponent(t);
 
         t = getTestTable(12, 100);
-        t.setCaption("Table with  lot of rows and lot of columns, width == 50%");
+        t.setCaption(
+                "Table with  lot of rows and lot of columns, width == 50%");
         t.setWidth(50, Table.UNITS_PERCENTAGE);
         main.addComponent(t);
 
@@ -164,10 +167,10 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
             "Charles", "Aaron", "Lucas", "Luis", "Owen", "Landon", "Diego",
             "Brian", "Adam", "Adrian", "Kyle", "Eric", "Ian", "Nathaniel",
             "Carlos", "Alex", "Bryan", "Jesus", "Julian", "Sean", "Carter",
-            "Hayden", "Jeremiah", "Cole", "Brayden", "Wyatt", "Chase",
-            "Steven", "Timothy", "Dominic", "Sebastian", "Xavier", "Jaden",
-            "Jesse", "Devin", "Seth", "Antonio", "Richard", "Miguel", "Colin",
-            "Cody", "Alejandro", "Caden", "Blake", "Carson" };
+            "Hayden", "Jeremiah", "Cole", "Brayden", "Wyatt", "Chase", "Steven",
+            "Timothy", "Dominic", "Sebastian", "Xavier", "Jaden", "Jesse",
+            "Devin", "Seth", "Antonio", "Richard", "Miguel", "Colin", "Cody",
+            "Alejandro", "Caden", "Blake", "Carson" };
 
     public static String rndString() {
         return testString[(int) (Math.random() * testString.length)];

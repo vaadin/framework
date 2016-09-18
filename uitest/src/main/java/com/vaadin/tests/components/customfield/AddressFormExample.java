@@ -29,9 +29,9 @@ public class AddressFormExample extends TestBase {
             public void buttonClick(ClickEvent event) {
                 field.commit();
                 Address address = field.getValue();
-                Notification.show("Address saved: "
-                        + address.getStreetAddress() + ", "
-                        + address.getPostalCode() + ", " + address.getCity());
+                Notification.show("Address saved: " + address.getStreetAddress()
+                        + ", " + address.getPostalCode() + ", "
+                        + address.getCity());
             }
         });
         addComponent(commitButton);

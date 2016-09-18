@@ -102,8 +102,8 @@ public abstract class ConnectorBundleLoader {
     public boolean isBundleLoaded(String bundleName) {
         AsyncBundleLoader loader = asyncBlockLoaders.get(bundleName);
         if (loader == null) {
-            throw new IllegalArgumentException("Bundle " + bundleName
-                    + " not recognized");
+            throw new IllegalArgumentException(
+                    "Bundle " + bundleName + " not recognized");
         }
         return loader.getState() == State.LOADED;
     }

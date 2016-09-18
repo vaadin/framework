@@ -67,8 +67,8 @@ public class BeanItemContainerTestUI extends UI {
         // Add event table connected to same data source
         table = createTable();
         table.setContainerDataSource(events);
-        table.setVisibleColumns(new Object[] { "caption", "description",
-                "start", "end" });
+        table.setVisibleColumns(
+                new Object[] { "caption", "description", "start", "end" });
         content.addComponent(table);
 
         BasicEvent longEvent = new BasicEvent();
@@ -81,7 +81,7 @@ public class BeanItemContainerTestUI extends UI {
 
     /**
      * Creates a table with some actions
-     * 
+     *
      * @return
      */
     private Table createTable() {
@@ -94,7 +94,8 @@ public class BeanItemContainerTestUI extends UI {
             private final Action REMOVE = new Action("Remove event");
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 if (action == ADD) {
                     BasicEvent event = new BasicEvent();
                     event.setStart(new Date(100, 1, 1));
@@ -121,7 +122,7 @@ public class BeanItemContainerTestUI extends UI {
 
     /**
      * Opens up a modal dialog window where an event can be modified
-     * 
+     *
      * @param event
      *            The event to modify
      */
@@ -156,8 +157,8 @@ public class BeanItemContainerTestUI extends UI {
         fieldGroup.bind(startField, ContainerEventProvider.STARTDATE_PROPERTY);
         fieldGroup.bind(endField, ContainerEventProvider.ENDDATE_PROPERTY);
 
-        fieldGroup.setItemDataSource(new BeanItem<BasicEvent>(event, Arrays
-                .asList(ContainerEventProvider.CAPTION_PROPERTY,
+        fieldGroup.setItemDataSource(new BeanItem<BasicEvent>(event,
+                Arrays.asList(ContainerEventProvider.CAPTION_PROPERTY,
                         ContainerEventProvider.DESCRIPTION_PROPERTY,
                         ContainerEventProvider.STARTDATE_PROPERTY,
                         ContainerEventProvider.ENDDATE_PROPERTY)));

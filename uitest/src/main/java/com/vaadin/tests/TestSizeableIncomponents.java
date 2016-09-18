@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -262,13 +262,13 @@ public class TestSizeableIncomponents extends LegacyApplication {
         /**
          * Instantiates and populates component with test data to be ready for
          * testing.
-         * 
+         *
          * @return
          * @throws InstantiationException
          * @throws IllegalAccessException
          */
-        public Component getComponent() throws InstantiationException,
-                IllegalAccessException {
+        public Component getComponent()
+                throws InstantiationException, IllegalAccessException {
             Component c = (Component) classToTest.newInstance();
 
             if (c instanceof Button) {
@@ -277,21 +277,24 @@ public class TestSizeableIncomponents extends LegacyApplication {
             if (AbstractSelect.class.isAssignableFrom(c.getClass())) {
                 if (c instanceof Table) {
                     Table new_name = (Table) c;
-                    new_name.setContainerDataSource(TestForTablesInitialColumnWidthLogicRendering
-                            .getTestTable(5, 100).getContainerDataSource());
+                    new_name.setContainerDataSource(
+                            TestForTablesInitialColumnWidthLogicRendering
+                                    .getTestTable(5, 100)
+                                    .getContainerDataSource());
 
                 } else {
                     AbstractSelect new_name = (AbstractSelect) c;
                     Container cont = TestForTablesInitialColumnWidthLogicRendering
                             .getTestTable(2, 8).getContainerDataSource();
                     new_name.setContainerDataSource(cont);
-                    new_name.setItemCaptionPropertyId(cont
-                            .getContainerPropertyIds().iterator().next());
+                    new_name.setItemCaptionPropertyId(
+                            cont.getContainerPropertyIds().iterator().next());
 
                 }
             } else if (c instanceof ComponentContainer) {
                 ComponentContainer new_name = (ComponentContainer) c;
-                new_name.addComponent(new Label("component 1 in test container"));
+                new_name.addComponent(
+                        new Label("component 1 in test container"));
                 new_name.addComponent(new Button("component 2"));
             } else if (c instanceof Embedded) {
                 Embedded em = (Embedded) c;

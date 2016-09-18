@@ -12,7 +12,8 @@ import com.vaadin.ui.VerticalLayout;
 
 public class Ticket1737 extends LegacyApplication {
 
-    Resource slowRes = new ClassResource(Ticket1737.class, "m-bullet-blue.gif") {
+    Resource slowRes = new ClassResource(Ticket1737.class,
+            "m-bullet-blue.gif") {
         @Override
         public DownloadStream getStream() {
             try {
@@ -39,8 +40,8 @@ public class Ticket1737 extends LegacyApplication {
         Panel p = new Panel("Test panel", pl);
         p.setSizeFull();
 
-        pl.addComponent(new Label(
-                "Second component is embedded with a slow resource "
+        pl.addComponent(
+                new Label("Second component is embedded with a slow resource "
                         + "and thus should break layout if Embedded cannot"
                         + " request re-layout after load."));
 

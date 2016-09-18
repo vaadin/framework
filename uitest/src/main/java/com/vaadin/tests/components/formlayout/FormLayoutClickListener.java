@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,7 +24,7 @@ import com.vaadin.ui.Label;
 
 /**
  * Test UI for Form layout click listener.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class FormLayoutClickListener extends AbstractTestUIWithLog {
@@ -45,12 +45,10 @@ public class FormLayoutClickListener extends AbstractTestUIWithLog {
 
             @Override
             public void layoutClick(LayoutClickEvent event) {
-                log("Child component: "
-                        + (event.getChildComponent() == null ? null : event
-                                .getChildComponent().getId()));
-                log("Clicked component: "
-                        + (event.getClickedComponent() == null ? null : event
-                                .getClickedComponent().getId()));
+                log("Child component: " + (event.getChildComponent() == null
+                        ? null : event.getChildComponent().getId()));
+                log("Clicked component: " + (event.getClickedComponent() == null
+                        ? null : event.getClickedComponent().getId()));
                 log("Source component: " + event.getComponent().getId());
             }
         });

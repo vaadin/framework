@@ -50,38 +50,68 @@ public class OrderedLayoutBasics extends TestBase {
     }
 
     private void createUI(Layout layout) {
-        layout.addComponent(wrapLayout(layout_field_100pct_button_field(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_field_100pct_button_field(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_overfilled(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_overfilled(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_overfilled_dynamic_height(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_overfilled_dynamic_height(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_symmetric_fields(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_symmetric_fields(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_leftAndRight(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_leftAndRight(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_fixed_filled(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_fixed_filled(new VerticalLayout())));
+        layout.addComponent(wrapLayout(
+                layout_field_100pct_button_field(new HorizontalLayout())));
+        layout.addComponent(wrapLayout(
+                layout_field_100pct_button_field(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_overfilled(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_overfilled(new VerticalLayout())));
+        layout.addComponent(wrapLayout(
+                layout_overfilled_dynamic_height(new HorizontalLayout())));
+        layout.addComponent(wrapLayout(
+                layout_overfilled_dynamic_height(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_symmetric_fields(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_symmetric_fields(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_leftAndRight(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_leftAndRight(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_fixed_filled(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_fixed_filled(new VerticalLayout())));
         layout.addComponent(wrapLayout(layout_dynamic(new HorizontalLayout())));
         layout.addComponent(wrapLayout(layout_dynamic(new VerticalLayout())));
         layout.addComponent(wrapLayout(layout_labels(new HorizontalLayout())));
         layout.addComponent(wrapLayout(layout_labels(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_captions(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_captions(new HorizontalLayout())));
         layout.addComponent(wrapLayout(layout_captions(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_captions_fixed_size(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_captions_fixed_size(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_captions_fixed_size_and_relative_size(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_captions_fixed_size_and_relative_size(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_captions_fixed_size_and_fixed_size(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_captions_fixed_size_and_fixed_size(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_add_remove_components(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_add_remove_components(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_pctFilled(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_captions_fixed_size(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_captions_fixed_size(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_captions_fixed_size_and_relative_size(
+                        new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_captions_fixed_size_and_relative_size(
+                        new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_captions_fixed_size_and_fixed_size(
+                        new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_captions_fixed_size_and_fixed_size(
+                        new VerticalLayout())));
+        layout.addComponent(wrapLayout(
+                layout_add_remove_components(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_add_remove_components(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_pctFilled(new HorizontalLayout())));
         layout.addComponent(wrapLayout(layout_pctFilled(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_underFilled(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_underFilled(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_basic_test(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_basic_test(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_underFilled(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_underFilled(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_basic_test(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_basic_test(new VerticalLayout())));
     }
 
     private Layout wrapLayout(Layout ol) {
@@ -364,9 +394,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("Fixed width (" + ol.getWidth()
-                + "px) and fixed height (" + ol.getHeight()
-                + "px) / layout_field_100pct_button_field");
+        ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height ("
+                + ol.getHeight() + "px) / layout_field_100pct_button_field");
         TextArea tf;
 
         tf = new TextArea("300px x 300px Field");
@@ -406,9 +435,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("Fixed width (" + ol.getWidth()
-                + "px) and fixed height (" + ol.getHeight()
-                + "px) / layout_basic_test");
+        ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height ("
+                + ol.getHeight() + "px) / layout_basic_test");
         TextArea tf;
 
         tf = new TextArea("300px x 300px Field");
@@ -448,9 +476,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(false);
 
         // ol.setWidth("");
-        ol.setCaption("Fixed width (" + ol.getWidth()
-                + "px) and fixed height (" + ol.getHeight()
-                + "px) / layout_symmetric_fields");
+        ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height ("
+                + ol.getHeight() + "px) / layout_symmetric_fields");
         TextArea tf;
 
         tf = new TextArea("300px x 300px Field");
@@ -487,9 +514,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("Fixed width (" + ol.getWidth()
-                + "px) and fixed height (" + ol.getHeight()
-                + "px) / layout_leftAndRight");
+        ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height ("
+                + ol.getHeight() + "px) / layout_leftAndRight");
         TextArea tf;
 
         // tf = new TextField("100%x100% Field");
@@ -733,9 +759,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("Fixed width (" + ol.getWidth()
-                + "px) and fixed height (" + ol.getHeight()
-                + "px) / layout_add_remove_components");
+        ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height ("
+                + ol.getHeight() + "px) / layout_add_remove_components");
 
         for (int i = 0; i < 2; i++) {
             AbstractOrderedLayout inner = createAddRemove(ol, "", "");
@@ -1053,7 +1078,8 @@ public class OrderedLayoutBasics extends TestBase {
 
     }
 
-    protected void addBefore(AbstractOrderedLayout ol, Component c, String width) {
+    protected void addBefore(AbstractOrderedLayout ol, Component c,
+            String width) {
         int index = 0;
         Iterator<Component> iter = ol.getComponentIterator();
         while (iter.hasNext()) {

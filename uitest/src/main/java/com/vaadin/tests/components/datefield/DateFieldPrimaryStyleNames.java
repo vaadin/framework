@@ -18,8 +18,8 @@ public class DateFieldPrimaryStyleNames extends TestBase {
         idf.setPrimaryStyleName("my-inline-datefield");
         addComponent(idf);
 
-        addComponent(new Button("Set primary stylename",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Set primary stylename", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         df.setPrimaryStyleName("my-second-datefield");

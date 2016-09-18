@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,7 +37,7 @@ import java.util.Locale;
  * <p>
  * If conversion of a value fails, a {@link ConversionException} is thrown.
  * </p>
- * 
+ *
  * @param <PRESENTATION>
  *            The presentation type. Must be compatible with what
  *            {@link #getPresentationType()} returns.
@@ -58,7 +58,7 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
      * {@link #convertToPresentation(Object, Class, Locale)} and
      * {@link #convertToModel(Object, Class, Locale)} should return the original
      * value.
-     * 
+     *
      * @param value
      *            The value to convert, compatible with the target type. Can be
      *            null
@@ -83,7 +83,7 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
      * {@link #convertToPresentation(Object, Class, Locale)} and
      * {@link #convertToModel(Object, Class, Locale)} should return the original
      * value.
-     * 
+     *
      * @param value
      *            The value to convert, compatible with the target type. Can be
      *            null
@@ -101,20 +101,20 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
 
     /**
      * The source type of the converter.
-     * 
+     *
      * Values of this type can be passed to
      * {@link #convertToPresentation(Object, Class, Locale)}.
-     * 
+     *
      * @return The source type
      */
     public Class<MODEL> getModelType();
 
     /**
      * The target type of the converter.
-     * 
+     *
      * Values of this type can be passed to
      * {@link #convertToModel(Object, Class, Locale)}.
-     * 
+     *
      * @return The target type
      */
     public Class<PRESENTATION> getPresentationType();
@@ -124,7 +124,7 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
      * {@link Converter#convertToPresentation(Object, Class, Locale)} or
      * {@link Converter#convertToModel(Object, Class, Locale)} could not be
      * converted.
-     * 
+     *
      * @author Vaadin Ltd
      * @since 7.0
      */
@@ -140,7 +140,7 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
         /**
          * Constructs a new <code>ConversionException</code> with the specified
          * detail message.
-         * 
+         *
          * @param msg
          *            the detail message
          */
@@ -151,7 +151,7 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
         /**
          * Constructs a new {@code ConversionException} with the specified
          * cause.
-         * 
+         *
          * @param cause
          *            The cause of the the exception
          */
@@ -162,7 +162,7 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
         /**
          * Constructs a new <code>ConversionException</code> with the specified
          * detail message and cause.
-         * 
+         *
          * @param message
          *            the detail message
          * @param cause

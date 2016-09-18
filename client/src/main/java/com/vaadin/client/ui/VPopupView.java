@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -52,8 +52,8 @@ import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.popupview.VisibilityChangeEvent;
 import com.vaadin.client.ui.popupview.VisibilityChangeHandler;
 
-public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
-        DeferredWorker {
+public class VPopupView extends HTML
+        implements HasEnabled, Iterable<Widget>, DeferredWorker {
 
     public static final String CLASSNAME = "v-popupview";
 
@@ -132,12 +132,12 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
     /**
      * Determines the correct position for a popup and displays the popup at
      * that position.
-     * 
+     *
      * By default, the popup is shown centered relative to its host component,
      * ensuring it is visible on the screen if possible.
-     * 
+     *
      * Can be overridden to customize the popup position.
-     * 
+     *
      * @param popup
      */
     public void showPopup(final CustomPopup popup) {
@@ -184,7 +184,7 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
 
     /**
      * Make sure that we remove the popup when the main widget is removed.
-     * 
+     *
      * @see com.google.gwt.user.client.ui.Widget#onUnload()
      */
     @Override
@@ -229,8 +229,8 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
      * (other than it being a VOverlay) is to be considered private and
      * potentially subject to change.
      */
-    public class CustomPopup extends VOverlay implements
-            StateChangeEvent.StateChangeHandler {
+    public class CustomPopup extends VOverlay
+            implements StateChangeEvent.StateChangeHandler {
 
         private ComponentConnector popupComponentConnector = null;
 
@@ -256,8 +256,8 @@ public class VPopupView extends HTML implements HasEnabled, Iterable<Widget>,
                 @Override
                 public void onKeyDown(KeyDownEvent event) {
                     if (shortcutActionHandler != null) {
-                        shortcutActionHandler.handleKeyboardEvent(Event
-                                .as(event.getNativeEvent()));
+                        shortcutActionHandler.handleKeyboardEvent(
+                                Event.as(event.getNativeEvent()));
                     }
                 }
             }, KeyDownEvent.getType());

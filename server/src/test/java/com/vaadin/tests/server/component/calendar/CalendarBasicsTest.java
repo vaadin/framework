@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -131,8 +131,8 @@ public class CalendarBasicsTest {
         // Setting the locale should set the internal calendars locale
         assertEquals(Locale.CANADA_FRENCH, calendar.getLocale());
         java.util.Calendar c = new GregorianCalendar(Locale.CANADA_FRENCH);
-        assertEquals(c.getTimeZone().getRawOffset(), calendar
-                .getInternalCalendar().getTimeZone().getRawOffset());
+        assertEquals(c.getTimeZone().getRawOffset(),
+                calendar.getInternalCalendar().getTimeZone().getRawOffset());
     }
 
     @Test
@@ -223,8 +223,8 @@ public class CalendarBasicsTest {
         calendar.setLocale(Locale.GERMAN);
         // simulating consequences of markAsDirty
         calendar.beforeClientResponse(true);
-        assertEquals(java.util.Calendar.MONDAY, calendar.getInternalCalendar()
-                .getFirstDayOfWeek());
+        assertEquals(java.util.Calendar.MONDAY,
+                calendar.getInternalCalendar().getFirstDayOfWeek());
     }
 
     @Test
@@ -235,8 +235,8 @@ public class CalendarBasicsTest {
 
         // simulating consequences of markAsDirty
         calendar.beforeClientResponse(true);
-        assertEquals(java.util.Calendar.SUNDAY, calendar.getInternalCalendar()
-                .getFirstDayOfWeek());
+        assertEquals(java.util.Calendar.SUNDAY,
+                calendar.getInternalCalendar().getFirstDayOfWeek());
     }
 
     @Test
@@ -247,8 +247,8 @@ public class CalendarBasicsTest {
         calendar.setLocale(Locale.GERMAN);
         // simulating consequences of markAsDirty
         calendar.beforeClientResponse(true);
-        assertEquals(java.util.Calendar.SUNDAY, calendar.getInternalCalendar()
-                .getFirstDayOfWeek());
+        assertEquals(java.util.Calendar.SUNDAY,
+                calendar.getInternalCalendar().getFirstDayOfWeek());
     }
 
     @Test
@@ -259,8 +259,8 @@ public class CalendarBasicsTest {
         calendar.setFirstDayOfWeek(null);
         // simulating consequences of markAsDirty
         calendar.beforeClientResponse(true);
-        assertEquals(java.util.Calendar.MONDAY, calendar.getInternalCalendar()
-                .getFirstDayOfWeek());
+        assertEquals(java.util.Calendar.MONDAY,
+                calendar.getInternalCalendar().getFirstDayOfWeek());
     }
 
     @Test(expected = IllegalArgumentException.class)

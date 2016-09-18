@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,7 +29,7 @@ import com.vaadin.tests.tb3.SingleBrowserTest;
 
 /**
  * Test for PUSH version string in debug window.
- * 
+ *
  * @author Vaadin Ltd
  */
 @TestCategory("push")
@@ -59,8 +59,7 @@ public class PushVersionInfoTest extends SingleBrowserTest {
         Assert.assertTrue("Push row doesn't contain Atmosphere version",
                 pushRow.getText().contains(atmVersion));
         String jsString = getPushRowValue("Push client version").getText();
-        Assert.assertTrue(
-                "Push client version doesn't contain 'vaadin' string",
+        Assert.assertTrue("Push client version doesn't contain 'vaadin' string",
                 jsString.contains("vaadin"));
         Assert.assertTrue(
                 "Push client version doesn't contain 'javascript' string",
@@ -72,8 +71,8 @@ public class PushVersionInfoTest extends SingleBrowserTest {
 
             int size = findElements(By.className("v-debugwindow-tab")).size();
             for (int i = 0; i < size; i++) {
-                WebElement tab = findElement(By
-                        .className("v-debugwindow-tab-selected"));
+                WebElement tab = findElement(
+                        By.className("v-debugwindow-tab-selected"));
                 String title = tab.getAttribute("title");
                 if (title != null && title.startsWith("General information")) {
                     break;

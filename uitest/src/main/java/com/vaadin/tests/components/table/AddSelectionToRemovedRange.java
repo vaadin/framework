@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Test to see if selecting and deselecting a table row after select range has
  * been removed.
- * 
+ *
  * @since 7.1.13
  * @author Vaadin Ltd
  */
@@ -64,8 +64,7 @@ public class AddSelectionToRemovedRange extends AbstractTestUI {
 
                 for (Integer item : selected) {
                     if (null == item) {
-                        new Notification(
-                                "ERROR",
+                        new Notification("ERROR",
                                 "Table value has null in Set of selected items!",
                                 Type.ERROR_MESSAGE).show(getPage());
                     }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,7 +29,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Tests that details row displays GridLayout contents properly.
- * 
+ *
  * @author Vaadin Ltd
  */
 @TestCategory("grid")
@@ -58,7 +58,8 @@ public class GridLayoutDetailsRowTest extends MultiBrowserTest {
 
     private void assertLabelHeight(String id, double expectedHeight) {
         // 1px leeway for calculations
-        assertThat("Unexpected label height.", (double) $(LabelElement.class)
-                .id(id).getSize().height, closeTo(expectedHeight, 1d));
+        assertThat("Unexpected label height.",
+                (double) $(LabelElement.class).id(id).getSize().height,
+                closeTo(expectedHeight, 1d));
     }
 }

@@ -26,10 +26,10 @@ public class PopupViewLabelResized extends TestBase {
         gl.addComponent(expander, 1, 0);
         gl.setColumnExpandRatio(1, 1);
 
-        gl.addComponent(
-                new PopupView("Click here to popup", new Label("test")), 0, 0);
-        gl.addComponent(
-                new PopupView("Click here to popup", new Label("test")), 2, 0);
+        gl.addComponent(new PopupView("Click here to popup", new Label("test")),
+                0, 0);
+        gl.addComponent(new PopupView("Click here to popup", new Label("test")),
+                2, 0);
 
         addComponent(gl);
     }

@@ -5,7 +5,7 @@ import com.vaadin.ui.Label;
 /**
  * Label that has a default id <code>default10179</code> for the use of
  * IdOverrideTest (#10179).
- * 
+ *
  */
 public class IdTestLabel extends Label {
 

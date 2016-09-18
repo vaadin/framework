@@ -17,14 +17,14 @@ public class StartHtml5Drag extends TestBase {
 
     @Override
     protected void setup() {
-        DragAndDropWrapper dragStart = new DragAndDropWrapper(new Label(
-                "Drag me"));
+        DragAndDropWrapper dragStart = new DragAndDropWrapper(
+                new Label("Drag me"));
         dragStart.setDragStartMode(DragStartMode.HTML5);
         dragStart.setHTML5DataFlavor("Text", "HTML5!");
         addComponent(dragStart);
 
-        DragAndDropWrapper dropTarget = new DragAndDropWrapper(new Label(
-                "over here"));
+        DragAndDropWrapper dropTarget = new DragAndDropWrapper(
+                new Label("over here"));
         dropTarget.setDropHandler(new DropHandler() {
 
             @Override
@@ -34,12 +34,9 @@ public class StartHtml5Drag extends TestBase {
 
             @Override
             public void drop(DragAndDropEvent event) {
-                getWindows()
-                        .iterator()
-                        .next()
-                        .showNotification(
-                                ((WrapperTransferable) event.getTransferable())
-                                        .getText());
+                getWindows().iterator().next().showNotification(
+                        ((WrapperTransferable) event.getTransferable())
+                                .getText());
             }
         });
         addComponent(dropTarget);

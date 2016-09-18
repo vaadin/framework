@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -99,8 +99,8 @@ public class AnyEnumToStringConverterTest {
     public void stringToEnumConversion() {
         Assert.assertEquals(TestEnum.TWO, converter.convertToPresentation(
                 TestEnum.TWO.toString(), TestEnum.class, null));
-        Assert.assertEquals(AnotherTestEnum.TWO, converter
-                .convertToPresentation(AnotherTestEnum.TWO.toString(),
+        Assert.assertEquals(AnotherTestEnum.TWO,
+                converter.convertToPresentation(AnotherTestEnum.TWO.toString(),
                         AnotherTestEnum.class, null));
     }
 
@@ -113,15 +113,16 @@ public class AnyEnumToStringConverterTest {
         tf.setValue(AnotherTestEnum.ONE.toString());
         Assert.assertEquals(AnotherTestEnum.ONE.toString(), tf.getValue());
         Assert.assertEquals(AnotherTestEnum.ONE, tf.getConvertedValue());
-        Assert.assertEquals(AnotherTestEnum.ONE, tf.getPropertyDataSource()
-                .getValue());
+        Assert.assertEquals(AnotherTestEnum.ONE,
+                tf.getPropertyDataSource().getValue());
 
         tf.setPropertyDataSource(new ObjectProperty(TestEnum.TWO));
         Assert.assertEquals(TestEnum.TWO.toString(), tf.getValue());
         tf.setValue(TestEnum.ONE.toString());
         Assert.assertEquals(TestEnum.ONE.toString(), tf.getValue());
         Assert.assertEquals(TestEnum.ONE, tf.getConvertedValue());
-        Assert.assertEquals(TestEnum.ONE, tf.getPropertyDataSource().getValue());
+        Assert.assertEquals(TestEnum.ONE,
+                tf.getPropertyDataSource().getValue());
 
     }
 }

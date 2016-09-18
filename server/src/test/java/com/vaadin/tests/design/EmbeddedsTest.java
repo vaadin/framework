@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,7 +35,7 @@ import com.vaadin.ui.declarative.Design;
 /**
  * Tests declarative support for implementations of {@link AbstractEmbedded} and
  * {@link Embedded}.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -85,8 +85,8 @@ public class EmbeddedsTest {
         ae.setStandby("foobar");
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         Design.write(ae, bos);
-        Flash result = (Flash) Design.read(new ByteArrayInputStream(bos
-                .toByteArray()));
+        Flash result = (Flash) Design
+                .read(new ByteArrayInputStream(bos.toByteArray()));
         assertTrue(equals((ExternalResource) ae.getSource(),
                 (ExternalResource) result.getSource()));
         assertEquals(ae.getAlternateText(), result.getAlternateText());

@@ -39,8 +39,8 @@ public class NestedPersonForm extends Form {
         setItemDataSource(beanItem, Arrays.asList("firstName", "lastName",
                 "address", "email", "phoneNumber"));
         getFooter().addComponent(getButtonsLayout());
-        ((MarginHandler) getFooter()).setMargin(new MarginInfo(false, false,
-                true, true));
+        ((MarginHandler) getFooter())
+                .setMargin(new MarginInfo(false, false, true, true));
     }
 
     /**
@@ -87,8 +87,8 @@ public class NestedPersonForm extends Form {
             if ("address".equals(propertyId)) {
                 // create a custom field for the Address object
                 if (addressField == null) {
-                    Form form = (embeddedAddress && uiContext instanceof Form) ? (Form) uiContext
-                            : null;
+                    Form form = (embeddedAddress && uiContext instanceof Form)
+                            ? (Form) uiContext : null;
                     addressField = new AddressField(form);
                 }
                 f = addressField;

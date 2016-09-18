@@ -101,8 +101,8 @@ public class LayoutsCssTest extends GridLayout {
 
         CustomLayout custom;
         try {
-            custom = new CustomLayout(new ByteArrayInputStream(
-                    customLayoutSrc.getBytes()));
+            custom = new CustomLayout(
+                    new ByteArrayInputStream(customLayoutSrc.getBytes()));
             custom.addComponent(new Label("Some content"), "pos1");
             custom.setComponentError(new UserError("A error mesasge..."));
             custom.setCaption("CustomLayout");

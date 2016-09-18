@@ -42,8 +42,8 @@ public class HeaderClick extends AbstractTestUI {
 
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        table.setImmediate((Boolean) event.getProperty()
-                                .getValue());
+                        table.setImmediate(
+                                (Boolean) event.getProperty().getValue());
                     }
                 });
 
@@ -55,8 +55,8 @@ public class HeaderClick extends AbstractTestUI {
 
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        table.setSortEnabled((Boolean) event.getProperty()
-                                .getValue());
+                        table.setSortEnabled(
+                                (Boolean) event.getProperty().getValue());
                     }
                 });
 
@@ -69,8 +69,8 @@ public class HeaderClick extends AbstractTestUI {
 
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        table.setColumnReorderingAllowed((Boolean) event
-                                .getProperty().getValue());
+                        table.setColumnReorderingAllowed(
+                                (Boolean) event.getProperty().getValue());
                     }
                 });
 

@@ -60,8 +60,8 @@ public class CaseInsensitiveBindingTest {
     @Test
     public void perfectMatchPriority() {
         PropertysetItem item = new PropertysetItem();
-        item.addItemProperty("first_name", new ObjectProperty<String>(
-                "Not this"));
+        item.addItemProperty("first_name",
+                new ObjectProperty<String>("Not this"));
         item.addItemProperty("firstName", new ObjectProperty<String>("This"));
 
         class MyForm extends FormLayout {

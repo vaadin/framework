@@ -42,9 +42,8 @@ public class VaadinBrowserFactory extends DefaultBrowserFactory {
                             .getClassLoader().loadClass(browserFactoryClass)
                             .newInstance();
                 } catch (Exception e) {
-                    getLogger().warning(
-                            "Failed to instantiate browser factory "
-                                    + browserFactoryClass);
+                    getLogger().warning("Failed to instantiate browser factory "
+                            + browserFactoryClass);
                     throw new RuntimeException(e);
                 }
             }

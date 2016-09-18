@@ -50,8 +50,8 @@ public class Ticket34 extends LegacyApplication {
     private void setView(String string) {
         Component component = views.get(string);
         if (component == null) {
-            getMainWindow().showNotification(
-                    "View called " + string + " not found!");
+            getMainWindow()
+                    .showNotification("View called " + string + " not found!");
         } else if (component != currentView) {
             if (currentView != null) {
                 mainLayout.replaceComponent(currentView, component);

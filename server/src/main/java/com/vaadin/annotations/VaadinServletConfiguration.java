@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -39,7 +39,7 @@ import com.vaadin.ui.UI;
  * as well as from specific methods in {@link DeploymentConfiguration}. Init
  * params defined in <code>web.xml</code> or the <code>@WebServlet</code>
  * annotation take precedence over values defined in this annotation.
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd
  */
@@ -50,7 +50,7 @@ public @interface VaadinServletConfiguration {
     /**
      * Defines the init parameter name for methods in
      * {@link VaadinServletConfiguration}.
-     * 
+     *
      * @since 7.1
      * @author Vaadin Ltd
      */
@@ -60,7 +60,7 @@ public @interface VaadinServletConfiguration {
     public @interface InitParameterName {
         /**
          * The name of the init parameter that the annotated method controls.
-         * 
+         *
          * @return the parameter name
          */
         public String value();
@@ -68,9 +68,9 @@ public @interface VaadinServletConfiguration {
 
     /**
      * Whether Vaadin is in production mode.
-     * 
+     *
      * @return true if in production mode, false otherwise.
-     * 
+     *
      * @see DeploymentConfiguration#isProductionMode()
      */
     @InitParameterName(Constants.SERVLET_PARAMETER_PRODUCTION_MODE)
@@ -78,7 +78,7 @@ public @interface VaadinServletConfiguration {
 
     /**
      * Gets the default UI class to use for the servlet.
-     * 
+     *
      * @return the default UI class
      */
     @InitParameterName(VaadinSession.UI_PARAMETER)
@@ -87,9 +87,9 @@ public @interface VaadinServletConfiguration {
     /**
      * The time resources can be cached in the browser, in seconds. The default
      * value is 3600 seconds, i.e. one hour.
-     * 
+     *
      * @return the resource cache time
-     * 
+     *
      * @see DeploymentConfiguration#getResourceCacheTime()
      */
     @InitParameterName(Constants.SERVLET_PARAMETER_RESOURCE_CACHE_TIME)
@@ -99,9 +99,9 @@ public @interface VaadinServletConfiguration {
      * The number of seconds between heartbeat requests of a UI, or a
      * non-positive number if heartbeat is disabled. The default value is 300
      * seconds, i.e. 5 minutes.
-     * 
+     *
      * @return the time between heartbeats
-     * 
+     *
      * @see DeploymentConfiguration#getHeartbeatInterval()
      */
     @InitParameterName(Constants.SERVLET_PARAMETER_HEARTBEAT_INTERVAL)
@@ -111,11 +111,11 @@ public @interface VaadinServletConfiguration {
      * Whether a session should be closed when all its open UIs have been idle
      * for longer than its configured maximum inactivity time. The default value
      * is <code>false</code>.
-     * 
+     *
      * @return true if UIs and sessions receiving only heartbeat requests are
      *         eventually closed; false if heartbeat requests extend UI and
      *         session lifetime indefinitely
-     * 
+     *
      * @see DeploymentConfiguration#isCloseIdleSessions()
      */
     @InitParameterName(Constants.SERVLET_PARAMETER_CLOSE_IDLE_SESSIONS)
@@ -124,7 +124,7 @@ public @interface VaadinServletConfiguration {
     /**
      * The default widgetset to use for the servlet. The default value is
      * <code>com.vaadin.DefaultWidgetSet</code>.
-     * 
+     *
      * @return the default widgetset name
      */
     @InitParameterName(VaadinServlet.PARAMETER_WIDGETSET)
@@ -133,9 +133,9 @@ public @interface VaadinServletConfiguration {
     /**
      * The legacy Property.toString() mode used. The default value is
      * {@link LegacyProperyToStringMode#DISABLED}
-     * 
+     *
      * @return The Property.toString() mode in use.
-     * 
+     *
      * @deprecated as of 7.1, should only be used to ease migration
      */
     @Deprecated

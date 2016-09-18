@@ -27,7 +27,7 @@ public class LoginFormTest extends TestBase {
         loginForm.addListener(new LoginListener() {
 
             /**
-             * 
+             *
              */
             private static final long serialVersionUID = 1L;
 
@@ -87,8 +87,8 @@ public class LoginFormTest extends TestBase {
     protected void login(LoginForm loginForm, String user, String password) {
         VerticalLayout infoLayout = new VerticalLayout();
 
-        Label info = new Label("User '" + user + "', password='" + password
-                + "' logged in");
+        Label info = new Label(
+                "User '" + user + "', password='" + password + "' logged in");
         Button logoutButton = new Button("Log out", new ClickListener() {
 
             @Override

@@ -62,13 +62,12 @@ public class ExpandAnimationsInChameleon extends TestBase {
                 super.addComponent(c);
                 setComponentAlignment(c, Alignment.MIDDLE_CENTER);
                 if (c.getStyleName() != "") {
-                    ((AbstractComponent) c).setDescription(c.getClass()
-                            .getSimpleName()
-                            + ".addStyleName(\""
-                            + c.getStyleName() + "\")");
+                    ((AbstractComponent) c).setDescription(
+                            c.getClass().getSimpleName() + ".addStyleName(\""
+                                    + c.getStyleName() + "\")");
                 } else {
-                    ((AbstractComponent) c).setDescription("new "
-                            + c.getClass().getSimpleName() + "()");
+                    ((AbstractComponent) c).setDescription(
+                            "new " + c.getClass().getSimpleName() + "()");
                 }
             }
         };
@@ -106,8 +105,8 @@ public class ExpandAnimationsInChameleon extends TestBase {
             hc.setParent(j, 2);
         }
 
-        t.setColumnIcon("Third", new ThemeResource(
-                "../runo/icons/16/document.png"));
+        t.setColumnIcon("Third",
+                new ThemeResource("../runo/icons/16/document.png"));
         t.select(1);
 
         return t;

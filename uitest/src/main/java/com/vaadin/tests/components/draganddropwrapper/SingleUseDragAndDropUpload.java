@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -41,12 +41,12 @@ public class SingleUseDragAndDropUpload extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Label upload = new Label(FontAwesome.UPLOAD.getHtml(), ContentMode.HTML);
+        Label upload = new Label(FontAwesome.UPLOAD.getHtml(),
+                ContentMode.HTML);
         upload.setSizeUndefined();
         upload.setStyleName("upload");
-        getPage()
-                .getStyles()
-                .add(".upload{ font-size: 36px; border: 1px solid black; padding:15px;}");
+        getPage().getStyles().add(
+                ".upload{ font-size: 36px; border: 1px solid black; padding:15px;}");
 
         final DragAndDropWrapper dnd = new DragAndDropWrapper(upload);
         dnd.setSizeUndefined();

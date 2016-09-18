@@ -12,8 +12,8 @@ public class TableColumnAlignmentsTest {
     @Test
     public void defaultColumnAlignments() {
         for (int properties = 0; properties < 10; properties++) {
-            Table t = TableGeneratorTest.createTableWithDefaultContainer(
-                    properties, 10);
+            Table t = TableGeneratorTest
+                    .createTableWithDefaultContainer(properties, 10);
             Object[] expected = new Object[properties];
             for (int i = 0; i < properties; i++) {
                 expected[i] = Align.LEFT;
@@ -26,8 +26,8 @@ public class TableColumnAlignmentsTest {
     @Test
     public void explicitColumnAlignments() {
         int properties = 5;
-        Table t = TableGeneratorTest.createTableWithDefaultContainer(
-                properties, 10);
+        Table t = TableGeneratorTest.createTableWithDefaultContainer(properties,
+                10);
         Align[] explicitAlignments = new Align[] { Align.CENTER, Align.LEFT,
                 Align.RIGHT, Align.RIGHT, Align.LEFT };
 
@@ -122,8 +122,8 @@ public class TableColumnAlignmentsTest {
     @Test
     public void explicitColumnAlignmentOneByOne() {
         int properties = 5;
-        Table t = TableGeneratorTest.createTableWithDefaultContainer(
-                properties, 10);
+        Table t = TableGeneratorTest.createTableWithDefaultContainer(properties,
+                10);
         Align[] explicitAlignments = new Align[] { Align.CENTER, Align.LEFT,
                 Align.RIGHT, Align.RIGHT, Align.LEFT };
 
@@ -134,9 +134,9 @@ public class TableColumnAlignmentsTest {
             t.setColumnAlignment("Property " + i, explicitAlignments[i]);
             currentAlignments[i] = explicitAlignments[i];
 
-            assertArrayEquals("Explicit visible columns, " + i
-                    + " alignments set", currentAlignments,
-                    t.getColumnAlignments());
+            assertArrayEquals(
+                    "Explicit visible columns, " + i + " alignments set",
+                    currentAlignments, t.getColumnAlignments());
         }
 
     }

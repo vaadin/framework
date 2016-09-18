@@ -31,7 +31,8 @@ public class FormWithPropertyFormatterConnected extends TestBase {
                                 throws Exception {
                             String str = formattedValue.replaceAll("[^0-9.]",
                                     "");
-                            if (formattedValue.toLowerCase().contains("months")) {
+                            if (formattedValue.toLowerCase()
+                                    .contains("months")) {
                                 return Double.parseDouble(str) / 12;
                             }
                             return Double.parseDouble(str);

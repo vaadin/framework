@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,8 +35,8 @@ import com.vaadin.client.WidgetUtil;
 /**
  * DragEvent used by Vaadin client side engine. Supports components, items,
  * properties and custom payload (HTML5 style).
- * 
- * 
+ *
+ *
  */
 public class VDragEvent {
 
@@ -70,7 +70,7 @@ public class VDragEvent {
      * Returns the the latest {@link NativeEvent} that relates to this drag and
      * drop operation. For example on {@link VDropHandler#dragEnter(VDragEvent)}
      * this is commonly a {@link MouseOverEvent}.
-     * 
+     *
      * @return
      */
     public NativeEvent getCurrentGwtEvent() {
@@ -95,7 +95,7 @@ public class VDragEvent {
      * the pointer currently is (drag image excluded). {@link VDropHandler}s can
      * then more easily react properly on drag events by reading the element via
      * this method.
-     * 
+     *
      * @return the element in {@link VDropHandler} on which mouse cursor is on
      */
     public com.google.gwt.user.client.Element getElementOver() {
@@ -112,7 +112,8 @@ public class VDragEvent {
      *             instead
      */
     @Deprecated
-    public void setElementOver(com.google.gwt.user.client.Element targetElement) {
+    public void setElementOver(
+            com.google.gwt.user.client.Element targetElement) {
         elementOver = targetElement;
     }
 
@@ -129,13 +130,13 @@ public class VDragEvent {
      * <p>
      * The element to be used as drag image will automatically get CSS style
      * name "v-drag-element".
-     * 
+     *
      * TODO decide if this method should be here or in {@link VTransferable} (in
      * HTML5 it is in DataTransfer) or {@link VDragAndDropManager}
-     * 
+     *
      * TODO should be possible to override behavior. Like to proxy the element
      * to HTML5 DataTransfer
-     * 
+     *
      * @param node
      * @deprecated As of 7.2, call or override {@link #setDragImage(Element)}
      *             instead
@@ -151,15 +152,15 @@ public class VDragEvent {
      * <p>
      * The element to be used as drag image will automatically get CSS style
      * name "v-drag-element".
-     * 
+     *
      * TODO decide if this method should be here or in {@link VTransferable} (in
      * HTML5 it is in DataTransfer) or {@link VDragAndDropManager}
-     * 
+     *
      * TODO should be possible to override behavior. Like to proxy the element
      * to HTML5 DataTransfer
-     * 
+     *
      * @param node
-     * 
+     *
      * @since 7.2
      */
     public void setDragImage(Element node) {
@@ -168,9 +169,9 @@ public class VDragEvent {
 
     /**
      * TODO consider using similar smaller (than map) api as in Transferable
-     * 
+     *
      * TODO clean up when drop handler changes
-     * 
+     *
      * @return
      */
     public Map<String, Object> getDropDetails() {
@@ -183,7 +184,7 @@ public class VDragEvent {
      * <p>
      * The element to be used as drag image will automatically get CSS style
      * name "v-drag-element".
-     * 
+     *
      * @param element
      *            the dom element to be positioned next to mouse cursor
      * @param offsetX
@@ -208,14 +209,14 @@ public class VDragEvent {
      * <p>
      * The element to be used as drag image will automatically get CSS style
      * name "v-drag-element".
-     * 
+     *
      * @param element
      *            the dom element to be positioned next to mouse cursor
      * @param offsetX
      *            the horizontal offset of drag image from mouse cursor
      * @param offsetY
      *            the vertical offset of drag image from mouse cursor
-     * 
+     *
      * @since 7.2
      */
     public void setDragImage(Element element, int offsetX, int offsetY) {
@@ -232,7 +233,7 @@ public class VDragEvent {
 
     /**
      * Automatically tries to create a proxy image from given element.
-     * 
+     *
      * @param element
      * @param alignImageToEvent
      *            if true, proxy image is aligned to start event, else next to
@@ -275,7 +276,7 @@ public class VDragEvent {
 
     /**
      * Automatically tries to create a proxy image from given element.
-     * 
+     *
      * @param element
      * @param alignImageToEvent
      *            if true, proxy image is aligned to start event, else next to
@@ -289,7 +290,7 @@ public class VDragEvent {
     /**
      * Do additional content sync between <code>original</code> element and its
      * <code>copy</code> if needed.
-     * 
+     *
      * @since 7.2
      * @param original
      *            original element

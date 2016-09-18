@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,12 +36,12 @@ import com.vaadin.ui.UI;
  * no UIDL requests for a prolonged period of time. UIs that do not receive
  * either heartbeat or UIDL requests are eventually removed from the session and
  * garbage collected.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class HeartbeatHandler extends SynchronizedRequestHandler implements
-        SessionExpiredHandler {
+public class HeartbeatHandler extends SynchronizedRequestHandler
+        implements SessionExpiredHandler {
 
     @Override
     protected boolean canHandleRequest(VaadinRequest request) {
@@ -68,7 +68,8 @@ public class HeartbeatHandler extends SynchronizedRequestHandler implements
             // complain about the empty response body (#12182)
             response.setHeader("Content-Type", "text/plain");
         } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "UI not found");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND,
+                    "UI not found");
         }
 
         return true;
@@ -76,7 +77,7 @@ public class HeartbeatHandler extends SynchronizedRequestHandler implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.server.SessionExpiredHandler#handleSessionExpired(com.vaadin
      * .server.VaadinRequest, com.vaadin.server.VaadinResponse)

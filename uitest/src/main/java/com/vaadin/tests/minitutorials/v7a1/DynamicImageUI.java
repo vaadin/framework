@@ -28,8 +28,8 @@ public class DynamicImageUI extends AbstractTestUI {
                 String text = request.getParameter("text");
                 BufferedImage bi = new BufferedImage(100, 30,
                         BufferedImage.TYPE_3BYTE_BGR);
-                bi.getGraphics().drawChars(text.toCharArray(), 0,
-                        text.length(), 10, 20);
+                bi.getGraphics().drawChars(text.toCharArray(), 0, text.length(),
+                        10, 20);
                 response.setContentType("image/png");
                 ImageIO.write(bi, "png", response.getOutputStream());
 

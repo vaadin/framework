@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -332,10 +332,10 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         Element root = new Element(Tag.valueOf("vaadin-grid"), "");
         grid.writeDesign(root, new DesignContext());
 
-        Assert.assertEquals("&amp;amp; Test", root.getElementsByTag("th")
-                .get(0).html());
-        Assert.assertEquals("&amp;amp; Test", root.getElementsByTag("td")
-                .get(0).html());
+        Assert.assertEquals("&amp;amp; Test",
+                root.getElementsByTag("th").get(0).html());
+        Assert.assertEquals("&amp;amp; Test",
+                root.getElementsByTag("td").get(0).html());
 
         header = grid.addHeaderRowAt(0);
         footer = grid.addFooterRowAt(0);
@@ -347,10 +347,10 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         root = new Element(Tag.valueOf("vaadin-grid"), "");
         grid.writeDesign(root, new DesignContext());
 
-        Assert.assertEquals("&amp; Test", root.getElementsByTag("th").get(0)
-                .html());
-        Assert.assertEquals("&amp; Test", root.getElementsByTag("td").get(0)
-                .html());
+        Assert.assertEquals("&amp; Test",
+                root.getElementsByTag("th").get(0).html());
+        Assert.assertEquals("&amp; Test",
+                root.getElementsByTag("td").get(0).html());
 
     }
 }

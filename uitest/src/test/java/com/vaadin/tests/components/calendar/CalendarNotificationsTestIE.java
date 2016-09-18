@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,7 +29,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Tests opening and closing of calendar notifications.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -62,15 +62,15 @@ public class CalendarNotificationsTestIE extends MultiBrowserTest {
         WebElement day = findElements(By.className("v-calendar-day-number"))
                 .get(2);
         // IE8 requires you to click on the text part to fire the event
-        new Actions(getDriver())
-                .moveToElement(day, day.getSize().getWidth() - 3,
-                        day.getSize().getHeight() / 2).click().perform();
+        new Actions(getDriver()).moveToElement(day,
+                day.getSize().getWidth() - 3, day.getSize().getHeight() / 2)
+                .click().perform();
 
         // check that a notification was opened, this is done with a log instead
         // of a screenshot or element presence check due to problems with IE
         // webdriver
-        String text = findElement(By.id("Log")).findElement(
-                By.className("v-label")).getText();
+        String text = findElement(By.id("Log"))
+                .findElement(By.className("v-label")).getText();
         Assert.assertTrue("Notification should've opened",
                 "1. Opening a notification".equals(text));
 

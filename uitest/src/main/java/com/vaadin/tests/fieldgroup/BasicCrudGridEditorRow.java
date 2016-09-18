@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -44,21 +44,17 @@ public class BasicCrudGridEditorRow extends AbstractBasicCrud {
         grid.addSelectionListener(new SelectionListener() {
             @Override
             public void select(SelectionEvent event) {
-                Item item = grid.getContainerDataSource().getItem(
-                        grid.getSelectedRow());
+                Item item = grid.getContainerDataSource()
+                        .getItem(grid.getSelectedRow());
                 form.edit((BeanItem<ComplexPerson>) item);
             }
         });
         grid.setEditorEnabled(true);
         grid.setSizeFull();
-        grid.getColumn("age")
-                .getEditorField()
-                .addValidator(
-                        new IntegerRangeValidator("Must be between 0 and 100",
-                                0, 100));
-        grid.getColumn("birthDate").setRenderer(
-                new DateRenderer(DateFormat.getDateInstance(DateFormat.MEDIUM,
-                        Locale.US)));
+        grid.getColumn("age").getEditorField().addValidator(
+                new IntegerRangeValidator("Must be between 0 and 100", 0, 100));
+        grid.getColumn("birthDate").setRenderer(new DateRenderer(
+                DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US)));
         addComponent(grid);
         getLayout().setExpandRatio(grid, 1);
     }

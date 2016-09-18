@@ -27,8 +27,7 @@ public class ClassesSerializableTest {
 
     private static String[] BASE_PACKAGES = { "com.vaadin" };
 
-    private static String[] EXCLUDED_PATTERNS = {
-            "com\\.vaadin\\.demo\\..*", //
+    private static String[] EXCLUDED_PATTERNS = { "com\\.vaadin\\.demo\\..*", //
             "com\\.vaadin\\.external\\.org\\.apache\\.commons\\.fileupload\\..*", //
             "com\\.vaadin\\.launcher\\..*", //
             "com\\.vaadin\\.client\\..*", //
@@ -85,7 +84,7 @@ public class ClassesSerializableTest {
     /**
      * Tests that all the relevant classes and interfaces under
      * {@link #BASE_PACKAGES} implement Serializable.
-     * 
+     *
      * @throws Exception
      */
     @Test
@@ -149,8 +148,9 @@ public class ClassesSerializableTest {
                     nonSerializableString += ")";
                 }
             }
-            Assert.fail("Serializable not implemented by the following classes and interfaces: "
-                    + nonSerializableString);
+            Assert.fail(
+                    "Serializable not implemented by the following classes and interfaces: "
+                            + nonSerializableString);
         }
     }
 
@@ -172,10 +172,10 @@ public class ClassesSerializableTest {
 
     /**
      * Lists all class path entries by splitting the class path string.
-     * 
+     *
      * Adapted from ClassPathExplorer.getRawClasspathEntries(), but without
      * filtering.
-     * 
+     *
      * @return List of class path segment strings
      */
     //
@@ -205,10 +205,10 @@ public class ClassesSerializableTest {
     /**
      * Finds the server side classes/interfaces under a class path entry -
      * either a directory or a JAR that matches {@link #JAR_PATTERN}.
-     * 
+     *
      * Only classes under {@link #BASE_PACKAGES} are considered, and those
      * matching {@link #EXCLUDED_PATTERNS} are filtered out.
-     * 
+     *
      * @param classpathEntry
      * @return
      * @throws IOException
@@ -258,7 +258,7 @@ public class ClassesSerializableTest {
 
     /**
      * Lists class names (based on .class files) in a JAR file.
-     * 
+     *
      * @param file
      *            a valid JAR file
      * @return collection of fully qualified class names in the JAR
@@ -272,8 +272,8 @@ public class ClassesSerializableTest {
         while (e.hasMoreElements()) {
             JarEntry entry = e.nextElement();
             if (entry.getName().endsWith(".class")) {
-                String nameWithoutExtension = entry.getName().replaceAll(
-                        "\\.class", "");
+                String nameWithoutExtension = entry.getName()
+                        .replaceAll("\\.class", "");
                 String className = nameWithoutExtension.replace('/', '.');
                 classes.add(className);
             }
@@ -284,7 +284,7 @@ public class ClassesSerializableTest {
     /**
      * Lists class names (based on .class files) in a directory (a package path
      * root).
-     * 
+     *
      * @param parentPackage
      *            parent package name or null at root of hierarchy, used by
      *            recursion

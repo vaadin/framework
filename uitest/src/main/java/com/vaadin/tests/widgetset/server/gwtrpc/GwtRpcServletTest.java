@@ -24,8 +24,8 @@ import com.vaadin.tests.widgetset.client.gwtrpc.GwtRpcServiceTest;
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")
-public class GwtRpcServletTest extends RemoteServiceServlet implements
-        GwtRpcServiceTest {
+public class GwtRpcServletTest extends RemoteServiceServlet
+        implements GwtRpcServiceTest {
 
     @Override
     public String giveMeThat(String that, String haveThis) {

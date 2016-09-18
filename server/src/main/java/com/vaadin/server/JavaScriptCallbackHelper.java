@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -39,7 +39,7 @@ import elemental.json.JsonException;
  * {@link com.vaadin.client.JavaScriptConnectorHelper}.
  * <p>
  * You should most likely no use this class directly.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
@@ -89,13 +89,12 @@ public class JavaScriptCallbackHelper implements Serializable {
 
     public void invokeCallback(String name, Object... arguments) {
         if (callbacks.containsKey(name)) {
-            throw new IllegalStateException(
-                    "Can't call callback "
-                            + name
-                            + " on the client because a callback with the same name is registered on the server.");
+            throw new IllegalStateException("Can't call callback " + name
+                    + " on the client because a callback with the same name is registered on the server.");
         }
-        JsonArray args = (JsonArray) JsonCodec.encode(arguments, null,
-                Object[].class, null).getEncodedValue();
+        JsonArray args = (JsonArray) JsonCodec
+                .encode(arguments, null, Object[].class, null)
+                .getEncodedValue();
         connector.addMethodInvocationToQueue(
                 JavaScriptCallbackRpc.class.getName(), CALL_METHOD,
                 new Object[] { name, args });

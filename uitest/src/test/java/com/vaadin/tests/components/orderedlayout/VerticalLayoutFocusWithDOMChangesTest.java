@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,8 +35,8 @@ public class VerticalLayoutFocusWithDOMChangesTest extends MultiBrowserTest {
     @Test
     public void inputTextAndChangeFocus() throws InterruptedException {
         openTestURL();
-        List<WebElement> textFields = getDriver().findElements(
-                By.tagName("input"));
+        List<WebElement> textFields = getDriver()
+                .findElements(By.tagName("input"));
         WebElement tf1 = textFields.get(0);
         WebElement tf2 = textFields.get(1);
         tf1.sendKeys(initialText);
@@ -69,8 +69,8 @@ public class VerticalLayoutFocusWithDOMChangesTest extends MultiBrowserTest {
     @Test
     public void moveFocusAndChangeFieldWithValue() {
         openTestURL();
-        List<WebElement> textFields = getDriver().findElements(
-                By.tagName("input"));
+        List<WebElement> textFields = getDriver()
+                .findElements(By.tagName("input"));
         WebElement tf1 = textFields.get(0);
         WebElement tf2 = textFields.get(1);
 

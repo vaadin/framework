@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -55,7 +55,7 @@ public class ListSelect extends AbstractSelect {
      * Calling {@code setColumns(10);} is equivalent to calling
      * {@code setWidth("10em");}
      * </p>
-     * 
+     *
      * @deprecated As of 7.0. "Columns" does not reflect the exact number of
      *             characters that will be displayed. It is better to use
      *             setWidth together with "em" to control the width of the
@@ -76,7 +76,7 @@ public class ListSelect extends AbstractSelect {
 
     /**
      * Gets the number of columns for the component.
-     * 
+     *
      * @see #setColumns(int)
      * @deprecated As of 7.0. "Columns" does not reflect the exact number of
      *             characters that will be displayed. It is better to use
@@ -96,7 +96,7 @@ public class ListSelect extends AbstractSelect {
      * Sets the number of rows in the editor. If the number of rows is set 0,
      * the actual number of displayed rows is determined implicitly by the
      * adapter.
-     * 
+     *
      * @param rows
      *            the number of rows to set.
      */

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,11 +36,11 @@ import com.vaadin.server.widgetsetutils.ClassPathExplorer.LocationInfo;
  * Helper class for managing the addon imports and creating an a SCSS file for
  * importing all your addon themes. The helper method searches the classpath for
  * Vaadin addons and uses the 'Vaadin-Themes' metadata to create the imports.
- * 
+ *
  * <p>
  * The addons.scss is always overwritten when this tool is invoked.
  * </p>
- * 
+ *
  * @since 7.1
  */
 public class SASSAddonImportFileCreator {
@@ -51,7 +51,7 @@ public class SASSAddonImportFileCreator {
             + "will be overwritten from time to time.";
 
     /**
-     * 
+     *
      * @param args
      *            Theme directory where the addons.scss file should be created
      */
@@ -66,7 +66,7 @@ public class SASSAddonImportFileCreator {
 
     /**
      * Updates a themes addons.scss with the addon themes found on the classpath
-     * 
+     *
      * @param themeDirectory
      *            The target theme directory
      */
@@ -87,8 +87,8 @@ public class SASSAddonImportFileCreator {
                 .getAvailableWidgetSetsAndStylesheets();
 
         try {
-            PrintStream printStream = new PrintStream(new FileOutputStream(
-                    addonImports));
+            PrintStream printStream = new PrintStream(
+                    new FileOutputStream(addonImports));
 
             printStream.println("/* " + ADDON_IMPORTS_FILE_TEXT + " */");
 
@@ -119,8 +119,8 @@ public class SASSAddonImportFileCreator {
 
             List<String> mixins = new ArrayList<String>();
             for (String path : paths) {
-                mixins.addAll(addImport(printStream, path,
-                        addonThemes.get(path)));
+                mixins.addAll(
+                        addImport(printStream, path, addonThemes.get(path)));
                 printStream.println();
             }
 
@@ -187,7 +187,8 @@ public class SASSAddonImportFileCreator {
     private static void createAddonsMixin(PrintStream stream,
             List<String> mixins) {
 
-        stream.println("/* Import and include this mixin into your project theme to include the addon themes */");
+        stream.println(
+                "/* Import and include this mixin into your project theme to include the addon themes */");
         stream.println("@mixin addons {");
         for (String addon : mixins) {
             stream.println("\t@include " + addon + ";");

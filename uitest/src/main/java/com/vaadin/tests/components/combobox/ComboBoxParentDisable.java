@@ -62,7 +62,8 @@ public class ComboBoxParentDisable extends AbstractTestUIWithLog {
 
     }
 
-    private class MyValueChangeListener implements Property.ValueChangeListener {
+    private class MyValueChangeListener
+            implements Property.ValueChangeListener {
         @Override
         public void valueChange(Property.ValueChangeEvent event) {
             log.log("you made a selection change");

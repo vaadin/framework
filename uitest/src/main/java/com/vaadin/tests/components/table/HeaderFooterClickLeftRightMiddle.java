@@ -62,7 +62,8 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
                                 .isEmpty()) {
                             table.addHeaderClickListener(headerClickListener);
                         } else {
-                            table.removeHeaderClickListener(headerClickListener);
+                            table.removeHeaderClickListener(
+                                    headerClickListener);
                         }
                     }
                 });
@@ -92,7 +93,8 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
                                 .isEmpty()) {
                             table.addFooterClickListener(footerClickListener);
                         } else {
-                            table.removeFooterClickListener(footerClickListener);
+                            table.removeFooterClickListener(
+                                    footerClickListener);
                         }
                     }
                 });
@@ -117,8 +119,8 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
 
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        table.setColumnReorderingAllowed((Boolean) event
-                                .getProperty().getValue());
+                        table.setColumnReorderingAllowed(
+                                (Boolean) event.getProperty().getValue());
                     }
                 });
 

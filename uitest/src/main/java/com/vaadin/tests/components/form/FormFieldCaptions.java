@@ -14,7 +14,8 @@ public class FormFieldCaptions extends TestBase {
         Form form1 = new Form();
         Item item1 = createItem();
         for (Object propertyId : item1.getItemPropertyIds()) {
-            form1.addItemProperty(propertyId, item1.getItemProperty(propertyId));
+            form1.addItemProperty(propertyId,
+                    item1.getItemProperty(propertyId));
         }
 
         // Method 2

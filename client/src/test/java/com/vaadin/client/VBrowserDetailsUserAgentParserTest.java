@@ -415,7 +415,8 @@ public class VBrowserDetailsUserAgentParserTest {
 
     @Test
     public void testIE9InIE8CompatibilityMode() {
-        VBrowserDetails bd = new VBrowserDetails(IE9_BETA_IN_IE8_MODE_WINDOWS_7);
+        VBrowserDetails bd = new VBrowserDetails(
+                IE9_BETA_IN_IE8_MODE_WINDOWS_7);
         // bd.setIE8InCompatibilityMode();
 
         /*
@@ -621,8 +622,8 @@ public class VBrowserDetailsUserAgentParserTest {
         assertFalse(browserDetails.isAndroid());
     }
 
-    private void assertAndroid(VBrowserDetails browserDetails,
-            int majorVersion, int minorVersion) {
+    private void assertAndroid(VBrowserDetails browserDetails, int majorVersion,
+            int minorVersion) {
         assertFalse(browserDetails.isLinux());
         assertFalse(browserDetails.isWindows());
         assertFalse(browserDetails.isMacOSX());

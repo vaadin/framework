@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.tests.tb3.DndActionsTest;
 
 /**
- * 
+ *
  * @author Vaadin Ltd
  */
 public class CalendarResizeOverlappingEventsTest extends DndActionsTest {
@@ -76,20 +76,23 @@ public class CalendarResizeOverlappingEventsTest extends DndActionsTest {
 
         int actualWidth = firstEvent.getSize().getWidth();
         int expectedWidth = firstEventExpectedWidth;
-        Assert.assertTrue(String.format(errorMessage, expectedWidth,
-                widthTolerance, actualWidth),
+        Assert.assertTrue(
+                String.format(errorMessage, expectedWidth, widthTolerance,
+                        actualWidth),
                 isAproximateWidth(actualWidth, expectedWidth, widthTolerance));
 
         actualWidth = secondEvent.getSize().getWidth();
         expectedWidth = secondEventExpectedWidth;
-        Assert.assertTrue(String.format(errorMessage, expectedWidth,
-                widthTolerance, actualWidth),
+        Assert.assertTrue(
+                String.format(errorMessage, expectedWidth, widthTolerance,
+                        actualWidth),
                 isAproximateWidth(actualWidth, expectedWidth, widthTolerance));
 
         actualWidth = thirdEvent.getSize().getWidth();
         expectedWidth = thirdEventExpectedWidth;
-        Assert.assertTrue(String.format(errorMessage, expectedWidth,
-                widthTolerance, actualWidth),
+        Assert.assertTrue(
+                String.format(errorMessage, expectedWidth, widthTolerance,
+                        actualWidth),
                 isAproximateWidth(actualWidth, expectedWidth, widthTolerance));
     }
 
@@ -103,8 +106,8 @@ public class CalendarResizeOverlappingEventsTest extends DndActionsTest {
     }
 
     private void initParams() {
-        WebElement dateSlot = getDriver().findElement(
-                By.className("v-datecellslot"));
+        WebElement dateSlot = getDriver()
+                .findElement(By.className("v-datecellslot"));
         int dateSlotWidth = dateSlot.getSize().getWidth();
         noOverlapWidth = dateSlotWidth;
         oneOverlapWidth = dateSlotWidth / 2;
@@ -119,15 +122,15 @@ public class CalendarResizeOverlappingEventsTest extends DndActionsTest {
             }
         };
 
-        List<WebElement> eventElements = getDriver().findElements(
-                By.className("v-calendar-event-content"));
+        List<WebElement> eventElements = getDriver()
+                .findElements(By.className("v-calendar-event-content"));
         Collections.sort(eventElements, startTimeComparator);
         firstEvent = eventElements.get(0);
         secondEvent = eventElements.get(1);
         thirdEvent = eventElements.get(2);
 
-        List<WebElement> resizeBottomElements = getDriver().findElements(
-                By.className("v-calendar-event-resizebottom"));
+        List<WebElement> resizeBottomElements = getDriver()
+                .findElements(By.className("v-calendar-event-resizebottom"));
         Collections.sort(resizeBottomElements, startTimeComparator);
         firstEventBottomResize = resizeBottomElements.get(0);
         secondEventBottomResize = resizeBottomElements.get(1);

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -122,8 +122,8 @@ public class GridColumnResizeTest extends GridBasicFeaturesTest {
         Dimension size = headerCell.getSize();
         new Actions(getDriver())
                 .moveToElement(headerCell, size.getWidth() + posX,
-                        size.getHeight() / 2).clickAndHold()
-                .moveByOffset(offset, 0).release().perform();
+                        size.getHeight() / 2)
+                .clickAndHold().moveByOffset(offset, 0).release().perform();
     }
 
     private void assertResizable(int columnIndex, boolean resizable) {
@@ -133,8 +133,8 @@ public class GridColumnResizeTest extends GridBasicFeaturesTest {
 
     private void assertResizable(GridCellElement cell, boolean resizable) {
         assertEquals("Header resize handle present", resizable,
-                cell.isElementPresent(By
-                        .cssSelector("div.v-grid-column-resize-handle")));
+                cell.isElementPresent(
+                        By.cssSelector("div.v-grid-column-resize-handle")));
     }
 
     @Test

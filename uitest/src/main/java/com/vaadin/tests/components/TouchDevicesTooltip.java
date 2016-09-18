@@ -26,8 +26,8 @@ public class TouchDevicesTooltip extends AbstractTestUI {
     private void createTextField(int n) {
         TextField textField = new TextField("Value" + n);
         textField.setConverter(new StringToIntegerConverter());
-        textField.addValidator(new IntegerRangeValidator(getErrorMessage(n), 0,
-                100));
+        textField.addValidator(
+                new IntegerRangeValidator(getErrorMessage(n), 0, 100));
         textField.setImmediate(true);
         textField.setValue("-5");
         addComponent(textField);

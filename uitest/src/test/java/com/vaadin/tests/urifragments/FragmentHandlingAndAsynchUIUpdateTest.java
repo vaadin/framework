@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Back and Forward buttons in browser should work correctly during UI update
- * 
+ *
  * @author Vaadin Ltd
  */
 public class FragmentHandlingAndAsynchUIUpdateTest extends MultiBrowserTest {
@@ -45,8 +45,10 @@ public class FragmentHandlingAndAsynchUIUpdateTest extends MultiBrowserTest {
         for (int i = 0; i < 10; i++) {
             // here we wait for setting fragment in URI. If not to do it -
             // history will be "loss"
-            getDriver().findElement(
-                    By.id(FragmentHandlingAndAsynchUIUpdate.BUTTON_ID)).click();
+            getDriver()
+                    .findElement(
+                            By.id(FragmentHandlingAndAsynchUIUpdate.BUTTON_ID))
+                    .click();
             assertFragment(String.format(FRAG_NAME_TPL, START_FRAG_ID + i));
         }
 
@@ -97,8 +99,9 @@ public class FragmentHandlingAndAsynchUIUpdateTest extends MultiBrowserTest {
             @Override
             public void run() {
                 for (int i = 0; i < 10; i++) {
-                    getDriver().findElement(
-                            By.id(FragmentHandlingAndAsynchUIUpdate.BUTTON_ID))
+                    getDriver()
+                            .findElement(
+                                    By.id(FragmentHandlingAndAsynchUIUpdate.BUTTON_ID))
                             .click();
                 }
 

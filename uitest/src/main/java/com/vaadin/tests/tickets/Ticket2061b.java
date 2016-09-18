@@ -21,8 +21,8 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
-public class Ticket2061b extends LegacyApplication implements
-        SelectedTabChangeListener {
+public class Ticket2061b extends LegacyApplication
+        implements SelectedTabChangeListener {
 
     private LegacyWindow mainWindow;
     private Panel p;
@@ -101,7 +101,8 @@ public class Ticket2061b extends LegacyApplication implements
         tab.addTab(p, "Panel with panel", null);
     }
 
-    public class MyTable extends CustomComponent implements ValueChangeListener {
+    public class MyTable extends CustomComponent
+            implements ValueChangeListener {
 
         private Table table = new Table();
         private String[] columns;
@@ -131,8 +132,8 @@ public class Ticket2061b extends LegacyApplication implements
                 Item rowItem = table.addItem(j);
                 if (rowItem != null) {
                     for (int i = 0; i < columns.length; i++) {
-                        rowItem.getItemProperty(columns[i]).setValue(
-                                "Value" + j);
+                        rowItem.getItemProperty(columns[i])
+                                .setValue("Value" + j);
                     }
                 }
             }

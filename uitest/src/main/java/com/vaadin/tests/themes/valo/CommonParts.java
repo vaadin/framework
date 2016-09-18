@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -185,8 +185,8 @@ public class CommonParts extends VerticalLayout implements View {
                         }
                     }
                 });
-                description
-                        .setValue("A more informative message about what has happened. Nihil hic munitissimus habendi senatus locus, nihil horum? Inmensae subtilitatis, obscuris et malesuada fames. Hi omnes lingua, institutis, legibus inter se differunt.");
+                description.setValue(
+                        "A more informative message about what has happened. Nihil hic munitissimus habendi senatus locus, nihil horum? Inmensae subtilitatis, obscuris et malesuada fames. Hi omnes lingua, institutis, legibus inter se differunt.");
                 description.setWidth("100%");
                 addComponent(description);
 
@@ -198,9 +198,9 @@ public class CommonParts extends VerticalLayout implements View {
                             notification.setStyleName(styleString.trim());
                         } else {
                             typeString = selectedItem.getText().toLowerCase();
-                            notification
-                                    .setStyleName((typeString + " " + styleString
-                                            .trim()).trim());
+                            notification.setStyleName(
+                                    (typeString + " " + styleString.trim())
+                                            .trim());
                         }
                         for (MenuItem item : type.getItems()) {
                             item.setChecked(false);
@@ -231,9 +231,9 @@ public class CommonParts extends VerticalLayout implements View {
                             }
                         }
                         if (styleString.trim().length() > 0) {
-                            notification
-                                    .setStyleName((typeString + " " + styleString
-                                            .trim()).trim());
+                            notification.setStyleName(
+                                    (typeString + " " + styleString.trim())
+                                            .trim());
                         } else if (typeString.length() > 0) {
                             notification.setStyleName(typeString.trim());
                         } else {
@@ -265,8 +265,8 @@ public class CommonParts extends VerticalLayout implements View {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
                         try {
-                            notification.setDelayMsec(Integer.parseInt(delay
-                                    .getValue()));
+                            notification.setDelayMsec(
+                                    Integer.parseInt(delay.getValue()));
                         } catch (Exception e) {
                             notification.setDelayMsec(-1);
                             delay.setValue("");
@@ -410,19 +410,21 @@ public class CommonParts extends VerticalLayout implements View {
 
                 label = new Label("Long");
                 label.addStyleName(ValoTheme.LABEL_BOLD);
-                label.setDescription("Long tooltip message. Inmensae subtilitatis, obscuris et malesuada fames. Salutantibus vitae elit libero, a pharetra augue.");
+                label.setDescription(
+                        "Long tooltip message. Inmensae subtilitatis, obscuris et malesuada fames. Salutantibus vitae elit libero, a pharetra augue.");
                 addComponent(label);
 
                 label = new Label("HTML tooltip");
                 label.addStyleName(ValoTheme.LABEL_BOLD);
-                label.setDescription("<div><h1>Ut enim ad minim veniam, quis nostrud exercitation</h1><p><span>Morbi fringilla convallis sapien, id pulvinar odio volutpat.</span> <span>Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</span> <span>Donec sed odio operae, eu vulputate felis rhoncus.</span> <span>At nos hinc posthac, sitientis piros Afros.</span> <span>Tu quoque, Brute, fili mi, nihil timor populi, nihil!</span></p><p><span>Gallia est omnis divisa in partes tres, quarum.</span> <span>Praeterea iter est quasdam res quas ex communi.</span> <span>Cum ceteris in veneratione tui montes, nascetur mus.</span> <span>Quam temere in vitiis, legem sancimus haerentia.</span> <span>Idque Caesaris facere voluntate liceret: sese habere.</span></p></div>");
+                label.setDescription(
+                        "<div><h1>Ut enim ad minim veniam, quis nostrud exercitation</h1><p><span>Morbi fringilla convallis sapien, id pulvinar odio volutpat.</span> <span>Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</span> <span>Donec sed odio operae, eu vulputate felis rhoncus.</span> <span>At nos hinc posthac, sitientis piros Afros.</span> <span>Tu quoque, Brute, fili mi, nihil timor populi, nihil!</span></p><p><span>Gallia est omnis divisa in partes tres, quarum.</span> <span>Praeterea iter est quasdam res quas ex communi.</span> <span>Cum ceteris in veneratione tui montes, nascetur mus.</span> <span>Quam temere in vitiis, legem sancimus haerentia.</span> <span>Idque Caesaris facere voluntate liceret: sese habere.</span></p></div>");
                 addComponent(label);
 
                 label = new Label("With an error message");
                 label.addStyleName(ValoTheme.LABEL_BOLD);
                 label.setDescription("Simple tooltip message");
-                label.setComponentError(new UserError(
-                        "Something terrible has happened"));
+                label.setComponentError(
+                        new UserError("Something terrible has happened"));
                 addComponent(label);
 
                 label = new Label("With a long error message");
@@ -436,8 +438,8 @@ public class CommonParts extends VerticalLayout implements View {
 
                 label = new Label("Error message only");
                 label.addStyleName(ValoTheme.LABEL_BOLD);
-                label.setComponentError(new UserError(
-                        "Something terrible has happened"));
+                label.setComponentError(
+                        new UserError("Something terrible has happened"));
                 addComponent(label);
             }
         };
@@ -500,17 +502,18 @@ public class CommonParts extends VerticalLayout implements View {
                     tabs.addTab(new Label("&nbsp;", ContentMode.HTML),
                             "One more");
                     tabs.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
-                    tabs.addSelectedTabChangeListener(new SelectedTabChangeListener() {
-                        @Override
-                        public void selectedTabChange(
-                                SelectedTabChangeEvent event) {
-                            try {
-                                Thread.sleep(600);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
+                    tabs.addSelectedTabChangeListener(
+                            new SelectedTabChangeListener() {
+                                @Override
+                                public void selectedTabChange(
+                                        SelectedTabChangeEvent event) {
+                                    try {
+                                        Thread.sleep(600);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
                     content = tabs;
                 } else if (!autoHeight) {
                     Panel p = new Panel();
@@ -609,14 +612,15 @@ public class CommonParts extends VerticalLayout implements View {
                             footerToolbar = selectedItem.isChecked();
                         }
 
-                        if (selectedItem.getText().equals("Top Toolbar layout")) {
+                        if (selectedItem.getText()
+                                .equals("Top Toolbar layout")) {
                             toolbarLayout = selectedItem.isChecked();
                         }
 
                         if (selectedItem.getText()
                                 .equals("Borderless Toolbars")) {
-                            toolbarStyle = selectedItem.isChecked() ? ValoTheme.MENUBAR_BORDERLESS
-                                    : null;
+                            toolbarStyle = selectedItem.isChecked()
+                                    ? ValoTheme.MENUBAR_BORDERLESS : null;
                         }
 
                         win.setContent(windowContent());
@@ -625,8 +629,8 @@ public class CommonParts extends VerticalLayout implements View {
 
                 MenuBar options = new MenuBar();
                 options.setCaption("Content");
-                options.addItem("Auto Height", optionsCommand).setCheckable(
-                        true);
+                options.addItem("Auto Height", optionsCommand)
+                        .setCheckable(true);
                 options.addItem("Tabs", optionsCommand).setCheckable(true);
                 MenuItem option = options.addItem("Footer", optionsCommand);
                 option.setCheckable(true);
@@ -636,10 +640,10 @@ public class CommonParts extends VerticalLayout implements View {
 
                 options = new MenuBar();
                 options.setCaption("Toolbars");
-                options.addItem("Footer Toolbar", optionsCommand).setCheckable(
-                        true);
-                options.addItem("Top Toolbar", optionsCommand).setCheckable(
-                        true);
+                options.addItem("Footer Toolbar", optionsCommand)
+                        .setCheckable(true);
+                options.addItem("Top Toolbar", optionsCommand)
+                        .setCheckable(true);
                 options.addItem("Top Toolbar layout", optionsCommand)
                         .setCheckable(true);
                 options.addItem("Borderless Toolbars", optionsCommand)
@@ -651,8 +655,8 @@ public class CommonParts extends VerticalLayout implements View {
                     @Override
                     public void menuSelected(MenuItem selectedItem) {
                         if (selectedItem.getText().equals("Caption")) {
-                            win.setCaption(selectedItem.isChecked() ? "Window Caption"
-                                    : null);
+                            win.setCaption(selectedItem.isChecked()
+                                    ? "Window Caption" : null);
                         } else if (selectedItem.getText().equals("Closable")) {
                             win.setClosable(selectedItem.isChecked());
                         } else if (selectedItem.getText().equals("Resizable")) {

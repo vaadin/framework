@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -49,7 +49,7 @@ import com.vaadin.ui.declarative.converters.DesignToStringConverter;
  * Class focused on flexible and consistent formatting and parsing of different
  * values throughout reading and writing {@link Design}. An instance of this
  * class is used by {@link DesignAttributeHandler}.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -68,7 +68,7 @@ public class DesignFormatter implements Serializable {
 
     /**
      * Maps default types to their converters.
-     * 
+     *
      */
     protected void mapDefaultTypes() {
         // numbers use standard toString/valueOf approach
@@ -205,7 +205,7 @@ public class DesignFormatter implements Serializable {
 
     /**
      * Adds a converter for a new type.
-     * 
+     *
      * @param converter
      *            Converter to add.
      */
@@ -215,7 +215,7 @@ public class DesignFormatter implements Serializable {
 
     /**
      * Adds a converter for a given type.
-     * 
+     *
      * @param type
      *            Type to convert to/from.
      * @param converter
@@ -228,7 +228,7 @@ public class DesignFormatter implements Serializable {
 
     /**
      * Removes the converter for given type, if it was present.
-     * 
+     *
      * @param type
      *            Type to remove converter for.
      */
@@ -240,7 +240,7 @@ public class DesignFormatter implements Serializable {
      * Returns a set of classes that have a converter registered. This is <b>not
      * the same</b> as the list of supported classes - subclasses of classes in
      * this set are also supported.
-     * 
+     *
      * @return An unmodifiable set of classes that have a converter registered.
      */
     protected Set<Class<?>> getRegisteredClasses() {
@@ -249,7 +249,7 @@ public class DesignFormatter implements Serializable {
 
     /**
      * Parses a given string as a value of given type
-     * 
+     *
      * @param value
      *            String value to convert.
      * @param type
@@ -268,19 +268,20 @@ public class DesignFormatter implements Serializable {
 
     /**
      * Finds a formatter for a given object and attempts to format it.
-     * 
+     *
      * @param object
      *            Object to format.
      * @return String representation of the object, as returned by the
      *         registered converter.
      */
     public String format(Object object) {
-        return format(object, object == null ? Object.class : object.getClass());
+        return format(object,
+                object == null ? Object.class : object.getClass());
     }
 
     /**
      * Formats an object according to a converter suitable for a given type.
-     * 
+     *
      * @param object
      *            Object to format.
      * @param type
@@ -292,8 +293,8 @@ public class DesignFormatter implements Serializable {
         if (object == null) {
             return null;
         } else {
-            Converter<String, Object> converter = findConverterFor(object
-                    .getClass());
+            Converter<String, Object> converter = findConverterFor(
+                    object.getClass());
             return converter.convertToPresentation(object, String.class, null);
         }
     }
@@ -301,7 +302,7 @@ public class DesignFormatter implements Serializable {
     /**
      * Checks whether or not a value of a given type can be converted. If a
      * converter for a superclass is found, this will return true.
-     * 
+     *
      * @param type
      *            Type to check.
      * @return <b>true</b> when either a given type or its supertype has a
@@ -314,7 +315,7 @@ public class DesignFormatter implements Serializable {
     /**
      * Finds a converter for a given type. May return a converter for a
      * superclass instead, if one is found and {@code strict} is false.
-     * 
+     *
      * @param sourceType
      *            Type to find a converter for.
      * @param strict
@@ -353,7 +354,7 @@ public class DesignFormatter implements Serializable {
     /**
      * Finds a converter for a given type. May return a converter for a
      * superclass instead, if one is found.
-     * 
+     *
      * @param sourceType
      *            Type to find a converter for.
      * @return A valid converter for a given type or its subtype, <b>null</b> if
@@ -378,7 +379,7 @@ public class DesignFormatter implements Serializable {
      * Typically, this method will be used by components to encode data (like
      * option items in {@link AbstractSelect}) when dumping to HTML format
      * </p>
-     * 
+     *
      * @since 7.5.7
      * @param input
      *            String to be encoded
@@ -388,8 +389,8 @@ public class DesignFormatter implements Serializable {
         if (input == null) {
             return null;
         }
-        return input.replace("&", "&amp;").replace(">", "&gt;")
-                .replace("<", "&lt;");
+        return input.replace("&", "&amp;").replace(">", "&gt;").replace("<",
+                "&lt;");
     }
 
     /**
@@ -397,13 +398,13 @@ public class DesignFormatter implements Serializable {
      * Decodes HTML entities in a text from text node and replaces them with
      * actual characters.
      * </p>
-     * 
+     *
      * <p>
      * Typically this method will be used by components to read back data (like
      * option items in {@link AbstractSelect}) from HTML. Note that this method
      * unencodes more characters than {@link #encodeForTextNode(String)} encodes
      * </p>
-     * 
+     *
      * @since 7.6
      * @param input
      * @return

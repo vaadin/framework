@@ -25,8 +25,8 @@ public class ProgressIndicatorInvisible extends TestBase {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         pi.setVisible(!pi.isVisible());
-                        event.getButton().setCaption(
-                                (pi.isVisible() ? "Hide" : "Show")
+                        event.getButton()
+                                .setCaption((pi.isVisible() ? "Hide" : "Show")
                                         + " progress indicator");
 
                     }
@@ -47,19 +47,19 @@ public class ProgressIndicatorInvisible extends TestBase {
                 });
 
         addComponent(disableProgressIndicator);
-        Button removeProgressIndicator = new Button(
-                "Remove progress indicator", new ClickListener() {
+        Button removeProgressIndicator = new Button("Remove progress indicator",
+                new ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
                         if (pi.getParent() != null) {
                             lo.removeComponent(pi);
-                            event.getButton().setCaption(
-                                    "Add progress indicator");
+                            event.getButton()
+                                    .setCaption("Add progress indicator");
                         } else {
                             lo.addComponent(pi);
-                            event.getButton().setCaption(
-                                    "Remove progress indicator");
+                            event.getButton()
+                                    .setCaption("Remove progress indicator");
                         }
 
                     }

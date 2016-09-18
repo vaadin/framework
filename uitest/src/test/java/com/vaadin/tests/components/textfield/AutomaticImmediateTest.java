@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ public class AutomaticImmediateTest extends MultiBrowserTest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.tb3.AbstractTB3Test#getUIClass()
      */
     @Override
@@ -40,17 +40,17 @@ public class AutomaticImmediateTest extends MultiBrowserTest {
     public void test() {
         openTestURL();
 
-        WebElement field = getDriver().findElement(
-                By.id(AutomaticImmediate.FIELD));
+        WebElement field = getDriver()
+                .findElement(By.id(AutomaticImmediate.FIELD));
 
-        WebElement toggle = getDriver().findElement(
-                By.xpath("//input[@type = 'checkbox']"));
+        WebElement toggle = getDriver()
+                .findElement(By.xpath("//input[@type = 'checkbox']"));
 
-        WebElement explicitFalseButton = getDriver().findElement(
-                By.id(AutomaticImmediate.EXPLICIT_FALSE));
+        WebElement explicitFalseButton = getDriver()
+                .findElement(By.id(AutomaticImmediate.EXPLICIT_FALSE));
 
-        WebElement hitServerButton = getDriver().findElement(
-                By.id(AutomaticImmediate.BUTTON));
+        WebElement hitServerButton = getDriver()
+                .findElement(By.id(AutomaticImmediate.BUTTON));
 
         String string = getRandomString();
         field.sendKeys(string + Keys.ENTER);

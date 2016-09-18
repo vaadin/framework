@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -119,8 +119,8 @@ public class JsonDecoder {
         } else if (Character.class.getName().equals(baseTypeName)) {
             return Character.valueOf(jsonValue.asString().charAt(0));
         } else if (Connector.class.getName().equals(baseTypeName)) {
-            return ConnectorMap.get(connection).getConnector(
-                    jsonValue.asString());
+            return ConnectorMap.get(connection)
+                    .getConnector(jsonValue.asString());
         } else {
             return decodeObject(type, jsonValue, target, connection);
         }
@@ -169,12 +169,15 @@ public class JsonDecoder {
                         propertyReference = null;
                     }
 
-                    Profiler.leave("JsonDecoder.decodeObject meta data processing");
-                    JsonValue encodedPropertyValue = jsonObject.get(property
-                            .getName());
+                    Profiler.leave(
+                            "JsonDecoder.decodeObject meta data processing");
+                    JsonValue encodedPropertyValue = jsonObject
+                            .get(property.getName());
                     Object decodedValue = decodeValue(propertyType,
-                            encodedPropertyValue, propertyReference, connection);
-                    Profiler.enter("JsonDecoder.decodeObject meta data processing");
+                            encodedPropertyValue, propertyReference,
+                            connection);
+                    Profiler.enter(
+                            "JsonDecoder.decodeObject meta data processing");
                     property.setValue(target, decodedValue);
                 }
                 Profiler.leave("JsonDecoder.decodeObject meta data processing");
@@ -183,8 +186,8 @@ public class JsonDecoder {
             } catch (NoDataException e) {
                 Profiler.leave("JsonDecoder.decodeObject meta data processing");
                 Profiler.leave("JsonDecoder.decodeObject");
-                throw new RuntimeException("Can not deserialize "
-                        + type.getSignature(), e);
+                throw new RuntimeException(
+                        "Can not deserialize " + type.getSignature(), e);
             }
         }
     }
@@ -210,7 +213,8 @@ public class JsonDecoder {
         if (keyType.getBaseTypeName().equals(String.class.getName())) {
             assert jsonMap.getType() == JsonType.OBJECT;
             return decodeStringMap(valueType, (JsonObject) jsonMap, connection);
-        } else if (keyType.getBaseTypeName().equals(Connector.class.getName())) {
+        } else if (keyType.getBaseTypeName()
+                .equals(Connector.class.getName())) {
             assert jsonMap.getType() == JsonType.OBJECT;
             return decodeConnectorMap(valueType, (JsonObject) jsonMap,
                     connection);
@@ -274,16 +278,16 @@ public class JsonDecoder {
     private static List<Object> decodeList(Type type, JsonArray jsonArray,
             ApplicationConnection connection) {
         List<Object> tokens = new ArrayList<Object>();
-        decodeIntoCollection(type.getParameterTypes()[0], jsonArray,
-                connection, tokens);
+        decodeIntoCollection(type.getParameterTypes()[0], jsonArray, connection,
+                tokens);
         return tokens;
     }
 
     private static Set<Object> decodeSet(Type type, JsonArray jsonArray,
             ApplicationConnection connection) {
         Set<Object> tokens = new HashSet<Object>();
-        decodeIntoCollection(type.getParameterTypes()[0], jsonArray,
-                connection, tokens);
+        decodeIntoCollection(type.getParameterTypes()[0], jsonArray, connection,
+                tokens);
         return tokens;
     }
 

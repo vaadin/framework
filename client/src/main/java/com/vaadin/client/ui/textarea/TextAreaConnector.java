@@ -57,7 +57,8 @@ public class TextAreaConnector extends TextFieldConnector {
 
             updateSize(element.getStyle().getHeight(), getState().height,
                     "height");
-            updateSize(element.getStyle().getWidth(), getState().width, "width");
+            updateSize(element.getStyle().getWidth(), getState().width,
+                    "width");
         }
 
         /*
@@ -82,8 +83,8 @@ public class TextAreaConnector extends TextFieldConnector {
                 return;
             }
 
-            getConnection().updateVariable(getConnectorId(), sizeType,
-                    sizeText, false);
+            getConnection().updateVariable(getConnectorId(), sizeType, sizeText,
+                    false);
         }
 
     }

@@ -4,8 +4,8 @@ import org.junit.Test;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class TextFieldTruncatesUnderscoresInModalDialogsTest extends
-        MultiBrowserTest {
+public class TextFieldTruncatesUnderscoresInModalDialogsTest
+        extends MultiBrowserTest {
 
     @Test
     public void testWindowRepositioning() throws Exception {

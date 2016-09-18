@@ -11,8 +11,8 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
 
-public class TestImmediateUploadInFormLayout extends
-        ComponentTestCase<FormLayout> implements Receiver {
+public class TestImmediateUploadInFormLayout
+        extends ComponentTestCase<FormLayout> implements Receiver {
 
     @Override
     protected String getDescription() {

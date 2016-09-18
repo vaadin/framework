@@ -50,7 +50,7 @@ public class CustomUIClassLoaderTest {
     /**
      * Tests that a UI class can be loaded even if no classloader has been
      * provided.
-     * 
+     *
      * @throws Exception
      *             if thrown
      */
@@ -70,8 +70,8 @@ public class CustomUIClassLoaderTest {
     private static DeploymentConfiguration createConfigurationMock() {
         Properties properties = new Properties();
         properties.put(VaadinSession.UI_PARAMETER, MyUI.class.getName());
-        return new DefaultDeploymentConfiguration(
-                CustomUIClassLoaderTest.class, properties);
+        return new DefaultDeploymentConfiguration(CustomUIClassLoaderTest.class,
+                properties);
     }
 
     private static VaadinRequest createRequestMock(ClassLoader classloader) {
@@ -80,8 +80,8 @@ public class CustomUIClassLoaderTest {
                 .createMock(VaadinService.class);
         EasyMock.expect(configurationMock.getDeploymentConfiguration())
                 .andReturn(createConfigurationMock());
-        EasyMock.expect(configurationMock.getClassLoader()).andReturn(
-                classloader);
+        EasyMock.expect(configurationMock.getClassLoader())
+                .andReturn(classloader);
 
         // Mock a VaadinRequest to give the mocked vaadin service
         VaadinRequest requestMock = EasyMock.createMock(VaadinRequest.class);
@@ -96,7 +96,7 @@ public class CustomUIClassLoaderTest {
     /**
      * Tests that the ClassLoader passed in the ApplicationStartEvent is used to
      * load UI classes.
-     * 
+     *
      * @throws Exception
      *             if thrown
      */

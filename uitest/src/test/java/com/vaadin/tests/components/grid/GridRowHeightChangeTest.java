@@ -13,8 +13,8 @@ import static org.junit.Assert.assertEquals;
 
 public class GridRowHeightChangeTest extends MultiBrowserTest {
 
-    private final List<String> themes = Arrays
-            .asList("valo", "reindeer", "runo", "chameleon", "base");
+    private final List<String> themes = Arrays.asList("valo", "reindeer",
+            "runo", "chameleon", "base");
 
     @Override
     public void setup() throws Exception {
@@ -32,8 +32,8 @@ public class GridRowHeightChangeTest extends MultiBrowserTest {
 
             int gridHeight = grid.getSize().getHeight();
             int tabsheetHeight = findElements(
-                    By.className("v-tabsheet-content"))
-                    .get(0).getSize().getHeight();
+                    By.className("v-tabsheet-content")).get(0).getSize()
+                            .getHeight();
 
             assertEquals("Grid's visible height should be equal to Grid height",
                     gridHeight, tabsheetHeight, 1);

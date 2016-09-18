@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
  * Connection pool for testing SQLContainer. Ensures that only reserved
  * connections are released and that all connections are released before the
  * pool is destroyed.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class ValidatingSimpleJDBCConnectionPool implements JDBCConnectionPool {
@@ -60,9 +60,8 @@ public class ValidatingSimpleJDBCConnectionPool implements JDBCConnectionPool {
     public void releaseConnection(Connection conn) {
         if (conn != null && !reserved.remove(conn)) {
             if (alreadyReleased.contains(conn)) {
-                getLogger().severe(
-                        "Tried to release connection (" + conn
-                                + ") which has already been released");
+                getLogger().severe("Tried to release connection (" + conn
+                        + ") which has already been released");
             } else {
                 throw new RuntimeException("Tried to release connection ("
                         + conn + ") not reserved using reserveConnection");
@@ -77,13 +76,13 @@ public class ValidatingSimpleJDBCConnectionPool implements JDBCConnectionPool {
     public void destroy() {
         realPool.destroy();
         if (!reserved.isEmpty()) {
-            throw new RuntimeException(reserved.size()
-                    + " connections never released");
+            throw new RuntimeException(
+                    reserved.size() + " connections never released");
         }
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(ValidatingSimpleJDBCConnectionPool.class
-                .getName());
+        return Logger
+                .getLogger(ValidatingSimpleJDBCConnectionPool.class.getName());
     }
 }

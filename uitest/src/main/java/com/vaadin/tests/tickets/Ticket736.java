@@ -64,11 +64,11 @@ public class Ticket736 extends LegacyApplication {
         f.setFooter(ol);
 
         // Add some validators for the form
-        f.getField("zip").addValidator(
-                new IntegerValidator("'{0}' is not a number"));
+        f.getField("zip")
+                .addValidator(new IntegerValidator("'{0}' is not a number"));
         ((AbstractComponent) f.getField("zip")).setDescription("Jepjep");
-        ((AbstractComponent) f.getField("zip")).setIcon(new ThemeResource(
-                "../runo/icons/16/folder.png"));
+        ((AbstractComponent) f.getField("zip"))
+                .setIcon(new ThemeResource("../runo/icons/16/folder.png"));
         f.getField("state").addValidator(new IsValidState());
         f.getField("name").setRequired(true);
         f.getField("street").setRequired(true);

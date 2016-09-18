@@ -35,14 +35,14 @@ public class Ticket1970 extends LegacyApplication {
         addWindow(w);
         w.addComponent(new Label(
                 "This window has been created on fly for name: " + name));
-        w.addComponent(new Button("Show open windows",
-                new Button.ClickListener() {
+        w.addComponent(
+                new Button("Show open windows", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
                         String openWindows = "";
-                        for (Iterator<LegacyWindow> i = getWindows().iterator(); i
-                                .hasNext();) {
+                        for (Iterator<LegacyWindow> i = getWindows()
+                                .iterator(); i.hasNext();) {
                             LegacyWindow t = i.next();
                             openWindows += (openWindows.length() > 0 ? "," : "")
                                     + t.getName();
@@ -60,12 +60,14 @@ public class Ticket1970 extends LegacyApplication {
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        w.showNotification("Name of this window = "
-                                + w.getName());
+                        w.showNotification(
+                                "Name of this window = " + w.getName());
                     }
                 }));
-        w.addComponent(new Label("<a href='" + getURL().toExternalForm() + "'>"
-                + getURL().toExternalForm() + "</a>", ContentMode.HTML));
+        w.addComponent(new Label(
+                "<a href='" + getURL().toExternalForm() + "'>"
+                        + getURL().toExternalForm() + "</a>",
+                ContentMode.HTML));
         w.addComponent(new Label(
                 "<h2>How to reproduce</h2>Open the above link in another browser"
                         + " window and then press the Show-button on this window.",

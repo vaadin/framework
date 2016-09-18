@@ -40,19 +40,19 @@ public class Ticket2244 extends LegacyApplication {
             }
 
         }));
-        w.addComponent(new Button("new bigger item",
-                new Button.ClickListener() {
+        w.addComponent(
+                new Button("new bigger item", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        form.setItemDataSource(new BeanItem<MyBean>(
-                                new MyBiggerBean()));
+                        form.setItemDataSource(
+                                new BeanItem<MyBean>(new MyBiggerBean()));
 
                     }
 
                 }));
-        w.addComponent(new Button("new grid layout",
-                new Button.ClickListener() {
+        w.addComponent(
+                new Button("new grid layout", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
@@ -61,8 +61,8 @@ public class Ticket2244 extends LegacyApplication {
                     }
 
                 }));
-        w.addComponent(new Button("new form layout",
-                new Button.ClickListener() {
+        w.addComponent(
+                new Button("new form layout", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {

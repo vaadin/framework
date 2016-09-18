@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,7 +40,7 @@ import com.vaadin.client.ValueMap;
  * <p>
  * Scroll lock state is persisted.
  * </p>
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd
  */
@@ -61,7 +61,8 @@ public class LogSection implements Section {
                 }
 
                 @Override
-                protected String getRecordInfo(LogRecord event, String newline) {
+                protected String getRecordInfo(LogRecord event,
+                        String newline) {
                     return "";
                 }
             });
@@ -157,8 +158,8 @@ public class LogSection implements Section {
             public void onClick(ClickEvent event) {
                 Element el = Element
                         .as(event.getNativeEvent().getEventTarget());
-                while (!el.getClassName().contains(
-                        VDebugWindow.STYLENAME + "-message")) {
+                while (!el.getClassName()
+                        .contains(VDebugWindow.STYLENAME + "-message")) {
                     if (el == contentElement) {
                         // clicked something else
                         return;
@@ -188,7 +189,7 @@ public class LogSection implements Section {
 
     /**
      * Activates or deactivates scroll lock
-     * 
+     *
      * @param locked
      */
     void setScrollLock(boolean locked) {
@@ -242,7 +243,7 @@ public class LogSection implements Section {
 
     /**
      * Sets the log row limit.
-     * 
+     *
      * @param limit
      */
     public void setLimit(int limit) {
@@ -254,7 +255,7 @@ public class LogSection implements Section {
 
     /**
      * Gets the current log row limit.
-     * 
+     *
      * @return
      */
     public int getLimit() {
@@ -319,7 +320,7 @@ public class LogSection implements Section {
     /**
      * Adds a row to the log, applies the log row limit by removing old rows if
      * needed, and scrolls new row into view if scroll lock is not active.
-     * 
+     *
      * @param level
      * @param msg
      * @return
@@ -336,8 +337,8 @@ public class LogSection implements Section {
                 + "'></span><span class='" + VDebugWindow.STYLENAME
                 + "-time' title='"
                 + VDebugWindow.getTimingTooltip(sinceStart, sinceReset) + "'>"
-                + sinceReset + "ms</span><span class='"
-                + VDebugWindow.STYLENAME + "-message'>" + msg + "</span>";
+                + sinceReset + "ms</span><span class='" + VDebugWindow.STYLENAME
+                + "-message'>" + msg + "</span>";
         row.setInnerHTML(inner);
 
         contentElement.appendChild(row);

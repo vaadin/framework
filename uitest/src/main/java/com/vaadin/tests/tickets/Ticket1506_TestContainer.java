@@ -24,17 +24,17 @@ public class Ticket1506_TestContainer implements Container {
 
     private void loadItems() {
         final PropertysetItem item1 = new PropertysetItem();
-        item1.addItemProperty(PROPERTY_1_ID, new ObjectProperty<String>(
-                "value 1", String.class));
-        item1.addItemProperty(PROPERTY_2_ID, new ObjectProperty<String>(
-                "name 1", String.class));
+        item1.addItemProperty(PROPERTY_1_ID,
+                new ObjectProperty<String>("value 1", String.class));
+        item1.addItemProperty(PROPERTY_2_ID,
+                new ObjectProperty<String>("name 1", String.class));
         items.put(ITEM_1_ID, item1);
 
         final PropertysetItem item2 = new PropertysetItem();
-        item2.addItemProperty(PROPERTY_1_ID, new ObjectProperty<String>(
-                "value 2", String.class));
-        item2.addItemProperty(PROPERTY_2_ID, new ObjectProperty<String>(
-                "name 2", String.class));
+        item2.addItemProperty(PROPERTY_1_ID,
+                new ObjectProperty<String>("value 2", String.class));
+        item2.addItemProperty(PROPERTY_2_ID,
+                new ObjectProperty<String>("name 2", String.class));
         items.put(ITEM_2_ID, item2);
     }
 

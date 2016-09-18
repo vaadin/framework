@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.vaadin.tests.tickets;
 
@@ -10,13 +10,13 @@ import com.vaadin.ui.NativeSelect;
 
 /**
  * @author Risto Yrjänä / Vaadin Ltd.
- * 
+ *
  */
 public class Ticket2742 extends LegacyApplication {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.Application#init()
      */
     @Override

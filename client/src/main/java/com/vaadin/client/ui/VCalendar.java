@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -45,7 +45,7 @@ import com.vaadin.shared.ui.calendar.DateConstants;
 
 /**
  * Client side implementation for Calendar
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd.
  */
@@ -106,7 +106,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
     public interface DateClickListener {
         /**
          * Triggered when a date was clicked
-         * 
+         *
          * @param date
          *            The date and time that was clicked
          */
@@ -119,7 +119,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
     public interface WeekClickListener {
         /**
          * Called when a week number was selected.
-         * 
+         *
          * @param event
          *            The format of the vent string is "<year>w<week>"
          */
@@ -156,9 +156,9 @@ public class VCalendar extends Composite implements VHasDropHandler {
         /**
          * Called when a user selected a new event by highlighting an area of
          * the calendar.
-         * 
+         *
          * FIXME Fix the value nonsense.
-         * 
+         *
          * @param value
          *            The format of the value string is
          *            "<year>:<start-minutes>:<end-minutes>" if called from the
@@ -174,7 +174,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
     public interface EventClickListener {
         /**
          * Called when an event was clicked
-         * 
+         *
          * @param event
          *            The event that was clicked
          */
@@ -189,7 +189,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
         /**
          * Triggered when an event was dragged to a new position and the start
          * and end dates was changed
-         * 
+         *
          * @param event
          *            The event that was moved
          */
@@ -203,7 +203,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
     public interface EventResizeListener {
         /**
          * Triggers when the time limits for the event was changed.
-         * 
+         *
          * @param event
          *            The event that was changed. The new time limits have been
          *            updated in the event before calling this method
@@ -217,7 +217,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
     public interface ScrollListener {
         /**
          * Triggered when the calendar is scrolled
-         * 
+         *
          * @param scrollPosition
          *            The scroll position in pixels as returned by
          *            {@link ScrollPanel#getScrollPosition()}
@@ -231,10 +231,10 @@ public class VCalendar extends Composite implements VHasDropHandler {
     public interface MouseEventListener {
         /**
          * Triggered when a user wants an context menu
-         * 
+         *
          * @param event
          *            The context menu event
-         * 
+         *
          * @param widget
          *            The widget that the context menu should be added to
          */
@@ -253,7 +253,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Hack for IE to not select text when dragging.
-     * 
+     *
      * @param e
      *            The element to apply the hack on
      */
@@ -292,13 +292,13 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Adds events to the month grid
-     * 
+     *
      * @param events
      *            The events to add
      * @param drawImmediately
      *            Should the grid be rendered immediately. (currently not in
      *            use)
-     * 
+     *
      */
     public void updateEventsToMonthGrid(Collection<CalendarEvent> events,
             boolean drawImmediately) {
@@ -308,7 +308,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
         }
     }
 
-    private void addEventToMonthGrid(CalendarEvent e, boolean renderImmediately) {
+    private void addEventToMonthGrid(CalendarEvent e,
+            boolean renderImmediately) {
         Date when = e.getStart();
         Date to = e.getEnd();
         boolean eventAdded = false;
@@ -374,7 +375,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
                 && from.getDay() != to.getDay() && isMidnight(endTime)));
     }
 
-    private void updateEventSlotIndex(CalendarEvent e, List<SimpleDayCell> cells) {
+    private void updateEventSlotIndex(CalendarEvent e,
+            List<SimpleDayCell> cells) {
         if (cells.isEmpty()) {
             return;
         }
@@ -424,10 +426,10 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Remove a month event from the view
-     * 
+     *
      * @param target
      *            The event to remove
-     * 
+     *
      * @param repaintImmediately
      *            Should we repaint after the event was removed?
      */
@@ -437,8 +439,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
             // Remove event
             for (int row = 0; row < monthGrid.getRowCount(); row++) {
                 for (int cell = 0; cell < monthGrid.getCellCount(row); cell++) {
-                    SimpleDayCell sdc = (SimpleDayCell) monthGrid.getWidget(
-                            row, cell);
+                    SimpleDayCell sdc = (SimpleDayCell) monthGrid.getWidget(row,
+                            cell);
                     if (sdc == null) {
                         return;
                     }
@@ -450,7 +452,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Updates an event in the month grid
-     * 
+     *
      * @param changedEvent
      *            The event that has changed
      */
@@ -462,12 +464,13 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Sort the event by how long they are
-     * 
+     *
      * @param events
      *            The events to sort
      * @return An array where the events has been sorted
      */
-    public CalendarEvent[] sortEventsByDuration(Collection<CalendarEvent> events) {
+    public CalendarEvent[] sortEventsByDuration(
+            Collection<CalendarEvent> events) {
         CalendarEvent[] sorted = events
                 .toArray(new CalendarEvent[events.size()]);
         Arrays.sort(sorted, getEventComparator());
@@ -489,7 +492,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Re-render the week grid
-     * 
+     *
      * @param daysCount
      *            The amount of days to include in the week
      * @param days
@@ -541,11 +544,11 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Updates the events in the Month view
-     * 
+     *
      * @param daysCount
      *            How many days there are
      * @param daysUidl
-     * 
+     *
      * @param today
      *            Todays date
      */
@@ -649,13 +652,13 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
             monthGrid.updateCellSizes(intWidth - weekToolbar.getOffsetWidth(),
                     intHeight - nameToolbar.getOffsetHeight());
-            weekToolbar.setHeightPX((intHeight == -1) ? intHeight : intHeight
-                    - nameToolbar.getOffsetHeight());
+            weekToolbar.setHeightPX((intHeight == -1) ? intHeight
+                    : intHeight - nameToolbar.getOffsetHeight());
 
         } else if (weekGrid != null) {
-            weekGrid.setHeightPX((intHeight == -1) ? intHeight : intHeight
-                    - weeklyLongEvents.getOffsetHeight()
-                    - dayToolbar.getOffsetHeight());
+            weekGrid.setHeightPX((intHeight == -1) ? intHeight
+                    : intHeight - weeklyLongEvents.getOffsetHeight()
+                            - dayToolbar.getOffsetHeight());
         }
     }
 
@@ -669,8 +672,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
             if (monthGrid != null) {
                 monthGrid.updateCellSizes(
-                        intWidth - weekToolbar.getOffsetWidth(), intHeight
-                                - nameToolbar.getOffsetHeight());
+                        intWidth - weekToolbar.getOffsetWidth(),
+                        intHeight - nameToolbar.getOffsetHeight());
             } else if (weekGrid != null) {
                 weekGrid.setWidthPX(intWidth);
                 weeklyLongEvents.setWidthPX(weekGrid.getInternalWidth());
@@ -695,7 +698,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Get the date format used to format dates only (excludes time)
-     * 
+     *
      * @return
      */
     public DateTimeFormat getDateFormat() {
@@ -704,7 +707,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Get the time format used to format time only (excludes date)
-     * 
+     *
      * @return
      */
     public DateTimeFormat getTimeFormat() {
@@ -717,7 +720,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
     /**
      * Get the date and time format to format the dates (includes both date and
      * time)
-     * 
+     *
      * @return
      */
     public DateTimeFormat getDateTimeFormat() {
@@ -726,7 +729,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Is the calendar either disabled or readonly
-     * 
+     *
      * @return
      */
     public boolean isDisabledOrReadOnly() {
@@ -742,7 +745,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Is the component disabled
-     * 
+     *
      * @param disabled
      *            True if disabled
      */
@@ -759,7 +762,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Is the component read-only
-     * 
+     *
      * @param readOnly
      *            True if component is readonly
      */
@@ -769,7 +772,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Get the month grid component
-     * 
+     *
      * @return
      */
     public MonthGrid getMonthGrid() {
@@ -778,7 +781,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Get he week grid component
-     * 
+     *
      * @return
      */
     public WeekGrid getWeekGrid() {
@@ -788,7 +791,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
     /**
      * Calculates correct size for all cells (size / amount of cells ) and
      * distributes any overflow over all the cells.
-     * 
+     *
      * @param totalSize
      *            the total amount of size reserved for all cells
      * @param numberOfCells
@@ -826,7 +829,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Returns a comparator which can compare calendar events.
-     * 
+     *
      * @return
      */
     public static Comparator<CalendarEvent> getEventComparator() {
@@ -846,8 +849,9 @@ public class VCalendar extends Composite implements VHasDropHandler {
                 int r = 0;
                 if (!d1.equals(0L) && !d2.equals(0L)) {
                     r = d2.compareTo(d1);
-                    return (r == 0) ? ((Integer) o2.getIndex()).compareTo(o1
-                            .getIndex()) : r;
+                    return (r == 0)
+                            ? ((Integer) o2.getIndex()).compareTo(o1.getIndex())
+                            : r;
                 }
 
                 if (d2.equals(0L) && d1.equals(0L)) {
@@ -862,29 +866,30 @@ public class VCalendar extends Composite implements VHasDropHandler {
                     return -1;
                 }
                 r = d2.compareTo(d1);
-                return (r == 0) ? ((Integer) o2.getIndex()).compareTo(o1
-                        .getIndex()) : r;
+                return (r == 0)
+                        ? ((Integer) o2.getIndex()).compareTo(o1.getIndex())
+                        : r;
             }
         };
     }
 
     /**
      * Is the date at midnight
-     * 
+     *
      * @param date
      *            The date to check
-     * 
+     *
      * @return
      */
     @SuppressWarnings("deprecation")
     public static boolean isMidnight(Date date) {
-        return (date.getHours() == 0 && date.getMinutes() == 0 && date
-                .getSeconds() == 0);
+        return (date.getHours() == 0 && date.getMinutes() == 0
+                && date.getSeconds() == 0);
     }
 
     /**
      * Are the dates equal (uses second resolution)
-     * 
+     *
      * @param date1
      *            The first the to compare
      * @param date2
@@ -902,7 +907,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Is the calendar event zero seconds long and is occurring at midnight
-     * 
+     *
      * @param event
      *            The event to check
      * @return
@@ -914,7 +919,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Should the 24h time format be used
-     * 
+     *
      * @param format
      *            True if the 24h format should be used else the 12h format is
      *            used
@@ -932,7 +937,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set the names of the week days
-     * 
+     *
      * @param names
      *            The names of the days (Monday, Thursday,...)
      */
@@ -950,7 +955,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set the names of the months
-     * 
+     *
      * @param names
      *            The names of the months (January, February,...)
      */
@@ -968,7 +973,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set the number when a week starts
-     * 
+     *
      * @param dayNumber
      *            The number of the day
      */
@@ -986,7 +991,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set the number when a week ends
-     * 
+     *
      * @param dayNumber
      *            The number of the day
      */
@@ -1004,7 +1009,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set the number when a week starts
-     * 
+     *
      * @param dayNumber
      *            The number of the day
      */
@@ -1022,7 +1027,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set the number when a week ends
-     * 
+     *
      * @param dayNumber
      *            The number of the day
      */
@@ -1040,7 +1045,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Re-renders the whole week view
-     * 
+     *
      * @param scroll
      *            The amount of pixels to scroll the week view
      * @param today
@@ -1090,7 +1095,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Re-renders the whole month view
-     * 
+     *
      * @param firstDayOfWeek
      *            The first day of the week
      * @param today
@@ -1102,9 +1107,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
      * @param days
      *            The day information
      */
-    public void updateMonthView(int firstDayOfWeek, Date today,
-            int daysInMonth, Collection<CalendarEvent> events,
-            List<CalendarDay> days) {
+    public void updateMonthView(int firstDayOfWeek, Date today, int daysInMonth,
+            Collection<CalendarEvent> events, List<CalendarDay> days) {
 
         // Remove all week numbers from bar
         while (outer.getWidgetCount() > 0) {
@@ -1152,7 +1156,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Sets the listener for listening to event clicks
-     * 
+     *
      * @param listener
      *            The listener to use
      */
@@ -1162,7 +1166,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Gets the listener for listening to event clicks
-     * 
+     *
      * @return
      */
     public DateClickListener getDateClickListener() {
@@ -1173,7 +1177,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set the listener which listens to forward events from the calendar
-     * 
+     *
      * @param listener
      *            The listener to use
      */
@@ -1183,7 +1187,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Get the listener which listens to forward events from the calendar
-     * 
+     *
      * @return
      */
     public ForwardListener getForwardListener() {
@@ -1194,7 +1198,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set the listener which listens to backward events from the calendar
-     * 
+     *
      * @param listener
      *            The listener to use
      */
@@ -1204,7 +1208,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set the listener which listens to backward events from the calendar
-     * 
+     *
      * @return
      */
     public BackwardListener getBackwardListener() {
@@ -1215,7 +1219,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set the listener that listens to user clicking on the week numbers
-     * 
+     *
      * @param listener
      *            The listener to use
      */
@@ -1225,7 +1229,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Get the listener that listens to user clicking on the week numbers
-     * 
+     *
      * @return
      */
     public WeekClickListener getWeekClickListener() {
@@ -1237,7 +1241,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
     /**
      * Set the listener that listens to the user highlighting a region in the
      * calendar
-     * 
+     *
      * @param listener
      *            The listener to use
      */
@@ -1248,7 +1252,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
     /**
      * Get the listener that listens to the user highlighting a region in the
      * calendar
-     * 
+     *
      * @return
      */
     public RangeSelectListener getRangeSelectListener() {
@@ -1266,7 +1270,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set the listener that listens to the user clicking on the events
-     * 
+     *
      * @param listener
      *            The listener to use
      */
@@ -1278,7 +1282,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Get the listener that listens to when event is dragged to a new location
-     * 
+     *
      * @return
      */
     public EventMovedListener getEventMovedListener() {
@@ -1287,7 +1291,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set the listener that listens to when event is dragged to a new location
-     * 
+     *
      * @param eventMovedListener
      *            The listener to use
      */
@@ -1299,7 +1303,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Get the listener that listens to when the calendar widget is scrolled
-     * 
+     *
      * @return
      */
     public ScrollListener getScrollListener() {
@@ -1308,7 +1312,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set the listener that listens to when the calendar widget is scrolled
-     * 
+     *
      * @param scrollListener
      *            The listener to use
      */
@@ -1321,7 +1325,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
     /**
      * Get the listener that listens to when an events time limits are being
      * adjusted
-     * 
+     *
      * @return
      */
     public EventResizeListener getEventResizeListener() {
@@ -1331,7 +1335,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
     /**
      * Set the listener that listens to when an events time limits are being
      * adjusted
-     * 
+     *
      * @param eventResizeListener
      *            The listener to use
      */
@@ -1346,7 +1350,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Get the listener that listen to mouse events
-     * 
+     *
      * @return
      */
     public MouseEventListener getMouseEventListener() {
@@ -1355,7 +1359,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set the listener that listen to mouse events
-     * 
+     *
      * @param mouseEventListener
      *            The listener to use
      */
@@ -1372,7 +1376,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set selecting a range allowed
-     * 
+     *
      * @param rangeSelectAllowed
      *            Should selecting a range be allowed
      */
@@ -1382,7 +1386,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Is moving a range allowed
-     * 
+     *
      * @return
      */
     public boolean isRangeMoveAllowed() {
@@ -1391,7 +1395,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Is moving a range allowed
-     * 
+     *
      * @param rangeMoveAllowed
      *            Is it allowed
      */
@@ -1408,7 +1412,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Is resizing an event allowed
-     * 
+     *
      * @param eventResizeAllowed
      *            True if allowed false if not
      */
@@ -1425,7 +1429,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Is moving an event allowed
-     * 
+     *
      * @param eventMoveAllowed
      *            True if moving is allowed, false if not
      */
@@ -1451,7 +1455,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.dd.VHasDropHandler#getDropHandler()
      */
     @Override
@@ -1461,7 +1465,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set the drop handler
-     * 
+     *
      * @param dropHandler
      *            The drophandler to use
      */
@@ -1477,7 +1481,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
      * false, the caption is rendered in the browser as plain text.
      * <p>
      * The default is false, i.e. to render that caption as plain text.
-     * 
+     *
      * @param captionAsHtml
      *            true if the captions are rendered as HTML, false if rendered
      *            as plain text
@@ -1490,7 +1494,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
      * Checks whether event captions are rendered as HTML
      * <p>
      * The default is false, i.e. to render that caption as plain text.
-     * 
+     *
      * @return true if the captions are rendered as HTML, false if rendered as
      *         plain text
      */

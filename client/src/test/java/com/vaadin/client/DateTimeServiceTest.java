@@ -65,7 +65,7 @@ public class DateTimeServiceTest {
     /**
      * Test all dates from 1990-1992 + some more and see that {@link Calendar}
      * calculates the ISO week number like we do.
-     * 
+     *
      */
     @Test
     public void testISOWeekNumbers() {
@@ -86,7 +86,7 @@ public class DateTimeServiceTest {
     /**
      * Verify that special cases are handled correctly by us (and
      * {@link Calendar}).
-     * 
+     *
      */
     @Test
     public void testSampleISOWeekNumbers() {
@@ -94,9 +94,10 @@ public class DateTimeServiceTest {
             // System.out.println("Sample: " + d);
             int expected = isoWeekNumbers.get(d);
             int calculated = DateTimeService.getISOWeekNumber(d);
-            Assert.assertEquals(d + " should be week " + expected
-                    + " (Java Calendar is wrong?)", expected,
-                    getCalendarISOWeekNr(d));
+            Assert.assertEquals(
+                    d + " should be week " + expected
+                            + " (Java Calendar is wrong?)",
+                    expected, getCalendarISOWeekNr(d));
             Assert.assertEquals(d + " should be week " + expected, expected,
                     calculated);
 

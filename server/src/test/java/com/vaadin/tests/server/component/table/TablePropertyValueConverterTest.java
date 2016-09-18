@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2013 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -68,8 +68,8 @@ public class TablePropertyValueConverterTest {
 
     @Test
     public void testSetContainer() {
-        table.setContainerDataSource(createContainer(new String[] { "col1",
-                "col3", "col4", "col5" }));
+        table.setContainerDataSource(createContainer(
+                new String[] { "col1", "col3", "col4", "col5" }));
         Collection<Object> converters = table.getCurrentConverters();
         assertTrue("There should only have been one converter left.",
                 converters.size() == 1);
@@ -166,9 +166,10 @@ public class TablePropertyValueConverterTest {
                 return null;
             }
         });
-        customTable.setContainerDataSource(createContainer(new String[] {
-                "col1", "col2", "col3" }, new Class[] { DerivedClass.class,
-                DerivedClass.class, BaseClass.class }));
+        customTable.setContainerDataSource(
+                createContainer(new String[] { "col1", "col2", "col3" },
+                        new Class[] { DerivedClass.class, DerivedClass.class,
+                                BaseClass.class }));
         Set<Object> converters = customTable.getCurrentConverters();
         // TODO Test temporarily disabled as this feature
         // is not yet implemented in Table
@@ -227,8 +228,8 @@ public class TablePropertyValueConverterTest {
 
     @Before
     public void setUp() {
-        table = new TestableTable("Test table", createContainer(new String[] {
-                "col1", "col2", "col3" }));
+        table = new TestableTable("Test table",
+                createContainer(new String[] { "col1", "col2", "col3" }));
         table.setConverter("col1", new Converter<String, String>() {
             private static final long serialVersionUID = 1L;
 

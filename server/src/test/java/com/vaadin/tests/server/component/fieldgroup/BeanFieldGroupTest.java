@@ -103,8 +103,8 @@ public class BeanFieldGroupTest {
         MyBean myBean = new MyBean();
 
         ViewStub viewStub = new ViewStub();
-        BeanFieldGroup<MyBean> bindFields = BeanFieldGroup.bindFieldsBuffered(
-                myBean, viewStub);
+        BeanFieldGroup<MyBean> bindFields = BeanFieldGroup
+                .bindFieldsBuffered(myBean, viewStub);
 
         Field<String> basicField = (Field<String>) bindFields
                 .getField("basicField");

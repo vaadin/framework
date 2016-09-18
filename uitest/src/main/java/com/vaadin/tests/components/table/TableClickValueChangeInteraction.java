@@ -73,8 +73,8 @@ public class TableClickValueChangeInteraction extends TestBase {
 
                 @Override
                 public void valueChange(ValueChangeEvent event) {
-                    valueChangeLabel.setValue("Value "
-                            + event.getProperty().getValue());
+                    valueChangeLabel.setValue(
+                            "Value " + event.getProperty().getValue());
                 }
             });
         }

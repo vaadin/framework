@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -77,13 +77,13 @@ import com.vaadin.ui.Calendar;
 /**
  * Handles communication between Calendar on the server side and
  * {@link VCalendar} on the client side.
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd.
  */
 @Connect(value = Calendar.class, loadStyle = LoadStyle.LAZY)
-public class CalendarConnector extends AbstractComponentConnector implements
-        ActionOwner, SimpleManagedLayout, Paintable {
+public class CalendarConnector extends AbstractComponentConnector
+        implements ActionOwner, SimpleManagedLayout, Paintable {
 
     private CalendarServerRpc rpc = RpcProxy.create(CalendarServerRpc.class,
             this);
@@ -94,7 +94,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
     private static final String DROPHANDLER_ACCEPT_CRITERIA_PAINT_TAG = "-ac";
 
     /**
-     * 
+     *
      */
     public CalendarConnector() {
 
@@ -184,8 +184,8 @@ public class CalendarConnector extends AbstractComponentConnector implements
                     StringBuilder sb = new StringBuilder();
                     sb.append(DateUtil.formatClientSideDate(event.getStart()));
                     sb.append("-");
-                    sb.append(DateUtil.formatClientSideTime(event
-                            .getStartTime()));
+                    sb.append(DateUtil
+                            .formatClientSideTime(event.getStartTime()));
                     rpc.eventMove(event.getIndex(), sb.toString());
                 }
             }
@@ -196,19 +196,20 @@ public class CalendarConnector extends AbstractComponentConnector implements
                 if (hasEventListener(CalendarEventId.EVENTRESIZE)) {
                     StringBuilder buffer = new StringBuilder();
 
-                    buffer.append(DateUtil.formatClientSideDate(event
-                            .getStart()));
+                    buffer.append(
+                            DateUtil.formatClientSideDate(event.getStart()));
                     buffer.append("-");
-                    buffer.append(DateUtil.formatClientSideTime(event
-                            .getStartTime()));
+                    buffer.append(DateUtil
+                            .formatClientSideTime(event.getStartTime()));
 
                     String newStartDate = buffer.toString();
 
                     buffer = new StringBuilder();
-                    buffer.append(DateUtil.formatClientSideDate(event.getEnd()));
+                    buffer.append(
+                            DateUtil.formatClientSideDate(event.getEnd()));
                     buffer.append("-");
-                    buffer.append(DateUtil.formatClientSideTime(event
-                            .getEndTime()));
+                    buffer.append(
+                            DateUtil.formatClientSideTime(event.getEndTime()));
 
                     String newEndDate = buffer.toString();
 
@@ -233,7 +234,8 @@ public class CalendarConnector extends AbstractComponentConnector implements
         });
         getWidget().setListener(new MouseEventListener() {
             @Override
-            public void contextMenu(ContextMenuEvent event, final Widget widget) {
+            public void contextMenu(ContextMenuEvent event,
+                    final Widget widget) {
                 final NativeEvent ne = event.getNativeEvent();
                 int left = ne.getClientX();
                 int top = ne.getClientY();
@@ -259,15 +261,15 @@ public class CalendarConnector extends AbstractComponentConnector implements
                              */
                             SimpleDayCell cell = (SimpleDayCell) widget;
                             Date start = new Date(cell.getDate().getYear(),
-                                    cell.getDate().getMonth(), cell.getDate()
-                                            .getDate(), 0, 0, 0);
+                                    cell.getDate().getMonth(),
+                                    cell.getDate().getDate(), 0, 0, 0);
 
-                            Date end = new Date(cell.getDate().getYear(), cell
-                                    .getDate().getMonth(), cell.getDate()
-                                    .getDate(), 23, 59, 59);
+                            Date end = new Date(cell.getDate().getYear(),
+                                    cell.getDate().getMonth(),
+                                    cell.getDate().getDate(), 23, 59, 59);
 
-                            return CalendarConnector.this.getActionsBetween(
-                                    start, end);
+                            return CalendarConnector.this
+                                    .getActionsBetween(start, end);
 
                         } else if (widget instanceof MonthEventLabel) {
                             MonthEventLabel mel = (MonthEventLabel) widget;
@@ -285,9 +287,8 @@ public class CalendarConnector extends AbstractComponentConnector implements
                              * Week and Day view
                              */
                             DateCell cell = (DateCell) widget;
-                            int slotIndex = DOM.getChildIndex(
-                                    cell.getElement(), (Element) ne
-                                            .getEventTarget().cast());
+                            int slotIndex = DOM.getChildIndex(cell.getElement(),
+                                    (Element) ne.getEventTarget().cast());
                             DateCellSlot slot = cell.getSlot(slotIndex);
                             return CalendarConnector.this.getActionsBetween(
                                     slot.getFrom(), slot.getTo());
@@ -327,8 +328,10 @@ public class CalendarConnector extends AbstractComponentConnector implements
         VCalendar widget = getWidget();
 
         // Enable or disable the forward and backward navigation buttons
-        widget.setForwardNavigationEnabled(hasEventListener(CalendarEventId.FORWARD));
-        widget.setBackwardNavigationEnabled(hasEventListener(CalendarEventId.BACKWARD));
+        widget.setForwardNavigationEnabled(
+                hasEventListener(CalendarEventId.FORWARD));
+        widget.setBackwardNavigationEnabled(
+                hasEventListener(CalendarEventId.BACKWARD));
 
         widget.set24HFormat(state.format24H);
         widget.setDayNames(state.dayNames);
@@ -340,10 +343,12 @@ public class CalendarConnector extends AbstractComponentConnector implements
         widget.setReadOnly(state.readOnly);
         widget.setDisabled(!state.enabled);
 
-        widget.setRangeSelectAllowed(hasEventListener(CalendarEventId.RANGESELECT));
+        widget.setRangeSelectAllowed(
+                hasEventListener(CalendarEventId.RANGESELECT));
         widget.setRangeMoveAllowed(hasEventListener(CalendarEventId.EVENTMOVE));
         widget.setEventMoveAllowed(hasEventListener(CalendarEventId.EVENTMOVE));
-        widget.setEventResizeAllowed(hasEventListener(CalendarEventId.EVENTRESIZE));
+        widget.setEventResizeAllowed(
+                hasEventListener(CalendarEventId.EVENTRESIZE));
 
         widget.setEventCaptionAsHtml(state.eventCaptionAsHtml);
 
@@ -373,10 +378,10 @@ public class CalendarConnector extends AbstractComponentConnector implements
 
     /*
      * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal
-     * .gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
+     *
+     * @see com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.
+     * terminal .gwt.client.UIDL,
+     * com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -385,9 +390,9 @@ public class CalendarConnector extends AbstractComponentConnector implements
             UIDL child = (UIDL) childIterator.next();
             if (DROPHANDLER_ACCEPT_CRITERIA_PAINT_TAG.equals(child.getTag())) {
                 if (getWidget().getDropHandler() == null) {
-                    getWidget().setDropHandler(
-                            showingMonthView() ? new CalendarMonthDropHandler(
-                                    this) : new CalendarWeekDropHandler(this));
+                    getWidget().setDropHandler(showingMonthView()
+                            ? new CalendarMonthDropHandler(this)
+                            : new CalendarWeekDropHandler(this));
                 }
                 getWidget().getDropHandler().updateAcceptRules(child);
             } else {
@@ -420,7 +425,8 @@ public class CalendarConnector extends AbstractComponentConnector implements
     }
 
     @Override
-    public TooltipInfo getTooltipInfo(com.google.gwt.dom.client.Element element) {
+    public TooltipInfo getTooltipInfo(
+            com.google.gwt.dom.client.Element element) {
         TooltipInfo tooltipInfo = null;
         Widget w = WidgetUtil.findWidget(element, null);
         if (w instanceof HasTooltipKey) {
@@ -550,7 +556,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
 
     /**
      * Get the original action ID that was passed in from the shared state
-     * 
+     *
      * @since 7.1.2
      * @param actionKey
      *            the unique action key
@@ -562,7 +568,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
 
     /**
      * Get the text that is displayed for a context menu item
-     * 
+     *
      * @param actionKey
      *            The unique action key
      * @return
@@ -573,7 +579,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
 
     /**
      * Get the icon url for a context menu item
-     * 
+     *
      * @param actionKey
      *            The unique action key
      * @return
@@ -584,7 +590,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
 
     /**
      * Get the start date for an action item
-     * 
+     *
      * @param actionKey
      *            The unique action key
      * @return
@@ -599,7 +605,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
 
     /**
      * Get the end date for an action item
-     * 
+     *
      * @param actionKey
      *            The unique action key
      * @return
@@ -639,7 +645,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.terminal.gwt.client.ui.ActionOwner#getPaintableId()
      */
     @Override
@@ -662,10 +668,10 @@ public class CalendarConnector extends AbstractComponentConnector implements
             calendarEvent.setStart(getWidget().getDateFormat().parse(dateFrom));
             calendarEvent.setEnd(getWidget().getDateFormat().parse(dateTo));
             calendarEvent.setFormat24h(format24h);
-            calendarEvent.setStartTime(getWidget().getDateTimeFormat().parse(
-                    dateFrom + " " + timeFrom));
-            calendarEvent.setEndTime(getWidget().getDateTimeFormat().parse(
-                    dateTo + " " + timeTo));
+            calendarEvent.setStartTime(getWidget().getDateTimeFormat()
+                    .parse(dateFrom + " " + timeFrom));
+            calendarEvent.setEndTime(getWidget().getDateTimeFormat()
+                    .parse(dateTo + " " + timeTo));
             calendarEvent.setStyleName(event.styleName);
             calendarEvent.setIndex(event.index);
             list.add(calendarEvent);

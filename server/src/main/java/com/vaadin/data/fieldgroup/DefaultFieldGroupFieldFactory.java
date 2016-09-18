@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,7 +40,7 @@ import com.vaadin.ui.TextField;
  * This class contains a basic implementation for {@link FieldGroupFieldFactory}
  * .The class is singleton, use {@link #get()} method to get reference to the
  * instance.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
@@ -54,9 +54,9 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
 
     /**
      * Gets the singleton instance.
-     * 
+     *
      * @since 7.4
-     * 
+     *
      * @return the singleton instance
      */
     public static DefaultFieldGroupFieldFactory get() {
@@ -74,8 +74,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
             return createBooleanField(fieldType);
         }
         if (AbstractTextField.class.isAssignableFrom(fieldType)) {
-            return fieldType.cast(createAbstractTextField(fieldType
-                    .asSubclass(AbstractTextField.class)));
+            return fieldType.cast(createAbstractTextField(
+                    fieldType.asSubclass(AbstractTextField.class)));
         } else if (fieldType == RichTextArea.class) {
             return fieldType.cast(createRichTextArea());
         }
@@ -104,7 +104,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
             populateWithEnumData(s, (Class<? extends Enum>) type);
             return (T) s;
         } else if (AbstractTextField.class.isAssignableFrom(fieldType)) {
-            return (T) createAbstractTextField((Class<? extends AbstractTextField>) fieldType);
+            return (T) createAbstractTextField(
+                    (Class<? extends AbstractTextField>) fieldType);
         }
 
         return null;
@@ -120,7 +121,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
                 || DateField.class.isAssignableFrom(fieldType)) {
             field = new PopupDateField();
         } else if (AbstractTextField.class.isAssignableFrom(fieldType)) {
-            field = createAbstractTextField((Class<? extends AbstractTextField>) fieldType);
+            field = createAbstractTextField(
+                    (Class<? extends AbstractTextField>) fieldType);
         } else {
             return null;
         }
@@ -179,7 +181,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
             cb.setImmediate(true);
             return (T) cb;
         } else if (AbstractTextField.class.isAssignableFrom(fieldType)) {
-            return (T) createAbstractTextField((Class<? extends AbstractTextField>) fieldType);
+            return (T) createAbstractTextField(
+                    (Class<? extends AbstractTextField>) fieldType);
         }
 
         return null;
@@ -195,15 +198,15 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
             field.setImmediate(true);
             return field;
         } catch (Exception e) {
-            throw new BindException("Could not create a field of type "
-                    + fieldType, e);
+            throw new BindException(
+                    "Could not create a field of type " + fieldType, e);
         }
     }
 
     /**
      * Fallback when no specific field has been created. Typically returns a
      * TextField.
-     * 
+     *
      * @param <T>
      *            The type of field to create
      * @param type
@@ -224,7 +227,7 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
     /**
      * Populates the given select with all the enums in the given {@link Enum}
      * class. Uses {@link Enum}.toString() for caption.
-     * 
+     *
      * @param select
      *            The select to populate
      * @param enumClass

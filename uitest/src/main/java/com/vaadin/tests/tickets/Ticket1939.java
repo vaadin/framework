@@ -24,8 +24,8 @@ public class Ticket1939 extends LegacyApplication {
         l.addComponent(t);
         w.addComponent(l);
 
-        w.addComponent(new Button("show me the bug",
-                new Button.ClickListener() {
+        w.addComponent(
+                new Button("show me the bug", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         l.setWidth(null);

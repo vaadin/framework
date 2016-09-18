@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,7 +31,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * For testing that UI scroll does not jump back to up when: 1. UI is in iframe
  * 2. the window scrolled down 3. and table is clicked
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -76,8 +76,9 @@ public class TableInIframeRowClickScrollJumpTest extends MultiBrowserTest {
 
         Long scrollPosition2 = getWindowsScrollPosition();
 
-        assertThat("Scroll position should stay about the same. Old was "
-                + scrollPosition + " and new one " + scrollPosition2,
+        assertThat(
+                "Scroll position should stay about the same. Old was "
+                        + scrollPosition + " and new one " + scrollPosition2,
                 Math.abs(scrollPosition - scrollPosition2) < 10);
     }
 
@@ -104,8 +105,8 @@ public class TableInIframeRowClickScrollJumpTest extends MultiBrowserTest {
         driver.switchTo().defaultContent();
 
         JavascriptExecutor executor = (JavascriptExecutor) driver;
-        Long value = (Long) executor
-                .executeScript("if (window.pageYOffset) return window.pageYOffset;else if (window.document.documentElement.scrollTop) return window.document.documentElement.scrollTop;else return window.document.body.scrollTop;");
+        Long value = (Long) executor.executeScript(
+                "if (window.pageYOffset) return window.pageYOffset;else if (window.document.documentElement.scrollTop) return window.document.documentElement.scrollTop;else return window.document.body.scrollTop;");
 
         // back to the iframe
         switchIntoIframe();

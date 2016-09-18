@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,14 +31,14 @@ public interface HasComponentsConnector extends ServerConnector {
 
     /**
      * Update child components caption, description and error message.
-     * 
+     *
      * <p>
      * Each component is responsible for maintaining its caption, description
      * and error message. In most cases components doesn't want to do that and
      * those elements reside outside of the component. Because of this layouts
      * must provide service for it's childen to show those elements for them.
      * </p>
-     * 
+     *
      * @param connector
      *            Child component for which service is requested.
      */
@@ -53,7 +53,7 @@ public interface HasComponentsConnector extends ServerConnector {
      * Note that the method {@link ServerConnector#getChildren()} can return a
      * larger list of children including both the child components and any
      * extensions registered for the connector.
-     * 
+     *
      * @return A collection of child components for this connector. An empty
      *         collection if there are no children. Never returns null.
      */
@@ -73,7 +73,7 @@ public interface HasComponentsConnector extends ServerConnector {
      * {@link ServerConnector#setChildren(List)} and contains only child
      * components. Both methods are called separately by the framework if the
      * connector implements {@link HasComponentsConnector}.
-     * 
+     *
      * @param children
      *            The new child connectors (components only)
      */
@@ -82,7 +82,7 @@ public interface HasComponentsConnector extends ServerConnector {
     /**
      * Adds a handler that is called whenever the child hierarchy of this
      * connector has been updated by the server.
-     * 
+     *
      * @param handler
      *            The handler that should be added.
      * @return A handler registration reference that can be used to unregister

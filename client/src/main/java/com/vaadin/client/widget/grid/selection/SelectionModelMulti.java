@@ -28,7 +28,7 @@ import com.vaadin.client.widgets.Grid;
 
 /**
  * Multi-row selection model.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.4
  */

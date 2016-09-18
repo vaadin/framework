@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -42,7 +42,7 @@ import com.vaadin.ui.Image;
  * Tests that {@link Embedded} uses correct theme when the theme is set with
  * {@link #setTheme(String)}, and also updates correctly if theme is changed
  * later. {@link Image} is used as the baseline for correct behaviour.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class EmbeddedThemeResourceTest extends SingleBrowserTest {
@@ -51,8 +51,8 @@ public class EmbeddedThemeResourceTest extends SingleBrowserTest {
     public List<DesiredCapabilities> getBrowsersToTest() {
         // Seems like stylesheet onload is not fired on PhantomJS
         // https://github.com/ariya/phantomjs/issues/12332
-        return Collections.singletonList(Browser.FIREFOX
-                .getDesiredCapabilities());
+        return Collections
+                .singletonList(Browser.FIREFOX.getDesiredCapabilities());
     }
 
     @Before
@@ -104,8 +104,8 @@ public class EmbeddedThemeResourceTest extends SingleBrowserTest {
             }
         });
 
-        assertTrue("ThemeResource image source didn't update correctly.", image
-                .getAttribute("src").contains("/reindeer/"));
+        assertTrue("ThemeResource image source didn't update correctly.",
+                image.getAttribute("src").contains("/reindeer/"));
         assertThat(
                 "Embedded and Image aren't using the same source for the image despite sharing the ThemeResource.",
                 embedded.findElement(By.tagName("img")).getAttribute("src"),

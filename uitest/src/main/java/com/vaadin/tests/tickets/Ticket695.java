@@ -32,7 +32,8 @@ public class Ticket695 extends LegacyApplication {
                             + (System.currentTimeMillis() - t) + "ms");
                 } catch (IOException e) {
                     e.printStackTrace();
-                    w.showNotification("ApplicationContext serialization failed - see console for stacktrace");
+                    w.showNotification(
+                            "ApplicationContext serialization failed - see console for stacktrace");
                 }
 
             }

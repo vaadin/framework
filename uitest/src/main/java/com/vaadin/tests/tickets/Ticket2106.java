@@ -31,9 +31,8 @@ public class Ticket2106 extends LegacyApplication {
                 new Button("Do nothing", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        getMainWindow().addComponent(
-                                new Label("Last time did nothing: "
-                                        + new Date()));
+                        getMainWindow().addComponent(new Label(
+                                "Last time did nothing: " + new Date()));
                     }
                 }));
     }

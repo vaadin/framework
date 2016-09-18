@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 
 /**
- * 
+ *
  * @author Vaadin Ltd
  */
 @TestCategory("grid")
@@ -43,10 +43,10 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
     public void columnReorderEventTriggered() {
         final int firstIndex = 3;
         final int secondIndex = 4;
-        final String firstHeaderText = getGridElement().getHeaderCell(0,
-                firstIndex).getText();
-        final String secondHeaderText = getGridElement().getHeaderCell(0,
-                secondIndex).getText();
+        final String firstHeaderText = getGridElement()
+                .getHeaderCell(0, firstIndex).getText();
+        final String secondHeaderText = getGridElement()
+                .getHeaderCell(0, secondIndex).getText();
         selectMenuPath("Component", "Internals", "Listeners",
                 "Add ColumnReorder listener");
         selectMenuPath("Component", "Columns", "Column " + secondIndex,
@@ -60,16 +60,16 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
 
         // the reorder event should have typed the order to this label
         WebElement columnReorderElement = findElement(By.id("columnreorder"));
-        int eventIndex = Integer.parseInt(columnReorderElement
-                .getAttribute("columns"));
+        int eventIndex = Integer
+                .parseInt(columnReorderElement.getAttribute("columns"));
         assertEquals(1, eventIndex);
 
         // trigger another event
         selectMenuPath("Component", "Columns", "Column " + secondIndex,
                 "Move column left");
         columnReorderElement = findElement(By.id("columnreorder"));
-        eventIndex = Integer.parseInt(columnReorderElement
-                .getAttribute("columns"));
+        eventIndex = Integer
+                .parseInt(columnReorderElement.getAttribute("columns"));
         assertEquals(2, eventIndex);
     }
 
@@ -77,10 +77,10 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
     public void testColumnReorder_onReorder_columnReorderEventTriggered() {
         final int firstIndex = 3;
         final int secondIndex = 4;
-        final String firstHeaderText = getGridElement().getHeaderCell(0,
-                firstIndex).getText();
-        final String secondHeaderText = getGridElement().getHeaderCell(0,
-                secondIndex).getText();
+        final String firstHeaderText = getGridElement()
+                .getHeaderCell(0, firstIndex).getText();
+        final String secondHeaderText = getGridElement()
+                .getHeaderCell(0, secondIndex).getText();
         selectMenuPath("Component", "Internals", "Listeners",
                 "Add ColumnReorder listener");
         selectMenuPath("Component", "Columns", "Column " + secondIndex,
@@ -94,16 +94,16 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
 
         // the reorder event should have typed the order to this label
         WebElement columnReorderElement = findElement(By.id("columnreorder"));
-        int eventIndex = Integer.parseInt(columnReorderElement
-                .getAttribute("columns"));
+        int eventIndex = Integer
+                .parseInt(columnReorderElement.getAttribute("columns"));
         assertEquals(1, eventIndex);
 
         // trigger another event
         selectMenuPath("Component", "Columns", "Column " + secondIndex,
                 "Move column left");
         columnReorderElement = findElement(By.id("columnreorder"));
-        eventIndex = Integer.parseInt(columnReorderElement
-                .getAttribute("columns"));
+        eventIndex = Integer
+                .parseInt(columnReorderElement.getAttribute("columns"));
         assertEquals(2, eventIndex);
     }
 
@@ -280,7 +280,8 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         toggleColumnReorder();
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Append row");
-        selectMenuPath("Component", "Header", "Row 2", "Join column cells 0, 1");
+        selectMenuPath("Component", "Header", "Row 2",
+                "Join column cells 0, 1");
         selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
         dragAndDropColumnHeader(0, 3, 0, CellSide.LEFT);
         assertColumnHeaderOrder(3, 0, 1, 2, 4);
@@ -298,7 +299,8 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         toggleColumnReorder();
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Append row");
-        selectMenuPath("Component", "Header", "Row 2", "Join column cells 0, 1");
+        selectMenuPath("Component", "Header", "Row 2",
+                "Join column cells 0, 1");
         selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
         dragAndDropColumnHeader(0, 3, 0, CellSide.LEFT);
         assertColumnHeaderOrder(3, 0, 1, 2, 4);
@@ -415,7 +417,8 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         toggleColumnReorder();
         selectMenuPath("Component", "Footer", "Append row");
         selectMenuPath("Component", "Footer", "Append row");
-        selectMenuPath("Component", "Footer", "Row 1", "Join column cells 0, 1");
+        selectMenuPath("Component", "Footer", "Row 1",
+                "Join column cells 0, 1");
         selectMenuPath("Component", "Footer", "Row 2", "Join columns 1, 2");
         dragAndDropColumnHeader(0, 3, 0, CellSide.LEFT);
         assertColumnHeaderOrder(3, 0, 1, 2, 4);
@@ -500,7 +503,8 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 1, 2");
         selectMenuPath("Component", "Header", "Append row");
-        selectMenuPath("Component", "Header", "Row 3", "Join column cells 0, 1");
+        selectMenuPath("Component", "Header", "Row 3",
+                "Join column cells 0, 1");
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
 
         // when

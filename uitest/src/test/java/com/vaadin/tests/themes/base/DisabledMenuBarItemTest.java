@@ -18,14 +18,14 @@ public class DisabledMenuBarItemTest extends MultiBrowserTest {
     public void disabledMenuItemShouldHaveOpacity() throws IOException {
         openTestURL();
 
-        WebElement element = driver.findElement(By
-                .className("v-menubar-menuitem-disabled"));
+        WebElement element = driver
+                .findElement(By.className("v-menubar-menuitem-disabled"));
 
-        if (Browser.IE9.getDesiredCapabilities().equals(
-                getDesiredCapabilities())) {
+        if (Browser.IE9.getDesiredCapabilities()
+                .equals(getDesiredCapabilities())) {
             assertThat(element.getCssValue("filter"), is("alpha(opacity=50)"));
-        } else if (Browser.IE8.getDesiredCapabilities().equals(
-                getDesiredCapabilities())) {
+        } else if (Browser.IE8.getDesiredCapabilities()
+                .equals(getDesiredCapabilities())) {
             WebElement icon = element.findElement(By.tagName("img"));
             assertThat(icon.getCssValue("filter"), is("alpha(opacity=50)"));
         } else {

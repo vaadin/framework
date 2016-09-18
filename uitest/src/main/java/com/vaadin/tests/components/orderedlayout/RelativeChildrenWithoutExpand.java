@@ -24,8 +24,8 @@ public class RelativeChildrenWithoutExpand extends AbstractTestUI {
         setContent(vl);
 
         HorizontalLayout verticalExpand = new HorizontalLayout();
-        verticalExpand.addComponent(new Button("Add relative child",
-                new Button.ClickListener() {
+        verticalExpand.addComponent(
+                new Button("Add relative child", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         horizontalExpand.addComponent(new Label(loremIpsum), 0);

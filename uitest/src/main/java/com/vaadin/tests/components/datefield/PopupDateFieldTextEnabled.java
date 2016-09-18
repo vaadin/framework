@@ -18,8 +18,8 @@ public class PopupDateFieldTextEnabled extends TestBase {
 
             @Override
             public void valueChange(Property.ValueChangeEvent event) {
-                field.setTextFieldEnabled((Boolean) event.getProperty()
-                        .getValue());
+                field.setTextFieldEnabled(
+                        (Boolean) event.getProperty().getValue());
                 if (field.isTextFieldEnabled()) {
                     box.setCaption(ENABLED);
                 } else {

@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,11 +37,11 @@ import com.vaadin.ui.VerticalLayout;
  * This is a demonstration of how URL parameters can be recieved and handled.
  * Parameters and URL:s can be received trough the windows by registering
  * URIHandler and ParameterHandler classes window.
- * 
+ *
  * @since 3.1.1
  */
-public class Parameters extends com.vaadin.server.LegacyApplication implements
-        RequestHandler {
+public class Parameters extends com.vaadin.server.LegacyApplication
+        implements RequestHandler {
 
     private final Label context = new Label();
 
@@ -65,14 +65,14 @@ public class Parameters extends com.vaadin.server.LegacyApplication implements
         try {
             final URL u1 = new URL(getURL(), "test/uri?test=1&test=2");
             final URL u2 = new URL(getURL(), "foo/bar?mary=john&count=3");
-            layout.addComponent(new Link(u1.toString(),
-                    new ExternalResource(u1)));
+            layout.addComponent(
+                    new Link(u1.toString(), new ExternalResource(u1)));
             layout.addComponent(new Label("Or this: "));
-            layout.addComponent(new Link(u2.toString(),
-                    new ExternalResource(u2)));
+            layout.addComponent(
+                    new Link(u2.toString(), new ExternalResource(u2)));
         } catch (final Exception e) {
-            System.out.println("Couldn't get hostname for this machine: "
-                    + e.toString());
+            System.out.println(
+                    "Couldn't get hostname for this machine: " + e.toString());
             e.printStackTrace();
         }
 

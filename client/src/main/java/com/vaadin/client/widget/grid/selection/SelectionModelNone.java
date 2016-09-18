@@ -24,7 +24,7 @@ import com.vaadin.client.widgets.Grid;
 
 /**
  * No-row selection model.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.4
  */
@@ -59,15 +59,15 @@ public class SelectionModelNone<T> extends AbstractRowHandleSelectionModel<T>
     @Override
     protected boolean selectByHandle(RowHandle<T> handle)
             throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("This selection model "
-                + "does not support selection");
+        throw new UnsupportedOperationException(
+                "This selection model " + "does not support selection");
     }
 
     @Override
     protected boolean deselectByHandle(RowHandle<T> handle)
             throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("This selection model "
-                + "does not support deselection");
+        throw new UnsupportedOperationException(
+                "This selection model " + "does not support deselection");
     }
 
 }

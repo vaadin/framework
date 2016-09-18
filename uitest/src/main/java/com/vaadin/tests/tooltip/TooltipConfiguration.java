@@ -23,7 +23,8 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
         componentWithShortTooltip.setDescription("This is a short tooltip");
         componentWithShortTooltip.setId("shortTooltip");
 
-        NativeButton componentWithLongTooltip = new NativeButton("Long tooltip");
+        NativeButton componentWithLongTooltip = new NativeButton(
+                "Long tooltip");
         componentWithLongTooltip.setId("longTooltip");
         componentWithLongTooltip.setDescription(LoremIpsum.get(5000));
 
@@ -68,8 +69,8 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
                         if (quickOpenDelay.getConvertedValue() != null) {
-                            getTooltipConfiguration().setQuickOpenDelay(
-                                    (Integer) quickOpenDelay
+                            getTooltipConfiguration()
+                                    .setQuickOpenDelay((Integer) quickOpenDelay
                                             .getConvertedValue());
                         }
                     }

@@ -60,16 +60,16 @@ public class ConnectorBundle {
     public static final Comparator<JClassType> jClassComparator = new Comparator<JClassType>() {
         @Override
         public int compare(JClassType o1, JClassType o2) {
-            return o1.getQualifiedSourceName().compareTo(
-                    o2.getQualifiedSourceName());
+            return o1.getQualifiedSourceName()
+                    .compareTo(o2.getQualifiedSourceName());
         }
     };
 
     public static final Comparator<JMethod> jMethodComparator = new Comparator<JMethod>() {
         @Override
         public int compare(JMethod o1, JMethod o2) {
-            return o1.getReadableDeclaration().compareTo(
-                    o2.getReadableDeclaration());
+            return o1.getReadableDeclaration()
+                    .compareTo(o2.getReadableDeclaration());
         }
     };
 
@@ -140,10 +140,11 @@ public class ConnectorBundle {
             TypeOracle oracle) throws NotFoundException {
         Map<JType, JClassType> serializers = new HashMap<JType, JClassType>();
 
-        JClassType serializerInterface = oracle.findType(JSONSerializer.class
-                .getName());
+        JClassType serializerInterface = oracle
+                .findType(JSONSerializer.class.getName());
         JType[] deserializeParamTypes = new JType[] {
-                oracle.findType(com.vaadin.client.metadata.Type.class.getName()),
+                oracle.findType(
+                        com.vaadin.client.metadata.Type.class.getName()),
                 oracle.findType(JsonValue.class.getName()),
                 oracle.findType(ApplicationConnection.class.getName()) };
         String deserializeMethodName = "deserialize";
@@ -152,8 +153,8 @@ public class ConnectorBundle {
                 deserializeParamTypes);
 
         for (JClassType serializer : serializerInterface.getSubtypes()) {
-            JMethod deserializeMethod = serializer.findMethod(
-                    deserializeMethodName, deserializeParamTypes);
+            JMethod deserializeMethod = serializer
+                    .findMethod(deserializeMethodName, deserializeParamTypes);
             if (deserializeMethod == null) {
                 continue;
             }
@@ -309,21 +310,18 @@ public class ConnectorBundle {
 
     private void checkSerializable(TreeLogger logger, JClassType type)
             throws UnableToCompleteException {
-        JClassType javaSerializable = type.getOracle().findType(
-                Serializable.class.getName());
+        JClassType javaSerializable = type.getOracle()
+                .findType(Serializable.class.getName());
         boolean serializable = type.isAssignableTo(javaSerializable);
         if (!serializable) {
-            boolean abortCompile = "true".equals(System
-                    .getProperty(FAIL_IF_NOT_SERIALIZABLE));
-            logger.log(
-                    abortCompile ? Type.ERROR : Type.WARN,
-                    type
-                            + " is used in RPC or shared state but does not implement "
-                            + Serializable.class.getName()
-                            + ". Communication will work but the Application on server side cannot be serialized if it refers to objects of this type. "
-                            + "If the system property "
-                            + FAIL_IF_NOT_SERIALIZABLE
-                            + " is set to \"true\", this causes the compilation to fail instead of just emitting a warning.");
+            boolean abortCompile = "true"
+                    .equals(System.getProperty(FAIL_IF_NOT_SERIALIZABLE));
+            logger.log(abortCompile ? Type.ERROR : Type.WARN, type
+                    + " is used in RPC or shared state but does not implement "
+                    + Serializable.class.getName()
+                    + ". Communication will work but the Application on server side cannot be serialized if it refers to objects of this type. "
+                    + "If the system property " + FAIL_IF_NOT_SERIALIZABLE
+                    + " is set to \"true\", this causes the compilation to fail instead of just emitting a warning.");
             if (abortCompile) {
                 throw new UnableToCompleteException();
             }
@@ -509,7 +507,8 @@ public class ConnectorBundle {
         set.add(value);
     }
 
-    private <K> void addMapping(Map<K, Set<JMethod>> map, K key, JMethod value) {
+    private <K> void addMapping(Map<K, Set<JMethod>> map, K key,
+            JMethod value) {
         Set<JMethod> set = map.get(key);
         if (set == null) {
             set = new TreeSet<JMethod>(jMethodComparator);
@@ -609,9 +608,8 @@ public class ConnectorBundle {
         if (typeData != null && hasMapping(typeData, method, methodAttribute)) {
             return true;
         } else {
-            return previousBundle != null
-                    && previousBundle.hasMethodAttribute(type, method,
-                            methodAttribute);
+            return previousBundle != null && previousBundle
+                    .hasMethodAttribute(type, method, methodAttribute);
         }
     }
 
@@ -699,7 +697,8 @@ public class ConnectorBundle {
         }
     }
 
-    private boolean isNeedsOnStateChangeHandler(JClassType type, JMethod method) {
+    private boolean isNeedsOnStateChangeHandler(JClassType type,
+            JMethod method) {
         if (hasMapping(needsOnStateChange, type, method)) {
             return true;
         } else {

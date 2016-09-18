@@ -56,8 +56,10 @@ public class BaseAddReplaceMove extends BaseLayoutTestUI {
         source.addComponent(new Label("OTHER LABEL 1"));
         source.addComponent(new Label("OTHER LABEL 2"));
 
-        final AbstractComponent c1 = new Label("<b>LABEL</b>", ContentMode.HTML);
-        final AbstractComponent c2 = new Label("<b>LABEL</b>", ContentMode.HTML);
+        final AbstractComponent c1 = new Label("<b>LABEL</b>",
+                ContentMode.HTML);
+        final AbstractComponent c2 = new Label("<b>LABEL</b>",
+                ContentMode.HTML);
         final AbstractComponent c3 = new Table("TABLE");
         c3.setHeight("100px");
         c3.setWidth("100%");

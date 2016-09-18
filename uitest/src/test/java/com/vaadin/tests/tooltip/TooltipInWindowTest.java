@@ -61,6 +61,7 @@ public class TooltipInWindowTest extends TooltipTest {
         int tooltipX = getTooltipContainerElement().getLocation().getX();
         assertLessThanOrEqual(
                 "Tooltip should be positioned outside of viewport (was at "
-                        + tooltipX + ")", tooltipX, -1000);
+                        + tooltipX + ")",
+                tooltipX, -1000);
     }
 }

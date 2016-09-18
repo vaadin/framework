@@ -22,8 +22,8 @@ public class LayoutAttachListenerInfo extends TestBase {
     @Override
     protected void setup() {
 
-        OptionGroup layouts = new OptionGroup("Layouts", Arrays.asList(
-                "AbsoluteLayout", "OrderedLayout", "GridLayout"));
+        OptionGroup layouts = new OptionGroup("Layouts",
+                Arrays.asList("AbsoluteLayout", "OrderedLayout", "GridLayout"));
         layouts.select("AbsoluteLayout");
         layouts.setImmediate(true);
         layouts.addValueChangeListener(new ValueChangeListener() {
@@ -34,7 +34,8 @@ public class LayoutAttachListenerInfo extends TestBase {
                 } else if (event.getProperty().getValue()
                         .equals("OrderedLayout")) {
                     testOrderedLayout();
-                } else if (event.getProperty().getValue().equals("GridLayout")) {
+                } else if (event.getProperty().getValue()
+                        .equals("GridLayout")) {
                     testGridLayout();
                 }
             }
@@ -66,7 +67,8 @@ public class LayoutAttachListenerInfo extends TestBase {
         a.setHeight("300px");
         a.addComponentAttachListener(new ComponentAttachListener() {
             @Override
-            public void componentAttachedToContainer(ComponentAttachEvent event) {
+            public void componentAttachedToContainer(
+                    ComponentAttachEvent event) {
                 AbsoluteLayout layout = (AbsoluteLayout) event.getContainer();
                 AbsoluteLayout.ComponentPosition position = layout
                         .getPosition(event.getAttachedComponent());
@@ -95,12 +97,12 @@ public class LayoutAttachListenerInfo extends TestBase {
         v.setHeight("300px");
         v.addComponentAttachListener(new ComponentAttachListener() {
             @Override
-            public void componentAttachedToContainer(ComponentAttachEvent event) {
+            public void componentAttachedToContainer(
+                    ComponentAttachEvent event) {
                 VerticalLayout layout = (VerticalLayout) event.getContainer();
                 getMainWindow().showNotification(
-                        "Attached to index "
-                                + layout.getComponentIndex(event
-                                        .getAttachedComponent()),
+                        "Attached to index " + layout.getComponentIndex(
+                                event.getAttachedComponent()),
                         Notification.TYPE_ERROR_MESSAGE);
             }
         });
@@ -125,10 +127,11 @@ public class LayoutAttachListenerInfo extends TestBase {
         g.setHideEmptyRowsAndColumns(true);
         g.addComponentAttachListener(new ComponentAttachListener() {
             @Override
-            public void componentAttachedToContainer(ComponentAttachEvent event) {
+            public void componentAttachedToContainer(
+                    ComponentAttachEvent event) {
                 GridLayout layout = (GridLayout) event.getContainer();
-                GridLayout.Area area = layout.getComponentArea(event
-                        .getAttachedComponent());
+                GridLayout.Area area = layout
+                        .getComponentArea(event.getAttachedComponent());
                 getMainWindow().showNotification(
                         "Attached to " + area.getColumn1() + ","
                                 + area.getRow1(),

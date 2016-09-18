@@ -32,7 +32,7 @@ import com.vaadin.testbench.parallel.ParallelRunner;
  * (http://tedyoung.me/2011/01/23/junit-runtime-tests-custom-runners/). The
  * generated test names give information about the parameters used (unlike
  * {@link Parameterized}).
- * 
+ *
  * @since 7.1
  */
 public class TB3Runner extends ParallelRunner {
@@ -57,7 +57,8 @@ public class TB3Runner extends ParallelRunner {
                 public HttpClient getGridHttpClient(int connection_timeout,
                         int socket_timeout) {
 
-                    if (socket_timeout == 0 || socket_timeout > SOCKET_TIMEOUT) {
+                    if (socket_timeout == 0
+                            || socket_timeout > SOCKET_TIMEOUT) {
                         return super.getGridHttpClient(connection_timeout,
                                 SOCKET_TIMEOUT);
                     }

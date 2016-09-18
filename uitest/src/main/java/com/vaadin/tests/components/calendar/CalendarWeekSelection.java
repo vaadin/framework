@@ -15,10 +15,10 @@ public class CalendarWeekSelection extends AbstractTestUI {
         calendar.setLocale(Locale.US);
 
         try {
-            calendar.setStartDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2013-12-15"));
-            calendar.setEndDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2014-01-15"));
+            calendar.setStartDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2013-12-15"));
+            calendar.setEndDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2014-01-15"));
         } catch (ParseException e) {
             e.printStackTrace();
         }

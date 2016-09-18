@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -70,8 +70,8 @@ public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
         // Show spinner and make sure it is shown by comparing to the screenshot
         // without a spinner
         executeScript("arguments[0].style.visibility='visible';", spinner);
-        BufferedImage fullScreen = ImageIO.read(new ByteArrayInputStream(
-                ((TakesScreenshot) getDriver())
+        BufferedImage fullScreen = ImageIO
+                .read(new ByteArrayInputStream(((TakesScreenshot) getDriver())
                         .getScreenshotAs(OutputType.BYTES)));
         BufferedImage spinnerImage = CustomTestBenchCommandExecutor
                 .cropToElement(spinner, fullScreen,
@@ -109,7 +109,8 @@ public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
             @Override
             public Boolean apply(WebDriver input) {
                 try {
-                    final WebElement reconnectDialog = findElement(ReconnectDialogThemeTest.reconnectDialogBy);
+                    final WebElement reconnectDialog = findElement(
+                            ReconnectDialogThemeTest.reconnectDialogBy);
                     return reconnectDialog.findElement(By.className("text"))
                             .getText().equals(text);
                 } catch (Exception e) {
@@ -120,11 +121,13 @@ public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
 
     }
 
-    private void assertHasManyColors(String message, BufferedImage spinnerImage) {
+    private void assertHasManyColors(String message,
+            BufferedImage spinnerImage) {
         int backgroundColor = spinnerImage.getRGB(0, 0);
         for (int x = 0; x < spinnerImage.getWidth(); x++) {
             for (int y = 0; y < spinnerImage.getHeight(); y++) {
-                if (Math.abs(spinnerImage.getRGB(x, y) - backgroundColor) > 50) {
+                if (Math.abs(
+                        spinnerImage.getRGB(x, y) - backgroundColor) > 50) {
                     return;
                 }
             }

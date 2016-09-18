@@ -31,10 +31,10 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Test case creating and deleting table component in a loop, testing memory
  * lead in Table component. This test should not be used in auto testing.
- * 
+ *
  * To test memory consuption. Run test in debug mode. Take memory snapshot in
  * Profiler in browser before and after the loop. Compare memory consuption.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -84,8 +84,8 @@ public class MemoryLeakTableTest extends MultiBrowserTest {
     // Method scroll in TalbeElement class has a bug
     //
     private void scrollTable(TableElement tbl, int value) {
-        WebElement actualElement = tbl.findElement(By
-                .className("v-table-body-wrapper"));
+        WebElement actualElement = tbl
+                .findElement(By.className("v-table-body-wrapper"));
         JavascriptExecutor js = tbl.getCommandExecutor();
         js.executeScript("arguments[0].scrollTop = " + value, actualElement);
     }

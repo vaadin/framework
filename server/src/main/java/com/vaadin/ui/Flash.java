@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,10 +28,9 @@ import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * A component for displaying Adobe® Flash® content.
- * 
+ *
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
+ * @version @VERSION@
  * @since 7.0
  */
 @SuppressWarnings("serial")
@@ -46,7 +45,7 @@ public class Flash extends AbstractEmbedded {
 
     /**
      * Creates a new empty Flash component with the given caption
-     * 
+     *
      * @param caption
      *            The caption for the component
      */
@@ -56,7 +55,7 @@ public class Flash extends AbstractEmbedded {
 
     /**
      * Creates a new Flash component with the given caption and content.
-     * 
+     *
      * @param caption
      *            The caption for the component
      * @param source
@@ -82,13 +81,13 @@ public class Flash extends AbstractEmbedded {
      * This attribute specifies the base path used to resolve relative URIs
      * specified by the classid, data, and archive attributes. When absent, its
      * default value is the base URI of the current document.
-     * 
+     *
      * @param codebase
      *            The base path
      */
     public void setCodebase(String codebase) {
-        if (codebase != getState().codebase
-                || (codebase != null && !codebase.equals(getState().codebase))) {
+        if (codebase != getState().codebase || (codebase != null
+                && !codebase.equals(getState().codebase))) {
             getState().codebase = codebase;
             requestRepaint();
         }
@@ -96,7 +95,7 @@ public class Flash extends AbstractEmbedded {
 
     /**
      * Returns the codebase.
-     * 
+     *
      * @see #setCodebase(String)
      * @since 7.4.1
      * @return Current codebase.
@@ -111,13 +110,13 @@ public class Flash extends AbstractEmbedded {
      * but recommended when classid is specified since it allows the user agent
      * to avoid loading information for unsupported content types. When absent,
      * it defaults to the value of the type attribute.
-     * 
+     *
      * @param codetype
      *            the codetype to set.
      */
     public void setCodetype(String codetype) {
-        if (codetype != getState().codetype
-                || (codetype != null && !codetype.equals(getState().codetype))) {
+        if (codetype != getState().codetype || (codetype != null
+                && !codetype.equals(getState().codetype))) {
             getState().codetype = codetype;
             requestRepaint();
         }
@@ -125,7 +124,7 @@ public class Flash extends AbstractEmbedded {
 
     /**
      * Returns the current codetype.
-     * 
+     *
      * @see #setCodetype(String)
      * @since 7.4.1
      * @return Current codetype.
@@ -141,7 +140,7 @@ public class Flash extends AbstractEmbedded {
      * archives will generally result in reduced load times for objects.
      * Archives specified as relative URIs should be interpreted relative to the
      * codebase attribute.
-     * 
+     *
      * @param archive
      *            Space-separated list of URIs with resources relevant to the
      *            object
@@ -156,7 +155,7 @@ public class Flash extends AbstractEmbedded {
 
     /**
      * Returns current archive.
-     * 
+     *
      * @see #setArchive(String)
      * @since 7.4.1
      * @return Current archive.
@@ -167,7 +166,7 @@ public class Flash extends AbstractEmbedded {
 
     /**
      * Sets standby.
-     * 
+     *
      * @param standby
      *            Standby string.
      */
@@ -181,7 +180,7 @@ public class Flash extends AbstractEmbedded {
 
     /**
      * Returns standby.
-     * 
+     *
      * @since 7.4.1
      * @return Standby string.
      */
@@ -194,7 +193,7 @@ public class Flash extends AbstractEmbedded {
      * are passed to the instantiated object. Parameters are are stored as name
      * value pairs. This overrides the previous value assigned to this
      * parameter.
-     * 
+     *
      * @param name
      *            the name of the parameter.
      * @param value
@@ -212,17 +211,17 @@ public class Flash extends AbstractEmbedded {
      * Gets the value of an object parameter. Parameters are optional
      * information, and they are passed to the instantiated object. Parameters
      * are are stored as name value pairs.
-     * 
+     *
      * @return the Value of parameter or null if not found.
      */
     public String getParameter(String name) {
-        return getState(false).embedParams != null ? getState(false).embedParams
-                .get(name) : null;
+        return getState(false).embedParams != null
+                ? getState(false).embedParams.get(name) : null;
     }
 
     /**
      * Removes an object parameter from the list.
-     * 
+     *
      * @param name
      *            the name of the parameter to remove.
      */
@@ -246,14 +245,14 @@ public class Flash extends AbstractEmbedded {
 
         Collections.sort(paramNames);
         for (String param : paramNames) {
-            design.appendElement("parameter").attr("name", param)
-                    .attr("value", getParameter(param));
+            design.appendElement("parameter").attr("name", param).attr("value",
+                    getParameter(param));
         }
     }
 
     /**
      * Returns an iterable with declared parameter names.
-     * 
+     *
      * @see #setParameter(String, String)
      * @see #getParameter(String)
      * @since 7.4.1

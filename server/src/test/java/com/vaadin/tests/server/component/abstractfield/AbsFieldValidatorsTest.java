@@ -89,8 +89,7 @@ public class AbsFieldValidatorsTest {
     public void removeValidatorMakesNonImmediate() {
         field.addValidator(validator);
         field.removeValidator(validator);
-        assertFalse(
-                "field should be non-immediate after validator was removed",
+        assertFalse("field should be non-immediate after validator was removed",
                 field.isImmediate());
     }
 
@@ -109,8 +108,7 @@ public class AbsFieldValidatorsTest {
                 field.isImmediate());
         field.setRequired(true);
         field.setRequired(false);
-        assertFalse(
-                "field should not be immediate even though it was required",
+        assertFalse("field should not be immediate even though it was required",
                 field.isImmediate());
     }
 

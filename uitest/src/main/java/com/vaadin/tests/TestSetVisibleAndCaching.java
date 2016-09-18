@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,8 +25,8 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
-public class TestSetVisibleAndCaching extends
-        com.vaadin.server.LegacyApplication {
+public class TestSetVisibleAndCaching
+        extends com.vaadin.server.LegacyApplication {
 
     Panel panelA = new Panel("Panel A");
     Panel panelB = new Panel("Panel B");
@@ -42,20 +42,19 @@ public class TestSetVisibleAndCaching extends
                 "TestSetVisibleAndCaching");
         setMainWindow(mainWindow);
 
-        panelA.setContent(wrapInPanelLayout(new Label(
-                "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")));
-        panelB.setContent(wrapInPanelLayout(new Label(
-                "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")));
-        panelC.setContent(wrapInPanelLayout(new Label(
-                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")));
+        panelA.setContent(wrapInPanelLayout(
+                new Label("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")));
+        panelB.setContent(wrapInPanelLayout(
+                new Label("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")));
+        panelC.setContent(wrapInPanelLayout(
+                new Label("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")));
 
-        mainWindow
-                .addComponent(new Label(
-                        "Inspect transfered data from server to "
-                                + "client using firebug (http request / response cycles)."
-                                + " See how widgets are re-used,"
-                                + " after each panel is once shown in GUI then"
-                                + " their contents are not resend."));
+        mainWindow.addComponent(
+                new Label("Inspect transfered data from server to "
+                        + "client using firebug (http request / response cycles)."
+                        + " See how widgets are re-used,"
+                        + " after each panel is once shown in GUI then"
+                        + " their contents are not resend."));
         mainWindow.addComponent(buttonNextPanel);
         mainWindow.addComponent(panelA);
         mainWindow.addComponent(panelB);

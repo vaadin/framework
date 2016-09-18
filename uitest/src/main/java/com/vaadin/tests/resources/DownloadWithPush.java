@@ -85,7 +85,6 @@ public class DownloadWithPush extends AbstractTestUIWithLog {
         return hugeFileResource;
     }
 
-
     @Override
     protected Integer getTicketNumber() {
         return 19709;

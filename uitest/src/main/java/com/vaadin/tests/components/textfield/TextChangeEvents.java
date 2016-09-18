@@ -66,15 +66,15 @@ public class TextChangeEvents extends TestBase {
 
     /**
      * "Autosuggest"
-     * 
+     *
      * Known issue is timing if suggestion comes while typing more content. IMO
      * we will not support this kind of features in default TextField, but
      * hopefully make it easily extendable to perfect suggest feature. MT
      * 2010-10
-     * 
+     *
      */
-    private class VaadinDeveloperNameField extends TextField implements
-            TextChangeListener {
+    private class VaadinDeveloperNameField extends TextField
+            implements TextChangeListener {
         private String[] names = new String[] { "Matti Tahvonen",
                 "Marc Englund", "Joonas Lehtinen", "Jouni Koivuviita",
                 "Marko Grönroos", "Artur Signell" };
@@ -94,7 +94,8 @@ public class TextChangeEvents extends TestBase {
 
         @Override
         public void textChange(TextChangeEvent event) {
-            boolean atTheEndOfText = event.getText().length() == getCursorPosition();
+            boolean atTheEndOfText = event.getText()
+                    .length() == getCursorPosition();
             String match = findMatch(event.getText());
             if (match != null) {
                 setStyleName("match");

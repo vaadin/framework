@@ -93,7 +93,8 @@ public class ComboPushTiming extends TestBase {
 
     class MyExecutor extends ThreadPoolExecutor {
         public MyExecutor() {
-            super(5, 20, 20, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
+            super(5, 20, 20, TimeUnit.SECONDS,
+                    new SynchronousQueue<Runnable>());
         }
     }
 

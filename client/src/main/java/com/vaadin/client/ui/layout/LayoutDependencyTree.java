@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,7 +37,7 @@ import com.vaadin.shared.AbstractComponentState;
 /**
  * Internal class used to keep track of layout dependencies during one layout
  * run. This class is not intended to be used directly by applications.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
@@ -67,8 +67,8 @@ public class LayoutDependencyTree {
                 layoutBlockers.add(blockerId);
                 if (wasEmpty) {
                     if (needsLayout) {
-                        getLayoutQueue(direction).remove(
-                                connector.getConnectorId());
+                        getLayoutQueue(direction)
+                                .remove(connector.getConnectorId());
                     } else {
                         // Propagation already done if needsLayout is set
                         propagatePotentialLayout();
@@ -83,8 +83,8 @@ public class LayoutDependencyTree {
                 layoutBlockers.remove(blockerId);
                 if (layoutBlockers.isEmpty()) {
                     if (needsLayout) {
-                        getLayoutQueue(direction).add(
-                                connector.getConnectorId());
+                        getLayoutQueue(direction)
+                                .add(connector.getConnectorId());
                     } else {
                         propagateNoUpcomingLayout();
                     }
@@ -102,8 +102,8 @@ public class LayoutDependencyTree {
             measureBlockers.add(blockerId);
             if (wasEmpty) {
                 if (needsMeasure) {
-                    getMeasureQueue(direction).remove(
-                            connector.getConnectorId());
+                    getMeasureQueue(direction)
+                            .remove(connector.getConnectorId());
                 } else {
                     propagatePotentialResize();
                 }
@@ -247,7 +247,8 @@ public class LayoutDependencyTree {
 
             if (connector instanceof HasComponentsConnector) {
                 HasComponentsConnector container = (HasComponentsConnector) connector;
-                for (ComponentConnector child : container.getChildComponents()) {
+                for (ComponentConnector child : container
+                        .getChildComponents()) {
                     if (!Util.shouldSkipMeasurementOfConnector(child, connector)
                             && isRelativeInDirection(child, direction)) {
                         resized.push(child.getConnectorId());
@@ -280,15 +281,19 @@ public class LayoutDependencyTree {
                 LayoutDependency layoutDependency = getDependency(connectorId,
                         direction);
                 if (layoutDependency.connector instanceof ManagedLayout) {
-                    Profiler.enter("LayoutDependency.markSizeAsChanged setNeedsLayout");
+                    Profiler.enter(
+                            "LayoutDependency.markSizeAsChanged setNeedsLayout");
                     layoutDependency.setNeedsLayout(true);
-                    Profiler.leave("LayoutDependency.markSizeAsChanged setNeedsLayout");
+                    Profiler.leave(
+                            "LayoutDependency.markSizeAsChanged setNeedsLayout");
                 } else {
-                    Profiler.enter("LayoutDependency.markSizeAsChanged propagatePostLayoutMeasure");
+                    Profiler.enter(
+                            "LayoutDependency.markSizeAsChanged propagatePostLayoutMeasure");
                     // Should simulate setNeedsLayout(true) + markAsLayouted ->
                     // propagate needs measure
                     layoutDependency.propagatePostLayoutMeasure();
-                    Profiler.leave("LayoutDependency.markSizeAsChanged propagatePostLayoutMeasure");
+                    Profiler.leave(
+                            "LayoutDependency.markSizeAsChanged propagatePostLayoutMeasure");
                 }
             }
             Profiler.leave("LayoutDependency.markSizeAsChanged phase 1");
@@ -296,7 +301,8 @@ public class LayoutDependencyTree {
             Profiler.enter("LayoutDependency.markSizeAsChanged scrollbars");
             // Should also go through the hierarchy to discover appeared or
             // disappeared scrollbars
-            ComponentConnector scrollingBoundary = getScrollingBoundary(connector);
+            ComponentConnector scrollingBoundary = getScrollingBoundary(
+                    connector);
             if (scrollingBoundary != null) {
                 getDependency(scrollingBoundary.getConnectorId(),
                         getOppositeDirection()).setNeedsMeasure(true);
@@ -309,7 +315,7 @@ public class LayoutDependencyTree {
          * Go up the hierarchy to find a component whose size might have changed
          * in the other direction because changes to this component causes
          * scrollbars to appear or disappear.
-         * 
+         *
          * @return
          */
         private LayoutDependency findPotentiallyChangedScrollbar() {
@@ -343,28 +349,34 @@ public class LayoutDependencyTree {
         }
 
         private void propagatePostLayoutMeasure() {
-            Profiler.enter("LayoutDependency.propagatePostLayoutMeasure getResizedByLayout");
+            Profiler.enter(
+                    "LayoutDependency.propagatePostLayoutMeasure getResizedByLayout");
             JsArrayString resizedByLayout = getResizedByLayout();
-            Profiler.leave("LayoutDependency.propagatePostLayoutMeasure getResizedByLayout");
+            Profiler.leave(
+                    "LayoutDependency.propagatePostLayoutMeasure getResizedByLayout");
             int length = resizedByLayout.length();
             for (int i = 0; i < length; i++) {
-                Profiler.enter("LayoutDependency.propagatePostLayoutMeasure setNeedsMeasure");
+                Profiler.enter(
+                        "LayoutDependency.propagatePostLayoutMeasure setNeedsMeasure");
                 String resizedId = resizedByLayout.get(i);
                 LayoutDependency layoutDependency = getDependency(resizedId,
                         direction);
                 layoutDependency.setNeedsMeasure(true);
-                Profiler.leave("LayoutDependency.propagatePostLayoutMeasure setNeedsMeasure");
+                Profiler.leave(
+                        "LayoutDependency.propagatePostLayoutMeasure setNeedsMeasure");
             }
 
             // Special case for e.g. wrapping texts
-            Profiler.enter("LayoutDependency.propagatePostLayoutMeasure horizontal case");
+            Profiler.enter(
+                    "LayoutDependency.propagatePostLayoutMeasure horizontal case");
             if (direction == HORIZONTAL && !connector.isUndefinedWidth()
                     && connector.isUndefinedHeight()) {
                 LayoutDependency dependency = getDependency(
                         connector.getConnectorId(), VERTICAL);
                 dependency.setNeedsMeasure(true);
             }
-            Profiler.leave("LayoutDependency.propagatePostLayoutMeasure horizontal case");
+            Profiler.leave(
+                    "LayoutDependency.propagatePostLayoutMeasure horizontal case");
         }
 
         @Override
@@ -377,13 +389,15 @@ public class LayoutDependencyTree {
             }
             AbstractComponentState state = connector.getState();
             s += " sizing: "
-                    + getSizeDefinition(direction == VERTICAL ? state.height
-                            : state.width) + "\n";
+                    + getSizeDefinition(
+                            direction == VERTICAL ? state.height : state.width)
+                    + "\n";
 
             if (needsLayout) {
                 s += "Needs layout\n";
             }
-            if (getLayoutQueue(direction).contains(connector.getConnectorId())) {
+            if (getLayoutQueue(direction)
+                    .contains(connector.getConnectorId())) {
                 s += "In layout queue\n";
             }
             s += "Layout blockers: " + blockersToString(layoutBlockers) + "\n";
@@ -391,7 +405,8 @@ public class LayoutDependencyTree {
             if (needsMeasure) {
                 s += "Needs measure\n";
             }
-            if (getMeasureQueue(direction).contains(connector.getConnectorId())) {
+            if (getMeasureQueue(direction)
+                    .contains(connector.getConnectorId())) {
                 s += "In measure queue\n";
             }
             s += "Measure blockers: " + blockersToString(measureBlockers);
@@ -434,15 +449,15 @@ public class LayoutDependencyTree {
     /**
      * @param connectorId
      * @param needsMeasure
-     * 
+     *
      * @deprecated As of 7.4.2, use
      *             {@link #setNeedsMeasure(ComponentConnector, boolean)} for
      *             improved performance.
      */
     @Deprecated
     public void setNeedsMeasure(String connectorId, boolean needsMeasure) {
-        ComponentConnector connector = (ComponentConnector) ConnectorMap.get(
-                connection).getConnector(connectorId);
+        ComponentConnector connector = (ComponentConnector) ConnectorMap
+                .get(connection).getConnector(connectorId);
         if (connector == null) {
             return;
         }
@@ -459,8 +474,8 @@ public class LayoutDependencyTree {
     public void setNeedsHorizontalMeasure(String connectorId,
             boolean needsMeasure) {
         // Ensure connector exists
-        ComponentConnector connector = (ComponentConnector) ConnectorMap.get(
-                connection).getConnector(connectorId);
+        ComponentConnector connector = (ComponentConnector) ConnectorMap
+                .get(connection).getConnector(connectorId);
         if (connector == null) {
             return;
         }
@@ -474,10 +489,11 @@ public class LayoutDependencyTree {
         dependency.setNeedsMeasure(needsMeasure);
     }
 
-    public void setNeedsVerticalMeasure(String connectorId, boolean needsMeasure) {
+    public void setNeedsVerticalMeasure(String connectorId,
+            boolean needsMeasure) {
         // Ensure connector exists
-        ComponentConnector connector = (ComponentConnector) ConnectorMap.get(
-                connection).getConnector(connectorId);
+        ComponentConnector connector = (ComponentConnector) ConnectorMap
+                .get(connection).getConnector(connectorId);
         if (connector == null) {
             return;
         }
@@ -503,9 +519,8 @@ public class LayoutDependencyTree {
                 connector = (ComponentConnector) ConnectorMap.get(connection)
                         .getConnector(connectorId);
                 if (connector == null) {
-                    getLogger().warning(
-                            "No connector found for id " + connectorId
-                                    + " while creating LayoutDependency");
+                    getLogger().warning("No connector found for id "
+                            + connectorId + " while creating LayoutDependency");
                     return null;
                 }
             }
@@ -526,7 +541,7 @@ public class LayoutDependencyTree {
     /**
      * @param layout
      * @param needsLayout
-     * 
+     *
      * @deprecated As of 7.0.1, use
      *             {@link #setNeedsHorizontalLayout(String, boolean)} for
      *             improved performance.
@@ -537,30 +552,33 @@ public class LayoutDependencyTree {
         setNeedsHorizontalLayout(layout.getConnectorId(), needsLayout);
     }
 
-    public void setNeedsHorizontalLayout(String connectorId, boolean needsLayout) {
+    public void setNeedsHorizontalLayout(String connectorId,
+            boolean needsLayout) {
         LayoutDependency dependency = getDependency(connectorId, HORIZONTAL);
         if (dependency != null) {
             dependency.setNeedsLayout(needsLayout);
         } else {
-            getLogger().warning(
-                    "No dependency found in setNeedsHorizontalLayout");
+            getLogger()
+                    .warning("No dependency found in setNeedsHorizontalLayout");
         }
     }
 
     /**
      * @param layout
      * @param needsLayout
-     * 
+     *
      * @deprecated As of 7.0.1, use
      *             {@link #setNeedsVerticalLayout(String, boolean)} for improved
      *             performance.
      */
     @Deprecated
-    public void setNeedsVerticalLayout(ManagedLayout layout, boolean needsLayout) {
+    public void setNeedsVerticalLayout(ManagedLayout layout,
+            boolean needsLayout) {
         setNeedsVerticalLayout(layout.getConnectorId(), needsLayout);
     }
 
-    public void setNeedsVerticalLayout(String connectorId, boolean needsLayout) {
+    public void setNeedsVerticalLayout(String connectorId,
+            boolean needsLayout) {
         LayoutDependency dependency = getDependency(connectorId, VERTICAL);
         if (dependency != null) {
             dependency.setNeedsLayout(needsLayout);
@@ -634,8 +652,8 @@ public class LayoutDependencyTree {
         ConnectorMap connectorMap = ConnectorMap.get(connection);
         JsArrayString blockersDump = blockers.dump();
         for (int i = 0; i < blockersDump.length(); i++) {
-            ServerConnector blocker = connectorMap.getConnector(blockersDump
-                    .get(i));
+            ServerConnector blocker = connectorMap
+                    .getConnector(blockersDump.get(i));
             if (b.length() != 1) {
                 b.append(", ");
             }
@@ -678,7 +696,8 @@ public class LayoutDependencyTree {
         return asManagedLayoutArray(getVerticalLayoutTargetsJsArray());
     }
 
-    private ManagedLayout[] asManagedLayoutArray(JsArrayString connectorIdArray) {
+    private ManagedLayout[] asManagedLayoutArray(
+            JsArrayString connectorIdArray) {
         int length = connectorIdArray.length();
         ConnectorMap connectorMap = ConnectorMap.get(connection);
         ManagedLayout[] result = new ManagedLayout[length];
@@ -738,7 +757,8 @@ public class LayoutDependencyTree {
                         .noMoreChangesExpected();
     }
 
-    public ComponentConnector getScrollingBoundary(ComponentConnector connector) {
+    public ComponentConnector getScrollingBoundary(
+            ComponentConnector connector) {
         LayoutDependency dependency = getDependency(connector.getConnectorId(),
                 HORIZONTAL);
         if (!dependency.scrollingParentCached) {
@@ -746,7 +766,8 @@ public class LayoutDependencyTree {
             if (parent instanceof MayScrollChildren) {
                 dependency.scrollingBoundary = connector;
             } else if (parent instanceof ComponentConnector) {
-                dependency.scrollingBoundary = getScrollingBoundary((ComponentConnector) parent);
+                dependency.scrollingBoundary = getScrollingBoundary(
+                        (ComponentConnector) parent);
             } else {
                 // No scrolling parent
             }

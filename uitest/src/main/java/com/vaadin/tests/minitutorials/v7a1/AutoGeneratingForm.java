@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,7 +27,7 @@ import com.vaadin.ui.VerticalLayout;
  * Mini tutorial code for
  * https://vaadin.com/wiki/-/wiki/Main/Auto%20generating%20
  * a%20form%20based%20on%20a%20bean%20-%20Vaadin%206%20style%20Form
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
@@ -43,8 +43,8 @@ public class AutoGeneratingForm extends UI {
 
         // We need an item data source before we create the fields to be able to
         // find the properties, otherwise we have to specify them by hand
-        fieldGroup.setItemDataSource(new BeanItem<Person>(new Person("John",
-                "Doe", 34)));
+        fieldGroup.setItemDataSource(
+                new BeanItem<Person>(new Person("John", "Doe", 34)));
 
         // Loop through the properties, build fields for them and add the fields
         // to this root

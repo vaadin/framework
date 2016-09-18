@@ -16,8 +16,8 @@ public class CheckBoxNullValueTest extends MultiBrowserTest {
     public void testValidation() throws Exception {
         openTestURL();
         CheckBoxElement checkbox = $(CheckBoxElement.class).first();
-        CheckBoxElement requiredCheckbox = $(CheckBoxElement.class).caption(
-                "A required checkbox").first();
+        CheckBoxElement requiredCheckbox = $(CheckBoxElement.class)
+                .caption("A required checkbox").first();
 
         assertValid(checkbox, true);
         assertValid(requiredCheckbox, true);
@@ -45,14 +45,15 @@ public class CheckBoxNullValueTest extends MultiBrowserTest {
 
     private void assertValid(CheckBoxElement checkbox, boolean valid) {
         boolean hasIndicator = false;
-        List<WebElement> e = checkbox.findElements(By
-                .className("v-errorindicator"));
+        List<WebElement> e = checkbox
+                .findElements(By.className("v-errorindicator"));
         if (e.size() != 0) {
             hasIndicator = e.get(0).isDisplayed();
         }
 
-        Assert.assertEquals("Checkbox state should be "
-                + (valid ? "valid" : "invalid"), valid, !hasIndicator);
+        Assert.assertEquals(
+                "Checkbox state should be " + (valid ? "valid" : "invalid"),
+                valid, !hasIndicator);
 
     }
 

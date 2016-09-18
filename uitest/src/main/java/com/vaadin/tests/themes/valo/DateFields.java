@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2013 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -201,14 +201,15 @@ public class DateFields extends VerticalLayout implements View {
         row.addComponent(date);
 
         PropertysetItem item = new PropertysetItem();
-        item.addItemProperty("date", new ObjectProperty<Date>(getDefaultDate()));
+        item.addItemProperty("date",
+                new ObjectProperty<Date>(getDefaultDate()));
 
         FormLayout form = new FormLayout();
         form.setMargin(false);
 
         FieldGroup binder = new FieldGroup(item);
-        form.addComponent(binder.buildAndBind(
-                "Picker in read-only field group", "date"));
+        form.addComponent(
+                binder.buildAndBind("Picker in read-only field group", "date"));
         binder.setReadOnly(true);
 
         row.addComponent(form);

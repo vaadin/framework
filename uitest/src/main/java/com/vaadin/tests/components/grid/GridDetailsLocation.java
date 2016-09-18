@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -43,8 +43,8 @@ public class GridDetailsLocation extends UI {
         @Override
         public Component getDetails(RowReference rowReference) {
             Person person = (Person) rowReference.getItemId();
-            Label label = new Label(person.getFirstName() + " "
-                    + person.getLastName());
+            Label label = new Label(
+                    person.getFirstName() + " " + person.getLastName());
             // currently the decorator row doesn't change its height when the
             // content height is different.
             label.setHeight("30px");
@@ -82,16 +82,16 @@ public class GridDetailsLocation extends UI {
         numberTextField.setImmediate(true);
         layout.addComponent(numberTextField);
 
-        layout.addComponent(new Button("Toggle and scroll",
-                new Button.ClickListener() {
+        layout.addComponent(
+                new Button("Toggle and scroll", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         toggle();
                         scrollTo();
                     }
                 }));
-        layout.addComponent(new Button("Scroll and toggle",
-                new Button.ClickListener() {
+        layout.addComponent(
+                new Button("Scroll and toggle", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         scrollTo();

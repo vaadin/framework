@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -50,7 +50,7 @@ import elemental.json.impl.JsonUtil;
  * Serializes pending server-side changes to UI state to JSON. This includes
  * shared state, client RPC invocations, connector hierarchy changes, connector
  * type information among others.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -58,7 +58,7 @@ public class UidlWriter implements Serializable {
 
     /**
      * Writes a JSON object containing all pending changes to the given UI.
-     * 
+     *
      * @param ui
      *            The {@link UI} whose changes to write
      * @param writer
@@ -68,7 +68,7 @@ public class UidlWriter implements Serializable {
      * @param async
      *            True if this message is sent by the server asynchronously,
      *            false if it is a response to a client message.
-     * 
+     *
      * @throws IOException
      *             If the writing fails.
      */
@@ -116,17 +116,15 @@ public class UidlWriter implements Serializable {
             }
         }
 
-        getLogger().log(
-                Level.FINE,
-                "Found " + processedConnectors.size()
-                        + " dirty connectors to paint");
+        getLogger().log(Level.FINE, "Found " + processedConnectors.size()
+                + " dirty connectors to paint");
 
         uiConnectorTracker.setWritingResponse(true);
         try {
 
             int syncId = service.getDeploymentConfiguration()
-                    .isSyncIdCheckEnabled() ? uiConnectorTracker
-                    .getCurrentSyncId() : -1;
+                    .isSyncIdCheckEnabled()
+                            ? uiConnectorTracker.getCurrentSyncId() : -1;
             writer.write("\"" + ApplicationConstants.SERVER_SYNC_ID + "\": "
                     + syncId + ", ");
             if (repaintAll) {
@@ -159,8 +157,8 @@ public class UidlWriter implements Serializable {
             // processing.
 
             writer.write("\"state\":");
-            Set<String> stateUpdateConnectors = new SharedStateWriter().write(
-                    ui, writer);
+            Set<String> stateUpdateConnectors = new SharedStateWriter()
+                    .write(ui, writer);
             writer.write(", "); // close states
 
             // TODO This should be optimized. The type only needs to be
@@ -241,8 +239,8 @@ public class UidlWriter implements Serializable {
             if (typeMappingsOpen) {
                 // send the whole type inheritance map if any new mappings
                 for (Class<? extends ClientConnector> class1 : usedClientConnectors) {
-                    if (!ClientConnector.class.isAssignableFrom(class1
-                            .getSuperclass())) {
+                    if (!ClientConnector.class
+                            .isAssignableFrom(class1.getSuperclass())) {
                         continue;
                     }
                     if (!typeInheritanceMapOpen) {
@@ -254,8 +252,8 @@ public class UidlWriter implements Serializable {
                     writer.write("\"");
                     writer.write(manager.getTagForType(class1));
                     writer.write("\" : ");
-                    writer.write(manager
-                            .getTagForType((Class<? extends ClientConnector>) class1
+                    writer.write(manager.getTagForType(
+                            (Class<? extends ClientConnector>) class1
                                     .getSuperclass()));
                 }
                 if (typeInheritanceMapOpen) {
@@ -267,7 +265,7 @@ public class UidlWriter implements Serializable {
             /*
              * Ensure super classes come before sub classes to get script
              * dependency order right. Sub class @JavaScript might assume that
-             * 
+             *
              * @JavaScript defined by super class is already loaded.
              */
             Collections.sort(newConnectorTypes, new Comparator<Class<?>>() {
@@ -294,8 +292,8 @@ public class UidlWriter implements Serializable {
                         .getAnnotation(JavaScript.class);
                 if (jsAnnotation != null) {
                     for (String uri : jsAnnotation.value()) {
-                        scriptDependencies.add(manager.registerDependency(uri,
-                                class1));
+                        scriptDependencies
+                                .add(manager.registerDependency(uri, class1));
                     }
                 }
 
@@ -303,8 +301,8 @@ public class UidlWriter implements Serializable {
                         .getAnnotation(StyleSheet.class);
                 if (styleAnnotation != null) {
                     for (String uri : styleAnnotation.value()) {
-                        styleDependencies.add(manager.registerDependency(uri,
-                                class1));
+                        styleDependencies
+                                .add(manager.registerDependency(uri, class1));
                     }
                 }
             }
@@ -327,7 +325,8 @@ public class UidlWriter implements Serializable {
                 uiConnectorTracker.markClientSideInitialized(connector);
             }
 
-            assert (uiConnectorTracker.getDirtyConnectors().isEmpty()) : "Connectors have been marked as dirty during the end of the paint phase. This is most certainly not intended.";
+            assert (uiConnectorTracker.getDirtyConnectors()
+                    .isEmpty()) : "Connectors have been marked as dirty during the end of the paint phase. This is most certainly not intended.";
 
             writePerformanceData(ui, writer);
         } finally {
@@ -348,15 +347,15 @@ public class UidlWriter implements Serializable {
     /**
      * Adds the performance timing data (used by TestBench 3) to the UIDL
      * response.
-     * 
+     *
      * @throws IOException
      */
     private void writePerformanceData(UI ui, Writer writer) throws IOException {
         if (!ui.getSession().getService().getDeploymentConfiguration()
                 .isProductionMode()) {
-            writer.write(String.format(", \"timings\":[%d, %d]", ui
-                    .getSession().getCumulativeRequestDuration(), ui
-                    .getSession().getLastRequestDuration()));
+            writer.write(String.format(", \"timings\":[%d, %d]",
+                    ui.getSession().getCumulativeRequestDuration(),
+                    ui.getSession().getLastRequestDuration()));
         }
     }
 

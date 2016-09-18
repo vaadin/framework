@@ -40,8 +40,8 @@ public class ComboBoxSuggestionPopupCloseTest extends MultiBrowserTest {
 
         waitForElementVisible(By.className("v-filterselect"));
 
-        selectTextbox = $(ComboBoxElement.class).first().findElement(
-                By.vaadin("#textbox"));
+        selectTextbox = $(ComboBoxElement.class).first()
+                .findElement(By.vaadin("#textbox"));
         selectTextbox.click();
 
         // open popup and select first element
@@ -50,7 +50,8 @@ public class ComboBoxSuggestionPopupCloseTest extends MultiBrowserTest {
         // open popup and hit enter to close it
         sendKeys(new Keys[] { ARROW_DOWN, ENTER });
 
-        assertFalse(isElementPresent(By.className("v-filterselect-suggestmenu")));
+        assertFalse(
+                isElementPresent(By.className("v-filterselect-suggestmenu")));
 
     }
 

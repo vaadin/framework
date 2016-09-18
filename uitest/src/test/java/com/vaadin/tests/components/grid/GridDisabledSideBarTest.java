@@ -29,10 +29,12 @@ public class GridDisabledSideBarTest extends GridBasicClientFeaturesTest {
 
             @Override
             public Boolean apply(WebDriver input) {
-                return !findElement(By.className("v-grid-sidebar-button")).isEnabled();
+                return !findElement(By.className("v-grid-sidebar-button"))
+                        .isEnabled();
             }
         });
     }
+
     private void clickSideBarButton() {
         findElement(By.cssSelector(".v-grid-sidebar-button")).click();
     }
@@ -42,7 +44,8 @@ public class GridDisabledSideBarTest extends GridBasicClientFeaturesTest {
     }
 
     private void assertSideBarContainsClass(String cssClass) {
-        assertThat(findElement(By.cssSelector(".v-grid-sidebar")).getAttribute("class"), containsString(cssClass));
+        assertThat(findElement(By.cssSelector(".v-grid-sidebar"))
+                .getAttribute("class"), containsString(cssClass));
     }
 
     @Test

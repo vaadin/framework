@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -88,7 +88,8 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
         Matcher matcher = defaultLog.matcher(getLogRow(0));
         Assert.assertTrue(
                 "Log row content did not match default listener output: "
-                        + getLogRow(0), matcher.find());
+                        + getLogRow(0),
+                matcher.find());
 
         int xCoord = Integer.parseInt(matcher.group(1));
         int yCoord = Integer.parseInt(matcher.group(2));
@@ -120,7 +121,7 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
      * Performs a context click on given element at coordinates 10, 10 followed
      * by a regular click. This prevents browser context menu from blocking
      * future operations.
-     * 
+     *
      * @param e
      *            web element
      */
@@ -132,7 +133,7 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
      * Performs a context click on given element at given coordinates followed
      * by a regular click. This prevents browser context menu from blocking
      * future operations.
-     * 
+     *
      * @param e
      *            web element
      * @param xCoord
@@ -141,8 +142,8 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
      *            y coordinate
      */
     protected void contextClick(WebElement e, int xCoord, int yCoord) {
-        new Actions(getDriver()).moveToElement(e, xCoord, yCoord)
-                .contextClick().moveByOffset(-5, -5).click().perform();
+        new Actions(getDriver()).moveToElement(e, xCoord, yCoord).contextClick()
+                .moveByOffset(-5, -5).click().perform();
     }
 
 }

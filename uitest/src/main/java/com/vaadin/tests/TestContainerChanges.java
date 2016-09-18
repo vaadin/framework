@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.vaadin.tests;
 
@@ -23,7 +23,7 @@ import com.vaadin.ui.themes.Reindeer;
 
 /**
  * @author marc
- * 
+ *
  */
 public class TestContainerChanges extends CustomComponent {
     Container cont = new IndexedContainer();
@@ -72,8 +72,8 @@ public class TestContainerChanges extends CustomComponent {
         tbl2.addListener(new Table.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                System.err.println("Value now "
-                        + event.getProperty().getValue());
+                System.err
+                        .println("Value now " + event.getProperty().getValue());
 
             }
         });

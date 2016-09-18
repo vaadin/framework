@@ -33,9 +33,10 @@ public class FormTooltips extends AbstractTestUI {
         final Form form = new Form();
         form.setId("tooltipForm");
         form.setDescription("Some description");
-        form.setItemDataSource(new BeanItem<Person>(new Person("foo", "bar",
-                "baz", 12, Sex.MALE, null)), Arrays.asList(new String[] {
-                "firstName", "lastName", "age" }));
+        form.setItemDataSource(
+                new BeanItem<Person>(
+                        new Person("foo", "bar", "baz", 12, Sex.MALE, null)),
+                Arrays.asList(new String[] { "firstName", "lastName", "age" }));
         ((TextField) form.getField("firstName"))
                 .setDescription("Fields own tooltip");
 

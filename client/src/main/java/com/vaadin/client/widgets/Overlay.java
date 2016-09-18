@@ -50,7 +50,7 @@ import com.vaadin.client.WidgetUtil;
  * <p>
  * <b>Note:</b> This class should always be constructed with
  * {@link GWT#create(Class)}.
- * 
+ *
  * <h3>Shadow</h3>
  * <p>
  * The separate shadow element underneath the main overlay element is <strong>
@@ -61,7 +61,7 @@ import com.vaadin.client.WidgetUtil;
  * supports, add <code>-webkit-box-shadow</code> and the standard
  * <code>box-shadow</code> properties.
  * </p>
- * 
+ *
  * <p>
  * For IE8, which doesn't support CSS box-shadow, you can use the proprietary
  * DropShadow filter. It doesn't provide the exact same features as box-shadow,
@@ -69,13 +69,13 @@ import com.vaadin.client.WidgetUtil;
  * border or a pseudo-element underneath the overlay which mimics a shadow, or
  * any combination of these.
  * </p>
- * 
+ *
  * <p>
- * Read more about the DropShadow filter from <a
- * href="http://msdn.microsoft.com/en-us/library/ms532985(v=vs.85).aspx"
+ * Read more about the DropShadow filter from
+ * <a href="http://msdn.microsoft.com/en-us/library/ms532985(v=vs.85).aspx"
  * >Microsoft Developer Network</a>
  * </p>
- * 
+ *
  * @since 7.6.1
  */
 public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
@@ -165,7 +165,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * Shadow element style. If an extending class wishes to use a different
      * style of shadow, it can use setShadowStyle(String) to give the shadow
      * element a new style name.
-     * 
+     *
      * @deprecated See main JavaDoc for Overlay
      */
     @Deprecated
@@ -188,9 +188,9 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     /**
      * The shadow element for this overlay.
-     * 
+     *
      * @deprecated See main JavaDoc for Overlay
-     * 
+     *
      */
     @Deprecated
     private Element shadow;
@@ -210,7 +210,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * The HTML snippet that is used to render the actual shadow. In consists of
      * nine different DIV-elements with the following class names:
-     * 
+     *
      * <pre>
      *   .v-shadow[-stylename]
      *   ----------------------------------------------
@@ -223,9 +223,9 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
      *   | .bottom-left  |  .bottom  |  .bottom-right |
      *   ----------------------------------------------
      * </pre>
-     * 
+     *
      * See default theme 'shadow.css' for implementation example.
-     * 
+     *
      * @deprecated See main JavaDoc for Overlay
      */
     @Deprecated
@@ -274,7 +274,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * Return true if a separate shadow div should be used. Since Vaadin 7.3,
      * shadows are implemented with CSS box-shadow. Thus, a shadow div is only
      * used for IE8 by default.
-     * 
+     *
      * @deprecated See main JavaDoc for Overlay
      * @since 7.3
      * @return true to use a shadow div
@@ -288,10 +288,10 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * Method to control whether DOM elements for shadow are added. With this
      * method subclasses can control displaying of shadow also after the
      * constructor.
-     * 
+     *
      * @param enabled
      *            true if shadow should be displayed
-     * 
+     *
      * @deprecated See main JavaDoc for Overlay
      */
     @Deprecated
@@ -355,7 +355,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     /**
      * Set the z-index (visual stack position) for this overlay.
-     * 
+     *
      * @param zIndex
      *            The new z-index
      */
@@ -526,7 +526,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * A "thread local" of sorts, set temporarily so that OverlayImpl knows
      * which Overlay is using it, so that it can be attached to the correct
      * overlay container.
-     * 
+     *
      * TODO this is a strange pattern that we should get rid of when possible.
      */
     protected static Overlay current;
@@ -575,17 +575,20 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
             if (animationName.contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
                 // Disable GWT PopupPanel animation if used
                 setAnimationEnabled(false);
-                AnimationUtil.addAnimationEndListener(
-                        getElement(), new AnimationEndListener() {
+                AnimationUtil.addAnimationEndListener(getElement(),
+                        new AnimationEndListener() {
                             @Override
                             public void onAnimationEnd(NativeEvent event) {
                                 String animationName = AnimationUtil
                                         .getAnimationName(event);
-                                if (animationName
-                                        .contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
-                                    boolean removed = AnimationUtil.removeAnimationEndListener(getElement(), this);
-                                    assert removed: "Animation end listener was not removed";
-                                    removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                                if (animationName.contains(
+                                        ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                                    boolean removed = AnimationUtil
+                                            .removeAnimationEndListener(
+                                                    getElement(), this);
+                                    assert removed : "Animation end listener was not removed";
+                                    removeStyleDependentName(
+                                            ADDITIONAL_CLASSNAME_ANIMATE_IN);
                                     if (isShadowEnabled()) {
                                         shadow.removeClassName(CLASSNAME_SHADOW
                                                 + "-"
@@ -644,12 +647,12 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * Sets the shadow style for this overlay. Will override any previous style
      * for the shadow. The default style name is defined by CLASSNAME_SHADOW.
      * The given style will be prefixed with CLASSNAME_SHADOW.
-     * 
+     *
      * @param style
      *            The new style name for the shadow element. Will be prefixed by
      *            CLASSNAME_SHADOW, e.g. style=='foobar' -> actual style
      *            name=='v-shadow-foobar'.
-     * 
+     *
      * @deprecated See main JavaDoc for Overlay
      */
     @Deprecated
@@ -663,7 +666,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * Extending classes should always call this method after they change the
      * size of overlay without using normal 'setWidth(String)' and
      * 'setHeight(String)' methods (if not calling super.setWidth/Height).
-     * 
+     *
      */
     public void positionOrSizeUpdated() {
         positionOrSizeUpdated(1.0);
@@ -682,7 +685,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * elements. Can be used to animate the related elements, using the
      * 'progress' parameter (used to animate the shadow in sync with GWT
      * PopupPanel's default animation 'PopupPanel.AnimationType.CENTER').
-     * 
+     *
      * @param progress
      *            A value between 0.0 and 1.0, indicating the progress of the
      *            animation (0=start, 1=end).
@@ -768,18 +771,12 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
         // Opera fix, part 2 (ticket #2704)
         if (BrowserInfo.get().isOpera()) {
             // We'll fix the height of all the middle elements
-            DOM.getChild(shadow, 3)
-                    .getStyle()
-                    .setPropertyPx("height",
-                            DOM.getChild(shadow, 3).getOffsetHeight());
-            DOM.getChild(shadow, 4)
-                    .getStyle()
-                    .setPropertyPx("height",
-                            DOM.getChild(shadow, 4).getOffsetHeight());
-            DOM.getChild(shadow, 5)
-                    .getStyle()
-                    .setPropertyPx("height",
-                            DOM.getChild(shadow, 5).getOffsetHeight());
+            DOM.getChild(shadow, 3).getStyle().setPropertyPx("height",
+                    DOM.getChild(shadow, 3).getOffsetHeight());
+            DOM.getChild(shadow, 4).getStyle().setPropertyPx("height",
+                    DOM.getChild(shadow, 4).getOffsetHeight());
+            DOM.getChild(shadow, 5).getStyle().setPropertyPx("height",
+                    DOM.getChild(shadow, 5).getOffsetHeight());
         }
     }
 
@@ -791,7 +788,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * Returns true if we should add a shim iframe below the overlay to deal
      * with zindex issues with PDFs and applets. Can be overriden to disable
      * shim iframes if they are not needed.
-     * 
+     *
      * @return true if a shim iframe should be added, false otherwise
      */
     protected boolean needsShimElement() {
@@ -853,13 +850,13 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * Enables or disables sinking the events of the shadow to the same
      * onBrowserEvent as events to the actual overlay goes.
-     * 
+     *
      * Please note, that if you enable this, you can't assume that e.g.
      * event.getEventTarget returns an element inside the DOM structure of the
      * overlay
-     * 
+     *
      * @param sinkShadowEvents
-     * 
+     *
      * @deprecated See main JavaDoc for Overlay
      */
     @Deprecated
@@ -883,7 +880,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * Get owner (Widget that made this Overlay, not the layout parent) of
      * Overlay
-     * 
+     *
      * @return Owner (creator) or null if not defined
      */
     public Widget getOwner() {
@@ -893,7 +890,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * Set owner (Widget that made this Overlay, not the layout parent) of
      * Overlay
-     * 
+     *
      * @param owner
      *            Owner (creator) of Overlay
      */
@@ -903,7 +900,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     /**
      * Gets the 'overlay container' element.
-     * 
+     *
      * @return the overlay container element
      */
     public com.google.gwt.user.client.Element getOverlayContainer() {
@@ -929,10 +926,10 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * Gets the visual viewport width, which is useful for e.g iOS where the
      * view can be zoomed in while keeping the layout viewport intact.
-     * 
+     *
      * Falls back to layout viewport; for those browsers/devices the difference
      * is that the scrollbar with is included (if there is a scrollbar).
-     * 
+     *
      * @since 7.0.7
      * @return
      */
@@ -948,10 +945,10 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * Gets the visual viewport height, which is useful for e.g iOS where the
      * view can be zoomed in while keeping the layout viewport intact.
-     * 
+     *
      * Falls back to layout viewport; for those browsers/devices the difference
      * is that the scrollbar with is included (if there is a scrollbar).
-     * 
+     *
      * @since 7.0.7
      * @return
      */
@@ -976,7 +973,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.gwt.user.client.ui.PopupPanel#hide()
      */
     @Override
@@ -986,7 +983,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.gwt.user.client.ui.PopupPanel#hide(boolean)
      */
     @Override
@@ -995,13 +992,13 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
     }
 
     /**
-     * 
+     *
      * Hides the popup and detaches it from the page. This has no effect if it
      * is not currently showing. Animation-in, animation-out can be
      * enable/disabled for different use cases.
-     * 
+     *
      * @see com.google.gwt.user.client.ui.PopupPanel#hide(boolean)
-     * 
+     *
      * @param autoClosed
      *            the value that will be passed to
      *            {@link CloseHandler#onClose(CloseEvent)} when the popup is
@@ -1017,18 +1014,19 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
         if (BrowserInfo.get().isIE8() || BrowserInfo.get().isIE9()) {
             reallyHide(autoClosed);
         } else {
-            if (animateIn
-                    && getStyleName().contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+            if (animateIn && getStyleName()
+                    .contains(ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
                 AnimationUtil.addAnimationEndListener(getElement(),
                         new AnimationEndListener() {
                             @Override
                             public void onAnimationEnd(NativeEvent event) {
-                                if (AnimationUtil
-                                        .getAnimationName(event)
+                                if (AnimationUtil.getAnimationName(event)
                                         .contains(
                                                 ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
-                                    boolean removed = AnimationUtil.removeAnimationEndListener(getElement(), this);
-                                    assert removed: "Animation end listener was not removed";
+                                    boolean removed = AnimationUtil
+                                            .removeAnimationEndListener(
+                                                    getElement(), this);
+                                    assert removed : "Animation end listener was not removed";
                                     reallyHide(autoClosed);
                                 }
                             }
@@ -1046,9 +1044,8 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
                     animationName = "";
                 }
 
-                if (animateOut
-                        && animationName
-                                .contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
+                if (animateOut && animationName
+                        .contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
                     // Disable GWT PopupPanel closing animation if used
                     setAnimationEnabled(false);
 
@@ -1058,21 +1055,25 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
                                 public void onAnimationEnd(NativeEvent event) {
                                     String animationName = AnimationUtil
                                             .getAnimationName(event);
-                                    if (animationName
-                                            .contains(ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
-                                        boolean removed = AnimationUtil.removeAnimationEndListener(getElement(), this);
-                                        assert removed: "Animation end listener was not removed";
+                                    if (animationName.contains(
+                                            ADDITIONAL_CLASSNAME_ANIMATE_OUT)) {
+                                        boolean removed = AnimationUtil
+                                                .removeAnimationEndListener(
+                                                        getElement(), this);
+                                        assert removed : "Animation end listener was not removed";
                                         // Remove both animation styles just in
                                         // case
-                                        removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_IN);
-                                        removeStyleDependentName(ADDITIONAL_CLASSNAME_ANIMATE_OUT);
+                                        removeStyleDependentName(
+                                                ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                                        removeStyleDependentName(
+                                                ADDITIONAL_CLASSNAME_ANIMATE_OUT);
                                         if (isShadowEnabled()) {
-                                            shadow.removeClassName(CLASSNAME_SHADOW
-                                                    + "-"
-                                                    + ADDITIONAL_CLASSNAME_ANIMATE_IN);
-                                            shadow.removeClassName(CLASSNAME_SHADOW
-                                                    + "-"
-                                                    + ADDITIONAL_CLASSNAME_ANIMATE_OUT);
+                                            shadow.removeClassName(
+                                                    CLASSNAME_SHADOW + "-"
+                                                            + ADDITIONAL_CLASSNAME_ANIMATE_IN);
+                                            shadow.removeClassName(
+                                                    CLASSNAME_SHADOW + "-"
+                                                            + ADDITIONAL_CLASSNAME_ANIMATE_OUT);
                                         }
                                         reallyHide(autoClosed);
                                     }
@@ -1114,7 +1115,7 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * it does not fit on either side. If the popup is larger than the window,
      * it will be shrunk to fit and assume that scrolling e.g. using
      * <code>overflow:auto</code>, is taken care of by the overlay user.
-     * 
+     *
      * @since 7.6.6
      * @param fitInWindow
      *            <code>true</code> to ensure that no part of the popup is
@@ -1128,9 +1129,9 @@ public class Overlay extends PopupPanel implements CloseHandler<PopupPanel> {
     /**
      * Checks whether the overlay should be moved or shrunk to fit inside the
      * window.
-     * 
+     *
      * @see #setFitInWindow(boolean)
-     * 
+     *
      * @since 7.6.6
      * @return <code>true</code> if the popup will be moved and/or shrunk to fit
      *         inside the window, <code>false</code> otherwise

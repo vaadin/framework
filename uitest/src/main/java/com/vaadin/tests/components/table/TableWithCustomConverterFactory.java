@@ -25,8 +25,8 @@ import com.vaadin.ui.Table;
 
 public class TableWithCustomConverterFactory extends AbstractTestUI {
 
-    public static class MyIntegerConverter implements
-            Converter<String, Integer> {
+    public static class MyIntegerConverter
+            implements Converter<String, Integer> {
 
         @Override
         public Integer convertToModel(String value,
@@ -57,7 +57,8 @@ public class TableWithCustomConverterFactory extends AbstractTestUI {
 
     public static class MyConverterFactory extends DefaultConverterFactory {
         @Override
-        protected Converter<String, ?> createStringConverter(Class<?> sourceType) {
+        protected Converter<String, ?> createStringConverter(
+                Class<?> sourceType) {
             if (Integer.class.isAssignableFrom(sourceType)) {
                 return new MyIntegerConverter();
             } else {

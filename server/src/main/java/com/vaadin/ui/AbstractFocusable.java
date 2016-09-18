@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,12 +28,12 @@ import com.vaadin.ui.Component.Focusable;
 /**
  * An abstract base class for focusable components. Includes API for setting the
  * tab index, programmatic focusing, and adding focus and blur listeners.
- * 
+ *
  * @since 7.6
  * @author Vaadin Ltd
  */
-public abstract class AbstractFocusable extends AbstractComponent implements
-        Focusable, FocusNotifier, BlurNotifier {
+public abstract class AbstractFocusable extends AbstractComponent
+        implements Focusable, FocusNotifier, BlurNotifier {
 
     protected AbstractFocusable() {
         registerRpc(new FocusAndBlurServerRpcImpl(this) {

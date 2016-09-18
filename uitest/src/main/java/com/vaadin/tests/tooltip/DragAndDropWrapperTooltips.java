@@ -36,8 +36,8 @@ public class DragAndDropWrapperTooltips extends AbstractTestUI {
         l.setWidth("400px");
         l.setHeight("100px");
         dragAndDropWrapper = new DragAndDropWrapper(cssLayout);
-        dragAndDropWrapper
-                .setDescription("Tooltip for the wrapper wrapping all the draggable layouts");
+        dragAndDropWrapper.setDescription(
+                "Tooltip for the wrapper wrapping all the draggable layouts");
         dragAndDropWrapper.setSizeFull();
         l.addComponent(dragAndDropWrapper);
 
@@ -104,8 +104,8 @@ public class DragAndDropWrapperTooltips extends AbstractTestUI {
                         }
                         next = componentIterator.next();
                     }
-                    if (dropTargetData.getData("horizontalLocation").equals(
-                            "LEFT")) {
+                    if (dropTargetData.getData("horizontalLocation")
+                            .equals("LEFT")) {
                         index--;
                         if (index < 0) {
                             index = 0;
@@ -115,8 +115,8 @@ public class DragAndDropWrapperTooltips extends AbstractTestUI {
                     cssLayout.removeComponent(sourceComponent);
                     cssLayout.addComponent(sourceComponent, index);
 
-                    dragAndDropWrapper
-                            .setDescription("Drag was performed and tooltip was changed");
+                    dragAndDropWrapper.setDescription(
+                            "Drag was performed and tooltip was changed");
                 }
             }
         }

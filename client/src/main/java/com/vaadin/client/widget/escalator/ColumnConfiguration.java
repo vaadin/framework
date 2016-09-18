@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * A representation of the columns in an instance of {@link Escalator}.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  * @see Escalator#getColumnConfiguration()
@@ -37,7 +37,7 @@ public interface ColumnConfiguration {
      * do much of anything else. Especially if you have column spans, you
      * probably need to run {@link #refreshColumns(int, int)} or
      * {@link RowContainer#refreshRows(int, int)}
-     * 
+     *
      * @param index
      *            the index of the first column to be removed
      * @param numberOfColumns
@@ -71,7 +71,7 @@ public interface ColumnConfiguration {
      * columns (e.g. you have column spans),
      * {@link RowContainer#refreshRows(int, int)} or
      * {@link #refreshColumns(int, int)} needs to be called as appropriate.
-     * 
+     *
      * @param index
      *            the index of the column before which new columns are inserted,
      *            or {@link #getColumnCount()} to add new columns at the end
@@ -88,7 +88,7 @@ public interface ColumnConfiguration {
 
     /**
      * Returns the number of columns in the escalator.
-     * 
+     *
      * @return the number of columns in the escalator
      */
     public int getColumnCount();
@@ -96,27 +96,27 @@ public interface ColumnConfiguration {
     /**
      * Sets the number of leftmost columns that are not affected by horizontal
      * scrolling.
-     * 
+     *
      * @param count
      *            the number of columns to freeze
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the column count is &lt; 0 or &gt; the number of columns
-     * 
+     *
      */
     public void setFrozenColumnCount(int count) throws IllegalArgumentException;
 
     /**
      * Get the number of leftmost columns that are not affected by horizontal
      * scrolling.
-     * 
+     *
      * @return the number of frozen columns
      */
     public int getFrozenColumnCount();
 
     /**
      * Sets (or unsets) an explicit width for a column.
-     * 
+     *
      * @param index
      *            the index of the column for which to set a width
      * @param px
@@ -130,7 +130,7 @@ public interface ColumnConfiguration {
 
     /**
      * Returns the user-defined width of a column.
-     * 
+     *
      * @param index
      *            the index of the column for which to retrieve the width
      * @return the column's width in pixels, or a negative number if the width
@@ -142,7 +142,7 @@ public interface ColumnConfiguration {
 
     /**
      * Sets widths for a set of columns.
-     * 
+     *
      * @param indexWidthMap
      *            a map from column index to its respective width to be set. If
      *            the given width for a column index is negative, the column is
@@ -159,7 +159,7 @@ public interface ColumnConfiguration {
 
     /**
      * Returns the actual width of a column.
-     * 
+     *
      * @param index
      *            the index of the column for which to retrieve the width
      * @return the column's actual width in pixels
@@ -175,7 +175,7 @@ public interface ColumnConfiguration {
      * <p>
      * The data for the refreshed columns is queried from the current cell
      * renderer.
-     * 
+     *
      * @param index
      *            the index of the first row that will be updated
      * @param numberOfRows

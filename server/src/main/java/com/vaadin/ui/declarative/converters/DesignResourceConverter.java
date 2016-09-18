@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,7 +35,7 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 /**
  * A converter for {@link Resource} implementations supported by
  * {@link DesignAttributeHandler}.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -73,8 +73,8 @@ public class DesignResourceConverter implements Converter<String, Resource> {
         if (byType != null) {
             return byType.format(value);
         } else {
-            throw new Converter.ConversionException("unknown Resource type - "
-                    + value.getClass().getName());
+            throw new Converter.ConversionException(
+                    "unknown Resource type - " + value.getClass().getName());
         }
     }
 
@@ -94,8 +94,8 @@ public class DesignResourceConverter implements Converter<String, Resource> {
         public Resource parse(String value);
     }
 
-    private static enum ResourceConverterByProtocol implements
-            ProtocolResourceConverter {
+    private static enum ResourceConverterByProtocol
+            implements ProtocolResourceConverter {
 
         HTTP, HTTPS, FTP, FTPS, THEME {
 
@@ -125,7 +125,8 @@ public class DesignResourceConverter implements Converter<String, Resource> {
                     } catch (IllegalArgumentException iae) {
                         throw new ConversionException(
                                 "Unknown codepoint in FontAwesome: "
-                                        + codepoint, iae);
+                                        + codepoint,
+                                iae);
                     }
                 }
 
@@ -154,17 +155,17 @@ public class DesignResourceConverter implements Converter<String, Resource> {
                 try {
                     return FontAwesome.valueOf(iconName);
                 } catch (IllegalArgumentException iae) {
-                    throw new ConversionException("Unknown FontIcon constant: "
-                            + iconName, iae);
+                    throw new ConversionException(
+                            "Unknown FontIcon constant: " + iconName, iae);
                 }
             }
 
             @Override
             public String format(Resource value)
                     throws Converter.ConversionException {
-                throw new UnsupportedOperationException("Use "
-                        + ResourceConverterByProtocol.FONTICON.toString()
-                        + " instead");
+                throw new UnsupportedOperationException(
+                        "Use " + ResourceConverterByProtocol.FONTICON.toString()
+                                + " instead");
             }
         },
         FILE {

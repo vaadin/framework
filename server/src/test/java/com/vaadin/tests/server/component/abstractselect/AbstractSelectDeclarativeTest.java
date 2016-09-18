@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,11 +36,11 @@ import com.vaadin.ui.declarative.DesignException;
 
 /**
  * Test cases for reading the properties of selection components.
- * 
+ *
  * @author Vaadin Ltd
  */
-public class AbstractSelectDeclarativeTest extends
-        DeclarativeTestBase<AbstractSelect> {
+public class AbstractSelectDeclarativeTest
+        extends DeclarativeTestBase<AbstractSelect> {
 
     public String getDesignSingleSelectNewItemsAllowed() {
         return "<vaadin-combo-box new-items-allowed item-caption-mode='icon_only'"
@@ -100,7 +100,8 @@ public class AbstractSelectDeclarativeTest extends
     @Test(expected = DesignException.class)
     public void testReadMultipleValuesForSingleSelect() {
         testRead("<vaadin-list-select>" + "<option selected>1</option>"
-                + "<option selected>2</option>" + "</vaadin-list-select>", null);
+                + "<option selected>2</option>" + "</vaadin-list-select>",
+                null);
     }
 
     @Test
@@ -148,8 +149,8 @@ public class AbstractSelectDeclarativeTest extends
 
     @Test
     public void testWriteInlineData() {
-        testWrite(getDesignForInlineData(),
-                getExpectedComponentForInlineData(), true);
+        testWrite(getDesignForInlineData(), getExpectedComponentForInlineData(),
+                true);
     }
 
     private String getDesignForInlineData() {
@@ -162,8 +163,8 @@ public class AbstractSelectDeclarativeTest extends
     private AbstractSelect getExpectedComponentForInlineData() {
         AbstractSelect as = new ListSelect();
         as.addItem("Value 1");
-        as.setItemIcon("Value 1", new ExternalResource(
-                "http://some.url/icon.png"));
+        as.setItemIcon("Value 1",
+                new ExternalResource("http://some.url/icon.png"));
         as.addItem("Value 2");
         as.setValue("Value 2");
         return as;
@@ -198,7 +199,8 @@ public class AbstractSelectDeclarativeTest extends
         Element design = createDesignWithAttributesMultiSelect();
         ListSelect ls = new ListSelect();
         ls.readDesign(design, new DesignContext());
-        Assert.assertTrue("Multi select should be allowed.", ls.isMultiSelect());
+        Assert.assertTrue("Multi select should be allowed.",
+                ls.isMultiSelect());
         assertEquals("Wrong caption mode.",
                 AbstractSelect.ItemCaptionMode.EXPLICIT,
                 ls.getItemCaptionMode());
@@ -239,8 +241,7 @@ public class AbstractSelectDeclarativeTest extends
                 e.attr("item-caption-mode"));
         assertEquals("Wrong item icon property id.", "icon",
                 e.attr("item-icon-property-id"));
-        Assert.assertTrue(
-                "Null selection should be allowed.",
+        Assert.assertTrue("Null selection should be allowed.",
                 "".equals(e.attr("null-selection-allowed"))
                         || "true".equals(e.attr("null-selection-allowed")));
         assertEquals("Wrong null selection item id.", "No item selected",
@@ -254,8 +255,7 @@ public class AbstractSelectDeclarativeTest extends
         ls.writeDesign(e, new DesignContext());
         assertEquals("Null selection should not be allowed.", "false",
                 e.attr("null-selection-allowed"));
-        Assert.assertTrue(
-                "Multi select should be allowed.",
+        Assert.assertTrue("Multi select should be allowed.",
                 "".equals(e.attr("multi-select"))
                         || "true".equals(e.attr("multi-select")));
     }
@@ -274,11 +274,12 @@ public class AbstractSelectDeclarativeTest extends
 
         Element root = new Element(Tag.valueOf("vaadin-combo-box"), "");
         DesignContext dc = new DesignContext();
-        dc.setShouldWriteDataDelegate(DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
+        dc.setShouldWriteDataDelegate(
+                DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
         underTest.writeDesign(root, dc);
 
-        Assert.assertEquals("&gt; One", root.getElementsByTag("option").first()
-                .html());
+        Assert.assertEquals("&gt; One",
+                root.getElementsByTag("option").first().html());
     }
 
     public ComboBox createSingleSelectWithOnlyAttributes() {

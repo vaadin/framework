@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,8 +33,8 @@ import com.vaadin.client.ui.AbstractConnector;
 
 import elemental.json.JsonObject;
 
-public class StateChangeEvent extends
-        AbstractServerConnectorEvent<StateChangeHandler> {
+public class StateChangeEvent
+        extends AbstractServerConnectorEvent<StateChangeHandler> {
     /**
      * Type of this event, used by the event bus.
      */
@@ -65,7 +65,7 @@ public class StateChangeEvent extends
 
     /**
      * Creates a new state change event.
-     * 
+     *
      * @param connector
      *            the event whose state has changed
      * @param changedPropertiesSet
@@ -89,7 +89,7 @@ public class StateChangeEvent extends
 
     /**
      * Creates a new state change event.
-     * 
+     *
      * @param connector
      *            the event whose state has changed
      * @param changedProperties
@@ -107,7 +107,7 @@ public class StateChangeEvent extends
 
     /**
      * /** Creates a new state change event.
-     * 
+     *
      * @param connector
      *            the event whose state has changed
      * @param stateJson
@@ -131,7 +131,7 @@ public class StateChangeEvent extends
     /**
      * Event handler that gets notified whenever any part of the state has been
      * updated by the server.
-     * 
+     *
      * @author Vaadin Ltd
      * @version @VERSION@
      * @since 7.0.0
@@ -139,7 +139,7 @@ public class StateChangeEvent extends
     public interface StateChangeHandler extends Serializable, EventHandler {
         /**
          * Notifies the event handler that the state has changed.
-         * 
+         *
          * @param stateChangeEvent
          *            the state change event with details about the change
          */
@@ -148,9 +148,9 @@ public class StateChangeEvent extends
 
     /**
      * Gets the properties that have changed.
-     * 
+     *
      * @return a set of names of the changed properties
-     * 
+     *
      * @deprecated As of 7.0.1, use {@link #hasPropertyChanged(String)} instead
      *             for improved performance.
      */
@@ -167,16 +167,17 @@ public class StateChangeEvent extends
 
     /**
      * Gets the properties that have changed.
-     * 
+     *
      * @return a set of names of the changed properties
-     * 
+     *
      * @deprecated As of 7.0.1, use {@link #hasPropertyChanged(String)} instead
      *             for improved performance.
      */
     @Deprecated
     public FastStringSet getChangedPropertiesFastSet() {
         if (changedProperties == null) {
-            Profiler.enter("StateChangeEvent.getChangedPropertiesFastSet populate");
+            Profiler.enter(
+                    "StateChangeEvent.getChangedPropertiesFastSet populate");
             changedProperties = FastStringSet.create();
 
             addJsonFields(stateJson, changedProperties, "");
@@ -186,14 +187,15 @@ public class StateChangeEvent extends
                         changedProperties, "");
             }
 
-            Profiler.leave("StateChangeEvent.getChangedPropertiesFastSet populate");
+            Profiler.leave(
+                    "StateChangeEvent.getChangedPropertiesFastSet populate");
         }
         return changedProperties;
     }
 
     /**
      * Checks whether the give property has changed.
-     * 
+     *
      * @param property
      *            the name of the property to check
      * @return <code>true</code> if the property has changed, else
@@ -224,7 +226,7 @@ public class StateChangeEvent extends
     /**
      * Checks whether the given property name (which might contains dots) is
      * defined in some JavaScript object.
-     * 
+     *
      * @param property
      *            the name of the property, might include dots to reference
      *            inner objects
@@ -255,7 +257,7 @@ public class StateChangeEvent extends
 
     /**
      * Recursively adds the names of all properties in the provided state type.
-     * 
+     *
      * @param type
      *            the type to process
      * @param changedProperties
@@ -282,15 +284,17 @@ public class StateChangeEvent extends
                 }
             }
         } catch (NoDataException e) {
-            throw new IllegalStateException("No property info for " + type
-                    + ". Did you remember to compile the right widgetset?", e);
+            throw new IllegalStateException(
+                    "No property info for " + type
+                            + ". Did you remember to compile the right widgetset?",
+                    e);
         }
     }
 
     /**
      * Recursively adds the names of all fields in all objects in the provided
      * json object.
-     * 
+     *
      * @param json
      *            the json object to process
      * @param changedProperties
@@ -315,7 +319,7 @@ public class StateChangeEvent extends
     /**
      * Checks if the state change event is the first one for the given
      * connector.
-     * 
+     *
      * @since 7.1
      * @return true if this is the first state change event for the connector,
      *         false otherwise

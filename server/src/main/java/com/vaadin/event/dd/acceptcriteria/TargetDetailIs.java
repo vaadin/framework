@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -14,7 +14,7 @@
  * the License.
  */
 /**
- * 
+ *
  */
 package com.vaadin.event.dd.acceptcriteria;
 
@@ -26,11 +26,11 @@ import com.vaadin.server.PaintTarget;
 /**
  * Criterion for checking if drop target details contains the specific property
  * with the specific value. Currently only String values are supported.
- * 
+ *
  * @since 6.3
- * 
+ *
  *        TODO add support for other basic data types that we support in UIDL.
- * 
+ *
  */
 public class TargetDetailIs extends ClientSideCriterion {
 
@@ -41,7 +41,7 @@ public class TargetDetailIs extends ClientSideCriterion {
     /**
      * Constructs a criterion which ensures that the value there is a value in
      * {@link TargetDetails} that equals the reference value.
-     * 
+     *
      * @param dataFlavor
      *            the type of data to be checked
      * @param value

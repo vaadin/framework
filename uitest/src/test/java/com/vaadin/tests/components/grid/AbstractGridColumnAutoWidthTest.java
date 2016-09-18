@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -100,10 +100,10 @@ public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
         WebElement[] col = new WebElement[3];
         col[0] = getDriver().findElement(
                 By.xpath("//thead//th[" + (i + 1) + "]/div[1]/span"));
-        col[1] = getDriver().findElement(
-                By.xpath("//tbody//td[" + (i + 1) + "]//span"));
-        col[2] = getDriver().findElement(
-                By.xpath("//tbody//td[" + (i + 1) + "]"));
+        col[1] = getDriver()
+                .findElement(By.xpath("//tbody//td[" + (i + 1) + "]//span"));
+        col[2] = getDriver()
+                .findElement(By.xpath("//tbody//td[" + (i + 1) + "]"));
         return col;
     }
 

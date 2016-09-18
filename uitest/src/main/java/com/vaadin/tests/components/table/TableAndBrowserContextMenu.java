@@ -13,8 +13,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Table;
 
-public class TableAndBrowserContextMenu extends TestBase implements
-        Action.Handler, ItemClickListener {
+public class TableAndBrowserContextMenu extends TestBase
+        implements Action.Handler, ItemClickListener {
 
     private Table table;
     private boolean actionHandlerHasActions = false;
@@ -53,7 +53,8 @@ public class TableAndBrowserContextMenu extends TestBase implements
         });
         addComponent(cbActionHandler);
 
-        CheckBox cbActionHasActions = new CheckBox("Action handler has actions");
+        CheckBox cbActionHasActions = new CheckBox(
+                "Action handler has actions");
         cbActionHasActions.setImmediate(true);
         cbActionHasActions.addListener(new ValueChangeListener() {
 

@@ -52,8 +52,8 @@ public class SelectionAndCursorPosition extends TestBase {
         fl.addComponent(b);
 
         HorizontalLayout selectRange = new HorizontalLayout();
-        selectRange
-                .setCaption("Select range of text ( setSelectionRange(int start, int lengt) )");
+        selectRange.setCaption(
+                "Select range of text ( setSelectionRange(int start, int lengt) )");
         final TextField start = new TextField("From:");
         final TextField length = new TextField("Selection length:");
         b = new Button("select");
@@ -85,8 +85,8 @@ public class SelectionAndCursorPosition extends TestBase {
 
         setCursorPosition.addComponent(pos);
         setCursorPosition.addComponent(b);
-        setCursorPosition
-                .setCaption("Set cursor position ( setCursorPosition(int pos) )");
+        setCursorPosition.setCaption(
+                "Set cursor position ( setCursorPosition(int pos) )");
         fl.addComponent(setCursorPosition);
 
         getLayout().addComponent(textField);

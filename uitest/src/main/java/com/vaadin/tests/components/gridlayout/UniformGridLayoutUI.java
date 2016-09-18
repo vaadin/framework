@@ -23,7 +23,8 @@ public class UniformGridLayoutUI extends UI {
         layout.addComponent(createGridWithoutGridBuilder(3, hide));
     }
 
-    private GridLayout createGridWithoutGridBuilder(int rows, boolean collapse) {
+    private GridLayout createGridWithoutGridBuilder(int rows,
+            boolean collapse) {
         GridLayout grid = new GridLayout(30, 3);
         grid.setWidth("100%");
         // grid.setMargin(true);

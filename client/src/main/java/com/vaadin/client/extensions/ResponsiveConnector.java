@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -34,14 +34,14 @@ import com.vaadin.shared.util.SharedUtil;
 
 /**
  * The client side connector for the Responsive extension.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.2
  */
 @SuppressWarnings("GwtInconsistentSerializableClass")
 @Connect(Responsive.class)
-public class ResponsiveConnector extends AbstractExtensionConnector implements
-        ElementResizeListener {
+public class ResponsiveConnector extends AbstractExtensionConnector
+        implements ElementResizeListener {
 
     /**
      * The target component which we will monitor for width changes
@@ -99,7 +99,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
     /**
      * Construct the list of selectors that should be matched against in the
      * range selectors
-     * 
+     *
      * @return The selectors in a comma delimited string.
      */
     protected String constructSelectorsForTarget() {
@@ -192,7 +192,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
      * Process an individual stylesheet object. Any @import statements are
      * handled recursively. Regular rule declarations are searched for
      * 'width-range' and 'height-range' attribute selectors.
-     * 
+     *
      * @param sheet
      */
     private static native void searchStylesheetForBreakPoints(
@@ -268,7 +268,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
 
                 // Loop all the selectors in this ruleset
                 for(var k = 0, len2 = haystack.length; k < len2; k++) {
-                    
+
                     // Split the haystack into parts.
                     var widthRange = haystack[k].match(/\[width-range.*?\]/);
                     var heightRange = haystack[k].match(/\[height-range.*?\]/);
@@ -276,13 +276,13 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
 
                     if (selector != null) {
                         selector = selector[1];
-                        
+
                         // Check for width-ranges.
                         if (widthRange != null) {
                             var minMax = widthRange[0].match(/\[width-range~?=["|'](.*?)-(.*?)["|']\]/i);
                             var min = minMax[1];
                             var max = minMax[2];
-                            
+
                             pushToCache(widthRanges, selector, min, max);
                         }
 
@@ -291,7 +291,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
                             var minMax = heightRange[0].match(/\[height-range~?=["|'](.*?)-(.*?)["|']\]/i);
                             var min = minMax[1];
                             var max = minMax[2];
-    
+
                             pushToCache(heightRanges, selector, min, max);
                         }
                     }
@@ -303,7 +303,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
 
     /**
      * Get all matching ranges from the cache for this particular instance.
-     * 
+     *
      * @param selectors
      */
     private native void getBreakPointsFor(final String selectors)
@@ -386,8 +386,8 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
         // case some new styles are applied
         if (!currentWidthRanges.equals(oldWidthRanges)
                 || !currentHeightRanges.equals(oldHeightRanges)) {
-            layoutManager
-                    .setNeedsMeasureRecursively(ResponsiveConnector.this.target);
+            layoutManager.setNeedsMeasureRecursively(
+                    ResponsiveConnector.this.target);
         }
     }
 
@@ -395,7 +395,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
      * Forces IE8 to reinterpret CSS rules.
      * {@link com.vaadin.client.WidgetUtil#forceIE8Redraw(com.google.gwt.dom.client.Element)}
      * doesn't work in this case.
-     * 
+     *
      * @param element
      *            the element to redraw
      */

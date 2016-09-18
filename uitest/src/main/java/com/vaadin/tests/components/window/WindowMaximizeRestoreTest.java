@@ -145,8 +145,8 @@ public class WindowMaximizeRestoreTest extends AbstractTestUI {
             @Override
             public void windowClose(CloseEvent e) {
                 Item item = addWindowAgain.addItem(w);
-                addWindowAgain.setItemCaption(w, "Window "
-                        + w.getData().toString());
+                addWindowAgain.setItemCaption(w,
+                        "Window " + w.getData().toString());
             }
         });
 

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -74,11 +74,13 @@ public class PopupViews extends VerticalLayout implements View {
                 return new VerticalLayout() {
                     {
                         setMargin(true);
-                        addComponent(new Label(
-                                "<h3>Thanks for waiting!</h3><p>You've opened this popup <b>"
-                                        + ++count + " time"
-                                        + (count > 1 ? "s" : " only")
-                                        + "</b>.</p>", ContentMode.HTML));
+                        addComponent(
+                                new Label(
+                                        "<h3>Thanks for waiting!</h3><p>You've opened this popup <b>"
+                                                + ++count + " time"
+                                                + (count > 1 ? "s" : " only")
+                                                + "</b>.</p>",
+                                        ContentMode.HTML));
                     }
                 };
             }

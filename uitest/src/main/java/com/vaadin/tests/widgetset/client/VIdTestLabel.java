@@ -4,7 +4,7 @@ import com.vaadin.client.ui.VLabel;
 
 /**
  * Client-side implementation for IdTestLabel (#10179).
- * 
+ *
  */
 public class VIdTestLabel extends VLabel {
 

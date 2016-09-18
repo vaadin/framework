@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import com.vaadin.shared.ui.progressindicator.ProgressIndicatorState;
  * centralized management of when messages are sent to the server. Furthermore,
  * polling might not be needed at all if {@link UI#setPushMode(PushMode)} or
  * {@link UI#setPollInterval(int)} is used.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 4
  * @deprecated as of 7.1, use {@link ProgressBar} combined with
@@ -56,7 +56,7 @@ public class ProgressIndicator extends ProgressBar {
 
     /**
      * Creates a new instance of ProgressIndicator with given state.
-     * 
+     *
      * @param value
      */
     public ProgressIndicator(float value) {
@@ -67,7 +67,7 @@ public class ProgressIndicator extends ProgressBar {
     /**
      * Creates a new instance of ProgressIndicator with state read from the
      * given datasource.
-     * 
+     *
      * @param contentSource
      */
     public ProgressIndicator(Property contentSource) {
@@ -87,7 +87,7 @@ public class ProgressIndicator extends ProgressBar {
 
     /**
      * Sets the interval that component checks for progress.
-     * 
+     *
      * @param pollingInterval
      *            the interval in milliseconds.
      */
@@ -97,7 +97,7 @@ public class ProgressIndicator extends ProgressBar {
 
     /**
      * Gets the interval that component checks for progress.
-     * 
+     *
      * @return the interval in milliseconds.
      */
     public int getPollingInterval() {

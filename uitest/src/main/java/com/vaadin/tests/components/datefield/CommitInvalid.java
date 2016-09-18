@@ -48,7 +48,8 @@ public class CommitInvalid extends TestBase {
         /*
          * Create and configure Date Field, the actual component to be tested.
          */
-        dateProperty = new ObjectProperty<Date>(new Date(2009 - 1900, 4 - 1, 1));
+        dateProperty = new ObjectProperty<Date>(
+                new Date(2009 - 1900, 4 - 1, 1));
 
         dateField = new DateField("Year", dateProperty);
         dateField.setLocale(new Locale("fi", "FI"));

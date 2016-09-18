@@ -46,8 +46,8 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
 
     private InlineDateField createInlineDateField(String caption, String width,
             Locale locale) {
-        InlineDateField pd = new InlineDateField(caption + "("
-                + locale.toString() + ")");
+        InlineDateField pd = new InlineDateField(
+                caption + "(" + locale.toString() + ")");
         pd.setWidth(width);
         pd.setValue(new Date(12312312313L));
         pd.setLocale(locale);

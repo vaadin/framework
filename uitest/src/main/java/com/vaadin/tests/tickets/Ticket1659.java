@@ -12,14 +12,13 @@ public class Ticket1659 extends LegacyApplication {
     public void init() {
         final LegacyWindow mainWin = new LegacyWindow();
         setMainWindow(mainWin);
-        mainWin.addComponent(new Button(
-                "Change URI using Application.getURL()",
+        mainWin.addComponent(new Button("Change URI using Application.getURL()",
                 new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        mainWin.open(new ExternalResource(getURL() + "#"
-                                + System.currentTimeMillis()));
+                        mainWin.open(new ExternalResource(
+                                getURL() + "#" + System.currentTimeMillis()));
                     }
                 }));
         mainWin.addComponent(new Button("Change URI uring Window.getURL()",
@@ -27,8 +26,8 @@ public class Ticket1659 extends LegacyApplication {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        mainWin.open(new ExternalResource(mainWin.getURL()
-                                + "#" + System.currentTimeMillis()));
+                        mainWin.open(new ExternalResource(mainWin.getURL() + "#"
+                                + System.currentTimeMillis()));
                     }
                 }));
     }

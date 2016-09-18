@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -45,7 +45,7 @@ import elemental.json.JsonObject;
 /**
  * Provides a connection to the /UIDL url on the server and knows how to send
  * messages to that end point
- * 
+ *
  * @since 7.6
  * @author Vaadin Ltd
  */
@@ -119,7 +119,7 @@ public class XhrConnection {
 
         /**
          * Sets the payload which was sent to the server
-         * 
+         *
          * @param payload
          *            the payload which was sent to the server
          */
@@ -146,10 +146,9 @@ public class XhrConnection {
                 return;
             }
 
-            getLogger().info(
-                    "Server visit took "
-                            + Util.round(Profiler.getRelativeTimeMillis()
-                                    - requestStartTime, 3) + "ms");
+            getLogger().info("Server visit took " + Util.round(
+                    Profiler.getRelativeTimeMillis() - requestStartTime, 3)
+                    + "ms");
 
             // for(;;);["+ realJson +"]"
             String responseText = response.getText();
@@ -170,7 +169,7 @@ public class XhrConnection {
         /**
          * Sets the relative time (see {@link Profiler#getRelativeTimeMillis()})
          * when the request was sent.
-         * 
+         *
          * @param requestStartTime
          *            the relative time when the request was sent
          */
@@ -182,7 +181,7 @@ public class XhrConnection {
 
     /**
      * Sends an asynchronous UIDL request to the server using the given URI.
-     * 
+     *
      * @param payload
      *            The URI to use for the request. May includes GET parameters
      * @throws RequestException
@@ -221,14 +220,14 @@ public class XhrConnection {
                 }.schedule(retryTimeout);
             }
         } catch (RequestException e) {
-            getConnectionStateHandler().xhrException(
-                    new XhrConnectionError(null, payload, e));
+            getConnectionStateHandler()
+                    .xhrException(new XhrConnectionError(null, payload, e));
         }
     }
 
     /**
      * Retrieves the URI to use when sending RPCs to the server
-     * 
+     *
      * @return The URI to use for server messages.
      */
     protected String getUri() {
@@ -236,8 +235,8 @@ public class XhrConnection {
                 .translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
                         + ApplicationConstants.UIDL_PATH + '/');
 
-        uri = SharedUtil.addGetParameters(uri, UIConstants.UI_ID_PARAMETER
-                + "=" + connection.getConfiguration().getUIId());
+        uri = SharedUtil.addGetParameters(uri, UIConstants.UI_ID_PARAMETER + "="
+                + connection.getConfiguration().getUIId());
 
         return uri;
 

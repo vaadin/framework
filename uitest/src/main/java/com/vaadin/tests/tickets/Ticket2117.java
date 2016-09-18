@@ -50,12 +50,9 @@ public class Ticket2117 extends LegacyApplication {
 
     private LegacyWindow createWindow() {
         final LegacyWindow w = new LegacyWindow();
-        w.addComponent(new Label(
-                "Click this link: <a target=\"_blank\" href='"
-                        + getURL().toExternalForm()
-                        + "'>"
-                        + getURL().toExternalForm()
-                        + "</a> which opens new windows to this uri. They should end up having a separate Window and URL.",
+        w.addComponent(new Label("Click this link: <a target=\"_blank\" href='"
+                + getURL().toExternalForm() + "'>" + getURL().toExternalForm()
+                + "</a> which opens new windows to this uri. They should end up having a separate Window and URL.",
                 ContentMode.HTML));
         return w;
     }

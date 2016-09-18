@@ -50,7 +50,8 @@ public class TreeTablePartialUpdatesPageLength0 extends AbstractTestUI {
     }
 
     @SuppressWarnings("unchecked")
-    private void addNodesToRoot(HierarchicalContainer hc, Object root, int count) {
+    private void addNodesToRoot(HierarchicalContainer hc, Object root,
+            int count) {
         for (int ix = 0; ix < count; ix++) {
             Object id = hc.addItem();
             hc.getItem(id).getItemProperty("p1").setValue(String.valueOf(ix));

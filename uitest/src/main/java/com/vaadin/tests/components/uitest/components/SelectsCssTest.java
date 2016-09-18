@@ -76,7 +76,8 @@ public class SelectsCssTest extends GridLayout {
         addComponent(s);
 
         createComboBoxWith(null, null, "100px");
-        createComboBoxWith("CB Search", ChameleonTheme.COMBOBOX_SEARCH, "100px");
+        createComboBoxWith("CB Search", ChameleonTheme.COMBOBOX_SEARCH,
+                "100px");
         createComboBoxWith("SelectButton",
                 ChameleonTheme.COMBOBOX_SELECT_BUTTON, "100px");
     }

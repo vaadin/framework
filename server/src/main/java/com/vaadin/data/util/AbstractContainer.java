@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,7 +26,7 @@ import com.vaadin.data.Container;
 /**
  * Abstract container class that manages event listeners and sending events to
  * them ({@link PropertySetChangeNotifier}, {@link ItemSetChangeNotifier}).
- * 
+ *
  * Note that this class provides the internal implementations for both types of
  * events and notifiers as protected methods, but does not implement the
  * {@link PropertySetChangeNotifier} and {@link ItemSetChangeNotifier}
@@ -34,7 +34,7 @@ import com.vaadin.data.Container;
  * Subclasses implementing those interfaces should also override the
  * corresponding {@link #addListener()} and {@link #removeListener()} methods to
  * make them public.
- * 
+ *
  * @since 6.6
  */
 public abstract class AbstractContainer implements Container {
@@ -52,7 +52,7 @@ public abstract class AbstractContainer implements Container {
     /**
      * An <code>event</code> object specifying the container whose Property set
      * has changed.
-     * 
+     *
      * This class does not provide information about which properties were
      * concerned by the change, but subclasses can provide additional
      * information about the changes.
@@ -73,13 +73,13 @@ public abstract class AbstractContainer implements Container {
     /**
      * An <code>event</code> object specifying the container whose Item set has
      * changed.
-     * 
+     *
      * This class does not provide information about the exact changes
      * performed, but subclasses can add provide additional information about
      * the changes.
      */
-    protected static class BaseItemSetChangeEvent extends EventObject implements
-            Container.ItemSetChangeEvent, Serializable {
+    protected static class BaseItemSetChangeEvent extends EventObject
+            implements Container.ItemSetChangeEvent, Serializable {
 
         protected BaseItemSetChangeEvent(Container source) {
             super(source);
@@ -97,13 +97,14 @@ public abstract class AbstractContainer implements Container {
      * Implementation of the corresponding method in
      * {@link PropertySetChangeNotifier}, override with the corresponding public
      * method and implement the interface to use this.
-     * 
+     *
      * @see PropertySetChangeNotifier#addListener(com.vaadin.data.Container.PropertySetChangeListener)
      */
     protected void addPropertySetChangeListener(
             Container.PropertySetChangeListener listener) {
         if (getPropertySetChangeListeners() == null) {
-            setPropertySetChangeListeners(new LinkedList<Container.PropertySetChangeListener>());
+            setPropertySetChangeListeners(
+                    new LinkedList<Container.PropertySetChangeListener>());
         }
         getPropertySetChangeListeners().add(listener);
     }
@@ -121,7 +122,7 @@ public abstract class AbstractContainer implements Container {
      * Implementation of the corresponding method in
      * {@link PropertySetChangeNotifier}, override with the corresponding public
      * method and implement the interface to use this.
-     * 
+     *
      * @see PropertySetChangeNotifier#removeListener(com.vaadin.data.Container.
      *      PropertySetChangeListener)
      */
@@ -137,7 +138,8 @@ public abstract class AbstractContainer implements Container {
      *             {@link #removePropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
      **/
     @Deprecated
-    protected void removeListener(Container.PropertySetChangeListener listener) {
+    protected void removeListener(
+            Container.PropertySetChangeListener listener) {
         removePropertySetChangeListener(listener);
     }
 
@@ -147,13 +149,14 @@ public abstract class AbstractContainer implements Container {
      * Implementation of the corresponding method in
      * {@link ItemSetChangeNotifier}, override with the corresponding public
      * method and implement the interface to use this.
-     * 
+     *
      * @see ItemSetChangeNotifier#addListener(com.vaadin.data.Container.ItemSetChangeListener)
      */
     protected void addItemSetChangeListener(
             Container.ItemSetChangeListener listener) {
         if (getItemSetChangeListeners() == null) {
-            setItemSetChangeListeners(new LinkedList<Container.ItemSetChangeListener>());
+            setItemSetChangeListeners(
+                    new LinkedList<Container.ItemSetChangeListener>());
         }
         getItemSetChangeListeners().add(listener);
     }
@@ -171,7 +174,7 @@ public abstract class AbstractContainer implements Container {
      * Implementation of the corresponding method in
      * {@link ItemSetChangeNotifier}, override with the corresponding public
      * method and implement the interface to use this.
-     * 
+     *
      * @see ItemSetChangeNotifier#removeListener(com.vaadin.data.Container.ItemSetChangeListener)
      */
     protected void removeItemSetChangeListener(
@@ -199,11 +202,11 @@ public abstract class AbstractContainer implements Container {
 
     /**
      * Sends a Property set change event to all interested listeners.
-     * 
+     *
      * Use {@link #fireContainerPropertySetChange()} instead of this method
      * unless additional information about the exact changes is available and
      * should be included in the event.
-     * 
+     *
      * @param event
      *            the property change event to send, optionally with additional
      *            information
@@ -230,7 +233,7 @@ public abstract class AbstractContainer implements Container {
 
     /**
      * Sends an Item set change event to all registered interested listeners.
-     * 
+     *
      * @param event
      *            the item set change event to send, optionally with additional
      *            information
@@ -247,7 +250,7 @@ public abstract class AbstractContainer implements Container {
 
     /**
      * Sets the property set change listener collection. For internal use only.
-     * 
+     *
      * @param propertySetChangeListeners
      */
     protected void setPropertySetChangeListeners(
@@ -265,7 +268,7 @@ public abstract class AbstractContainer implements Container {
 
     /**
      * Sets the item set change listener collection. For internal use only.
-     * 
+     *
      * @param itemSetChangeListeners
      */
     protected void setItemSetChangeListeners(
@@ -281,7 +284,8 @@ public abstract class AbstractContainer implements Container {
     }
 
     public Collection<?> getListeners(Class<?> eventType) {
-        if (Container.PropertySetChangeEvent.class.isAssignableFrom(eventType)) {
+        if (Container.PropertySetChangeEvent.class
+                .isAssignableFrom(eventType)) {
             if (propertySetChangeListeners == null) {
                 return Collections.EMPTY_LIST;
             } else {

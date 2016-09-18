@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -54,15 +54,15 @@ public class BeanFieldGroup<T> extends FieldGroup {
                         propertyId.toString());
                 if (type == null) {
                     throw new BindException(
-                            "Cannot determine type of propertyId '"
-                                    + propertyId
+                            "Cannot determine type of propertyId '" + propertyId
                                     + "'. The propertyId was not found in "
                                     + beanType.getName());
                 }
                 return type;
             } catch (IntrospectionException e) {
                 throw new BindException("Cannot determine type of propertyId '"
-                        + propertyId + "'. Unable to introspect " + beanType, e);
+                        + propertyId + "'. Unable to introspect " + beanType,
+                        e);
             }
         }
     }
@@ -71,7 +71,8 @@ public class BeanFieldGroup<T> extends FieldGroup {
     protected Object findPropertyId(java.lang.reflect.Field memberField) {
         String fieldName = memberField.getName();
         Item dataSource = getItemDataSource();
-        if (dataSource != null && dataSource.getItemProperty(fieldName) != null) {
+        if (dataSource != null
+                && dataSource.getItemProperty(fieldName) != null) {
             return fieldName;
         } else {
             String minifiedFieldName = minifyFieldName(fieldName);
@@ -107,7 +108,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
      * <p>
      * For null values, a null item is passed to
      * {@link #setItemDataSource(Item)} to be properly clear fields.
-     * 
+     *
      * @param bean
      *            The bean to use as data source.
      */
@@ -190,9 +191,9 @@ public class BeanFieldGroup<T> extends FieldGroup {
     /**
      * Checks whether a bean validation implementation (e.g. Hibernate Validator
      * or Apache Bean Validation) is available.
-     * 
+     *
      * TODO move this method to some more generic location
-     * 
+     *
      * @return true if a JSR-303 bean validation implementation is available
      */
     protected static boolean isBeanValidationImplementationAvailable() {
@@ -219,7 +220,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
      * <p>
      * The returned {@link BeanFieldGroup} can be used for further
      * configuration.
-     * 
+     *
      * @see #bindFieldsBuffered(Object, Object)
      * @see #bindMemberFields(Object)
      * @since 7.2
@@ -240,7 +241,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
      * <p>
      * The returned {@link BeanFieldGroup} can be used for further
      * configuration.
-     * 
+     *
      * @see #bindFieldsUnbuffered(Object, Object)
      * @see #bindMemberFields(Object)
      * @since 7.2

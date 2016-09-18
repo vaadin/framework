@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,11 +24,11 @@ import com.vaadin.shared.ui.colorpicker.ColorPickerState;
 /**
  * An abstract class that defines default implementation for a color picker
  * connector.
- * 
+ *
  * @since 7.0.0
  */
-public abstract class AbstractColorPickerConnector extends
-        AbstractComponentConnector implements ClickHandler {
+public abstract class AbstractColorPickerConnector
+        extends AbstractComponentConnector implements ClickHandler {
 
     private static final String DEFAULT_WIDTH_STYLE = "v-default-caption-width";
 
@@ -49,9 +49,8 @@ public abstract class AbstractColorPickerConnector extends
         if (stateChangeEvent.hasPropertyChanged("color")) {
             refreshColor();
 
-            if (getState().showDefaultCaption
-                    && (getState().caption == null || ""
-                            .equals(getState().caption))) {
+            if (getState().showDefaultCaption && (getState().caption == null
+                    || "".equals(getState().caption))) {
 
                 setCaption(getState().color);
             }
@@ -75,12 +74,12 @@ public abstract class AbstractColorPickerConnector extends
 
     /**
      * Get caption for the color picker widget.
-     * 
+     *
      * @return
      */
     protected String getCaption() {
-        if (getState().showDefaultCaption
-                && (getState().caption == null || "".equals(getState().caption))) {
+        if (getState().showDefaultCaption && (getState().caption == null
+                || "".equals(getState().caption))) {
             return getState().color;
         }
         return getState().caption;
@@ -101,7 +100,7 @@ public abstract class AbstractColorPickerConnector extends
 
     /**
      * Set caption of the color picker widget.
-     * 
+     *
      * @param caption
      */
     protected abstract void setCaption(String caption);

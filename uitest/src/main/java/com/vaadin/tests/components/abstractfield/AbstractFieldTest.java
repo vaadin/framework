@@ -18,9 +18,9 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 
-public abstract class AbstractFieldTest<T extends AbstractField> extends
-        AbstractComponentTest<T> implements ValueChangeListener,
-        ReadOnlyStatusChangeListener {
+public abstract class AbstractFieldTest<T extends AbstractField>
+        extends AbstractComponentTest<T>
+        implements ValueChangeListener, ReadOnlyStatusChangeListener {
 
     private boolean sortValueChanges = true;
 
@@ -54,8 +54,8 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
         super.populateSettingsMenu(settingsMenu);
 
         if (AbstractField.class.isAssignableFrom(getTestClass())) {
-            MenuItem abstractField = settingsMenu
-                    .addItem("AbstractField", null);
+            MenuItem abstractField = settingsMenu.addItem("AbstractField",
+                    null);
             abstractField.addItem("Show value", new MenuBar.Command() {
 
                 @Override
@@ -101,8 +101,8 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
 
     private void createReadOnlyStatusChangeListener(String category) {
 
-        createBooleanAction("Read only status change listener", category,
-                false, readonlyStatusChangeListenerCommand);
+        createBooleanAction("Read only status change listener", category, false,
+                readonlyStatusChangeListenerCommand);
     }
 
     protected Command<T, Boolean> valueChangeListenerCommand = new Command<T, Boolean>() {
@@ -121,9 +121,11 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((ReadOnlyStatusChangeListener) AbstractFieldTest.this);
+                c.addListener(
+                        (ReadOnlyStatusChangeListener) AbstractFieldTest.this);
             } else {
-                c.removeListener((ReadOnlyStatusChangeListener) AbstractFieldTest.this);
+                c.removeListener(
+                        (ReadOnlyStatusChangeListener) AbstractFieldTest.this);
             }
         }
     };
@@ -189,7 +191,8 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
         List<String> values = new ArrayList<String>();
         values.add("Test");
         values.add("A little longer value");
-        values.add("A very long value with very much text. All in all it is 74 characters long");
+        values.add(
+                "A very long value with very much text. All in all it is 74 characters long");
 
         createClickAction("(empty string)", subCategory, setValueCommand, "");
         createClickAction("(null)", subCategory, setValueCommand, null);

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -44,8 +44,8 @@ import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperServerRpc;
 import com.vaadin.ui.declarative.DesignContext;
 
 @SuppressWarnings("serial")
-public class DragAndDropWrapper extends CustomComponent implements DropTarget,
-        DragSource, LegacyComponent {
+public class DragAndDropWrapper extends CustomComponent
+        implements DropTarget, DragSource, LegacyComponent {
 
     public class WrapperTransferable extends TransferableImpl {
 
@@ -73,7 +73,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         /**
          * The component in wrapper that is being dragged or null if the
          * transferable is not a component (most likely an html5 drag).
-         * 
+         *
          * @return
          */
         public Component getDraggedComponent() {
@@ -136,7 +136,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         }
 
         /**
-         * 
+         *
          * @return the absolute position of wrapper on the page
          */
         public Integer getAbsoluteTop() {
@@ -177,7 +177,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         WRAPPER,
         /**
          * The whole wrapper is used to start an HTML5 drag.
-         * 
+         *
          * NOTE: In Internet Explorer 6 to 8, this prevents user interactions
          * with the wrapper's contents. For example, clicking a button inside
          * the wrapper will no longer work.
@@ -200,7 +200,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
     /**
      * This is an internal constructor. Use
      * {@link DragAndDropWrapper#DragAndDropWrapper(Component)} instead.
-     * 
+     *
      * @since 7.5.0
      */
     @Deprecated
@@ -211,7 +211,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     /**
      * Wraps given component in a {@link DragAndDropWrapper}.
-     * 
+     *
      * @param root
      *            the component to be wrapped
      */
@@ -224,7 +224,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
      * Sets data flavors available in the DragAndDropWrapper is used to start an
      * HTML5 style drags. Most commonly the "Text" flavor should be set.
      * Multiple data types can be set.
-     * 
+     *
      * @param type
      *            the string identifier of the drag "payload". E.g. "Text" or
      *            "text/html"
@@ -279,7 +279,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                          * We want to avoid a new ProxyReceiver to be made since
                          * it'll get a new URL, so we need to keep extra track
                          * on what has been sent.
-                         * 
+                         *
                          * See #12330.
                          */
                         sentIds.add(id);
@@ -318,7 +318,8 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
     }
 
     @Override
-    public Transferable getTransferable(final Map<String, Object> rawVariables) {
+    public Transferable getTransferable(
+            final Map<String, Object> rawVariables) {
         return new WrapperTransferable(this, rawVariables);
     }
 
@@ -334,7 +335,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
     /**
      * Sets the component that will be used as the drag image. Only used when
      * wrapper is set to {@link DragStartMode#COMPONENT_OTHER}
-     * 
+     *
      * @param dragImageComponent
      */
     public void setDragImageComponent(Component dragImageComponent) {
@@ -345,7 +346,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
     /**
      * Gets the component that will be used as the drag image. Only used when
      * wrapper is set to {@link DragStartMode#COMPONENT_OTHER}
-     * 
+     *
      * @return <code>null</code> if no component is set.
      */
     public Component getDragImageComponent() {
@@ -379,16 +380,16 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
         @Override
         public void onProgress(StreamingProgressEvent event) {
-            file.getStreamVariable().onProgress(
-                    new ReceivingEventWrapper(event));
+            file.getStreamVariable()
+                    .onProgress(new ReceivingEventWrapper(event));
         }
 
         @Override
         public void streamingStarted(StreamingStartEvent event) {
             listenProgressOfUploadedFile = file.getStreamVariable() != null;
             if (listenProgressOfUploadedFile) {
-                file.getStreamVariable().streamingStarted(
-                        new ReceivingEventWrapper(event));
+                file.getStreamVariable()
+                        .streamingStarted(new ReceivingEventWrapper(event));
             }
             // no need tell to the client about this receiver on next paint
             receivers.remove(id);
@@ -401,16 +402,16 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         @Override
         public void streamingFinished(StreamingEndEvent event) {
             if (listenProgressOfUploadedFile) {
-                file.getStreamVariable().streamingFinished(
-                        new ReceivingEventWrapper(event));
+                file.getStreamVariable()
+                        .streamingFinished(new ReceivingEventWrapper(event));
             }
         }
 
         @Override
         public void streamingFailed(final StreamingErrorEvent event) {
             if (listenProgressOfUploadedFile) {
-                file.getStreamVariable().streamingFailed(
-                        new ReceivingEventWrapper(event));
+                file.getStreamVariable()
+                        .streamingFailed(new ReceivingEventWrapper(event));
             }
         }
 

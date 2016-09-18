@@ -21,8 +21,8 @@ public class ReflectToolsGetSuperFieldTest {
         }
 
         PropertysetItem item = new PropertysetItem();
-        item.addItemProperty("testProperty", new ObjectProperty<String>(
-                "Value of testProperty"));
+        item.addItemProperty("testProperty",
+                new ObjectProperty<String>("Value of testProperty"));
 
         MySubClass form = new MySubClass();
 

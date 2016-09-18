@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -38,7 +38,7 @@ import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Tests the handling of the locale property in parsing and html generation.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -92,7 +92,8 @@ public class LocaleTest {
         Element eb1 = ehLayout.child(0);
         assertTrue(
                 "The element should not have a locale specification, found locale "
-                        + eb1.attr("locale"), "".equals(eb1.attr("locale")));
+                        + eb1.attr("locale"),
+                "".equals(eb1.attr("locale")));
         Element eb2 = ehLayout.child(1);
         assertEquals("Wrong locale information.", "en_US", eb2.attr("locale"));
         Element ehLayout2 = evLayout.child(1);
@@ -103,7 +104,8 @@ public class LocaleTest {
         Element el1 = ehLayout2.child(0);
         assertTrue(
                 "The element should not have a locale specification, found locale "
-                        + el1.attr("locale"), "".equals(el1.attr("locale")));
+                        + el1.attr("locale"),
+                "".equals(el1.attr("locale")));
         Element el2 = ehLayout2.child(1);
         assertEquals("Wrong locale information.", "en_CA", el2.attr("locale"));
     }
@@ -174,8 +176,7 @@ public class LocaleTest {
         Button b2 = (Button) hLayout.getComponent(1);
         assertEquals("Wrong locale.", new Locale("en", "GB"), b2.getLocale());
         Button b3 = (Button) hLayout.getComponent(2);
-        assertEquals(
-                "The component should have the same locale as its parent.",
+        assertEquals("The component should have the same locale as its parent.",
                 hLayout.getLocale(), b3.getLocale());
     }
 }

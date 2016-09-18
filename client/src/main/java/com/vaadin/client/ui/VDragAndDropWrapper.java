@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -60,14 +60,14 @@ import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 
 /**
- * 
+ *
  * Must have features pending:
- * 
+ *
  * drop details: locations + sizes in document hierarchy up to wrapper
- * 
+ *
  */
-public class VDragAndDropWrapper extends VCustomComponent implements
-        VHasDropHandler {
+public class VDragAndDropWrapper extends VCustomComponent
+        implements VHasDropHandler {
 
     /**
      * Minimum pixel delta is used to detect click from drag. #12838
@@ -91,7 +91,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             @Override
             public void onMouseDown(final MouseDownEvent event) {
                 if (getConnector().isEnabled()
-                        && event.getNativeEvent().getButton() == Event.BUTTON_LEFT
+                        && event.getNativeEvent()
+                                .getButton() == Event.BUTTON_LEFT
                         && startDrag(event.getNativeEvent())) {
                     event.preventDefault(); // prevent text selection
                     startX = event.getClientX();
@@ -135,7 +136,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     /**
      * Starts a drag and drop operation from mousedown or touchstart event if
      * required conditions are met.
-     * 
+     *
      * @param event
      * @return true if the event was handled as a drag start event
      */
@@ -149,8 +150,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                     Element.as(event.getEventTarget()));
             Widget widget = paintable.getWidget();
             transferable.setData("component", paintable);
-            VDragEvent dragEvent = VDragAndDropManager.get().startDrag(
-                    transferable, event, true);
+            VDragEvent dragEvent = VDragAndDropManager.get()
+                    .startDrag(transferable, event, true);
 
             transferable.setData("mouseDown", MouseEventDetailsBuilder
                     .buildMouseEventDetails(event).serialize());
@@ -253,9 +254,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                         uploading = true;
                         final Integer fileId = fileIds.remove(0);
                         VHtml5File file = files.remove(0);
-                        final String receiverUrl = client
-                                .translateVaadinUri(fileIdToReceiver
-                                        .remove(fileId.toString()));
+                        final String receiverUrl = client.translateVaadinUri(
+                                fileIdToReceiver.remove(fileId.toString()));
                         ExtendedXHR extendedXHR = (ExtendedXHR) ExtendedXHR
                                 .create();
                         extendedXHR
@@ -297,14 +297,15 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                 dragleavetimer.cancel();
                 dragleavetimer = null;
             }
-            if (VDragAndDropManager.get().getCurrentDropHandler() != getDropHandler()) {
+            if (VDragAndDropManager.get()
+                    .getCurrentDropHandler() != getDropHandler()) {
                 VTransferable transferable = new VTransferable();
                 transferable.setDragSource(getConnector());
 
-                vaadinDragEvent = VDragAndDropManager.get().startDrag(
-                        transferable, event, false);
-                VDragAndDropManager.get().setCurrentDropHandler(
-                        getDropHandler());
+                vaadinDragEvent = VDragAndDropManager.get()
+                        .startDrag(transferable, event, false);
+                VDragAndDropManager.get()
+                        .setCurrentDropHandler(getDropHandler());
             }
             try {
                 event.preventDefault();
@@ -334,9 +335,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                     // this
                     // is what IE does).
                     // In Vaadin we fire it only if drop did not happen.
-                    if (vaadinDragEvent != null
-                            && VDragAndDropManager.get()
-                                    .getCurrentDropHandler() == getDropHandler()) {
+                    if (vaadinDragEvent != null && VDragAndDropManager.get()
+                            .getCurrentDropHandler() == getDropHandler()) {
                         VDragAndDropManager.get().interruptDrag();
                     }
                 }
@@ -617,7 +617,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
     /**
      * Prototype code, memory leak risk.
-     * 
+     *
      * @param el
      * @deprecated As of 7.2, call or override {@link #hookHtml5Events(Element)}
      *             instead
@@ -646,9 +646,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
     /**
      * Prototype code, memory leak risk.
-     * 
+     *
      * @param el
-     * 
+     *
      * @since 7.2
      */
     protected void hookHtml5Events(Element el) {
@@ -676,10 +676,12 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     protected void deEmphasis(boolean doLayout) {
         if (emphasizedVDrop != null) {
             VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, false);
-            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
-                    + emphasizedVDrop.toString().toLowerCase(), false);
-            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
-                    + emphasizedHDrop.toString().toLowerCase(), false);
+            VDragAndDropWrapper.setStyleName(getElement(),
+                    OVER_STYLE + "-" + emphasizedVDrop.toString().toLowerCase(),
+                    false);
+            VDragAndDropWrapper.setStyleName(getElement(),
+                    OVER_STYLE + "-" + emphasizedHDrop.toString().toLowerCase(),
+                    false);
         }
         if (doLayout) {
             notifySizePotentiallyChanged();
@@ -695,8 +697,10 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, true);
         VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
                 + verticalDropLocation.toString().toLowerCase(), true);
-        VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
-                + horizontalDropLocation.toString().toLowerCase(), true);
+        VDragAndDropWrapper.setStyleName(getElement(),
+                OVER_STYLE + "-"
+                        + horizontalDropLocation.toString().toLowerCase(),
+                true);
         emphasizedVDrop = verticalDropLocation;
         emphasizedHDrop = horizontalDropLocation;
 
@@ -708,7 +712,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     /**
      * Set the widget that will be used as the drag image when using
      * DragStartMode {@link COMPONENT_OTHER} .
-     * 
+     *
      * @param widget
      */
     public void setDragAndDropWidget(Widget widget) {
@@ -727,7 +731,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
      * Internal client side interface used by the connector and the widget for
      * the drag and drop wrapper to signal the completion of an HTML5 file
      * upload.
-     * 
+     *
      * @since 7.6.4
      */
     public interface UploadHandler {

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,21 +37,22 @@ public class NativeSelectTest {
 
     @Test
     public void rpcRegisteredConstructorStringCollection() {
-        assertFocusRpcRegistered(new NativeSelect("foo",
-                Collections.singleton("Hello")));
+        assertFocusRpcRegistered(
+                new NativeSelect("foo", Collections.singleton("Hello")));
     }
 
     @Test
     public void rpcRegisteredConstructorStringContainer() {
-        assertFocusRpcRegistered(new NativeSelect("foo", new IndexedContainer()));
+        assertFocusRpcRegistered(
+                new NativeSelect("foo", new IndexedContainer()));
     }
 
     @Test
     public void getState_listSelectHasCustomState() {
         TestNativeSelect select = new TestNativeSelect();
         AbstractSelectState state = select.getState();
-        Assert.assertEquals("Unexpected state class",
-                AbstractSelectState.class, state.getClass());
+        Assert.assertEquals("Unexpected state class", AbstractSelectState.class,
+                state.getClass());
     }
 
     private static class TestNativeSelect extends NativeSelect {
@@ -62,9 +63,8 @@ public class NativeSelectTest {
     }
 
     private void assertFocusRpcRegistered(NativeSelect s) {
-        Assert.assertNotNull(
-                "RPC is not correctly registered",
-                s.getRpcManager("com.vaadin.shared.communication.FieldRpc$FocusAndBlurServerRpc"));
+        Assert.assertNotNull("RPC is not correctly registered", s.getRpcManager(
+                "com.vaadin.shared.communication.FieldRpc$FocusAndBlurServerRpc"));
     }
 
 }

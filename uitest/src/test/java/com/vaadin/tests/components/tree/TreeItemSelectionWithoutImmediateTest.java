@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -43,19 +43,20 @@ public class TreeItemSelectionWithoutImmediateTest extends MultiBrowserTest {
             new Actions(getDriver()).moveToElement(treeItem).click().perform();
             Thread.sleep(100);
 
-            WebElement selectedElement = driver.findElement(By
-                    .className("v-tree-node-selected"));
+            WebElement selectedElement = driver
+                    .findElement(By.className("v-tree-node-selected"));
 
             treeItem = getTreeNode(String.format(
                     TreeItemSelectionWithoutImmediate.MENU_ITEM_TEMPLATE, i));
 
-            assertThat("Clicked element should be selected", selectedElement
-                    .getText().equals(treeItem.getText()), is(true));
+            assertThat("Clicked element should be selected",
+                    selectedElement.getText().equals(treeItem.getText()),
+                    is(true));
         }
     }
 
     private WebElement getTreeNode(String caption) {
-        return getDriver().findElement(
-                By.xpath("//span[text() = '" + caption + "']"));
+        return getDriver()
+                .findElement(By.xpath("//span[text() = '" + caption + "']"));
     }
 }

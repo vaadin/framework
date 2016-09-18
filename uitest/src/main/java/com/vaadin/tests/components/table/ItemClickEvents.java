@@ -58,9 +58,7 @@ public class ItemClickEvents extends AbstractTestUI {
         tree.setParent("2. Child 1", "Root 2");
         tree.addItem("2. Child 2");
         tree.setParent("2. Child 2", "Root 2");
-        tree.addContainerProperty(
-                "icon",
-                ExternalResource.class,
+        tree.addContainerProperty("icon", ExternalResource.class,
                 new ExternalResource(
                         "https://vaadin.com/vaadin-theme/images/vaadin-logo.png"));
 
@@ -137,19 +135,20 @@ public class ItemClickEvents extends AbstractTestUI {
 
     private static HorizontalLayout createHorizontalLayout(Component c) {
         HorizontalLayout layout = new HorizontalLayout();
-        CheckBox b = new CheckBox("immediate", new MethodProperty<Boolean>(c,
-                "immediate"));
+        CheckBox b = new CheckBox("immediate",
+                new MethodProperty<Boolean>(c, "immediate"));
         b.setImmediate(true);
         layout.addComponent(b);
-        b = new CheckBox("selectable", new MethodProperty<Boolean>(c,
-                "selectable"));
+        b = new CheckBox("selectable",
+                new MethodProperty<Boolean>(c, "selectable"));
         b.setImmediate(true);
         layout.addComponent(b);
-        b = new CheckBox("nullsel", new MethodProperty<Boolean>(c,
-                "nullSelectionAllowed"));
+        b = new CheckBox("nullsel",
+                new MethodProperty<Boolean>(c, "nullSelectionAllowed"));
         b.setImmediate(true);
         layout.addComponent(b);
-        b = new CheckBox("multi", new MethodProperty<Boolean>(c, "multiSelect"));
+        b = new CheckBox("multi",
+                new MethodProperty<Boolean>(c, "multiSelect"));
         b.setImmediate(true);
         layout.addComponent(b);
         return layout;

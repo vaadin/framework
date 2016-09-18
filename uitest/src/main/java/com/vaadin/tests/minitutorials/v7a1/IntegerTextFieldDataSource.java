@@ -32,7 +32,8 @@ public class IntegerTextFieldDataSource extends AbstractTestUI {
 
         final Property<Integer> integerProperty = beanItem
                 .getItemProperty("value");
-        final TextField textField = new TextField("Text field", integerProperty);
+        final TextField textField = new TextField("Text field",
+                integerProperty);
 
         Button submitButton = new Button("Submit value", new ClickListener() {
             @Override
@@ -48,7 +49,8 @@ public class IntegerTextFieldDataSource extends AbstractTestUI {
         });
 
         addComponent(new Label("Text field type: " + textField.getType()));
-        addComponent(new Label("Text field type: " + integerProperty.getType()));
+        addComponent(
+                new Label("Text field type: " + integerProperty.getType()));
         addComponent(textField);
         addComponent(submitButton);
     }

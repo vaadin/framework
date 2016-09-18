@@ -141,8 +141,8 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
                             if (value == null) {
                                 c.setItemIcon(id, null);
                             } else {
-                                c.setItemIcon(id, new ThemeResource(value + "?"
-                                        + new Date().getTime()));
+                                c.setItemIcon(id, new ThemeResource(
+                                        value + "?" + new Date().getTime()));
                             }
                         }
                     }

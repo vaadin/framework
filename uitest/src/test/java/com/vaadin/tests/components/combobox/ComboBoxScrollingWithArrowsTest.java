@@ -72,8 +72,8 @@ public class ComboBoxScrollingWithArrowsTest extends MultiBrowserTest {
     }
 
     private String getSelectedItemText() {
-        List<WebElement> items = driver.findElements(By
-                .className("gwt-MenuItem-selected"));
+        List<WebElement> items = driver
+                .findElements(By.className("gwt-MenuItem-selected"));
         return items.get(0).getText();
     }
 

@@ -399,8 +399,8 @@ public class MockServletContext implements ServletContext {
      * java.lang.String)
      */
     @Override
-    public javax.servlet.FilterRegistration.Dynamic addFilter(
-            String filterName, String className) {
+    public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName,
+            String className) {
         return null;
     }
 
@@ -411,8 +411,8 @@ public class MockServletContext implements ServletContext {
      * javax.servlet.Filter)
      */
     @Override
-    public javax.servlet.FilterRegistration.Dynamic addFilter(
-            String filterName, Filter filter) {
+    public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName,
+            Filter filter) {
         return null;
     }
 
@@ -423,8 +423,8 @@ public class MockServletContext implements ServletContext {
      * java.lang.Class)
      */
     @Override
-    public javax.servlet.FilterRegistration.Dynamic addFilter(
-            String filterName, Class<? extends Filter> filterClass) {
+    public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName,
+            Class<? extends Filter> filterClass) {
         return null;
     }
 

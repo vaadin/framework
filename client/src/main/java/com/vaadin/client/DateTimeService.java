@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,9 +27,9 @@ import com.vaadin.shared.ui.datefield.Resolution;
 /**
  * This class provides date/time parsing services to all components on the
  * client side.
- * 
+ *
  * @author Vaadin Ltd.
- * 
+ *
  */
 @SuppressWarnings("deprecation")
 public class DateTimeService {
@@ -48,7 +48,7 @@ public class DateTimeService {
 
     /**
      * Creates a new date time service with a given locale.
-     * 
+     *
      * @param locale
      *            e.g. fi, en etc.
      * @throws LocaleNotLoadedException
@@ -152,8 +152,8 @@ public class DateTimeService {
         try {
             firstDay = LocaleService.getFirstDayOfWeek(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            getLogger().log(Level.SEVERE,
-                    "Locale not loaded, using fallback 0", e);
+            getLogger().log(Level.SEVERE, "Locale not loaded, using fallback 0",
+                    e);
             firstDay = 0;
         }
         int start = dateForFirstOfThisMonth.getDay() - firstDay;
@@ -261,7 +261,7 @@ public class DateTimeService {
 
     /**
      * Returns the ISO-8601 week number of the given date.
-     * 
+     *
      * @param date
      *            The date for which the week number should be resolved
      * @return The ISO-8601 week number for {@literal date}
@@ -278,16 +278,16 @@ public class DateTimeService {
         // Find nearest thursday (defines the week in ISO 8601). The week number
         // for the nearest thursday is the same as for the target date.
         int nearestThursdayDiff = 4 - dayOfWeek; // 4 is thursday
-        Date nearestThursday = new Date(date.getTime() + nearestThursdayDiff
-                * MILLISECONDS_PER_DAY);
+        Date nearestThursday = new Date(
+                date.getTime() + nearestThursdayDiff * MILLISECONDS_PER_DAY);
 
         Date firstOfJanuary = new Date(nearestThursday.getYear(), 0, 1);
         long timeDiff = nearestThursday.getTime() - firstOfJanuary.getTime();
 
         // Rounding the result, as the division doesn't result in an integer
         // when the given date is inside daylight saving time period.
-        int daysSinceFirstOfJanuary = (int) Math.round((double) timeDiff
-                / MILLISECONDS_PER_DAY);
+        int daysSinceFirstOfJanuary = (int) Math
+                .round((double) timeDiff / MILLISECONDS_PER_DAY);
 
         int weekNumber = (daysSinceFirstOfJanuary) / 7 + 1;
 
@@ -299,11 +299,11 @@ public class DateTimeService {
      * it to the month name since DateTimeFormat.format always uses the current
      * locale and will replace the month name wrong if current locale is
      * different from the locale set for the DateField.
-     * 
+     *
      * MMMM is converted into long month name, MMM is converted into short month
      * name. '' are added around the name to avoid that DateTimeFormat parses
      * the month name as a pattern.
-     * 
+     *
      * @param date
      *            The date to convert
      * @param formatStr
@@ -343,8 +343,8 @@ public class DateTimeService {
                 formatStr = formatStr.replaceAll("'([E]{4,})'", dayName);
                 formatStr = formatStr.replaceAll("([E]{4,})'", "'" + dayName);
                 formatStr = formatStr.replaceAll("'([E]{4,})", dayName + "'");
-                formatStr = formatStr
-                        .replaceAll("[E]{4,}", "'" + dayName + "'");
+                formatStr = formatStr.replaceAll("[E]{4,}",
+                        "'" + dayName + "'");
             }
         }
 
@@ -363,8 +363,8 @@ public class DateTimeService {
                 formatStr = formatStr.replaceAll("'([E]{3,})'", dayName);
                 formatStr = formatStr.replaceAll("([E]{3,})'", "'" + dayName);
                 formatStr = formatStr.replaceAll("'([E]{3,})", dayName + "'");
-                formatStr = formatStr
-                        .replaceAll("[E]{3,}", "'" + dayName + "'");
+                formatStr = formatStr.replaceAll("[E]{3,}",
+                        "'" + dayName + "'");
             }
         }
 
@@ -386,8 +386,8 @@ public class DateTimeService {
                 formatStr = formatStr.replaceAll("'([M]{4,})'", monthName);
                 formatStr = formatStr.replaceAll("([M]{4,})'", "'" + monthName);
                 formatStr = formatStr.replaceAll("'([M]{4,})", monthName + "'");
-                formatStr = formatStr.replaceAll("[M]{4,}", "'" + monthName
-                        + "'");
+                formatStr = formatStr.replaceAll("[M]{4,}",
+                        "'" + monthName + "'");
             }
         }
 
@@ -406,8 +406,8 @@ public class DateTimeService {
                 formatStr = formatStr.replaceAll("'([M]{3,})'", monthName);
                 formatStr = formatStr.replaceAll("([M]{3,})'", "'" + monthName);
                 formatStr = formatStr.replaceAll("'([M]{3,})", monthName + "'");
-                formatStr = formatStr.replaceAll("[M]{3,}", "'" + monthName
-                        + "'");
+                formatStr = formatStr.replaceAll("[M]{3,}",
+                        "'" + monthName + "'");
             }
         }
 
@@ -417,7 +417,7 @@ public class DateTimeService {
     /**
      * Replaces month names in the entered date with the name in the current
      * browser locale.
-     * 
+     *
      * @param enteredDate
      *            Date string e.g. "5 May 2010"
      * @param formatString
@@ -457,7 +457,7 @@ public class DateTimeService {
     /**
      * Parses the given date string using the given format string and the locale
      * set in this DateTimeService instance.
-     * 
+     *
      * @param dateString
      *            Date string e.g. "1 February 2010"
      * @param formatString
@@ -467,7 +467,7 @@ public class DateTimeService {
      * @return A Date object representing the dateString. Never returns null.
      * @throws IllegalArgumentException
      *             if the parsing fails
-     * 
+     *
      */
     public Date parseDate(String dateString, String formatString,
             boolean lenient) throws IllegalArgumentException {
@@ -490,8 +490,8 @@ public class DateTimeService {
 
         // Some version of Firefox sets the timestamp to 0 if parsing fails.
         if (date != null && date.getTime() == 0) {
-            throw new IllegalArgumentException("Parsing of '" + dateString
-                    + "' failed");
+            throw new IllegalArgumentException(
+                    "Parsing of '" + dateString + "' failed");
         }
 
         return date;

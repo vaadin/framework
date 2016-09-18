@@ -10,10 +10,8 @@ public class StylingPopupOpener extends TestBase {
 
     @Override
     protected void setup() {
-        TestUtils
-                .injectCSS(
-                        getMainWindow(),
-                        ".v-filterselect-mystyle .v-filterselect-button { width: 50px; background-color: red; } ");
+        TestUtils.injectCSS(getMainWindow(),
+                ".v-filterselect-mystyle .v-filterselect-button { width: 50px; background-color: red; } ");
 
         final Select select = new Select();
         addComponent(select);

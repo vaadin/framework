@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -58,8 +58,8 @@ public class FormLayoutResizingTest extends MultiBrowserThemeTest {
 
         int[] expandedWidths = getWidths(tables);
 
-        Assert.assertEquals("Table should have grown ",
-                originalWidths[0] + 200, expandedWidths[0]);
+        Assert.assertEquals("Table should have grown ", originalWidths[0] + 200,
+                expandedWidths[0]);
         Assert.assertEquals("Wrapped table should have grown ",
                 originalWidths[1] + 200, expandedWidths[1]);
 
@@ -79,8 +79,8 @@ public class FormLayoutResizingTest extends MultiBrowserThemeTest {
 
         expandedWidths = getWidths(tables);
 
-        Assert.assertEquals("Table should have grown ",
-                originalWidths[0] + 200, expandedWidths[0]);
+        Assert.assertEquals("Table should have grown ", originalWidths[0] + 200,
+                expandedWidths[0]);
         Assert.assertEquals("Wrapped table should have grown ",
                 originalWidths[1] + 200, expandedWidths[1]);
     }

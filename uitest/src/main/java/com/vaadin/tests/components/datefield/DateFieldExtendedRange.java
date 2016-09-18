@@ -38,7 +38,8 @@ public class DateFieldExtendedRange extends TestBase {
 
         fields[4] = makeDateField(true, fi, "Finnish locale with week numbers");
         fields[4].setShowISOWeekNumbers(true);
-        fields[5] = makeDateField(false, fi, "Finnish locale with week numbers");
+        fields[5] = makeDateField(false, fi,
+                "Finnish locale with week numbers");
         fields[5].setShowISOWeekNumbers(true);
 
         for (DateField f : fields) {

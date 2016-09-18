@@ -47,8 +47,8 @@ public class Ticket1598 extends LegacyApplication {
 
                         @Override
                         public void menuSelected(MenuItem selected) {
-                            main.showNotification("Action "
-                                    + selected.getText());
+                            main.showNotification(
+                                    "Action " + selected.getText());
                         }
                     });
         }
@@ -60,8 +60,8 @@ public class Ticket1598 extends LegacyApplication {
 
                         @Override
                         public void menuSelected(MenuItem selected) {
-                            main.showNotification("Action "
-                                    + selected.getText());
+                            main.showNotification(
+                                    "Action " + selected.getText());
                         }
                     });
         }
@@ -74,8 +74,8 @@ public class Ticket1598 extends LegacyApplication {
 
                         @Override
                         public void menuSelected(MenuItem selected) {
-                            main.showNotification("Action "
-                                    + selected.getText());
+                            main.showNotification(
+                                    "Action " + selected.getText());
                         }
                     });
         }

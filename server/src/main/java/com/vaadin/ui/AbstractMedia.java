@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -44,7 +44,7 @@ import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Abstract base class for the HTML5 media components.
- * 
+ *
  * @author Vaadin Ltd
  */
 public abstract class AbstractMedia extends AbstractComponent {
@@ -61,7 +61,7 @@ public abstract class AbstractMedia extends AbstractComponent {
 
     /**
      * Sets a single media file as the source of the media component.
-     * 
+     *
      * @param source
      */
     public void setSource(Resource source) {
@@ -78,17 +78,17 @@ public abstract class AbstractMedia extends AbstractComponent {
     /**
      * Adds an alternative media file to the sources list. Which of the sources
      * is used is selected by the browser depending on which file formats it
-     * supports. See <a
-     * href="http://en.wikipedia.org/wiki/HTML5_video#Table">wikipedia</a> for a
-     * table of formats supported by different browsers.
-     * 
+     * supports. See
+     * <a href="http://en.wikipedia.org/wiki/HTML5_video#Table">wikipedia</a>
+     * for a table of formats supported by different browsers.
+     *
      * @param source
      */
     public void addSource(Resource source) {
         if (source != null) {
             List<URLReference> sources = getState().sources;
-            sources.add(new ResourceReference(source, this, Integer
-                    .toString(sources.size())));
+            sources.add(new ResourceReference(source, this,
+                    Integer.toString(sources.size())));
             getState().sourceTypes.add(source.getMIMEType());
         }
     }
@@ -135,10 +135,10 @@ public abstract class AbstractMedia extends AbstractComponent {
 
     /**
      * Set multiple sources at once. Which of the sources is used is selected by
-     * the browser depending on which file formats it supports. See <a
-     * href="http://en.wikipedia.org/wiki/HTML5_video#Table">wikipedia</a> for a
-     * table of formats supported by different browsers.
-     * 
+     * the browser depending on which file formats it supports. See
+     * <a href="http://en.wikipedia.org/wiki/HTML5_video#Table">wikipedia</a>
+     * for a table of formats supported by different browsers.
+     *
      * @param sources
      */
     public void setSources(Resource... sources) {
@@ -161,7 +161,7 @@ public abstract class AbstractMedia extends AbstractComponent {
 
     /**
      * Sets whether or not the browser should show native media controls.
-     * 
+     *
      * @param showControls
      */
     public void setShowControls(boolean showControls) {
@@ -183,7 +183,7 @@ public abstract class AbstractMedia extends AbstractComponent {
      * flash-based player, see the <a href=
      * "https://developer.mozilla.org/En/Using_audio_and_video_in_Firefox#Using_Flash"
      * >Mozilla Developer Network</a> for details.
-     * 
+     *
      * @param altText
      */
     public void setAltText(String altText) {
@@ -201,7 +201,7 @@ public abstract class AbstractMedia extends AbstractComponent {
     /**
      * Set whether the alternative text ({@link #setAltText(String)}) is
      * rendered as HTML or not.
-     * 
+     *
      * @param htmlContentAllowed
      */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
@@ -219,7 +219,7 @@ public abstract class AbstractMedia extends AbstractComponent {
     /**
      * Sets whether the media is to automatically start playback when enough
      * data has been loaded.
-     * 
+     *
      * @param autoplay
      */
     public void setAutoplay(boolean autoplay) {
@@ -235,7 +235,7 @@ public abstract class AbstractMedia extends AbstractComponent {
 
     /**
      * Set whether to mute the audio or not.
-     * 
+     *
      * @param muted
      */
     public void setMuted(boolean muted) {

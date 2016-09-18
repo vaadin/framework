@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -62,15 +62,15 @@ public abstract class AbstractSplitPanelConnector extends
                     // Send % values as a fraction to avoid that the splitter
                     // "jumps" when server responds with the integer pct value
                     // (e.g. dragged 16.6% -> should not jump to 17%)
-                    pos = Float.valueOf(position.substring(0,
-                            position.length() - 1));
+                    pos = Float.valueOf(
+                            position.substring(0, position.length() - 1));
                 } else {
-                    pos = Integer.parseInt(position.substring(0,
-                            position.length() - 2));
+                    pos = Integer.parseInt(
+                            position.substring(0, position.length() - 2));
                 }
 
-                getRpcProxy(AbstractSplitPanelRpc.class).setSplitterPosition(
-                        pos);
+                getRpcProxy(AbstractSplitPanelRpc.class)
+                        .setSplitterPosition(pos);
             }
 
         }, SplitterMoveEvent.TYPE);
@@ -86,8 +86,8 @@ public abstract class AbstractSplitPanelConnector extends
         @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
                 H handler, Type<H> type) {
-            if ((Event.getEventsSunk(getWidget().splitter) & Event
-                    .getTypeInt(type.getName())) != 0) {
+            if ((Event.getEventsSunk(getWidget().splitter)
+                    & Event.getTypeInt(type.getName())) != 0) {
                 // If we are already sinking the event for the splitter we do
                 // not want to additionally sink it for the root element
                 return getWidget().addHandler(handler, type);
@@ -208,14 +208,14 @@ public abstract class AbstractSplitPanelConnector extends
         LayoutManager layoutManager = getLayoutManager();
         if (this instanceof HorizontalSplitPanelConnector) {
             if (child.isRelativeHeight()) {
-                int height = layoutManager.getInnerHeight(getWidget()
-                        .getElement());
+                int height = layoutManager
+                        .getInnerHeight(getWidget().getElement());
                 layoutManager.reportHeightAssignedToRelative(child, height);
             }
         } else {
             if (child.isRelativeWidth()) {
-                int width = layoutManager.getInnerWidth(getWidget()
-                        .getElement());
+                int width = layoutManager
+                        .getInnerWidth(getWidget().getElement());
                 layoutManager.reportWidthAssignedToRelative(child, width);
             }
         }
@@ -240,7 +240,8 @@ public abstract class AbstractSplitPanelConnector extends
     }
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         handleHierarchyChange();
     }
 

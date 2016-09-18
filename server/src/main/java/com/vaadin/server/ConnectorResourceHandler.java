@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -88,11 +88,11 @@ public class ConnectorResourceHandler implements RequestHandler {
                 .setCurrent(ui);
         try {
             if (!connector.handleConnectorRequest(request, response, key)) {
-                return error(request, response, connector.getClass()
-                        .getSimpleName()
-                        + " ("
-                        + connector.getConnectorId()
-                        + ") did not handle connector request for " + key);
+                return error(request, response,
+                        connector.getClass().getSimpleName() + " ("
+                                + connector.getConnectorId()
+                                + ") did not handle connector request for "
+                                + key);
             }
         } catch (Exception e) {
             session.lock();
@@ -120,16 +120,15 @@ public class ConnectorResourceHandler implements RequestHandler {
 
             if (!loggedDecodingWarning) {
                 loggedDecodingWarning = true;
-                getLogger()
-                        .warning(
-                                "Request path contains a new line character. This typically means that the server is incorrectly configured to use something else than UTF-8 for URL decoding (requestPath: "
-                                        + requestPath + ")");
+                getLogger().warning(
+                        "Request path contains a new line character. This typically means that the server is incorrectly configured to use something else than UTF-8 for URL decoding (requestPath: "
+                                + requestPath + ")");
             }
         }
     }
 
-    private static boolean error(VaadinRequest request,
-            VaadinResponse response, String logMessage) throws IOException {
+    private static boolean error(VaadinRequest request, VaadinResponse response,
+            String logMessage) throws IOException {
         getLogger().log(Level.WARNING, logMessage);
         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                 request.getPathInfo() + " can not be found");

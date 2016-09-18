@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -41,7 +41,7 @@ import com.vaadin.ui.AbstractComponent;
  * while files served in other ways, (e.g. {@link ExternalResource} or
  * {@link ThemeResource}) will not automatically get this treatment.
  * </p>
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
@@ -53,7 +53,7 @@ public class FileDownloader extends AbstractExtension {
      * Creates a new file downloader for the given resource. To use the
      * downloader, you should also {@link #extend(AbstractClientConnector)} the
      * component.
-     * 
+     *
      * @param resource
      *            the resource to download when the user clicks the extended
      *            component.
@@ -71,7 +71,7 @@ public class FileDownloader extends AbstractExtension {
 
     /**
      * Gets the resource set for download.
-     * 
+     *
      * @return the resource that will be downloaded if clicking the extended
      *         component
      */
@@ -82,7 +82,7 @@ public class FileDownloader extends AbstractExtension {
     /**
      * Sets the resource that is downloaded when the extended component is
      * clicked.
-     * 
+     *
      * @param resource
      *            the resource to download
      */
@@ -100,7 +100,7 @@ public class FileDownloader extends AbstractExtension {
      * {@link FileResource} and {@link ClassResource}) but not other resource
      * types (e.g. {@link ExternalResource} or {@link ThemeResource}).
      * </p>
-     * 
+     *
      * @param overrideContentType
      *            <code>true</code> to override the content type if possible;
      *            <code>false</code> to use the original content type.
@@ -111,9 +111,9 @@ public class FileDownloader extends AbstractExtension {
 
     /**
      * Checks whether the content type should be overridden.
-     * 
+     *
      * @see #setOverrideContentType(boolean)
-     * 
+     *
      * @return <code>true</code> if the content type will be overridden when
      *         possible; <code>false</code> if the original content type will be
      *         used.
@@ -144,9 +144,8 @@ public class FileDownloader extends AbstractExtension {
             String contentDisposition = stream
                     .getParameter(DownloadStream.CONTENT_DISPOSITION);
             if (contentDisposition == null) {
-                contentDisposition = "attachment; "
-                        + DownloadStream.getContentDispositionFilename(stream
-                                .getFileName());
+                contentDisposition = "attachment; " + DownloadStream
+                        .getContentDispositionFilename(stream.getFileName());
             }
 
             stream.setParameter(DownloadStream.CONTENT_DISPOSITION,

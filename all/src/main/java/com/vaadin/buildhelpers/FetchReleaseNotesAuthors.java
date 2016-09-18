@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,18 +27,17 @@ import java.util.Properties;
 public class FetchReleaseNotesAuthors {
     private static final String template = "<li class=\"author\">@author@</li>";
 
-    public static void main(String[] args) throws IOException,
-            InterruptedException {
+    public static void main(String[] args)
+            throws IOException, InterruptedException {
         Properties authorMap = new Properties();
 
         String authorsFilename = FetchReleaseNotesAuthors.class.getPackage()
-                .getName().replace(".", "/")
-                + "/authormap.properties";
+                .getName().replace(".", "/") + "/authormap.properties";
         InputStream s = FetchReleaseNotesAuthors.class.getClassLoader()
                 .getResourceAsStream(authorsFilename);
         if (s == null) {
-            System.err.println("Author mapping file " + authorsFilename
-                    + " not found!");
+            System.err.println(
+                    "Author mapping file " + authorsFilename + " not found!");
         }
         authorMap.load(s);
 
@@ -53,8 +52,8 @@ public class FetchReleaseNotesAuthors {
         if (p.exitValue() != 0) {
             System.err.println("Exit code: " + p.exitValue());
         }
-        BufferedReader b = new BufferedReader(new InputStreamReader(
-                p.getInputStream()));
+        BufferedReader b = new BufferedReader(
+                new InputStreamReader(p.getInputStream()));
         String line = "";
 
         List<String> authors = new ArrayList<String>();
@@ -77,8 +76,8 @@ public class FetchReleaseNotesAuthors {
     private static String getPreviousVersion(String version) {
         String[] versionNumbers = version.split("\\.");
         if (versionNumbers.length > 4 || versionNumbers.length < 3) {
-            throw new IllegalArgumentException("Cannot parse version: "
-                    + version);
+            throw new IllegalArgumentException(
+                    "Cannot parse version: " + version);
         }
         int major = Integer.parseInt(versionNumbers[0]);
         int minor = Integer.parseInt(versionNumbers[1]);

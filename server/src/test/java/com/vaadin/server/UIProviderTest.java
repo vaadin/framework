@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import com.vaadin.annotations.Widgetset;
 
 /**
  * Tests for {@link UIProvider} class.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class UIProviderTest {
@@ -48,8 +48,8 @@ public class UIProviderTest {
     @Test
     public void getAnnotationFor_themeAnnotationForSubclass_annotationOverridden() {
         Assert.assertEquals(
-                "Theme annotation is not overridden correctly in subclass",
-                "c", UIProvider.getAnnotationFor(TestClass.class, Theme.class)
+                "Theme annotation is not overridden correctly in subclass", "c",
+                UIProvider.getAnnotationFor(TestClass.class, Theme.class)
                         .value());
     }
 
@@ -71,10 +71,9 @@ public class UIProviderTest {
 
     @Test
     public void getAnnotationFor_annotationInheritedFromInterface_annotationFound() {
-        Assert.assertNotNull(
-                "Theme annotation is not inherited from interface", UIProvider
-                        .getAnnotationFor(ClassImplementingInterface.class,
-                                Theme.class));
+        Assert.assertNotNull("Theme annotation is not inherited from interface",
+                UIProvider.getAnnotationFor(ClassImplementingInterface.class,
+                        Theme.class));
     }
 
     @Retention(RetentionPolicy.RUNTIME)
@@ -106,8 +105,8 @@ public class UIProviderTest {
     public interface InterfaceWithAnnotation {
     }
 
-    public static class ClassImplementingInterface implements
-            InterfaceWithAnnotation {
+    public static class ClassImplementingInterface
+            implements InterfaceWithAnnotation {
     }
 
 }

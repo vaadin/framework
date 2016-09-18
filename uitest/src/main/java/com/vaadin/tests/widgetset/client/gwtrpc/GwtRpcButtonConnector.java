@@ -39,8 +39,8 @@ import com.vaadin.tests.widgetset.server.gwtrpc.GwtRpcButton;
 @Connect(GwtRpcButton.class)
 public class GwtRpcButtonConnector extends AbstractComponentConnector {
 
-    static Logger logger = Logger.getLogger(GwtRpcButtonConnector.class
-            .getName());
+    static Logger logger = Logger
+            .getLogger(GwtRpcButtonConnector.class.getName());
     static {
         logger.setLevel(Level.ALL);
     }

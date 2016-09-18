@@ -59,8 +59,8 @@ public class TableSqlContainer extends AbstractTestUI {
         table.addValueChangeListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                selectedLabel.setValue("Selected: "
-                        + event.getProperty().getValue());
+                selectedLabel.setValue(
+                        "Selected: " + event.getProperty().getValue());
             }
         });
 
@@ -76,7 +76,7 @@ public class TableSqlContainer extends AbstractTestUI {
 
     /**
      * (Re)creates the test table
-     * 
+     *
      * @param connectionPool
      */
     private void createTestTable(JDBCConnectionPool connectionPool) {
@@ -102,7 +102,7 @@ public class TableSqlContainer extends AbstractTestUI {
 
     /**
      * Adds test data to the test table
-     * 
+     *
      * @param connectionPool
      * @throws SQLException
      */
@@ -113,14 +113,14 @@ public class TableSqlContainer extends AbstractTestUI {
             conn = connectionPool.reserveConnection();
             Statement statement = conn.createStatement();
 
-            statement
-                    .executeUpdate("INSERT INTO mytable VALUES(1, '2013-05-24', 'A0')");
-            statement
-                    .executeUpdate("INSERT INTO mytable VALUES(2, '2013-04-26', 'A1')");
-            statement
-                    .executeUpdate("INSERT INTO mytable VALUES(3, '2013-05-27', 'B0')");
-            statement
-                    .executeUpdate("INSERT INTO mytable VALUES(4, '2013-04-28', 'B1')");
+            statement.executeUpdate(
+                    "INSERT INTO mytable VALUES(1, '2013-05-24', 'A0')");
+            statement.executeUpdate(
+                    "INSERT INTO mytable VALUES(2, '2013-04-26', 'A1')");
+            statement.executeUpdate(
+                    "INSERT INTO mytable VALUES(3, '2013-05-27', 'B0')");
+            statement.executeUpdate(
+                    "INSERT INTO mytable VALUES(4, '2013-04-28', 'B1')");
 
             statement.close();
             conn.commit();

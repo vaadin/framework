@@ -67,7 +67,7 @@ class TreeExample extends CustomComponent {
 
     /**
      * Helper to add an item with specified caption and (optional) parent.
-     * 
+     *
      * @param caption
      *            The item caption
      * @param parent

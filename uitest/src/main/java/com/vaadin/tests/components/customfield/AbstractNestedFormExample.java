@@ -38,11 +38,11 @@ public abstract class AbstractNestedFormExample extends TestBase {
                 "taina.testaaja@example.com", "", "Ruukinkatu 2–4", 20540,
                 "Turku");
         Item item = table.addItem(person);
-        item.getItemProperty("Name").setValue(
-                person.getFirstName() + " " + person.getLastName());
+        item.getItemProperty("Name")
+                .setValue(person.getFirstName() + " " + person.getLastName());
         item = table.addItem(person2);
-        item.getItemProperty("Name").setValue(
-                person2.getFirstName() + " " + person2.getLastName());
+        item.getItemProperty("Name")
+                .setValue(person2.getFirstName() + " " + person2.getLastName());
         return table;
     }
 
@@ -58,8 +58,9 @@ public abstract class AbstractNestedFormExample extends TestBase {
                     removeComponent(personForm);
                 }
                 if (event.getProperty().getValue() != null) {
-                    personForm = new NestedPersonForm((Person) event
-                            .getProperty().getValue(), embeddedAddress);
+                    personForm = new NestedPersonForm(
+                            (Person) event.getProperty().getValue(),
+                            embeddedAddress);
                     personForm.setWidth("350px");
                     addComponent(personForm);
                 }

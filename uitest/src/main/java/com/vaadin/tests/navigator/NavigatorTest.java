@@ -37,9 +37,8 @@ public class NavigatorTest extends UI {
         @Override
         public void enter(ViewChangeEvent event) {
             String params = event.getParameters();
-            log.log("Navigated to ListView "
-                    + (params.isEmpty() ? "without params" : "with params "
-                            + params));
+            log.log("Navigated to ListView " + (params.isEmpty()
+                    ? "without params" : "with params " + params));
             removeAllItems();
             for (String arg : params.split(",")) {
                 addItem(arg.split("=|$", 2), arg);
@@ -52,9 +51,8 @@ public class NavigatorTest extends UI {
         @Override
         public void enter(ViewChangeEvent event) {
             String params = event.getParameters();
-            log.log("Navigated to EditView "
-                    + (params.isEmpty() ? "without params" : "with params "
-                            + params));
+            log.log("Navigated to EditView " + (params.isEmpty()
+                    ? "without params" : "with params " + params));
             setValue("Displaying edit view with parameters " + params);
         }
     }
@@ -75,9 +73,8 @@ public class NavigatorTest extends UI {
         @Override
         public void enter(ViewChangeEvent event) {
             String params = event.getParameters();
-            log.log("Navigated to DefaultView "
-                    + (params.isEmpty() ? "without params" : "with params "
-                            + params));
+            log.log("Navigated to DefaultView " + (params.isEmpty()
+                    ? "without params" : "with params " + params));
             setValue("Default view: " + event.getParameters());
         }
     }

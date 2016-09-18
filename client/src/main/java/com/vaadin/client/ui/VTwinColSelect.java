@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -72,10 +72,10 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     /**
      * A ListBox which catches double clicks
-     * 
+     *
      */
-    public class DoubleClickListBox extends ListBox implements
-            HasDoubleClickHandlers {
+    public class DoubleClickListBox extends ListBox
+            implements HasDoubleClickHandlers {
         public DoubleClickListBox(boolean isMultipleSelect) {
             super(isMultipleSelect);
         }
@@ -170,13 +170,15 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public void updateCaptions(UIDL uidl) {
         String leftCaption = (uidl
-                .hasAttribute(TwinColSelectConstants.ATTRIBUTE_LEFT_CAPTION) ? uidl
-                .getStringAttribute(TwinColSelectConstants.ATTRIBUTE_LEFT_CAPTION)
-                : null);
+                .hasAttribute(TwinColSelectConstants.ATTRIBUTE_LEFT_CAPTION)
+                        ? uidl.getStringAttribute(
+                                TwinColSelectConstants.ATTRIBUTE_LEFT_CAPTION)
+                        : null);
         String rightCaption = (uidl
-                .hasAttribute(TwinColSelectConstants.ATTRIBUTE_RIGHT_CAPTION) ? uidl
-                .getStringAttribute(TwinColSelectConstants.ATTRIBUTE_RIGHT_CAPTION)
-                : null);
+                .hasAttribute(TwinColSelectConstants.ATTRIBUTE_RIGHT_CAPTION)
+                        ? uidl.getStringAttribute(
+                                TwinColSelectConstants.ATTRIBUTE_RIGHT_CAPTION)
+                        : null);
 
         boolean hasCaptions = (leftCaption != null || rightCaption != null);
 
@@ -394,13 +396,14 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public void setInternalWidths() {
         getElement().getStyle().setPosition(Position.RELATIVE);
-        int bordersAndPaddings = WidgetUtil.measureHorizontalPaddingAndBorder(
-                buttons.getElement(), 0);
+        int bordersAndPaddings = WidgetUtil
+                .measureHorizontalPaddingAndBorder(buttons.getElement(), 0);
 
         int buttonWidth = WidgetUtil.getRequiredWidth(buttons);
         int totalWidth = getOffsetWidth();
 
-        int spaceForSelect = (totalWidth - buttonWidth - bordersAndPaddings) / 2;
+        int spaceForSelect = (totalWidth - buttonWidth - bordersAndPaddings)
+                / 2;
 
         options.setWidth(spaceForSelect + "px");
         if (optionsCaption != null) {
@@ -441,7 +444,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     /**
      * Get the key that selects an item in the table. By default it is the Enter
      * key but by overriding this you can change the key to whatever you want.
-     * 
+     *
      * @return
      */
     protected int getNavigationSelectKey() {
@@ -450,7 +453,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
@@ -514,7 +517,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.MouseDownHandler#onMouseDown(com.google
      * .gwt.event.dom.client.MouseDownEvent)
@@ -537,7 +540,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.DoubleClickHandler#onDoubleClick(com.
      * google.gwt.event.dom.client.DoubleClickEvent)
@@ -568,7 +571,8 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     private static final String SUBPART_REMOVE_BUTTON = "remove";
 
     @Override
-    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(
+            String subPart) {
         if (SUBPART_OPTION_SELECT.equals(subPart)) {
             return options.getElement();
         } else if (subPart.startsWith(SUBPART_OPTION_SELECT_ITEM)) {
@@ -578,8 +582,8 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         } else if (SUBPART_SELECTION_SELECT.equals(subPart)) {
             return selections.getElement();
         } else if (subPart.startsWith(SUBPART_SELECTION_SELECT_ITEM)) {
-            String idx = subPart.substring(SUBPART_SELECTION_SELECT_ITEM
-                    .length());
+            String idx = subPart
+                    .substring(SUBPART_SELECTION_SELECT_ITEM.length());
             return (com.google.gwt.user.client.Element) selections.getElement()
                     .getChild(Integer.parseInt(idx));
         } else if (optionsCaption != null
@@ -598,7 +602,8 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     }
 
     @Override
-    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+    public String getSubPartName(
+            com.google.gwt.user.client.Element subElement) {
         if (optionsCaption != null
                 && optionsCaption.getElement().isOrHasChild(subElement)) {
             return SUBPART_LEFT_CAPTION;

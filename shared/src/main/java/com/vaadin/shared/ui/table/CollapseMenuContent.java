@@ -19,9 +19,9 @@ package com.vaadin.shared.ui.table;
 /**
  * Defines whether only collapsible columns should be shown to the user in the
  * column collapse menu.
- * 
+ *
  * @see com.vaadin.ui.Table#setCollapseMenuContent(CollapseMenuContent)
- * 
+ *
  * @since 7.6
  * @author Vaadin Ltd
  */

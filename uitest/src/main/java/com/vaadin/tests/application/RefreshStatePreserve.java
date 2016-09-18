@@ -20,7 +20,8 @@ public class RefreshStatePreserve extends AbstractTestUIWithLog {
         getPage().addUriFragmentChangedListener(
                 new UriFragmentChangedListener() {
                     @Override
-                    public void uriFragmentChanged(UriFragmentChangedEvent event) {
+                    public void uriFragmentChanged(
+                            UriFragmentChangedEvent event) {
                         log("Fragment changed to " + event.getUriFragment());
                     }
                 });

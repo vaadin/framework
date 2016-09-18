@@ -20,7 +20,7 @@ import com.vaadin.shared.data.sort.SortDirection;
 
 /**
  * Sort order descriptor. Contains column and direction references.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -32,7 +32,7 @@ public class SortOrder {
     /**
      * Create a sort order descriptor with a default sorting direction value of
      * {@link SortDirection#ASCENDING}.
-     * 
+     *
      * @param column
      *            a grid column descriptor object
      */
@@ -42,7 +42,7 @@ public class SortOrder {
 
     /**
      * Create a sort order descriptor.
-     * 
+     *
      * @param column
      *            a grid column descriptor object
      * @param direction
@@ -63,7 +63,7 @@ public class SortOrder {
 
     /**
      * Returns the {@link GridColumn} reference given in the constructor.
-     * 
+     *
      * @return a grid column reference
      */
     public Grid.Column<?, ?> getColumn() {
@@ -72,7 +72,7 @@ public class SortOrder {
 
     /**
      * Returns the {@link SortDirection} value given in the constructor.
-     * 
+     *
      * @return a sort direction value
      */
     public SortDirection getDirection() {
@@ -81,7 +81,7 @@ public class SortOrder {
 
     /**
      * Returns a new SortOrder object with the sort direction reversed.
-     * 
+     *
      * @return a new sort order object
      */
     public SortOrder getOpposite() {

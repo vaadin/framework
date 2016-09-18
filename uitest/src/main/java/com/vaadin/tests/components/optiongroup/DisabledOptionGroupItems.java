@@ -9,9 +9,9 @@ import com.vaadin.ui.OptionGroup;
 
 public class DisabledOptionGroupItems extends ComponentTestCase<OptionGroup> {
 
-    private static final List<String> cities = Arrays.asList(new String[] {
-            "Berlin", "Brussels", "Helsinki", "Madrid", "Oslo", "Paris",
-            "Stockholm" });
+    private static final List<String> cities = Arrays
+            .asList(new String[] { "Berlin", "Brussels", "Helsinki", "Madrid",
+                    "Oslo", "Paris", "Stockholm" });
 
     private static final String NULL_SELECTION_ID = "Berlin";
 

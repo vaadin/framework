@@ -18,8 +18,8 @@ public class LowResolution extends TestBase {
         dateField.addListener(new PopupDateField.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                getMainWindow().showNotification(
-                        "Date now" + event.getProperty());
+                getMainWindow()
+                        .showNotification("Date now" + event.getProperty());
             }
         });
         dateField.setImmediate(true);
@@ -31,8 +31,8 @@ public class LowResolution extends TestBase {
         dateField3.addListener(new PopupDateField.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                getMainWindow().showNotification(
-                        "Date now" + event.getProperty());
+                getMainWindow()
+                        .showNotification("Date now" + event.getProperty());
             }
         });
         dateField3.setImmediate(true);
@@ -44,8 +44,8 @@ public class LowResolution extends TestBase {
         dateField2.addListener(new PopupDateField.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                getMainWindow().showNotification(
-                        "Date now" + event.getProperty());
+                getMainWindow()
+                        .showNotification("Date now" + event.getProperty());
             }
         });
         dateField2.setImmediate(true);

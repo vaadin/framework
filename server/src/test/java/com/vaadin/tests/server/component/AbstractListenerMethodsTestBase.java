@@ -47,19 +47,22 @@ public abstract class AbstractListenerMethodsTestBase {
 
                         System.out.println("import "
                                 + AbstractListenerMethodsTestBase.class
-                                        .getName() + ";");
+                                        .getName()
+                                + ";");
                         System.out.println("import " + c.getName() + ";");
-                        System.out.println("public class "
-                                + c.getSimpleName()
-                                + "Listeners extends "
-                                + AbstractListenerMethodsTestBase.class
-                                        .getSimpleName() + " {");
+                        System.out
+                                .println(
+                                        "public class " + c.getSimpleName()
+                                                + "Listeners extends "
+                                                + AbstractListenerMethodsTestBase.class
+                                                        .getSimpleName()
+                                                + " {");
                     }
 
                     String listenerClassName = m.getParameterTypes()[0]
                             .getSimpleName();
-                    String eventClassName = listenerClassName.replaceFirst(
-                            "Listener$", "Event");
+                    String eventClassName = listenerClassName
+                            .replaceFirst("Listener$", "Event");
                     System.out.println("public void test" + listenerClassName
                             + "() throws Exception {");
                     System.out.println("    testListener(" + c.getSimpleName()
@@ -127,14 +130,16 @@ public abstract class AbstractListenerMethodsTestBase {
 
     private void addListener(Object c, Object listener1, Class<?> listenerClass)
             throws IllegalArgumentException, IllegalAccessException,
-            InvocationTargetException, SecurityException, NoSuchMethodException {
+            InvocationTargetException, SecurityException,
+            NoSuchMethodException {
         Method method = getAddListenerMethod(c.getClass(), listenerClass);
         method.invoke(c, listener1);
     }
 
     private Collection<?> getListeners(Object c, Class<?> eventType)
             throws IllegalArgumentException, IllegalAccessException,
-            InvocationTargetException, SecurityException, NoSuchMethodException {
+            InvocationTargetException, SecurityException,
+            NoSuchMethodException {
         Method method = getGetListenersMethod(c.getClass());
         return (Collection<?>) method.invoke(c, eventType);
     }

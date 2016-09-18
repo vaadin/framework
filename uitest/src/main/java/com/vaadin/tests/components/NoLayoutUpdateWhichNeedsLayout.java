@@ -75,8 +75,8 @@ public class NoLayoutUpdateWhichNeedsLayout extends UI {
                 w = new Window("test");
                 w.setWidth("300px");
                 w.setHeight("300px");
-                w.setContent(new VerticalLayout(new Label(
-                        "simple test label component")));
+                w.setContent(new VerticalLayout(
+                        new Label("simple test label component")));
                 w.center();
                 getUI().addWindow(w);
             }

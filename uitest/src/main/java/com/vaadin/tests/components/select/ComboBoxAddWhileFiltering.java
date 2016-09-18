@@ -9,7 +9,7 @@ import com.vaadin.ui.ComboBox;
 /**
  * TODO can't reproduce the issue with this test case, possibly need some
  * enhancements.
- * 
+ *
  */
 public class ComboBoxAddWhileFiltering extends TestBase {
 

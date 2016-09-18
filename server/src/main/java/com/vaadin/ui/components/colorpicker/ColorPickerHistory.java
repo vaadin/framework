@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,11 +28,11 @@ import com.vaadin.ui.CustomComponent;
 
 /**
  * A component that represents color selection history within a color picker.
- * 
+ *
  * @since 7.0.0
  */
-public class ColorPickerHistory extends CustomComponent implements
-        ColorSelector, ColorChangeListener {
+public class ColorPickerHistory extends CustomComponent
+        implements ColorSelector, ColorChangeListener {
 
     private static final String STYLENAME = "v-colorpicker-history";
 
@@ -96,8 +96,8 @@ public class ColorPickerHistory extends CustomComponent implements
     @SuppressWarnings("unchecked")
     private ArrayBlockingQueue<Color> getColorHistory() {
         if (isAttached()) {
-            Object colorHistory = getSession().getAttribute(
-                    "colorPickerHistory");
+            Object colorHistory = getSession()
+                    .getAttribute("colorPickerHistory");
             if (colorHistory instanceof ArrayBlockingQueue<?>) {
                 return (ArrayBlockingQueue<Color>) colorHistory;
             }
@@ -167,7 +167,7 @@ public class ColorPickerHistory extends CustomComponent implements
 
     /**
      * Gets the history.
-     * 
+     *
      * @return the history
      */
     public List<Color> getHistory() {
@@ -178,10 +178,10 @@ public class ColorPickerHistory extends CustomComponent implements
 
     /**
      * Checks if the history contains given color.
-     * 
+     *
      * @param c
      *            the color
-     * 
+     *
      * @return true, if successful
      */
     public boolean hasColor(Color c) {
@@ -190,7 +190,7 @@ public class ColorPickerHistory extends CustomComponent implements
 
     /**
      * Adds a color change listener
-     * 
+     *
      * @param listener
      *            The listener
      */
@@ -201,7 +201,7 @@ public class ColorPickerHistory extends CustomComponent implements
 
     /**
      * Removes a color change listener
-     * 
+     *
      * @param listener
      *            The listener
      */

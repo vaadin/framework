@@ -13,8 +13,8 @@ public class FocusFromShortcutAction extends TestBase {
 
     @Override
     protected void setup() {
-        final Select select = new Select("Select", Arrays.asList("Option 1",
-                "Option 2"));
+        final Select select = new Select("Select",
+                Arrays.asList("Option 1", "Option 2"));
         final TextField text = new TextField("Text");
 
         addComponent(select);

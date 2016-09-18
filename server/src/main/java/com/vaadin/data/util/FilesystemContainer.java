@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -38,7 +38,7 @@ import com.vaadin.util.FileTypeResolver;
 
 /**
  * A hierarchical container wrapper for a filesystem.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -107,7 +107,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     /**
      * Constructs a new <code>FileSystemContainer</code> with the specified file
      * as the root of the filesystem. The files are included recursively.
-     * 
+     *
      * @param root
      *            the root file for the new file-system container. Null values
      *            are ignored.
@@ -121,7 +121,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     /**
      * Constructs a new <code>FileSystemContainer</code> with the specified file
      * as the root of the filesystem. The files are included recursively.
-     * 
+     *
      * @param root
      *            the root file for the new file-system container.
      * @param recursive
@@ -135,7 +135,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     /**
      * Constructs a new <code>FileSystemContainer</code> with the specified file
      * as the root of the filesystem.
-     * 
+     *
      * @param root
      *            the root file for the new file-system container.
      * @param extension
@@ -153,7 +153,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     /**
      * Constructs a new <code>FileSystemContainer</code> with the specified root
      * and recursivity status.
-     * 
+     *
      * @param root
      *            the root file for the new file-system container.
      * @param filter
@@ -171,7 +171,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     /**
      * Adds new root file directory. Adds a file to be included as root file
      * directory in the <code>FilesystemContainer</code>.
-     * 
+     *
      * @param root
      *            the File to be added as root directory. Null values are
      *            ignored.
@@ -191,7 +191,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * Tests if the specified Item in the container may have children. Since a
      * <code>FileSystemContainer</code> contains files and directories, this
      * method returns <code>true</code> for directory Items only.
-     * 
+     *
      * @param itemId
      *            the id of the item.
      * @return <code>true</code> if the specified Item is a directory,
@@ -316,7 +316,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     /**
      * Returns <code>false</code> when conversion from files to directories is
      * not supported.
-     * 
+     *
      * @param itemId
      *            the ID of the item.
      * @param areChildrenAllowed
@@ -338,7 +338,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     /**
      * Returns <code>false</code> when moving files around in the filesystem is
      * not supported.
-     * 
+     *
      * @param itemId
      *            the ID of the item.
      * @param newParentId
@@ -372,8 +372,8 @@ public class FilesystemContainer implements Container.Hierarchical {
         // Try to match all roots
         for (int i = 0; i < roots.length; i++) {
             try {
-                val |= ((File) itemId).getCanonicalPath().startsWith(
-                        roots[i].getCanonicalPath());
+                val |= ((File) itemId).getCanonicalPath()
+                        .startsWith(roots[i].getCanonicalPath());
             } catch (final IOException e) {
                 // Exception ignored
             }
@@ -402,7 +402,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     /**
      * Internal recursive method to add the files under the specified directory
      * to the collection.
-     * 
+     *
      * @param col
      *            the collection where the found items are added
      * @param f
@@ -473,7 +473,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * Gets the specified property of the specified file Item. The available
      * file properties are "Name", "Size" and "Last Modified". If propertyId is
      * not one of those, <code>null</code> is returned.
-     * 
+     *
      * @param itemId
      *            the ID of the file whose property is requested.
      * @param propertyId
@@ -512,7 +512,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     /**
      * Gets the collection of available file properties.
-     * 
+     *
      * @return Unmodifiable collection containing all available file properties.
      */
     @Override
@@ -524,7 +524,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * Gets the specified property's data type. "Name" is a <code>String</code>,
      * "Size" is a <code>Long</code>, "Last Modified" is a <code>Date</code>. If
      * propertyId is not one of those, <code>null</code> is returned.
-     * 
+     *
      * @param propertyId
      *            the ID of the property whose type is requested.
      * @return data type of the requested property, or <code>null</code>
@@ -550,7 +550,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     /**
      * Internal method to recursively calculate the number of files under a root
      * directory.
-     * 
+     *
      * @param f
      *            the root to start counting from.
      */
@@ -577,7 +577,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     /**
      * Gets the number of Items in the container. In effect, this is the
      * combined amount of files and directories.
-     * 
+     *
      * @return Number of Items in the container.
      */
     @Override
@@ -610,7 +610,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     /**
      * A Item wrapper for files in a filesystem.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -653,7 +653,7 @@ public class FilesystemContainer implements Container.Hierarchical {
          * same Item contained in the same list always have different
          * hash-codes, though Properties in different Items may have identical
          * hash-codes.
-         * 
+         *
          * @return A locally unique hash-code as integer
          */
         @Override
@@ -664,7 +664,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         /**
          * Tests if the given object is the same as the this object. Two
          * Properties got from an Item with the same ID are equal.
-         * 
+         *
          * @param obj
          *            an object to compare with this object.
          * @return <code>true</code> if the given object is the same as this
@@ -688,7 +688,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
         /**
          * Gets the last modified date of this file.
-         * 
+         *
          * @return Date
          */
         public Date lastModified() {
@@ -697,7 +697,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
         /**
          * Gets the name of this file.
-         * 
+         *
          * @return file name of this file.
          */
         public String getName() {
@@ -706,7 +706,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
         /**
          * Gets the icon of this file.
-         * 
+         *
          * @return the icon of this file.
          */
         public Resource getIcon() {
@@ -715,7 +715,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
         /**
          * Gets the size of this file.
-         * 
+         *
          * @return size
          */
         public long getSize() {
@@ -738,7 +738,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
         /**
          * Filesystem container does not support adding new properties.
-         * 
+         *
          * @see com.vaadin.data.Item#addItemProperty(Object, Property)
          */
         @Override
@@ -750,7 +750,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
         /**
          * Filesystem container does not support removing properties.
-         * 
+         *
          * @see com.vaadin.data.Item#removeItemProperty(Object)
          */
         @Override
@@ -765,7 +765,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     /**
      * Generic file extension filter for displaying only files having certain
      * extension.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -775,7 +775,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
         /**
          * Constructs a new FileExtensionFilter using given extension.
-         * 
+         *
          * @param fileExtension
          *            the File extension without the separator (dot).
          */
@@ -785,7 +785,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
         /**
          * Allows only files with the extension and directories.
-         * 
+         *
          * @see java.io.FilenameFilter#accept(File, String)
          */
         @Override
@@ -800,7 +800,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     /**
      * Returns the file filter used to limit the files in this container.
-     * 
+     *
      * @return Used filter instance or null if no filter is assigned.
      */
     public FilenameFilter getFilter() {
@@ -809,7 +809,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     /**
      * Sets the file filter used to limit the files in this container.
-     * 
+     *
      * @param filter
      *            The filter to set. <code>null</code> disables filtering.
      */
@@ -819,7 +819,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     /**
      * Sets the file filter used to limit the files in this container.
-     * 
+     *
      * @param extension
      *            the Filename extension (w/o separator) to limit the files in
      *            container.
@@ -830,7 +830,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     /**
      * Is this container recursive filesystem.
-     * 
+     *
      * @return <code>true</code> if container is recursive, <code>false</code>
      *         otherwise.
      */
@@ -844,7 +844,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * <p>
      * Note : This is meaningful only if the root really is a directory.
      * </p>
-     * 
+     *
      * @param recursive
      *            the New value for recursive property.
      */
@@ -854,7 +854,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#addContainerProperty(java.lang.Object,
      * java.lang.Class, java.lang.Object)
      */
@@ -867,7 +867,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#addItem()
      */
     @Override
@@ -878,7 +878,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#addItem(java.lang.Object)
      */
     @Override
@@ -889,7 +889,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#removeAllItems()
      */
     @Override
@@ -900,7 +900,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#removeItem(java.lang.Object)
      */
     @Override
@@ -912,7 +912,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Container#removeContainerProperty(java.lang.Object )
      */
     @Override

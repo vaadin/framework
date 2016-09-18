@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,14 +26,14 @@ import com.vaadin.data.util.sqlcontainer.query.OrderBy;
  * The SQLGenerator interface is meant to be implemented for each different SQL
  * syntax that is to be supported. By default there are implementations for
  * HSQLDB, MySQL, PostgreSQL, MSSQL and Oracle syntaxes.
- * 
+ *
  * @author Jonatan Kronqvist / Vaadin Ltd
  */
 public interface SQLGenerator extends Serializable {
     /**
      * Generates a SELECT query with the provided parameters. Uses default
      * filtering mode (INCLUSIVE).
-     * 
+     *
      * @param tableName
      *            Name of the table queried
      * @param filters
@@ -55,7 +55,7 @@ public interface SQLGenerator extends Serializable {
 
     /**
      * Generates an UPDATE query with the provided parameters.
-     * 
+     *
      * @param tableName
      *            Name of the table queried
      * @param item
@@ -68,7 +68,7 @@ public interface SQLGenerator extends Serializable {
     /**
      * Generates an INSERT query for inserting a new row with the provided
      * values.
-     * 
+     *
      * @param tableName
      *            Name of the table queried
      * @param item
@@ -81,7 +81,7 @@ public interface SQLGenerator extends Serializable {
     /**
      * Generates a DELETE query for deleting data related to the given RowItem
      * from the database.
-     * 
+     *
      * @param tableName
      *            Name of the table queried
      * @param primaryKeyColumns

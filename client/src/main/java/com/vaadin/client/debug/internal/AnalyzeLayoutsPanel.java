@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -44,7 +44,7 @@ import com.vaadin.client.ValueMap;
 
 /**
  * Analyze layouts view panel of the debug window.
- * 
+ *
  * @since 7.1.4
  */
 public class AnalyzeLayoutsPanel extends FlowPanel {
@@ -68,8 +68,8 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
         int size = valueMapArray.length();
 
         if (size > 0) {
-            SimpleTree root = new SimpleTree("Layouts analyzed, " + size
-                    + " top level problems");
+            SimpleTree root = new SimpleTree(
+                    "Layouts analyzed, " + size + " top level problems");
             for (int i = 0; i < size; i++) {
                 printLayoutError(ac, valueMapArray.get(i), root);
             }
@@ -94,7 +94,8 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
                 printClientSideDetectedIssues(zeroHeightComponents, ac);
             }
             if (zeroWidthComponents.size() > 0) {
-                add(new HTML("<p><strong>Horizontally zero size:</strong></p>"));
+                add(new HTML(
+                        "<p><strong>Horizontally zero size:</strong></p>"));
                 printClientSideDetectedIssues(zeroWidthComponents, ac);
             }
         }
@@ -111,12 +112,10 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
             final ServerConnector parent = connector.getParent();
             final String parentId = parent.getConnectorId();
 
-            final Label errorDetails = new Label(connector.getClass()
-                    .getSimpleName()
-                    + "["
-                    + connector.getConnectorId()
-                    + "]"
-                    + " inside " + parent.getClass().getSimpleName());
+            final Label errorDetails = new Label(
+                    connector.getClass().getSimpleName() + "["
+                            + connector.getConnectorId() + "]" + " inside "
+                            + parent.getClass().getSimpleName());
 
             if (parent instanceof ComponentConnector) {
                 final ComponentConnector parentConnector = (ComponentConnector) parent;
@@ -173,8 +172,8 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
 
         Highlight.show(connector);
 
-        final SimpleTree errorNode = new SimpleTree(connector.getClass()
-                .getSimpleName() + " id: " + pid);
+        final SimpleTree errorNode = new SimpleTree(
+                connector.getClass().getSimpleName() + " id: " + pid);
         errorNode.addDomHandler(new MouseOverHandler() {
             @Override
             public void onMouseOver(MouseOverEvent event) {
@@ -205,12 +204,12 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
         VerticalPanel errorDetails = new VerticalPanel();
 
         if (valueMap.containsKey("heightMsg")) {
-            errorDetails.add(new Label("Height problem: "
-                    + valueMap.getString("heightMsg")));
+            errorDetails.add(new Label(
+                    "Height problem: " + valueMap.getString("heightMsg")));
         }
         if (valueMap.containsKey("widthMsg")) {
-            errorDetails.add(new Label("Width problem: "
-                    + valueMap.getString("widthMsg")));
+            errorDetails.add(new Label(
+                    "Width problem: " + valueMap.getString("widthMsg")));
         }
         if (errorDetails.getWidgetCount() > 0) {
             errorNode.add(errorDetails);

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,12 +26,12 @@ import com.vaadin.client.ui.VTabsheetBase;
 import com.vaadin.shared.ui.tabsheet.TabState;
 import com.vaadin.shared.ui.tabsheet.TabsheetState;
 
-public abstract class TabsheetBaseConnector extends
-        AbstractComponentContainerConnector {
+public abstract class TabsheetBaseConnector
+        extends AbstractComponentContainerConnector {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.AbstractConnector#init()
      */
     @Override
@@ -43,7 +43,7 @@ public abstract class TabsheetBaseConnector extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.client.ui.AbstractComponentConnector#onStateChanged(com.vaadin
      * .client.communication.StateChangeEvent)
@@ -57,8 +57,8 @@ public abstract class TabsheetBaseConnector extends
 
         // Widgets in the TabSheet before update
         ArrayList<Widget> oldWidgets = new ArrayList<Widget>();
-        for (Iterator<Widget> iterator = getWidget().getWidgetIterator(); iterator
-                .hasNext();) {
+        for (Iterator<Widget> iterator = getWidget()
+                .getWidgetIterator(); iterator.hasNext();) {
             oldWidgets.add(iterator.next());
         }
 

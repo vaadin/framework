@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -64,18 +64,18 @@ public class PopupDateFieldValueChangeEventsTest extends MultiBrowserTest {
     }
 
     public WebElement getHoursSelect() {
-        return findElement(By
-                .xpath("//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select"));
+        return findElement(By.xpath(
+                "//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select"));
     }
 
     public WebElement getMinutesSelect() {
-        return findElement(By
-                .xpath("//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select[2]"));
+        return findElement(By.xpath(
+                "//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select[2]"));
     }
 
     public WebElement getSecondsSelect() {
-        return findElement(By
-                .xpath("//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select[3]"));
+        return findElement(By.xpath(
+                "//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select[3]"));
     }
 
     public NativeSelectElement getResolutionSelect() {

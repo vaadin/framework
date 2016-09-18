@@ -19,8 +19,8 @@ public class LinkTargetSize extends TestBase {
 
     @Override
     protected void setup() {
-        Link l = new Link("Try it!", new ExternalResource(
-                "http://www.google.com/m"));
+        Link l = new Link("Try it!",
+                new ExternalResource("http://www.google.com/m"));
         l.setTargetName("_blank");
         l.setTargetWidth(300);
         l.setTargetHeight(300);

@@ -8,8 +8,8 @@ import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Notification;
 
-public class ComboBoxScrollingToPageDisabled extends
-        ComponentTestCase<ComboBox> {
+public class ComboBoxScrollingToPageDisabled
+        extends ComponentTestCase<ComboBox> {
 
     private static final Object CAPTION = "caption";
 

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import com.vaadin.data.util.converter.Converter.ConversionException;
  * ColumnProperty represents the value of one column in a RowItem. In addition
  * to the value, ColumnProperty also contains some basic column attributes such
  * as nullability status, read-only status and data type.
- * 
+ *
  * Note that depending on the QueryDelegate in use this does not necessarily map
  * into an actual column in a database table.
  */
@@ -63,14 +63,14 @@ final public class ColumnProperty implements Property {
      * Deprecated constructor for ColumnProperty. If this is used the primary
      * keys are not identified correctly in some cases for some databases (i.e.
      * Oracle). See http://dev.vaadin.com/ticket/9145.
-     * 
+     *
      * @param propertyId
      * @param readOnly
      * @param allowReadOnlyChange
      * @param nullable
      * @param value
      * @param type
-     * 
+     *
      * @deprecated As of 7.0. Use
      *             {@link #ColumnProperty(String, boolean, boolean, boolean, boolean, Object, Class)
      *             instead
@@ -85,7 +85,7 @@ final public class ColumnProperty implements Property {
 
     /**
      * Creates a new ColumnProperty instance.
-     * 
+     *
      * @param propertyId
      *            The ID of this property.
      * @param readOnly
@@ -124,7 +124,7 @@ final public class ColumnProperty implements Property {
     /**
      * Returns the current value for this property. To get the previous value
      * (if one exists) for a modified property use {@link #getOldValue()}.
-     * 
+     *
      * @return
      */
     @Override
@@ -138,7 +138,7 @@ final public class ColumnProperty implements Property {
     /**
      * Returns the original non-modified value of this property if it has been
      * modified.
-     * 
+     *
      * @return The original value if <code>isModified()</code> is true,
      *         <code>getValue()</code> otherwise.
      */
@@ -147,8 +147,8 @@ final public class ColumnProperty implements Property {
     }
 
     @Override
-    public void setValue(Object newValue) throws ReadOnlyException,
-            ConversionException {
+    public void setValue(Object newValue)
+            throws ReadOnlyException, ConversionException {
         if (newValue == null && !nullable) {
             throw new NotNullableException(
                     "Null values are not allowed for this property.");
@@ -232,7 +232,7 @@ final public class ColumnProperty implements Property {
      * to be written by the underlying database. Also used for values like
      * VERSION and AUTO_INCREMENT fields that might be set to read-only by the
      * container but the database still allows writes.
-     * 
+     *
      * @return true if the read-only status can be changed, false otherwise.
      */
     public boolean isReadOnlyChangeAllowed() {
@@ -266,9 +266,9 @@ final public class ColumnProperty implements Property {
      * If legacy Property toString mode is disabled, the string representation
      * has no special meaning
      * </p>
-     * 
+     *
      * @see LegacyPropertyHelper#isLegacyToStringEnabled()
-     * 
+     *
      * @return A string representation of the value value stored in the Property
      *         or a string representation of the Property object.
      * @deprecated As of 7.0. To get the property value, use {@link #getValue()}
@@ -318,7 +318,7 @@ final public class ColumnProperty implements Property {
     /**
      * Return whether the value of this property should be persisted to the
      * database.
-     * 
+     *
      * @return true if the value should be written to the database, false
      *         otherwise.
      */
@@ -334,7 +334,7 @@ final public class ColumnProperty implements Property {
 
     /**
      * Returns whether or not this property is used as a row identifier.
-     * 
+     *
      * @return true if the property is a row identifier, false otherwise.
      */
     public boolean isRowIdentifier() {
@@ -359,7 +359,7 @@ final public class ColumnProperty implements Property {
         /**
          * Constructs a new <code>NotNullableException</code> with the specified
          * detail message.
-         * 
+         *
          * @param msg
          *            the detail message
          */
@@ -370,7 +370,7 @@ final public class ColumnProperty implements Property {
         /**
          * Constructs a new <code>NotNullableException</code> from another
          * exception.
-         * 
+         *
          * @param cause
          *            The cause of the failure
          */

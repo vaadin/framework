@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -66,12 +66,13 @@ public class UsingObjectsInSelect extends com.vaadin.server.LegacyApplication
     public void createExampleTasks() {
         final String[] assignedTo = new String[] { "John", "Mary", "Joe",
                 "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
-        final String[] type = new String[] { "Enhancement", "Bugfix",
-                "Testing", "Task" };
+        final String[] type = new String[] { "Enhancement", "Bugfix", "Testing",
+                "Task" };
         for (int j = 0; j < 100; j++) {
             final Task task = new Task(
                     type[(int) (random.nextDouble() * (type.length - 1))],
-                    assignedTo[(int) (random.nextDouble() * (assignedTo.length - 1))],
+                    assignedTo[(int) (random.nextDouble()
+                            * (assignedTo.length - 1))],
                     random.nextInt(100));
             select.addItem(task);
         }
@@ -87,7 +88,7 @@ public class UsingObjectsInSelect extends com.vaadin.server.LegacyApplication
 
     /**
      * Sample class which is bound to Vaadin components
-     * 
+     *
      */
     public class Task {
 

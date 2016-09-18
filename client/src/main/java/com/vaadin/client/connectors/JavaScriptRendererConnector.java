@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -38,21 +38,21 @@ import elemental.json.JsonValue;
 
 /**
  * Connector for server-side renderer implemented using JavaScript.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
 // This is really typed to <JsonValue>, but because of the way native strings
 // are not always instanceof JsonValue, we need to accept Object
 @Connect(AbstractJavaScriptRenderer.class)
-public class JavaScriptRendererConnector extends
-        AbstractRendererConnector<Object> implements
-        HasJavaScriptConnectorHelper {
+public class JavaScriptRendererConnector
+        extends AbstractRendererConnector<Object>
+        implements HasJavaScriptConnectorHelper {
     private final JavaScriptConnectorHelper helper = new JavaScriptConnectorHelper(
             this);
 
-    private final JavaScriptObject cellReferenceWrapper = createCellReferenceWrapper(BrowserInfo
-            .get().isIE8());
+    private final JavaScriptObject cellReferenceWrapper = createCellReferenceWrapper(
+            BrowserInfo.get().isIE8());
 
     @Override
     protected void init() {
@@ -70,7 +70,7 @@ public class JavaScriptRendererConnector extends
           // IE8 only supports defineProperty for DOM objects
           reference = $doc.createElement('div');
         }
-        
+
         var setProperty = function(name, getter, setter) {
             var descriptor = {
                 get: getter
@@ -80,25 +80,25 @@ public class JavaScriptRendererConnector extends
             }
             Object.defineProperty(reference, name, descriptor);
         };
-        
+
         setProperty("element", function() {
             return reference.target.@CellReference::getElement()();
         }, null);
-        
+
         setProperty("rowIndex", function() {
             return reference.target.@CellReference::getRowIndex()();
         }, null);
-        
+
         setProperty("columnIndex", function() {
             return reference.target.@CellReference::getColumnIndex()();
         }, null);
-        
+
         setProperty("colSpan", function() {
             return reference.target.@RendererCellReference::getColSpan()();
         }, function(colSpan) {
             reference.target.@RendererCellReference::setColSpan(*)(colSpan);
         });
-        
+
         return reference;
     }-*/;
 
@@ -137,9 +137,9 @@ public class JavaScriptRendererConnector extends
         helper.ensureJavascriptInited();
 
         if (!hasFunction("render")) {
-            throw new RuntimeException("JavaScriptRenderer "
-                    + helper.getInitFunctionName()
-                    + " must have a function named 'render'");
+            throw new RuntimeException(
+                    "JavaScriptRenderer " + helper.getInitFunctionName()
+                            + " must have a function named 'render'");
         }
 
         final boolean hasInit = hasFunction("init");
@@ -221,8 +221,8 @@ public class JavaScriptRendererConnector extends
             @Override
             public Collection<String> getConsumedEvents() {
                 if (hasGetConsumedEvents) {
-                    JsArrayString events = getConsumedEvents(helper
-                            .getConnectorWrapper());
+                    JsArrayString events = getConsumedEvents(
+                            helper.getConnectorWrapper());
 
                     ArrayList<String> list = new ArrayList<String>(
                             events.length());

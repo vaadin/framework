@@ -38,8 +38,8 @@ public class TabSheetCaptions extends TestBase {
         VerticalLayout layout1 = new VerticalLayout();
         layout1.setMargin(true);
         layout1.setSizeFull();
-        panel1 = new Panel(
-                "Panel initial caption (should also be tab caption)", layout1);
+        panel1 = new Panel("Panel initial caption (should also be tab caption)",
+                layout1);
         panel1.setSizeFull();
         layout1.addComponent(new Label("This is a panel"));
         tabSheet.addTab(panel1);
@@ -48,9 +48,8 @@ public class TabSheetCaptions extends TestBase {
         button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                tabSheet.getTab(panel1).setCaption(
-                        "This is a new tab caption "
-                                + dateFormatter.format(date));
+                tabSheet.getTab(panel1).setCaption("This is a new tab caption "
+                        + dateFormatter.format(date));
             }
         });
 

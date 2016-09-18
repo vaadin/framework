@@ -81,7 +81,8 @@ public class WindowShouldRemoveActionHandler extends AbstractTestUI {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 Notification.show("Handling action " + action.getCaption());
             }
 
@@ -101,7 +102,8 @@ public class WindowShouldRemoveActionHandler extends AbstractTestUI {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 Notification.show("Handling action " + action.getCaption());
             }
 
@@ -113,8 +115,8 @@ public class WindowShouldRemoveActionHandler extends AbstractTestUI {
     private void addHandler(Handler actionHandler) {
         actionHandlers.add(actionHandler);
         addActionHandler(actionHandler);
-        state.setValue("An UI with " + actionHandlers.size()
-                + " action handlers");
+        state.setValue(
+                "An UI with " + actionHandlers.size() + " action handlers");
 
     }
 }

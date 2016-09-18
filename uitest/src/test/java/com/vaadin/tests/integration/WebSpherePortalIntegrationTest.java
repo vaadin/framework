@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -62,8 +62,8 @@ public class WebSpherePortalIntegrationTest extends PrivateTB3Configuration {
             sftpChannel.disconnect();
         } else {
             sftpChannel.disconnect();
-            throw new AssertionError("Demo application not found at "
-                    + applicationPath);
+            throw new AssertionError(
+                    "Demo application not found at " + applicationPath);
         }
     }
 
@@ -73,8 +73,8 @@ public class WebSpherePortalIntegrationTest extends PrivateTB3Configuration {
         channel.setCommand(command);
         BufferedReader in;
         try {
-            in = new BufferedReader(new InputStreamReader(
-                    channel.getInputStream()));
+            in = new BufferedReader(
+                    new InputStreamReader(channel.getInputStream()));
 
             channel.connect();
 
@@ -130,8 +130,8 @@ public class WebSpherePortalIntegrationTest extends PrivateTB3Configuration {
 
     private void waitUntilPortletIsLoaded() {
         WebDriverWait wait = new WebDriverWait(driver, 15);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                .className("v-app")));
+        wait.until(ExpectedConditions
+                .visibilityOfElementLocated(By.className("v-app")));
     }
 
     private boolean isLoggedIn() {

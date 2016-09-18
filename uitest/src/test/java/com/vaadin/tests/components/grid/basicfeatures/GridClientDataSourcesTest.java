@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -101,15 +101,16 @@ public class GridClientDataSourcesTest extends MultiBrowserTest {
     }
 
     private void assertCellPresent(String content) {
-        assertNotNull("A cell with content \"" + content
-                + "\" should've been found", findByXPath("//td[text()='"
-                + content + "']"));
+        assertNotNull(
+                "A cell with content \"" + content + "\" should've been found",
+                findByXPath("//td[text()='" + content + "']"));
     }
 
     private void assertCellNotPresent(String content) {
-        assertNull("A cell with content \"" + content
-                + "\" should've not been found", findByXPath("//td[text()='"
-                + content + "']"));
+        assertNull(
+                "A cell with content \"" + content
+                        + "\" should've not been found",
+                findByXPath("//td[text()='" + content + "']"));
     }
 
     private void scrollToTop() {
@@ -129,7 +130,8 @@ public class GridClientDataSourcesTest extends MultiBrowserTest {
     }
 
     private void scrollVerticallyTo(int px) {
-        executeScript("arguments[0].scrollTop = " + px, findVerticalScrollbar());
+        executeScript("arguments[0].scrollTop = " + px,
+                findVerticalScrollbar());
     }
 
     private Object executeScript(String script, Object args) {
@@ -145,9 +147,8 @@ public class GridClientDataSourcesTest extends MultiBrowserTest {
     }
 
     private WebElement findVerticalScrollbar() {
-        return getDriver().findElement(
-                By.xpath("//div[contains(@class, "
-                        + "\"v-grid-scroller-vertical\")]"));
+        return getDriver().findElement(By.xpath(
+                "//div[contains(@class, " + "\"v-grid-scroller-vertical\")]"));
     }
 
     @Override
@@ -158,8 +159,8 @@ public class GridClientDataSourcesTest extends MultiBrowserTest {
 
     @Override
     protected WebElement getMenuElement(String menuCaption) {
-        return getDriver().findElement(
-                By.xpath("//td[text() = '" + menuCaption + "']"));
+        return getDriver()
+                .findElement(By.xpath("//td[text() = '" + menuCaption + "']"));
     }
 
 }

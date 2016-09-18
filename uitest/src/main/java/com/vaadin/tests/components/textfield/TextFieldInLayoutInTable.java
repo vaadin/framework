@@ -12,8 +12,8 @@ public class TextFieldInLayoutInTable extends LegacyApplication {
     @Override
     public void init() {
 
-        final LegacyWindow mainWindow = new LegacyWindow(this.getClass()
-                .getName());
+        final LegacyWindow mainWindow = new LegacyWindow(
+                this.getClass().getName());
         setMainWindow(mainWindow);
 
         final Table table = new Table();

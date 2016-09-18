@@ -71,8 +71,8 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
             confFieldGroup.setBuffered(false);
 
             for (Object propertyId : bi.getItemPropertyIds()) {
-                ((ComponentContainer) getContent()).addComponent(confFieldGroup
-                        .buildAndBind(propertyId));
+                ((ComponentContainer) getContent())
+                        .addComponent(confFieldGroup.buildAndBind(propertyId));
             }
 
         }

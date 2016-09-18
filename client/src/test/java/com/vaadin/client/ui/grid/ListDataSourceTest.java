@@ -185,8 +185,8 @@ public class ListDataSourceTest {
             }
         });
 
-        assertTrue(Arrays.equals(ds.asList().toArray(), new Integer[] { 1, 2,
-                3, 3, 4 }));
+        assertTrue(Arrays.equals(ds.asList().toArray(),
+                new Integer[] { 1, 2, 3, 3, 4 }));
     }
 
 }

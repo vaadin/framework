@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -30,11 +30,11 @@ import elemental.json.impl.JsonUtil;
 /**
  * Internal class for keeping track of pending server to client method
  * invocations for a Connector.
- * 
+ *
  * @since 7.0
  */
-public class ClientMethodInvocation implements Serializable,
-        Comparable<ClientMethodInvocation> {
+public class ClientMethodInvocation
+        implements Serializable, Comparable<ClientMethodInvocation> {
     private final ClientConnector connector;
     private final String interfaceName;
     private final String methodName;
@@ -121,8 +121,8 @@ public class ClientMethodInvocation implements Serializable,
         stream.writeObject(serializedParameters);
     }
 
-    private void readObject(ObjectInputStream stream) throws IOException,
-            ClassNotFoundException {
+    private void readObject(ObjectInputStream stream)
+            throws IOException, ClassNotFoundException {
         // Reverses the serialization done in writeObject. Basically just
         // parsing the serialized type back to the non-serializable type.
         stream.defaultReadObject();

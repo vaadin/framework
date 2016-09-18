@@ -23,7 +23,8 @@ public class StringToShortConverterTest {
     @Test
     public void testReverseNullConversion() {
         Assert.assertEquals("Null value reversely was converted incorrectly",
-                null, reverseConverter.convertToModel(null, String.class, null));
+                null,
+                reverseConverter.convertToModel(null, String.class, null));
     }
 
     @Test
@@ -41,8 +42,7 @@ public class StringToShortConverterTest {
 
     @Test
     public void testReverseValueConversion() {
-        Assert.assertEquals(
-                "Short value reversely was converted incorrectly",
+        Assert.assertEquals("Short value reversely was converted incorrectly",
                 reverseConverter.convertToModel((short) 10, String.class, null),
                 "10");
     }

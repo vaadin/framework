@@ -148,8 +148,8 @@ public class DateFieldRanges extends AbstractTestUI {
         Calendar endCal = createCalendar();
         endCal.add(Calendar.DATE, 30);
 
-        dynamicDateField = createDateField(startCal.getTime(),
-                endCal.getTime(), null, Resolution.DAY, false);
+        dynamicDateField = createDateField(startCal.getTime(), endCal.getTime(),
+                null, Resolution.DAY, false);
         inlineDynamicDateField = createDateField(startCal.getTime(),
                 endCal.getTime(), null, Resolution.DAY, true);
 
@@ -210,8 +210,8 @@ public class DateFieldRanges extends AbstractTestUI {
         DateField df = createDateField(startCal.getTime(), endCal.getTime(),
                 null, Resolution.DAY, false);
         gl.addComponent(df);
-        DateField inline = createDateField(startCal.getTime(),
-                endCal.getTime(), null, Resolution.DAY, true);
+        DateField inline = createDateField(startCal.getTime(), endCal.getTime(),
+                null, Resolution.DAY, true);
         gl.addComponent(inline);
         inline.setId("staticInline");
         VerticalLayout vl = new VerticalLayout();
@@ -237,9 +237,8 @@ public class DateFieldRanges extends AbstractTestUI {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                label.setValue((gg.getValue() == null ? "Nothing" : gg
-                        .getValue().toString())
-                        + " selected. isValid: "
+                label.setValue((gg.getValue() == null ? "Nothing"
+                        : gg.getValue().toString()) + " selected. isValid: "
                         + gg.isValid());
             }
         });

@@ -17,8 +17,8 @@ public class ReflectToolsGetPrimitiveFieldValueTest {
         Object fieldValue = new Boolean(false);
         try {
             memberField = myInstance.getClass().getField("field");
-            fieldValue = ReflectTools
-                    .getJavaFieldValue(myInstance, memberField);
+            fieldValue = ReflectTools.getJavaFieldValue(myInstance,
+                    memberField);
         } catch (Exception e) {
         }
         assertFalse(fieldValue instanceof Boolean);

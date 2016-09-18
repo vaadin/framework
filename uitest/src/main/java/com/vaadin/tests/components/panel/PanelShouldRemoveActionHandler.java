@@ -70,7 +70,8 @@ public class PanelShouldRemoveActionHandler extends TestBase {
 
     public void remove() {
         panel.setCaption(panel.getCaption() + " - Removed handler");
-        panel.removeActionHandler(actionHandlers.remove(actionHandlers.size() - 1));
+        panel.removeActionHandler(
+                actionHandlers.remove(actionHandlers.size() - 1));
     }
 
     private List<Handler> actionHandlers = new ArrayList<Handler>();
@@ -87,7 +88,8 @@ public class PanelShouldRemoveActionHandler extends TestBase {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 getMainWindow().showNotification(
                         "Handling action " + action.getCaption());
             }
@@ -108,7 +110,8 @@ public class PanelShouldRemoveActionHandler extends TestBase {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 getMainWindow().showNotification(
                         "Handling action " + action.getCaption());
             }
@@ -121,8 +124,8 @@ public class PanelShouldRemoveActionHandler extends TestBase {
     private void addHandler(Handler actionHandler) {
         actionHandlers.add(actionHandler);
         panel.addActionHandler(actionHandler);
-        panel.setCaption("A panel with " + actionHandlers.size()
-                + " action handlers");
+        panel.setCaption(
+                "A panel with " + actionHandlers.size() + " action handlers");
 
     }
 }

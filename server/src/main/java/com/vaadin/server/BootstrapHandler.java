@@ -134,8 +134,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                 UICreateEvent event = new UICreateEvent(getRequest(),
                         getUIClass());
 
-                pushMode = getBootstrapResponse().getUIProvider().getPushMode(
-                        event);
+                pushMode = getBootstrapResponse().getUIProvider()
+                        .getPushMode(event);
                 if (pushMode == null) {
                     pushMode = getRequest().getService()
                             .getDeploymentConfiguration().getPushMode();
@@ -192,8 +192,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
         @Override
         protected String getVaadinDirUrl() {
-            return context.getApplicationParameters().getString(
-                    ApplicationConstants.VAADIN_DIR_URL);
+            return context.getApplicationParameters()
+                    .getString(ApplicationConstants.VAADIN_DIR_URL);
         }
 
         @Override
@@ -203,12 +203,14 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
         @Override
         protected String getServiceUrlParameterName() {
-            return getConfigOrNull(ApplicationConstants.SERVICE_URL_PARAMETER_NAME);
+            return getConfigOrNull(
+                    ApplicationConstants.SERVICE_URL_PARAMETER_NAME);
         }
 
         @Override
         protected String getServiceUrl() {
-            String serviceUrl = getConfigOrNull(ApplicationConstants.SERVICE_URL);
+            String serviceUrl = getConfigOrNull(
+                    ApplicationConstants.SERVICE_URL);
             if (serviceUrl == null) {
                 return "./";
             } else if (!serviceUrl.endsWith("/")) {
@@ -303,8 +305,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         if (vaadinService.isStandalone(request)) {
             Map<String, Object> headers = new LinkedHashMap<String, Object>();
             Document document = Document.createShell("");
-            BootstrapPageResponse pageResponse = new BootstrapPageResponse(
-                    this, request, context.getSession(), context.getUIClass(),
+            BootstrapPageResponse pageResponse = new BootstrapPageResponse(this,
+                    request, context.getSession(), context.getUIClass(),
                     document, headers, fragmentResponse.getUIProvider());
             List<Node> fragmentNodes = fragmentResponse.getFragmentNodes();
             Element body = document.body();
@@ -342,7 +344,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                 response.setDateHeader(header.getKey(),
                         ((Long) value).longValue());
             } else {
-                throw new RuntimeException("Unsupported header value: " + value);
+                throw new RuntimeException(
+                        "Unsupported header value: " + value);
             }
         }
     }
@@ -350,8 +353,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
     private void writeBootstrapPage(VaadinResponse response, String html)
             throws IOException {
         response.setContentType("text/html");
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-                response.getOutputStream(), "UTF-8"));
+        BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(response.getOutputStream(), "UTF-8"));
         writer.append(html);
         writer.close();
     }
@@ -403,13 +406,14 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             } catch (Exception e) {
                 throw new RuntimeException(
                         "Error processing viewport generator "
-                                + viewportGeneratorClass.getCanonicalName(), e);
+                                + viewportGeneratorClass.getCanonicalName(),
+                        e);
             }
         }
 
         if (viewportContent != null) {
-            head.appendElement("meta").attr("name", "viewport")
-                    .attr("content", viewportContent);
+            head.appendElement("meta").attr("name", "viewport").attr("content",
+                    viewportContent);
         }
 
         String title = response.getUIProvider().getPageTitle(
@@ -477,12 +481,12 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
         UICreateEvent event = new UICreateEvent(context.getRequest(),
                 context.getUIClass());
-        WidgetsetInfo widgetset = context.getBootstrapResponse()
-                .getUIProvider().getWidgetsetInfo(event);
+        WidgetsetInfo widgetset = context.getBootstrapResponse().getUIProvider()
+                .getWidgetsetInfo(event);
         if (widgetset == null) {
             // TODO do we want to move WidgetsetInfoImpl elsewhere?
-            widgetset = new WidgetsetInfoImpl(request.getService()
-                    .getConfiguredWidgetset(request));
+            widgetset = new WidgetsetInfoImpl(
+                    request.getService().getConfiguredWidgetset(request));
         }
 
         return widgetset;
@@ -523,8 +527,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             mainDiv.attr("style", style);
         }
         mainDiv.appendElement("div").addClass("v-app-loading");
-        mainDiv.appendElement("noscript")
-                .append("You have to enable javascript in your browser to use an application built with Vaadin.");
+        mainDiv.appendElement("noscript").append(
+                "You have to enable javascript in your browser to use an application built with Vaadin.");
         fragmentNodes.add(mainDiv);
 
         VaadinRequest request = context.getRequest();
@@ -548,28 +552,29 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
             pushJS += versionQueryParam;
 
-            fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr(
-                    "type", "text/javascript").attr("src", pushJS));
+            fragmentNodes.add(new Element(Tag.valueOf("script"), "")
+                    .attr("type", "text/javascript").attr("src", pushJS));
         }
 
         String bootstrapLocation = vaadinLocation
                 + ApplicationConstants.VAADIN_BOOTSTRAP_JS + versionQueryParam;
-        fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr("type",
-                "text/javascript").attr("src", bootstrapLocation));
-        Element mainScriptTag = new Element(Tag.valueOf("script"), "").attr(
-                "type", "text/javascript");
+        fragmentNodes.add(new Element(Tag.valueOf("script"), "")
+                .attr("type", "text/javascript")
+                .attr("src", bootstrapLocation));
+        Element mainScriptTag = new Element(Tag.valueOf("script"), "")
+                .attr("type", "text/javascript");
 
         StringBuilder builder = new StringBuilder();
         builder.append("//<![CDATA[\n");
-        builder.append("if (!window.vaadin) alert("
-                + JsonUtil.quote("Failed to load the bootstrap javascript: "
-                        + bootstrapLocation) + ");\n");
+        builder.append("if (!window.vaadin) alert(" + JsonUtil.quote(
+                "Failed to load the bootstrap javascript: " + bootstrapLocation)
+                + ");\n");
 
         appendMainScriptTagContents(context, builder);
 
         builder.append("//]]>");
-        mainScriptTag.appendChild(new DataNode(builder.toString(),
-                mainScriptTag.baseUri()));
+        mainScriptTag.appendChild(
+                new DataNode(builder.toString(), mainScriptTag.baseUri()));
         fragmentNodes.add(mainScriptTag);
 
     }
@@ -587,9 +592,11 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
              * side Profiler if another implementation hasn't already been
              * added.
              */
-            builder.append("if (typeof window.__gwtStatsEvent != 'function') {\n");
+            builder.append(
+                    "if (typeof window.__gwtStatsEvent != 'function') {\n");
             builder.append("vaadin.gwtStatsEvents = [];\n");
-            builder.append("window.__gwtStatsEvent = function(event) {vaadin.gwtStatsEvents.push(event); return true;};\n");
+            builder.append(
+                    "window.__gwtStatsEvent = function(event) {vaadin.gwtStatsEvents.push(event); return true;};\n");
             builder.append("}\n");
         }
 
@@ -622,8 +629,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         }
 
         // Ignore restartApplication that might be passed to UI init
-        if (request
-                .getParameter(VaadinService.URL_PARAMETER_RESTART_APPLICATION) != null) {
+        if (request.getParameter(
+                VaadinService.URL_PARAMETER_RESTART_APPLICATION) != null) {
             appConfig.put("extraParams", "&" + IGNORE_RESTART_PARAM + "=1");
         }
 

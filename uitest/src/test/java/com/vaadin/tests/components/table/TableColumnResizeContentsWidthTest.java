@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -34,7 +34,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Tests that components within table cells get resized when their column gets
  * resized.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class TableColumnResizeContentsWidthTest extends MultiBrowserTest {
@@ -50,8 +50,8 @@ public class TableColumnResizeContentsWidthTest extends MultiBrowserTest {
 
         List<ButtonElement> buttons = $(ButtonElement.class).all();
 
-        WebElement resizer = getTable().findElement(
-                By.className("v-table-resizer"));
+        WebElement resizer = getTable()
+                .findElement(By.className("v-table-resizer"));
 
         assertEquals(100, getTextFieldWidth());
 
@@ -81,8 +81,8 @@ public class TableColumnResizeContentsWidthTest extends MultiBrowserTest {
 
     private int getTextFieldWidth() {
         TableElement table = getTable();
-        final WebElement textField = table.findElement(By
-                .className("v-textfield"));
+        final WebElement textField = table
+                .findElement(By.className("v-textfield"));
 
         return textField.getSize().width;
     }

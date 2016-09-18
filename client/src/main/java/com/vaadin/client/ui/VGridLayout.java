@@ -97,7 +97,7 @@ public class VGridLayout extends ComplexPanel {
 
     /**
      * Returns the column widths measured in pixels
-     * 
+     *
      * @return
      */
     protected int[] getColumnWidths() {
@@ -106,7 +106,7 @@ public class VGridLayout extends ComplexPanel {
 
     /**
      * Returns the row heights measured in pixels
-     * 
+     *
      * @return
      */
     protected int[] getRowHeights() {
@@ -115,7 +115,7 @@ public class VGridLayout extends ComplexPanel {
 
     /**
      * Returns the spacing between the cells horizontally in pixels
-     * 
+     *
      * @return
      */
     protected int getHorizontalSpacing() {
@@ -124,7 +124,7 @@ public class VGridLayout extends ComplexPanel {
 
     /**
      * Returns the spacing between the cells vertically in pixels
-     * 
+     *
      * @return
      */
     protected int getVerticalSpacing() {
@@ -155,7 +155,8 @@ public class VGridLayout extends ComplexPanel {
                     expandRatioSum += actualExpandRatio[i];
                 }
                 for (int i = 0; i < rowHeights.length; i++) {
-                    int ew = (int) (excessSpace * actualExpandRatio[i] / expandRatioSum);
+                    int ew = (int) (excessSpace * actualExpandRatio[i]
+                            / expandRatioSum);
                     rowHeights[i] = minRowHeights[i] + ew;
                     distributed += ew;
                 }
@@ -184,7 +185,7 @@ public class VGridLayout extends ComplexPanel {
 
     /**
      * Checks if it is ok to hide (or ignore) the given row.
-     * 
+     *
      * @param rowIndex
      *            the row to check
      * @return true, if the row should be interpreted as non-existant (hides
@@ -197,7 +198,7 @@ public class VGridLayout extends ComplexPanel {
 
     /**
      * Checks if it is ok to hide (or ignore) the given column.
-     * 
+     *
      * @param columnIndex
      *            the column to check
      * @return true, if the column should be interpreted as non-existant (hides
@@ -236,7 +237,8 @@ public class VGridLayout extends ComplexPanel {
                     expandRatioSum += actualExpandRatio[i];
                 }
                 for (int i = 0; i < columnWidths.length; i++) {
-                    int ew = (int) (excessSpace * actualExpandRatio[i] / expandRatioSum);
+                    int ew = (int) (excessSpace * actualExpandRatio[i]
+                            / expandRatioSum);
                     columnWidths[i] = minColumnWidths[i] + ew;
                     distributed += ew;
                 }
@@ -533,9 +535,8 @@ public class VGridLayout extends ComplexPanel {
         }
     }
 
-    private static void distributeSpanSize(int[] dimensions,
-            int spanStartIndex, int spanSize, int spacingSize, int size,
-            float[] expansionRatios) {
+    private static void distributeSpanSize(int[] dimensions, int spanStartIndex,
+            int spanSize, int spacingSize, int size, float[] expansionRatios) {
         int allocated = dimensions[spanStartIndex];
         for (int i = 1; i < spanSize; i++) {
             allocated += spacingSize + dimensions[spanStartIndex + i];
@@ -784,7 +785,7 @@ public class VGridLayout extends ComplexPanel {
      * Creates a new Cell with the given coordinates.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param row
      * @param col
      * @return
@@ -800,7 +801,7 @@ public class VGridLayout extends ComplexPanel {
      * child component is also returned if "element" is part of its caption.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param element
      *            An element that is a nested sub element of the root element in
      *            this layout
@@ -821,13 +822,13 @@ public class VGridLayout extends ComplexPanel {
      * child component is also returned if "element" is part of its caption.
      * <p>
      * For internal use only. May be removed or replaced in the future.
-     * 
+     *
      * @param element
      *            An element that is a nested sub element of the root element in
      *            this layout
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
-     * 
+     *
      * @since 7.2
      */
     public ComponentConnector getComponent(Element element) {

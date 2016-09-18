@@ -39,14 +39,14 @@ public class DataGenerator {
             statement.executeUpdate("insert into people values('Pelle', '18')");
             statement.executeUpdate("insert into people values('Börje', '64')");
         } else {
-            statement
-                    .executeUpdate("insert into people values(default, 'Ville', '23')");
-            statement
-                    .executeUpdate("insert into people values(default, 'Kalle', '7')");
-            statement
-                    .executeUpdate("insert into people values(default, 'Pelle', '18')");
-            statement
-                    .executeUpdate("insert into people values(default, 'Börje', '64')");
+            statement.executeUpdate(
+                    "insert into people values(default, 'Ville', '23')");
+            statement.executeUpdate(
+                    "insert into people values(default, 'Kalle', '7')");
+            statement.executeUpdate(
+                    "insert into people values(default, 'Pelle', '18')");
+            statement.executeUpdate(
+                    "insert into people values(default, 'Börje', '64')");
         }
         statement.close();
         statement = conn.createStatement();
@@ -63,12 +63,12 @@ public class DataGenerator {
         Statement statement = conn.createStatement();
         for (int i = 4; i < 5000; i++) {
             if (SQLTestsConstants.db == DB.MSSQL) {
-                statement.executeUpdate("insert into people values('Person "
-                        + i + "', '" + i % 99 + "')");
+                statement.executeUpdate("insert into people values('Person " + i
+                        + "', '" + i % 99 + "')");
             } else {
-                statement
-                        .executeUpdate("insert into people values(default, 'Person "
-                                + i + "', '" + i % 99 + "')");
+                statement.executeUpdate(
+                        "insert into people values(default, 'Person " + i
+                                + "', '" + i % 99 + "')");
             }
         }
         statement.close();
@@ -94,11 +94,11 @@ public class DataGenerator {
             statement.execute(stmtString);
         }
         if (SQLTestsConstants.db == DB.MSSQL) {
-            statement
-                    .executeUpdate("insert into VERSIONED values('Junk', default)");
+            statement.executeUpdate(
+                    "insert into VERSIONED values('Junk', default)");
         } else {
-            statement
-                    .executeUpdate("insert into VERSIONED values(default, 'Junk', default)");
+            statement.executeUpdate(
+                    "insert into VERSIONED values(default, 'Junk', default)");
         }
         statement.close();
         statement = conn.createStatement();

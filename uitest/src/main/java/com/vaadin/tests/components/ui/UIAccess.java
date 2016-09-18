@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -52,8 +52,8 @@ public class UIAccess extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(new Button("Access from UI thread",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Access from UI thread", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
@@ -84,14 +84,15 @@ public class UIAccess extends AbstractTestUIWithLog {
                                         .getCurrentResponse() != null;
                                 // session is locked by request thread at this
                                 // point
-                                final Future<Void> initialFuture = access(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        log("Initial background message");
-                                        log("Thread has current response? "
-                                                + threadHasCurrentResponse);
-                                    }
-                                });
+                                final Future<Void> initialFuture = access(
+                                        new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                log("Initial background message");
+                                                log("Thread has current response? "
+                                                        + threadHasCurrentResponse);
+                                            }
+                                        });
 
                                 // Let request thread continue
                                 latch.countDown();
@@ -171,8 +172,8 @@ public class UIAccess extends AbstractTestUIWithLog {
                         log("future was cancelled, should not start");
                     }
                 }));
-        addComponent(new Button("Cancel running future",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Cancel running future", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         log.clear();
@@ -232,10 +233,11 @@ public class UIAccess extends AbstractTestUIWithLog {
                             @Override
                             public void run() {
                                 log.log("accessSynchronously has request? "
-                                        + (VaadinService.getCurrentRequest() != null));
+                                        + (VaadinService
+                                                .getCurrentRequest() != null));
                                 log.log("Test value in accessSynchronously: "
-                                        + CurrentInstance
-                                                .get(CurrentInstanceTestType.class));
+                                        + CurrentInstance.get(
+                                                CurrentInstanceTestType.class));
                                 CurrentInstance.set(
                                         CurrentInstanceTestType.class,
                                         new CurrentInstanceTestType(
@@ -255,18 +257,18 @@ public class UIAccess extends AbstractTestUIWithLog {
                     public void buttonClick(ClickEvent event) {
                         log.clear();
                         // accessSynchronously should maintain values
-                        CurrentInstance
-                                .setInheritable(CurrentInstanceTestType.class,
-                                        new CurrentInstanceTestType(
-                                                "Set before access"));
+                        CurrentInstance.setInheritable(
+                                CurrentInstanceTestType.class,
+                                new CurrentInstanceTestType(
+                                        "Set before access"));
                         access(new Runnable() {
                             @Override
                             public void run() {
-                                log.log("access has request? "
-                                        + (VaadinService.getCurrentRequest() != null));
+                                log.log("access has request? " + (VaadinService
+                                        .getCurrentRequest() != null));
                                 log.log("Test value in access: "
-                                        + CurrentInstance
-                                                .get(CurrentInstanceTestType.class));
+                                        + CurrentInstance.get(
+                                                CurrentInstanceTestType.class));
                                 CurrentInstance.setInheritable(
                                         CurrentInstanceTestType.class,
                                         new CurrentInstanceTestType(
@@ -278,14 +280,13 @@ public class UIAccess extends AbstractTestUIWithLog {
                                 new CurrentInstanceTestType(
                                         "Set before run pending"));
 
-                        getSession().getService().runPendingAccessTasks(
-                                getSession());
+                        getSession().getService()
+                                .runPendingAccessTasks(getSession());
 
                         log.log("has request after access? "
                                 + (VaadinService.getCurrentRequest() != null));
-                        log("Test value after access: "
-                                + CurrentInstance
-                                        .get(CurrentInstanceTestType.class));
+                        log("Test value after access: " + CurrentInstance
+                                .get(CurrentInstanceTestType.class));
                     }
                 }));
 
@@ -294,7 +295,8 @@ public class UIAccess extends AbstractTestUIWithLog {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         log.clear();
-                        if (getPushConfiguration().getPushMode() != PushMode.AUTOMATIC) {
+                        if (getPushConfiguration()
+                                .getPushMode() != PushMode.AUTOMATIC) {
                             log("Can only test with automatic push enabled");
                             return;
                         }

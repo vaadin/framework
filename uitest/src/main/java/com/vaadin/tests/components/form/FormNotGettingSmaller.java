@@ -14,11 +14,11 @@ public class FormNotGettingSmaller extends TestBase {
     @Override
     protected void setup() {
         Item item = new PropertysetItem();
-        item.addItemProperty("name", new ObjectProperty<String>(
-                "Charles Anthony"));
+        item.addItemProperty("name",
+                new ObjectProperty<String>("Charles Anthony"));
         item.addItemProperty("city", new ObjectProperty<String>("London"));
-        item.addItemProperty("isTallPerson", new ObjectProperty<Boolean>(
-                Boolean.FALSE));
+        item.addItemProperty("isTallPerson",
+                new ObjectProperty<Boolean>(Boolean.FALSE));
 
         Label spacer = new Label();
         HorizontalLayout buttons = new HorizontalLayout();
@@ -30,7 +30,8 @@ public class FormNotGettingSmaller extends TestBase {
         buttons.setExpandRatio(spacer, 1f);
 
         Form form = new Form();
-        form.setDescription("Ooh. Just a demonstration of things, really. Some long lorem ipsum dolor sit amet.Some very long lorem ipsum dolor sit amet.Some very long lorem ipsum dolor sit amet.Some very long lorem ipsum dolor sit amet.");
+        form.setDescription(
+                "Ooh. Just a demonstration of things, really. Some long lorem ipsum dolor sit amet.Some very long lorem ipsum dolor sit amet.Some very long lorem ipsum dolor sit amet.Some very long lorem ipsum dolor sit amet.");
 
         form.setItemDataSource(item);
         form.setFooter(buttons);

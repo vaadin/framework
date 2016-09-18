@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -121,7 +121,8 @@ public class ScreenshotBrowser extends UI {
             return new File(screenshotDir, "reference");
         }
 
-        private static File getAlternative(File baseFile, int alternativeNumber) {
+        private static File getAlternative(File baseFile,
+                int alternativeNumber) {
             assert alternativeNumber >= 1;
             String alternativeName = baseFile.getName().replaceFirst("\\.png",
                     "_" + alternativeNumber + ".png");
@@ -198,18 +199,18 @@ public class ScreenshotBrowser extends UI {
             left.setSpacing(true);
             left.setSizeFull();
 
-            left.addComponent(createActionButton("Accept changes", 'j',
-                    Action.ACCEPT));
-            left.addComponent(createActionButton("Ignore changes", 'k',
-                    Action.IGNORE));
+            left.addComponent(
+                    createActionButton("Accept changes", 'j', Action.ACCEPT));
+            left.addComponent(
+                    createActionButton("Ignore changes", 'k', Action.IGNORE));
             left.addComponent(createActionButton("Use as alternative", 'l',
                     Action.ALTERNATIVE));
-            left.addComponent(new Button("Clear action",
-                    createSetActionListener(null)));
+            left.addComponent(
+                    new Button("Clear action", createSetActionListener(null)));
 
             left.addComponent(createSpacer());
-            left.addComponent(new Button("Commit actions",
-                    new Button.ClickListener() {
+            left.addComponent(
+                    new Button("Commit actions", new Button.ClickListener() {
                         @Override
                         public void buttonClick(ClickEvent event) {
                             commitActions();
@@ -241,8 +242,9 @@ public class ScreenshotBrowser extends UI {
 
         private Button createActionButton(String caption, char shortcut,
                 Action action) {
-            Button button = new Button(caption + " <strong>" + shortcut
-                    + "</strong>", createSetActionListener(action));
+            Button button = new Button(
+                    caption + " <strong>" + shortcut + "</strong>",
+                    createSetActionListener(action));
             button.setCaptionAsHtml(true);
             return button;
         }
@@ -300,12 +302,12 @@ public class ScreenshotBrowser extends UI {
             }
         });
 
-        table.addShortcutListener(createShortcutListener(KeyCode.J,
-                Action.ACCEPT));
-        table.addShortcutListener(createShortcutListener(KeyCode.K,
-                Action.IGNORE));
-        table.addShortcutListener(createShortcutListener(KeyCode.L,
-                Action.ALTERNATIVE));
+        table.addShortcutListener(
+                createShortcutListener(KeyCode.J, Action.ACCEPT));
+        table.addShortcutListener(
+                createShortcutListener(KeyCode.K, Action.IGNORE));
+        table.addShortcutListener(
+                createShortcutListener(KeyCode.L, Action.ALTERNATIVE));
 
         refreshTableContainer();
 
@@ -320,7 +322,8 @@ public class ScreenshotBrowser extends UI {
     }
 
     private void commitActions() {
-        for (ComparisonFailure comparisonFailure : getContainer().getItemIds()) {
+        for (ComparisonFailure comparisonFailure : getContainer()
+                .getItemIds()) {
             Action action = comparisonFailure.getAction();
             if (action != null) {
                 action.commit(comparisonFailure.getFile());
@@ -400,8 +403,8 @@ public class ScreenshotBrowser extends UI {
         File propertiesFile = new File(
                 "../work/eclipse-run-selected-test.properties");
         if (!propertiesFile.exists()) {
-            throw new RuntimeException("File "
-                    + propertiesFile.getAbsolutePath() + " not found.");
+            throw new RuntimeException(
+                    "File " + propertiesFile.getAbsolutePath() + " not found.");
         }
 
         FileInputStream in = null;
@@ -412,7 +415,8 @@ public class ScreenshotBrowser extends UI {
             properties.load(in);
             String screenShotDirName = properties
                     .getProperty("com.vaadin.testbench.screenshot.directory");
-            if (screenShotDirName == null || screenShotDirName.startsWith("<")) {
+            if (screenShotDirName == null
+                    || screenShotDirName.startsWith("<")) {
                 throw new RuntimeException(
                         "com.vaadin.testbench.screenshot.directory has not been configred in "
                                 + propertiesFile.getAbsolutePath());

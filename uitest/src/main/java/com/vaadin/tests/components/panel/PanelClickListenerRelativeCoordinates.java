@@ -17,10 +17,8 @@ public class PanelClickListenerRelativeCoordinates extends TestBase {
 
             @Override
             public void click(ClickEvent event) {
-                getMainWindow()
-                        .showNotification(
-                                "" + event.getRelativeX() + ", "
-                                        + event.getRelativeY());
+                getMainWindow().showNotification("" + event.getRelativeX()
+                        + ", " + event.getRelativeY());
             }
         });
         addComponent(panel);

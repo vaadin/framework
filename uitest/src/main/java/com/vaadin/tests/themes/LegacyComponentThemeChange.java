@@ -85,7 +85,8 @@ public class LegacyComponentThemeChange extends AbstractTestUIWithLog {
         Table t = new Table();
         t.addActionHandler(new Handler() {
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
             }
 
             @Override

@@ -94,8 +94,8 @@ public class ActiveDragSourceClassName extends TestBase {
                         }
                         next = componentIterator.next();
                     }
-                    if (dropTargetData.getData("horizontalLocation").equals(
-                            "LEFT")) {
+                    if (dropTargetData.getData("horizontalLocation")
+                            .equals("LEFT")) {
                         index--;
                         if (index < 0) {
                             index = 0;

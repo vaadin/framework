@@ -33,13 +33,15 @@ public class BeanValidationTest {
 
     @Test(expected = InvalidValueException.class)
     public void testBeanValidationIntegerTooSmall() {
-        BeanValidator validator = new BeanValidator(BeanToValidate.class, "age");
+        BeanValidator validator = new BeanValidator(BeanToValidate.class,
+                "age");
         validator.validate(17);
     }
 
     @Test
     public void testBeanValidationIntegerOk() {
-        BeanValidator validator = new BeanValidator(BeanToValidate.class, "age");
+        BeanValidator validator = new BeanValidator(BeanToValidate.class,
+                "age");
         validator.validate(18);
     }
 

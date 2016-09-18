@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,9 +20,9 @@ import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Internal constants used by both the client and the server side framework
- * 
+ *
  * @since 6.2
- * 
+ *
  */
 public interface Constants {
 
@@ -62,8 +62,7 @@ public interface Constants {
             + "The widgetset in use does not seem to be built for the Vaadin\n"
             + "version in use. This might cause strange problems - a\n"
             + "recompile/deploy is strongly recommended.\n"
-            + " Vaadin version: %s\n"
-            + " Widgetset version: %s\n"
+            + " Vaadin version: %s\n" + " Widgetset version: %s\n"
             + "=================================================================";
 
     // Keep the version number in sync with pom.xml
@@ -83,21 +82,15 @@ public interface Constants {
             + "to vaadin-push.\n"
             + "If managing dependencies manually, please make sure Atmosphere\n"
             + REQUIRED_ATMOSPHERE_RUNTIME_VERSION
-            + " is included on the classpath.\n"
-            + "Will fall back to using "
-            + PushMode.class.getSimpleName()
-            + "."
-            + PushMode.DISABLED.name()
+            + " is included on the classpath.\n" + "Will fall back to using "
+            + PushMode.class.getSimpleName() + "." + PushMode.DISABLED.name()
             + ".\n"
             + "=================================================================";
 
     static final String PUSH_NOT_SUPPORTED_ERROR = "\n"
             + "=================================================================\n"
-            + "Push is not supported for {0}\n"
-            + "Will fall back to using "
-            + PushMode.class.getSimpleName()
-            + "."
-            + PushMode.DISABLED.name()
+            + "Push is not supported for {0}\n" + "Will fall back to using "
+            + PushMode.class.getSimpleName() + "." + PushMode.DISABLED.name()
             + ".\n"
             + "=================================================================";
 
@@ -142,7 +135,7 @@ public interface Constants {
      * Name of system or context property to write declarative syntax with the
      * old "v-" prefix or with the new "vaadin-" prefix. The default value
      * depends on the Vaadin branch used.
-     * 
+     *
      * @see DesignContext
      * @since 7.5.7
      */

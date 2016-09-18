@@ -57,10 +57,10 @@ public class TableQueryTest {
     public void construction_legalParameters_shouldSucceed() {
         TableQuery tQuery = new TableQuery("people", connectionPool,
                 new DefaultSQLGenerator());
-        Assert.assertArrayEquals(new Object[] { "ID" }, tQuery
-                .getPrimaryKeyColumns().toArray());
-        boolean correctTableName = "people".equalsIgnoreCase(tQuery
-                .getTableName());
+        Assert.assertArrayEquals(new Object[] { "ID" },
+                tQuery.getPrimaryKeyColumns().toArray());
+        boolean correctTableName = "people"
+                .equalsIgnoreCase(tQuery.getTableName());
         Assert.assertTrue(correctTableName);
     }
 
@@ -68,10 +68,10 @@ public class TableQueryTest {
     public void construction_legalParameters_defaultGenerator_shouldSucceed() {
         TableQuery tQuery = new TableQuery("people", connectionPool,
                 SQLTestsConstants.sqlGen);
-        Assert.assertArrayEquals(new Object[] { "ID" }, tQuery
-                .getPrimaryKeyColumns().toArray());
-        boolean correctTableName = "people".equalsIgnoreCase(tQuery
-                .getTableName());
+        Assert.assertArrayEquals(new Object[] { "ID" },
+                tQuery.getPrimaryKeyColumns().toArray());
+        boolean correctTableName = "people"
+                .equalsIgnoreCase(tQuery.getTableName());
         Assert.assertTrue(correctTableName);
     }
 
@@ -115,10 +115,10 @@ public class TableQueryTest {
             statement.executeUpdate("insert into people values('Bengt', 30)");
             statement.executeUpdate("insert into people values('Ingvar', 50)");
         } else {
-            statement
-                    .executeUpdate("insert into people values(default, 'Bengt', 30)");
-            statement
-                    .executeUpdate("insert into people values(default, 'Ingvar', 50)");
+            statement.executeUpdate(
+                    "insert into people values(default, 'Bengt', 30)");
+            statement.executeUpdate(
+                    "insert into people values(default, 'Ingvar', 50)");
         }
         statement.close();
         conn.commit();
@@ -145,7 +145,8 @@ public class TableQueryTest {
      * TableQuery get results tests
      **********************************************************************/
     @Test
-    public void getResults_simpleQuery_returnsFourRecords() throws SQLException {
+    public void getResults_simpleQuery_returnsFourRecords()
+            throws SQLException {
         TableQuery tQuery = new TableQuery("people", connectionPool,
                 SQLTestsConstants.sqlGen);
         tQuery.beginTransaction();
@@ -200,7 +201,8 @@ public class TableQueryTest {
         tQuery.beginTransaction();
         try {
             tQuery.beginTransaction();
-            Assert.fail("Should throw exception when starting a transaction while already in a transaction");
+            Assert.fail(
+                    "Should throw exception when starting a transaction while already in a transaction");
         } catch (IllegalStateException e) {
             // Cleanup to make test connection pool happy
             tQuery.rollback();
@@ -278,8 +280,8 @@ public class TableQueryTest {
                 SQLTestsConstants.sqlGen);
         try {
             tQuery.containsRowWithKey(new Object[] { null });
-            org.junit.Assert
-                    .fail("null should throw an IllegalArgumentException from StatementHelper");
+            org.junit.Assert.fail(
+                    "null should throw an IllegalArgumentException from StatementHelper");
         } catch (IllegalArgumentException e) {
             // We should now be able to reserve two connections
             Connection c1 = connectionPool.reserveConnection();
@@ -395,8 +397,8 @@ public class TableQueryTest {
                 SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(tQuery);
         container.setAutoCommit(false);
-        Assert.assertTrue(container.removeItem(container.getItemIds()
-                .iterator().next()));
+        Assert.assertTrue(
+                container.removeItem(container.getItemIds().iterator().next()));
 
         Assert.assertEquals(4, tQuery.getCount());
         Assert.assertEquals(3, container.size());
@@ -459,8 +461,8 @@ public class TableQueryTest {
         tQuery.setFilters(null);
 
         /* Fetch first item, modify and commit */
-        Object item = container.getItem(container.getItemIds().iterator()
-                .next());
+        Object item = container
+                .getItem(container.getItemIds().iterator().next());
         Assert.assertNotNull(item);
 
         RowItem ri = (RowItem) item;
@@ -549,8 +551,8 @@ public class TableQueryTest {
 
         // Update the version using another connection.
         Connection conn = connectionPool.reserveConnection();
-        PreparedStatement stmt = conn
-                .prepareStatement("UPDATE VERSIONED SET \"TEXT\" = ? WHERE \"ID\" = ?");
+        PreparedStatement stmt = conn.prepareStatement(
+                "UPDATE VERSIONED SET \"TEXT\" = ? WHERE \"ID\" = ?");
         stmt.setString(1, "foo");
         stmt.setObject(2, row.getItemProperty("ID").getValue());
         stmt.executeUpdate();
@@ -607,8 +609,8 @@ public class TableQueryTest {
 
         // Update the version using another connection.
         Connection conn = connectionPool.reserveConnection();
-        PreparedStatement stmt = conn
-                .prepareStatement("UPDATE VERSIONED SET \"TEXT\" = ? WHERE \"ID\" = ?");
+        PreparedStatement stmt = conn.prepareStatement(
+                "UPDATE VERSIONED SET \"TEXT\" = ? WHERE \"ID\" = ?");
         stmt.setString(1, "asdf");
         stmt.setObject(2, row.getItemProperty("ID").getValue());
         stmt.executeUpdate();
@@ -639,8 +641,8 @@ public class TableQueryTest {
 
         // Update the version using another connection.
         Connection conn = connectionPool.reserveConnection();
-        PreparedStatement stmt = conn
-                .prepareStatement("UPDATE VERSIONED SET \"TEXT\" = ? WHERE \"ID\" = ?");
+        PreparedStatement stmt = conn.prepareStatement(
+                "UPDATE VERSIONED SET \"TEXT\" = ? WHERE \"ID\" = ?");
         stmt.setString(1, "asdf");
         stmt.setObject(2, row.getItemProperty("ID").getValue());
         stmt.executeUpdate();
@@ -665,7 +667,8 @@ public class TableQueryTest {
     }
 
     @Test
-    public void construction_explicitSchema_shouldSucceed() throws SQLException {
+    public void construction_explicitSchema_shouldSucceed()
+            throws SQLException {
         if (SQLTestsConstants.createSchema == null
                 || SQLTestsConstants.createProductTable == null
                 || SQLTestsConstants.dropSchema == null) {

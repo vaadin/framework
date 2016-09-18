@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -38,7 +38,7 @@ import elemental.json.JsonValue;
 /**
  * Manages the queue of server invocations (RPC) which are waiting to be sent to
  * the server.
- * 
+ *
  * @since 7.6
  * @author Vaadin Ltd
  */
@@ -83,7 +83,7 @@ public class ServerRpcQueue {
 
     /**
      * Removes any pending invocation of the given method from the queue
-     * 
+     *
      * @param invocation
      *            The invocation to remove
      */
@@ -100,7 +100,7 @@ public class ServerRpcQueue {
 
     /**
      * Adds an explicit RPC method invocation to the send queue.
-     * 
+     *
      * @param invocation
      *            RPC method invocation
      * @param delayed
@@ -118,15 +118,15 @@ public class ServerRpcQueue {
      */
     public void add(MethodInvocation invocation, boolean lastOnly) {
         if (!connection.isApplicationRunning()) {
-            getLogger()
-                    .warning(
-                            "Trying to invoke method on not yet started or stopped application");
+            getLogger().warning(
+                    "Trying to invoke method on not yet started or stopped application");
             return;
         }
         String tag;
         if (lastOnly) {
             tag = invocation.getLastOnlyTag();
-            assert !tag.matches("\\d+") : "getLastOnlyTag value must have at least one non-digit character";
+            assert !tag.matches(
+                    "\\d+") : "getLastOnlyTag value must have at least one non-digit character";
             pendingInvocations.remove(tag);
         } else {
             tag = Integer.toString(lastInvocationTag++);
@@ -138,7 +138,7 @@ public class ServerRpcQueue {
      * Returns a collection of all queued method invocations
      * <p>
      * The returned collection must not be modified in any way
-     * 
+     *
      * @return a collection of all queued method invocations
      */
     public Collection<MethodInvocation> getAll() {
@@ -157,7 +157,7 @@ public class ServerRpcQueue {
 
     /**
      * Returns the current size of the queue
-     * 
+     *
      * @return the number of invocations in the queue
      */
     public int size() {
@@ -166,7 +166,7 @@ public class ServerRpcQueue {
 
     /**
      * Returns the server RPC queue for the given application
-     * 
+     *
      * @param connection
      *            the application connection which owns the queue
      * @return the server rpc queue for the given application
@@ -177,7 +177,7 @@ public class ServerRpcQueue {
 
     /**
      * Checks if the queue is empty
-     * 
+     *
      * @return true if the queue is empty, false otherwise
      */
     public boolean isEmpty() {
@@ -211,7 +211,7 @@ public class ServerRpcQueue {
 
     /**
      * Checks if a flush operation is pending
-     * 
+     *
      * @return true if a flush is pending, false otherwise
      */
     public boolean isFlushPending() {
@@ -221,7 +221,7 @@ public class ServerRpcQueue {
     /**
      * Checks if a loading indicator should be shown when the RPCs have been
      * sent to the server and we are waiting for a response
-     * 
+     *
      * @return true if a loading indicator should be shown, false otherwise
      */
     public boolean showLoadingIndicator() {
@@ -244,7 +244,7 @@ public class ServerRpcQueue {
 
     /**
      * Returns the current invocations as JSON
-     * 
+     *
      * @return the current invocations in a JSON format ready to be sent to the
      *         server
      */
@@ -257,9 +257,8 @@ public class ServerRpcQueue {
         for (MethodInvocation invocation : getAll()) {
             String connectorId = invocation.getConnectorId();
             if (!connectorExists(connectorId)) {
-                getLogger().info(
-                        "Ignoring RPC for removed connector: " + connectorId
-                                + ": " + invocation.toString());
+                getLogger().info("Ignoring RPC for removed connector: "
+                        + connectorId + ": " + invocation.toString());
                 continue;
             }
 
@@ -277,8 +276,8 @@ public class ServerRpcQueue {
                     Method method = type.getMethod(invocation.getMethodName());
                     parameterTypes = method.getParameterTypes();
                 } catch (NoDataException e) {
-                    throw new RuntimeException("No type data for "
-                            + invocation.toString(), e);
+                    throw new RuntimeException(
+                            "No type data for " + invocation.toString(), e);
                 }
             }
 
@@ -303,7 +302,7 @@ public class ServerRpcQueue {
     /**
      * Checks if the connector with the given id is still ok to use (has not
      * been removed)
-     * 
+     *
      * @param connectorId
      *            the connector id to check
      * @return true if the connector exists, false otherwise
@@ -316,7 +315,7 @@ public class ServerRpcQueue {
 
     /**
      * Checks if the given method invocation originates from Javascript
-     * 
+     *
      * @param invocation
      *            the invocation to check
      * @return true if the method invocation originates from javascript, false
@@ -329,15 +328,15 @@ public class ServerRpcQueue {
     /**
      * Checks if the given method invocation represents a Vaadin 6 variable
      * change
-     * 
+     *
      * @param invocation
      *            the invocation to check
      * @return true if the method invocation is a legacy variable change, false
      *         otherwise
      */
     public static boolean isLegacyVariableChange(MethodInvocation invocation) {
-        return ApplicationConstants.UPDATE_VARIABLE_METHOD.equals(invocation
-                .getInterfaceName())
+        return ApplicationConstants.UPDATE_VARIABLE_METHOD
+                .equals(invocation.getInterfaceName())
                 && ApplicationConstants.UPDATE_VARIABLE_METHOD
                         .equals(invocation.getMethodName());
     }

@@ -76,7 +76,7 @@ public class CvalAddonstCheckerUseCasesTest {
     enum Message {
         AGPL("AGPL"), VALID(">.* valid"), INVALID("not valid"), NO_LICENSE(
                 "not found"), NO_VALIDATED("has not been validated"), EXPIRED(
-                "has expired"), EVALUATION("evaluation");
+                        "has expired"), EVALUATION("evaluation");
 
         String msg;
 
@@ -93,7 +93,7 @@ public class CvalAddonstCheckerUseCasesTest {
     }
 
     /* TODO: Use more descriptive test names */
-    
+
     @Test
     public void testUseCase1() throws Exception {
         useCase(1, License.NONE, Version.AGPL, Validated.NO, Network.OFF,
@@ -219,8 +219,8 @@ public class CvalAddonstCheckerUseCasesTest {
         if (val == Validated.NO) {
             deleteCache(productNameCval);
         } else {
-            String type = lic == License.EVAL || lic == License.EVAL_EXPIRED ? "evaluation"
-                    : null;
+            String type = lic == License.EVAL || lic == License.EVAL_EXPIRED
+                    ? "evaluation" : null;
             Boolean expired = lic == License.EVAL_EXPIRED
                     || lic == License.REAL_EXPIRED ? true : null;
             String key = val == Validated.OLD_KEY ? "oldkey" : null;
@@ -253,17 +253,16 @@ public class CvalAddonstCheckerUseCasesTest {
             restoreSystemOut();
             message = e.getMessage();
             if (res == Compile.YES) {
-                Assert.fail(testNumber + "Unexpected Exception: "
-                        + e.getMessage());
+                Assert.fail(
+                        testNumber + "Unexpected Exception: " + e.getMessage());
             }
         }
 
         // System.err.println("\n> " + testNumber + " " + lic + " " + ver + " "
         // + val + " " + net + " " + res + " " + cached + "\n" + message);
 
-        Assert.assertTrue(testNumber + "Fail:\n" + message
-                + "\nDoes not match:" + msg.msg,
-                message.matches("(?s).*" + msg.msg + ".*"));
+        Assert.assertTrue(testNumber + "Fail:\n" + message + "\nDoes not match:"
+                + msg.msg, message.matches("(?s).*" + msg.msg + ".*"));
 
         String c = cachedPreferences(productNameCval);
         Assert.assertTrue(testNumber + "Fail: cacheExists != "

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -39,12 +39,12 @@ import elemental.json.JsonValue;
 /**
  * Encoder for converting RPC parameters and other values to JSON for transfer
  * between the client and the server.
- * 
+ *
  * Currently, basic data types as well as Map, String[] and Object[] are
  * supported, where maps and Object[] can contain other supported data types.
- * 
+ *
  * TODO extensible type support
- * 
+ *
  * @since 7.0
  */
 public class JsonEncoder {
@@ -52,7 +52,7 @@ public class JsonEncoder {
     /**
      * Encode a value to a JSON representation for transport from the client to
      * the server.
-     * 
+     *
      * @param value
      *            value to convert
      * @param connection
@@ -122,14 +122,14 @@ public class JsonEncoder {
                         Type propertyType = property.getType();
                         JsonValue encodedPropertyValue = encode(propertyValue,
                                 propertyType, connection);
-                        jsonObject
-                                .put(property.getName(), encodedPropertyValue);
+                        jsonObject.put(property.getName(),
+                                encodedPropertyValue);
                     }
                     return jsonObject;
 
                 } catch (NoDataException e) {
-                    throw new RuntimeException("Can not encode "
-                            + type.getSignature(), e);
+                    throw new RuntimeException(
+                            "Can not encode " + type.getSignature(), e);
                 }
 
             } else {
@@ -154,8 +154,8 @@ public class JsonEncoder {
             if (value != null) {
                 valueType = value.getClass().getName();
             }
-            throw new IllegalArgumentException("Cannot encode object of type "
-                    + valueType);
+            throw new IllegalArgumentException(
+                    "Cannot encode object of type " + valueType);
         }
         jsonArray.set(0, Json.create(transportType));
         jsonArray.set(1, encode(value, null, connection));
@@ -188,22 +188,23 @@ public class JsonEncoder {
         }
     }
 
-    private static JsonValue encodeChildValue(Object value,
-            Type collectionType, int typeIndex, ApplicationConnection connection) {
+    private static JsonValue encodeChildValue(Object value, Type collectionType,
+            int typeIndex, ApplicationConnection connection) {
         if (collectionType == null) {
             return encode(new UidlValue(value), null, connection);
         } else {
             assert collectionType.getParameterTypes() != null
                     && collectionType.getParameterTypes().length > typeIndex
-                    && collectionType.getParameterTypes()[typeIndex] != null : "Proper generics required for encoding child value, assertion failed for "
-                    + collectionType;
+                    && collectionType
+                            .getParameterTypes()[typeIndex] != null : "Proper generics required for encoding child value, assertion failed for "
+                                    + collectionType;
             Type childType = collectionType.getParameterTypes()[typeIndex];
             return encode(value, childType, connection);
         }
     }
 
-    private static JsonArray encodeObjectMap(Map<Object, Object> map,
-            Type type, ApplicationConnection connection) {
+    private static JsonArray encodeObjectMap(Map<Object, Object> map, Type type,
+            ApplicationConnection connection) {
         JsonArray keys = Json.createArray();
         JsonArray values = Json.createArray();
 
@@ -230,8 +231,8 @@ public class JsonEncoder {
         for (Entry<?, ?> entry : map.entrySet()) {
             Connector connector = (Connector) entry.getKey();
 
-            JsonValue encodedValue = encodeChildValue(entry.getValue(), type,
-                    1, connection);
+            JsonValue encodedValue = encodeChildValue(entry.getValue(), type, 1,
+                    connection);
 
             jsonMap.put(connector.getConnectorId(), encodedValue);
         }
@@ -239,8 +240,8 @@ public class JsonEncoder {
         return jsonMap;
     }
 
-    private static JsonValue encodeStringMap(Map<Object, Object> map,
-            Type type, ApplicationConnection connection) {
+    private static JsonValue encodeStringMap(Map<Object, Object> map, Type type,
+            ApplicationConnection connection) {
         JsonObject jsonMap = Json.createObject();
 
         for (Entry<?, ?> entry : map.entrySet()) {
@@ -291,7 +292,7 @@ public class JsonEncoder {
     /**
      * Returns the transport type for the given value. Only returns a transport
      * type for internally handled values.
-     * 
+     *
      * @param value
      *            The value that should be transported
      * @return One of the JsonEncode.VTYPE_ constants or null if the value

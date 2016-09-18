@@ -24,7 +24,7 @@ import com.vaadin.shared.data.sort.SortDirection;
 /**
  * Fluid Sort API. Provides a convenient, human-readable way of specifying
  * multi-column sort order.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -35,7 +35,7 @@ public class Sort implements Serializable {
 
     /**
      * Initial constructor, called by the static by() methods.
-     * 
+     *
      * @param propertyId
      *            a property ID, corresponding to a property in the data source
      * @param direction
@@ -49,7 +49,7 @@ public class Sort implements Serializable {
     /**
      * Chaining constructor, called by the non-static then() methods. This
      * constructor links to the previous Sort object.
-     * 
+     *
      * @param previous
      *            the sort marker that comes before this one
      * @param propertyId
@@ -76,7 +76,7 @@ public class Sort implements Serializable {
     /**
      * Start building a Sort order by sorting a provided column in ascending
      * order.
-     * 
+     *
      * @param propertyId
      *            a property id, corresponding to a data source property
      * @return a sort object
@@ -87,7 +87,7 @@ public class Sort implements Serializable {
 
     /**
      * Start building a Sort order by sorting a provided column.
-     * 
+     *
      * @param propertyId
      *            a property id, corresponding to a data source property
      * @param direction
@@ -102,7 +102,7 @@ public class Sort implements Serializable {
      * Continue building a Sort order. The provided property is sorted in
      * ascending order if the previously added properties have been evaluated as
      * equals.
-     * 
+     *
      * @param propertyId
      *            a property id, corresponding to a data source property
      * @return a sort object
@@ -115,7 +115,7 @@ public class Sort implements Serializable {
      * Continue building a Sort order. The provided property is sorted in
      * specified order if the previously added properties have been evaluated as
      * equals.
-     * 
+     *
      * @param propertyId
      *            a property id, corresponding to a data source property
      * @param direction
@@ -128,7 +128,7 @@ public class Sort implements Serializable {
 
     /**
      * Build a sort order list, ready to be passed to Grid
-     * 
+     *
      * @return a sort order list.
      */
     public List<SortOrder> build() {

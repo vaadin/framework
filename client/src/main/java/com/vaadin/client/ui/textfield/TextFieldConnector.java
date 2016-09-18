@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,8 +33,8 @@ import com.vaadin.shared.ui.textfield.TextFieldConstants;
 import com.vaadin.ui.TextField;
 
 @Connect(value = TextField.class, loadStyle = LoadStyle.EAGER)
-public class TextFieldConnector extends AbstractFieldConnector implements
-        Paintable, BeforeShortcutActionListener {
+public class TextFieldConnector extends AbstractFieldConnector
+        implements Paintable, BeforeShortcutActionListener {
 
     @Override
     public AbstractTextFieldState getState() {
@@ -59,14 +59,14 @@ public class TextFieldConnector extends AbstractFieldConnector implements
 
         getWidget().listenTextChangeEvents = hasEventListener("ie");
         if (getWidget().listenTextChangeEvents) {
-            getWidget().textChangeEventMode = uidl
-                    .getStringAttribute(TextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE);
+            getWidget().textChangeEventMode = uidl.getStringAttribute(
+                    TextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE);
             if (getWidget().textChangeEventMode
                     .equals(TextFieldConstants.TEXTCHANGE_MODE_EAGER)) {
                 getWidget().textChangeEventTimeout = 1;
             } else {
-                getWidget().textChangeEventTimeout = uidl
-                        .getIntAttribute(TextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT);
+                getWidget().textChangeEventTimeout = uidl.getIntAttribute(
+                        TextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT);
                 if (getWidget().textChangeEventTimeout < 1) {
                     // Sanitize and allow lazy/timeout with timeout set to 0 to
                     // work as eager
@@ -90,7 +90,8 @@ public class TextFieldConnector extends AbstractFieldConnector implements
          * force updating if not focused. Lost focus issue appeared in (#15144)
          */
         if (!(Util.getFocusedElement() == getWidget().getElement())
-                || !uidl.getBooleanAttribute(TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
+                || !uidl.getBooleanAttribute(
+                        TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
                 || getWidget().valueBeforeEdit == null
                 || !text.equals(getWidget().valueBeforeEdit)) {
             getWidget().updateFieldContent(text);

@@ -19,7 +19,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link SelectionEvent}s.
- * 
+ *
  * @author Vaadin Ltd
  * @param <T>
  *            The row data type
@@ -29,7 +29,7 @@ public interface SelectionHandler<T> extends EventHandler {
 
     /**
      * Called when a selection model's selection state is changed.
-     * 
+     *
      * @param event
      *            a selection event, containing info about rows that have been
      *            added to or removed from the selection.

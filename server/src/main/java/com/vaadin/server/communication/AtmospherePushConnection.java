@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -41,7 +41,7 @@ import com.vaadin.ui.UI;
 /**
  * A {@link PushConnection} implementation using the Atmosphere push support
  * that is by default included in Vaadin.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -83,7 +83,7 @@ public class AtmospherePushConnection implements PushConnection {
         /**
          * Appends all the data from the given Reader to this message and
          * returns whether the message was completed.
-         * 
+         *
          * @param reader
          *            The Reader from which to read.
          * @return true if this message is complete, false otherwise.
@@ -150,7 +150,7 @@ public class AtmospherePushConnection implements PushConnection {
      * Pushes pending state changes and client RPC calls to the client. If
      * {@code isConnected()} is false, defers the push until a connection is
      * established.
-     * 
+     *
      * @param async
      *            True if this push asynchronously originates from the server,
      *            false if it is a response to a client request.
@@ -176,7 +176,7 @@ public class AtmospherePushConnection implements PushConnection {
     /**
      * Sends the given message to the current client. Cannot be called if
      * {@isConnected()} is false.
-     * 
+     *
      * @param message
      *            The message to send
      */
@@ -192,7 +192,7 @@ public class AtmospherePushConnection implements PushConnection {
      * received, or if the call resulted in the completion of a partially
      * received message, returns a {@link Reader} yielding the complete message.
      * Otherwise, returns null.
-     * 
+     *
      * @param reader
      *            A Reader from which to read the (partial) message
      * @return A Reader yielding a complete message or null if the message is
@@ -230,10 +230,10 @@ public class AtmospherePushConnection implements PushConnection {
 
     /**
      * Associates this {@code AtmospherePushConnection} with the given
-     * {@AtmosphereResource} representing an established
-     * push connection. If already connected, calls {@link #disconnect()} first.
-     * If there is a deferred push, carries it out via the new connection.
-     * 
+     * {@AtmosphereResource} representing an established push connection. If
+     * already connected, calls {@link #disconnect()} first. If there is a
+     * deferred push, carries it out via the new connection.
+     *
      * @since 7.2
      */
     public void connect(AtmosphereResource resource) {
@@ -279,8 +279,8 @@ public class AtmospherePushConnection implements PushConnection {
         if (resource == null) {
             // Already disconnected. Should not happen but if it does, we don't
             // want to cause NPEs
-            getLogger()
-                    .fine("AtmospherePushConnection.disconnect() called twice, this should not happen");
+            getLogger().fine(
+                    "AtmospherePushConnection.disconnect() called twice, this should not happen");
             return;
         }
         if (resource.isResumed()) {
@@ -297,13 +297,11 @@ public class AtmospherePushConnection implements PushConnection {
             try {
                 outgoingMessage.get(1000, TimeUnit.MILLISECONDS);
             } catch (TimeoutException e) {
-                getLogger()
-                        .log(Level.INFO,
-                                "Timeout waiting for messages to be sent to client before disconnect");
+                getLogger().log(Level.INFO,
+                        "Timeout waiting for messages to be sent to client before disconnect");
             } catch (Exception e) {
-                getLogger()
-                        .log(Level.INFO,
-                                "Error waiting for messages to be sent to client before disconnect");
+                getLogger().log(Level.INFO,
+                        "Error waiting for messages to be sent to client before disconnect");
             }
             outgoingMessage = null;
         }
@@ -311,15 +309,15 @@ public class AtmospherePushConnection implements PushConnection {
         try {
             resource.close();
         } catch (IOException e) {
-            getLogger()
-                    .log(Level.INFO, "Error when closing push connection", e);
+            getLogger().log(Level.INFO, "Error when closing push connection",
+                    e);
         }
         connectionLost();
     }
 
     /**
      * Called when the connection to the client has been lost.
-     * 
+     *
      * @since 7.4.1
      */
     public void connectionLost() {
@@ -345,8 +343,8 @@ public class AtmospherePushConnection implements PushConnection {
      * is initially in disconnected state; the client will handle the
      * reconnecting.
      */
-    private void readObject(ObjectInputStream stream) throws IOException,
-            ClassNotFoundException {
+    private void readObject(ObjectInputStream stream)
+            throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
         state = State.DISCONNECTED;
     }
@@ -358,7 +356,7 @@ public class AtmospherePushConnection implements PushConnection {
     /**
      * Internal method used for reconfiguring loggers to show all Atmosphere log
      * messages in the console.
-     * 
+     *
      * @since 7.6
      */
     public static void enableAtmosphereDebugLogging() {

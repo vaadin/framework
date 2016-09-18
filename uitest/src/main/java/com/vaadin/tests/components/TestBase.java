@@ -7,7 +7,7 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 /**
- * 
+ *
  * @deprecated Use {@link AbstractTestUI} or {@link AbstractTestUIWithLog}
  *             instead. TestBase is a LegacyApplication
  */

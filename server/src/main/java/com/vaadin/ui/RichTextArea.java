@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,13 +28,13 @@ import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * A simple RichTextArea to edit HTML format text.
- * 
+ *
  * Note, that using {@link TextField#setMaxLength(int)} method in
  * {@link RichTextArea} may produce unexpected results as formatting is counted
  * into length of field.
  */
-public class RichTextArea extends AbstractField<String> implements
-        LegacyComponent {
+public class RichTextArea extends AbstractField<String>
+        implements LegacyComponent {
 
     /**
      * Null representation.
@@ -61,9 +61,9 @@ public class RichTextArea extends AbstractField<String> implements
     }
 
     /**
-     * 
+     *
      * Constructs an empty <code>RichTextArea</code> with the given caption.
-     * 
+     *
      * @param caption
      *            the caption for the editor.
      */
@@ -75,7 +75,7 @@ public class RichTextArea extends AbstractField<String> implements
     /**
      * Constructs a new <code>RichTextArea</code> that's bound to the specified
      * <code>Property</code> and has no caption.
-     * 
+     *
      * @param dataSource
      *            the data source for the editor value
      */
@@ -86,7 +86,7 @@ public class RichTextArea extends AbstractField<String> implements
     /**
      * Constructs a new <code>RichTextArea</code> that's bound to the specified
      * <code>Property</code> and has the given caption.
-     * 
+     *
      * @param caption
      *            the caption for the editor.
      * @param dataSource
@@ -100,7 +100,7 @@ public class RichTextArea extends AbstractField<String> implements
     /**
      * Constructs a new <code>RichTextArea</code> with the given caption and
      * initial text contents.
-     * 
+     *
      * @param caption
      *            the caption for the editor.
      * @param value
@@ -146,7 +146,7 @@ public class RichTextArea extends AbstractField<String> implements
     /**
      * Selects all text in the rich text area. As a side effect, focuses the
      * rich text area.
-     * 
+     *
      * @since 6.5
      */
     public void selectAll() {
@@ -173,8 +173,7 @@ public class RichTextArea extends AbstractField<String> implements
             String newValue = (String) variables.get("text");
 
             final String oldValue = getValue();
-            if (newValue != null
-                    && (oldValue == null || isNullSettingAllowed())
+            if (newValue != null && (oldValue == null || isNullSettingAllowed())
                     && newValue.equals(getNullRepresentation())) {
                 newValue = null;
             }
@@ -200,17 +199,17 @@ public class RichTextArea extends AbstractField<String> implements
 
     /**
      * Gets the null-string representation.
-     * 
+     *
      * <p>
      * The null-valued strings are represented on the user interface by
      * replacing the null value with this string. If the null representation is
      * set null (not 'null' string), painting null value throws exception.
      * </p>
-     * 
+     *
      * <p>
      * The default value is string 'null'.
      * </p>
-     * 
+     *
      * @return the String Textual representation for null strings.
      * @see TextField#isNullSettingAllowed()
      */
@@ -220,7 +219,7 @@ public class RichTextArea extends AbstractField<String> implements
 
     /**
      * Is setting nulls with null-string representation allowed.
-     * 
+     *
      * <p>
      * If this property is true, writing null-representation string to text
      * field always sets the field value to real null. If this property is
@@ -229,11 +228,11 @@ public class RichTextArea extends AbstractField<String> implements
      * contents to real null, if the text field matches the null-string
      * representation and the current value of the field is null.
      * </p>
-     * 
+     *
      * <p>
      * By default this setting is false
      * </p>
-     * 
+     *
      * @return boolean Should the null-string represenation be always converted
      *         to null-values.
      * @see TextField#getNullRepresentation()
@@ -244,17 +243,17 @@ public class RichTextArea extends AbstractField<String> implements
 
     /**
      * Sets the null-string representation.
-     * 
+     *
      * <p>
      * The null-valued strings are represented on the user interface by
      * replacing the null value with this string. If the null representation is
      * set null (not 'null' string), painting null value throws exception.
      * </p>
-     * 
+     *
      * <p>
      * The default value is string 'null'
      * </p>
-     * 
+     *
      * @param nullRepresentation
      *            Textual representation for null strings.
      * @see TextField#setNullSettingAllowed(boolean)
@@ -265,7 +264,7 @@ public class RichTextArea extends AbstractField<String> implements
 
     /**
      * Sets the null conversion mode.
-     * 
+     *
      * <p>
      * If this property is true, writing null-representation string to text
      * field always sets the field value to real null. If this property is
@@ -274,11 +273,11 @@ public class RichTextArea extends AbstractField<String> implements
      * contents to real null, if the text field matches the null-string
      * representation and the current value of the field is null.
      * </p>
-     * 
+     *
      * <p>
      * By default this setting is false.
      * </p>
-     * 
+     *
      * @param nullSettingAllowed
      *            Should the null-string represenation be always converted to
      *            null-values.

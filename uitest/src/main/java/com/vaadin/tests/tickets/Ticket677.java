@@ -50,22 +50,22 @@ public class Ticket677 extends LegacyApplication {
         HorizontalLayout l = new HorizontalLayout();
         main.addComponent(l);
 
-        l.addComponent(new Button("Toggle root panel",
-                new Button.ClickListener() {
+        l.addComponent(
+                new Button("Toggle root panel", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         toggle(root);
                     }
                 }));
-        l.addComponent(new Button("Toggle panel one",
-                new Button.ClickListener() {
+        l.addComponent(
+                new Button("Toggle panel one", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         toggle(one);
                     }
                 }));
-        l.addComponent(new Button("Toggle panel two",
-                new Button.ClickListener() {
+        l.addComponent(
+                new Button("Toggle panel two", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         toggle(two);

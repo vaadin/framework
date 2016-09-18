@@ -63,7 +63,8 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 Notification.show("Action!");
             }
         });

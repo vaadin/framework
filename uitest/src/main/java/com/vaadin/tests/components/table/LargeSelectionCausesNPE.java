@@ -86,8 +86,8 @@ public class LargeSelectionCausesNPE extends TestBase {
 
             // set column headers
             table.setVisibleColumns(new String[] { CODE, NAME, ID });
-            table.setColumnHeaders(new String[] { "DummyCode", "DummyName",
-                    "DummyId" });
+            table.setColumnHeaders(
+                    new String[] { "DummyCode", "DummyName", "DummyId" });
 
             // Column alignment
             table.setColumnAlignment(ID, Align.CENTER);

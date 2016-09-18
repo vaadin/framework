@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,7 +21,7 @@ import java.io.Serializable;
 /**
  * Interface to be implemented by components wishing to display some object that
  * may be dynamically resized during runtime.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -163,7 +163,7 @@ public interface Sizeable extends Serializable {
     /**
      * Gets the width of the object. Negative number implies unspecified size
      * (terminal is free to set the size).
-     * 
+     *
      * @return width of the object in units specified by widthUnits property.
      */
     public float getWidth();
@@ -171,38 +171,38 @@ public interface Sizeable extends Serializable {
     /**
      * Gets the height of the object. Negative number implies unspecified size
      * (terminal is free to set the size).
-     * 
+     *
      * @return height of the object in units specified by heightUnits property.
      */
     public float getHeight();
 
     /**
      * Gets the width property units.
-     * 
+     *
      * @return units used in width property.
      */
     public Unit getWidthUnits();
 
     /**
      * Gets the height property units.
-     * 
+     *
      * @return units used in height property.
      */
     public Unit getHeightUnits();
 
     /**
      * Sets the height of the component using String presentation.
-     * 
+     *
      * String presentation is similar to what is used in Cascading Style Sheets.
      * Size can be length or percentage of available size.
-     * 
+     *
      * The empty string ("") or null will unset the height and set the units to
      * pixels.
-     * 
-     * See <a
-     * href="http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-length">CSS
+     *
+     * See
+     * <a href="http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-length">CSS
      * specification</a> for more details.
-     * 
+     *
      * @param height
      *            in CSS style string representation
      */
@@ -211,7 +211,7 @@ public interface Sizeable extends Serializable {
     /**
      * Sets the width of the object. Negative number implies unspecified size
      * (terminal is free to set the size).
-     * 
+     *
      * @param width
      *            the width of the object.
      * @param unit
@@ -222,7 +222,7 @@ public interface Sizeable extends Serializable {
     /**
      * Sets the height of the object. Negative number implies unspecified size
      * (terminal is free to set the size).
-     * 
+     *
      * @param height
      *            the height of the object.
      * @param unit
@@ -232,17 +232,17 @@ public interface Sizeable extends Serializable {
 
     /**
      * Sets the width of the component using String presentation.
-     * 
+     *
      * String presentation is similar to what is used in Cascading Style Sheets.
      * Size can be length or percentage of available size.
-     * 
+     *
      * The empty string ("") or null will unset the width and set the units to
      * pixels.
-     * 
-     * See <a
-     * href="http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-length">CSS
+     *
+     * See
+     * <a href="http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-length">CSS
      * specification</a> for more details.
-     * 
+     *
      * @param width
      *            in CSS style string representation, null or empty string to
      *            reset
@@ -261,14 +261,14 @@ public interface Sizeable extends Serializable {
 
     /**
      * Clears any defined width
-     * 
+     *
      * @since 7.3
      */
     public void setWidthUndefined();
 
     /**
      * Clears any defined height
-     * 
+     *
      * @since 7.3
      */
     public void setHeightUndefined();

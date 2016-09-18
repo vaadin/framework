@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -38,16 +38,16 @@ import elemental.json.JsonException;
 
 /**
  * Processes a UIDL request from the client.
- * 
+ *
  * Uses {@link ServerRpcHandler} to execute client-to-server RPC invocations and
  * {@link UidlWriter} to write state changes and client RPC calls back to the
  * client.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class UidlRequestHandler extends SynchronizedRequestHandler implements
-        SessionExpiredHandler {
+public class UidlRequestHandler extends SynchronizedRequestHandler
+        implements SessionExpiredHandler {
 
     public static final String UIDL_PATH = "UIDL/";
 
@@ -59,7 +59,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
 
     /**
      * Creates the ServerRpcHandler to use
-     * 
+     *
      * @since 7.7
      * @return the ServerRpcHandler to use
      */
@@ -132,7 +132,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
 
     /**
      * Writes the opening of JSON message to be sent to client.
-     * 
+     *
      * @param outWriter
      * @param response
      * @throws IOException
@@ -149,7 +149,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.server.SessionExpiredHandler#handleSessionExpired(com.vaadin
      * .server.VaadinRequest, com.vaadin.server.VaadinResponse)
@@ -176,7 +176,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
     /**
      * Returns the JSON which should be returned to the client when a request
      * for a non-existent UI arrives.
-     * 
+     *
      * @param service
      *            The VaadinService
      * @param vaadinRequest
@@ -186,8 +186,8 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
      */
     static String getUINotFoundErrorJSON(VaadinService service,
             VaadinRequest vaadinRequest) {
-        SystemMessages ci = service.getSystemMessages(
-                vaadinRequest.getLocale(), vaadinRequest);
+        SystemMessages ci = service.getSystemMessages(vaadinRequest.getLocale(),
+                vaadinRequest);
         // Session Expired is not really the correct message as the
         // session exists but the requested UI does not.
         // Using Communication Error for now.

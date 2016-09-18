@@ -15,8 +15,9 @@ public class Labels extends ComponentTestCase<Label> {
     @Override
     protected void initializeComponents() {
         Label l;
-        l = createLabel("This is an undefined\nwide\nlabel               which do not wrap. It should be clipped at the end of the screen"
-                + LoremIpsum.get(1000));
+        l = createLabel(
+                "This is an undefined\nwide\nlabel               which do not wrap. It should be clipped at the end of the screen"
+                        + LoremIpsum.get(1000));
         l.setWidth(null);
         addTestComponent(l);
 
@@ -29,8 +30,9 @@ public class Labels extends ComponentTestCase<Label> {
         l.setWidth("100%");
         addTestComponent(l);
 
-        l = createLabel("This is a\n\n     100%\t\t\t   \twide simple with fixed 65px height. It should wrap. "
-                + LoremIpsum.get(5000));
+        l = createLabel(
+                "This is a\n\n     100%\t\t\t   \twide simple with fixed 65px height. It should wrap. "
+                        + LoremIpsum.get(5000));
         l.setWidth("100%");
         l.setHeight("65px");
         addTestComponent(l);

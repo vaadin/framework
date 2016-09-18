@@ -50,8 +50,8 @@ public class TestAbsoluteLayout extends TestBase {
                 s.setNullSelectionAllowed(false);
                 for (int i = 0; i < Layout.Unit.values().length; i++) {
                     Item unitItem = s.addItem(i);
-                    unitItem.getItemProperty("caption").setValue(
-                            Layout.Unit.values()[i]);
+                    unitItem.getItemProperty("caption")
+                            .setValue(Layout.Unit.values()[i]);
                 }
                 return s;
             }
@@ -173,8 +173,8 @@ public class TestAbsoluteLayout extends TestBase {
                     select.addListener(new ValueChangeListener() {
                         @Override
                         public void valueChange(ValueChangeEvent event) {
-                            editcomponent((Component) event.getProperty()
-                                    .getValue());
+                            editcomponent(
+                                    (Component) event.getProperty().getValue());
                             getMainWindow().removeWindow(chooser);
                         }
 
@@ -217,9 +217,8 @@ public class TestAbsoluteLayout extends TestBase {
                             // we are only interested in .class files
                             if (files[j].endsWith(".class")) {
                                 // removes the .class extension
-                                String p = resource.toString()
-                                        + files[j].substring(0,
-                                                files[j].length() - 6);
+                                String p = resource.toString() + files[j]
+                                        .substring(0, files[j].length() - 6);
                                 p = p.replaceAll(".*classes/", "");
                                 p = p.replaceAll("/", ".");
                                 Class<?> c;
@@ -227,10 +226,10 @@ public class TestAbsoluteLayout extends TestBase {
                                     c = Class.forName(p);
                                     if (AbstractComponent.class
                                             .isAssignableFrom(c)
-                                            && !p.toLowerCase().contains(
-                                                    "layout")
-                                            && !p.toLowerCase().contains(
-                                                    "abstract")) {
+                                            && !p.toLowerCase()
+                                                    .contains("layout")
+                                            && !p.toLowerCase()
+                                                    .contains("abstract")) {
                                         container.addItem(c);
                                     }
                                 } catch (ClassNotFoundException e) {

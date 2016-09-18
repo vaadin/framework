@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,13 +20,13 @@ import com.vaadin.data.util.converter.Converter;
 
 /**
  * Formatting proxy for a {@link Property}.
- * 
+ *
  * <p>
  * This class can be used to implement formatting for any type of Property
  * datasources. The idea is to connect this as proxy between UI component and
  * the original datasource.
  * </p>
- * 
+ *
  * <p>
  * For example <code>
  * <pre>textfield.setPropertyDataSource(new PropertyFormatter(property) {
@@ -41,11 +41,11 @@ import com.vaadin.data.util.converter.Converter;
         });</pre></code> adds formatter for Double-typed property that extends
  * standard "1.0" notation with more zeroes.
  * </p>
- * 
+ *
  * @param T
  *            type of the underlying property (a PropertyFormatter is always a
  *            Property&lt;String&gt;)
- * 
+ *
  * @deprecated As of 7.0, replaced by {@link Converter}
  * @author Vaadin Ltd.
  * @since 5.3.0
@@ -63,7 +63,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
      * Construct a new {@code PropertyFormatter} that is not connected to any
      * data source. Call {@link #setPropertyDataSource(Property)} later on to
      * attach it to a property.
-     * 
+     *
      */
     protected PropertyFormatter() {
     }
@@ -72,7 +72,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
      * Construct a new formatter that is connected to given data source. Calls
      * {@link #format(Object)} which can be a problem if the formatter has not
      * yet been initialized.
-     * 
+     *
      * @param propertyDataSource
      *            to connect this property to.
      */
@@ -83,7 +83,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
 
     /**
      * Gets the current data source of the formatter, if any.
-     * 
+     *
      * @return the current data source as a Property, or <code>null</code> if
      *         none defined.
      */
@@ -94,13 +94,13 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
 
     /**
      * Sets the specified Property as the data source for the formatter.
-     * 
-     * 
+     *
+     *
      * <p>
      * Remember that new data sources getValue() must return objects that are
      * compatible with parse() and format() methods.
      * </p>
-     * 
+     *
      * @param newDataSource
      *            the new data source Property.
      */
@@ -153,7 +153,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
 
     /**
      * Get the formatted value.
-     * 
+     *
      * @return If the datasource returns null, this is null. Otherwise this is
      *         String given by format().
      */
@@ -175,7 +175,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
     /**
      * This method must be implemented to format the values received from
      * DataSource.
-     * 
+     *
      * @param value
      *            Value object got from the datasource. This is guaranteed to be
      *            non-null and of the type compatible with getType() of the
@@ -186,9 +186,9 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
 
     /**
      * Parse string and convert it to format compatible with datasource.
-     * 
+     *
      * The method is required to assure that parse(format(x)) equals x.
-     * 
+     *
      * @param formattedValue
      *            This is guaranteed to be non-null string.
      * @return Non-null value compatible with datasource.
@@ -200,7 +200,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
 
     /**
      * Sets the Property's read-only mode to the specified status.
-     * 
+     *
      * @param newStatus
      *            the new read-only status of the Property.
      */
@@ -235,7 +235,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
 
     /**
      * Listens for changes in the datasource.
-     * 
+     *
      * This should not be called directly.
      */
     @Override
@@ -245,7 +245,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
 
     /**
      * Listens for changes in the datasource.
-     * 
+     *
      * This should not be called directly.
      */
     @Override

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,7 +33,7 @@ import com.vaadin.ui.UI;
 /**
  * Serializes resources to JSON. Currently only used for {@link CustomLayout}
  * templates.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -41,7 +41,7 @@ public class ResourceWriter implements Serializable {
 
     /**
      * Writes a JSON object containing registered resources.
-     * 
+     *
      * @param ui
      *            The {@link UI} whose resources to write.
      * @param writer
@@ -69,8 +69,8 @@ public class ResourceWriter implements Serializable {
             final String resource = (String) i.next();
             InputStream is = null;
             try {
-                is = ui.getSession().getService()
-                        .getThemeResourceAsStream(ui, ui.getTheme(), resource);
+                is = ui.getSession().getService().getThemeResourceAsStream(ui,
+                        ui.getTheme(), resource);
             } catch (final Exception e) {
                 // FIXME: Handle exception
                 getLogger().log(Level.FINER,
@@ -78,8 +78,8 @@ public class ResourceWriter implements Serializable {
             }
             if (is != null) {
 
-                writer.write((resourceIndex++ > 0 ? ", " : "") + "\""
-                        + resource + "\" : ");
+                writer.write((resourceIndex++ > 0 ? ", " : "") + "\"" + resource
+                        + "\" : ");
                 final StringBuffer layout = new StringBuffer();
 
                 try {

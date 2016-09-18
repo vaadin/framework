@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -48,7 +48,8 @@ public class VTreeTable extends VScrollTable {
         public final boolean ctrl;
         public final boolean shift;
 
-        public PendingNavigationEvent(int keycode, boolean ctrl, boolean shift) {
+        public PendingNavigationEvent(int keycode, boolean ctrl,
+                boolean shift) {
             this.keycode = keycode;
             this.ctrl = ctrl;
             this.shift = shift;
@@ -143,8 +144,8 @@ public class VTreeTable extends VScrollTable {
             return new VTreeTableRow(uidl, aligns2);
         }
 
-        public class VTreeTableRow extends
-                VScrollTable.VScrollTableBody.VScrollTableRow {
+        public class VTreeTableRow
+                extends VScrollTable.VScrollTableBody.VScrollTableRow {
 
             private boolean isTreeCellAdded = false;
             private SpanElement treeSpacer;
@@ -163,8 +164,8 @@ public class VTreeTable extends VScrollTable {
             public void addCell(UIDL rowUidl, String text, char align,
                     String style, boolean textIsHTML, boolean isSorted,
                     String description) {
-                super.addCell(rowUidl, text, align, style, textIsHTML,
-                        isSorted, description);
+                super.addCell(rowUidl, text, align, style, textIsHTML, isSorted,
+                        description);
 
                 addTreeSpacer(rowUidl);
             }
@@ -175,8 +176,8 @@ public class VTreeTable extends VScrollTable {
                             .getFirstChild();
 
                     if (rowUidl.hasAttribute("icon")) {
-                        Icon icon = client.getIcon(rowUidl
-                                .getStringAttribute("icon"));
+                        Icon icon = client
+                                .getIcon(rowUidl.getStringAttribute("icon"));
                         icon.setAlternateText("icon");
                         container.insertFirst(icon.getElement());
                     }
@@ -193,8 +194,8 @@ public class VTreeTable extends VScrollTable {
 
                     treeSpacer.setClassName(classname);
                     container.insertFirst(treeSpacer);
-                    depth = rowUidl.hasAttribute("depth") ? rowUidl
-                            .getIntAttribute("depth") : 0;
+                    depth = rowUidl.hasAttribute("depth")
+                            ? rowUidl.getIntAttribute("depth") : 0;
                     setIndent();
                     isTreeCellAdded = true;
                     return true;
@@ -355,9 +356,8 @@ public class VTreeTable extends VScrollTable {
                     if (cells.hasNext()) {
                         final Object cell = cells.next();
                         if (cell instanceof String) {
-                            addSpannedCell(uidl, cell.toString(), aligns[0],
-                                    "", htmlContentAllowed, false, null,
-                                    colCount);
+                            addSpannedCell(uidl, cell.toString(), aligns[0], "",
+                                    htmlContentAllowed, false, null, colCount);
                         } else {
                             addSpannedCell(uidl, (Widget) cell, aligns[0], "",
                                     false, colCount);
@@ -580,35 +580,35 @@ public class VTreeTable extends VScrollTable {
 
         /**
          * Animates row expansion using the GWT animation framework.
-         * 
+         *
          * The idea is as follows:
-         * 
+         *
          * 1. Insert all rows normally
-         * 
+         *
          * 2. Insert a newly created DIV containing a new TABLE element below
          * the DIV containing the actual scroll table body.
-         * 
+         *
          * 3. Clone the rows that were inserted in step 1 and attach the clones
          * to the new TABLE element created in step 2.
-         * 
+         *
          * 4. The new DIV from step 2 is absolutely positioned so that the last
          * inserted row is just behind the row that was expanded.
-         * 
+         *
          * 5. Hide the contents of the originally inserted rows by setting the
          * DIV.v-table-cell-wrapper to display:none;.
-         * 
+         *
          * 6. Set the height of the originally inserted rows to 0.
-         * 
+         *
          * 7. The animation loop slides the DIV from step 2 downwards, while at
          * the same pace growing the height of each of the inserted rows from 0
          * to full height. The first inserted row grows from 0 to full and after
          * this the second row grows from 0 to full, etc until all rows are full
          * height.
-         * 
+         *
          * 8. Remove the DIV from step 2
-         * 
+         *
          * 9. Restore display:block; to the DIV.v-table-cell-wrapper elements.
-         * 
+         *
          * 10. DONE
          */
         private class RowExpandAnimation extends Animation {
@@ -625,7 +625,8 @@ public class VTreeTable extends VScrollTable {
             public RowExpandAnimation(List<VScrollTableRow> rows) {
                 this.rows = rows;
                 buildAndInsertAnimatingDiv();
-                preparator = new AnimationPreparator(rows.get(0).getIndex() - 1);
+                preparator = new AnimationPreparator(
+                        rows.get(0).getIndex() - 1);
                 preparator.prepareTableForAnimation();
                 for (VScrollTableRow row : rows) {
                     cloneAndAppendRow(row);
@@ -724,7 +725,8 @@ public class VTreeTable extends VScrollTable {
                 return td.getChild(0).cast();
             }
 
-            private void resetCellWrapperDivsDisplayProperty(VScrollTableRow row) {
+            private void resetCellWrapperDivsDisplayProperty(
+                    VScrollTableRow row) {
                 Element tr = row.getElement();
                 for (int ix = 0; ix < tr.getChildCount(); ix++) {
                     getWrapperDiv(tr, ix).getStyle().clearProperty("display");
@@ -804,8 +806,9 @@ public class VTreeTable extends VScrollTable {
 
         VTreeTableRow focusedRow = (VTreeTableRow) getFocusedRow();
         if (focusedRow != null) {
-            if (focusedRow.canHaveChildren
-                    && ((keycode == KeyCodes.KEY_RIGHT && !focusedRow.open) || (keycode == KeyCodes.KEY_LEFT && focusedRow.open))) {
+            if (focusedRow.canHaveChildren && ((keycode == KeyCodes.KEY_RIGHT
+                    && !focusedRow.open)
+                    || (keycode == KeyCodes.KEY_LEFT && focusedRow.open))) {
                 if (!ctrl) {
                     client.updateVariable(paintableId, "selectCollapsed", true,
                             false);

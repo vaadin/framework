@@ -51,9 +51,9 @@ public class DDTest8 extends AbstractTestUI {
     /**
      * Moves items in tree (and could work in Table too). Also supports
      * "building" tree.
-     * 
+     *
      * TODO fix algorithm, broken in some cases.
-     * 
+     *
      * @param tree
      * @param container
      * @return drop handler
@@ -76,10 +76,8 @@ public class DDTest8 extends AbstractTestUI {
                             Collection<?> itemPropertyIds = item
                                     .getItemPropertyIds();
                             for (Object propId : itemPropertyIds) {
-                                addItem.getItemProperty(propId)
-                                        .setValue(
-                                                item.getItemProperty(propId)
-                                                        .getValue());
+                                addItem.getItemProperty(propId).setValue(item
+                                        .getItemProperty(propId).getValue());
                             }
                         }
                         idx.setParent(childId, itemId);
@@ -116,10 +114,8 @@ public class DDTest8 extends AbstractTestUI {
                         Collection<?> itemPropertyIds = item
                                 .getItemPropertyIds();
                         for (Object propertyId : itemPropertyIds) {
-                            addedItem.getItemProperty(propertyId)
-                                    .setValue(
-                                            item.getItemProperty(propertyId)
-                                                    .getValue());
+                            addedItem.getItemProperty(propertyId).setValue(item
+                                    .getItemProperty(propertyId).getValue());
                         }
                         copyChildren(source, target, childId);
                     }
@@ -166,8 +162,9 @@ public class DDTest8 extends AbstractTestUI {
 
             @Override
             public AcceptCriterion getAcceptCriterion() {
-                return new Or(new AbstractSelect.TargetItemIs(tree, "Foo",
-                        "Bar"), new AbstractSelect.AcceptItem(tree, "Foo"),
+                return new Or(
+                        new AbstractSelect.TargetItemIs(tree, "Foo", "Bar"),
+                        new AbstractSelect.AcceptItem(tree, "Foo"),
                         tree.new TargetInSubtree("Bar5") //
                 );
             }

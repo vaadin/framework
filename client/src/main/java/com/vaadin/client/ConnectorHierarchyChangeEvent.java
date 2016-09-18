@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,13 +29,13 @@ import com.vaadin.client.ui.AbstractHasComponentsConnector;
  * hierarchy. A {@link ConnectorHierarchyChangedEvent} is fired when an update
  * from the server has been fully processed and all hierarchy updates have been
  * completed.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
- * 
+ *
  */
-public class ConnectorHierarchyChangeEvent extends
-        AbstractServerConnectorEvent<ConnectorHierarchyChangeHandler> {
+public class ConnectorHierarchyChangeEvent
+        extends AbstractServerConnectorEvent<ConnectorHierarchyChangeHandler> {
     /**
      * Type of this event, used by the event bus.
      */
@@ -49,7 +49,7 @@ public class ConnectorHierarchyChangeEvent extends
     /**
      * Returns a collection of the old children for the connector. This was the
      * state before the update was received from the server.
-     * 
+     *
      * @return A collection of old child connectors. Never returns null.
      */
     public List<ComponentConnector> getOldChildren() {
@@ -58,7 +58,7 @@ public class ConnectorHierarchyChangeEvent extends
 
     /**
      * Sets the collection of the old children for the connector.
-     * 
+     *
      * @param oldChildren
      *            The old child connectors. Must not be null.
      */
@@ -68,7 +68,7 @@ public class ConnectorHierarchyChangeEvent extends
 
     /**
      * Returns the {@link HasComponentsConnector} for which this event occurred.
-     * 
+     *
      * @return The {@link HasComponentsConnector} whose child collection has
      *         changed. Never returns null.
      */
@@ -90,8 +90,8 @@ public class ConnectorHierarchyChangeEvent extends
      * implement this interface, but instead make your connector class extend
      * {@link AbstractHasComponentsConnector} or an appropriate subclass.
      */
-    public interface ConnectorHierarchyChangeHandler extends Serializable,
-            EventHandler {
+    public interface ConnectorHierarchyChangeHandler
+            extends Serializable, EventHandler {
         /**
          * Called by the framework when the list of child components of the
          * connector implementing this interface has changed. The implementation
@@ -112,7 +112,7 @@ public class ConnectorHierarchyChangeEvent extends
          * parent connector might not yet have detached a child widget and that
          * the widget of a removed child might already have been attached by its
          * new parent.
-         * 
+         *
          * @param connectorHierarchyChangeEvent
          *            the event with information about the hierarchy change
          */

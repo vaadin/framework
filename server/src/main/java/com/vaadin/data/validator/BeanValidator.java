@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,16 +31,16 @@ import com.vaadin.data.Validator;
 /**
  * Vaadin {@link Validator} using the JSR-303 (javax.validation)
  * annotation-based bean validation.
- * 
+ *
  * The annotations of the fields of the beans are used to determine the
  * validation to perform.
- * 
+ *
  * Note that a JSR-303 implementation (e.g. Hibernate Validator or Apache Bean
  * Validation - formerly agimatec validation) must be present on the project
  * classpath when using bean validation.
- * 
+ *
  * @since 7.0
- * 
+ *
  * @author Petri Hakala
  * @author Henri Sara
  */
@@ -65,7 +65,7 @@ public class BeanValidator implements Validator {
 
         /**
          * Create a simple immutable message interpolator context.
-         * 
+         *
          * @param value
          *            value being validated
          * @param descriptor
@@ -91,7 +91,7 @@ public class BeanValidator implements Validator {
 
     /**
      * Creates a Vaadin {@link Validator} utilizing JSR-303 bean validation.
-     * 
+     *
      * @param beanClass
      *            bean class based on which the validation should be performed
      * @param propertyName
@@ -105,7 +105,7 @@ public class BeanValidator implements Validator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.Validator#validate(java.lang.Object)
      */
     @Override
@@ -119,10 +119,11 @@ public class BeanValidator implements Validator {
             for (Object v : violations) {
                 final ConstraintViolation<?> violation = (ConstraintViolation<?>) v;
                 String msg = getJavaxBeanValidatorFactory()
-                        .getMessageInterpolator().interpolate(
-                                violation.getMessageTemplate(),
-                                new SimpleContext(value, violation
-                                        .getConstraintDescriptor()), locale);
+                        .getMessageInterpolator()
+                        .interpolate(violation.getMessageTemplate(),
+                                new SimpleContext(value,
+                                        violation.getConstraintDescriptor()),
+                                locale);
                 causes[i] = new InvalidValueException(msg);
                 ++i;
             }
@@ -133,9 +134,9 @@ public class BeanValidator implements Validator {
 
     /**
      * Sets the locale used for validation error messages.
-     * 
+     *
      * Revalidation is not automatically triggered by setting the locale.
-     * 
+     *
      * @param locale
      */
     public void setLocale(Locale locale) {
@@ -144,7 +145,7 @@ public class BeanValidator implements Validator {
 
     /**
      * Gets the locale used for validation error messages.
-     * 
+     *
      * @return locale used for validation
      */
     public Locale getLocale() {
@@ -154,7 +155,7 @@ public class BeanValidator implements Validator {
     /**
      * Returns the underlying JSR-303 bean validator factory used. A factory is
      * created using {@link Validation} if necessary.
-     * 
+     *
      * @return {@link ValidatorFactory} to use
      */
     protected static ValidatorFactory getJavaxBeanValidatorFactory() {
@@ -169,7 +170,7 @@ public class BeanValidator implements Validator {
      * Returns a shared Validator instance to use. An instance is created using
      * the validator factory if necessary and thereafter reused by the
      * {@link BeanValidator} instance.
-     * 
+     *
      * @return the JSR-303 {@link javax.validation.Validator} to use
      */
     protected javax.validation.Validator getJavaxBeanValidator() {

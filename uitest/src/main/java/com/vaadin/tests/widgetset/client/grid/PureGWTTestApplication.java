@@ -30,7 +30,7 @@ import com.vaadin.client.ui.SubPartAware;
 /**
  * Pure GWT Test Application base for testing features of a single widget;
  * provides a menu system and convenience method for adding items to it.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -47,7 +47,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
         /**
          * Creates a Command object, which is used as an action entry in the
          * Menu
-         * 
+         *
          * @param t
          *            a title string
          * @param cmd
@@ -61,7 +61,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
 
         /**
          * Returns the title of this command item
-         * 
+         *
          * @return a title string
          */
         public final String getTitle() {
@@ -70,7 +70,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
 
         /**
          * Returns the actual scheduled command of this command item
-         * 
+         *
          * @return a scheduled command
          */
         public final ScheduledCommand getCommand() {
@@ -105,7 +105,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
 
         /**
          * Create a sub-menu, with a title.
-         * 
+         *
          * @param title
          */
         public Menu(String title) {
@@ -118,7 +118,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
         /**
          * Return the GWT {@link MenuBar} object that provides the widget for
          * this Menu
-         * 
+         *
          * @return a menubar object
          */
         public MenuBar getMenuBar() {
@@ -127,7 +127,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
 
         /**
          * Returns the title of this menu entry
-         * 
+         *
          * @return a title string
          */
         public String getTitle() {
@@ -137,7 +137,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
         /**
          * Adds a child menu entry to this menu. The title for this entry is
          * taken from the Menu object argument.
-         * 
+         *
          * @param m
          *            another Menu object
          */
@@ -149,7 +149,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
         /**
          * Tests for the existence of a child menu by title at this level of the
          * menu hierarchy
-         * 
+         *
          * @param title
          *            a title string
          * @return true, if this menu has a direct child menu with the specified
@@ -162,7 +162,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
         /**
          * Gets a reference to a child menu with a certain title, that is a
          * direct child of this menu level.
-         * 
+         *
          * @param title
          *            a title string
          * @return a Menu object with the specified title string, or null, if
@@ -181,7 +181,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
         /**
          * Adds a command item to the menu. When the entry is clicked, the
          * command is executed.
-         * 
+         *
          * @param cmd
          *            a command object.
          */
@@ -193,7 +193,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
         /**
          * Tests for the existence of a {@link Command} that is the direct child
          * of this level of menu.
-         * 
+         *
          * @param title
          *            the command's title
          * @return true, if this menu level includes a command item with the
@@ -206,7 +206,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
         /**
          * Gets a reference to a {@link Command} item that is the direct child
          * of this level of menu.
-         * 
+         *
          * @param title
          *            the command's title
          * @return a command, if found in this menu level, otherwise null.
@@ -242,7 +242,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
 
     /**
      * Connect an item to the menu structure
-     * 
+     *
      * @param cmd
      *            a scheduled command; see google's docs
      * @param menupath
@@ -258,7 +258,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
     /**
      * Create a menu path, if one doesn't already exist, and return the last
      * menu in the series.
-     * 
+     *
      * @param path
      *            a varargs list or array of strings describing a menu path,
      *            e.g. "File", "Recent", "User Files", which would result in the
@@ -300,7 +300,7 @@ public abstract class PureGWTTestApplication<T> extends DockLayoutPanel
 
     /**
      * Gets the tested widget.
-     * 
+     *
      * @return tested widget
      */
     public T getTestedWidget() {

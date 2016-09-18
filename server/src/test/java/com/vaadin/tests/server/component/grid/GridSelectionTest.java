@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2013 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,8 +33,8 @@ import com.vaadin.ui.Grid.SelectionModel;
 
 public class GridSelectionTest {
 
-    private static class MockSelectionChangeListener implements
-            SelectionListener {
+    private static class MockSelectionChangeListener
+            implements SelectionListener {
         private SelectionEvent event;
 
         @Override
@@ -129,17 +129,20 @@ public class GridSelectionTest {
 
     @Test
     public void selectionModeMapsToMulti() {
-        assertTrue(grid.setSelectionMode(SelectionMode.MULTI) instanceof SelectionModel.Multi);
+        assertTrue(grid.setSelectionMode(
+                SelectionMode.MULTI) instanceof SelectionModel.Multi);
     }
 
     @Test
     public void selectionModeMapsToSingle() {
-        assertTrue(grid.setSelectionMode(SelectionMode.SINGLE) instanceof SelectionModel.Single);
+        assertTrue(grid.setSelectionMode(
+                SelectionMode.SINGLE) instanceof SelectionModel.Single);
     }
 
     @Test
     public void selectionModeMapsToNone() {
-        assertTrue(grid.setSelectionMode(SelectionMode.NONE) instanceof SelectionModel.None);
+        assertTrue(grid.setSelectionMode(
+                SelectionMode.NONE) instanceof SelectionModel.None);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -181,8 +184,8 @@ public class GridSelectionTest {
     private void selectionCallsListener() {
         grid.select(itemId1Present);
         assertEquals("added size", 1, mockListener.getAdded().size());
-        assertEquals("added item", itemId1Present, mockListener.getAdded()
-                .iterator().next());
+        assertEquals("added item", itemId1Present,
+                mockListener.getAdded().iterator().next());
         assertEquals("removed size", 0, mockListener.getRemoved().size());
     }
 
@@ -204,8 +207,8 @@ public class GridSelectionTest {
 
         grid.deselect(itemId1Present);
         assertEquals("removed size", 1, mockListener.getRemoved().size());
-        assertEquals("removed item", itemId1Present, mockListener.getRemoved()
-                .iterator().next());
+        assertEquals("removed item", itemId1Present,
+                mockListener.getRemoved().iterator().next());
         assertEquals("removed size", 0, mockListener.getAdded().size());
     }
 
@@ -364,10 +367,10 @@ public class GridSelectionTest {
         grid.select(itemId2Present);
         assertEquals("added size", 1, mockListener.getAdded().size());
         assertEquals("removed size", 1, mockListener.getRemoved().size());
-        assertEquals("added item", itemId2Present, mockListener.getAdded()
-                .iterator().next());
-        assertEquals("removed item", itemId1Present, mockListener.getRemoved()
-                .iterator().next());
+        assertEquals("added item", itemId2Present,
+                mockListener.getAdded().iterator().next());
+        assertEquals("removed item", itemId1Present,
+                mockListener.getRemoved().iterator().next());
         assertEquals("selectedRows is correct", itemId2Present,
                 grid.getSelectedRow());
     }

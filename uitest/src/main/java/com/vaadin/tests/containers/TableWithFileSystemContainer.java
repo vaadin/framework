@@ -12,8 +12,8 @@ public class TableWithFileSystemContainer extends TestBase {
 
     @Override
     public void setup() {
-        Table table = new Table("Documents", new FilesystemContainer(new File(
-                testPath)));
+        Table table = new Table("Documents",
+                new FilesystemContainer(new File(testPath)));
         table.setWidth("100%");
         getMainWindow().addComponent(table);
     }

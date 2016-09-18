@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,8 +31,8 @@ public class RichTextAreaRelativeHeightResizeTest extends MultiBrowserTest {
                 .findElement(By.cssSelector(".v-richtextarea")).getSize()
                 .getHeight();
         int originalEditorHeight = driver
-                .findElement(By.cssSelector(".v-richtextarea iframe"))
-                .getSize().getHeight();
+                .findElement(By.cssSelector(".v-richtextarea iframe")).getSize()
+                .getHeight();
 
         // Increase the component height
         driver.findElement(By.cssSelector(".v-button")).click();
@@ -40,8 +40,8 @@ public class RichTextAreaRelativeHeightResizeTest extends MultiBrowserTest {
         int newHeight = driver.findElement(By.cssSelector(".v-richtextarea"))
                 .getSize().getHeight();
         int newEditorHeight = driver
-                .findElement(By.cssSelector(".v-richtextarea iframe"))
-                .getSize().getHeight();
+                .findElement(By.cssSelector(".v-richtextarea iframe")).getSize()
+                .getHeight();
 
         // Check that the component height changed and that the editor height
         // changed equally as much
@@ -49,7 +49,7 @@ public class RichTextAreaRelativeHeightResizeTest extends MultiBrowserTest {
                 newHeight != originalHeight);
         Assert.assertEquals(
                 "Editor height change didn't match the Component height change",
-                newHeight - originalHeight, newEditorHeight
-                        - originalEditorHeight);
+                newHeight - originalHeight,
+                newEditorHeight - originalEditorHeight);
     }
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -51,7 +51,7 @@ import com.vaadin.shared.communication.SharedState;
  * The LegacyLocatorStrategy class handles the legacy locator syntax that was
  * introduced in version 5.4 of the framework. The legacy locator strategy is
  * always used if no other strategy claims responsibility for a locator string.
- * 
+ *
  * @since 7.2
  * @author Vaadin Ltd
  */
@@ -75,8 +75,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
     private final ApplicationConnection client;
 
-    private static final RegExp validSyntax = RegExp
-            .compile("^((\\w+::)?((PID_S)?\\w[-$_a-zA-Z0-9.' ]*)?)?(/[-$_a-zA-Z0-9]+\\[\\d+\\])*/?(#.*)?$");
+    private static final RegExp validSyntax = RegExp.compile(
+            "^((\\w+::)?((PID_S)?\\w[-$_a-zA-Z0-9.' ]*)?)?(/[-$_a-zA-Z0-9]+\\[\\d+\\])*/?(#.*)?$");
 
     public LegacyLocatorStrategy(ApplicationConnection clientConnection) {
         client = clientConnection;
@@ -89,8 +89,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
     @Override
     public String getPathForElement(Element targetElement) {
-        ComponentConnector connector = Util
-                .findPaintable(client, targetElement);
+        ComponentConnector connector = Util.findPaintable(client,
+                targetElement);
 
         Widget w = null;
         if (connector != null) {
@@ -169,8 +169,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
              * If the widget can provide an identifier for the targetElement we
              * let it do that
              */
-            String elementLocator = ((SubPartAware) w).getSubPartName(DOM
-                    .asOld(targetElement));
+            String elementLocator = ((SubPartAware) w)
+                    .getSubPartName(DOM.asOld(targetElement));
             if (elementLocator != null) {
                 return path + LegacyLocatorStrategy.SUBPART_SEPARATOR
                         + elementLocator;
@@ -200,7 +200,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * {@inheritDoc}
      */
     @Override
-    public Element getElementByPathStartingAt(String path, Element baseElement) {
+    public Element getElementByPathStartingAt(String path,
+            Element baseElement) {
         /*
          * Path is of type "targetWidgetPath#componentPart" or
          * "targetWidgetPath".
@@ -253,7 +254,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * {@inheritDoc}
      */
     @Override
-    public List<Element> getElementsByPathStartingAt(String path, Element root) {
+    public List<Element> getElementsByPathStartingAt(String path,
+            Element root) {
         // This type of search is not supported in LegacyLocator
         List<Element> array = new ArrayList<Element>();
         Element e = getElementByPathStartingAt(path, root);
@@ -267,7 +269,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * Finds the first widget in the hierarchy (moving upwards) that implements
      * SubPartAware. Returns the SubPartAware implementor or null if none is
      * found.
-     * 
+     *
      * @param w
      *            The widget to start from. This is returned if it implements
      *            SubPartAware.
@@ -289,13 +291,14 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * Returns the first widget found when going from {@code targetElement}
      * upwards in the DOM hierarchy, assuming that {@code ancestorWidget} is a
      * parent of {@code targetElement}.
-     * 
+     *
      * @param targetElement
      * @param ancestorWidget
      * @return The widget whose root element is a parent of
      *         {@code targetElement}.
      */
-    private Widget findParentWidget(Element targetElement, Widget ancestorWidget) {
+    private Widget findParentWidget(Element targetElement,
+            Widget ancestorWidget) {
         /*
          * As we cannot resolve Widgets from the element we start from the
          * widget and move downwards to the correct child widget, as long as we
@@ -315,7 +318,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
     /**
      * Locates an element based on a DOM path and a base element.
-     * 
+     *
      * @param baseElement
      *            The base element which the path is relative to
      * @param path
@@ -334,13 +337,13 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                 String childIndexString = part.substring("domChild[".length(),
                         part.length() - 1);
 
-                if (WidgetUtil.findWidget(baseElement, null) instanceof VAbstractOrderedLayout) {
+                if (WidgetUtil.findWidget(baseElement,
+                        null) instanceof VAbstractOrderedLayout) {
                     if (element.hasChildNodes()) {
                         Element e = element.getFirstChildElement().cast();
                         String cn = e.getClassName();
-                        if (cn != null
-                                && (cn.equals("v-expand") || cn
-                                        .contains("v-has-caption"))) {
+                        if (cn != null && (cn.equals("v-expand")
+                                || cn.contains("v-has-caption"))) {
                             element = e;
                         }
                     }
@@ -374,7 +377,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
     /**
      * Generates a String locator using domChild[x] parts for the element
      * relative to the baseElement.
-     * 
+     *
      * @param element
      *            The target element
      * @param baseElement
@@ -421,7 +424,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * <p/>
      * Returns null if no path can be determined for the widget or if the widget
      * is null.
-     * 
+     *
      * @param w
      *            The target widget
      * @return A String locator for the widget
@@ -472,8 +475,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
         while (i.hasNext()) {
             Object child = i.next();
             if (child == w) {
-                return basePath + PARENTCHILD_SEPARATOR + simpleName + "["
-                        + pos + "]";
+                return basePath + PARENTCHILD_SEPARATOR + simpleName + "[" + pos
+                        + "]";
             }
             String simpleName2 = Util.getSimpleName(child);
             if (simpleName.equals(simpleName2)) {
@@ -486,7 +489,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
     /**
      * Locates the widget based on a String locator.
-     * 
+     *
      * @param path
      *            The String locator that identifies the widget.
      * @param baseWidget
@@ -568,8 +571,9 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                 // ChildComponentContainer and VOrderedLayout$Slot have been
                 // replaced with Slot
                 if (w instanceof VAbstractOrderedLayout
-                        && ("ChildComponentContainer".equals(widgetClassName) || "VOrderedLayout$Slot"
-                                .equals(widgetClassName))) {
+                        && ("ChildComponentContainer".equals(widgetClassName)
+                                || "VOrderedLayout$Slot"
+                                        .equals(widgetClassName))) {
                     widgetClassName = "Slot";
                 }
 
@@ -606,8 +610,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                     // the same type before it
                     int nextIndex = 0;
                     for (Widget child : layout) {
-                        boolean matchingType = nextWidgetClassName.equals(Util
-                                .getSimpleName(child));
+                        boolean matchingType = nextWidgetClassName
+                                .equals(Util.getSimpleName(child));
                         if (matchingType && widgetPosition == 0) {
                             // This is the n:th child that we looked for
                             break;

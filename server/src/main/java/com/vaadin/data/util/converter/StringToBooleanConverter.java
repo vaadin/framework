@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,10 +19,16 @@ package com.vaadin.data.util.converter;
 import java.util.Locale;
 
 /**
- * A converter that converts from {@link String} to {@link Boolean} and back. The String representation is given by
- * {@link Boolean#toString()} or provided in constructor {@link #StringToBooleanConverter(String, String)}.
- * <p> Leading and trailing white spaces are ignored when converting from a String. </p>
- * <p> For language-dependent representation, subclasses should overwrite {@link #getFalseString(Locale)} and {@link #getTrueString(Locale)}</p>
+ * A converter that converts from {@link String} to {@link Boolean} and back.
+ * The String representation is given by {@link Boolean#toString()} or provided
+ * in constructor {@link #StringToBooleanConverter(String, String)}.
+ * <p>
+ * Leading and trailing white spaces are ignored when converting from a String.
+ * </p>
+ * <p>
+ * For language-dependent representation, subclasses should overwrite
+ * {@link #getFalseString(Locale)} and {@link #getTrueString(Locale)}
+ * </p>
  *
  * @author Vaadin Ltd
  * @since 7.0
@@ -34,7 +40,8 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
     private final String falseString;
 
     /**
-     * Creates converter with default string representations - "true" and "false"
+     * Creates converter with default string representations - "true" and
+     * "false"
      *
      */
     public StringToBooleanConverter() {
@@ -45,8 +52,10 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * Creates converter with custom string representation.
      *
      * @since 7.5.4
-     * @param falseString string representation for <code>false</code>
-     * @param trueString string representation for <code>true</code>
+     * @param falseString
+     *            string representation for <code>false</code>
+     * @param trueString
+     *            string representation for <code>true</code>
      */
     public StringToBooleanConverter(String trueString, String falseString) {
         this.trueString = trueString;
@@ -82,7 +91,8 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
     }
 
     /**
-     * Gets the string representation for true. Default is "true", if not set in constructor.
+     * Gets the string representation for true. Default is "true", if not set in
+     * constructor.
      *
      * @return the string representation for true
      */
@@ -91,7 +101,8 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
     }
 
     /**
-     * Gets the string representation for false. Default is "false", if not set in constructor.
+     * Gets the string representation for false. Default is "false", if not set
+     * in constructor.
      *
      * @return the string representation for false
      */
@@ -121,11 +132,12 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
     }
 
     /**
-     * Gets the locale-depended string representation for false.
-     * Default is locale-independent value provided by {@link #getFalseString()}
+     * Gets the locale-depended string representation for false. Default is
+     * locale-independent value provided by {@link #getFalseString()}
      *
      * @since 7.5.4
-     * @param locale to be used
+     * @param locale
+     *            to be used
      * @return the string representation for false
      */
     protected String getFalseString(Locale locale) {
@@ -133,11 +145,12 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
     }
 
     /**
-     * Gets the locale-depended string representation for true.
-     * Default is locale-independent value provided by {@link #getTrueString()}
+     * Gets the locale-depended string representation for true. Default is
+     * locale-independent value provided by {@link #getTrueString()}
      *
      * @since 7.5.4
-     * @param locale to be used
+     * @param locale
+     *            to be used
      * @return the string representation for true
      */
     protected String getTrueString(Locale locale) {

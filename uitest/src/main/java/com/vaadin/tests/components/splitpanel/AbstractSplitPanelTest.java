@@ -8,17 +8,19 @@ import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;
 import com.vaadin.ui.AbstractSplitPanel.SplitterClickListener;
 
 public abstract class AbstractSplitPanelTest<T extends AbstractSplitPanel>
-        extends AbstractComponentContainerTest<T> implements
-        SplitterClickListener {
+        extends AbstractComponentContainerTest<T>
+        implements SplitterClickListener {
 
     private Command<T, Boolean> splitterClickListenerCommand = new Command<T, Boolean>() {
 
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((SplitterClickListener) AbstractSplitPanelTest.this);
+                c.addListener(
+                        (SplitterClickListener) AbstractSplitPanelTest.this);
             } else {
-                c.removeListener((SplitterClickListener) AbstractSplitPanelTest.this);
+                c.removeListener(
+                        (SplitterClickListener) AbstractSplitPanelTest.this);
             }
 
         }

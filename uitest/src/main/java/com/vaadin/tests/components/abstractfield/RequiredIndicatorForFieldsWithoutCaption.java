@@ -72,7 +72,7 @@ public class RequiredIndicatorForFieldsWithoutCaption extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -82,7 +82,7 @@ public class RequiredIndicatorForFieldsWithoutCaption extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override

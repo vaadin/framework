@@ -58,15 +58,16 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
             @SuppressWarnings("unchecked")
             public void valueChange(ValueChangeEvent event) {
                 HasComponents oldCC = cc;
-                cc = createComponentContainer((Class<? extends HasComponents>) event
-                        .getProperty().getValue());
+                cc = createComponentContainer(
+                        (Class<? extends HasComponents>) event.getProperty()
+                                .getValue());
                 addToCC(lab);
                 replaceComponent(oldCC, cc);
             }
         });
 
-        componentContainerSelect.setValue(componentContainerSelect.getItemIds()
-                .iterator().next());
+        componentContainerSelect.setValue(
+                componentContainerSelect.getItemIds().iterator().next());
         Button but1 = new Button("Move in and out of component container",
                 new Button.ClickListener() {
 
@@ -96,8 +97,8 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
         } else if (cc instanceof SingleComponentContainer) {
             ((SingleComponentContainer) cc).setContent(lab);
         } else {
-            throw new RuntimeException("Don't know how to add to "
-                    + cc.getClass().getName());
+            throw new RuntimeException(
+                    "Don't know how to add to " + cc.getClass().getName());
         }
     }
 

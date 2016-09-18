@@ -96,8 +96,8 @@ public class DateFieldInSubWindow extends AbstractTestCase {
                 BeanItem<MyBean> myBeanItem = new BeanItem<MyBean>(myBean);
                 generalForm.setItemDataSource(myBeanItem);
 
-                generalForm.setVisibleItemProperties(new String[] { "myDate",
-                        "myString" });
+                generalForm.setVisibleItemProperties(
+                        new String[] { "myDate", "myString" });
                 generalForm.setValidationVisible(true);
                 layout.addComponent(generalForm);
             }

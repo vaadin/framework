@@ -2,8 +2,8 @@ package com.vaadin.data.util;
 
 import org.junit.Test;
 
-public class HierarchicalContainerOrderedWrapperTest extends
-        AbstractHierarchicalContainerTestBase {
+public class HierarchicalContainerOrderedWrapperTest
+        extends AbstractHierarchicalContainerTestBase {
 
     private HierarchicalContainerOrderedWrapper createContainer() {
         return new HierarchicalContainerOrderedWrapper(

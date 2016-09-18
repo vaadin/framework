@@ -25,10 +25,11 @@ public class DefaultHandleUnparsableDateField extends TestBase {
             }
         });
 
-        final DateField validated = new DateField("Validated Default DateField");
+        final DateField validated = new DateField(
+                "Validated Default DateField");
         validated.setImmediate(true);
-        validated.addValidator(new NullValidator("Validator: Date is NULL",
-                false));
+        validated.addValidator(
+                new NullValidator("Validator: Date is NULL", false));
         addComponent(validated);
     }
 

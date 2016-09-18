@@ -112,12 +112,9 @@ public class SQLGeneratorsTest {
                 SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
 
-        StatementHelper sh = sg.generateDeleteQuery(
-                "people",
-                query.getPrimaryKeyColumns(),
-                null,
-                (RowItem) container.getItem(container.getItemIds().iterator()
-                        .next()));
+        StatementHelper sh = sg.generateDeleteQuery("people",
+                query.getPrimaryKeyColumns(), null, (RowItem) container
+                        .getItem(container.getItemIds().iterator().next()));
         Assert.assertEquals("DELETE FROM people WHERE \"ID\" = ?",
                 sh.getQueryString());
     }
@@ -137,15 +134,16 @@ public class SQLGeneratorsTest {
         TableQuery query = new TableQuery("people", connectionPool);
         SQLContainer container = new SQLContainer(query);
 
-        RowItem ri = (RowItem) container.getItem(container.getItemIds()
-                .iterator().next());
+        RowItem ri = (RowItem) container
+                .getItem(container.getItemIds().iterator().next());
         ri.getItemProperty("NAME").setValue("Viljami");
 
         StatementHelper sh = sg.generateUpdateQuery("people", ri);
-        Assert.assertTrue("UPDATE people SET \"NAME\" = ?, \"AGE\" = ? WHERE \"ID\" = ?"
-                .equals(sh.getQueryString())
-                || "UPDATE people SET \"AGE\" = ?, \"NAME\" = ? WHERE \"ID\" = ?"
-                        .equals(sh.getQueryString()));
+        Assert.assertTrue(
+                "UPDATE people SET \"NAME\" = ?, \"AGE\" = ? WHERE \"ID\" = ?"
+                        .equals(sh.getQueryString())
+                        || "UPDATE people SET \"AGE\" = ?, \"NAME\" = ? WHERE \"ID\" = ?"
+                                .equals(sh.getQueryString()));
     }
 
     @Test
@@ -215,8 +213,7 @@ public class SQLGeneratorsTest {
         List<OrderBy> ob = Arrays.asList(new OrderBy("name", true));
         StatementHelper sh = sg.generateSelectQuery("TABLE", f, ob, 4, 8,
                 "NAME, ID");
-        Assert.assertEquals(
-                sh.getQueryString(),
+        Assert.assertEquals(sh.getQueryString(),
                 "SELECT * FROM (SELECT x.*, ROWNUM AS \"rownum\" FROM"
                         + " (SELECT NAME, ID FROM TABLE WHERE (\"name\" LIKE ?"
                         + " OR \"name\" LIKE ?) "

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,7 +35,7 @@ public interface LayoutEvents {
 
         /**
          * Layout has been clicked
-         * 
+         *
          * @param event
          *            Component click event.
          */
@@ -56,7 +56,7 @@ public interface LayoutEvents {
      * class really will send the events, or if it just defines the methods to
      * be able to implement an interface.
      * </p>
-     * 
+     *
      * @since 6.5.2
      * @see LayoutClickListener
      * @see LayoutClickEvent
@@ -68,13 +68,13 @@ public interface LayoutEvents {
          * the click targets a component inside a nested layout or Panel,
          * provided the targeted component does not prevent the click event from
          * propagating. A caption is not considered part of a component.
-         * 
+         *
          * The child component that was clicked is included in the
          * {@link LayoutClickEvent}.
-         * 
+         *
          * Use {@link #removeListener(LayoutClickListener)} to remove the
          * listener.
-         * 
+         *
          * @param listener
          *            The listener to add
          */
@@ -89,7 +89,7 @@ public interface LayoutEvents {
 
         /**
          * Removes an LayoutClickListener.
-         * 
+         *
          * @param listener
          *            LayoutClickListener to be removed
          */
@@ -114,8 +114,8 @@ public interface LayoutEvents {
         private final Component childComponent;
 
         public LayoutClickEvent(Component source,
-                MouseEventDetails mouseEventDetails,
-                Component clickedComponent, Component childComponent) {
+                MouseEventDetails mouseEventDetails, Component clickedComponent,
+                Component childComponent) {
             super(source, mouseEventDetails);
             this.clickedComponent = clickedComponent;
             this.childComponent = childComponent;
@@ -124,10 +124,10 @@ public interface LayoutEvents {
         /**
          * Returns the component that was clicked, which is somewhere inside the
          * parent layout on which the listener was registered.
-         * 
+         *
          * For the direct child component of the layout, see
          * {@link #getChildComponent()}.
-         * 
+         *
          * @return clicked {@link Component}, null if none found
          */
         public Component getClickedComponent() {
@@ -137,10 +137,10 @@ public interface LayoutEvents {
         /**
          * Returns the direct child component of the layout which contains the
          * clicked component.
-         * 
+         *
          * For the clicked component inside that child component of the layout,
          * see {@link #getClickedComponent()}.
-         * 
+         *
          * @return direct child {@link Component} of the layout which contains
          *         the clicked Component, null if none found
          */

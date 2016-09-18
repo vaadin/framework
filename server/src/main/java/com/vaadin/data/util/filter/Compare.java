@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,13 +24,13 @@ import com.vaadin.data.Property;
  * constant value. Use the nested classes {@link Equal}, {@link Greater},
  * {@link Less}, {@link GreaterOrEqual} and {@link LessOrEqual} instead of this
  * class directly.
- * 
+ *
  * This filter also directly supports in-memory filtering.
- * 
+ *
  * The reference and actual values must implement {@link Comparable} and the
  * class of the actual property value must be assignable from the class of the
  * reference value.
- * 
+ *
  * @since 6.6
  */
 public abstract class Compare implements Filter {
@@ -46,23 +46,23 @@ public abstract class Compare implements Filter {
     /**
      * A {@link Compare} filter that accepts items for which the identified
      * property value is equal to <code>value</code>.
-     * 
+     *
      * For in-memory filters, {@link Comparable#compareTo(Object)} or, if not
      * Comparable, {@link #equals(Object)} is used for the comparison. For other
      * containers, the comparison implementation is container dependent and may
      * use e.g. database comparison operations.
-     * 
+     *
      * @since 6.6
      */
     public static final class Equal extends Compare {
         /**
          * Construct a filter that accepts items for which the identified
          * property value is equal to <code>value</code>.
-         * 
+         *
          * For in-memory filters, equals() is used for the comparison. For other
          * containers, the comparison implementation is container dependent and
          * may use e.g. database comparison operations.
-         * 
+         *
          * @param propertyId
          *            the identifier of the property whose value to compare
          *            against value, not null
@@ -78,24 +78,24 @@ public abstract class Compare implements Filter {
     /**
      * A {@link Compare} filter that accepts items for which the identified
      * property value is greater than <code>value</code>.
-     * 
+     *
      * For in-memory filters, the values must implement {@link Comparable} and
      * {@link Comparable#compareTo(Object)} is used for the comparison. For
      * other containers, the comparison implementation is container dependent
      * and may use e.g. database comparison operations.
-     * 
+     *
      * @since 6.6
      */
     public static final class Greater extends Compare {
         /**
          * Construct a filter that accepts items for which the identified
          * property value is greater than <code>value</code>.
-         * 
+         *
          * For in-memory filters, the values must implement {@link Comparable}
          * and {@link Comparable#compareTo(Object)} is used for the comparison.
          * For other containers, the comparison implementation is container
          * dependent and may use e.g. database comparison operations.
-         * 
+         *
          * @param propertyId
          *            the identifier of the property whose value to compare
          *            against value, not null
@@ -111,24 +111,24 @@ public abstract class Compare implements Filter {
     /**
      * A {@link Compare} filter that accepts items for which the identified
      * property value is less than <code>value</code>.
-     * 
+     *
      * For in-memory filters, the values must implement {@link Comparable} and
      * {@link Comparable#compareTo(Object)} is used for the comparison. For
      * other containers, the comparison implementation is container dependent
      * and may use e.g. database comparison operations.
-     * 
+     *
      * @since 6.6
      */
     public static final class Less extends Compare {
         /**
          * Construct a filter that accepts items for which the identified
          * property value is less than <code>value</code>.
-         * 
+         *
          * For in-memory filters, the values must implement {@link Comparable}
          * and {@link Comparable#compareTo(Object)} is used for the comparison.
          * For other containers, the comparison implementation is container
          * dependent and may use e.g. database comparison operations.
-         * 
+         *
          * @param propertyId
          *            the identifier of the property whose value to compare
          *            against value, not null
@@ -144,24 +144,24 @@ public abstract class Compare implements Filter {
     /**
      * A {@link Compare} filter that accepts items for which the identified
      * property value is greater than or equal to <code>value</code>.
-     * 
+     *
      * For in-memory filters, the values must implement {@link Comparable} and
      * {@link Comparable#compareTo(Object)} is used for the comparison. For
      * other containers, the comparison implementation is container dependent
      * and may use e.g. database comparison operations.
-     * 
+     *
      * @since 6.6
      */
     public static final class GreaterOrEqual extends Compare {
         /**
          * Construct a filter that accepts items for which the identified
          * property value is greater than or equal to <code>value</code>.
-         * 
+         *
          * For in-memory filters, the values must implement {@link Comparable}
          * and {@link Comparable#compareTo(Object)} is used for the comparison.
          * For other containers, the comparison implementation is container
          * dependent and may use e.g. database comparison operations.
-         * 
+         *
          * @param propertyId
          *            the identifier of the property whose value to compare
          *            against value, not null
@@ -177,24 +177,24 @@ public abstract class Compare implements Filter {
     /**
      * A {@link Compare} filter that accepts items for which the identified
      * property value is less than or equal to <code>value</code>.
-     * 
+     *
      * For in-memory filters, the values must implement {@link Comparable} and
      * {@link Comparable#compareTo(Object)} is used for the comparison. For
      * other containers, the comparison implementation is container dependent
      * and may use e.g. database comparison operations.
-     * 
+     *
      * @since 6.6
      */
     public static final class LessOrEqual extends Compare {
         /**
          * Construct a filter that accepts items for which the identified
          * property value is less than or equal to <code>value</code>.
-         * 
+         *
          * For in-memory filters, the values must implement {@link Comparable}
          * and {@link Comparable#compareTo(Object)} is used for the comparison.
          * For other containers, the comparison implementation is container
          * dependent and may use e.g. database comparison operations.
-         * 
+         *
          * @param propertyId
          *            the identifier of the property whose value to compare
          *            against value, not null
@@ -210,21 +210,21 @@ public abstract class Compare implements Filter {
     /**
      * Constructor for a {@link Compare} filter that compares the value of an
      * item property with the given constant <code>value</code>.
-     * 
+     *
      * This constructor is intended to be used by the nested static classes only
      * ({@link Equal}, {@link Greater}, {@link Less}, {@link GreaterOrEqual},
      * {@link LessOrEqual}).
-     * 
+     *
      * For in-memory filtering, comparisons except EQUAL require that the values
      * implement {@link Comparable} and {@link Comparable#compareTo(Object)} is
      * used for the comparison. The equality comparison is performed using
      * {@link Object#equals(Object)}.
-     * 
+     *
      * For other containers, the comparison implementation is container
      * dependent and may use e.g. database comparison operations. Therefore, the
      * behavior of comparisons might differ in some cases between in-memory and
      * other containers.
-     * 
+     *
      * @param propertyId
      *            the identifier of the property whose value to compare against
      *            value, not null
@@ -267,7 +267,7 @@ public abstract class Compare implements Filter {
      * Checks if the this value equals the given value. Favors Comparable over
      * equals to better support e.g. BigDecimal where equals is stricter than
      * compareTo.
-     * 
+     *
      * @param otherValue
      *            The value to compare to
      * @return true if the values are equal, false otherwise
@@ -277,9 +277,8 @@ public abstract class Compare implements Filter {
             return (otherValue == value);
         } else if (value == otherValue) {
             return true;
-        } else if (value instanceof Comparable
-                && otherValue.getClass()
-                        .isAssignableFrom(getValue().getClass())) {
+        } else if (value instanceof Comparable && otherValue.getClass()
+                .isAssignableFrom(getValue().getClass())) {
             return ((Comparable) value).compareTo(otherValue) == 0;
         } else {
             return value.equals(otherValue);
@@ -331,8 +330,8 @@ public abstract class Compare implements Filter {
         if (getOperation() != o.getOperation()) {
             return false;
         }
-        return (null == getValue()) ? null == o.getValue() : getValue().equals(
-                o.getValue());
+        return (null == getValue()) ? null == o.getValue()
+                : getValue().equals(o.getValue());
     }
 
     @Override
@@ -344,7 +343,7 @@ public abstract class Compare implements Filter {
     /**
      * Returns the property id of the property to compare against the fixed
      * value.
-     * 
+     *
      * @return property id (not null)
      */
     public Object getPropertyId() {
@@ -353,7 +352,7 @@ public abstract class Compare implements Filter {
 
     /**
      * Returns the comparison operation.
-     * 
+     *
      * @return {@link Operation}
      */
     public Operation getOperation() {
@@ -362,7 +361,7 @@ public abstract class Compare implements Filter {
 
     /**
      * Returns the value to compare the property against.
-     * 
+     *
      * @return comparison reference value
      */
     public Object getValue() {

@@ -46,7 +46,8 @@ public class CheckBoxNullValue extends TestBase {
                             .getErrorMessageForException(e));
                 }
                 valueLabel.setValue("Checkbox: " + checkbox.getValue()
-                        + "; Required checkbox: " + requiredCheckbox.getValue());
+                        + "; Required checkbox: "
+                        + requiredCheckbox.getValue());
             }
         });
         addComponent(valueLabel);

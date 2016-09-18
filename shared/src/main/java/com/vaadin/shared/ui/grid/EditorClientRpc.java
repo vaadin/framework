@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,7 +21,7 @@ import com.vaadin.shared.communication.ClientRpc;
 
 /**
  * An RPC interface for the grid editor server-to-client communications.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -29,7 +29,7 @@ public interface EditorClientRpc extends ClientRpc {
 
     /**
      * Tells the client to open the editor and bind data to it.
-     * 
+     *
      * @param rowIndex
      *            the index of the edited row
      */
@@ -37,7 +37,7 @@ public interface EditorClientRpc extends ClientRpc {
 
     /**
      * Tells the client to cancel editing and hide the editor.
-     * 
+     *
      * @param rowIndex
      *            the index of the edited row
      */
@@ -46,7 +46,7 @@ public interface EditorClientRpc extends ClientRpc {
     /**
      * Confirms a pending {@link EditorServerRpc#bind(int) bind request} sent by
      * the client.
-     * 
+     *
      * @param bindSucceeded
      *            <code>true</code> iff the bind action was successful
      */
@@ -55,7 +55,7 @@ public interface EditorClientRpc extends ClientRpc {
     /**
      * Confirms a pending {@link EditorServerRpc#save(int) save request} sent by
      * the client.
-     * 
+     *
      * @param saveSucceeded
      *            <code>true</code> iff the save action was successful
      * @param errorMessage

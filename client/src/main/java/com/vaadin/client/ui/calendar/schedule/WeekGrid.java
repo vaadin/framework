@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,10 +36,10 @@ import com.vaadin.client.ui.VCalendar;
 import com.vaadin.shared.ui.calendar.DateConstants;
 
 /**
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd.
- * 
+ *
  */
 public class WeekGrid extends SimplePanel {
 
@@ -165,8 +165,8 @@ public class WeekGrid extends SimplePanel {
             this.width = content.getOffsetWidth() - timebar.getOffsetWidth();
 
         } else {
-            this.width = (width == -1) ? width : width
-                    - timebar.getOffsetWidth();
+            this.width = (width == -1) ? width
+                    : width - timebar.getOffsetWidth();
 
             if (isVerticalScrollable() && width != -1) {
                 this.width = this.width - WidgetUtil.getNativeScrollbarSize();
@@ -219,12 +219,13 @@ public class WeekGrid extends SimplePanel {
             int count = content.getWidgetCount();
             int datesWidth = width;
             if (datesWidth > 0 && count > 1) {
-                cellWidths = VCalendar
-                        .distributeSize(datesWidth, count - 1, -1);
+                cellWidths = VCalendar.distributeSize(datesWidth, count - 1,
+                        -1);
 
                 for (int i = 1; i < count; i++) {
                     DateCell dc = (DateCell) content.getWidget(i);
-                    dc.setHorizontalSized(isHorizontalScrollable() || width < 0);
+                    dc.setHorizontalSized(
+                            isHorizontalScrollable() || width < 0);
                     dc.setWidthPX(cellWidths[i - 1]);
                     if (dc.isToday()) {
                         dc.setTimeBarWidth(getOffsetWidth());
@@ -237,7 +238,8 @@ public class WeekGrid extends SimplePanel {
             if (count > 1) {
                 for (int i = 1; i < count; i++) {
                     DateCell dc = (DateCell) content.getWidget(i);
-                    dc.setHorizontalSized(isHorizontalScrollable() || width < 0);
+                    dc.setHorizontalSized(
+                            isHorizontalScrollable() || width < 0);
                 }
             }
         }
@@ -269,8 +271,8 @@ public class WeekGrid extends SimplePanel {
             if (count > 1) {
                 DateCell first = (DateCell) content.getWidget(1);
                 dateCellBorder = first.getSlotBorder();
-                int dateHeight = (first.getOffsetHeight() / first
-                        .getNumberOfSlots()) - dateCellBorder;
+                int dateHeight = (first.getOffsetHeight()
+                        / first.getNumberOfSlots()) - dateCellBorder;
                 cellHeights = new int[48];
                 Arrays.fill(cellHeights, dateHeight);
 
@@ -291,10 +293,8 @@ public class WeekGrid extends SimplePanel {
             Date dcDate = dc.getDate();
             int comp = dcDate.compareTo(from);
             int comp2 = dcDate.compareTo(toTime);
-            if (comp >= 0
-                    && comp2 < 0
-                    || (comp == 0 && comp2 == 0 && VCalendar
-                            .isZeroLengthMidnightEvent(e))) {
+            if (comp >= 0 && comp2 < 0 || (comp == 0 && comp2 == 0
+                    && VCalendar.isZeroLengthMidnightEvent(e))) {
                 // Same event may be over two DateCells if event's date
                 // range floats over one day. It can't float over two days,
                 // because event which range is over 24 hours, will be handled
@@ -322,8 +322,8 @@ public class WeekGrid extends SimplePanel {
         int shownHeightInMinutes = endHourInMinutes - firstHourInMinutes
                 + DateConstants.HOURINMINUTES;
 
-        durationInMinutes = Math.min(durationInMinutes, shownHeightInMinutes
-                - startFromMinutes);
+        durationInMinutes = Math.min(durationInMinutes,
+                shownHeightInMinutes - startFromMinutes);
 
         // calculate full slots to event
         int slotsTillEvent = startFromMinutes / slotInMinutes;
@@ -353,25 +353,29 @@ public class WeekGrid extends SimplePanel {
         // calculate slot overflow at start
         if (startOverFlowTime > 0 && currentSlot < cellHeights.length) {
             int lastSlotHeight = cellHeights[currentSlot] + dateCellBorder;
-            pixelLength += (int) (((double) lastSlotHeight / (double) slotInMinutes) * startOverFlowTime);
+            pixelLength += (int) (((double) lastSlotHeight
+                    / (double) slotInMinutes) * startOverFlowTime);
         }
 
         // calculate length in full slots
         int lastFullSlot = currentSlot + durationInSlots;
-        for (; currentSlot < lastFullSlot && currentSlot < cellHeights.length; currentSlot++) {
+        for (; currentSlot < lastFullSlot
+                && currentSlot < cellHeights.length; currentSlot++) {
             pixelLength += cellHeights[currentSlot] + dateCellBorder;
         }
 
         // calculate overflow at end
         if (endOverFlowTime > 0 && currentSlot < cellHeights.length) {
             int lastSlotHeight = cellHeights[currentSlot] + dateCellBorder;
-            pixelLength += (int) (((double) lastSlotHeight / (double) slotInMinutes) * endOverFlowTime);
+            pixelLength += (int) (((double) lastSlotHeight
+                    / (double) slotInMinutes) * endOverFlowTime);
         }
 
         // reduce possible underflow at end
         if (endOverFlowTime < 0) {
             int lastSlotHeight = cellHeights[currentSlot] + dateCellBorder;
-            pixelLength += (int) (((double) lastSlotHeight / (double) slotInMinutes) * endOverFlowTime);
+            pixelLength += (int) (((double) lastSlotHeight
+                    / (double) slotInMinutes) * endOverFlowTime);
         }
 
         return pixelLength;
@@ -410,8 +414,8 @@ public class WeekGrid extends SimplePanel {
 
     public void eventMoved(DateCellDayEvent dayEvent) {
         Style s = dayEvent.getElement().getStyle();
-        int left = Integer.parseInt(s.getLeft().substring(0,
-                s.getLeft().length() - 2));
+        int left = Integer
+                .parseInt(s.getLeft().substring(0, s.getLeft().length() - 2));
         DateCell previousParent = (DateCell) dayEvent.getParent();
         DateCell newParent = (DateCell) content
                 .getWidget((left / getDateCellWidth()) + 1);
@@ -490,7 +494,7 @@ public class WeekGrid extends SimplePanel {
 
     /**
      * Get width of the single date cell
-     * 
+     *
      * @return Date cell width
      */
     public int getDateCellWidth() {

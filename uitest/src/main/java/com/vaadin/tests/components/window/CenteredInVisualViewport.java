@@ -30,8 +30,8 @@ public class CenteredInVisualViewport extends TestBase {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                Window centered = new Window("A window", new Label(
-                        "Centered window"));
+                Window centered = new Window("A window",
+                        new Label("Centered window"));
                 centered.center();
                 getMainWindow().addWindow(centered);
             }
@@ -42,8 +42,8 @@ public class CenteredInVisualViewport extends TestBase {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                Window centered = new Window("A window", new Label(
-                        "Centered window"));
+                Window centered = new Window("A window",
+                        new Label("Centered window"));
                 centered.center();
                 getMainWindow().addWindow(centered);
             }
@@ -54,8 +54,8 @@ public class CenteredInVisualViewport extends TestBase {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                Window centered = new Window("A window", new Label(
-                        "Centered window"));
+                Window centered = new Window("A window",
+                        new Label("Centered window"));
                 centered.center();
                 getMainWindow().addWindow(centered);
             }

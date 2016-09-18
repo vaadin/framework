@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,7 +33,7 @@ import com.vaadin.client.widgets.Grid;
  * <p>
  * The showing of the dragged element, drag hints and reacting to drop/cancel is
  * delegated to {@link DragAndDropCallback} implementation.
- * 
+ *
  * @since 7.5.0
  * @author Vaadin Ltd
  */
@@ -46,7 +46,7 @@ public class DragAndDropHandler {
         /**
          * Called when the drag has started. The drag can be canceled by
          * returning {@code false}.
-         * 
+         *
          * @param e
          *            the original event that started the drag
          * @return {@code true} if the drag is OK to start, {@code false} to
@@ -56,7 +56,7 @@ public class DragAndDropHandler {
 
         /**
          * Called on drag.
-         * 
+         *
          * @param e
          *            the event related to the drag
          */
@@ -150,11 +150,11 @@ public class DragAndDropHandler {
     /**
      * This method can be called to trigger drag and drop on any grid element
      * that can be dragged and dropped.
-     * 
+     *
      * @param dragStartingEvent
      *            the drag triggering event, usually a {@link Event#ONMOUSEDOWN}
      *            or {@link Event#ONTOUCHSTART} event on the draggable element
-     * 
+     *
      * @param callback
      *            the callback that will handle actual drag and drop related
      *            operations
@@ -173,9 +173,8 @@ public class DragAndDropHandler {
                     @Override
                     public void onPreviewNativeEvent(NativePreviewEvent event) {
                         final int typeInt = event.getTypeInt();
-                        if (typeInt == -1
-                                && event.getNativeEvent().getType()
-                                        .toLowerCase().contains("pointer")) {
+                        if (typeInt == -1 && event.getNativeEvent().getType()
+                                .toLowerCase().contains("pointer")) {
                             /*
                              * Ignore PointerEvents since IE10 and IE11 send
                              * also MouseEvents for backwards compatibility.
@@ -196,12 +195,10 @@ public class DragAndDropHandler {
                             break;
                         case Event.ONMOUSEMOVE:
                         case Event.ONTOUCHMOVE:
-                            int currentX = WidgetUtil
-                                    .getTouchOrMouseClientX(event
-                                            .getNativeEvent());
-                            int currentY = WidgetUtil
-                                    .getTouchOrMouseClientY(event
-                                            .getNativeEvent());
+                            int currentX = WidgetUtil.getTouchOrMouseClientX(
+                                    event.getNativeEvent());
+                            int currentY = WidgetUtil.getTouchOrMouseClientY(
+                                    event.getNativeEvent());
                             if (Math.abs(startX - currentX) > 3
                                     || Math.abs(startY - currentY) > 3) {
                                 removeStartPreviewHandler();

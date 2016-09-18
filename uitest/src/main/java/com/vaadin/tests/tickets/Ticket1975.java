@@ -34,8 +34,8 @@ public class Ticket1975 extends LegacyApplication {
             cl1 = new CustomLayout(new ByteArrayInputStream(s.getBytes()));
             layout.addComponent(cl1);
 
-            layout.addComponent(new Button("Disable/Enable",
-                    new ClickListener() {
+            layout.addComponent(
+                    new Button("Disable/Enable", new ClickListener() {
 
                         @Override
                         public void buttonClick(ClickEvent event) {

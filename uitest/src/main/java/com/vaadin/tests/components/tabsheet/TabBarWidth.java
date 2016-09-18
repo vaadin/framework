@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,7 +26,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Tests the width of the tab bar, especially when using relative width for the
  * {@link TabSheet}.
- * 
+ *
  * Created for ticket <a href="http://dev.vaadin.com/ticket/12805">#12805</a>.
  */
 public class TabBarWidth extends AbstractTestUI {
@@ -82,9 +82,8 @@ public class TabBarWidth extends AbstractTestUI {
                     String originalWidth = (String) ((TabSheet) component)
                             .getData();
                     component.setWidth(originalWidth);
-                    component.setCaption("Width: "
-                            + (originalWidth == null ? "undefined"
-                                    : originalWidth));
+                    component.setCaption("Width: " + (originalWidth == null
+                            ? "undefined" : originalWidth));
                 }
             }
         }

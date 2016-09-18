@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,7 +32,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Tests partial updates of a TreeTable.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
@@ -42,8 +42,9 @@ public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
         openTestURL();
 
         TreeTableElement treeTable = $(TreeTableElement.class).first();
-        List<WebElement> rows = treeTable.findElement(
-                By.className("v-table-body")).findElements(By.tagName("tr"));
+        List<WebElement> rows = treeTable
+                .findElement(By.className("v-table-body"))
+                .findElements(By.tagName("tr"));
         assertEquals("unexpected row count", 4, rows.size());
 
         // expand the first root element
@@ -52,8 +53,8 @@ public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
         treeTable = $(TreeTableElement.class).first();
 
         // wait for the scrollposition element to disappear
-        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(By
-                .className("v-table-scrollposition")));
+        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(
+                By.className("v-table-scrollposition")));
 
         rows = treeTable.findElement(By.className("v-table-body"))
                 .findElements(By.tagName("tr"));
@@ -61,28 +62,28 @@ public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
 
         // TODO: replace these with just treeTable.scroll(int) when #13826 has
         // been fixed
-        TestBenchElementCommands scrollable = testBenchElement(treeTable
-                .findElement(By.className("v-scrollable")));
+        TestBenchElementCommands scrollable = testBenchElement(
+                treeTable.findElement(By.className("v-scrollable")));
 
         // scroll far enough down to drop the first row from the cache
         // but not far enough to reach the last row
         scrollable.scroll(1692);
 
         // wait for the scrollposition element to disappear
-        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(By
-                .className("v-table-scrollposition")));
+        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(
+                By.className("v-table-scrollposition")));
 
-        assertEquals("elements found where there should be none", 0, treeTable
-                .findElements(By.vaadin("#row[0]/col[0]")).size());
-        assertEquals("elements found where there should be none", 0, treeTable
-                .findElements(By.vaadin("#row[203]/col[0]")).size());
+        assertEquals("elements found where there should be none", 0,
+                treeTable.findElements(By.vaadin("#row[0]/col[0]")).size());
+        assertEquals("elements found where there should be none", 0,
+                treeTable.findElements(By.vaadin("#row[203]/col[0]")).size());
 
         // scroll 6000 to make sure to actually hit bottom
         scrollable.scroll(6000);
 
         // wait for the scrollposition element to disappear
-        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(By
-                .className("v-table-scrollposition")));
+        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(
+                By.className("v-table-scrollposition")));
 
         // check the contents
         treeTable = $(TreeTableElement.class).first();
@@ -96,23 +97,24 @@ public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
         assertEquals("unexpected cell contents (first cached row expected)",
                 "158", treeTable.getCell(159, 0).getText());
 
-        assertEquals("elements found where there should be none", 0, treeTable
-                .findElements(By.vaadin("#row[158]/col[0]")).size());
-        assertEquals("elements found where there should be none", 0, treeTable
-                .findElements(By.vaadin("#row[204]/col[0]")).size());
+        assertEquals("elements found where there should be none", 0,
+                treeTable.findElements(By.vaadin("#row[158]/col[0]")).size());
+        assertEquals("elements found where there should be none", 0,
+                treeTable.findElements(By.vaadin("#row[204]/col[0]")).size());
 
         // check the actual visibility
         compareScreen("bottom");
     }
 
     @Test
-    public void testNegativeArraySize() throws IOException,
-            InterruptedException {
+    public void testNegativeArraySize()
+            throws IOException, InterruptedException {
         openTestURL();
 
         TreeTableElement treeTable = $(TreeTableElement.class).first();
-        List<WebElement> rows = treeTable.findElement(
-                By.className("v-table-body")).findElements(By.tagName("tr"));
+        List<WebElement> rows = treeTable
+                .findElement(By.className("v-table-body"))
+                .findElements(By.tagName("tr"));
         assertEquals("unexpected row count", 4, rows.size());
 
         // expand the first root element
@@ -120,8 +122,8 @@ public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
                 .findElement(By.className("v-treetable-treespacer")).click();
 
         // wait for the scrollposition element to disappear
-        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(By
-                .className("v-table-scrollposition")));
+        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(
+                By.className("v-table-scrollposition")));
 
         treeTable = $(TreeTableElement.class).first();
         rows = treeTable.findElement(By.className("v-table-body"))
@@ -130,18 +132,18 @@ public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
 
         // TODO: replace these with just treeTable.scroll(int) when #13826 has
         // been fixed
-        TestBenchElementCommands scrollable = testBenchElement(treeTable
-                .findElement(By.className("v-scrollable")));
+        TestBenchElementCommands scrollable = testBenchElement(
+                treeTable.findElement(By.className("v-scrollable")));
 
         // scroll far enough down to reach the second root item again
         scrollable.scroll(3969);
 
         // wait for the scrollposition element to disappear
-        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(By
-                .className("v-table-scrollposition")));
+        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(
+                By.className("v-table-scrollposition")));
 
-        assertEquals("elements found where there should be none", 0, treeTable
-                .findElements(By.vaadin("#row[0]/col[0]")).size());
+        assertEquals("elements found where there should be none", 0,
+                treeTable.findElements(By.vaadin("#row[0]/col[0]")).size());
         assertEquals("unexpected cell contents", "root2",
                 treeTable.getCell(201, 0).getText());
         assertEquals("unexpected cell contents", "END",
@@ -152,8 +154,8 @@ public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
                 .findElement(By.className("v-treetable-treespacer")).click();
 
         // wait for the scrollposition element to disappear
-        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(By
-                .className("v-table-scrollposition")));
+        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(
+                By.className("v-table-scrollposition")));
 
         // ensure the last cached row isn't the final row
         treeTable = $(TreeTableElement.class).first();
@@ -169,8 +171,8 @@ public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
                 .findElement(By.className("v-treetable-treespacer")).click();
 
         // wait for the scrollposition element to disappear
-        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(By
-                .className("v-table-scrollposition")));
+        waitUntilNot(ExpectedConditions.visibilityOfElementLocated(
+                By.className("v-table-scrollposition")));
 
         // check the contents
         treeTable = $(TreeTableElement.class).first();
@@ -184,10 +186,10 @@ public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
         assertEquals("unexpected cell contents (first cached row expected)",
                 "158", treeTable.getCell(159, 0).getText());
 
-        assertEquals("elements found where there should be none", 0, treeTable
-                .findElements(By.vaadin("#row[158]/col[0]")).size());
-        assertEquals("elements found where there should be none", 0, treeTable
-                .findElements(By.vaadin("#row[204]/col[0]")).size());
+        assertEquals("elements found where there should be none", 0,
+                treeTable.findElements(By.vaadin("#row[158]/col[0]")).size());
+        assertEquals("elements found where there should be none", 0,
+                treeTable.findElements(By.vaadin("#row[204]/col[0]")).size());
 
         // check the actual visibility
         compareScreen("bottom");

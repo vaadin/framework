@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,8 +40,8 @@ import com.vaadin.ui.AbsoluteLayout;
  * counterpart {@link VAbsoluteLayout}
  */
 @Connect(AbsoluteLayout.class)
-public class AbsoluteLayoutConnector extends
-        AbstractComponentContainerConnector implements DirectionalManagedLayout {
+public class AbsoluteLayoutConnector extends AbstractComponentContainerConnector
+        implements DirectionalManagedLayout {
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
@@ -77,7 +77,7 @@ public class AbsoluteLayoutConnector extends
     /**
      * Returns the deepest nested child component which contains "element". The
      * child component is also returned if "element" is part of its caption.
-     * 
+     *
      * @param element
      *            An element that is a nested sub element of the root element in
      *            this layout
@@ -96,13 +96,13 @@ public class AbsoluteLayoutConnector extends
     /**
      * Returns the deepest nested child component which contains "element". The
      * child component is also returned if "element" is part of its caption.
-     * 
+     *
      * @param element
      *            An element that is a nested sub element of the root element in
      *            this layout
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
-     * 
+     *
      * @since 7.2
      */
     protected ComponentConnector getConnectorForElement(Element element) {
@@ -111,7 +111,7 @@ public class AbsoluteLayoutConnector extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.HasComponentsConnector#updateCaption(com.vaadin
      * .client.ComponentConnector)
      */
@@ -120,8 +120,8 @@ public class AbsoluteLayoutConnector extends
         VAbsoluteLayout absoluteLayoutWidget = getWidget();
         boolean captionIsNeeded = VCaption.isNeeded(component.getState());
 
-        VCaption caption = absoluteLayoutWidget.getWidgetCaption(component
-                .getWidget());
+        VCaption caption = absoluteLayoutWidget
+                .getWidgetCaption(component.getWidget());
         if (captionIsNeeded) {
             if (caption == null) {
                 caption = new VCaption(component, getConnection());
@@ -135,7 +135,7 @@ public class AbsoluteLayoutConnector extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.AbstractComponentConnector#getWidget()
      */
     @Override
@@ -145,7 +145,7 @@ public class AbsoluteLayoutConnector extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.AbstractComponentConnector#getState()
      */
     @Override
@@ -155,7 +155,7 @@ public class AbsoluteLayoutConnector extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.client.ui.AbstractComponentConnector#onStateChanged(com.vaadin
      * .client.communication.StateChangeEvent)
@@ -173,8 +173,8 @@ public class AbsoluteLayoutConnector extends
     }
 
     private void setChildWidgetPosition(ComponentConnector child) {
-        String position = getState().connectorToCssPosition.get(child
-                .getConnectorId());
+        String position = getState().connectorToCssPosition
+                .get(child.getConnectorId());
         if (position == null) {
             position = "";
         }
@@ -196,7 +196,7 @@ public class AbsoluteLayoutConnector extends
      * Adds default value of 0.0px for the given property if it's missing from
      * the position string altogether. If the property value is already set no
      * changes are needed.
-     * 
+     *
      * @param position
      *            original position styles
      * @param property
@@ -204,7 +204,8 @@ public class AbsoluteLayoutConnector extends
      * @return updated position, or the original string if no updates were
      *         needed
      */
-    private String addDefaultPositionIfMissing(String position, String property) {
+    private String addDefaultPositionIfMissing(String position,
+            String property) {
         if (!position.contains(property)) {
             position = position + property + ":0.0px;";
         }
@@ -213,13 +214,14 @@ public class AbsoluteLayoutConnector extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.AbstractComponentContainerConnector#
      * onConnectorHierarchyChange
      * (com.vaadin.client.ConnectorHierarchyChangeEvent)
      */
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         for (ComponentConnector child : getChildComponents()) {
             if (!getWidget().contains(child.getWidget())) {
                 getWidget().add(child.getWidget());
@@ -239,7 +241,7 @@ public class AbsoluteLayoutConnector extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.DirectionalManagedLayout#layoutVertically()
      */
     @Override
@@ -255,7 +257,7 @@ public class AbsoluteLayoutConnector extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.DirectionalManagedLayout#layoutHorizontally()
      */
     @Override

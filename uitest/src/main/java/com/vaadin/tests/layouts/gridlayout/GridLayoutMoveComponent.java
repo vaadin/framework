@@ -29,8 +29,8 @@ public class GridLayoutMoveComponent extends AbstractTestUI {
         grid.addComponent(b, 0, 1);
         grid.addComponent(tf, 0, 2);
 
-        addComponent(new Button("Shift label right",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Shift label right", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         // Moving component from 0,0 -> 1,0
@@ -39,8 +39,8 @@ public class GridLayoutMoveComponent extends AbstractTestUI {
                     }
                 }));
 
-        addComponent(new Button("Shift button right",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Shift button right", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         grid.removeComponent(b);

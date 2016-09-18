@@ -30,8 +30,8 @@ public class SetTabIndex extends TestBase {
         readonly.addListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                boolean readonly = Boolean.valueOf(event.getProperty()
-                        .getValue().toString());
+                boolean readonly = Boolean
+                        .valueOf(event.getProperty().getValue().toString());
                 field1.setReadOnly(readonly);
                 field2.setReadOnly(readonly);
                 field3.setReadOnly(readonly);

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,9 +40,9 @@ import com.vaadin.shared.ui.textfield.TextFieldConstants;
 
 /**
  * This class represents a basic text input field with one row.
- * 
+ *
  * @author Vaadin Ltd.
- * 
+ *
  */
 public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         FocusHandler, BlurHandler, KeyDownHandler {
@@ -340,7 +340,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
      * This method is responsible for updating the DOM or otherwise ensuring
      * that the given max length is enforced. Called when the max length for the
      * field has changed.
-     * 
+     *
      * @param maxLength
      *            The new max length
      */
@@ -375,7 +375,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
      * Called when the field value might have changed and/or the field was
      * blurred. These are combined so the blur event is sent in the same batch
      * as a possible value change event (these are often connected).
-     * 
+     *
      * @param blurred
      *            true if the field was blurred
      */
@@ -418,7 +418,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
     /**
      * Updates the cursor position variable if it has changed since the last
      * update.
-     * 
+     *
      * @return true iff the value was updated
      */
     protected boolean updateCursorPosition() {

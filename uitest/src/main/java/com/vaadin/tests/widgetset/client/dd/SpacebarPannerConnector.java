@@ -20,8 +20,8 @@ import com.vaadin.shared.ui.Connect;
 @Connect(com.vaadin.tests.dd.SpacebarPanner.class)
 public class SpacebarPannerConnector extends AbstractExtensionConnector {
 
-    Logger logger = Logger.getLogger(SpacebarPannerConnector.class
-            .getSimpleName());
+    Logger logger = Logger
+            .getLogger(SpacebarPannerConnector.class.getSimpleName());
 
     private boolean trigger = false;
     private VUI vui;

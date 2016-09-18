@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -43,10 +43,11 @@ public class TreeTableConnector extends TableConnector {
             scrollPosition = widget.getScrollPosition();
         }
         getWidget().animationsEnabled = uidl.getBooleanAttribute("animate");
-        getWidget().colIndexOfHierarchy = uidl
-                .hasAttribute(TreeTableConstants.ATTRIBUTE_HIERARCHY_COLUMN_INDEX) ? uidl
-                .getIntAttribute(TreeTableConstants.ATTRIBUTE_HIERARCHY_COLUMN_INDEX)
-                : 0;
+        getWidget().colIndexOfHierarchy = uidl.hasAttribute(
+                TreeTableConstants.ATTRIBUTE_HIERARCHY_COLUMN_INDEX)
+                        ? uidl.getIntAttribute(
+                                TreeTableConstants.ATTRIBUTE_HIERARCHY_COLUMN_INDEX)
+                        : 0;
         int oldTotalRows = getWidget().getTotalRows();
 
         super.updateFromUIDL(uidl, client);
@@ -57,8 +58,8 @@ public class TreeTableConnector extends TableConnector {
         if (getWidget().collapseRequest) {
             if (getWidget().collapsedRowKey != null
                     && getWidget().scrollBody != null) {
-                VScrollTableRow row = getWidget().getRenderedRowByKey(
-                        getWidget().collapsedRowKey);
+                VScrollTableRow row = getWidget()
+                        .getRenderedRowByKey(getWidget().collapsedRowKey);
                 if (row != null) {
                     getWidget().setRowFocus(row);
                     getWidget().focus();
@@ -76,9 +77,8 @@ public class TreeTableConnector extends TableConnector {
         }
         // Recalculate table size if collapse request, or if page length is zero
         // (not sent by server) and row count changes (#7908).
-        if (getWidget().collapseRequest
-                || (!uidl.hasAttribute("pagelength") && getWidget()
-                        .getTotalRows() != oldTotalRows)) {
+        if (getWidget().collapseRequest || (!uidl.hasAttribute("pagelength")
+                && getWidget().getTotalRows() != oldTotalRows)) {
             /*
              * Ensure that possibly removed/added scrollbars are considered.
              * Triggers row calculations, removes cached rows etc. Basically
@@ -107,8 +107,8 @@ public class TreeTableConnector extends TableConnector {
             // potential content changes pending
             PendingNavigationEvent event = getWidget().pendingNavigationEvents
                     .removeFirst();
-            getWidget()
-                    .handleNavigation(event.keycode, event.ctrl, event.shift);
+            getWidget().handleNavigation(event.keycode, event.ctrl,
+                    event.shift);
         }
         getWidget().rendering = false;
     }

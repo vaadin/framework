@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -34,7 +34,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Test to see if tooltips will render in the correct locations near the edges.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class MenuBarTooltipsNearEdgeTest extends MultiBrowserTest {
@@ -54,7 +54,7 @@ public class MenuBarTooltipsNearEdgeTest extends MultiBrowserTest {
         mouse.click(menuLocation);
         mouse.mouseMove(menuLocation, 5, -40);
         WebElement tooltip = getTooltipElement();
-        assertThat(tooltip.getLocation().x, is(lessThan(menuLocation.onPage().x
-                - tooltip.getSize().getWidth())));
+        assertThat(tooltip.getLocation().x, is(lessThan(
+                menuLocation.onPage().x - tooltip.getSize().getWidth())));
     }
 }

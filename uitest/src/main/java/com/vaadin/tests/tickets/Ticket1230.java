@@ -124,8 +124,8 @@ public class Ticket1230 extends LegacyApplication {
 
         }
 
-        w.addComponent(new Button("print select values",
-                new Button.ClickListener() {
+        w.addComponent(
+                new Button("print select values", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         printState();
@@ -152,8 +152,8 @@ public class Ticket1230 extends LegacyApplication {
     void printState() {
         System.out.println(" Select without null item "
                 + selectWithoutNullItem.getValue());
-        System.out.println(" Select with null item "
-                + selectWithNullItem.getValue());
+        System.out.println(
+                " Select with null item " + selectWithNullItem.getValue());
 
     }
 

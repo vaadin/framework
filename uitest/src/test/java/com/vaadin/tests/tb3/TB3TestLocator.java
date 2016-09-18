@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,7 +35,7 @@ public class TB3TestLocator {
      * specified by 'basePackage'. Collects all classes inside the location
      * which can be assigned to 'baseClass' except for classes inside packages
      * listed in 'ignoredPackages'.
-     * 
+     *
      * @param baseClass
      * @param basePackage
      * @param ignorePackages
@@ -58,7 +58,7 @@ public class TB3TestLocator {
      * specified by 'basePackage'. Collects all classes inside the location
      * which can be assigned to 'baseClass' except for classes inside packages
      * listed in 'ignoredPackages'.
-     * 
+     *
      * @param baseClass
      * @param basePackage
      * @param ignoredPackages
@@ -74,8 +74,8 @@ public class TB3TestLocator {
             try {
                 File f = new File(location.toURI());
                 if (!f.exists()) {
-                    throw new IOException("Directory " + f.toString()
-                            + " does not exist");
+                    throw new IOException(
+                            "Directory " + f.toString() + " does not exist");
                 }
                 findPackages(f, basePackage, baseClass, classes,
                         ignoredPackages);
@@ -103,7 +103,7 @@ public class TB3TestLocator {
      * Traverses the given directory and collects all classes which are inside
      * the given 'javaPackage' and can be assigned to the given 'baseClass'. The
      * found classes are added to 'result'.
-     * 
+     *
      * @param parent
      *            The directory to traverse
      * @param javaPackage
@@ -141,7 +141,7 @@ public class TB3TestLocator {
      * Traverses a Jar file using the given connection and collects all classes
      * which are inside the given 'javaPackage' and can be assigned to the given
      * 'baseClass'. The found classes are added to 'result'.
-     * 
+     *
      * @param javaPackage
      *            The java package containing the classes (classes may be in a
      *            sub package)
@@ -171,7 +171,7 @@ public class TB3TestLocator {
      * Verifies that the class represented by 'fullyQualifiedClassName' can be
      * loaded, assigned to 'baseClass' and is not an abstract or anonymous
      * class.
-     * 
+     *
      * @param result
      *            The collection to add to
      * @param fullyQualifiedClassName
@@ -193,7 +193,8 @@ public class TB3TestLocator {
                 return;
             }
 
-            if (!Modifier.isAbstract(c.getModifiers()) && !c.isAnonymousClass()) {
+            if (!Modifier.isAbstract(c.getModifiers())
+                    && !c.isAnonymousClass()) {
                 result.add((Class<? extends T>) c);
             }
         } catch (Exception e) {
@@ -217,8 +218,8 @@ public class TB3TestLocator {
                 .getAnnotation(IncludeIfProperty.class);
         if (includeIfProperty != null) {
             String includeValue = includeIfProperty.value();
-            String systemPropertyValue = System.getProperty(includeIfProperty
-                    .property());
+            String systemPropertyValue = System
+                    .getProperty(includeIfProperty.property());
             if (!includeValue.equals(systemPropertyValue)) {
                 return false;
             }

@@ -11,7 +11,8 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.VerticalLayout;
 
-public class DateFieldWhenChangingValueAndEnablingParent extends AbstractTestUI {
+public class DateFieldWhenChangingValueAndEnablingParent
+        extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -55,8 +56,8 @@ public class DateFieldWhenChangingValueAndEnablingParent extends AbstractTestUI 
     }
 
     private DateField createDateField(boolean enabled) {
-        DateField df = new DateField("DateField, "
-                + (enabled ? "enabled" : "disabled"));
+        DateField df = new DateField(
+                "DateField, " + (enabled ? "enabled" : "disabled"));
         df.setEnabled(enabled);
         df.setId("DATEFIELD_" + (enabled ? "ENABLED" : "DISABLED"));
         return df;

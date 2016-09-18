@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,7 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
 
 /**
  * Represents native key down event in Grid.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -38,8 +38,10 @@ public class GridKeyDownEvent extends AbstractGridKeyEvent<GridKeyDownHandler> {
     @Override
     protected void doDispatch(GridKeyDownHandler handler, Section section) {
         if ((section == Section.BODY && handler instanceof BodyKeyDownHandler)
-                || (section == Section.HEADER && handler instanceof HeaderKeyDownHandler)
-                || (section == Section.FOOTER && handler instanceof FooterKeyDownHandler)) {
+                || (section == Section.HEADER
+                        && handler instanceof HeaderKeyDownHandler)
+                || (section == Section.FOOTER
+                        && handler instanceof FooterKeyDownHandler)) {
             handler.onKeyDown(this);
         }
     }
@@ -51,7 +53,7 @@ public class GridKeyDownEvent extends AbstractGridKeyEvent<GridKeyDownHandler> {
 
     /**
      * Does the key code represent an arrow key?
-     * 
+     *
      * @param keyCode
      *            the key code
      * @return if it is an arrow key code
@@ -71,7 +73,7 @@ public class GridKeyDownEvent extends AbstractGridKeyEvent<GridKeyDownHandler> {
     /**
      * Gets the native key code. These key codes are enumerated in the
      * {@link KeyCodes} class.
-     * 
+     *
      * @return the key code
      */
     public int getNativeKeyCode() {
@@ -80,7 +82,7 @@ public class GridKeyDownEvent extends AbstractGridKeyEvent<GridKeyDownHandler> {
 
     /**
      * Is this a key down arrow?
-     * 
+     *
      * @return whether this is a down arrow key event
      */
     public boolean isDownArrow() {
@@ -89,7 +91,7 @@ public class GridKeyDownEvent extends AbstractGridKeyEvent<GridKeyDownHandler> {
 
     /**
      * Is this a left arrow?
-     * 
+     *
      * @return whether this is a left arrow key event
      */
     public boolean isLeftArrow() {
@@ -98,7 +100,7 @@ public class GridKeyDownEvent extends AbstractGridKeyEvent<GridKeyDownHandler> {
 
     /**
      * Is this a right arrow?
-     * 
+     *
      * @return whether this is a right arrow key event
      */
     public boolean isRightArrow() {
@@ -107,7 +109,7 @@ public class GridKeyDownEvent extends AbstractGridKeyEvent<GridKeyDownHandler> {
 
     /**
      * Is this a up arrow?
-     * 
+     *
      * @return whether this is a right arrow key event
      */
     public boolean isUpArrow() {

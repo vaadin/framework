@@ -7,17 +7,17 @@ import com.vaadin.ui.Label;
  * Your results will vary.
  * The real world use case motivating it was a 10k Row table, which generated labels for 10 columns. 
  * This is 1/10th of what this performance tester demonstrates.
- * 
+ *
  * Please run with -server and -Xloggc:/tmp/gclog.vgc -verbose:gc -XX:+PrintCompilation
- * 
+ *
  * My results Win 7 64, i7 2760QM 2.4Ghz, Java 7 21.
- * 
+ *
  * Proposed Patch with StringTokenizer:
  * 13 GC activations, 1.009GB allocated memory over time, total time 948ms
- * 
+ *
  * Current String.split implementation:
  * 31 GC activations, 2.277 GB allocated memory over time, total time 1557ms
- * 
+ *
  */
 public class PerformanceTester8759 {
 

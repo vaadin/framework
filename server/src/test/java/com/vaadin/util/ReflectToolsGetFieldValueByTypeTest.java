@@ -30,8 +30,8 @@ public class ReflectToolsGetFieldValueByTypeTest {
             // Should get a String value. Without the third parameter (calling
             // ReflectTools.getJavaFieldValue(Object object, Field field)) would
             // get an Integer value
-            fieldValue = ReflectTools.getJavaFieldValue(myInstance,
-                    memberField, String.class);
+            fieldValue = ReflectTools.getJavaFieldValue(myInstance, memberField,
+                    String.class);
         } catch (Exception e) {
         }
         assertTrue(fieldValue instanceof String);

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,7 +35,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * TB tests for the various builtin widget-based renderers.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -51,14 +51,14 @@ public class WidgetRenderersTest extends MultiBrowserTest {
 
     @Test
     public void testProgressBarRenderer() {
-        assertTrue(getGridCell(0, 0).isElementPresent(
-                By.className("v-progressbar")));
+        assertTrue(getGridCell(0, 0)
+                .isElementPresent(By.className("v-progressbar")));
     }
 
     @Test
     public void testButtonRenderer() {
-        WebElement button = getGridCell(0, 1).findElement(
-                By.className("v-nativebutton"));
+        WebElement button = getGridCell(0, 1)
+                .findElement(By.className("v-nativebutton"));
 
         button.click();
 
@@ -76,10 +76,10 @@ public class WidgetRenderersTest extends MultiBrowserTest {
         assertTrue("cell should be focused after focusing",
                 buttonCell.isFocused());
 
-        WebElement button = buttonCell.findElement(By
-                .className("v-nativebutton"));
-        assertNotEquals("Button should not be clicked before click",
-                "Clicked!", button.getText());
+        WebElement button = buttonCell
+                .findElement(By.className("v-nativebutton"));
+        assertNotEquals("Button should not be clicked before click", "Clicked!",
+                button.getText());
 
         new Actions(getDriver()).moveToElement(button).click().perform();
 
@@ -88,8 +88,8 @@ public class WidgetRenderersTest extends MultiBrowserTest {
 
     @Test
     public void testImageRenderer() {
-        final WebElement image = getGridCell(0, 2).findElement(
-                By.className("gwt-Image"));
+        final WebElement image = getGridCell(0, 2)
+                .findElement(By.className("gwt-Image"));
 
         waitUntilmageSrcEndsWith(image, "window/img/close.png");
 
@@ -110,9 +110,9 @@ public class WidgetRenderersTest extends MultiBrowserTest {
             @Override
             public String toString() {
                 // Timed out after 10 seconds waiting for ...
-                return String
-                        .format("image source to update. Supposed to end with '%s' (was: '%s').",
-                                expectedText, image.getAttribute("src"));
+                return String.format(
+                        "image source to update. Supposed to end with '%s' (was: '%s').",
+                        expectedText, image.getAttribute("src"));
             }
         });
     }
@@ -124,18 +124,18 @@ public class WidgetRenderersTest extends MultiBrowserTest {
         assertFalse("Notification was present",
                 isElementPresent(NotificationElement.class));
 
-        assertTrue(getGridCell(0, 0)
-                .isElementPresent(By.className("gwt-Image")));
-        assertTrue(getGridCell(0, 1).isElementPresent(
-                By.className("v-progressbar")));
-        assertTrue(getGridCell(0, 2).isElementPresent(
-                By.className("v-nativebutton")));
+        assertTrue(
+                getGridCell(0, 0).isElementPresent(By.className("gwt-Image")));
+        assertTrue(getGridCell(0, 1)
+                .isElementPresent(By.className("v-progressbar")));
+        assertTrue(getGridCell(0, 2)
+                .isElementPresent(By.className("v-nativebutton")));
     }
 
     @Test
     public void testPropertyIdInEvent() {
-        WebElement button = getGridCell(0, 3).findElement(
-                By.className("v-nativebutton"));
+        WebElement button = getGridCell(0, 3)
+                .findElement(By.className("v-nativebutton"));
 
         button.click();
 

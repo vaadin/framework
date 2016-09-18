@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,10 +24,10 @@ import com.vaadin.data.Property;
 
 /**
  * Abstract base class for {@link Property} implementations.
- * 
+ *
  * Handles listener management for {@link ValueChangeListener}s and
  * {@link ReadOnlyStatusChangeListener}s.
- * 
+ *
  * @since 6.6
  */
 public abstract class AbstractProperty<T> implements Property<T>,
@@ -51,7 +51,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Override for additional restrictions on what is considered a read-only
      * property.
      */
@@ -81,9 +81,9 @@ public abstract class AbstractProperty<T> implements Property<T>,
      * If legacy Property toString mode is disabled, the string representation
      * has no special meaning
      * </p>
-     * 
+     *
      * @see LegacyPropertyHelper#isLegacyToStringEnabled()
-     * 
+     *
      * @return A string representation of the value value stored in the Property
      *         or a string representation of the Property object.
      * @deprecated As of 7.0. To get the property value, use {@link #getValue()}
@@ -105,12 +105,13 @@ public abstract class AbstractProperty<T> implements Property<T>,
      * An <code>Event</code> object specifying the Property whose read-only
      * status has been changed.
      */
-    protected static class ReadOnlyStatusChangeEvent extends
-            java.util.EventObject implements Property.ReadOnlyStatusChangeEvent {
+    protected static class ReadOnlyStatusChangeEvent
+            extends java.util.EventObject
+            implements Property.ReadOnlyStatusChangeEvent {
 
         /**
          * Constructs a new read-only status change event for this object.
-         * 
+         *
          * @param source
          *            source object of the event.
          */
@@ -120,7 +121,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
 
         /**
          * Gets the Property whose read-only state has changed.
-         * 
+         *
          * @return source Property of the event.
          */
         @Override
@@ -132,7 +133,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
 
     /**
      * Registers a new read-only status change listener for this Property.
-     * 
+     *
      * @param listener
      *            the new Listener to be registered.
      */
@@ -157,7 +158,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
 
     /**
      * Removes a previously registered read-only status change listener.
-     * 
+     *
      * @param listener
      *            the listener to be removed.
      */
@@ -203,7 +204,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
 
         /**
          * Constructs a new value change event for this object.
-         * 
+         *
          * @param source
          *            source object of the event.
          */
@@ -213,7 +214,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
 
         /**
          * Gets the Property whose value has changed.
-         * 
+         *
          * @return source Property of the event.
          */
         @Override

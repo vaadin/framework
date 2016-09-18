@@ -28,8 +28,8 @@ public class CheckboxCaptionWrapping extends TestBase {
         mainLayout.setStyleName("borders");
         mainLayout.setWidth("300px");
         mainLayout.addComponent(cb);
-        mainLayout.addComponent(new Label(
-                "Lorem ipsum dolor sit amet, consectetur adipisicing"
+        mainLayout.addComponent(
+                new Label("Lorem ipsum dolor sit amet, consectetur adipisicing"
                         + " elit, sed do eiusmod tempor."));
 
         addComponent(mainLayout);

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ public interface FreeformQueryDelegate extends Serializable {
      * Should return the SQL query string to be performed. This method is
      * responsible for gluing together the select query from the filters and the
      * order by conditions if these are supported.
-     * 
+     *
      * @param offset
      *            the first record (row) to fetch.
      * @param pagelength
@@ -45,7 +45,7 @@ public interface FreeformQueryDelegate extends Serializable {
      * Generates and executes a query to determine the current row count from
      * the DB. Row count will be fetched using filters that are currently set to
      * the QueryDelegate.
-     * 
+     *
      * @return row count
      * @throws SQLException
      * @deprecated As of 6.7. Implement {@link FreeformStatementDelegate}
@@ -57,7 +57,7 @@ public interface FreeformQueryDelegate extends Serializable {
     /**
      * Sets the filters to apply when performing the SQL query. These are
      * translated into a WHERE clause. Default filtering mode will be used.
-     * 
+     *
      * @param filters
      *            The filters to apply.
      * @throws UnsupportedOperationException
@@ -71,7 +71,7 @@ public interface FreeformQueryDelegate extends Serializable {
      * can be ordered by zero or more columns and each column can be in
      * ascending or descending order. These are translated into an ORDER BY
      * clause in the SQL query.
-     * 
+     *
      * @param orderBys
      *            A list of the OrderBy conditions.
      * @throws UnsupportedOperationException
@@ -84,7 +84,7 @@ public interface FreeformQueryDelegate extends Serializable {
      * Stores a row in the database. The implementation of this interface
      * decides how to identify whether to store a new row or update an existing
      * one.
-     * 
+     *
      * @param conn
      *            the JDBC connection to use
      * @param row
@@ -98,7 +98,7 @@ public interface FreeformQueryDelegate extends Serializable {
 
     /**
      * Removes the given RowItem from the database.
-     * 
+     *
      * @param conn
      *            the JDBC connection to use
      * @param row
@@ -116,7 +116,7 @@ public interface FreeformQueryDelegate extends Serializable {
      * FreeformQuery.containsRowWithKeys() method. This is useful for cases when
      * the logic in the containsRowWithKeys method is not enough to support more
      * complex free form queries.
-     * 
+     *
      * @param keys
      *            the values of the primary keys
      * @throws UnsupportedOperationException

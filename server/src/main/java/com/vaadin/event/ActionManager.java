@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,18 +29,18 @@ import com.vaadin.ui.Component;
 
 /**
  * Javadoc TODO
- * 
+ *
  * Notes:
  * <p>
  * Empties the keymapper for each repaint to avoid leaks; can cause problems in
  * the future if the client assumes key don't change. (if lazyloading, one must
  * not cache results)
  * </p>
- * 
- * 
+ *
+ *
  */
-public class ActionManager implements Action.Container, Action.Handler,
-        Action.Notifier {
+public class ActionManager
+        implements Action.Container, Action.Handler, Action.Notifier {
 
     private static final long serialVersionUID = 1641868163608066491L;
 
@@ -227,8 +227,8 @@ public class ActionManager implements Action.Container, Action.Handler,
     @Override
     public void handleAction(Action action, Object sender, Object target) {
         if (actionHandlers != null) {
-            Handler[] array = actionHandlers.toArray(new Handler[actionHandlers
-                    .size()]);
+            Handler[] array = actionHandlers
+                    .toArray(new Handler[actionHandlers.size()]);
             for (Handler handler : array) {
                 handler.handleAction(action, sender, target);
             }

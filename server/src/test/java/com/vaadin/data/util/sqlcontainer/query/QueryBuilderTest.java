@@ -85,7 +85,8 @@ public class QueryBuilderTest {
     @Test
     public void getWhereStringForFilter_simpleStringFilter() {
         StatementHelper sh = mockedStatementHelper("Vi%");
-        SimpleStringFilter f = new SimpleStringFilter("NAME", "Vi", false, true);
+        SimpleStringFilter f = new SimpleStringFilter("NAME", "Vi", false,
+                true);
         Assert.assertEquals("\"NAME\" LIKE ?",
                 QueryBuilder.getWhereStringForFilter(f, sh));
         EasyMock.verify(sh);
@@ -104,7 +105,8 @@ public class QueryBuilderTest {
     @Test
     public void getWhereStringForFilter_simpleStringFilterMatchAnywhereIgnoreCase() {
         StatementHelper sh = mockedStatementHelper("%VI%");
-        SimpleStringFilter f = new SimpleStringFilter("NAME", "Vi", true, false);
+        SimpleStringFilter f = new SimpleStringFilter("NAME", "Vi", true,
+                false);
         Assert.assertEquals("UPPER(\"NAME\") LIKE ?",
                 QueryBuilder.getWhereStringForFilter(f, sh));
         EasyMock.verify(sh);
@@ -230,8 +232,9 @@ public class QueryBuilderTest {
     public void getWhereStringForFilters_complexCompoundFilters() {
         StatementHelper sh = mockedStatementHelper("%lle", 18, 65, "Pelle");
         ArrayList<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Or(new And(new Like("NAME", "%lle"), new Or(new Less(
-                "AGE", 18), new Greater("AGE", 65))),
+        filters.add(new Or(
+                new And(new Like("NAME", "%lle"),
+                        new Or(new Less("AGE", 18), new Greater("AGE", 65))),
                 new Equal("NAME", "Pelle")));
         Assert.assertEquals(
                 " WHERE ((\"NAME\" LIKE ? AND (\"AGE\" < ? OR \"AGE\" > ?)) OR \"NAME\" = ?)",
@@ -244,8 +247,9 @@ public class QueryBuilderTest {
         StatementHelper sh = mockedStatementHelper("%lle", 18, 65, "Pelle",
                 "Virtanen");
         ArrayList<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Or(new And(new Like("NAME", "%lle"), new Or(new Less(
-                "AGE", 18), new Greater("AGE", 65))),
+        filters.add(new Or(
+                new And(new Like("NAME", "%lle"),
+                        new Or(new Less("AGE", 18), new Greater("AGE", 65))),
                 new Equal("NAME", "Pelle")));
         filters.add(new Equal("LASTNAME", "Virtanen"));
         Assert.assertEquals(
@@ -275,7 +279,8 @@ public class QueryBuilderTest {
     public void getWhereStringForFilters_complexNegatedFilter() {
         StatementHelper sh = mockedStatementHelper(65, 18);
         ArrayList<Filter> filters = new ArrayList<Filter>();
-        filters.add(new Not(new Or(new Equal("AGE", 65), new Equal("AGE", 18))));
+        filters.add(
+                new Not(new Or(new Equal("AGE", 65), new Equal("AGE", 18))));
         Assert.assertEquals(" WHERE NOT (\"AGE\" = ? OR \"AGE\" = ?)",
                 QueryBuilder.getWhereStringForFilters(filters, sh));
         EasyMock.verify(sh);

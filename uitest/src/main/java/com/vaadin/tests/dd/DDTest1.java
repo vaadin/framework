@@ -46,8 +46,8 @@ public class DDTest1 extends TestBase {
 
         pane1.addComponent(label);
 
-        Link l = new Link("This is link", new ExternalResource(
-                "http://www.google.com/"));
+        Link l = new Link("This is link",
+                new ExternalResource("http://www.google.com/"));
         pane1.addComponent(l, "top:100px; left: 20px;");
 
         label = new Label("Bar");
@@ -55,10 +55,11 @@ public class DDTest1 extends TestBase {
         pane1.addComponent(label);
 
         DragDropPane pane2 = new DragDropPane();
-        pane2.setCaption("Pane2 (accept needs server side visit, check for \"Bar\")");
+        pane2.setCaption(
+                "Pane2 (accept needs server side visit, check for \"Bar\")");
         final AcceptCriterion crit = new ServerSideCriterion() {
             /**
-             * 
+             *
              */
             private static final long serialVersionUID = 1L;
 
@@ -120,7 +121,7 @@ public class DDTest1 extends TestBase {
         /*
          * Moves items in tree (and could work in Table too). Also supports
          * "building" tree.
-         * 
+         *
          * TODO fix algorithm, broken in some cases.
          */
         DropHandler itemSorter = new DropHandler() {
@@ -139,10 +140,8 @@ public class DDTest1 extends TestBase {
                             Collection<?> itemPropertyIds = item
                                     .getItemPropertyIds();
                             for (Object propId : itemPropertyIds) {
-                                addItem.getItemProperty(propId)
-                                        .setValue(
-                                                item.getItemProperty(propId)
-                                                        .getValue());
+                                addItem.getItemProperty(propId).setValue(item
+                                        .getItemProperty(propId).getValue());
                             }
                         }
                         idx.setParent(childId, itemId);
@@ -178,10 +177,8 @@ public class DDTest1 extends TestBase {
                         Collection<?> itemPropertyIds = item
                                 .getItemPropertyIds();
                         for (Object propertyId : itemPropertyIds) {
-                            addedItem.getItemProperty(propertyId)
-                                    .setValue(
-                                            item.getItemProperty(propertyId)
-                                                    .getValue());
+                            addedItem.getItemProperty(propertyId).setValue(item
+                                    .getItemProperty(propertyId).getValue());
                         }
                         copyChildren(source, target, childId);
                     }
@@ -249,8 +246,8 @@ public class DDTest1 extends TestBase {
         main.addComponent(pane3);
         main.addComponent(t);
         main.addComponent(ta);
-        main.addComponent(new Link("Foo", new ExternalResource(
-                "http://www.itmill.com/")));
+        main.addComponent(new Link("Foo",
+                new ExternalResource("http://www.itmill.com/")));
 
         getLayout().setSizeFull();
         addComponent(main);

@@ -35,8 +35,8 @@ public class EmptyFieldErrorIndicators extends TestBase {
         part1.setId("emptyFieldPart");
         hl.addComponent(part1);
 
-        Panel part2 = createPart(
-                "Empty required fields with failing validator", true, true);
+        Panel part2 = createPart("Empty required fields with failing validator",
+                true, true);
         part1.setId("validatedFieldPart");
         hl.addComponent(part2);
 
@@ -75,7 +75,8 @@ public class EmptyFieldErrorIndicators extends TestBase {
         return panel;
     }
 
-    private Form createForm(final boolean required, final boolean failValidator) {
+    private Form createForm(final boolean required,
+            final boolean failValidator) {
         // hand-crafted form, not using form field factory
         final Form form = new Form() {
             @Override

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -51,7 +51,7 @@ import com.google.apphosting.api.DeadlineExceededException;
 /**
  * ApplicationServlet to be used when deploying to Google App Engine, in
  * web.xml:
- * 
+ *
  * <pre>
  *      &lt;servlet&gt;
  *              &lt;servlet-name&gt;HelloWorld&lt;/servlet-name&gt;
@@ -62,17 +62,17 @@ import com.google.apphosting.api.DeadlineExceededException;
  *              &lt;/init-param&gt;
  *      &lt;/servlet&gt;
  * </pre>
- * 
+ *
  * Session support must be enabled in appengine-web.xml:
- * 
+ *
  * <pre>
  *      &lt;sessions-enabled&gt;true&lt;/sessions-enabled&gt;
  * </pre>
- * 
+ *
  * Appengine datastore cleanup can be invoked by calling one of the applications
  * with an additional path "/CLEAN". This can be set up as a cron-job in
  * cron.xml (see appengine documentation for more information):
- * 
+ *
  * <pre>
  * &lt;cronentries&gt;
  *   &lt;cron&gt;
@@ -82,18 +82,18 @@ import com.google.apphosting.api.DeadlineExceededException;
  *   &lt;/cron&gt;
  * &lt;/cronentries&gt;
  * </pre>
- * 
+ *
  * It is recommended (but not mandatory) to extract themes and widgetsets and
  * have App Engine server these statically. Extract VAADIN folder (and it's
  * contents) 'next to' the WEB-INF folder, and add the following to
  * appengine-web.xml:
- * 
+ *
  * <pre>
  *      &lt;static-files&gt;
  *           &lt;include path=&quot;/VAADIN/**&quot; /&gt;
  *      &lt;/static-files&gt;
  * </pre>
- * 
+ *
  * Additional limitations:
  * <ul>
  * <li/>Do not change application state when serving an ApplicationResource.
@@ -139,41 +139,31 @@ public class GAEVaadinServlet extends VaadinServlet {
     protected void sendDeadlineExceededNotification(
             VaadinServletRequest request, VaadinServletResponse response)
             throws IOException {
-        criticalNotification(
-                request,
-                response,
-                "Deadline Exceeded",
+        criticalNotification(request, response, "Deadline Exceeded",
                 "I'm sorry, but the operation took too long to complete. We'll try reloading to see where we're at, please take note of any unsaved data...",
                 "", null);
     }
 
-    protected void sendNotSerializableNotification(
-            VaadinServletRequest request, VaadinServletResponse response)
-            throws IOException {
-        criticalNotification(
-                request,
-                response,
-                "NotSerializableException",
+    protected void sendNotSerializableNotification(VaadinServletRequest request,
+            VaadinServletResponse response) throws IOException {
+        criticalNotification(request, response, "NotSerializableException",
                 "I'm sorry, but there seems to be a serious problem, please contact the administrator. And please take note of any unsaved data...",
-                "", getApplicationUrl(request).toString()
-                        + "?restartApplication");
+                "",
+                getApplicationUrl(request).toString() + "?restartApplication");
     }
 
     protected void sendCriticalErrorNotification(VaadinServletRequest request,
             VaadinServletResponse response) throws IOException {
-        criticalNotification(
-                request,
-                response,
-                "Critical error",
+        criticalNotification(request, response, "Critical error",
                 "I'm sorry, but there seems to be a serious problem, please contact the administrator. And please take note of any unsaved data...",
-                "", getApplicationUrl(request).toString()
-                        + "?restartApplication");
+                "",
+                getApplicationUrl(request).toString() + "?restartApplication");
     }
 
     @Override
     protected void service(HttpServletRequest unwrappedRequest,
-            HttpServletResponse unwrappedResponse) throws ServletException,
-            IOException {
+            HttpServletResponse unwrappedResponse)
+            throws ServletException, IOException {
         VaadinServletRequest request = new VaadinServletRequest(
                 unwrappedRequest, getService());
         VaadinServletResponse response = new VaadinServletResponse(
@@ -200,8 +190,8 @@ public class GAEVaadinServlet extends VaadinServlet {
             return;
         }
 
-        final HttpSession session = request.getSession(getService()
-                .requestCanCreateSession(request));
+        final HttpSession session = request
+                .getSession(getService().requestCanCreateSession(request));
         if (session == null) {
             try {
                 getService().handleSessionExpired(request, response);
@@ -219,7 +209,8 @@ public class GAEVaadinServlet extends VaadinServlet {
         try {
             // try to get lock
             long started = System.currentTimeMillis();
-            while (System.currentTimeMillis() - started < MAX_UIDL_WAIT_MILLISECONDS) {
+            while (System.currentTimeMillis()
+                    - started < MAX_UIDL_WAIT_MILLISECONDS) {
                 locked = memcache.put(mutex, 1, Expiration.byDeltaSeconds(40),
                         MemcacheService.SetPolicy.ADD_ONLY_IF_NOT_PRESENT);
                 if (locked || ServletPortletHelper.isUIDLRequest(request)) {
@@ -233,8 +224,8 @@ public class GAEVaadinServlet extends VaadinServlet {
                 try {
                     Thread.sleep(RETRY_AFTER_MILLISECONDS);
                 } catch (InterruptedException e) {
-                    getLogger().finer(
-                            "Thread.sleep() interrupted while waiting for lock. Trying again. "
+                    getLogger()
+                            .finer("Thread.sleep() interrupted while waiting for lock. Trying again. "
                                     + e);
                 }
             }
@@ -244,7 +235,8 @@ public class GAEVaadinServlet extends VaadinServlet {
                 // client to retry
                 response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
                 // Note: currently interpreting Retry-After as ms, not sec
-                response.setHeader("Retry-After", "" + RETRY_AFTER_MILLISECONDS);
+                response.setHeader("Retry-After",
+                        "" + RETRY_AFTER_MILLISECONDS);
                 return;
             }
 
@@ -264,8 +256,8 @@ public class GAEVaadinServlet extends VaadinServlet {
             started = new Date().getTime();
 
             String id = AC_BASE + session.getId();
-            Date expire = new Date(started
-                    + (getMaxInactiveIntervalSeconds(session) * 1000));
+            Date expire = new Date(
+                    started + (getMaxInactiveIntervalSeconds(session) * 1000));
             Expiration expires = Expiration.onDate(expire);
 
             memcache.put(id, bytes, expires);
@@ -303,16 +295,15 @@ public class GAEVaadinServlet extends VaadinServlet {
     /**
      * Returns the maximum inactive time for a session. This is used for
      * handling the expiration of session related information in caches etc.
-     * 
+     *
      * @param session
      * @return inactive timeout in seconds, greater than zero
      */
     protected int getMaxInactiveIntervalSeconds(final HttpSession session) {
         int interval = session.getMaxInactiveInterval();
         if (interval <= 0) {
-            getLogger()
-                    .log(Level.FINE,
-                            "Undefined session expiration time, using default value instead.");
+            getLogger().log(Level.FINE,
+                    "Undefined session expiration time, using default value instead.");
             return DEFAULT_MAX_INACTIVE_INTERVAL;
         }
         return interval;
@@ -336,11 +327,9 @@ public class GAEVaadinServlet extends VaadinServlet {
                 Blob blob = (Blob) entity.getProperty(PROPERTY_DATA);
                 serializedAC = blob.getBytes();
                 // bring it to memcache
-                memcache.put(
-                        AC_BASE + session.getId(),
-                        serializedAC,
-                        Expiration
-                                .byDeltaSeconds(getMaxInactiveIntervalSeconds(session)),
+                memcache.put(AC_BASE + session.getId(), serializedAC,
+                        Expiration.byDeltaSeconds(
+                                getMaxInactiveIntervalSeconds(session)),
                         MemcacheService.SetPolicy.ADD_ONLY_IF_NOT_PRESENT);
             }
         }
@@ -353,17 +342,17 @@ public class GAEVaadinServlet extends VaadinServlet {
                 getService().storeSession(vaadinSession,
                         new WrappedHttpSession(session));
             } catch (IOException e) {
-                getLogger().log(
-                        Level.WARNING,
+                getLogger().log(Level.WARNING,
                         "Could not de-serialize ApplicationContext for "
                                 + session.getId()
-                                + " A new one will be created. ", e);
+                                + " A new one will be created. ",
+                        e);
             } catch (ClassNotFoundException e) {
-                getLogger().log(
-                        Level.WARNING,
+                getLogger().log(Level.WARNING,
                         "Could not de-serialize ApplicationContext for "
                                 + session.getId()
-                                + " A new one will be created. ", e);
+                                + " A new one will be created. ",
+                        e);
             }
         }
 
@@ -386,7 +375,7 @@ public class GAEVaadinServlet extends VaadinServlet {
     /**
      * Removes the ApplicationContext from the session in order to minimize the
      * data serialized to datastore and memcache.
-     * 
+     *
      * @param request
      */
     private void cleanSession(VaadinServletRequest request) {
@@ -416,7 +405,7 @@ public class GAEVaadinServlet extends VaadinServlet {
     /**
      * This will look at the timestamp and delete expired persisted Vaadin and
      * appengine sessions from the datastore.
-     * 
+     *
      * TODO Possible improvements include: 1. Use transactions (requires entity
      * groups - overkill?) 2. Delete one-at-a-time, catch possible exception,
      * continue w/ next.
@@ -430,16 +419,15 @@ public class GAEVaadinServlet extends VaadinServlet {
                 Query q = new Query(AC_BASE);
                 q.setKeysOnly();
 
-                q.addFilter(PROPERTY_EXPIRES,
-                        FilterOperator.LESS_THAN_OR_EQUAL, expire);
+                q.addFilter(PROPERTY_EXPIRES, FilterOperator.LESS_THAN_OR_EQUAL,
+                        expire);
                 PreparedQuery pq = ds.prepare(q);
-                List<Entity> entities = pq.asList(Builder
-                        .withLimit(CLEANUP_LIMIT));
+                List<Entity> entities = pq
+                        .asList(Builder.withLimit(CLEANUP_LIMIT));
                 if (entities != null) {
-                    getLogger()
-                            .log(Level.INFO,
-                                    "Vaadin cleanup deleting {0} expired Vaadin sessions.",
-                                    entities.size());
+                    getLogger().log(Level.INFO,
+                            "Vaadin cleanup deleting {0} expired Vaadin sessions.",
+                            entities.size());
                     List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
                         keys.add(e.getKey());
@@ -454,13 +442,12 @@ public class GAEVaadinServlet extends VaadinServlet {
                 q.addFilter(PROPERTY_APPENGINE_EXPIRES,
                         FilterOperator.LESS_THAN_OR_EQUAL, expire);
                 PreparedQuery pq = ds.prepare(q);
-                List<Entity> entities = pq.asList(Builder
-                        .withLimit(CLEANUP_LIMIT));
+                List<Entity> entities = pq
+                        .asList(Builder.withLimit(CLEANUP_LIMIT));
                 if (entities != null) {
-                    getLogger()
-                            .log(Level.INFO,
-                                    "Vaadin cleanup deleting {0} expired appengine sessions.",
-                                    entities.size());
+                    getLogger().log(Level.INFO,
+                            "Vaadin cleanup deleting {0} expired appengine sessions.",
+                            entities.size());
                     List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
                         keys.add(e.getKey());

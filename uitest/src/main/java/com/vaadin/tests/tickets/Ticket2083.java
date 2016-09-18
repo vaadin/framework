@@ -23,7 +23,8 @@ public class Ticket2083 extends LegacyApplication {
         VerticalLayout pl = new VerticalLayout();
         pl.setMargin(true);
         Panel p = new Panel(
-                "This is a panel with a longer caption than it should have", pl);
+                "This is a panel with a longer caption than it should have",
+                pl);
         p.setWidth("100px");
         pl.addComponent(new Label("Contents"));
         layout.addComponent(p);

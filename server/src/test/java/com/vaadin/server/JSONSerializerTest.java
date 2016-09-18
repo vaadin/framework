@@ -2,13 +2,13 @@ package com.vaadin.server;
 
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,10 +35,10 @@ import elemental.json.JsonValue;
 
 /**
  * Tests for {@link JsonCodec}
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0
- * 
+ *
  */
 public class JSONSerializerTest {
     HashMap<String, AbstractSplitPanelState> stringToStateMap;
@@ -58,8 +58,9 @@ public class JSONSerializerTest {
         stringToStateMap.put("string - state 1", s);
         stringToStateMap.put("String - state 2", s2);
 
-        JsonValue encodedMap = JsonCodec.encode(stringToStateMap, null,
-                mapType, null).getEncodedValue();
+        JsonValue encodedMap = JsonCodec
+                .encode(stringToStateMap, null, mapType, null)
+                .getEncodedValue();
 
         ensureDecodedCorrectly(stringToStateMap, encodedMap, mapType);
     }
@@ -76,8 +77,9 @@ public class JSONSerializerTest {
         stateToStringMap.put(s, "string - state 1");
         stateToStringMap.put(s2, "String - state 2");
 
-        JsonValue encodedMap = JsonCodec.encode(stateToStringMap, null,
-                mapType, null).getEncodedValue();
+        JsonValue encodedMap = JsonCodec
+                .encode(stateToStringMap, null, mapType, null)
+                .getEncodedValue();
 
         ensureDecodedCorrectly(stateToStringMap, encodedMap, mapType);
     }
@@ -87,8 +89,8 @@ public class JSONSerializerTest {
         JsonArray inputArray = Json.createArray();
         inputArray.set(0, "n");
         inputArray.set(1, Json.createNull());
-        UidlValue decodedObject = (UidlValue) JsonCodec.decodeInternalType(
-                UidlValue.class, true, inputArray, null);
+        UidlValue decodedObject = (UidlValue) JsonCodec
+                .decodeInternalType(UidlValue.class, true, inputArray, null);
         Assert.assertNull(decodedObject.getValue());
     }
 
@@ -97,15 +99,16 @@ public class JSONSerializerTest {
         JsonArray inputArray = Json.createArray();
         inputArray.set(0, "n");
         inputArray.set(1, "a");
-        UidlValue decodedObject = (UidlValue) JsonCodec.decodeInternalType(
-                UidlValue.class, true, inputArray, null);
+        UidlValue decodedObject = (UidlValue) JsonCodec
+                .decodeInternalType(UidlValue.class, true, inputArray, null);
     }
 
     private void ensureDecodedCorrectly(Object original, JsonValue encoded,
             Type type) throws Exception {
         Object serverSideDecoded = JsonCodec.decodeInternalOrCustomType(type,
                 encoded, null);
-        Assert.assertTrue("Server decoded", equals(original, serverSideDecoded));
+        Assert.assertTrue("Server decoded",
+                equals(original, serverSideDecoded));
 
     }
 

@@ -16,7 +16,6 @@ import com.vaadin.data.util.filter.Compare.GreaterOrEqual;
 import com.vaadin.data.util.filter.Compare.Less;
 import com.vaadin.data.util.filter.Compare.LessOrEqual;
 
-
 public class CompareFilterDateTest extends AbstractFilterTestBase<Compare> {
 
     protected Item itemNullUtilDate;
@@ -51,20 +50,20 @@ public class CompareFilterDateTest extends AbstractFilterTestBase<Compare> {
         lessEqualCompUtilDate = new LessOrEqual(PROPERTY1,
                 formatter.parse("26072016"));
 
-        equalCompSqlDate = new Equal(PROPERTY1, new java.sql.Date(formatter
-                .parse("26072016").getTime()));
-        greaterCompSqlDate = new Greater(PROPERTY1, new java.sql.Date(formatter
-                .parse("26072016").getTime()));
-        lessCompSqlDate = new Less(PROPERTY1, new java.sql.Date(formatter
-                .parse("26072016").getTime()));
+        equalCompSqlDate = new Equal(PROPERTY1,
+                new java.sql.Date(formatter.parse("26072016").getTime()));
+        greaterCompSqlDate = new Greater(PROPERTY1,
+                new java.sql.Date(formatter.parse("26072016").getTime()));
+        lessCompSqlDate = new Less(PROPERTY1,
+                new java.sql.Date(formatter.parse("26072016").getTime()));
         greaterEqualCompSqlDate = new GreaterOrEqual(PROPERTY1,
                 new java.sql.Date(formatter.parse("26072016").getTime()));
-        lessEqualCompSqlDate = new LessOrEqual(PROPERTY1, new java.sql.Date(
-                formatter.parse("26072016").getTime()));
+        lessEqualCompSqlDate = new LessOrEqual(PROPERTY1,
+                new java.sql.Date(formatter.parse("26072016").getTime()));
 
         itemNullUtilDate = new PropertysetItem();
-        itemNullUtilDate.addItemProperty(PROPERTY1, new ObjectProperty<Date>(
-                null, Date.class));
+        itemNullUtilDate.addItemProperty(PROPERTY1,
+                new ObjectProperty<Date>(null, Date.class));
         itemNullSqlDate = new PropertysetItem();
         itemNullSqlDate.addItemProperty(PROPERTY1,
                 new ObjectProperty<java.sql.Date>(null, java.sql.Date.class));
@@ -73,8 +72,10 @@ public class CompareFilterDateTest extends AbstractFilterTestBase<Compare> {
                 formatter.parse("25072016"), Date.class));
         itemSqlDate = new PropertysetItem();
         itemSqlDate.addItemProperty(PROPERTY1,
-                new ObjectProperty<java.sql.Date>(new java.sql.Date(formatter
-                        .parse("25072016").getTime()), java.sql.Date.class));
+                new ObjectProperty<java.sql.Date>(
+                        new java.sql.Date(
+                                formatter.parse("25072016").getTime()),
+                        java.sql.Date.class));
     }
 
     @Override
@@ -88,50 +89,54 @@ public class CompareFilterDateTest extends AbstractFilterTestBase<Compare> {
 
     @Test
     public void testCompareUtilDatesAndUtilDates() {
-        Assert.assertFalse(equalCompUtilDate.passesFilter(null,
-                itemNullUtilDate));
+        Assert.assertFalse(
+                equalCompUtilDate.passesFilter(null, itemNullUtilDate));
         Assert.assertFalse(equalCompUtilDate.passesFilter(null, itemUtilDate));
-        Assert.assertFalse(greaterCompUtilDate.passesFilter(null, itemUtilDate));
+        Assert.assertFalse(
+                greaterCompUtilDate.passesFilter(null, itemUtilDate));
         Assert.assertTrue(lessCompUtilDate.passesFilter(null, itemUtilDate));
-        Assert.assertFalse(greaterEqualCompUtilDate.passesFilter(null,
-                itemUtilDate));
-        Assert.assertTrue(lessEqualCompUtilDate
-                .passesFilter(null, itemUtilDate));
+        Assert.assertFalse(
+                greaterEqualCompUtilDate.passesFilter(null, itemUtilDate));
+        Assert.assertTrue(
+                lessEqualCompUtilDate.passesFilter(null, itemUtilDate));
     }
 
     @Test
     public void testCompareUtilDatesAndSqlDates() {
-        Assert.assertFalse(equalCompUtilDate
-                .passesFilter(null, itemNullSqlDate));
+        Assert.assertFalse(
+                equalCompUtilDate.passesFilter(null, itemNullSqlDate));
         Assert.assertFalse(equalCompUtilDate.passesFilter(null, itemSqlDate));
         Assert.assertFalse(greaterCompUtilDate.passesFilter(null, itemSqlDate));
         Assert.assertTrue(lessCompUtilDate.passesFilter(null, itemSqlDate));
-        Assert.assertFalse(greaterEqualCompUtilDate.passesFilter(null,
-                itemSqlDate));
-        Assert.assertTrue(lessEqualCompUtilDate.passesFilter(null, itemSqlDate));
+        Assert.assertFalse(
+                greaterEqualCompUtilDate.passesFilter(null, itemSqlDate));
+        Assert.assertTrue(
+                lessEqualCompUtilDate.passesFilter(null, itemSqlDate));
     }
 
     @Test
     public void testCompareSqlDatesAndSqlDates() {
-        Assert.assertFalse(equalCompSqlDate.passesFilter(null, itemNullSqlDate));
+        Assert.assertFalse(
+                equalCompSqlDate.passesFilter(null, itemNullSqlDate));
         Assert.assertFalse(equalCompSqlDate.passesFilter(null, itemSqlDate));
         Assert.assertFalse(greaterCompSqlDate.passesFilter(null, itemSqlDate));
         Assert.assertTrue(lessCompSqlDate.passesFilter(null, itemSqlDate));
-        Assert.assertFalse(greaterEqualCompSqlDate.passesFilter(null,
-                itemSqlDate));
+        Assert.assertFalse(
+                greaterEqualCompSqlDate.passesFilter(null, itemSqlDate));
         Assert.assertTrue(lessEqualCompSqlDate.passesFilter(null, itemSqlDate));
     }
 
     @Test
     public void testCompareSqlDatesAndUtilDates() {
-        Assert.assertFalse(equalCompSqlDate
-                .passesFilter(null, itemNullUtilDate));
+        Assert.assertFalse(
+                equalCompSqlDate.passesFilter(null, itemNullUtilDate));
         Assert.assertFalse(equalCompSqlDate.passesFilter(null, itemUtilDate));
         Assert.assertFalse(greaterCompSqlDate.passesFilter(null, itemUtilDate));
         Assert.assertTrue(lessCompSqlDate.passesFilter(null, itemUtilDate));
-        Assert.assertFalse(greaterEqualCompSqlDate.passesFilter(null,
-                itemUtilDate));
-        Assert.assertTrue(lessEqualCompSqlDate.passesFilter(null, itemUtilDate));
+        Assert.assertFalse(
+                greaterEqualCompSqlDate.passesFilter(null, itemUtilDate));
+        Assert.assertTrue(
+                lessEqualCompSqlDate.passesFilter(null, itemUtilDate));
     }
 
 }

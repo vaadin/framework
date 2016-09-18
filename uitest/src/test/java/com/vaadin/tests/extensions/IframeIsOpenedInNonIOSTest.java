@@ -21,9 +21,8 @@ public class IframeIsOpenedInNonIOSTest extends MultiBrowserTest {
         List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
         boolean containsFileIframe = false;
         for (WebElement iframe : iframes) {
-            containsFileIframe = containsFileIframe
-                    | iframe.getAttribute("src").contains(
-                            IframeIsOpenedInNonIOS.FILE_NAME);
+            containsFileIframe = containsFileIframe | iframe.getAttribute("src")
+                    .contains(IframeIsOpenedInNonIOS.FILE_NAME);
         }
 
         Assert.assertTrue("page doesn't contain iframe with the file",

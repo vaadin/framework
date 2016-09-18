@@ -73,8 +73,8 @@ public class SQLContainerTest {
     @Test(expected = SQLException.class)
     public void constructor_withIllegalFreeformQuery_shouldFail()
             throws SQLException {
-        SQLContainer c = new SQLContainer(new FreeformQuery(
-                "SELECT * FROM asdf", connectionPool, "ID"));
+        SQLContainer c = new SQLContainer(
+                new FreeformQuery("SELECT * FROM asdf", connectionPool, "ID"));
         c.getItem(c.firstItemId());
     }
 
@@ -91,8 +91,8 @@ public class SQLContainerTest {
             throws SQLException {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
-        Assert.assertFalse(container
-                .containsId(new RowId(new Object[] { 1337 })));
+        Assert.assertFalse(
+                container.containsId(new RowId(new Object[] { 1337 })));
     }
 
     @Test
@@ -101,15 +101,12 @@ public class SQLContainerTest {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
         if (SQLTestsConstants.db == DB.ORACLE) {
-            Assert.assertEquals(
-                    "Ville",
-                    container
-                            .getContainerProperty(
-                                    new RowId(new Object[] { new BigDecimal(
-                                            0 + offset) }), "NAME").getValue());
+            Assert.assertEquals("Ville",
+                    container.getContainerProperty(new RowId(
+                            new Object[] { new BigDecimal(0 + offset) }),
+                            "NAME").getValue());
         } else {
-            Assert.assertEquals(
-                    "Ville",
+            Assert.assertEquals("Ville",
                     container.getContainerProperty(
                             new RowId(new Object[] { 0 + offset }), "NAME")
                             .getValue());
@@ -121,8 +118,8 @@ public class SQLContainerTest {
             throws SQLException {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
-        Assert.assertNull(container.getContainerProperty(new RowId(
-                new Object[] { 1 + offset }), "asdf"));
+        Assert.assertNull(container.getContainerProperty(
+                new RowId(new Object[] { 1 + offset }), "asdf"));
     }
 
     @Test
@@ -130,8 +127,8 @@ public class SQLContainerTest {
             throws SQLException {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
-        Assert.assertNull(container.getContainerProperty(new RowId(
-                new Object[] { 1337 + offset }), "NAME"));
+        Assert.assertNull(container.getContainerProperty(
+                new RowId(new Object[] { 1337 + offset }), "NAME"));
     }
 
     @Test
@@ -152,8 +149,8 @@ public class SQLContainerTest {
                 "SELECT * FROM people", connectionPool, "ID"));
         Item item;
         if (SQLTestsConstants.db == DB.ORACLE) {
-            item = container.getItem(new RowId(new Object[] { new BigDecimal(
-                    0 + offset) }));
+            item = container.getItem(
+                    new RowId(new Object[] { new BigDecimal(0 + offset) }));
         } else {
             item = container.getItem(new RowId(new Object[] { 0 + offset }));
         }
@@ -187,19 +184,19 @@ public class SQLContainerTest {
                 "SELECT * FROM people", connectionPool, "ID"));
         Item item;
         if (SQLTestsConstants.db == DB.ORACLE) {
-            item = container.getItem(new RowId(new Object[] { new BigDecimal(
-                    1337 + offset) }));
+            item = container.getItem(
+                    new RowId(new Object[] { new BigDecimal(1337 + offset) }));
             Assert.assertNotNull(item);
-            Assert.assertEquals(new BigDecimal(1337 + offset), item
-                    .getItemProperty("ID").getValue());
+            Assert.assertEquals(new BigDecimal(1337 + offset),
+                    item.getItemProperty("ID").getValue());
         } else {
             item = container.getItem(new RowId(new Object[] { 1337 + offset }));
             Assert.assertNotNull(item);
-            Assert.assertEquals(1337 + offset, item.getItemProperty("ID")
-                    .getValue());
+            Assert.assertEquals(1337 + offset,
+                    item.getItemProperty("ID").getValue());
         }
-        Assert.assertEquals("Person 1337", item.getItemProperty("NAME")
-                .getValue());
+        Assert.assertEquals("Person 1337",
+                item.getItemProperty("NAME").getValue());
     }
 
     @Test
@@ -268,8 +265,8 @@ public class SQLContainerTest {
         if (SQLTestsConstants.db == DB.MSSQL) {
             statement.executeUpdate("insert into people values('Bengt', '42')");
         } else {
-            statement
-                    .executeUpdate("insert into people values(default, 'Bengt', '42')");
+            statement.executeUpdate(
+                    "insert into people values(default, 'Bengt', '42')");
         }
         statement.close();
         conn.commit();
@@ -286,11 +283,11 @@ public class SQLContainerTest {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
         if (SQLTestsConstants.db == DB.ORACLE) {
-            Assert.assertEquals(3, container.indexOfId(new RowId(
-                    new Object[] { new BigDecimal(3 + offset) })));
+            Assert.assertEquals(3, container.indexOfId(
+                    new RowId(new Object[] { new BigDecimal(3 + offset) })));
         } else {
-            Assert.assertEquals(3,
-                    container.indexOfId(new RowId(new Object[] { 3 + offset })));
+            Assert.assertEquals(3, container
+                    .indexOfId(new RowId(new Object[] { 3 + offset })));
         }
     }
 
@@ -298,18 +295,18 @@ public class SQLContainerTest {
     public void indexOfId_freeform5000RowsWithParameter1337_returns1337()
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
-        SQLContainer container = new SQLContainer(new FreeformQuery(
-                "SELECT * FROM people ORDER BY \"ID\" ASC", connectionPool,
-                "ID"));
+        SQLContainer container = new SQLContainer(
+                new FreeformQuery("SELECT * FROM people ORDER BY \"ID\" ASC",
+                        connectionPool, "ID"));
         if (SQLTestsConstants.db == DB.ORACLE) {
-            container.getItem(new RowId(new Object[] { new BigDecimal(
-                    1337 + offset) }));
-            Assert.assertEquals(1337, container.indexOfId(new RowId(
-                    new Object[] { new BigDecimal(1337 + offset) })));
+            container.getItem(
+                    new RowId(new Object[] { new BigDecimal(1337 + offset) }));
+            Assert.assertEquals(1337, container.indexOfId(
+                    new RowId(new Object[] { new BigDecimal(1337 + offset) })));
         } else {
             container.getItem(new RowId(new Object[] { 1337 + offset }));
-            Assert.assertEquals(1337, container.indexOfId(new RowId(
-                    new Object[] { 1337 + offset })));
+            Assert.assertEquals(1337, container
+                    .indexOfId(new RowId(new Object[] { 1337 + offset })));
         }
     }
 
@@ -317,13 +314,14 @@ public class SQLContainerTest {
     public void getIdByIndex_freeform5000rowsIndex1337_returnsRowId1337()
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
-        SQLContainer container = new SQLContainer(new FreeformQuery(
-                "SELECT * FROM people ORDER BY \"ID\" ASC", connectionPool,
-                "ID"));
+        SQLContainer container = new SQLContainer(
+                new FreeformQuery("SELECT * FROM people ORDER BY \"ID\" ASC",
+                        connectionPool, "ID"));
         Object itemId = container.getIdByIndex(1337);
         if (SQLTestsConstants.db == DB.ORACLE) {
-            Assert.assertEquals(new RowId(new Object[] { new BigDecimal(
-                    1337 + offset) }), itemId);
+            Assert.assertEquals(
+                    new RowId(new Object[] { new BigDecimal(1337 + offset) }),
+                    itemId);
         } else {
             Assert.assertEquals(new RowId(new Object[] { 1337 + offset }),
                     itemId);
@@ -352,8 +350,7 @@ public class SQLContainerTest {
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT row_number() OVER"
                                     + " ( ORDER BY \"ID\" ASC) AS rownum, * FROM people)"
-                                    + " AS a WHERE a.rownum BETWEEN "
-                                    + start
+                                    + " AS a WHERE a.rownum BETWEEN " + start
                                     + " AND " + end;
                             return q;
                         } else if (SQLTestsConstants.db == DB.ORACLE) {
@@ -361,9 +358,7 @@ public class SQLContainerTest {
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT x.*, ROWNUM AS r FROM"
                                     + " (SELECT * FROM people ORDER BY \"ID\" ASC) x) "
-                                    + " WHERE r BETWEEN "
-                                    + start
-                                    + " AND "
+                                    + " WHERE r BETWEEN " + start + " AND "
                                     + end;
                             return q;
                         } else {
@@ -400,9 +395,9 @@ public class SQLContainerTest {
     public void nextItemId_freeformCurrentItem1337_returnsItem1338()
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
-        SQLContainer container = new SQLContainer(new FreeformQuery(
-                "SELECT * FROM people ORDER BY \"ID\" ASC", connectionPool,
-                "ID"));
+        SQLContainer container = new SQLContainer(
+                new FreeformQuery("SELECT * FROM people ORDER BY \"ID\" ASC",
+                        connectionPool, "ID"));
         Object itemId = container.getIdByIndex(1337);
         if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
@@ -418,9 +413,9 @@ public class SQLContainerTest {
     public void prevItemId_freeformCurrentItem1337_returns1336()
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
-        SQLContainer container = new SQLContainer(new FreeformQuery(
-                "SELECT * FROM people ORDER BY \"ID\" ASC", connectionPool,
-                "ID"));
+        SQLContainer container = new SQLContainer(
+                new FreeformQuery("SELECT * FROM people ORDER BY \"ID\" ASC",
+                        connectionPool, "ID"));
         Object itemId = container.getIdByIndex(1337);
         if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
@@ -451,9 +446,9 @@ public class SQLContainerTest {
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
 
-        SQLContainer container = new SQLContainer(new FreeformQuery(
-                "SELECT * FROM people ORDER BY \"ID\" ASC", connectionPool,
-                "ID"));
+        SQLContainer container = new SQLContainer(
+                new FreeformQuery("SELECT * FROM people ORDER BY \"ID\" ASC",
+                        connectionPool, "ID"));
         if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
                     new RowId(new Object[] { 4999 + offset }).toString(),
@@ -470,11 +465,11 @@ public class SQLContainerTest {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
         if (SQLTestsConstants.db == DB.ORACLE) {
-            Assert.assertTrue(container.isFirstId(new RowId(
-                    new Object[] { new BigDecimal(0 + offset) })));
+            Assert.assertTrue(container.isFirstId(
+                    new RowId(new Object[] { new BigDecimal(0 + offset) })));
         } else {
-            Assert.assertTrue(container.isFirstId(new RowId(
-                    new Object[] { 0 + offset })));
+            Assert.assertTrue(container
+                    .isFirstId(new RowId(new Object[] { 0 + offset })));
         }
     }
 
@@ -483,11 +478,11 @@ public class SQLContainerTest {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
         if (SQLTestsConstants.db == DB.ORACLE) {
-            Assert.assertFalse(container.isFirstId(new RowId(
-                    new Object[] { new BigDecimal(1 + offset) })));
+            Assert.assertFalse(container.isFirstId(
+                    new RowId(new Object[] { new BigDecimal(1 + offset) })));
         } else {
-            Assert.assertFalse(container.isFirstId(new RowId(
-                    new Object[] { 1 + offset })));
+            Assert.assertFalse(container
+                    .isFirstId(new RowId(new Object[] { 1 + offset })));
         }
     }
 
@@ -496,11 +491,11 @@ public class SQLContainerTest {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
         if (SQLTestsConstants.db == DB.ORACLE) {
-            Assert.assertFalse(container.isLastId(new RowId(
-                    new Object[] { new BigDecimal(1 + offset) })));
+            Assert.assertFalse(container.isLastId(
+                    new RowId(new Object[] { new BigDecimal(1 + offset) })));
         } else {
-            Assert.assertFalse(container.isLastId(new RowId(
-                    new Object[] { 1 + offset })));
+            Assert.assertFalse(
+                    container.isLastId(new RowId(new Object[] { 1 + offset })));
         }
     }
 
@@ -509,11 +504,11 @@ public class SQLContainerTest {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
         if (SQLTestsConstants.db == DB.ORACLE) {
-            Assert.assertTrue(container.isLastId(new RowId(
-                    new Object[] { new BigDecimal(3 + offset) })));
+            Assert.assertTrue(container.isLastId(
+                    new RowId(new Object[] { new BigDecimal(3 + offset) })));
         } else {
-            Assert.assertTrue(container.isLastId(new RowId(
-                    new Object[] { 3 + offset })));
+            Assert.assertTrue(
+                    container.isLastId(new RowId(new Object[] { 3 + offset })));
         }
     }
 
@@ -521,15 +516,15 @@ public class SQLContainerTest {
     public void isLastId_freeform5000RowsLastId_returnsTrue()
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
-        SQLContainer container = new SQLContainer(new FreeformQuery(
-                "SELECT * FROM people ORDER BY \"ID\" ASC", connectionPool,
-                "ID"));
+        SQLContainer container = new SQLContainer(
+                new FreeformQuery("SELECT * FROM people ORDER BY \"ID\" ASC",
+                        connectionPool, "ID"));
         if (SQLTestsConstants.db == DB.ORACLE) {
-            Assert.assertTrue(container.isLastId(new RowId(
-                    new Object[] { new BigDecimal(4999 + offset) })));
+            Assert.assertTrue(container.isLastId(
+                    new RowId(new Object[] { new BigDecimal(4999 + offset) })));
         } else {
-            Assert.assertTrue(container.isLastId(new RowId(
-                    new Object[] { 4999 + offset })));
+            Assert.assertTrue(container
+                    .isLastId(new RowId(new Object[] { 4999 + offset })));
         }
     }
 
@@ -585,7 +580,8 @@ public class SQLContainerTest {
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void addContainerProperty_normal_isUnsupported() throws SQLException {
+    public void addContainerProperty_normal_isUnsupported()
+            throws SQLException {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
         container.addContainerProperty("asdf", String.class, "");
@@ -743,8 +739,8 @@ public class SQLContainerTest {
         Object id = container.addItem();
         Item item = container.getItem(id);
         item.getItemProperty("NAME").setValue("asdf");
-        Assert.assertEquals("asdf", container.getContainerProperty(id, "NAME")
-                .getValue());
+        Assert.assertEquals("asdf",
+                container.getContainerProperty(id, "NAME").getValue());
     }
 
     @Test
@@ -1148,15 +1144,14 @@ public class SQLContainerTest {
             throws SQLException {
         FreeformQueryDelegate delegate = EasyMock
                 .createMock(FreeformQueryDelegate.class);
-        EasyMock.expect(
-                delegate.storeRow(EasyMock.isA(Connection.class),
-                        EasyMock.isA(RowItem.class)))
-                .andAnswer(new IAnswer<Integer>() {
+        EasyMock.expect(delegate.storeRow(EasyMock.isA(Connection.class),
+                EasyMock.isA(RowItem.class))).andAnswer(new IAnswer<Integer>() {
                     @Override
                     public Integer answer() throws Throwable {
                         Connection conn = (Connection) EasyMock
                                 .getCurrentArguments()[0];
-                        RowItem item = (RowItem) EasyMock.getCurrentArguments()[1];
+                        RowItem item = (RowItem) EasyMock
+                                .getCurrentArguments()[1];
                         Statement statement = conn.createStatement();
                         if (SQLTestsConstants.db == DB.MSSQL) {
                             statement
@@ -1165,15 +1160,17 @@ public class SQLContainerTest {
                                                     .getValue()
                                             + "', '"
                                             + item.getItemProperty("AGE")
-                                                    .getValue() + "')");
+                                                    .getValue()
+                                            + "')");
                         } else {
-                            statement
-                                    .executeUpdate("insert into people values(default, '"
+                            statement.executeUpdate(
+                                    "insert into people values(default, '"
                                             + item.getItemProperty("NAME")
                                                     .getValue()
                                             + "', '"
                                             + item.getItemProperty("AGE")
-                                                    .getValue() + "')");
+                                                    .getValue()
+                                            + "')");
                         }
                         statement.close();
                         conn.commit();
@@ -1194,8 +1191,7 @@ public class SQLContainerTest {
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT row_number() OVER"
                                     + " ( ORDER BY \"ID\" ASC) AS rownum, * FROM people)"
-                                    + " AS a WHERE a.rownum BETWEEN "
-                                    + start
+                                    + " AS a WHERE a.rownum BETWEEN " + start
                                     + " AND " + end;
                             return q;
                         } else if (SQLTestsConstants.db == DB.ORACLE) {
@@ -1203,9 +1199,7 @@ public class SQLContainerTest {
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT x.*, ROWNUM AS r FROM"
                                     + " (SELECT * FROM people ORDER BY \"ID\" ASC) x) "
-                                    + " WHERE r BETWEEN "
-                                    + start
-                                    + " AND "
+                                    + " WHERE r BETWEEN " + start + " AND "
                                     + end;
                             return q;
                         } else {
@@ -1249,15 +1243,14 @@ public class SQLContainerTest {
             throws SQLException {
         FreeformQueryDelegate delegate = EasyMock
                 .createMock(FreeformQueryDelegate.class);
-        EasyMock.expect(
-                delegate.storeRow(EasyMock.isA(Connection.class),
-                        EasyMock.isA(RowItem.class)))
-                .andAnswer(new IAnswer<Integer>() {
+        EasyMock.expect(delegate.storeRow(EasyMock.isA(Connection.class),
+                EasyMock.isA(RowItem.class))).andAnswer(new IAnswer<Integer>() {
                     @Override
                     public Integer answer() throws Throwable {
                         Connection conn = (Connection) EasyMock
                                 .getCurrentArguments()[0];
-                        RowItem item = (RowItem) EasyMock.getCurrentArguments()[1];
+                        RowItem item = (RowItem) EasyMock
+                                .getCurrentArguments()[1];
                         Statement statement = conn.createStatement();
                         if (SQLTestsConstants.db == DB.MSSQL) {
                             statement
@@ -1266,15 +1259,17 @@ public class SQLContainerTest {
                                                     .getValue()
                                             + "', '"
                                             + item.getItemProperty("AGE")
-                                                    .getValue() + "')");
+                                                    .getValue()
+                                            + "')");
                         } else {
-                            statement
-                                    .executeUpdate("insert into people values(default, '"
+                            statement.executeUpdate(
+                                    "insert into people values(default, '"
                                             + item.getItemProperty("NAME")
                                                     .getValue()
                                             + "', '"
                                             + item.getItemProperty("AGE")
-                                                    .getValue() + "')");
+                                                    .getValue()
+                                            + "')");
                         }
                         statement.close();
                         conn.commit();
@@ -1295,8 +1290,7 @@ public class SQLContainerTest {
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT row_number() OVER"
                                     + " ( ORDER BY \"ID\" ASC) AS rownum, * FROM people)"
-                                    + " AS a WHERE a.rownum BETWEEN "
-                                    + start
+                                    + " AS a WHERE a.rownum BETWEEN " + start
                                     + " AND " + end;
                             return q;
                         } else if (SQLTestsConstants.db == DB.ORACLE) {
@@ -1304,9 +1298,7 @@ public class SQLContainerTest {
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT x.*, ROWNUM AS r FROM"
                                     + " (SELECT * FROM people ORDER BY \"ID\" ASC) x) "
-                                    + " WHERE r BETWEEN "
-                                    + start
-                                    + " AND "
+                                    + " WHERE r BETWEEN " + start + " AND "
                                     + end;
                             return q;
                         } else {
@@ -1357,19 +1349,18 @@ public class SQLContainerTest {
             throws SQLException {
         FreeformQueryDelegate delegate = EasyMock
                 .createMock(FreeformQueryDelegate.class);
-        EasyMock.expect(
-                delegate.removeRow(EasyMock.isA(Connection.class),
-                        EasyMock.isA(RowItem.class)))
-                .andAnswer(new IAnswer<Boolean>() {
+        EasyMock.expect(delegate.removeRow(EasyMock.isA(Connection.class),
+                EasyMock.isA(RowItem.class))).andAnswer(new IAnswer<Boolean>() {
                     @Override
                     public Boolean answer() throws Throwable {
                         Connection conn = (Connection) EasyMock
                                 .getCurrentArguments()[0];
-                        RowItem item = (RowItem) EasyMock.getCurrentArguments()[1];
+                        RowItem item = (RowItem) EasyMock
+                                .getCurrentArguments()[1];
                         Statement statement = conn.createStatement();
-                        statement
-                                .executeUpdate("DELETE FROM people WHERE \"ID\"="
-                                        + item.getItemProperty("ID").getValue());
+                        statement.executeUpdate(
+                                "DELETE FROM people WHERE \"ID\"=" + item
+                                        .getItemProperty("ID").getValue());
                         statement.close();
                         return true;
                     }
@@ -1387,8 +1378,7 @@ public class SQLContainerTest {
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT row_number() OVER"
                                     + " ( ORDER BY \"ID\" ASC) AS rownum, * FROM people)"
-                                    + " AS a WHERE a.rownum BETWEEN "
-                                    + start
+                                    + " AS a WHERE a.rownum BETWEEN " + start
                                     + " AND " + end;
                             return q;
                         } else if (SQLTestsConstants.db == DB.ORACLE) {
@@ -1396,9 +1386,7 @@ public class SQLContainerTest {
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT x.*, ROWNUM AS r FROM"
                                     + " (SELECT * FROM people ORDER BY \"ID\" ASC) x) "
-                                    + " WHERE r BETWEEN "
-                                    + start
-                                    + " AND "
+                                    + " WHERE r BETWEEN " + start + " AND "
                                     + end;
                             return q;
                         } else {
@@ -1436,15 +1424,14 @@ public class SQLContainerTest {
             throws SQLException {
         FreeformQueryDelegate delegate = EasyMock
                 .createMock(FreeformQueryDelegate.class);
-        EasyMock.expect(
-                delegate.storeRow(EasyMock.isA(Connection.class),
-                        EasyMock.isA(RowItem.class)))
-                .andAnswer(new IAnswer<Integer>() {
+        EasyMock.expect(delegate.storeRow(EasyMock.isA(Connection.class),
+                EasyMock.isA(RowItem.class))).andAnswer(new IAnswer<Integer>() {
                     @Override
                     public Integer answer() throws Throwable {
                         Connection conn = (Connection) EasyMock
                                 .getCurrentArguments()[0];
-                        RowItem item = (RowItem) EasyMock.getCurrentArguments()[1];
+                        RowItem item = (RowItem) EasyMock
+                                .getCurrentArguments()[1];
                         Statement statement = conn.createStatement();
                         statement.executeUpdate("UPDATE people SET \"NAME\"='"
                                 + item.getItemProperty("NAME").getValue()
@@ -1469,8 +1456,7 @@ public class SQLContainerTest {
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT row_number() OVER"
                                     + " ( ORDER BY \"ID\" ASC) AS rownum, * FROM people)"
-                                    + " AS a WHERE a.rownum BETWEEN "
-                                    + start
+                                    + " AS a WHERE a.rownum BETWEEN " + start
                                     + " AND " + end;
                             return q;
                         } else if (SQLTestsConstants.db == DB.ORACLE) {
@@ -1478,9 +1464,7 @@ public class SQLContainerTest {
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT x.*, ROWNUM AS r FROM"
                                     + " (SELECT * FROM people ORDER BY \"ID\" ASC) x) "
-                                    + " WHERE r BETWEEN "
-                                    + start
-                                    + " AND "
+                                    + " WHERE r BETWEEN " + start + " AND "
                                     + end;
                             return q;
                         } else {
@@ -1525,8 +1509,9 @@ public class SQLContainerTest {
         Assert.assertEquals(size + 1, container.size());
         container.rollback();
         Assert.assertEquals(size, container.size());
-        Assert.assertFalse("foo".equals(container.getContainerProperty(
-                container.lastItemId(), "NAME").getValue()));
+        Assert.assertFalse("foo".equals(
+                container.getContainerProperty(container.lastItemId(), "NAME")
+                        .getValue()));
     }
 
     @Test
@@ -1551,8 +1536,9 @@ public class SQLContainerTest {
         Object last = container.lastItemId();
         container.getContainerProperty(last, "NAME").setValue("foo");
         container.rollback();
-        Assert.assertFalse("foo".equals(container.getContainerProperty(
-                container.lastItemId(), "NAME").getValue()));
+        Assert.assertFalse("foo".equals(
+                container.getContainerProperty(container.lastItemId(), "NAME")
+                        .getValue()));
     }
 
     @Test
@@ -1694,12 +1680,14 @@ public class SQLContainerTest {
                             if (orderBys == null || orderBys.isEmpty()) {
                                 List<OrderBy> ob = new ArrayList<OrderBy>();
                                 ob.add(new OrderBy("ID", true));
-                                return gen.generateSelectQuery("people", null,
-                                        ob, offset, limit, null)
+                                return gen
+                                        .generateSelectQuery("people", null, ob,
+                                                offset, limit, null)
                                         .getQueryString();
                             } else {
-                                return gen.generateSelectQuery("people", null,
-                                        orderBys, offset, limit, null)
+                                return gen
+                                        .generateSelectQuery("people", null,
+                                                orderBys, offset, limit, null)
                                         .getQueryString();
                             }
                         } else if (SQLTestsConstants.db == DB.ORACLE) {
@@ -1707,12 +1695,14 @@ public class SQLContainerTest {
                             if (orderBys == null || orderBys.isEmpty()) {
                                 List<OrderBy> ob = new ArrayList<OrderBy>();
                                 ob.add(new OrderBy("ID", true));
-                                return gen.generateSelectQuery("people", null,
-                                        ob, offset, limit, null)
+                                return gen
+                                        .generateSelectQuery("people", null, ob,
+                                                offset, limit, null)
                                         .getQueryString();
                             } else {
-                                return gen.generateSelectQuery("people", null,
-                                        orderBys, offset, limit, null)
+                                return gen
+                                        .generateSelectQuery("people", null,
+                                                orderBys, offset, limit, null)
                                         .getQueryString();
                             }
                         } else {
@@ -1721,8 +1711,8 @@ public class SQLContainerTest {
                             if (!orderBys.isEmpty()) {
                                 query.append(" ORDER BY ");
                                 for (OrderBy orderBy : orderBys) {
-                                    query.append("\"" + orderBy.getColumn()
-                                            + "\"");
+                                    query.append(
+                                            "\"" + orderBy.getColumn() + "\"");
                                     if (orderBy.isAscending()) {
                                         query.append(" ASC");
                                     } else {
@@ -1808,12 +1798,14 @@ public class SQLContainerTest {
                             if (orderBys == null || orderBys.isEmpty()) {
                                 List<OrderBy> ob = new ArrayList<OrderBy>();
                                 ob.add(new OrderBy("ID", true));
-                                return gen.generateSelectQuery("people", null,
-                                        ob, offset, limit, null)
+                                return gen
+                                        .generateSelectQuery("people", null, ob,
+                                                offset, limit, null)
                                         .getQueryString();
                             } else {
-                                return gen.generateSelectQuery("people", null,
-                                        orderBys, offset, limit, null)
+                                return gen
+                                        .generateSelectQuery("people", null,
+                                                orderBys, offset, limit, null)
                                         .getQueryString();
                             }
                         } else if (SQLTestsConstants.db == DB.ORACLE) {
@@ -1821,12 +1813,14 @@ public class SQLContainerTest {
                             if (orderBys == null || orderBys.isEmpty()) {
                                 List<OrderBy> ob = new ArrayList<OrderBy>();
                                 ob.add(new OrderBy("ID", true));
-                                return gen.generateSelectQuery("people", null,
-                                        ob, offset, limit, null)
+                                return gen
+                                        .generateSelectQuery("people", null, ob,
+                                                offset, limit, null)
                                         .getQueryString();
                             } else {
-                                return gen.generateSelectQuery("people", null,
-                                        orderBys, offset, limit, null)
+                                return gen
+                                        .generateSelectQuery("people", null,
+                                                orderBys, offset, limit, null)
                                         .getQueryString();
                             }
                         } else {
@@ -1835,8 +1829,8 @@ public class SQLContainerTest {
                             if (!orderBys.isEmpty()) {
                                 query.append(" ORDER BY ");
                                 for (OrderBy orderBy : orderBys) {
-                                    query.append("\"" + orderBy.getColumn()
-                                            + "\"");
+                                    query.append(
+                                            "\"" + orderBy.getColumn() + "\"");
                                     if (orderBy.isAscending()) {
                                         query.append(" ASC");
                                     } else {
@@ -1902,9 +1896,8 @@ public class SQLContainerTest {
                 return null;
             }
         }).anyTimes();
-        EasyMock.expect(
-                delegate.getQueryStatement(EasyMock.anyInt(), EasyMock.anyInt()))
-                .andAnswer(new IAnswer<StatementHelper>() {
+        EasyMock.expect(delegate.getQueryStatement(EasyMock.anyInt(),
+                EasyMock.anyInt())).andAnswer(new IAnswer<StatementHelper>() {
                     @Override
                     public StatementHelper answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
@@ -1922,8 +1915,8 @@ public class SQLContainerTest {
                         StringBuffer query = new StringBuffer(
                                 "SELECT COUNT(*) FROM people");
                         if (!filters.isEmpty()) {
-                            query.append(QueryBuilder.getWhereStringForFilters(
-                                    filters, sh));
+                            query.append(QueryBuilder
+                                    .getWhereStringForFilters(filters, sh));
                         }
                         sh.setQueryString(query.toString());
                         return sh;
@@ -1974,9 +1967,8 @@ public class SQLContainerTest {
                 return null;
             }
         }).anyTimes();
-        EasyMock.expect(
-                delegate.getQueryStatement(EasyMock.anyInt(), EasyMock.anyInt()))
-                .andAnswer(new IAnswer<StatementHelper>() {
+        EasyMock.expect(delegate.getQueryStatement(EasyMock.anyInt(),
+                EasyMock.anyInt())).andAnswer(new IAnswer<StatementHelper>() {
                     @Override
                     public StatementHelper answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
@@ -1994,8 +1986,8 @@ public class SQLContainerTest {
                         StringBuffer query = new StringBuffer(
                                 "SELECT COUNT(*) FROM people");
                         if (!filters.isEmpty()) {
-                            query.append(QueryBuilder.getWhereStringForFilters(
-                                    filters, sh));
+                            query.append(QueryBuilder
+                                    .getWhereStringForFilters(filters, sh));
                         }
                         sh.setQueryString(query.toString());
                         return sh;
@@ -2045,9 +2037,8 @@ public class SQLContainerTest {
                 return null;
             }
         }).anyTimes();
-        EasyMock.expect(
-                delegate.getQueryStatement(EasyMock.anyInt(), EasyMock.anyInt()))
-                .andAnswer(new IAnswer<StatementHelper>() {
+        EasyMock.expect(delegate.getQueryStatement(EasyMock.anyInt(),
+                EasyMock.anyInt())).andAnswer(new IAnswer<StatementHelper>() {
                     @Override
                     public StatementHelper answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
@@ -2065,8 +2056,8 @@ public class SQLContainerTest {
                         StringBuffer query = new StringBuffer(
                                 "SELECT COUNT(*) FROM people");
                         if (!filters.isEmpty()) {
-                            query.append(QueryBuilder.getWhereStringForFilters(
-                                    filters, sh));
+                            query.append(QueryBuilder
+                                    .getWhereStringForFilters(filters, sh));
                         }
                         sh.setQueryString(query.toString());
                         return sh;
@@ -2117,9 +2108,8 @@ public class SQLContainerTest {
                 return null;
             }
         }).anyTimes();
-        EasyMock.expect(
-                delegate.getQueryStatement(EasyMock.anyInt(), EasyMock.anyInt()))
-                .andAnswer(new IAnswer<StatementHelper>() {
+        EasyMock.expect(delegate.getQueryStatement(EasyMock.anyInt(),
+                EasyMock.anyInt())).andAnswer(new IAnswer<StatementHelper>() {
                     @Override
                     public StatementHelper answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
@@ -2137,8 +2127,8 @@ public class SQLContainerTest {
                         StringBuffer query = new StringBuffer(
                                 "SELECT COUNT(*) FROM people");
                         if (!filters.isEmpty()) {
-                            query.append(QueryBuilder.getWhereStringForFilters(
-                                    filters, sh));
+                            query.append(QueryBuilder
+                                    .getWhereStringForFilters(filters, sh));
                         }
                         sh.setQueryString(query.toString());
                         return sh;
@@ -2195,9 +2185,8 @@ public class SQLContainerTest {
                 return null;
             }
         }).anyTimes();
-        EasyMock.expect(
-                delegate.getQueryStatement(EasyMock.anyInt(), EasyMock.anyInt()))
-                .andAnswer(new IAnswer<StatementHelper>() {
+        EasyMock.expect(delegate.getQueryStatement(EasyMock.anyInt(),
+                EasyMock.anyInt())).andAnswer(new IAnswer<StatementHelper>() {
                     @Override
                     public StatementHelper answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
@@ -2215,8 +2204,8 @@ public class SQLContainerTest {
                         StringBuffer query = new StringBuffer(
                                 "SELECT COUNT(*) FROM people");
                         if (!filters.isEmpty()) {
-                            query.append(QueryBuilder.getWhereStringForFilters(
-                                    filters, sh));
+                            query.append(QueryBuilder
+                                    .getWhereStringForFilters(filters, sh));
                         }
                         sh.setQueryString(query.toString());
                         return sh;
@@ -2273,9 +2262,8 @@ public class SQLContainerTest {
                 return null;
             }
         }).anyTimes();
-        EasyMock.expect(
-                delegate.getQueryStatement(EasyMock.anyInt(), EasyMock.anyInt()))
-                .andAnswer(new IAnswer<StatementHelper>() {
+        EasyMock.expect(delegate.getQueryStatement(EasyMock.anyInt(),
+                EasyMock.anyInt())).andAnswer(new IAnswer<StatementHelper>() {
                     @Override
                     public StatementHelper answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
@@ -2293,8 +2281,8 @@ public class SQLContainerTest {
                         StringBuffer query = new StringBuffer(
                                 "SELECT COUNT(*) FROM people");
                         if (!filters.isEmpty()) {
-                            query.append(QueryBuilder.getWhereStringForFilters(
-                                    filters, sh));
+                            query.append(QueryBuilder
+                                    .getWhereStringForFilters(filters, sh));
                         }
                         sh.setQueryString(query.toString());
                         return sh;
@@ -2319,26 +2307,27 @@ public class SQLContainerTest {
 
         // Ville, Kalle, Pelle, Palle
         Assert.assertEquals(4, container.size());
-        Assert.assertEquals(
-                "Ville",
-                container.getContainerProperty(container.getIdByIndex(0),
-                        "NAME").getValue());
-        Assert.assertEquals(
-                "Kalle",
-                container.getContainerProperty(container.getIdByIndex(1),
-                        "NAME").getValue());
-        Assert.assertEquals(
-                "Pelle",
-                container.getContainerProperty(container.getIdByIndex(2),
-                        "NAME").getValue());
-        Assert.assertEquals(
-                "Palle",
-                container.getContainerProperty(container.getIdByIndex(3),
-                        "NAME").getValue());
+        Assert.assertEquals("Ville",
+                container
+                        .getContainerProperty(container.getIdByIndex(0), "NAME")
+                        .getValue());
+        Assert.assertEquals("Kalle",
+                container
+                        .getContainerProperty(container.getIdByIndex(1), "NAME")
+                        .getValue());
+        Assert.assertEquals("Pelle",
+                container
+                        .getContainerProperty(container.getIdByIndex(2), "NAME")
+                        .getValue());
+        Assert.assertEquals("Palle",
+                container
+                        .getContainerProperty(container.getIdByIndex(3), "NAME")
+                        .getValue());
 
         try {
             container.getIdByIndex(4);
-            Assert.fail("SQLContainer.getIdByIndex() returned a value for an index beyond the end of the container");
+            Assert.fail(
+                    "SQLContainer.getIdByIndex() returned a value for an index beyond the end of the container");
         } catch (IndexOutOfBoundsException e) {
             // should throw exception - item is filtered out
         }
@@ -2395,12 +2384,14 @@ public class SQLContainerTest {
                             if (orderBys == null || orderBys.isEmpty()) {
                                 List<OrderBy> ob = new ArrayList<OrderBy>();
                                 ob.add(new OrderBy("ID", true));
-                                return gen.generateSelectQuery("people", null,
-                                        ob, offset, limit, null)
+                                return gen
+                                        .generateSelectQuery("people", null, ob,
+                                                offset, limit, null)
                                         .getQueryString();
                             } else {
-                                return gen.generateSelectQuery("people", null,
-                                        orderBys, offset, limit, null)
+                                return gen
+                                        .generateSelectQuery("people", null,
+                                                orderBys, offset, limit, null)
                                         .getQueryString();
                             }
                         } else if (SQLTestsConstants.db == DB.ORACLE) {
@@ -2408,12 +2399,14 @@ public class SQLContainerTest {
                             if (orderBys == null || orderBys.isEmpty()) {
                                 List<OrderBy> ob = new ArrayList<OrderBy>();
                                 ob.add(new OrderBy("ID", true));
-                                return gen.generateSelectQuery("people", null,
-                                        ob, offset, limit, null)
+                                return gen
+                                        .generateSelectQuery("people", null, ob,
+                                                offset, limit, null)
                                         .getQueryString();
                             } else {
-                                return gen.generateSelectQuery("people", null,
-                                        orderBys, offset, limit, null)
+                                return gen
+                                        .generateSelectQuery("people", null,
+                                                orderBys, offset, limit, null)
                                         .getQueryString();
                             }
                         } else {
@@ -2422,8 +2415,8 @@ public class SQLContainerTest {
                             if (!orderBys.isEmpty()) {
                                 query.append(" ORDER BY ");
                                 for (OrderBy orderBy : orderBys) {
-                                    query.append("\"" + orderBy.getColumn()
-                                            + "\"");
+                                    query.append(
+                                            "\"" + orderBy.getColumn() + "\"");
                                     if (orderBy.isAscending()) {
                                         query.append(" ASC");
                                     } else {
@@ -2462,8 +2455,7 @@ public class SQLContainerTest {
         Assert.assertEquals("Börje",
                 container.getContainerProperty(container.firstItemId(), "NAME")
                         .getValue());
-        Assert.assertEquals(
-                "Wilbert",
+        Assert.assertEquals("Wilbert",
                 container.getContainerProperty(
                         container.getIdByIndex(container.size() - 2), "NAME")
                         .getValue());

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -49,7 +49,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -75,9 +75,11 @@ public class Dragging extends VerticalLayout implements View {
             @Override
             public void menuSelected(MenuItem selectedItem) {
                 if (selectedItem.isChecked()) {
-                    sample.removeStyleName(ValoTheme.DRAG_AND_DROP_WRAPPER_NO_VERTICAL_DRAG_HINTS);
+                    sample.removeStyleName(
+                            ValoTheme.DRAG_AND_DROP_WRAPPER_NO_VERTICAL_DRAG_HINTS);
                 } else {
-                    sample.addStyleName(ValoTheme.DRAG_AND_DROP_WRAPPER_NO_VERTICAL_DRAG_HINTS);
+                    sample.addStyleName(
+                            ValoTheme.DRAG_AND_DROP_WRAPPER_NO_VERTICAL_DRAG_HINTS);
                 }
             }
         });
@@ -88,9 +90,11 @@ public class Dragging extends VerticalLayout implements View {
             @Override
             public void menuSelected(MenuItem selectedItem) {
                 if (selectedItem.isChecked()) {
-                    sample.removeStyleName(ValoTheme.DRAG_AND_DROP_WRAPPER_NO_HORIZONTAL_DRAG_HINTS);
+                    sample.removeStyleName(
+                            ValoTheme.DRAG_AND_DROP_WRAPPER_NO_HORIZONTAL_DRAG_HINTS);
                 } else {
-                    sample.addStyleName(ValoTheme.DRAG_AND_DROP_WRAPPER_NO_HORIZONTAL_DRAG_HINTS);
+                    sample.addStyleName(
+                            ValoTheme.DRAG_AND_DROP_WRAPPER_NO_HORIZONTAL_DRAG_HINTS);
                 }
             }
         });
@@ -101,9 +105,11 @@ public class Dragging extends VerticalLayout implements View {
             @Override
             public void menuSelected(MenuItem selectedItem) {
                 if (selectedItem.isChecked()) {
-                    sample.removeStyleName(ValoTheme.DRAG_AND_DROP_WRAPPER_NO_BOX_DRAG_HINTS);
+                    sample.removeStyleName(
+                            ValoTheme.DRAG_AND_DROP_WRAPPER_NO_BOX_DRAG_HINTS);
                 } else {
-                    sample.addStyleName(ValoTheme.DRAG_AND_DROP_WRAPPER_NO_BOX_DRAG_HINTS);
+                    sample.addStyleName(
+                            ValoTheme.DRAG_AND_DROP_WRAPPER_NO_BOX_DRAG_HINTS);
                 }
             }
         });
@@ -130,15 +136,15 @@ public class Dragging extends VerticalLayout implements View {
         label.setWidth("120px");
         components.add(label);
 
-        final Embedded image = new Embedded("", new ThemeResource(
-                "../runo/icons/64/document.png"));
+        final Embedded image = new Embedded("",
+                new ThemeResource("../runo/icons/64/document.png"));
         components.add(image);
 
         final CssLayout documentLayout = new CssLayout();
         documentLayout.setWidth("19px");
         for (int i = 0; i < 5; ++i) {
-            final Embedded e = new Embedded(null, new ThemeResource(
-                    "../runo/icons/16/document.png"));
+            final Embedded e = new Embedded(null,
+                    new ThemeResource("../runo/icons/16/document.png"));
             e.setHeight("16px");
             e.setWidth("16px");
             documentLayout.addComponent(e);
@@ -202,16 +208,16 @@ public class Dragging extends VerticalLayout implements View {
                 }
 
                 // drop on top of target?
-                if (dropTargetData.getData("horizontalLocation").equals(
-                        HorizontalDropLocation.CENTER.toString())) {
+                if (dropTargetData.getData("horizontalLocation")
+                        .equals(HorizontalDropLocation.CENTER.toString())) {
                     if (sourceWasAfterTarget) {
                         index--;
                     }
                 }
 
                 // drop before the target?
-                else if (dropTargetData.getData("horizontalLocation").equals(
-                        HorizontalDropLocation.LEFT.toString())) {
+                else if (dropTargetData.getData("horizontalLocation")
+                        .equals(HorizontalDropLocation.LEFT.toString())) {
                     index--;
                     if (index < 0) {
                         index = 0;

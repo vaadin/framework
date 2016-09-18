@@ -11,8 +11,8 @@ import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 
-public class CustomLayoutUsingTemplate extends TestBase implements
-        ClickListener {
+public class CustomLayoutUsingTemplate extends TestBase
+        implements ClickListener {
 
     CustomLayout layout;
     Button button1 = new Button("Add Button to first location", this);
@@ -20,13 +20,13 @@ public class CustomLayoutUsingTemplate extends TestBase implements
 
     @Override
     protected void setup() {
-        String thisPackage = CustomLayoutUsingTemplate.class.getName().replace(
-                '.', '/');
+        String thisPackage = CustomLayoutUsingTemplate.class.getName()
+                .replace('.', '/');
         thisPackage = thisPackage.replaceAll(
                 CustomLayoutUsingTemplate.class.getSimpleName() + "$", "");
         String template = thisPackage + "template.htm";
-        InputStream is = getClass().getClassLoader().getResourceAsStream(
-                template);
+        InputStream is = getClass().getClassLoader()
+                .getResourceAsStream(template);
 
         addComponent(button1);
 

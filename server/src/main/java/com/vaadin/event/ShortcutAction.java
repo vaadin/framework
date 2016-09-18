@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -47,7 +47,7 @@ import com.vaadin.ui.Window;
  * very well supported yet, but it might still be a good idea to give a caption
  * to the shortcut.
  * </p>
- * 
+ *
  * @author Vaadin Ltd.
  * @since 4.0.1
  */
@@ -63,7 +63,7 @@ public class ShortcutAction extends Action {
      * (optionally) {@link ModifierKey}s. <br/>
      * The shortcut might be shown in the UI (e.g context menu), in which case
      * the caption will be used.
-     * 
+     *
      * @param caption
      *            used when displaying the shortcut visually
      * @param kc
@@ -82,7 +82,7 @@ public class ShortcutAction extends Action {
      * (optionally) {@link ModifierKey}s. <br/>
      * The shortcut might be shown in the UI (e.g context menu), in which case
      * the caption and icon will be used.
-     * 
+     *
      * @param caption
      *            used when displaying the shortcut visually
      * @param icon
@@ -112,21 +112,21 @@ public class ShortcutAction extends Action {
     public static final char SHORTHAND_CHAR_CTRL = '^';
 
     // regex-quote (escape) the characters
-    private static final String SHORTHAND_ALT = Pattern.quote(Character
-            .toString(SHORTHAND_CHAR_ALT));
-    private static final String SHORTHAND_SHIFT = Pattern.quote(Character
-            .toString(SHORTHAND_CHAR_SHIFT));
-    private static final String SHORTHAND_CTRL = Pattern.quote(Character
-            .toString(SHORTHAND_CHAR_CTRL));
+    private static final String SHORTHAND_ALT = Pattern
+            .quote(Character.toString(SHORTHAND_CHAR_ALT));
+    private static final String SHORTHAND_SHIFT = Pattern
+            .quote(Character.toString(SHORTHAND_CHAR_SHIFT));
+    private static final String SHORTHAND_CTRL = Pattern
+            .quote(Character.toString(SHORTHAND_CHAR_CTRL));
     // Used for replacing escaped chars, e.g && with &
-    private static final Pattern SHORTHAND_ESCAPE = Pattern.compile("("
-            + SHORTHAND_ALT + "?)" + SHORTHAND_ALT + "|(" + SHORTHAND_SHIFT
-            + "?)" + SHORTHAND_SHIFT + "|(" + SHORTHAND_CTRL + "?)"
-            + SHORTHAND_CTRL);
+    private static final Pattern SHORTHAND_ESCAPE = Pattern
+            .compile("(" + SHORTHAND_ALT + "?)" + SHORTHAND_ALT + "|("
+                    + SHORTHAND_SHIFT + "?)" + SHORTHAND_SHIFT + "|("
+                    + SHORTHAND_CTRL + "?)" + SHORTHAND_CTRL);
     // Used for removing escaped chars, only leaving real shorthands
-    private static final Pattern SHORTHAND_REMOVE = Pattern.compile("(["
-            + SHORTHAND_ALT + "|" + SHORTHAND_SHIFT + "|" + SHORTHAND_CTRL
-            + "])\\1");
+    private static final Pattern SHORTHAND_REMOVE = Pattern
+            .compile("([" + SHORTHAND_ALT + "|" + SHORTHAND_SHIFT + "|"
+                    + SHORTHAND_CTRL + "])\\1");
     // Mnemonic char, optionally followed by another, and optionally a third
     private static final Pattern SHORTHANDS = Pattern.compile("("
             + SHORTHAND_ALT + "|" + SHORTHAND_SHIFT + "|" + SHORTHAND_CTRL
@@ -151,7 +151,7 @@ public class ShortcutAction extends Action {
      * <code>"Save&&&close"</code> will respond to ALT-C, and the caption will
      * say "Save&close".
      * </p>
-     * 
+     *
      * @param shorthandCaption
      *            the caption in modifier shorthand
      */
@@ -171,7 +171,7 @@ public class ShortcutAction extends Action {
      * <code>new ShortcutAction("Do &stuff", new int[]{ShortcutAction.ModifierKey.CTRL}));</code>
      * will respond to CTRL-S.
      * </p>
-     * 
+     *
      * @param shorthandCaption
      * @param modifierKeys
      */
@@ -186,8 +186,8 @@ public class ShortcutAction extends Action {
             String match = matcher.group();
 
             // KeyCode from last char in match, uppercase
-            keyCode = Character.toUpperCase(matcher.group().charAt(
-                    match.length() - 1));
+            keyCode = Character
+                    .toUpperCase(matcher.group().charAt(match.length() - 1));
 
             // Given modifiers override this indicated in the caption
             if (modifierKeys != null) {
@@ -222,7 +222,7 @@ public class ShortcutAction extends Action {
     /**
      * When setting modifiers, make sure that modifiers is a valid array AND
      * that it's sorted.
-     * 
+     *
      * @param modifiers
      *            the modifier keys for this shortcut
      */
@@ -238,7 +238,7 @@ public class ShortcutAction extends Action {
     /**
      * Get the {@link KeyCode} that this shortcut reacts to (in combination with
      * the {@link ModifierKey}s).
-     * 
+     *
      * @return keycode for this shortcut
      */
     public int getKeyCode() {
@@ -247,7 +247,7 @@ public class ShortcutAction extends Action {
 
     /**
      * Get the {@link ModifierKey}s required for the shortcut to react.
-     * 
+     *
      * @return modifier keys for this shortcut
      */
     public int[] getModifiers() {
@@ -256,7 +256,7 @@ public class ShortcutAction extends Action {
 
     /**
      * Key codes that can be used for shortcuts
-     * 
+     *
      */
     public interface KeyCode extends Serializable {
         public static final int ENTER = 13;
@@ -388,7 +388,7 @@ public class ShortcutAction extends Action {
 
     /**
      * Modifier key constants
-     * 
+     *
      */
     public interface ModifierKey extends Serializable {
         public static final int SHIFT = 16;

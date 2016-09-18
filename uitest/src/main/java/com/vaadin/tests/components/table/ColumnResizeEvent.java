@@ -85,20 +85,21 @@ public class ColumnResizeEvent extends TestBase {
 
         table.addListener(new ColumnResizeListener() {
             @Override
-            public void columnResize(com.vaadin.ui.Table.ColumnResizeEvent event) {
+            public void columnResize(
+                    com.vaadin.ui.Table.ColumnResizeEvent event) {
 
                 if (event.getPropertyId().equals("firstname")) {
-                    column1Width.setValue(event.getCurrentWidth()
-                            + "px (previously " + event.getPreviousWidth()
-                            + "px)");
+                    column1Width.setValue(
+                            event.getCurrentWidth() + "px (previously "
+                                    + event.getPreviousWidth() + "px)");
                 } else if (event.getPropertyId().equals("lastname")) {
-                    column2Width.setValue(event.getCurrentWidth()
-                            + "px (previously " + event.getPreviousWidth()
-                            + "px)");
+                    column2Width.setValue(
+                            event.getCurrentWidth() + "px (previously "
+                                    + event.getPreviousWidth() + "px)");
                 } else if (event.getPropertyId().equals("150pxfixedCol")) {
-                    column3Width.setValue(event.getCurrentWidth()
-                            + "px (previously " + event.getPreviousWidth()
-                            + "px)");
+                    column3Width.setValue(
+                            event.getCurrentWidth() + "px (previously "
+                                    + event.getPreviousWidth() + "px)");
                 }
             }
         });

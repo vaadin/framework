@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Tests if table focus is moved correctly to the selected item
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -40,8 +40,8 @@ public class TableMoveFocusWithSelectionTest extends MultiBrowserTest {
         getDriver().findElement(By.id("row-5")).click();
 
         // Ensure row 5 gets focused
-        WebElement row5TableRow = getDriver().findElement(
-                By.xpath("//div[@id='row-5']/../../.."));
+        WebElement row5TableRow = getDriver()
+                .findElement(By.xpath("//div[@id='row-5']/../../.."));
         String row5StyleName = row5TableRow.getAttribute("class");
         assertTrue(row5StyleName.contains("v-table-focus"));
     }
@@ -58,8 +58,8 @@ public class TableMoveFocusWithSelectionTest extends MultiBrowserTest {
         getDriver().findElement(By.id("row-7")).click();
 
         // Clicking a row should get the row focus
-        WebElement row7TableRow = getDriver().findElement(
-                By.xpath("//div[@id='row-7']/../../.."));
+        WebElement row7TableRow = getDriver()
+                .findElement(By.xpath("//div[@id='row-7']/../../.."));
         String row7StyleName = row7TableRow.getAttribute("class");
         assertTrue(row7StyleName.contains("v-table-focus"));
 
@@ -73,8 +73,8 @@ public class TableMoveFocusWithSelectionTest extends MultiBrowserTest {
         getDriver().findElement(By.id("test-table")).click();
 
         // Ensure row 7 is still focused
-        row7TableRow = getDriver().findElement(
-                By.xpath("//div[@id='row-7']/../../.."));
+        row7TableRow = getDriver()
+                .findElement(By.xpath("//div[@id='row-7']/../../.."));
         row7StyleName = row7TableRow.getAttribute("class");
         assertTrue(row7StyleName.contains("v-table-focus"));
     }

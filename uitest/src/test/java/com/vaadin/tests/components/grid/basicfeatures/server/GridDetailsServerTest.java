@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -50,8 +50,8 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
             "Component", "Details", "Generators", "\"Watching\"" };
     private static final String[] DETAILS_GENERATOR_PERSISTING = new String[] {
             "Component", "Details", "Generators", "Persisting" };
-    private static final String[] CHANGE_HIERARCHY = new String[] {
-            "Component", "Details", "Generators", "- Change Component" };
+    private static final String[] CHANGE_HIERARCHY = new String[] { "Component",
+            "Details", "Generators", "- Change Component" };
 
     @Before
     public void setUp() {
@@ -93,8 +93,8 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         getGridElement().scroll(0);
         Thread.sleep(50);
-        assertNotNull("details should've been opened", getGridElement()
-                .getDetails(0));
+        assertNotNull("details should've been opened",
+                getGridElement().getDetails(0));
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -149,8 +149,8 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
         getGridElement().scrollToRow(0);
 
         // if this fails, it'll fail before the assertNotNull
-        assertNotNull("unexpected null details row", getGridElement()
-                .getDetails(0));
+        assertNotNull("unexpected null details row",
+                getGridElement().getDetails(0));
     }
 
     @Test
@@ -171,8 +171,8 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
         selectMenuPath(OPEN_ALMOST_LAST_ITEM_DETAILS);
         scrollGridVerticallyTo(100000);
 
-        TestBenchElement details = getGridElement().getDetails(
-                ALMOST_LAST_INDEX);
+        TestBenchElement details = getGridElement()
+                .getDetails(ALMOST_LAST_INDEX);
         assertNotNull(details);
         assertTrue("Unexpected details content",
                 details.getText().endsWith(ALMOST_LAST_INDEX + " (0)"));
@@ -205,8 +205,8 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
         assertEquals("One", getGridElement().getDetails(0).getText());
 
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
-        assertFalse("Details should be detached", getGridElement()
-                .isElementPresent(By.vaadin("#details[0]")));
+        assertFalse("Details should be detached",
+                getGridElement().isElementPresent(By.vaadin("#details[0]")));
 
         selectMenuPath(CHANGE_HIERARCHY);
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
@@ -225,8 +225,8 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
     public void swappingDetailsGenerators_shownDetails() {
         selectMenuPath(DETAILS_GENERATOR_PERSISTING);
         selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
-        assertTrue("Details should contain 'One' at first", getGridElement()
-                .getDetails(0).getText().contains("One"));
+        assertTrue("Details should contain 'One' at first",
+                getGridElement().getDetails(0).getText().contains("One"));
 
         selectMenuPath(DETAILS_GENERATOR_WATCHING);
         assertFalse(
@@ -251,8 +251,8 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
         scrollGridVerticallyTo(0);
 
         assertFalse("Got some errors", $(NotificationElement.class).exists());
-        assertNotNull("Could not find a details", getGridElement()
-                .getDetails(0));
+        assertNotNull("Could not find a details",
+                getGridElement().getDetails(0));
     }
 
     @Test
@@ -263,8 +263,8 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
         scrollGridVerticallyTo(1000);
 
         assertFalse("Got some errors", $(NotificationElement.class).exists());
-        assertNotNull("Could not find a details", getGridElement()
-                .getDetails(0));
+        assertNotNull("Could not find a details",
+                getGridElement().getDetails(0));
     }
 
     @Test
@@ -276,8 +276,8 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
         scrollGridVerticallyTo(0);
 
         assertFalse("Got some errors", $(NotificationElement.class).exists());
-        assertNotNull("Could not find a details", getGridElement()
-                .getDetails(0));
+        assertNotNull("Could not find a details",
+                getGridElement().getDetails(0));
     }
 
     @Test

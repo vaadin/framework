@@ -13,8 +13,8 @@ import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.data.Container.Sortable;
 import com.vaadin.data.Item;
 
-public abstract class AbstractHierarchicalContainerTestBase extends
-        AbstractContainerTestBase {
+public abstract class AbstractHierarchicalContainerTestBase
+        extends AbstractContainerTestBase {
 
     /**
      * @param container
@@ -45,9 +45,8 @@ public abstract class AbstractHierarchicalContainerTestBase extends
      */
     protected void validateHierarchicalContainer(Hierarchical container,
             Object expectedFirstItemId, Object expectedLastItemId,
-            Object itemIdInSet, Object itemIdNotInSet,
-            boolean checkGetItemNull, int expectedSize, int expectedRootSize,
-            boolean rootsHaveChildren) {
+            Object itemIdInSet, Object itemIdNotInSet, boolean checkGetItemNull,
+            int expectedSize, int expectedRootSize, boolean rootsHaveChildren) {
 
         validateContainer(container, expectedFirstItemId, expectedLastItemId,
                 itemIdInSet, itemIdNotInSet, checkGetItemNull, expectedSize);
@@ -166,10 +165,10 @@ public abstract class AbstractHierarchicalContainerTestBase extends
         initializeContainer(container);
 
         // Must be able to sort based on PROP1 and PROP2 for this test
-        assertTrue(sortable.getSortableContainerPropertyIds().contains(
-                FULLY_QUALIFIED_NAME));
-        assertTrue(sortable.getSortableContainerPropertyIds().contains(
-                REVERSE_FULLY_QUALIFIED_NAME));
+        assertTrue(sortable.getSortableContainerPropertyIds()
+                .contains(FULLY_QUALIFIED_NAME));
+        assertTrue(sortable.getSortableContainerPropertyIds()
+                .contains(REVERSE_FULLY_QUALIFIED_NAME));
 
         sortable.sort(new Object[] { FULLY_QUALIFIED_NAME },
                 new boolean[] { true });
@@ -218,8 +217,8 @@ public abstract class AbstractHierarchicalContainerTestBase extends
                 Item item = container.getItem(path);
                 item.getItemProperty(FULLY_QUALIFIED_NAME).setValue(path);
                 item.getItemProperty(SIMPLE_NAME).setValue(getSimpleName(path));
-                item.getItemProperty(REVERSE_FULLY_QUALIFIED_NAME).setValue(
-                        reverse(path));
+                item.getItemProperty(REVERSE_FULLY_QUALIFIED_NAME)
+                        .setValue(reverse(path));
                 item.getItemProperty(ID_NUMBER).setValue(1);
             }
             for (int j = 1; j < paths.length; j++) {
@@ -233,16 +232,15 @@ public abstract class AbstractHierarchicalContainerTestBase extends
 
                     Item item = container.getItem(path);
                     item.getItemProperty(FULLY_QUALIFIED_NAME).setValue(path);
-                    item.getItemProperty(SIMPLE_NAME).setValue(
-                            getSimpleName(path));
+                    item.getItemProperty(SIMPLE_NAME)
+                            .setValue(getSimpleName(path));
                     item.getItemProperty(REVERSE_FULLY_QUALIFIED_NAME)
                             .setValue(reverse(path));
                     item.getItemProperty(ID_NUMBER).setValue(1);
 
                 }
                 assertTrue(container.setChildrenAllowed(parent, true));
-                assertTrue(
-                        "Failed to set " + parent + " as parent for " + path,
+                assertTrue("Failed to set " + parent + " as parent for " + path,
                         container.setParent(path, parent));
             }
 
@@ -251,10 +249,10 @@ public abstract class AbstractHierarchicalContainerTestBase extends
             String parent = id.substring(0, id.lastIndexOf('.'));
             assertTrue(container.setParent(id, parent));
             item.getItemProperty(FULLY_QUALIFIED_NAME).setValue(sampleData[i]);
-            item.getItemProperty(SIMPLE_NAME).setValue(
-                    getSimpleName(sampleData[i]));
-            item.getItemProperty(REVERSE_FULLY_QUALIFIED_NAME).setValue(
-                    reverse(sampleData[i]));
+            item.getItemProperty(SIMPLE_NAME)
+                    .setValue(getSimpleName(sampleData[i]));
+            item.getItemProperty(REVERSE_FULLY_QUALIFIED_NAME)
+                    .setValue(reverse(sampleData[i]));
             item.getItemProperty(ID_NUMBER).setValue(i % 2);
         }
     }

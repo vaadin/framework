@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -59,8 +59,8 @@ public class GridEditorBufferedTest extends GridEditorTest {
         new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
 
         assertEditorClosed();
-        assertEquals("(100, 0) changed", getGridElement().getCell(100, 0)
-                .getText());
+        assertEquals("(100, 0) changed",
+                getGridElement().getCell(100, 0).getText());
     }
 
     @Test
@@ -101,13 +101,13 @@ public class GridEditorBufferedTest extends GridEditorTest {
 
         textField.sendKeys(" changed");
 
-        WebElement saveButton = getEditor().findElement(
-                By.className("v-grid-editor-save"));
+        WebElement saveButton = getEditor()
+                .findElement(By.className("v-grid-editor-save"));
 
         saveButton.click();
 
-        assertEquals("(100, 0) changed", getGridElement().getCell(100, 0)
-                .getText());
+        assertEquals("(100, 0) changed",
+                getGridElement().getCell(100, 0).getText());
     }
 
     @Test
@@ -125,8 +125,8 @@ public class GridEditorBufferedTest extends GridEditorTest {
 
         selectMenuPath("Component", "Editor", "Save");
 
-        assertEquals("(100, 0) changed", getGridElement().getCell(100, 0)
-                .getText());
+        assertEquals("(100, 0) changed",
+                getGridElement().getCell(100, 0).getText());
     }
 
     @Test
@@ -151,7 +151,8 @@ public class GridEditorBufferedTest extends GridEditorTest {
 
     private void makeInvalidEdition() {
         selectMenuPath(EDIT_ITEM_5);
-        assertFalse(logContainsText("Exception occured, java.lang.IllegalStateException"));
+        assertFalse(logContainsText(
+                "Exception occured, java.lang.IllegalStateException"));
 
         GridEditorElement editor = getGridElement().getEditor();
 
@@ -197,8 +198,8 @@ public class GridEditorBufferedTest extends GridEditorTest {
                 GridConstants.DEFAULT_SAVE_CAPTION, getSaveButton().getText());
         assertEquals("Cancel button caption should've been \""
                 + GridConstants.DEFAULT_CANCEL_CAPTION + "\" to begin with",
-                GridConstants.DEFAULT_CANCEL_CAPTION, getCancelButton()
-                        .getText());
+                GridConstants.DEFAULT_CANCEL_CAPTION,
+                getCancelButton().getText());
 
         selectMenuPath("Component", "Editor", "Change save caption");
         assertNotEquals(
@@ -211,8 +212,8 @@ public class GridEditorBufferedTest extends GridEditorTest {
         selectMenuPath(EDIT_ITEM_5);
         assertNotEquals(
                 "Cancel button caption should've changed while editor is closed",
-                GridConstants.DEFAULT_CANCEL_CAPTION, getCancelButton()
-                        .getText());
+                GridConstants.DEFAULT_CANCEL_CAPTION,
+                getCancelButton().getText());
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -288,11 +289,12 @@ public class GridEditorBufferedTest extends GridEditorTest {
     public void testProgrammaticOpeningDisabledWhenOpen() {
         selectMenuPath(EDIT_ITEM_5);
         assertEditorOpen();
-        assertEquals("Editor should edit row 5", "(5, 0)", getEditorWidgets()
-                .get(0).getAttribute("value"));
+        assertEquals("Editor should edit row 5", "(5, 0)",
+                getEditorWidgets().get(0).getAttribute("value"));
 
         selectMenuPath(EDIT_ITEM_100);
-        boolean thrown = logContainsText("Exception occured, java.lang.IllegalStateException");
+        boolean thrown = logContainsText(
+                "Exception occured, java.lang.IllegalStateException");
         assertTrue("IllegalStateException thrown", thrown);
 
         assertEditorOpen();

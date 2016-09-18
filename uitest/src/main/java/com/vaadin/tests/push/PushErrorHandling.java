@@ -28,10 +28,10 @@ public class PushErrorHandling extends AbstractTestUI {
 
             @Override
             public void error(com.vaadin.server.ErrorEvent event) {
-                addComponent(new Label("An error! "
-                        + event.getThrowable().getMessage()));
-                System.err.println("An error! "
-                        + event.getThrowable().getMessage());
+                addComponent(new Label(
+                        "An error! " + event.getThrowable().getMessage()));
+                System.err.println(
+                        "An error! " + event.getThrowable().getMessage());
             }
         });
 
@@ -60,8 +60,8 @@ public class PushErrorHandling extends AbstractTestUI {
                         AbstractInMemoryContainer.class) {
                     @Override
                     public Collection<String> getContainerPropertyIds() {
-                        List<String> cpropIds = new ArrayList<String>(super
-                                .getContainerPropertyIds());
+                        List<String> cpropIds = new ArrayList<String>(
+                                super.getContainerPropertyIds());
                         cpropIds.add("testid");
                         return cpropIds;
                     }

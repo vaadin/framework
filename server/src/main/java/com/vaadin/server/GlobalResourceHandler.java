@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,7 +36,7 @@ import com.vaadin.util.CurrentInstance;
 /**
  * A {@link RequestHandler} that takes care of {@link ConnectorResource}s that
  * should not be served by the connector.
- * 
+ *
  * @author Vaadin Ltd
  * @version @VERSION@
  * @since 7.0.0
@@ -61,9 +61,9 @@ public class GlobalResourceHandler implements RequestHandler {
     private int nextLegacyId = 0;
 
     // APP/global/[uiid]/[type]/[id]
-    private static final Pattern pattern = Pattern.compile("^/?"
-            + ApplicationConstants.APP_PATH + '/' + RESOURCE_REQUEST_PATH
-            + "(\\d+)/(([^/]+)(/.*))");
+    private static final Pattern pattern = Pattern
+            .compile("^/?" + ApplicationConstants.APP_PATH + '/'
+                    + RESOURCE_REQUEST_PATH + "(\\d+)/(([^/]+)(/.*))");
 
     @Override
     public boolean handleRequest(VaadinSession session, VaadinRequest request,
@@ -83,8 +83,8 @@ public class GlobalResourceHandler implements RequestHandler {
         String key = matcher.group(2);
 
         if (key == null) {
-            return error(request, response, pathInfo
-                    + " is not a valid global resource path");
+            return error(request, response,
+                    pathInfo + " is not a valid global resource path");
         }
         session.lock();
         Map<Class<?>, CurrentInstance> oldInstances = null;
@@ -104,14 +104,14 @@ public class GlobalResourceHandler implements RequestHandler {
             }
 
             if (resource == null) {
-                return error(request, response, "Global resource " + key
-                        + " not found");
+                return error(request, response,
+                        "Global resource " + key + " not found");
             }
 
             stream = resource.getStream();
             if (stream == null) {
-                return error(request, response, "Resource " + resource
-                        + " didn't produce any stream.");
+                return error(request, response,
+                        "Resource " + resource + " didn't produce any stream.");
             }
         } finally {
             session.unlock();
@@ -130,7 +130,7 @@ public class GlobalResourceHandler implements RequestHandler {
      * A {@link ConnectorResource} registered for a {@link LegacyComponent} will
      * be set to be served with a global URL. Other resource types will be
      * ignored and thus not served by this handler.
-     * 
+     *
      * @param resource
      *            the resource to register
      * @param ownerConnector
@@ -181,7 +181,7 @@ public class GlobalResourceHandler implements RequestHandler {
 
     /**
      * Gets a global URI for a resource if it's registered with this handler.
-     * 
+     *
      * @param connector
      *            the connector for which the uri should be generated.
      * @param resource
@@ -189,7 +189,8 @@ public class GlobalResourceHandler implements RequestHandler {
      * @return an URI string, or <code>null</code> if the resource is not
      *         registered.
      */
-    public String getUri(ClientConnector connector, ConnectorResource resource) {
+    public String getUri(ClientConnector connector,
+            ConnectorResource resource) {
         // app://APP/global/[ui]/[type]/[id]
         String uri = legacyResourceKeys.get(resource);
         if (uri != null && !uri.isEmpty()) {
@@ -205,7 +206,7 @@ public class GlobalResourceHandler implements RequestHandler {
     /**
      * Notifies this handler that resources registered for the given connector
      * can be released.
-     * 
+     *
      * @param connector
      *            the connector for which any registered resources can be
      *            released.
@@ -230,8 +231,8 @@ public class GlobalResourceHandler implements RequestHandler {
         return Logger.getLogger(GlobalResourceHandler.class.getName());
     }
 
-    private static boolean error(VaadinRequest request,
-            VaadinResponse response, String logMessage) throws IOException {
+    private static boolean error(VaadinRequest request, VaadinResponse response,
+            String logMessage) throws IOException {
         getLogger().log(Level.WARNING, logMessage);
         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                 request.getPathInfo() + " can not be found");

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,31 +40,31 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
  * An abstract superclass for renderers that render clickable widgets. Click
  * handlers can be added to a renderer to listen to click events emitted by all
  * widgets rendered by the renderer.
- * 
+ *
  * @param <T>
  *            the presentation (column) type
  * @param <W>
  *            the widget type
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
-public abstract class ClickableRenderer<T, W extends Widget> extends
-        WidgetRenderer<T, W> implements ClickHandler {
+public abstract class ClickableRenderer<T, W extends Widget>
+        extends WidgetRenderer<T, W> implements ClickHandler {
 
     /**
      * A handler for {@link RendererClickEvent renderer click events}.
-     * 
+     *
      * @param <R>
      *            the row type of the containing Grid
-     * 
+     *
      * @see {@link ButtonRenderer#addClickHandler(RendererClickHandler)}
      */
     public interface RendererClickHandler<R> extends EventHandler {
 
         /**
          * Called when a rendered button is clicked.
-         * 
+         *
          * @param event
          *            the event representing the click
          */
@@ -74,13 +74,13 @@ public abstract class ClickableRenderer<T, W extends Widget> extends
     /**
      * An event fired when a widget rendered by a ClickableWidgetRenderer
      * subclass is clicked.
-     * 
+     *
      * @param <R>
      *            the row type of the containing Grid
      */
     @SuppressWarnings("rawtypes")
-    public static class RendererClickEvent<R> extends
-            MouseEvent<RendererClickHandler> {
+    public static class RendererClickEvent<R>
+            extends MouseEvent<RendererClickHandler> {
 
         @SuppressWarnings("unchecked")
         static final Type<RendererClickHandler> TYPE = new Type<RendererClickHandler>(
@@ -95,7 +95,7 @@ public abstract class ClickableRenderer<T, W extends Widget> extends
 
         /**
          * Returns the cell of the clicked button.
-         * 
+         *
          * @return the cell
          */
         public CellReference<R> getCell() {
@@ -105,7 +105,7 @@ public abstract class ClickableRenderer<T, W extends Widget> extends
         /**
          * Returns the data object corresponding to the row of the clicked
          * button.
-         * 
+         *
          * @return the row data object
          */
         public R getRow() {
@@ -138,7 +138,7 @@ public abstract class ClickableRenderer<T, W extends Widget> extends
 
         /**
          * Returns the cell the given element belongs to.
-         * 
+         *
          * @param grid
          *            the grid instance that is queried
          * @param e
@@ -174,7 +174,7 @@ public abstract class ClickableRenderer<T, W extends Widget> extends
          * please refer to the note in
          * {@link WidgetUtil#findWidget(Element, Class) Util.findWidget} for
          * details.
-         * 
+         *
          * @param e
          *            the element whose parent grid to find
          * @return the parent grid or null if none found.
@@ -209,11 +209,12 @@ public abstract class ClickableRenderer<T, W extends Widget> extends
      * <p>
      * Note that the row type of the click handler must match the row type of
      * the containing Grid.
-     * 
+     *
      * @param handler
      *            the click handler to be added
      */
-    public HandlerRegistration addClickHandler(RendererClickHandler<?> handler) {
+    public HandlerRegistration addClickHandler(
+            RendererClickHandler<?> handler) {
         if (handlerManager == null) {
             handlerManager = new HandlerManager(this);
         }

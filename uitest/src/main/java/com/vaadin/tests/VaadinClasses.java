@@ -37,7 +37,7 @@ public class VaadinClasses {
             return null;
         }
     }
-    
+
     public static List<Class<? extends ComponentContainer>> getComponentContainers() {
         try {
             return findClasses(ComponentContainer.class, "com.vaadin.ui");
@@ -73,7 +73,8 @@ public class VaadinClasses {
         try {
             // Given as name to avoid dependencies on testbench source folder
             return (List) findClasses(
-                    Class.forName("com.vaadin.tests.components.AbstractComponentTest"),
+                    Class.forName(
+                            "com.vaadin.tests.components.AbstractComponentTest"),
                     "com.vaadin.tests.components");
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,8 +97,8 @@ public class VaadinClasses {
             try {
                 File f = new File(location.toURI());
                 if (!f.exists()) {
-                    throw new IOException("Directory " + f.toString()
-                            + " does not exist");
+                    throw new IOException(
+                            "Directory " + f.toString() + " does not exist");
                 }
                 findPackages(f, basePackage, baseClass, classes,
                         ignoredPackages);

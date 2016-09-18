@@ -30,8 +30,8 @@ public class DateFieldPopupClosingTest extends MultiBrowserTest {
     }
 
     private void assertThatPopupIsVisible() {
-        waitUntil(ExpectedConditions.visibilityOfElementLocated(By
-                .className("v-datefield-popup")));
+        waitUntil(ExpectedConditions
+                .visibilityOfElementLocated(By.className("v-datefield-popup")));
     }
 
     private void assertThatPopupIsInvisible() {

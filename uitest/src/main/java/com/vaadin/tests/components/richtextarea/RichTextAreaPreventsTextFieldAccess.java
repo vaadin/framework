@@ -17,14 +17,13 @@ public class RichTextAreaPreventsTextFieldAccess extends TestBase {
 
     @Override
     protected void setup() {
-        Label label = new Label(
-                "Steps to reproduce problem with IE8. "
-                        + "<br> Step 1: Click on the 'Open RichTextArea-Dialog' button "
-                        + "<br> Step 2: Write something in the RichTextArea. "
-                        + "Do not press outside the textfield for the "
-                        + "richTextArea. <br> Step 3: Press the 'removeWindowButton' "
-                        + "<br> Now you cannot write in the TextField on this page "
-                        + "<br> Resetting the focus to textfield explicitly, works around the issue");
+        Label label = new Label("Steps to reproduce problem with IE8. "
+                + "<br> Step 1: Click on the 'Open RichTextArea-Dialog' button "
+                + "<br> Step 2: Write something in the RichTextArea. "
+                + "Do not press outside the textfield for the "
+                + "richTextArea. <br> Step 3: Press the 'removeWindowButton' "
+                + "<br> Now you cannot write in the TextField on this page "
+                + "<br> Resetting the focus to textfield explicitly, works around the issue");
         label.setContentMode(ContentMode.HTML);
         addComponent(label);
 

@@ -108,7 +108,8 @@ public class AddComponentsTest {
         assertSame(extra, layout.getComponent(4));
 
         layout.removeAllComponents();
-        layout.addComponents(children[3], children[2], children[1], children[0]);
+        layout.addComponents(children[3], children[2], children[1],
+                children[0]);
         assertOrder(layout, new int[] { 3, 2, 1, 0 });
     }
 

@@ -45,10 +45,9 @@ public class FormWithNestedProperties extends AbstractBeanFieldGroupTest {
         addComponent(getDiscardButton());
         addComponent(getShowBeanButton());
 
-        getFieldBinder().setItemDataSource(
-                new Person("First", "Last", "Email", 52, Sex.FEMALE,
-                        new Address("street address", 01234, "City",
-                                Country.FINLAND)));
+        getFieldBinder().setItemDataSource(new Person("First", "Last", "Email",
+                52, Sex.FEMALE,
+                new Address("street address", 01234, "City", Country.FINLAND)));
 
     }
 

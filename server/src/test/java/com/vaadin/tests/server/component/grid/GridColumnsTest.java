@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -109,8 +109,8 @@ public class GridColumnsTest {
 
         column.setHeaderCaption("CustomHeader");
         assertEquals("CustomHeader", column.getHeaderCaption());
-        assertEquals(column.getHeaderCaption(), grid.getDefaultHeaderRow()
-                .getCell("column1").getText());
+        assertEquals(column.getHeaderCaption(),
+                grid.getDefaultHeaderRow().getCell("column1").getText());
 
         column.setWidth(100);
         assertEquals(100, column.getWidth(), 0.49d);
@@ -226,15 +226,14 @@ public class GridColumnsTest {
                 .getContainerPropertyIds().iterator().next();
 
         grid.getContainerDataSource().removeContainerProperty(propertyId);
-        assertEquals(
-                "Frozen column count should update when removing last row",
+        assertEquals("Frozen column count should update when removing last row",
                 containerSize - 1, grid.getFrozenColumnCount());
     }
 
     @Test
     public void testReorderColumns() {
-        Set<?> containerProperties = new LinkedHashSet<Object>(grid
-                .getContainerDataSource().getContainerPropertyIds());
+        Set<?> containerProperties = new LinkedHashSet<Object>(
+                grid.getContainerDataSource().getContainerPropertyIds());
         Object[] properties = new Object[] { "column3", "column2", "column6" };
         grid.setColumnOrder(properties);
 
@@ -284,8 +283,8 @@ public class GridColumnsTest {
     public void testPropertyAndColumnEditorFieldsMatch() {
         Column column1 = grid.getColumn("column1");
         column1.setEditorField(new TextField());
-        assertSame(column1.getEditorField(), grid.getColumn("column1")
-                .getEditorField());
+        assertSame(column1.getEditorField(),
+                grid.getColumn("column1").getEditorField());
 
         Column column2 = grid.getColumn("column2");
         column2.setEditorField(new TextField());
@@ -372,8 +371,8 @@ public class GridColumnsTest {
         ColumnResizeListener mock = EasyMock
                 .createMock(ColumnResizeListener.class);
         Capture<ColumnResizeEvent> capturedEvent = new Capture<ColumnResizeEvent>();
-        mock.columnResize(and(capture(capturedEvent),
-                isA(ColumnResizeEvent.class)));
+        mock.columnResize(
+                and(capture(capturedEvent), isA(ColumnResizeEvent.class)));
         EasyMock.expectLastCall().once();
 
         // Tell it to wait for the call
@@ -394,7 +393,7 @@ public class GridColumnsTest {
                 event.isUserOriginated());
     }
 
-	@Test
+    @Test
     public void textHeaderCaptionIsReturned() {
         Column firstColumn = grid.getColumns().get(0);
 

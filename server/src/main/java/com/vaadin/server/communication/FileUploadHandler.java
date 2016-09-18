@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -42,7 +42,7 @@ import com.vaadin.ui.Upload.FailedEvent;
 
 /**
  * Handles a file upload request submitted via an Upload component.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -51,7 +51,7 @@ public class FileUploadHandler implements RequestHandler {
     /**
      * Stream that extracts content from another stream until the boundary
      * string is encountered.
-     * 
+     *
      * Public only for unit tests, should be considered private for all other
      * purposes.
      */
@@ -119,7 +119,7 @@ public class FileUploadHandler implements RequestHandler {
         /**
          * Reads the input to expect a boundary string. Expects that the first
          * character has already been matched.
-         * 
+         *
          * @return -1 if the boundary was matched, else returns the first byte
          *         from boundary
          * @throws IOException
@@ -155,7 +155,7 @@ public class FileUploadHandler implements RequestHandler {
         /**
          * Returns the partly matched boundary string and the byte following
          * that.
-         * 
+         *
          * @return
          * @throws IOException
          */
@@ -192,7 +192,8 @@ public class FileUploadHandler implements RequestHandler {
                 }
             }
             if (b == -1) {
-                throw new IOException("The multipart stream ended unexpectedly");
+                throw new IOException(
+                        "The multipart stream ended unexpectedly");
             }
             return b;
         }
@@ -201,7 +202,7 @@ public class FileUploadHandler implements RequestHandler {
     /**
      * An UploadInterruptedException will be thrown by an ongoing upload if
      * {@link StreamVariable#isInterrupted()} returns <code>true</code>.
-     * 
+     *
      * By checking the exception of an {@link StreamingErrorEvent} or
      * {@link FailedEvent} against this class, it is possible to determine if an
      * upload was interrupted by code or aborted due to any other exception.
@@ -227,7 +228,9 @@ public class FileUploadHandler implements RequestHandler {
 
     private static final String DASHDASH = "--";
 
-    /* Same as in apache commons file upload library that was previously used. */
+    /*
+     * Same as in apache commons file upload library that was previously used.
+     */
     private static final int MAX_UPLOAD_BUFFER_SIZE = 4 * 1024;
 
     /* Minimum interval which will be used for streaming progress events. */
@@ -266,8 +269,8 @@ public class FileUploadHandler implements RequestHandler {
             UI uI = session.getUIById(Integer.parseInt(uiId));
             UI.setCurrent(uI);
 
-            streamVariable = uI.getConnectorTracker().getStreamVariable(
-                    connectorId, variableName);
+            streamVariable = uI.getConnectorTracker()
+                    .getStreamVariable(connectorId, variableName);
             String secKey = uI.getConnectorTracker().getSeckey(streamVariable);
             if (secKey == null || !secKey.equals(parts[3])) {
                 // TODO Should rethink error handling
@@ -299,7 +302,8 @@ public class FileUploadHandler implements RequestHandler {
         int readByte = stream.read();
         while (readByte != LF) {
             if (readByte == -1) {
-                throw new IOException("The multipart stream ended unexpectedly");
+                throw new IOException(
+                        "The multipart stream ended unexpectedly");
             }
             bout.write(readByte);
             readByte = stream.read();
@@ -316,7 +320,7 @@ public class FileUploadHandler implements RequestHandler {
      * assume the caller has locked the session. This allows the session to be
      * locked only when needed and not when handling the upload data.
      * </p>
-     * 
+     *
      * @param session
      *            The session containing the stream variable
      * @param request
@@ -374,19 +378,19 @@ public class FileUploadHandler implements RequestHandler {
             }
         }
 
-        contentLength -= (boundary.length() + CRLF.length() + 2
-                * DASHDASH.length() + CRLF.length());
+        contentLength -= (boundary.length() + CRLF.length()
+                + 2 * DASHDASH.length() + CRLF.length());
 
         /*
          * Reads bytes from the underlying stream. Compares the read bytes to
          * the boundary string and returns -1 if met.
-         * 
+         *
          * The matching happens so that if the read byte equals to the first
          * char of boundary string, the stream goes to "buffering mode". In
          * buffering mode bytes are read until the character does not match the
          * corresponding from boundary string or the full boundary string is
          * found.
-         * 
+         *
          * Note, if this is someday needed elsewhere, don't shoot yourself to
          * foot and split to a top level helper class.
          */
@@ -404,8 +408,8 @@ public class FileUploadHandler implements RequestHandler {
                     streamVariable, filename, mimeType, contentLength, owner,
                     variableName);
         } catch (UploadException e) {
-            session.getCommunicationManager().handleConnectorRelatedException(
-                    owner, e);
+            session.getCommunicationManager()
+                    .handleConnectorRelatedException(owner, e);
         }
         sendUploadResponse(request, response);
 
@@ -476,7 +480,7 @@ public class FileUploadHandler implements RequestHandler {
      * assume the caller has locked the session. This allows the session to be
      * locked only when needed and not when handling the upload data.
      * </p>
-     * 
+     *
      * @param session
      *            The session containing the stream variable
      * @param request
@@ -510,8 +514,8 @@ public class FileUploadHandler implements RequestHandler {
             handleFileUploadValidationAndData(session, stream, streamVariable,
                     filename, mimeType, contentLength, owner, variableName);
         } catch (UploadException e) {
-            session.getCommunicationManager().handleConnectorRelatedException(
-                    owner, e);
+            session.getCommunicationManager()
+                    .handleConnectorRelatedException(owner, e);
         }
         sendUploadResponse(request, response);
     }
@@ -657,7 +661,7 @@ public class FileUploadHandler implements RequestHandler {
     /**
      * Removes any possible path information from the filename and returns the
      * filename. Separators / and \\ are used.
-     * 
+     *
      * @param name
      * @return
      */
@@ -671,7 +675,7 @@ public class FileUploadHandler implements RequestHandler {
 
     /**
      * TODO document
-     * 
+     *
      * @param request
      * @param response
      * @throws IOException
@@ -680,8 +684,8 @@ public class FileUploadHandler implements RequestHandler {
             VaadinResponse response) throws IOException {
         response.setContentType("text/html");
         final OutputStream out = response.getOutputStream();
-        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
-                new OutputStreamWriter(out, "UTF-8")));
+        final PrintWriter outWriter = new PrintWriter(
+                new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));
         outWriter.print("<html><body>download handled</body></html>");
         outWriter.flush();
         out.close();

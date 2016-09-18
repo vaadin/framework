@@ -29,8 +29,8 @@ public class ComboboxInPopupViewWithItems extends TestBase {
 
     class PopupContent implements PopupView.Content {
 
-        private final ComboBox cb = new ComboBox(null, Arrays.asList("Item 1",
-                "Item 2", "Item 3"));
+        private final ComboBox cb = new ComboBox(null,
+                Arrays.asList("Item 1", "Item 2", "Item 3"));
 
         @Override
         public String getMinimizedValueAsHTML() {

@@ -89,8 +89,8 @@ public class AbsoluteLayoutHideComponent extends AbstractTestUI {
         // =====> THIS CODE generates error
         // WITHOUT THIS CODE works fine
 
-        Embedded e = new Embedded("", new ThemeResource(
-                "../runo/icons/64/ok.png"));
+        Embedded e = new Embedded("",
+                new ThemeResource("../runo/icons/64/ok.png"));
         // e.setMimeType("image/jpg");
         e.setWidth("100%");
         e.setHeight("100%");

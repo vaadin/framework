@@ -15,9 +15,11 @@ public class AbsoluteLayoutResizing extends TestBase {
         AbsoluteLayout al = new AbsoluteLayout();
 
         TextArea ta = new TextArea();
-        ta.setValue("When resizing the layout this text area should also get resized");
+        ta.setValue(
+                "When resizing the layout this text area should also get resized");
         ta.setSizeFull();
-        al.addComponent(ta, "left: 10px; right: 10px; top: 10px; bottom: 10px;");
+        al.addComponent(ta,
+                "left: 10px; right: 10px; top: 10px; bottom: 10px;");
 
         HorizontalSplitPanel horizPanel = new HorizontalSplitPanel();
         horizPanel.setSizeFull();

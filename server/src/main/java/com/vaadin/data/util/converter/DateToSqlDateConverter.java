@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,7 +15,7 @@
  */
 
 /**
- * 
+ *
  */
 package com.vaadin.data.util.converter;
 
@@ -28,7 +28,7 @@ import java.util.Locale;
  * is connected to a java.sql.Date property, typically through a JPAContainer or
  * SQLContainer. Note that information (time information) is lost when
  * converting from {@link java.util.Date} to {@link java.sql.Date}.
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd
  */
@@ -39,9 +39,9 @@ public class DateToSqlDateConverter implements Converter<Date, java.sql.Date> {
             Class<? extends java.sql.Date> targetType, Locale locale)
             throws ConversionException {
         if (targetType != getModelType()) {
-            throw new ConversionException("Converter only supports "
-                    + getModelType().getName() + " (targetType was "
-                    + targetType.getName() + ")");
+            throw new ConversionException(
+                    "Converter only supports " + getModelType().getName()
+                            + " (targetType was " + targetType.getName() + ")");
         }
 
         if (value == null) {
@@ -56,9 +56,9 @@ public class DateToSqlDateConverter implements Converter<Date, java.sql.Date> {
             Class<? extends Date> targetType, Locale locale)
             throws ConversionException {
         if (targetType != getPresentationType()) {
-            throw new ConversionException("Converter only supports "
-                    + getPresentationType().getName() + " (targetType was "
-                    + targetType.getName() + ")");
+            throw new ConversionException(
+                    "Converter only supports " + getPresentationType().getName()
+                            + " (targetType was " + targetType.getName() + ")");
         }
 
         if (value == null) {

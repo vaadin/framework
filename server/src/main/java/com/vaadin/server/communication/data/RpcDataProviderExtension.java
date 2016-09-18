@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -58,7 +58,7 @@ import elemental.json.JsonObject;
  * implemented as an Extension hardcoded to support a specific connector type.
  * This will be changed once framework support for something more flexible has
  * been implemented.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -66,7 +66,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     /**
      * Class for keeping track of current items and ValueChangeListeners.
-     * 
+     *
      * @since 7.6
      */
     private class ActiveItemHandler implements Serializable, DataGenerator {
@@ -80,7 +80,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * <p>
          * Note: This method will clean up any unneeded listeners and key
          * mappings
-         * 
+         *
          * @param itemIds
          *            collection of new active item ids
          */
@@ -101,7 +101,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
         /**
          * Marks given item id as dropped. Dropped items are cleared when adding
          * new active items.
-         * 
+         *
          * @param itemId
          *            dropped item id
          */
@@ -113,7 +113,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
         /**
          * Gets a collection copy of currently active item ids.
-         * 
+         *
          * @return collection of item ids
          */
         public Collection<Object> getActiveItemIds() {
@@ -122,7 +122,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
         /**
          * Gets a collection copy of currently active ValueChangeListeners.
-         * 
+         *
          * @return collection of value change listeners
          */
         public Collection<GridValueChangeListener> getValueChangeListeners() {
@@ -163,7 +163,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * Since there's no Container-wide possibility to listen to any kind of
      * value changes, an instance of this class needs to be attached to each and
      * every Item's Property in the container.
-     * 
+     *
      * @see Grid#addValueChangeListener(Container, Object, Object)
      * @see Grid#valueChangeListeners
      */
@@ -199,8 +199,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
         private void internalAddColumns(Collection<Column> addedColumns) {
             for (final Column column : addedColumns) {
-                final Property<?> property = item.getItemProperty(column
-                        .getPropertyId());
+                final Property<?> property = item
+                        .getItemProperty(column.getPropertyId());
                 if (property instanceof ValueChangeNotifier) {
                     ((ValueChangeNotifier) property)
                             .addValueChangeListener(this);
@@ -210,8 +210,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
         public void removeColumns(Collection<Column> removedColumns) {
             for (final Column column : removedColumns) {
-                final Property<?> property = item.getItemProperty(column
-                        .getPropertyId());
+                final Property<?> property = item
+                        .getItemProperty(column.getPropertyId());
                 if (property instanceof ValueChangeNotifier) {
                     ((ValueChangeNotifier) property)
                             .removeValueChangeListener(this);
@@ -278,7 +278,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     /**
      * Creates a new data provider using the given container.
-     * 
+     *
      * @param container
      *            the container to make available
      */
@@ -297,8 +297,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
             @Override
             public void dropRows(JsonArray rowKeys) {
                 for (int i = 0; i < rowKeys.length(); ++i) {
-                    activeItemHandler.dropActiveItem(getKeyMapper().get(
-                            rowKeys.getString(i)));
+                    activeItemHandler.dropActiveItem(
+                            getKeyMapper().get(rowKeys.getString(i)));
                 }
             }
         });
@@ -383,7 +383,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
             diff = cached.length();
         }
 
-        for (int i = 0; i < newRange.length() && i + diff < itemIds.size(); ++i) {
+        for (int i = 0; i < newRange.length()
+                && i + diff < itemIds.size(); ++i) {
             Object itemId = itemIds.get(i + diff);
 
             Item item = container.getItem(itemId);
@@ -408,7 +409,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     /**
      * Makes the data source available to the given {@link Grid} component.
-     * 
+     *
      * @param component
      *            the remote data grid component to extend
      * @param columnKeys
@@ -422,7 +423,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * Adds a {@link DataGenerator} for this {@code RpcDataProviderExtension}.
      * DataGenerators are called when sending row data to client. If given
      * DataGenerator is already added, this method does nothing.
-     * 
+     *
      * @since 7.6
      * @param generator
      *            generator to add
@@ -435,7 +436,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * Removes a {@link DataGenerator} from this
      * {@code RpcDataProviderExtension}. If given DataGenerator is not added to
      * this data provider, this method does nothing.
-     * 
+     *
      * @since 7.6
      * @param generator
      *            generator to remove
@@ -447,7 +448,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     /**
      * Informs the client side that new rows have been inserted into the data
      * source.
-     * 
+     *
      * @param index
      *            the index at which new rows have been inserted
      * @param count
@@ -478,7 +479,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     /**
      * Informs the client side that rows have been removed from the data source.
-     * 
+     *
      * @param index
      *            the index of the first row removed
      * @param count
@@ -507,7 +508,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     /**
      * Informs the client side that data of a row has been modified in the data
      * source.
-     * 
+     *
      * @param itemId
      *            the item Id the row that was updated
      */
@@ -576,7 +577,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     /**
      * Informs all DataGenerators than an item id has been dropped.
-     * 
+     *
      * @param droppedItemIds
      *            collection of dropped item ids
      */
@@ -591,7 +592,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     /**
      * Informs this data provider that given columns have been removed from
      * grid.
-     * 
+     *
      * @param removedColumns
      *            a list of removed columns
      */
@@ -607,7 +608,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     /**
      * Informs this data provider that given columns have been added to grid.
-     * 
+     *
      * @param addedColumns
      *            a list of added columns
      */

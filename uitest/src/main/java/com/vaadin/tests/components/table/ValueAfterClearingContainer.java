@@ -51,8 +51,8 @@ public class ValueAfterClearingContainer extends TestBase {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         if (!table.getItemIds().isEmpty()) {
-                            Notification
-                                    .show("Only possible when the table is empty");
+                            Notification.show(
+                                    "Only possible when the table is empty");
                             return;
                         } else {
                             for (int i = 0; i < 5; i++) {

@@ -55,8 +55,8 @@ public class UISerialization extends AbstractTestUI {
                             .getDiffState(UISerialization.this);
                     UISerialization app = (UISerialization) deserialize(result);
                     log.log("Deserialized UI in " + elapsed + "ms");
-                    Object diffStateAfter = getConnectorTracker().getDiffState(
-                            UISerialization.this);
+                    Object diffStateAfter = getConnectorTracker()
+                            .getDiffState(UISerialization.this);
                     if (diffStateBefore.equals(diffStateAfter)) {
                         log.log("Diff states match, size: "
                                 + diffStateBefore.toString().length());
@@ -67,8 +67,8 @@ public class UISerialization extends AbstractTestUI {
                     log.log("Exception caught: " + e.getMessage());
                     StringWriter sw = new StringWriter();
                     e.printStackTrace(new PrintWriter(sw));
-                    addComponent(new Label(sw.toString(),
-                            ContentMode.PREFORMATTED));
+                    addComponent(
+                            new Label(sw.toString(), ContentMode.PREFORMATTED));
                 }
 
             }

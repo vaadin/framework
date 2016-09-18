@@ -70,14 +70,16 @@ public class TreeTableExtraScrollbar extends TestBase {
 
     private class EmptyColumnGenerator implements Table.ColumnGenerator {
         @Override
-        public Object generateCell(Table table, Object itemId, Object columnId) {
+        public Object generateCell(Table table, Object itemId,
+                Object columnId) {
             return null;
         }
     }
 
     private class TypeColumnGenerator implements Table.ColumnGenerator {
         @Override
-        public Object generateCell(Table table, Object itemId, Object columnId) {
+        public Object generateCell(Table table, Object itemId,
+                Object columnId) {
             if (itemId instanceof TestObject) {
                 return new Label(((TestObject) itemId).getValue());
             }

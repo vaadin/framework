@@ -19,8 +19,8 @@ public class ColumnPropertyTest {
 
     @Test
     public void constructor_legalParameters_shouldSucceed() {
-        ColumnProperty cp = new ColumnProperty("NAME", false, true, true,
-                false, "Ville", String.class);
+        ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
+                "Ville", String.class);
         Assert.assertNotNull(cp);
     }
 
@@ -37,15 +37,15 @@ public class ColumnPropertyTest {
 
     @Test
     public void getValue_defaultValue_returnsVille() {
-        ColumnProperty cp = new ColumnProperty("NAME", false, true, true,
-                false, "Ville", String.class);
+        ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
+                "Ville", String.class);
         Assert.assertEquals("Ville", cp.getValue());
     }
 
     @Test
     public void setValue_readWriteNullable_returnsKalle() {
-        ColumnProperty cp = new ColumnProperty("NAME", false, true, true,
-                false, "Ville", String.class);
+        ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
+                "Ville", String.class);
         SQLContainer container = EasyMock.createMock(SQLContainer.class);
         RowItem owner = new RowItem(container, new RowId(new Object[] { 1 }),
                 Arrays.asList(cp));
@@ -61,7 +61,8 @@ public class ColumnPropertyTest {
         ColumnProperty cp = new ColumnProperty("NAME", true, true, true, false,
                 "Ville", String.class);
         SQLContainer container = EasyMock.createMock(SQLContainer.class);
-        new RowItem(container, new RowId(new Object[] { 1 }), Arrays.asList(cp));
+        new RowItem(container, new RowId(new Object[] { 1 }),
+                Arrays.asList(cp));
         EasyMock.replay(container);
         cp.setValue("Kalle");
         EasyMock.verify(container);
@@ -69,8 +70,8 @@ public class ColumnPropertyTest {
 
     @Test
     public void setValue_readWriteNullable_nullShouldWork() {
-        ColumnProperty cp = new ColumnProperty("NAME", false, true, true,
-                false, "Ville", String.class);
+        ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
+                "Ville", String.class);
         SQLContainer container = EasyMock.createMock(SQLContainer.class);
         RowItem owner = new RowItem(container, new RowId(new Object[] { 1 }),
                 Arrays.asList(cp));
@@ -97,15 +98,15 @@ public class ColumnPropertyTest {
 
     @Test
     public void getType_normal_returnsStringClass() {
-        ColumnProperty cp = new ColumnProperty("NAME", false, true, true,
-                false, "Ville", String.class);
+        ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
+                "Ville", String.class);
         Assert.assertSame(String.class, cp.getType());
     }
 
     @Test
     public void isReadOnly_readWriteNullable_returnsTrue() {
-        ColumnProperty cp = new ColumnProperty("NAME", false, true, true,
-                false, "Ville", String.class);
+        ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
+                "Ville", String.class);
         Assert.assertFalse(cp.isReadOnly());
     }
 
@@ -118,8 +119,8 @@ public class ColumnPropertyTest {
 
     @Test
     public void setReadOnly_readOnlyChangeAllowed_shouldSucceed() {
-        ColumnProperty cp = new ColumnProperty("NAME", false, true, true,
-                false, "Ville", String.class);
+        ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
+                "Ville", String.class);
         cp.setReadOnly(true);
         Assert.assertTrue(cp.isReadOnly());
     }
@@ -141,8 +142,8 @@ public class ColumnPropertyTest {
 
     @Test
     public void isModified_valueModified_returnsTrue() {
-        ColumnProperty cp = new ColumnProperty("NAME", false, true, true,
-                false, "Ville", String.class);
+        ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
+                "Ville", String.class);
         SQLContainer container = EasyMock.createMock(SQLContainer.class);
         RowItem owner = new RowItem(container, new RowId(new Object[] { 1 }),
                 Arrays.asList(cp));
@@ -163,20 +164,22 @@ public class ColumnPropertyTest {
 
     @Test
     public void setValue_nullOnNullable_shouldWork() {
-        ColumnProperty cp = new ColumnProperty("NAME", false, true, true,
-                false, "asdf", String.class);
+        ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
+                "asdf", String.class);
         SQLContainer container = EasyMock.createMock(SQLContainer.class);
-        new RowItem(container, new RowId(new Object[] { 1 }), Arrays.asList(cp));
+        new RowItem(container, new RowId(new Object[] { 1 }),
+                Arrays.asList(cp));
         cp.setValue(null);
         Assert.assertNull(cp.getValue());
     }
 
     @Test
     public void setValue_resetTonullOnNullable_shouldWork() {
-        ColumnProperty cp = new ColumnProperty("NAME", false, true, true,
-                false, null, String.class);
+        ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
+                null, String.class);
         SQLContainer container = EasyMock.createMock(SQLContainer.class);
-        new RowItem(container, new RowId(new Object[] { 1 }), Arrays.asList(cp));
+        new RowItem(container, new RowId(new Object[] { 1 }),
+                Arrays.asList(cp));
         cp.setValue("asdf");
         Assert.assertEquals("asdf", cp.getValue());
         cp.setValue(null);

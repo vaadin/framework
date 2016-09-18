@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,11 +37,11 @@ import java.util.regex.Pattern;
 /**
  * Helper class to update widgetsets GWT module configuration file. Can be used
  * command line or via IDE tools.
- * 
+ *
  * <p>
  * If module definition file contains text "WS Compiler: manually edited", tool
  * will skip editing file.
- * 
+ *
  */
 public class WidgetSetBuilder {
 
@@ -84,28 +84,25 @@ public class WidgetSetBuilder {
                 }
             }
             widgetsetFile.createNewFile();
-            PrintStream printStream = new PrintStream(new FileOutputStream(
-                    widgetsetFile));
-            printStream
-                    .print("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                            + "<!DOCTYPE module PUBLIC \"-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN\" \"http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd\">\n");
+            PrintStream printStream = new PrintStream(
+                    new FileOutputStream(widgetsetFile));
+            printStream.print("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                    + "<!DOCTYPE module PUBLIC \"-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN\" \"http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd\">\n");
             printStream.print("<module>\n");
-            printStream
-                    .print("    <!--\n"
-                            + "     Uncomment the following to compile the widgetset for one browser only.\n\n"
-                            + "     Multiple browsers can be specified as a comma separated list. The\n"
-                            + "     supported user agents at the moment of writing were:\n"
-                            + "     ie8,ie9,gecko1_8,safari,opera\n\n"
-                            + "     The value gecko1_8 is used for Firefox and safari is used for webkit\n"
-                            + "     based browsers including Google Chrome.\n"
-                            + "    -->\n"
-                            + "    <!-- <set-property name=\"user.agent\" value=\"safari\"/> -->\n\n"
-                            + "    <!--\n"
-                            + "    To enable SuperDevMode, uncomment this line.\n\n"
-                            + "    See https://vaadin.com/wiki/-/wiki/Main/Using%20SuperDevMode for more\n"
-                            + "    information and instructions.\n"
-                            + "    -->\n"
-                            + "    <!-- <set-configuration-property name=\"devModeRedirectEnabled\" value=\"true\" /> -->\n\n");
+            printStream.print("    <!--\n"
+                    + "     Uncomment the following to compile the widgetset for one browser only.\n\n"
+                    + "     Multiple browsers can be specified as a comma separated list. The\n"
+                    + "     supported user agents at the moment of writing were:\n"
+                    + "     ie8,ie9,gecko1_8,safari,opera\n\n"
+                    + "     The value gecko1_8 is used for Firefox and safari is used for webkit\n"
+                    + "     based browsers including Google Chrome.\n"
+                    + "    -->\n"
+                    + "    <!-- <set-property name=\"user.agent\" value=\"safari\"/> -->\n\n"
+                    + "    <!--\n"
+                    + "    To enable SuperDevMode, uncomment this line.\n\n"
+                    + "    See https://vaadin.com/wiki/-/wiki/Main/Using%20SuperDevMode for more\n"
+                    + "    information and instructions.\n" + "    -->\n"
+                    + "    <!-- <set-configuration-property name=\"devModeRedirectEnabled\" value=\"true\" /> -->\n\n");
             printStream.print("\n</module>\n");
             printStream.close();
             changed = true;
@@ -115,7 +112,8 @@ public class WidgetSetBuilder {
         if (isEditable(content)) {
             String originalContent = content;
 
-            Collection<String> oldInheritedWidgetsets = getCurrentInheritedWidgetsets(content);
+            Collection<String> oldInheritedWidgetsets = getCurrentInheritedWidgetsets(
+                    content);
 
             // add widgetsets that do not exist
             Iterator<String> i = availableWidgetSets.keySet().iterator();
@@ -164,8 +162,8 @@ public class WidgetSetBuilder {
     }
 
     private static String addWidgetSet(String ws, String content) {
-        return content.replace("</module>", "\n    <inherits name=\"" + ws
-                + "\" />" + "\n</module>");
+        return content.replace("</module>",
+                "\n    <inherits name=\"" + ws + "\" />" + "\n</module>");
     }
 
     private static Collection<String> getCurrentInheritedWidgetsets(
@@ -209,7 +207,8 @@ public class WidgetSetBuilder {
         o.println("    2. Give the widgetsetname (to be created or updated)"
                 + " as first parameter");
         o.println();
-        o.println("All found vaadin widgetsets will be inherited in given widgetset");
+        o.println(
+                "All found vaadin widgetsets will be inherited in given widgetset");
 
     }
 

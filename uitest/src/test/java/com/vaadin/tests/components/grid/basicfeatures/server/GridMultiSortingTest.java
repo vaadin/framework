@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -58,9 +58,8 @@ public class GridMultiSortingTest extends GridBasicFeaturesTest {
 
         prev = getGridElement().getCell(0, 0).getText();
         for (int i = 1; i <= 6; ++i) {
-            assertTrue(
-                    "Grid is not sorted by column 0.",
-                    prev.compareTo(getGridElement().getCell(i, 0).getText()) < 0);
+            assertTrue("Grid is not sorted by column 0.", prev
+                    .compareTo(getGridElement().getCell(i, 0).getText()) < 0);
         }
     }
 }

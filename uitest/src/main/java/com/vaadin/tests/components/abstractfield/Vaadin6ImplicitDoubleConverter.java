@@ -4,8 +4,8 @@ import java.util.Locale;
 
 import com.vaadin.data.util.converter.Converter;
 
-public class Vaadin6ImplicitDoubleConverter implements
-        Converter<String, Double> {
+public class Vaadin6ImplicitDoubleConverter
+        implements Converter<String, Double> {
 
     @Override
     public Double convertToModel(String value,

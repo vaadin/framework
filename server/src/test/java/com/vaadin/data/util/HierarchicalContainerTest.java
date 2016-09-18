@@ -9,8 +9,8 @@ import org.junit.Test;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 
-public class HierarchicalContainerTest extends
-        AbstractHierarchicalContainerTestBase {
+public class HierarchicalContainerTest
+        extends AbstractHierarchicalContainerTestBase {
 
     @Test
     public void testBasicOperations() {
@@ -142,8 +142,8 @@ public class HierarchicalContainerTest extends
 
         validateHierarchicalContainer(container, "com",
                 "com.vaadin.terminal.gwt.client.WidgetSet",
-                "com.vaadin.terminal.gwt.client.ui.VSplitPanelVertical",
-                "blah", true, expectedSize, expectedRoots, true);
+                "com.vaadin.terminal.gwt.client.ui.VSplitPanelVertical", "blah",
+                true, expectedSize, expectedRoots, true);
 
         // Additionally remove all without 'm' in the simple name.
         container.addContainerFilter(SIMPLE_NAME, "m", false, false);
@@ -151,9 +151,7 @@ public class HierarchicalContainerTest extends
         expectedSize = 7 + 18;
         expectedRoots = 1;
 
-        validateHierarchicalContainer(
-                container,
-                "com",
+        validateHierarchicalContainer(container, "com",
                 "com.vaadin.terminal.gwt.client.ui.VUriFragmentUtility",
                 "com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer",
                 "blah", true, expectedSize, expectedRoots, true);
@@ -249,10 +247,9 @@ public class HierarchicalContainerTest extends
         int expectedRoots = 20;
 
         validateHierarchicalContainer(container,
-                "com.vaadin.data.BufferedValidatable",
-                "com.vaadin.ui.TabSheet",
-                "com.vaadin.terminal.gwt.client.ui.VTabsheetBase", "blah",
-                true, expectedSize, expectedRoots, false);
+                "com.vaadin.data.BufferedValidatable", "com.vaadin.ui.TabSheet",
+                "com.vaadin.terminal.gwt.client.ui.VTabsheetBase", "blah", true,
+                expectedSize, expectedRoots, false);
 
         // only include .gwt.client classes
         container.removeAllContainerFilters();

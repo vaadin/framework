@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,7 +27,7 @@ import com.google.gwt.dom.client.TableRowElement;
  * <p>
  * There is only one instance per Escalator. This is designed to be re-used when
  * rendering rows.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  * @see Escalator.AbstractRowContainer#refreshRow(Node, int)
@@ -45,7 +45,7 @@ public class FlyweightRow implements Row {
          * Creates a new iterator of attached flyweight cells. A cell is
          * attached if it has a corresponding {@link FlyweightCell#getElement()
          * DOM element} attached to the row element.
-         * 
+         *
          * @param cells
          *            the collection of cells to iterate
          */
@@ -59,7 +59,7 @@ public class FlyweightRow implements Row {
          * unattached if it does not have a corresponding
          * {@link FlyweightCell#getElement() DOM element} attached to the row
          * element.
-         * 
+         *
          * @param cells
          *            the collection of cells to iterate
          */
@@ -101,7 +101,7 @@ public class FlyweightRow implements Row {
         /**
          * Sets the number of cells to skip when {@link #next()} is called the
          * next time. Cell hiding is also handled eagerly in this method.
-         * 
+         *
          * @param colspan
          *            the number of cells to skip on next invocation of
          *            {@link #next()}
@@ -115,7 +115,7 @@ public class FlyweightRow implements Row {
         /**
          * Gets the next <code>n</code> cells in the iterator, ignoring any
          * possibly spanned cells.
-         * 
+         *
          * @param n
          *            the number of next cells to retrieve
          * @return A list of next <code>n</code> cells, or less if there aren't
@@ -160,7 +160,7 @@ public class FlyweightRow implements Row {
      * This should only be used with asserts ("
      * <code>assert flyweightRow.teardown()</code> ") so that the code is never
      * run when asserts aren't enabled.
-     * 
+     *
      * @return always <code>true</code>
      */
     public boolean teardown() {
@@ -211,9 +211,9 @@ public class FlyweightRow implements Row {
      * element.
      * <p>
      * Precondition: each cell has a corresponding element in the row
-     * 
+     *
      * @return an iterable of flyweight cells
-     * 
+     *
      * @see #setup(Element, int, int[])
      * @see #teardown()
      */
@@ -227,7 +227,7 @@ public class FlyweightRow implements Row {
      * from the row element.
      * <p>
      * Precondition: each cell has a corresponding element in the row
-     * 
+     *
      * @param offset
      *            the index of the first cell to return
      * @param numberOfCells
@@ -237,12 +237,13 @@ public class FlyweightRow implements Row {
     public Iterable<FlyweightCell> getCells(final int offset,
             final int numberOfCells) {
         assertSetup();
-        assert offset >= 0 && offset + numberOfCells <= cells.size() : "Invalid range of cells";
+        assert offset >= 0 && offset + numberOfCells <= cells
+                .size() : "Invalid range of cells";
         return new Iterable<FlyweightCell>() {
             @Override
             public Iterator<FlyweightCell> iterator() {
-                return CellIterator.attached(cells.subList(offset, offset
-                        + numberOfCells));
+                return CellIterator.attached(
+                        cells.subList(offset, offset + numberOfCells));
             }
         };
     }
@@ -255,7 +256,7 @@ public class FlyweightRow implements Row {
      * invoke this method with correct parameters.
      * <p>
      * Precondition: the range [offset, offset + numberOfCells) must be valid
-     * 
+     *
      * @param offset
      *            the index of the first cell to return
      * @param numberOfCells
@@ -265,12 +266,13 @@ public class FlyweightRow implements Row {
     public Iterable<FlyweightCell> getUnattachedCells(final int offset,
             final int numberOfCells) {
         assertSetup();
-        assert offset >= 0 && offset + numberOfCells <= cells.size() : "Invalid range of cells";
+        assert offset >= 0 && offset + numberOfCells <= cells
+                .size() : "Invalid range of cells";
         return new Iterable<FlyweightCell>() {
             @Override
             public Iterator<FlyweightCell> iterator() {
-                return CellIterator.unattached(cells.subList(offset, offset
-                        + numberOfCells));
+                return CellIterator.unattached(
+                        cells.subList(offset, offset + numberOfCells));
             }
         };
     }
@@ -280,11 +282,12 @@ public class FlyweightRow implements Row {
      * access any of its data.
      */
     private void assertSetup() {
-        assert element != null && row != BLANK && columnWidths != null : "Flyweight row was not "
-                + "properly initialized. Make sure the setup-method is "
-                + "called before retrieving data. This is either a bug "
-                + "in Escalator, or the instance of the flyweight row "
-                + "has been stored and accessed.";
+        assert element != null && row != BLANK
+                && columnWidths != null : "Flyweight row was not "
+                        + "properly initialized. Make sure the setup-method is "
+                        + "called before retrieving data. This is either a bug "
+                        + "in Escalator, or the instance of the flyweight row "
+                        + "has been stored and accessed.";
     }
 
     double getColumnWidth(int column) {

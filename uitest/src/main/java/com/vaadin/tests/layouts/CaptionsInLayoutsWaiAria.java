@@ -337,8 +337,8 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
             for (String width : new String[] { "auto" }) {
                 Object id = layoutSelect.addItem();
                 Item i = layoutSelect.getItem(id);
-                i.getItemProperty(CAPTION).setValue(
-                        cls.getSimpleName() + ", " + width);
+                i.getItemProperty(CAPTION)
+                        .setValue(cls.getSimpleName() + ", " + width);
                 i.getItemProperty(CLASS).setValue(cls);
                 i.getItemProperty(WIDTH).setValue(width);
             }
@@ -352,10 +352,11 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
             public void valueChange(ValueChangeEvent event) {
                 Item i = layoutSelect.getItem(event.getProperty().getValue());
 
-                setLayout(getLayout((String) i.getItemProperty(CAPTION)
-                        .getValue(), (Class<? extends Layout>) i
-                        .getItemProperty(CLASS).getValue(), (String) i
-                        .getItemProperty(WIDTH).getValue()));
+                setLayout(getLayout(
+                        (String) i.getItemProperty(CAPTION).getValue(),
+                        (Class<? extends Layout>) i.getItemProperty(CLASS)
+                                .getValue(),
+                        (String) i.getItemProperty(WIDTH).getValue()));
             }
         });
 

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,7 +36,7 @@ import com.vaadin.data.Property;
  * A Comparator is used for comparing the individual <code>Property</code>
  * values. The comparator can be set using the constructor. If no comparator is
  * provided a default comparator is used.
- * 
+ *
  */
 public class DefaultItemSorter implements ItemSorter {
 
@@ -48,7 +48,7 @@ public class DefaultItemSorter implements ItemSorter {
     /**
      * Constructs a DefaultItemSorter using the default <code>Comparator</code>
      * for comparing <code>Property</code>values.
-     * 
+     *
      */
     public DefaultItemSorter() {
         this(new DefaultPropertyValueComparator());
@@ -58,7 +58,7 @@ public class DefaultItemSorter implements ItemSorter {
      * Constructs a DefaultItemSorter which uses the <code>Comparator</code>
      * indicated by the <code>propertyValueComparator</code> parameter for
      * comparing <code>Property</code>values.
-     * 
+     *
      * @param propertyValueComparator
      *            The comparator to use when comparing individual
      *            <code>Property</code> values
@@ -69,7 +69,7 @@ public class DefaultItemSorter implements ItemSorter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.data.util.ItemSorter#compare(java.lang.Object,
      * java.lang.Object)
      */
@@ -117,7 +117,7 @@ public class DefaultItemSorter implements ItemSorter {
      * <p>
      * The comparator set for this <code>DefaultItemSorter</code> is used for
      * comparing the two property values.
-     * 
+     *
      * @param propertyId
      *            The property id for the property that is used for comparison.
      * @param sortDirection
@@ -155,10 +155,9 @@ public class DefaultItemSorter implements ItemSorter {
 
     /*
      * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.data.util.ItemSorter#setSortProperties(com.vaadin.data.Container
-     * .Sortable, java.lang.Object[], boolean[])
+     *
+     * @see com.vaadin.data.util.ItemSorter#setSortProperties(com.vaadin.data.
+     * Container .Sortable, java.lang.Object[], boolean[])
      */
     @Override
     public void setSortProperties(Container.Sortable container,
@@ -173,8 +172,8 @@ public class DefaultItemSorter implements ItemSorter {
         for (int i = 0; i < propertyId.length; i++) {
             if (sortable.contains(propertyId[i])) {
                 ids.add(propertyId[i]);
-                orders.add(Boolean.valueOf(i < ascending.length ? ascending[i]
-                        : true));
+                orders.add(Boolean
+                        .valueOf(i < ascending.length ? ascending[i] : true));
             }
         }
 
@@ -190,10 +189,10 @@ public class DefaultItemSorter implements ItemSorter {
      * Provides a default comparator used for comparing {@link Property} values.
      * The <code>DefaultPropertyValueComparator</code> assumes all objects it
      * compares can be cast to Comparable.
-     * 
+     *
      */
-    public static class DefaultPropertyValueComparator implements
-            Comparator<Object>, Serializable {
+    public static class DefaultPropertyValueComparator
+            implements Comparator<Object>, Serializable {
 
         @Override
         @SuppressWarnings("unchecked")

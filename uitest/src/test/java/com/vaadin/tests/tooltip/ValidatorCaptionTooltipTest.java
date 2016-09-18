@@ -22,7 +22,7 @@ import com.vaadin.tests.tb3.TooltipTest;
 
 /**
  * Test to see if validators create error tooltips correctly.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class ValidatorCaptionTooltipTest extends TooltipTest {

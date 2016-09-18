@@ -29,7 +29,7 @@ import org.atmosphere.handler.AbstractReflectorAtmosphereHandler;
 /**
  * Handles Atmosphere requests and forwards them to logical methods in
  * {@link PushHandler}
- * 
+ *
  * @since 7.5.0
  * @author Vaadin Ltd
  */
@@ -47,12 +47,12 @@ public class PushAtmosphereHandler extends AbstractReflectorAtmosphereHandler
     }
 
     @Override
-    public void onStateChange(AtmosphereResourceEvent event) throws IOException {
+    public void onStateChange(AtmosphereResourceEvent event)
+            throws IOException {
         super.onStateChange(event);
         if (pushHandler == null) {
-            getLogger()
-                    .warning(
-                            "AtmosphereHandler.onStateChange called before PushHandler has been set. This should really not happen");
+            getLogger().warning(
+                    "AtmosphereHandler.onStateChange called before PushHandler has been set. This should really not happen");
             return;
         }
 
@@ -64,9 +64,8 @@ public class PushAtmosphereHandler extends AbstractReflectorAtmosphereHandler
     @Override
     public void onRequest(AtmosphereResource resource) {
         if (pushHandler == null) {
-            getLogger()
-                    .warning(
-                            "AtmosphereHandler.onRequest called before PushHandler has been set. This should really not happen");
+            getLogger().warning(
+                    "AtmosphereHandler.onRequest called before PushHandler has been set. This should really not happen");
             return;
         }
 
@@ -81,7 +80,7 @@ public class PushAtmosphereHandler extends AbstractReflectorAtmosphereHandler
 
     /**
      * Called when the client sends a message through the push channel
-     * 
+     *
      * @param resource
      */
     private void onMessage(AtmosphereResource resource) {
@@ -91,7 +90,7 @@ public class PushAtmosphereHandler extends AbstractReflectorAtmosphereHandler
     /**
      * Called when the client sends the first request (to establish a push
      * connection)
-     * 
+     *
      * @param resource
      */
     private void onConnect(AtmosphereResource resource) {

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -52,7 +52,7 @@ import elemental.json.JsonObject;
 
 /**
  * Connector for server-side {@link MultiSelectionModel}.
- * 
+ *
  * @since 7.6
  * @author Vaadin Ltd
  */
@@ -87,8 +87,8 @@ public class MultiSelectionModelConnector extends
     @OnStateChange("allSelected")
     void updateSelectAllCheckbox() {
         if (selectionModel.getSelectionColumnRenderer() != null) {
-            HeaderCell cell = getGrid().getDefaultHeaderRow().getCell(
-                    getGrid().getColumn(0));
+            HeaderCell cell = getGrid().getDefaultHeaderRow()
+                    .getCell(getGrid().getColumn(0));
             CheckBox widget = (CheckBox) cell.getWidget();
             widget.setValue(getState().allSelected, false);
         }
@@ -119,11 +119,12 @@ public class MultiSelectionModelConnector extends
                                 selectAll();
                             }
                         });
-                dataAvailable = getGrid().addDataAvailableHandler(
-                        new DataAvailableHandler() {
+                dataAvailable = getGrid()
+                        .addDataAvailableHandler(new DataAvailableHandler() {
 
                             @Override
-                            public void onDataAvailable(DataAvailableEvent event) {
+                            public void onDataAvailable(
+                                    DataAvailableEvent event) {
                                 availableRows = event.getAvailableRows();
                             }
                         });
@@ -138,7 +139,7 @@ public class MultiSelectionModelConnector extends
          * Creates a selection column renderer. This method can be overridden to
          * use a custom renderer or use {@code null} to disable the selection
          * column.
-         * 
+         *
          * @param grid
          *            the grid for this selection model
          * @return selection column renderer or {@code null} if not needed
@@ -156,7 +157,8 @@ public class MultiSelectionModelConnector extends
             assert !isBeingBatchSelected() : "Can't select all in middle of a batch selection.";
 
             DataSource<JsonObject> dataSource = getGrid().getDataSource();
-            for (int i = availableRows.getStart(); i < availableRows.getEnd(); ++i) {
+            for (int i = availableRows.getStart(); i < availableRows
+                    .getEnd(); ++i) {
                 final JsonObject row = dataSource.getRow(i);
                 if (row != null) {
                     RowHandle<JsonObject> handle = dataSource.getHandle(row);
@@ -174,7 +176,7 @@ public class MultiSelectionModelConnector extends
 
         /**
          * {@inheritDoc}
-         * 
+         *
          * @return {@code false} if rows is empty, else {@code true}
          */
         @Override
@@ -184,7 +186,7 @@ public class MultiSelectionModelConnector extends
 
         /**
          * {@inheritDoc}
-         * 
+         *
          * @return {@code false} if rows is empty, else {@code true}
          */
         @Override
@@ -194,7 +196,7 @@ public class MultiSelectionModelConnector extends
 
         /**
          * {@inheritDoc}
-         * 
+         *
          * @return always {@code true}
          */
         @Override
@@ -202,7 +204,8 @@ public class MultiSelectionModelConnector extends
             assert !isBeingBatchSelected() : "Can't select all in middle of a batch selection.";
 
             DataSource<JsonObject> dataSource = getGrid().getDataSource();
-            for (int i = availableRows.getStart(); i < availableRows.getEnd(); ++i) {
+            for (int i = availableRows.getStart(); i < availableRows
+                    .getEnd(); ++i) {
                 final JsonObject row = dataSource.getRow(i);
                 if (row != null) {
                     RowHandle<JsonObject> handle = dataSource.getHandle(row);
@@ -217,7 +220,7 @@ public class MultiSelectionModelConnector extends
 
         /**
          * {@inheritDoc}
-         * 
+         *
          * @return {@code false} if rows is empty, else {@code true}
          */
         @Override
@@ -245,7 +248,7 @@ public class MultiSelectionModelConnector extends
          * <p>
          * Note: If selection model is in batch select state, the row will be
          * pinned on select.
-         * 
+         *
          * @param row
          *            row handle
          * @param selected
@@ -273,7 +276,7 @@ public class MultiSelectionModelConnector extends
 
         /**
          * {@inheritDoc}
-         * 
+         *
          * @return {@code false} if rows is empty, else {@code true}
          */
         @Override
@@ -300,8 +303,8 @@ public class MultiSelectionModelConnector extends
          * rows. Unpins any pinned rows.
          */
         private void sendDeselected() {
-            getRpcProxy(MultiSelectionModelServerRpc.class).deselect(
-                    getRowKeys(deselected));
+            getRpcProxy(MultiSelectionModelServerRpc.class)
+                    .deselect(getRowKeys(deselected));
 
             if (isBeingBatchSelected()) {
                 for (RowHandle<JsonObject> row : deselected) {
@@ -317,8 +320,8 @@ public class MultiSelectionModelConnector extends
          * Unpins any pinned rows.
          */
         private void sendSelected() {
-            getRpcProxy(MultiSelectionModelServerRpc.class).select(
-                    getRowKeys(selected));
+            getRpcProxy(MultiSelectionModelServerRpc.class)
+                    .select(getRowKeys(selected));
 
             if (isBeingBatchSelected()) {
                 for (RowHandle<JsonObject> row : selected) {
@@ -347,7 +350,8 @@ public class MultiSelectionModelConnector extends
 
         @Override
         public void startBatchSelect() {
-            assert selected.isEmpty() && deselected.isEmpty() : "Row caches were not clear.";
+            assert selected.isEmpty()
+                    && deselected.isEmpty() : "Row caches were not clear.";
             batchSelect = true;
         }
 

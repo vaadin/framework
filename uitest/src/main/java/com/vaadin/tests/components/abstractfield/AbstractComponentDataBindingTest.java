@@ -38,11 +38,11 @@ public abstract class AbstractComponentDataBindingTest extends TestBase
         cb.setNullSelectionAllowed(false);
         for (Locale l : Locale.getAvailableLocales()) {
             Item i = cb.addItem(l);
-            i.getItemProperty(CAPTION).setValue(
-                    l.getDisplayName(Locale.ENGLISH));
+            i.getItemProperty(CAPTION)
+                    .setValue(l.getDisplayName(Locale.ENGLISH));
         }
-        ((Container.Sortable) cb.getContainerDataSource()).sort(
-                new Object[] { CAPTION }, new boolean[] { true });
+        ((Container.Sortable) cb.getContainerDataSource())
+                .sort(new Object[] { CAPTION }, new boolean[] { true });
         cb.setImmediate(true);
         cb.addListener(new ValueChangeListener() {
 

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,7 +37,7 @@ import com.vaadin.shared.ui.dd.AcceptCriterion;
  * GWT generator to build {@link VAcceptCriterionFactory} implementation
  * dynamically based on {@link AcceptCriterion} annotations available in
  * classpath.
- * 
+ *
  */
 public class AcceptCriteriaFactoryGenerator extends Generator {
 
@@ -67,7 +67,7 @@ public class AcceptCriteriaFactoryGenerator extends Generator {
 
     /**
      * Generate source code for WidgetMapImpl
-     * 
+     *
      * @param logger
      *            Logger object
      * @param context
@@ -89,7 +89,8 @@ public class AcceptCriteriaFactoryGenerator extends Generator {
         ClassSourceFileComposerFactory composer = null;
         composer = new ClassSourceFileComposerFactory(packageName, className);
         composer.addImport("com.google.gwt.core.client.GWT");
-        composer.setSuperclass("com.vaadin.client.ui.dd.VAcceptCriterionFactory");
+        composer.setSuperclass(
+                "com.vaadin.client.ui.dd.VAcceptCriterionFactory");
         SourceWriter sourceWriter = composer.createSourceWriter(context,
                 printWriter);
 
@@ -100,9 +101,8 @@ public class AcceptCriteriaFactoryGenerator extends Generator {
         sourceWriter.println("}");
         // commit generated class
         context.commit(logger, printWriter);
-        logger.log(Type.INFO,
-                "Done. (" + (new Date().getTime() - date.getTime()) / 1000
-                        + "seconds)");
+        logger.log(Type.INFO, "Done. ("
+                + (new Date().getTime() - date.getTime()) / 1000 + "seconds)");
 
     }
 
@@ -114,8 +114,8 @@ public class AcceptCriteriaFactoryGenerator extends Generator {
 
         sourceWriter.println("name = name.intern();");
 
-        JClassType criteriaType = context.getTypeOracle().findType(
-                VAcceptCriterion.class.getName());
+        JClassType criteriaType = context.getTypeOracle()
+                .findType(VAcceptCriterion.class.getName());
         JClassType[] subtypes = criteriaType.getSubtypes();
         Arrays.sort(subtypes, ConnectorBundle.jClassComparator);
         for (JClassType clientClass : subtypes) {
@@ -123,10 +123,11 @@ public class AcceptCriteriaFactoryGenerator extends Generator {
                     .getAnnotation(AcceptCriterion.class);
             if (annotation != null) {
                 String clientClassName = clientClass.getQualifiedSourceName();
-                Class<?> serverClass = clientClass.getAnnotation(
-                        AcceptCriterion.class).value();
+                Class<?> serverClass = clientClass
+                        .getAnnotation(AcceptCriterion.class).value();
                 String serverClassName = serverClass.getCanonicalName();
-                logger.log(Type.INFO, "creating mapping for " + serverClassName);
+                logger.log(Type.INFO,
+                        "creating mapping for " + serverClassName);
                 sourceWriter.print("if (\"");
                 sourceWriter.print(serverClassName);
                 sourceWriter.print("\" == name) return GWT.create(");

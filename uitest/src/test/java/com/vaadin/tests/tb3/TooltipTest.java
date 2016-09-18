@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2013 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,7 +29,7 @@ import com.vaadin.testbench.By;
 /**
  * Base class for TestBench 3+ tests that use tooltips. This class contains
  * utility methods for testing tooltip use.
- * 
+ *
  * @author Vaadin Ltd
  */
 public abstract class TooltipTest extends MultiBrowserTest {
@@ -63,16 +63,18 @@ public abstract class TooltipTest extends MultiBrowserTest {
         WebElement body = findElement(By.cssSelector("body"));
         WebElement tooltip = getTooltip();
         Assert.assertEquals(value, tooltip.getText());
-        Assert.assertTrue("Tooltip overflowed to the left", tooltip
-                .getLocation().getX() >= 0);
+        Assert.assertTrue("Tooltip overflowed to the left",
+                tooltip.getLocation().getX() >= 0);
         Assert.assertTrue("Tooltip overflowed up",
                 tooltip.getLocation().getY() >= 0);
-        Assert.assertTrue("Tooltip overflowed to the right", tooltip
-                .getLocation().getX() + tooltip.getSize().getWidth() < body
-                .getSize().getWidth());
-        Assert.assertTrue("Tooltip overflowed down", tooltip.getLocation()
-                .getY() + tooltip.getSize().getHeight() < body.getSize()
-                .getHeight());
+        Assert.assertTrue("Tooltip overflowed to the right",
+                tooltip.getLocation().getX()
+                        + tooltip.getSize().getWidth() < body.getSize()
+                                .getWidth());
+        Assert.assertTrue("Tooltip overflowed down",
+                tooltip.getLocation().getY()
+                        + tooltip.getSize().getHeight() < body.getSize()
+                                .getHeight());
 
     }
 
@@ -95,7 +97,8 @@ public abstract class TooltipTest extends MultiBrowserTest {
                         + tooltip.getText() + " at " + tooltip.getLocation());
             }
         } catch (NoSuchElementException e) {
-            Assert.fail("Tooltip element was removed completely, causing extra events to accessibility tools");
+            Assert.fail(
+                    "Tooltip element was removed completely, causing extra events to accessibility tools");
         }
     }
 

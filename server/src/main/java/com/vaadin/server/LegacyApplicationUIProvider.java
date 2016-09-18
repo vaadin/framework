@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,10 +25,10 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;
 
 /**
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
- * 
+ *
  * @deprecated As of 7.0. Used only to support LegacyApplication - will be
  *             removed when LegacyApplication support is removed.
  */
@@ -100,7 +100,7 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
     /**
      * Hack used to return existing LegacyWindow instances without regard for
      * out-of-sync problems.
-     * 
+     *
      * @param event
      * @return
      */
@@ -129,8 +129,8 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
 
             URL applicationUrl;
             try {
-                applicationUrl = VaadinService.getCurrent().getApplicationUrl(
-                        VaadinService.getCurrentRequest());
+                applicationUrl = VaadinService.getCurrent()
+                        .getApplicationUrl(VaadinService.getCurrentRequest());
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);
             }

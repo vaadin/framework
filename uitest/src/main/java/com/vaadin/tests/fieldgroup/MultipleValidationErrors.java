@@ -39,8 +39,8 @@ public class MultipleValidationErrors extends AbstractTestUI {
                 try {
                     fieldGroup.commit();
                 } catch (FieldGroup.CommitException e) {
-                    if (e.getCause() != null
-                            && e.getCause() instanceof Validator.InvalidValueException) {
+                    if (e.getCause() != null && e
+                            .getCause() instanceof Validator.InvalidValueException) {
                         validationErrors.setValue(StringEscapeUtils
                                 .unescapeHtml(AbstractErrorMessage
                                         .getErrorMessageForException(

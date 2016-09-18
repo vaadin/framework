@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -47,9 +47,8 @@ public class GridAddRowBuiltinContainerTest {
         Assert.assertEquals("There should be one item in the container", 1,
                 container.size());
 
-        Assert.assertEquals("Hello",
-                container.getItem(itemId).getItemProperty("myColumn")
-                        .getValue());
+        Assert.assertEquals("Hello", container.getItem(itemId)
+                .getItemProperty("myColumn").getValue());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -63,9 +62,8 @@ public class GridAddRowBuiltinContainerTest {
         // cast to Object to distinguish from a null varargs array
         Object itemId = grid.addRow((Object) null);
 
-        Assert.assertEquals(null,
-                container.getItem(itemId).getItemProperty("myColumn")
-                        .getValue());
+        Assert.assertEquals(null, container.getItem(itemId)
+                .getItemProperty("myColumn").getValue());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -80,10 +78,10 @@ public class GridAddRowBuiltinContainerTest {
         Object itemId = grid.addRow("Hello", Integer.valueOf(3));
 
         Item item = container.getItem(itemId);
-        Assert.assertEquals("Hello", item.getItemProperty("myColumn")
-                .getValue());
-        Assert.assertEquals(Integer.valueOf(3), item.getItemProperty("myOther")
-                .getValue());
+        Assert.assertEquals("Hello",
+                item.getItemProperty("myColumn").getValue());
+        Assert.assertEquals(Integer.valueOf(3),
+                item.getItemProperty("myOther").getValue());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -101,8 +99,8 @@ public class GridAddRowBuiltinContainerTest {
         Item item = container.getItem(Integer.valueOf(1));
         Assert.assertEquals("Default value should be used for removed column",
                 "", item.getItemProperty("myColumn").getValue());
-        Assert.assertEquals(Integer.valueOf(3), item.getItemProperty("myOther")
-                .getValue());
+        Assert.assertEquals(Integer.valueOf(3),
+                item.getItemProperty("myOther").getValue());
     }
 
     @Test
@@ -114,10 +112,10 @@ public class GridAddRowBuiltinContainerTest {
         grid.addRow(Integer.valueOf(3), "Hello");
 
         Item item = container.getItem(Integer.valueOf(1));
-        Assert.assertEquals("Hello", item.getItemProperty("myColumn")
-                .getValue());
-        Assert.assertEquals(Integer.valueOf(3), item.getItemProperty("myOther")
-                .getValue());
+        Assert.assertEquals("Hello",
+                item.getItemProperty("myColumn").getValue());
+        Assert.assertEquals(Integer.valueOf(3),
+                item.getItemProperty("myOther").getValue());
     }
 
     @Test
@@ -143,7 +141,8 @@ public class GridAddRowBuiltinContainerTest {
 
             // Can't use @Test(expect = Foo.class) since we also want to verify
             // state after exception was thrown
-            Assert.fail("Adding to BeanItemContainer container should throw UnsupportedOperationException");
+            Assert.fail(
+                    "Adding to BeanItemContainer container should throw UnsupportedOperationException");
         } catch (UnsupportedOperationException e) {
             Assert.assertEquals("No row should have been added", 0,
                     container.size());
@@ -200,15 +199,16 @@ public class GridAddRowBuiltinContainerTest {
             // state after exception was thrown
             Assert.fail("Adding row should throw MethodException");
         } catch (MethodException e) {
-            Assert.assertEquals("Got the wrong exception", "name", e.getCause()
-                    .getMessage());
+            Assert.assertEquals("Got the wrong exception", "name",
+                    e.getCause().getMessage());
 
             Assert.assertEquals("There should be no rows in the container", 0,
                     container.size());
         }
     }
 
-    private void setContainerRemoveColumns(BeanItemContainer<Person> container) {
+    private void setContainerRemoveColumns(
+            BeanItemContainer<Person> container) {
         // Remove predefined column so we can change container
         grid.removeAllColumns();
         grid.setContainerDataSource(container);

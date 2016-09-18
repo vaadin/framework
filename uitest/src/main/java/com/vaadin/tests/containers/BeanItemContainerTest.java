@@ -9,12 +9,12 @@ public class BeanItemContainerTest {
 
     /**
      * Test class for BeanItemContainer
-     * 
+     *
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    public static void main(String[] args) throws InstantiationException,
-            IllegalAccessException {
+    public static void main(String[] args)
+            throws InstantiationException, IllegalAccessException {
         BeanItemContainer<Hello> c = new BeanItemContainer<Hello>(Hello.class);
         c.addItem(new Hello());
 

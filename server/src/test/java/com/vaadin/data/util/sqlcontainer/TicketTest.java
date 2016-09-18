@@ -74,9 +74,8 @@ public class TicketTest {
                 return null;
             }
         }).anyTimes();
-        EasyMock.expect(
-                delegate.getQueryStatement(EasyMock.anyInt(), EasyMock.anyInt()))
-                .andAnswer(new IAnswer<StatementHelper>() {
+        EasyMock.expect(delegate.getQueryStatement(EasyMock.anyInt(),
+                EasyMock.anyInt())).andAnswer(new IAnswer<StatementHelper>() {
                     @Override
                     public StatementHelper answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
@@ -94,8 +93,8 @@ public class TicketTest {
                         StringBuffer query = new StringBuffer(
                                 "SELECT COUNT(*) FROM people");
                         if (!filters.isEmpty()) {
-                            query.append(QueryBuilder.getWhereStringForFilters(
-                                    filters, sh));
+                            query.append(QueryBuilder
+                                    .getWhereStringForFilters(filters, sh));
                         }
                         sh.setQueryString(query.toString());
                         return sh;
@@ -122,10 +121,9 @@ public class TicketTest {
                     .getContainerProperty(container.firstItemId(), "AGE")
                     .getValue());
         } else {
-            Assert.assertEquals(
-                    18,
-                    container.getContainerProperty(container.firstItemId(),
-                            "AGE").getValue());
+            Assert.assertEquals(18, container
+                    .getContainerProperty(container.firstItemId(), "AGE")
+                    .getValue());
         }
 
         EasyMock.verify(delegate);
@@ -151,10 +149,9 @@ public class TicketTest {
                     .getContainerProperty(container.firstItemId(), "AGE")
                     .getValue());
         } else {
-            Assert.assertEquals(
-                    18,
-                    container.getContainerProperty(container.firstItemId(),
-                            "AGE").getValue());
+            Assert.assertEquals(18, container
+                    .getContainerProperty(container.firstItemId(), "AGE")
+                    .getValue());
         }
     }
 
@@ -170,8 +167,8 @@ public class TicketTest {
 
         // set a different name
         item.getItemProperty("NAME").setValue("otherName");
-        Assert.assertEquals("otherName", item.getItemProperty("NAME")
-                .getValue());
+        Assert.assertEquals("otherName",
+                item.getItemProperty("NAME").getValue());
 
         // access the item and reset the name to its old value
         Item item2 = container.getItem(id);

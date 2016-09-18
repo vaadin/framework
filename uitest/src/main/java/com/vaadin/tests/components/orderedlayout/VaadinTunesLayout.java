@@ -43,7 +43,8 @@ public class VaadinTunesLayout extends AbstractTestUI {
         setContent(rootLayout);
 
         // root.showNotification(
-        // "This is an example of how you can do layouts in Vaadin.<br/>It is not a working sound player.",
+        // "This is an example of how you can do layouts in Vaadin.<br/>It is
+        // not a working sound player.",
         // Notification.TYPE_HUMANIZED_MESSAGE);
 
         // Our root window contains one VerticalLayout, let's make
@@ -140,7 +141,8 @@ public class VaadinTunesLayout extends AbstractTestUI {
 
         // Place all components to the status layout and align them properly
         status.addComponent(toggleVisualization);
-        status.setComponentAlignment(toggleVisualization, Alignment.MIDDLE_LEFT);
+        status.setComponentAlignment(toggleVisualization,
+                Alignment.MIDDLE_LEFT);
         status.addComponent(timeFromStart);
         status.setComponentAlignment(timeFromStart, Alignment.BOTTOM_LEFT);
         status.addComponent(trackDetails);
@@ -243,11 +245,11 @@ public class VaadinTunesLayout extends AbstractTestUI {
                 new NativeSelect());
 
         // Lets populate the table with random data
-        String[] tracks = new String[] { "Red Flag", "Millstone",
-                "Not The Sun", "Breath", "Here We Are", "Deep Heaven",
-                "Her Voice Resides", "Natural Tan", "End It All", "Kings",
-                "Daylight Slaving", "Mad Man", "Resolve", "Teargas",
-                "African Air", "Passing Bird" };
+        String[] tracks = new String[] { "Red Flag", "Millstone", "Not The Sun",
+                "Breath", "Here We Are", "Deep Heaven", "Her Voice Resides",
+                "Natural Tan", "End It All", "Kings", "Daylight Slaving",
+                "Mad Man", "Resolve", "Teargas", "African Air",
+                "Passing Bird" };
         String[] times = new String[] { "4:12", "6:03", "5:43", "4:32", "3:42",
                 "4:45", "2:56", "9:34", "2:10", "3:44", "5:49", "6:30", "5:18",
                 "7:42", "3:13", "2:52" };
@@ -263,9 +265,8 @@ public class VaadinTunesLayout extends AbstractTestUI {
                 "Frames", "Fortress", "Phobia", "The Poison", "Manifesto",
                 "White Pony", "The Big Dirty" };
         String[] genres = new String[] { "Rock", "Metal", "Hardcore", "Indie",
-                "Pop", "Alternative", "Blues", "Jazz", "Hip Hop",
-                "Electronica", "Punk", "Hard Rock", "Dance", "R'n'B", "Gospel",
-                "Country" };
+                "Pop", "Alternative", "Blues", "Jazz", "Hip Hop", "Electronica",
+                "Punk", "Hard Rock", "Dance", "R'n'B", "Gospel", "Country" };
         for (int i = 0; i < 1000; i++) {
             NativeSelect s = new NativeSelect();
             s.addItem("1 star");

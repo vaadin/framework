@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -50,7 +50,7 @@ import com.vaadin.util.ReflectTools;
  * using a FieldGroupFieldFactory but you still have to add them to the correct
  * position in your layout.
  * </p>
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0
  */
@@ -75,7 +75,7 @@ public class FieldGroup implements Serializable {
     /**
      * Constructs a field binder. Use {@link #setItemDataSource(Item)} to set a
      * data source for the field binder.
-     * 
+     *
      */
     public FieldGroup() {
 
@@ -83,7 +83,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Constructs a field binder that uses the given data source.
-     * 
+     *
      * @param itemDataSource
      *            The data source to bind the fields to
      */
@@ -94,7 +94,7 @@ public class FieldGroup implements Serializable {
     /**
      * Updates the item that is used by this FieldBinder. Rebinds all fields to
      * the properties in the new item.
-     * 
+     *
      * @param itemDataSource
      *            The new item to use
      */
@@ -110,10 +110,10 @@ public class FieldGroup implements Serializable {
      * Gets the item used by this FieldBinder. Note that you must call
      * {@link #commit()} for the item to be updated unless buffered mode has
      * been switched off.
-     * 
+     *
      * @see #setBuffered(boolean)
      * @see #commit()
-     * 
+     *
      * @return The item used by this FieldBinder
      */
     public Item getItemDataSource() {
@@ -123,12 +123,12 @@ public class FieldGroup implements Serializable {
     /**
      * Checks the buffered mode for the bound fields.
      * <p>
-     * 
+     *
      * @see #setBuffered(boolean) for more details on buffered mode
-     * 
+     *
      * @see Field#isBuffered()
      * @return true if buffered mode is on, false otherwise
-     * 
+     *
      */
     public boolean isBuffered() {
         return buffered;
@@ -144,7 +144,7 @@ public class FieldGroup implements Serializable {
      * <p>
      * The default is to use buffered mode.
      * </p>
-     * 
+     *
      * @see Field#setBuffered(boolean)
      * @param buffered
      *            true to turn on buffered mode, false otherwise
@@ -166,7 +166,7 @@ public class FieldGroup implements Serializable {
      * Note that this will not accurately represent the enabled status of all
      * fields if you change the enabled status of the fields through some other
      * method than {@link #setEnabled(boolean)}.
-     * 
+     *
      * @return true if the fields are enabled, false otherwise
      */
     public boolean isEnabled() {
@@ -175,7 +175,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Updates the enabled state of all bound fields.
-     * 
+     *
      * @param fieldsEnabled
      *            true to enable all bound fields, false to disable them
      */
@@ -193,7 +193,7 @@ public class FieldGroup implements Serializable {
      * Note that this will not accurately represent the read only status of all
      * fields if you change the read only status of the fields through some
      * other method than {@link #setReadOnly(boolean)}.
-     * 
+     *
      * @return true if the fields are set to read only, false otherwise
      */
     public boolean isReadOnly() {
@@ -204,7 +204,7 @@ public class FieldGroup implements Serializable {
      * Sets the read only state to the given value for all fields with writable
      * data source. Fields with read only data source will always be set to read
      * only.
-     * 
+     *
      * @param fieldsReadOnly
      *            true to set the fields with writable data source to read only,
      *            false to set them to read write
@@ -226,7 +226,7 @@ public class FieldGroup implements Serializable {
      * <p>
      * The fields are not returned in any specific order.
      * </p>
-     * 
+     *
      * @return A collection with all bound Fields
      */
     public Collection<Field<?>> getFields() {
@@ -240,7 +240,7 @@ public class FieldGroup implements Serializable {
      * <p>
      * This method also adds validators when applicable.
      * </p>
-     * 
+     *
      * @param field
      *            The field to bind
      * @param propertyId
@@ -275,7 +275,8 @@ public class FieldGroup implements Serializable {
             return;
         }
 
-        field.setPropertyDataSource(wrapInTransactionalProperty(getItemProperty(propertyId)));
+        field.setPropertyDataSource(
+                wrapInTransactionalProperty(getItemProperty(propertyId)));
         configureField(field);
     }
 
@@ -289,14 +290,14 @@ public class FieldGroup implements Serializable {
 
     private void throwIfFieldIsNull(Field<?> field, Object propertyId) {
         if (field == null) {
-            throw new BindException(
-                    String.format(
-                            "Cannot bind property id '%s' to a null field.",
-                            propertyId));
+            throw new BindException(String.format(
+                    "Cannot bind property id '%s' to a null field.",
+                    propertyId));
         }
     }
 
-    private void throwIfPropertyIdAlreadyBound(Field<?> field, Object propertyId) {
+    private void throwIfPropertyIdAlreadyBound(Field<?> field,
+            Object propertyId) {
         if (propertyIdToField.containsKey(propertyId)
                 && propertyIdToField.get(propertyId) != field) {
             throw new BindException("Property id " + propertyId
@@ -306,7 +307,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Gets the property with the given property id from the item.
-     * 
+     *
      * @param propertyId
      *            The id if the property to find
      * @return The property with the given id from the item
@@ -335,7 +336,7 @@ public class FieldGroup implements Serializable {
      * Note that the field is not detached from its property data source if it
      * is no longer connected to the same property id it was bound to using this
      * FieldBinder.
-     * 
+     *
      * @param field
      *            The field to detach
      * @throws BindException
@@ -374,7 +375,7 @@ public class FieldGroup implements Serializable {
      * By default this updates the buffered, read only and enabled state of the
      * field. Also adds validators when applicable. Fields with read only data
      * source are always configured as read only.
-     * 
+     *
      * @param field
      *            The field to update
      */
@@ -392,24 +393,20 @@ public class FieldGroup implements Serializable {
 
     /**
      * Gets the type of the property with the given property id.
-     * 
+     *
      * @param propertyId
      *            The propertyId. Must be find
      * @return The type of the property
      */
     protected Class<?> getPropertyType(Object propertyId) throws BindException {
         if (getItemDataSource() == null) {
-            throw new BindException(
-                    "Property type for '"
-                            + propertyId
-                            + "' could not be determined. No item data source has been set.");
+            throw new BindException("Property type for '" + propertyId
+                    + "' could not be determined. No item data source has been set.");
         }
         Property<?> p = getItemDataSource().getItemProperty(propertyId);
         if (p == null) {
-            throw new BindException(
-                    "Property type for '"
-                            + propertyId
-                            + "' could not be determined. No property with that id was found.");
+            throw new BindException("Property type for '" + propertyId
+                    + "' could not be determined. No property with that id was found.");
         }
 
         return p.getType();
@@ -425,7 +422,7 @@ public class FieldGroup implements Serializable {
      * <p>
      * No guarantee is given for the order of the property ids
      * </p>
-     * 
+     *
      * @return A collection of bound property ids
      */
     public Collection<Object> getBoundPropertyIds() {
@@ -442,7 +439,7 @@ public class FieldGroup implements Serializable {
      * <p>
      * No guarantee is given for the order of the property ids
      * </p>
-     * 
+     *
      * @return A collection of property ids that have not been bound to fields
      */
     public Collection<Object> getUnboundPropertyIds() {
@@ -463,7 +460,7 @@ public class FieldGroup implements Serializable {
      * restored to what it was before commit was called if any
      * {@link CommitHandler} throws a CommitException or there is a problem
      * committing the fields
-     * 
+     *
      * @throws CommitException
      *             If the commit was aborted
      */
@@ -497,7 +494,7 @@ public class FieldGroup implements Serializable {
     /**
      * Tries to commit all bound fields one by one and gathers any validation
      * exceptions in a map, which is returned to the caller
-     * 
+     *
      * @return a propertyId to validation exception map which is empty if all
      *         commits succeeded
      */
@@ -518,16 +515,16 @@ public class FieldGroup implements Serializable {
     /**
      * Exception which wraps InvalidValueExceptions from all invalid fields in a
      * FieldGroup
-     * 
+     *
      * @since 7.4
      */
-    public static class FieldGroupInvalidValueException extends
-            InvalidValueException {
+    public static class FieldGroupInvalidValueException
+            extends InvalidValueException {
         private Map<Field<?>, InvalidValueException> invalidValueExceptions;
 
         /**
          * Constructs a new exception with the specified validation exceptions.
-         * 
+         *
          * @param invalidValueExceptions
          *            a property id to exception map
          */
@@ -554,9 +551,9 @@ public class FieldGroup implements Serializable {
             Property.Transactional<?> property = (Property.Transactional<?>) f
                     .getPropertyDataSource();
             if (property == null) {
-                throw new CommitException("Property \""
-                        + fieldToPropertyId.get(f)
-                        + "\" not bound to datasource.");
+                throw new CommitException(
+                        "Property \"" + fieldToPropertyId.get(f)
+                                + "\" not bound to datasource.");
             }
             property.startTransaction();
         }
@@ -581,7 +578,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Sends a preCommit event to all registered commit handlers
-     * 
+     *
      * @throws CommitException
      *             If the commit should be aborted
      */
@@ -596,7 +593,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Sends a postCommit event to all registered commit handlers
-     * 
+     *
      * @throws CommitException
      *             If the commit should be aborted
      */
@@ -613,7 +610,7 @@ public class FieldGroup implements Serializable {
      * Discards all changes done to the bound fields.
      * <p>
      * Only has effect if buffered mode is used.
-     * 
+     *
      */
     public void discard() {
         for (Field<?> f : fieldToPropertyId.keySet()) {
@@ -629,7 +626,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Returns the field that is bound to the given property id
-     * 
+     *
      * @param propertyId
      *            The property id to use to lookup the field
      * @return The field that is bound to the property id or null if no field is
@@ -641,7 +638,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Returns the property id that is bound to the given field
-     * 
+     *
      * @param field
      *            The field to use to lookup the property id
      * @return The property id that is bound to the field or null if the field
@@ -659,7 +656,7 @@ public class FieldGroup implements Serializable {
      * has been updated ({@link CommitHandler#postCommit(CommitEvent)}). If a
      * {@link CommitHandler} throws a CommitException the whole commit is
      * aborted and the fields retain their old values.
-     * 
+     *
      * @param commitHandler
      *            The commit handler to add
      */
@@ -669,9 +666,9 @@ public class FieldGroup implements Serializable {
 
     /**
      * Removes the given commit handler.
-     * 
+     *
      * @see #addCommitHandler(CommitHandler)
-     * 
+     *
      * @param commitHandler
      *            The commit handler to remove
      */
@@ -685,7 +682,7 @@ public class FieldGroup implements Serializable {
      * Use {@link #addCommitHandler(CommitHandler)} and
      * {@link #removeCommitHandler(CommitHandler)} to register or unregister a
      * commit handler.
-     * 
+     *
      * @return A collection of commit handlers
      */
     protected Collection<CommitHandler> getCommitHandlers() {
@@ -704,7 +701,7 @@ public class FieldGroup implements Serializable {
          * updated.
          * <p>
          * Throw a {@link CommitException} to abort the commit.
-         * 
+         *
          * @param commitEvent
          *            An event containing information regarding the commit
          * @throws CommitException
@@ -717,7 +714,7 @@ public class FieldGroup implements Serializable {
          * updated.
          * <p>
          * Throw a {@link CommitException} to abort the commit.
-         * 
+         *
          * @param commitEvent
          *            An event containing information regarding the commit
          * @throws CommitException
@@ -728,7 +725,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * FIXME javadoc
-     * 
+     *
      */
     public static class CommitEvent implements Serializable {
         private FieldGroup fieldBinder;
@@ -739,7 +736,7 @@ public class FieldGroup implements Serializable {
 
         /**
          * Returns the field binder that this commit relates to
-         * 
+         *
          * @return The FieldBinder that is being committed.
          */
         public FieldGroup getFieldBinder() {
@@ -753,7 +750,7 @@ public class FieldGroup implements Serializable {
      * <p>
      * Call the {@link Field#validate()} for the fields to get the individual
      * error messages.
-     * 
+     *
      * @return true if all bound fields are valid, false otherwise.
      */
     public boolean isValid() {
@@ -769,7 +766,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Checks if any bound field has been modified.
-     * 
+     *
      * @return true if at least one field has been modified, false otherwise
      */
     public boolean isModified() {
@@ -784,9 +781,9 @@ public class FieldGroup implements Serializable {
     /**
      * Gets the field factory for the {@link FieldGroup}. The field factory is
      * only used when {@link FieldGroup} creates a new field.
-     * 
+     *
      * @return The field factory in use
-     * 
+     *
      */
     public FieldGroupFieldFactory getFieldFactory() {
         return fieldFactory;
@@ -795,7 +792,7 @@ public class FieldGroup implements Serializable {
     /**
      * Sets the field factory for the {@link FieldGroup}. The field factory is
      * only used when {@link FieldGroup} creates a new field.
-     * 
+     *
      * @param fieldFactory
      *            The field factory to use
      */
@@ -814,24 +811,24 @@ public class FieldGroup implements Serializable {
      * </p>
      * <p>
      * For example:
-     * 
+     *
      * <pre>
      * public class MyForm extends VerticalLayout {
      * private TextField firstName = new TextField("First name");
-     * @PropertyId("last")
+     * &#64;PropertyId("last")
      * private TextField lastName = new TextField("Last name"); 
      * private TextField age = new TextField("Age"); ... }
-     * 
+     *
      * MyForm myForm = new MyForm(); 
      * ... 
      * fieldGroup.bindMemberFields(myForm);
      * </pre>
-     * 
+     *
      * </p>
      * This binds the firstName TextField to a "firstName" property in the item,
      * lastName TextField to a "last" property and the age TextField to a "age"
      * property.
-     * 
+     *
      * @param objectWithMemberFields
      *            The object that contains (Java) member fields to bind
      * @throws BindException
@@ -856,26 +853,26 @@ public class FieldGroup implements Serializable {
      * </p>
      * <p>
      * For example:
-     * 
+     *
      * <pre>
      * public class MyForm extends VerticalLayout {
      * private TextField firstName = new TextField("First name");
-     * @PropertyId("last")
+     * &#64;PropertyId("last")
      * private TextField lastName = new TextField("Last name"); 
      * private TextField age;
-     * 
+     *
      * MyForm myForm = new MyForm(); 
      * ... 
      * fieldGroup.buildAndBindMemberFields(myForm);
      * </pre>
-     * 
+     *
      * </p>
      * <p>
      * This binds the firstName TextField to a "firstName" property in the item,
      * lastName TextField to a "last" property and builds an age TextField using
      * the field factory and then binds it to the "age" property.
      * </p>
-     * 
+     *
      * @param objectWithMemberFields
      *            The object that contains (Java) member fields to build and
      *            bind
@@ -899,7 +896,7 @@ public class FieldGroup implements Serializable {
      * field factory is buildFields is true. All non-null fields for which a
      * property id can be determined are bound to the property id.
      * </p>
-     * 
+     *
      * @param objectWithMemberFields
      *            The object that contains (Java) member fields to build and
      *            bind
@@ -910,7 +907,8 @@ public class FieldGroup implements Serializable {
             boolean buildFields) throws BindException {
         Class<?> objectClass = objectWithMemberFields.getClass();
 
-        for (java.lang.reflect.Field memberField : getFieldsInDeclareOrder(objectClass)) {
+        for (java.lang.reflect.Field memberField : getFieldsInDeclareOrder(
+                objectClass)) {
 
             if (!Field.class.isAssignableFrom(memberField.getType())) {
                 // Process next field
@@ -1012,7 +1010,7 @@ public class FieldGroup implements Serializable {
      * buildAndBindMemberFields} can easily be customized by overriding this
      * method. No other changes are needed.
      * </p>
-     * 
+     *
      * @param memberField
      *            The field an object id is searched for
      * @return
@@ -1020,10 +1018,8 @@ public class FieldGroup implements Serializable {
     protected Object findPropertyId(java.lang.reflect.Field memberField) {
         String fieldName = memberField.getName();
         if (getItemDataSource() == null) {
-            throw new SearchException(
-                    "Property id type for field '"
-                            + fieldName
-                            + "' could not be determined. No item data source has been set.");
+            throw new SearchException("Property id type for field '" + fieldName
+                    + "' could not be determined. No item data source has been set.");
         }
         Item dataSource = getItemDataSource();
         if (dataSource.getItemProperty(fieldName) != null) {
@@ -1049,11 +1045,11 @@ public class FieldGroup implements Serializable {
 
     /**
      * Exception thrown by a FieldGroup when the commit operation fails.
-     * 
+     *
      * Provides information about validation errors through
      * {@link #getInvalidFields()} if the cause of the failure is that all bound
      * fields did not pass validation
-     * 
+     *
      */
     public static class CommitException extends Exception {
 
@@ -1099,7 +1095,7 @@ public class FieldGroup implements Serializable {
 
         /**
          * Returns the field group where the exception occurred
-         * 
+         *
          * @since 7.4
          * @return the field group
          */
@@ -1136,7 +1132,7 @@ public class FieldGroup implements Serializable {
     /**
      * Builds a field and binds it to the given property id using the field
      * binder.
-     * 
+     *
      * @param propertyId
      *            The property id to bind to. Must be present in the field
      *            finder.
@@ -1153,7 +1149,7 @@ public class FieldGroup implements Serializable {
     /**
      * Builds a field using the given caption and binds it to the given property
      * id using the field binder.
-     * 
+     *
      * @param caption
      *            The caption for the field
      * @param propertyId
@@ -1171,7 +1167,7 @@ public class FieldGroup implements Serializable {
     /**
      * Builds a field using the given caption and binds it to the given property
      * id using the field binder. Ensures the new field is of the given type.
-     * 
+     *
      * @param caption
      *            The caption for the field
      * @param propertyId
@@ -1199,7 +1195,7 @@ public class FieldGroup implements Serializable {
      * type is the type of field we want to create, can be {@link Field} if any
      * Field is good.
      * </p>
-     * 
+     *
      * @param caption
      *            The caption for the new field
      * @param dataType
@@ -1214,9 +1210,9 @@ public class FieldGroup implements Serializable {
             Class<T> fieldType) throws BindException {
         T field = getFieldFactory().createField(dataType, fieldType);
         if (field == null) {
-            throw new BindException("Unable to build a field of type "
-                    + fieldType.getName() + " for editing "
-                    + dataType.getName());
+            throw new BindException(
+                    "Unable to build a field of type " + fieldType.getName()
+                            + " for editing " + dataType.getName());
         }
 
         field.setCaption(caption);
@@ -1228,7 +1224,7 @@ public class FieldGroup implements Serializable {
      * the class or interface represented by this Class object. The elements in
      * the array returned are sorted in declare order from sub class to super
      * class.
-     * 
+     *
      * @param searchClass
      * @return
      */
@@ -1248,7 +1244,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Clears the value of all fields.
-     * 
+     *
      * @since 7.4
      */
     public void clear() {

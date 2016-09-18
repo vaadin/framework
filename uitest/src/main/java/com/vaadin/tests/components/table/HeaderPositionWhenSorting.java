@@ -15,8 +15,8 @@ import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 
-public class HeaderPositionWhenSorting extends AbstractTestUI implements
-        Action.Handler, ItemClickListener {
+public class HeaderPositionWhenSorting extends AbstractTestUI
+        implements Action.Handler, ItemClickListener {
 
     private Table table;
     private boolean actionHandlerHasActions = false;
@@ -32,7 +32,8 @@ public class HeaderPositionWhenSorting extends AbstractTestUI implements
                 if (((Boolean) event.getProperty().getValue())) {
                     table.addItemClickListener(HeaderPositionWhenSorting.this);
                 } else {
-                    table.removeItemClickListener(HeaderPositionWhenSorting.this);
+                    table.removeItemClickListener(
+                            HeaderPositionWhenSorting.this);
                 }
 
             }
@@ -55,7 +56,8 @@ public class HeaderPositionWhenSorting extends AbstractTestUI implements
         });
         addComponent(cbActionHandler);
 
-        CheckBox cbActionHasActions = new CheckBox("Action handler has actions");
+        CheckBox cbActionHasActions = new CheckBox(
+                "Action handler has actions");
         cbActionHasActions.setImmediate(true);
         cbActionHasActions.addValueChangeListener(new ValueChangeListener() {
 

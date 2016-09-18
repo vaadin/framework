@@ -59,8 +59,8 @@ class StringToNameConverter implements Converter<String, Name> {
         }
         String[] parts = text.split(" ");
         if (parts.length != 2) {
-            throw new ConversionException("Can not convert text to a name: "
-                    + text);
+            throw new ConversionException(
+                    "Can not convert text to a name: " + text);
         }
         return new Name(parts[0], parts[1]);
     }

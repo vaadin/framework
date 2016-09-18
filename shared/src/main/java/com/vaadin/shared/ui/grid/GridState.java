@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,7 @@ import com.vaadin.shared.ui.TabIndexState;
 
 /**
  * The shared state for the {@link com.vaadin.ui.components.grid.Grid} component
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -37,14 +37,14 @@ public class GridState extends TabIndexState {
      * <p>
      * Used as a data transfer object instead of the client/server ones, because
      * they don't know about each others classes.
-     * 
+     *
      * @see com.vaadin.ui.components.grid.Grid.SelectionMode
      * @see com.vaadin.client.ui.grid.Grid.SelectionMode
      */
     public enum SharedSelectionMode {
         /**
          * Representation of a single selection mode
-         * 
+         *
          * @see com.vaadin.ui.components.grid.Grid.SelectionMode#SINGLE
          * @see com.vaadin.client.ui.grid.Grid.SelectionMode#SINGLE
          */
@@ -52,7 +52,7 @@ public class GridState extends TabIndexState {
 
         /**
          * Representation of a multiselection mode
-         * 
+         *
          * @see com.vaadin.ui.components.grid.Grid.SelectionMode#MULTI
          * @see com.vaadin.client.ui.grid.Grid.SelectionMode#MULTI
          */
@@ -60,7 +60,7 @@ public class GridState extends TabIndexState {
 
         /**
          * Representation of a no-selection mode
-         * 
+         *
          * @see com.vaadin.ui.components.grid.Grid.SelectionMode#NONE
          * @see com.vaadin.client.ui.grid.Grid.SelectionMode#NONE
          */
@@ -76,35 +76,35 @@ public class GridState extends TabIndexState {
 
     /**
      * The key in which a row's data can be found
-     * 
+     *
      * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
      */
     public static final String JSONKEY_DATA = "d";
 
     /**
      * The key in which a row's own key can be found
-     * 
+     *
      * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
      */
     public static final String JSONKEY_ROWKEY = "k";
 
     /**
      * The key in which a row's generated style can be found
-     * 
+     *
      * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
      */
     public static final String JSONKEY_ROWSTYLE = "rs";
 
     /**
      * The key in which a generated styles for a row's cells can be found
-     * 
+     *
      * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
      */
     public static final String JSONKEY_CELLSTYLES = "cs";
 
     /**
      * The key in which a row's description can be found
-     * 
+     *
      * @since 7.6
      * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
      */
@@ -112,7 +112,7 @@ public class GridState extends TabIndexState {
 
     /**
      * The key in which a cell's description can be found
-     * 
+     *
      * @since 7.6
      * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
      */
@@ -120,19 +120,19 @@ public class GridState extends TabIndexState {
 
     /**
      * The key that tells whether details are visible for the row.
-     * 
+     *
      * @since 7.5.0
-     * 
+     *
      * @see com.vaadin.ui.Grid#setDetailsGenerator(com.vaadin.ui.Grid.DetailsGenerator)
      * @see com.vaadin.ui.Grid#setDetailsVisible(Object, boolean)
      * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int,
      *      elemental.json.JsonArray)
-     * */
+     */
     public static final String JSONKEY_DETAILS_VISIBLE = "dv";
 
     /**
      * The key that tells whether row is selected.
-     * 
+     *
      * @since 7.6
      */
     public static final String JSONKEY_SELECTED = "s";
@@ -177,7 +177,7 @@ public class GridState extends TabIndexState {
 
     /**
      * Buffered editor mode
-     * 
+     *
      * @since 7.6
      */
     @DelegateToWidget
@@ -185,7 +185,7 @@ public class GridState extends TabIndexState {
 
     /**
      * Whether rows and/or cells have generated descriptions (tooltips)
-     * 
+     *
      * @since 7.6
      */
     public boolean hasDescriptions;

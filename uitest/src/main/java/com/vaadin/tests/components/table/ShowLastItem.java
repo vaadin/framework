@@ -10,7 +10,7 @@ public class ShowLastItem extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#setup(com.vaadin.server.
      * VaadinRequest)
      */
@@ -35,7 +35,8 @@ public class ShowLastItem extends AbstractTestUI {
                 table.addItem(itemId).getItemProperty("Col")
                         .setValue(String.valueOf(itemId));
 
-                table.setCurrentPageFirstItemIndex(table.getItemIds().size() - 1);
+                table.setCurrentPageFirstItemIndex(
+                        table.getItemIds().size() - 1);
             }
         });
 
@@ -45,7 +46,7 @@ public class ShowLastItem extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -55,7 +56,7 @@ public class ShowLastItem extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override

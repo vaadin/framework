@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -87,8 +87,8 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
     }
 
     protected WebElement getEditor() {
-        List<WebElement> elems = getGridElement().findElements(
-                By.className("v-grid-editor"));
+        List<WebElement> elems = getGridElement()
+                .findElements(By.className("v-grid-editor"));
 
         assertLessThanOrEqual("number of editors", elems.size(), 1);
 
@@ -108,15 +108,13 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
     }
 
     protected WebElement getGridVerticalScrollbar() {
-        return getDriver()
-                .findElement(
-                        By.xpath("//div[contains(@class, \"v-grid-scroller-vertical\")]"));
+        return getDriver().findElement(By.xpath(
+                "//div[contains(@class, \"v-grid-scroller-vertical\")]"));
     }
 
     protected WebElement getGridHorizontalScrollbar() {
-        return getDriver()
-                .findElement(
-                        By.xpath("//div[contains(@class, \"v-grid-scroller-horizontal\")]"));
+        return getDriver().findElement(By.xpath(
+                "//div[contains(@class, \"v-grid-scroller-horizontal\")]"));
     }
 
     /**
@@ -148,25 +146,25 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
 
     protected void assertColumnHeader(String expectedHeaderCaption,
             TestBenchElement testBenchElement) {
-        assertEquals(expectedHeaderCaption.toLowerCase(), testBenchElement
-                .getText().toLowerCase());
+        assertEquals(expectedHeaderCaption.toLowerCase(),
+                testBenchElement.getText().toLowerCase());
     }
 
     protected GridCellElement getDefaultColumnHeader(int index) {
-        List<GridCellElement> headerRowCells = getGridElement().getHeaderCells(
-                0);
+        List<GridCellElement> headerRowCells = getGridElement()
+                .getHeaderCells(0);
         return headerRowCells.get(index);
     }
 
     protected void dragAndDropDefaultColumnHeader(int draggedColumnHeaderIndex,
             int onTopOfColumnHeaderIndex, CellSide cellSide) {
-        GridCellElement columnHeader = getDefaultColumnHeader(onTopOfColumnHeaderIndex);
+        GridCellElement columnHeader = getDefaultColumnHeader(
+                onTopOfColumnHeaderIndex);
         new Actions(getDriver())
                 .clickAndHold(getDefaultColumnHeader(draggedColumnHeaderIndex))
-                .moveToElement(
-                        columnHeader,
-                        getHorizontalOffsetForDragAndDrop(columnHeader,
-                                cellSide), 0).release().perform();
+                .moveToElement(columnHeader, getHorizontalOffsetForDragAndDrop(
+                        columnHeader, cellSide), 0)
+                .release().perform();
     }
 
     private int getHorizontalOffsetForDragAndDrop(GridCellElement columnHeader,
@@ -185,13 +183,12 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         GridCellElement headerCell = getGridElement().getHeaderCell(headerRow,
                 onTopOfColumnHeaderIndex);
         new Actions(getDriver())
-                .clickAndHold(
-                        getGridElement().getHeaderCell(headerRow,
-                                draggedColumnHeaderIndex))
-                .moveToElement(
-                        headerCell,
+                .clickAndHold(getGridElement().getHeaderCell(headerRow,
+                        draggedColumnHeaderIndex))
+                .moveToElement(headerCell,
                         getHorizontalOffsetForDragAndDrop(headerCell, cellSide),
-                        0).release().perform();
+                        0)
+                .release().perform();
     }
 
     protected void dragAndDropColumnHeader(int headerRow,
@@ -200,9 +197,8 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         GridCellElement headerCell = getGridElement().getHeaderCell(headerRow,
                 onTopOfColumnHeaderIndex);
         new Actions(getDriver())
-                .clickAndHold(
-                        getGridElement().getHeaderCell(headerRow,
-                                draggedColumnHeaderIndex))
+                .clickAndHold(getGridElement().getHeaderCell(headerRow,
+                        draggedColumnHeaderIndex))
                 .moveToElement(headerCell, horizontalOffset, 0).release()
                 .perform();
     }
@@ -218,8 +214,8 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
     }
 
     protected WebElement getSidebarPopup() {
-        List<WebElement> elements = findElements(By
-                .className("v-grid-sidebar-popup"));
+        List<WebElement> elements = findElements(
+                By.className("v-grid-sidebar-popup"));
         if (elements.isEmpty()) {
             getSidebarOpenButton().click();
             elements = findElements(By.className("v-grid-sidebar-popup"));
@@ -228,14 +224,14 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
     }
 
     protected WebElement getSidebarPopupIfPresent() {
-        List<WebElement> elements = findElements(By
-                .className("v-grid-sidebar-popup"));
+        List<WebElement> elements = findElements(
+                By.className("v-grid-sidebar-popup"));
         return elements.isEmpty() ? null : elements.get(0);
     }
 
     protected WebElement getSidebarOpenButton() {
-        List<WebElement> elements = findElements(By
-                .className("v-grid-sidebar-button"));
+        List<WebElement> elements = findElements(
+                By.className("v-grid-sidebar-button"));
         return elements.isEmpty() ? null : elements.get(0);
     }
 
@@ -245,10 +241,11 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
      */
     protected WebElement getColumnHidingToggle(int columnIndex) {
         WebElement sidebar = getSidebarPopup();
-        List<WebElement> elements = sidebar.findElements(By
-                .className("column-hiding-toggle"));
+        List<WebElement> elements = sidebar
+                .findElements(By.className("column-hiding-toggle"));
         for (WebElement e : elements) {
-            if ((e.getText().toLowerCase()).startsWith("column " + columnIndex)) {
+            if ((e.getText().toLowerCase())
+                    .startsWith("column " + columnIndex)) {
                 return e;
             }
         }

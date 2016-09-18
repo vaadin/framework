@@ -143,9 +143,9 @@ public class Ticket1397 extends LegacyApplication {
 
                 TextField tf = new TextField("Editor for line " + lineNum,
 
-                "Try to edit the contents for this textfield on line "
-                        + lineNum
-                        + " and see how the overview-version changes.");
+                        "Try to edit the contents for this textfield on line "
+                                + lineNum
+                                + " and see how the overview-version changes.");
 
                 @Override
                 public String getMinimizedValueAsHTML() {
@@ -159,8 +159,8 @@ public class Ticket1397 extends LegacyApplication {
                 }
 
             });
-            table.addItem(new Object[] { "1 " + i, "2 " + i, "3 " + i,
-                    "4 " + i, "5 " + i, pp, pp2 }, new Integer(i));
+            table.addItem(new Object[] { "1 " + i, "2 " + i, "3 " + i, "4 " + i,
+                    "5 " + i, pp, pp2 }, new Integer(i));
         }
 
         main.addComponent(table);

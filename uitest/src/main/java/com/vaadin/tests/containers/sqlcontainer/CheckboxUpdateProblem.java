@@ -15,8 +15,8 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Table;
 
-public class CheckboxUpdateProblem extends LegacyApplication implements
-        Property.ValueChangeListener {
+public class CheckboxUpdateProblem extends LegacyApplication
+        implements Property.ValueChangeListener {
     private final DatabaseHelper databaseHelper = new DatabaseHelper();
     private Table testList;
     private final HorizontalSplitPanel horizontalSplit = new HorizontalSplitPanel();
@@ -36,14 +36,15 @@ public class CheckboxUpdateProblem extends LegacyApplication implements
         testList.setImmediate(true);
         testList.addListener(this);
 
-        databaseHelper.getTestContainer().addListener(
-                new ItemSetChangeListener() {
+        databaseHelper.getTestContainer()
+                .addListener(new ItemSetChangeListener() {
                     @Override
-                    public void containerItemSetChange(ItemSetChangeEvent event) {
+                    public void containerItemSetChange(
+                            ItemSetChangeEvent event) {
                         Object selected = testList.getValue();
                         if (selected != null) {
-                            testForm.setItemDataSource(testList
-                                    .getItem(selected));
+                            testForm.setItemDataSource(
+                                    testList.getItem(selected));
                         }
                     }
                 });

@@ -53,8 +53,8 @@ public class FooterClick extends AbstractTestUIWithLog {
 
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        table.setImmediate((Boolean) event.getProperty()
-                                .getValue());
+                        table.setImmediate(
+                                (Boolean) event.getProperty().getValue());
                     }
                 });
 
@@ -67,8 +67,8 @@ public class FooterClick extends AbstractTestUIWithLog {
 
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        table.setColumnReorderingAllowed((Boolean) event
-                                .getProperty().getValue());
+                        table.setColumnReorderingAllowed(
+                                (Boolean) event.getProperty().getValue());
                     }
                 });
 

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -45,8 +45,8 @@ import com.vaadin.shared.ui.orderedlayout.FormLayoutState;
 import com.vaadin.ui.FormLayout;
 
 @Connect(FormLayout.class)
-public class FormLayoutConnector extends AbstractLayoutConnector implements
-        PostLayoutListener {
+public class FormLayoutConnector extends AbstractLayoutConnector
+        implements PostLayoutListener {
 
     /*
      * Handlers & Listeners
@@ -85,8 +85,8 @@ public class FormLayoutConnector extends AbstractLayoutConnector implements
             LayoutManager layoutManager = getLayoutManager();
             double tableWidth = layoutManager
                     .getOuterWidthDouble(getWidget().table.getElement());
-            double ownWidth = layoutManager.getInnerWidthDouble(getWidget()
-                    .getElement());
+            double ownWidth = layoutManager
+                    .getInnerWidthDouble(getWidget().getElement());
             if (ownWidth < tableWidth) {
                 // Something inside the table prevents it from shrinking,
                 // temporarily force column widths
@@ -113,8 +113,8 @@ public class FormLayoutConnector extends AbstractLayoutConnector implements
                 // Restrict content td width
                 // Round down to prevent interactions with fractional sizes of
                 // other columns
-                int targetWidth = (int) Math.floor(componentColWidth
-                        - excessWidth);
+                int targetWidth = (int) Math
+                        .floor(componentColWidth - excessWidth);
 
                 // Target might be negative if captions are wider than the total
                 // available width
@@ -152,8 +152,8 @@ public class FormLayoutConnector extends AbstractLayoutConnector implements
     public void onUnregister() {
         getLayoutManager().removeElementResizeListener(
                 getWidget().table.getElement(), resizeListener);
-        getLayoutManager().removeElementResizeListener(
-                getWidget().getElement(), resizeListener);
+        getLayoutManager().removeElementResizeListener(getWidget().getElement(),
+                resizeListener);
         removeComponentCellListener();
         super.onUnregister();
     }
@@ -176,7 +176,8 @@ public class FormLayoutConnector extends AbstractLayoutConnector implements
     }
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         VFormLayout formLayout = getWidget();
         VFormLayoutTable formLayoutTable = getWidget().table;
 
@@ -249,7 +250,8 @@ public class FormLayoutConnector extends AbstractLayoutConnector implements
 
         // FIXME This incorrectly depends on AbstractFieldConnector
         if (component instanceof AbstractFieldConnector) {
-            hideErrors = ((AbstractFieldConnector) component).getState().hideErrors;
+            hideErrors = ((AbstractFieldConnector) component)
+                    .getState().hideErrors;
         }
 
         getWidget().table.updateError(component.getWidget(),

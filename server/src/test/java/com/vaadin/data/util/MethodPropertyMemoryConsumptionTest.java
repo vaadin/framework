@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,15 +28,16 @@ import org.junit.Test;
 
 /**
  * Test for MethodProperty: don't allocate unnecessary Object arrays.
- * 
+ *
  * @since 7.2
  * @author Vaadin Ltd
  */
 public class MethodPropertyMemoryConsumptionTest {
 
     @Test
-    public void testSetArguments() throws NoSuchFieldException,
-            SecurityException, IllegalArgumentException, IllegalAccessException {
+    public void testSetArguments()
+            throws NoSuchFieldException, SecurityException,
+            IllegalArgumentException, IllegalAccessException {
         TestBean bean = new TestBean();
         TestMethodProperty<String> property = new TestMethodProperty<String>(
                 bean, "name");
@@ -51,12 +52,14 @@ public class MethodPropertyMemoryConsumptionTest {
                 .getDeclaredField("setArgs");
         setArgsField.setAccessible(true);
 
-        Assert.assertSame("setArguments method sets non-default instance"
-                + " of empty Object array for getArgs",
+        Assert.assertSame(
+                "setArguments method sets non-default instance"
+                        + " of empty Object array for getArgs",
                 getArgsField.get(property), getArgs);
 
-        Assert.assertSame("setArguments method sets non-default instance"
-                + " of empty Object array for setArgs",
+        Assert.assertSame(
+                "setArguments method sets non-default instance"
+                        + " of empty Object array for setArgs",
                 setArgsField.get(property), setArgs);
     }
 
@@ -72,17 +75,19 @@ public class MethodPropertyMemoryConsumptionTest {
         TestBean otherBean = new TestBean();
         TestMethodProperty<String> otherProperty = new TestMethodProperty<String>(
                 otherBean, "name");
-        Assert.assertSame("setArguments method uses different instance"
-                + " of empty Object array for getArgs", getArgs,
-                otherProperty.getGetArgs());
-        Assert.assertSame("setArguments method uses different instance"
-                + " of empty Object array for setArgs", setArgs,
-                otherProperty.getSetArgs());
+        Assert.assertSame(
+                "setArguments method uses different instance"
+                        + " of empty Object array for getArgs",
+                getArgs, otherProperty.getGetArgs());
+        Assert.assertSame(
+                "setArguments method uses different instance"
+                        + " of empty Object array for setArgs",
+                setArgs, otherProperty.getSetArgs());
     }
 
     @Test
-    public void testDefaultArgsSerialization() throws IOException,
-            ClassNotFoundException {
+    public void testDefaultArgsSerialization()
+            throws IOException, ClassNotFoundException {
         TestBean bean = new TestBean();
         TestMethodProperty<String> property = new TestMethodProperty<String>(
                 bean, "name");

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -48,8 +48,8 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.optiongroup.OptionGroupConstants;
 
-public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
-        BlurHandler {
+public class VOptionGroup extends VOptionGroupBase
+        implements FocusHandler, BlurHandler {
 
     public static final String CLASSNAME = "v-select-optiongroup";
 
@@ -173,8 +173,8 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
             op.setHTML(itemHtml);
             op.setValue(opUidl.getBooleanAttribute("selected"));
-            boolean optionEnabled = !opUidl
-                    .getBooleanAttribute(OptionGroupConstants.ATTRIBUTE_OPTION_DISABLED);
+            boolean optionEnabled = !opUidl.getBooleanAttribute(
+                    OptionGroupConstants.ATTRIBUTE_OPTION_DISABLED);
             boolean enabled = optionEnabled && !isReadonly() && isEnabled();
             op.setEnabled(enabled);
             optionsEnabled.put(op, optionEnabled);
@@ -235,7 +235,8 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
     @Override
     public void setTabIndex(int tabIndex) {
-        for (Iterator<Widget> iterator = panel.iterator(); iterator.hasNext();) {
+        for (Iterator<Widget> iterator = panel.iterator(); iterator
+                .hasNext();) {
             FocusWidget widget = (FocusWidget) iterator.next();
             widget.setTabIndex(tabIndex);
         }

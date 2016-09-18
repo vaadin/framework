@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,7 @@ import com.vaadin.tests.tb3.DndActionsTest;
 /**
  * Test to check how DnD works for regular (not all day event) in calendar month
  * view.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class CalendarMonthViewDndEventTest extends DndActionsTest {
@@ -44,8 +44,8 @@ public class CalendarMonthViewDndEventTest extends DndActionsTest {
 
         // does calendar have space on the right for one more event (i.e. day
         // cell on the right).
-        boolean moveRight = event.getLocation().getX() + 2
-                * event.getSize().getWidth() <= calendarRight;
+        boolean moveRight = event.getLocation().getX()
+                + 2 * event.getSize().getWidth() <= calendarRight;
 
         WebElement cell = getParentCell(event, "v-calendar-month-day");
 
@@ -67,9 +67,9 @@ public class CalendarMonthViewDndEventTest extends DndActionsTest {
 
         Assert.assertTrue(
                 "Moved event has wrong Y position (not the same row), new Y position="
-                        + newY + ", cell Y position=" + cellY
-                        + ", cell height=" + cellHeight, newY >= cellY
-                        && newY < cellY + cellHeight);
+                        + newY + ", cell Y position=" + cellY + ", cell height="
+                        + cellHeight,
+                newY >= cellY && newY < cellY + cellHeight);
         if (moveRight) {
             Assert.assertTrue(
                     "Moved event has wrong X position (not after original event)",

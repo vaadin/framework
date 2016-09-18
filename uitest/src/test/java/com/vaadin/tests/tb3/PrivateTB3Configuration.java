@@ -40,14 +40,14 @@ import com.vaadin.testbench.parallel.BrowserUtil;
  * Provides values for parameters which depend on where the test is run.
  * Parameters should be configured in work/eclipse-run-selected-test.properties.
  * A template is available in uitest/.
- * 
+ *
  * @author Vaadin Ltd
  */
 @RunOnHub("tb3-hub.intra.itmill.com")
 @BrowserFactory(VaadinBrowserFactory.class)
 public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     /**
-     * 
+     *
      */
     public static final String SCREENSHOT_DIRECTORY = "com.vaadin.testbench.screenshot.directory";
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
@@ -69,8 +69,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                 if (properties.containsKey(RUN_LOCALLY_PROPERTY)) {
                     System.setProperty("useLocalWebDriver", "true");
                     DesiredCapabilities localBrowser = getRunLocallyCapabilities();
-                    System.setProperty(
-                            "browsers.include",
+                    System.setProperty("browsers.include",
                             localBrowser.getBrowserName()
                                     + localBrowser.getVersion());
                 }
@@ -93,15 +92,17 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         String allowRunLocally = getProperty(ALLOW_RUN_LOCALLY_PROPERTY);
         if ((allowRunLocally == null || !allowRunLocally.equals("" + true))
                 && getClass().getAnnotation(RunLocally.class) != null) {
-            Assert.fail("@RunLocally annotation is not allowed by default in framework tests. "
-                    + "See file uitest/eclipse-run-selected-test.properties for more information.");
+            Assert.fail(
+                    "@RunLocally annotation is not allowed by default in framework tests. "
+                            + "See file uitest/eclipse-run-selected-test.properties for more information.");
         }
 
         super.setup();
     }
 
     @Override
-    public void setDesiredCapabilities(DesiredCapabilities desiredCapabilities) {
+    public void setDesiredCapabilities(
+            DesiredCapabilities desiredCapabilities) {
         super.setDesiredCapabilities(desiredCapabilities);
 
         if (BrowserUtil.isIE(desiredCapabilities)) {
@@ -123,17 +124,15 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         desiredCapabilities.setCapability("project", "Vaadin Framework");
         desiredCapabilities.setCapability("build", String.format("%s / %s",
                 getDeploymentHostname(), Calendar.getInstance().getTime()));
-        desiredCapabilities.setCapability(
-                "name",
-                String.format("%s.%s", getClass().getCanonicalName(),
-                        testName.getMethodName()));
+        desiredCapabilities.setCapability("name", String.format("%s.%s",
+                getClass().getCanonicalName(), testName.getMethodName()));
     }
 
     protected static DesiredCapabilities getRunLocallyCapabilities() {
         VaadinBrowserFactory factory = new VaadinBrowserFactory();
         try {
-            return factory.create(Browser.valueOf(properties.getProperty(
-                    RUN_LOCALLY_PROPERTY).toUpperCase()));
+            return factory.create(Browser.valueOf(properties
+                    .getProperty(RUN_LOCALLY_PROPERTY).toUpperCase()));
         } catch (Exception e) {
             System.err.println(e.getMessage());
             System.err.println("Falling back to FireFox");
@@ -154,9 +153,8 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     protected String getScreenshotDirectory() {
         String screenshotDirectory = getProperty(SCREENSHOT_DIRECTORY);
         if (screenshotDirectory == null) {
-            throw new RuntimeException(
-                    "No screenshot directory defined. Use -D"
-                            + SCREENSHOT_DIRECTORY + "=<path>");
+            throw new RuntimeException("No screenshot directory defined. Use -D"
+                    + SCREENSHOT_DIRECTORY + "=<path>");
         }
         return screenshotDirectory;
     }
@@ -207,7 +205,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     /**
      * Gets the hostname that tests are configured to use.
-     * 
+     *
      * @return the host name configuration value
      */
     public static String getConfiguredDeploymentHostname() {
@@ -227,7 +225,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     /**
      * Gets the port that tests are configured to use.
-     * 
+     *
      * @return the port configuration value
      */
     public static int getConfiguredDeploymentPort() {
@@ -244,7 +242,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     /**
      * Tries to automatically determine the IP address of the machine the test
      * is running on.
-     * 
+     *
      * @return An IP address of one of the network interfaces in the machine.
      * @throws RuntimeException
      *             if there was an error or no IP was found

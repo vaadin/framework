@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -57,7 +57,7 @@ public class Property {
      * returned string may change without notice and should not be used for any
      * other purpose than identification. The signature is currently based on
      * the declaring type's signature and the property's name.
-     * 
+     *
      * @return the unique signature of this property
      */
     public String getSignature() {
@@ -68,9 +68,9 @@ public class Property {
      * Gets the string that is internally used when looking up generated support
      * code for this method. This is the same as {@link #getSignature()}, but
      * without any type parameters.
-     * 
+     *
      * @return the string to use for looking up generated support code
-     * 
+     *
      * @since 7.2
      */
     public String getLookupKey() {
@@ -105,9 +105,9 @@ public class Property {
 
     /**
      * Gets the property name formatted for displaying in a user interface. This
-     * returns a string where e.g. "camelCase" has been converted to
-     * "Camel case".
-     * 
+     * returns a string where e.g. "camelCase" has been converted to "Camel
+     * case".
+     *
      * @return the name of this property, formatted for humans to read
      */
     public String getDisplayName() {
@@ -130,9 +130,9 @@ public class Property {
 
     /**
      * Checks whether this property is annotated with {@link NoLayout}.
-     * 
+     *
      * @since 7.4
-     * 
+     *
      * @return <code>true</code> if this property has a NoLayout annotation;
      *         otherwise <code>false</code>
      */

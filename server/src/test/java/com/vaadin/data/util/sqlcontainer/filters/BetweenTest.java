@@ -144,32 +144,32 @@ public class BetweenTest {
     public void passesFilter_nullValue_filterIsPassed() {
         String id = "id";
         Between between = new Between(id, null, null);
-        Assert.assertTrue(between.passesFilter(id,
-                itemWithPropertyValue(id, null)));
+        Assert.assertTrue(
+                between.passesFilter(id, itemWithPropertyValue(id, null)));
     }
 
     @Test
     public void passesFilter_nullStartValue_filterIsPassed() {
         String id = "id";
         Between between = new Between(id, null, 2);
-        Assert.assertTrue(between
-                .passesFilter(id, itemWithPropertyValue(id, 1)));
+        Assert.assertTrue(
+                between.passesFilter(id, itemWithPropertyValue(id, 1)));
     }
 
     @Test
     public void passesFilter_nullEndValue_filterIsPassed() {
         String id = "id";
         Between between = new Between(id, 0, null);
-        Assert.assertTrue(between
-                .passesFilter(id, itemWithPropertyValue(id, 1)));
+        Assert.assertTrue(
+                between.passesFilter(id, itemWithPropertyValue(id, 1)));
     }
 
     @Test
     public void passesFilter_nullStartValueAndEndValue_filterIsPassed() {
         String id = "id";
         Between between = new Between(id, null, null);
-        Assert.assertTrue(between
-                .passesFilter(id, itemWithPropertyValue(id, 1)));
+        Assert.assertTrue(
+                between.passesFilter(id, itemWithPropertyValue(id, 1)));
     }
 
     @Test

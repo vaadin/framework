@@ -10,8 +10,8 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.TextField;
 
-public class TextFieldFocusAndBlurListeners extends TestBase implements
-        FocusListener, BlurListener, ValueChangeListener {
+public class TextFieldFocusAndBlurListeners extends TestBase
+        implements FocusListener, BlurListener, ValueChangeListener {
     private Log log = new Log(5).setNumberLogRows(false);
 
     @Override

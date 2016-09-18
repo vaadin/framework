@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,10 +35,10 @@ import com.vaadin.ui.CustomLayout;
 
 /**
  * User Interface Description Language Target.
- * 
+ *
  * TODO document better: role of this class, UIDL format, attributes, variables,
  * etc.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 5.0
  */
@@ -77,7 +77,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Creates a new JsonPaintTarget.
-     * 
+     *
      * @param manager
      * @param outWriter
      *            A character-output stream.
@@ -87,8 +87,8 @@ public class JsonPaintTarget implements PaintTarget {
      * @throws PaintException
      *             if the paint operation failed.
      */
-    public JsonPaintTarget(LegacyCommunicationManager manager,
-            Writer outWriter, boolean cachingRequired) throws PaintException {
+    public JsonPaintTarget(LegacyCommunicationManager manager, Writer outWriter,
+            boolean cachingRequired) throws PaintException {
 
         this.manager = manager;
 
@@ -112,18 +112,18 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Prints the element start tag.
-     * 
+     *
      * <pre>
      *   Todo:
      *    Checking of input values
-     * 
+     *
      * </pre>
-     * 
+     *
      * @param tagName
      *            the name of the start tag.
      * @throws PaintException
      *             if the paint operation failed.
-     * 
+     *
      */
     public void startTag(String tagName, boolean isChildNode)
             throws PaintException {
@@ -152,10 +152,10 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Prints the element end tag.
-     * 
+     *
      * If the parent tag is closed before every child tag is closed an
      * PaintException is raised.
-     * 
+     *
      * @param tag
      *            the name of the end tag.
      * @throws PaintException
@@ -198,7 +198,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Substitutes the XML sensitive characters with predefined XML entities.
-     * 
+     *
      * @param xml
      *            the String to be substituted.
      * @return A new string instance where all occurrences of XML sensitive
@@ -213,12 +213,12 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Substitutes the XML sensitive characters with predefined XML entities.
-     * 
+     *
      * @param xml
      *            the String to be substituted.
      * @return A new StringBuilder instance where all occurrences of XML
      *         sensitive characters are substituted with entities.
-     * 
+     *
      */
     static StringBuilder escapeXML(StringBuilder xml) {
         if (xml == null || xml.length() <= 0) {
@@ -241,7 +241,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Escapes the given string so it can safely be used as a JSON string.
-     * 
+     *
      * @param s
      *            The string to escape
      * @return Escaped version of the string
@@ -298,7 +298,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Substitutes a XML sensitive character with predefined XML entity.
-     * 
+     *
      * @param c
      *            the Character to be replaced with an entity.
      * @return String of the entity or null if character is not to be replaced
@@ -323,11 +323,11 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Prints XML-escaped text.
-     * 
+     *
      * @param str
      * @throws PaintException
      *             if the paint operation failed.
-     * 
+     *
      */
 
     @Override
@@ -341,7 +341,8 @@ public class JsonPaintTarget implements PaintTarget {
     }
 
     @Override
-    public void addAttribute(String name, Resource value) throws PaintException {
+    public void addAttribute(String name, Resource value)
+            throws PaintException {
         if (value == null) {
             throw new NullPointerException();
         }
@@ -417,8 +418,7 @@ public class JsonPaintTarget implements PaintTarget {
             }
             sb.append("\":");
             if (mapValue instanceof Float || mapValue instanceof Integer
-                    || mapValue instanceof Double
-                    || mapValue instanceof Boolean
+                    || mapValue instanceof Double || mapValue instanceof Boolean
                     || mapValue instanceof Alignment) {
                 sb.append(mapValue);
             } else {
@@ -465,7 +465,8 @@ public class JsonPaintTarget implements PaintTarget {
     @Override
     public void addVariable(VariableOwner owner, String name, Component value)
             throws PaintException {
-        tag.addVariable(new StringVariable(owner, name, value.getConnectorId()));
+        tag.addVariable(
+                new StringVariable(owner, name, value.getConnectorId()));
     }
 
     @Override
@@ -506,14 +507,14 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Adds a upload stream type variable.
-     * 
+     *
      * TODO not converted for JSON
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -528,9 +529,9 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Prints the single text section.
-     * 
+     *
      * Prints full text section. The section data is escaped
-     * 
+     *
      * @param sectionTagName
      *            the name of the tag.
      * @param sectionData
@@ -548,7 +549,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Adds XML directly to UIDL.
-     * 
+     *
      * @param xml
      *            the Xml to be added.
      * @throws PaintException
@@ -576,7 +577,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /**
      * Adds XML section with namespace.
-     * 
+     *
      * @param sectionTagName
      *            the name of the tag.
      * @param sectionData
@@ -585,7 +586,7 @@ public class JsonPaintTarget implements PaintTarget {
      *            the namespace to be added.
      * @throws PaintException
      *             if the paint operation failed.
-     * 
+     *
      * @see com.vaadin.server.PaintTarget#addXMLSection(String, String, String)
      */
 
@@ -613,7 +614,7 @@ public class JsonPaintTarget implements PaintTarget {
     /**
      * Gets the UIDL already printed to stream. Paint target must be closed
      * before the <code>getUIDL</code> can be called.
-     * 
+     *
      * @return the UIDL.
      */
     public String getUIDL() {
@@ -629,7 +630,7 @@ public class JsonPaintTarget implements PaintTarget {
      * <code>getUIDL</code> can be called. Subsequent attempts to write to paint
      * target. If the target was already closed, call to this function is
      * ignored. will generate an exception.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -650,7 +651,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.terminal.PaintTarget#startPaintable(com.vaadin.terminal
      * .Paintable, java.lang.String)
      */
@@ -661,9 +662,7 @@ public class JsonPaintTarget implements PaintTarget {
         boolean topLevelPaintable = openPaintables.isEmpty();
 
         if (getLogger().isLoggable(Level.FINE)) {
-            getLogger().log(
-                    Level.FINE,
-                    "startPaintable for {0}@{1}",
+            getLogger().log(Level.FINE, "startPaintable for {0}@{1}",
                     new Object[] { connector.getClass().getName(),
                             Integer.toHexString(connector.hashCode()) });
         }
@@ -689,9 +688,7 @@ public class JsonPaintTarget implements PaintTarget {
     @Override
     public void endPaintable(Component paintable) throws PaintException {
         if (getLogger().isLoggable(Level.FINE)) {
-            getLogger().log(
-                    Level.FINE,
-                    "endPaintable for {0}@{1}",
+            getLogger().log(Level.FINE, "endPaintable for {0}@{1}",
                     new Object[] { paintable.getClass().getName(),
                             Integer.toHexString(paintable.hashCode()) });
         }
@@ -710,7 +707,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.terminal.PaintTarget#addCharacterData(java.lang.String )
      */
 
@@ -724,9 +721,9 @@ public class JsonPaintTarget implements PaintTarget {
     /**
      * This is basically a container for UI components variables, that will be
      * added at the end of JSON object.
-     * 
+     *
      * @author mattitahvonen
-     * 
+     *
      */
     class JsonTag implements Serializable {
         boolean firstField = false;
@@ -797,7 +794,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
 
         /**
-         * 
+         *
          * @param s
          *            json string, object or array
          */
@@ -823,7 +820,8 @@ public class JsonPaintTarget implements PaintTarget {
             final StringBuilder buf = new StringBuilder();
             buf.append(startField());
             buf.append("{");
-            for (final Iterator<Object> iter = attr.iterator(); iter.hasNext();) {
+            for (final Iterator<Object> iter = attr.iterator(); iter
+                    .hasNext();) {
                 final String element = (String) iter.next();
                 buf.append(element);
                 if (iter.hasNext()) {
@@ -1010,8 +1008,8 @@ public class JsonPaintTarget implements PaintTarget {
     @Override
     public void addVariable(VariableOwner owner, String name,
             StreamVariable value) throws PaintException {
-        String url = manager.getStreamVariableTargetUrl(
-                (ClientConnector) owner, name, value);
+        String url = manager.getStreamVariableTargetUrl((ClientConnector) owner,
+                name, value);
         if (url != null) {
             addVariable(owner, name, url);
         } // else { //NOP this was just a cleanup by component }
@@ -1020,7 +1018,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.terminal.PaintTarget#isFullRepaint()
      */
 

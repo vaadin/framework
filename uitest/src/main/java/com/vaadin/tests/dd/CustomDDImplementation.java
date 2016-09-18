@@ -17,7 +17,7 @@ import com.vaadin.ui.Layout;
 /**
  * Test/Example/Draft code how to build custom DD implementation using the thing
  * framework provided by Vaadin.
- * 
+ *
  */
 public class CustomDDImplementation extends CustomComponent {
 
@@ -30,12 +30,12 @@ public class CustomDDImplementation extends CustomComponent {
     /**
      * Server side component that accepts drags must implement HasDropHandler
      * that have one method to get reference of DropHandler.
-     * 
+     *
      * DropHandler may be implemented directly or probably most commonly using a
      * half baked implementation {@link AbstractDropHandler}.
-     * 
+     *
      * Check the @ClientWidget
-     * 
+     *
      */
     class MyDropTarget extends AbstractComponent implements DropTarget {
         @Override
@@ -71,12 +71,12 @@ public class CustomDDImplementation extends CustomComponent {
     /**
      * Server side implementation of source does not necessary need to contain
      * anything.
-     * 
+     *
      * Check the @ClientWidget
-     * 
+     *
      * However component might have different modes to support starting drag
      * operations that are controlled via server side api.
-     * 
+     *
      */
     public class MyDragSource extends AbstractComponent implements Component {
 

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,10 +21,10 @@ import java.util.TimeZone;
 
 /**
  * Class for representing a date range.
- * 
+ *
  * @since 7.1.0
  * @author Vaadin Ltd.
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class CalendarDateRange implements Serializable {
@@ -37,7 +37,7 @@ public class CalendarDateRange implements Serializable {
 
     /**
      * Constructor
-     * 
+     *
      * @param start
      *            The start date and time of the date range
      * @param end
@@ -52,7 +52,7 @@ public class CalendarDateRange implements Serializable {
 
     /**
      * Get the start date of the date range
-     * 
+     *
      * @return the start Date of the range
      */
     public Date getStart() {
@@ -61,7 +61,7 @@ public class CalendarDateRange implements Serializable {
 
     /**
      * Get the end date of the date range
-     * 
+     *
      * @return the end Date of the range
      */
     public Date getEnd() {
@@ -70,7 +70,7 @@ public class CalendarDateRange implements Serializable {
 
     /**
      * Is a date in the date range
-     * 
+     *
      * @param date
      *            The date to check
      * @return true if the date range contains a date start and end of range
@@ -86,7 +86,7 @@ public class CalendarDateRange implements Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

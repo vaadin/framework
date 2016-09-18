@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -34,7 +34,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Tests that the tooltip is positioned so that it fits in the displayed area.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class TooltipPositionTest extends MultiBrowserTest {
@@ -164,10 +164,10 @@ public class TooltipPositionTest extends MultiBrowserTest {
         int yTop = topLeft.getY();
         int xRight = xLeft + tooltipSize.getWidth() - 1;
         int yBottom = yTop + tooltipSize.getHeight() - 1;
-        boolean overlapHorizontally = !(xRight < 0 || xLeft >= windowSize
-                .getWidth());
-        boolean overlapVertically = !(yBottom < 0 || yTop >= windowSize
-                .getHeight());
+        boolean overlapHorizontally = !(xRight < 0
+                || xLeft >= windowSize.getWidth());
+        boolean overlapVertically = !(yBottom < 0
+                || yTop >= windowSize.getHeight());
         return !(overlapHorizontally && overlapVertically);
     }
 }

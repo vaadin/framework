@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,7 +26,7 @@ import com.vaadin.ui.UI;
  * A representation of a bootstrap fragment being generated. The bootstrap
  * fragment is the HTML code that will make up the actual application. This also
  * includes the JavaScript that initializes the application.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
@@ -35,10 +35,10 @@ public class BootstrapFragmentResponse extends BootstrapResponse {
 
     /**
      * Crate a new bootstrap fragment response.
-     * 
+     *
      * @see BootstrapResponse#BootstrapResponse(BootstrapHandler, VaadinRequest,
      *      VaadinSession, Class)
-     * 
+     *
      * @param handler
      *            the bootstrap handler that is firing the event
      * @param request
@@ -67,7 +67,7 @@ public class BootstrapFragmentResponse extends BootstrapResponse {
      * Gets the list of DOM nodes that will be used to generate the fragment
      * HTML. Changes to the returned list will be reflected in the generated
      * HTML.
-     * 
+     *
      * @return the current list of DOM nodes that makes up the application
      *         fragment
      */

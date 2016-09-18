@@ -27,8 +27,7 @@ import org.apache.commons.io.IOUtils;
 
 public class FetchReleaseNotesTickets {
     private static final String queryURL = "https://dev.vaadin.com/query?status=pending-release&amp;status=released&amp;@milestone@&amp;resolution=fixed&amp;col=id&amp;col=summary&amp;col=owner&amp;col=type&amp;col=priority&amp;col=component&amp;col=version&amp;col=bfptime&col=fv&amp;format=tab&amp;order=id";
-    private static final String ticketTemplate = "<tr>"
-            + "@badge@" //
+    private static final String ticketTemplate = "<tr>" + "@badge@" //
             + "<td class=\"ticket\"><a href=\"https://dev.vaadin.com/ticket/@ticket@\">#@ticket@</a></td>" //
             + "<td>@description@</td>" //
             + "</tr>"; //
@@ -105,7 +104,8 @@ public class FetchReleaseNotesTickets {
             String badge = "<td></td>";
             if (fields.length >= 8 && !fields[7].equals("")) {
                 badge = "<td class=\"bfp\"><span class=\"bfp\">Priority</span></td>";
-            } else if (fields.length >= 9 && fields[8].equalsIgnoreCase("true")) {
+            } else if (fields.length >= 9
+                    && fields[8].equalsIgnoreCase("true")) {
                 badge = "<td class=\"fv\"><span class=\"fv\">Vote</span></td>";
             }
 
@@ -163,9 +163,9 @@ public class FetchReleaseNotesTickets {
     }
 
     private static void usage() {
-        System.err.println("Usage: "
-                + FetchReleaseNotesTickets.class.getSimpleName()
-                + " -Dvaadin.version=<version>");
+        System.err.println(
+                "Usage: " + FetchReleaseNotesTickets.class.getSimpleName()
+                        + " -Dvaadin.version=<version>");
         System.exit(1);
     }
 }

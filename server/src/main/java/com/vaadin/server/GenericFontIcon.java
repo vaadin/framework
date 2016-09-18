@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,7 +17,7 @@ package com.vaadin.server;
 
 /**
  * A generic implementation of {@link FontIcon} interface
- * 
+ *
  * @since 7.5.0
  * @author Vaadin Ltd
  */
@@ -29,7 +29,7 @@ public class GenericFontIcon implements FontIcon {
     /**
      * Creates a new instance of GenericFontIcon with given font family and
      * codepoint
-     * 
+     *
      * @param fontFamily
      *            Name of the type face that is used to display icons
      * @param codepoint
@@ -42,7 +42,7 @@ public class GenericFontIcon implements FontIcon {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.FontIcon#getFontFamily()
      */
     @Override
@@ -52,7 +52,7 @@ public class GenericFontIcon implements FontIcon {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Resource#getMIMEType()
      */
     @Override
@@ -63,7 +63,7 @@ public class GenericFontIcon implements FontIcon {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.FontIcon#getCodepoint()
      */
     @Override
@@ -73,7 +73,7 @@ public class GenericFontIcon implements FontIcon {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.FontIcon#getHtml()
      */
     @Override
@@ -84,7 +84,7 @@ public class GenericFontIcon implements FontIcon {
     /**
      * Utility method for generating HTML that displays an icon from specific
      * fontFamiliy with a given codePoint in the font
-     * 
+     *
      * @param fontFamily
      *            Name of the font family
      * @param codePoint
@@ -98,7 +98,7 @@ public class GenericFontIcon implements FontIcon {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -113,7 +113,7 @@ public class GenericFontIcon implements FontIcon {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

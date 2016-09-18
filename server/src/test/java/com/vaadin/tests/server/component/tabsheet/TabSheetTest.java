@@ -281,6 +281,6 @@ public class TabSheetTest {
 
         // then
         listener.assertActualComponentIs(lbl3);
-        assertEquals(lbl3, tabSheet.getSelectedTab());        
+        assertEquals(lbl3, tabSheet.getSelectedTab());
     }
 }

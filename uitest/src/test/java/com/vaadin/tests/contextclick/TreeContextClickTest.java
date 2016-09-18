@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -34,8 +34,8 @@ public class TreeContextClickTest extends AbstractContextClickTest {
 
         addOrRemoveTypedListener();
 
-        List<WebElement> nodes = $(TreeElement.class).first().findElements(
-                By.className("v-tree-node"));
+        List<WebElement> nodes = $(TreeElement.class).first()
+                .findElements(By.className("v-tree-node"));
 
         contextClick(nodes.get(1));
 
@@ -52,14 +52,14 @@ public class TreeContextClickTest extends AbstractContextClickTest {
 
         addOrRemoveTypedListener();
 
-        List<WebElement> nodes = $(TreeElement.class).first().findElements(
-                By.className("v-tree-node"));
+        List<WebElement> nodes = $(TreeElement.class).first()
+                .findElements(By.className("v-tree-node"));
 
         new Actions(getDriver()).moveToElement(nodes.get(1), 10, 10).click()
                 .perform();
 
-        nodes = $(TreeElement.class).first().findElements(
-                By.className("v-tree-node"));
+        nodes = $(TreeElement.class).first()
+                .findElements(By.className("v-tree-node"));
         contextClick(nodes.get(2));
 
         assertEquals("1. ContextClickEvent: Baz", getLogRow(0));

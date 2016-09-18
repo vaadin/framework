@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,17 +40,21 @@ public class UIAccessTest extends MultiBrowserTest {
 
         $(ButtonElement.class).get(7).click();
 
-        waitForLogToContainText("0. Current UI matches in beforeResponse? true");
-        waitForLogToContainText("1. Current session matches in beforeResponse? true");
+        waitForLogToContainText(
+                "0. Current UI matches in beforeResponse? true");
+        waitForLogToContainText(
+                "1. Current session matches in beforeResponse? true");
     }
 
     @Test
     public void canBeAccessedFromUIThread() {
         $(ButtonElement.class).first().click();
 
-        assertTrue(logContainsText("0. Access from UI thread future is done? false"));
+        assertTrue(logContainsText(
+                "0. Access from UI thread future is done? false"));
         assertTrue(logContainsText("1. Access from UI thread is run"));
-        assertTrue(logContainsText("2. beforeClientResponse future is done? true"));
+        assertTrue(logContainsText(
+                "2. beforeClientResponse future is done? true"));
     }
 
     @Test
@@ -78,14 +82,16 @@ public class UIAccessTest extends MultiBrowserTest {
 
         assertTrue(logContainsText("0. Throwing exception in access"));
         assertTrue(logContainsText("1. firstFuture is done? true"));
-        assertTrue(logContainsText("2. Got exception from firstFuture: java.lang.RuntimeException: Catch me if you can"));
+        assertTrue(logContainsText(
+                "2. Got exception from firstFuture: java.lang.RuntimeException: Catch me if you can"));
     }
 
     @Test
     public void futureIsCancelledBeforeStarted() {
         $(ButtonElement.class).get(3).click();
 
-        assertTrue(logContainsText("0. future was cancelled, should not start"));
+        assertTrue(
+                logContainsText("0. future was cancelled, should not start"));
     }
 
     @Test
@@ -102,9 +108,12 @@ public class UIAccessTest extends MultiBrowserTest {
         $(ButtonElement.class).get(5).click();
 
         assertTrue(logContainsText("0. accessSynchronously has request? true"));
-        assertTrue(logContainsText("1. Test value in accessSynchronously: Set before accessSynchronosly"));
-        assertTrue(logContainsText("2. has request after accessSynchronously? true"));
-        assertTrue(logContainsText("3. Test value after accessSynchornously: Set in accessSynchronosly"));
+        assertTrue(logContainsText(
+                "1. Test value in accessSynchronously: Set before accessSynchronosly"));
+        assertTrue(logContainsText(
+                "2. has request after accessSynchronously? true"));
+        assertTrue(logContainsText(
+                "3. Test value after accessSynchornously: Set in accessSynchronosly"));
     }
 
     @Test
@@ -112,9 +121,11 @@ public class UIAccessTest extends MultiBrowserTest {
         $(ButtonElement.class).get(6).click();
 
         assertTrue(logContainsText("0. access has request? false"));
-        assertTrue(logContainsText("1. Test value in access: Set before access"));
+        assertTrue(
+                logContainsText("1. Test value in access: Set before access"));
         assertTrue(logContainsText("2. has request after access? true"));
-        assertTrue(logContainsText("3. Test value after access: Set before run pending"));
+        assertTrue(logContainsText(
+                "3. Test value after access: Set before run pending"));
     }
 
 }

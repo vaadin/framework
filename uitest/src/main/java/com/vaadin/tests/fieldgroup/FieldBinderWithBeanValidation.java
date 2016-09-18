@@ -82,11 +82,10 @@ public class FieldBinderWithBeanValidation extends TestBase {
         sex.setPageLength(0);
 
         PersonWithBeanValidationAnnotations p = new PersonWithBeanValidationAnnotations(
-                "John", "Doe", "john@doe.com", 64, Sex.MALE, new Address(
-                        "John street", 11223, "John's town", Country.USA));
-        fieldGroup
-                .setItemDataSource(new BeanItem<PersonWithBeanValidationAnnotations>(
-                        p));
+                "John", "Doe", "john@doe.com", 64, Sex.MALE,
+                new Address("John street", 11223, "John's town", Country.USA));
+        fieldGroup.setItemDataSource(
+                new BeanItem<PersonWithBeanValidationAnnotations>(p));
     }
 
     public static PersonWithBeanValidationAnnotations getPerson(

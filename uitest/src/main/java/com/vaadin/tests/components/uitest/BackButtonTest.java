@@ -35,7 +35,8 @@ public class BackButtonTest extends AbstractTestUI {
                 new UriFragmentChangedListener() {
 
                     @Override
-                    public void uriFragmentChanged(UriFragmentChangedEvent event) {
+                    public void uriFragmentChanged(
+                            UriFragmentChangedEvent event) {
                         String f = event.getUriFragment();
                         if ("page2".equals(f)) {
                             showPage2();

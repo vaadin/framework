@@ -195,8 +195,8 @@ public abstract class UIProvider implements Serializable {
 
         // Fourth case: we have an AppWidgetset.gwt.xml file
         else {
-            InputStream resource = event.getUIClass().getResourceAsStream(
-                    "/" + APP_WIDGETSET_NAME + ".gwt.xml");
+            InputStream resource = event.getUIClass()
+                    .getResourceAsStream("/" + APP_WIDGETSET_NAME + ".gwt.xml");
             if (resource != null) {
                 return new WidgetsetInfoImpl(false, null, APP_WIDGETSET_NAME);
             }
@@ -231,15 +231,14 @@ public abstract class UIProvider implements Serializable {
             try {
                 return cls.newInstance();
             } catch (InstantiationException e) {
-                getLogger().log(
-                        Level.INFO,
+                getLogger().log(Level.INFO,
                         "Unexpected trying to instantiate class "
-                                + cls.getName(), e);
+                                + cls.getName(),
+                        e);
             } catch (IllegalAccessException e) {
-                getLogger()
-                        .log(Level.INFO,
-                                "Unexpected trying to access class "
-                                        + cls.getName(), e);
+                getLogger().log(Level.INFO,
+                        "Unexpected trying to access class " + cls.getName(),
+                        e);
             }
         }
         return null;

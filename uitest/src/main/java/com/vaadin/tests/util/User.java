@@ -27,7 +27,7 @@ public class User implements Serializable {
     /**
      * Returns an unmodifiable set of roles. To modify the roles a user has,
      * replace the whole set using {@link #setRoles(Set)}.
-     * 
+     *
      * @return set of roles (unmodifiable, not null)
      */
     public Set<Role> getRoles() {
@@ -37,7 +37,7 @@ public class User implements Serializable {
     /**
      * Replaces the set of roles with another collection. User references in
      * roles are automatically updated when setting the roles of a user.
-     * 
+     *
      * @param roles
      *            non-null set of roles
      */

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,7 +26,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Test to check that TabsheetBaseConnector reacts on disabling its parent.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class TabSheetInDisabledParentTest extends MultiBrowserTest {
@@ -39,8 +39,8 @@ public class TabSheetInDisabledParentTest extends MultiBrowserTest {
         // disable parent
         button.click();
 
-        List<WebElement> tabHeaders = getDriver().findElements(
-                By.className("v-tabsheet-tabitemcell"));
+        List<WebElement> tabHeaders = getDriver()
+                .findElements(By.className("v-tabsheet-tabitemcell"));
         tabHeaders.get(1).findElement(By.className("v-captiontext")).click();
 
         Assert.assertFalse(
@@ -52,8 +52,8 @@ public class TabSheetInDisabledParentTest extends MultiBrowserTest {
         button.click();
 
         // selected tab is still the same
-        tabHeaders = getDriver().findElements(
-                By.className("v-tabsheet-tabitemcell"));
+        tabHeaders = getDriver()
+                .findElements(By.className("v-tabsheet-tabitemcell"));
         Assert.assertTrue(
                 "Tabsheet has wrong selected tab after enabling its parent",
                 tabHeaders.get(0).getAttribute("class")

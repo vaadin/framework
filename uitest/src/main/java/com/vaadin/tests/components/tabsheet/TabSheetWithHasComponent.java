@@ -64,8 +64,8 @@ public class TabSheetWithHasComponent extends AbstractTestUI {
     }
 
     protected TabSheet createSmallTabSheet() {
-        return new TabSheet(new Button("Tab1 inside popup"), new NativeButton(
-                "Tab 2 inside popup"));
+        return new TabSheet(new Button("Tab1 inside popup"),
+                new NativeButton("Tab 2 inside popup"));
     }
 
     private Panel createPanel() {

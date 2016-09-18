@@ -42,8 +42,8 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
 
     private PopupDateField createPopupDateField(String caption, String width,
             Locale locale) {
-        PopupDateField pd = new PopupDateField(caption + "("
-                + locale.toString() + ")");
+        PopupDateField pd = new PopupDateField(
+                caption + "(" + locale.toString() + ")");
         pd.setWidth(width);
         pd.setValue(new Date(12312312313L));
         pd.setLocale(locale);

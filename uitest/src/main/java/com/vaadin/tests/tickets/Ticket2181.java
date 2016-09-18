@@ -16,8 +16,8 @@ import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2181 extends LegacyApplication implements
-        Button.ClickListener {
+public class Ticket2181 extends LegacyApplication
+        implements Button.ClickListener {
 
     // private static final Object PROPERTY_VALUE = new Object();
     // private static final Object PROPERTY_CAPTION = new Object();
@@ -93,8 +93,9 @@ public class Ticket2181 extends LegacyApplication implements
                     tf.setCaption(caption);
                 } else if (value.equals("Icon")) {
                     String timestamp = String.valueOf(new Date().getTime());
-                    tf.setIcon(new ThemeResource(icons.get(random.nextInt(icons
-                            .size())) + "?" + timestamp));
+                    tf.setIcon(new ThemeResource(
+                            icons.get(random.nextInt(icons.size())) + "?"
+                                    + timestamp));
                 } else if (value.equals("Required")) {
                     tf.setRequired(true);
                 } else if (value.equals("Error")) {

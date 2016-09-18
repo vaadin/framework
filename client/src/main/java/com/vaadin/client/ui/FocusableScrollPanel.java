@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,10 +37,10 @@ import com.vaadin.client.BrowserInfo;
 
 /**
  * A scrollhandlers similar to {@link ScrollPanel}.
- * 
+ *
  */
-public class FocusableScrollPanel extends SimpleFocusablePanel implements
-        HasScrollHandlers, ScrollHandler {
+public class FocusableScrollPanel extends SimpleFocusablePanel
+        implements HasScrollHandlers, ScrollHandler {
 
     public FocusableScrollPanel() {
         // Prevent IE standard mode bug when a AbsolutePanel is contained.
@@ -131,7 +131,7 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
 
     /**
      * Gets the horizontal scroll position.
-     * 
+     *
      * @return the horizontal scroll position, in pixels
      */
     public int getHorizontalScrollPosition() {
@@ -140,7 +140,7 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
 
     /**
      * Gets the vertical scroll position.
-     * 
+     *
      * @return the vertical scroll position, in pixels
      */
     public int getScrollPosition() {
@@ -153,7 +153,7 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
 
     /**
      * Sets the horizontal scroll position.
-     * 
+     *
      * @param position
      *            the new horizontal scroll position, in pixels
      */
@@ -163,7 +163,7 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
 
     /**
      * Sets the vertical scroll position.
-     * 
+     *
      * @param position
      *            the new vertical scroll position, in pixels
      */
@@ -174,8 +174,8 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
                     .getElements(getElement());
             for (com.google.gwt.dom.client.Element el : elements) {
                 final Style style = el.getStyle();
-                style.setProperty("webkitTransform", "translate3d(0px,"
-                        + -position + "px,0px)");
+                style.setProperty("webkitTransform",
+                        "translate3d(0px," + -position + "px,0px)");
             }
             getElement().setPropertyInt("_vScrollTop", position);
         } else {

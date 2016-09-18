@@ -78,8 +78,8 @@ public class FormUsingExistingLayout extends AbstractTestUI {
         MyFormLayout myFormLayout = new MyFormLayout();
 
         // Create a field group and use it to bind the fields in the layout
-        FieldGroup fieldGroup = new FieldGroup(new BeanItem<Notice>(new Notice(
-                "John", "Doe", "")));
+        FieldGroup fieldGroup = new FieldGroup(
+                new BeanItem<Notice>(new Notice("John", "Doe", "")));
         fieldGroup.bindMemberFields(myFormLayout);
 
         addComponent(myFormLayout);

@@ -31,22 +31,18 @@ public class DDTest7 extends TestBase {
     protected void setup() {
         UI w = getLayout().getUI();
 
-        TestUtils
-                .injectCSS(
-                        w,
-                        ".v-table-row-drag-middle .v-table-cell-content {"
-                                + "        background-color: inherit ; border-bottom: 1px solid cyan;"
-                                + "}"
-                                + ".v-table-row-drag-middle .v-table-cell-wrapper {"
-                                + "        margin-bottom: -1px;"
-                                + "}"
-                                + ""
-                                // always show the drop hint below
-                                + ".v-table-row-drag-top .v-table-cell-content {"
-                                + "border-top: 0; margin-top:0;border-bottom:1px solid cyan;"
-                                + "        margin-bottom: -1px;" + "}" + ""
+        TestUtils.injectCSS(w,
+                ".v-table-row-drag-middle .v-table-cell-content {"
+                        + "        background-color: inherit ; border-bottom: 1px solid cyan;"
+                        + "}"
+                        + ".v-table-row-drag-middle .v-table-cell-wrapper {"
+                        + "        margin-bottom: -1px;" + "}" + ""
+                        // always show the drop hint below
+                        + ".v-table-row-drag-top .v-table-cell-content {"
+                        + "border-top: 0; margin-top:0;border-bottom:1px solid cyan;"
+                        + "        margin-bottom: -1px;" + "}" + ""
 
-                );
+        );
 
         // hl.addComponent(tree1);
         hl.addComponent(table);
@@ -171,8 +167,8 @@ public class DDTest7 extends TestBase {
         for (int i = 0; i < 40; i++) {
             Item addItem = table.addItem("Item" + i);
             Person p = testData.getIdByIndex(i);
-            addItem.getItemProperty("Name").setValue(
-                    p.getFirstName() + " " + p.getLastName());
+            addItem.getItemProperty("Name")
+                    .setValue(p.getFirstName() + " " + p.getLastName());
             addItem.getItemProperty("Weight").setValue(50 + r.nextInt(60));
         }
 

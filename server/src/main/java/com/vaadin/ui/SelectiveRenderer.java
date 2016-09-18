@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,11 +19,11 @@ package com.vaadin.ui;
  * Interface implemented by {@link HasComponents} implementors that wish to
  * dynamically be able to prevent given child components from reaching the
  * client side.
- * 
+ *
  * @author Vaadin Ltd
  * @version @VERSION@
  * @since 7.0
- * 
+ *
  */
 public interface SelectiveRenderer extends HasComponents {
     /**
@@ -39,7 +39,7 @@ public interface SelectiveRenderer extends HasComponents {
      * returning false will prevent the child from being sent to the client. If
      * a child is set to invisible, this method has no effect.
      * </p>
-     * 
+     *
      * @param childComponent
      *            The child component to check
      * @return true if the child component may be sent to the client, false

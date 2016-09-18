@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,7 +20,7 @@ import com.google.gwt.regexp.shared.RegExp;
 /**
  * Common String manipulator utilities used in VaadinFinderLocatorStrategy and
  * SelectorPredicates.
- * 
+ *
  * @since 7.2
  * @author Vaadin Ltd
  */
@@ -29,7 +29,7 @@ public class LocatorUtil {
     /**
      * Find first occurrence of character that's not inside quotes starting from
      * specified index.
-     * 
+     *
      * @param str
      *            Full string for searching
      * @param find
@@ -65,7 +65,7 @@ public class LocatorUtil {
     /**
      * Find first occurrence of character that's not inside quotes starting from
      * the beginning of string.
-     * 
+     *
      * @param str
      *            Full string for searching
      * @param find
@@ -78,7 +78,7 @@ public class LocatorUtil {
 
     /**
      * Checks if path refers to vaadin UI element com.vaadin.ui.UI.
-     * 
+     *
      * @param path
      *            to vaadin element
      * @return true if path refers to UI element, false otherwise
@@ -92,7 +92,7 @@ public class LocatorUtil {
     /**
      * Checks if path refers to vaadin Notification element
      * com.vaadin.ui.Notification.
-     * 
+     *
      * @param path
      *            to vaadin element
      * @return true if path refers to Notification element, false otherwise

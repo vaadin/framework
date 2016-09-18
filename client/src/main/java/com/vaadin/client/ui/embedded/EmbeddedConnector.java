@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -44,8 +44,8 @@ import com.vaadin.shared.ui.embedded.EmbeddedState;
 import com.vaadin.ui.Embedded;
 
 @Connect(Embedded.class)
-public class EmbeddedConnector extends AbstractComponentConnector implements
-        Paintable {
+public class EmbeddedConnector extends AbstractComponentConnector
+        implements Paintable {
 
     private Element resourceElement;
     private ObjectElement objectElement;
@@ -136,9 +136,9 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
                 setResourceUrl(getResourceUrl("src"));
 
                 if (uidl.hasAttribute(EmbeddedConstants.ALTERNATE_TEXT)) {
-                    el.setPropertyString(
-                            EmbeddedConstants.ALTERNATE_TEXT,
-                            uidl.getStringAttribute(EmbeddedConstants.ALTERNATE_TEXT));
+                    el.setPropertyString(EmbeddedConstants.ALTERNATE_TEXT,
+                            uidl.getStringAttribute(
+                                    EmbeddedConstants.ALTERNATE_TEXT));
                 }
 
                 if (created) {
@@ -160,16 +160,16 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
                                     + " allowTransparency=\"true\" src=\"\""
                                     + " name=\"" + uidl.getId()
                                     + "\"></iframe>");
-                    getWidget().browserElement = DOM.getFirstChild(getWidget()
-                            .getElement());
+                    getWidget().browserElement = DOM
+                            .getFirstChild(getWidget().getElement());
                 }
                 resourceElement = getWidget().browserElement;
                 objectElement = null;
                 setResourceUrl(getResourceUrl("src"));
                 clearBrowserElement = false;
             } else {
-                VConsole.error("Unknown Embedded type '" + getWidget().type
-                        + "'");
+                VConsole.error(
+                        "Unknown Embedded type '" + getWidget().type + "'");
             }
         } else if (uidl.hasAttribute("mimetype")) {
             // remove old style name related to type
@@ -235,8 +235,8 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
                 }
                 getWidget().getElement().appendChild(obj);
                 if (uidl.hasAttribute(EmbeddedConstants.ALTERNATE_TEXT)) {
-                    obj.setInnerText(uidl
-                            .getStringAttribute(EmbeddedConstants.ALTERNATE_TEXT));
+                    obj.setInnerText(uidl.getStringAttribute(
+                            EmbeddedConstants.ALTERNATE_TEXT));
                 }
             } else {
                 VConsole.error("Unknown Embedded mimetype '" + mime + "'");

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -99,15 +99,16 @@ public class GridFooterTest extends GridStaticSectionTest {
 
         selectMenuPath("Component", "Footer", "Append row");
 
-        selectMenuPath("Component", "Footer", "Row 1", "Join column cells 0, 1");
+        selectMenuPath("Component", "Footer", "Row 1",
+                "Join column cells 0, 1");
 
         GridCellElement spannedCell = getGridElement().getFooterCell(0, 0);
         assertTrue(spannedCell.isDisplayed());
         assertEquals("2", spannedCell.getAttribute("colspan"));
 
         // TestBench returns the spanned cell for all columns
-        assertEquals(spannedCell.getText(), getGridElement()
-                .getFooterCell(0, 1).getText());
+        assertEquals(spannedCell.getText(),
+                getGridElement().getFooterCell(0, 1).getText());
     }
 
     @Test
@@ -123,8 +124,8 @@ public class GridFooterTest extends GridStaticSectionTest {
         assertEquals("2", spannedCell.getAttribute("colspan"));
 
         // TestBench returns the spanned cell for all columns
-        assertEquals(spannedCell.getText(), getGridElement()
-                .getFooterCell(0, 2).getText());
+        assertEquals(spannedCell.getText(),
+                getGridElement().getFooterCell(0, 2).getText());
     }
 
     @Test

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,7 +27,7 @@ import com.vaadin.server.VaadinService;
 /**
  * Helper class which provides methods for handling Property.toString in a
  * Vaadin 6 compatible way
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  * @deprecated This is only used internally for backwards compatibility
@@ -37,7 +37,7 @@ public class LegacyPropertyHelper implements Serializable {
 
     /**
      * Returns the property value converted to a String.
-     * 
+     *
      * @param p
      *            The property
      * @return A string representation of the property value, compatible with
@@ -76,7 +76,7 @@ public class LegacyPropertyHelper implements Serializable {
      * The legacy toString mode can be toggled using the
      * "legacyPropertyToString" init parameter
      * </p>
-     * 
+     *
      * @return true if legacy Property.toString() mode is enabled, false
      *         otherwise
      */

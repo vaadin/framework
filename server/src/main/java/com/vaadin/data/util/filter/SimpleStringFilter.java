@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -22,17 +22,17 @@ import com.vaadin.data.Property;
 /**
  * Simple string filter for matching items that start with or contain a
  * specified string. The matching can be case-sensitive or case-insensitive.
- * 
+ *
  * This filter also directly supports in-memory filtering. When performing
  * in-memory filtering, values of other types are converted using toString(),
  * but other (lazy container) implementations do not need to perform such
  * conversions and might not support values of different types.
- * 
+ *
  * Note that this filter is modeled after the pre-6.6 filtering mechanisms, and
  * might not be very efficient e.g. for database filtering.
- * 
+ *
  * TODO this might still change
- * 
+ *
  * @since 6.6
  */
 public final class SimpleStringFilter implements Filter {
@@ -61,8 +61,8 @@ public final class SimpleStringFilter implements Filter {
         if (propertyValue == null) {
             return false;
         }
-        final String value = ignoreCase ? propertyValue.toString()
-                .toLowerCase() : propertyValue.toString();
+        final String value = ignoreCase ? propertyValue.toString().toLowerCase()
+                : propertyValue.toString();
         if (onlyMatchPrefix) {
             if (!value.startsWith(filterString)) {
                 return false;
@@ -119,7 +119,7 @@ public final class SimpleStringFilter implements Filter {
 
     /**
      * Returns the property identifier to which this filter applies.
-     * 
+     *
      * @return property id
      */
     public Object getPropertyId() {
@@ -128,10 +128,10 @@ public final class SimpleStringFilter implements Filter {
 
     /**
      * Returns the filter string.
-     * 
+     *
      * Note: this method is intended only for implementations of lazy string
      * filters and may change in the future.
-     * 
+     *
      * @return filter string given to the constructor
      */
     public String getFilterString() {
@@ -140,10 +140,10 @@ public final class SimpleStringFilter implements Filter {
 
     /**
      * Returns whether the filter is case-insensitive or case-sensitive.
-     * 
+     *
      * Note: this method is intended only for implementations of lazy string
      * filters and may change in the future.
-     * 
+     *
      * @return true if performing case-insensitive filtering, false for
      *         case-sensitive
      */
@@ -154,10 +154,10 @@ public final class SimpleStringFilter implements Filter {
     /**
      * Returns true if the filter only applies to the beginning of the value
      * string, false for any location in the value.
-     * 
+     *
      * Note: this method is intended only for implementations of lazy string
      * filters and may change in the future.
-     * 
+     *
      * @return true if checking for matches at the beginning of the value only,
      *         false if matching any part of value
      */

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,8 +40,8 @@ import com.vaadin.ui.declarative.DesignFormatter;
  * Configures select to be used as an option group.
  */
 @SuppressWarnings("serial")
-public class OptionGroup extends AbstractSelect implements
-        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
+public class OptionGroup extends AbstractSelect
+        implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
     private Set<Object> disabledItemIds = new HashSet<Object>();
     private boolean htmlContentAllowed = false;
@@ -66,7 +66,8 @@ public class OptionGroup extends AbstractSelect implements
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute("type", "optiongroup");
         if (isHtmlContentAllowed()) {
-            target.addAttribute(OptionGroupConstants.HTML_CONTENT_ALLOWED, true);
+            target.addAttribute(OptionGroupConstants.HTML_CONTENT_ALLOWED,
+                    true);
         }
         super.paintContent(target);
     }
@@ -168,7 +169,8 @@ public class OptionGroup extends AbstractSelect implements
                 Set<?> currentValueSet = (Set<?>) getValue();
                 Set<?> newValueSet = (Set<?>) newValue;
                 for (Object itemId : currentValueSet) {
-                    if (!isItemEnabled(itemId) && !newValueSet.contains(itemId)) {
+                    if (!isItemEnabled(itemId)
+                            && !newValueSet.contains(itemId)) {
                         markAsDirty();
                         return;
                     }
@@ -197,10 +199,10 @@ public class OptionGroup extends AbstractSelect implements
      * Sets an item disabled or enabled. In the multiselect mode, a disabled
      * item cannot be selected or deselected by the user. In the single
      * selection mode, a disable item cannot be selected.
-     * 
+     *
      * However, programmatical selection or deselection of an disable item is
      * possible. By default, items are enabled.
-     * 
+     *
      * @param itemId
      *            the id of the item to be disabled or enabled
      * @param enabled
@@ -219,7 +221,7 @@ public class OptionGroup extends AbstractSelect implements
 
     /**
      * Returns true if the item is enabled.
-     * 
+     *
      * @param itemId
      *            the id of the item to be checked
      * @return true if the item is enabled, false otherwise
@@ -237,7 +239,7 @@ public class OptionGroup extends AbstractSelect implements
      * captions are passed to the browser as html and the developer is
      * responsible for ensuring no harmful html is used. If set to false, the
      * content is passed to the browser as plain text.
-     * 
+     *
      * @param htmlContentAllowed
      *            true if the captions are used as html, false if used as plain
      *            text
@@ -249,7 +251,7 @@ public class OptionGroup extends AbstractSelect implements
 
     /**
      * Checks whether captions are interpreted as html or plain text.
-     * 
+     *
      * @return true if the captions are used as html, false if used as plain
      *         text
      * @see #setHtmlContentAllowed(boolean)

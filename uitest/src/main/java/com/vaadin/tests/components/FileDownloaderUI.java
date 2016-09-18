@@ -1,12 +1,12 @@
 /*
  * Copyright 2012 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -99,14 +99,14 @@ public class FileDownloaderUI extends AbstractTestUIWithLog {
         addComponents("Class resource pdf", resource, components);
 
         Button downloadUtf8File = new Button("Download UTF-8 named file");
-        FileDownloader fd = new FileDownloader(new ClassResource(
-                new EmbeddedPdf().getClass(), "åäö-日本語.pdf"));
+        FileDownloader fd = new FileDownloader(
+                new ClassResource(new EmbeddedPdf().getClass(), "åäö-日本語.pdf"));
         fd.setOverrideContentType(false);
         fd.extend(downloadUtf8File);
         addComponent(downloadUtf8File);
 
-        addComponent(new Button("Remove first download button",
-                new ClickListener() {
+        addComponent(
+                new Button("Remove first download button", new ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
@@ -115,18 +115,18 @@ public class FileDownloaderUI extends AbstractTestUIWithLog {
                         parent.removeComponent(firstDownloadComponent);
                     }
                 }));
-        addComponent(new Button(
-                "Detach FileDownloader from first download button",
-                new ClickListener() {
+        addComponent(
+                new Button("Detach FileDownloader from first download button",
+                        new ClickListener() {
 
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        FileDownloader e = (FileDownloader) firstDownloadComponent
-                                .getExtensions().iterator().next();
-                        e.remove();
-                        log("FileDownload detached");
-                    }
-                }));
+                            @Override
+                            public void buttonClick(ClickEvent event) {
+                                FileDownloader e = (FileDownloader) firstDownloadComponent
+                                        .getExtensions().iterator().next();
+                                e.remove();
+                                log("FileDownload detached");
+                            }
+                        }));
     }
 
     public void addComponents(String caption, ConnectorResource resource,
@@ -142,8 +142,8 @@ public class FileDownloaderUI extends AbstractTestUIWithLog {
 
                 c.setId(cls.getName() + caption.replace(" ", ""));
                 c.setCaption(cls.getName());
-                c.setDescription(resource.getMIMEType() + " / "
-                        + resource.getClass());
+                c.setDescription(
+                        resource.getMIMEType() + " / " + resource.getClass());
                 c.setWidth("100px");
                 c.setHeight("100px");
 
@@ -180,8 +180,8 @@ public class FileDownloaderUI extends AbstractTestUIWithLog {
             }
             BufferedImage bi = getImage(text);
             response.setContentType("image/png");
-            response.setHeader("Content-Disposition", "attachment; filename=\""
-                    + path + "\"");
+            response.setHeader("Content-Disposition",
+                    "attachment; filename=\"" + path + "\"");
             ImageIO.write(bi, "png", response.getOutputStream());
 
             return true;
@@ -193,16 +193,16 @@ public class FileDownloaderUI extends AbstractTestUIWithLog {
     private BufferedImage getImage(String text) {
         BufferedImage bi = new BufferedImage(150, 30,
                 BufferedImage.TYPE_3BYTE_BGR);
-        bi.getGraphics()
-                .drawChars(text.toCharArray(), 0, text.length(), 10, 20);
+        bi.getGraphics().drawChars(text.toCharArray(), 0, text.length(), 10,
+                20);
         return bi;
     }
 
     private BufferedImage getImage2(String text) {
         BufferedImage bi = new BufferedImage(200, 200,
                 BufferedImage.TYPE_INT_RGB);
-        bi.getGraphics()
-                .drawChars(text.toCharArray(), 0, text.length(), 10, 20);
+        bi.getGraphics().drawChars(text.toCharArray(), 0, text.length(), 10,
+                20);
         return bi;
     }
 

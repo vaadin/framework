@@ -24,8 +24,8 @@ public class FormPrimaryStyleName extends TestBase {
 
         addComponent(form);
 
-        addComponent(new Button("Set primary stylename",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Set primary stylename", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         form.setPrimaryStyleName("my-second-form");

@@ -15,8 +15,8 @@ public class FormDescription extends TestBase {
         form.addField("AAAA", new TextField());
         addComponent(form);
 
-        addComponent(new Button("Toggle description",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Toggle description", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         if (form.getDescription() == null) {

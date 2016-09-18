@@ -29,8 +29,8 @@ public class GridLayoutInForm extends TestBase {
 
         PropertysetItem item = new PropertysetItem();
         for (String propertyId : propertyIds) {
-            item.addItemProperty(propertyId, new ObjectProperty<String>(
-                    propertyId));
+            item.addItemProperty(propertyId,
+                    new ObjectProperty<String>(propertyId));
         }
 
         final Form form = new Form(gridLayout);
@@ -46,20 +46,20 @@ public class GridLayoutInForm extends TestBase {
 
         addComponent(panel);
 
-        addComponent(new Button("Use 15 first fields",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Use 15 first fields", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        form.setVisibleItemProperties(propertyIds
-                                .subList(0, 15));
+                        form.setVisibleItemProperties(
+                                propertyIds.subList(0, 15));
                     }
                 }));
-        addComponent(new Button("Use 15 last fields",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Use 15 last fields", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        form.setVisibleItemProperties(propertyIds.subList(35,
-                                50));
+                        form.setVisibleItemProperties(
+                                propertyIds.subList(35, 50));
                     }
                 }));
 

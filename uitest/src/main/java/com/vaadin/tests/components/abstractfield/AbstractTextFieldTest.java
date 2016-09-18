@@ -48,7 +48,8 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
             if (value) {
                 c.addListener((TextChangeListener) AbstractTextFieldTest.this);
             } else {
-                c.removeListener((TextChangeListener) AbstractTextFieldTest.this);
+                c.removeListener(
+                        (TextChangeListener) AbstractTextFieldTest.this);
             }
         }
     };

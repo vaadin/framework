@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,8 +29,10 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
     public void testStyleNameGeneratorScrolling() throws Exception {
         openTestURL();
 
-        selectCellStyleNameGenerator(GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_COL_INDEX);
-        selectRowStyleNameGenerator(GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_ROW_INDEX);
+        selectCellStyleNameGenerator(
+                GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_COL_INDEX);
+        selectRowStyleNameGenerator(
+                GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_ROW_INDEX);
 
         GridRowElement row2 = getGridElement().getRow(2);
         GridCellElement cell4_2 = getGridElement().getCell(4, 2);
@@ -51,8 +53,10 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
     public void testDisableStyleNameGenerator() throws Exception {
         openTestURL();
 
-        selectCellStyleNameGenerator(GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_COL_INDEX);
-        selectRowStyleNameGenerator(GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_ROW_INDEX);
+        selectCellStyleNameGenerator(
+                GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_COL_INDEX);
+        selectRowStyleNameGenerator(
+                GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_ROW_INDEX);
 
         // Just verify that change was effective
         GridRowElement row2 = getGridElement().getRow(2);
@@ -62,8 +66,10 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
         Assert.assertTrue(hasCssClass(cell4_2, "4_2"));
 
         // Disable the generator and check again
-        selectCellStyleNameGenerator(GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_NONE);
-        selectRowStyleNameGenerator(GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_NONE);
+        selectCellStyleNameGenerator(
+                GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_NONE);
+        selectRowStyleNameGenerator(
+                GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_NONE);
 
         Assert.assertFalse(hasCssClass(row2, "2"));
         Assert.assertFalse(hasCssClass(cell4_2, "4_2"));
@@ -73,8 +79,10 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
     public void testChangeStyleNameGenerator() throws Exception {
         openTestURL();
 
-        selectCellStyleNameGenerator(GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_COL_INDEX);
-        selectRowStyleNameGenerator(GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_ROW_INDEX);
+        selectCellStyleNameGenerator(
+                GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_COL_INDEX);
+        selectRowStyleNameGenerator(
+                GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_ROW_INDEX);
 
         // Just verify that change was effective
         GridRowElement row2 = getGridElement().getRow(2);
@@ -84,8 +92,10 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
         Assert.assertTrue(hasCssClass(cell4_2, "4_2"));
 
         // Change the generator and check again
-        selectRowStyleNameGenerator(GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_NONE);
-        selectCellStyleNameGenerator(GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_SIMPLE);
+        selectRowStyleNameGenerator(
+                GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_NONE);
+        selectCellStyleNameGenerator(
+                GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_SIMPLE);
 
         // Old styles removed?
         Assert.assertFalse(hasCssClass(row2, "2"));
@@ -99,8 +109,10 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
     public void testStyleNameGeneratorChangePrimary() throws Exception {
         openTestURL();
 
-        selectCellStyleNameGenerator(GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_COL_INDEX);
-        selectRowStyleNameGenerator(GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_ROW_INDEX);
+        selectCellStyleNameGenerator(
+                GridBasicClientFeaturesWidget.CELL_STYLE_GENERATOR_COL_INDEX);
+        selectRowStyleNameGenerator(
+                GridBasicClientFeaturesWidget.ROW_STYLE_GENERATOR_ROW_INDEX);
 
         // Just verify that change was effective
         GridRowElement row2 = getGridElement().getRow(2);
@@ -110,7 +122,8 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
         Assert.assertTrue(hasCssClass(cell4_2, "4_2"));
 
         // Change primary stylename
-        selectMenuPath("Component", "State", "Primary Stylename", "v-escalator");
+        selectMenuPath("Component", "State", "Primary Stylename",
+                "v-escalator");
 
         // Styles still present
         Assert.assertTrue(hasCssClass(row2, "2"));
@@ -118,7 +131,8 @@ public class GridCellStyleGeneratorTest extends GridBasicClientFeaturesTest {
 
         // New styles present?
         Assert.assertFalse(hasCssClass(row2, "v-escalator-row-2"));
-        Assert.assertFalse(hasCssClass(cell4_2, "v-escalator-cell-content-4_2"));
+        Assert.assertFalse(
+                hasCssClass(cell4_2, "v-escalator-cell-content-4_2"));
     }
 
     private void selectCellStyleNameGenerator(String name) {

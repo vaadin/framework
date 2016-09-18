@@ -1,6 +1,6 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -92,7 +92,7 @@ public class GridSpacerDecoClipTest extends MultiBrowserTest {
 
     private TestBenchElement getSpacerDeco(int index) {
         SearchContext context = getContext();
-        return (TestBenchElement) context.findElements(
-                By.className(SPACER_CSS_CLASS_DECO)).get(index);
+        return (TestBenchElement) context
+                .findElements(By.className(SPACER_CSS_CLASS_DECO)).get(index);
     }
 }

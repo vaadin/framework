@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,26 +36,26 @@ import com.vaadin.util.SerializerHelper;
  * attached to a field of an object. Accessing the object through the Property
  * interface directly manipulates the underlying field.
  * </p>
- * 
+ *
  * <p>
  * It's assumed that the return value returned by the getter method is
  * assignable to the type of the property, and the setter method parameter is
  * assignable to that value.
  * </p>
- * 
+ *
  * <p>
  * A valid getter method must always be available, but instance of this class
  * can be constructed with a <code>null</code> setter method in which case the
  * resulting MethodProperty is read-only.
  * </p>
- * 
+ *
  * <p>
  * MethodProperty implements Property.ValueChangeNotifier, but does not
  * automatically know whether or not the getter method will actually return a
  * new value - value change listeners are always notified when setValue is
  * called, without verifying what the getter returns.
  * </p>
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -94,7 +94,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     private static final Object[] DEFAULT_SET_ARGS = new Object[1];
 
     /* Special serialization to handle method references */
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+    private void writeObject(java.io.ObjectOutputStream out)
+            throws IOException {
         out.defaultWriteObject();
         SerializerHelper.writeClass(out, type);
         out.writeObject(instance);
@@ -102,16 +103,16 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         out.writeObject(getArgs);
         if (setMethod != null) {
             out.writeObject(setMethod.getName());
-            SerializerHelper
-                    .writeClassArray(out, setMethod.getParameterTypes());
+            SerializerHelper.writeClassArray(out,
+                    setMethod.getParameterTypes());
         } else {
             out.writeObject(null);
             out.writeObject(null);
         }
         if (getMethod != null) {
             out.writeObject(getMethod.getName());
-            SerializerHelper
-                    .writeClassArray(out, getMethod.getParameterTypes());
+            SerializerHelper.writeClassArray(out,
+                    getMethod.getParameterTypes());
         } else {
             out.writeObject(null);
             out.writeObject(null);
@@ -119,8 +120,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     }
 
     /* Special serialization to handle method references */
-    private void readObject(java.io.ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         try {
             @SuppressWarnings("unchecked")
@@ -165,19 +166,19 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * constructor will be called with no arguments, and the setter method with
      * only the new value as the sole argument.
      * </p>
-     * 
+     *
      * <p>
      * If the setter method is unavailable, the resulting
      * <code>MethodProperty</code> will be read-only, otherwise it will be
      * read-write.
      * </p>
-     * 
+     *
      * <p>
      * Method names are constructed from the bean property by adding
      * get/is/are/set prefix and capitalising the first character in the name of
      * the given bean property.
      * </p>
-     * 
+     *
      * @param instance
      *            the object that includes the property.
      * @param beanPropertyName
@@ -197,8 +198,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         try {
             getMethod = initGetterMethod(beanPropertyName, beanClass);
         } catch (final java.lang.NoSuchMethodException ignored) {
-            throw new MethodException(this, "Bean property " + beanPropertyName
-                    + " can not be found");
+            throw new MethodException(this,
+                    "Bean property " + beanPropertyName + " can not be found");
         }
 
         // In case the get method is found, resolve the type
@@ -216,9 +217,9 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         if (returnType.isPrimitive()) {
             type = (Class<T>) convertPrimitiveType(returnType);
             if (type.isPrimitive()) {
-                throw new MethodException(this, "Bean property "
-                        + beanPropertyName
-                        + " getter return type must not be void");
+                throw new MethodException(this,
+                        "Bean property " + beanPropertyName
+                                + " getter return type must not be void");
             }
         } else {
             type = (Class<T>) returnType;
@@ -235,13 +236,13 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * instantiated with this constructor will be called with no arguments, and
      * the setter method with only the new value as the sole argument.
      * </p>
-     * 
+     *
      * <p>
      * If the setter method is <code>null</code>, the resulting
      * <code>MethodProperty</code> will be read-only, otherwise it will be
      * read-write.
      * </p>
-     * 
+     *
      * @param type
      *            the type of the property.
      * @param instance
@@ -250,7 +251,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      *            the name of the getter method.
      * @param setMethodName
      *            the name of the setter method.
-     * 
+     *
      */
     public MethodProperty(Class<? extends T> type, Object instance,
             String getMethodName, String setMethodName) {
@@ -265,13 +266,13 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * instantiated with this constructor will be called with no arguments, and
      * the setter method with only the new value as the sole argument.
      * </p>
-     * 
+     *
      * <p>
      * If the setter method is <code>null</code>, the resulting
      * <code>MethodProperty</code> will be read-only, otherwise it will be
      * read-write.
      * </p>
-     * 
+     *
      * @param type
      *            the type of the property.
      * @param instance
@@ -297,7 +298,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * setArgumentIndex will be replaced with the argument passed to the
      * {@link #setValue(Object newValue)} method.
      * </p>
-     * 
+     *
      * <p>
      * For example, if the <code>setArgs</code> contains <code>A</code>,
      * <code>B</code> and <code>C</code>, and <code>setArgumentIndex =
@@ -305,7 +306,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * in the setter method to be called with the parameter set of
      * <code>{A, X, C}</code>
      * </p>
-     * 
+     *
      * @param type
      *            the type of the property.
      * @param instance
@@ -332,8 +333,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         if (setMethodName != null && setArgs == null) {
             throw new IndexOutOfBoundsException("The setArgs can not be null");
         }
-        if (setMethodName != null
-                && (setArgumentIndex < 0 || setArgumentIndex >= setArgs.length)) {
+        if (setMethodName != null && (setArgumentIndex < 0
+                || setArgumentIndex >= setArgs.length)) {
             throw new IndexOutOfBoundsException(
                     "The setArgumentIndex must be >= 0 and < setArgs.length");
         }
@@ -391,8 +392,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
             }
         }
         if (found != true) {
-            throw new MethodException(this, "Could not find " + getMethodName
-                    + "-method");
+            throw new MethodException(this,
+                    "Could not find " + getMethodName + "-method");
         }
 
         // Finds set method
@@ -444,8 +445,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                 }
             }
             if (found != true) {
-                throw new MethodException(this, "Could not identify "
-                        + setMethodName + "-method");
+                throw new MethodException(this,
+                        "Could not identify " + setMethodName + "-method");
             }
         }
 
@@ -467,7 +468,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * except that instead of names of the getter and setter methods this
      * constructor is given the actual methods themselves.
      * </p>
-     * 
+     *
      * @param type
      *            the type of the property.
      * @param instance
@@ -509,7 +510,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         }
 
         // Gets the return type from get method
-        Class<? extends T> convertedType = (Class<? extends T>) convertPrimitiveType(type);
+        Class<? extends T> convertedType = (Class<? extends T>) convertPrimitiveType(
+                type);
 
         this.getMethod = getMethod;
         this.setMethod = setMethod;
@@ -520,7 +522,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
 
     /**
      * Find a getter method for a property (getXyz(), isXyz() or areXyz()).
-     * 
+     *
      * @param propertyName
      *            name of the property
      * @param beanClass
@@ -529,8 +531,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * @throws NoSuchMethodException
      *             if no getter found
      */
-    static Method initGetterMethod(String propertyName, final Class<?> beanClass)
-            throws NoSuchMethodException {
+    static Method initGetterMethod(String propertyName,
+            final Class<?> beanClass) throws NoSuchMethodException {
         propertyName = SharedUtil.capitalize(propertyName);
 
         Method getMethod = null;
@@ -555,7 +557,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * to safely cast the value returned from <code>getValue</code> to the given
      * type and pass any variable assignable to this type as an argument to
      * <code>setValue</code>.
-     * 
+     *
      * @return type of the Property
      */
     @Override
@@ -567,7 +569,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * Tests if the object is in read-only mode. In read-only mode calls to
      * <code>setValue</code> will throw <code>ReadOnlyException</code> and will
      * not modify the value of the Property.
-     * 
+     *
      * @return <code>true</code> if the object is in read-only mode,
      *         <code>false</code> if it's not
      */
@@ -579,7 +581,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     /**
      * Gets the value stored in the Property. The value is resolved by calling
      * the specified getter method with the argument specified at instantiation.
-     * 
+     *
      * @return the value of the Property
      */
     @Override
@@ -599,7 +601,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * <p>
      * Sets the setter method and getter method argument lists.
      * </p>
-     * 
+     *
      * @param getArgs
      *            the fixed argument list to be passed to the getter method.
      * @param setArgs
@@ -626,14 +628,14 @@ public class MethodProperty<T> extends AbstractProperty<T> {
 
     /**
      * Sets the value of the property.
-     * 
+     *
      * Note that since Vaadin 7, no conversions are performed and the value must
      * be of the correct type.
-     * 
+     *
      * @param newValue
      *            the New value of the property.
-     * @throws <code>Property.ReadOnlyException</code> if the object is in
-     *         read-only mode.
+     * @throws <code>Property.ReadOnlyException</code>
+     *             if the object is in read-only mode.
      * @see #invokeSetMethod(Object)
      */
     @Override
@@ -651,7 +653,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     /**
      * Internal method to actually call the setter method of the wrapped
      * property.
-     * 
+     *
      * @param value
      */
     protected void invokeSetMethod(T value) {
@@ -681,7 +683,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * <code>Exception</code> object that signals that there were problems
      * calling or finding the specified getter or setter methods of the
      * property.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -702,7 +704,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         /**
          * Constructs a new <code>MethodException</code> with the specified
          * detail message.
-         * 
+         *
          * @param property
          *            the property.
          * @param msg
@@ -715,7 +717,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
 
         /**
          * Constructs a new <code>MethodException</code> from another exception.
-         * 
+         *
          * @param property
          *            the property.
          * @param cause
@@ -736,17 +738,17 @@ public class MethodProperty<T> extends AbstractProperty<T> {
 
         /**
          * Gets the method property this exception originates from.
-         * 
+         *
          * @return MethodProperty or null if not a valid MethodProperty
          */
         public MethodProperty getMethodProperty() {
-            return (property instanceof MethodProperty) ? (MethodProperty) property
-                    : null;
+            return (property instanceof MethodProperty)
+                    ? (MethodProperty) property : null;
         }
 
         /**
          * Gets the method property this exception originates from.
-         * 
+         *
          * @return Property from which the exception originates
          */
         public Property getProperty() {
@@ -756,7 +758,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
 
     /**
      * Sends a value change event to all registered listeners.
-     * 
+     *
      * Public for backwards compatibility, visibility may be reduced in future
      * versions.
      */

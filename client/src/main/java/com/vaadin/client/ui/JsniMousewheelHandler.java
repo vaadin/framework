@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,9 +24,9 @@ import com.vaadin.client.widgets.Escalator;
 /**
  * A mousewheel handling class to get around the limits of
  * {@link Event#ONMOUSEWHEEL}.
- * 
+ *
  * For internal use only. May be removed or replaced in the future.
- * 
+ *
  * @see Escalator.JsniWorkaround
  */
 abstract class JsniMousewheelHandler {
@@ -34,7 +34,7 @@ abstract class JsniMousewheelHandler {
     /**
      * A JavaScript function that handles the mousewheel DOM event, and passes
      * it on to Java code.
-     * 
+     *
      * @see #createMousewheelListenerFunction(Widget)
      */
     protected final JavaScriptObject mousewheelListenerFunction;
@@ -46,7 +46,7 @@ abstract class JsniMousewheelHandler {
     /**
      * A method that constructs the JavaScript function that will be stored into
      * {@link #mousewheelListenerFunction}.
-     * 
+     *
      * @param widget
      *            a reference to the current instance of {@link Widget}
      */

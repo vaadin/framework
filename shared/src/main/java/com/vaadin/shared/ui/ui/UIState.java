@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -68,7 +68,7 @@ public class UIState extends TabIndexState {
     public PushConfigurationState pushConfiguration = new PushConfigurationState();
     /**
      * Currently used theme.
-     * 
+     *
      * @since 7.3
      */
     public String theme;
@@ -79,8 +79,8 @@ public class UIState extends TabIndexState {
         tabIndex = 1;
     }
 
-    public static class LoadingIndicatorConfigurationState implements
-            Serializable {
+    public static class LoadingIndicatorConfigurationState
+            implements Serializable {
         public int firstDelay = 300;
         public int secondDelay = 1500;
         public int thirdDelay = 5000;
@@ -119,15 +119,15 @@ public class UIState extends TabIndexState {
         public String pushUrl = null;
         public Map<String, String> parameters = new HashMap<String, String>();
         {
-            parameters
-                    .put(TRANSPORT_PARAM, Transport.WEBSOCKET.getIdentifier());
+            parameters.put(TRANSPORT_PARAM,
+                    Transport.WEBSOCKET.getIdentifier());
             parameters.put(FALLBACK_TRANSPORT_PARAM,
                     Transport.LONG_POLLING.getIdentifier());
         }
     }
 
-    public static class ReconnectDialogConfigurationState implements
-            Serializable {
+    public static class ReconnectDialogConfigurationState
+            implements Serializable {
         public String dialogText = "Server connection lost, trying to reconnect...";
         public String dialogTextGaveUp = "Server connection lost.";
         public int reconnectAttempts = 10000;

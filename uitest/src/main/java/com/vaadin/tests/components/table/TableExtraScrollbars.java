@@ -42,8 +42,8 @@ public class TableExtraScrollbars extends AbstractTestCase {
         for (int i = 0; i < ROWS; ++i) {
             Item item = container.addItem(i);
             for (int p = 0; p < PROPS; ++p) {
-                item.getItemProperty("prop" + p).setValue(
-                        "property value 1234567890");
+                item.getItemProperty("prop" + p)
+                        .setValue("property value 1234567890");
             }
         }
         return container;

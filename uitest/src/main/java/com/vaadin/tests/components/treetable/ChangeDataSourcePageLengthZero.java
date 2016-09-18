@@ -43,9 +43,9 @@ public class ChangeDataSourcePageLengthZero extends TestBase {
                         .getContainerDataSource();
                 Object itemId = container.addItem();
                 container.getContainerProperty(itemId, "i").setValue(i++);
-                container.getContainerProperty(itemId, "link").setValue(
-                        new Link(String.valueOf(i + 1), new ExternalResource(
-                                "http://www.google.fi")));
+                container.getContainerProperty(itemId, "link")
+                        .setValue(new Link(String.valueOf(i + 1),
+                                new ExternalResource("http://www.google.fi")));
                 container.setChildrenAllowed(itemId, false);
                 container.setParent(itemId, null);
             }
@@ -68,9 +68,9 @@ public class ChangeDataSourcePageLengthZero extends TestBase {
         for (int i = 0; i < num; i++) {
             Object item = container.addItem();
             container.getContainerProperty(item, "i").setValue(i + 1);
-            container.getContainerProperty(item, "link").setValue(
-                    new Link(String.valueOf(i + 1), new ExternalResource(
-                            "http://www.google.fi")));
+            container.getContainerProperty(item, "link")
+                    .setValue(new Link(String.valueOf(i + 1),
+                            new ExternalResource("http://www.google.fi")));
             if (i > 0 && (i + 1) % 2 == 0) {
                 container.setChildrenAllowed(item, false);
                 container.setParent(item, previous);

@@ -2,12 +2,12 @@ package com.vaadin.data.util;
 
 /**
  * Automated test for {@link AbstractBeanContainer}.
- * 
+ *
  * Only a limited subset of the functionality is tested here, the rest in tests
  * of subclasses including {@link BeanItemContainer} and {@link BeanContainer}.
  */
-public abstract class AbstractBeanContainerTestBase extends
-        AbstractInMemoryContainerTestBase {
+public abstract class AbstractBeanContainerTestBase
+        extends AbstractInMemoryContainerTestBase {
 
     public static class Person {
         private String name;

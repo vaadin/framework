@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,7 +32,7 @@ import com.vaadin.server.ErrorHandler;
  * <code>EventRouter</code> class implementing the inheritable event listening
  * model. For more information on the event model see the
  * {@link com.vaadin.event package documentation}.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -63,7 +63,8 @@ public class EventRouter implements MethodEventSource {
      * here, we use the default documentation from implemented interface.
      */
     @Override
-    public void addListener(Class<?> eventType, Object object, String methodName) {
+    public void addListener(Class<?> eventType, Object object,
+            String methodName) {
         if (listenerList == null) {
             listenerList = new LinkedHashSet<ListenerMethod>();
         }
@@ -95,7 +96,8 @@ public class EventRouter implements MethodEventSource {
      * implemented interface.
      */
     @Override
-    public void removeListener(Class<?> eventType, Object target, Method method) {
+    public void removeListener(Class<?> eventType, Object target,
+            Method method) {
         if (listenerList != null) {
             final Iterator<ListenerMethod> i = listenerList.iterator();
             while (i.hasNext()) {
@@ -153,7 +155,7 @@ public class EventRouter implements MethodEventSource {
     /**
      * Sends an event to all registered listeners. The listeners will decide if
      * the activation method should be called or not.
-     * 
+     *
      * @param event
      *            the Event to be sent to all listeners.
      */
@@ -168,7 +170,7 @@ public class EventRouter implements MethodEventSource {
      * If an error handler is set, the processing of other listeners will
      * continue after the error handler method call unless the error handler
      * itself throws an exception.
-     * 
+     *
      * @param event
      *            the Event to be sent to all listeners.
      * @param errorHandler
@@ -205,7 +207,7 @@ public class EventRouter implements MethodEventSource {
     /**
      * Checks if the given Event type is listened by a listener registered to
      * this router.
-     * 
+     *
      * @param eventType
      *            the event type to be checked
      * @return true if a listener is registered for the given event type
@@ -223,7 +225,7 @@ public class EventRouter implements MethodEventSource {
 
     /**
      * Returns all listeners that match or extend the given event type.
-     * 
+     *
      * @param eventType
      *            The type of event to return listeners for.
      * @return A collection with all registered listeners. Empty if no listeners

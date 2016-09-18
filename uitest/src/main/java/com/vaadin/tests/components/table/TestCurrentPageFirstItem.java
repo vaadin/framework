@@ -10,7 +10,8 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 
-public class TestCurrentPageFirstItem extends TestBase implements ClickListener {
+public class TestCurrentPageFirstItem extends TestBase
+        implements ClickListener {
 
     private Button buttonIndex;
     private Button buttonItem;
@@ -56,8 +57,9 @@ public class TestCurrentPageFirstItem extends TestBase implements ClickListener 
             Table t = tables[i];
             t.select(counter);
             if (event.getButton() == buttonIndex) {
-                t.setCurrentPageFirstItemIndex(((Container.Indexed) t
-                        .getContainerDataSource()).indexOfId(counter));
+                t.setCurrentPageFirstItemIndex(
+                        ((Container.Indexed) t.getContainerDataSource())
+                                .indexOfId(counter));
             } else {
                 t.setCurrentPageFirstItemId(counter);
             }

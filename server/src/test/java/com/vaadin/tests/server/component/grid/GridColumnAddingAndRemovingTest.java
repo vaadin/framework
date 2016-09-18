@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -42,8 +42,8 @@ public class GridColumnAddingAndRemovingTest {
     public void testAddColumn() {
         grid.addColumn("foo");
 
-        Property<?> property = container.getContainerProperty(
-                container.firstItemId(), "foo");
+        Property<?> property = container
+                .getContainerProperty(container.firstItemId(), "foo");
         assertEquals(property.getType(), String.class);
     }
 
@@ -59,8 +59,8 @@ public class GridColumnAddingAndRemovingTest {
         grid.removeColumn("foo");
 
         // Removing a column, doesn't remove the property
-        Property<?> property = container.getContainerProperty(
-                container.firstItemId(), "foo");
+        Property<?> property = container
+                .getContainerProperty(container.firstItemId(), "foo");
         assertEquals(property.getType(), String.class);
         grid.addColumn("foo");
     }
@@ -70,8 +70,8 @@ public class GridColumnAddingAndRemovingTest {
         grid.addColumn("bar", Integer.class);
         grid.addColumn("baz", Double.class);
 
-        Property<?> property = container.getContainerProperty(
-                container.firstItemId(), "bar");
+        Property<?> property = container
+                .getContainerProperty(container.firstItemId(), "bar");
         assertEquals(property.getType(), Integer.class);
         assertEquals(null, property.getValue());
         property = container.getContainerProperty(container.firstItemId(),
@@ -126,8 +126,8 @@ public class GridColumnAddingAndRemovingTest {
     @Test
     public void testAddBooleanColumnProperty() {
         grid.addColumn("foo", Boolean.class);
-        Property<?> property = container.getContainerProperty(
-                container.firstItemId(), "foo");
+        Property<?> property = container
+                .getContainerProperty(container.firstItemId(), "foo");
         assertEquals(property.getType(), Boolean.class);
         assertEquals(property.getValue(), null);
     }

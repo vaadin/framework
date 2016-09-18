@@ -23,8 +23,8 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
 
 public abstract class AbstractComponentContainerTest<T extends AbstractComponentContainer>
-        extends AbstractComponentTest<T> implements ComponentAttachListener,
-        ComponentDetachListener {
+        extends AbstractComponentTest<T>
+        implements ComponentAttachListener, ComponentDetachListener {
 
     private String CATEGORY_COMPONENT_CONTAINER_FEATURES = "Component container features";
     private Command<T, ComponentSize> addButtonCommand = new Command<T, ComponentSize>() {
@@ -147,9 +147,11 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((ComponentAttachListener) AbstractComponentContainerTest.this);
+                c.addListener(
+                        (ComponentAttachListener) AbstractComponentContainerTest.this);
             } else {
-                c.removeListener((ComponentAttachListener) AbstractComponentContainerTest.this);
+                c.removeListener(
+                        (ComponentAttachListener) AbstractComponentContainerTest.this);
             }
         }
     };
@@ -159,9 +161,11 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((ComponentDetachListener) AbstractComponentContainerTest.this);
+                c.addListener(
+                        (ComponentDetachListener) AbstractComponentContainerTest.this);
             } else {
-                c.removeListener((ComponentDetachListener) AbstractComponentContainerTest.this);
+                c.removeListener(
+                        (ComponentDetachListener) AbstractComponentContainerTest.this);
             }
         }
     };
@@ -312,8 +316,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         // addCommands.put("VerticalLayout", addVerticalLayoutCommand);
 
         ComponentSize[] sizes = new ComponentSize[] {
-                new ComponentSize(null, null),
-                new ComponentSize("200px", null),
+                new ComponentSize(null, null), new ComponentSize("200px", null),
                 new ComponentSize("100%", null),
                 new ComponentSize(null, "200px"),
                 new ComponentSize(null, "100%"),
@@ -352,8 +355,8 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
 
             createClickAction("auto", componentHeightCategory,
                     setComponentHeight, Integer.valueOf(i), null);
-            createClickAction("auto", componentWidthCategory,
-                    setComponentWidth, Integer.valueOf(i), null);
+            createClickAction("auto", componentWidthCategory, setComponentWidth,
+                    Integer.valueOf(i), null);
             for (String option : options) {
                 createClickAction(option, componentHeightCategory,
                         setComponentHeight, Integer.valueOf(i), option);

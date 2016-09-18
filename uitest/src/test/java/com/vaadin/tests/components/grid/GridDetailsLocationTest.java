@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -163,14 +163,15 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
             int visibleIndexOfSpacer) {
         waitForDetailsVisible();
         WebElement details = getDetailsElement(visibleIndexOfSpacer);
-        Assert.assertEquals("Wrong details row height", expectedHeight, details
-                .getSize().getHeight());
+        Assert.assertEquals("Wrong details row height", expectedHeight,
+                details.getSize().getHeight());
     }
 
     private void verifyDetailsDecoratorLocation(int row,
             int visibleIndexOfSpacer, int visibleIndexOfDeco) {
         WebElement detailsElement = getDetailsElement(visibleIndexOfSpacer);
-        WebElement detailsDecoElement = getDetailsDecoElement(visibleIndexOfDeco);
+        WebElement detailsDecoElement = getDetailsDecoElement(
+                visibleIndexOfDeco);
         GridRowElement rowElement = getGrid().getRow(row);
 
         int diff = 0;
@@ -180,8 +181,8 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
 
         Assert.assertEquals(
                 "Details deco top position does not match row top pos",
-                rowElement.getLocation().getY(), detailsDecoElement
-                        .getLocation().getY());
+                rowElement.getLocation().getY(),
+                detailsDecoElement.getLocation().getY());
         Assert.assertEquals(
                 "Details deco bottom position does not match details bottom pos",
                 detailsElement.getLocation().getY()
@@ -216,9 +217,8 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
                         + bottomBoundary + " decoratorBotton:" + detailsBottom,
                 detailsBottom, bottomBoundary);
 
-        verifyDetailsRowHeight(param.getRowIndex(),
-                param.useGenerator() ? getDefinedHeight()
-                        : detailsDefaultHeight, 0);
+        verifyDetailsRowHeight(param.getRowIndex(), param.useGenerator()
+                ? getDefinedHeight() : detailsDefaultHeight, 0);
         verifyDetailsDecoratorLocation(param.getRowIndex(), 0, 0);
 
         Assert.assertFalse("Notification was present",
@@ -247,8 +247,8 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
                 try {
                     WebElement detailsElement = getDetailsElement();
                     return detailsElement.isDisplayed()
-                            && detailsElement.getSize().getHeight() > 3 ? detailsElement
-                            : null;
+                            && detailsElement.getSize().getHeight() > 3
+                                    ? detailsElement : null;
                 } catch (StaleElementReferenceException e) {
                     return null;
                 }
@@ -322,14 +322,14 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
     }
 
     private WebElement getVerticalScrollbar() {
-        WebElement scrollBar = getGrid().findElement(
-                By.className("v-grid-scroller-vertical"));
+        WebElement scrollBar = getGrid()
+                .findElement(By.className("v-grid-scroller-vertical"));
         return scrollBar;
     }
 
     private WebElement getHorizontalScrollbar() {
-        WebElement scrollBar = getGrid().findElement(
-                By.className("v-grid-scroller-horizontal"));
+        WebElement scrollBar = getGrid()
+                .findElement(By.className("v-grid-scroller-horizontal"));
         return scrollBar;
     }
 }

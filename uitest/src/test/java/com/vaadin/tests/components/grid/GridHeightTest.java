@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2016 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,7 +37,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Tests that Grid gets correct height based on height mode, and resizes
  * properly with details row if height is undefined.
- * 
+ *
  * @author Vaadin Ltd
  */
 @TestCategory("grid")
@@ -83,11 +83,11 @@ public class GridHeightTest extends MultiBrowserTest {
         } else {
             caption = (String) gridHeight;
         }
-        $(OptionGroupElement.class).id("gridHeightSelector").selectByText(
-                caption);
+        $(OptionGroupElement.class).id("gridHeightSelector")
+                .selectByText(caption);
         for (String gridWidth : GridHeight.gridWidths) {
-            $(OptionGroupElement.class).id("gridWidthSelector").selectByText(
-                    gridWidth);
+            $(OptionGroupElement.class).id("gridWidthSelector")
+                    .selectByText(gridWidth);
             for (String detailsRowHeight : GridHeight.detailsRowHeights) {
                 $(OptionGroupElement.class).id("detailsHeightSelector")
                         .selectByText(detailsRowHeight);
@@ -110,9 +110,8 @@ public class GridHeightTest extends MultiBrowserTest {
                 int openHeight = grid.getSize().getHeight();
                 try {
                     // check height with details row opened
-                    assertGridHeight(
-                            getExpectedOpenedHeight(gridHeight,
-                                    detailsRowHeight), openHeight);
+                    assertGridHeight(getExpectedOpenedHeight(gridHeight,
+                            detailsRowHeight), openHeight);
                 } catch (AssertionError e) {
                     errors.put(e, new Object[] { gridHeight, gridWidth,
                             detailsRowHeight, "opened" });

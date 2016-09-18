@@ -71,8 +71,8 @@ public class SubWindowFocus extends TestBase {
                         if (action == esc) {
                             getMainWindow().removeWindow(win);
                         } else {
-                            getMainWindow().showNotification(
-                                    action.getCaption());
+                            getMainWindow()
+                                    .showNotification(action.getCaption());
                         }
 
                     }

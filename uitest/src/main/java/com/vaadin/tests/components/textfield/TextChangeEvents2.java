@@ -149,8 +149,8 @@ public class TextChangeEvents2 extends TestBase {
                                 TextField next = tfs[idx + 1];
                                 next.focus();
                                 if (len > 4) {
-                                    next.setValue(txt.substring(4, len > 8 ? 8
-                                            : len));
+                                    next.setValue(txt.substring(4,
+                                            len > 8 ? 8 : len));
                                 } else {
                                     next.selectAll();
                                 }

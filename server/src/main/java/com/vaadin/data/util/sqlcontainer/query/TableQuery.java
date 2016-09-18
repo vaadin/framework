@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -47,8 +47,8 @@ import com.vaadin.data.util.sqlcontainer.query.generator.SQLGenerator;
 import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 
 @SuppressWarnings("serial")
-public class TableQuery extends AbstractTransactionalQuery implements
-        QueryDelegate, QueryDelegate.RowIdChangeNotifier {
+public class TableQuery extends AbstractTransactionalQuery
+        implements QueryDelegate, QueryDelegate.RowIdChangeNotifier {
 
     /**
      * Table name (without catalog or schema information).
@@ -87,12 +87,12 @@ public class TableQuery extends AbstractTransactionalQuery implements
     /**
      * Creates a new TableQuery using the given connection pool, SQL generator
      * and table name to fetch the data from. All parameters must be non-null.
-     * 
+     *
      * The table name must be a simple name with no catalog or schema
      * information. If those are needed, use
      * {@link #TableQuery(String, String, String, JDBCConnectionPool, SQLGenerator)}
      * .
-     * 
+     *
      * @param tableName
      *            Name of the database table to connect to
      * @param connectionPool
@@ -109,7 +109,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
      * Creates a new TableQuery using the given connection pool, SQL generator
      * and table name to fetch the data from. Catalog and schema names can be
      * null, all other parameters must be non-null.
-     * 
+     *
      * @param catalogName
      *            Name of the database catalog (can be null)
      * @param schemaName
@@ -132,12 +132,12 @@ public class TableQuery extends AbstractTransactionalQuery implements
      * Creates a new TableQuery using the given connection pool and table name
      * to fetch the data from. All parameters must be non-null. The default SQL
      * generator will be used for queries.
-     * 
+     *
      * The table name must be a simple name with no catalog or schema
      * information. If those are needed, use
      * {@link #TableQuery(String, String, String, JDBCConnectionPool, SQLGenerator)}
      * .
-     * 
+     *
      * @param tableName
      *            Name of the database table to connect to
      * @param connectionPool
@@ -151,7 +151,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
      * Creates a new TableQuery using the given connection pool, SQL generator
      * and table name to fetch the data from. Catalog and schema names can be
      * null, all other parameters must be non-null.
-     * 
+     *
      * @param catalogName
      *            Name of the database catalog (can be null)
      * @param schemaName
@@ -191,7 +191,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#getCount()
      */
     @Override
@@ -227,12 +227,13 @@ public class TableQuery extends AbstractTransactionalQuery implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#getResults(int,
      * int)
      */
     @Override
-    public ResultSet getResults(int offset, int pagelength) throws SQLException {
+    public ResultSet getResults(int offset, int pagelength)
+            throws SQLException {
         StatementHelper sh;
         /*
          * If no ordering is explicitly set, results will be ordered by the
@@ -254,7 +255,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#
      * implementationRespectsPagingLimits()
      */
@@ -265,16 +266,17 @@ public class TableQuery extends AbstractTransactionalQuery implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.sqlcontainer.query.QueryDelegate#storeRow(com.vaadin
      * .addon.sqlcontainer.RowItem)
      */
     @Override
-    public int storeRow(RowItem row) throws UnsupportedOperationException,
-            SQLException {
+    public int storeRow(RowItem row)
+            throws UnsupportedOperationException, SQLException {
         if (row == null) {
-            throw new IllegalArgumentException("Row argument must be non-null.");
+            throw new IllegalArgumentException(
+                    "Row argument must be non-null.");
         }
         StatementHelper sh;
         int result = 0;
@@ -309,7 +311,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
      * solve the problem of returning the final RowId immediately on the
      * SQLContainer.addItem() call when auto commit mode is enabled in the
      * SQLContainer.
-     * 
+     *
      * @param row
      *            RowItem to add to the database
      * @return Final RowId of the added row
@@ -320,8 +322,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
         /* Set version column, if one is provided */
         setVersionColumnFlagInProperty(row);
         /* Generate query */
-        StatementHelper sh = sqlGenerator.generateInsertQuery(
-                getFullTableName(), row);
+        StatementHelper sh = sqlGenerator
+                .generateInsertQuery(getFullTableName(), row);
         Connection connection = null;
         PreparedStatement pstmt = null;
         ResultSet generatedKeys = null;
@@ -351,7 +353,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.sqlcontainer.query.QueryDelegate#setFilters(java.util
      * .List)
@@ -368,7 +370,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.sqlcontainer.query.QueryDelegate#setOrderBy(java.util
      * .List)
@@ -385,19 +387,19 @@ public class TableQuery extends AbstractTransactionalQuery implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#beginTransaction()
      */
     @Override
-    public void beginTransaction() throws UnsupportedOperationException,
-            SQLException {
+    public void beginTransaction()
+            throws UnsupportedOperationException, SQLException {
         getLogger().log(Level.FINE, "DB -> begin transaction");
         super.beginTransaction();
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#commit()
      */
     @Override
@@ -420,7 +422,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#rollback()
      */
     @Override
@@ -431,7 +433,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.sqlcontainer.query.QueryDelegate#getPrimaryKeyColumns()
      */
@@ -451,7 +453,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
     /**
      * Returns the table name for the query without catalog and schema
      * information.
-     * 
+     *
      * @return table name, not null
      */
     public String getTableName() {
@@ -460,7 +462,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
 
     /**
      * Returns the catalog name for the query.
-     * 
+     *
      * @return catalog name, can be null
      * @since 7.1
      */
@@ -470,7 +472,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
 
     /**
      * Returns the catalog name for the query.
-     * 
+     *
      * @return catalog name, can be null
      * @since 7.1
      */
@@ -481,9 +483,9 @@ public class TableQuery extends AbstractTransactionalQuery implements
     /**
      * Returns the complete table name obtained by concatenation of the catalog
      * and schema names (if any) and the table name.
-     * 
+     *
      * This method can be overridden if customization is needed.
-     * 
+     *
      * @return table name in the form it should be used in query and update
      *         statements
      * @since 7.1
@@ -511,7 +513,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
      * Executes the given query string using either the active connection if a
      * transaction is already open, or a new connection from this query's
      * connection pool.
-     * 
+     *
      * @param sh
      *            an instance of StatementHelper, containing the query string
      *            and parameter values.
@@ -537,7 +539,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
      * Executes the given update query string using either the active connection
      * if a transaction is already open, or a new connection from this query's
      * connection pool.
-     * 
+     *
      * @param sh
      *            an instance of StatementHelper, containing the query string
      *            and parameter values.
@@ -563,9 +565,9 @@ public class TableQuery extends AbstractTransactionalQuery implements
      * Executes the given update query string using either the active connection
      * if a transaction is already open, or a new connection from this query's
      * connection pool.
-     * 
+     *
      * Additionally adds a new RowIdChangeEvent to the event buffer.
-     * 
+     *
      * @param sh
      *            an instance of StatementHelper, containing the query string
      *            and parameter values.
@@ -597,7 +599,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
 
     /**
      * Fetches name(s) of primary key column(s) from DB metadata.
-     * 
+     *
      * Also tries to get the escape string to be used in search strings.
      */
     private void fetchMetaData() {
@@ -611,16 +613,15 @@ public class TableQuery extends AbstractTransactionalQuery implements
                 tables = dbmd.getTables(catalogName, schemaName, tableName,
                         null);
                 if (!tables.next()) {
-                    String catalog = (catalogName != null) ? catalogName
-                            .toUpperCase() : null;
-                    String schema = (schemaName != null) ? schemaName
-                            .toUpperCase() : null;
+                    String catalog = (catalogName != null)
+                            ? catalogName.toUpperCase() : null;
+                    String schema = (schemaName != null)
+                            ? schemaName.toUpperCase() : null;
                     tables = dbmd.getTables(catalog, schema,
                             tableName.toUpperCase(), null);
                     if (!tables.next()) {
                         throw new IllegalArgumentException(
-                                "Table with the name \""
-                                        + getFullTableName()
+                                "Table with the name \"" + getFullTableName()
                                         + "\" was not found. Check your database contents.");
                     } else {
                         catalogName = catalog;
@@ -692,8 +693,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
                     for (String s : primaryKeyColumns) {
                         if (!((ColumnProperty) row.getItemProperty(s))
                                 .isReadOnlyChangeAllowed()) {
-                            newRowId.add(values.get(values.keySet().iterator()
-                                    .next()));
+                            newRowId.add(values
+                                    .get(values.keySet().iterator().next()));
                         } else {
                             newRowId.add(values.get(s));
                         }
@@ -706,24 +707,23 @@ public class TableQuery extends AbstractTransactionalQuery implements
             }
             return new RowId(newRowId.toArray());
         } catch (Exception e) {
-            getLogger()
-                    .log(Level.FINE,
-                            "Failed to fetch key values on insert: {0}",
-                            e.getMessage());
+            getLogger().log(Level.FINE,
+                    "Failed to fetch key values on insert: {0}",
+                    e.getMessage());
             return null;
         }
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.sqlcontainer.query.QueryDelegate#removeRow(com.vaadin
      * .addon.sqlcontainer.RowItem)
      */
     @Override
-    public boolean removeRow(RowItem row) throws UnsupportedOperationException,
-            SQLException {
+    public boolean removeRow(RowItem row)
+            throws UnsupportedOperationException, SQLException {
         if (getLogger().isLoggable(Level.FINE)) {
             getLogger().log(Level.FINE, "Removing row with id: {0}",
                     row.getId().getId()[0]);
@@ -742,7 +742,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.sqlcontainer.query.QueryDelegate#containsRowWithKey(
      * java.lang.Object[])
@@ -788,7 +788,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
     /**
      * Custom writeObject to call rollback() if object is serialized.
      */
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+    private void writeObject(java.io.ObjectOutputStream out)
+            throws IOException {
         try {
             rollback();
         } catch (SQLException ignored) {
@@ -799,8 +800,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
     /**
      * Simple RowIdChangeEvent implementation.
      */
-    public static class RowIdChangeEvent extends EventObject implements
-            QueryDelegate.RowIdChangeEvent {
+    public static class RowIdChangeEvent extends EventObject
+            implements QueryDelegate.RowIdChangeEvent {
         private final RowId oldId;
         private final RowId newId;
 

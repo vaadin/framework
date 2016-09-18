@@ -38,8 +38,9 @@ public class CustomLayoutUsingTheme extends TestBase implements ClickListener {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        layout.addComponent(new NativeButton(
-                                "This is it, the body!"), "body");
+                        layout.addComponent(
+                                new NativeButton("This is it, the body!"),
+                                "body");
                     }
                 }));
         layout.addComponent(menu, "menu");

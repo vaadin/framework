@@ -41,8 +41,8 @@ public class TableMatchesMouseDownMouseUpElement extends AbstractTestUI {
         Item item = table.addItem("Item 1 (row 1)");
         item.getItemProperty("Column 1").setValue("String A");
         item.getItemProperty("Column 2").setValue(new Label("Label A"));
-        item.getItemProperty("Column 3").setValue(
-                new Label("<b>Label A</b>", ContentMode.HTML));
+        item.getItemProperty("Column 3")
+                .setValue(new Label("<b>Label A</b>", ContentMode.HTML));
         VerticalLayout l = new VerticalLayout();
         l.setId("row-1");
         l.setHeight(100, Unit.PIXELS);
@@ -52,10 +52,9 @@ public class TableMatchesMouseDownMouseUpElement extends AbstractTestUI {
         item.getItemProperty("Column 1").setValue("String B");
         item.getItemProperty("Column 2").setValue(new Label("Label B"));
         item.getItemProperty("Column 3")
-                .setValue(
-                        new Label(
-                                "<a style=\"color: blue\" href=\"javascript:false\">Label B</a>",
-                                ContentMode.HTML));
+                .setValue(new Label(
+                        "<a style=\"color: blue\" href=\"javascript:false\">Label B</a>",
+                        ContentMode.HTML));
         l = new VerticalLayout();
         l.setId("row-2");
         l.setSizeFull();

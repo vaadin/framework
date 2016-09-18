@@ -25,7 +25,7 @@ import com.vaadin.client.widgets.Grid;
 
 /**
  * Event object describing a change in Grid row selection state.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -41,7 +41,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
 
     /**
      * Creates an event with a single added or removed row.
-     * 
+     *
      * @param grid
      *            grid reference, used for getSource
      * @param added
@@ -72,7 +72,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
 
     /**
      * Creates an event where several rows have been added or removed.
-     * 
+     *
      * @param grid
      *            Grid reference, used for getSource
      * @param added
@@ -106,7 +106,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
 
     /**
      * Gets a reference to the Grid object that fired this event.
-     * 
+     *
      * @return a grid reference
      */
     @Override
@@ -117,7 +117,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
     /**
      * Gets all rows added to the selection since the last
      * {@link SelectionEvent} .
-     * 
+     *
      * @return a collection of added rows. Empty collection if no rows were
      *         added.
      */
@@ -128,7 +128,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
     /**
      * Gets all rows removed from the selection since the last
      * {@link SelectionEvent}.
-     * 
+     *
      * @return a collection of removed rows. Empty collection if no rows were
      *         removed.
      */
@@ -138,7 +138,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
 
     /**
      * Gets currently selected rows.
-     * 
+     *
      * @return a non-null collection containing all currently selected rows.
      */
     public Collection<T> getSelected() {
@@ -147,7 +147,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
 
     /**
      * Gets a type identifier for this event.
-     * 
+     *
      * @return a {@link Type} identifier.
      */
     public static Type<SelectionHandler> getType() {
@@ -168,7 +168,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
     /**
      * Checks if this selection change event is fired during a batched
      * selection/deselection operation.
-     * 
+     *
      * @return <code>true</code> iff this event is fired during a batched
      *         selection/deselection operation
      */

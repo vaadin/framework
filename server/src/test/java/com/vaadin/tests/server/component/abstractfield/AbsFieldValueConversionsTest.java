@@ -26,8 +26,8 @@ import com.vaadin.ui.TextField;
 public class AbsFieldValueConversionsTest {
 
     Person paulaBean = new Person("Paula", "Brilliant", "paula@brilliant.com",
-            34, Sex.FEMALE, new Address("Paula street 1", 12345, "P-town",
-                    Country.FINLAND));
+            34, Sex.FEMALE,
+            new Address("Paula street 1", 12345, "P-town", Country.FINLAND));
 
     /**
      * Java uses a non-breaking space (ascii 160) instead of space when
@@ -38,8 +38,8 @@ public class AbsFieldValueConversionsTest {
     @Test
     public void testWithoutConversion() {
         TextField tf = new TextField();
-        tf.setPropertyDataSource(new MethodProperty<String>(paulaBean,
-                "firstName"));
+        tf.setPropertyDataSource(
+                new MethodProperty<String>(paulaBean, "firstName"));
         assertEquals("Paula", tf.getValue());
         assertEquals("Paula", tf.getPropertyDataSource().getValue());
         tf.setValue("abc");
@@ -112,8 +112,8 @@ public class AbsFieldValueConversionsTest {
                 return String.class;
             }
         });
-        tf.setPropertyDataSource(new MethodProperty<String>(paulaBean,
-                "firstName"));
+        tf.setPropertyDataSource(
+                new MethodProperty<String>(paulaBean, "firstName"));
         assertEquals("Paula", tf.getValue());
         assertEquals("Paula", tf.getPropertyDataSource().getValue());
         tf.setValue("abc");
@@ -266,7 +266,8 @@ public class AbsFieldValueConversionsTest {
         try {
             Object v = tf.getConvertedValue();
             System.out.println(v);
-            Assert.fail("Trying to convert String -> Integer should fail when there is no converter");
+            Assert.fail(
+                    "Trying to convert String -> Integer should fail when there is no converter");
         } catch (ConversionException e) {
             // ok, should happen when there is no converter but conversion is
             // needed

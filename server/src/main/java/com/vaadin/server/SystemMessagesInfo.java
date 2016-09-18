@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,7 +26,7 @@ public class SystemMessagesInfo implements Serializable {
 
     /**
      * The locale of the UI related to the {@link SystemMessages} request.
-     * 
+     *
      * @return The Locale or null if the locale is not known
      */
     public Locale getLocale() {
@@ -39,7 +39,7 @@ public class SystemMessagesInfo implements Serializable {
 
     /**
      * Gets the request currently in progress.
-     * 
+     *
      * @return The request currently in progress or null if no request is in
      *         progress.
      */
@@ -53,7 +53,7 @@ public class SystemMessagesInfo implements Serializable {
 
     /**
      * Returns the service this SystemMessages request comes from.
-     * 
+     *
      * @return The service which triggered this request or null of not triggered
      *         from a service.
      */

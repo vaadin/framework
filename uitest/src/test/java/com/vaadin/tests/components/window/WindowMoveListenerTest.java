@@ -23,8 +23,8 @@ public class WindowMoveListenerTest extends MultiBrowserTest {
 
         // I'd loved to use the header, but that doesn't work. Footer works
         // fine, though :)
-        WebElement windowFooter = getDriver().findElement(
-                By.className("v-window-footer"));
+        WebElement windowFooter = getDriver()
+                .findElement(By.className("v-window-footer"));
 
         final Point winPos = window.getLocation();
 

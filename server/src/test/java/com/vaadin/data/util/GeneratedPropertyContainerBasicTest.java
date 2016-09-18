@@ -20,8 +20,8 @@ import com.vaadin.data.Container.ItemSetChangeNotifier;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 
-public class GeneratedPropertyContainerBasicTest extends
-        AbstractInMemoryContainerTestBase {
+public class GeneratedPropertyContainerBasicTest
+        extends AbstractInMemoryContainerTestBase {
 
     @Test
     public void testBasicOperations() {
@@ -147,8 +147,8 @@ public class GeneratedPropertyContainerBasicTest extends
         counter.assertOnce();
         container.removeContainerFilter(filter);
         counter.assertOnce();
-        container.addContainerFilter(new SimpleStringFilter(SIMPLE_NAME, "a",
-                true, false));
+        container.addContainerFilter(
+                new SimpleStringFilter(SIMPLE_NAME, "a", true, false));
         counter.assertOnce();
         container.removeAllContainerFilters();
         counter.assertOnce();
@@ -164,8 +164,8 @@ public class GeneratedPropertyContainerBasicTest extends
 
         counter.reset();
         ((Container.Filterable) container)
-                .addContainerFilter(new SimpleStringFilter(
-                        FULLY_QUALIFIED_NAME, "Test", true, false));
+                .addContainerFilter(new SimpleStringFilter(FULLY_QUALIFIED_NAME,
+                        "Test", true, false));
         // no real change, so no notification required
         counter.assertNone();
 
@@ -380,8 +380,8 @@ public class GeneratedPropertyContainerBasicTest extends
         GeneratedPropertyContainer container = createContainer();
         Object itemId = container.addItem();
         ItemSetChangeListener removeListener = createListenerMockFor(container);
-        removeListener.containerItemSetChange(EasyMock
-                .isA(ItemRemoveEvent.class));
+        removeListener
+                .containerItemSetChange(EasyMock.isA(ItemRemoveEvent.class));
         EasyMock.replay(removeListener);
 
         container.removeItem(itemId);
@@ -394,7 +394,8 @@ public class GeneratedPropertyContainerBasicTest extends
         GeneratedPropertyContainer container = createContainer();
         Object itemId = container.addItem();
         ItemSetChangeListener removeListener = createListenerMockFor(container);
-        Capture<ItemRemoveEvent> capturedEvent = captureRemoveEvent(removeListener);
+        Capture<ItemRemoveEvent> capturedEvent = captureRemoveEvent(
+                removeListener);
         EasyMock.replay(removeListener);
 
         container.removeItem(itemId);
@@ -408,7 +409,8 @@ public class GeneratedPropertyContainerBasicTest extends
         container.addItem();
         Object secondItemId = container.addItem();
         ItemSetChangeListener removeListener = createListenerMockFor(container);
-        Capture<ItemRemoveEvent> capturedEvent = captureRemoveEvent(removeListener);
+        Capture<ItemRemoveEvent> capturedEvent = captureRemoveEvent(
+                removeListener);
         EasyMock.replay(removeListener);
 
         container.removeItem(secondItemId);
@@ -422,7 +424,8 @@ public class GeneratedPropertyContainerBasicTest extends
         container.addItem();
         container.addItem();
         ItemSetChangeListener removeListener = createListenerMockFor(container);
-        Capture<ItemRemoveEvent> capturedEvent = captureRemoveEvent(removeListener);
+        Capture<ItemRemoveEvent> capturedEvent = captureRemoveEvent(
+                removeListener);
         EasyMock.replay(removeListener);
 
         container.removeAllItems();

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -49,7 +49,8 @@ public class CalendarHtmlInEventsTest extends SingleBrowserTest {
         click(htmlAllowed);
         Assert.assertEquals("1. HTML in event caption: true", getLogRow(0));
 
-        Assert.assertEquals(getMonthEvent(0).getText(), "12:00 AM Hello world!");
+        Assert.assertEquals(getMonthEvent(0).getText(),
+                "12:00 AM Hello world!");
     }
 
     @Test
@@ -78,22 +79,22 @@ public class CalendarHtmlInEventsTest extends SingleBrowserTest {
     }
 
     private WebElement getMonthEvent(int dayInCalendar) {
-        return getMonthDay(dayInCalendar).findElement(
-                By.className("v-calendar-event"));
+        return getMonthDay(dayInCalendar)
+                .findElement(By.className("v-calendar-event"));
     }
 
     private WebElement getWeekEvent(int dayInCalendar) {
-        return getWeekDay(dayInCalendar).findElement(
-                By.className("v-calendar-event"));
+        return getWeekDay(dayInCalendar)
+                .findElement(By.className("v-calendar-event"));
     }
 
     private WebElement getMonthDay(int i) {
-        return calendar.findElements(By.className("v-calendar-month-day")).get(
-                i);
+        return calendar.findElements(By.className("v-calendar-month-day"))
+                .get(i);
     }
 
     private WebElement getWeekDay(int i) {
-        return calendar.findElements(By.className("v-calendar-day-times")).get(
-                i);
+        return calendar.findElements(By.className("v-calendar-day-times"))
+                .get(i);
     }
 }

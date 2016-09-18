@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,7 +37,7 @@ import com.vaadin.tests.tb3.TB3Runner;
  * permutation for each value returned by {@code getThemes()}. The value is
  * automatically assigned to the test instance using {@code setTheme(String)}
  * before invoking the test method
- * 
+ *
  * @author Vaadin Ltd
  */
 public class ParameterizedTB3Runner extends TB3Runner {
@@ -61,17 +61,13 @@ public class ParameterizedTB3Runner extends TB3Runner {
             }
 
             if (!m.getName().startsWith("get") || !m.getName().endsWith("s")) {
-                throw new IllegalStateException(
-                        "Method "
-                                + m.getName()
-                                + " is annotated with @Parameter but is not named getSomeThings() as it should");
+                throw new IllegalStateException("Method " + m.getName()
+                        + " is annotated with @Parameter but is not named getSomeThings() as it should");
             }
 
             if (m.getParameterTypes().length != 0) {
-                throw new IllegalStateException(
-                        "Method "
-                                + m.getName()
-                                + " annotated with @Parameter should not have any arguments");
+                throw new IllegalStateException("Method " + m.getName()
+                        + " annotated with @Parameter should not have any arguments");
             }
 
             if (!Modifier.isStatic(m.getModifiers())) {
@@ -90,9 +86,10 @@ public class ParameterizedTB3Runner extends TB3Runner {
                 setterMethod = getTestClass().getJavaClass().getMethod(setter,
                         String.class);
             } catch (Exception e) {
-                throw new IllegalStateException("No setter " + setter
-                        + " found in "
-                        + getTestClass().getJavaClass().getName(), e);
+                throw new IllegalStateException(
+                        "No setter " + setter + " found in "
+                                + getTestClass().getJavaClass().getName(),
+                        e);
             }
 
             Collection<String> values;
@@ -105,8 +102,9 @@ public class ParameterizedTB3Runner extends TB3Runner {
                     parameters.put(setterMethod, values);
                 }
             } catch (Exception e) {
-                throw new IllegalStateException("The setter " + m.getName()
-                        + " could not be invoked", e);
+                throw new IllegalStateException(
+                        "The setter " + m.getName() + " could not be invoked",
+                        e);
             }
         }
 
@@ -116,8 +114,8 @@ public class ParameterizedTB3Runner extends TB3Runner {
             for (FrameworkMethod m : methods) {
 
                 if (!(m instanceof TBMethod)) {
-                    System.err.println("Unknown method type: "
-                            + m.getClass().getName());
+                    System.err.println(
+                            "Unknown method type: " + m.getClass().getName());
                     newMethods.add(m);
                     continue;
                 }

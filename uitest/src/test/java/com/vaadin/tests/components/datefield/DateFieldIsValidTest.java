@@ -36,8 +36,8 @@ public class DateFieldIsValidTest extends MultiBrowserTest {
 
         waitForElementVisible(By.id("Log"));
         waitForElementVisible(By.className("v-datefield"));
-        WebElement dateTextbox = $(DateFieldElement.class).first().findElement(
-                By.className("v-textfield"));
+        WebElement dateTextbox = $(DateFieldElement.class).first()
+                .findElement(By.className("v-textfield"));
         ButtonElement button = $(ButtonElement.class).first();
 
         dateTextbox.sendKeys("01/01/01", Keys.TAB);

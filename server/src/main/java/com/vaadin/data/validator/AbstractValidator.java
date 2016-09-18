@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -38,7 +38,7 @@ import com.vaadin.data.Validator;
  * directly or implement {@link #isValidValue(Object)} when migrating legacy
  * applications. To check validity, {@link #validate(Object)} should be used.
  * </p>
- * 
+ *
  * @param <T>
  *            The type
  * @author Vaadin Ltd.
@@ -54,7 +54,7 @@ public abstract class AbstractValidator<T> implements Validator {
 
     /**
      * Constructs a validator with the given error message.
-     * 
+     *
      * @param errorMessage
      *            the message to be included in an {@link InvalidValueException}
      *            (with "{0}" replaced by the value that failed validation).
@@ -68,7 +68,7 @@ public abstract class AbstractValidator<T> implements Validator {
      * {@link #isValidValue(Object)} or {@link #validate(Object)} instead of
      * {@link #isValid(Object)}. {@link #validate(Object)} should normally be
      * used to check values.
-     * 
+     *
      * @param value
      * @return true if the value is valid
      */
@@ -86,9 +86,9 @@ public abstract class AbstractValidator<T> implements Validator {
      * perform validation in subclasses if customization of the error message is
      * not needed. Otherwise, subclasses should override
      * {@link #validate(Object)} and the return value of this method is ignored.
-     * 
+     *
      * This method should not be called from outside the validator class itself.
-     * 
+     *
      * @param value
      * @return
      */
@@ -108,7 +108,7 @@ public abstract class AbstractValidator<T> implements Validator {
      * Checks the type of the value to validate to ensure it conforms with
      * getType. Enables sub classes to handle the specific type instead of
      * Object.
-     * 
+     *
      * @param value
      *            The value to check
      * @return true if the value can safely be cast to the type specified by
@@ -125,7 +125,7 @@ public abstract class AbstractValidator<T> implements Validator {
     /**
      * Returns the message to be included in the exception in case the value
      * does not validate.
-     * 
+     *
      * @return the error message provided in the constructor or using
      *         {@link #setErrorMessage(String)}.
      */
@@ -136,7 +136,7 @@ public abstract class AbstractValidator<T> implements Validator {
     /**
      * Sets the message to be included in the exception in case the value does
      * not validate. The exception message is typically shown to the end user.
-     * 
+     *
      * @param errorMessage
      *            the error message. "{0}" is automatically replaced by the
      *            value that did not validate.

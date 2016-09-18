@@ -9,8 +9,8 @@ public class ListSelectAllowNewItem extends TestBase {
 
     @Override
     protected void setup() {
-        ListSelect select = new ListSelect("Select", Arrays.asList("Option 1",
-                "Option 2"));
+        ListSelect select = new ListSelect("Select",
+                Arrays.asList("Option 1", "Option 2"));
         select.setImmediate(true);
         select.setNewItemsAllowed(true);
         addComponent(select);

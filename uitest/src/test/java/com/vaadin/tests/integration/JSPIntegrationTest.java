@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -79,8 +79,8 @@ public class JSPIntegrationTest extends PrivateTB3Configuration {
         List<UIData> uis = new ArrayList<UIData>();
 
         getDriver().get(jspUrl);
-        List<WebElement> rows = getDriver().findElements(
-                By.xpath("//tr[@class='uirow']"));
+        List<WebElement> rows = getDriver()
+                .findElements(By.xpath("//tr[@class='uirow']"));
         for (WebElement row : rows) {
             UIData data = new UIData();
             List<WebElement> tds = row.findElements(By.xpath("./td"));

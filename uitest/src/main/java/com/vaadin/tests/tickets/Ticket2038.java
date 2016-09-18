@@ -23,8 +23,9 @@ public class Ticket2038 extends LegacyApplication {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                w.showNotification("TextField is " + (tf.isValid() ? "" : "in")
-                        + "valid, with error: " + tf.getErrorMessage(),
+                w.showNotification(
+                        "TextField is " + (tf.isValid() ? "" : "in")
+                                + "valid, with error: " + tf.getErrorMessage(),
                         Notification.TYPE_WARNING_MESSAGE);
             }
         });
@@ -38,8 +39,8 @@ public class Ticket2038 extends LegacyApplication {
         b.addListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                tf.setRequiredError(b.getValue() ? "Field must not be empty"
-                        : null);
+                tf.setRequiredError(
+                        b.getValue() ? "Field must not be empty" : null);
             }
         });
     }

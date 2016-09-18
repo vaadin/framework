@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -128,8 +128,8 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
         selectMenuPath(EDIT_ROW_100);
         WebElement editor = getEditor();
 
-        List<WebElement> widgets = editor.findElements(By
-                .className("gwt-TextBox"));
+        List<WebElement> widgets = editor
+                .findElements(By.className("gwt-TextBox"));
 
         assertEquals(GridBasicFeatures.EDITABLE_COLUMNS, widgets.size());
 
@@ -150,27 +150,27 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
 
         WebElement editorCells = findElements(
                 By.className("v-grid-editor-cells")).get(1);
-        List<WebElement> selectorDivs = editorCells.findElements(By
-                .cssSelector("div"));
+        List<WebElement> selectorDivs = editorCells
+                .findElements(By.cssSelector("div"));
 
-        assertFalse("selector column cell should've had contents", selectorDivs
-                .get(0).getAttribute("innerHTML").isEmpty());
-        assertFalse("normal column cell shoul've had contents", selectorDivs
-                .get(1).getAttribute("innerHTML").isEmpty());
+        assertFalse("selector column cell should've had contents",
+                selectorDivs.get(0).getAttribute("innerHTML").isEmpty());
+        assertFalse("normal column cell shoul've had contents",
+                selectorDivs.get(1).getAttribute("innerHTML").isEmpty());
     }
 
     @Test
     public void testSave() {
         selectMenuPath(EDIT_ROW_100);
 
-        WebElement textField = getEditor().findElements(
-                By.className("gwt-TextBox")).get(0);
+        WebElement textField = getEditor()
+                .findElements(By.className("gwt-TextBox")).get(0);
 
         textField.clear();
         textField.sendKeys("Changed");
 
-        WebElement saveButton = getEditor().findElement(
-                By.className("v-grid-editor-save"));
+        WebElement saveButton = getEditor()
+                .findElement(By.className("v-grid-editor-save"));
 
         saveButton.click();
 
@@ -181,8 +181,8 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
     public void testProgrammaticSave() {
         selectMenuPath(EDIT_ROW_100);
 
-        WebElement textField = getEditor().findElements(
-                By.className("gwt-TextBox")).get(0);
+        WebElement textField = getEditor()
+                .findElements(By.className("gwt-TextBox")).get(0);
 
         textField.clear();
         textField.sendKeys("Changed");
@@ -200,8 +200,8 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
                 GridConstants.DEFAULT_SAVE_CAPTION, getSaveButton().getText());
         assertEquals("Cancel button caption should've been \""
                 + GridConstants.DEFAULT_CANCEL_CAPTION + "\" to begin with",
-                GridConstants.DEFAULT_CANCEL_CAPTION, getCancelButton()
-                        .getText());
+                GridConstants.DEFAULT_CANCEL_CAPTION,
+                getCancelButton().getText());
 
         selectMenuPath("Component", "Editor", "Change Save Caption");
         assertNotEquals(
@@ -214,8 +214,8 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
         selectMenuPath(EDIT_ROW_5);
         assertNotEquals(
                 "Cancel button caption should've changed while editor is closed",
-                GridConstants.DEFAULT_CANCEL_CAPTION, getCancelButton()
-                        .getText());
+                GridConstants.DEFAULT_CANCEL_CAPTION,
+                getCancelButton().getText());
     }
 
     @Test
@@ -240,10 +240,9 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Editor", "Toggle second editor error");
         getSaveButton().click();
 
-        assertEquals("Unexpected amount of error fields", 1, editor
-                .findElements(By.className("error")).size());
-        assertEquals(
-                "Unexpedted error message",
+        assertEquals("Unexpected amount of error fields", 1,
+                editor.findElements(By.className("error")).size());
+        assertEquals("Unexpedted error message",
                 "Syntethic fail of editor in column 2. "
                         + "This message is so long that it doesn't fit into its box",
                 editor.getErrorMessage());

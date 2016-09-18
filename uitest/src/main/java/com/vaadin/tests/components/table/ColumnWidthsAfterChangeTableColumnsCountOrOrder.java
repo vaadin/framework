@@ -10,8 +10,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
-public class ColumnWidthsAfterChangeTableColumnsCountOrOrder extends
-        AbstractTestUI {
+public class ColumnWidthsAfterChangeTableColumnsCountOrOrder
+        extends AbstractTestUI {
 
     protected static final String BUTTON_CHANGE_ORDER_AND_WIDTH_ID = "buttonChangeOrderAndWidth";
     protected static final String BUTTON_CHANGE_COLUMN_COUNT_AND_WIDTH = "buttonChangeColumnCountAndWidth";
@@ -40,8 +40,8 @@ public class ColumnWidthsAfterChangeTableColumnsCountOrOrder extends
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(Button.ClickEvent clickEvent) {
-                        table.setVisibleColumns(new Object[] { "name", "descr",
-                                "id" });
+                        table.setVisibleColumns(
+                                new Object[] { "name", "descr", "id" });
                         table.setColumnWidth("descr", NEW_COLUMN_WIDTH);
                     }
                 });
@@ -51,7 +51,8 @@ public class ColumnWidthsAfterChangeTableColumnsCountOrOrder extends
                 "Change columns count and width", new Button.ClickListener() {
                     @Override
                     public void buttonClick(Button.ClickEvent clickEvent) {
-                        table.setVisibleColumns(new Object[] { "name", "descr" });
+                        table.setVisibleColumns(
+                                new Object[] { "name", "descr" });
                         table.setColumnWidth("descr", NEW_COLUMN_WIDTH);
                     }
                 });

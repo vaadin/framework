@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -38,13 +38,12 @@ public class TogglePush extends AbstractTestUI {
         addComponent(counterLabel);
 
         getPushConfiguration()
-                .setPushMode(
-                        "disabled".equals(request.getParameter("push")) ? PushMode.DISABLED
-                                : PushMode.AUTOMATIC);
+                .setPushMode("disabled".equals(request.getParameter("push"))
+                        ? PushMode.DISABLED : PushMode.AUTOMATIC);
 
         CheckBox pushSetting = new CheckBox("Push enabled");
-        pushSetting.setValue(Boolean.valueOf(getPushConfiguration()
-                .getPushMode().isEnabled()));
+        pushSetting.setValue(Boolean
+                .valueOf(getPushConfiguration().getPushMode().isEnabled()));
         pushSetting.setImmediate(true);
         pushSetting.addValueChangeListener(new ValueChangeListener() {
             @Override
@@ -58,8 +57,8 @@ public class TogglePush extends AbstractTestUI {
         });
         addComponent(pushSetting);
 
-        addComponent(new Button("Update counter now",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Update counter now", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         updateCounter();
@@ -86,8 +85,8 @@ public class TogglePush extends AbstractTestUI {
     }
 
     public void updateCounter() {
-        counterLabel.setValue("Counter has been updated " + counter++
-                + " times");
+        counterLabel
+                .setValue("Counter has been updated " + counter++ + " times");
     }
 
     @Override

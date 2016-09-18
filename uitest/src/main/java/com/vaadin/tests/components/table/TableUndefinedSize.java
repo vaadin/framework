@@ -37,8 +37,8 @@ public class TableUndefinedSize extends TestBase {
 
         log = new Log(5);
 
-        controls.addComponent(new Button("Fixed size (200x200)",
-                new Button.ClickListener() {
+        controls.addComponent(
+                new Button("Fixed size (200x200)", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         tbl.setWidth("200px");
@@ -47,8 +47,8 @@ public class TableUndefinedSize extends TestBase {
                     }
                 }));
 
-        controls.addComponent(new Button("Fixed size (600x200)",
-                new Button.ClickListener() {
+        controls.addComponent(
+                new Button("Fixed size (600x200)", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         tbl.setWidth("600px");
@@ -57,8 +57,8 @@ public class TableUndefinedSize extends TestBase {
                     }
                 }));
 
-        controls.addComponent(new Button("Undefined size",
-                new Button.ClickListener() {
+        controls.addComponent(
+                new Button("Undefined size", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         tbl.setSizeUndefined();
@@ -66,15 +66,15 @@ public class TableUndefinedSize extends TestBase {
                     }
                 }));
 
-        NativeSelect pageLength = new NativeSelect("PageLength", Arrays.asList(
-                0, 1, 2, 4, 8, 10));
+        NativeSelect pageLength = new NativeSelect("PageLength",
+                Arrays.asList(0, 1, 2, 4, 8, 10));
         pageLength.setImmediate(true);
         pageLength.setNullSelectionAllowed(false);
         pageLength.addListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                int pageLength = Integer.valueOf(event.getProperty().getValue()
-                        .toString());
+                int pageLength = Integer
+                        .valueOf(event.getProperty().getValue().toString());
                 tbl.setPageLength(pageLength);
                 log.log("Page length: " + pageLength);
             }

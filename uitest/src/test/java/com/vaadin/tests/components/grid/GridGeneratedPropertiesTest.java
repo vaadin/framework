@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -34,8 +34,8 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
     public void testMilesColumnExists() {
         openTestURL();
         GridElement grid = $(GridElement.class).first();
-        assertEquals("Miles header wasn't present.", "miles", grid
-                .getHeaderCell(0, 2).getText().toLowerCase());
+        assertEquals("Miles header wasn't present.", "miles",
+                grid.getHeaderCell(0, 2).getText().toLowerCase());
     }
 
     @Test
@@ -46,14 +46,14 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
         // Overwritten foo property should not be sortable
         GridCellElement fooHeader = grid.getHeaderCell(0, 0);
         fooHeader.click();
-        assertFalse("Column foo was unexpectedly sorted.", fooHeader
-                .getAttribute("class").contains("sort"));
+        assertFalse("Column foo was unexpectedly sorted.",
+                fooHeader.getAttribute("class").contains("sort"));
 
         // Generated property miles is not sortable
         GridCellElement milesHeader = grid.getHeaderCell(0, 2);
         milesHeader.click();
-        assertFalse("Column miles was unexpectedly sorted.", milesHeader
-                .getAttribute("class").contains("sort"));
+        assertFalse("Column miles was unexpectedly sorted.",
+                milesHeader.getAttribute("class").contains("sort"));
     }
 
     @Test
@@ -64,11 +64,11 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
         // Generated property baz is sortable
         GridCellElement bazHeader = grid.getHeaderCell(0, 3);
         bazHeader.click();
-        assertTrue("Column baz was not sorted ascending", bazHeader
-                .getAttribute("class").contains("sort-asc"));
+        assertTrue("Column baz was not sorted ascending",
+                bazHeader.getAttribute("class").contains("sort-asc"));
         bazHeader.click();
-        assertTrue("Column baz was not sorted descending", bazHeader
-                .getAttribute("class").contains("sort-desc"));
+        assertTrue("Column baz was not sorted descending",
+                bazHeader.getAttribute("class").contains("sort-desc"));
     }
 
     @Test
@@ -82,8 +82,8 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
 
         GridCellElement kmHeader = grid.getHeaderCell(0, 1);
         assertFalse("Column km was unexpectedly sorted",
-                kmHeader.getAttribute("class").contains("sort-asc")
-                        || kmHeader.getAttribute("class").contains("sort-desc"));
+                kmHeader.getAttribute("class").contains("sort-asc") || kmHeader
+                        .getAttribute("class").contains("sort-desc"));
         assertFalse("Unexpected client-side exception was visible",
                 isElementPresent(NotificationElement.class));
     }

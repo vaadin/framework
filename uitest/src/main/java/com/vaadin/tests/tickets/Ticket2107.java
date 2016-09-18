@@ -18,15 +18,17 @@ public class Ticket2107 extends LegacyApplication {
 
         final TextField tf = new TextField(
                 "Required field that validated the input");
-        tf.setDescription("Enter someting and click outside the field to activate");
+        tf.setDescription(
+                "Enter someting and click outside the field to activate");
         tf.setRequired(true);
         tf.setImmediate(true);
         tf.addListener(new Property.ValueChangeListener() {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                w.showNotification("TextField is " + (tf.isValid() ? "" : "in")
-                        + "valid, with error: " + tf.getErrorMessage(),
+                w.showNotification(
+                        "TextField is " + (tf.isValid() ? "" : "in")
+                                + "valid, with error: " + tf.getErrorMessage(),
                         Notification.TYPE_WARNING_MESSAGE);
             }
         });
@@ -50,8 +52,8 @@ public class Ticket2107 extends LegacyApplication {
         b.addListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                tf.setRequiredError(b.getValue() ? "Field must not be empty"
-                        : null);
+                tf.setRequiredError(
+                        b.getValue() ? "Field must not be empty" : null);
             }
         });
     }

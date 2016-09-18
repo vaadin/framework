@@ -32,8 +32,8 @@ public class TableItemDescriptionGeneratorUI extends AbstractTestUI {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                table.setContainerDataSource(createContainer(componentDescription
-                        .getValue()));
+                table.setContainerDataSource(
+                        createContainer(componentDescription.getValue()));
             }
         });
         componentDescription.setImmediate(true);

@@ -22,8 +22,8 @@ public class NativeButtonHtml extends TestBase {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                swapButton.setHtmlContentAllowed(!swapButton
-                        .isHtmlContentAllowed());
+                swapButton.setHtmlContentAllowed(
+                        !swapButton.isHtmlContentAllowed());
             }
         });
         addComponent(swapButton);

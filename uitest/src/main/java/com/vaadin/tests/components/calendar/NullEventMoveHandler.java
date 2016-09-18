@@ -35,10 +35,10 @@ public class NullEventMoveHandler extends AbstractTestUIWithLog {
         calendar.setLocale(Locale.US);
 
         try {
-            calendar.setStartDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2014-06-01"));
-            calendar.setEndDate(new SimpleDateFormat("yyyy-MM-dd")
-                    .parse("2014-06-30"));
+            calendar.setStartDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2014-06-01"));
+            calendar.setEndDate(
+                    new SimpleDateFormat("yyyy-MM-dd").parse("2014-06-30"));
 
             BasicEvent event = new BasicEvent("foo", "bar",
                     new SimpleDateFormat("yyyy-MM-dd").parse("2014-06-01"));

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -39,13 +39,13 @@ import com.vaadin.util.ReflectTools;
 
 /**
  * A generic button component.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Button extends AbstractFocusable implements
-        Action.ShortcutNotifier {
+public class Button extends AbstractFocusable
+        implements Action.ShortcutNotifier {
 
     private ButtonServerRpc rpc = new ButtonServerRpc() {
 
@@ -74,7 +74,7 @@ public class Button extends AbstractFocusable implements
 
     /**
      * Creates a new push button with the given caption.
-     * 
+     *
      * @param caption
      *            the Button caption.
      */
@@ -85,7 +85,7 @@ public class Button extends AbstractFocusable implements
 
     /**
      * Creates a new push button with the given icon.
-     * 
+     *
      * @param icon
      *            the icon
      */
@@ -96,7 +96,7 @@ public class Button extends AbstractFocusable implements
 
     /**
      * Creates a new push button with the given caption and icon.
-     * 
+     *
      * @param caption
      *            the caption
      * @param icon
@@ -110,7 +110,7 @@ public class Button extends AbstractFocusable implements
 
     /**
      * Creates a new push button with a click listener.
-     * 
+     *
      * @param caption
      *            the Button caption.
      * @param listener
@@ -123,7 +123,7 @@ public class Button extends AbstractFocusable implements
 
     /**
      * Click event. This event is thrown, when the button is clicked.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -133,7 +133,7 @@ public class Button extends AbstractFocusable implements
 
         /**
          * New instance of text change event.
-         * 
+         *
          * @param source
          *            the Source of the event.
          */
@@ -144,7 +144,7 @@ public class Button extends AbstractFocusable implements
 
         /**
          * Constructor with mouse details
-         * 
+         *
          * @param source
          *            The source where the click took place
          * @param details
@@ -157,7 +157,7 @@ public class Button extends AbstractFocusable implements
 
         /**
          * Gets the Button where the event occurred.
-         * 
+         *
          * @return the Source of the event.
          */
         public Button getButton() {
@@ -167,7 +167,7 @@ public class Button extends AbstractFocusable implements
         /**
          * Returns the mouse position (x coordinate) when the click took place.
          * The position is relative to the browser client area.
-         * 
+         *
          * @return The mouse cursor x position or -1 if unknown
          */
         public int getClientX() {
@@ -181,7 +181,7 @@ public class Button extends AbstractFocusable implements
         /**
          * Returns the mouse position (y coordinate) when the click took place.
          * The position is relative to the browser client area.
-         * 
+         *
          * @return The mouse cursor y position or -1 if unknown
          */
         public int getClientY() {
@@ -195,7 +195,7 @@ public class Button extends AbstractFocusable implements
         /**
          * Returns the relative mouse position (x coordinate) when the click
          * took place. The position is relative to the clicked component.
-         * 
+         *
          * @return The mouse cursor x position relative to the clicked layout
          *         component or -1 if no x coordinate available
          */
@@ -210,7 +210,7 @@ public class Button extends AbstractFocusable implements
         /**
          * Returns the relative mouse position (y coordinate) when the click
          * took place. The position is relative to the clicked component.
-         * 
+         *
          * @return The mouse cursor y position relative to the clicked layout
          *         component or -1 if no y coordinate available
          */
@@ -224,7 +224,7 @@ public class Button extends AbstractFocusable implements
 
         /**
          * Checks if the Alt key was down when the mouse event took place.
-         * 
+         *
          * @return true if Alt was down when the event occured, false otherwise
          *         or if unknown
          */
@@ -238,7 +238,7 @@ public class Button extends AbstractFocusable implements
 
         /**
          * Checks if the Ctrl key was down when the mouse event took place.
-         * 
+         *
          * @return true if Ctrl was pressed when the event occured, false
          *         otherwise or if unknown
          */
@@ -252,7 +252,7 @@ public class Button extends AbstractFocusable implements
 
         /**
          * Checks if the Meta key was down when the mouse event took place.
-         * 
+         *
          * @return true if Meta was pressed when the event occured, false
          *         otherwise or if unknown
          */
@@ -266,7 +266,7 @@ public class Button extends AbstractFocusable implements
 
         /**
          * Checks if the Shift key was down when the mouse event took place.
-         * 
+         *
          * @return true if Shift was pressed when the event occured, false
          *         otherwise or if unknown
          */
@@ -282,7 +282,7 @@ public class Button extends AbstractFocusable implements
     /**
      * Interface for listening for a {@link ClickEvent} fired by a
      * {@link Component}.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -295,7 +295,7 @@ public class Button extends AbstractFocusable implements
         /**
          * Called when a {@link Button} has been clicked. A reference to the
          * button is given by {@link ClickEvent#getButton()}.
-         * 
+         *
          * @param event
          *            An event containing information about the click.
          */
@@ -305,7 +305,7 @@ public class Button extends AbstractFocusable implements
 
     /**
      * Adds the button click listener.
-     * 
+     *
      * @param listener
      *            the Listener to be added.
      */
@@ -325,7 +325,7 @@ public class Button extends AbstractFocusable implements
 
     /**
      * Removes the button click listener.
-     * 
+     *
      * @param listener
      *            the Listener to be removed.
      */
@@ -345,7 +345,7 @@ public class Button extends AbstractFocusable implements
 
     /**
      * Simulates a button click, notifying all server-side listeners.
-     * 
+     *
      * No action is taken is the button is disabled.
      */
     public void click() {
@@ -356,7 +356,7 @@ public class Button extends AbstractFocusable implements
 
     /**
      * Fires a click event to all listeners without any event details.
-     * 
+     *
      * In subclasses, override {@link #fireClick(MouseEventDetails)} instead of
      * this method.
      */
@@ -366,7 +366,7 @@ public class Button extends AbstractFocusable implements
 
     /**
      * Fires a click event to all listeners.
-     * 
+     *
      * @param details
      *            MouseEventDetails from which keyboard modifiers and other
      *            information about the mouse click can be obtained. If the
@@ -387,7 +387,7 @@ public class Button extends AbstractFocusable implements
      * Makes it possible to invoke a click on this button by pressing the given
      * {@link KeyCode} and (optional) {@link ModifierKey}s.<br/>
      * The shortcut is global (bound to the containing Window).
-     * 
+     *
      * @param keyCode
      *            the keycode for invoking the shortcut
      * @param modifiers
@@ -418,7 +418,7 @@ public class Button extends AbstractFocusable implements
     /**
      * A {@link ShortcutListener} specifically made to define a keyboard
      * shortcut that invokes a click on the given button.
-     * 
+     *
      */
     public static class ClickShortcut extends ShortcutListener {
         protected Button button;
@@ -426,7 +426,7 @@ public class Button extends AbstractFocusable implements
         /**
          * Creates a keyboard shortcut for clicking the given button using the
          * shorthand notation defined in {@link ShortcutAction}.
-         * 
+         *
          * @param button
          *            to be clicked when the shortcut is invoked
          * @param shorthandCaption
@@ -440,7 +440,7 @@ public class Button extends AbstractFocusable implements
         /**
          * Creates a keyboard shortcut for clicking the given button using the
          * given {@link KeyCode} and {@link ModifierKey}s.
-         * 
+         *
          * @param button
          *            to be clicked when the shortcut is invoked
          * @param keyCode
@@ -456,7 +456,7 @@ public class Button extends AbstractFocusable implements
         /**
          * Creates a keyboard shortcut for clicking the given button using the
          * given {@link KeyCode}.
-         * 
+         *
          * @param button
          *            to be clicked when the shortcut is invoked
          * @param keyCode
@@ -475,7 +475,7 @@ public class Button extends AbstractFocusable implements
     /**
      * Determines if a button is automatically disabled when clicked. See
      * {@link #setDisableOnClick(boolean)} for details.
-     * 
+     *
      * @return true if the button is disabled when clicked, false otherwise
      */
     public boolean isDisableOnClick() {
@@ -491,7 +491,7 @@ public class Button extends AbstractFocusable implements
      * calling {@link #click()} method programmatically. Also, if developer
      * wants to re-enable the button, it needs to be done programmatically.
      * </p>
-     * 
+     *
      * @param disableOnClick
      *            true to disable button when it is clicked, false otherwise
      */
@@ -511,10 +511,10 @@ public class Button extends AbstractFocusable implements
 
     /**
      * Sets the component's icon and alt text.
-     * 
+     *
      * An alt text is shown when an image could not be loaded, and read by
      * assisitve devices.
-     * 
+     *
      * @param icon
      *            the icon to be shown with the component's caption.
      * @param iconAltText
@@ -527,7 +527,7 @@ public class Button extends AbstractFocusable implements
 
     /**
      * Returns the icon's alt text.
-     * 
+     *
      * @return String with the alt text
      */
     public String getIconAlternateText() {
@@ -541,11 +541,11 @@ public class Button extends AbstractFocusable implements
     /**
      * Set whether the caption text is rendered as HTML or not. You might need
      * to re-theme button to allow higher content than the original text style.
-     * 
+     *
      * If set to true, the captions are passed to the browser as html and the
      * developer is responsible for ensuring no harmful html is used. If set to
      * false, the content is passed to the browser as plain text.
-     * 
+     *
      * @param htmlContentAllowed
      *            <code>true</code> if caption is rendered as HTML,
      *            <code>false</code> otherwise
@@ -556,7 +556,7 @@ public class Button extends AbstractFocusable implements
 
     /**
      * Return HTML rendering setting
-     * 
+     *
      * @return <code>true</code> if the caption text is to be rendered as HTML,
      *         <code>false</code> otherwise
      */
@@ -566,7 +566,7 @@ public class Button extends AbstractFocusable implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
      * com.vaadin.ui.declarative.DesignContext)
      */
@@ -576,8 +576,8 @@ public class Button extends AbstractFocusable implements
         Attributes attr = design.attributes();
         String content;
         // plain-text (default is html)
-        Boolean plain = DesignAttributeHandler.readAttribute(
-                DESIGN_ATTR_PLAIN_TEXT, attr, Boolean.class);
+        Boolean plain = DesignAttributeHandler
+                .readAttribute(DESIGN_ATTR_PLAIN_TEXT, attr, Boolean.class);
         if (plain == null || !plain) {
             setHtmlContentAllowed(true);
             content = design.html();
@@ -588,13 +588,13 @@ public class Button extends AbstractFocusable implements
         }
         setCaption(content);
         if (attr.hasKey("icon-alt")) {
-            setIconAlternateText(DesignAttributeHandler.readAttribute(
-                    "icon-alt", attr, String.class));
+            setIconAlternateText(DesignAttributeHandler
+                    .readAttribute("icon-alt", attr, String.class));
         }
         // click-shortcut
         removeClickShortcut();
-        ShortcutAction action = DesignAttributeHandler.readAttribute(
-                "click-shortcut", attr, ShortcutAction.class);
+        ShortcutAction action = DesignAttributeHandler
+                .readAttribute("click-shortcut", attr, ShortcutAction.class);
         if (action != null) {
             setClickShortcut(action.getKeyCode(), action.getModifiers());
         }
@@ -602,7 +602,7 @@ public class Button extends AbstractFocusable implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#getCustomAttributes()
      */
     @Override
@@ -620,7 +620,7 @@ public class Button extends AbstractFocusable implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Element
      * , com.vaadin.ui.declarative.DesignContext)
      */

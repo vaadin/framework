@@ -54,7 +54,8 @@ public class FormTest extends AbstractFieldTest<Form> {
     private Command<Form, Class<? extends Layout>> formLayoutCommand = new Command<Form, Class<? extends Layout>>() {
 
         @Override
-        public void execute(Form c, Class<? extends Layout> value, Object data) {
+        public void execute(Form c, Class<? extends Layout> value,
+                Object data) {
             if (value == null) {
                 c.setLayout(null);
             } else {
@@ -77,7 +78,8 @@ public class FormTest extends AbstractFieldTest<Form> {
     private Command<Form, Class<? extends Layout>> formFooterCommand = new Command<Form, Class<? extends Layout>>() {
 
         @Override
-        public void execute(Form c, Class<? extends Layout> value, Object data) {
+        public void execute(Form c, Class<? extends Layout> value,
+                Object data) {
             if (value == null) {
                 c.setFooter(null);
             } else {
@@ -219,15 +221,15 @@ public class FormTest extends AbstractFieldTest<Form> {
 
         LinkedHashMap<String, Alignment> alignmentOptions = new LinkedHashMap<String, Alignment>();
         for (AlignmentInfo horizontal : new AlignmentInfo[] {
-                AlignmentInfo.LEFT, AlignmentInfo.CENTER, AlignmentInfo.RIGHT }) {
+                AlignmentInfo.LEFT, AlignmentInfo.CENTER,
+                AlignmentInfo.RIGHT }) {
             for (AlignmentInfo vertical : new AlignmentInfo[] {
                     AlignmentInfo.TOP, AlignmentInfo.MIDDLE,
                     AlignmentInfo.BOTTOM }) {
-                Alignment a = new Alignment(horizontal.getBitMask()
-                        + vertical.getBitMask());
-                alignmentOptions.put(
-                        a.getHorizontalAlignment() + " "
-                                + a.getVerticalAlignment(), a);
+                Alignment a = new Alignment(
+                        horizontal.getBitMask() + vertical.getBitMask());
+                alignmentOptions.put(a.getHorizontalAlignment() + " "
+                        + a.getVerticalAlignment(), a);
 
             }
 
@@ -238,8 +240,8 @@ public class FormTest extends AbstractFieldTest<Form> {
             public void execute(Form c, Alignment value, Object data) {
                 Layout l = c.getFooter();
                 if (l instanceof AlignmentHandler) {
-                    ((AlignmentHandler) l).setComponentAlignment(l
-                            .getComponentIterator().next(), value);
+                    ((AlignmentHandler) l).setComponentAlignment(
+                            l.getComponentIterator().next(), value);
                 }
 
             }

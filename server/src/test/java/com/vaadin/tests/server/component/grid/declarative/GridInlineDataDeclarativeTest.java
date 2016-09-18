@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,8 +26,7 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
     @Test
     public void testSimpleInlineData() {
         String design = "<vaadin-grid><table>"//
-                + "<colgroup>"
-                + "   <col sortable property-id='Col1' />"
+                + "<colgroup>" + "   <col sortable property-id='Col1' />"
                 + "</colgroup>" //
                 + "<thead />" // No headers read or written
                 + "<tbody>" //
@@ -53,8 +52,7 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
     @Test
     public void testMultipleColumnsInlineData() {
         String design = "<vaadin-grid><table>"//
-                + "<colgroup>"
-                + "   <col sortable property-id='Col1' />"
+                + "<colgroup>" + "   <col sortable property-id='Col1' />"
                 + "   <col sortable property-id='Col2' />"
                 + "   <col sortable property-id='Col3' />" //
                 + "</colgroup>" //
@@ -82,8 +80,7 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
     @Test
     public void testMultipleColumnsInlineDataReordered() {
         String design = "<vaadin-grid><table>"//
-                + "<colgroup>"
-                + "   <col sortable property-id='Col2' />"
+                + "<colgroup>" + "   <col sortable property-id='Col2' />"
                 + "   <col sortable property-id='Col3' />"
                 + "   <col sortable property-id='Col1' />" //
                 + "</colgroup>" //
@@ -112,13 +109,10 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
     @Test
     public void testHtmlEntities() {
         String design = "<vaadin-grid><table>"//
-                + "<colgroup>"
-                + "   <col property-id='test' />"
-                + "</colgroup>" //
+                + "<colgroup>" + "   <col property-id='test' />" + "</colgroup>" //
                 + "<thead />" // No headers read or written
                 + "<tbody>" //
-                + "  <tr><td>&amp;Test</tr></td>"
-                + "</tbody>"
+                + "  <tr><td>&amp;Test</tr></td>" + "</tbody>"
                 + "</table></vaadin-grid>";
 
         Grid read = read(design);

@@ -11,7 +11,7 @@ import com.vaadin.ui.Table;
  * Setting table height and setting column header mode as hidden leaves the body
  * height of the table as it would be with the headers visible and leaves an
  * empty area below the body.
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class TableHeightWhenHidingHeaders extends AbstractTestCase {
@@ -39,7 +39,8 @@ public class TableHeightWhenHidingHeaders extends AbstractTestCase {
                 if ((Boolean) event.getProperty().getValue()) {
                     // table body height is now 77px, which together
                     // with header makes 100px
-                    table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
+                    table.setColumnHeaderMode(
+                            Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
                 } else {
                     table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
                     // header disappears, but table body height stays at

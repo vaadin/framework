@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -95,8 +95,8 @@ public class BasicJavaScriptComponent extends AbstractTestUI {
                     HasComponents parent = getParent();
                     int i = 1;
                     while (parent != null) {
-                        if (!parentIds.getString(i).equals(
-                                parent.getConnectorId())) {
+                        if (!parentIds.getString(i)
+                                .equals(parent.getConnectorId())) {
                             log.log("parentIds[" + i + "] doesn't match");
                         }
                         i++;
@@ -134,10 +134,8 @@ public class BasicJavaScriptComponent extends AbstractTestUI {
             getRpcProxy(TestRpc.class).sendRpc("RPC message");
             callFunction("messageToClient", "Callback message");
 
-            getState()
-                    .setMessages(
-                            Arrays.asList("First state message",
-                                    "Second state message"));
+            getState().setMessages(Arrays.asList("First state message",
+                    "Second state message"));
             // Dummy resource used to test URL translation
             Resource resource = new ConnectorResource() {
                 @Override

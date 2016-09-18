@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -181,27 +181,27 @@ public class VRichTextToolbar extends Composite {
      * We use an inner EventHandler class to avoid exposing event methods on the
      * RichTextToolbar itself.
      */
-    private class EventHandler implements ClickHandler, ChangeHandler,
-            KeyUpHandler {
+    private class EventHandler
+            implements ClickHandler, ChangeHandler, KeyUpHandler {
 
         @Override
         @SuppressWarnings("deprecation")
         public void onChange(ChangeEvent event) {
             Object sender = event.getSource();
             if (sender == backColors) {
-                basic.setBackColor(backColors.getValue(backColors
-                        .getSelectedIndex()));
+                basic.setBackColor(
+                        backColors.getValue(backColors.getSelectedIndex()));
                 backColors.setSelectedIndex(0);
             } else if (sender == foreColors) {
-                basic.setForeColor(foreColors.getValue(foreColors
-                        .getSelectedIndex()));
+                basic.setForeColor(
+                        foreColors.getValue(foreColors.getSelectedIndex()));
                 foreColors.setSelectedIndex(0);
             } else if (sender == fonts) {
                 basic.setFontName(fonts.getValue(fonts.getSelectedIndex()));
                 fonts.setSelectedIndex(0);
             } else if (sender == fontSizes) {
-                basic.setFontSize(fontSizesConstants[fontSizes
-                        .getSelectedIndex() - 1]);
+                basic.setFontSize(
+                        fontSizesConstants[fontSizes.getSelectedIndex() - 1]);
                 fontSizes.setSelectedIndex(0);
             }
         }
@@ -239,8 +239,8 @@ public class VRichTextToolbar extends Composite {
                     extended.insertImage(url);
                 }
             } else if (sender == createLink) {
-                final String url = Window
-                        .prompt("Enter a link URL:", "http://");
+                final String url = Window.prompt("Enter a link URL:",
+                        "http://");
                 if (url != null) {
                     extended.createLink(url);
                 }
@@ -320,7 +320,7 @@ public class VRichTextToolbar extends Composite {
 
     /**
      * Creates a new toolbar that drives the given rich text area.
-     * 
+     *
      * @param richText
      *            the rich text area to be controlled
      */
@@ -339,8 +339,8 @@ public class VRichTextToolbar extends Composite {
         setStyleName("gwt-RichTextToolbar");
 
         if (basic != null) {
-            topPanel.add(bold = createToggleButton(images.bold(),
-                    strings.bold()));
+            topPanel.add(
+                    bold = createToggleButton(images.bold(), strings.bold()));
             topPanel.add(italic = createToggleButton(images.italic(),
                     strings.italic()));
             topPanel.add(underline = createToggleButton(images.underline(),

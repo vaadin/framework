@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -50,8 +50,8 @@ import com.vaadin.ui.Upload.StartedEvent;
 import com.vaadin.ui.Upload.StartedListener;
 import com.vaadin.ui.VerticalLayout;
 
-public class TestForUpload extends CustomComponent implements
-        Upload.ProgressListener {
+public class TestForUpload extends CustomComponent
+        implements Upload.ProgressListener {
 
     private static final long serialVersionUID = -3400119871764256575L;
 
@@ -86,8 +86,8 @@ public class TestForUpload extends CustomComponent implements
 
     public TestForUpload() {
         setCompositionRoot(main);
-        main.addComponent(new Label(
-                "This is a simple test for upload application. "
+        main.addComponent(
+                new Label("This is a simple test for upload application. "
                         + "Upload should work with big files and concurrent "
                         + "requests should not be blocked. Button 'b' reads "
                         + "current state into label below it. Memory receiver "
@@ -139,8 +139,8 @@ public class TestForUpload extends CustomComponent implements
                 pi2.setVisible(false);
                 if (event instanceof Upload.FailedEvent) {
                     Exception reason = ((Upload.FailedEvent) event).getReason();
-                    l.setValue("Finished with failure ( " + reason
-                            + "  ), idle");
+                    l.setValue(
+                            "Finished with failure ( " + reason + "  ), idle");
                 } else if (event instanceof Upload.SucceededEvent) {
                     l.setValue("Finished with succes, idle");
                 } else {
@@ -153,16 +153,19 @@ public class TestForUpload extends CustomComponent implements
                     statusLayout.addComponent(new Label(
                             "Upload finished, but output buffer is null"));
                 } else {
-                    statusLayout.addComponent(new Label("<b>Name:</b> "
-                            + event.getFilename(), ContentMode.HTML));
-                    statusLayout.addComponent(new Label("<b>Mimetype:</b> "
-                            + event.getMIMEType(), ContentMode.HTML));
-                    statusLayout.addComponent(new Label("<b>Size:</b> "
-                            + event.getLength() + " bytes.", ContentMode.HTML));
+                    statusLayout.addComponent(
+                            new Label("<b>Name:</b> " + event.getFilename(),
+                                    ContentMode.HTML));
+                    statusLayout.addComponent(
+                            new Label("<b>Mimetype:</b> " + event.getMIMEType(),
+                                    ContentMode.HTML));
+                    statusLayout.addComponent(new Label(
+                            "<b>Size:</b> " + event.getLength() + " bytes.",
+                            ContentMode.HTML));
 
-                    statusLayout.addComponent(new Link("Download "
-                            + buffer.getFileName(), new StreamResource(buffer,
-                            buffer.getFileName())));
+                    statusLayout.addComponent(new Link(
+                            "Download " + buffer.getFileName(),
+                            new StreamResource(buffer, buffer.getFileName())));
 
                     statusLayout.setVisible(true);
                 }
@@ -278,8 +281,8 @@ public class TestForUpload extends CustomComponent implements
             sb.append("/");
             sb.append(up.getUploadSize());
             sb.append(" ");
-            sb.append(Math.round(100 * up.getBytesRead()
-                    / (double) up.getUploadSize()));
+            sb.append(Math.round(
+                    100 * up.getBytesRead() / (double) up.getUploadSize()));
             sb.append("%");
         } else {
             sb.append("Idle");
@@ -288,8 +291,8 @@ public class TestForUpload extends CustomComponent implements
         refreshMemUsage();
     }
 
-    public interface Buffer extends StreamResource.StreamSource,
-            Upload.Receiver {
+    public interface Buffer
+            extends StreamResource.StreamSource, Upload.Receiver {
 
         String getFileName();
     }
@@ -334,7 +337,7 @@ public class TestForUpload extends CustomComponent implements
 
         /**
          * Returns the fileName.
-         * 
+         *
          * @return String
          */
         @Override
@@ -344,7 +347,7 @@ public class TestForUpload extends CustomComponent implements
 
         /**
          * Returns the mimeType.
-         * 
+         *
          * @return String
          */
         public String getMimeType() {
@@ -414,7 +417,7 @@ public class TestForUpload extends CustomComponent implements
 
         /**
          * Returns the fileName.
-         * 
+         *
          * @return String
          */
         @Override
@@ -424,7 +427,7 @@ public class TestForUpload extends CustomComponent implements
 
         /**
          * Returns the mimeType.
-         * 
+         *
          * @return String
          */
         public String getMimeType() {

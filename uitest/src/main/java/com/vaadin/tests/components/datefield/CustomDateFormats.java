@@ -172,8 +172,8 @@ public class CustomDateFormats extends TestBase {
 
         Label expectedLabel = new Label(expDateFormat.format(cal.getTime()));
         if (!pattern.equals(expectedDateFormat)) {
-            expectedLabel.setValue(expectedLabel.getValue()
-                    + " (differs from JDK)");
+            expectedLabel
+                    .setValue(expectedLabel.getValue() + " (differs from JDK)");
         }
         expectedLabel.setWidth(null);
 

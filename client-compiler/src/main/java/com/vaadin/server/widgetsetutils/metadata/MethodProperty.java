@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,8 +36,8 @@ public class MethodProperty extends Property {
     private final String getter;
 
     private MethodProperty(JClassType beanType, JMethod setter, String getter) {
-        super(getTransportFieldName(setter), beanType, setter
-                .getParameterTypes()[0]);
+        super(getTransportFieldName(setter), beanType,
+                setter.getParameterTypes()[0]);
         this.setter = setter;
         this.getter = getter;
     }
@@ -54,8 +54,8 @@ public class MethodProperty extends Property {
         List<JMethod> setters = getSetters(type, getters);
         for (JMethod setter : setters) {
             String getter = findGetter(type, setter);
-            properties.add(new MethodProperty(setter.getEnclosingType(),
-                    setter, getters.contains(getter) ? getter : null));
+            properties.add(new MethodProperty(setter.getEnclosingType(), setter,
+                    getters.contains(getter) ? getter : null));
         }
 
         return properties;
@@ -63,7 +63,7 @@ public class MethodProperty extends Property {
 
     /**
      * Returns a list of all setters found in the beanType or its parent class
-     * 
+     *
      * @param beanType
      *            The type to check
      * @param getters
@@ -74,9 +74,8 @@ public class MethodProperty extends Property {
             Set<String> getters) {
         List<JMethod> setterMethods = new ArrayList<JMethod>();
 
-        while (beanType != null
-                && !beanType.getQualifiedSourceName().equals(
-                        Object.class.getName())) {
+        while (beanType != null && !beanType.getQualifiedSourceName()
+                .equals(Object.class.getName())) {
             for (JMethod method : beanType.getMethods()) {
                 // Process all setters that have corresponding fields
                 if (!method.isPublic() || method.isStatic()) {
@@ -112,18 +111,19 @@ public class MethodProperty extends Property {
     @Override
     public void writeSetterBody(TreeLogger logger, SourceWriter w,
             String beanVariable, String valueVariable) {
-        w.println("%s.@%s::%s(%s)(%s);", beanVariable, getBeanType()
-                .getQualifiedSourceName(), setter.getName(), setter
-                .getParameterTypes()[0].getJNISignature(),
+        w.println("%s.@%s::%s(%s)(%s);", beanVariable,
+                getBeanType().getQualifiedSourceName(), setter.getName(),
+                setter.getParameterTypes()[0].getJNISignature(),
                 unboxValue(valueVariable));
 
     }
 
-    private static String findGetter(JClassType beanType, JMethod setterMethod) {
+    private static String findGetter(JClassType beanType,
+            JMethod setterMethod) {
         JType setterParameterType = setterMethod.getParameterTypes()[0];
         String fieldName = setterMethod.getName().substring(3);
-        if (setterParameterType.getQualifiedSourceName().equals(
-                boolean.class.getName())) {
+        if (setterParameterType.getQualifiedSourceName()
+                .equals(boolean.class.getName())) {
             return "is" + fieldName;
         } else {
             return "get" + fieldName;

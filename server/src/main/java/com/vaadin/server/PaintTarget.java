@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,7 +24,7 @@ import com.vaadin.ui.Component;
 
 /**
  * This interface defines the methods for painting XML to the UIDL stream.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -32,10 +32,10 @@ public interface PaintTarget extends Serializable {
 
     /**
      * Prints single XMLsection.
-     * 
+     *
      * Prints full XML section. The section data is escaped from XML tags and
      * surrounded by XML start and end-tags.
-     * 
+     *
      * @param sectionTagName
      *            the name of the tag.
      * @param sectionData
@@ -49,7 +49,7 @@ public interface PaintTarget extends Serializable {
     /**
      * Result of starting to paint a Component (
      * {@link PaintTarget#startPaintable(Component, String)}).
-     * 
+     *
      * @since 7.0
      */
     public enum PaintStatus {
@@ -85,7 +85,7 @@ public interface PaintTarget extends Serializable {
      * {@link #endPaintable(Component)} regardless of the {@link PaintStatus}
      * returned.
      * </p>
-     * 
+     *
      * @param paintable
      *            the paintable to start.
      * @param tag
@@ -103,11 +103,11 @@ public interface PaintTarget extends Serializable {
 
     /**
      * Prints paintable element end tag.
-     * 
+     *
      * Calls to {@link #startPaintable(Component, String)}should be matched by
      * {@link #endPaintable(Component)}. If the parent tag is closed before
      * every child tag is closed a PaintException is raised.
-     * 
+     *
      * @param paintable
      *            the paintable to close.
      * @throws PaintException
@@ -118,12 +118,12 @@ public interface PaintTarget extends Serializable {
 
     /**
      * Prints element start tag.
-     * 
+     *
      * <pre>
      * Todo:
      * Checking of input values
      * </pre>
-     * 
+     *
      * @param tagName
      *            the name of the start tag.
      * @throws PaintException
@@ -133,10 +133,10 @@ public interface PaintTarget extends Serializable {
 
     /**
      * Prints element end tag.
-     * 
+     *
      * If the parent tag is closed before every child tag is closed an
      * PaintException is raised.
-     * 
+     *
      * @param tagName
      *            the name of the end tag.
      * @throws PaintException
@@ -147,12 +147,12 @@ public interface PaintTarget extends Serializable {
     /**
      * Adds a boolean attribute to component. Atributes must be added before any
      * content is written.
-     * 
+     *
      * @param name
      *            the Attribute name.
      * @param value
      *            the Attribute value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -161,12 +161,12 @@ public interface PaintTarget extends Serializable {
     /**
      * Adds a integer attribute to component. Atributes must be added before any
      * content is written.
-     * 
+     *
      * @param name
      *            the Attribute name.
      * @param value
      *            the Attribute value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -175,12 +175,12 @@ public interface PaintTarget extends Serializable {
     /**
      * Adds a resource attribute to component. Atributes must be added before
      * any content is written.
-     * 
+     *
      * @param name
      *            the Attribute name
      * @param value
      *            the Attribute value
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -206,7 +206,7 @@ public interface PaintTarget extends Serializable {
      * Most commonly a component developer can just ignore this issue, but with
      * strict memory requirements and lots of StreamVariables implementations
      * that reserve a lot of memory this may be a critical issue.
-     * 
+     *
      * @param owner
      *            the ReceiverOwner that can track the progress of streaming to
      *            the given StreamVariable
@@ -214,7 +214,7 @@ public interface PaintTarget extends Serializable {
      *            an identifying name for the StreamVariable
      * @param value
      *            the StreamVariable to paint
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -224,12 +224,12 @@ public interface PaintTarget extends Serializable {
     /**
      * Adds a long attribute to component. Atributes must be added before any
      * content is written.
-     * 
+     *
      * @param name
      *            the Attribute name.
      * @param value
      *            the Attribute value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -238,12 +238,12 @@ public interface PaintTarget extends Serializable {
     /**
      * Adds a float attribute to component. Atributes must be added before any
      * content is written.
-     * 
+     *
      * @param name
      *            the Attribute name.
      * @param value
      *            the Attribute value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -252,12 +252,12 @@ public interface PaintTarget extends Serializable {
     /**
      * Adds a double attribute to component. Atributes must be added before any
      * content is written.
-     * 
+     *
      * @param name
      *            the Attribute name.
      * @param value
      *            the Attribute value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -266,12 +266,12 @@ public interface PaintTarget extends Serializable {
     /**
      * Adds a string attribute to component. Atributes must be added before any
      * content is written.
-     * 
+     *
      * @param name
      *            the Boolean attribute name.
      * @param value
      *            the Boolean attribute value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -279,7 +279,7 @@ public interface PaintTarget extends Serializable {
 
     /**
      * TODO
-     * 
+     *
      * @param name
      * @param value
      * @throws PaintException
@@ -291,7 +291,7 @@ public interface PaintTarget extends Serializable {
      * Adds a Component type attribute. On client side the value will be a
      * terminal specific reference to corresponding component on client side
      * implementation.
-     * 
+     *
      * @param name
      *            the name of the attribute
      * @param value
@@ -303,14 +303,14 @@ public interface PaintTarget extends Serializable {
 
     /**
      * Adds a string type variable.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
      * @param value
      *            the Variable initial value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -319,14 +319,14 @@ public interface PaintTarget extends Serializable {
 
     /**
      * Adds a int type variable.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
      * @param value
      *            the Variable initial value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -335,14 +335,14 @@ public interface PaintTarget extends Serializable {
 
     /**
      * Adds a long type variable.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
      * @param value
      *            the Variable initial value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -351,14 +351,14 @@ public interface PaintTarget extends Serializable {
 
     /**
      * Adds a float type variable.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
      * @param value
      *            the Variable initial value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -367,14 +367,14 @@ public interface PaintTarget extends Serializable {
 
     /**
      * Adds a double type variable.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
      * @param value
      *            the Variable initial value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -383,14 +383,14 @@ public interface PaintTarget extends Serializable {
 
     /**
      * Adds a boolean type variable.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
      * @param value
      *            the Variable initial value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -399,14 +399,14 @@ public interface PaintTarget extends Serializable {
 
     /**
      * Adds a string array type variable.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
      * @param value
      *            the Variable initial value.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -419,14 +419,14 @@ public interface PaintTarget extends Serializable {
      * implementation. When updated from client side, terminal will map the
      * client side component reference back to a corresponding server side
      * reference.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes
      * @param name
      *            the name of the variable
      * @param value
      *            the initial value of the variable
-     * 
+     *
      * @throws PaintException
      *             if the paint oparation fails
      */
@@ -435,12 +435,12 @@ public interface PaintTarget extends Serializable {
 
     /**
      * Adds a upload stream type variable.
-     * 
+     *
      * @param owner
      *            the Listener for variable changes.
      * @param name
      *            the Variable name.
-     * 
+     *
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -453,7 +453,7 @@ public interface PaintTarget extends Serializable {
      * Prints full XML section. The section data must be XML and it is
      * surrounded by XML start and end-tags.
      * </p>
-     * 
+     *
      * @param sectionTagName
      *            the tag name.
      * @param sectionData
@@ -469,7 +469,7 @@ public interface PaintTarget extends Serializable {
     /**
      * Adds UIDL directly. The UIDL must be valid in accordance with the
      * UIDL.dtd
-     * 
+     *
      * @param uidl
      *            the UIDL to be added.
      * @throws PaintException
@@ -479,7 +479,7 @@ public interface PaintTarget extends Serializable {
 
     /**
      * Adds text node. All the contents of the text are XML-escaped.
-     * 
+     *
      * @param text
      *            the Text to add
      * @throws PaintException
@@ -489,7 +489,7 @@ public interface PaintTarget extends Serializable {
 
     /**
      * Adds CDATA node to target UIDL-tree.
-     * 
+     *
      * @param text
      *            the Character data to add
      * @throws PaintException

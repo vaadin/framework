@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -151,8 +151,8 @@ public class VAccordion extends VTabsheetBase {
 
             addStyleDependentName("loading");
 
-            connector.getRpcProxy(TabsheetServerRpc.class).setSelected(
-                    tabKeys.get(index).toString());
+            connector.getRpcProxy(TabsheetServerRpc.class)
+                    .setSelected(tabKeys.get(index).toString());
         }
     }
 
@@ -210,7 +210,7 @@ public class VAccordion extends VTabsheetBase {
 
         /**
          * Returns caption width including padding
-         * 
+         *
          * @return
          */
         public int getCaptionWidth() {
@@ -333,10 +333,10 @@ public class VAccordion extends VTabsheetBase {
 
         /**
          * Updates the content of the open tab of the accordion.
-         * 
+         *
          * This method is mostly for internal use and may change in future
          * versions.
-         * 
+         *
          * @since 7.2
          * @param newWidget
          *            new content
@@ -361,13 +361,11 @@ public class VAccordion extends VTabsheetBase {
         public void updateCaption(TabState tabState) {
             // TODO need to call this because the caption does not have an owner
             caption.setCaptionAsHtml(isTabCaptionsAsHtml());
-            caption.updateCaptionWithoutOwner(
-                    tabState.caption,
-                    !tabState.enabled,
-                    hasAttribute(tabState.description),
+            caption.updateCaptionWithoutOwner(tabState.caption,
+                    !tabState.enabled, hasAttribute(tabState.description),
                     hasAttribute(tabState.componentError),
-                    connector.getResourceUrl(ComponentConstants.ICON_RESOURCE
-                            + tabState.key));
+                    connector.getResourceUrl(
+                            ComponentConstants.ICON_RESOURCE + tabState.key));
         }
 
         private boolean hasAttribute(String string) {
@@ -376,7 +374,7 @@ public class VAccordion extends VTabsheetBase {
 
         /**
          * Updates a tabs stylename from the child UIDL
-         * 
+         *
          * @param uidl
          *            The child uidl of the tab
          */

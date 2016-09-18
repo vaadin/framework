@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,7 +33,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      * Implementor/user of {@link VAbstractDropHandler} must pass the UIDL
      * painted by {@link AcceptCriterion} to this method. Practically the
      * details about {@link AcceptCriterion} are saved.
-     * 
+     *
      * @param uidl
      */
     public void updateAcceptRules(UIDL uidl) {
@@ -85,7 +85,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      * {@link Transferable} and others don't, one should use similar validation
      * logic in dragOver method and replace this method with empty
      * implementation.
-     * 
+     *
      */
     @Override
     public void dragEnter(final VDragEvent drag) {
@@ -103,7 +103,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      * <p>
      * Implementations can set some hints for users here to highlight that the
      * drag is on a valid drop location.
-     * 
+     *
      * @param drag
      */
     abstract protected void dragAccepted(VDragEvent drag);
@@ -122,7 +122,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
     boolean validated = false;
 
     /**
-     * The default implemmentation visits server if {@link AcceptCriterion} 
+     * The default implemmentation visits server if {@link AcceptCriterion}
      * can't be verified on client or if {@link AcceptCriterion} are met on
      * client.
      */

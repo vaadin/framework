@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -30,8 +30,8 @@ public class MissingHierarchyDetectionTest extends SingleBrowserTest {
 
         Assert.assertTrue(isElementPresent(By.id("label")));
 
-        ButtonElement toggleProperly = $(ButtonElement.class).caption(
-                "Toggle properly").first();
+        ButtonElement toggleProperly = $(ButtonElement.class)
+                .caption("Toggle properly").first();
 
         toggleProperly.click();
         assertNoSystemNotifications();
@@ -41,8 +41,8 @@ public class MissingHierarchyDetectionTest extends SingleBrowserTest {
         assertNoSystemNotifications();
         Assert.assertTrue(isElementPresent(LabelElement.class));
 
-        ButtonElement toggleInproperly = $(ButtonElement.class).caption(
-                "Toggle improperly").first();
+        ButtonElement toggleInproperly = $(ButtonElement.class)
+                .caption("Toggle improperly").first();
         toggleInproperly.click();
 
         assertSystemNotification();

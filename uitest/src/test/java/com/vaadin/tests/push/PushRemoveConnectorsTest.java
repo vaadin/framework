@@ -18,7 +18,7 @@ public class PushRemoveConnectorsTest extends SingleBrowserTest {
         while (i++ < 10) {
             Thread.sleep(5000);
             int now = getMemoryUsage();
-            System.out.println("Memory usage: "+now);
+            System.out.println("Memory usage: " + now);
             if (last == now)
                 break;
 
@@ -30,7 +30,7 @@ public class PushRemoveConnectorsTest extends SingleBrowserTest {
     }
 
     private int getMemoryUsage() {
-        return Integer.parseInt(getLogRow(0).replaceFirst(
-                ".*Serialized session size: ", ""));
+        return Integer.parseInt(
+                getLogRow(0).replaceFirst(".*Serialized session size: ", ""));
     }
 }

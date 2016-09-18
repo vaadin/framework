@@ -24,7 +24,7 @@ import com.vaadin.ui.UI;
 
 /**
  * Initializer shell for GridClientBasicFeatures test application
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -33,7 +33,8 @@ public class GridBasicClientFeatures extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        setContent(new TestWidgetComponent(GridBasicClientFeaturesWidget.class));
+        setContent(
+                new TestWidgetComponent(GridBasicClientFeaturesWidget.class));
     }
 
 }

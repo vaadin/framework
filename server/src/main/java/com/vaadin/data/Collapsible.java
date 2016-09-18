@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,7 +35,7 @@ import com.vaadin.data.Container.Ordered;
  * {@linkContainer.Indexed}. From the accessors point of view, items in
  * collapsed subtrees don't exist.
  * <p>
- * 
+ *
  */
 public interface Collapsible extends Hierarchical, Ordered {
 
@@ -44,11 +44,11 @@ public interface Collapsible extends Hierarchical, Ordered {
      * Collapsing the {@link Item} indicated by <code>itemId</code> hides all
      * children, and their respective children, from the {@link Container}.
      * </p>
-     * 
+     *
      * <p>
      * If called on a leaf {@link Item}, this method does nothing.
      * </p>
-     * 
+     *
      * @param itemId
      *            the identifier of the collapsed {@link Item}
      * @param collapsed
@@ -63,12 +63,12 @@ public interface Collapsible extends Hierarchical, Ordered {
      * Checks whether the {@link Item}, identified by <code>itemId</code> is
      * collapsed or not.
      * </p>
-     * 
+     *
      * <p>
      * If an {@link Item} is "collapsed" its children are not included in
      * methods used to list Items in this container.
      * </p>
-     * 
+     *
      * @param itemId
      *            The {@link Item}'s identifier that is to be checked.
      * @return <code>true</code> iff the {@link Item} identified by

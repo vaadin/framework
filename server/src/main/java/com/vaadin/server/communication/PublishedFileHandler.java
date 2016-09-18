@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -42,7 +42,7 @@ import com.vaadin.shared.ApplicationConstants;
  * names that have explicitly been registered. Resources can currently only be
  * registered by including a {@link JavaScript} or {@link StyleSheet} annotation
  * on a Connector class.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -62,16 +62,16 @@ public class PublishedFileHandler implements RequestHandler {
 
         String pathInfo = request.getPathInfo();
         // + 2 to also remove beginning and ending slashes
-        String fileName = pathInfo
-                .substring(ApplicationConstants.PUBLISHED_FILE_PATH.length() + 2);
+        String fileName = pathInfo.substring(
+                ApplicationConstants.PUBLISHED_FILE_PATH.length() + 2);
 
         final String mimetype = response.getService().getMimeType(fileName);
 
         // Security check: avoid accidentally serving from the UI of the
         // classpath instead of relative to the context class
         if (fileName.startsWith("/")) {
-            getLogger().warning(
-                    "Published file request starting with / rejected: "
+            getLogger()
+                    .warning("Published file request starting with / rejected: "
                             + fileName);
             response.sendError(HttpServletResponse.SC_NOT_FOUND, fileName);
             return true;
@@ -100,12 +100,10 @@ public class PublishedFileHandler implements RequestHandler {
         // Resolve file relative to the location of the context class
         InputStream in = context.getResourceAsStream(fileName);
         if (in == null) {
-            getLogger().warning(
-                    fileName + " published by " + context.getName()
-                            + " not found. Verify that the file "
-                            + context.getPackage().getName().replace('.', '/')
-                            + '/' + fileName
-                            + " is available on the classpath.");
+            getLogger().warning(fileName + " published by " + context.getName()
+                    + " not found. Verify that the file "
+                    + context.getPackage().getName().replace('.', '/') + '/'
+                    + fileName + " is available on the classpath.");
             response.sendError(HttpServletResponse.SC_NOT_FOUND, fileName);
             return true;
         }

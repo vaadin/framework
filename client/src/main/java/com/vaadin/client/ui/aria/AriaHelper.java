@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,7 +32,7 @@ public class AriaHelper {
     /**
      * Binds a caption (label in HTML speak) to the form element as required by
      * WAI-ARIA specification.
-     * 
+     *
      * @param widget
      *            Widget, that should be bound to the caption
      * @param captionElements
@@ -47,8 +47,8 @@ public class AriaHelper {
                 ((HandlesAriaCaption) widget).bindAriaCaption(null);
             } else {
                 ensureHasId(captionElement);
-                ((HandlesAriaCaption) widget).bindAriaCaption(DOM
-                        .asOld(captionElement));
+                ((HandlesAriaCaption) widget)
+                        .bindAriaCaption(DOM.asOld(captionElement));
             }
         } else if (captionElement != null) {
             // Handle the default case
@@ -66,7 +66,7 @@ public class AriaHelper {
     /**
      * Removes a binding to a caption added with bindCaption() from the provided
      * Widget.
-     * 
+     *
      * @param widget
      *            Widget, that was bound to a caption before
      */
@@ -78,7 +78,7 @@ public class AriaHelper {
     /**
      * Handles the required actions depending of the input Widget being required
      * or not.
-     * 
+     *
      * @param widget
      *            Widget, typically an input Widget like TextField
      * @param required
@@ -97,7 +97,7 @@ public class AriaHelper {
     /**
      * Handles the required actions depending of the input element being
      * required or not.
-     * 
+     *
      * @param element
      *            Element, typically from an input Widget like TextField
      * @param required
@@ -114,7 +114,7 @@ public class AriaHelper {
     /**
      * Handles the required actions depending of the input Widget contains
      * unaccepted input.
-     * 
+     *
      * @param widget
      *            Widget, typically an input Widget like TextField
      * @param invalid
@@ -133,7 +133,7 @@ public class AriaHelper {
     /**
      * Handles the required actions depending of the input element contains
      * unaccepted input.
-     * 
+     *
      * @param element
      *            Element, typically an input Widget like TextField
      * @param invalid
@@ -151,7 +151,7 @@ public class AriaHelper {
     /**
      * Makes sure that the provided element has an id attribute. Adds a new
      * unique id if not.
-     * 
+     *
      * @param element
      *            Element to check
      * @return String with the id of the element
@@ -169,14 +169,15 @@ public class AriaHelper {
 
     /**
      * Allows to move an element out of the visible area of the browser window.
-     * 
+     *
      * This makes it possible to have additional information for an assistive
      * device, that is not in the way for visual users.
-     * 
+     *
      * @param element
      *            Element to move out of sight
-     * @param boolean assistiveOnly true when element should only be visible for
-     *        assistive devices, false to make the element visible for all
+     * @param boolean
+     *            assistiveOnly true when element should only be visible for
+     *            assistive devices, false to make the element visible for all
      */
     public static void setVisibleForAssistiveDevicesOnly(Element element,
             boolean assistiveOnly) {

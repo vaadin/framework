@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,7 +32,7 @@ public class MSSQLGenerator extends DefaultSQLGenerator {
      * Construct a MSSQLGenerator with the specified identifiers for start and
      * end of quoted strings. The identifiers may be different depending on the
      * database engine and it's settings.
-     * 
+     *
      * @param quoteStart
      *            the identifier (character) denoting the start of a quoted
      *            string
@@ -45,7 +45,7 @@ public class MSSQLGenerator extends DefaultSQLGenerator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.sqlcontainer.query.generator.DefaultSQLGenerator#
      * generateSelectQuery(java.lang.String, java.util.List,
      * com.vaadin.addon.sqlcontainer.query.FilteringMode, java.util.List, int,
@@ -71,7 +71,8 @@ public class MSSQLGenerator extends DefaultSQLGenerator {
                     "SELECT COUNT(*) AS %s FROM (SELECT * FROM %s",
                     QueryBuilder.quote("rowcount"), tableName));
             if (filters != null && !filters.isEmpty()) {
-                query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
+                query.append(
+                        QueryBuilder.getWhereStringForFilters(filters, sh));
             }
             query.append(") AS t");
             sh.setQueryString(query.toString());
@@ -83,7 +84,8 @@ public class MSSQLGenerator extends DefaultSQLGenerator {
             query.append("SELECT ").append(toSelect).append(" FROM ")
                     .append(tableName);
             if (filters != null) {
-                query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
+                query.append(
+                        QueryBuilder.getWhereStringForFilters(filters, sh));
             }
             if (orderBys != null) {
                 for (OrderBy o : orderBys) {

@@ -49,8 +49,8 @@ public class TestAbstractApplicationServletStaticFilesLocation {
 
         // http://dummy.host/contextpath/servlet/extra/stuff
         // should return ./../.. (relative url resolving to /contextpath)
-        location = testLocation("http://dummy.host", "/contextpath",
-                "/servlet", "/extra/stuff");
+        location = testLocation("http://dummy.host", "/contextpath", "/servlet",
+                "/extra/stuff");
         Assert.assertEquals("./../..", location);
 
         // http://dummy.host/context/path/servlet/extra/stuff
@@ -76,8 +76,8 @@ public class TestAbstractApplicationServletStaticFilesLocation {
         // Set request into replay mode
         replay(request);
 
-        String location = servlet.getService().getStaticFileLocation(
-                servlet.createVaadinRequest(request));
+        String location = servlet.getService()
+                .getStaticFileLocation(servlet.createVaadinRequest(request));
         return location;
     }
 
@@ -89,8 +89,8 @@ public class TestAbstractApplicationServletStaticFilesLocation {
         // Set request into replay mode
         replay(request);
 
-        String location = servlet.getService().getStaticFileLocation(
-                servlet.createVaadinRequest(request));
+        String location = servlet.getService()
+                .getStaticFileLocation(servlet.createVaadinRequest(request));
         return location;
     }
 
@@ -121,7 +121,7 @@ public class TestAbstractApplicationServletStaticFilesLocation {
 
     /**
      * Creates a HttpServletRequest mock using the supplied parameters.
-     * 
+     *
      * @param base
      *            The base url, e.g. http://localhost:8080
      * @param contextPath
@@ -139,8 +139,9 @@ public class TestAbstractApplicationServletStaticFilesLocation {
             String servletPath, String pathInfo) throws MalformedURLException {
         URL url = new URL(base + contextPath + pathInfo);
         HttpServletRequest request = createMock(HttpServletRequest.class);
-        expect(request.isSecure()).andReturn(
-                url.getProtocol().equalsIgnoreCase("https")).anyTimes();
+        expect(request.isSecure())
+                .andReturn(url.getProtocol().equalsIgnoreCase("https"))
+                .anyTimes();
         expect(request.getServerName()).andReturn(url.getHost()).anyTimes();
         expect(request.getServerPort()).andReturn(url.getPort()).anyTimes();
         expect(request.getRequestURI()).andReturn(url.getPath()).anyTimes();

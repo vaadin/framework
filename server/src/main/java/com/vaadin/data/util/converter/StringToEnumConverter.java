@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,7 +32,7 @@ import java.util.Locale;
  * </ul>
  * Will not necessarily work correctly for other cases.
  * </p>
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.4
  */
@@ -52,7 +52,7 @@ public class StringToEnumConverter implements Converter<String, Enum> {
      * Converts the given string to the given enum type using the given locale
      * <p>
      * Compatible with {@link #enumToString(Enum, Locale)}
-     * 
+     *
      * @param value
      *            The string value to convert
      * @param enumType
@@ -71,8 +71,8 @@ public class StringToEnumConverter implements Converter<String, Enum> {
         }
 
         if (!enumType.isEnum()) {
-            throw new ConversionException(enumType.getName()
-                    + " is not an enum type");
+            throw new ConversionException(
+                    enumType.getName() + " is not an enum type");
         }
 
         // First test for the human-readable value since that's the more likely
@@ -107,7 +107,7 @@ public class StringToEnumConverter implements Converter<String, Enum> {
      * Converts the given enum to a human readable string using the given locale
      * <p>
      * Compatible with {@link #stringToEnum(String, Class, Locale)}
-     * 
+     *
      * @param value
      *            The enum value to convert
      * @param locale
@@ -128,8 +128,8 @@ public class StringToEnumConverter implements Converter<String, Enum> {
             // FOO_BAR -> Foo bar
             // _FOO -> _foo
             String result = enumString.substring(0, 1).toUpperCase(locale);
-            result += enumString.substring(1).toLowerCase(locale)
-                    .replace('_', ' ');
+            result += enumString.substring(1).toLowerCase(locale).replace('_',
+                    ' ');
             return result;
         } else {
             return enumString;

@@ -13,15 +13,15 @@ public class IsNullFilterTest extends AbstractFilterTestBase<IsNull> {
     @Test
     public void testIsNull() {
         Item item1 = new PropertysetItem();
-        item1.addItemProperty("a", new ObjectProperty<String>(null,
-                String.class));
+        item1.addItemProperty("a",
+                new ObjectProperty<String>(null, String.class));
         item1.addItemProperty("b",
                 new ObjectProperty<String>("b", String.class));
         Item item2 = new PropertysetItem();
         item2.addItemProperty("a",
                 new ObjectProperty<String>("a", String.class));
-        item2.addItemProperty("b", new ObjectProperty<String>(null,
-                String.class));
+        item2.addItemProperty("b",
+                new ObjectProperty<String>(null, String.class));
 
         Filter filter1 = new IsNull("a");
         Filter filter2 = new IsNull("b");

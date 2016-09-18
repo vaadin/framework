@@ -10,7 +10,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Test to see if the width of the tooltip element is updated if a narrower
  * tooltip is opened to replace a tooltip with wider content.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class TooltipWidthUpdating extends AbstractTestUI {
@@ -30,7 +30,8 @@ public class TooltipWidthUpdating extends AbstractTestUI {
         getTooltipConfiguration().setMaxWidth(MAX_WIDTH);
         getTooltipConfiguration().setCloseTimeout(200);
 
-        NativeButton componentWithLongTooltip = new NativeButton("Long tooltip");
+        NativeButton componentWithLongTooltip = new NativeButton(
+                "Long tooltip");
         componentWithLongTooltip.setId("longTooltip");
         componentWithLongTooltip.setDescription(LONG_TOOLTIP_TEXT);
 

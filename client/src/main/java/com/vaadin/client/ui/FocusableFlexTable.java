@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -49,7 +49,7 @@ public class FocusableFlexTable extends FlexTable implements HasFocusHandlers,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.HasFocusHandlers#addFocusHandler(com.
      * google.gwt.event.dom.client.FocusHandler)
@@ -61,7 +61,7 @@ public class FocusableFlexTable extends FlexTable implements HasFocusHandlers,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.HasBlurHandlers#addBlurHandler(com.google
      * .gwt.event.dom.client.BlurHandler)
@@ -73,7 +73,7 @@ public class FocusableFlexTable extends FlexTable implements HasFocusHandlers,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.HasKeyDownHandlers#addKeyDownHandler(
      * com.google.gwt.event.dom.client.KeyDownHandler)
@@ -85,7 +85,7 @@ public class FocusableFlexTable extends FlexTable implements HasFocusHandlers,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.HasKeyPressHandlers#addKeyPressHandler
      * (com.google.gwt.event.dom.client.KeyPressHandler)
@@ -97,7 +97,7 @@ public class FocusableFlexTable extends FlexTable implements HasFocusHandlers,
 
     /**
      * Sets the keyboard focus to the panel
-     * 
+     *
      * @param focus
      *            Should the panel have keyboard focus. If true the keyboard
      *            focus will be moved to the
@@ -112,7 +112,7 @@ public class FocusableFlexTable extends FlexTable implements HasFocusHandlers,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.Focusable#focus()
      */
     @Override

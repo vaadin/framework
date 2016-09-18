@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,11 +37,11 @@ import com.vaadin.ui.declarative.DesignContext;
 /**
  * An abstract class that defines default implementation for a color picker
  * component.
- * 
+ *
  * @since 7.0.0
  */
-public abstract class AbstractColorPicker extends AbstractComponent implements
-        CloseListener, ColorSelector {
+public abstract class AbstractColorPicker extends AbstractComponent
+        implements CloseListener, ColorSelector {
     private static final Method COLOR_CHANGE_METHOD;
     static {
         try {
@@ -61,22 +61,22 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
         /**
          * Calculate color from coordinates
-         * 
+         *
          * @param x
          *            the x-coordinate
          * @param y
          *            the y-coordinate
-         * 
+         *
          * @return the color
          */
         public Color calculate(int x, int y);
 
         /**
          * Calculate coordinates from color
-         * 
+         *
          * @param c
          *            the c
-         * 
+         *
          * @return the integer array with the coordinates
          */
         public int[] calculate(Color c);
@@ -139,7 +139,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Instantiates a new color picker.
-     * 
+     *
      * @param popupCaption
      *            the caption of the popup window
      */
@@ -149,7 +149,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Instantiates a new color picker.
-     * 
+     *
      * @param popupCaption
      *            the caption of the popup window
      * @param initialColor
@@ -183,7 +183,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
      * Set true if the component should show a default caption (css-code for the
      * currently selected color, e.g. #ffffff) when no other caption is
      * available.
-     * 
+     *
      * @param enabled
      */
     public void setDefaultCaptionEnabled(boolean enabled) {
@@ -200,7 +200,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Sets the position of the popup window
-     * 
+     *
      * @param x
      *            the x-coordinate
      * @param y
@@ -235,7 +235,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Fired when a color change event occurs
-     * 
+     *
      * @param event
      *            The color change event
      */
@@ -253,7 +253,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * The style for the popup window
-     * 
+     *
      * @param style
      *            The style
      */
@@ -283,7 +283,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Gets the style for the popup window
-     * 
+     *
      * @since 7.5.0
      * @return popup window style
      */
@@ -293,7 +293,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Set the visibility of the RGB Tab
-     * 
+     *
      * @param visible
      *            The visibility
      */
@@ -311,7 +311,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Gets the visibility of the RGB Tab
-     * 
+     *
      * @since 7.5.0
      * @return visibility of the RGB tab
      */
@@ -321,7 +321,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Set the visibility of the HSV Tab
-     * 
+     *
      * @param visible
      *            The visibility
      */
@@ -338,7 +338,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Gets the visibility of the HSV Tab
-     * 
+     *
      * @since 7.5.0
      * @return visibility of the HSV tab
      */
@@ -348,7 +348,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Set the visibility of the Swatches Tab
-     * 
+     *
      * @param visible
      *            The visibility
      */
@@ -365,7 +365,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Gets the visibility of the Swatches Tab
-     * 
+     *
      * @since 7.5.0
      * @return visibility of the swatches tab
      */
@@ -375,7 +375,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Sets the visibility of the Color History
-     * 
+     *
      * @param visible
      *            The visibility
      */
@@ -388,7 +388,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Gets the visibility of the Color History
-     * 
+     *
      * @since 7.5.0
      * @return visibility of color history
      */
@@ -398,7 +398,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Sets the visibility of the CSS color code text field
-     * 
+     *
      * @param visible
      *            The visibility
      */
@@ -411,7 +411,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Gets the visibility of CSS color code text field
-     * 
+     *
      * @since 7.5.0
      * @return visibility of css color code text field
      */
@@ -431,7 +431,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Sets the default styles of the component
-     * 
+     *
      */
     abstract protected void setDefaultStyles();
 
@@ -452,7 +452,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     /**
      * Shows or hides popup-window depending on the given parameter. If there is
      * no such window yet, one is created.
-     * 
+     *
      * @param open
      */
     protected void showPopup(boolean open) {
@@ -513,11 +513,11 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
      * Set whether the caption text is rendered as HTML or not. You might need
      * to re-theme component to allow higher content than the original text
      * style.
-     * 
+     *
      * If set to true, the captions are passed to the browser as html and the
      * developer is responsible for ensuring no harmful html is used. If set to
      * false, the content is passed to the browser as plain text.
-     * 
+     *
      * @param htmlContentAllowed
      *            <code>true</code> if caption is rendered as HTML,
      *            <code>false</code> otherwise
@@ -530,7 +530,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Return HTML rendering setting
-     * 
+     *
      * @return <code>true</code> if the caption text is to be rendered as HTML,
      *         <code>false</code> otherwise
      * @deprecated as of , use {@link #isCaptionAsHtml()} instead
@@ -547,13 +547,14 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
         Attributes attributes = design.attributes();
         if (design.hasAttr("color")) {
             // Ignore the # character
-            String hexColor = DesignAttributeHandler.readAttribute("color",
-                    attributes, String.class).substring(1);
+            String hexColor = DesignAttributeHandler
+                    .readAttribute("color", attributes, String.class)
+                    .substring(1);
             setColor(new Color(Integer.parseInt(hexColor, 16)));
         }
         if (design.hasAttr("popup-style")) {
-            setPopupStyle(PopupStyle.valueOf("POPUP_"
-                    + attributes.get("popup-style").toUpperCase()));
+            setPopupStyle(PopupStyle.valueOf(
+                    "POPUP_" + attributes.get("popup-style").toUpperCase()));
         }
         if (design.hasAttr("position")) {
             String[] position = attributes.get("position").split(",");
@@ -572,8 +573,8 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
         DesignAttributeHandler.writeAttribute("popup-style", attribute,
                 (popupStyle == PopupStyle.POPUP_NORMAL ? "normal" : "simple"),
                 "normal", String.class);
-        DesignAttributeHandler.writeAttribute("position", attribute, positionX
-                + "," + positionY, "0,0", String.class);
+        DesignAttributeHandler.writeAttribute("position", attribute,
+                positionX + "," + positionY, "0,0", String.class);
     }
 
     @Override

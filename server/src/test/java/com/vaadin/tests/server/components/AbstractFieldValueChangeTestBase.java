@@ -12,10 +12,10 @@ import com.vaadin.ui.AbstractField;
 /**
  * Base class for tests for checking that value change listeners for fields are
  * not called exactly once when they should be, and not at other times.
- * 
+ *
  * Does not check all cases (e.g. properties that do not implement
  * {@link ValueChangeNotifier}).
- * 
+ *
  * Subclasses should implement {@link #setValue()} and call
  * <code>super.setValue(AbstractField)</code>. Also, subclasses should typically
  * override {@link #setValue(AbstractField)} to set the field value via
@@ -67,11 +67,11 @@ public abstract class AbstractFieldValueChangeTestBase<T> {
     /**
      * Common unbuffered case: both writeThrough (auto-commit) and readThrough
      * are on. Calling commit() should not cause notifications.
-     * 
+     *
      * Using the readThrough mode allows changes made to the property value to
      * be seen in some cases also when there is no notification of value change
      * from the property.
-     * 
+     *
      * Field value change notifications closely mirror value changes of the data
      * source behind the field.
      */
@@ -86,7 +86,7 @@ public abstract class AbstractFieldValueChangeTestBase<T> {
     /**
      * Fully buffered use where the data source is neither read nor modified
      * during editing, and is updated at commit().
-     * 
+     *
      * Field value change notifications reflect the buffered value in the field,
      * not the original data source value changes.
      */

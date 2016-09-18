@@ -18,8 +18,8 @@ public class FieldNamedDescriptionTest {
         // Create an item
         PropertysetItem item = new PropertysetItem();
         item.addItemProperty("name", new ObjectProperty<String>("Zaphod"));
-        item.addItemProperty("description", new ObjectProperty<String>(
-                "This is a description"));
+        item.addItemProperty("description",
+                new ObjectProperty<String>("This is a description"));
 
         // Define a form as a class that extends some layout
         class MyForm extends FormLayout {

@@ -14,8 +14,8 @@ import java.util.List;
 
 public class GridRowHeightChange extends AbstractTestUI {
 
-    private final List<String> themes = Arrays
-            .asList("valo", "reindeer", "runo", "chameleon", "base");
+    private final List<String> themes = Arrays.asList("valo", "reindeer",
+            "runo", "chameleon", "base");
 
     @Override
     protected void setup(VaadinRequest request) {

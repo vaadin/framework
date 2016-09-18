@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -45,7 +45,7 @@ import com.vaadin.client.WidgetUtil;
 
 /**
  * Provides functionality for picking selectors for Vaadin TestBench.
- * 
+ *
  * @since 7.1.x
  * @author Vaadin Ltd
  */
@@ -54,8 +54,8 @@ public class TestBenchSection implements Section {
     /**
      * Selector widget showing a selector in a program-usable form.
      */
-    private static class SelectorWidget extends HTML implements
-            MouseOverHandler, MouseOutHandler {
+    private static class SelectorWidget extends HTML
+            implements MouseOverHandler, MouseOutHandler {
         private final SelectorPath path;
 
         public SelectorWidget(final SelectorPath path) {
@@ -197,9 +197,9 @@ public class TestBenchSection implements Section {
 
     private void pickSelector(ServerConnector connector, Element element) {
 
-        SelectorPath p = new SelectorPath(connector, Util
-                .findPaintable(connector.getConnection(), element).getWidget()
-                .getElement());
+        SelectorPath p = new SelectorPath(connector,
+                Util.findPaintable(connector.getConnection(), element)
+                        .getWidget().getElement());
         SelectorWidget w = new SelectorWidget(p);
 
         content.add(w);
@@ -210,17 +210,17 @@ public class TestBenchSection implements Section {
         @Override
         public void onPreviewNativeEvent(NativePreviewEvent event) {
 
-            if (event.getTypeInt() == Event.ONKEYDOWN
-                    && event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
+            if (event.getTypeInt() == Event.ONKEYDOWN && event.getNativeEvent()
+                    .getKeyCode() == KeyCodes.KEY_ESCAPE) {
                 stopFind();
                 Highlight.hideAll();
                 return;
             }
             if (event.getTypeInt() == Event.ONMOUSEMOVE
                     || event.getTypeInt() == Event.ONCLICK) {
-                Element eventTarget = WidgetUtil.getElementFromPoint(event
-                        .getNativeEvent().getClientX(), event.getNativeEvent()
-                        .getClientY());
+                Element eventTarget = WidgetUtil.getElementFromPoint(
+                        event.getNativeEvent().getClientX(),
+                        event.getNativeEvent().getClientY());
                 if (VDebugWindow.get().getElement().isOrHasChild(eventTarget)) {
                     if (isFindMode() && event.getTypeInt() == Event.ONCLICK) {
                         stopFind();
@@ -232,9 +232,9 @@ public class TestBenchSection implements Section {
                 // make sure that not finding the highlight element only
                 Highlight.hideAll();
 
-                eventTarget = WidgetUtil.getElementFromPoint(event
-                        .getNativeEvent().getClientX(), event.getNativeEvent()
-                        .getClientY());
+                eventTarget = WidgetUtil.getElementFromPoint(
+                        event.getNativeEvent().getClientX(),
+                        event.getNativeEvent().getClientY());
                 ComponentConnector connector = findConnector(eventTarget);
 
                 if (event.getTypeInt() == Event.ONMOUSEMOVE) {
@@ -264,8 +264,8 @@ public class TestBenchSection implements Section {
     private ComponentConnector findConnector(Element element) {
         for (ApplicationConnection a : ApplicationConfiguration
                 .getRunningApplications()) {
-            ComponentConnector connector = Util.getConnectorForElement(a, a
-                    .getUIConnector().getWidget(), element);
+            ComponentConnector connector = Util.getConnectorForElement(a,
+                    a.getUIConnector().getWidget(), element);
             if (connector == null) {
                 connector = Util.getConnectorForElement(a, RootPanel.get(),
                         element);

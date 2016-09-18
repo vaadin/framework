@@ -21,9 +21,10 @@ public class TableSelectPagingOff extends TestBase {
     }
 
     private Collection<MyBean> getBeans() {
-        return Arrays.asList(new MyBean("a", "description a"), new MyBean("b",
-                "description b"), new MyBean("c", "description c"), new MyBean(
-                "d", "description d"));
+        return Arrays.asList(new MyBean("a", "description a"),
+                new MyBean("b", "description b"),
+                new MyBean("c", "description c"),
+                new MyBean("d", "description d"));
     }
 
     public class MyBean {

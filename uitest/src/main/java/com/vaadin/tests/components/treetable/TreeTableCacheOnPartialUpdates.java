@@ -74,8 +74,8 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
             TestBean tb = (TestBean) itemId;
             String identifier = "Item " + itemId + "/" + columnId;
             Button btnCol3 = new NativeButton(identifier);
-            btnCol3.setId("cacheTestButton-" + tb.getCol1() + "-"
-                    + tb.getCol2());
+            btnCol3.setId(
+                    "cacheTestButton-" + tb.getCol1() + "-" + tb.getCol2());
             btnCol3.addClickListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {

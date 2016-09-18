@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,12 +29,12 @@ import com.vaadin.shared.ui.popupview.PopupViewState;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
- * 
+ *
  * A component for displaying a two different views to data. The minimized view
  * is normally used to render the component, and when it is clicked the full
  * view is displayed on a popup. The inner class {@link PopupView.Content} is
  * used to deliver contents to this component.
- * 
+ *
  * @author Vaadin Ltd.
  */
 @SuppressWarnings("serial")
@@ -69,7 +69,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
     /**
      * This is an internal constructor. Use
      * {@link PopupView#PopupView(String, Component)} instead.
-     * 
+     *
      * @since 7.5.0
      */
     @Deprecated
@@ -83,7 +83,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
      * A simple way to create a PopupPanel. Note that the minimal representation
      * may not be dynamically updated, in order to achieve this create your own
      * Content object and use {@link PopupView#PopupView(Content)}.
-     * 
+     *
      * @param small
      *            the minimal textual representation as HTML
      * @param large
@@ -96,7 +96,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
     /**
      * Creates a PopupView through the PopupView.Content interface. This allows
      * the creator to dynamically change the contents of the PopupView.
-     * 
+     *
      * @param content
      *            the PopupView.Content that contains the information for this
      */
@@ -107,9 +107,9 @@ public class PopupView extends AbstractComponent implements HasComponents {
 
     /**
      * Creates a Content from given text representation and popup content.
-     * 
+     *
      * @since 7.5.0
-     * 
+     *
      * @param minimizedValue
      *            text representation when popup is hidden
      * @param popupContent
@@ -133,7 +133,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
 
     /**
      * This method will replace the current content of the panel with a new one.
-     * 
+     *
      * @param newContent
      *            PopupView.Content object containing new information for the
      *            PopupView
@@ -152,7 +152,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
 
     /**
      * Returns the content-package for this PopupView.
-     * 
+     *
      * @return the PopupView.Content for this object or null
      */
     public PopupView.Content getContent() {
@@ -162,7 +162,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
     /**
      * Set the visibility of the popup. Does not hide the minimal
      * representation.
-     * 
+     *
      * @param visible
      */
     public void setPopupVisible(boolean visible) {
@@ -202,7 +202,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
 
     /**
      * Return whether the popup is visible.
-     * 
+     *
      * @return true if the popup is showing
      */
     public boolean isPopupVisible() {
@@ -212,7 +212,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
     /**
      * Check if this popup will be hidden when the user takes the mouse cursor
      * out of the popup area.
-     * 
+     *
      * @return true if the popup is hidden on mouse out, false otherwise
      */
     public boolean isHideOnMouseOut() {
@@ -223,9 +223,9 @@ public class PopupView extends AbstractComponent implements HasComponents {
      * Should the popup automatically hide when the user takes the mouse cursor
      * out of the popup area? If this is false, the user must click outside the
      * popup to close it. The default is true.
-     * 
+     *
      * @param hideOnMouseOut
-     * 
+     *
      */
     public void setHideOnMouseOut(boolean hideOnMouseOut) {
         getState().hideOnMouseOut = hideOnMouseOut;
@@ -238,7 +238,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
 
     /**
      * This class only contains other components when the popup is showing.
-     * 
+     *
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
     @Override
@@ -253,7 +253,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
     /**
      * Gets the number of contained components. Consistent with the iterator
      * returned by {@link #getComponentIterator()}.
-     * 
+     *
      * @return the number of contained components (zero or one)
      */
     public int getComponentCount() {
@@ -288,8 +288,8 @@ public class PopupView extends AbstractComponent implements HasComponents {
         super.writeDesign(design, designContext);
 
         Element popupContent = new Element(Tag.valueOf("popup-content"), "");
-        popupContent.appendChild(designContext.createElement(content
-                .getPopupComponent()));
+        popupContent.appendChild(
+                designContext.createElement(content.getPopupComponent()));
 
         String minimizedHTML = content.getMinimizedValueAsHTML();
         if (minimizedHTML != null && !minimizedHTML.isEmpty()) {
@@ -317,14 +317,14 @@ public class PopupView extends AbstractComponent implements HasComponents {
 
         /**
          * This should return a small view of the full data.
-         * 
+         *
          * @return value in HTML format
          */
         public String getMinimizedValueAsHTML();
 
         /**
          * This should return the full Component representing the data
-         * 
+         *
          * @return a Component for the value
          */
         public Component getPopupComponent();
@@ -333,13 +333,13 @@ public class PopupView extends AbstractComponent implements HasComponents {
     /**
      * Add a listener that is called whenever the visibility of the popup is
      * changed.
-     * 
+     *
      * @param listener
      *            the listener to add
      * @see PopupVisibilityListener
      * @see PopupVisibilityEvent
      * @see #removeListener(PopupVisibilityListener)
-     * 
+     *
      */
     public void addPopupVisibilityListener(PopupVisibilityListener listener) {
         addListener(PopupVisibilityEvent.class, listener,
@@ -358,13 +358,14 @@ public class PopupView extends AbstractComponent implements HasComponents {
     /**
      * Removes a previously added listener, so that it no longer receives events
      * when the visibility of the popup changes.
-     * 
+     *
      * @param listener
      *            the listener to remove
      * @see PopupVisibilityListener
      * @see #addListener(PopupVisibilityListener)
      */
-    public void removePopupVisibilityListener(PopupVisibilityListener listener) {
+    public void removePopupVisibilityListener(
+            PopupVisibilityListener listener) {
         removeListener(PopupVisibilityEvent.class, listener,
                 POPUP_VISIBILITY_METHOD);
     }
@@ -383,7 +384,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
      * visibility of the popup changes. You can get the new visibility directly
      * with {@link #isPopupVisible()}, or get the PopupView that produced the
      * event with {@link #getPopupView()}.
-     * 
+     *
      */
     public static class PopupVisibilityEvent extends Event {
 
@@ -393,7 +394,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
 
         /**
          * Get the PopupView instance that is the source of this event.
-         * 
+         *
          * @return the source PopupView
          */
         public PopupView getPopupView() {
@@ -402,7 +403,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
 
         /**
          * Returns the current visibility of the popup.
-         * 
+         *
          * @return true if the popup is visible
          */
         public boolean isPopupVisible() {
@@ -413,16 +414,16 @@ public class PopupView extends AbstractComponent implements HasComponents {
     /**
      * Defines a listener that can receive a PopupVisibilityEvent when the
      * visibility of the popup changes.
-     * 
+     *
      */
     public interface PopupVisibilityListener extends Serializable {
         /**
          * Pass to {@link PopupView#PopupVisibilityEvent} to start listening for
          * popup visibility changes.
-         * 
+         *
          * @param event
          *            the event
-         * 
+         *
          * @see {@link PopupVisibilityEvent}
          * @see {@link PopupView#addListener(PopupVisibilityListener)}
          */

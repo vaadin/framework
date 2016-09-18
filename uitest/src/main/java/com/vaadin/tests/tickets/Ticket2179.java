@@ -27,8 +27,8 @@ public class Ticket2179 extends LegacyApplication {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                main.showNotification("Test field is "
-                        + (f.isValid() ? "valid" : "invalid"));
+                main.showNotification(
+                        "Test field is " + (f.isValid() ? "valid" : "invalid"));
             }
         });
 

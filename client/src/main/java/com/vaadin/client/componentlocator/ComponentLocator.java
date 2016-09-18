@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -30,7 +30,7 @@ import com.vaadin.client.ApplicationConnection;
  * <p>
  * The main use for this class is locating components for automated testing
  * purposes.
- * 
+ *
  * @since 7.2, moved from {@link com.vaadin.client.ComponentLocator}
  */
 public class ComponentLocator {
@@ -45,14 +45,15 @@ public class ComponentLocator {
 
     /**
      * Construct a ComponentLocator for the given ApplicationConnection.
-     * 
+     *
      * @param client
      *            ApplicationConnection instance for the application.
      */
     public ComponentLocator(ApplicationConnection client) {
         this.client = client;
-        locatorStrategies = Arrays.asList(new VaadinFinderLocatorStrategy(
-                client), new LegacyLocatorStrategy(client));
+        locatorStrategies = Arrays.asList(
+                new VaadinFinderLocatorStrategy(client),
+                new LegacyLocatorStrategy(client));
     }
 
     /**
@@ -66,7 +67,7 @@ public class ComponentLocator {
      * element if the widget determines an action on the other element will give
      * the same result as the action on the target element.
      * </p>
-     * 
+     *
      * @since 5.4
      * @param targetElement
      *            The element to generate a path for.
@@ -98,7 +99,7 @@ public class ComponentLocator {
      * element if the widget determines an action on the other element will give
      * the same result as the action on the target element.
      * </p>
-     * 
+     *
      * @since 7.2
      * @param targetElement
      *            The element to generate a path for.
@@ -117,7 +118,7 @@ public class ComponentLocator {
      * element. The {@link #getPathForElement(Element)} method can be used for
      * the inverse operation, i.e. generating a string expression for a DOM
      * element.
-     * 
+     *
      * @since 5.4
      * @param path
      *            The String locator which identifies the target element.
@@ -139,7 +140,7 @@ public class ComponentLocator {
     /**
      * Locates elements using a String locator (path) which identifies DOM
      * elements.
-     * 
+     *
      * @since 7.2
      * @param path
      *            The String locator which identifies target elements.
@@ -165,9 +166,9 @@ public class ComponentLocator {
     /**
      * Locates elements using a String locator (path) which identifies DOM
      * elements. The path starts from the specified root element.
-     * 
+     *
      * @see #getElementByPath(String)
-     * 
+     *
      * @since 7.2
      * @param path
      *            The path of elements to be found
@@ -181,8 +182,8 @@ public class ComponentLocator {
         JsArray<Element> jsElements = JavaScriptObject.createArray().cast();
         for (LocatorStrategy strategy : locatorStrategies) {
             if (strategy.validatePath(path)) {
-                List<Element> elements = strategy.getElementsByPathStartingAt(
-                        path, root);
+                List<Element> elements = strategy
+                        .getElementsByPathStartingAt(path, root);
                 if (elements.size() > 0) {
                     for (Element e : elements) {
                         jsElements.push(e);
@@ -197,11 +198,11 @@ public class ComponentLocator {
     /**
      * Locates an element using a String locator (path) which identifies a DOM
      * element. The path starts from the specified root element.
-     * 
+     *
      * @see #getElementByPath(String)
-     * 
+     *
      * @since 7.2
-     * 
+     *
      * @param path
      *            The path of the element to be found
      * @param root
@@ -227,7 +228,7 @@ public class ComponentLocator {
      * Returns the {@link ApplicationConnection} used by this locator.
      * <p>
      * This method is primarily for internal use by the framework.
-     * 
+     *
      * @return the application connection
      */
     public ApplicationConnection getClient() {
@@ -236,7 +237,7 @@ public class ComponentLocator {
 
     /**
      * Check if a given selector is valid for LegacyLocatorStrategy.
-     * 
+     *
      * @param path
      *            Vaadin selector path
      * @return true if passes path validation with LegacyLocatorStrategy

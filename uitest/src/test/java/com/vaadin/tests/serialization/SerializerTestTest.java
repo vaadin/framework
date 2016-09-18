@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -70,14 +70,14 @@ public class SerializerTestTest extends MultiBrowserTest {
         Assert.assertEquals(
                 "sendDouble: 0.423310825130748, 5.859874482048838, [2.0, 1.7976931348623157E308, 4.9E-324]",
                 getLogRow(logRow++));
-        Assert.assertEquals(
-                "sendFloat: 1.0000001, 3.14159, [-12.0, 0.0, 57.0]",
+        Assert.assertEquals("sendFloat: 1.0000001, 3.14159, [-12.0, 0.0, 57.0]",
                 getLogRow(logRow++));
         Assert.assertEquals("sendLong: -57841235865, 577431841358, [57, 0]",
                 getLogRow(logRow++));
         Assert.assertEquals("sendInt: 2, 5, [2147483647, 0]",
                 getLogRow(logRow++));
-        Assert.assertEquals("sendChar: Å, ∫, [a, b, c, d]", getLogRow(logRow++));
+        Assert.assertEquals("sendChar: Å, ∫, [a, b, c, d]",
+                getLogRow(logRow++));
         Assert.assertEquals("sendByte: 5, -12, [3, 1, 2]", getLogRow(logRow++));
         Assert.assertEquals(
                 "sendBoolean: false, false, [false, false, true, false, true, true]",
@@ -93,7 +93,8 @@ public class SerializerTestTest extends MultiBrowserTest {
         Assert.assertEquals("state.jsonBoolean: false", getLogRow(logRow++));
         Assert.assertEquals("state.jsonString: a string", getLogRow(logRow++));
         Assert.assertEquals("state.jsonNull: NULL", getLogRow(logRow++));
-        Assert.assertEquals("state.stringArray: [null, ‡]", getLogRow(logRow++));
+        Assert.assertEquals("state.stringArray: [null, ‡]",
+                getLogRow(logRow++));
         Assert.assertEquals("state.string: This is a tesing string ‡",
                 getLogRow(logRow++));
         Assert.assertEquals(
@@ -105,10 +106,10 @@ public class SerializerTestTest extends MultiBrowserTest {
                 getLogRow(logRow++));
         Assert.assertEquals("state.floatArray: [57, 0, -12]",
                 getLogRow(logRow++));
-        Assert.assertTrue(getLogRow(logRow++).startsWith(
-                "state.floatObjectValue: 1.0000001"));
-        Assert.assertTrue(getLogRow(logRow++).startsWith(
-                "state.floatValue: 3.14159"));
+        Assert.assertTrue(getLogRow(logRow++)
+                .startsWith("state.floatObjectValue: 1.0000001"));
+        Assert.assertTrue(
+                getLogRow(logRow++).startsWith("state.floatValue: 3.14159"));
         Assert.assertEquals("state.longArray: [-57841235865, 57]",
                 getLogRow(logRow++));
         Assert.assertEquals("state.longObjectValue: 577431841360",

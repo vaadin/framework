@@ -38,7 +38,7 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
     }
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 
@@ -85,10 +85,10 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
                 int clientY = eventDetails.getClientY();
 
                 try {
-                    root.getPosition(component).setTopValue(
-                            Float.valueOf(clientY - top));
-                    root.getPosition(component).setLeftValue(
-                            Float.valueOf(clientX - left));
+                    root.getPosition(component)
+                            .setTopValue(Float.valueOf(clientY - top));
+                    root.getPosition(component)
+                            .setLeftValue(Float.valueOf(clientX - left));
                 } catch (Exception e) {
                 }
             } else {
@@ -150,13 +150,16 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
                         }
 
                         @Override
-                        public void streamingStarted(StreamingStartEvent event) {
+                        public void streamingStarted(
+                                StreamingStartEvent event) {
                         }
 
                         @Override
                         public void streamingFinished(StreamingEndEvent event) {
-                            l.setValue((new String(byteArrayOutputStream
-                                    .toByteArray()).substring(0, 80) + "..."));
+                            l.setValue((new String(
+                                    byteArrayOutputStream.toByteArray())
+                                            .substring(0, 80)
+                                    + "..."));
                         }
 
                         @Override

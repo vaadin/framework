@@ -9,11 +9,12 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.minitutorials.v7a2.WidgetContainer;
 
 @Connect(WidgetContainer.class)
-public class WidgetContainerConnector extends
-        AbstractComponentContainerConnector {
+public class WidgetContainerConnector
+        extends AbstractComponentContainerConnector {
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         List<ComponentConnector> children = getChildComponents();
         VWidgetContainer widget = getWidget();
         widget.clear();

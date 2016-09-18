@@ -89,7 +89,8 @@ public class GraphVizClassHierarchyCreator {
     }
 
     private static void addClassAndParentInterfaces(
-            Set<Class> classesAndParents, Class<?> cls, String packageToInclude) {
+            Set<Class> classesAndParents, Class<?> cls,
+            String packageToInclude) {
 
         if (cls == null) {
             return;
@@ -123,7 +124,8 @@ public class GraphVizClassHierarchyCreator {
         if (!superClass.getPackage().getName().startsWith(packageToInclude)) {
             return;
         }
-        if (!includeInterfaces && (c.isInterface() || superClass.isInterface())) {
+        if (!includeInterfaces
+                && (c.isInterface() || superClass.isInterface())) {
             return;
         }
 

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,11 +29,11 @@ import com.vaadin.shared.ui.slider.SliderState;
 import com.vaadin.ui.Slider;
 
 @Connect(Slider.class)
-public class SliderConnector extends AbstractFieldConnector implements
-        ValueChangeHandler<Double> {
+public class SliderConnector extends AbstractFieldConnector
+        implements ValueChangeHandler<Double> {
 
-    protected SliderServerRpc rpc = RpcProxy
-            .create(SliderServerRpc.class, this);
+    protected SliderServerRpc rpc = RpcProxy.create(SliderServerRpc.class,
+            this);
 
     private final ElementResizeListener resizeListener = new ElementResizeListener() {
 
@@ -56,8 +56,8 @@ public class SliderConnector extends AbstractFieldConnector implements
     @Override
     public void onUnregister() {
         super.onUnregister();
-        getLayoutManager().removeElementResizeListener(
-                getWidget().getElement(), resizeListener);
+        getLayoutManager().removeElementResizeListener(getWidget().getElement(),
+                resizeListener);
     }
 
     @Override

@@ -78,8 +78,9 @@ public class AcceptFromComponent extends Window {
                             // Item id
                             Label l = new Label();
                             l.setSizeUndefined();
-                            l.setValue("ItemId : "
-                                    + ((DataBoundTransferable) ctr).getItemId());
+                            l.setValue(
+                                    "ItemId : " + ((DataBoundTransferable) ctr)
+                                            .getItemId());
                             layout.addComponent(l);
                             component = l;
 
@@ -100,8 +101,8 @@ public class AcceptFromComponent extends Window {
                         int clientY = eventDetails.getClientY();
 
                         try {
-                            layout.getPosition(component).setTopValue(
-                                    Float.valueOf(clientY - top));
+                            layout.getPosition(component)
+                                    .setTopValue(Float.valueOf(clientY - top));
                             layout.getPosition(component).setLeftValue(
                                     Float.valueOf(clientX - left));
                         } catch (Exception e) {

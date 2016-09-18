@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,12 +21,12 @@ import com.vaadin.shared.ui.grid.Range;
 
 /**
  * Event fired when the range of visible rows changes e.g. because of scrolling.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class RowVisibilityChangeEvent extends
-        GwtEvent<RowVisibilityChangeHandler> {
+public class RowVisibilityChangeEvent
+        extends GwtEvent<RowVisibilityChangeHandler> {
     /**
      * The type of this event.
      */
@@ -36,7 +36,7 @@ public class RowVisibilityChangeEvent extends
 
     /**
      * Creates a new row visibility change event
-     * 
+     *
      * @param firstVisibleRow
      *            the index of the first visible row
      * @param visibleRowCount
@@ -48,7 +48,7 @@ public class RowVisibilityChangeEvent extends
 
     /**
      * Gets the index of the first row that is at least partially visible.
-     * 
+     *
      * @return the index of the first visible row
      */
     public int getFirstVisibleRow() {
@@ -57,7 +57,7 @@ public class RowVisibilityChangeEvent extends
 
     /**
      * Gets the number of at least partially visible rows.
-     * 
+     *
      * @return the number of visible rows
      */
     public int getVisibleRowCount() {
@@ -66,7 +66,7 @@ public class RowVisibilityChangeEvent extends
 
     /**
      * Gets the range of visible rows.
-     * 
+     *
      * @since 7.6
      * @return the visible rows
      */
@@ -76,7 +76,7 @@ public class RowVisibilityChangeEvent extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
      */
     @Override
@@ -86,7 +86,7 @@ public class RowVisibilityChangeEvent extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared
      * .EventHandler)

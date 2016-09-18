@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,8 +32,9 @@ public class WidgetInitVisitor extends TypeVisitor {
             ConnectorBundle bundle) throws UnableToCompleteException {
         if (ConnectorBundle.isConnectedComponentConnector(type)) {
             // The class in which createWidget is implemented
-            JClassType createWidgetClass = ConnectorBundle.findInheritedMethod(
-                    type, "createWidget").getEnclosingType();
+            JClassType createWidgetClass = ConnectorBundle
+                    .findInheritedMethod(type, "createWidget")
+                    .getEnclosingType();
 
             JMethod getWidget = ConnectorBundle.findInheritedMethod(type,
                     "getWidget");
@@ -42,9 +43,7 @@ public class WidgetInitVisitor extends TypeVisitor {
             // Needs GWT constructor if createWidget is not overridden
             if (createWidgetClass.getQualifiedSourceName().equals(
                     AbstractComponentConnector.class.getCanonicalName())) {
-                if (getWidget
-                        .getEnclosingType()
-                        .getQualifiedSourceName()
+                if (getWidget.getEnclosingType().getQualifiedSourceName()
                         .equals(AbstractComponentConnector.class
                                 .getCanonicalName())) {
                     logger.log(Type.ERROR, type.getQualifiedSourceName()
@@ -79,12 +78,8 @@ public class WidgetInitVisitor extends TypeVisitor {
                             .findInheritedMethod(widgetType, methodName,
                                     property.getPropertyType());
                     if (delegatedSetter == null) {
-                        logger.log(
-                                Type.ERROR,
-                                widgetType.getName()
-                                        + "."
-                                        + methodName
-                                        + "("
+                        logger.log(Type.ERROR,
+                                widgetType.getName() + "." + methodName + "("
                                         + property.getPropertyType()
                                                 .getSimpleSourceName()
                                         + ") required by @DelegateToWidget for "

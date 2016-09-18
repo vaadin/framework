@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -43,12 +43,12 @@ import com.vaadin.shared.ui.calendar.DateConstants;
 
 /**
  * A class representing a single cell within the calendar in month-view
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd.
  */
-public class SimpleDayCell extends FocusableFlowPanel implements
-        MouseUpHandler, MouseDownHandler, MouseOverHandler, MouseMoveHandler {
+public class SimpleDayCell extends FocusableFlowPanel implements MouseUpHandler,
+        MouseDownHandler, MouseOverHandler, MouseMoveHandler {
 
     private static int BOTTOMSPACERHEIGHT = -1;
     private static int EVENTHEIGHT = -1;
@@ -221,9 +221,8 @@ public class SimpleDayCell extends FocusableFlowPanel implements
             }
         }
 
-        int remainingSpace = intHeight
-                - ((slots * EVENTHEIGHT) + BOTTOMSPACERHEIGHT + caption
-                        .getOffsetHeight());
+        int remainingSpace = intHeight - ((slots * EVENTHEIGHT)
+                + BOTTOMSPACERHEIGHT + caption.getOffsetHeight());
         int newHeight = remainingSpace + BOTTOMSPACERHEIGHT;
         if (newHeight < 0) {
             newHeight = EVENTHEIGHT;
@@ -344,8 +343,8 @@ public class SimpleDayCell extends FocusableFlowPanel implements
     public void setMonthNameVisible(boolean b) {
         monthNameVisible = b;
         int dateOfMonth = date.getDate();
-        caption.setText(dateOfMonth + " "
-                + calendar.getMonthNames()[date.getMonth()]);
+        caption.setText(
+                dateOfMonth + " " + calendar.getMonthNames()[date.getMonth()]);
     }
 
     public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
@@ -517,9 +516,11 @@ public class SimpleDayCell extends FocusableFlowPanel implements
         }
         // Check boundaries
         if (relativeY < 0
-                || relativeY >= (calendar.getMonthGrid().getRowCount() * dateCellHeigth)
+                || relativeY >= (calendar.getMonthGrid().getRowCount()
+                        * dateCellHeigth)
                 || relativeX < 0
-                || relativeX >= (calendar.getMonthGrid().getColumnCount() * dateCellWidth)) {
+                || relativeX >= (calendar.getMonthGrid().getColumnCount()
+                        * dateCellWidth)) {
             return;
         }
 
@@ -644,7 +645,8 @@ public class SimpleDayCell extends FocusableFlowPanel implements
         }
     }
 
-    public void updateDragPosition(MonthEventLabel w, int dayDiff, int weekDiff) {
+    public void updateDragPosition(MonthEventLabel w, int dayDiff,
+            int weekDiff) {
         // Draw event to its new position only when position has changed
         if (dayDiff == prevDayDiff && weekDiff == prevWeekDiff) {
             return;

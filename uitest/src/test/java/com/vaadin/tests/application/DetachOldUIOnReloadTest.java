@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -38,8 +38,8 @@ public class DetachOldUIOnReloadTest extends MultiBrowserTest {
         assertEquals("initial label incorrect", "This is UI 0",
                 lastLabelText(labels));
 
-        assertFalse("reloading button not found", $(ButtonElement.class)
-                .caption(RELOAD).all().isEmpty());
+        assertFalse("reloading button not found",
+                $(ButtonElement.class).caption(RELOAD).all().isEmpty());
 
         openTestURL();
         click(READ_LOG);
@@ -68,9 +68,12 @@ public class DetachOldUIOnReloadTest extends MultiBrowserTest {
                 String.format("label incorrect after %s reload", descriptor),
                 String.format("This is UI %s", index), lastLabelText(labels));
         if (!"final".equals(descriptor)) {
-            assertEquals(String.format("log message incorrect after %s reload",
-                    descriptor), String.format("%s. UI %s has been detached",
-                    index, index - 1), labels.get(0).getText());
+            assertEquals(
+                    String.format("log message incorrect after %s reload",
+                            descriptor),
+                    String.format("%s. UI %s has been detached", index,
+                            index - 1),
+                    labels.get(0).getText());
         }
     }
 

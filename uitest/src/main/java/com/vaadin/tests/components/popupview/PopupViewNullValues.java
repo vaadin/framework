@@ -27,15 +27,14 @@ public class PopupViewNullValues extends TestBase {
 
             });
         } catch (Exception e) {
-            getMainWindow()
-                    .showNotification(
-                            "Error, 'null content' should not throw an exception at this point",
-                            Notification.TYPE_ERROR_MESSAGE);
+            getMainWindow().showNotification(
+                    "Error, 'null content' should not throw an exception at this point",
+                    Notification.TYPE_ERROR_MESSAGE);
         }
 
         try {
-            pv[1] = new PopupView(null, new TextField(
-                    "Empty html, contains component"));
+            pv[1] = new PopupView(null,
+                    new TextField("Empty html, contains component"));
             addComponent(pv[1]);
             b[1] = new Button("Open popupview 2", new ClickListener() {
 
@@ -46,10 +45,9 @@ public class PopupViewNullValues extends TestBase {
 
             });
         } catch (Exception e) {
-            getMainWindow()
-                    .showNotification(
-                            "Error, 'null html', should not throw an exception at this point",
-                            Notification.TYPE_ERROR_MESSAGE);
+            getMainWindow().showNotification(
+                    "Error, 'null html', should not throw an exception at this point",
+                    Notification.TYPE_ERROR_MESSAGE);
         }
 
         try {
@@ -64,14 +62,13 @@ public class PopupViewNullValues extends TestBase {
 
             });
         } catch (Exception e) {
-            getMainWindow()
-                    .showNotification(
-                            "Error, 'null html, null content', should not throw an exception at this point",
-                            Notification.TYPE_ERROR_MESSAGE);
+            getMainWindow().showNotification(
+                    "Error, 'null html, null content', should not throw an exception at this point",
+                    Notification.TYPE_ERROR_MESSAGE);
         }
         try {
-            pv[3] = new PopupView("Popupview 4 - has component", new TextField(
-                    "This is the content of popupview 4"));
+            pv[3] = new PopupView("Popupview 4 - has component",
+                    new TextField("This is the content of popupview 4"));
             addComponent(pv[3]);
             b[3] = new Button("Open popupview 4", new ClickListener() {
 
@@ -82,10 +79,9 @@ public class PopupViewNullValues extends TestBase {
 
             });
         } catch (Exception e) {
-            getMainWindow()
-                    .showNotification(
-                            "Error, 'null html, null content', should not throw an exception at this point",
-                            Notification.TYPE_ERROR_MESSAGE);
+            getMainWindow().showNotification(
+                    "Error, 'null html, null content', should not throw an exception at this point",
+                    Notification.TYPE_ERROR_MESSAGE);
         }
 
         addComponent(b[0]);

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -65,14 +65,15 @@ public class VaadinPortletService extends VaadinService {
 
     /**
      * Retrieves a reference to the portlet associated with this service.
-     * 
+     *
      * @return A reference to the VaadinPortlet this service is using
      */
     public VaadinPortlet getPortlet() {
         return portlet;
     }
 
-    private String getPortalProperty(VaadinRequest request, String propertyName) {
+    private String getPortalProperty(VaadinRequest request,
+            String propertyName) {
         return ((VaadinPortletRequest) request).getPortalProperty(propertyName);
     }
 
@@ -179,11 +180,10 @@ public class VaadinPortletService extends VaadinService {
                 return new File(url.getFile());
             } catch (final Exception e) {
                 // FIXME: Handle exception
-                getLogger()
-                        .log(Level.INFO,
-                                "Cannot access base directory, possible security issue "
-                                        + "with Application Server or Servlet Container",
-                                e);
+                getLogger().log(Level.INFO,
+                        "Cannot access base directory, possible security issue "
+                                + "with Application Server or Servlet Container",
+                        e);
             }
         }
         return null;
@@ -222,18 +222,18 @@ public class VaadinPortletService extends VaadinService {
 
     /**
      * Gets the request type for the request.
-     * 
+     *
      * @param request
      *            the request to get a request type for
      * @return the request type
-     * 
+     *
      * @deprecated As of 7.0. Will likely change or be removed in a future
      *             version
      */
     @Deprecated
     protected RequestType getRequestType(VaadinRequest request) {
-        RequestType type = (RequestType) request.getAttribute(RequestType.class
-                .getName());
+        RequestType type = (RequestType) request
+                .getAttribute(RequestType.class.getName());
         if (type == null) {
             type = getPortlet().getRequestType((VaadinPortletRequest) request);
             request.setAttribute(RequestType.class.getName(), type);
@@ -246,10 +246,10 @@ public class VaadinPortletService extends VaadinService {
      * is automatically defined when the request is started. The current portlet
      * request can not be used in e.g. background threads because of the way
      * server implementations reuse request instances.
-     * 
+     *
      * @return the current portlet request instance if available, otherwise
      *         <code>null</code>
-     * 
+     *
      */
     public static PortletRequest getCurrentPortletRequest() {
         VaadinPortletRequest currentRequest = getCurrentRequest();
@@ -265,10 +265,10 @@ public class VaadinPortletService extends VaadinService {
      * is automatically defined when the request is started. The current request
      * can not be used in e.g. background threads because of the way server
      * implementations reuse request instances.
-     * 
+     *
      * @return the current Vaadin portlet request instance if available,
      *         otherwise <code>null</code>
-     * 
+     *
      */
     public static VaadinPortletRequest getCurrentRequest() {
         return (VaadinPortletRequest) VaadinService.getCurrentRequest();
@@ -279,10 +279,10 @@ public class VaadinPortletService extends VaadinService {
      * response is automatically defined when the request is started. The
      * current response can not be used in e.g. background threads because of
      * the way server implementations reuse response instances.
-     * 
+     *
      * @return the current Vaadin portlet response instance if available,
      *         otherwise <code>null</code>
-     * 
+     *
      */
     public static VaadinPortletResponse getCurrentResponse() {
         return (VaadinPortletResponse) VaadinService.getCurrentResponse();
@@ -303,7 +303,8 @@ public class VaadinPortletService extends VaadinService {
      * Always preserve UIs in portlets to make portlet actions work.
      */
     @Override
-    public boolean preserveUIOnRefresh(UIProvider provider, UICreateEvent event) {
+    public boolean preserveUIOnRefresh(UIProvider provider,
+            UICreateEvent event) {
         return true;
     }
 
@@ -313,9 +314,9 @@ public class VaadinPortletService extends VaadinService {
         VaadinPortletSession session = (VaadinPortletSession) uI.getSession();
         PortletContext portletContext = session.getPortletSession()
                 .getPortletContext();
-        return portletContext.getResourceAsStream("/"
-                + VaadinPortlet.THEME_DIR_PATH + '/' + themeName + "/"
-                + resource);
+        return portletContext
+                .getResourceAsStream("/" + VaadinPortlet.THEME_DIR_PATH + '/'
+                        + themeName + "/" + resource);
     }
 
     @Override
@@ -332,7 +333,7 @@ public class VaadinPortletService extends VaadinService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.server.VaadinService#handleSessionExpired(com.vaadin.server
      * .VaadinRequest, com.vaadin.server.VaadinResponse)

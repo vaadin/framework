@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -70,7 +70,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
 
         /**
          * Access method to form values by field names.
-         * 
+         *
          * @param name
          * @return value in given field
          */
@@ -90,7 +90,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
     public interface LoginListener extends Serializable {
         /**
          * This method is fired on each login form post.
-         * 
+         *
          * @param event
          *            Login event
          */
@@ -101,19 +101,19 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * Internal stream source for the login URL - always returns "Success" and
      * ignores the values received.
      */
-    private static class LoginStreamSource implements StreamResource.StreamSource {
+    private static class LoginStreamSource
+            implements StreamResource.StreamSource {
         @Override
         public InputStream getStream() {
             try {
-                return new ByteArrayInputStream("<html>Success</html>".toString().getBytes(
-                        "UTF-8"));
+                return new ByteArrayInputStream(
+                        "<html>Success</html>".toString().getBytes("UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 return null;
             }
 
         }
     }
-
 
     static {
         try {
@@ -136,7 +136,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
 
     /**
      * Customize the user name field. Only for overriding, do not call.
-     * 
+     *
      * @return the user name field
      * @since 7.7
      */
@@ -151,7 +151,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * Returns the caption set with {@link #setUsernameCaption(String)}. Note
      * that this method might not match what is shown to the user if
      * {@link #createUsernameField()} has been overridden.
-     * 
+     *
      * @return user name field caption
      */
     public String getUsernameCaption() {
@@ -165,7 +165,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * <p>
      * As an alternative to calling this method, the method
      * {@link #createUsernameField()} can be overridden.
-     * 
+     *
      * @param cap
      *            new caption
      */
@@ -175,7 +175,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
 
     /**
      * Customize the password field. Only for overriding, do not call.
-     * 
+     *
      * @return the password field
      * @since 7.7
      */
@@ -188,7 +188,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * Returns the caption set with {@link #setPasswordCaption(String)}. Note
      * that this method might not match what is shown to the user if
      * {@link #createPasswordField()} has been overridden.
-     * 
+     *
      * @return password field caption
      */
     public String getPasswordCaption() {
@@ -202,8 +202,9 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * <p>
      * As an alternative to calling this method, the method
      * {@link #createPasswordField()} can be overridden.
-     * 
-     * @param cap new caption
+     *
+     * @param cap
+     *            new caption
      */
     public void setPasswordCaption(String cap) {
         passwordCaption = cap;
@@ -212,7 +213,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
 
     /**
      * Customize the login button. Only for overriding, do not call.
-     * 
+     *
      * @return the login button
      * @since 7.7
      */
@@ -225,7 +226,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * Returns the caption set with {@link #setLoginButtonCaption(String)}. Note
      * that this method might not match what is shown to the user if
      * {@link #createLoginButton()} has been overridden.
-     * 
+     *
      * @return login button caption
      */
     public String getLoginButtonCaption() {
@@ -239,8 +240,9 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * <p>
      * As an alternative to calling this method, the method
      * {@link #createLoginButton()} can be overridden.
-     * 
-     * @param cap new caption
+     *
+     * @param cap
+     *            new caption
      */
     public void setLoginButtonCaption(String cap) {
         loginButtonCaption = cap;
@@ -274,7 +276,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * {@link #getUsernameFieldCaption()}, {@link #getPasswordFieldCaption()}
      * and {@link #getLoginButtonCaption()}. You do not have to use the login
      * button in your layout.
-     * 
+     *
      * @param userNameField
      *            the user name text field
      * @param passwordField
@@ -338,7 +340,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * Handle the login. In deferred mode, this method is called after the dummy
      * POST request that triggers the password manager has been completed. In
      * direct mode (the default setting), it is called directly when the user
@@ -356,7 +358,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
 
     /**
      * Adds LoginListener to handle login logic
-     * 
+     *
      * @param listener
      */
     public void addLoginListener(LoginListener listener) {
@@ -374,7 +376,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
 
     /**
      * Removes LoginListener
-     * 
+     *
      * @param listener
      */
     public void removeLoginListener(LoginListener listener) {

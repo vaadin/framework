@@ -37,8 +37,8 @@ public class ResynchronizeAfterAsyncRemoval extends AbstractTestUIWithLog {
             public void buttonClick(ClickEvent event) {
                 log("Window removed: " + (window.getParent() == null));
 
-                boolean dirty = getUI().getConnectorTracker().isDirty(
-                        event.getButton());
+                boolean dirty = getUI().getConnectorTracker()
+                        .isDirty(event.getButton());
                 log("Dirty: " + dirty);
             }
         }));
@@ -66,8 +66,8 @@ public class ResynchronizeAfterAsyncRemoval extends AbstractTestUIWithLog {
     private Map<Integer, Set<String>> getUnregisterIdMap() {
         try {
             ConnectorTracker tracker = getConnectorTracker();
-            Field field = tracker.getClass().getDeclaredField(
-                    "syncIdToUnregisteredConnectorIds");
+            Field field = tracker.getClass()
+                    .getDeclaredField("syncIdToUnregisteredConnectorIds");
             field.setAccessible(true);
             return (Map<Integer, Set<String>>) field.get(tracker);
         } catch (Exception e) {

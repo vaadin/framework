@@ -36,8 +36,8 @@ public class PropertyDescriptorTest {
         VaadinPropertyDescriptor<Person> descriptor2 = (VaadinPropertyDescriptor<Person>) new ObjectInputStream(
                 new ByteArrayInputStream(baos.toByteArray())).readObject();
 
-        Property<?> property = descriptor2.createProperty(new Person("John",
-                null));
+        Property<?> property = descriptor2
+                .createProperty(new Person("John", null));
         Assert.assertEquals("John", property.getValue());
     }
 

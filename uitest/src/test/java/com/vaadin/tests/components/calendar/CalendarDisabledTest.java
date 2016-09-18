@@ -46,7 +46,7 @@ public class CalendarDisabledTest extends MultiBrowserTest {
     }
 
     private void assertCalendarInMonthView() {
-        assertTrue("Calendar wasn't in month view.", getCalendar()
-                .hasMonthView());
+        assertTrue("Calendar wasn't in month view.",
+                getCalendar().hasMonthView());
     }
 }

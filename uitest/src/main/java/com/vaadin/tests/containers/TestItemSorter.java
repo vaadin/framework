@@ -38,8 +38,8 @@ public class TestItemSorter extends TestBase {
                     return caption1.compareTo(caption2);
 
                 } else if (o1 instanceof String && o2 instanceof String) {
-                    return ((String) o1).toLowerCase().compareTo(
-                            ((String) o2).toLowerCase());
+                    return ((String) o1).toLowerCase()
+                            .compareTo(((String) o2).toLowerCase());
                 }
 
                 return 0;
@@ -61,8 +61,8 @@ public class TestItemSorter extends TestBase {
             Item item = container.getItem(id);
             item.getItemProperty(STRING).setValue(s);
             item.getItemProperty(BUTTON).setValue(new Button(s));
-            item.getItemProperty(CHECKBOX).setValue(
-                    new CheckBox("", s.equals("true")));
+            item.getItemProperty(CHECKBOX)
+                    .setValue(new CheckBox("", s.equals("true")));
         }
 
     }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,9 +24,9 @@ public class Runo extends BaseTheme {
     }
 
     /***************************************************************************
-     * 
+     *
      * Button styles
-     * 
+     *
      **************************************************************************/
 
     /**
@@ -47,9 +47,9 @@ public class Runo extends BaseTheme {
     public static final String BUTTON_DEFAULT = "default";
 
     /***************************************************************************
-     * 
+     *
      * Panel styles
-     * 
+     *
      **************************************************************************/
 
     /**
@@ -58,9 +58,9 @@ public class Runo extends BaseTheme {
     public static final String PANEL_LIGHT = "light";
 
     /***************************************************************************
-     * 
+     *
      * ProgressBar Styles
-     * 
+     *
      **************************************************************************/
 
     /**
@@ -70,9 +70,9 @@ public class Runo extends BaseTheme {
     public static final String PROGRESSBAR_STATIC = "static";
 
     /***************************************************************************
-     * 
+     *
      * TabSheet styles
-     * 
+     *
      **************************************************************************/
 
     /**
@@ -81,9 +81,9 @@ public class Runo extends BaseTheme {
     public static final String TABSHEET_SMALL = "light";
 
     /***************************************************************************
-     * 
+     *
      * SplitPanel styles
-     * 
+     *
      **************************************************************************/
 
     /**
@@ -99,9 +99,9 @@ public class Runo extends BaseTheme {
     public static final String SPLITPANEL_SMALL = "small";
 
     /***************************************************************************
-     * 
+     *
      * Label styles
-     * 
+     *
      **************************************************************************/
 
     /**
@@ -123,9 +123,9 @@ public class Runo extends BaseTheme {
     public static final String LABEL_SMALL = "small";
 
     /***************************************************************************
-     * 
+     *
      * Layout styles
-     * 
+     *
      **************************************************************************/
 
     /**
@@ -153,9 +153,9 @@ public class Runo extends BaseTheme {
     public static final String CSSLAYOUT_SELECTABLE_SELECTED = "selectable-selected";
 
     /***************************************************************************
-     * 
+     *
      * TextField styles
-     * 
+     *
      **************************************************************************/
 
     /**
@@ -164,9 +164,9 @@ public class Runo extends BaseTheme {
     public static final String TEXTFIELD_SMALL = "small";
 
     /***************************************************************************
-     * 
+     *
      * Table styles
-     * 
+     *
      **************************************************************************/
 
     /**
@@ -181,9 +181,9 @@ public class Runo extends BaseTheme {
     public static final String TABLE_BORDERLESS = "borderless";
 
     /***************************************************************************
-     * 
+     *
      * Accordion styles
-     * 
+     *
      **************************************************************************/
 
     /**
@@ -194,9 +194,9 @@ public class Runo extends BaseTheme {
     public static final String ACCORDION_LIGHT = "light";
 
     /***************************************************************************
-     * 
+     *
      * Window styles
-     * 
+     *
      **************************************************************************/
 
     /**

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,13 +35,14 @@ import com.vaadin.server.PaintTarget;
  * better choice.
  */
 @SuppressWarnings("serial")
-public class NativeSelect extends AbstractSelect implements
-        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
+public class NativeSelect extends AbstractSelect
+        implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
     // width in characters, mimics TextField
     private int columns = 0;
 
-    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
+    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(
+            this) {
 
         @Override
         protected void fireEvent(Event event) {
@@ -76,7 +77,7 @@ public class NativeSelect extends AbstractSelect implements
      * Calling {@code setColumns(10);} is equivalent to calling
      * {@code setWidth("10em");}
      * </p>
-     * 
+     *
      * @deprecated As of 7.0. "Columns" does not reflect the exact number of
      *             characters that will be displayed. It is better to use
      *             setWidth together with "em" to control the width of the
@@ -97,7 +98,7 @@ public class NativeSelect extends AbstractSelect implements
 
     /**
      * Gets the number of columns for the component.
-     * 
+     *
      * @see #setColumns(int)
      * @deprecated As of 7.0. "Columns" does not reflect the exact number of
      *             characters that will be displayed. It is better to use
@@ -124,7 +125,8 @@ public class NativeSelect extends AbstractSelect implements
     public void setMultiSelect(boolean multiSelect)
             throws UnsupportedOperationException {
         if (multiSelect == true) {
-            throw new UnsupportedOperationException("Multiselect not supported");
+            throw new UnsupportedOperationException(
+                    "Multiselect not supported");
         }
     }
 

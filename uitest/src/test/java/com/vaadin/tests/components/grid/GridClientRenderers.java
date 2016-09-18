@@ -42,7 +42,7 @@ import com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers;
 
 /**
  * Tests Grid client side renderers
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -81,8 +81,8 @@ public class GridClientRenderers extends MultiBrowserTest {
         openTestURL();
 
         // Add widget renderer column
-        $(NativeSelectElement.class).first().selectByText(
-                Renderers.WIDGET_RENDERER.toString());
+        $(NativeSelectElement.class).first()
+                .selectByText(Renderers.WIDGET_RENDERER.toString());
         $(NativeButtonElement.class).caption("Add").first().click();
 
         // Click the button in cell 1,1
@@ -100,8 +100,8 @@ public class GridClientRenderers extends MultiBrowserTest {
         openTestURL();
 
         // Add widget renderer column
-        $(NativeSelectElement.class).first().selectByText(
-                Renderers.WIDGET_RENDERER.toString());
+        $(NativeSelectElement.class).first()
+                .selectByText(Renderers.WIDGET_RENDERER.toString());
         $(NativeButtonElement.class).caption("Add").first().click();
 
         // Detach and re-attach the Grid
@@ -131,8 +131,7 @@ public class GridClientRenderers extends MultiBrowserTest {
 
         TestBenchElement row = getGrid().getRow(51);
         String className = row.getAttribute("class");
-        assertFalse(
-                "Row should not yet contain style name v-grid-row-has-data",
+        assertFalse("Row should not yet contain style name v-grid-row-has-data",
                 className.contains("v-grid-row-has-data"));
 
         // Wait for data to arrive
@@ -171,7 +170,8 @@ public class GridClientRenderers extends MultiBrowserTest {
         // Test initial renderering with contentVisible = False
         TestBenchElement cell = getGrid().getCell(51, 1);
         String backgroundColor = cell.getCssValue("backgroundColor");
-        assertEquals("Background color was not red.", colorRed, backgroundColor);
+        assertEquals("Background color was not red.", colorRed,
+                backgroundColor);
 
         // data arrives...
         sleep((int) (latency * SLEEP_MULTIPLIER));
@@ -187,15 +187,15 @@ public class GridClientRenderers extends MultiBrowserTest {
         // Cell should be red (setContentVisible set cell red)
         cell = getGrid().getCell(55, 1);
         backgroundColor = cell.getCssValue("backgroundColor");
-        assertEquals("Background color was not red.", colorRed, backgroundColor);
+        assertEquals("Background color was not red.", colorRed,
+                backgroundColor);
 
         // data arrives...
         sleep((int) (latency * SLEEP_MULTIPLIER));
 
         // Cell should no longer be red
         backgroundColor = cell.getCssValue("backgroundColor");
-        assertTrue(
-                "Background color was not reset",
+        assertTrue("Background color was not reset",
                 backgroundColor.equals(colorWhite)
                         || backgroundColor.equals(colorDark));
     }
@@ -272,8 +272,8 @@ public class GridClientRenderers extends MultiBrowserTest {
         cell = getGrid().getCell(4, 1);
         cell.click();
         new Actions(getDriver()).moveToElement(cell).doubleClick().perform();
-        assertEquals("onActivate was not called on double click.",
-                "Activated!", cell.getText());
+        assertEquals("onActivate was not called on double click.", "Activated!",
+                cell.getText());
     }
 
     private GridElement getGrid() {

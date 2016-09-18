@@ -25,7 +25,8 @@ public class HeaderUpdateWhenNoRows extends AbstractTestUI {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 if (showHeaders.getValue()) {
-                    table.setColumnHeaderMode(ColumnHeaderMode.EXPLICIT_DEFAULTS_ID);
+                    table.setColumnHeaderMode(
+                            ColumnHeaderMode.EXPLICIT_DEFAULTS_ID);
                 } else {
                     table.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
                 }

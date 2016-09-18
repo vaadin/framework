@@ -28,14 +28,14 @@ public class MenuBarSubmenusClosingValo extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         // here we increase animation time to 1 second for to do auto testing
         // possible
-        getPage().getStyles().add(
-                ".valo .v-menubar-popup[class*=\"animate-in\"] {"
+        getPage().getStyles()
+                .add(".valo .v-menubar-popup[class*=\"animate-in\"] {"
                         + "-webkit-animation: valo-overlay-animate-in 1000ms; "
                         + "-moz-animation: valo-overlay-animate-in 1000ms; "
                         + "animation: valo-overlay-animate-in 1000ms;};");
 
-        getPage().getStyles().add(
-                ".valo .v-menubar-popup[class*=\"animate-out\"] {"
+        getPage().getStyles()
+                .add(".valo .v-menubar-popup[class*=\"animate-out\"] {"
                         + "-webkit-animation: valo-animate-out-fade 1000ms; "
                         + "-moz-animation: valo-animate-out-fade 1000ms; "
                         + "animation: valo-animate-out-fade 1000ms;};");

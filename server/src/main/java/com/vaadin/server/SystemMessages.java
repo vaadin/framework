@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,13 +31,13 @@ import java.io.Serializable;
  * <li><b>sessionExpiredURL</b> = null</li>
  * <li><b>sessionExpiredNotificationEnabled</b> = true</li>
  * <li><b>sessionExpiredCaption</b> = ""</li>
- * <li><b>sessionExpiredMessage</b> =
- * "Take note of any unsaved data, and <u>click here</u> to continue."</li>
+ * <li><b>sessionExpiredMessage</b> = "Take note of any unsaved data, and
+ * <u>click here</u> to continue."</li>
  * <li><b>communicationErrorURL</b> = null</li>
  * <li><b>communicationErrorNotificationEnabled</b> = true</li>
  * <li><b>communicationErrorCaption</b> = "Communication problem"</li>
- * <li><b>communicationErrorMessage</b> =
- * "Take note of any unsaved data, and <u>click here</u> to continue."</li>
+ * <li><b>communicationErrorMessage</b> = "Take note of any unsaved data, and
+ * <u>click here</u> to continue."</li>
  * <li><b>internalErrorURL</b> = null</li>
  * <li><b>internalErrorNotificationEnabled</b> = true</li>
  * <li><b>internalErrorCaption</b> = "Internal error"</li>
@@ -48,10 +48,11 @@ import java.io.Serializable;
  * <li><b>cookiesDisabledCaption</b> = "Cookies disabled"</li>
  * <li><b>cookiesDisabledMessage</b> = "This application requires cookies to
  * function.<br/>
- * Please enable cookies in your browser and <u>click here</u> to try again.</li>
+ * Please enable cookies in your browser and <u>click here</u> to try
+ * again.</li>
  * </ul>
  * </p>
- * 
+ *
  */
 public class SystemMessages implements Serializable {
     protected String sessionExpiredURL = null;
@@ -110,8 +111,8 @@ public class SystemMessages implements Serializable {
     }
 
     /**
-     * @return 
-     *         "Take note of any unsaved data, and <u>click here</u> to continue."
+     * @return "Take note of any unsaved data, and <u>click here</u> to
+     *         continue."
      */
     public String getSessionExpiredMessage() {
         return (sessionExpiredNotificationEnabled ? sessionExpiredMessage
@@ -136,17 +137,17 @@ public class SystemMessages implements Serializable {
      * @return "Communication problem"
      */
     public String getCommunicationErrorCaption() {
-        return (communicationErrorNotificationEnabled ? communicationErrorCaption
-                : null);
+        return (communicationErrorNotificationEnabled
+                ? communicationErrorCaption : null);
     }
 
     /**
-     * @return 
-     *         "Take note of any unsaved data, and <u>click here</u> to continue."
+     * @return "Take note of any unsaved data, and <u>click here</u> to
+     *         continue."
      */
     public String getCommunicationErrorMessage() {
-        return (communicationErrorNotificationEnabled ? communicationErrorMessage
-                : null);
+        return (communicationErrorNotificationEnabled
+                ? communicationErrorMessage : null);
     }
 
     /**
@@ -168,17 +169,17 @@ public class SystemMessages implements Serializable {
      * @return "Authentication problem"
      */
     public String getAuthenticationErrorCaption() {
-        return (authenticationErrorNotificationEnabled ? authenticationErrorCaption
-                : null);
+        return (authenticationErrorNotificationEnabled
+                ? authenticationErrorCaption : null);
     }
 
     /**
-     * @return 
-     *         "Take note of any unsaved data, and <u>click here</u> to continue."
+     * @return "Take note of any unsaved data, and <u>click here</u> to
+     *         continue."
      */
     public String getAuthenticationErrorMessage() {
-        return (authenticationErrorNotificationEnabled ? authenticationErrorMessage
-                : null);
+        return (authenticationErrorNotificationEnabled
+                ? authenticationErrorMessage : null);
     }
 
     /**
@@ -215,7 +216,7 @@ public class SystemMessages implements Serializable {
     /**
      * Returns the URL the user should be redirected to after dismissing the
      * "you have to enable your cookies" message. Typically null.
-     * 
+     *
      * @return A URL the user should be redirected to after dismissing the
      *         message or null to reload the current URL.
      */
@@ -227,7 +228,7 @@ public class SystemMessages implements Serializable {
      * Determines if "cookies disabled" messages should be shown to the end user
      * or not. If the notification is disabled the user will be immediately
      * redirected to the URL returned by {@link #getCookiesDisabledURL()}.
-     * 
+     *
      * @return true to show "cookies disabled" messages to the end user, false
      *         to redirect to the given URL directly
      */
@@ -238,7 +239,7 @@ public class SystemMessages implements Serializable {
     /**
      * Returns the caption of the message shown to the user when cookies are
      * disabled in the browser.
-     * 
+     *
      * @return The caption of the "cookies disabled" message
      */
     public String getCookiesDisabledCaption() {
@@ -249,7 +250,7 @@ public class SystemMessages implements Serializable {
     /**
      * Returns the message shown to the user when cookies are disabled in the
      * browser.
-     * 
+     *
      * @return The "cookies disabled" message
      */
     public String getCookiesDisabledMessage() {

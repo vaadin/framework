@@ -15,15 +15,24 @@ import com.vaadin.ui.Layout.SpacingHandler;
 public abstract class AbstractComponentTestCase<T extends AbstractComponent>
         extends TestBase {
 
-    protected static final ThemeResource ICON_16_HELP_PNG_CACHEABLE = cacheableThemeResource("../runo/icons/16/help.png");
-    protected static final ThemeResource ICON_16_FOLDER_PNG_CACHEABLE = cacheableThemeResource("../runo/icons/16/folder.png");
-    protected static final ThemeResource ICON_16_ERROR_PNG_CACHEABLE = cacheableThemeResource("../runo/icons/16/error.png");
-    protected static final ThemeResource ICON_16_USER_PNG_CACHEABLE = cacheableThemeResource("../runo/icons/16/user.png");
-    protected static final ThemeResource ICON_16_USER_PNG_UNCACHEABLE = uncacheableThemeResource("../runo/icons/16/user.png");
-    protected static final ThemeResource ICON_32_ATTENTION_PNG_CACHEABLE = cacheableThemeResource("../runo/icons/32/attention.png");
-    protected static final ThemeResource ICON_32_ATTENTION_PNG_UNCACHEABLE = uncacheableThemeResource("../runo/icons/32/attention.png");
-    protected static final ThemeResource ICON_64_EMAIL_REPLY_PNG_CACHEABLE = cacheableThemeResource("../runo/icons/64/email-reply.png");
-    protected static final ThemeResource ICON_64_EMAIL_REPLY_PNG_UNCACHEABLE = uncacheableThemeResource("../runo/icons/64/email-reply.png");
+    protected static final ThemeResource ICON_16_HELP_PNG_CACHEABLE = cacheableThemeResource(
+            "../runo/icons/16/help.png");
+    protected static final ThemeResource ICON_16_FOLDER_PNG_CACHEABLE = cacheableThemeResource(
+            "../runo/icons/16/folder.png");
+    protected static final ThemeResource ICON_16_ERROR_PNG_CACHEABLE = cacheableThemeResource(
+            "../runo/icons/16/error.png");
+    protected static final ThemeResource ICON_16_USER_PNG_CACHEABLE = cacheableThemeResource(
+            "../runo/icons/16/user.png");
+    protected static final ThemeResource ICON_16_USER_PNG_UNCACHEABLE = uncacheableThemeResource(
+            "../runo/icons/16/user.png");
+    protected static final ThemeResource ICON_32_ATTENTION_PNG_CACHEABLE = cacheableThemeResource(
+            "../runo/icons/32/attention.png");
+    protected static final ThemeResource ICON_32_ATTENTION_PNG_UNCACHEABLE = uncacheableThemeResource(
+            "../runo/icons/32/attention.png");
+    protected static final ThemeResource ICON_64_EMAIL_REPLY_PNG_CACHEABLE = cacheableThemeResource(
+            "../runo/icons/64/email-reply.png");
+    protected static final ThemeResource ICON_64_EMAIL_REPLY_PNG_UNCACHEABLE = uncacheableThemeResource(
+            "../runo/icons/64/email-reply.png");
 
     private List<T> testComponents = new ArrayList<T>();
 
@@ -198,7 +207,8 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     };
 
-    protected <VALUET> void doCommand(Command<T, VALUET> command, VALUET value) {
+    protected <VALUET> void doCommand(Command<T, VALUET> command,
+            VALUET value) {
         doCommand(command, value, null);
     }
 

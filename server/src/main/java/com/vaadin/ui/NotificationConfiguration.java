@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,7 +15,7 @@
  */
 
 /**
- * 
+ *
  */
 package com.vaadin.ui;
 
@@ -86,8 +86,8 @@ public interface NotificationConfiguration extends Serializable {
      * Sets the WAI-ARIA role for a notification type.
      * <p>
      * This role defines how an assistive device handles a notification.
-     * Available roles are alert and status (@see <a
-     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * Available roles are alert and status (@see
+     * <a href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
      * Model</a>).
      *
      * The default role is alert.
@@ -103,8 +103,8 @@ public interface NotificationConfiguration extends Serializable {
      * Gets the WAI-ARIA role for a notification type.
      * <p>
      * This role defines how an assistive device handles a notification.
-     * Available roles are alert and status (@see <a
-     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * Available roles are alert and status (@see
+     * <a href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
      * Model</a>)
      * <p>
      * The default role is alert.

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,8 +32,8 @@ import com.vaadin.shared.ui.upload.UploadState;
 import com.vaadin.ui.Upload;
 
 @Connect(Upload.class)
-public class UploadConnector extends AbstractComponentConnector implements
-        Paintable {
+public class UploadConnector extends AbstractComponentConnector
+        implements Paintable {
 
     public UploadConnector() {
         registerRpc(UploadClientRpc.class, new UploadClientRpc() {
@@ -52,8 +52,8 @@ public class UploadConnector extends AbstractComponentConnector implements
             @Override
             public void onChange(ChangeEvent event) {
                 if (hasEventListener(EventId.CHANGE)) {
-                    getRpcProxy(UploadServerRpc.class).change(
-                            getWidget().fu.getFilename());
+                    getRpcProxy(UploadServerRpc.class)
+                            .change(getWidget().fu.getFilename());
                 }
             }
         });
@@ -72,12 +72,12 @@ public class UploadConnector extends AbstractComponentConnector implements
         getWidget().client = client;
         getWidget().paintableId = uidl.getId();
         getWidget().nextUploadId = uidl.getIntAttribute("nextid");
-        final String action = client.translateVaadinUri(uidl
-                .getStringVariable("action"));
+        final String action = client
+                .translateVaadinUri(uidl.getStringVariable("action"));
         getWidget().element.setAction(action);
         if (uidl.hasAttribute("buttoncaption")) {
-            getWidget().submitButton.setText(uidl
-                    .getStringAttribute("buttoncaption"));
+            getWidget().submitButton
+                    .setText(uidl.getStringAttribute("buttoncaption"));
             getWidget().submitButton.setVisible(true);
         } else {
             getWidget().submitButton.setVisible(false);

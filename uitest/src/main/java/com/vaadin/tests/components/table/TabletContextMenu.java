@@ -36,7 +36,7 @@ public class TabletContextMenu extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#setup(com.vaadin.server.
      * VaadinRequest)
      */
@@ -104,7 +104,8 @@ public class TabletContextMenu extends AbstractTestUI {
                     ShortcutAction.KeyCode.DELETE, null);
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 System.out.println(action.getCaption());
             }
 
@@ -118,7 +119,7 @@ public class TabletContextMenu extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -128,7 +129,7 @@ public class TabletContextMenu extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override

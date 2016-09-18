@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -49,13 +49,13 @@ import com.vaadin.shared.communication.URLReference;
 
 /**
  * An abstract implementation of Connector.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
- * 
+ *
  */
-public abstract class AbstractConnector implements ServerConnector,
-        StateChangeHandler {
+public abstract class AbstractConnector
+        implements ServerConnector, StateChangeHandler {
 
     private ApplicationConnection connection;
     private String id;
@@ -85,7 +85,7 @@ public abstract class AbstractConnector implements ServerConnector,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.VPaintable#getConnection()
      */
     @Override
@@ -95,7 +95,7 @@ public abstract class AbstractConnector implements ServerConnector,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.Connector#getId()
      */
     @Override
@@ -120,13 +120,13 @@ public abstract class AbstractConnector implements ServerConnector,
 
         addStateChangeHandler(this);
         if (Profiler.isEnabled()) {
-            Profiler.enter("AbstractConnector.init "
-                    + getClass().getSimpleName());
+            Profiler.enter(
+                    "AbstractConnector.init " + getClass().getSimpleName());
         }
         init();
         if (Profiler.isEnabled()) {
-            Profiler.leave("AbstractConnector.init "
-                    + getClass().getSimpleName());
+            Profiler.leave(
+                    "AbstractConnector.init " + getClass().getSimpleName());
         }
         Profiler.leave("AbstractConnector.doInit");
     }
@@ -144,10 +144,10 @@ public abstract class AbstractConnector implements ServerConnector,
 
     /**
      * Registers an implementation for a server to client RPC interface.
-     * 
+     *
      * Multiple registrations can be made for a single interface, in which case
      * all of them receive corresponding RPC calls.
-     * 
+     *
      * @param rpcInterface
      *            RPC interface
      * @param implementation
@@ -169,7 +169,7 @@ public abstract class AbstractConnector implements ServerConnector,
 
     /**
      * Unregisters an implementation for a server to client RPC interface.
-     * 
+     *
      * @param rpcInterface
      *            RPC interface
      * @param implementation
@@ -187,7 +187,7 @@ public abstract class AbstractConnector implements ServerConnector,
     /**
      * Returns an RPC proxy object which can be used to invoke the RPC method on
      * the server.
-     * 
+     *
      * @param <T>
      *            The type of the ServerRpc interface
      * @param rpcInterface
@@ -225,7 +225,8 @@ public abstract class AbstractConnector implements ServerConnector,
         }
         if (statePropertyHandlerManagers != null
                 && event instanceof StateChangeEvent) {
-            Profiler.enter("AbstractConnector.fireEvent statePropertyHandlerManagers");
+            Profiler.enter(
+                    "AbstractConnector.fireEvent statePropertyHandlerManagers");
             StateChangeEvent stateChangeEvent = (StateChangeEvent) event;
             JsArrayString keys = statePropertyHandlerManagers.getKeys();
             for (int i = 0; i < keys.length(); i++) {
@@ -234,7 +235,8 @@ public abstract class AbstractConnector implements ServerConnector,
                     statePropertyHandlerManagers.get(property).fireEvent(event);
                 }
             }
-            Profiler.leave("AbstractConnector.fireEvent statePropertyHandlerManagers");
+            Profiler.leave(
+                    "AbstractConnector.fireEvent statePropertyHandlerManagers");
         }
         if (Profiler.isEnabled()) {
             Profiler.leave(profilerKey);
@@ -251,9 +253,10 @@ public abstract class AbstractConnector implements ServerConnector,
     }
 
     @Override
-    public HandlerRegistration addStateChangeHandler(StateChangeHandler handler) {
-        return ensureHandlerManager()
-                .addHandler(StateChangeEvent.TYPE, handler);
+    public HandlerRegistration addStateChangeHandler(
+            StateChangeHandler handler) {
+        return ensureHandlerManager().addHandler(StateChangeEvent.TYPE,
+                handler);
     }
 
     @Override
@@ -264,8 +267,8 @@ public abstract class AbstractConnector implements ServerConnector,
     @Override
     public HandlerRegistration addStateChangeHandler(String propertyName,
             StateChangeHandler handler) {
-        return ensureHandlerManager(propertyName).addHandler(
-                StateChangeEvent.TYPE, handler);
+        return ensureHandlerManager(propertyName)
+                .addHandler(StateChangeEvent.TYPE, handler);
     }
 
     @Override
@@ -333,23 +336,23 @@ public abstract class AbstractConnector implements ServerConnector,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ServerConnector#onUnregister()
      */
     @Override
     public void onUnregister() {
         if (debugLogging) {
-            VConsole.log("Unregistered connector "
-                    + Util.getConnectorString(this));
+            VConsole.log(
+                    "Unregistered connector " + Util.getConnectorString(this));
         }
 
     }
 
     /**
      * Returns the shared state object for this connector.
-     * 
+     *
      * Override this method to define the shared state type for your connector.
-     * 
+     *
      * @return the current shared state (never null)
      */
     @Override
@@ -368,7 +371,7 @@ public abstract class AbstractConnector implements ServerConnector,
      * created state object must be compatible with the return type of
      * {@link #getState()}. The default implementation creates a state object
      * using GWT.create() using the defined return type of {@link #getState()}.
-     * 
+     *
      * @return A new state object
      */
     protected SharedState createState() {
@@ -457,7 +460,7 @@ public abstract class AbstractConnector implements ServerConnector,
      * {@link com.vaadin.terminal.AbstractClientConnector#setResource(String, com.vaadin.terminal.Resource)}
      * with the same key. <code>null</code> is returned if no corresponding
      * resource is found.
-     * 
+     *
      * @param key
      *            a string identifying the resource.
      * @return the resource URL as a string, or <code>null</code> if no
@@ -474,7 +477,7 @@ public abstract class AbstractConnector implements ServerConnector,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ServerConnector#hasEventListener(java.lang.String)
      */
     @Override
@@ -486,7 +489,7 @@ public abstract class AbstractConnector implements ServerConnector,
     /**
      * Force the connector to recheck its state variables as the variables or
      * their meaning might have changed.
-     * 
+     *
      * @since 7.3
      */
     public void forceStateChange() {

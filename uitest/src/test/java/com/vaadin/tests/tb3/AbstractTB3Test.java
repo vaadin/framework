@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -81,17 +81,18 @@ import elemental.json.impl.JsonUtil;
 /**
  * Base class for TestBench 3+ tests. All TB3+ tests in the project should
  * extend this class.
- * 
+ *
  * Provides:
  * <ul>
  * <li>Helpers for browser selection</li>
  * <li>Hub connection setup and teardown</li>
  * <li>Automatic generation of URL for a given test on the development server
  * using {@link #getUIClass()} or by automatically finding an enclosing UI class
- * and based on requested features, e.g. {@link #isDebug()}, {@link #isPush()}</li>
+ * and based on requested features, e.g. {@link #isDebug()},
+ * {@link #isPush()}</li>
  * <li>Generic helpers for creating TB3+ tests</li>
  * </ul>
- * 
+ *
  * @author Vaadin Ltd
  */
 @RunWith(TB3Runner.class)
@@ -119,11 +120,11 @@ public abstract class AbstractTB3Test extends ParallelTest {
     private static final int BROWSER_TIMEOUT_IN_MS = 30 * 1000;
 
     protected static DesiredCapabilities PHANTOMJS2() {
-        DesiredCapabilities phantomjs2 = new VaadinBrowserFactory().create(
-                Browser.PHANTOMJS, "2");
+        DesiredCapabilities phantomjs2 = new VaadinBrowserFactory()
+                .create(Browser.PHANTOMJS, "2");
         // Hack for the test cluster
-        phantomjs2
-                .setCapability("phantomjs.binary.path", "/usr/bin/phantomjs2");
+        phantomjs2.setCapability("phantomjs.binary.path",
+                "/usr/bin/phantomjs2");
         return phantomjs2;
     }
 
@@ -139,7 +140,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     /**
      * Connect to the hub using a remote web driver, set the canvas size and
      * opens the initial URL as specified by {@link #getTestUrl()}
-     * 
+     *
      * @throws Exception
      */
     @Override
@@ -175,8 +176,8 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     protected WebElement getTooltipErrorElement() {
-        WebElement tooltip = getDriver().findElement(
-                com.vaadin.testbench.By.className("v-tooltip"));
+        WebElement tooltip = getDriver()
+                .findElement(com.vaadin.testbench.By.className("v-tooltip"));
         return tooltip.findElement(By.className("v-errormessage"));
     }
 
@@ -203,7 +204,8 @@ public abstract class AbstractTB3Test extends ParallelTest {
         waitForDebugMessage(expectedMessage, 30);
     }
 
-    protected void waitForDebugMessage(final String expectedMessage, int timeout) {
+    protected void waitForDebugMessage(final String expectedMessage,
+            int timeout) {
         waitUntil(new ExpectedCondition<Boolean>() {
 
             @Override
@@ -214,12 +216,13 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     protected void clearDebugMessages() {
-        driver.findElement(
-                By.xpath("//button[@class='v-debugwindow-button' and @title='Clear log']"))
+        driver.findElement(By
+                .xpath("//button[@class='v-debugwindow-button' and @title='Clear log']"))
                 .click();
     }
 
-    protected void waitUntilRowIsVisible(final TableElement table, final int row) {
+    protected void waitUntilRowIsVisible(final TableElement table,
+            final int row) {
         waitUntil(new ExpectedCondition<Object>() {
             @Override
             public Object apply(WebDriver input) {
@@ -286,7 +289,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Returns the full URL to be used for the test
-     * 
+     *
      * @return the full URL for the test
      */
     protected String getTestUrl() {
@@ -295,7 +298,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Returns the full URL to be used for the test for the provided UI class.
-     * 
+     *
      * @return the full URL for the test
      */
     protected String getTestURL(Class<?> uiClass) {
@@ -305,14 +308,14 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Used to determine what URL to initially open for the test
-     * 
+     *
      * @return the host name of development server
      */
     protected abstract String getDeploymentHostname();
 
     /**
      * Used to determine what port the test is running on
-     * 
+     *
      * @return The port teh test is running on, by default 8888
      */
     protected abstract int getDeploymentPort();
@@ -324,23 +327,23 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * ran and before running that,
      * {@link #setDesiredCapabilities(DesiredCapabilities)} is invoked with the
      * value returned by this method.
-     * 
+     *
      * This method is not static to allow overriding it in sub classes. By
      * default runs the test only on Firefox
-     * 
+     *
      * @return The browsers to run the test on
      */
     @BrowserConfiguration
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singletonList(Browser.FIREFOX
-                .getDesiredCapabilities());
+        return Collections
+                .singletonList(Browser.FIREFOX.getDesiredCapabilities());
     }
 
     /**
      * Finds an element based on the part of a TB2 style locator following the
      * :: (e.g. vaadin=runLabelModes::PID_Scheckboxaction-Enabled/domChild[0] ->
      * PID_Scheckboxaction-Enabled/domChild[0]).
-     * 
+     *
      * @param vaadinLocator
      *            The part following :: of the vaadin locator string
      * @return
@@ -351,7 +354,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Uses JavaScript to determine the currently focused element.
-     * 
+     *
      * @return Focused element or null
      */
     protected WebElement getFocusedElement() {
@@ -365,7 +368,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Executes the given Javascript
-     * 
+     *
      * @param script
      *            the script to execute
      * @return whatever
@@ -378,7 +381,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Find a Vaadin element based on its id given using Component.setId
-     * 
+     *
      * @param id
      *            The id to locate
      * @return
@@ -392,7 +395,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * following the :: (e.g.
      * vaadin=runLabelModes::PID_Scheckboxaction-Enabled/domChild[0] ->
      * PID_Scheckboxaction-Enabled/domChild[0]).
-     * 
+     *
      * @param vaadinLocator
      *            The part following :: of the vaadin locator string
      * @return
@@ -406,7 +409,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Constructs a {@link By} locator for the id given using Component.setId
-     * 
+     *
      * @param id
      *            The id to locate
      * @return a locator for the given id
@@ -418,7 +421,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     /**
      * Waits up to 10s for the given condition to become true. Use e.g. as
      * {@link #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
-     * 
+     *
      * @param condition
      *            the condition to wait for to become true
      */
@@ -428,9 +431,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Waits the given number of seconds for the given condition to become true.
-     * Use e.g. as {@link
-     * #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
-     * 
+     * Use e.g. as
+     * {@link #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
+     *
      * @param condition
      *            the condition to wait for to become true
      */
@@ -443,7 +446,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Waits up to 10s for the given condition to become false. Use e.g. as
      * {@link #waitUntilNot(ExpectedConditions.textToBePresentInElement(by,
      * text))}
-     * 
+     *
      * @param condition
      *            the condition to wait for to become false
      */
@@ -453,9 +456,10 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Waits the given number of seconds for the given condition to become
-     * false. Use e.g. as {@link
-     * #waitUntilNot(ExpectedConditions.textToBePresentInElement(by, text))}
-     * 
+     * false. Use e.g. as
+     * {@link #waitUntilNot(ExpectedConditions.textToBePresentInElement(by,
+     * text))}
+     *
      * @param condition
      *            the condition to wait for to become false
      */
@@ -483,10 +487,10 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Checks if the given element has the given class name.
-     * 
+     *
      * Matches only full class names, i.e. has ("foo") does not match
      * class="foobar"
-     * 
+     *
      * @param element
      * @param className
      * @return
@@ -509,7 +513,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     /**
      * For tests extending {@link AbstractTestUIWithLog}, returns the element
      * for the Nth log row
-     * 
+     *
      * @param rowNr
      *            The log row to retrieve
      * @return the Nth log row
@@ -521,7 +525,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     /**
      * For tests extending {@link AbstractTestUIWithLog}, returns the text in
      * the Nth log row
-     * 
+     *
      * @param rowNr
      *            The log row to retrieve text for
      * @return the text in the log row
@@ -532,7 +536,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Asserts that {@literal a} is &gt;= {@literal b}
-     * 
+     *
      * @param message
      *            The message to include in the {@link AssertionError}
      * @param a
@@ -551,7 +555,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Asserts that {@literal a} is &gt; {@literal b}
-     * 
+     *
      * @param message
      *            The message to include in the {@link AssertionError}
      * @param a
@@ -569,7 +573,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Asserts that {@literal a} is &lt;= {@literal b}
-     * 
+     *
      * @param message
      *            The message to include in the {@link AssertionError}
      * @param a
@@ -588,7 +592,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Asserts that {@literal a} is &lt; {@literal b}
-     * 
+     *
      * @param message
      *            The message to include in the {@link AssertionError}
      * @param a
@@ -596,8 +600,8 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * @throws AssertionError
      *             If comparison fails
      */
-    public static final <T> void assertLessThan(String message,
-            Comparable<T> a, T b) throws AssertionError {
+    public static final <T> void assertLessThan(String message, Comparable<T> a,
+            T b) throws AssertionError {
         if (a.compareTo(b) < 0) {
             return;
         }
@@ -613,12 +617,12 @@ public abstract class AbstractTB3Test extends ParallelTest {
     /**
      * Returns the path that should be used for the test. The path contains the
      * full path (appended to hostname+port) and must start with a slash.
-     * 
+     *
      * @param push
      *            true if "?debug" should be added
      * @param debug
      *            true if /run-push should be used instead of /run
-     * 
+     *
      * @return The URL path to the UI class to test
      */
     protected String getDeploymentPath() {
@@ -635,13 +639,13 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Returns the UI class the current test is connected to (or in special
      * cases UIProvider or LegacyApplication). Uses the enclosing class if the
      * test class is a static inner class to a UI class.
-     * 
+     *
      * Test which are not enclosed by a UI class must implement this method and
      * return the UI class they want to test.
-     * 
+     *
      * Note that this method will update the test name to the enclosing class to
      * be compatible with TB2 screenshot naming
-     * 
+     *
      * @return the UI class the current test is connected to
      */
     protected Class<?> getUIClass() {
@@ -679,7 +683,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     /**
      * Returns whether to run the test in debug mode (with the debug console
      * open) or not
-     * 
+     *
      * @return true to run with the debug window open, false by default
      */
     protected final boolean isDebug() {
@@ -689,7 +693,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     /**
      * Sets whether to run the test in debug mode (with the debug console open)
      * or not.
-     * 
+     *
      * @param debug
      *            true to open debug window, false otherwise
      */
@@ -701,7 +705,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Returns whether to run the test with push enabled (using /run-push) or
      * not. Note that push tests can and should typically be created using @Push
      * on the UI instead of overriding this method
-     * 
+     *
      * @return true if /run-push is used, false otherwise
      */
     protected final boolean isPush() {
@@ -712,7 +716,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Sets whether to run the test with push enabled (using /run-push) or not.
      * Note that push tests can and should typically be created using @Push on
      * the UI instead of overriding this method
-     * 
+     *
      * @param push
      *            true to use /run-push in the test, false otherwise
      */
@@ -724,10 +728,10 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Returns the path for the given UI class when deployed on the test server.
      * The path contains the full path (appended to hostname+port) and must
      * start with a slash.
-     * 
+     *
      * This method takes into account {@link #isPush()} and {@link #isDebug()}
      * when the path is generated.
-     * 
+     *
      * @param uiClass
      * @param push
      *            true if "?debug" should be added
@@ -754,7 +758,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Used to determine what URL to initially open for the test
-     * 
+     *
      * @return The base URL for the test. Does not include a trailing slash.
      */
     protected String getBaseURL() {
@@ -764,7 +768,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     /**
      * Generates the application id based on the URL in a way compatible with
      * VaadinServletService.
-     * 
+     *
      * @param pathWithQueryParameters
      *            The path part of the URL, possibly still containing query
      *            parameters
@@ -772,8 +776,8 @@ public abstract class AbstractTB3Test extends ParallelTest {
      */
     private String getApplicationId(String pathWithQueryParameters) {
         // Remove any possible URL parameters
-        String pathWithoutQueryParameters = pathWithQueryParameters.replaceAll(
-                "\\?.*", "");
+        String pathWithoutQueryParameters = pathWithQueryParameters
+                .replaceAll("\\?.*", "");
         if ("".equals(pathWithoutQueryParameters)) {
             return "ROOT";
         }
@@ -785,7 +789,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     /**
      * Sleeps for the given number of ms but ensures that the browser connection
      * does not time out.
-     * 
+     *
      * @param timeoutMillis
      *            Number of ms to wait
      * @throws InterruptedException
@@ -804,7 +808,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     /**
      * Called by the test runner whenever there is an exception in the test that
      * will cause termination of the test
-     * 
+     *
      * @param t
      *            the throwable which caused the termination
      */
@@ -815,7 +819,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Returns the mouse object for doing mouse commands
-     * 
+     *
      * @return Returns the mouse
      */
     public Mouse getMouse() {
@@ -824,7 +828,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Returns the keyboard object for controlling keyboard events
-     * 
+     *
      * @return Return the keyboard
      */
     public Keyboard getKeyboard() {
@@ -860,10 +864,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     protected void assertNoDebugMessage(Level level) {
         // class="v-debugwindow-row Level.getName()"
-        List<WebElement> logElements = driver
-                .findElements(By.xpath(String
-                        .format("//div[@class='v-debugwindow-row %s']/span[@class='v-debugwindow-message']",
-                                level.getName())));
+        List<WebElement> logElements = driver.findElements(By.xpath(String
+                .format("//div[@class='v-debugwindow-row %s']/span[@class='v-debugwindow-message']",
+                        level.getName())));
         if (!logElements.isEmpty()) {
             String logRows = "";
             for (WebElement e : logElements) {
@@ -879,7 +882,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * RequireWindowFocus makes tests more stable but seems to be broken with
      * certain commands such as sendKeys. Therefore it is not enabled by default
      * for all tests
-     * 
+     *
      * @return true, to use the "require window focus" feature, false otherwise
      */
     protected boolean requireWindowFocusForIE() {
@@ -888,7 +891,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Should the "enable persistent hover" be enabled for Internet Explorer.
-     * 
+     *
      * Persistent hovering causes continuous firing of mouse over events at the
      * last location the mouse cursor has been moved to. This is to avoid
      * problems where the real mouse cursor is inside the browser window and
@@ -896,7 +899,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * (http://
      * jimevansmusic.blogspot.fi/2012/06/whats-wrong-with-internet-explorer
      * .html)
-     * 
+     *
      * @return true, to use the "persistent hover" feature, false otherwise
      */
     protected boolean usePersistentHoverForIE() {
@@ -908,7 +911,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * <p>
      * Native events sometimes cause failure in clicking on buttons/checkboxes
      * but are possibly needed for some operations.
-     * 
+     *
      * @return true, to use "native events", false to use generated Javascript
      *         events
      */
@@ -1009,8 +1012,8 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     protected boolean isLoadingIndicatorVisible() {
-        WebElement loadingIndicator = findElement(By
-                .className("v-loading-indicator"));
+        WebElement loadingIndicator = findElement(
+                By.className("v-loading-indicator"));
 
         return loadingIndicator.isDisplayed();
     }
@@ -1035,7 +1038,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Selects a menu item. By default, this will click on the menu item.
-     * 
+     *
      * @param menuCaption
      *            caption of the menu item
      */
@@ -1045,7 +1048,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Selects a menu item.
-     * 
+     *
      * @param menuCaption
      *            caption of the menu item
      * @param click
@@ -1055,8 +1058,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
     protected void selectMenu(String menuCaption, boolean click) {
         WebElement menuElement = getMenuElement(menuCaption);
         Dimension size = menuElement.getSize();
-        new Actions(getDriver()).moveToElement(menuElement, size.width - 10,
-                size.height / 2).perform();
+        new Actions(getDriver())
+                .moveToElement(menuElement, size.width - 10, size.height / 2)
+                .perform();
         if (click) {
             new Actions(getDriver()).click().perform();
         }
@@ -1064,7 +1068,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Finds the menu item from the DOM based on menu item caption.
-     * 
+     *
      * @param menuCaption
      *            caption of the menu item
      * @return the found menu item
@@ -1080,7 +1084,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     /**
      * Selects a submenu described by a path of menus from the first MenuBar in
      * the UI.
-     * 
+     *
      * @param menuCaptions
      *            array of menu captions
      */
@@ -1088,8 +1092,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
         selectMenu(menuCaptions[0], true);
 
         // Move to the menu item opened below the menu bar.
-        new Actions(getDriver()).moveByOffset(0,
-                getMenuElement(menuCaptions[0]).getSize().getHeight())
+        new Actions(getDriver())
+                .moveByOffset(0,
+                        getMenuElement(menuCaptions[0]).getSize().getHeight())
                 .perform();
 
         for (int i = 1; i < menuCaptions.length - 1; i++) {
@@ -1101,7 +1106,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Asserts that an element is present
-     * 
+     *
      * @param by
      *            the locatore for the element
      */
@@ -1111,7 +1116,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     /**
      * Asserts that an element is not present
-     * 
+     *
      * @param by
      *            the locatore for the element
      */
@@ -1172,7 +1177,8 @@ public abstract class AbstractTB3Test extends ParallelTest {
         Assert.assertFalse(
                 "The element should not have a horizontal scrollbar (scrollWidth: "
                         + scrollWidth + ", clientWidth: " + clientWidth + "): "
-                        + errorMessage, hasScrollbar);
+                        + errorMessage,
+                hasScrollbar);
     }
 
     protected void assertNoVerticalScrollbar(WebElement element,
@@ -1187,7 +1193,8 @@ public abstract class AbstractTB3Test extends ParallelTest {
         Assert.assertFalse(
                 "The element should not have a vertical scrollbar (scrollHeight: "
                         + scrollHeight + ", clientHeight: " + clientHeight
-                        + "): " + errorMessage, hasScrollbar);
+                        + "): " + errorMessage,
+                hasScrollbar);
     }
 
     protected int getScrollHeight(WebElement element) {
@@ -1252,8 +1259,8 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     protected void waitForThemeToChange(final String theme) {
 
-        final WebElement rootDiv = findElement(By
-                .xpath("//div[contains(@class,'v-app')]"));
+        final WebElement rootDiv = findElement(
+                By.xpath("//div[contains(@class,'v-app')]"));
         waitUntil(new ExpectedCondition<Boolean>() {
 
             @Override

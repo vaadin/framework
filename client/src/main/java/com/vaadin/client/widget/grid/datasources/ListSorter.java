@@ -31,7 +31,7 @@ import com.vaadin.shared.data.sort.SortDirection;
 /**
  * Provides sorting facility from Grid for the {@link ListDataSource} in-memory
  * data source.
- * 
+ *
  * @author Vaadin Ltd
  * @param <T>
  *            Grid row data type
@@ -75,7 +75,7 @@ public class ListSorter<T> {
      * which includes all standard data classes like String, Number derivatives
      * and Dates). Any existing comparator can be removed by passing in a
      * non-null GridColumn and a null Comparator.
-     * 
+     *
      * @param column
      *            a grid column. May not be null.
      * @param comparator
@@ -97,7 +97,7 @@ public class ListSorter<T> {
 
     /**
      * Retrieve the comparator assigned for a specific grid column.
-     * 
+     *
      * @param column
      *            a grid column. May not be null.
      * @return a comparator, or null if no comparator for the specified grid
@@ -122,15 +122,15 @@ public class ListSorter<T> {
 
     /**
      * Apply sorting to the current ListDataSource.
-     * 
+     *
      * @param order
      *            the sort order list provided by the grid sort event
      */
     private void sort(final List<SortOrder> order) {
         DataSource<T> ds = grid.getDataSource();
         if (!(ds instanceof ListDataSource)) {
-            throw new IllegalStateException("Grid " + grid
-                    + " data source is not a ListDataSource!");
+            throw new IllegalStateException(
+                    "Grid " + grid + " data source is not a ListDataSource!");
         }
 
         ((ListDataSource<T>) ds).sort(new Comparator<T>() {
@@ -158,15 +158,16 @@ public class ListSorter<T> {
                     }
 
                     if (result != 0) {
-                        return o.getDirection() == SortDirection.ASCENDING ? result
-                                : -result;
+                        return o.getDirection() == SortDirection.ASCENDING
+                                ? result : -result;
                     }
                 }
 
                 if (order.size() > 0) {
-                    return order.get(0).getDirection() == SortDirection.ASCENDING ? a
-                            .hashCode() - b.hashCode()
-                            : b.hashCode() - a.hashCode();
+                    return order.get(0)
+                            .getDirection() == SortDirection.ASCENDING
+                                    ? a.hashCode() - b.hashCode()
+                                    : b.hashCode() - a.hashCode();
                 }
                 return a.hashCode() - b.hashCode();
             }

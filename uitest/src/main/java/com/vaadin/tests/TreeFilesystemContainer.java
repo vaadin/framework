@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,12 +37,12 @@ import com.vaadin.ui.VerticalLayout;
  * <code>com.vaadin.data.util.FilesystemContainer</code>, how to read
  * <code>com.vaadin.ui.Component.Event</code> objects, how to receive and handle
  * any event by implementing <code>com.vaadin.ui.Component.Listener</code>.
- * 
+ *
  * @since 4.0.0
- * 
+ *
  */
-public class TreeFilesystemContainer extends
-        com.vaadin.server.LegacyApplication implements Listener {
+public class TreeFilesystemContainer extends com.vaadin.server.LegacyApplication
+        implements Listener {
 
     // Filesystem explorer panel and it's components
     private final Panel explorerPanel = new Panel("Filesystem explorer");
@@ -56,7 +56,8 @@ public class TreeFilesystemContainer extends
 
     @Override
     public void init() {
-        final LegacyWindow w = new LegacyWindow("Tree FilesystemContainer demo");
+        final LegacyWindow w = new LegacyWindow(
+                "Tree FilesystemContainer demo");
         setMainWindow(w);
         final VerticalLayout main = new VerticalLayout();
         w.setContent(main);
@@ -84,10 +85,11 @@ public class TreeFilesystemContainer extends
         propertyPanel.setEnabled(false);
 
         // Get sample directory
-        final File sampleDir = SampleDirectory.getDirectory(
-                VaadinSession.getCurrent(), w);
+        final File sampleDir = SampleDirectory
+                .getDirectory(VaadinSession.getCurrent(), w);
         // Populate tree with FilesystemContainer
-        final FilesystemContainer fsc = new FilesystemContainer(sampleDir, true);
+        final FilesystemContainer fsc = new FilesystemContainer(sampleDir,
+                true);
         filesystem.setContainerDataSource(fsc);
         // "this" handles all filesystem events
         // e.g. node clicked, expanded etc.

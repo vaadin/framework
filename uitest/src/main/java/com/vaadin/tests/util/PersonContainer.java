@@ -6,15 +6,15 @@ import java.util.Random;
 import com.vaadin.data.util.BeanItemContainer;
 
 @SuppressWarnings("serial")
-public class PersonContainer extends BeanItemContainer<Person> implements
-        Serializable {
+public class PersonContainer extends BeanItemContainer<Person>
+        implements Serializable {
 
     /**
      * Natural property order for Person bean. Used in tables and forms.
      */
-    public static final Object[] NATURAL_COL_ORDER = new Object[] {
-            "firstName", "lastName", "email", "phoneNumber",
-            "address.streetAddress", "address.postalCode", "address.city" };
+    public static final Object[] NATURAL_COL_ORDER = new Object[] { "firstName",
+            "lastName", "email", "phoneNumber", "address.streetAddress",
+            "address.postalCode", "address.city" };
 
     /**
      * "Human readable" captions for properties in same order as in
@@ -49,8 +49,8 @@ public class PersonContainer extends BeanItemContainer<Person> implements
             p.setPhoneNumber(TestDataGenerator.getPhoneNumber(r));
 
             p.getAddress().setPostalCode(TestDataGenerator.getPostalCode(r));
-            p.getAddress().setStreetAddress(
-                    TestDataGenerator.getStreetAddress(r));
+            p.getAddress()
+                    .setStreetAddress(TestDataGenerator.getStreetAddress(r));
             c.addItem(p);
         }
 

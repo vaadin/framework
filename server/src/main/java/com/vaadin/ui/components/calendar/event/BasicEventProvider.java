@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,7 +29,7 @@ import com.vaadin.ui.components.calendar.event.CalendarEventProvider.EventSetCha
  * CalendarEventProvider}. Use {@link #addEvent(CalendarEvent)} and
  * {@link #removeEvent(CalendarEvent)} to add / remove events.
  * </p>
- * 
+ *
  * <p>
  * {@link com.vaadin.addon.calendar.event.CalendarEventProvider.EventSetChangeNotifier
  * EventSetChangeNotifier} and
@@ -37,7 +37,7 @@ import com.vaadin.ui.components.calendar.event.CalendarEventProvider.EventSetCha
  * EventChangeListener} are also implemented, so the Calendar is notified when
  * an event is added, changed or removed.
  * </p>
- * 
+ *
  * @since 7.1.0
  * @author Vaadin Ltd.
  */
@@ -51,7 +51,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.event.CalendarEventProvider#getEvents(java.
      * util.Date, java.util.Date)
@@ -81,7 +81,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
 
     /**
      * Does this event provider container this event
-     * 
+     *
      * @param event
      *            The event to check for
      * @return If this provider has the event then true is returned, else false
@@ -92,12 +92,11 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
 
     /*
      * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventSetChangeNotifier
-     * #addListener
-     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventSetChangeListener
-     * )
+     *
+     * @see com.vaadin.addon.calendar.ui.CalendarComponentEvents.
+     * EventSetChangeNotifier #addListener
+     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.
+     * EventSetChangeListener )
      */
     @Override
     public void addEventSetChangeListener(EventSetChangeListener listener) {
@@ -107,12 +106,11 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
 
     /*
      * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventSetChangeNotifier
-     * #removeListener
-     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventSetChangeListener
-     * )
+     *
+     * @see com.vaadin.addon.calendar.ui.CalendarComponentEvents.
+     * EventSetChangeNotifier #removeListener
+     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.
+     * EventSetChangeListener )
      */
     @Override
     public void removeEventSetChangeListener(EventSetChangeListener listener) {
@@ -133,7 +131,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventChangeListener
      * #eventChange
@@ -147,7 +145,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#addEvent
      * (com.vaadin.addon.calendar.event.CalendarEvent)
@@ -163,7 +161,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#removeEvent
      * (com.vaadin.addon.calendar.event.CalendarEvent)

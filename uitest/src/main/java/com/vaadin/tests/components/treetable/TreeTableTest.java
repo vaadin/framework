@@ -17,8 +17,8 @@ import com.vaadin.ui.Tree.ExpandEvent;
 import com.vaadin.ui.Tree.ExpandListener;
 import com.vaadin.ui.TreeTable;
 
-public class TreeTableTest extends Tables<TreeTable> implements
-        CollapseListener, ExpandListener {
+public class TreeTableTest extends Tables<TreeTable>
+        implements CollapseListener, ExpandListener {
 
     @Override
     protected Class<TreeTable> getTestClass() {

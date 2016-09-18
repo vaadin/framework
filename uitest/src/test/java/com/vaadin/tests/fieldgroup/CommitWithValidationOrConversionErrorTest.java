@@ -2,8 +2,8 @@ package com.vaadin.tests.fieldgroup;
 
 import org.junit.Test;
 
-public class CommitWithValidationOrConversionErrorTest extends
-        BasicPersonFormTest {
+public class CommitWithValidationOrConversionErrorTest
+        extends BasicPersonFormTest {
 
     private static final String UPDATED_BEAN_VALUES = "Person [firstName=John, lastName=Doever, email=john@doe.com, age=123, sex=Male, address=Address [streetAddress=John street, postalCode=11223, city=John's town, country=USA], deceased=false, salary=null, salaryDouble=null, rent=null]";
     private static final String UPDATED_NAME_BEAN_VALUES = "Person [firstName=John, lastName=Doever, email=john@doe.com, age=64, sex=Male, address=Address [streetAddress=John street, postalCode=11223, city=John's town, country=USA], deceased=false, salary=null, salaryDouble=null, rent=null]";

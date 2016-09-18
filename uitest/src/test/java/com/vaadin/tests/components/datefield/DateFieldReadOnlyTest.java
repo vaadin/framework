@@ -13,8 +13,8 @@ import java.io.IOException;
 public class DateFieldReadOnlyTest extends MultiBrowserTest {
 
     @Test
-    public void readOnlyDateFieldPopupShouldNotOpen() throws IOException,
-            InterruptedException {
+    public void readOnlyDateFieldPopupShouldNotOpen()
+            throws IOException, InterruptedException {
         openTestURL();
 
         compareScreen("initial");
@@ -29,8 +29,8 @@ public class DateFieldReadOnlyTest extends MultiBrowserTest {
     }
 
     private void closePopup() {
-        findElement(By.className("v-datefield-calendarpanel")).sendKeys(
-                Keys.RETURN);
+        findElement(By.className("v-datefield-calendarpanel"))
+                .sendKeys(Keys.RETURN);
     }
 
     private void openPopup() {

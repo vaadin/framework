@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,7 +29,7 @@ import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Link is used to create external or internal URL links.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -63,7 +63,7 @@ public class Link extends AbstractComponent {
 
     /**
      * Creates a new instance of Link.
-     * 
+     *
      * @param caption
      * @param resource
      */
@@ -74,8 +74,8 @@ public class Link extends AbstractComponent {
 
     /**
      * Creates a new instance of Link that opens a new window.
-     * 
-     * 
+     *
+     *
      * @param caption
      *            the Link text.
      * @param targetName
@@ -88,7 +88,7 @@ public class Link extends AbstractComponent {
      *            the Height of the target window.
      * @param border
      *            the Border style of the target window.
-     * 
+     *
      */
     public Link(String caption, Resource resource, String targetName, int width,
             int height, BorderStyle border) {
@@ -112,7 +112,7 @@ public class Link extends AbstractComponent {
 
     /**
      * Returns the target window border.
-     * 
+     *
      * @return the target window border.
      */
     public BorderStyle getTargetBorder() {
@@ -121,7 +121,7 @@ public class Link extends AbstractComponent {
 
     /**
      * Returns the target window height or -1 if not set.
-     * 
+     *
      * @return the target window height.
      */
     public int getTargetHeight() {
@@ -132,7 +132,7 @@ public class Link extends AbstractComponent {
     /**
      * Returns the target window name. Empty name of null implies that the
      * target is opened to the window containing the link.
-     * 
+     *
      * @return the target window name.
      */
     public String getTargetName() {
@@ -141,7 +141,7 @@ public class Link extends AbstractComponent {
 
     /**
      * Returns the target window width or -1 if not set.
-     * 
+     *
      * @return the target window width.
      */
     public int getTargetWidth() {
@@ -151,7 +151,7 @@ public class Link extends AbstractComponent {
 
     /**
      * Sets the border of the target window.
-     * 
+     *
      * @param targetBorder
      *            the targetBorder to set.
      */
@@ -161,7 +161,7 @@ public class Link extends AbstractComponent {
 
     /**
      * Sets the target window height.
-     * 
+     *
      * @param targetHeight
      *            the targetHeight to set.
      */
@@ -171,7 +171,7 @@ public class Link extends AbstractComponent {
 
     /**
      * Sets the target window name.
-     * 
+     *
      * @param targetName
      *            the targetName to set.
      */
@@ -181,7 +181,7 @@ public class Link extends AbstractComponent {
 
     /**
      * Sets the target window width.
-     * 
+     *
      * @param targetWidth
      *            the targetWidth to set.
      */
@@ -191,7 +191,7 @@ public class Link extends AbstractComponent {
 
     /**
      * Returns the resource this link opens.
-     * 
+     *
      * @return the Resource.
      */
     public Resource getResource() {
@@ -200,7 +200,7 @@ public class Link extends AbstractComponent {
 
     /**
      * Sets the resource this link opens.
-     * 
+     *
      * @param resource
      *            the resource to set.
      */

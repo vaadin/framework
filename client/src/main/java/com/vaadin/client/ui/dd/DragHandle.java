@@ -31,7 +31,7 @@ import com.vaadin.client.ui.dd.DragAndDropHandler.DragAndDropCallback;
  * view of this component, there really is no use for that). For the more
  * general, event-providing interface that this component is based on, see
  * {@link DragAndDropHandler}.
- * 
+ *
  * @since 7.6
  */
 public class DragHandle {
@@ -48,7 +48,7 @@ public class DragHandle {
 
         /**
          * Called when the drag handle has moved.
-         * 
+         *
          * @param deltaX
          *            change in X direction since start
          * @param deltaY
@@ -80,7 +80,7 @@ public class DragHandle {
 
     /**
      * Creates a new DragHandle.
-     * 
+     *
      * @param baseName
      *            CSS style name to use for this DragHandle element. This
      *            parameter is supplied to the constructor (rather than added
@@ -158,7 +158,7 @@ public class DragHandle {
 
     /**
      * Returns the current parent element for this drag handle. May be null.
-     * 
+     *
      * @return an Element or null
      */
     public Element getParent() {
@@ -167,7 +167,7 @@ public class DragHandle {
 
     /**
      * Gets the element used as actual drag handle.
-     * 
+     *
      * @return an Element
      */
     public Element getElement() {
@@ -176,7 +176,7 @@ public class DragHandle {
 
     /**
      * Adds this drag handle to an HTML element.
-     * 
+     *
      * @param elem
      *            an element
      */
@@ -198,7 +198,7 @@ public class DragHandle {
 
     /**
      * Adds CSS style name to the drag handle element.
-     * 
+     *
      * @param styleName
      *            a CSS style name
      */
@@ -208,7 +208,7 @@ public class DragHandle {
 
     /**
      * Removes existing style name from drag handle element.
-     * 
+     *
      * @param styleName
      *            a CSS style name
      */

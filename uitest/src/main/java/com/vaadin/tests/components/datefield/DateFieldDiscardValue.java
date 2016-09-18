@@ -17,8 +17,8 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Test to demonstrate how discarding of field value works with various valid
  * and invalid data sources. Previously (Ticket #8069) the case where the
- * content of the datasource was null was not handled correctly. This value
- * is a valid data source value for the field, but discard did not actually discard
+ * content of the datasource was null was not handled correctly. This value is a
+ * valid data source value for the field, but discard did not actually discard
  * the value or remove error markers in this cases.
  *
  * @author Vaadin Ltd
@@ -29,11 +29,11 @@ public class DateFieldDiscardValue extends AbstractTestUI {
     public static final String PROP_NONULL = "A field with a valid date in the data source property";
     public static final String PROP_NULL_VALUE = "A field with a null value in the data source property";
     public static final String PROP_NULL = "A field with a null datasource property";
-    
+
     @Override
     protected void setup(VaadinRequest request) {
         String dateFormat = "dd/MM/yy";
-        
+
         final DateField df = new DateField(PROP_NONULL);
         df.setDateFormat(dateFormat);
         df.setBuffered(true);
@@ -41,7 +41,7 @@ public class DateFieldDiscardValue extends AbstractTestUI {
         try {
             date = new SimpleDateFormat(dateFormat).parse("25/07/16");
         } catch (ParseException e1) {
-            //This cannot happen
+            // This cannot happen
         }
         ObjectProperty<Date> prop = new ObjectProperty<Date>(date, Date.class);
         df.setPropertyDataSource(prop);
@@ -61,7 +61,7 @@ public class DateFieldDiscardValue extends AbstractTestUI {
         final DateField df1 = new DateField(PROP_NULL_VALUE);
         df1.setDateFormat(dateFormat);
         df1.setBuffered(true);
-       
+
         prop = new ObjectProperty<Date>(null, Date.class);
         df1.setPropertyDataSource(prop);
         button = new Button("Discard 2");
@@ -71,7 +71,7 @@ public class DateFieldDiscardValue extends AbstractTestUI {
             public void buttonClick(ClickEvent event) {
                 df1.discard();
             }
-            
+
         });
         hLayout = new HorizontalLayout(df1, button);
         layout.addComponent(hLayout);

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -42,7 +42,7 @@ import elemental.json.JsonObject;
  * <p>
  * Handles permanent errors by showing a critical system notification to the
  * user
- * 
+ *
  * @since 7.6
  * @author Vaadin Ltd
  */
@@ -78,7 +78,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
         /**
          * Checks if this type is of higher priority than the given type
-         * 
+         *
          * @param type
          *            the type to compare to
          * @return true if this type has higher priority than the given type,
@@ -116,7 +116,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
     /**
      * Checks if we are currently trying to reconnect
-     * 
+     *
      * @return true if we have noted a problem and are trying to re-establish
      *         server connection, false otherwise
      */
@@ -130,7 +130,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
     /**
      * Returns the connection this handler is connected to
-     * 
+     *
      * @return the connection for this handler
      */
     protected ApplicationConnection getConnection() {
@@ -185,7 +185,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
      * Called whenever an error occurs in communication which should be handled
      * by showing the reconnect dialog and retrying communication until
      * successful again
-     * 
+     *
      * @param type
      *            The type of failure detected
      * @param payload
@@ -229,8 +229,8 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
         }
 
         reconnectAttempt++;
-        getLogger().info(
-                "Reconnect attempt " + reconnectAttempt + " for " + type);
+        getLogger()
+                .info("Reconnect attempt " + reconnectAttempt + " for " + type);
 
         if (reconnectAttempt >= getConfiguration().reconnectAttempts) {
             // Max attempts reached, stop trying
@@ -243,10 +243,10 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
     /**
      * Called after a problem occurred.
-     * 
+     *
      * This method is responsible for re-sending the payload to the server (if
      * not null) or re-send a heartbeat request at some point
-     * 
+     *
      * @param payload
      *            the payload that did not reach the server, null if the problem
      *            was detected by a heartbeat
@@ -274,7 +274,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
     /**
      * Re-sends the payload to the server (if not null) or re-sends a heartbeat
      * request immediately
-     * 
+     *
      * @param payload
      *            the payload that did not reach the server, null if the problem
      *            was detected by a heartbeat
@@ -283,9 +283,8 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
         if (!connection.isApplicationRunning()) {
             // This should not happen as nobody should call this if the
             // application has been stopped
-            getLogger()
-                    .warning(
-                            "Trying to reconnect after application has been stopped. Giving up");
+            getLogger().warning(
+                    "Trying to reconnect after application has been stopped. Giving up");
             return;
         }
         if (payload != null) {
@@ -309,7 +308,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
     /**
      * Called when we should give up trying to reconnect and let the user decide
      * how to continue
-     * 
+     *
      */
     protected void giveUp() {
         reconnectionCause = null;
@@ -340,7 +339,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
     /**
      * Checks if the reconnect dialog is visible to the user
-     * 
+     *
      * @return true if the user can see the dialog, false otherwise
      */
     protected boolean isDialogVisible() {
@@ -372,7 +371,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
     /**
      * Gets the text to show in the reconnect dialog after giving up (reconnect
      * limit reached)
-     * 
+     *
      * @param reconnectAttempt
      *            The number of the current reconnection attempt
      * @return The text to show in the reconnect dialog after giving up
@@ -384,14 +383,14 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
     /**
      * Gets the text to show in the reconnect dialog
-     * 
+     *
      * @param reconnectAttempt
      *            The number of the current reconnection attempt
      * @return The text to show in the reconnect dialog
      */
     protected String getDialogText(int reconnectAttempt) {
-        return getConfiguration().dialogText.replace("{0}", reconnectAttempt
-                + "");
+        return getConfiguration().dialogText.replace("{0}",
+                reconnectAttempt + "");
     }
 
     @Override
@@ -401,7 +400,8 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
     }
 
     private ReconnectDialogConfigurationState getConfiguration() {
-        return connection.getUIConnector().getState().reconnectDialogConfiguration;
+        return connection.getUIConnector()
+                .getState().reconnectDialogConfiguration;
     }
 
     @Override
@@ -416,9 +416,10 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
          * has expired.) If the response contains a magic substring, do a
          * synchronous refresh. See #8241.
          */
-        MatchResult refreshToken = RegExp.compile(
-                ApplicationConnection.UIDL_REFRESH_TOKEN
-                        + "(:\\s*(.*?))?(\\s|$)").exec(responseText);
+        MatchResult refreshToken = RegExp
+                .compile(ApplicationConnection.UIDL_REFRESH_TOKEN
+                        + "(:\\s*(.*?))?(\\s|$)")
+                .exec(responseText);
         if (refreshToken != null) {
             WidgetUtil.redirect(refreshToken.getGroup(2));
         } else {
@@ -430,7 +431,8 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
     }
 
     @Override
-    public void pushInvalidContent(PushConnection pushConnection, String message) {
+    public void pushInvalidContent(PushConnection pushConnection,
+            String message) {
         debug("pushInvalidContent");
         if (pushConnection.isBidirectional()) {
             // We can't be sure that what was pushed was actually a response but
@@ -441,8 +443,8 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
         // Do nothing special for now. Should likely do the same as
         // xhrInvalidContent
-        handleUnrecoverableCommunicationError("Invalid JSON from server: "
-                + message, null);
+        handleUnrecoverableCommunicationError(
+                "Invalid JSON from server: " + message, null);
 
     }
 
@@ -538,8 +540,8 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
     @Override
     public void pushScriptLoadError(String resourceUrl) {
-        connection.handleCommunicationError(resourceUrl
-                + " could not be loaded. Push will not work.", 0);
+        connection.handleCommunicationError(
+                resourceUrl + " could not be loaded. Push will not work.", 0);
     }
 
     @Override
@@ -550,7 +552,8 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
     @Override
     public void pushReconnectPending(PushConnection pushConnection) {
-        debug("pushReconnectPending(" + pushConnection.getTransportType() + ")");
+        debug("pushReconnectPending(" + pushConnection.getTransportType()
+                + ")");
         getLogger().info("Reopening push connection");
         if (pushConnection.isBidirectional()) {
             // Lost connection for a connection which will tell us when the
@@ -579,10 +582,9 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
         debug("pushClientTimeout()");
         // TODO Reconnect, allowing client timeout to be set
         // https://dev.vaadin.com/ticket/18429
-        connection
-                .handleCommunicationError(
-                        "Client unexpectedly disconnected. Ensure client timeout is disabled.",
-                        -1);
+        connection.handleCommunicationError(
+                "Client unexpectedly disconnected. Ensure client timeout is disabled.",
+                -1);
     }
 
     @Override

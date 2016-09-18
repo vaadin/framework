@@ -33,20 +33,20 @@ public class Ticket2104 extends LegacyApplication {
 
         HorizontalLayout ol = new HorizontalLayout();
         main.addComponent(ol);
-        CheckBox cb = new CheckBox("immediate", new MethodProperty<Boolean>(
-                tree, "immediate"));
+        CheckBox cb = new CheckBox("immediate",
+                new MethodProperty<Boolean>(tree, "immediate"));
         cb.setImmediate(true);
         ol.addComponent(cb);
-        cb = new CheckBox("selectable", new MethodProperty<Boolean>(tree,
-                "selectable"));
+        cb = new CheckBox("selectable",
+                new MethodProperty<Boolean>(tree, "selectable"));
         cb.setImmediate(true);
         ol.addComponent(cb);
-        cb = new CheckBox("nullsel", new MethodProperty<Boolean>(tree,
-                "nullSelectionAllowed"));
+        cb = new CheckBox("nullsel",
+                new MethodProperty<Boolean>(tree, "nullSelectionAllowed"));
         cb.setImmediate(true);
         ol.addComponent(cb);
-        cb = new CheckBox("multi", new MethodProperty<Boolean>(tree,
-                "multiSelect"));
+        cb = new CheckBox("multi",
+                new MethodProperty<Boolean>(tree, "multiSelect"));
         cb.setImmediate(true);
         ol.addComponent(cb);
         cb = new CheckBox("icon");
@@ -85,29 +85,28 @@ public class Ticket2104 extends LegacyApplication {
         tree.addListener(new ItemClickListener() {
             @Override
             public void itemClick(ItemClickEvent event) {
-                getMainWindow().addComponent(
-                        new Label(event.toString() + " // " + event.getItemId()
-                                + "//" + event.getSource()));
+                getMainWindow().addComponent(new Label(event.toString() + " // "
+                        + event.getItemId() + "//" + event.getSource()));
 
             }
         });
 
         ol = new HorizontalLayout();
         main.addComponent(ol);
-        cb = new CheckBox("immediate", new MethodProperty<Boolean>(table,
-                "immediate"));
+        cb = new CheckBox("immediate",
+                new MethodProperty<Boolean>(table, "immediate"));
         cb.setImmediate(true);
         ol.addComponent(cb);
-        cb = new CheckBox("selectable", new MethodProperty<Boolean>(table,
-                "selectable"));
+        cb = new CheckBox("selectable",
+                new MethodProperty<Boolean>(table, "selectable"));
         cb.setImmediate(true);
         ol.addComponent(cb);
-        cb = new CheckBox("nullsel", new MethodProperty<Boolean>(table,
-                "nullSelectionAllowed"));
+        cb = new CheckBox("nullsel",
+                new MethodProperty<Boolean>(table, "nullSelectionAllowed"));
         cb.setImmediate(true);
         ol.addComponent(cb);
-        cb = new CheckBox("multi", new MethodProperty<Boolean>(table,
-                "multiSelect"));
+        cb = new CheckBox("multi",
+                new MethodProperty<Boolean>(table, "multiSelect"));
         cb.setImmediate(true);
         ol.addComponent(cb);
         main.addComponent(table);
@@ -121,9 +120,8 @@ public class Ticket2104 extends LegacyApplication {
         table.addListener(new ItemClickListener() {
             @Override
             public void itemClick(ItemClickEvent event) {
-                getMainWindow().addComponent(
-                        new Label(event.toString() + " // " + event.getItemId()
-                                + "//" + event.getSource()));
+                getMainWindow().addComponent(new Label(event.toString() + " // "
+                        + event.getItemId() + "//" + event.getSource()));
 
             }
         });

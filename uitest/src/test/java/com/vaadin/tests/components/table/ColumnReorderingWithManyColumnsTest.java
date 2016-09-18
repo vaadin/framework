@@ -21,8 +21,8 @@ public class ColumnReorderingWithManyColumnsTest extends MultiBrowserTest {
         TableHeaderElement sourceCell = table.getHeaderCell(0);
         TableHeaderElement targetCell = table.getHeaderCell(10);
         drag(sourceCell, targetCell);
-        WebElement markedElement = table.findElement(By
-                .className("v-table-focus-slot-right"));
+        WebElement markedElement = table
+                .findElement(By.className("v-table-focus-slot-right"));
         String markedColumnName = markedElement.findElement(By.xpath(".."))
                 .getText();
         assertEquals("col-9", markedColumnName.toLowerCase());

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -47,7 +47,7 @@ import elemental.json.impl.JsonUtil;
 
 /**
  * Handles an initial request from the client to initialize a {@link UI}.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -91,7 +91,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
      * Commit the JSON response. We can't write immediately to the output stream
      * as we want to write only a critical notification if something goes wrong
      * during the response handling.
-     * 
+     *
      * @param request
      *            The request that resulted in this response
      * @param response
@@ -122,7 +122,8 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         return true;
     }
 
-    private UI getBrowserDetailsUI(VaadinRequest request, VaadinSession session) {
+    private UI getBrowserDetailsUI(VaadinRequest request,
+            VaadinSession session) {
         VaadinService vaadinService = request.getService();
 
         List<UIProvider> uiProviders = session.getUIProviders();
@@ -162,17 +163,16 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
 
         UI retainedUI = session.getUIByEmbedId(embedId);
         if (retainedUI != null) {
-            if (vaadinService.preserveUIOnRefresh(provider, new UICreateEvent(
-                    request, uiClass))) {
+            if (vaadinService.preserveUIOnRefresh(provider,
+                    new UICreateEvent(request, uiClass))) {
                 if (uiClass.isInstance(retainedUI)) {
                     reinitUI(retainedUI, request);
                     return retainedUI;
                 } else {
-                    getLogger().info(
-                            "Not using the preserved UI " + embedId
-                                    + " because it is of type "
-                                    + retainedUI.getClass() + " but " + uiClass
-                                    + " is expected for the request.");
+                    getLogger().info("Not using the preserved UI " + embedId
+                            + " because it is of type " + retainedUI.getClass()
+                            + " but " + uiClass
+                            + " is expected for the request.");
                 }
             }
             /*
@@ -218,9 +218,8 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         // Warn if the window can't be preserved
         if (embedId == null
                 && vaadinService.preserveUIOnRefresh(provider, event)) {
-            getLogger().warning(
-                    "There is no embed id available for UI " + uiClass
-                            + " that should be preserved.");
+            getLogger().warning("There is no embed id available for UI "
+                    + uiClass + " that should be preserved.");
         }
 
         return ui;
@@ -228,13 +227,13 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
 
     /**
      * Constructs an embed id based on information in the request.
-     * 
+     *
      * @since 7.2
-     * 
+     *
      * @param request
      *            the request to get embed information from
      * @return the embed id, or <code>null</code> if id is not available.
-     * 
+     *
      * @see UI#getEmbedId()
      */
     protected String getEmbedId(VaadinRequest request) {
@@ -252,7 +251,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
     /**
      * Updates a UI that has already been initialized but is now loaded again,
      * e.g. because of {@link PreserveOnRefresh}.
-     * 
+     *
      * @param ui
      * @param request
      */
@@ -264,7 +263,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
     /**
      * Generates the initial UIDL message that can e.g. be included in a html
      * page to avoid a separate round trip just for getting the UIDL.
-     * 
+     *
      * @param request
      *            the request that caused the initialization
      * @param uI
@@ -295,7 +294,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
 
     /**
      * Gets the security key (and generates one if needed) as UIDL.
-     * 
+     *
      * @param session
      *            the vaadin session to which the security key belongs
      * @return the security key UIDL or "" if the feature is turned off

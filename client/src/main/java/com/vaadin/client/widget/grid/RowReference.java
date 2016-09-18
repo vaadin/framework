@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,7 @@ import com.vaadin.client.widgets.Grid;
  * Since this class follows the <code>Flyweight</code>-pattern any instance of
  * this object is subject to change without the user knowing it and so should
  * not be stored anywhere outside of the method providing these instances.
- * 
+ *
  * @author Vaadin Ltd
  * @param <T>
  *            the row object type
@@ -41,7 +41,7 @@ public class RowReference<T> {
 
     /**
      * Creates a new row reference for the given grid.
-     * 
+     *
      * @param grid
      *            the grid that the row belongs to
      */
@@ -51,7 +51,7 @@ public class RowReference<T> {
 
     /**
      * Sets the identifying information for this row.
-     * 
+     *
      * @param rowIndex
      *            the index of the row
      * @param row
@@ -67,7 +67,7 @@ public class RowReference<T> {
 
     /**
      * Gets the grid that contains the referenced row.
-     * 
+     *
      * @return the grid that contains referenced row
      */
     public Grid<T> getGrid() {
@@ -76,7 +76,7 @@ public class RowReference<T> {
 
     /**
      * Gets the row index of the row.
-     * 
+     *
      * @return the index of the row
      */
     public int getRowIndex() {
@@ -85,7 +85,7 @@ public class RowReference<T> {
 
     /**
      * Gets the row data object.
-     * 
+     *
      * @return the row object
      */
     public T getRow() {
@@ -94,7 +94,7 @@ public class RowReference<T> {
 
     /**
      * Gets the table row element of the row.
-     * 
+     *
      * @return the element of the row
      */
     public TableRowElement getElement() {

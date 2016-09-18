@@ -12,7 +12,8 @@ public class PopUpWidth extends TestBase {
     protected void setup() {
 
         addComponent(createComboBox("Do not touch this"));
-        addComponent(createComboBox("Browse this (check that width does not change)"));
+        addComponent(createComboBox(
+                "Browse this (check that width does not change)"));
     }
 
     private ComboBox createComboBox(String caption) {
@@ -22,8 +23,8 @@ public class PopUpWidth extends TestBase {
         for (int i = 1; i < 200 + 1; i++) {
             Item item = cb.addItem(i);
             item.getItemProperty("caption").setValue("Item " + i);
-            item.getItemProperty("icon").setValue(
-                    new ThemeResource("../runo/icons/16/users.png"));
+            item.getItemProperty("icon")
+                    .setValue(new ThemeResource("../runo/icons/16/users.png"));
         }
         cb.setItemIconPropertyId("icon");
         cb.setItemCaptionPropertyId("caption");

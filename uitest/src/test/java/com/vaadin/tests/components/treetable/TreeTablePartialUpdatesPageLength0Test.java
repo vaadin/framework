@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,7 +29,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Tests expanding TreeTable rows when page length is zero.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class TreeTablePartialUpdatesPageLength0Test extends MultiBrowserTest {
@@ -39,17 +39,18 @@ public class TreeTablePartialUpdatesPageLength0Test extends MultiBrowserTest {
         openTestURL();
 
         TreeTableElement treeTable = $(TreeTableElement.class).first();
-        List<WebElement> rows = treeTable.findElement(
-                By.className("v-table-body")).findElements(By.tagName("tr"));
+        List<WebElement> rows = treeTable
+                .findElement(By.className("v-table-body"))
+                .findElements(By.tagName("tr"));
         assertEquals("unexpected row count", 4, rows.size());
-        assertEquals("unexpected contents", "root1", treeTable.getCell(0, 0)
-                .getText());
-        assertEquals("unexpected contents", "root2", treeTable.getCell(1, 0)
-                .getText());
-        assertEquals("unexpected contents", "root3", treeTable.getCell(2, 0)
-                .getText());
-        assertEquals("unexpected contents", "END", treeTable.getCell(3, 0)
-                .getText());
+        assertEquals("unexpected contents", "root1",
+                treeTable.getCell(0, 0).getText());
+        assertEquals("unexpected contents", "root2",
+                treeTable.getCell(1, 0).getText());
+        assertEquals("unexpected contents", "root3",
+                treeTable.getCell(2, 0).getText());
+        assertEquals("unexpected contents", "END",
+                treeTable.getCell(3, 0).getText());
 
         // expand first row, should have 10 children
         treeTable.getCell(0, 0)
@@ -61,14 +62,14 @@ public class TreeTablePartialUpdatesPageLength0Test extends MultiBrowserTest {
         assertEquals("unexpected row count", 14, rows.size());
 
         // expand root3, should have 200 children
-        assertEquals("unexpected contents", "root3", treeTable.getCell(12, 0)
-                .getText());
+        assertEquals("unexpected contents", "root3",
+                treeTable.getCell(12, 0).getText());
         treeTable.getCell(12, 0)
                 .findElement(By.className("v-treetable-treespacer")).click();
 
         // expand root2, should have 200 children
-        assertEquals("unexpected contents", "root2", treeTable.getCell(11, 0)
-                .getText());
+        assertEquals("unexpected contents", "root2",
+                treeTable.getCell(11, 0).getText());
         treeTable.getCell(11, 0)
                 .findElement(By.className("v-treetable-treespacer")).click();
 

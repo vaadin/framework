@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,8 +23,8 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.NativeButton;
 
-public class NativeButtonIconAndText extends AbstractTestUI implements
-        ClickListener {
+public class NativeButtonIconAndText extends AbstractTestUI
+        implements ClickListener {
 
     static final String UPDATED_ALTERNATE_TEXT = "Now has alternate text";
     static final String INITIAL_ALTERNATE_TEXT = "Initial alternate text";
@@ -43,8 +43,8 @@ public class NativeButtonIconAndText extends AbstractTestUI implements
         buttonTextIcon.setIcon(new ThemeResource("../runo/icons/64/ok.png"));
 
         Button buttonTextIconAlt = new Button("Text icon alt");
-        buttonTextIconAlt.setIcon(new ThemeResource(
-                "../runo/icons/64/cancel.png"));
+        buttonTextIconAlt
+                .setIcon(new ThemeResource("../runo/icons/64/cancel.png"));
         buttonTextIconAlt.setIconAlternateText(INITIAL_ALTERNATE_TEXT);
 
         buttonText.addClickListener(this);
@@ -62,12 +62,13 @@ public class NativeButtonIconAndText extends AbstractTestUI implements
         NativeButton nativeButtonText = new NativeButton("Only text");
 
         NativeButton nativeButtonTextIcon = new NativeButton("Text icon");
-        nativeButtonTextIcon.setIcon(new ThemeResource(
-                "../runo/icons/64/ok.png"));
+        nativeButtonTextIcon
+                .setIcon(new ThemeResource("../runo/icons/64/ok.png"));
 
-        NativeButton nativeButtonTextIconAlt = new NativeButton("Text icon alt");
-        nativeButtonTextIconAlt.setIcon(new ThemeResource(
-                "../runo/icons/64/cancel.png"));
+        NativeButton nativeButtonTextIconAlt = new NativeButton(
+                "Text icon alt");
+        nativeButtonTextIconAlt
+                .setIcon(new ThemeResource("../runo/icons/64/cancel.png"));
         nativeButtonTextIconAlt.setIconAlternateText(INITIAL_ALTERNATE_TEXT);
 
         nativeButtonText.addClickListener(this);
@@ -85,7 +86,7 @@ public class NativeButtonIconAndText extends AbstractTestUI implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -95,7 +96,7 @@ public class NativeButtonIconAndText extends AbstractTestUI implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override
@@ -105,7 +106,7 @@ public class NativeButtonIconAndText extends AbstractTestUI implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Button.ClickListener#buttonClick(com.vaadin.ui.Button.
      * ClickEvent)
      */

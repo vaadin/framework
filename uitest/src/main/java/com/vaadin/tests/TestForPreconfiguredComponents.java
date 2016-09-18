@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -89,7 +89,8 @@ public class TestForPreconfiguredComponents extends CustomComponent {
         fillSelect(s, 20);
         s.setMultiSelect(true);
         test = createTestBench(s);
-        test.setCaption("OptionGroup + multiselect manually (configured from select)");
+        test.setCaption(
+                "OptionGroup + multiselect manually (configured from select)");
         main.addComponent(test);
 
         final Button b = new Button("refresh view", new Button.ClickListener() {
@@ -104,8 +105,8 @@ public class TestForPreconfiguredComponents extends CustomComponent {
 
     public static void fillSelect(AbstractSelect s, int items) {
         for (int i = 0; i < items; i++) {
-            final String name = firstnames[(int) (Math.random() * (firstnames.length - 1))]
-                    + " "
+            final String name = firstnames[(int) (Math.random()
+                    * (firstnames.length - 1))] + " "
                     + lastnames[(int) (Math.random() * (lastnames.length - 1))];
             s.addItem(name);
         }
@@ -115,8 +116,8 @@ public class TestForPreconfiguredComponents extends CustomComponent {
         Tree t = new Tree("Tree");
         final String[] names = new String[100];
         for (int i = 0; i < names.length; i++) {
-            names[i] = firstnames[(int) (Math.random() * (firstnames.length - 1))]
-                    + " "
+            names[i] = firstnames[(int) (Math.random()
+                    * (firstnames.length - 1))] + " "
                     + lastnames[(int) (Math.random() * (lastnames.length - 1))];
         }
 
@@ -124,7 +125,8 @@ public class TestForPreconfiguredComponents extends CustomComponent {
         t = new Tree("Organization Structure");
         for (int i = 0; i < 100; i++) {
             t.addItem(names[i]);
-            final String parent = names[(int) (Math.random() * (names.length - 1))];
+            final String parent = names[(int) (Math.random()
+                    * (names.length - 1))];
             if (t.containsId(parent)) {
                 t.setParent(names[i], parent);
             }
@@ -171,8 +173,8 @@ public class TestForPreconfiguredComponents extends CustomComponent {
                 statusLayout
                         .addComponent(new Label(event.getClass().getName()));
                 // TODO should not use Field.toString()
-                statusLayout.addComponent(new Label("selected: "
-                        + event.getSource().toString()));
+                statusLayout.addComponent(
+                        new Label("selected: " + event.getSource().toString()));
             }
         });
 

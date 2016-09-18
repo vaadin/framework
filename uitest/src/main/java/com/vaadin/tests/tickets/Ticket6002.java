@@ -18,8 +18,8 @@ public class Ticket6002 extends TestBase {
         final VerticalLayout mainLayout = new VerticalLayout();
         main.setContent(mainLayout);
 
-        mainLayout.addComponent(new Label(
-                "Replace the floating-point values with an integer"));
+        mainLayout.addComponent(
+                new Label("Replace the floating-point values with an integer"));
 
         // ///////////////////////////////////////////////////
         // Better working case

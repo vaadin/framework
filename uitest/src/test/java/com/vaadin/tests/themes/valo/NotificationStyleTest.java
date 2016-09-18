@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,7 +31,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * Test for H1 and P elements styles in Notifications.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class NotificationStyleTest extends MultiBrowserTest {
@@ -46,13 +46,14 @@ public class NotificationStyleTest extends MultiBrowserTest {
         waitUntil(notificationPresentCondition(), 2);
 
         WebElement notification = findElement(By.className("v-Notification"));
-        List<WebElement> headers = notification.findElements(By
-                .tagName(ValoTheme.LABEL_H1));
+        List<WebElement> headers = notification
+                .findElements(By.tagName(ValoTheme.LABEL_H1));
         String textAlign = headers.get(0).getCssValue("text-align");
         String textAlignInnerHeader = headers.get(1).getCssValue("text-align");
-        Assert.assertNotEquals("Styles for notification defined h1 tag "
-                + "and custom HTML tag are the same", textAlign,
-                textAlignInnerHeader);
+        Assert.assertNotEquals(
+                "Styles for notification defined h1 tag "
+                        + "and custom HTML tag are the same",
+                textAlign, textAlignInnerHeader);
     }
 
     @Test
@@ -65,13 +66,15 @@ public class NotificationStyleTest extends MultiBrowserTest {
         waitUntil(notificationPresentCondition(), 2);
 
         WebElement notification = findElement(By.className("v-Notification"));
-        WebElement description = notification.findElement(By
-                .className("v-Notification-description"));
+        WebElement description = notification
+                .findElement(By.className("v-Notification-description"));
         String display = description.getCssValue("display");
         String displayP2 = notification.findElement(By.className("tested-p"))
                 .getCssValue("display");
-        Assert.assertNotEquals("Styles for notification defined 'p' tag "
-                + "and custom HTML tag are the same", display, displayP2);
+        Assert.assertNotEquals(
+                "Styles for notification defined 'p' tag "
+                        + "and custom HTML tag are the same",
+                display, displayP2);
     }
 
     private ExpectedCondition<Boolean> notificationPresentCondition() {

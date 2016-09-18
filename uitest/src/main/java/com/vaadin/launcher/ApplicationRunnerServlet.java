@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -66,8 +66,8 @@ import com.vaadin.util.CurrentInstance;
 @SuppressWarnings("serial")
 public class ApplicationRunnerServlet extends LegacyVaadinServlet {
 
-    private static class ApplicationRunnerRedirectException extends
-            RuntimeException {
+    private static class ApplicationRunnerRedirectException
+            extends RuntimeException {
         private final String target;
 
         public ApplicationRunnerRedirectException(String target) {
@@ -205,8 +205,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         try {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
-                session.addUIProvider(new ApplicationRunnerUIProvider(
-                        classToRun));
+                session.addUIProvider(
+                        new ApplicationRunnerUIProvider(classToRun));
             } else if (LegacyApplication.class.isAssignableFrom(classToRun)) {
                 // Avoid using own UIProvider for legacy Application
             } else if (UIProvider.class.isAssignableFrom(classToRun)) {
@@ -220,10 +220,10 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         } catch (final InstantiationException e) {
             throw new ServiceException(e);
         } catch (final ClassNotFoundException e) {
-            throw new ServiceException(
-                    new InstantiationException(
-                            "Failed to load application class: "
-                                    + getApplicationRunnerApplicationClassName((VaadinServletRequest) request)));
+            throw new ServiceException(new InstantiationException(
+                    "Failed to load application class: "
+                            + getApplicationRunnerApplicationClassName(
+                                    (VaadinServletRequest) request)));
         }
     }
 
@@ -232,8 +232,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         return getApplicationRunnerURIs(request).applicationClassname;
     }
 
-    private final static class ProxyDeploymentConfiguration implements
-            InvocationHandler, Serializable {
+    private final static class ProxyDeploymentConfiguration
+            implements InvocationHandler, Serializable {
         private final DeploymentConfiguration originalConfiguration;
 
         private ProxyDeploymentConfiguration(
@@ -246,7 +246,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                 throws Throwable {
             if (method.getDeclaringClass() == DeploymentConfiguration.class) {
                 // Find the configuration instance to delegate to
-                DeploymentConfiguration configuration = findDeploymentConfiguration(originalConfiguration);
+                DeploymentConfiguration configuration = findDeploymentConfiguration(
+                        originalConfiguration);
 
                 return method.invoke(configuration, args);
             } else {
@@ -280,7 +281,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
 
     /**
      * Parses application runner URIs.
-     * 
+     *
      * If request URL is e.g.
      * http://localhost:8080/vaadin/run/com.vaadin.demo.Calc then
      * <ul>
@@ -288,7 +289,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
      * <li>Runner servlet=run</li>
      * <li>Vaadin application=com.vaadin.demo.Calc</li>
      * </ul>
-     * 
+     *
      * @param request
      * @return string array containing widgetset URI, application URI and
      *         context, runner, application classname
@@ -351,8 +352,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                         String className = file.getPath()
                                 .substring(uitestDir.getPath().length() + 1)
                                 .replace(File.separatorChar, '.');
-                        className = className.substring(0, className.length()
-                                - ".java".length());
+                        className = className.substring(0,
+                                className.length() - ".java".length());
                         if (isSupportedClass(className)) {
                             lastModifiedTimestamp = file.lastModified();
                             lastModifiedClassName = className;
@@ -394,8 +395,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
 
         Class<?> appClass = null;
 
-        String baseName = getApplicationRunnerApplicationClassName(request
-                .get());
+        String baseName = getApplicationRunnerApplicationClassName(
+                request.get());
         try {
             appClass = getClass().getClassLoader().loadClass(baseName);
             return appClass;
@@ -403,16 +404,16 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             //
             for (String pkg : defaultPackages) {
                 try {
-                    appClass = getClass().getClassLoader().loadClass(
-                            pkg + "." + baseName);
+                    appClass = getClass().getClassLoader()
+                            .loadClass(pkg + "." + baseName);
                 } catch (ClassNotFoundException ee) {
                     // Ignore as this is expected for many packages
                 } catch (Exception e2) {
                     // TODO: handle exception
-                    getLogger().log(
-                            Level.FINE,
+                    getLogger().log(Level.FINE,
                             "Failed to find application class " + pkg + "."
-                                    + baseName, e2);
+                                    + baseName,
+                            e2);
                 }
                 if (appClass != null) {
                     return appClass;
@@ -432,8 +433,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     protected DeploymentConfiguration createDeploymentConfiguration(
             Properties initParameters) {
         // Get the original configuration from the super class
-        final DeploymentConfiguration originalConfiguration = super
-                .createDeploymentConfiguration(initParameters);
+        final DeploymentConfiguration originalConfiguration = super.createDeploymentConfiguration(
+                initParameters);
 
         // And then create a proxy instance that delegates to the original
         // configuration or a customized version
@@ -447,8 +448,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     protected VaadinServletService createServletService(
             DeploymentConfiguration deploymentConfiguration)
             throws ServiceException {
-        VaadinServletService service = super
-                .createServletService(deploymentConfiguration);
+        VaadinServletService service = super.createServletService(
+                deploymentConfiguration);
         final SystemMessagesProvider provider = service
                 .getSystemMessagesProvider();
         service.setSystemMessagesProvider(new SystemMessagesProvider() {
@@ -459,8 +460,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                 if (systemMessagesInfo.getRequest() == null) {
                     return provider.getSystemMessages(systemMessagesInfo);
                 }
-                Object messages = systemMessagesInfo.getRequest().getAttribute(
-                        CUSTOM_SYSTEM_MESSAGES_PROPERTY);
+                Object messages = systemMessagesInfo.getRequest()
+                        .getAttribute(CUSTOM_SYSTEM_MESSAGES_PROPERTY);
                 if (messages instanceof SystemMessages) {
                     return (SystemMessages) messages;
                 }
@@ -500,9 +501,9 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                         try {
                             VaadinServletService service = (VaadinServletService) VaadinService
                                     .getCurrent();
-                            session = service
-                                    .findVaadinSession(new VaadinServletRequest(
-                                            currentRequest, service));
+                            session = service.findVaadinSession(
+                                    new VaadinServletRequest(currentRequest,
+                                            service));
                         } finally {
                             /*
                              * Clear some state set by findVaadinSession to
@@ -510,8 +511,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                              * e.g. static request handling.
                              */
                             CurrentInstance.restoreInstances(oldCurrent);
-                            currentRequest.removeAttribute(VaadinSession.class
-                                    .getName());
+                            currentRequest.removeAttribute(
+                                    VaadinSession.class.getName());
                         }
                     }
                 }
@@ -542,7 +543,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                         }
 
                         CustomDeploymentConfiguration customDeploymentConfiguration = classToRun
-                                .getAnnotation(CustomDeploymentConfiguration.class);
+                                .getAnnotation(
+                                        CustomDeploymentConfiguration.class);
                         if (customDeploymentConfiguration != null) {
                             Properties initParameters = new Properties(
                                     originalConfiguration.getInitParameters());

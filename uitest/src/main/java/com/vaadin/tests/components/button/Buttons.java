@@ -42,7 +42,8 @@ public class Buttons extends ComponentTestCase<Button> {
 
             l = createButton(
                     "This is a 100% wide button with fixed 65px height. "
-                            + LoremIpsum.get(5000), nat);
+                            + LoremIpsum.get(5000),
+                    nat);
             l.setWidth("100%");
             l.setHeight("65px");
 

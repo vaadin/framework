@@ -65,8 +65,8 @@ public class CSSInjectTest extends TestBase {
 
                                     @Override
                                     public InputStream getStream() {
-                                        return new ByteArrayInputStream(css
-                                                .getBytes());
+                                        return new ByteArrayInputStream(
+                                                css.getBytes());
                                     }
                                 }, UUID.randomUUID().toString() + ".css"));
 
@@ -75,8 +75,8 @@ public class CSSInjectTest extends TestBase {
                 });
         addComponent(injectRandom);
 
-        addComponent(new Button("Inject initial again!",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Inject initial again!", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         stylesheet.add(initialResource);

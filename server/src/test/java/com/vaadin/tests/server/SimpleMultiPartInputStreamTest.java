@@ -13,7 +13,7 @@ public class SimpleMultiPartInputStreamTest {
 
     /**
      * Check that the output for a given stream until boundary is as expected.
-     * 
+     *
      * @param input
      * @param boundary
      * @param expected
@@ -31,9 +31,9 @@ public class SimpleMultiPartInputStreamTest {
                 resultStream.write(outbyte);
             }
         } catch (IOException e) {
-            throw new IOException(e.getMessage() + "; expected "
-                    + new String(expected) + " but got "
-                    + resultStream.toString());
+            throw new IOException(
+                    e.getMessage() + "; expected " + new String(expected)
+                            + " but got " + resultStream.toString());
         }
         if (!Arrays.equals(expected, resultStream.toByteArray())) {
             throw new Exception("Mismatch: expected " + new String(expected)
@@ -53,7 +53,8 @@ public class SimpleMultiPartInputStreamTest {
 
     @Test
     public void testSingleByteBoundaryInMiddle() throws Exception {
-        checkBoundaryDetection("xyz" + getFullBoundary("a") + "123", "a", "xyz");
+        checkBoundaryDetection("xyz" + getFullBoundary("a") + "123", "a",
+                "xyz");
     }
 
     @Test
@@ -78,13 +79,14 @@ public class SimpleMultiPartInputStreamTest {
         checkBoundaryDetection(getFullBoundary("aa") + "xyz123", "aa", "");
         checkBoundaryDetection("axyz" + getFullBoundary("aa") + "123", "aa",
                 "axyz");
-        checkBoundaryDetection("xyz123" + getFullBoundary("aa"), "aa", "xyz123");
+        checkBoundaryDetection("xyz123" + getFullBoundary("aa"), "aa",
+                "xyz123");
     }
 
     /**
      * Note, the boundary in this test is invalid. Boundary strings don't
      * contain CR/LF.
-     * 
+     *
      */
     // public void testRepeatingNewlineBoundary() throws Exception {
     // checkBoundaryDetection("1234567890" + getFullBoundary("\n\n")

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,7 +33,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Tests dialogs with WAI-ARIA.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -65,8 +65,8 @@ public class ExtraWindowShownWaiAriaTest extends MultiBrowserTest {
         assertEquals(label.getAttribute("id"),
                 window.getAttribute("aria-describedby"));
 
-        List<WebElement> wButtons = window.findElements(By
-                .className("v-button"));
+        List<WebElement> wButtons = window
+                .findElements(By.className("v-button"));
         assertEquals("button", wButtons.get(0).getAttribute("role"));
         assertEquals("button", wButtons.get(1).getAttribute("role"));
 
@@ -95,8 +95,9 @@ public class ExtraWindowShownWaiAriaTest extends MultiBrowserTest {
         // ensure correct attributes
         window = $(WindowElement.class).first();
         List<WebElement> labels = window.findElements(By.className("v-label"));
-        assertEquals(labels.get(0).getAttribute("id") + " "
-                + labels.get(1).getAttribute("id"),
+        assertEquals(
+                labels.get(0).getAttribute("id") + " "
+                        + labels.get(1).getAttribute("id"),
                 window.getAttribute("aria-describedby"));
 
         // close dialog
@@ -121,8 +122,8 @@ public class ExtraWindowShownWaiAriaTest extends MultiBrowserTest {
         // ensure the assistive spans have been added to the header
         window = $(WindowElement.class).first();
         header = window.findElement(By.className("v-window-header"));
-        List<WebElement> assistiveElements = header.findElements(By
-                .className("v-assistive-device-only"));
+        List<WebElement> assistiveElements = header
+                .findElements(By.className("v-assistive-device-only"));
         assertEquals("Important",
                 assistiveElements.get(0).getAttribute("innerHTML"));
         assertEquals(" - do ASAP",

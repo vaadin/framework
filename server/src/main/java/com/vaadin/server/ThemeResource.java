@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,7 +23,7 @@ import com.vaadin.util.FileTypeResolver;
  * managed by a theme. The actual resource contents are dynamically resolved to
  * comply with the used theme by the terminal adapter. This is commonly used to
  * provide static images, flash, java-applets, etc for the terminals.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -37,7 +37,7 @@ public class ThemeResource implements Resource {
 
     /**
      * Creates a resource.
-     * 
+     *
      * @param resourceId
      *            the Id of the resource.
      */
@@ -58,7 +58,7 @@ public class ThemeResource implements Resource {
 
     /**
      * Tests if the given object equals this Resource.
-     * 
+     *
      * @param obj
      *            the object to be tested for equality.
      * @return <code>true</code> if the given object equals this Icon,
@@ -89,7 +89,7 @@ public class ThemeResource implements Resource {
 
     /**
      * Gets the resource id.
-     * 
+     *
      * @return the resource id.
      */
     public String getResourceId() {

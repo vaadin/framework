@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -79,11 +79,11 @@ import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.tree.TreeConstants;
 
 /**
- * 
+ *
  */
-public class VTree extends FocusElementPanel implements VHasDropHandler,
-        FocusHandler, BlurHandler, KeyPressHandler, KeyDownHandler,
-        SubPartAware, ActionOwner, HandlesAriaCaption {
+public class VTree extends FocusElementPanel
+        implements VHasDropHandler, FocusHandler, BlurHandler, KeyPressHandler,
+        KeyDownHandler, SubPartAware, ActionOwner, HandlesAriaCaption {
     private String lastNodeKey = "";
 
     public static final String CLASSNAME = "v-tree";
@@ -237,7 +237,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt.user
      * .client.Event)
@@ -254,8 +254,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         } else if (event.getTypeInt() == Event.ONMOUSEUP) {
             // Remove IE text selection hack
             if (BrowserInfo.get().isIE()) {
-                ((Element) event.getEventTarget().cast()).setPropertyJSO(
-                        "onselectstart", null);
+                ((Element) event.getEventTarget().cast())
+                        .setPropertyJSO("onselectstart", null);
             }
         } else if (event.getTypeInt() == Event.ONKEYUP) {
             if (selectionHasChanged) {
@@ -289,7 +289,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     /**
      * Returns the first root node of the tree or null if there are no root
      * nodes.
-     * 
+     *
      * @return The first root {@link TreeNode}
      */
     protected TreeNode getFirstRootNode() {
@@ -302,7 +302,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     /**
      * Returns the last root node of the tree or null if there are no root
      * nodes.
-     * 
+     *
      * @return The last root {@link TreeNode}
      */
     protected TreeNode getLastRootNode() {
@@ -315,7 +315,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     /**
      * Returns a list of all root nodes in the Tree in the order they appear in
      * the tree.
-     * 
+     *
      * @return A list of all root {@link TreeNode}s.
      */
     protected List<TreeNode> getRootNodes() {
@@ -333,8 +333,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         drag.getDropDetails().put("itemIdOver", currentMouseOverKey);
         if (currentMouseOverKey != null) {
             TreeNode treeNode = getNodeByKey(currentMouseOverKey);
-            VerticalDropLocation detail = treeNode.getDropDetail(drag
-                    .getCurrentGwtEvent());
+            VerticalDropLocation detail = treeNode
+                    .getDropDetail(drag.getCurrentGwtEvent());
             Boolean overTreeNode = null;
             if (treeNode != null && !treeNode.isLeaf()
                     && detail == VerticalDropLocation.MIDDLE) {
@@ -370,17 +370,20 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
                 @Override
                 public void dragOver(final VDragEvent currentDrag) {
-                    final Object oldIdOver = currentDrag.getDropDetails().get(
-                            "itemIdOver");
+                    final Object oldIdOver = currentDrag.getDropDetails()
+                            .get("itemIdOver");
                     final VerticalDropLocation oldDetail = (VerticalDropLocation) currentDrag
                             .getDropDetails().get("detail");
 
                     updateTreeRelatedDragData(currentDrag);
                     final VerticalDropLocation detail = (VerticalDropLocation) currentDrag
                             .getDropDetails().get("detail");
-                    boolean nodeHasChanged = (currentMouseOverKey != null && currentMouseOverKey != oldIdOver)
-                            || (currentMouseOverKey == null && oldIdOver != null);
-                    boolean detailHasChanded = (detail != null && detail != oldDetail)
+                    boolean nodeHasChanged = (currentMouseOverKey != null
+                            && currentMouseOverKey != oldIdOver)
+                            || (currentMouseOverKey == null
+                                    && oldIdOver != null);
+                    boolean detailHasChanded = (detail != null
+                            && detail != oldDetail)
                             || (detail == null && oldDetail != null);
 
                     if (nodeHasChanged || detailHasChanded) {
@@ -396,8 +399,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                                 public void accepted(VDragEvent event) {
                                     VerticalDropLocation curDetail = (VerticalDropLocation) event
                                             .getDropDetails().get("detail");
-                                    if (curDetail == detail
-                                            && newKey.equals(currentMouseOverKey)) {
+                                    if (curDetail == detail && newKey
+                                            .equals(currentMouseOverKey)) {
                                         getNodeByKey(newKey).emphasis(detail);
                                     }
                                     /*
@@ -511,7 +514,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /**
      * Is a node selected in the tree
-     * 
+     *
      * @param treeNode
      *            The node to check
      * @return
@@ -634,7 +637,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
         /**
          * Handles mouse selection
-         * 
+         *
          * @param ctrl
          *            Was the ctrl-key pressed
          * @param shift
@@ -699,7 +702,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
          * .user.client.Event)
@@ -710,7 +713,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             final int type = DOM.eventGetType(event);
             final Element target = DOM.eventGetTarget(event);
 
-            if (type == Event.ONLOAD && icon != null && target == icon.getElement()) {
+            if (type == Event.ONLOAD && icon != null
+                    && target == icon.getElement()) {
                 iconLoaded.trigger();
             }
 
@@ -719,9 +723,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             }
 
             final boolean inCaption = isCaptionElement(target);
-            if (inCaption
-                    && client.hasEventListeners(VTree.this,
-                            TreeConstants.ITEM_CLICK_EVENT_ID)
+            if (inCaption && client.hasEventListeners(VTree.this,
+                    TreeConstants.ITEM_CLICK_EVENT_ID)
 
                     && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {
                 fireClick(event);
@@ -751,11 +754,10 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
             if (dragMode != 0 || dropHandler != null) {
                 if (type == Event.ONMOUSEDOWN || type == Event.ONTOUCHSTART) {
-                    if (nodeCaptionDiv.isOrHasChild((Node) event
-                            .getEventTarget().cast())) {
-                        if (dragMode > 0
-                                && (type == Event.ONTOUCHSTART || event
-                                        .getButton() == NativeEvent.BUTTON_LEFT)) {
+                    if (nodeCaptionDiv.isOrHasChild(
+                            (Node) event.getEventTarget().cast())) {
+                        if (dragMode > 0 && (type == Event.ONTOUCHSTART || event
+                                .getButton() == NativeEvent.BUTTON_LEFT)) {
                             mouseDownEvent = event; // save event for possible
                             // dd operation
                             if (type == Event.ONMOUSEDOWN) {
@@ -775,18 +777,17 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                             }
                         }
                     }
-                } else if (type == Event.ONMOUSEMOVE
-                        || type == Event.ONMOUSEOUT
+                } else if (type == Event.ONMOUSEMOVE || type == Event.ONMOUSEOUT
                         || type == Event.ONTOUCHMOVE) {
 
                     if (mouseDownEvent != null) {
                         // start actual drag on slight move when mouse is down
                         VTransferable t = new VTransferable();
-                        t.setDragSource(ConnectorMap.get(client).getConnector(
-                                VTree.this));
+                        t.setDragSource(ConnectorMap.get(client)
+                                .getConnector(VTree.this));
                         t.setData("itemId", key);
-                        VDragEvent drag = VDragAndDropManager.get().startDrag(
-                                t, mouseDownEvent, true);
+                        VDragEvent drag = VDragAndDropManager.get().startDrag(t,
+                                mouseDownEvent, true);
 
                         drag.createDragImage(nodeCaptionDiv, true);
                         event.stopPropagation();
@@ -810,14 +811,15 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
         /**
          * Checks if the given element is the caption or the icon.
-         * 
+         *
          * @param target
          *            The element to check
          * @return true if the element is the caption or the icon
          */
-        public boolean isCaptionElement(com.google.gwt.dom.client.Element target) {
-            return (target == nodeCaptionSpan || (icon != null && target == icon
-                    .getElement()));
+        public boolean isCaptionElement(
+                com.google.gwt.dom.client.Element target) {
+            return (target == nodeCaptionSpan
+                    || (icon != null && target == icon.getElement()));
         }
 
         private void fireClick(final Event evt) {
@@ -849,8 +851,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     // selection event happening after this. In all other cases
                     // we want to send it immediately.
                     clickEventPending = false;
-                    if ((details.getButton() == MouseButton.LEFT || details
-                            .getButton() == MouseButton.MIDDLE)
+                    if ((details.getButton() == MouseButton.LEFT
+                            || details.getButton() == MouseButton.MIDDLE)
                             && !details.isDoubleClick() && selectable) {
                         // Probably a selection that will cause a value change
                         // event to be sent
@@ -864,7 +866,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                             clickEventPending = false;
                         }
                     }
-                    client.updateVariable(paintableId, "clickedKey", key, false);
+                    client.updateVariable(paintableId, "clickedKey", key,
+                            false);
                     client.updateVariable(paintableId, "clickEvent",
                             details.toString(), !clickEventPending);
                 }
@@ -906,8 +909,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     Id.of(labelId));
 
             nodeCaptionDiv = DOM.createDiv();
-            DOM.setElementProperty(nodeCaptionDiv, "className", CLASSNAME
-                    + "-caption");
+            DOM.setElementProperty(nodeCaptionDiv, "className",
+                    CLASSNAME + "-caption");
             Element wrapper = DOM.createDiv();
             wrapper.setId(labelId);
             wrapper.setAttribute("for", treeItemId);
@@ -948,8 +951,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             }
             if (state) {
                 if (!childrenLoaded && notifyServer) {
-                    client.updateVariable(paintableId, "requestChildTree",
-                            true, false);
+                    client.updateVariable(paintableId, "requestChildTree", true,
+                            false);
                 }
                 if (notifyServer) {
                     client.updateVariable(paintableId, "expand",
@@ -997,7 +1000,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
         /**
          * Returns the children of the node
-         * 
+         *
          * @return A set of tree nodes
          */
         public List<TreeNode> getChildren() {
@@ -1044,7 +1047,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
          * Adds/removes Vaadin specific style name.
          * <p>
          * For internal use only. May be removed or replaced in the future.
-         * 
+         *
          * @param selected
          */
         public void setSelected(boolean selected) {
@@ -1058,7 +1061,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
         /**
          * Travels up the hierarchy looking for this node
-         * 
+         *
          * @param child
          *            The child which grandparent this is or is not
          * @return True if this is a grandparent of the child node
@@ -1097,7 +1100,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see com.google.gwt.user.client.ui.Widget#onDetach()
          */
         @Override
@@ -1108,7 +1111,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see com.google.gwt.user.client.ui.UIObject#toString()
          */
         @Override
@@ -1118,7 +1121,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
         /**
          * Is the node focused?
-         * 
+         *
          * @param focused
          *            True if focused, false if not
          */
@@ -1160,10 +1163,10 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
         public void setNodeStyleName(String styleName) {
             addStyleName(TreeNode.CLASSNAME + "-" + styleName);
-            setStyleName(nodeCaptionDiv, TreeNode.CLASSNAME + "-caption-"
-                    + styleName, true);
-            childNodeContainer.addStyleName(TreeNode.CLASSNAME + "-children-"
-                    + styleName);
+            setStyleName(nodeCaptionDiv,
+                    TreeNode.CLASSNAME + "-caption-" + styleName, true);
+            childNodeContainer.addStyleName(
+                    TreeNode.CLASSNAME + "-children-" + styleName);
 
         }
 
@@ -1194,7 +1197,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /**
      * Selects a range of nodes
-     * 
+     *
      * @param startNodeKey
      *            The start node key
      * @param endNodeKey
@@ -1224,7 +1227,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /**
      * Selects a node and deselect all other nodes
-     * 
+     *
      * @param node
      *            The node to select
      */
@@ -1243,7 +1246,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /**
      * Deselects a node
-     * 
+     *
      * @param node
      *            The node to deselect
      */
@@ -1255,7 +1258,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /**
      * Selects all the open children to a node
-     * 
+     *
      * @param node
      *            The parent node
      */
@@ -1278,7 +1281,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /**
      * Selects all children until a stop child is reached
-     * 
+     *
      * @param root
      *            The root not to start from
      * @param stopNode
@@ -1287,7 +1290,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      *            Should the root node be selected
      * @param includeStopNode
      *            Should the stop node be selected
-     * 
+     *
      * @return Returns false if the stop child was found, else true if all
      *         children was selected
      */
@@ -1323,7 +1326,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /**
      * Select a range between two nodes which have no relation to each other
-     * 
+     *
      * @param startNode
      *            The start node to start the selection from
      * @param endNode
@@ -1369,8 +1372,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         TreeNode currentNode = startNode;
         while (startParent != null && startParent != commonParent) {
             List<TreeNode> startChildren = startParent.getChildren();
-            for (int i = startChildren.indexOf(currentNode) + 1; i < startChildren
-                    .size(); i++) {
+            for (int i = startChildren.indexOf(currentNode)
+                    + 1; i < startChildren.size(); i++) {
                 selectAllChildren(startChildren.get(i), true);
             }
 
@@ -1393,7 +1396,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     /**
      * Examines the children of the branch node and returns true if a node is in
      * that branch
-     * 
+     *
      * @param node
      *            The node to search for
      * @param branch
@@ -1418,11 +1421,12 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     }
 
     /**
-     * Selects a range of items which are in direct relation with each other.<br/>
+     * Selects a range of items which are in direct relation with each
+     * other.<br/>
      * NOTE: The start node <b>MUST</b> be before the end node!
-     * 
+     *
      * @param startNode
-     * 
+     *
      * @param endNode
      */
     private void doRelationSelection(TreeNode startNode, TreeNode endNode) {
@@ -1452,7 +1456,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /**
      * Selects a range of items which have the same parent.
-     * 
+     *
      * @param startNode
      *            The start node
      * @param endNode
@@ -1502,7 +1506,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /**
      * Returns the first common parent of two nodes
-     * 
+     *
      * @param node1
      *            The first node
      * @param node2
@@ -1552,7 +1556,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /**
      * Sets the node currently in focus
-     * 
+     *
      * @param node
      *            The node to focus or null to remove the focus completely
      * @param scrollIntoView
@@ -1575,12 +1579,12 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             /*
              * FIXME: This code needs to be changed when the keyboard navigation
              * doesn't immediately trigger a selection change anymore.
-             * 
+             *
              * Right now this function is called before and after the Tree is
              * rebuilt when up/down arrow keys are pressed. This leads to the
              * problem, that the newly selected item is announced too often with
              * a screen reader.
-             * 
+             *
              * Behaviour is different when using the Tree with and without
              * screen reader.
              */
@@ -1614,7 +1618,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /**
      * Focuses a node and scrolls it into view
-     * 
+     *
      * @param node
      *            The node to focus
      */
@@ -1624,7 +1628,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
@@ -1644,7 +1648,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
      * .dom.client.BlurEvent)
@@ -1659,7 +1663,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google
      * .gwt.event.dom.client.KeyPressEvent)
@@ -1683,7 +1687,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
@@ -1700,7 +1704,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /**
      * Handles the keyboard navigation
-     * 
+     *
      * @param keycode
      *            The keycode of the pressed key
      * @param ctrl
@@ -1820,9 +1824,9 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         // Selection
         if (keycode == getNavigationSelectKey()) {
             if (!focusedNode.isSelected()) {
-                selectNode(
-                        focusedNode,
-                        (!isMultiselect || multiSelectMode == MULTISELECT_MODE_SIMPLE)
+                selectNode(focusedNode,
+                        (!isMultiselect
+                                || multiSelectMode == MULTISELECT_MODE_SIMPLE)
                                 && selectable);
             } else {
                 deselectNode(focusedNode);
@@ -1881,7 +1885,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
          * be at least one selection. After this the newly focused node is
          * selected and we've ended up with two selected nodes even though we
          * only navigated with the arrow keys.
-         * 
+         *
          * Because of this, we first select the next node and later de-select
          * the old one.
          */
@@ -1893,13 +1897,14 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /**
      * Traverses the tree to the bottom most child
-     * 
+     *
      * @param root
      *            The root of the tree
      * @return The bottom most child
      */
     private TreeNode getLastVisibleChildInTree(TreeNode root) {
-        if (root.isLeaf() || !root.getState() || root.getChildren().size() == 0) {
+        if (root.isLeaf() || !root.getState()
+                || root.getChildren().size() == 0) {
             return root;
         }
         List<TreeNode> children = root.getChildren();
@@ -1908,7 +1913,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /**
      * Gets the next sibling in the tree
-     * 
+     *
      * @param node
      *            The node to get the sibling for
      * @return The sibling node or null if the node is the last sibling
@@ -1932,7 +1937,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /**
      * Returns the previous sibling in the tree
-     * 
+     *
      * @param node
      *            The node to get the sibling for
      * @return The sibling node or null if the node is the first sibling
@@ -1958,7 +1963,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * Add this to the element mouse down event by using element.setPropertyJSO
      * ("onselectstart",applyDisableTextSelectionIEHack()); Remove it then again
      * when the mouse is depressed in the mouse up event.
-     * 
+     *
      * @return Returns the JSO preventing text selection
      */
     private native JavaScriptObject applyDisableTextSelectionIEHack()
@@ -1970,7 +1975,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * Get the key that moves the selection head upwards. By default it is the
      * up arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationUpKey() {
@@ -1981,7 +1986,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * Get the key that moves the selection head downwards. By default it is the
      * down arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationDownKey() {
@@ -1992,7 +1997,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * Get the key that scrolls to the left in the table. By default it is the
      * left arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationLeftKey() {
@@ -2003,7 +2008,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * Get the key that scroll to the right on the table. By default it is the
      * right arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationRightKey() {
@@ -2014,7 +2019,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * Get the key that selects an item in the table. By default it is the space
      * bar key but by overriding this you can change the key to whatever you
      * want.
-     * 
+     *
      * @return
      */
     protected int getNavigationSelectKey() {
@@ -2025,7 +2030,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * Get the key the moves the selection one page up in the table. By default
      * this is the Page Up key but by overriding this you can change the key to
      * whatever you want.
-     * 
+     *
      * @return
      */
     protected int getNavigationPageUpKey() {
@@ -2036,7 +2041,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * Get the key the moves the selection one page down in the table. By
      * default this is the Page Down key but by overriding this you can change
      * the key to whatever you want.
-     * 
+     *
      * @return
      */
     protected int getNavigationPageDownKey() {
@@ -2047,7 +2052,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * Get the key the moves the selection to the beginning of the table. By
      * default this is the Home key but by overriding this you can change the
      * key to whatever you want.
-     * 
+     *
      * @return
      */
     protected int getNavigationStartKey() {
@@ -2058,7 +2063,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * Get the key the moves the selection to the end of the table. By default
      * this is the End key but by overriding this you can change the key to
      * whatever you want.
-     * 
+     *
      * @return
      */
     protected int getNavigationEndKey() {
@@ -2077,12 +2082,13 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.SubPartAware#getSubPartElement(java
      * .lang.String)
      */
     @Override
-    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(
+            String subPart) {
         if ("fe".equals(subPart)) {
             if (BrowserInfo.get().isOpera() && focusedNode != null) {
                 return focusedNode.getElement();
@@ -2130,12 +2136,13 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.SubPartAware#getSubPartName(com.google
      * .gwt.user.client.Element)
      */
     @Override
-    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+    public String getSubPartName(
+            com.google.gwt.user.client.Element subElement) {
         // Supported identifiers:
         //
         // n[index]/n[index]/n[index]{/expand}

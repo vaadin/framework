@@ -54,7 +54,7 @@ public class RowIdTest {
     @Test
     public void toString_defaultCtor_noException() {
         RowId rowId = new RowId();
-        Assert.assertTrue("Unexpected to string for empty Row Id", rowId
-                .toString().isEmpty());
+        Assert.assertTrue("Unexpected to string for empty Row Id",
+                rowId.toString().isEmpty());
     }
 }

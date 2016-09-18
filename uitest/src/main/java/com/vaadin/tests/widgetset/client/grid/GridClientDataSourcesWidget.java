@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,8 +25,8 @@ import com.vaadin.client.renderers.TextRenderer;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.SelectionMode;
 
-public class GridClientDataSourcesWidget extends
-        PureGWTTestApplication<Grid<String[]>> {
+public class GridClientDataSourcesWidget
+        extends PureGWTTestApplication<Grid<String[]>> {
 
     private interface RestCallback {
         void onResponse(RestishDataSource.Backend.Result result);
@@ -37,13 +37,13 @@ public class GridClientDataSourcesWidget extends
      * constantly. The back-end is unable to actively push data to Grid.
      * Instead, with each row request, in addition to its row payload it tells
      * how many rows it contains in total.
-     * 
+     *
      * A plausible response from this REST-like api would be:
-     * 
+     *
      * <pre>
      * <code>
      * GET /foos/4..8
-     * 
+     *
      * {
      *     "resultsize": 4,
      *     "data": [
@@ -56,10 +56,10 @@ public class GridClientDataSourcesWidget extends
      * }
      * </code>
      * </pre>
-     * 
+     *
      * In this case, the size of Grid needs to be updated to be able to show 100
      * rows in total (no more, no less).
-     * 
+     *
      * This class
      * <ol>
      * <li>gets initialized
@@ -75,7 +75,7 @@ public class GridClientDataSourcesWidget extends
          * somewhere.
          * <p>
          * It's scoped inside the RDS class only because it's tied to that.
-         * */
+         */
         private class Backend {
             public class Result {
                 public int size;
@@ -100,11 +100,13 @@ public class GridClientDataSourcesWidget extends
 
             }
 
-            private List<String[]> fetchRows(int firstRowIndex, int numberOfRows) {
+            private List<String[]> fetchRows(int firstRowIndex,
+                    int numberOfRows) {
                 List<String[]> rows = new ArrayList<String[]>();
                 for (int i = 0; i < numberOfRows; i++) {
                     String id = String.valueOf(firstRowIndex + i);
-                    rows.add(new String[] { id, "cell " + id + " #" + modCount });
+                    rows.add(new String[] { id,
+                            "cell " + id + " #" + modCount });
                 }
                 return rows;
             }

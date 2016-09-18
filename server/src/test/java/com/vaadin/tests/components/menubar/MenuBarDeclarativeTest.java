@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,7 +29,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
 
 /**
  * Tests declarative support for menu bars.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -54,8 +54,8 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
         bar.addItem("Save", null).setCheckable(true);
         bar.addItem("Open", null).setDescription("Open a file");
         bar.addItem("Close", null).setEnabled(false);
-        bar.addItem("Help", null).setIcon(
-                new ExternalResource("http://foo.bar/ico.png"));
+        bar.addItem("Help", null)
+                .setIcon(new ExternalResource("http://foo.bar/ico.png"));
         bar.addItem("About", null).setVisible(false);
 
         bar.addItem("Sub", null).addItem("Item", null);
@@ -70,13 +70,10 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
     // #16328
     public void testTicketSpec1() throws IOException {
         String design = "<vaadin-menu-bar auto-open plain-text tabindex=5> "
-                + "<menu>File"
-                + "<menu>Save</menu>"
+                + "<menu>File" + "<menu>Save</menu>"
                 + "<menu icon=\"theme://../runo/icons/16/folder.png\">Open</menu>"
-                + "<menu separator />"
-                + "<menu disabled>Exit</menu>"
-                + "<menu visible='false'>Not for everybody</menu>"
-                + "</menu>"
+                + "<menu separator />" + "<menu disabled>Exit</menu>"
+                + "<menu visible='false'>Not for everybody</menu>" + "</menu>"
                 + "<menu description=\"This contains many items in sub menus\">Other"
                 + "<menu style-name=\"fancy\">Sub"
                 + "<menu checkable checked>Option 1 - no <b>html</b></menu>"
@@ -95,8 +92,8 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
         // File menu
         MenuItem fileMenu = menuBar.addItem("File", null);
         fileMenu.addItem("Save", null);
-        fileMenu.addItem("Open", new ThemeResource(
-                "../runo/icons/16/folder.png"), null);
+        fileMenu.addItem("Open",
+                new ThemeResource("../runo/icons/16/folder.png"), null);
         fileMenu.addSeparator();
         fileMenu.addItem("Exit", null).setEnabled(false);
         fileMenu.addItem("Not for everybody", null).setVisible(false);
@@ -120,8 +117,7 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
     @Test
     // #16328
     public void testTicketSpec2() throws IOException {
-        String design = "<vaadin-menu-bar>"
-                + "<menu><b>File</b>"
+        String design = "<vaadin-menu-bar>" + "<menu><b>File</b>"
                 + "<menu><font style=\"color: red\">Save</font></menu>"
                 + "<menu icon=\"theme://../runo/icons/16/folder.png\">Open</menu>"
                 + "<menu separator />" + "<menu disabled>Exit</menu>" //
@@ -130,8 +126,8 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
         menuBar.setHtmlContentAllowed(true);
         MenuItem fileMenu = menuBar.addItem("<b>File</b>", null);
         fileMenu.addItem("<font style=\"color: red\">Save</font>", null);
-        fileMenu.addItem("Open", new ThemeResource(
-                "../runo/icons/16/folder.png"), null);
+        fileMenu.addItem("Open",
+                new ThemeResource("../runo/icons/16/folder.png"), null);
         fileMenu.addSeparator();
         fileMenu.addItem("Exit", null).setEnabled(false);
         testRead(design, menuBar);

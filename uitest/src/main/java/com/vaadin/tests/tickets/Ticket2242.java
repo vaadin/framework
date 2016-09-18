@@ -13,8 +13,8 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Table;
 
-public class Ticket2242 extends LegacyApplication implements
-        ValueChangeListener {
+public class Ticket2242 extends LegacyApplication
+        implements ValueChangeListener {
 
     private Object tableValue = null;
     private Table t;
@@ -62,8 +62,8 @@ public class Ticket2242 extends LegacyApplication implements
         IndexedContainer ic = new IndexedContainer();
         ic.addContainerProperty("a", String.class, null);
 
-        for (String s : new String[] { "Lorem", "ipsum", "dolor", "sit",
-                "amet", "consectetuer" }) {
+        for (String s : new String[] { "Lorem", "ipsum", "dolor", "sit", "amet",
+                "consectetuer" }) {
             Item item = ic.addItem(s);
             item.getItemProperty("a").setValue(s);
 
@@ -74,8 +74,8 @@ public class Ticket2242 extends LegacyApplication implements
 
     @Override
     public void valueChange(ValueChangeEvent event) {
-        System.out.println("Value change from " + tableValue + " to "
-                + t.getValue());
+        System.out.println(
+                "Value change from " + tableValue + " to " + t.getValue());
         tableValue = t.getValue();
     }
 

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,9 +21,9 @@ import com.vaadin.data.Property;
 
 /**
  * Simple container filter checking whether an item property value is null.
- * 
+ *
  * This filter also directly supports in-memory filtering.
- * 
+ *
  * @since 6.6
  */
 public final class IsNull implements Filter {
@@ -33,11 +33,11 @@ public final class IsNull implements Filter {
     /**
      * Constructor for a filter that compares the value of an item property with
      * null.
-     * 
+     *
      * For in-memory filtering, a simple == check is performed. For other
      * containers, the comparison implementation is container dependent but
      * should correspond to the in-memory null check.
-     * 
+     *
      * @param propertyId
      *            the identifier (not null) of the property whose value to check
      */
@@ -73,8 +73,9 @@ public final class IsNull implements Filter {
         final IsNull o = (IsNull) obj;
 
         // Checks the properties one by one
-        return (null != getPropertyId()) ? getPropertyId().equals(
-                o.getPropertyId()) : null == o.getPropertyId();
+        return (null != getPropertyId())
+                ? getPropertyId().equals(o.getPropertyId())
+                : null == o.getPropertyId();
     }
 
     @Override
@@ -85,7 +86,7 @@ public final class IsNull implements Filter {
     /**
      * Returns the property id of the property tested by the filter, not null
      * for valid filters.
-     * 
+     *
      * @return property id (not null)
      */
     public Object getPropertyId() {

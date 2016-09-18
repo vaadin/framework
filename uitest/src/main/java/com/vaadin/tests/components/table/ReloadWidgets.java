@@ -15,8 +15,8 @@ public class ReloadWidgets extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
 
-        final Table table = new Table(null, new BeanItemContainer<Bean>(
-                Bean.class));
+        final Table table = new Table(null,
+                new BeanItemContainer<Bean>(Bean.class));
         table.setId("table");
         table.setSizeFull();
 

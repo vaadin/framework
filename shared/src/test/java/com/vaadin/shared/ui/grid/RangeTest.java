@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2013 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,7 +35,8 @@ public class RangeTest {
 
     @Test
     public void constructorEquivalenceTest() {
-        assertEquals("10 == [10,11[", Range.withOnly(10), Range.between(10, 11));
+        assertEquals("10 == [10,11[", Range.withOnly(10),
+                Range.between(10, 11));
         assertEquals("[10,20[ == 10, length 10", Range.between(10, 20),
                 Range.withLength(10, 10));
         assertEquals("10 == 10, length 1", Range.withOnly(10),
@@ -87,17 +88,18 @@ public class RangeTest {
         assertTrue("end-1 should be contained", range.contains(end - 1));
 
         assertTrue("[0..10[ contains 5", Range.between(0, 10).contains(5));
-        assertTrue("empty range does not contain 5", !Range.between(5, 5)
-                .contains(5));
+        assertTrue("empty range does not contain 5",
+                !Range.between(5, 5).contains(5));
     }
 
     @Test
     public void emptyTest() {
         assertTrue("[0..0[ should be empty", Range.between(0, 0).isEmpty());
-        assertTrue("Range of length 0 should be empty", Range.withLength(0, 0)
-                .isEmpty());
+        assertTrue("Range of length 0 should be empty",
+                Range.withLength(0, 0).isEmpty());
 
-        assertTrue("[0..1[ should not be empty", !Range.between(0, 1).isEmpty());
+        assertTrue("[0..1[ should not be empty",
+                !Range.between(0, 1).isEmpty());
         assertTrue("Range of length 1 should not be empty",
                 !Range.withLength(0, 1).isEmpty());
     }
@@ -151,18 +153,18 @@ public class RangeTest {
 
     @Test
     public void intersectsTest() {
-        assertTrue("[0..10[ intersects [5..15[", Range.between(0, 10)
-                .intersects(Range.between(5, 15)));
-        assertTrue("[0..10[ does not intersect [10..20[", !Range.between(0, 10)
-                .intersects(Range.between(10, 20)));
+        assertTrue("[0..10[ intersects [5..15[",
+                Range.between(0, 10).intersects(Range.between(5, 15)));
+        assertTrue("[0..10[ does not intersect [10..20[",
+                !Range.between(0, 10).intersects(Range.between(10, 20)));
     }
 
     @Test
     public void intersects_emptyInside() {
-        assertTrue("[5..5[ does intersect with [0..10[", Range.between(5, 5)
-                .intersects(Range.between(0, 10)));
-        assertTrue("[0..10[ does intersect with [5..5[", Range.between(0, 10)
-                .intersects(Range.between(5, 5)));
+        assertTrue("[5..5[ does intersect with [0..10[",
+                Range.between(5, 5).intersects(Range.between(0, 10)));
+        assertTrue("[0..10[ does intersect with [5..5[",
+                Range.between(0, 10).intersects(Range.between(5, 5)));
     }
 
     @Test
@@ -175,14 +177,14 @@ public class RangeTest {
 
     @Test
     public void subsetTest() {
-        assertTrue("[5..10[ is subset of [0..20[", Range.between(5, 10)
-                .isSubsetOf(Range.between(0, 20)));
+        assertTrue("[5..10[ is subset of [0..20[",
+                Range.between(5, 10).isSubsetOf(Range.between(0, 20)));
 
         final Range range = Range.between(0, 10);
         assertTrue("range is subset of self", range.isSubsetOf(range));
 
-        assertTrue("[0..10[ is not subset of [5..15[", !Range.between(0, 10)
-                .isSubsetOf(Range.between(5, 15)));
+        assertTrue("[0..10[ is not subset of [5..15[",
+                !Range.between(0, 10).isSubsetOf(Range.between(5, 15)));
     }
 
     @Test
@@ -220,7 +222,8 @@ public class RangeTest {
     public void rangeEndsBeforeTest() {
         final Range former = Range.between(0, 5);
         final Range latter = Range.between(5, 10);
-        assertTrue("latter should end before former", former.endsBefore(latter));
+        assertTrue("latter should end before former",
+                former.endsBefore(latter));
         assertTrue("former shouldn't end before latter",
                 !latter.endsBefore(former));
 

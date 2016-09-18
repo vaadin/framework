@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,7 +40,7 @@ import elemental.json.impl.JsonUtil;
 
 /**
  * Serializes {@link ClientRpc client RPC} invocations to JSON.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -49,7 +49,7 @@ public class ClientRpcWriter implements Serializable {
     /**
      * Writes a JSON object containing all pending client RPC invocations in the
      * given UI.
-     * 
+     *
      * @param ui
      *            The {@link UI} whose RPC calls to write.
      * @param writer
@@ -59,20 +59,21 @@ public class ClientRpcWriter implements Serializable {
      */
     public void write(UI ui, Writer writer) throws IOException {
 
-        Collection<ClientMethodInvocation> pendingInvocations = collectPendingRpcCalls(ui
-                .getConnectorTracker().getDirtyVisibleConnectors());
+        Collection<ClientMethodInvocation> pendingInvocations = collectPendingRpcCalls(
+                ui.getConnectorTracker().getDirtyVisibleConnectors());
 
         JsonArray rpcCalls = Json.createArray();
         for (ClientMethodInvocation invocation : pendingInvocations) {
             // add invocation to rpcCalls
             try {
                 JsonArray invocationJson = Json.createArray();
-                invocationJson.set(0, invocation.getConnector()
-                        .getConnectorId());
+                invocationJson.set(0,
+                        invocation.getConnector().getConnectorId());
                 invocationJson.set(1, invocation.getInterfaceName());
                 invocationJson.set(2, invocation.getMethodName());
                 JsonArray paramJson = Json.createArray();
-                for (int i = 0; i < invocation.getParameterTypes().length; ++i) {
+                for (int i = 0; i < invocation
+                        .getParameterTypes().length; ++i) {
                     Type parameterType = invocation.getParameterTypes()[i];
                     JsonValue referenceParameter = null;
                     // TODO Use default values for RPC parameter types
@@ -98,7 +99,8 @@ public class ClientRpcWriter implements Serializable {
                                 + invocation.getConnector().getConnectorId()
                                 + " method " + invocation.getInterfaceName()
                                 + "." + invocation.getMethodName() + ": "
-                                + e.getMessage(), e);
+                                + e.getMessage(),
+                        e);
             }
         }
         writer.write(JsonUtil.stringify(rpcCalls));
@@ -107,7 +109,7 @@ public class ClientRpcWriter implements Serializable {
     /**
      * Collects all pending RPC calls from listed {@link ClientConnector}s and
      * clears their RPC queues.
-     * 
+     *
      * @param rpcPendingQueue
      *            list of {@link ClientConnector} of interest
      * @return ordered list of pending RPC calls
@@ -128,14 +130,15 @@ public class ClientRpcWriter implements Serializable {
                 // merge two ordered comparable lists
                 for (int destIndex = 0, oldIndex = 0, paintableIndex = 0; destIndex < totalCalls; destIndex++) {
                     if (paintableIndex >= paintablePendingRpc.size()
-                            || (oldIndex < oldPendingRpc.size() && ((Comparable<ClientMethodInvocation>) oldPendingRpc
-                                    .get(oldIndex))
-                                    .compareTo(paintablePendingRpc
-                                            .get(paintableIndex)) <= 0)) {
+                            || (oldIndex < oldPendingRpc.size()
+                                    && ((Comparable<ClientMethodInvocation>) oldPendingRpc
+                                            .get(oldIndex)).compareTo(
+                                                    paintablePendingRpc.get(
+                                                            paintableIndex)) <= 0)) {
                         pendingInvocations.add(oldPendingRpc.get(oldIndex++));
                     } else {
-                        pendingInvocations.add(paintablePendingRpc
-                                .get(paintableIndex++));
+                        pendingInvocations
+                                .add(paintablePendingRpc.get(paintableIndex++));
                     }
                 }
             }

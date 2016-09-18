@@ -22,7 +22,8 @@ public class OptionGroupMultipleValueChange extends TestBase {
     @Override
     protected void setup() {
         final OptionGroup og = new OptionGroup();
-        og.addItem("Clicking on the text might cause an extra valuechange event");
+        og.addItem(
+                "Clicking on the text might cause an extra valuechange event");
         og.addItem("Second option, same thing");
         og.setImmediate(true);
         addComponent(og);

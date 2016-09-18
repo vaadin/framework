@@ -35,8 +35,8 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.ComboBox;
 
 @Connect(ComboBox.class)
-public class ComboBoxConnector extends AbstractFieldConnector implements
-        Paintable, SimpleManagedLayout {
+public class ComboBoxConnector extends AbstractFieldConnector
+        implements Paintable, SimpleManagedLayout {
 
     // oldSuggestionTextMatchTheOldSelection is used to detect when it's safe to
     // update textbox text by a changed item caption.
@@ -44,7 +44,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.Paintable#updateFromUIDL(com.vaadin.client.UIDL,
      * com.vaadin.client.ApplicationConnection)
      */
@@ -65,15 +65,16 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         // work without additional UIDL messages
         boolean noTextInput = uidl
                 .hasAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT)
-                && uidl.getBooleanAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT);
+                && uidl.getBooleanAttribute(
+                        ComboBoxConstants.ATTR_NO_TEXT_INPUT);
         getWidget().setTextInputEnabled(!noTextInput);
 
         // not a FocusWidget -> needs own tabindex handling
         getWidget().tb.setTabIndex(getState().tabIndex);
 
         if (uidl.hasAttribute("filteringmode")) {
-            getWidget().filteringmode = FilteringMode.valueOf(uidl
-                    .getStringAttribute("filteringmode"));
+            getWidget().filteringmode = FilteringMode
+                    .valueOf(uidl.getStringAttribute("filteringmode"));
         }
 
         getWidget().immediate = getState().immediate;
@@ -284,16 +285,16 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             if (!getWidget().waitingForFilteringResponse
                     || getWidget().popupOpenerClicked) {
                 if (!suggestionKey.equals(getWidget().selectedOptionKey)
-                        || suggestion.getReplacementString().equals(
-                                getWidget().tb.getText())
+                        || suggestion.getReplacementString()
+                                .equals(getWidget().tb.getText())
                         || oldSuggestionTextMatchTheOldSelection) {
                     // Update text field if we've got a new
                     // selection
                     // Also update if we've got the same text to
                     // retain old text selection behavior
                     // OR if selected item caption is changed.
-                    getWidget().setPromptingOff(
-                            suggestion.getReplacementString());
+                    getWidget()
+                            .setPromptingOff(suggestion.getReplacementString());
                     getWidget().selectedOptionKey = suggestionKey;
                 }
             }
@@ -306,8 +307,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
 
     private boolean isWidgetsCurrentSelectionTextInTextBox() {
         return getWidget().currentSuggestion != null
-                && getWidget().currentSuggestion.getReplacementString().equals(
-                        getWidget().tb.getText());
+                && getWidget().currentSuggestion.getReplacementString()
+                        .equals(getWidget().tb.getText());
     }
 
     private void resetSelection() {
@@ -329,13 +330,13 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                 // just clear the input if the value has changed from something
                 // else to null
                 if (getWidget().selectedOptionKey != null
-                        || (getWidget().allowNewItem && !getWidget().tb
-                                .getValue().isEmpty())) {
+                        || (getWidget().allowNewItem
+                                && !getWidget().tb.getValue().isEmpty())) {
 
                     boolean openedPopupWithNonScrollingMode = (getWidget().popupOpenerClicked
                             && getWidget().getSelectedCaption() != null);
                     if (!openedPopupWithNonScrollingMode) {
-                    getWidget().tb.setValue("");
+                        getWidget().tb.setValue("");
                     } else {
                         getWidget().tb
                                 .setValue(getWidget().getSelectedCaption());

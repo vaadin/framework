@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -56,7 +56,8 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
                 startTest();
             }
         });
-        b.setDescription("Push this button to start test. A test label will be rendered above existing components.");
+        b.setDescription(
+                "Push this button to start test. A test label will be rendered above existing components.");
         main.addComponent(b);
         b = new Button("end test", new Button.ClickListener() {
             @Override
@@ -64,7 +65,8 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
                 endTest();
             }
         });
-        b.setDescription("Push this button as soon as test componenet is rendered.");
+        b.setDescription(
+                "Push this button as soon as test componenet is rendered.");
         main.addComponent(b);
 
         result = new Label();
@@ -88,7 +90,7 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
 
     /**
      * Adds n Table components to given container
-     * 
+     *
      * @param testContainer2
      */
     private void populateContainer(VerticalLayout container, int n) {

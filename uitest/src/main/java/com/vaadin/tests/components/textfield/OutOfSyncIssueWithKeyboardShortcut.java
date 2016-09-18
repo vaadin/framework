@@ -86,9 +86,8 @@ public class OutOfSyncIssueWithKeyboardShortcut extends TestBase {
                 public void valueChange(ValueChangeEvent event) {
                     Object value = event.getProperty().getValue();
                     if (value != null) {
-                        String fragment = "edit/"
-                                + String.valueOf(value)
-                                        .replaceAll("[^0-9]", "");
+                        String fragment = "edit/" + String.valueOf(value)
+                                .replaceAll("[^0-9]", "");
                         if (!fragment.equals(previousFragment)) {
                             navigateTo(fragment);
                         }

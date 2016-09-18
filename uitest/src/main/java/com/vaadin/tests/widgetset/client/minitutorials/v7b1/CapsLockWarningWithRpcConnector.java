@@ -12,7 +12,8 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.minitutorials.v7b1.CapsLockWarningWithRpc;
 
 @Connect(CapsLockWarningWithRpc.class)
-public class CapsLockWarningWithRpcConnector extends AbstractExtensionConnector {
+public class CapsLockWarningWithRpcConnector
+        extends AbstractExtensionConnector {
 
     private CapsLockWarningRpc rpc = getRpcProxy(CapsLockWarningRpc.class);
 

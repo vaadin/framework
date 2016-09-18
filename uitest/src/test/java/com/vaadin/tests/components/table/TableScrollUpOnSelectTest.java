@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2013 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,7 +29,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * Test to see if Table appears to scroll up under an obscure set of conditions
  * (Scrolled down, set to expand, selecting updates a TextField that precedes
  * the Table in a VerticalLayout.) (#10106)
- * 
+ *
  * @author Vaadin Ltd
  */
 public class TableScrollUpOnSelectTest extends MultiBrowserTest {
@@ -40,8 +40,8 @@ public class TableScrollUpOnSelectTest extends MultiBrowserTest {
 
         // WebElement table = driver.findElement(By.vaadin("//Table"));
         WebElement row = $(TableElement.class).first().getCell(49, 0);
-        final WebElement scrollPositionDisplay = getDriver().findElement(
-                By.className("v-table-scrollposition"));
+        final WebElement scrollPositionDisplay = getDriver()
+                .findElement(By.className("v-table-scrollposition"));
         waitUntilNot(new ExpectedCondition<Boolean>() {
 
             @Override

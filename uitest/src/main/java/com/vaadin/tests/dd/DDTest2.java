@@ -73,7 +73,7 @@ public class DDTest2 extends TestBase {
         /*
          * An example of lazy initializing drop criterion with component
          * specific api for easy rule writing.
-         * 
+         *
          * Example is pretty stupid (accepts drop on all nodes, but by
          * explicitly defining them here), but demonstrates lazy initialization
          * option if rules are heavy.
@@ -272,8 +272,8 @@ public class DDTest2 extends TestBase {
         for (int i = 0; i < 10; i++) {
             Item addItem = table.addItem("Item" + i);
             Person p = testData.getIdByIndex(i);
-            addItem.getItemProperty("Name").setValue(
-                    p.getFirstName() + " " + p.getLastName());
+            addItem.getItemProperty("Name")
+                    .setValue(p.getFirstName() + " " + p.getLastName());
             addItem.getItemProperty("Weight").setValue(50 + r.nextInt(60));
         }
 

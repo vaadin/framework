@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,12 +25,13 @@ import com.vaadin.server.VaadinSession;
 
 /**
  * Default implementation of {@link ConverterFactory}. Provides converters for
- * standard types like {@link String}, {@link Double} and {@link Date}. </p>
+ * standard types like {@link String}, {@link Double} and {@link Date}.
+ * </p>
  * <p>
  * Custom converters can be provided by extending this class and using
  * {@link VaadinSession#setConverterFactory(ConverterFactory)}.
  * </p>
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0
  */
@@ -70,13 +71,15 @@ public class DefaultConverterFactory implements ConverterFactory {
             Class<PRESENTATION> presentationType, Class<MODEL> modelType) {
         if (presentationType == String.class) {
             // TextField converters and more
-            Converter<PRESENTATION, MODEL> converter = (Converter<PRESENTATION, MODEL>) createStringConverter(modelType);
+            Converter<PRESENTATION, MODEL> converter = (Converter<PRESENTATION, MODEL>) createStringConverter(
+                    modelType);
             if (converter != null) {
                 return converter;
             }
         } else if (presentationType == Date.class) {
             // DateField converters and more
-            Converter<PRESENTATION, MODEL> converter = (Converter<PRESENTATION, MODEL>) createDateConverter(modelType);
+            Converter<PRESENTATION, MODEL> converter = (Converter<PRESENTATION, MODEL>) createDateConverter(
+                    modelType);
             if (converter != null) {
                 return converter;
             }

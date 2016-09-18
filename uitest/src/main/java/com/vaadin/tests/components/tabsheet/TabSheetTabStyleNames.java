@@ -21,8 +21,8 @@ public class TabSheetTabStyleNames extends TestBase {
 
         tab1.setStyleName(STYLE_NAME);
 
-        addComponent(new Button("Update style names",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Update style names", new Button.ClickListener() {
                     int counter = 0;
 
                     @Override

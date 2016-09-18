@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -52,7 +52,7 @@ public class ComponentSizeValidator implements Serializable {
     /**
      * Recursively checks given component and its subtree for invalid layout
      * setups. Prints errors to std err stream.
-     * 
+     *
      * @param component
      *            component to check
      * @return set of first level errors found
@@ -127,7 +127,8 @@ public class ComponentSizeValidator implements Serializable {
         err.append("Layout problem detected: ");
         err.append(msg);
         err.append("\n");
-        err.append("Relative sizes were replaced by undefined sizes, components may not render as expected.\n");
+        err.append(
+                "Relative sizes were replaced by undefined sizes, components may not render as expected.\n");
         errorStream.println(err);
 
     }
@@ -181,7 +182,8 @@ public class ComponentSizeValidator implements Serializable {
 
         private final Vector<InvalidLayout> subErrors = new Vector<InvalidLayout>();
 
-        public InvalidLayout(Component component, boolean height, boolean width) {
+        public InvalidLayout(Component component, boolean height,
+                boolean width) {
             this.component = component;
             invalidHeight = height;
             invalidWidth = width;
@@ -289,7 +291,8 @@ public class ComponentSizeValidator implements Serializable {
 
     }
 
-    private static Stack<ComponentInfo> getHeightAttributes(Component component) {
+    private static Stack<ComponentInfo> getHeightAttributes(
+            Component component) {
         Stack<ComponentInfo> attributes = new Stack<ComponentInfo>();
         attributes
                 .add(new ComponentInfo(component, getHeightString(component)));
@@ -303,7 +306,8 @@ public class ComponentSizeValidator implements Serializable {
         return attributes;
     }
 
-    private static Stack<ComponentInfo> getWidthAttributes(Component component) {
+    private static Stack<ComponentInfo> getWidthAttributes(
+            Component component) {
         Stack<ComponentInfo> attributes = new Stack<ComponentInfo>();
         attributes.add(new ComponentInfo(component, getWidthString(component)));
         Component parent = component.getParent();
@@ -320,7 +324,8 @@ public class ComponentSizeValidator implements Serializable {
         String width = "width: ";
         if (hasRelativeWidth(component)) {
             width += "RELATIVE, " + component.getWidth() + " %";
-        } else if (component instanceof Window && component.getParent() == null) {
+        } else if (component instanceof Window
+                && component.getParent() == null) {
             width += "MAIN WINDOW";
         } else if (component.getWidth() >= 0) {
             width += "ABSOLUTE, " + component.getWidth() + " "
@@ -336,7 +341,8 @@ public class ComponentSizeValidator implements Serializable {
         String height = "height: ";
         if (hasRelativeHeight(component)) {
             height += "RELATIVE, " + component.getHeight() + " %";
-        } else if (component instanceof Window && component.getParent() == null) {
+        } else if (component instanceof Window
+                && component.getParent() == null) {
             height += "MAIN WINDOW";
         } else if (component.getHeight() > 0) {
             height += "ABSOLUTE, " + component.getHeight() + " "
@@ -427,8 +433,8 @@ public class ComponentSizeValidator implements Serializable {
                 if (parent instanceof VerticalLayout) {
                     horizontal = false;
                 }
-                if (horizontal
-                        && hasNonRelativeHeightComponent((AbstractOrderedLayout) parent)) {
+                if (horizontal && hasNonRelativeHeightComponent(
+                        (AbstractOrderedLayout) parent)) {
                     return true;
                 } else {
                     return false;
@@ -484,11 +490,12 @@ public class ComponentSizeValidator implements Serializable {
     }
 
     private static boolean hasRelativeHeight(Component component) {
-        return (component.getHeightUnits() == Unit.PERCENTAGE && component
-                .getHeight() > 0);
+        return (component.getHeightUnits() == Unit.PERCENTAGE
+                && component.getHeight() > 0);
     }
 
-    private static boolean hasNonRelativeWidthComponent(AbstractOrderedLayout ol) {
+    private static boolean hasNonRelativeWidthComponent(
+            AbstractOrderedLayout ol) {
         Iterator<Component> it = ol.getComponentIterator();
         while (it.hasNext()) {
             if (!hasRelativeWidth(it.next())) {
@@ -536,7 +543,8 @@ public class ComponentSizeValidator implements Serializable {
                 boolean columnHasWidth = false;
                 for (int col = componentArea.getColumn1(); !columnHasWidth
                         && col <= componentArea.getColumn2(); col++) {
-                    for (int row = 0; !columnHasWidth && row < gl.getRows(); row++) {
+                    for (int row = 0; !columnHasWidth
+                            && row < gl.getRows(); row++) {
                         Component c = gl.getComponent(col, row);
                         if (c != null) {
                             columnHasWidth = !hasRelativeWidth(c);
@@ -638,7 +646,8 @@ public class ComponentSizeValidator implements Serializable {
         setLocation(heightLocations, object);
     }
 
-    private static void setLocation(Map<Object, FileLocation> map, Object object) {
+    private static void setLocation(Map<Object, FileLocation> map,
+            Object object) {
         StackTraceElement[] traceLines = Thread.currentThread().getStackTrace();
         for (StackTraceElement traceElement : traceLines) {
             Class<?> cls;
@@ -650,7 +659,8 @@ public class ComponentSizeValidator implements Serializable {
                 }
 
                 cls = Class.forName(className);
-                if (cls == ComponentSizeValidator.class || cls == Thread.class) {
+                if (cls == ComponentSizeValidator.class
+                        || cls == Thread.class) {
                     continue;
                 }
 
@@ -675,7 +685,7 @@ public class ComponentSizeValidator implements Serializable {
 
     /**
      * Validates the layout and returns a collection of errors
-     * 
+     *
      * @since 7.1
      * @param ui
      *            The UI to validate

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -63,7 +63,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.AbstractLayoutConnector#getState()
      */
     @Override
@@ -73,7 +73,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.client.ui.AbstractComponentConnector#onStateChanged(com.vaadin
      * .client.communication.StateChangeEvent)
@@ -105,15 +105,17 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.AbstractComponentContainerConnector#
      * onConnectorHierarchyChange
      * (com.vaadin.client.ConnectorHierarchyChangeEvent)
      */
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         Profiler.enter("CssLayoutConnector.onConnectorHierarchyChange");
-        Profiler.enter("CssLayoutConnector.onConnectorHierarchyChange add children");
+        Profiler.enter(
+                "CssLayoutConnector.onConnectorHierarchyChange add children");
         int index = 0;
         for (ComponentConnector child : getChildComponents()) {
             VCaption childCaption = childIdToCaption
@@ -123,10 +125,12 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
             }
             getWidget().addOrMove(child.getWidget(), index++);
         }
-        Profiler.leave("CssLayoutConnector.onConnectorHierarchyChange add children");
+        Profiler.leave(
+                "CssLayoutConnector.onConnectorHierarchyChange add children");
 
         // Detach old child widgets and possibly their caption
-        Profiler.enter("CssLayoutConnector.onConnectorHierarchyChange remove old children");
+        Profiler.enter(
+                "CssLayoutConnector.onConnectorHierarchyChange remove old children");
         for (ComponentConnector child : event.getOldChildren()) {
             if (child.getParent() == this) {
                 // Skip current children
@@ -139,13 +143,14 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
                 getWidget().remove(vCaption);
             }
         }
-        Profiler.leave("CssLayoutConnector.onConnectorHierarchyChange remove old children");
+        Profiler.leave(
+                "CssLayoutConnector.onConnectorHierarchyChange remove old children");
         Profiler.leave("CssLayoutConnector.onConnectorHierarchyChange");
     }
 
     /**
      * Converts a css property string to CamelCase
-     * 
+     *
      * @param cssProperty
      *            The property string
      * @return A string converted to camelcase
@@ -164,7 +169,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ui.AbstractComponentConnector#getWidget()
      */
     @Override
@@ -174,7 +179,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.HasComponentsConnector#updateCaption(com.vaadin
      * .client.ComponentConnector)
      */

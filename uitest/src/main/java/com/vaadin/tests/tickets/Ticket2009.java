@@ -47,8 +47,8 @@ public class Ticket2009 extends com.vaadin.server.LegacyApplication {
                 events.addComponent(new Label(new Label("Click:"
                         + (event.isDoubleClick() ? "double" : "single")
                         + " button:" + event.getButtonName() + " propertyId:"
-                        + event.getPropertyId() + " itemID:"
-                        + event.getItemId() + " item:" + event.getItem())));
+                        + event.getPropertyId() + " itemID:" + event.getItemId()
+                        + " item:" + event.getItem())));
 
             }
         });
@@ -72,8 +72,8 @@ public class Ticket2009 extends com.vaadin.server.LegacyApplication {
                 events2.addComponent(new Label("Click:"
                         + (event.isDoubleClick() ? "double" : "single")
                         + " button:" + event.getButtonName() + " propertyId:"
-                        + event.getPropertyId() + " itemID:"
-                        + event.getItemId() + " item:" + event.getItem()));
+                        + event.getPropertyId() + " itemID:" + event.getItemId()
+                        + " item:" + event.getItem()));
                 if (event.isDoubleClick()) {
                     new PropertyEditor(event);
                 }
@@ -110,8 +110,8 @@ public class Ticket2009 extends com.vaadin.server.LegacyApplication {
 
             setCaption("Editing " + itemid + " : " + propertyid);
 
-            editor.setPropertyDataSource(c.getContainerProperty(itemid,
-                    propertyid));
+            editor.setPropertyDataSource(
+                    c.getContainerProperty(itemid, propertyid));
             layout.addComponent(editor);
             layout.addComponent(done);
 

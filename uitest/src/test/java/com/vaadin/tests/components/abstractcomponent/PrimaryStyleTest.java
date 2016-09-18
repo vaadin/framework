@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,16 +35,16 @@ public class PrimaryStyleTest extends MultiBrowserTest {
         openTestURL();
 
         // Verify the initial class names for all three components.
-        List<WebElement> initialElements = driver.findElements(By
-                .className("initial-state"));
+        List<WebElement> initialElements = driver
+                .findElements(By.className("initial-state"));
         assertThat(initialElements, hasSize(3));
 
         // Click on a button that updates the styles.
         $(ButtonElement.class).id("update-button").click();
 
         // Verify that the class names where updated as expected.
-        List<WebElement> updatedElements = driver.findElements(By
-                .className("updated-correctly"));
+        List<WebElement> updatedElements = driver
+                .findElements(By.className("updated-correctly"));
         assertThat(updatedElements, hasSize(initialElements.size()));
 
     }

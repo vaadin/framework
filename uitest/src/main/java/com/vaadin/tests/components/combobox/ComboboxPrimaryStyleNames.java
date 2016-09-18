@@ -21,8 +21,8 @@ public class ComboboxPrimaryStyleNames extends TestBase {
         addItem(box, "Value 4");
 
         addComponent(box);
-        addComponent(new Button("Set primary style",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Set primary style", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         box.setPrimaryStyleName("my-second-combobox");

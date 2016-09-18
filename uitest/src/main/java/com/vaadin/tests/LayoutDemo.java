@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,10 +32,10 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * This example demonstrates layouts. Layouts are populated with sample Vaadin
  * UI components.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 4.0.0
- * 
+ *
  */
 public class LayoutDemo extends com.vaadin.server.LegacyApplication {
 
@@ -87,7 +87,8 @@ public class LayoutDemo extends com.vaadin.server.LegacyApplication {
         // Create TabSheet
         //
         final TabSheet tabsheet = new TabSheet();
-        tabsheet.setCaption("Tabsheet, above layouts are added to this component");
+        tabsheet.setCaption(
+                "Tabsheet, above layouts are added to this component");
         tabsheet.addTab(layoutA, "Horizontal ordered layout", null);
         tabsheet.addTab(layoutB, "Vertical ordered layout", null);
         tabsheet.addTab(layoutG, "First grid layout", null);
@@ -108,13 +109,15 @@ public class LayoutDemo extends com.vaadin.server.LegacyApplication {
                 "<br /><h3>Grid Layout (4 x 4)</h3>Added 16 components.",
                 ContentMode.HTML));
         mainWindow.addComponent(layoutG);
-        mainWindow.addComponent(new Label("<br /><h3>Grid Layout (4 x 4)</h3>"
-                + "Added four panels and four embedded components "
-                + "diagonally with absolute coordinates.", ContentMode.HTML));
-        mainWindow.addComponent(layoutG2);
         mainWindow.addComponent(new Label(
-                "<br /><h3>TabSheet</h3>Added above layouts as tabs.",
+                "<br /><h3>Grid Layout (4 x 4)</h3>"
+                        + "Added four panels and four embedded components "
+                        + "diagonally with absolute coordinates.",
                 ContentMode.HTML));
+        mainWindow.addComponent(layoutG2);
+        mainWindow.addComponent(
+                new Label("<br /><h3>TabSheet</h3>Added above layouts as tabs.",
+                        ContentMode.HTML));
         mainWindow.addComponent(tabsheet);
 
     }
@@ -144,7 +147,7 @@ public class LayoutDemo extends com.vaadin.server.LegacyApplication {
 
     /**
      * Add multiple demo component to given layout.
-     * 
+     *
      * @param layout
      *            where components are added
      * @param numberOfComponents

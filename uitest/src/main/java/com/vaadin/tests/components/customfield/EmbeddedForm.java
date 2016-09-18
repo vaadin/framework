@@ -10,10 +10,10 @@ import com.vaadin.ui.Layout;
 
 /**
  * Form that displays its fields in the layout of another form.
- * 
+ *
  * The fields are still logically part of this form even though they are in the
  * layout of the parent form. The embedded form itself is automatically hidden.
- * 
+ *
  * TODO Known issue: any field factory creating an {@link EmbeddedForm}
  * (directly or indirectly) should re-use the field once it has been created to
  * avoid the creation of duplicate fields when e.g. setting the visible item
@@ -25,7 +25,7 @@ public class EmbeddedForm extends Form {
 
     /**
      * Create a form that places its fields in another {@link Form}.
-     * 
+     *
      * @param parentForm
      *            form to which to embed the fields, not null
      */

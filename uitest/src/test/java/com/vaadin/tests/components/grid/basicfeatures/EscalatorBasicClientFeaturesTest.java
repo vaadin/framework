@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -30,7 +30,8 @@ import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("grid")
-public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest {
+public abstract class EscalatorBasicClientFeaturesTest
+        extends MultiBrowserTest {
 
     private static final String LOGICAL_ROW_ATTRIBUTE_NAME = "vLogicalRow";
     private static final String SPACER_CSS_CLASS = "v-escalator-spacer";
@@ -217,8 +218,8 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
 
     @Override
     protected WebElement getMenuElement(String menuCaption) {
-        return getDriver().findElement(
-                By.xpath("//td[text() = '" + menuCaption + "']"));
+        return getDriver()
+                .findElement(By.xpath("//td[text() = '" + menuCaption + "']"));
     }
 
     protected void assertLogContains(String substring) {
@@ -261,8 +262,8 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     }
 
     private TestBenchElement getVerticalScrollbar() {
-        return (TestBenchElement) getEscalator().findElement(
-                By.className("v-escalator-scroller-vertical"));
+        return (TestBenchElement) getEscalator()
+                .findElement(By.className("v-escalator-scroller-vertical"));
     }
 
     protected void scrollHorizontallyTo(int px) {
@@ -275,8 +276,8 @@ public abstract class EscalatorBasicClientFeaturesTest extends MultiBrowserTest 
     }
 
     protected TestBenchElement getHorizontalScrollbar() {
-        return (TestBenchElement) getEscalator().findElement(
-                By.className("v-escalator-scroller-horizontal"));
+        return (TestBenchElement) getEscalator()
+                .findElement(By.className("v-escalator-scroller-horizontal"));
     }
 
     @Override

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -52,7 +52,8 @@ public abstract class VLayoutSlot {
         this.caption = caption;
         if (caption != null) {
             // Physical attach.
-            DOM.insertBefore(wrapper, caption.getElement(), widget.getElement());
+            DOM.insertBefore(wrapper, caption.getElement(),
+                    widget.getElement());
             Style style = caption.getElement().getStyle();
             style.setPosition(Position.ABSOLUTE);
             style.setTop(0, Unit.PX);
@@ -119,7 +120,8 @@ public abstract class VLayoutSlot {
                     .getWidth();
             double percentage = parsePercent(percentWidth);
             allocatedContentWidth = availableWidth * (percentage / 100);
-            reportActualRelativeWidth(Math.round((float) allocatedContentWidth));
+            reportActualRelativeWidth(
+                    Math.round((float) allocatedContentWidth));
         }
 
         double usedWidth; // widget width in px
@@ -191,8 +193,8 @@ public abstract class VLayoutSlot {
             String height = getWidget().getElement().getStyle().getHeight();
             double percentage = parsePercent(height);
             allocatedContentHeight = contentHeight * (percentage / 100);
-            reportActualRelativeHeight(Math
-                    .round((float) allocatedContentHeight));
+            reportActualRelativeHeight(
+                    Math.round((float) allocatedContentHeight));
         }
 
         style.setTop(currentLocation, Unit.PX);

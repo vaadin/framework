@@ -14,10 +14,11 @@ import com.vaadin.ui.Table;
 /**
  * Scroll position should be restored when removing and re-adding all rows in
  * Table.
- * 
+ *
  * @author Vaadin Ltd
  */
-public class TableRepairsScrollPositionOnReAddingAllRows extends AbstractTestUI {
+public class TableRepairsScrollPositionOnReAddingAllRows
+        extends AbstractTestUI {
 
     private static final long serialVersionUID = 1L;
 
@@ -50,8 +51,8 @@ public class TableRepairsScrollPositionOnReAddingAllRows extends AbstractTestUI 
 
             @Override
             public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
-                List<TableItem> originalItemIds = new ArrayList<TableItem>(cont
-                        .getItemIds());
+                List<TableItem> originalItemIds = new ArrayList<TableItem>(
+                        cont.getItemIds());
                 cont.removeAllItems();
                 cont.addAll(originalItemIds);
             }

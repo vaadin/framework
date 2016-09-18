@@ -109,8 +109,8 @@ public class ProgrammaticSelect extends TestBase {
         for (int i = 1; i <= items; i++) {
             Item item = c.addItem("Item " + i);
             for (int j = 1; j <= properties; j++) {
-                item.getItemProperty("Property " + j).setValue(
-                        "Item " + i + "," + j);
+                item.getItemProperty("Property " + j)
+                        .setValue("Item " + i + "," + j);
             }
         }
 

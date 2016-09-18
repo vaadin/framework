@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -22,10 +22,10 @@ import java.util.List;
 import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeNotifier;
 
 /**
- * Simple implementation of
- * {@link com.vaadin.addon.calendar.event.CalendarEvent CalendarEvent}. Has
- * setters for all required fields and fires events when this event is changed.
- * 
+ * Simple implementation of {@link com.vaadin.addon.calendar.event.CalendarEvent
+ * CalendarEvent}. Has setters for all required fields and fires events when
+ * this event is changed.
+ *
  * @since 7.1.0
  * @author Vaadin Ltd.
  */
@@ -50,7 +50,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     /**
      * Constructor for creating an event with the same start and end date
-     * 
+     *
      * @param caption
      *            The caption for the event
      * @param description
@@ -68,7 +68,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
     /**
      * Constructor for creating an event with a start date and an end date.
      * Start date should be before the end date
-     * 
+     *
      * @param caption
      *            The caption for the event
      * @param description
@@ -88,7 +88,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.calendar.event.CalendarEvent#getCaption()
      */
     @Override
@@ -98,7 +98,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.calendar.event.CalendarEvent#getDescription()
      */
     @Override
@@ -108,7 +108,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.calendar.event.CalendarEvent#getEnd()
      */
     @Override
@@ -118,7 +118,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.calendar.event.CalendarEvent#getStart()
      */
     @Override
@@ -128,7 +128,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.calendar.event.CalendarEvent#getStyleName()
      */
     @Override
@@ -138,7 +138,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.addon.calendar.event.CalendarEvent#isAllDay()
      */
     @Override
@@ -148,7 +148,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.event.CalendarEventEditor#setCaption(java.lang
      * .String)
@@ -161,7 +161,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.event.CalendarEventEditor#setDescription(java
      * .lang.String)
@@ -174,7 +174,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.event.CalendarEventEditor#setEnd(java.util.
      * Date)
@@ -187,7 +187,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.event.CalendarEventEditor#setStart(java.util
      * .Date)
@@ -200,7 +200,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.event.CalendarEventEditor#setStyleName(java
      * .lang.String)
@@ -213,7 +213,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.event.CalendarEventEditor#setAllDay(boolean)
      */
@@ -225,7 +225,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventChangeNotifier
      * #addListener
@@ -239,7 +239,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventChangeNotifier
      * #removeListener

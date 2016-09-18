@@ -18,8 +18,8 @@ import com.vaadin.ui.TextField;
 public class AbsFieldValueConversionErrorTest {
 
     Person paulaBean = new Person("Paula", "Brilliant", "paula@brilliant.com",
-            34, Sex.FEMALE, new Address("Paula street 1", 12345, "P-town",
-                    Country.FINLAND));
+            34, Sex.FEMALE,
+            new Address("Paula street 1", 12345, "P-town", Country.FINLAND));
 
     @Test
     public void testValidateConversionErrorParameters() {

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -78,11 +78,13 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
                                 && !receiverUrl
                                         .equals(getWidget().fileIdToReceiver
                                                 .get(fileId))) {
-                            VConsole.error("Overwriting file receiver mapping for fileId "
-                                    + fileId
-                                    + " . Old receiver URL: "
-                                    + getWidget().fileIdToReceiver.get(fileId)
-                                    + " New receiver URL: " + receiverUrl);
+                            VConsole.error(
+                                    "Overwriting file receiver mapping for fileId "
+                                            + fileId + " . Old receiver URL: "
+                                            + getWidget().fileIdToReceiver
+                                                    .get(fileId)
+                                            + " New receiver URL: "
+                                            + receiverUrl);
                         }
                         getWidget().fileIdToReceiver.put(fileId, receiverUrl);
                     }
@@ -90,11 +92,11 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
             }
             getWidget().startNextUpload();
 
-            getWidget().dragStartMode = uidl
-                    .getIntAttribute(DragAndDropWrapperConstants.DRAG_START_MODE);
+            getWidget().dragStartMode = uidl.getIntAttribute(
+                    DragAndDropWrapperConstants.DRAG_START_MODE);
 
-            String dragImageComponentConnectorId = uidl
-                    .getStringAttribute(DragAndDropWrapperConstants.DRAG_START_COMPONENT_ATTRIBUTE);
+            String dragImageComponentConnectorId = uidl.getStringAttribute(
+                    DragAndDropWrapperConstants.DRAG_START_COMPONENT_ATTRIBUTE);
 
             ComponentConnector connector = null;
             if (dragImageComponentConnectorId != null) {
@@ -102,8 +104,7 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
                         .getConnector(dragImageComponentConnectorId);
 
                 if (connector == null) {
-                    getLogger().log(
-                            Level.WARNING,
+                    getLogger().log(Level.WARNING,
                             "DragAndDropWrapper drag image component"
                                     + " connector now found. Make sure the"
                                     + " component is attached.");
@@ -112,8 +113,8 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
                 }
             }
             getWidget().initDragStartMode();
-            getWidget().html5DataFlavors = uidl
-                    .getMapAttribute(DragAndDropWrapperConstants.HTML5_DATA_FLAVORS);
+            getWidget().html5DataFlavors = uidl.getMapAttribute(
+                    DragAndDropWrapperConstants.HTML5_DATA_FLAVORS);
 
             // Used to prevent wrapper from stealing tooltips when not defined
             getWidget().hasTooltip = getState().description != null;

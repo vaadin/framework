@@ -36,7 +36,7 @@ public class Ticket2186 extends LegacyApplication {
 
             table.addItem(new Object[] { i + " Joku Ihminen", "Testiviesti" },
 
-            new Object());
+                    new Object());
 
         }
 

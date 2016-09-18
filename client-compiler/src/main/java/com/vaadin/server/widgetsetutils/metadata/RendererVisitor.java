@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,9 +37,9 @@ import elemental.json.JsonValue;
  * {@link AbstractRendererConnector#decode(elemental.json.JsonValue) decode}
  * method to work without having to implement a "getPresentationType" method.
  * </ul>
- * 
+ *
  * @see WidgetInitVisitor
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -57,17 +57,17 @@ public class RendererVisitor extends TypeVisitor {
     private static void doRendererType(TreeLogger logger, JClassType type,
             ConnectorBundle bundle) throws UnableToCompleteException {
         // The class in which createRenderer is implemented
-        JClassType createRendererClass = ConnectorBundle.findInheritedMethod(
-                type, "createRenderer").getEnclosingType();
+        JClassType createRendererClass = ConnectorBundle
+                .findInheritedMethod(type, "createRenderer").getEnclosingType();
 
         // Needs GWT constructor if createRenderer is not overridden
-        if (createRendererClass.getQualifiedSourceName().equals(
-                AbstractRendererConnector.class.getCanonicalName())) {
+        if (createRendererClass.getQualifiedSourceName()
+                .equals(AbstractRendererConnector.class.getCanonicalName())) {
 
             JMethod getRenderer = ConnectorBundle.findInheritedMethod(type,
                     "getRenderer");
-            if (getRenderer.getEnclosingType().getQualifiedSourceName()
-                    .equals(AbstractRendererConnector.class.getCanonicalName())) {
+            if (getRenderer.getEnclosingType().getQualifiedSourceName().equals(
+                    AbstractRendererConnector.class.getCanonicalName())) {
                 logger.log(Type.ERROR, type.getQualifiedSourceName()
                         + " must override either createRenderer or getRenderer");
                 throw new UnableToCompleteException();
@@ -79,8 +79,8 @@ public class RendererVisitor extends TypeVisitor {
             // Also needs renderer type to find the right GWT constructor
             bundle.setNeedsReturnType(type, getRenderer);
 
-            logger.log(Type.DEBUG, "Renderer type of " + type + " is "
-                    + rendererType);
+            logger.log(Type.DEBUG,
+                    "Renderer type of " + type + " is " + rendererType);
         }
     }
 
@@ -93,8 +93,8 @@ public class RendererVisitor extends TypeVisitor {
             bundle.setNeedsSerialize(presentationType);
         }
 
-        logger.log(Type.DEBUG, "Presentation type of " + type + " is "
-                + presentationType);
+        logger.log(Type.DEBUG,
+                "Presentation type of " + type + " is " + presentationType);
     }
 
     private static boolean hasCustomDecodeMethod(JClassType type,
@@ -110,8 +110,8 @@ public class RendererVisitor extends TypeVisitor {
             return !decodeMethod.getEnclosingType().getQualifiedSourceName()
                     .equals(AbstractRendererConnector.class.getName());
         } catch (NotFoundException e) {
-            logger.log(Type.ERROR, "Can't find decode method for renderer "
-                    + type, e);
+            logger.log(Type.ERROR,
+                    "Can't find decode method for renderer " + type, e);
             throw new UnableToCompleteException();
         }
     }
@@ -120,16 +120,13 @@ public class RendererVisitor extends TypeVisitor {
             throws UnableToCompleteException {
         JClassType originalType = type;
         while (type != null) {
-            if (type.getQualifiedBinaryName().equals(
-                    AbstractRendererConnector.class.getName())) {
+            if (type.getQualifiedBinaryName()
+                    .equals(AbstractRendererConnector.class.getName())) {
                 JParameterizedType parameterized = type.isParameterized();
                 if (parameterized == null) {
-                    logger.log(
-                            Type.ERROR,
-                            type.getQualifiedSourceName()
-                                    + " must define the generic parameter of the inherited "
-                                    + AbstractRendererConnector.class
-                                            .getSimpleName());
+                    logger.log(Type.ERROR, type.getQualifiedSourceName()
+                            + " must define the generic parameter of the inherited "
+                            + AbstractRendererConnector.class.getSimpleName());
                     throw new UnableToCompleteException();
                 }
                 return parameterized.getTypeArgs()[0];

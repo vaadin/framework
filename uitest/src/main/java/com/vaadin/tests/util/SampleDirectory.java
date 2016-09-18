@@ -1,12 +1,12 @@
 /* 
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,19 +31,20 @@ import com.vaadin.ui.VerticalLayout;
  * Provides sample directory based on application directory. If this fails then
  * sampleDirectory property is read. If no sample directory is resolved, then a
  * panel displaying error message is added to main window.
- * 
+ *
  * @author Vaadin Ltd.
- * 
+ *
  */
 public class SampleDirectory {
 
     /**
      * Get sample directory.
-     * 
+     *
      * @param application
      * @return file pointing to sample directory
      */
-    public static File getDirectory(VaadinSession application, LegacyWindow uI) {
+    public static File getDirectory(VaadinSession application,
+            LegacyWindow uI) {
         String errorMessage = "Access to application "
                 + "context base directory failed, "
                 + "possible security constraint with Application "
@@ -82,8 +83,8 @@ public class SampleDirectory {
         final Panel errorPanel = new Panel("Demo application error",
                 errorLayout);
         errorPanel.setStyleName("strong");
-        errorPanel.setComponentError(new SystemError(
-                "Cannot provide sample directory"));
+        errorPanel.setComponentError(
+                new SystemError("Cannot provide sample directory"));
         errorLayout.addComponent(new Label(errorMessage, ContentMode.HTML));
         // Remove all components from applications main window
         uI.removeAllComponents();

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,7 +35,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Tests that navigation with PageDown/PageUp/Home/End in Table works
- * 
+ *
  * @author Vaadin Ltd
  */
 public class TableNavigationPageDownTest extends MultiBrowserTest {
@@ -116,8 +116,8 @@ public class TableNavigationPageDownTest extends MultiBrowserTest {
         // page downs.
         // Can't use v-table-body height because lower rows haven't been
         // fetched yet.
-        testBenchElement(wrapper).scroll(
-                ROW_NUMBER * rowHeight - (int) (2.8 * pageHeight));
+        testBenchElement(wrapper)
+                .scroll(ROW_NUMBER * rowHeight - (int) (2.8 * pageHeight));
         waitForScrollToFinish();
 
         getLastVisibleRow().click();
@@ -166,8 +166,8 @@ public class TableNavigationPageDownTest extends MultiBrowserTest {
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver input) {
-                List<WebElement> elements = findElements(By
-                        .className("v-table-scrollposition"));
+                List<WebElement> elements = findElements(
+                        By.className("v-table-scrollposition"));
                 return elements.isEmpty() || !elements.get(0).isDisplayed();
             }
 
@@ -183,8 +183,8 @@ public class TableNavigationPageDownTest extends MultiBrowserTest {
      * Returns row number from its first cell
      */
     private int getRowNumber(WebElement row) {
-        return Integer.valueOf(row.findElement(
-                By.className("v-table-cell-wrapper")).getText());
+        return Integer.valueOf(row
+                .findElement(By.className("v-table-cell-wrapper")).getText());
     }
 
     /**

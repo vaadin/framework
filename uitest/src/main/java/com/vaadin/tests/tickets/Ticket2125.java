@@ -55,8 +55,8 @@ public class Ticket2125 extends LegacyApplication {
                 }
 
             });
-            CheckBox b = new CheckBox("editmode", new MethodProperty<Boolean>(
-                    table, "editable"));
+            CheckBox b = new CheckBox("editmode",
+                    new MethodProperty<Boolean>(table, "editable"));
             b.setImmediate(true);
             addComponent(b);
         }

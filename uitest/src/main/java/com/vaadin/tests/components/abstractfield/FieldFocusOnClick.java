@@ -15,8 +15,8 @@ public class FieldFocusOnClick extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         addComponent(new TextField(null, "TextField"));
         addComponent(new CheckBox("CheckBox"));
-        addComponent(new OptionGroup(null,
-                Arrays.asList("Option 1", "Option 2")));
+        addComponent(
+                new OptionGroup(null, Arrays.asList("Option 1", "Option 2")));
         addComponent(new NativeButton("NativeButton"));
     }
 

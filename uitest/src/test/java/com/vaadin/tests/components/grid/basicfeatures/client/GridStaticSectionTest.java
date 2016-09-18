@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,15 +26,17 @@ import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 
 /**
  * Abstract base class for header and footer tests.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
-public abstract class GridStaticSectionTest extends GridBasicClientFeaturesTest {
+public abstract class GridStaticSectionTest
+        extends GridBasicClientFeaturesTest {
 
     protected void assertHeaderTexts(int headerId, int rowIndex) {
         int i = 0;
-        for (TestBenchElement cell : getGridElement().getHeaderCells(rowIndex)) {
+        for (TestBenchElement cell : getGridElement()
+                .getHeaderCells(rowIndex)) {
             WebElement content = cell.findElement(By.tagName("div"));
 
             if (i % 3 == 0) {
@@ -56,7 +58,8 @@ public abstract class GridStaticSectionTest extends GridBasicClientFeaturesTest 
 
     protected void assertFooterTexts(int footerId, int rowIndex) {
         int i = 0;
-        for (TestBenchElement cell : getGridElement().getFooterCells(rowIndex)) {
+        for (TestBenchElement cell : getGridElement()
+                .getFooterCells(rowIndex)) {
             WebElement content = cell.findElement(By.tagName("div"));
 
             if (i % 3 == 0) {

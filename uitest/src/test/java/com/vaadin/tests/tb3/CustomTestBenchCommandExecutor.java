@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,10 +37,10 @@ import com.vaadin.testbench.screenshot.ImageFileUtil;
 
 /**
  * Internal hack to support capturing screenshots for elements.
- * 
+ *
  * Most parts are from TestBenchCommandExecutor and the feature should be
  * integrated into TB4.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class CustomTestBenchCommandExecutor {
@@ -54,7 +54,7 @@ public class CustomTestBenchCommandExecutor {
 
     /**
      * Compares the screenshot of the given element with the reference.
-     * 
+     *
      * Copied from TestBenchCommandExecutor
      */
     public boolean compareScreen(WebElement element, File reference,
@@ -71,28 +71,27 @@ public class CustomTestBenchCommandExecutor {
 
     /**
      * Compares the screenshot of the given element with the reference.
-     * 
+     *
      * Copied from TestBenchCommandExecutor and added cropToElement
      */
     public boolean compareScreen(WebElement element, BufferedImage reference,
             String referenceName, boolean isIE8) throws IOException {
-        for (int times = 0; times < Parameters.getMaxScreenshotRetries(); times++) {
+        for (int times = 0; times < Parameters
+                .getMaxScreenshotRetries(); times++) {
             BufferedImage screenshotImage = cropToElement(element,
                     ImageIO.read(new ByteArrayInputStream(
                             ((TakesScreenshot) actualDriver)
-                                    .getScreenshotAs(OutputType.BYTES))), isIE8);
+                                    .getScreenshotAs(OutputType.BYTES))),
+                    isIE8);
             if (reference == null) {
                 // Store the screenshot in the errors directory and fail the
                 // test
                 ImageFileUtil.createScreenshotDirectoriesIfNeeded();
                 ImageIO.write(screenshotImage, "png",
                         ImageFileUtil.getErrorScreenshotFile(referenceName));
-                getLogger().severe(
-                        "No reference found for "
-                                + referenceName
-                                + " in "
-                                + ImageFileUtil
-                                        .getScreenshotReferenceDirectory());
+                getLogger().severe("No reference found for " + referenceName
+                        + " in "
+                        + ImageFileUtil.getScreenshotReferenceDirectory());
                 return false;
             }
             if (imageComparison.imageEqualToReference(screenshotImage,
@@ -108,7 +107,7 @@ public class CustomTestBenchCommandExecutor {
     /**
      * Crops the image to show only the element. If the element is partly off
      * screen, crops to show the part of the element which is in the screenshot
-     * 
+     *
      * @param element
      *            the element to retain in the screenshot
      * @param fullScreen
@@ -136,8 +135,8 @@ public class CustomTestBenchCommandExecutor {
             // Get the part of the element which is on screen
             w = Math.min(fullScreen.getWidth() - x, w);
         } else {
-            throw new IOException("Element x is outside the screenshot (x: "
-                    + x + ", y: " + y + ")");
+            throw new IOException("Element x is outside the screenshot (x: " + x
+                    + ", y: " + y + ")");
         }
 
         if (y >= 0 && y < fullScreen.getHeight()) {
@@ -145,8 +144,8 @@ public class CustomTestBenchCommandExecutor {
             // Get the part of the element which is on screen
             h = Math.min(fullScreen.getHeight() - y, h);
         } else {
-            throw new IOException("Element y is outside the screenshot (x: "
-                    + x + ", y: " + y + ")");
+            throw new IOException("Element y is outside the screenshot (x: " + x
+                    + ", y: " + y + ")");
         }
 
         return fullScreen.getSubimage(x, y, w, h);

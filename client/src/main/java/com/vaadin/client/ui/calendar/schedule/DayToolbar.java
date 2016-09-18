@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,10 +27,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.VCalendar;
 
 /**
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd.
- * 
+ *
  */
 public class DayToolbar extends HorizontalPanel implements ClickHandler {
     private int width = 0;
@@ -73,8 +73,8 @@ public class DayToolbar extends HorizontalPanel implements ClickHandler {
             setCellHorizontalAlignment(nextLabel, ALIGN_RIGHT);
             int cellw = width / (count - 2);
             if (cellw > 0) {
-                int[] cellWidths = VCalendar
-                        .distributeSize(width, count - 2, 0);
+                int[] cellWidths = VCalendar.distributeSize(width, count - 2,
+                        0);
                 for (int i = 1; i < count - 1; i++) {
                     Widget widget = getWidget(i);
                     // if (remain > 0) {

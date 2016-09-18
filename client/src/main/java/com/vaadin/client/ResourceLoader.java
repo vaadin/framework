@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,11 +37,11 @@ import com.google.gwt.user.client.Timer;
 /**
  * ResourceLoader lets you dynamically include external scripts and styles on
  * the page and lets you know when the resource has been loaded.
- * 
+ *
  * You can also preload resources, allowing them to get cached by the browser
  * without being evaluated. This enables downloading multiple resources at once
  * while still controlling in which order e.g. scripts are executed.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
@@ -56,7 +56,7 @@ public class ResourceLoader {
 
         /**
          * Creates a new event.
-         * 
+         *
          * @param loader
          *            the resource loader that has loaded the resource
          * @param resourceUrl
@@ -74,7 +74,7 @@ public class ResourceLoader {
 
         /**
          * Gets the resource loader that has fired this event
-         * 
+         *
          * @return the resource loader
          */
         public ResourceLoader getResourceLoader() {
@@ -83,7 +83,7 @@ public class ResourceLoader {
 
         /**
          * Gets the absolute url of the loaded resource.
-         * 
+         *
          * @return the absolute url of the loaded resource
          */
         public String getResourceUrl() {
@@ -93,9 +93,9 @@ public class ResourceLoader {
         /**
          * Returns true if the resource has been preloaded, false if it's fully
          * loaded
-         * 
+         *
          * @see ResourceLoader#preloadResource(String, ResourceLoadListener)
-         * 
+         *
          * @return true if the resource has been preloaded, false if it's fully
          *         loaded
          */
@@ -112,9 +112,9 @@ public class ResourceLoader {
          * Notifies this ResourceLoadListener that a resource has been loaded.
          * Some browsers do not support any way of detecting load errors. In
          * these cases, onLoad will be called regardless of the status.
-         * 
+         *
          * @see ResourceLoadEvent
-         * 
+         *
          * @param event
          *            a resource load event with information about the loaded
          *            resource
@@ -127,9 +127,9 @@ public class ResourceLoader {
          * server did not respond. Some browsers do not support any way of
          * detecting load errors. In these cases, onLoad will be called
          * regardless of the status.
-         * 
+         *
          * @see ResourceLoadEvent
-         * 
+         *
          * @param event
          *            a resource load event with information about the resource
          *            that could not be loaded.
@@ -183,7 +183,7 @@ public class ResourceLoader {
 
     /**
      * Returns the default ResourceLoader
-     * 
+     *
      * @return the default ResourceLoader
      */
     public static ResourceLoader get() {
@@ -195,8 +195,8 @@ public class ResourceLoader {
      * this method when the script is currently loading or already loaded
      * doesn't cause the script to be loaded again, but the listener will still
      * be notified when appropriate.
-     * 
-     * 
+     *
+     *
      * @param scriptUrl
      *            the url of the script to load
      * @param resourceLoadListener
@@ -213,8 +213,8 @@ public class ResourceLoader {
      * this method when the script is currently loading or already loaded
      * doesn't cause the script to be loaded again, but the listener will still
      * be notified when appropriate.
-     * 
-     * 
+     *
+     *
      * @param scriptUrl
      *            url of script to load
      * @param resourceLoadListener
@@ -278,7 +278,7 @@ public class ResourceLoader {
     /**
      * The current browser supports script.async='false' for maintaining
      * execution order for dynamically-added scripts.
-     * 
+     *
      * @return Browser supports script.async='false'
      * @since 7.2.4
      */
@@ -292,12 +292,12 @@ public class ResourceLoader {
      * preloaded, it will be present in the browser's cache (provided the HTTP
      * headers allow caching), making a subsequent load operation complete
      * without having to wait for the resource to be downloaded again.
-     * 
+     *
      * Calling this method when the resource is currently loading, currently
      * preloading, already preloaded or already loaded doesn't cause the
      * resource to be preloaded again, but the listener will still be notified
      * when appropriate.
-     * 
+     *
      * @param url
      *            the url of the resource to preload
      * @param resourceLoadListener
@@ -378,7 +378,7 @@ public class ResourceLoader {
      * Adds an onload listener to the given element, which should be a link or a
      * script tag. The listener is called whenever loading is complete or an
      * error occurred.
-     * 
+     *
      * @since 7.3
      * @param element
      *            the element to attach a listener to
@@ -414,7 +414,7 @@ public class ResourceLoader {
      * Calling this method when the stylesheet is currently loading or already
      * loaded doesn't cause the stylesheet to be loaded again, but the listener
      * will still be notified when appropriate.
-     * 
+     *
      * @param stylesheetUrl
      *            the url of the stylesheet to load
      * @param resourceLoadListener

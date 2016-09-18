@@ -33,8 +33,8 @@ public class SerializationTest {
     public void testForm() throws Exception {
         Form f = new Form();
         String propertyId = "My property";
-        f.addItemProperty(propertyId, new MethodProperty<Object>(new Data(),
-                "dummyGetterAndSetter"));
+        f.addItemProperty(propertyId,
+                new MethodProperty<Object>(new Data(), "dummyGetterAndSetter"));
         f.replaceWithSelect(propertyId, new Object[] { "a", "b", null },
                 new String[] { "Item a", "ITem b", "Null item" });
 
@@ -95,8 +95,8 @@ public class SerializationTest {
         ObjectOutputStream out = new ObjectOutputStream(bs);
         out.writeObject(s);
         byte[] data = bs.toByteArray();
-        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(
-                data));
+        ObjectInputStream in = new ObjectInputStream(
+                new ByteArrayInputStream(data));
         @SuppressWarnings("unchecked")
         S s2 = (S) in.readObject();
 

@@ -92,12 +92,12 @@ import com.vaadin.tests.widgetset.client.grid.GridBasicClientFeaturesWidget.Data
 
 /**
  * Grid basic client features test application.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
-public class GridBasicClientFeaturesWidget extends
-        PureGWTTestApplication<Grid<List<Data>>> {
+public class GridBasicClientFeaturesWidget
+        extends PureGWTTestApplication<Grid<List<Data>>> {
     public static final String ROW_STYLE_GENERATOR_NONE = "None";
     public static final String ROW_STYLE_GENERATOR_ROW_INDEX = "Row numbers";
     public static final String ROW_STYLE_GENERATOR_EVERY_THIRD = "Every third";
@@ -125,7 +125,8 @@ public class GridBasicClientFeaturesWidget extends
         public void bind(EditorRequest<List<Data>> request) {
             List<Data> rowData = ds.getRow(request.getRowIndex());
 
-            boolean hasSelectionColumn = !(grid.getSelectionModel() instanceof None);
+            boolean hasSelectionColumn = !(grid
+                    .getSelectionModel() instanceof None);
             for (int i = 0; i < rowData.size(); i++) {
                 int columnIndex = hasSelectionColumn ? i + 1 : i;
                 getWidget(columnIndex).setText(rowData.get(i).value.toString());
@@ -144,8 +145,8 @@ public class GridBasicClientFeaturesWidget extends
                 request.failure(
                         "Syntethic fail of editor in column 2. "
                                 + "This message is so long that it doesn't fit into its box",
-                        Collections.<Column<?, List<Data>>> singleton(grid
-                                .getColumn(2)));
+                        Collections.<Column<?, List<Data>>> singleton(
+                                grid.getColumn(2)));
                 return;
             }
             try {
@@ -259,7 +260,7 @@ public class GridBasicClientFeaturesWidget extends
     /**
      * Convenience method for creating a list of Data objects to be used as a
      * Row in the data source
-     * 
+     *
      * @param cols
      *            number of columns (items) to include in the row
      * @return
@@ -472,8 +473,8 @@ public class GridBasicClientFeaturesWidget extends
                 final Label columnOrderLabel = new Label();
                 columnOrderLabel.getElement().setId("columnreorder");
                 addLineEnd(columnOrderLabel, 300);
-                columnReorderHandler = grid
-                        .addColumnReorderHandler(new ColumnReorderHandler<List<Data>>() {
+                columnReorderHandler = grid.addColumnReorderHandler(
+                        new ColumnReorderHandler<List<Data>>() {
 
                             private int eventIndex = 0;
 
@@ -508,17 +509,14 @@ public class GridBasicClientFeaturesWidget extends
                                 columnOrderLabel.getElement().setAttribute(
                                         "counter", "" + (++eventIndex));
                                 columnOrderLabel.getElement().setAttribute(
-                                        "useroriginated",
-                                        (Boolean.toString(event
-                                                .isUserOriginated())));
+                                        "useroriginated", (Boolean.toString(
+                                                event.isUserOriginated())));
                                 columnOrderLabel.getElement().setAttribute(
                                         "ishidden",
                                         (Boolean.toString(event.isHidden())));
                                 columnOrderLabel.getElement().setAttribute(
-                                        "columnindex",
-                                        ""
-                                                + grid.getColumns().indexOf(
-                                                        event.getColumn()));
+                                        "columnindex", "" + grid.getColumns()
+                                                .indexOf(event.getColumn()));
                             }
                         };
 
@@ -546,9 +544,8 @@ public class GridBasicClientFeaturesWidget extends
                         location = "somewhere";
                     }
 
-                    getLogger().info(
-                            "Prevented opening a context menu in grid "
-                                    + location);
+                    getLogger().info("Prevented opening a context menu in grid "
+                            + location);
                 }
             };
 
@@ -644,8 +641,8 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void execute() {
                 DataSource<List<Data>> ds = grid.getDataSource();
-                final RowHandle<List<Data>> rowHandle = ds.getHandle(ds
-                        .getRow(0));
+                final RowHandle<List<Data>> rowHandle = ds
+                        .getHandle(ds.getRow(0));
 
                 new Timer() {
                     @Override
@@ -671,13 +668,14 @@ public class GridBasicClientFeaturesWidget extends
                 grid.setRowStyleGenerator(new RowStyleGenerator<List<Data>>() {
 
                     @Override
-                    public String getStyle(RowReference<List<Data>> rowReference) {
+                    public String getStyle(
+                            RowReference<List<Data>> rowReference) {
                         if (rowReference.getRowIndex() % 3 == 0) {
                             return "third";
                         } else {
                             // First manual col is integer
-                            Integer value = (Integer) rowReference.getRow()
-                                    .get(COLUMNS - MANUALLY_FORMATTED_COLUMNS).value;
+                            Integer value = (Integer) rowReference.getRow().get(
+                                    COLUMNS - MANUALLY_FORMATTED_COLUMNS).value;
                             return value.toString();
                         }
                     }
@@ -692,7 +690,8 @@ public class GridBasicClientFeaturesWidget extends
                 grid.setRowStyleGenerator(new RowStyleGenerator<List<Data>>() {
 
                     @Override
-                    public String getStyle(RowReference<List<Data>> rowReference) {
+                    public String getStyle(
+                            RowReference<List<Data>> rowReference) {
                         return Integer.toString(rowReference.getRowIndex());
                     }
                 });
@@ -710,43 +709,44 @@ public class GridBasicClientFeaturesWidget extends
         addMenuCommand(CELL_STYLE_GENERATOR_SIMPLE, new ScheduledCommand() {
             @Override
             public void execute() {
-                grid.setCellStyleGenerator(new CellStyleGenerator<List<Data>>() {
+                grid.setCellStyleGenerator(
+                        new CellStyleGenerator<List<Data>>() {
 
-                    @Override
-                    public String getStyle(
-                            CellReference<List<Data>> cellReference) {
-                        Grid.Column<?, List<Data>> column = cellReference
-                                .getColumn();
-                        if (column == grid.getColumn(2)) {
-                            return "two";
-                        } else if (column == grid.getColumn(COLUMNS
-                                - MANUALLY_FORMATTED_COLUMNS)) {
-                            // First manual col is integer
-                            Integer value = (Integer) column
-                                    .getValue(cellReference.getRow());
-                            return value.toString();
+                            @Override
+                            public String getStyle(
+                                    CellReference<List<Data>> cellReference) {
+                                Grid.Column<?, List<Data>> column = cellReference
+                                        .getColumn();
+                                if (column == grid.getColumn(2)) {
+                                    return "two";
+                                } else if (column == grid.getColumn(
+                                        COLUMNS - MANUALLY_FORMATTED_COLUMNS)) {
+                                    // First manual col is integer
+                                    Integer value = (Integer) column
+                                            .getValue(cellReference.getRow());
+                                    return value.toString();
 
-                        } else {
-                            return null;
-                        }
-                    }
-                });
+                                } else {
+                                    return null;
+                                }
+                            }
+                        });
             }
         }, cellStyleGeneratorNamePath);
         addMenuCommand(CELL_STYLE_GENERATOR_COL_INDEX, new ScheduledCommand() {
             @Override
             public void execute() {
-                grid.setCellStyleGenerator(new CellStyleGenerator<List<Data>>() {
+                grid.setCellStyleGenerator(
+                        new CellStyleGenerator<List<Data>>() {
 
-                    @Override
-                    public String getStyle(
-                            CellReference<List<Data>> cellReference) {
-                        return cellReference.getRowIndex()
-                                + "_"
-                                + grid.getColumns().indexOf(
-                                        cellReference.getColumn());
-                    }
-                });
+                            @Override
+                            public String getStyle(
+                                    CellReference<List<Data>> cellReference) {
+                                return cellReference.getRowIndex() + "_"
+                                        + grid.getColumns().indexOf(
+                                                cellReference.getColumn());
+                            }
+                        });
             }
         }, cellStyleGeneratorNamePath);
 
@@ -776,15 +776,16 @@ public class GridBasicClientFeaturesWidget extends
             public void execute() {
                 List<Column> columns = new ArrayList<Column>(grid.getColumns());
                 Collections.reverse(columns);
-                grid.setColumnOrder(columns.toArray(new Column[columns.size()]));
+                grid.setColumnOrder(
+                        columns.toArray(new Column[columns.size()]));
             }
         }, "Component", "State");
         addMenuCommand("Column Reordering", new ScheduledCommand() {
 
             @Override
             public void execute() {
-                grid.setColumnReorderingAllowed(!grid
-                        .isColumnReorderingAllowed());
+                grid.setColumnReorderingAllowed(
+                        !grid.isColumnReorderingAllowed());
             }
         }, "Component", "State");
         addMenuCommand("250px", new ScheduledCommand() {
@@ -820,8 +821,8 @@ public class GridBasicClientFeaturesWidget extends
     }
 
     private void createScrollToRowMenu() {
-        String[] menupath = new String[] { "Component", "State",
-                "Scroll to...", null };
+        String[] menupath = new String[] { "Component", "State", "Scroll to...",
+                null };
 
         for (int i = 0; i < ROWS; i += 100) {
             menupath[3] = "Row " + i + "...";
@@ -988,8 +989,8 @@ public class GridBasicClientFeaturesWidget extends
                         Column<?, List<Data>> col = reordered.remove(index);
                         reordered.add(index - 1, col);
                     }
-                    grid.setColumnOrder(reordered.toArray(new Column[reordered
-                            .size()]));
+                    grid.setColumnOrder(
+                            reordered.toArray(new Column[reordered.size()]));
                 }
             }, "Component", "Columns", "Column " + i);
         }
@@ -1051,8 +1052,8 @@ public class GridBasicClientFeaturesWidget extends
         addMenuCommand("Bottom", new ScheduledCommand() {
             @Override
             public void execute() {
-                grid.setDefaultHeaderRow(grid.getHeaderRow(grid
-                        .getHeaderRowCount() - 1));
+                grid.setDefaultHeaderRow(
+                        grid.getHeaderRow(grid.getHeaderRowCount() - 1));
             }
         }, "Component", "Header", "Default row");
         addMenuCommand("Unset", new ScheduledCommand() {
@@ -1099,8 +1100,8 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void execute() {
                 row.join(row.getCell(grid.getColumn(0)),
-                        row.getCell(grid.getColumn(1))).setText(
-                        "Join column cells 0, 1");
+                        row.getCell(grid.getColumn(1)))
+                        .setText("Join column cells 0, 1");
 
             }
         }, menuPath);
@@ -1109,8 +1110,8 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void execute() {
-                row.join(grid.getColumn(1), grid.getColumn(2)).setText(
-                        "Join columns 1, 2");
+                row.join(grid.getColumn(1), grid.getColumn(2))
+                        .setText("Join columns 1, 2");
                 ;
 
             }
@@ -1130,9 +1131,8 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void execute() {
-                row.join(
-                        grid.getColumns().toArray(
-                                new Grid.Column[grid.getColumnCount()]))
+                row.join(grid.getColumns()
+                        .toArray(new Grid.Column[grid.getColumnCount()]))
                         .setText("Join all columns");
                 ;
 
@@ -1245,8 +1245,8 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void execute() {
                 row.join(row.getCell(grid.getColumn(0)),
-                        row.getCell(grid.getColumn(1))).setText(
-                        "Join column cells 0, 1");
+                        row.getCell(grid.getColumn(1)))
+                        .setText("Join column cells 0, 1");
 
             }
         }, menuPath);
@@ -1255,8 +1255,8 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void execute() {
-                row.join(grid.getColumn(1), grid.getColumn(2)).setText(
-                        "Join columns 1, 2");
+                row.join(grid.getColumn(1), grid.getColumn(2))
+                        .setText("Join columns 1, 2");
                 ;
 
             }
@@ -1266,9 +1266,8 @@ public class GridBasicClientFeaturesWidget extends
 
             @Override
             public void execute() {
-                row.join(
-                        grid.getColumns().toArray(
-                                new Grid.Column[grid.getColumnCount()]))
+                row.join(grid.getColumns()
+                        .toArray(new Grid.Column[grid.getColumnCount()]))
                         .setText("Join all columns");
                 ;
 
@@ -1312,7 +1311,8 @@ public class GridBasicClientFeaturesWidget extends
             return new HtmlRenderer() {
 
                 @Override
-                public void render(RendererCellReference cell, String htmlString) {
+                public void render(RendererCellReference cell,
+                        String htmlString) {
                     super.render(cell, "<b>" + htmlString + "</b>");
                 }
             };
@@ -1346,8 +1346,8 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void onKeyDown(GridKeyDownEvent event) {
                 CellReference<?> focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(),
-                        focused.getRowIndex(), focused.getColumnIndex());
+                updateLabel(label, event.toDebugString(), focused.getRowIndex(),
+                        focused.getColumnIndex());
             }
         });
 
@@ -1357,8 +1357,8 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void onKeyDown(GridKeyDownEvent event) {
                 CellReference<?> focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(),
-                        focused.getRowIndex(), focused.getColumnIndex());
+                updateLabel(label, event.toDebugString(), focused.getRowIndex(),
+                        focused.getColumnIndex());
             }
         });
 
@@ -1368,8 +1368,8 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void onKeyDown(GridKeyDownEvent event) {
                 CellReference<?> focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(),
-                        focused.getRowIndex(), focused.getColumnIndex());
+                updateLabel(label, event.toDebugString(), focused.getRowIndex(),
+                        focused.getColumnIndex());
             }
         });
 
@@ -1380,8 +1380,8 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void onKeyUp(GridKeyUpEvent event) {
                 CellReference<?> focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(),
-                        focused.getRowIndex(), focused.getColumnIndex());
+                updateLabel(label, event.toDebugString(), focused.getRowIndex(),
+                        focused.getColumnIndex());
             }
         });
 
@@ -1391,8 +1391,8 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void onKeyUp(GridKeyUpEvent event) {
                 CellReference<?> focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(),
-                        focused.getRowIndex(), focused.getColumnIndex());
+                updateLabel(label, event.toDebugString(), focused.getRowIndex(),
+                        focused.getColumnIndex());
             }
         });
 
@@ -1402,8 +1402,8 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void onKeyUp(GridKeyUpEvent event) {
                 CellReference<?> focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(),
-                        focused.getRowIndex(), focused.getColumnIndex());
+                updateLabel(label, event.toDebugString(), focused.getRowIndex(),
+                        focused.getColumnIndex());
             }
         });
 
@@ -1414,8 +1414,8 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void onKeyPress(GridKeyPressEvent event) {
                 CellReference<?> focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(),
-                        focused.getRowIndex(), focused.getColumnIndex());
+                updateLabel(label, event.toDebugString(), focused.getRowIndex(),
+                        focused.getColumnIndex());
             }
         });
 
@@ -1425,8 +1425,8 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void onKeyPress(GridKeyPressEvent event) {
                 CellReference<?> focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(),
-                        focused.getRowIndex(), focused.getColumnIndex());
+                updateLabel(label, event.toDebugString(), focused.getRowIndex(),
+                        focused.getColumnIndex());
             }
         });
 
@@ -1436,14 +1436,15 @@ public class GridBasicClientFeaturesWidget extends
             @Override
             public void onKeyPress(GridKeyPressEvent event) {
                 CellReference<?> focused = event.getFocusedCell();
-                updateLabel(label, event.toDebugString(),
-                        focused.getRowIndex(), focused.getColumnIndex());
+                updateLabel(label, event.toDebugString(), focused.getRowIndex(),
+                        focused.getColumnIndex());
             }
         });
 
     }
 
-    private void updateLabel(VLabel label, String output, int object, int column) {
+    private void updateLabel(VLabel label, String output, int object,
+            int column) {
         String coords = "(" + object + ", " + column + ")";
         label.setText(coords + " " + output);
     }
@@ -1600,18 +1601,19 @@ public class GridBasicClientFeaturesWidget extends
             public void execute() {
                 grid.setSidebarOpen(true);
 
-                Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
-                    @Override
-                    public boolean execute() {
-                        if(grid.isSidebarOpen()) {
-                            grid.setEnabled(false);
+                Scheduler.get()
+                        .scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+                            @Override
+                            public boolean execute() {
+                                if (grid.isSidebarOpen()) {
+                                    grid.setEnabled(false);
 
-                            return false;
-                        }
+                                    return false;
+                                }
 
-                        return true;
-                    }
-                }, 250);
+                                return true;
+                            }
+                        }, 250);
             }
         }, menupath);
     }

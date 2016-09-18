@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -45,11 +45,11 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
     /**
      * Container which throws an exception on every fifth call to
      * {@link #getContainerProperty(Object, Object)}.
-     * 
+     *
      * @author Vaadin Ltd
      * @version @VERSION@
      * @since 7.0
-     * 
+     *
      */
     public class BrokenContainer extends IndexedContainer {
         private int counter = 0;
@@ -79,11 +79,12 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
         }
 
         @Override
-        public Object generateCell(Table source, Object itemId, Object columnId) {
+        public Object generateCell(Table source, Object itemId,
+                Object columnId) {
             if (counter++ % brokenInterval == 0
                     && Boolean.TRUE.equals(brokenGenerator.getValue())) {
-                throw new IllegalArgumentException("Broken generator for "
-                        + itemId + "/" + columnId);
+                throw new IllegalArgumentException(
+                        "Broken generator for " + itemId + "/" + columnId);
             } else {
                 return "Generated " + itemId + "/" + columnId;
             }
@@ -142,9 +143,9 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
                                     Table table = ((CacheUpdateException) t)
                                             .getTable();
                                     table.removeAllItems();
-                                    Notification
-                                            .show("Problem updating table. Please try again later",
-                                                    Notification.Type.ERROR_MESSAGE);
+                                    Notification.show(
+                                            "Problem updating table. Please try again later",
+                                            Notification.Type.ERROR_MESSAGE);
                                 }
                             }
                         }
@@ -164,8 +165,8 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
         for (int i = 1; i <= rows; i++) {
             Item item = container.addItem("item" + i);
             for (int j = 1; j <= cols; j++) {
-                item.getItemProperty("prop" + j).setValue(
-                        "item" + i + "/prop" + j);
+                item.getItemProperty("prop" + j)
+                        .setValue("item" + i + "/prop" + j);
             }
         }
         return container;
