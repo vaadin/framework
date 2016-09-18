@@ -4094,11 +4094,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * This is a workaround to make Chrome work like Firefox. In Chrome,
      * normally if you start a drag on one cell and release on:
      * <ul>
-     * <li>that same cell, the click event is that {@code 
-     * <td>}.
-     * <li>a cell on that same row, the click event is the parent {@code 
-     * <tr>
-     * }.
+     * <li>that same cell, the click event is that <code>&lt;td></code>.
+     * <li>a cell on that same row, the click event is the parent
+     * <code>&lt;tr></code>.
      * <li>a cell on another row, the click event is the table section ancestor
      * ({@code <thead>}, {@code <tbody>} or {@code <tfoot>}).
      * </ul>
