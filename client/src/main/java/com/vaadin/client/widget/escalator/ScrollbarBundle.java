@@ -16,6 +16,9 @@
 
 package com.vaadin.client.widget.escalator;
 
+import com.google.gwt.animation.client.AnimationScheduler;
+import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
+import com.google.gwt.animation.client.AnimationScheduler.AnimationSupportDetector;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
@@ -47,12 +50,14 @@ import com.vaadin.client.widget.grid.events.ScrollHandler;
  * @see HorizontalScrollbarBundle
  */
 public abstract class ScrollbarBundle implements DeferredWorker {
+    private static final boolean supportsRequestAnimationFrame = new AnimationSupportDetector()
+            .isNativelySupported();
 
     private class ScrollEventFirer {
+
         private final ScheduledCommand fireEventCommand = new ScheduledCommand() {
             @Override
             public void execute() {
-
                 /*
                  * Some kind of native-scroll-event related asynchronous problem
                  * occurs here (at least on desktops) where the internal
@@ -92,7 +97,23 @@ public abstract class ScrollbarBundle implements DeferredWorker {
                  * We'll gather all the scroll events, and only fire once, once
                  * everything has calmed down.
                  */
-                Scheduler.get().scheduleDeferred(fireEventCommand);
+                if (supportsRequestAnimationFrame) {
+                    // Chrome MUST use this as deferred commands will sometimes
+                    // be run with a 300+ ms delay when scrolling.
+                    AnimationScheduler.get()
+                            .requestAnimationFrame(new AnimationCallback() {
+                                @Override
+                                public void execute(double timestamp) {
+                                    fireEventCommand.execute();
+
+                                }
+                            });
+                } else {
+                    // Does not support requestAnimationFrame and the fallback
+                    // uses a delay of 16ms, we stick to the old deferred
+                    // command which uses a delay of 0ms
+                    Scheduler.get().scheduleDeferred(fireEventCommand);
+                }
                 isBeingFired = true;
             }
         }
@@ -894,7 +915,10 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     @Override
     public boolean isWorkPending() {
+        // Need to include scrollEventFirer.isBeingFired as it might use
+        // requestAnimationFrame - which is not automatically checked
         return scrollSizeTemporaryScrollHandler != null
-                || offsetSizeTemporaryScrollHandler != null;
+                || offsetSizeTemporaryScrollHandler != null
+                || scrollEventFirer.isBeingFired;
     }
 }
