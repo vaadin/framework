@@ -68,6 +68,7 @@ public class GridClientColumnRendererConnector
         private int numberOfRows;
         private DataChangeHandler dataChangeHandler;
         private int latency;
+        private Timer timer;
 
         public DelayedDataSource(DataSource<String> ds, int latency) {
             this.ds = ds;
@@ -77,7 +78,7 @@ public class GridClientColumnRendererConnector
         @Override
         public void ensureAvailability(final int firstRowIndex,
                 final int numberOfRows) {
-            new Timer() {
+            timer = new Timer() {
 
                 @Override
                 public void run() {
@@ -86,8 +87,10 @@ public class GridClientColumnRendererConnector
                     dataChangeHandler.dataUpdated(firstRowIndex, numberOfRows);
                     dataChangeHandler.dataAvailable(firstRowIndex,
                             numberOfRows);
+                    timer = null;
                 }
-            }.schedule(latency);
+            };
+            timer.schedule(latency);
         }
 
         @Override
@@ -113,6 +116,11 @@ public class GridClientColumnRendererConnector
         public RowHandle<String> getHandle(String row) {
             // TODO Auto-generated method stub (henrik paul: 17.6.)
             return null;
+        }
+
+        @Override
+        public boolean isWaitingForData() {
+            return timer != null;
         }
     }
 

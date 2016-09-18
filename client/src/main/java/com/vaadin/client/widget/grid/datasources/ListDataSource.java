@@ -475,4 +475,9 @@ public class ListDataSource<T> implements DataSource<T> {
             }
         };
     }
+
+    @Override
+    public boolean isWaitingForData() {
+        return false;
+    }
 }

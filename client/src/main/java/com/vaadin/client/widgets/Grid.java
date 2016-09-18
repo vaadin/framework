@@ -3188,7 +3188,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         Scheduler.get().scheduleDeferred(this);
                     }
                 } else if (currentDataAvailable.isEmpty()
-                        && dataIsBeingFetched) {
+                        && dataSource.isWaitingForData()) {
                     // No data available yet but something is incoming soon
                     Scheduler.get().scheduleDeferred(this);
                 } else {
@@ -3224,8 +3224,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private void calculate() {
             isScheduled = false;
             rescheduleCount = 0;
-            assert !(currentDataAvailable.isEmpty()
-                    && dataIsBeingFetched) : "Trying to calculate column widths without data while data is still being fetched.";
+            assert !(currentDataAvailable.isEmpty() && dataSource
+                    .isWaitingForData()) : "Trying to calculate column widths without data while data is still being fetched.";
 
             if (columnsAreGuaranteedToBeWiderThanGrid()) {
                 applyColumnWidths();
@@ -4085,8 +4085,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     private final UserSorter sorter = new UserSorter();
 
     private final Editor<T> editor = GWT.create(Editor.class);
-
-    private boolean dataIsBeingFetched = false;
 
     /**
      * The cell a click event originated from
@@ -5955,7 +5953,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     public void onRowVisibilityChange(
                             RowVisibilityChangeEvent event) {
                         if (dataSource != null && dataSource.size() != 0) {
-                            dataIsBeingFetched = true;
                             dataSource.ensureAvailability(
                                     event.getFirstVisibleRow(),
                                     event.getVisibleRowCount());
@@ -5995,12 +5992,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
         });
 
-        addDataAvailableHandler(new DataAvailableHandler() {
-            @Override
-            public void onDataAvailable(DataAvailableEvent event) {
-                dataIsBeingFetched = false;
-            }
-        });
     }
 
     @Override
@@ -6775,7 +6766,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 }
 
                 if (newSize > 0) {
-                    dataIsBeingFetched = true;
                     Range visibleRowRange = escalator.getVisibleRowRange();
                     dataSource.ensureAvailability(visibleRowRange.getStart(),
                             visibleRowRange.length());
@@ -7915,7 +7905,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         Scheduler.get().scheduleFinally(new ScheduledCommand() {
             @Override
             public void execute() {
-                if (!dataIsBeingFetched) {
+                if (!dataSource.isWaitingForData()) {
                     handler.onDataAvailable(
                             new DataAvailableEvent(currentDataAvailable));
                 }
@@ -8236,7 +8226,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     @Override
     public boolean isWorkPending() {
-        return escalator.isWorkPending() || dataIsBeingFetched
+        return escalator.isWorkPending() || dataSource.isWaitingForData()
                 || autoColumnWidthsRecalculator.isScheduled()
                 || editor.isWorkPending();
     }

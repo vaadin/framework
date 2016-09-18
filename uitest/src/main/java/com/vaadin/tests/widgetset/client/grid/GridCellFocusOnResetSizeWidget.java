@@ -78,6 +78,11 @@ public class GridCellFocusOnResetSizeWidget
             }
             handler.resetDataAndSize(size);
         }
+
+        @Override
+        public boolean isWaitingForData() {
+            return false;
+        }
     }
 
     private class Col extends Grid.Column<String, String[]> {

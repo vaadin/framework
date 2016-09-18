@@ -194,4 +194,14 @@ public interface DataSource<T> {
      *        means that the row is not currently in this data source's cache.
      */
     public RowHandle<T> getHandle(T row);
+
+    /**
+     * Checks whether this data source is currently waiting for more rows to
+     * become available.
+     *
+     * @return <code>true</code> if waiting for data; otherwise
+     *         <code>false</code>
+     * @since 7.7.2
+     */
+    public boolean isWaitingForData();
 }

@@ -308,6 +308,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * @return <code>true</code> if waiting for data; otherwise
      *         <code>false</code>
      */
+    @Override
     public boolean isWaitingForData() {
         return currentRequestCallback != null;
     }
@@ -366,7 +367,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     }
 
     private void handleMissingRows(Range range) {
-        if (range.isEmpty()) {
+        if (range.isEmpty() || !canFetchData()) {
             return;
         }
         currentRequestCallback = new RequestRowsCallback<T>(this, range);
@@ -775,5 +776,18 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     protected boolean isPinned(T row) {
         return pinnedRows.containsKey(getRowKey(row));
+    }
+
+    /**
+     * Checks if it is possible to currently fetch data from the remote data
+     * source.
+     * 
+     * @return <code>true</code> if it is ok to try to fetch data,
+     *         <code>false</code> if it is known that fetching data will fail
+     *         and should not be tried right now.
+     * @since 7.7.2
+     */
+    protected boolean canFetchData() {
+        return true;
     }
 }

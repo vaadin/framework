@@ -240,6 +240,11 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
                 droppedRowKeys.set(droppedRowKeys.length(), getRowKey(row));
             }
         }
+
+        @Override
+        protected boolean canFetchData() {
+            return isEnabled();
+        }
     }
 
     private final RpcDataSource dataSource = new RpcDataSource();
