@@ -16,11 +16,11 @@
 
 package com.vaadin.data.validator;
 
+import java.io.Serializable;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BinaryOperator;
-import java.util.logging.Logger;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.MessageInterpolator.Context;
@@ -30,6 +30,7 @@ import javax.validation.metadata.ConstraintDescriptor;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.Validator;
+import com.vaadin.data.util.BeanUtil;
 
 /**
  * A {@code Validator} using the JSR-303 (javax.validation) annotation-based
@@ -43,45 +44,35 @@ import com.vaadin.data.Validator;
  * project classpath when using bean validation. Specification versions 1.0 and
  * 1.1 are supported.
  *
- * @author Petri Hakala
  * @author Vaadin Ltd.
  *
  * @since 8.0
  */
 public class BeanValidator implements Validator<Object> {
 
-    private static volatile Boolean beanValidationAvailable;
-    private static ValidatorFactory factory;
+    private static final class ContextImpl implements Context, Serializable {
+
+        private final ConstraintViolation<?> violation;
+
+        private ContextImpl(ConstraintViolation<?> violation) {
+            this.violation = violation;
+        }
+
+        @Override
+        public ConstraintDescriptor<?> getConstraintDescriptor() {
+            return violation.getConstraintDescriptor();
+        }
+
+        @Override
+        public Object getValidatedValue() {
+            return violation.getInvalidValue();
+        }
+
+    }
 
     private String propertyName;
     private Class<?> beanType;
     private Locale locale;
-
-    /**
-     * Returns whether an implementation of JSR-303 version 1.0 or 1.1 is
-     * present on the classpath. If this method returns false, trying to create
-     * a {@code BeanValidator} instance will throw an
-     * {@code IllegalStateException}. If an implementation is not found, logs a
-     * level {@code FINE} message the first time it is run.
-     *
-     * @return {@code true} if bean validation is available, {@code false}
-     *         otherwise.
-     */
-    public static boolean checkBeanValidationAvailable() {
-        if (beanValidationAvailable == null) {
-            try {
-                Class.forName(Validation.class.getName());
-                beanValidationAvailable = true;
-            } catch (ClassNotFoundException e) {
-                Logger.getLogger(BeanValidator.class.getName())
-                        .fine("A JSR-303 bean validation implementation not found on the classpath. "
-                                + BeanValidator.class.getSimpleName()
-                                + " cannot be used.");
-                beanValidationAvailable = false;
-            }
-        }
-        return beanValidationAvailable;
-    }
 
     /**
      * Creates a new JSR-303 {@code BeanValidator} that validates values of the
@@ -93,7 +84,8 @@ public class BeanValidator implements Validator<Object> {
      * @param propertyName
      *            the property to validate, not null
      * @throws IllegalStateException
-     *             if {@link #checkBeanValidationAvailable()} returns false
+     *             if {@link BeanUtil#checkBeanValidationAvailable()} returns
+     *             false
      */
     public BeanValidator(Class<?> beanType, String propertyName) {
         this(beanType, propertyName, Locale.getDefault());
@@ -110,11 +102,12 @@ public class BeanValidator implements Validator<Object> {
      * @param locale
      *            the locale to use, not null
      * @throws IllegalStateException
-     *             if {@link #checkBeanValidationAvailable()} returns false
+     *             if {@link BeanUtil#checkBeanValidationAvailable()} returns
+     *             false
      */
     public BeanValidator(Class<?> beanType, String propertyName,
             Locale locale) {
-        if (!checkBeanValidationAvailable()) {
+        if (!BeanUtil.checkBeanValidationAvailable()) {
             throw new IllegalStateException("Cannot create a "
                     + BeanValidator.class.getSimpleName()
                     + ": a JSR-303 Bean Validation implementation not found on theclasspath");
@@ -170,11 +163,7 @@ public class BeanValidator implements Validator<Object> {
      * @return the validator factory to use
      */
     protected static ValidatorFactory getJavaxBeanValidatorFactory() {
-        if (factory == null) {
-            checkBeanValidationAvailable();
-            factory = Validation.buildDefaultValidatorFactory();
-        }
-        return factory;
+        return LazyFactoryInitializer.FACTORY;
     }
 
     /**
@@ -203,22 +192,12 @@ public class BeanValidator implements Validator<Object> {
      * Creates a simple message interpolation context based on the given
      * constraint violation.
      *
-     * @param v
+     * @param violation
      *            the constraint violation
      * @return the message interpolation context
      */
-    protected Context createContext(ConstraintViolation<?> v) {
-        return new Context() {
-            @Override
-            public ConstraintDescriptor<?> getConstraintDescriptor() {
-                return v.getConstraintDescriptor();
-            }
-
-            @Override
-            public Object getValidatedValue() {
-                return v.getInvalidValue();
-            }
-        };
+    protected Context createContext(ConstraintViolation<?> violation) {
+        return new ContextImpl(violation);
     }
 
     /**
@@ -231,5 +210,13 @@ public class BeanValidator implements Validator<Object> {
     private void setLocale(Locale locale) {
         Objects.requireNonNull(locale, "locale cannot be null");
         this.locale = locale;
+    }
+
+    private static class LazyFactoryInitializer implements Serializable {
+        private static final ValidatorFactory FACTORY = getFactory();
+
+        private static ValidatorFactory getFactory() {
+            return Validation.buildDefaultValidatorFactory();
+        }
     }
 }

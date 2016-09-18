@@ -23,6 +23,9 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+
+import com.vaadin.data.validator.BeanValidator;
 
 /**
  * Utility class for Java Beans information access.
@@ -145,6 +148,20 @@ public final class BeanUtil implements Serializable {
         }
     }
 
+    /**
+     * Returns whether an implementation of JSR-303 version 1.0 or 1.1 is
+     * present on the classpath. If this method returns false, trying to create
+     * a {@code BeanValidator} instance will throw an
+     * {@code IllegalStateException}. If an implementation is not found, logs a
+     * level {@code FINE} message the first time it is run.
+     *
+     * @return {@code true} if bean validation is available, {@code false}
+     *         otherwise.
+     */
+    public static boolean checkBeanValidationAvailable() {
+        return LazyValidationAvailability.BEAN_VALIDATION_AVAILABLE;
+    }
+
     // Workaround for Java6 bug JDK-6788525. Do nothing for JDK7+.
     private static List<PropertyDescriptor> getPropertyDescriptors(
             BeanInfo beanInfo) {
@@ -204,6 +221,23 @@ public final class BeanUtil implements Serializable {
                     .getMethod(bridgeMethod.getName(), paramTypes);
         } catch (NoSuchMethodException e) {
             return null;
+        }
+    }
+
+    private static class LazyValidationAvailability implements Serializable {
+        private static final boolean BEAN_VALIDATION_AVAILABLE = isAvailable();
+
+        private static boolean isAvailable() {
+            try {
+                Class.forName("javax.validation.Validation");
+                return true;
+            } catch (ClassNotFoundException e) {
+                Logger.getLogger(BeanValidator.class.getName())
+                        .fine("A JSR-303 bean validation implementation not found on the classpath. "
+                                + BeanValidator.class.getSimpleName()
+                                + " cannot be used.");
+                return false;
+            }
         }
     }
 }

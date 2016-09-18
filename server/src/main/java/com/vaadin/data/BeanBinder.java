@@ -176,7 +176,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
 
             finalBinding = withConverter(createConverter());
 
-            if (BeanValidator.checkBeanValidationAvailable()) {
+            if (BeanUtil.checkBeanValidationAvailable()) {
                 finalBinding = finalBinding.withValidator(new BeanValidator(
                         getBinder().beanType, propertyName, findLocale()));
             }
@@ -262,7 +262,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      *            the bean {@code Class} instance, not null
      */
     public BeanBinder(Class<? extends BEAN> beanType) {
-        BeanValidator.checkBeanValidationAvailable();
+        BeanUtil.checkBeanValidationAvailable();
         this.beanType = beanType;
     }
 
