@@ -16,23 +16,16 @@
 
 package com.vaadin.client.ui;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
-import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
-import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
-import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.*;
 import com.vaadin.shared.ui.embedded.EmbeddedConstants;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class VEmbedded extends HTML {
     public static String CLASSNAME = "v-embedded";
@@ -54,7 +47,7 @@ public class VEmbedded extends HTML {
     }
 
     /**
-     * Creates the Object and Embed tags for the Flash plugin so it works
+     * Creates the Object and Embed tags.
      * cross-browser.
      * <p>
      * For internal use only. May be removed or replaced in the future.
@@ -63,10 +56,10 @@ public class VEmbedded extends HTML {
      *            The UIDL
      * @return Tags concatenated into a string
      */
-    public String createFlashEmbed(UIDL uidl) {
+    public String createEmbed(UIDL uidl) {
         /*
          * To ensure cross-browser compatibility we are using the twice-cooked
-         * method to embed flash i.e. we add a OBJECT tag for IE ActiveX and
+         * method to embed i.e. we add a OBJECT tag for IE ActiveX and
          * inside it a EMBED for all other browsers.
          */
 
@@ -76,7 +69,7 @@ public class VEmbedded extends HTML {
         html.append("<object ");
 
         /*
-         * Add classid required for ActiveX to recognize the flash. This is a
+         * Add classid required for ActiveX to recognize the plugin. This is a
          * predefined value which ActiveX recognizes and must be the given
          * value. More info can be found on
          * http://kb2.adobe.com/cps/415/tn_4150.html. Allow user to override
@@ -86,7 +79,7 @@ public class VEmbedded extends HTML {
             html.append("classid=\""
                     + WidgetUtil.escapeAttribute(uidl
                             .getStringAttribute("classid")) + "\" ");
-        } else {
+        } else if ("flash".equals(this.mimetype)) {
             html.append("classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" ");
         }
 
@@ -102,7 +95,7 @@ public class VEmbedded extends HTML {
             html.append("codebase=\""
                     + WidgetUtil.escapeAttribute(uidl
                             .getStringAttribute("codebase")) + "\" ");
-        } else {
+        } else if ("flash".equals(this.mimetype)) {
             html.append("codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ");
         }
 
@@ -137,14 +130,19 @@ public class VEmbedded extends HTML {
                             .getStringAttribute("archive")) + "\" ");
         }
 
+        // Ensure we have an movie parameter for flash. Or add data attribute for others.
+        Map<String, String> parameters = getParameters(uidl);
+        if ("flash".equals(this.mimetype)) {
+            if (parameters.get("movie") == null) {
+                parameters.put("movie", getSrc(uidl, client));
+            }
+        } else {
+            html.append("data=\"" + WidgetUtil.escapeAttribute(getSrc(uidl, client))
+                    + "\" ");
+        }
+
         // End object tag
         html.append(">");
-
-        // Ensure we have an movie parameter
-        Map<String, String> parameters = getParameters(uidl);
-        if (parameters.get("movie") == null) {
-            parameters.put("movie", getSrc(uidl, client));
-        }
 
         // Add parameters to OBJECT
         for (String name : parameters.keySet()) {
@@ -161,7 +159,10 @@ public class VEmbedded extends HTML {
                 + "\" ");
         html.append("width=\"" + WidgetUtil.escapeAttribute(width) + "\" ");
         html.append("height=\"" + WidgetUtil.escapeAttribute(height) + "\" ");
-        html.append("type=\"application/x-shockwave-flash\" ");
+
+        if (uidl.hasAttribute("mimetype")) {
+            html.append("type=\"" + WidgetUtil.escapeAttribute(uidl.getStringAttribute("mimetype")) + "\" ");
+        }
 
         // Add the parameters to the Embed
         for (String name : parameters.keySet()) {
