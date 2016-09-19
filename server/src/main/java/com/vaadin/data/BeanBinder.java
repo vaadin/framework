@@ -21,12 +21,15 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.validator.BeanValidator;
+import com.vaadin.ui.AbstractMultiSelect;
+import com.vaadin.ui.AbstractSingleSelect;
 
 /**
  * A {@code Binder} subclass specialized for binding <em>beans</em>: classes
@@ -259,6 +262,20 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
             HasValue<FIELDVALUE> field) {
         return createBinding(field, Converter.identity(),
                 this::handleValidationStatus);
+    }
+
+    @Override
+    public <SELECTVALUE> BeanBinding<BEAN, SELECTVALUE, SELECTVALUE> forSelect(
+            AbstractSingleSelect<SELECTVALUE> select) {
+        return (BeanBinding<BEAN, SELECTVALUE, SELECTVALUE>) super.forSelect(
+                select);
+    }
+
+    @Override
+    public <SELECTVALUE> BeanBinding<BEAN, Set<SELECTVALUE>, Set<SELECTVALUE>> forSelect(
+            AbstractMultiSelect<SELECTVALUE> select) {
+        return (BeanBinding<BEAN, Set<SELECTVALUE>, Set<SELECTVALUE>>) super.forSelect(
+                select);
     }
 
     /**
