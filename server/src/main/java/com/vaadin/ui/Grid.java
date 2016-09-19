@@ -73,6 +73,12 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     private static final Method ITEM_CLICK_METHOD = ReflectTools
             .findMethod(ItemClickListener.class, "accept", ItemClick.class);
 
+    @Deprecated
+    private static final Method COLUMN_VISIBILITY_METHOD = ReflectTools
+            .findMethod(ColumnVisibilityChangeListener.class,
+                    "columnVisibilityChanged",
+                    ColumnVisibilityChangeEvent.class);
+
     /**
      * An event fired when an item in the Grid has been clicked.
      *
@@ -243,6 +249,85 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     }
 
     /**
+     * An event listener for column visibility change events in the Grid.
+     *
+     * @since 7.5.0
+     */
+    public interface ColumnVisibilityChangeListener extends Serializable {
+
+        /**
+         * Called when a column has become hidden or unhidden.
+         *
+         * @param event
+         */
+        void columnVisibilityChanged(ColumnVisibilityChangeEvent event);
+    }
+
+    /**
+     * An event that is fired when a column's visibility changes.
+     *
+     * @since 7.5.0
+     */
+    public static class ColumnVisibilityChangeEvent extends Component.Event {
+
+        private final Column<?, ?> column;
+        private final boolean userOriginated;
+        private final boolean hidden;
+
+        /**
+         * Constructor for a column visibility change event.
+         *
+         * @param source
+         *            the grid from which this event originates
+         * @param column
+         *            the column that changed its visibility
+         * @param hidden
+         *            <code>true</code> if the column was hidden,
+         *            <code>false</code> if it became visible
+         * @param isUserOriginated
+         *            <code>true</code> iff the event was triggered by an UI
+         *            interaction
+         */
+        public ColumnVisibilityChangeEvent(Grid<?> source, Column<?, ?> column,
+                boolean hidden, boolean isUserOriginated) {
+            super(source);
+            this.column = column;
+            this.hidden = hidden;
+            userOriginated = isUserOriginated;
+        }
+
+        /**
+         * Gets the column that became hidden or visible.
+         *
+         * @return the column that became hidden or visible.
+         * @see Column#isHidden()
+         */
+        public Column<?, ?> getColumn() {
+            return column;
+        }
+
+        /**
+         * Was the column set hidden or visible.
+         *
+         * @return <code>true</code> if the column was hidden <code>false</code>
+         *         if it was set visible
+         */
+        public boolean isHidden() {
+            return hidden;
+        }
+
+        /**
+         * Returns <code>true</code> if the column reorder was done by the user,
+         * <code>false</code> if not and it was triggered by server side code.
+         *
+         * @return <code>true</code> if event is a result of user interaction
+         */
+        public boolean isUserOriginated() {
+            return userOriginated;
+        }
+    }
+
+    /**
      * A callback interface for generating description texts for an item.
      *
      * @param <T>
@@ -370,9 +455,13 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         }
 
         @Override
-        public void columnVisibilityChanged(String id, boolean hidden,
-                boolean userOriginated) {
-            // TODO Auto-generated method stub
+        public void columnVisibilityChanged(String id, boolean hidden) {
+            Column<T, ?> column = getColumn(id);
+            ColumnState columnState = column.getState(false);
+            if (columnState.hidden != hidden) {
+                columnState.hidden = hidden;
+                fireColumnVisibilityChangeEvent(column, hidden, true);
+            }
         }
 
         @Override
@@ -852,6 +941,119 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         public DescriptionGenerator<T> getDescriptionGenerator() {
             return descriptionGenerator;
         }
+
+        /**
+         * Sets the caption of the hiding toggle for this column. Shown in the
+         * toggle for this column in the grid's sidebar when the column is
+         * {@link #isHidable() hidable}.
+         * <p>
+         * The default value is <code>null</code>, and in that case the column's
+         * {@link #getHeaderCaption() header caption} is used.
+         * <p>
+         * <em>NOTE:</em> setting this to empty string might cause the hiding
+         * toggle to not render correctly.
+         *
+         * @since 7.5.0
+         * @param hidingToggleCaption
+         *            the text to show in the column hiding toggle
+         * @return the column itself
+         */
+        public Column<T, V> setHidingToggleCaption(String hidingToggleCaption) {
+            if (hidingToggleCaption != getHidingToggleCaption()) {
+                getState().hidingToggleCaption = hidingToggleCaption;
+            }
+            return this;
+        }
+
+        /**
+         * Gets the caption of the hiding toggle for this column.
+         *
+         * @since 7.5.0
+         * @see #setHidingToggleCaption(String)
+         * @return the caption for the hiding toggle for this column
+         */
+        public String getHidingToggleCaption() {
+            return getState(false).hidingToggleCaption;
+        }
+
+        /**
+         * Hides or shows the column. By default columns are visible before
+         * explicitly hiding them.
+         *
+         * @since 7.5.0
+         * @param hidden
+         *            <code>true</code> to hide the column, <code>false</code>
+         *            to show
+         * @return this column
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         */
+        public Column<T, V> setHidden(boolean hidden) {
+            checkColumnIsAttached();
+            if (hidden != isHidden()) {
+                getState().hidden = hidden;
+                getParent().fireColumnVisibilityChangeEvent(this, hidden,
+                        false);
+            }
+            return this;
+        }
+
+        /**
+         * Returns whether this column is hidden. Default is {@code false}.
+         *
+         * @since 7.5.0
+         * @return <code>true</code> if the column is currently hidden,
+         *         <code>false</code> otherwise
+         */
+        public boolean isHidden() {
+            return getState(false).hidden;
+        }
+
+        /**
+         * Sets whether this column can be hidden by the user. Hidable columns
+         * can be hidden and shown via the sidebar menu.
+         *
+         * @since 7.5.0
+         * @param hidable
+         *            <code>true</code> iff the column may be hidable by the
+         *            user via UI interaction
+         * @return this column
+         */
+        public Column<T, V> setHidable(boolean hidable) {
+            if (hidable != isHidable()) {
+                getState().hidable = hidable;
+            }
+            return this;
+        }
+
+        /**
+         * Returns whether this column can be hidden by the user. Default is
+         * {@code false}.
+         * <p>
+         * <em>Note:</em> the column can be programmatically hidden using
+         * {@link #setHidden(boolean)} regardless of the returned value.
+         *
+         * @since 7.5.0
+         * @return <code>true</code> if the user can hide the column,
+         *         <code>false</code> if not
+         */
+        public boolean isHidable() {
+            return getState(false).hidable;
+        }
+
+        /**
+         * Checks whether this column is attached and throws an
+         * {@link IllegalStateException} if it is not.
+         *
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         */
+        protected void checkColumnIsAttached() throws IllegalStateException {
+            if (getParent() == null) {
+                throw new IllegalStateException(
+                        "Column is no longer attached to a grid.");
+            }
+        }
     }
 
     private final class SingleSelection extends AbstractSingleSelection {
@@ -921,6 +1123,12 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
                 }
             }
         });
+    }
+
+    public <V> void fireColumnVisibilityChangeEvent(Column<T, V> column,
+            boolean hidden, boolean userOriginated) {
+        fireEvent(new ColumnVisibilityChangeEvent(this, column, hidden,
+                userOriginated));
     }
 
     /**
@@ -1254,6 +1462,22 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         addListener(GridConstants.ITEM_CLICK_EVENT_ID, ItemClick.class,
                 listener, ITEM_CLICK_METHOD);
         return () -> removeListener(ItemClick.class, listener);
+    }
+
+    /**
+     * Registers a new column visibility change listener
+     *
+     * @param listener
+     *            the listener to register, not null
+     * @return a registration for the listener
+     */
+    public Registration addColumnVisibilityChangeListener(
+            ColumnVisibilityChangeListener listener) {
+        Objects.requireNonNull(listener, "listener cannot be null");
+        addListener(ColumnVisibilityChangeEvent.class, listener,
+                COLUMN_VISIBILITY_METHOD);
+        return () -> removeListener(ColumnVisibilityChangeEvent.class, listener,
+                COLUMN_VISIBILITY_METHOD);
     }
 
     @Override

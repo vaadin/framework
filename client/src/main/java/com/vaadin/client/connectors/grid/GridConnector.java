@@ -157,6 +157,13 @@ public class GridConnector
             return null;
         });
 
+        getWidget().addColumnVisibilityChangeHandler(event -> {
+            if (event.isUserOriginated()) {
+                getRpcProxy(GridServerRpc.class).columnVisibilityChanged(
+                        getColumnId(event.getColumn()), event.isHidden());
+            }
+        });
+
         /* Item click events */
         getWidget().addBodyClickHandler(itemClickHandler);
         getWidget().addBodyDoubleClickHandler(itemClickHandler);

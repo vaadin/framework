@@ -1,0 +1,50 @@
+package com.vaadin.tests.components.grid;
+
+import java.util.Arrays;
+
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.data.bean.Person;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.renderers.NumberRenderer;
+import com.vaadin.v7.ui.Label;
+
+public class GridColumnHiding extends AbstractTestUI {
+
+    @Override
+    protected void setup(VaadinRequest request) {
+        Grid<Person> grid = new Grid<>();
+        Column<Person, String> nameColumn = grid
+                .addColumn("Name", Person::getFirstName).setHidable(true);
+        Column<Person, Number> ageColumn = grid
+                .addColumn("Age", Person::getAge, new NumberRenderer())
+                .setHidable(true)
+                .setHidingToggleCaption("custom age column caption");
+        Column<Person, String> emailColumn = grid.addColumn("Email",
+                Person::getEmail);
+
+        Button toggleNameColumn = new Button("server side toggle name column");
+        Button toggleAgeColumn = new Button("server side toggle age column");
+        Button toggleEmailColumn = new Button(
+                "server side toggle email column");
+
+        toggleNameColumn.addClickListener(
+                event -> nameColumn.setHidden(!nameColumn.isHidden()));
+        toggleAgeColumn.addClickListener(
+                event -> ageColumn.setHidden(!ageColumn.isHidden()));
+        toggleEmailColumn.addClickListener(
+                event -> emailColumn.setHidden(!emailColumn.isHidden()));
+
+        Label visibilityChangeLabel = new Label("visibility change label");
+        grid.addColumnVisibilityChangeListener(event -> visibilityChangeLabel
+                .setValue(event.getColumn().isHidden() + ""));
+
+        grid.setItems(Arrays.asList(Person.createTestPerson1(),
+                Person.createTestPerson2()));
+
+        addComponents(grid, toggleNameColumn, toggleAgeColumn,
+                toggleEmailColumn, visibilityChangeLabel);
+    }
+}

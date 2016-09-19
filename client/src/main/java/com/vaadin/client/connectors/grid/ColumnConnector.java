@@ -80,6 +80,21 @@ public class ColumnConnector extends AbstractExtensionConnector {
         column.setSortable(getState().sortable);
     }
 
+    @OnStateChange("hidingToggleCaption")
+    void updateHidingToggleCaption() {
+        column.setHidingToggleCaption(getState().hidingToggleCaption);
+    }
+
+    @OnStateChange("hidden")
+    void updateHidden() {
+        column.setHidden(getState().hidden);
+    }
+
+    @OnStateChange("hidable")
+    void updateHidable() {
+        column.setHidable(getState().hidable);
+    }
+
     @Override
     public void onUnregister() {
         super.onUnregister();

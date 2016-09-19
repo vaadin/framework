@@ -83,12 +83,8 @@ public interface GridServerRpc extends ServerRpc {
      *            the id of the column
      * @param hidden
      *            <code>true</code> if hidden, <code>false</code> if unhidden
-     * @param userOriginated
-     *            <code>true</code> if triggered by user, <code>false</code> if
-     *            by code
      */
-    void columnVisibilityChanged(String id, boolean hidden,
-            boolean userOriginated);
+    void columnVisibilityChanged(String id, boolean hidden);
 
     /**
      * Informs the server that a column has been resized by the user.
