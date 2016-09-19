@@ -320,6 +320,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * @return <code>true</code> if waiting for data; otherwise
      *         <code>false</code>
      */
+    @Override
     public boolean isWaitingForData() {
         return currentRequestCallback != null;
     }
@@ -462,7 +463,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             currentRequestCallback = null;
         }
 
-        Range maxCacheRange = getMaxCacheRange();
+        Range maxCacheRange = getMaxCacheRange(received);
 
         Range[] partition = received.partitionWith(maxCacheRange);
 
@@ -698,9 +699,13 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     }
 
     private Range getMaxCacheRange() {
+        return getMaxCacheRange(getRequestedAvailability());
+    }
+
+    private Range getMaxCacheRange(Range range) {
         Range availableDataRange = getAvailableRangeForCache();
-        Range maxCacheRange = cacheStrategy.getMaxCacheRange(
-                requestedAvailability, cached, availableDataRange);
+        Range maxCacheRange = cacheStrategy.getMaxCacheRange(range, cached,
+                availableDataRange);
 
         assert maxCacheRange.isSubsetOf(availableDataRange);
 

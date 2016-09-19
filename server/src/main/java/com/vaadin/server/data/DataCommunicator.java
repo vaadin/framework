@@ -184,7 +184,8 @@ public class DataCommunicator<T> extends AbstractExtension {
 
     private boolean reset = false;
     private final Set<T> updatedData = new HashSet<>();
-    private Range pushRows = Range.withLength(0, 40);
+    private int minPushSize = 40;
+    private Range pushRows = Range.withLength(0, minPushSize);
 
     private Comparator<T> inMemorySorting;
     private SerializablePredicate<T> inMemoryFilter;
@@ -473,10 +474,60 @@ public class DataCommunicator<T> extends AbstractExtension {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
         this.dataProvider = dataProvider;
         detachDataProviderListener();
+        /*
+         * This introduces behavior which influence on the client-server
+         * communication: now the very first response to the client will always
+         * contain some data. If data provider has been set already then {@code
+         * pushRows} is empty at this point. So without the next line the very
+         * first response will be without data. And the client will request more
+         * data in the next request after the response. The next line allows to
+         * send some data (in the {@code pushRows} range) to the client even in
+         * the very first response. This is necessary for disabled component
+         * (and theoretically allows to the client doesn't request more data in
+         * a happy path).
+         */
+        pushRows = Range.between(0, getMinPushSize());
         if (isAttached()) {
             attachDataProviderListener();
         }
         reset();
+    }
+
+    /**
+     * Set minimum size of data which will be sent to the client when data
+     * source is set.
+     * <p>
+     * Server doesn't send all data from data source to the client. It sends
+     * some initial chunk of data (whose size is determined as minimum between
+     * {@code size} parameter of this method and data size). Client decides
+     * whether it is able to show more data and request server to send more data
+     * (next chunk).
+     * <p>
+     * When component is disabled then client cannot communicate to the server
+     * side (by design, because of security reasons). It means that client will
+     * get <b>only</b> initial chunk of data whose size is set here.
+     * 
+     * @param size
+     *            the size of initial data to send to the client
+     */
+    public void setMinPushSize(int size) {
+        if (size < 0) {
+            throw new IllegalArgumentException("Value cannot be negative");
+        }
+        minPushSize = size;
+    }
+
+    /**
+     * Get minimum size of data which will be sent to the client when data
+     * source is set.
+     * 
+     * @see #setMinPushSize(int)
+     * 
+     * @return current minimum push size of initial data chunk which is sent to
+     *         the client when data source is set
+     */
+    public int getMinPushSize() {
+        return minPushSize;
     }
 
     private void attachDataProviderListener() {

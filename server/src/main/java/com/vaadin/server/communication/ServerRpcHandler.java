@@ -46,6 +46,7 @@ import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.UidlValue;
+import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.UI;
@@ -354,9 +355,9 @@ public class ServerRpcHandler implements Serializable {
                 if (connector == null) {
                     getLogger().log(Level.WARNING,
                             "Received RPC call for unknown connector with id {0} (tried to invoke {1}.{2})",
-                            new Object[]{invocation.getConnectorId(),
+                            new Object[] { invocation.getConnectorId(),
                                     invocation.getInterfaceName(),
-                                    invocation.getMethodName()});
+                                    invocation.getMethodName() });
                     continue;
                 }
 
@@ -377,6 +378,15 @@ public class ServerRpcHandler implements Serializable {
                             // Silently ignore this
                             continue;
                         }
+                    } else if (invocation instanceof ServerRpcMethodInvocation) {
+                        ServerRpcMethodInvocation rpc = (ServerRpcMethodInvocation) invocation;
+                        // special case for data communicator requesting more
+                        // data
+                        if (DataRequestRpc.class.getName()
+                                .equals(rpc.getInterfaceClass().getName())) {
+                            handleInvocation(ui, connector, rpc);
+                        }
+                        continue;
                     }
 
                     // Connector is disabled, log a warning and move to the next

@@ -60,7 +60,30 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
     }
 
     @Test
+    public void disabled_reduceItemCount_containsCorrectItems() {
+        selectMenuPath("Component", "State", "Enabled");
+        selectMenuPath("Component", "Data provider", "Items", "5");
+        assertItems(5);
+    }
+
+    @Test
     public void initialItems_increaseItemCount_containsCorrectItems() {
+        selectMenuPath("Component", "Data provider", "Items", "100");
+        assertItems(100);
+    }
+
+    @Test
+    public void disabled_increaseItemCountWithinPushRows_containsCorrectItems() {
+        selectMenuPath("Component", "Data provider", "Items", "5");
+        selectMenuPath("Component", "State", "Enabled");
+        selectMenuPath("Component", "Data provider", "Items", "20");
+        assertItems(20);
+    }
+
+    @Test
+    public void disabled_increaseItemCountBeyondPushRows_containsCorrectItems() {
+        selectMenuPath("Component", "Data provider", "Items", "5");
+        selectMenuPath("Component", "State", "Enabled");
         selectMenuPath("Component", "Data provider", "Items", "100");
         assertItems(100);
     }

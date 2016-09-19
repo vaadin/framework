@@ -60,8 +60,26 @@ public class DummyDataTest extends SingleBrowserTest {
     public void testDataProviderChangeOnlyOneRequest() {
         // Change to a new logging data provider
         $(ButtonElement.class).get(1).click();
-        assertEquals("DataProvider change should only cause 1 request",
-                "3. Backend request #0", getLogRow(0));
+        /*
+         * There are two requests between the server and the client.
+         * 
+         * But current implementation sends some data in both requests:
+         * 
+         * - the first roundtrip contains data for initial range (normally
+         * 0..40)
+         * 
+         * - the second roundtrip initiated by the client sends remaining data (
+         * from 41 to the whole size())
+         * 
+         * This differs from the previous behavior: when data provider is
+         * updated (it doesn't apply for the initially set data provider) no
+         * data is sent to the client. So this first roundtrip is useless. And
+         * only the second rountrip is used to send the whole data.
+         */
+        assertEquals("DataProvider change should cause 2 requests",
+                "3. Backend request #0", getLogRow(1));
+        assertEquals("DataProvider change should cause 2 request",
+                "4. Backend request #1", getLogRow(0));
     }
 
     @Test
