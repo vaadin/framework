@@ -15,8 +15,11 @@
  */
 package com.vaadin.tests.components.checkbox;
 
+import java.util.function.Function;
 import java.util.stream.IntStream;
 
+import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Resource;
 import com.vaadin.shared.data.selection.SelectionModel.Multi;
 import com.vaadin.tests.components.abstractlisting.AbstractListingTestUI;
 import com.vaadin.ui.CheckBoxGroup;
@@ -31,19 +34,19 @@ public class CheckBoxGroupTestUI
 
     private final String selectionCategory = "Selection";
 
+    private static final Function<Object, Resource> DEFAULT_ICON_PROVIDER = item -> "Item 2"
+            .equals(item) ? ICON_16_HELP_PNG_CACHEABLE : null;
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     protected Class<CheckBoxGroup<Object>> getTestClass() {
         return (Class) CheckBoxGroup.class;
     }
 
-
     @Override
     protected CheckBoxGroup<Object> constructComponent() {
         CheckBoxGroup<Object> checkBoxGroup = super.constructComponent();
-        checkBoxGroup.setItemIconProvider(
-                item -> "Item 2".equals(item) ? ICON_16_HELP_PNG_CACHEABLE :
-                        null);
+        checkBoxGroup.setItemIconProvider(DEFAULT_ICON_PROVIDER);
         checkBoxGroup.setItemEnabledProvider(item -> !"Item 10".equals(item));
         return checkBoxGroup;
     }
@@ -53,6 +56,7 @@ public class CheckBoxGroupTestUI
         super.createActions();
         createListenerMenu();
         createSelectionMenu();
+        createItemProviderMenu();
     }
 
     protected void createSelectionMenu() {
@@ -80,9 +84,54 @@ public class CheckBoxGroupTestUI
         }
     }
 
+    private void createItemProviderMenu() {
+        createBooleanAction("Use Item Caption Provider", "Item Provider", false,
+                this::useItemCaptionProvider);
+        createBooleanAction("Use Item Icon Provider", "Item Provider", false,
+                this::useItemIconProvider);
+    }
+
+    private void useItemCaptionProvider(CheckBoxGroup<Object> group,
+            boolean activate, Object data) {
+        if (activate) {
+            group.setItemCaptionProvider(item -> item.toString() + " Caption");
+        } else {
+            group.setItemCaptionProvider(item -> item.toString());
+        }
+        group.getDataSource().refreshAll();
+    }
+
+    private void useItemIconProvider(CheckBoxGroup<Object> group,
+            boolean activate, Object data) {
+        if (activate) {
+            group.setItemIconProvider(
+                    item -> FontAwesome.values()[getIndex(item) + 1]);
+        } else {
+            group.setItemIconProvider(DEFAULT_ICON_PROVIDER);
+        }
+        group.getDataSource().refreshAll();
+    }
+
     protected void createListenerMenu() {
         createListenerAction("Selection listener", "Listeners",
                 c -> c.addSelectionListener(
                         e -> log("Selected: " + e.getNewSelection())));
+    }
+
+    private int getIndex(Object item) {
+        int index = item.toString().indexOf(' ');
+        if (index < 0) {
+            return 0;
+        }
+        String postfix = item.toString().substring(index + 1);
+        index = postfix.indexOf(' ');
+        if (index >= 0) {
+            postfix = postfix.substring(0, index);
+        }
+        try {
+            return Integer.parseInt(postfix);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 }

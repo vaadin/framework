@@ -15,11 +15,11 @@
  */
 package com.vaadin.tests.components.radiobutton;
 
+import java.util.stream.IntStream;
+
 import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.tests.components.abstractlisting.AbstractListingTestUI;
 import com.vaadin.ui.RadioButtonGroup;
-
-import java.util.stream.IntStream;
 
 /**
  * Test UI for RadioButtonGroup component
@@ -42,6 +42,7 @@ public class RadioButtonGroupTestUI
         super.createActions();
         createListenerMenu();
         createSelectionMenu();
+        createItemProviderMenu();
     }
 
     protected void createSelectionMenu() {
@@ -54,12 +55,28 @@ public class RadioButtonGroupTestUI
                 item, data) -> toggleSelection(item);
 
         IntStream.of(0, 1, 5, 10, 25).mapToObj(i -> "Item " + i)
-                .forEach(item -> createClickAction("Toggle " + item, selectionCategory,
-                                               toggleSelection, item));
+                .forEach(item -> createClickAction("Toggle " + item,
+                        selectionCategory, toggleSelection, item));
+    }
+
+    private void createItemProviderMenu() {
+        createBooleanAction("Use Item Caption Provider", "Item Provider", false,
+                this::useItemCaptionProvider);
+    }
+
+    private void useItemCaptionProvider(RadioButtonGroup<Object> group,
+            boolean activate, Object data) {
+        if (activate) {
+            group.setItemCaptionProvider(item -> item.toString() + " Caption");
+        } else {
+            group.setItemCaptionProvider(item -> item.toString());
+        }
+        group.getDataSource().refreshAll();
     }
 
     private void toggleSelection(String item) {
-        SelectionModel.Single<Object> selectionModel = getComponent().getSelectionModel();
+        SelectionModel.Single<Object> selectionModel = getComponent()
+                .getSelectionModel();
         if (selectionModel.isSelected(item)) {
             selectionModel.deselect(item);
         } else {
@@ -72,4 +89,5 @@ public class RadioButtonGroupTestUI
                 c -> c.addSelectionListener(
                         e -> log("Selected: " + e.getSelectedItem())));
     }
+
 }

@@ -15,15 +15,17 @@
  */
 package com.vaadin.tests.components.radiobutton;
 
-import com.vaadin.testbench.customelements.RadioButtonGroupElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+
+import com.vaadin.testbench.customelements.RadioButtonGroupElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Test for RadioButtonGroup
@@ -70,6 +72,53 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
     }
 
     @Test
+    public void disabled_clickToSelect() {
+        selectMenuPath("Component", "State", "Enabled");
+
+        Assert.assertTrue(getSelect().findElements(By.tagName("input")).stream()
+                .allMatch(element -> element.getAttribute("disabled") != null));
+
+        selectMenuPath("Component", "Listeners", "Selection listener");
+
+        String lastLogRow = getLogRow(0);
+
+        getSelect().selectByText("Item 4");
+        Assert.assertEquals(lastLogRow, getLogRow(0));
+
+        getSelect().selectByText("Item 2");
+        Assert.assertEquals(lastLogRow, getLogRow(0));
+
+        getSelect().selectByText("Item 4");
+        Assert.assertEquals(lastLogRow, getLogRow(0));
+    }
+
+    @Test
+    public void clickToSelect_reenable() {
+        selectMenuPath("Component", "State", "Enabled");
+        selectMenuPath("Component", "Listeners", "Selection listener");
+
+        getSelect().selectByText("Item 4");
+
+        selectMenuPath("Component", "State", "Enabled");
+
+        getSelect().selectByText("Item 5");
+        Assert.assertEquals("3. Selected: Optional[Item 5]", getLogRow(0));
+
+        getSelect().selectByText("Item 2");
+        Assert.assertEquals("4. Selected: Optional[Item 2]", getLogRow(0));
+
+        getSelect().selectByText("Item 4");
+        Assert.assertEquals("5. Selected: Optional[Item 4]", getLogRow(0));
+    }
+
+    @Test
+    public void itemCaptionProvider() {
+        selectMenuPath("Component", "Item Provider",
+                "Use Item Caption Provider");
+        assertItems(20, " Caption");
+    }
+
+    @Test
     public void selectProgramatically() {
         selectMenuPath("Component", "Listeners", "Selection listener");
 
@@ -102,11 +151,16 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
     }
 
     protected void assertItems(int count) {
+        assertItems(count, "");
+    }
+
+    protected void assertItems(int count, String suffix) {
         int i = 0;
         for (String text : getSelect().getOptions()) {
-            assertEquals("Item " + i, text);
+            assertEquals("Item " + i + suffix, text);
             i++;
         }
         assertEquals("Number of items", count, i);
     }
+
 }

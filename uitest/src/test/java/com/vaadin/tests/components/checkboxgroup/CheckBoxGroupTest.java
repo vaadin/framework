@@ -16,26 +16,24 @@
 package com.vaadin.tests.components.checkboxgroup;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.Arrays;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.vaadin.testbench.customelements.CheckBoxGroupElement;
-import com.vaadin.tests.components.checkbox.CheckBoxGroupTestUI;
-import com.vaadin.tests.tb3.MultiBrowserTest;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import com.vaadin.server.FontAwesome;
+import com.vaadin.testbench.customelements.CheckBoxGroupElement;
+import com.vaadin.tests.components.checkbox.CheckBoxGroupTestUI;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Test for CheckBoxGroup
@@ -83,6 +81,66 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
     }
 
     @Test
+    public void disabled_clickToSelect() {
+        selectMenuPath("Component", "State", "Enabled");
+
+        Assert.assertTrue(getSelect().findElements(By.tagName("input")).stream()
+                .allMatch(element -> element.getAttribute("disabled") != null));
+
+        selectMenuPath("Component", "Listeners", "Selection listener");
+
+        String lastLogRow = getLogRow(0);
+
+        getSelect().selectByText("Item 4");
+        Assert.assertEquals(lastLogRow, getLogRow(0));
+
+        getSelect().selectByText("Item 2");
+        // Selection order (most recently selected is last)
+        Assert.assertEquals(lastLogRow, getLogRow(0));
+
+        getSelect().selectByText("Item 4");
+        Assert.assertEquals(lastLogRow, getLogRow(0));
+    }
+
+    @Test
+    public void clickToSelect_reenable() {
+        selectMenuPath("Component", "State", "Enabled");
+        selectMenuPath("Component", "Listeners", "Selection listener");
+
+        getSelect().selectByText("Item 4");
+
+        selectMenuPath("Component", "State", "Enabled");
+
+        getSelect().selectByText("Item 5");
+        Assert.assertEquals("3. Selected: [Item 5]", getLogRow(0));
+
+        getSelect().selectByText("Item 2");
+        Assert.assertEquals("4. Selected: [Item 5, Item 2]", getLogRow(0));
+
+        getSelect().selectByText("Item 5");
+        Assert.assertEquals("5. Selected: [Item 2]", getLogRow(0));
+    }
+
+    @Test
+    public void itemCaptionProvider() {
+        selectMenuPath("Component", "Item Provider",
+                "Use Item Caption Provider");
+        assertItems(20, " Caption");
+    }
+
+    @Test
+    public void itemIconProvider() {
+        selectMenuPath("Component", "Item Provider", "Use Item Icon Provider");
+        assertItemSuffices(20);
+        List<WebElement> icons = getSelect()
+                .findElements(By.cssSelector(".v-icon.FontAwesome"));
+        for (int i = 0; i < icons.size(); i++) {
+            Assert.assertEquals(FontAwesome.values()[i + 1].getCodepoint(),
+                    icons.get(i).getText().charAt(0));
+        }
+    }
+
+    @Test
     public void selectProgramatically() {
         selectMenuPath("Component", "Listeners", "Selection listener");
 
@@ -116,9 +174,22 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
     }
 
     protected void assertItems(int count) {
+        assertItems(count, "");
+    }
+
+    protected void assertItems(int count, String suffix) {
         int i = 0;
         for (String text : getSelect().getOptions()) {
-            assertEquals("Item " + i, text);
+            assertEquals("Item " + i + suffix, text);
+            i++;
+        }
+        assertEquals("Number of items", count, i);
+    }
+
+    protected void assertItemSuffices(int count) {
+        int i = 0;
+        for (String text : getSelect().getOptions()) {
+            assertTrue(text.endsWith("Item " + i));
             i++;
         }
         assertEquals("Number of items", count, i);
@@ -131,10 +202,10 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
             String cssClassList = optionsCssClasses.get(i);
             if (i == 10) {
                 assertTrue("10th item should be disabled",
-                           cssClassList.toLowerCase().contains("disabled"));
+                        cssClassList.toLowerCase().contains("disabled"));
             } else {
                 assertFalse("Only 10th item should be disabled",
-                            cssClassList.toLowerCase().contains("disabled"));
+                        cssClassList.toLowerCase().contains("disabled"));
             }
         }
     }
@@ -151,4 +222,5 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
             }
         }
     }
+
 }
