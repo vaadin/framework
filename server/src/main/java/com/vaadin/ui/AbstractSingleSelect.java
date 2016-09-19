@@ -16,8 +16,13 @@
 package com.vaadin.ui;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.data.SelectionModel;
@@ -28,6 +33,8 @@ import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.AbstractSingleSelectState;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -305,6 +312,65 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
      */
     public boolean isSelected(T item) {
         return Objects.equals(getValue(), item);
+    }
+
+    @Override
+    protected Element writeItem(Element design, T item, DesignContext context) {
+        Element element = super.writeItem(design, item, context);
+
+        if (isSelected(item)) {
+            element.attr("selected", "");
+        }
+
+        return element;
+    }
+
+    @Override
+    protected void readItems(Element design, DesignContext context) {
+        super.readItems(design, context);
+        Set<T> selected = new HashSet<>();
+        design.children().stream()
+                .forEach(child -> readItem(child, selected, context));
+        selected.forEach(this::setValue);
+    }
+
+    /**
+     * Reads an Item from a design and inserts it into the data source.
+     * Hierarchical select components should override this method to recursively
+     * recursively read any child items as well.
+     *
+     * @param child
+     *            a child element representing the item
+     * @param selected
+     *            A set accumulating selected items. If the item that is read is
+     *            marked as selected, its item id should be added to this set.
+     * @param context
+     *            the DesignContext instance used in parsing
+     * @return the item id of the new item
+     *
+     * @throws DesignException
+     *             if the tag name of the {@code child} element is not
+     *             {@code option}.
+     */
+    protected T readItem(Element child, Set<T> selected,
+            DesignContext context) {
+        T item = readItem(child, context);
+
+        if (child.hasAttr("selected")) {
+            selected.add(item);
+        }
+
+        return item;
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> attributes = super.getCustomAttributes();
+        // "value" is not an attribute for the component. "selected" attribute
+        // is used in "option"'s tag to mark selection which implies value for
+        // single select component
+        attributes.add("value");
+        return attributes;
     }
 
     private void init() {

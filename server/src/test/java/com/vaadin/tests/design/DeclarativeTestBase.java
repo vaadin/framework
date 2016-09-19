@@ -38,55 +38,31 @@ public abstract class DeclarativeTestBase<T extends Component>
 
     public class IntrospectorEqualsAsserter<C> implements EqualsAsserter<C> {
 
-        private final Class<C> c;
+        private final Class<C> clazz;
 
-        public IntrospectorEqualsAsserter(Class<C> c) {
-            this.c = c;
+        public IntrospectorEqualsAsserter(Class<C> clazz) {
+            this.clazz = clazz;
         }
 
         @Override
-        public void assertObjectEquals(C o1, C o2) {
+        public void assertObjectEquals(C object1, C object2) {
             try {
-                BeanInfo bi = Introspector.getBeanInfo(c);
+                BeanInfo bi = Introspector.getBeanInfo(clazz);
                 for (PropertyDescriptor pd : bi.getPropertyDescriptors()) {
                     Method readMethod = pd.getReadMethod();
                     Method writeMethod = pd.getWriteMethod();
-                    if (readMethod == null || writeMethod == null) {
-                        continue;
-                    }
-                    // Needed to access public properties inherited from a
-                    // nonpublic superclass, see #17425
-                    readMethod.setAccessible(true);
-                    writeMethod.setAccessible(true);
-                    if (Connector.class.isAssignableFrom(c)
-                            && readMethod.getName().equals("getParent")) {
-                        // Hack to break cycles in the connector hierarchy
-                        continue;
-                    }
-                    try {
-                        c.getDeclaredMethod(readMethod.getName());
-                    } catch (Exception e) {
-                        // Not declared in this class, will be tested by parent
-                        // class tester
-                        if (debug) {
-                            System.out.println("Skipped " + c.getSimpleName()
-                                    + "." + readMethod.getName());
-                        }
-                        continue;
-                    }
 
-                    if (debug) {
-                        System.out.println("Testing " + c.getSimpleName() + "."
-                                + readMethod.getName());
+                    if (acceptProperty(clazz, readMethod, writeMethod)) {
+                        Object property1 = readMethod.invoke(object1);
+                        Object property2 = readMethod.invoke(object2);
+                        assertEquals(pd.getDisplayName(), property1, property2);
                     }
-                    Object v1 = readMethod.invoke(o1);
-                    Object v2 = readMethod.invoke(o2);
-                    assertEquals(pd.getDisplayName(), v1, v2);
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
+
     }
 
     {
@@ -106,6 +82,39 @@ public abstract class DeclarativeTestBase<T extends Component>
                 });
     }
 
+    protected boolean acceptProperty(Class<?> clazz, Method readMethod,
+            Method writeMethod) {
+        if (readMethod == null || writeMethod == null) {
+            return false;
+        }
+        // Needed to access public properties inherited from a
+        // nonpublic superclass, see #17425
+        readMethod.setAccessible(true);
+        writeMethod.setAccessible(true);
+        if (Connector.class.isAssignableFrom(clazz)
+                && readMethod.getName().equals("getParent")) {
+            // Hack to break cycles in the connector hierarchy
+            return false;
+        }
+        try {
+            clazz.getDeclaredMethod(readMethod.getName());
+        } catch (Exception e) {
+            // Not declared in this class, will be tested by parent
+            // class tester
+            if (debug) {
+                System.out.println("Skipped " + clazz.getSimpleName() + "."
+                        + readMethod.getName());
+            }
+            return false;
+        }
+
+        if (debug) {
+            System.out.println("Testing " + clazz.getSimpleName() + "."
+                    + readMethod.getName());
+        }
+        return true;
+    }
+
     @Override
     protected EqualsAsserter getComparator(Class c) {
         com.vaadin.tests.design.DeclarativeTestBaseBase.EqualsAsserter<?> comp = comparators
@@ -122,4 +131,5 @@ public abstract class DeclarativeTestBase<T extends Component>
         }
         return comp;
     }
+
 }

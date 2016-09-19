@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.jsoup.nodes.Element;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +37,7 @@ import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.data.provider.bov.Person;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorClientRpc;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Test for {@link AbstractSingleSelect} and {@link AbstractSingleSelection}
@@ -47,6 +49,16 @@ public class AbstractSingleSelectTest {
     private List<Person> selectionChanges;
 
     private static class PersonListing extends AbstractSingleSelect<Person> {
+
+        @Override
+        protected Element writeItem(Element design, Person item,
+                DesignContext context) {
+            return null;
+        }
+
+        @Override
+        protected void readItems(Element design, DesignContext context) {
+        }
     }
 
     @Before
@@ -219,6 +231,16 @@ public class AbstractSingleSelectTest {
             @Override
             public String getValue() {
                 return value;
+            }
+
+            @Override
+            protected Element writeItem(Element design, String item,
+                    DesignContext context) {
+                return null;
+            }
+
+            @Override
+            protected void readItems(Element design, DesignContext context) {
             }
         };
 

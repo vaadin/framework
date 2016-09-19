@@ -18,9 +18,14 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.event.FieldEvents;
@@ -40,6 +45,9 @@ import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignFormatter;
 
 import elemental.json.JsonObject;
 
@@ -61,6 +69,36 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
      */
     @FunctionalInterface
     public interface NewItemHandler extends Consumer<String>, Serializable {
+    }
+
+    /**
+     * Item style generator class for declarative support.
+     * <p>
+     * Provides a straightforward mapping between an item and its style.
+     *
+     * @param <T>
+     *            item type
+     */
+    protected static class DeclarativeStyleGenerator<T>
+            implements StyleGenerator<T> {
+        private Map<T, String> styles = new HashMap<>();
+
+        @Override
+        public String apply(T item) {
+            return styles.get(item);
+        }
+
+        /**
+         * Sets a {@code style} for the {@code item}.
+         * 
+         * @param item
+         *            a data item
+         * @param style
+         *            a style for the {@code item}
+         */
+        protected void setStyle(T item, String style) {
+            styles.put(item, style);
+        }
     }
 
     /**
@@ -107,10 +145,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
      */
     private NewItemHandler newItemHandler;
 
-    private ItemCaptionGenerator<T> itemCaptionGenerator = String::valueOf;
-
     private StyleGenerator<T> itemStyleGenerator = item -> null;
-    private IconGenerator<T> itemIconGenerator = item -> null;
 
     private ItemFilter<T> filter = (filterText, item) -> {
         if (filterText == null) {
@@ -200,7 +235,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
             if (style != null) {
                 jsonObject.put(ComboBoxConstants.STYLE, style);
             }
-            Resource icon = itemIconGenerator.apply(data);
+            Resource icon = getItemIconGenerator().apply(data);
             if (icon != null) {
                 String iconUrl = ResourceReference
                         .create(icon, ComboBox.this, null).getURL();
@@ -377,30 +412,15 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
         return getState(false).scrollToSelectedItem;
     }
 
-    /**
-     * Gets the item caption generator that is used to produce the strings shown
-     * in the combo box for each item.
-     *
-     * @return the item caption generator used, not null
-     */
+    @Override
     public ItemCaptionGenerator<T> getItemCaptionGenerator() {
-        return itemCaptionGenerator;
+        return super.getItemCaptionGenerator();
     }
 
-    /**
-     * Sets the item caption generator that is used to produce the strings shown
-     * in the combo box for each item. By default,
-     * {@link String#valueOf(Object)} is used.
-     *
-     * @param itemCaptionGenerator
-     *            the item caption provider to use, not null
-     */
+    @Override
     public void setItemCaptionGenerator(
             ItemCaptionGenerator<T> itemCaptionGenerator) {
-        Objects.requireNonNull(itemCaptionGenerator,
-                "Item caption generators must not be null");
-        this.itemCaptionGenerator = itemCaptionGenerator;
-        getDataCommunicator().reset();
+        super.setItemCaptionGenerator(itemCaptionGenerator);
     }
 
     /**
@@ -437,36 +457,14 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
         return itemStyleGenerator;
     }
 
-    /**
-     * Sets the item icon generator that is used to produce custom icons for
-     * showing items in the popup. The generator can return null for items with
-     * no icon.
-     *
-     * @see IconGenerator
-     *
-     * @param itemIconGenerator
-     *            the item icon generator to set, not null
-     * @throws NullPointerException
-     *             if {@code itemIconGenerator} is {@code null}
-     */
+    @Override
     public void setItemIconGenerator(IconGenerator<T> itemIconGenerator) {
-        Objects.requireNonNull(itemIconGenerator,
-                "Item icon generator must not be null");
-        this.itemIconGenerator = itemIconGenerator;
-        getDataCommunicator().reset();
+        super.setItemIconGenerator(itemIconGenerator);
     }
 
-    /**
-     * Gets the currently used item icon generator. The default item icon
-     * provider returns null for all items, resulting in no icons being used.
-     *
-     * @see IconGenerator
-     * @see #setItemIconGenerator(IconGenerator)
-     *
-     * @return the currently used item icon generator, not null
-     */
+    @Override
     public IconGenerator<T> getItemIconGenerator() {
-        return itemIconGenerator;
+        return super.getItemIconGenerator();
     }
 
     /**
@@ -546,6 +544,63 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
             selectedCaption = getItemCaptionGenerator().apply(value);
         }
         getState().selectedItemCaption = selectedCaption;
+    }
+
+    @Override
+    protected Element writeItem(Element design, T item, DesignContext context) {
+        Element element = design.appendElement("option");
+
+        String caption = getItemCaptionGenerator().apply(item);
+        if (caption != null) {
+            element.html(DesignFormatter.encodeForTextNode(caption));
+        } else {
+            element.html(DesignFormatter.encodeForTextNode(item.toString()));
+        }
+        element.attr("item", item.toString());
+
+        Resource icon = getItemIconGenerator().apply(item);
+        if (icon != null) {
+            DesignAttributeHandler.writeAttribute("icon", element.attributes(),
+                    icon, null, Resource.class, context);
+        }
+
+        String style = getStyleGenerator().apply(item);
+        if (style != null) {
+            element.attr("style", style);
+        }
+
+        if (isSelected(item)) {
+            element.attr("selected", "");
+        }
+
+        return element;
+    }
+
+    @Override
+    protected void readItems(Element design, DesignContext context) {
+        setStyleGenerator(new DeclarativeStyleGenerator<>());
+        super.readItems(design, context);
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    protected T readItem(Element child, Set<T> selected,
+            DesignContext context) {
+        T item = super.readItem(child, selected, context);
+
+        if (child.hasAttr("style")) {
+            StyleGenerator<T> styleGenerator = getStyleGenerator();
+            if (styleGenerator instanceof DeclarativeStyleGenerator) {
+                ((DeclarativeStyleGenerator) styleGenerator).setStyle(item,
+                        child.attr("style"));
+            } else {
+                throw new IllegalStateException(String.format(
+                        "Don't know how "
+                                + "to set style using current style generator '%s'",
+                        styleGenerator.getClass().getName()));
+            }
+        }
+        return item;
     }
 
 }

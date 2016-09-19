@@ -17,6 +17,9 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
+import java.util.Set;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Listing;
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -30,6 +33,8 @@ import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.data.DataProvider;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.optiongroup.CheckBoxGroupState;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignFormatter;
 
 /**
  * A group of Checkboxes. Individual checkboxes are made from items supplied by
@@ -170,5 +175,51 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
     @Deprecated
     public void removeBlurListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    }
+
+    @Override
+    protected void readItems(Element design, DesignContext context) {
+        setItemEnabledProvider(new DeclarativeItemEnabledProvider<>());
+        super.readItems(design, context);
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    protected T readItem(Element child, Set<T> selected,
+            DesignContext context) {
+        T item = super.readItem(child, selected, context);
+
+        SerializablePredicate<T> provider = getItemEnabledProvider();
+        if (provider instanceof DeclarativeItemEnabledProvider) {
+            if (child.hasAttr("disabled")) {
+                ((DeclarativeItemEnabledProvider) provider).addDisabled(item);
+            }
+        } else {
+            throw new IllegalStateException(String.format(
+                    "Don't know how "
+                            + "to disable item using current item enabled provider '%s'",
+                    provider.getClass().getName()));
+        }
+        return item;
+    }
+
+    @Override
+    protected Element writeItem(Element design, T item, DesignContext context) {
+        Element elem = super.writeItem(design, item, context);
+
+        if (!getItemEnabledProvider().test(item)) {
+            elem.attr("disabled", "");
+        }
+
+        if (isHtmlContentAllowed()) {
+            // need to unencode HTML entities. AbstractMultiSelect.writeDesign
+            // can't check if HTML content is allowed, so it always encodes
+            // entities like '>', '<' and '&'; in case HTML content is allowed
+            // this is undesirable so we need to unencode entities. Entities
+            // other than '<' and '>' will be taken care by Jsoup.
+            elem.html(DesignFormatter.decodeFromTextNode(elem.html()));
+        }
+
+        return elem;
     }
 }

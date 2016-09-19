@@ -219,11 +219,12 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         Assert.assertEquals("", l.getMessages());
     }
 
-    public void testWrite(String design, T expected, boolean writeData) {
-        String written = write(expected, writeData);
+    public void testWrite(String expectedDesign, T component,
+            boolean writeData) {
+        String written = write(component, writeData);
 
         Element producedElem = Jsoup.parse(written).body().child(0);
-        Element comparableElem = Jsoup.parse(design).body().child(0);
+        Element comparableElem = Jsoup.parse(expectedDesign).body().child(0);
 
         String produced = elementToHtml(producedElem);
         String comparable = elementToHtml(comparableElem);

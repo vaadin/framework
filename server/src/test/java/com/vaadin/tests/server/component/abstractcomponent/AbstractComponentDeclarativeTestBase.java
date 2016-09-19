@@ -18,6 +18,8 @@ package com.vaadin.tests.server.component.abstractcomponent;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Locale;
 
 import org.junit.Test;
@@ -71,7 +73,8 @@ public abstract class AbstractComponentDeclarativeTestBase<T extends AbstractCom
 
     @Test
     public void abstractComponentAttributesDeserialization()
-            throws InstantiationException, IllegalAccessException {
+            throws InstantiationException, IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException {
         String id = "testId";
         String caption = "testCaption";
         boolean captionAsHtml = true;
@@ -87,12 +90,14 @@ public abstract class AbstractComponentDeclarativeTestBase<T extends AbstractCom
         boolean responsive = true;
         String styleName = "testStyleName";
         boolean visible = false;
+        boolean requiredIndicator = true;
 
         String design = String.format(
                 "<%s id='%s' caption='%s' caption-as-html description='%s' "
                         + "error='%s' enabled='false' width='%s' height='%s' "
                         + "icon='%s' locale='%s' primary-style-name='%s' "
-                        + "readonly responsive style-name='%s' visible='false'/>",
+                        + "readonly responsive style-name='%s' visible='false' "
+                        + "required-indicator-visible/>",
                 getComponentTag(), id, caption, description, error, width,
                 height, icon, locale.toString(), primaryStyle, styleName);
 
@@ -110,19 +115,27 @@ public abstract class AbstractComponentDeclarativeTestBase<T extends AbstractCom
         component.setIcon(new FileResource(new File(icon)));
         component.setLocale(locale);
         component.setPrimaryStyleName(primaryStyle);
-        try {
-            component.getClass()
-                    .getMethod("setReadOnly", new Class[] { boolean.class })
-                    .invoke(component, readOnly);
-        } catch (Exception e) {
-            // Ignore
-        }
+        callBooleanSetter(readOnly, "setReadOnly", component);
+        callBooleanSetter(requiredIndicator, "setRequiredIndicatorVisible",
+                component);
         component.setResponsive(responsive);
         component.setStyleName(styleName);
         component.setVisible(visible);
 
         testRead(design, component);
         testWrite(design, component);
+    }
+
+    private void callBooleanSetter(boolean value, String setterName,
+            T component)
+            throws IllegalAccessException, InvocationTargetException {
+        try {
+            Method method = component.getClass().getMethod(setterName,
+                    new Class[] { boolean.class });
+            method.invoke(component, value);
+        } catch (NoSuchMethodException ignore) {
+            // ignore if there is no such method
+        }
     }
 
     @Test

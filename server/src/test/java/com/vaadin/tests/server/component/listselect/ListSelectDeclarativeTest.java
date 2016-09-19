@@ -15,59 +15,48 @@
  */
 package com.vaadin.tests.server.component.listselect;
 
-import java.util.Arrays;
-
 import org.junit.Test;
 
-import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.tests.server.component.abstractmultiselect.AbstractMultiSelectDeclarativeTest;
 import com.vaadin.ui.ListSelect;
 
+/**
+ * List select declarative test.
+ * <p>
+ * There is only {@link ListSelect#setRows(int)}/{@link ListSelect#getRows()}
+ * explicit test. All other tests are in the super class (
+ * {@link AbstractMultiSelectDeclarativeTest}).
+ * 
+ * @see AbstractMultiSelectDeclarativeTest
+ * 
+ * @author Vaadin Ltd
+ *
+ */
+@SuppressWarnings("rawtypes")
 public class ListSelectDeclarativeTest
-        extends DeclarativeTestBase<ListSelect<String>> {
-
-    private ListSelect<String> getWithOptionsExpected() {
-        ListSelect<String> ls = new ListSelect<>(null,
-                Arrays.asList("Male", "Female"));
-        ls.setRows(9); // 10 is default
-        return ls;
-    }
-
-    private String getWithOptionsDesign() {
-        return "<vaadin-list-select rows=9>\n"
-                + "        <option>Male</option>\n"
-                + "        <option>Female</option>\n"
-                + "</vaadin-list-select>\n" + "";
-    }
+        extends AbstractMultiSelectDeclarativeTest<ListSelect> {
 
     @Test
-    public void testReadWithOptions() {
-        testRead(getWithOptionsDesign(), getWithOptionsExpected());
+    public void rowsPropertySerialization() {
+        int rows = 7;
+        String design = String.format("<%s rows='%s'/>", getComponentTag(),
+                rows);
+
+        ListSelect<String> select = new ListSelect<>();
+        select.setRows(rows);
+
+        testRead(design, select);
+        testWrite(design, select);
     }
 
-    @Test
-    public void testWriteWithOptions() {
-        testWrite(stripOptionTags(getWithOptionsDesign()),
-                getWithOptionsExpected());
+    @Override
+    protected String getComponentTag() {
+        return "vaadin-list-select";
     }
 
-    private ListSelect<String> getBasicExpected() {
-        ListSelect<String> ls = new ListSelect<>();
-        ls.setCaption("Hello");
-        return ls;
-    }
-
-    private String getBasicDesign() {
-        return "<vaadin-list-select caption='Hello' />";
-    }
-
-    @Test
-    public void testReadBasic() {
-        testRead(getBasicDesign(), getBasicExpected());
-    }
-
-    @Test
-    public void testWriteBasic() {
-        testWrite(getBasicDesign(), getBasicExpected());
+    @Override
+    protected Class<? extends ListSelect> getComponentClass() {
+        return ListSelect.class;
     }
 
 }

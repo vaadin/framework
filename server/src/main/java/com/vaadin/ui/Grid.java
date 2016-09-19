@@ -36,6 +36,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jsoup.nodes.Element;
+
 import com.vaadin.data.Binder;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.event.ConnectorEvent;
@@ -65,6 +67,7 @@ import com.vaadin.ui.components.grid.Footer;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
 import com.vaadin.ui.components.grid.SingleSelectionModel;
+import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.ui.renderers.Renderer;
 import com.vaadin.ui.renderers.TextRenderer;
@@ -2666,6 +2669,17 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
     private void fireColumnResizeEvent(Column<?, ?> column,
             boolean userOriginated) {
         fireEvent(new ColumnResizeEvent(this, column, userOriginated));
+    }
+
+    @Override
+    protected Element writeItem(Element design, T item, DesignContext context) {
+        // TODO see vaadin/framework8-issues#390
+        return null;
+    }
+
+    @Override
+    protected void readItems(Element design, DesignContext context) {
+        // TODO see vaadin/framework8-issues#390
     }
 
 }

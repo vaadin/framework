@@ -13,22 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.radiobutton;
+package com.vaadin.tests.components.radiobuttongroup;
 
-import com.vaadin.server.FontAwesome;
-import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.RadioButtonGroupElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import com.vaadin.server.FontAwesome;
+import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.RadioButtonGroupElement;
+import com.vaadin.tests.components.radiobutton.RadioButtonGroupTestUI;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Test for RadioButtonGroup
@@ -97,20 +99,20 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
 
     @Test
     public void itemIconGenerator() {
-        selectMenuPath("Component", "Item Icon Generator", "Use Item Icon Generator");
+        selectMenuPath("Component", "Item Icon Generator",
+                "Use Item Icon Generator");
         assertItemsSuffices(20);
 
-        List<WebElement> icons = getSelect().findElements(By.
-                cssSelector(".v-select-optiongroup .v-icon"));
+        List<WebElement> icons = getSelect()
+                .findElements(By.cssSelector(".v-select-optiongroup .v-icon"));
 
-        assertEquals(20,icons.size());
+        assertEquals(20, icons.size());
 
         for (int i = 0; i < icons.size(); i++) {
             Assert.assertEquals(FontAwesome.values()[i + 1].getCodepoint(),
                     icons.get(i).getText().charAt(0));
         }
     }
-
 
     @Test
     public void clickToSelect_reenable() {
@@ -133,15 +135,15 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
 
     @Test
     public void itemCaptionGenerator() {
-        selectMenuPath("Component", "Item Caption Generator", "Item Caption Generator",
-                "Custom Caption Generator");
+        selectMenuPath("Component", "Item Caption Generator",
+                "Item Caption Generator", "Custom Caption Generator");
         assertItems(20, " Caption");
     }
 
     @Test
     public void nullItemCaptionGenerator() {
-        selectMenuPath("Component", "Item Caption Generator", "Item Caption Generator",
-                "Null Caption Generator");
+        selectMenuPath("Component", "Item Caption Generator",
+                "Item Caption Generator", "Null Caption Generator");
         for (String text : getSelect().getOptions()) {
             Assert.assertEquals("", text);
         }

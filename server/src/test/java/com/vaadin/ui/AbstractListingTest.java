@@ -6,15 +6,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.vaadin.server.data.BackEndDataProvider;
+import org.jsoup.nodes.Element;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.server.data.BackEndDataProvider;
 import com.vaadin.server.data.DataProvider;
 import com.vaadin.server.data.ListDataProvider;
 import com.vaadin.server.data.Query;
 import com.vaadin.ui.AbstractListing.AbstractListingExtension;
+import com.vaadin.ui.declarative.DesignContext;
 
 import elemental.json.JsonObject;
 
@@ -27,6 +29,16 @@ public class AbstractListingTest {
          */
         public void runDataGeneration() {
             super.getDataCommunicator().beforeClientResponse(true);
+        }
+
+        @Override
+        protected Element writeItem(Element design, String item,
+                DesignContext context) {
+            return null;
+        }
+
+        @Override
+        protected void readItems(Element design, DesignContext context) {
         }
     }
 
@@ -87,10 +99,10 @@ public class AbstractListingTest {
     public void testSetDataProvider() {
         ListDataProvider<String> dataProvider = DataProvider.create(items);
         listing.setDataProvider(dataProvider);
-        Assert.assertEquals("setDataProvider did not set data provider", dataProvider,
-                listing.getDataProvider());
-        listing.setDataProvider(new BackEndDataProvider<>(q -> Stream.of(ITEM_ARRAY)
-                .skip(q.getOffset()).limit(q.getLimit()),
+        Assert.assertEquals("setDataProvider did not set data provider",
+                dataProvider, listing.getDataProvider());
+        listing.setDataProvider(new BackEndDataProvider<>(q -> Stream
+                .of(ITEM_ARRAY).skip(q.getOffset()).limit(q.getLimit()),
                 q -> ITEM_ARRAY.length));
         Assert.assertNotEquals("setDataProvider did not replace data provider",
                 dataProvider, listing.getDataProvider());

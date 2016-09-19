@@ -16,7 +16,9 @@
 package com.vaadin.ui;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,6 +26,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.data.SelectionModel;
@@ -38,6 +42,8 @@ import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
 import com.vaadin.shared.ui.ListingJsonConstants;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.util.ReflectTools;
 
 import elemental.json.JsonObject;
@@ -121,17 +127,6 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
                     MultiSelectionEvent.class);
 
     /**
-     * The item icon caption provider.
-     */
-    private ItemCaptionGenerator<T> itemCaptionGenerator = String::valueOf;
-
-    /**
-     * The item icon provider. It is up to the implementing class to support
-     * this or not.
-     */
-    private IconGenerator<T> itemIconGenerator = item -> null;
-
-    /**
      * The item enabled status provider. It is up to the implementing class to
      * support this or not.
      */
@@ -163,30 +158,15 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
                 SELECTION_CHANGE_METHOD);
     }
 
-    /**
-     * Gets the item caption generator that is used to produce the strings shown
-     * in the select for each item.
-     *
-     * @return the item caption generator used, not {@code null}
-     * @see #setItemCaptionGenerator(ItemCaptionGenerator)
-     */
+    @Override
     public ItemCaptionGenerator<T> getItemCaptionGenerator() {
-        return itemCaptionGenerator;
+        return super.getItemCaptionGenerator();
     }
 
-    /**
-     * Sets the item caption generator that is used to produce the strings shown
-     * in the select for each item. By default, {@link String#valueOf(Object)}
-     * is used.
-     *
-     * @param itemCaptionGenerator
-     *            the item caption generator to use, not {@code null}
-     */
+    @Override
     public void setItemCaptionGenerator(
             ItemCaptionGenerator<T> itemCaptionGenerator) {
-        Objects.requireNonNull(itemCaptionGenerator);
-        this.itemCaptionGenerator = itemCaptionGenerator;
-        getDataCommunicator().reset();
+        super.setItemCaptionGenerator(itemCaptionGenerator);
     }
 
     /**
@@ -252,40 +232,6 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
             HasValue.ValueChangeListener<Set<T>> listener) {
         return addSelectionListener(event -> listener.accept(
                 new ValueChangeEvent<>(this, event.isUserOriginated())));
-    }
-
-    /**
-     * Returns the item icon generator for this multiselect.
-     * <p>
-     * <em>Implementation note:</em> Override this method and
-     * {@link #setItemIconGenerator(IconGenerator)} as {@code public} and invoke
-     * {@code super} methods to support this feature in the multiselect
-     * component.
-     *
-     * @return the item icon generator, not {@code null}
-     * @see #setItemIconGenerator(IconGenerator)
-     */
-    protected IconGenerator<T> getItemIconGenerator() {
-        return itemIconGenerator;
-    }
-
-    /**
-     * Sets the item icon generator for this multiselect. The icon generator is
-     * queried for each item to optionally display an icon next to the item
-     * caption. If the generator returns null for an item, no icon is displayed.
-     * The default provider always returns null (no icons).
-     * <p>
-     * <em>Implementation note:</em> Override this method and
-     * {@link #getItemIconGenerator()} as {@code public} and invoke
-     * {@code super} methods to support this feature in the multiselect
-     * component.
-     *
-     * @param itemIconGenerator
-     *            the item icon generator to set, not {@code null}
-     */
-    protected void setItemIconGenerator(IconGenerator<T> itemIconGenerator) {
-        Objects.requireNonNull(itemIconGenerator);
-        this.itemIconGenerator = itemIconGenerator;
     }
 
     /**
@@ -459,6 +405,66 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
         }
 
         updateSelection(set -> set.add(item), userOriginated);
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> attributes = super.getCustomAttributes();
+        // "value" is not an attribute for the component. "selected" attribute
+        // is used in "option"'s tag to mark selection which implies value for
+        // multiselect component
+        attributes.add("value");
+        return attributes;
+    }
+
+    @Override
+    protected Element writeItem(Element design, T item, DesignContext context) {
+        Element element = super.writeItem(design, item, context);
+
+        if (isSelected(item)) {
+            element.attr("selected", "");
+        }
+
+        return element;
+    }
+
+    @Override
+    protected void readItems(Element design, DesignContext context) {
+        super.readItems(design, context);
+        Set<T> selected = new HashSet<>();
+        design.children().stream()
+                .forEach(child -> readItem(child, selected, context));
+        deselectAll();
+        selected.forEach(this::select);
+    }
+
+    /**
+     * Reads an Item from a design and inserts it into the data source.
+     * Hierarchical select components should override this method to recursively
+     * recursively read any child items as well.
+     *
+     * @param child
+     *            a child element representing the item
+     * @param selected
+     *            A set accumulating selected items. If the item that is read is
+     *            marked as selected, its item id should be added to this set.
+     * @param context
+     *            the DesignContext instance used in parsing
+     * @return the item id of the new item
+     *
+     * @throws DesignException
+     *             if the tag name of the {@code child} element is not
+     *             {@code option}.
+     */
+    protected T readItem(Element child, Set<T> selected,
+            DesignContext context) {
+        T item = readItem(child, context);
+
+        if (child.hasAttr("selected")) {
+            selected.add(item);
+        }
+
+        return item;
     }
 
     private void updateSelection(Consumer<Set<T>> handler,
