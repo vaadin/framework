@@ -36,6 +36,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.GridLayout.Area;
+import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI;
@@ -89,9 +90,37 @@ public class ComponentSizeValidator implements Serializable {
                 errors = validateComponentRelativeSizes(it.next(), errors,
                         parent);
             }
+        } else if (isForm(component)) {
+            HasComponents form = (HasComponents) component;
+            for (Iterator<Component> iterator = form.iterator(); iterator
+                    .hasNext();) {
+                Component child = iterator.next();
+                errors = validateComponentRelativeSizes(child, errors, parent);
+            }
         }
 
         return errors;
+    }
+
+    /**
+     * Comparability form component which is defined in the different jar.
+     * 
+     * TODO : Normally this logic shouldn't be here. But it means that the whole
+     * this class has wrong design and impementation and should be refactored.
+     */
+    private static boolean isForm(Component component) {
+        if (!(component instanceof HasComponents)) {
+            return false;
+        }
+        Class<?> clazz = component.getClass();
+        while (clazz != null) {
+            if (component.getClass().getName()
+                    .equals("com.vaadin.v7.ui.Form")) {
+                return true;
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return false;
     }
 
     private static void printServerError(String msg,
@@ -448,6 +477,12 @@ public class ComponentSizeValidator implements Serializable {
                     // Other components define row height
                     return true;
                 }
+            } else if (isForm(parent)) {
+                /*
+                 * If some other part of the form is not relative it determines
+                 * the component width
+                 */
+                return formHasNonRelativeWidthComponent(parent);
             }
 
             if (parent instanceof Panel || parent instanceof AbstractSplitPanel
@@ -475,6 +510,24 @@ public class ComponentSizeValidator implements Serializable {
             // Absolute height
             return true;
         }
+    }
+
+    /**
+     * Comparability form component which is defined in the different jar.
+     * 
+     * TODO : Normally this logic shouldn't be here. But it means that the whole
+     * this class has wrong design and impementation and should be refactored.
+     */
+    private static boolean formHasNonRelativeWidthComponent(Component form) {
+        HasComponents parent = (HasComponents) form;
+        for (Iterator<Component> iterator = parent.iterator(); iterator
+                .hasNext();) {
+            if (!hasRelativeWidth(iterator.next())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static boolean hasRelativeHeight(Component component) {

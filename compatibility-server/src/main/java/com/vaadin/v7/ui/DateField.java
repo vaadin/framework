@@ -18,6 +18,7 @@ package com.vaadin.v7.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -71,7 +72,7 @@ public class DateField extends AbstractField<Date> implements
 
     /**
      * Resolution identifier: seconds.
-     *
+     * 
      * @deprecated As of 7.0, use {@link Resolution#SECOND}
      */
     @Deprecated
@@ -600,6 +601,16 @@ public class DateField extends AbstractField<Date> implements
                         fireValueChange(false);
                     }
 
+                    /*
+                     * Because of our custom implementation of isValid(), that
+                     * also checks the parsingSucceeded flag, we must also
+                     * notify the form (if this is used in one) that the
+                     * validity of this field has changed.
+                     *
+                     * Normally fields validity doesn't change without value
+                     * change and form depends on this implementation detail.
+                     */
+                    notifyFormOfValidityChange();
                     markAsDirty();
                 }
             } else if (newDate != oldDate
@@ -691,6 +702,38 @@ public class DateField extends AbstractField<Date> implements
         }
 
         super.setValue(newValue, repaintIsNotNeeded);
+    }
+
+    /**
+     * Detects if this field is used in a Form (logically) and if so, notifies
+     * it (by repainting it) that the validity of this field might have changed.
+     */
+    private void notifyFormOfValidityChange() {
+        Component parenOfDateField = getParent();
+        boolean formFound = false;
+        while (parenOfDateField != null || formFound) {
+            if (parenOfDateField instanceof Form) {
+                Form f = (Form) parenOfDateField;
+                Collection<?> visibleItemProperties = f.getItemPropertyIds();
+                for (Object fieldId : visibleItemProperties) {
+                    Field<?> field = f.getField(fieldId);
+                    if (equals(field)) {
+                        /*
+                         * this datefield is logically in a form. Do the same
+                         * thing as form does in its value change listener that
+                         * it registers to all fields.
+                         */
+                        f.markAsDirty();
+                        formFound = true;
+                        break;
+                    }
+                }
+            }
+            if (formFound) {
+                break;
+            }
+            parenOfDateField = parenOfDateField.getParent();
+        }
     }
 
     @Override

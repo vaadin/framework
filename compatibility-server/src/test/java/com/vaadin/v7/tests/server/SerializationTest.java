@@ -17,6 +17,7 @@ import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.data.util.MethodProperty;
 import com.vaadin.v7.data.validator.RegexpValidator;
+import com.vaadin.v7.ui.Form;
 
 public class SerializationTest {
 
@@ -26,6 +27,19 @@ public class SerializationTest {
         validator.validate("aaa");
         RegexpValidator validator2 = serializeAndDeserialize(validator);
         validator2.validate("aaa");
+    }
+
+    @Test
+    public void testForm() throws Exception {
+        Form f = new Form();
+        String propertyId = "My property";
+        f.addItemProperty(propertyId,
+                new MethodProperty<>(new Data(), "dummyGetterAndSetter"));
+        f.replaceWithSelect(propertyId, new Object[] { "a", "b", null },
+                new String[] { "Item a", "ITem b", "Null item" });
+
+        serializeAndDeserialize(f);
+
     }
 
     @Test
@@ -43,22 +57,20 @@ public class SerializationTest {
 
     @Test
     public void testMethodPropertyGetter() throws Exception {
-        MethodProperty<?> mp = new MethodProperty<Object>(new Data(),
-                "dummyGetter");
+        MethodProperty<?> mp = new MethodProperty<>(new Data(), "dummyGetter");
         serializeAndDeserialize(mp);
     }
 
     @Test
     public void testMethodPropertyGetterAndSetter() throws Exception {
-        MethodProperty<?> mp = new MethodProperty<Object>(new Data(),
+        MethodProperty<?> mp = new MethodProperty<>(new Data(),
                 "dummyGetterAndSetter");
         serializeAndDeserialize(mp);
     }
 
     @Test
     public void testMethodPropertyInt() throws Exception {
-        MethodProperty<?> mp = new MethodProperty<Object>(new Data(),
-                "dummyInt");
+        MethodProperty<?> mp = new MethodProperty<>(new Data(), "dummyInt");
         serializeAndDeserialize(mp);
     }
 
