@@ -68,11 +68,20 @@ public abstract class AbstractGridRendererConnector<T>
      * @return the column id for the given column
      */
     protected String getColumnId(Column<?, JsonObject> column) {
+        return getGridConnector().getColumnId(column);
+    }
+
+    /**
+     * Gets the grid connector for this renderer connector.
+     * 
+     * @return the parent grid connector.
+     */
+    protected GridConnector getGridConnector() {
         final ServerConnector parent = getParent();
         if (parent instanceof ColumnConnector) {
             final ServerConnector parentGrid = parent.getParent();
             if (parentGrid instanceof GridConnector) {
-                return ((GridConnector) parentGrid).getColumnId(column);
+                return (GridConnector) parentGrid;
             }
         }
         throw new IllegalStateException(
