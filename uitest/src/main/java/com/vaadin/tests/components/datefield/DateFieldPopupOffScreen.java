@@ -5,8 +5,9 @@ import java.util.Locale;
 
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestCase;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.LegacyWindow;
 
@@ -29,7 +30,7 @@ public class DateFieldPopupOffScreen extends AbstractTestCase {
         GridLayout mainLayout = new GridLayout(3, 3);
         mainLayout.setSizeFull();
 
-        DateField df;
+        AbstractDateField df;
 
         df = createDateField();
         mainLayout.addComponent(df, 2, 0);
@@ -55,8 +56,8 @@ public class DateFieldPopupOffScreen extends AbstractTestCase {
         setMainWindow(mainWindow);
     }
 
-    private DateField createDateField() {
-        DateField df = new DateField();
+    private AbstractDateField createDateField() {
+        AbstractDateField df = new TestDateField();
         df.setLocale(new Locale("fi"));
         df.setResolution(Resolution.SECOND);
         df.setDescription(

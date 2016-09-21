@@ -14,7 +14,7 @@ import com.vaadin.ui.HasComponents.ComponentDetachListener;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.RichTextArea;
@@ -85,7 +85,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     private Command<T, ComponentSize> addPopupDateFieldCommand = new Command<T, ComponentSize>() {
         @Override
         public void execute(T c, ComponentSize size, Object data) {
-            PopupDateField tf = new PopupDateField();
+            DateField tf = new DateField();
             c.addComponent(tf);
             size.apply(tf);
         }

@@ -20,6 +20,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
+import com.vaadin.testbench.customelements.AbstractDateFieldElement;
 import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -31,7 +32,7 @@ public class DateFieldPopupClosingOnDetachTest extends MultiBrowserTest {
         openTestURL();
 
         // Open the DateField popup.
-        DateFieldElement df = $(DateFieldElement.class).first();
+        DateFieldElement df = $(AbstractDateFieldElement.class).first();
         df.findElement(By.tagName("button")).click();
 
         // Test UI will remove the DateField after 1 second.

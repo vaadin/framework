@@ -25,7 +25,8 @@ import java.util.Calendar;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.DateField;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
@@ -36,7 +37,7 @@ import com.vaadin.v7.ui.NativeSelect;
  * @since
  * @author Vaadin Ltd
  */
-public class PopupDateFieldValueChangeEvents extends AbstractTestUIWithLog {
+public class DateFieldValueChangeEvents extends AbstractTestUIWithLog {
 
     private int count = 0;
 
@@ -55,7 +56,8 @@ public class PopupDateFieldValueChangeEvents extends AbstractTestUIWithLog {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2010, 1, 1, 18, 19, 20);
 
-        final DateField df = new DateField(null, calendar.getTime());
+        final AbstractDateField df = new TestDateField(null,
+                calendar.getTime());
         df.setResolution(Resolution.SECOND);
         df.setImmediate(true);
         hl.addComponent(df);

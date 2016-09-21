@@ -5,9 +5,8 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.DateFieldElement;
+import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.InlineDateFieldElement;
-import com.vaadin.testbench.elements.PopupDateFieldElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -18,7 +17,7 @@ public class DateFormTest extends MultiBrowserTest {
         openTestURL();
         Assert.assertEquals("Unexpected DateField value,", "1/20/84",
                 getDateFieldValue());
-        Assert.assertEquals("Unexpected PopupDateField value,", "1/20/84",
+        Assert.assertEquals("Unexpected PopupDateField value,", "1/21/84",
                 getPopupDateFieldValue());
         WebElement day20 = getInlineDateFieldCalendarPanel()
                 .findElement(By.vaadin("#day20"));
@@ -36,7 +35,7 @@ public class DateFormTest extends MultiBrowserTest {
     }
 
     protected String getPopupDateFieldValue() {
-        return $(PopupDateFieldElement.class).first().getValue();
+        return $(DateFieldElement.class).get(1).getValue();
     }
 
     protected WebElement getInlineDateFieldCalendarPanel() {

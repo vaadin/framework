@@ -35,7 +35,7 @@ import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.TextField;
 
@@ -301,8 +301,8 @@ public class BinderBookOfVaadinTest {
     @Test
     public void crossFieldValidation_validateUsingBinder() {
         Binder<Trip> binder = new Binder<>();
-        PopupDateField departing = new PopupDateField("Departing");
-        PopupDateField returning = new PopupDateField("Returning");
+        DateField departing = new DateField("Departing");
+        DateField returning = new DateField("Returning");
 
         Binding<Trip, Date, Date> returnBinding = binder.forField(returning)
                 .withValidator(
@@ -356,8 +356,8 @@ public class BinderBookOfVaadinTest {
     @Test
     public void crossFieldValidation_validateUsingBinding() {
         Binder<Trip> binder = new Binder<>();
-        PopupDateField departing = new PopupDateField("Departing");
-        PopupDateField returning = new PopupDateField("Returning");
+        DateField departing = new DateField("Departing");
+        DateField returning = new DateField("Returning");
 
         Binding<Trip, Date, Date> returnBinding = binder.forField(returning)
                 .withValidator(

@@ -6,8 +6,8 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.AbstractDateFieldElement;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateFieldReadOnlyTest extends MultiBrowserTest {
@@ -36,7 +36,7 @@ public class DateFieldReadOnlyTest extends MultiBrowserTest {
     private void openPopup() {
         // waiting for openPopup() in TB4 beta1:
         // http://dev.vaadin.com/ticket/13766
-        $(DateFieldElement.class).first().findElement(By.tagName("button"))
+        $(AbstractDateFieldElement.class).first().findElement(By.tagName("button"))
                 .click();
     }
 

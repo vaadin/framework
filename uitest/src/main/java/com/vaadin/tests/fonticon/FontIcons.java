@@ -31,7 +31,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
@@ -50,6 +49,7 @@ import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.ListSelect;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.OptionGroup;
+import com.vaadin.v7.ui.PopupDateField;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.Align;
 import com.vaadin.v7.ui.Table.RowHeaderMode;
@@ -110,9 +110,10 @@ public class FontIcons extends AbstractTestUI {
         layout.addComponent(gl);
 
         // Basic components, caption icon only
-        Class<?>[] components = { Button.class, CheckBox.class, DateField.class,
-                NativeButton.class, Link.class, Label.class, Panel.class,
-                Slider.class, TextArea.class, TextField.class, Upload.class };
+        Class<?>[] components = { Button.class, CheckBox.class,
+                PopupDateField.class, NativeButton.class, Link.class,
+                Label.class, Panel.class, Slider.class, TextArea.class,
+                TextField.class, Upload.class };
         for (Class<?> clazz : components) {
             Component c;
             try {

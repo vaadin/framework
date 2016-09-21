@@ -17,7 +17,7 @@ package com.vaadin.tests.declarative;
 
 import com.vaadin.annotations.DesignRoot;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.v7.data.fieldgroup.PropertyId;
@@ -34,9 +34,9 @@ public class PotusForm extends VerticalLayout {
     @PropertyId("party")
     public ComboBox party;
     @PropertyId("tookOffice")
-    public PopupDateField tookOffice;
+    public DateField tookOffice;
     @PropertyId("leftOffice")
-    public PopupDateField leftOffice;
+    public DateField leftOffice;
 
     public Button save;
     public Button revert;

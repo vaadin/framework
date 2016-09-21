@@ -13,25 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui;
+package com.vaadin.tests.components;
 
 import java.util.Date;
 
+import com.vaadin.ui.AbstractDateField;
+
 /**
- * A date entry component, which displays the actual date selector inline.
+ * @author Vaadin Ltd
  *
- * @see AbstractDateField
- * @see DateField
- * @author Vaadin Ltd.
- * @since 8.0
  */
-public class InlineDateField extends AbstractDateField {
+public class TestDateField extends AbstractDateField {
 
     /**
      * Constructs an empty <code>DateField</code> with no caption.
      */
-    public InlineDateField() {
-        super();
+    public TestDateField() {
+    }
+
+    /**
+     * Constructs an empty <code>DateField</code> with caption.
+     *
+     * @param caption
+     *            the caption of the datefield.
+     */
+    public TestDateField(String caption) {
+        setCaption(caption);
     }
 
     /**
@@ -43,18 +50,8 @@ public class InlineDateField extends AbstractDateField {
      * @param value
      *            the Date value.
      */
-    public InlineDateField(String caption, Date value) {
-        super(caption, value);
+    public TestDateField(String caption, Date value) {
+        setValue(value);
+        setCaption(caption);
     }
-
-    /**
-     * Constructs an empty <code>DateField</code> with caption.
-     *
-     * @param caption
-     *            the caption of the datefield.
-     */
-    public InlineDateField(String caption) {
-        super(caption);
-    }
-
 }

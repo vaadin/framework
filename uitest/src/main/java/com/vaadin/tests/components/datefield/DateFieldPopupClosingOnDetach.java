@@ -22,7 +22,8 @@ import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.DateField;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 
 public class DateFieldPopupClosingOnDetach extends AbstractTestUI {
 
@@ -31,7 +32,7 @@ public class DateFieldPopupClosingOnDetach extends AbstractTestUI {
         // Use polling to notice the removal of DateField.
         getUI().setPollInterval(500);
 
-        final DateField df = new DateField();
+        final AbstractDateField df = new TestDateField();
         getLayout().addLayoutClickListener(new LayoutClickListener() {
 
             @Override

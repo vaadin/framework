@@ -19,7 +19,7 @@ import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.DateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.InlineDateField;
 
 public class DateRangeWithSqlDate extends AbstractTestUI {
@@ -34,7 +34,7 @@ public class DateRangeWithSqlDate extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        DateField df = new InlineDateField();
+        AbstractDateField df = new InlineDateField();
         df.setLocale(Locale.US);
         df.setRangeStart(startDate);
         df.setRangeEnd(endDate);

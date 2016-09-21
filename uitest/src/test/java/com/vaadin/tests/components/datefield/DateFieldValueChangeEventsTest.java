@@ -23,12 +23,12 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.DateFieldElement;
+import com.vaadin.testbench.customelements.AbstractDateFieldElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class PopupDateFieldValueChangeEventsTest extends MultiBrowserTest {
+public class DateFieldValueChangeEventsTest extends MultiBrowserTest {
 
     @Test
     public void tb2test() throws Exception {
@@ -53,7 +53,7 @@ public class PopupDateFieldValueChangeEventsTest extends MultiBrowserTest {
     }
 
     public WebElement getPopUpButton() {
-        DateFieldElement datefield = $(DateFieldElement.class).first();
+        AbstractDateFieldElement datefield = $(AbstractDateFieldElement.class).first();
         return datefield.findElement((By.className("v-datefield-button")));
     }
 

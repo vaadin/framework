@@ -6,7 +6,7 @@ import java.util.Locale;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.DateField;
 
 public class PopupDateFieldLocaleTest extends AbstractTestUI {
 
@@ -21,7 +21,7 @@ public class PopupDateFieldLocaleTest extends AbstractTestUI {
         cal.set(Calendar.SECOND, 1);
         cal.set(Calendar.MILLISECOND, 1);
 
-        final PopupDateField pdf = new PopupDateField();
+        final DateField pdf = new DateField();
         pdf.setLocale(Locale.ENGLISH);
         pdf.setValue(cal.getTime());
         pdf.setImmediate(true);

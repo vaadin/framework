@@ -8,10 +8,10 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.DateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.InlineDateField;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.DateField;
 
 @SuppressWarnings("serial")
 public class DateFieldExtendedRange extends TestBase {
@@ -26,7 +26,7 @@ public class DateFieldExtendedRange extends TestBase {
         layout.setWidth("600px");
         layout.setSpacing(true);
 
-        final DateField[] fields = new DateField[6];
+        final AbstractDateField[] fields = new AbstractDateField[6];
 
         Locale fi = new Locale("fi", "FI");
         Locale us = new Locale("en", "US");
@@ -43,7 +43,7 @@ public class DateFieldExtendedRange extends TestBase {
                 "Finnish locale with week numbers");
         fields[5].setShowISOWeekNumbers(true);
 
-        for (DateField f : fields) {
+        for (AbstractDateField f : fields) {
             layout.addComponent(f);
         }
 
@@ -53,7 +53,7 @@ public class DateFieldExtendedRange extends TestBase {
             @Override
             public void buttonClick(ClickEvent event) {
                 date.set(2010, 1, 16);
-                for (DateField f : fields) {
+                for (AbstractDateField f : fields) {
                     f.setValue(date.getTime());
                 }
             }
@@ -70,9 +70,9 @@ public class DateFieldExtendedRange extends TestBase {
         return 6718;
     }
 
-    private DateField makeDateField(boolean isPopup, Locale locale,
+    private AbstractDateField makeDateField(boolean isPopup, Locale locale,
             String caption) {
-        DateField df = isPopup ? new PopupDateField() : new InlineDateField();
+        AbstractDateField df = isPopup ? new DateField() : new InlineDateField();
         df.setResolution(Resolution.DAY);
         df.setValue(date.getTime());
         df.setLocale(locale);

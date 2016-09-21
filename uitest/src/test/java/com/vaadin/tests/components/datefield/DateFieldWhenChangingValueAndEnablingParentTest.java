@@ -19,9 +19,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
+import com.vaadin.testbench.customelements.AbstractDateFieldElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.DateFieldElement;
-import com.vaadin.testbench.elements.PopupDateFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class DateFieldWhenChangingValueAndEnablingParentTest
@@ -32,24 +32,21 @@ public class DateFieldWhenChangingValueAndEnablingParentTest
         openTestURL();
         $(CheckBoxElement.class).first().click();
 
-        assertState($(DateFieldElement.class).id("DATEFIELD_ENABLED"), true,
+        assertState($(AbstractDateFieldElement.class).id("DATEFIELD_ENABLED"), true,
                 true);
-        assertState($(DateFieldElement.class).id("DATEFIELD_DISABLED"), false,
-                false);
+        assertState($(AbstractDateFieldElement.class).id("DATEFIELD_DISABLED"),
+                false, false);
 
-        assertState(
-                $(PopupDateFieldElement.class).id("DATEFIELD_ENABLED_ENABLED"),
+        assertState($(DateFieldElement.class).id("DATEFIELD_ENABLED_ENABLED"),
                 true, true);
-        assertState(
-                $(PopupDateFieldElement.class).id("DATEFIELD_ENABLED_DISABLED"),
+        assertState($(DateFieldElement.class).id("DATEFIELD_ENABLED_DISABLED"),
                 true, false);
 
         // disabling widget should always disable input
-        assertState(
-                $(PopupDateFieldElement.class).id("DATEFIELD_DISABLED_ENABLED"),
+        assertState($(DateFieldElement.class).id("DATEFIELD_DISABLED_ENABLED"),
                 false, false);
-        assertState($(PopupDateFieldElement.class)
-                .id("DATEFIELD_DISABLED_DISABLED"), false, false);
+        assertState($(DateFieldElement.class).id("DATEFIELD_DISABLED_DISABLED"),
+                false, false);
 
     }
 

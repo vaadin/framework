@@ -10,8 +10,9 @@ import java.util.TimeZone;
 
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.TestDateField;
 import com.vaadin.tests.util.Log;
-import com.vaadin.ui.DateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.shared.ui.combobox.FilteringMode;
@@ -22,7 +23,7 @@ public class DateFieldTimezone extends TestBase {
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
     private static final Locale EN = Locale.ENGLISH;
     private final Log log = new Log(5);
-    private final DateField dateField = new DateField();
+    private final AbstractDateField dateField = new TestDateField();
     private static final String nullValue = "";
 
     @Override

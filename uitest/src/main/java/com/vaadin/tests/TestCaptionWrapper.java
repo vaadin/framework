@@ -21,18 +21,20 @@ import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Upload;
@@ -41,7 +43,6 @@ import com.vaadin.ui.Window;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.OptionGroup;
 import com.vaadin.v7.ui.ProgressIndicator;
-import com.vaadin.ui.RichTextArea;
 import com.vaadin.v7.ui.Select;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextField;
@@ -119,7 +120,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         test(layout, button);
         button.addListener(this);
 
-        final DateField df = new DateField("DateField " + count++);
+        final AbstractDateField df = new TestDateField("DateField " + count++);
         test(layout, df);
 
         final CheckBox cb = new CheckBox("Checkbox " + count++);

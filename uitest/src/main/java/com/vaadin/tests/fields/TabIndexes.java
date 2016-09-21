@@ -13,7 +13,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.InlineDateField;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Slider;
 import com.vaadin.v7.ui.ComboBox;
@@ -97,7 +97,7 @@ public class TabIndexes extends AbstractTestUIWithLog {
         fields.add(new NativeSelect());
         fields.add(new ListSelect());
         fields.add(new TextField());
-        fields.add(new PopupDateField());
+        fields.add(new DateField());
         fields.add(new InlineDateField());
         OptionGroup og = new OptionGroup();
         og.addItem("Item 1");

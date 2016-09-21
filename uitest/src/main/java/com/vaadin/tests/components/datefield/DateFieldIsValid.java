@@ -5,7 +5,8 @@ import java.util.Date;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.DateField;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 
 public class DateFieldIsValid extends AbstractTestUIWithLog {
 
@@ -25,7 +26,7 @@ public class DateFieldIsValid extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final DateField dateField = new DateField("Insert Date: ");
+        final AbstractDateField dateField = new TestDateField("Insert Date: ");
         dateField.setImmediate(true);
         dateField.setDateFormat(pattern);
 

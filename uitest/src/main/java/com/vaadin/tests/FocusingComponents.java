@@ -1,9 +1,9 @@
 package com.vaadin.tests;
 
+import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.v7.ui.AbstractSelect;
 import com.vaadin.v7.ui.ComboBox;
@@ -31,7 +31,7 @@ public class FocusingComponents extends CustomComponent {
         addFocusableTest(f);
         addFocusableTest(new ComboBox());
         addFocusableTest(new TextField());
-        addFocusableTest(new DateField());
+        addFocusableTest(new TestDateField());
         addFocusableTest(new NativeSelect());
         addFocusableTest(new ListSelect());
         addFocusableTest(new OptionGroup());

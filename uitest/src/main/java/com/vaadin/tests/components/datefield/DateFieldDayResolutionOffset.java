@@ -8,7 +8,8 @@ import java.util.TimeZone;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.DateField;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Label;
 
 public class DateFieldDayResolutionOffset extends AbstractTestUI {
@@ -22,7 +23,7 @@ public class DateFieldDayResolutionOffset extends AbstractTestUI {
 
         final TimeZone timezone = TimeZone.getTimeZone("GMT");
         final SimpleDateFormat dateformat = getDateFormat(timezone);
-        final DateField dateField = getDateField(timezone, dateformat);
+        final AbstractDateField dateField = getDateField(timezone, dateformat);
 
         addComponent(dateValue);
         addComponent(dateField);
@@ -31,9 +32,9 @@ public class DateFieldDayResolutionOffset extends AbstractTestUI {
                 .setValue(dateformat.format(dateField.getValue())));
     }
 
-    private DateField getDateField(TimeZone timezone,
+    private AbstractDateField getDateField(TimeZone timezone,
             SimpleDateFormat dateformat) {
-        final DateField dateField = new DateField();
+        final AbstractDateField dateField = new TestDateField();
         try {
             Date initialDate = dateformat.parse(initialDateString);
             dateField.setResolution(Resolution.DAY);

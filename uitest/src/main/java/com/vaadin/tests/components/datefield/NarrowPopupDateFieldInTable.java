@@ -2,7 +2,7 @@ package com.vaadin.tests.components.datefield;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.DateField;
 import com.vaadin.v7.ui.Table;
 
 public class NarrowPopupDateFieldInTable extends TestBase {
@@ -11,7 +11,7 @@ public class NarrowPopupDateFieldInTable extends TestBase {
 
     @Override
     public void setup() {
-        PopupDateField df = new PopupDateField();
+        DateField df = new DateField();
         df.setWidth("100%");
 
         Table t = new Table();

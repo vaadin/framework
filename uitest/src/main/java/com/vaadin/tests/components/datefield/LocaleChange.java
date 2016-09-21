@@ -23,10 +23,11 @@ import java.util.Locale;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.DateField;
 
 public class LocaleChange extends AbstractTestUI {
 
@@ -46,7 +47,7 @@ public class LocaleChange extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final DateField df = new DateField();
+        final AbstractDateField df = new TestDateField();
         df.setLocale(locale24hClock);
         df.setResolution(Resolution.SECOND);
         df.setValue(dateValue);

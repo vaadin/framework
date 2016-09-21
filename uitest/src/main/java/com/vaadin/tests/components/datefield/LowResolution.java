@@ -5,14 +5,14 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.InlineDateField;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.DateField;
 
 @SuppressWarnings("serial")
 public class LowResolution extends TestBase {
 
     @Override
     protected void setup() {
-        final PopupDateField dateField = new PopupDateField();
+        final DateField dateField = new DateField();
         dateField.setValue(new java.util.Date());
         dateField.setResolution(Resolution.MONTH);
         dateField.addValueChangeListener(event -> getMainWindow()
@@ -20,7 +20,7 @@ public class LowResolution extends TestBase {
         dateField.setImmediate(true);
         getLayout().addComponent(dateField);
 
-        final PopupDateField dateField3 = new PopupDateField();
+        final DateField dateField3 = new DateField();
         // dateField.setValue(new java.util.Date());
         dateField3.setResolution(Resolution.YEAR);
         dateField3.addValueChangeListener(event -> getMainWindow()

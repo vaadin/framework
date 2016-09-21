@@ -4,9 +4,10 @@ import java.util.Date;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.VerticalLayout;
 
 public class DateFieldWhenChangingValueAndEnablingParent
@@ -21,12 +22,12 @@ public class DateFieldWhenChangingValueAndEnablingParent
         main.setMargin(true);
         setContent(main);
 
-        final DateField df1 = createDateField(true);
-        final DateField df2 = createDateField(false);
-        final PopupDateField pdf1 = createPopupDateField(true, true);
-        final PopupDateField pdf2 = createPopupDateField(true, false);
-        final PopupDateField pdf3 = createPopupDateField(false, true);
-        final PopupDateField pdf4 = createPopupDateField(false, false);
+        final AbstractDateField df1 = createDateField(true);
+        final AbstractDateField df2 = createDateField(false);
+        final DateField pdf1 = createPopupDateField(true, true);
+        final DateField pdf2 = createPopupDateField(true, false);
+        final DateField pdf3 = createPopupDateField(false, true);
+        final DateField pdf4 = createPopupDateField(false, false);
 
         sub.addComponent(df1);
         sub.addComponent(df2);
@@ -49,17 +50,17 @@ public class DateFieldWhenChangingValueAndEnablingParent
         });
     }
 
-    private DateField createDateField(boolean enabled) {
-        DateField df = new DateField(
+    private AbstractDateField createDateField(boolean enabled) {
+        AbstractDateField df = new TestDateField(
                 "DateField, " + (enabled ? "enabled" : "disabled"));
         df.setEnabled(enabled);
         df.setId("DATEFIELD_" + (enabled ? "ENABLED" : "DISABLED"));
         return df;
     }
 
-    private PopupDateField createPopupDateField(boolean enabled,
+    private DateField createPopupDateField(boolean enabled,
             boolean textInputEnabled) {
-        PopupDateField df = new PopupDateField("PopupDateField, "
+        DateField df = new DateField("PopupDateField, "
                 + (enabled ? "enabled" : "disabled") + ", text input "
                 + (textInputEnabled ? "enabled" : "disabled"));
         df.setEnabled(enabled);

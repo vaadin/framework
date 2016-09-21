@@ -22,7 +22,7 @@ import java.util.Locale;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.DateField;
 
 public class DateFieldKeyboardInput extends AbstractTestUI {
 
@@ -30,7 +30,7 @@ public class DateFieldKeyboardInput extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         Calendar c = new GregorianCalendar(Locale.ENGLISH);
         c.set(2014, 0, 15);
-        final PopupDateField dateField = new PopupDateField("Select date",
+        final DateField dateField = new DateField("Select date",
                 c.getTime());
         dateField.setDateFormat("dd.MM.yyyy");
         addComponent(dateField);

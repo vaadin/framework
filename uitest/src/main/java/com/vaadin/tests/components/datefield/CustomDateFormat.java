@@ -5,7 +5,8 @@ import java.util.Locale;
 
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.DateField;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 
 public class CustomDateFormat extends TestBase {
 
@@ -16,7 +17,7 @@ public class CustomDateFormat extends TestBase {
         Calendar cal = Calendar.getInstance();
         cal.set(2010, 0, 1);
 
-        DateField df = new DateField();
+        AbstractDateField df = new TestDateField();
         df.setResolution(Resolution.DAY);
         df.setLocale(locale);
         df.setWidth("300px");

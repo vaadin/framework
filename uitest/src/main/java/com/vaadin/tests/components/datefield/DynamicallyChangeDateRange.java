@@ -7,9 +7,9 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.DateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.InlineDateField;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -25,7 +25,7 @@ public class DynamicallyChangeDateRange extends AbstractTestUI {
         layout.setMargin(true);
         setContent(layout);
 
-        final PopupDateField df = new PopupDateField();
+        final DateField df = new DateField();
         df.setValue(new Date(2012 - 1900, 5 - 1, 12));
         setRange(df, 5);
         layout.addComponent(df);
@@ -62,7 +62,7 @@ public class DynamicallyChangeDateRange extends AbstractTestUI {
      * @param df
      * @param i
      */
-    private void setRange(DateField df, int days) {
+    private void setRange(AbstractDateField df, int days) {
         df.setRangeStart(
                 new Date(df.getValue().getTime() - days * 24 * 60 * 60 * 1000));
         df.setRangeEnd(

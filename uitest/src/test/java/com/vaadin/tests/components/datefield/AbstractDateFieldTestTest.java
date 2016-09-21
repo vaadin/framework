@@ -25,7 +25,7 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class DateFieldTestTest extends MultiBrowserTest {
+public class AbstractDateFieldTestTest extends MultiBrowserTest {
 
     @Test
     public void testMakingRequired() throws InterruptedException {

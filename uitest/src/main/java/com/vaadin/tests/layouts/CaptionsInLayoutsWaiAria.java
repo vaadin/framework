@@ -7,6 +7,7 @@ import com.vaadin.data.HasRequired;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -15,7 +16,6 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -200,7 +200,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
         components.add(new TextArea("Default TextArea."));
         // components.add(new RichTextArea("Default RichtTextArea"));
         components.add(new PasswordField("Default Password"));
-        components.add(new DateField("Default DateField"));
+        components.add(new TestDateField("Default DateField"));
 
         // PopupDateField popupDateField = new
         // PopupDateField("Default DateField");

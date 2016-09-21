@@ -7,8 +7,9 @@ import com.vaadin.data.HasValue.ValueChange;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.DateField;
 
 public class LenientMode extends TestBase implements ValueChangeListener<Date> {
 
@@ -30,14 +31,14 @@ public class LenientMode extends TestBase implements ValueChangeListener<Date> {
         @SuppressWarnings("deprecation")
         Date d = new Date(2009 - 1900, 12 - 1, 31, 23, 59, 59);
 
-        DateField df = new DateField("Lenient ");
+        AbstractDateField df = new TestDateField("Lenient ");
         df.setLocale(new Locale("fi"));
         df.setResolution(Resolution.DAY);
         df.setLenient(true);
         df.setImmediate(true);
         df.setValue(d);
 
-        DateField df2 = new DateField("Normal ");
+        AbstractDateField df2 = new TestDateField("Normal ");
         df2.setLocale(new Locale("fi"));
         df2.setResolution(Resolution.DAY);
         // df2.setLenient(false);
@@ -51,13 +52,13 @@ public class LenientMode extends TestBase implements ValueChangeListener<Date> {
         df.addValueChangeListener(this);
         df2.addValueChangeListener(this);
 
-        df = new DateField("Lenient with time");
+        df = new TestDateField("Lenient with time");
         df.setLocale(new Locale("fi"));
         df.setLenient(true);
         df.setImmediate(true);
         df.setValue(d);
 
-        df2 = new DateField("Normal with time");
+        df2 = new TestDateField("Normal with time");
         df2.setLocale(new Locale("fi"));
         // df2.setLenient(false);
         df2.setValue(null);

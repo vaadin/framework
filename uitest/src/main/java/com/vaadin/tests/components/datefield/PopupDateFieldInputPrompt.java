@@ -17,7 +17,7 @@ package com.vaadin.tests.components.datefield;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 
 /**
@@ -29,7 +29,7 @@ import com.vaadin.ui.TextField;
 public class PopupDateFieldInputPrompt extends AbstractTestUI {
 
     private TextField text = new TextField("TextField");
-    private PopupDateField dateField = new PopupDateField();
+    private DateField dateField = new DateField();
 
     @Override
     protected void setup(VaadinRequest request) {

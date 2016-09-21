@@ -17,7 +17,8 @@ package com.vaadin.tests.components.datefield;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.DateField;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 
 public class DateFieldClose extends AbstractTestUI {
 
@@ -25,7 +26,7 @@ public class DateFieldClose extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final DateField df = new DateField();
+        final AbstractDateField df = new TestDateField();
         df.setId(DATEFIELD_ID);
         addComponent(df);
     }

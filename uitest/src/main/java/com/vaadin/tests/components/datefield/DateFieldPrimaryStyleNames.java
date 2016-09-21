@@ -1,16 +1,17 @@
 package com.vaadin.tests.components.datefield;
 
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.InlineDateField;
 
 public class DateFieldPrimaryStyleNames extends TestBase {
 
     @Override
     protected void setup() {
-        final DateField df = new DateField();
+        final AbstractDateField df = new TestDateField();
         df.setPrimaryStyleName("my-datefield");
         addComponent(df);
 

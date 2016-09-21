@@ -9,8 +9,9 @@ import java.util.Set;
 
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.data.Item;
@@ -141,7 +142,7 @@ public class CustomDateFormats extends TestBase {
 
         Label serversideValueLabel = new Label();
 
-        DateField df = new DateField();
+        AbstractDateField df = new TestDateField();
         df.setResolution(Resolution.DAY);
         df.setLocale(locale);
         df.setWidth("300px");
@@ -159,7 +160,7 @@ public class CustomDateFormats extends TestBase {
         df.setData(new Data(serversideValueLabel, pattern));
         df.setValue(cal.getTime());
         df.addValueChangeListener(event -> updateServerSideLabel(
-                (DateField) event.getConnector()));
+                (AbstractDateField) event.getConnector()));
 
         Label patternLabel = new Label(pattern);
         patternLabel.setWidth(null);
@@ -181,7 +182,7 @@ public class CustomDateFormats extends TestBase {
         updateServerSideLabel(df);
     }
 
-    private void updateServerSideLabel(DateField df) {
+    private void updateServerSideLabel(AbstractDateField df) {
         Data data = (Data) df.getData();
         String pattern = data.pattern;
         Locale locale = df.getLocale();

@@ -4,12 +4,12 @@ import java.util.Date;
 
 import com.vaadin.data.Result;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.DateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.v7.data.util.converter.Converter;
 
 public class DateFieldUnparsableDate extends TestBase {
 
-    public class MyDateField extends DateField {
+    public class MyDateField extends AbstractDateField {
         Date oldDate = null;
 
         public MyDateField(String caption) {
@@ -24,7 +24,7 @@ public class DateFieldUnparsableDate extends TestBase {
         }
     }
 
-    public class MyDateField2 extends DateField {
+    public class MyDateField2 extends AbstractDateField {
         public MyDateField2(String caption) {
             super(caption);
         }
@@ -36,7 +36,7 @@ public class DateFieldUnparsableDate extends TestBase {
         }
     }
 
-    public class MyDateField3 extends DateField {
+    public class MyDateField3 extends AbstractDateField {
         public MyDateField3(String caption) {
             super(caption);
         }
@@ -48,7 +48,7 @@ public class DateFieldUnparsableDate extends TestBase {
         }
     }
 
-    public class MyDateField4 extends DateField {
+    public class MyDateField4 extends AbstractDateField {
         public MyDateField4(String caption) {
             super(caption);
         }

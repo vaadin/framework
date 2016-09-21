@@ -8,8 +8,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.AbstractDateFieldElement;
 import com.vaadin.testbench.customelements.ComboBoxElement;
-import com.vaadin.testbench.customelements.DateFieldElement;
 import com.vaadin.testbench.customelements.FixedNotificationElement;
 import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.testbench.customelements.WindowElement;
@@ -187,13 +187,13 @@ public abstract class ThemeTest extends MultiBrowserTest {
 
     private void testDates() throws IOException {
         compareScreen("dates");
-        $(DateFieldElement.class).id("datefield0").openPopup();
+        $(AbstractDateFieldElement.class).id("datefield0").openPopup();
         compareScreen("dates-first-popup");
-        $(DateFieldElement.class).id("datefield1").openPopup();
+        $(AbstractDateFieldElement.class).id("datefield1").openPopup();
         compareScreen("dates-second-popup");
-        $(DateFieldElement.class).id("datefield2").openPopup();
+        $(AbstractDateFieldElement.class).id("datefield2").openPopup();
         compareScreen("dates-third-popup");
-        $(DateFieldElement.class).id("datefield3").openPopup();
+        $(AbstractDateFieldElement.class).id("datefield3").openPopup();
         compareScreen("dates-fourth-popup");
     }
 }

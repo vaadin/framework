@@ -31,9 +31,9 @@ import com.vaadin.client.ui.VPopupCalendar;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.datefield.PopupDateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.ui.DateField;
+import com.vaadin.ui.AbstractDateField;
 
-@Connect(DateField.class)
+@Connect(AbstractDateField.class)
 public class DateFieldConnector extends TextualDateConnector {
 
     /*

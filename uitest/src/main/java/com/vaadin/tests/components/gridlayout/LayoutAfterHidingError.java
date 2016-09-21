@@ -19,10 +19,11 @@ package com.vaadin.tests.components.gridlayout;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Panel;
 
@@ -38,7 +39,7 @@ public class LayoutAfterHidingError extends AbstractTestUI {
         gl.setWidth("100%");
         panel.setContent(gl);
 
-        final DateField df = new DateField();
+        final AbstractDateField df = new TestDateField();
         df.setWidth("100%");
         gl.addComponent(df);
 

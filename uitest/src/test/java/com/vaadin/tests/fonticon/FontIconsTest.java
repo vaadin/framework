@@ -30,7 +30,7 @@ public class FontIconsTest extends MultiBrowserTest {
     @Test
     public void checkScreenshot() throws IOException {
         openTestURL();
-        compareScreen("all");
+        compareScreen("allFontIcons");
     }
 
     @Test

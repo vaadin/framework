@@ -21,10 +21,10 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.DateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.DateField;
 
 public class DateFieldChangeResolution extends AbstractTestUI {
 
@@ -34,7 +34,7 @@ public class DateFieldChangeResolution extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final DateField dateField = new PopupDateField("Enter date");
+        final AbstractDateField dateField = new DateField("Enter date");
         dateField.setResolution(Resolution.YEAR);
         dateField.setId(DATEFIELD_ID);
         dateField.setImmediate(true);

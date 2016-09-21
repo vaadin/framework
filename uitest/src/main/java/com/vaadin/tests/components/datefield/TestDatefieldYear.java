@@ -5,7 +5,8 @@ import java.util.Locale;
 
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.DateField;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 
 public class TestDatefieldYear extends TestBase {
 
@@ -22,7 +23,8 @@ public class TestDatefieldYear extends TestBase {
     @Override
     protected void setup() {
         @SuppressWarnings("deprecation")
-        DateField df = new DateField("Year", new Date(2009 - 1900, 4 - 1, 1));
+        AbstractDateField df = new TestDateField("Year",
+                new Date(2009 - 1900, 4 - 1, 1));
         df.setLocale(new Locale("en", "US"));
         df.setResolution(Resolution.YEAR);
         df.setResolution(Resolution.MONTH);

@@ -11,12 +11,13 @@ import org.junit.Test;
 
 public class DateFieldTestCase {
 
-    private DateField dateField;
+    private AbstractDateField dateField;
     private Date date;
 
     @Before
     public void setup() {
-        dateField = new DateField();
+        dateField = new AbstractDateField() {
+        };
         date = new Date();
     }
 

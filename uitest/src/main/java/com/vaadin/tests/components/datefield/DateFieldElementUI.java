@@ -2,14 +2,14 @@ package com.vaadin.tests.components.datefield;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.PopupDateField;
 
-public class PopupDateFieldConnector extends AbstractTestUI {
+public class DateFieldElementUI extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(new PopupDateField());
         addComponent(new DateField());
+        addComponent(new TestDateField());
     }
 
     @Override
@@ -19,6 +19,6 @@ public class PopupDateFieldConnector extends AbstractTestUI {
 
     @Override
     protected String getTestDescription() {
-        return "PopupDateFieldElement should be accessible using TB4 PopupDateFieldElement.";
+        return "DateFieldElement should be accessible using TB4 DateFieldElement.";
     }
 }

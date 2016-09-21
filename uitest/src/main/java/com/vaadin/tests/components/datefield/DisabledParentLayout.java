@@ -17,8 +17,9 @@ package com.vaadin.tests.components.datefield;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -35,7 +36,7 @@ public class DisabledParentLayout extends AbstractTestUI {
         content.setMargin(true);
 
         final VerticalLayout pane = new VerticalLayout();
-        DateField dateField = new DateField();
+        AbstractDateField dateField = new TestDateField();
         // If the field is immediate, the UI behaves differently (the value is
         // updated and an error is indicated earlier instead of showing the date
         // selector on the first click as the test expects. Keeping as

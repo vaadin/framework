@@ -20,7 +20,7 @@ import java.util.Date;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.DateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.InlineDateField;
 
 public class DisabledInlineDateField extends AbstractTestUI {
@@ -34,7 +34,7 @@ public class DisabledInlineDateField extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        DateField df = new InlineDateField("Disabled");
+        AbstractDateField df = new InlineDateField("Disabled");
         df.setValue(testDate);
         df.setEnabled(false);
         addComponent(df);

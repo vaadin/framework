@@ -5,7 +5,8 @@ import java.util.Calendar;
 
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.DateField;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Label;
 
@@ -20,7 +21,7 @@ public class DateFieldMinResolution extends TestBase {
         Calendar cal = Calendar.getInstance();
         cal.set(2019, 1, 1, 1, 1);
 
-        DateField df = new DateField("foo");
+        AbstractDateField df = new TestDateField("foo");
         df.setResolution(Resolution.MINUTE);
         df.setDateFormat(dformat.toPattern());
         df.setValue(cal.getTime());

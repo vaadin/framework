@@ -16,10 +16,10 @@
 package com.vaadin.tests.layouts.layouttester;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.v7.ui.ComboBox;
@@ -52,7 +52,7 @@ public class BaseRegError extends BaseLayoutTestUI {
         l1.addComponent(createLabelsFields(TextField.class, true, ""));
 
         l2.addComponent(createLabelsFields(ComboBox.class, true, ""));
-        l2.addComponent(createLabelsFields(DateField.class, true, ""));
+        l2.addComponent(createLabelsFields(TestDateField.class, true, ""));
         l2.addComponent(createLabelsFields(NativeSelect.class, true, ""));
         l2.addComponent(createLabelsFields(CheckBox.class, true, ""));
 

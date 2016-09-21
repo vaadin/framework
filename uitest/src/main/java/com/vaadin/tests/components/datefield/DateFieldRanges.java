@@ -8,10 +8,11 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.InlineDateField;
@@ -30,17 +31,17 @@ public class DateFieldRanges extends AbstractTestUI {
 
     private Label label = new Label();
     private NativeSelect resoSelect = new NativeSelect("Resolution");
-    private DateField fromRange = new DateField("Range start");
-    private DateField toRange = new DateField("Range end");
-    private DateField valueDF = new DateField("Value");
+    private AbstractDateField fromRange = new TestDateField("Range start");
+    private AbstractDateField toRange = new TestDateField("Range end");
+    private AbstractDateField valueDF = new TestDateField("Value");
     private CheckBox immediateCB = new CheckBox("Immediate");
     private Button recreate = new Button("Recreate static datefields");
     private Button clearRangeButton = new Button("Clear range");
 
     private GridLayout currentStaticContainer;
 
-    private DateField inlineDynamicDateField;
-    private DateField dynamicDateField;
+    private AbstractDateField inlineDynamicDateField;
+    private AbstractDateField dynamicDateField;
 
     private Calendar createCalendar() {
         Calendar c = Calendar.getInstance();
@@ -183,11 +184,11 @@ public class DateFieldRanges extends AbstractTestUI {
         endCal.add(Calendar.DATE, 30);
         GridLayout gl = new GridLayout(2, 2);
         gl.setSpacing(true);
-        DateField df = createDateField(startCal.getTime(), endCal.getTime(),
-                null, Resolution.DAY, false);
+        AbstractDateField df = createDateField(startCal.getTime(),
+                endCal.getTime(), null, Resolution.DAY, false);
         gl.addComponent(df);
-        DateField inline = createDateField(startCal.getTime(), endCal.getTime(),
-                null, Resolution.DAY, true);
+        AbstractDateField inline = createDateField(startCal.getTime(),
+                endCal.getTime(), null, Resolution.DAY, true);
         gl.addComponent(inline);
         inline.setId("staticInline");
         VerticalLayout vl = new VerticalLayout();
@@ -195,18 +196,18 @@ public class DateFieldRanges extends AbstractTestUI {
         return gl;
     }
 
-    private DateField createDateField(Date rangeStart, Date rangeEnd,
+    private AbstractDateField createDateField(Date rangeStart, Date rangeEnd,
             Date value, Resolution resolution, boolean inline) {
 
-        DateField df = null;
+        AbstractDateField df = null;
 
         if (inline) {
             df = new InlineDateField();
         } else {
-            df = new DateField();
+            df = new TestDateField();
         }
 
-        final DateField gg = df;
+        final AbstractDateField gg = df;
         updateValuesForDateField(df);
 
         df.addValueChangeListener(event -> {
@@ -223,7 +224,7 @@ public class DateFieldRanges extends AbstractTestUI {
 
     }
 
-    private void updateValuesForDateField(DateField df) {
+    private void updateValuesForDateField(AbstractDateField df) {
         Date fromVal = fromRange.getValue();
         Date toVal = toRange.getValue();
         Date value = valueDF.getValue();
