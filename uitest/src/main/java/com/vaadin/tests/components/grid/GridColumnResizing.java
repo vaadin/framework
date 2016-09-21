@@ -2,6 +2,7 @@ package com.vaadin.tests.components.grid;
 
 import java.util.Arrays;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.data.bean.Person;
@@ -11,6 +12,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.renderers.NumberRenderer;
 
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridColumnResizing extends AbstractTestUI {
 
     @Override

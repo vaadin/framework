@@ -99,6 +99,9 @@ public class GridState extends AbstractSingleSelectState {
         primaryStyleName = "v-grid";
     }
 
+    /** The state of the header section. */
+    public SectionState header = new SectionState();
+
     /**
      * Column order in grid.
      */

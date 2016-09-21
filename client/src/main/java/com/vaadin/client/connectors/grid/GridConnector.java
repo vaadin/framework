@@ -34,6 +34,7 @@ import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SimpleManagedLayout;
@@ -49,6 +50,7 @@ import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.selection.SelectionModel;
@@ -59,6 +61,8 @@ import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.shared.ui.grid.SectionState;
+import com.vaadin.shared.ui.grid.SectionState.RowState;
 
 import elemental.json.JsonObject;
 
@@ -102,6 +106,8 @@ public class GridConnector
 
     /* Map to keep track of all added columns */
     private Map<Column<?, JsonObject>, String> columnToIdMap = new HashMap<>();
+    private Map<String, Column<?, JsonObject>> idToColumn = new HashMap<>();
+
     /* Child component list for HasComponentsConnector */
     private List<ComponentConnector> childComponents;
     private SpaceSelectHandler<JsonObject> spaceSelectHandler;
@@ -109,14 +115,25 @@ public class GridConnector
     private ItemClickHandler itemClickHandler = new ItemClickHandler();
 
     /**
-     * Gets the string identifier of a {@link Column} in this grid.
+     * Gets the string identifier of the given column in this grid.
      *
      * @param column
-     *            the column for which the identifier is to be retrieved for
-     * @return the string identifying the given column in this grid
+     *            the column whose id to get
+     * @return the string id of the column
      */
-    public String getColumnId(Grid.Column<?, ?> column) {
+    public String getColumnId(Column<?, ?> column) {
         return columnToIdMap.get(column);
+    }
+
+    /**
+     * Gets the column corresponding to the given string identifier.
+     *
+     * @param columnId
+     *            the id of the column to get
+     * @return the column with the given id
+     */
+    public Column<?, ?> getColumn(String columnId) {
+        return idToColumn.get(columnId);
     }
 
     @Override
@@ -202,6 +219,28 @@ public class GridConnector
         layout();
     }
 
+    @OnStateChange("header")
+    void updateHeader() {
+        final SectionState state = getState().header;
+        final Grid<JsonObject> grid = getWidget();
+
+        while (grid.getHeaderRowCount() > 0) {
+            grid.removeHeaderRow(0);
+        }
+
+        for (RowState rowState : state.rows) {
+            HeaderRow row = grid.appendHeaderRow();
+            rowState.cells.forEach((columnId, cellState) -> {
+                row.getCell(getColumn(columnId)).setText(cellState.text);
+            });
+        }
+
+        if (grid.getHeaderRowCount() > 0) {
+            // TODO Default header handling to be added in a later patch
+            grid.setDefaultHeaderRow(grid.getHeaderRow(0));
+        }
+    }
+
     @Override
     public void setDataSource(DataSource<JsonObject> dataSource) {
         super.setDataSource(dataSource);
@@ -228,6 +267,7 @@ public class GridConnector
                 .containsValue(id) : "Column with given id already exists.";
         getWidget().addColumn(column);
         columnToIdMap.put(column, id);
+        idToColumn.put(id, column);
     }
 
     /**
@@ -241,7 +281,8 @@ public class GridConnector
         assert columnToIdMap
                 .containsKey(column) : "Given Column does not exist.";
         getWidget().removeColumn(column);
-        columnToIdMap.remove(column);
+        String id = columnToIdMap.remove(column);
+        idToColumn.remove(id);
     }
 
     @Override

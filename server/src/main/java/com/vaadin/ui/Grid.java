@@ -49,6 +49,8 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.shared.ui.grid.SectionState;
+import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.ui.renderers.Renderer;
 import com.vaadin.ui.renderers.TextRenderer;
@@ -512,7 +514,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
             if (rowKey != null) {
                 item = getDataCommunicator().getKeyMapper().get(rowKey);
             }
-            fireEvent(new GridContextClickEvent<T>(Grid.this, details, section,
+            fireEvent(new GridContextClickEvent<>(Grid.this, details, section,
                     rowIndex, item, getColumn(columnId)));
         }
 
@@ -822,6 +824,15 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
          */
         private void extend(Grid<T> grid) {
             super.extend(grid);
+        }
+
+        /**
+         * Returns the identifier used with this Column in communication.
+         *
+         * @return the identifier string
+         */
+        public String getId() {
+            return getState(false).id;
         }
 
         /**
@@ -1408,6 +1419,53 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         }
     }
 
+    /**
+     * A header row in a Grid.
+     */
+    public interface HeaderRow extends Serializable {
+
+        /**
+         * Returns the cell on this row corresponding to the given column id.
+         * 
+         * @param columnId
+         *            the id of the column whose header cell to get
+         * @return the header cell
+         */
+        public HeaderCell getCell(String columnId);
+
+        /**
+         * Returns the cell on this row corresponding to the given column.
+         * 
+         * @param column
+         *            the column whose header cell to get
+         * @return the header cell
+         */
+        public default HeaderCell getCell(Column<?, ?> column) {
+            return getCell(column.getId());
+        }
+    }
+
+    /**
+     * An individual cell on a Grid header row.
+     */
+    public interface HeaderCell extends Serializable {
+
+        /**
+         * Returns the textual caption of this cell.
+         * 
+         * @return the header caption
+         */
+        public String getText();
+
+        /**
+         * Sets the textual caption of this cell.
+         * 
+         * @param text
+         *            the header caption to set
+         */
+        public void setText(String text);
+    }
+
     private KeyMapper<Column<T, ?>> columnKeys = new KeyMapper<>();
     private Set<Column<T, ?>> columnSet = new LinkedHashSet<>();
     private List<SortOrder<Column<T, ?>>> sortOrder = new ArrayList<>();
@@ -1416,15 +1474,26 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     private StyleGenerator<T> styleGenerator = item -> null;
     private DescriptionGenerator<T> descriptionGenerator;
 
+    private Header header = new Header() {
+        @Override
+        protected SectionState getState(boolean markAsDirty) {
+            return Grid.this.getState(markAsDirty).header;
+        }
+    };
+
     /**
      * Constructor for the {@link Grid} component.
      */
     public Grid() {
         setSelectionModel(new SingleSelection());
         registerRpc(new GridServerRpcImpl());
+
+        appendHeaderRow();
+
         detailsManager = new DetailsManager<>();
         addExtension(detailsManager);
         addDataGenerator(detailsManager);
+
         addDataGenerator((item, json) -> {
             String styleName = styleGenerator.apply(item);
             if (styleName != null && !styleName.isEmpty()) {
@@ -1455,8 +1524,6 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      *            the value provider
      * @param renderer
      *            the column value class
-     * @param <T>
-     *            the type of this grid
      * @param <V>
      *            the column value type
      *
@@ -1467,12 +1534,22 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     public <V> Column<T, V> addColumn(String caption,
             Function<T, ? extends V> valueProvider,
             AbstractRenderer<? super T, V> renderer) {
-        Column<T, V> column = new Column<>(caption, valueProvider, renderer);
+        final Column<T, V> column = new Column<>(caption, valueProvider,
+                renderer);
+        final String columnId = columnKeys.key(column);
 
         column.extend(this);
-        column.setId(columnKeys.key(column));
+        column.setId(columnId);
         columnSet.add(column);
         addDataGenerator(column);
+
+        getHeader().addColumn(columnId);
+
+        if (getHeaderRowCount() > 0) {
+            // TODO Default header API to be added in a later patch
+            HeaderRow defaultHeader = getHeaderRow(0);
+            defaultHeader.getCell(columnId).setText(caption);
+        }
 
         return column;
     }
@@ -1760,6 +1837,130 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      */
     public DescriptionGenerator<T> getDescriptionGenerator() {
         return descriptionGenerator;
+    }
+
+    //
+    // HEADER AND FOOTER
+    //
+
+    /**
+     * Returns the header row at the given index.
+     *
+     * @param rowIndex
+     *            the index of the row, where the topmost row has index zero
+     * @return the header row at the index
+     * @throws IndexOutOfBoundsException
+     *             if {@code rowIndex < 0 || rowIndex >= getHeaderRowCount()}
+     */
+    public HeaderRow getHeaderRow(int rowIndex) {
+        return getHeader().getRow(rowIndex);
+    }
+
+    /**
+     * Gets the number of rows in the header section.
+     *
+     * @return the number of header rows
+     */
+    public int getHeaderRowCount() {
+        return header.getRowCount();
+    }
+
+    /**
+     * Inserts a new row at the given position to the header section. Shifts the
+     * row currently at that position and any subsequent rows down (adds one to
+     * their indices). Inserting at {@link #getHeaderRowCount()} appends the row
+     * at the bottom of the header.
+     *
+     * @param index
+     *            the index at which to insert the row, where the topmost row
+     *            has index zero
+     * @return the inserted header row
+     * 
+     * @throws IndexOutOfBoundsException
+     *             if {@code rowIndex < 0 || rowIndex > getHeaderRowCount()}
+     * 
+     * @see #appendHeaderRow()
+     * @see #prependHeaderRow()
+     * @see #removeHeaderRow(HeaderRow)
+     * @see #removeHeaderRow(int)
+     */
+    public HeaderRow addHeaderRowAt(int index) {
+        return getHeader().addRowAt(index);
+    }
+
+    /**
+     * Adds a new row at the bottom of the header section.
+     *
+     * @return the appended header row
+     * 
+     * @see #prependHeaderRow()
+     * @see #addHeaderRowAt(int)
+     * @see #removeHeaderRow(HeaderRow)
+     * @see #removeHeaderRow(int)
+     */
+    public HeaderRow appendHeaderRow() {
+        return addHeaderRowAt(getHeaderRowCount());
+    }
+
+    /**
+     * Adds a new row at the top of the header section.
+     *
+     * @return the prepended header row
+     * 
+     * @see #appendHeaderRow()
+     * @see #addHeaderRowAt(int)
+     * @see #removeHeaderRow(HeaderRow)
+     * @see #removeHeaderRow(int)
+     */
+    public HeaderRow prependHeaderRow() {
+        return addHeaderRowAt(0);
+    }
+
+    /**
+     * Removes the given row from the header section.
+     *
+     * @param row
+     *            the header row to be removed, not null
+     *
+     * @throws IllegalArgumentException
+     *             if the header does not contain the row
+     * 
+     * @see #removeHeaderRow(int)
+     * @see #addHeaderRowAt(int)
+     * @see #appendHeaderRow()
+     * @see #prependHeaderRow()
+     */
+    public void removeHeaderRow(HeaderRow row) {
+        getHeader().removeRow(row);
+    }
+
+    /**
+     * Removes the row at the given position from the header section.
+     *
+     * @param rowIndex
+     *            the index of the row to remove, where the topmost row has
+     *            index zero
+     *
+     * @throws IndexOutOfBoundsException
+     *             if {@code rowIndex < 0 || rowIndex >= getHeaderRowCount()}
+     * 
+     * @see #removeHeaderRow(HeaderRow)
+     * @see #addHeaderRowAt(int)
+     * @see #appendHeaderRow()
+     * @see #prependHeaderRow()
+     */
+    public void removeHeaderRow(int rowIndex) {
+        getHeader().removeRow(rowIndex);
+    }
+
+    /**
+     * Returns the header section of this grid. The default header contains a
+     * single row displaying the column captions.
+     *
+     * @return the header section
+     */
+    protected Header getHeader() {
+        return header;
     }
 
     /**

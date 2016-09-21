@@ -33,6 +33,8 @@ import com.vaadin.ui.renderers.ProgressBarRenderer;
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridBasics extends AbstractTestUIWithLog {
 
+    public static final String[] COLUMN_CAPTIONS  = { "Column 0", "Column 1", "Column 2", "Row Number", "Date", "HTML String", "Big Random", "Small Random" };
+
     public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4 = "Row numbers for 3/4";
     public static final String ROW_STYLE_GENERATOR_NONE = "None";
     public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS = "Row numbers";
@@ -128,21 +130,21 @@ public class GridBasics extends AbstractTestUIWithLog {
         grid = new Grid<>();
         grid.setItems(data);
 
-        grid.addColumn("Column 0",
+        grid.addColumn(COLUMN_CAPTIONS[0],
                 dataObj -> "(" + dataObj.getRowNumber() + ", 0)");
-        grid.addColumn("Column 1",
+        grid.addColumn(COLUMN_CAPTIONS[1],
                 dataObj -> "(" + dataObj.getRowNumber() + ", 1)");
-        grid.addColumn("Column 2",
+        grid.addColumn(COLUMN_CAPTIONS[2],
                 dataObj -> "(" + dataObj.getRowNumber() + ", 2)");
 
-        grid.addColumn("Row Number", DataObject::getRowNumber,
+        grid.addColumn(COLUMN_CAPTIONS[3], DataObject::getRowNumber,
                 new NumberRenderer());
-        grid.addColumn("Date", DataObject::getDate, new DateRenderer());
-        grid.addColumn("HTML String", DataObject::getHtmlString,
+        grid.addColumn(COLUMN_CAPTIONS[4], DataObject::getDate, new DateRenderer());
+        grid.addColumn(COLUMN_CAPTIONS[5], DataObject::getHtmlString,
                 new HtmlRenderer());
-        grid.addColumn("Big Random", DataObject::getBigRandom,
+        grid.addColumn(COLUMN_CAPTIONS[6], DataObject::getBigRandom,
                 new NumberRenderer());
-        grid.addColumn("Small Random", data -> data.getSmallRandom() / 5d,
+        grid.addColumn(COLUMN_CAPTIONS[7], data -> data.getSmallRandom() / 5d,
                 new ProgressBarRenderer());
 
         grid.addSelectionListener(e -> log("Selected: " + e.getValue()));
@@ -159,6 +161,7 @@ public class GridBasics extends AbstractTestUIWithLog {
         createSizeMenu(componentMenu.addItem("Size", null));
         createDetailsMenu(componentMenu.addItem("Details", null));
         createBodyMenu(componentMenu.addItem("Body rows", null));
+        createHeaderMenu(componentMenu.addItem("Header", null));
         return menu;
     }
 
@@ -290,6 +293,18 @@ public class GridBasics extends AbstractTestUIWithLog {
             } else {
                 grid.select(item);
             }
+        });
+    }
+
+    private void createHeaderMenu(MenuItem headerMenu) {
+        headerMenu.addItem("Append header row", menuItem -> {
+            grid.appendHeaderRow();
+        });
+        headerMenu.addItem("Prepend header row", menuItem -> {
+            grid.prependHeaderRow();
+        });
+        headerMenu.addItem("Remove first header row", menuItem -> {
+            grid.removeHeaderRow(0);
         });
     }
 
