@@ -81,7 +81,7 @@ Please refer to <<getting-started/getting-started-environment#getting-started.en
 
 You can get an overview of this step with the following video, which first shows how to install Eclipse, then how to create a Vaadin application using Maven, and finally how to run it:
 
-video::jhgasF5euxg[youtube, width="640", height="400"]
+video::o93ofXBIkf8[youtube, width="640", height="400"]
 
 As the starting point for the application, we use a Maven archetype called `vaadin-archetype-application`.
 Archetypes are project stubs that have some example code and a basic Maven build script.
