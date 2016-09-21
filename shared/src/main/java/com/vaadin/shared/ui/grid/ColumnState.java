@@ -33,5 +33,29 @@ public class ColumnState extends SharedState {
     /** Whether the column can be hidden by the user. */
     public boolean hidable = false;
 
+    /**
+     * Column width in pixels. Default column width is
+     * {@value GridConstants#DEFAULT_COLUMN_WIDTH_PX}.
+     */
+    public double width = GridConstants.DEFAULT_COLUMN_WIDTH_PX;
+
+    /** How much of the remaining space this column will reserve. */
+    public int expandRatio = GridConstants.DEFAULT_EXPAND_RATIO;
+
+    /**
+     * The maximum expansion width of this column. -1 for "no maximum". If
+     * maxWidth is less than the calculated width, maxWidth is ignored.
+     */
+    public double maxWidth = GridConstants.DEFAULT_MAX_WIDTH;
+
+    /**
+     * The minimum expansion width of this column. -1 for "no minimum". If
+     * minWidth is less than the calculated width, minWidth will win.
+     */
+    public double minWidth = GridConstants.DEFAULT_MIN_WIDTH;
+
+    /** Whether this column is resizable by the user. */
+    public boolean resizable = true;
+
     public Connector renderer;
 }

@@ -95,6 +95,31 @@ public class ColumnConnector extends AbstractExtensionConnector {
         column.setHidable(getState().hidable);
     }
 
+    @OnStateChange("resizable")
+    void updateResizable() {
+        column.setResizable(getState().resizable);
+    }
+
+    @OnStateChange("width")
+    void updateWidth() {
+        column.setWidth(getState().width);
+    }
+
+    @OnStateChange("minWidth")
+    void updateMinWidth() {
+        column.setMinimumWidth(getState().minWidth);
+    }
+
+    @OnStateChange("maxWidth")
+    void updateMaxWidth() {
+        column.setMaximumWidth(getState().maxWidth);
+    }
+
+    @OnStateChange("expandRatio")
+    void updateExpandRatio() {
+        column.setExpandRatio(getState().expandRatio);
+    }
+
     @Override
     public void onUnregister() {
         super.onUnregister();

@@ -70,6 +70,11 @@ import elemental.json.JsonValue;
 public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
 
     @Deprecated
+    private static final Method COLUMN_RESIZE_METHOD = ReflectTools.findMethod(
+            ColumnResizeListener.class, "columnResize",
+            ColumnResizeEvent.class);
+
+    @Deprecated
     private static final Method ITEM_CLICK_METHOD = ReflectTools
             .findMethod(ItemClickListener.class, "accept", ItemClick.class);
 
@@ -78,6 +83,69 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
             .findMethod(ColumnVisibilityChangeListener.class,
                     "columnVisibilityChanged",
                     ColumnVisibilityChangeEvent.class);
+
+    /**
+     * An event listener for column resize events in the Grid.
+     *
+     * @since 7.6
+     */
+    public interface ColumnResizeListener extends Serializable {
+
+        /**
+         * Called when the columns of the grid have been resized.
+         *
+         * @param event
+         *            An event providing more information
+         */
+        void columnResize(ColumnResizeEvent event);
+    }
+
+    /**
+     * An event that is fired when a column is resized, either programmatically
+     * or by the user.
+     *
+     * @since 7.6
+     */
+    public static class ColumnResizeEvent extends Component.Event {
+
+        private final Column<?, ?> column;
+        private final boolean userOriginated;
+
+        /**
+         *
+         * @param source
+         *            the grid where the event originated from
+         * @param userOriginated
+         *            <code>true</code> if event is a result of user
+         *            interaction, <code>false</code> if from API call
+         */
+        public ColumnResizeEvent(Grid<?> source, Column<?, ?> column,
+                boolean userOriginated) {
+            super(source);
+            this.column = column;
+            this.userOriginated = userOriginated;
+        }
+
+        /**
+         * Returns the column that was resized.
+         *
+         * @return the resized column.
+         */
+        public Column<?, ?> getColumn() {
+            return column;
+        }
+
+        /**
+         * Returns <code>true</code> if the column resize was done by the user,
+         * <code>false</code> if not and it was triggered by server side code.
+         *
+         * @return <code>true</code> if event is a result of user interaction
+         */
+        public boolean isUserOriginated() {
+            return userOriginated;
+        }
+
+    }
 
     /**
      * An event fired when an item in the Grid has been clicked.
@@ -466,7 +534,12 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
 
         @Override
         public void columnResized(String id, double pixels) {
-            // TODO Auto-generated method stub
+            final Column<T, ?> column = getColumn(id);
+            if (column != null && column.isResizable()) {
+                column.getState().width = pixels;
+                fireColumnResizeEvent(column, true);
+                markAsDirty();
+            }
         }
     }
 
@@ -943,6 +1016,242 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         }
 
         /**
+         * Sets the ratio with which the column expands.
+         * <p>
+         * By default, all columns expand equally (treated as if all of them had
+         * an expand ratio of 1). Once at least one column gets a defined expand
+         * ratio, the implicit expand ratio is removed, and only the defined
+         * expand ratios are taken into account.
+         * <p>
+         * If a column has a defined width ({@link #setWidth(double)}), it
+         * overrides this method's effects.
+         * <p>
+         * <em>Example:</em> A grid with three columns, with expand ratios 0, 1
+         * and 2, respectively. The column with a <strong>ratio of 0 is exactly
+         * as wide as its contents requires</strong>. The column with a ratio of
+         * 1 is as wide as it needs, <strong>plus a third of any excess
+         * space</strong>, because we have 3 parts total, and this column
+         * reserves only one of those. The column with a ratio of 2, is as wide
+         * as it needs to be, <strong>plus two thirds</strong> of the excess
+         * width.
+         *
+         * @param expandRatio
+         *            the expand ratio of this column. {@code 0} to not have it
+         *            expand at all. A negative number to clear the expand
+         *            value.
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         * @see #setWidth(double)
+         */
+        public Column<T, V> setExpandRatio(int expandRatio)
+                throws IllegalStateException {
+            checkColumnIsAttached();
+            if (expandRatio != getExpandRatio()) {
+                getState().expandRatio = expandRatio;
+                getParent().markAsDirty();
+            }
+            return this;
+        }
+
+        /**
+         * Returns the column's expand ratio.
+         *
+         * @return the column's expand ratio
+         * @see #setExpandRatio(int)
+         */
+        public int getExpandRatio() {
+            return getState(false).expandRatio;
+        }
+
+        /**
+         * Clears the expand ratio for this column.
+         * <p>
+         * Equal to calling {@link #setExpandRatio(int) setExpandRatio(-1)}
+         *
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         */
+        public Column<T, V> clearExpandRatio() throws IllegalStateException {
+            return setExpandRatio(-1);
+        }
+
+        /**
+         * Returns the width (in pixels). By default a column is 100px wide.
+         *
+         * @return the width in pixels of the column
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         */
+        public double getWidth() throws IllegalStateException {
+            checkColumnIsAttached();
+            return getState(false).width;
+        }
+
+        /**
+         * Sets the width (in pixels).
+         * <p>
+         * This overrides any configuration set by any of
+         * {@link #setExpandRatio(int)}, {@link #setMinimumWidth(double)} or
+         * {@link #setMaximumWidth(double)}.
+         *
+         * @param pixelWidth
+         *            the new pixel width of the column
+         * @return the column itself
+         *
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         * @throws IllegalArgumentException
+         *             thrown if pixel width is less than zero
+         */
+        public Column<T, V> setWidth(double pixelWidth)
+                throws IllegalStateException, IllegalArgumentException {
+            checkColumnIsAttached();
+            if (pixelWidth < 0) {
+                throw new IllegalArgumentException(
+                        "Pixel width should be greated than 0 (in " + toString()
+                                + ")");
+            }
+            if (pixelWidth != getWidth()) {
+                getState().width = pixelWidth;
+                getParent().markAsDirty();
+                getParent().fireColumnResizeEvent(this, false);
+            }
+            return this;
+        }
+
+        /**
+         * Returns whether this column has an undefined width.
+         *
+         * @since 7.6
+         * @return whether the width is undefined
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         */
+        public boolean isWidthUndefined() {
+            checkColumnIsAttached();
+            return getState(false).width < 0;
+        }
+
+        /**
+         * Marks the column width as undefined. An undefined width means the
+         * grid is free to resize the column based on the cell contents and
+         * available space in the grid.
+         *
+         * @return the column itself
+         */
+        public Column<T, V> setWidthUndefined() {
+            checkColumnIsAttached();
+            if (!isWidthUndefined()) {
+                getState().width = -1;
+                getParent().markAsDirty();
+                getParent().fireColumnResizeEvent(this, false);
+            }
+            return this;
+        }
+
+        /**
+         * Sets the minimum width for this column.
+         * <p>
+         * This defines the minimum guaranteed pixel width of the column
+         * <em>when it is set to expand</em>.
+         *
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         * @see #setExpandRatio(int)
+         */
+        public Column<T, V> setMinimumWidth(double pixels)
+                throws IllegalStateException {
+            checkColumnIsAttached();
+
+            final double maxwidth = getMaximumWidth();
+            if (pixels >= 0 && pixels > maxwidth && maxwidth >= 0) {
+                throw new IllegalArgumentException("New minimum width ("
+                        + pixels + ") was greater than maximum width ("
+                        + maxwidth + ")");
+            }
+            getState().minWidth = pixels;
+            getParent().markAsDirty();
+            return this;
+        }
+
+        /**
+         * Return the minimum width for this column.
+         *
+         * @return the minimum width for this column
+         * @see #setMinimumWidth(double)
+         */
+        public double getMinimumWidth() {
+            return getState(false).minWidth;
+        }
+
+        /**
+         * Sets the maximum width for this column.
+         * <p>
+         * This defines the maximum allowed pixel width of the column <em>when
+         * it is set to expand</em>.
+         *
+         * @param pixels
+         *            the maximum width
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         * @see #setExpandRatio(int)
+         */
+        public Column<T, V> setMaximumWidth(double pixels) {
+            checkColumnIsAttached();
+
+            final double minwidth = getMinimumWidth();
+            if (pixels >= 0 && pixels < minwidth && minwidth >= 0) {
+                throw new IllegalArgumentException("New maximum width ("
+                        + pixels + ") was less than minimum width (" + minwidth
+                        + ")");
+            }
+
+            getState().maxWidth = pixels;
+            getParent().markAsDirty();
+            return this;
+        }
+
+        /**
+         * Returns the maximum width for this column.
+         *
+         * @return the maximum width for this column
+         * @see #setMaximumWidth(double)
+         */
+        public double getMaximumWidth() {
+            return getState(false).maxWidth;
+        }
+
+        /**
+         * Sets whether this column can be resized by the user.
+         *
+         * @since 7.6
+         * @param resizable
+         *            {@code true} if this column should be resizable,
+         *            {@code false} otherwise
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         */
+        public Column<T, V> setResizable(boolean resizable) {
+            checkColumnIsAttached();
+            if (resizable != isResizable()) {
+                getState().resizable = resizable;
+                getParent().markAsDirty();
+            }
+            return this;
+        }
+
+        /**
+         * Gets the caption of the hiding toggle for this column.
+         *
+         * @since 7.5.0
+         * @see #setHidingToggleCaption(String)
+         * @return the caption for the hiding toggle for this column
+         */
+        public String getHidingToggleCaption() {
+            return getState(false).hidingToggleCaption;
+        }
+
+        /**
          * Sets the caption of the hiding toggle for this column. Shown in the
          * toggle for this column in the grid's sidebar when the column is
          * {@link #isHidable() hidable}.
@@ -963,17 +1272,6 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
                 getState().hidingToggleCaption = hidingToggleCaption;
             }
             return this;
-        }
-
-        /**
-         * Gets the caption of the hiding toggle for this column.
-         *
-         * @since 7.5.0
-         * @see #setHidingToggleCaption(String)
-         * @return the caption for the hiding toggle for this column
-         */
-        public String getHidingToggleCaption() {
-            return getState(false).hidingToggleCaption;
         }
 
         /**
@@ -1042,8 +1340,24 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         }
 
         /**
-         * Checks whether this column is attached and throws an
-         * {@link IllegalStateException} if it is not.
+         * Returns whether this column can be resized by the user. Default is
+         * {@code true}.
+         * <p>
+         * <em>Note:</em> the column can be programmatically resized using
+         * {@link #setWidth(double)} and {@link #setWidthUndefined()} regardless
+         * of the returned value.
+         *
+         * @since 7.6
+         * @return {@code true} if this column is resizable, {@code false}
+         *         otherwise
+         */
+        public boolean isResizable() {
+            return getState(false).resizable;
+        }
+
+        /**
+         * Checks if column is attached and throws an
+         * {@link IllegalStateException} if it is not
          *
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
@@ -1449,6 +1763,20 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     }
 
     /**
+     * Registers a new column resize listener.
+     *
+     * @param listener
+     *            the listener to register, not null
+     * @return a registration for the listener
+     */
+    public Registration addColumnResizeListener(ColumnResizeListener listener) {
+        Objects.requireNonNull(listener, "listener cannot be null");
+        addListener(ColumnResizeEvent.class, listener, COLUMN_RESIZE_METHOD);
+        return () -> removeListener(ColumnResizeEvent.class, listener,
+                COLUMN_RESIZE_METHOD);
+    }
+
+    /**
      * Adds an item click listener. The listener is called when an item of this
      * {@code Grid} is clicked.
      *
@@ -1502,5 +1830,10 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
             c.setParent(null);
             markAsDirty();
         }
+    }
+
+    private void fireColumnResizeEvent(Column<?, ?> column,
+            boolean userOriginated) {
+        fireEvent(new ColumnResizeEvent(this, column, userOriginated));
     }
 }
