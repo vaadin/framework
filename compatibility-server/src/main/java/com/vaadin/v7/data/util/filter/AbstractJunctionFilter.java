@@ -29,6 +29,7 @@ import com.vaadin.v7.data.Container.Filter;
  *
  * @since 6.6
  */
+@Deprecated
 public abstract class AbstractJunctionFilter implements Filter {
 
     protected final Collection<Filter> filters;

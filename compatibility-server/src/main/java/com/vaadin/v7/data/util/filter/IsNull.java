@@ -26,6 +26,7 @@ import com.vaadin.v7.data.Property;
  *
  * @since 6.6
  */
+@Deprecated
 public final class IsNull implements Filter {
 
     private final Object propertyId;

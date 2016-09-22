@@ -35,6 +35,7 @@ import com.vaadin.server.VaadinSession;
  * @author Vaadin Ltd
  * @since 7.0
  */
+@Deprecated
 public class DefaultConverterFactory implements ConverterFactory {
 
     private final static Logger log = Logger
@@ -57,7 +58,7 @@ public class DefaultConverterFactory implements ConverterFactory {
         if (reverseConverter != null) {
             log.finest(getClass().getName() + " created a reverse "
                     + reverseConverter.getClass());
-            return new ReverseConverter<PRESENTATION, MODEL>(reverseConverter);
+            return new ReverseConverter<>(reverseConverter);
         }
 
         log.finest(getClass().getName() + " could not find a converter for "

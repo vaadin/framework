@@ -29,6 +29,7 @@ import com.vaadin.v7.ui.components.calendar.event.EditableCalendarEvent;
  * @author Vaadin Ltd.
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class BasicEventMoveHandler implements EventMoveHandler {
 
     /*

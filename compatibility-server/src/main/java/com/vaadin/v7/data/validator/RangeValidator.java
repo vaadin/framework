@@ -35,6 +35,7 @@ package com.vaadin.v7.data.validator;
  * @author Vaadin Ltd.
  * @since 7.0
  */
+@Deprecated
 public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
 
     private T minValue = null;

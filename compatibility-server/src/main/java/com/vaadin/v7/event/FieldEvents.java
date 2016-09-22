@@ -29,6 +29,7 @@ import com.vaadin.v7.ui.TextField;
 /**
  * Interface that serves as a wrapper for {@link Field} related events.
  */
+@Deprecated
 public interface FieldEvents {
 
     /**
@@ -56,6 +57,7 @@ public interface FieldEvents {
      * @see TextField#setTextChangeEventMode(com.vaadin.ui.TextField.TextChangeEventMode)
      * @since 6.5
      */
+    @Deprecated
     public static abstract class TextChangeEvent extends Component.Event {
 
         public TextChangeEvent(Component source) {
@@ -79,6 +81,7 @@ public interface FieldEvents {
      *
      * @since 6.5
      */
+    @Deprecated
     public interface TextChangeListener extends ConnectorEventListener {
 
         public static String EVENT_ID = "ie";
@@ -99,6 +102,7 @@ public interface FieldEvents {
      * {@link TextChangeEvent}s. An example a {@link TextField} supports
      * {@link TextChangeListener}s.
      */
+    @Deprecated
     public interface TextChangeNotifier extends Serializable {
         public void addTextChangeListener(TextChangeListener listener);
 

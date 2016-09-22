@@ -56,6 +56,7 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
  * @since 3.0
  */
 
+@Deprecated
 @SuppressWarnings("serial")
 // item type is really IndexedContainerItem, but using Item not to show it in
 // public API
@@ -70,23 +71,23 @@ public class IndexedContainer
     /**
      * Linked list of ordered Property IDs.
      */
-    private ArrayList<Object> propertyIds = new ArrayList<Object>();
+    private ArrayList<Object> propertyIds = new ArrayList<>();
 
     /**
      * Property ID to type mapping.
      */
-    private Hashtable<Object, Class<?>> types = new Hashtable<Object, Class<?>>();
+    private Hashtable<Object, Class<?>> types = new Hashtable<>();
 
     /**
      * Hash of Items, where each Item is implemented as a mapping from Property
      * ID to Property value.
      */
-    private Hashtable<Object, Map<Object, Object>> items = new Hashtable<Object, Map<Object, Object>>();
+    private Hashtable<Object, Map<Object, Object>> items = new Hashtable<>();
 
     /**
      * Set of properties that are read-only.
      */
-    private HashSet<Property<?>> readOnlyProperties = new HashSet<Property<?>>();
+    private HashSet<Property<?>> readOnlyProperties = new HashSet<>();
 
     /**
      * List of all Property value change event listeners listening all the
@@ -208,7 +209,7 @@ public class IndexedContainer
             }
             // store for next rows
             if (defaultPropertyValues == null) {
-                defaultPropertyValues = new HashMap<Object, Object>();
+                defaultPropertyValues = new HashMap<>();
             }
             defaultPropertyValues.put(propertyId, defaultValue);
         }
@@ -433,7 +434,7 @@ public class IndexedContainer
 
     @Override
     protected void registerNewItem(int index, Object newItemId, Item item) {
-        Hashtable<Object, Object> t = new Hashtable<Object, Object>();
+        Hashtable<Object, Object> t = new Hashtable<>();
         items.put(newItemId, t);
         addDefaultValues(t);
     }
@@ -447,6 +448,7 @@ public class IndexedContainer
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @Deprecated
     public static class ItemSetChangeEvent extends BaseItemSetChangeEvent {
 
         private final int addedItemIndex;
@@ -536,7 +538,7 @@ public class IndexedContainer
     @Override
     public void addValueChangeListener(Property.ValueChangeListener listener) {
         if (propertyValueChangeListeners == null) {
-            propertyValueChangeListeners = new LinkedList<Property.ValueChangeListener>();
+            propertyValueChangeListeners = new LinkedList<>();
         }
         propertyValueChangeListeners.add(listener);
     }
@@ -653,19 +655,19 @@ public class IndexedContainer
             Object itemId, Property.ValueChangeListener listener) {
         if (listener != null) {
             if (singlePropertyValueChangeListeners == null) {
-                singlePropertyValueChangeListeners = new Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>>();
+                singlePropertyValueChangeListeners = new Hashtable<>();
             }
             Map<Object, List<Property.ValueChangeListener>> propertySetToListenerListMap = singlePropertyValueChangeListeners
                     .get(propertyId);
             if (propertySetToListenerListMap == null) {
-                propertySetToListenerListMap = new Hashtable<Object, List<Property.ValueChangeListener>>();
+                propertySetToListenerListMap = new Hashtable<>();
                 singlePropertyValueChangeListeners.put(propertyId,
                         propertySetToListenerListMap);
             }
             List<Property.ValueChangeListener> listenerList = propertySetToListenerListMap
                     .get(itemId);
             if (listenerList == null) {
-                listenerList = new LinkedList<Property.ValueChangeListener>();
+                listenerList = new LinkedList<>();
                 propertySetToListenerListMap.put(itemId, listenerList);
             }
             listenerList.add(listener);
@@ -717,6 +719,7 @@ public class IndexedContainer
      *
      * @since 3.0
      */
+    @Deprecated
     class IndexedContainerItem implements Item {
 
         /**
@@ -1098,15 +1101,11 @@ public class IndexedContainer
                 ? (ListSet<Object>) ((ListSet<Object>) getAllItemIds()).clone()
                 : null);
         nc.setItemSetChangeListeners(getItemSetChangeListeners() != null
-                ? new LinkedList<Container.ItemSetChangeListener>(
-                        getItemSetChangeListeners())
-                : null);
+                ? new LinkedList<>(getItemSetChangeListeners()) : null);
         nc.propertyIds = propertyIds != null
                 ? (ArrayList<Object>) propertyIds.clone() : null;
         nc.setPropertySetChangeListeners(getPropertySetChangeListeners() != null
-                ? new LinkedList<Container.PropertySetChangeListener>(
-                        getPropertySetChangeListeners())
-                : null);
+                ? new LinkedList<>(getPropertySetChangeListeners()) : null);
         nc.propertyValueChangeListeners = propertyValueChangeListeners != null
                 ? (LinkedList<Property.ValueChangeListener>) propertyValueChangeListeners
                         .clone()
@@ -1132,7 +1131,7 @@ public class IndexedContainer
         if (items == null) {
             nc.items = null;
         } else {
-            nc.items = new Hashtable<Object, Map<Object, Object>>();
+            nc.items = new Hashtable<>();
             for (final Iterator<?> i = items.keySet().iterator(); i
                     .hasNext();) {
                 final Object id = i.next();

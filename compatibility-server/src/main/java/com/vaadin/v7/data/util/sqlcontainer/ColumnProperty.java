@@ -31,6 +31,7 @@ import com.vaadin.v7.data.util.converter.Converter.ConversionException;
  * Note that depending on the QueryDelegate in use this does not necessarily map
  * into an actual column in a database table.
  */
+@Deprecated
 final public class ColumnProperty implements Property {
     private static final long serialVersionUID = -3694463129581802457L;
 
@@ -316,6 +317,7 @@ final public class ColumnProperty implements Property {
      * be set to <code>null</code>.
      */
     @SuppressWarnings("serial")
+    @Deprecated
     public class NotNullableException extends RuntimeException {
 
         /**

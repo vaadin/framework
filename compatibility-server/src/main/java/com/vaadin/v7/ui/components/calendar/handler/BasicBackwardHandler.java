@@ -29,6 +29,7 @@ import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.BackwardHand
  * @author Vaadin Ltd.
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class BasicBackwardHandler implements BackwardHandler {
 
     /*

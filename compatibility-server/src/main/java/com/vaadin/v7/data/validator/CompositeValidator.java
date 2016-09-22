@@ -34,8 +34,10 @@ import com.vaadin.v7.data.Validator;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class CompositeValidator implements Validator {
 
+    @Deprecated
     public enum CombinationMode {
         /**
          * The validators are combined with <code>AND</code> clause: validity of
@@ -72,7 +74,7 @@ public class CompositeValidator implements Validator {
     /**
      * List of contained validators.
      */
-    private final List<Validator> validators = new LinkedList<Validator>();
+    private final List<Validator> validators = new LinkedList<>();
 
     /**
      * Construct a composite validator in <code>AND</code> mode without error
@@ -238,7 +240,7 @@ public class CompositeValidator implements Validator {
             return null;
         }
 
-        final HashSet<Validator> found = new HashSet<Validator>();
+        final HashSet<Validator> found = new HashSet<>();
         for (Validator v : validators) {
             if (validatorType.isAssignableFrom(v.getClass())) {
                 found.add(v);

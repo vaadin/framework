@@ -22,6 +22,7 @@ import com.vaadin.v7.data.util.sqlcontainer.query.OrderBy;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
 
 @SuppressWarnings("serial")
+@Deprecated
 public class MSSQLGenerator extends DefaultSQLGenerator {
 
     public MSSQLGenerator() {

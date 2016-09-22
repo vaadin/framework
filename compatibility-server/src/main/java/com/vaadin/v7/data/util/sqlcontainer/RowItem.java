@@ -28,6 +28,7 @@ import com.vaadin.v7.data.Property;
  * Note that depending on the QueryDelegate in use this does not necessarily map
  * into an actual row in a database table.
  */
+@Deprecated
 public final class RowItem implements Item {
     private static final long serialVersionUID = -6228966439127951408L;
     private SQLContainer container;
@@ -74,7 +75,7 @@ public final class RowItem implements Item {
 
     @Override
     public Collection<?> getItemPropertyIds() {
-        Collection<String> ids = new ArrayList<String>(properties.size());
+        Collection<String> ids = new ArrayList<>(properties.size());
         for (ColumnProperty cp : properties) {
             ids.add(cp.getPropertyId());
         }

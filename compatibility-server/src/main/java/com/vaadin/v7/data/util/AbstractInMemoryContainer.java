@@ -93,6 +93,7 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
  *
  * @since 6.6
  */
+@Deprecated
 public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITEMCLASS extends Item>
         extends AbstractContainer
         implements ItemSetChangeNotifier, Container.Indexed {
@@ -120,7 +121,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * Filters that are applied to the container to limit the items visible in
      * it
      */
-    private Set<Filter> filters = new HashSet<Filter>();
+    private Set<Filter> filters = new HashSet<>();
 
     /**
      * The item sorter which is used for sorting the container.
@@ -190,6 +191,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      *
      * @since 7.4
      */
+    @Deprecated
     protected static class BaseItemAddEvent extends BaseItemAddOrRemoveEvent
             implements Container.Indexed.ItemAddEvent {
 
@@ -215,6 +217,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      *
      * @since 7.4
      */
+    @Deprecated
     protected static class BaseItemRemoveEvent extends BaseItemAddOrRemoveEvent
             implements Container.Indexed.ItemRemoveEvent {
 
@@ -670,7 +673,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (getFilters().isEmpty() || propertyId == null) {
             return Collections.emptyList();
         }
-        List<Filter> removedFilters = new LinkedList<Filter>();
+        List<Filter> removedFilters = new LinkedList<>();
         for (Iterator<Filter> iterator = getFilters().iterator(); iterator
                 .hasNext();) {
             Filter f = iterator.next();
@@ -760,7 +763,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * to implement {@link Sortable#getSortableContainerPropertyIds()}.
      */
     protected Collection<?> getSortablePropertyIds() {
-        LinkedList<Object> sortables = new LinkedList<Object>();
+        LinkedList<Object> sortables = new LinkedList<>();
         for (Object propertyId : getContainerPropertyIds()) {
             Class<?> propertyType = getType(propertyId);
             if (Comparable.class.isAssignableFrom(propertyType)

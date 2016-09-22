@@ -23,6 +23,7 @@ import com.vaadin.v7.ui.Grid.AbstractRenderer;
  * @since 7.4
  * @author Vaadin Ltd
  */
+@Deprecated
 public class TextRenderer extends AbstractRenderer<String> {
 
     /**

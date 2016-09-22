@@ -109,6 +109,7 @@ import elemental.json.JsonValue;
  * @author Vaadin Ltd
  * @since 7.4
  */
+@Deprecated
 public abstract class AbstractJavaScriptRenderer<T>
         extends AbstractRenderer<T> {
     private JavaScriptCallbackHelper callbackHelper = new JavaScriptCallbackHelper(

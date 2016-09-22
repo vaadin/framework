@@ -29,6 +29,7 @@ import com.vaadin.v7.data.util.sqlcontainer.query.OrderBy;
  *
  * @author Jonatan Kronqvist / Vaadin Ltd
  */
+@Deprecated
 public interface SQLGenerator extends Serializable {
     /**
      * Generates a SELECT query with the provided parameters. Uses default

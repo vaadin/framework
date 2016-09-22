@@ -28,6 +28,7 @@ import java.io.Serializable;
  * @author Vaadin Ltd.
  * @since 3.0
  */
+@Deprecated
 public interface BufferedValidatable
         extends Buffered, Validatable, Serializable {
 

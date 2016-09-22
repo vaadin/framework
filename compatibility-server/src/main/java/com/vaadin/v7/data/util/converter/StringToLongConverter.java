@@ -30,6 +30,7 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.2
  */
+@Deprecated
 public class StringToLongConverter
         extends AbstractStringToNumberConverter<Long> {
 

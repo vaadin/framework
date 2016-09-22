@@ -30,6 +30,7 @@ import java.util.Collection;
  * @since 3.0
  * @see com.vaadin.v7.data.Validator
  */
+@Deprecated
 public interface Validatable extends Serializable {
 
     /**

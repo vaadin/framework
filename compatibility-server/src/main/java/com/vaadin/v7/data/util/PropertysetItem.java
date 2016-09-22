@@ -35,6 +35,7 @@ import com.vaadin.v7.data.Property;
  * @author Vaadin Ltd.
  * @since 3.0
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class PropertysetItem
         implements Item, Item.PropertySetChangeNotifier, Cloneable {
@@ -44,12 +45,12 @@ public class PropertysetItem
     /**
      * Mapping from property id to property.
      */
-    private HashMap<Object, Property<?>> map = new HashMap<Object, Property<?>>();
+    private HashMap<Object, Property<?>> map = new HashMap<>();
 
     /**
      * List of all property ids to maintain the order.
      */
-    private LinkedList<Object> list = new LinkedList<Object>();
+    private LinkedList<Object> list = new LinkedList<>();
 
     /**
      * List of property set modification listeners.
@@ -204,7 +205,7 @@ public class PropertysetItem
     public void addPropertySetChangeListener(
             Item.PropertySetChangeListener listener) {
         if (propertySetChangeListeners == null) {
-            propertySetChangeListeners = new LinkedList<PropertySetChangeListener>();
+            propertySetChangeListeners = new LinkedList<>();
         }
         propertySetChangeListeners.add(listener);
     }

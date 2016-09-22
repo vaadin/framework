@@ -36,6 +36,7 @@ import com.vaadin.v7.data.Container;
  *
  * @since 6.3
  */
+@Deprecated
 public abstract class DataBoundTransferable extends TransferableImpl {
 
     public DataBoundTransferable(Component sourceComponent,

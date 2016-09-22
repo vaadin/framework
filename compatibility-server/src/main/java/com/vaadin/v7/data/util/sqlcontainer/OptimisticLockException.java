@@ -30,6 +30,7 @@ import com.vaadin.v7.data.util.sqlcontainer.query.TableQuery;
  *
  * @author Jonatan Kronqvist / Vaadin Ltd
  */
+@Deprecated
 public class OptimisticLockException extends RuntimeException {
 
     private final RowId rowId;

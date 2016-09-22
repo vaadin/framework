@@ -48,6 +48,7 @@ import java.io.Serializable;
  * @author Vaadin Ltd
  * @since 3.0
  */
+@Deprecated
 public interface Property<T> extends Serializable {
 
     /**
@@ -125,6 +126,7 @@ public interface Property<T> extends Serializable {
      * @author Vaadin Ltd
      * @since 7.0
      */
+    @Deprecated
     public interface Transactional<T> extends Property<T> {
 
         /**
@@ -178,6 +180,7 @@ public interface Property<T> extends Serializable {
      * @since 3.0
      */
     @SuppressWarnings("serial")
+    @Deprecated
     public class ReadOnlyException extends RuntimeException {
 
         /**
@@ -206,6 +209,7 @@ public interface Property<T> extends Serializable {
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @Deprecated
     public interface Viewer extends Serializable {
 
         /**
@@ -238,6 +242,7 @@ public interface Property<T> extends Serializable {
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @Deprecated
     public interface Editor extends Property.Viewer, Serializable {
 
     }
@@ -251,6 +256,7 @@ public interface Property<T> extends Serializable {
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @Deprecated
     public interface ValueChangeEvent extends Serializable {
 
         /**
@@ -268,6 +274,7 @@ public interface Property<T> extends Serializable {
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @Deprecated
     public interface ValueChangeListener extends Serializable {
 
         /**
@@ -296,6 +303,7 @@ public interface Property<T> extends Serializable {
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @Deprecated
     public interface ValueChangeNotifier extends Serializable {
 
         /**
@@ -340,6 +348,7 @@ public interface Property<T> extends Serializable {
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @Deprecated
     public interface ReadOnlyStatusChangeEvent extends Serializable {
 
         /**
@@ -357,6 +366,7 @@ public interface Property<T> extends Serializable {
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @Deprecated
     public interface ReadOnlyStatusChangeListener extends Serializable {
 
         /**
@@ -387,6 +397,7 @@ public interface Property<T> extends Serializable {
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @Deprecated
     public interface ReadOnlyStatusChangeNotifier extends Serializable {
 
         /**

@@ -60,6 +60,7 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
  *
  * @since 6.5
  */
+@Deprecated
 public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
         extends AbstractInMemoryContainer<IDTYPE, String, BeanItem<BEANTYPE>>
         implements Filterable, SimpleFilterable, Sortable, ValueChangeListener,
@@ -78,6 +79,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
      *
      * @since 6.5
      */
+    @Deprecated
     public static interface BeanIdResolver<IDTYPE, BEANTYPE>
             extends Serializable {
         /**
@@ -95,6 +97,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
      * The bean must have a getter for the property, and the getter must return
      * an object of type IDTYPE.
      */
+    @Deprecated
     protected class PropertyBasedBeanIdResolver
             implements BeanIdResolver<IDTYPE, BEANTYPE> {
 
@@ -141,7 +144,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
      * Maps all item ids in the container (including filtered) to their
      * corresponding BeanItem.
      */
-    private final Map<IDTYPE, BeanItem<BEANTYPE>> itemIdToItem = new HashMap<IDTYPE, BeanItem<BEANTYPE>>();
+    private final Map<IDTYPE, BeanItem<BEANTYPE>> itemIdToItem = new HashMap<>();
 
     /**
      * The type of the beans in the container.
@@ -193,7 +196,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
      * @return created {@link BeanItem} or null if bean is null
      */
     protected BeanItem<BEANTYPE> createBeanItem(BEANTYPE bean) {
-        return bean == null ? null : new BeanItem<BEANTYPE>(bean, model);
+        return bean == null ? null : new BeanItem<>(bean, model);
     }
 
     /**
@@ -889,7 +892,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
                 .getPropertyDescriptors((Class<Object>) propertyType);
         for (String subPropertyId : pds.keySet()) {
             String qualifiedPropertyId = propertyId + "." + subPropertyId;
-            NestedPropertyDescriptor<BEANTYPE> pd = new NestedPropertyDescriptor<BEANTYPE>(
+            NestedPropertyDescriptor<BEANTYPE> pd = new NestedPropertyDescriptor<>(
                     qualifiedPropertyId, (Class<BEANTYPE>) type);
             model.put(qualifiedPropertyId, pd);
             model.remove(propertyId);

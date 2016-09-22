@@ -33,8 +33,10 @@ import com.vaadin.v7.data.Property;
  *
  * @since 6.6
  */
+@Deprecated
 public abstract class Compare implements Filter {
 
+    @Deprecated
     public enum Operation {
         EQUAL, GREATER, LESS, GREATER_OR_EQUAL, LESS_OR_EQUAL
     }
@@ -54,6 +56,7 @@ public abstract class Compare implements Filter {
      *
      * @since 6.6
      */
+    @Deprecated
     public static final class Equal extends Compare {
         /**
          * Construct a filter that accepts items for which the identified
@@ -86,6 +89,7 @@ public abstract class Compare implements Filter {
      *
      * @since 6.6
      */
+    @Deprecated
     public static final class Greater extends Compare {
         /**
          * Construct a filter that accepts items for which the identified
@@ -119,6 +123,7 @@ public abstract class Compare implements Filter {
      *
      * @since 6.6
      */
+    @Deprecated
     public static final class Less extends Compare {
         /**
          * Construct a filter that accepts items for which the identified
@@ -152,6 +157,7 @@ public abstract class Compare implements Filter {
      *
      * @since 6.6
      */
+    @Deprecated
     public static final class GreaterOrEqual extends Compare {
         /**
          * Construct a filter that accepts items for which the identified
@@ -185,6 +191,7 @@ public abstract class Compare implements Filter {
      *
      * @since 6.6
      */
+    @Deprecated
     public static final class LessOrEqual extends Compare {
         /**
          * Construct a filter that accepts items for which the identified

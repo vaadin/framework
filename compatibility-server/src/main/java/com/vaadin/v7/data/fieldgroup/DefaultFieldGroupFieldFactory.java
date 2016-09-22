@@ -43,6 +43,7 @@ import com.vaadin.v7.ui.TextField;
  *
  * @author Vaadin Ltd
  */
+@Deprecated
 public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
 
     private static final DefaultFieldGroupFieldFactory INSTANCE = new DefaultFieldGroupFieldFactory();

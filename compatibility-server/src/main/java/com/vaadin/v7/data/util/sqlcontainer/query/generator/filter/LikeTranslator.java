@@ -19,6 +19,7 @@ import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.util.filter.Like;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
 
+@Deprecated
 public class LikeTranslator implements FilterTranslator {
 
     @Override

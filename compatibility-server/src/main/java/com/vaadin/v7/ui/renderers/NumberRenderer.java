@@ -28,6 +28,7 @@ import elemental.json.JsonValue;
  * @since 7.4
  * @author Vaadin Ltd
  */
+@Deprecated
 public class NumberRenderer extends AbstractRenderer<Number> {
     private final Locale locale;
     private final NumberFormat numberFormat;

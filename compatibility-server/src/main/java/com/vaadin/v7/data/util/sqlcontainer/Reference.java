@@ -23,6 +23,7 @@ import java.io.Serializable;
  * required, but it is recommended to make sure that certain constraints are
  * followed.
  */
+@Deprecated
 @SuppressWarnings("serial")
 class Reference implements Serializable {
 

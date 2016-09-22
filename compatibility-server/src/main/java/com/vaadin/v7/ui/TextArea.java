@@ -26,6 +26,7 @@ import com.vaadin.v7.shared.ui.textarea.TextAreaState;
 /**
  * A text field that supports multi line editing.
  */
+@Deprecated
 public class TextArea extends AbstractTextField {
 
     /**

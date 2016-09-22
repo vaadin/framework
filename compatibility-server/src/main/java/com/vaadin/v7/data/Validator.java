@@ -53,6 +53,7 @@ import com.vaadin.server.VaadinServlet;
  * @author Vaadin Ltd.
  * @since 3.0
  */
+@Deprecated
 public interface Validator extends Serializable {
 
     /**
@@ -79,6 +80,7 @@ public interface Validator extends Serializable {
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @Deprecated
     @SuppressWarnings("serial")
     public class InvalidValueException extends RuntimeException
             implements ErrorMessageProducer {
@@ -188,6 +190,7 @@ public interface Validator extends Serializable {
      * @since 5.3.0
      */
     @SuppressWarnings("serial")
+    @Deprecated
     public class EmptyValueException extends Validator.InvalidValueException {
 
         public EmptyValueException(String message) {

@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
  * @since 5.4
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class RegexpValidator extends AbstractStringValidator {
 
     private Pattern pattern;

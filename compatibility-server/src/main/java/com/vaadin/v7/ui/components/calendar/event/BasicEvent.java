@@ -30,6 +30,7 @@ import com.vaadin.v7.ui.components.calendar.event.CalendarEvent.EventChangeNotif
  * @author Vaadin Ltd.
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
 
     private String caption;
@@ -37,7 +38,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
     private Date end;
     private Date start;
     private String styleName;
-    private transient List<EventChangeListener> listeners = new ArrayList<EventChangeListener>();
+    private transient List<EventChangeListener> listeners = new ArrayList<>();
 
     private boolean isAllDay;
 

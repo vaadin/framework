@@ -27,6 +27,7 @@ import java.util.TimeZone;
  *
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class CalendarDateRange implements Serializable {
 
     private Date start;

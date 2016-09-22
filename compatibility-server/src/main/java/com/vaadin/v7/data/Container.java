@@ -80,6 +80,7 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
  * @author Vaadin Ltd
  * @since 3.0
  */
+@Deprecated
 public interface Container extends Serializable {
 
     /**
@@ -301,6 +302,7 @@ public interface Container extends Serializable {
      * {@link Sortable} for more information.
      * </p>
      */
+    @Deprecated
     public interface Ordered extends Container {
 
         /**
@@ -424,6 +426,7 @@ public interface Container extends Serializable {
      * change the internal order of items in the container.
      * </p>
      */
+    @Deprecated
     public interface Sortable extends Ordered {
 
         /**
@@ -468,6 +471,7 @@ public interface Container extends Serializable {
      * position based on sorting.
      * </p>
      */
+    @Deprecated
     public interface Indexed extends Ordered {
 
         /**
@@ -588,6 +592,7 @@ public interface Container extends Serializable {
          *
          * @since 7.4
          */
+        @Deprecated
         public interface ItemAddEvent extends ItemSetChangeEvent {
 
             /**
@@ -618,6 +623,7 @@ public interface Container extends Serializable {
          *
          * @since 7.4
          */
+        @Deprecated
         public interface ItemRemoveEvent extends ItemSetChangeEvent {
             /**
              * Gets the item id of the first removed item.
@@ -655,6 +661,7 @@ public interface Container extends Serializable {
      * unable to have children.
      * </ul>
      */
+    @Deprecated
     public interface Hierarchical extends Container {
 
         /**
@@ -849,6 +856,7 @@ public interface Container extends Serializable {
      *
      * @since 5.0 (renamed from Filterable to SimpleFilterable in 6.6)
      */
+    @Deprecated
     public interface SimpleFilterable extends Container, Serializable {
 
         /**
@@ -913,6 +921,7 @@ public interface Container extends Serializable {
      *
      * @since 6.6
      */
+    @Deprecated
     public interface Filter extends Serializable {
 
         /**
@@ -985,6 +994,7 @@ public interface Container extends Serializable {
      *
      * @since 6.6
      */
+    @Deprecated
     public interface Filterable extends Container, Serializable {
         /**
          * Adds a filter for the container.
@@ -1026,6 +1036,7 @@ public interface Container extends Serializable {
      * Interface implemented by viewer classes capable of using a Container as a
      * data source.
      */
+    @Deprecated
     public interface Viewer extends Serializable {
 
         /**
@@ -1057,6 +1068,7 @@ public interface Container extends Serializable {
      * internally.
      * </p>
      */
+    @Deprecated
     public interface Editor extends Container.Viewer, Serializable {
 
     }
@@ -1069,6 +1081,7 @@ public interface Container extends Serializable {
      *
      * A simple property value change is not an item set change.
      */
+    @Deprecated
     public interface ItemSetChangeEvent extends Serializable {
 
         /**
@@ -1085,6 +1098,7 @@ public interface Container extends Serializable {
      * An item set change refers to addition, removal or reordering of items in
      * the container. A simple property value change is not an item set change.
      */
+    @Deprecated
     public interface ItemSetChangeListener extends Serializable {
 
         /**
@@ -1115,6 +1129,7 @@ public interface Container extends Serializable {
      * be able to implement an interface.
      * </p>
      */
+    @Deprecated
     public interface ItemSetChangeNotifier extends Serializable {
 
         /**
@@ -1161,6 +1176,7 @@ public interface Container extends Serializable {
      * items in the container and their property values are not property set
      * changes.
      */
+    @Deprecated
     public interface PropertySetChangeEvent extends Serializable {
 
         /**
@@ -1180,6 +1196,7 @@ public interface Container extends Serializable {
      * concerning the set of items in the container and their property values
      * are not property set changes.
      */
+    @Deprecated
     public interface PropertySetChangeListener extends Serializable {
 
         /**
@@ -1217,6 +1234,7 @@ public interface Container extends Serializable {
      * be able to implement an interface.
      * </p>
      */
+    @Deprecated
     public interface PropertySetChangeNotifier extends Serializable {
 
         /**

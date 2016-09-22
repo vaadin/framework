@@ -34,6 +34,7 @@ import com.vaadin.v7.shared.ui.textarea.RichTextAreaState;
  * {@link RichTextArea} may produce unexpected results as formatting is counted
  * into length of field.
  */
+@Deprecated
 public class RichTextArea extends AbstractField<String>
         implements LegacyComponent {
 

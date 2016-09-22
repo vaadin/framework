@@ -48,8 +48,8 @@ import com.vaadin.v7.data.Validator;
 import com.vaadin.v7.data.Validator.InvalidValueException;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.Converter.ConversionException;
-import com.vaadin.v7.shared.AbstractFieldState;
 import com.vaadin.v7.data.util.converter.ConverterUtil;
+import com.vaadin.v7.shared.AbstractFieldState;
 
 /**
  * <p>
@@ -1185,6 +1185,7 @@ public abstract class AbstractField<T> extends AbstractComponent
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @Deprecated
     public static class ReadOnlyStatusChangeEvent extends Component.Event
             implements Property.ReadOnlyStatusChangeEvent, Serializable {
 
@@ -1588,6 +1589,7 @@ public abstract class AbstractField<T> extends AbstractComponent
      * invoked.
      *
      */
+    @Deprecated
     public static class FocusShortcut extends ShortcutListener {
         protected Focusable focusable;
 

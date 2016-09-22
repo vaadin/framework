@@ -33,6 +33,7 @@ import com.vaadin.v7.data.Property;
  * factories.
  * 
  */
+@Deprecated
 public class DefaultFieldFactory
         implements FormFieldFactory, TableFieldFactory {
 

@@ -25,6 +25,7 @@ import elemental.json.JsonValue;
  * @author Vaadin Ltd
  * @since 7.4
  */
+@Deprecated
 public class ProgressBarRenderer extends AbstractRenderer<Double> {
 
     /**

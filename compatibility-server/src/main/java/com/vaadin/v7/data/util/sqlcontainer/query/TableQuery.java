@@ -47,6 +47,7 @@ import com.vaadin.v7.data.util.sqlcontainer.query.generator.SQLGenerator;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
 
 @SuppressWarnings("serial")
+@Deprecated
 public class TableQuery extends AbstractTransactionalQuery
         implements QueryDelegate, QueryDelegate.RowIdChangeNotifier {
 
@@ -79,7 +80,7 @@ public class TableQuery extends AbstractTransactionalQuery
     /** Row ID change listeners */
     private LinkedList<RowIdChangeListener> rowIdChangeListeners;
     /** Row ID change events, stored until commit() is called */
-    private final List<RowIdChangeEvent> bufferedEvents = new ArrayList<RowIdChangeEvent>();
+    private final List<RowIdChangeEvent> bufferedEvents = new ArrayList<>();
 
     /** Set to true to output generated SQL Queries to System.out */
     private final boolean debug = false;
@@ -240,7 +241,7 @@ public class TableQuery extends AbstractTransactionalQuery
          * first primary key column.
          */
         if (orderBys == null || orderBys.isEmpty()) {
-            List<OrderBy> ob = new ArrayList<OrderBy>();
+            List<OrderBy> ob = new ArrayList<>();
             for (int i = 0; i < primaryKeyColumns.size(); i++) {
                 ob.add(new OrderBy(primaryKeyColumns.get(i), true));
             }
@@ -631,7 +632,7 @@ public class TableQuery extends AbstractTransactionalQuery
                 }
                 tables.close();
                 rs = dbmd.getPrimaryKeys(catalogName, schemaName, tableName);
-                List<String> names = new ArrayList<String>();
+                List<String> names = new ArrayList<>();
                 while (rs.next()) {
                     names.add(rs.getString("COLUMN_NAME"));
                 }
@@ -676,7 +677,7 @@ public class TableQuery extends AbstractTransactionalQuery
     private RowId getNewRowId(RowItem row, ResultSet genKeys) {
         try {
             /* Fetch primary key values and generate a map out of them. */
-            Map<String, Object> values = new HashMap<String, Object>();
+            Map<String, Object> values = new HashMap<>();
             ResultSetMetaData rsmd = genKeys.getMetaData();
             int colCount = rsmd.getColumnCount();
             if (genKeys.next()) {
@@ -685,7 +686,7 @@ public class TableQuery extends AbstractTransactionalQuery
                 }
             }
             /* Generate new RowId */
-            List<Object> newRowId = new ArrayList<Object>();
+            List<Object> newRowId = new ArrayList<>();
             if (values.size() == 1) {
                 if (primaryKeyColumns.size() == 1) {
                     newRowId.add(values.get(values.keySet().iterator().next()));
@@ -749,7 +750,7 @@ public class TableQuery extends AbstractTransactionalQuery
      */
     @Override
     public boolean containsRowWithKey(Object... keys) throws SQLException {
-        ArrayList<Filter> filtersAndKeys = new ArrayList<Filter>();
+        ArrayList<Filter> filtersAndKeys = new ArrayList<>();
         if (filters != null) {
             filtersAndKeys.addAll(filters);
         }
@@ -800,6 +801,7 @@ public class TableQuery extends AbstractTransactionalQuery
     /**
      * Simple RowIdChangeEvent implementation.
      */
+    @Deprecated
     public static class RowIdChangeEvent extends EventObject
             implements QueryDelegate.RowIdChangeEvent {
         private final RowId oldId;
@@ -828,7 +830,7 @@ public class TableQuery extends AbstractTransactionalQuery
     @Override
     public void addRowIdChangeListener(RowIdChangeListener listener) {
         if (rowIdChangeListeners == null) {
-            rowIdChangeListeners = new LinkedList<QueryDelegate.RowIdChangeListener>();
+            rowIdChangeListeners = new LinkedList<>();
         }
         rowIdChangeListeners.add(listener);
     }

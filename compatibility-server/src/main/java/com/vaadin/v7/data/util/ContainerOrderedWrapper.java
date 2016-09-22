@@ -43,6 +43,7 @@ import com.vaadin.v7.data.Property;
  * @author Vaadin Ltd.
  * @since 3.0
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class ContainerOrderedWrapper implements Container.Ordered,
         Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier {
@@ -215,12 +216,12 @@ public class ContainerOrderedWrapper implements Container.Ordered,
             if (next == null || first == null || last == null || prev == null) {
                 first = null;
                 last = null;
-                next = new Hashtable<Object, Object>();
-                prev = new Hashtable<Object, Object>();
+                next = new Hashtable<>();
+                prev = new Hashtable<>();
             }
 
             // Filter out all the missing items
-            final LinkedList<?> l = new LinkedList<Object>(next.keySet());
+            final LinkedList<?> l = new LinkedList<>(next.keySet());
             for (final Iterator<?> i = l.iterator(); i.hasNext();) {
                 final Object id = i.next();
                 if (!container.containsId(id)) {
@@ -469,9 +470,9 @@ public class ContainerOrderedWrapper implements Container.Ordered,
         if (ordered) {
             return ((Container.Ordered) container).getItemIds();
         } else if (first == null) {
-            return new ArrayList<Object>();
+            return new ArrayList<>();
         } else {
-            List<Object> itemIds = new ArrayList<Object>();
+            List<Object> itemIds = new ArrayList<>();
             itemIds.add(first);
             Object current = first;
             while (next.containsKey(current)) {

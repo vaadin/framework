@@ -26,6 +26,7 @@ import com.vaadin.v7.ui.Calendar;
  *
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class CalendarComponentEvent extends Component.Event {
 
     /**

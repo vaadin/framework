@@ -33,6 +33,7 @@ import com.vaadin.v7.data.Property;
  *
  * @since 6.6
  */
+@Deprecated
 public class MethodPropertyDescriptor<BT>
         implements VaadinPropertyDescriptor<BT> {
 

@@ -36,6 +36,7 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.4
  */
+@Deprecated
 public class StringToEnumConverter implements Converter<String, Enum> {
 
     @Override

@@ -33,6 +33,7 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.0
  */
+@Deprecated
 public class StringToFloatConverter
         extends AbstractStringToNumberConverter<Float> {
 

@@ -23,6 +23,7 @@ import com.vaadin.v7.ui.Grid.AbstractRenderer;
  * @author Vaadin Ltd
  * @since 7.4
  */
+@Deprecated
 public class HtmlRenderer extends AbstractRenderer<String> {
     /**
      * Creates a new HTML renderer.

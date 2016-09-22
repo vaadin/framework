@@ -22,6 +22,7 @@ package com.vaadin.v7.data.validator;
  * @since 7.0
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class DoubleRangeValidator extends RangeValidator<Double> {
 
     /**

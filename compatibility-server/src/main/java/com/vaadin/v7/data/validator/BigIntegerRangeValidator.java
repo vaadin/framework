@@ -24,6 +24,7 @@ import java.math.BigInteger;
  * @since 7.4
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class BigIntegerRangeValidator extends RangeValidator<BigInteger> {
 
     /**

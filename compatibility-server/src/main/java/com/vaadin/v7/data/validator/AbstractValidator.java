@@ -44,6 +44,7 @@ import com.vaadin.v7.data.Validator;
  * @author Vaadin Ltd.
  * @since 5.4
  */
+@Deprecated
 public abstract class AbstractValidator<T> implements Validator {
 
     /**

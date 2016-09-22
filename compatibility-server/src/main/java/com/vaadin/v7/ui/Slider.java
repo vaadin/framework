@@ -322,6 +322,7 @@ public class Slider extends AbstractField<Double> {
      * @author Vaadin Ltd.
      *
      */
+    @Deprecated
     public class ValueOutOfBoundsException extends RuntimeException {
 
         private final Double value;

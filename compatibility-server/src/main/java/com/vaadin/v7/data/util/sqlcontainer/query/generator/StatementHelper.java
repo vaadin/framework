@@ -37,12 +37,13 @@ import java.util.Map;
  * This class will also fill the values with correct setters into the
  * PreparedStatement on request.
  */
+@Deprecated
 public class StatementHelper implements Serializable {
 
     private String queryString;
 
-    private List<Object> parameters = new ArrayList<Object>();
-    private Map<Integer, Class<?>> dataTypes = new HashMap<Integer, Class<?>>();
+    private List<Object> parameters = new ArrayList<>();
+    private Map<Integer, Class<?>> dataTypes = new HashMap<>();
 
     public StatementHelper() {
     }

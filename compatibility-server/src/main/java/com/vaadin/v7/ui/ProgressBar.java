@@ -34,6 +34,7 @@ import com.vaadin.v7.shared.ui.progressindicator.ProgressBarState;
  * @since 7.1
  * @author Vaadin Ltd
  */
+@Deprecated
 public class ProgressBar extends AbstractField<Float>
         implements Property.Viewer, Property.ValueChangeListener {
 

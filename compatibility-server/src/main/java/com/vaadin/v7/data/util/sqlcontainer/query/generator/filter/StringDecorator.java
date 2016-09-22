@@ -27,6 +27,7 @@ import java.io.Serializable;
  *
  * @author Vaadin Ltd
  */
+@Deprecated
 public class StringDecorator implements Serializable {
 
     private final String quoteStart;

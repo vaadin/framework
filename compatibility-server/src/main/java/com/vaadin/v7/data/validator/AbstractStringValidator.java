@@ -28,6 +28,7 @@ package com.vaadin.v7.data.validator;
  * @since 5.4
  */
 @SuppressWarnings("serial")
+@Deprecated
 public abstract class AbstractStringValidator
         extends AbstractValidator<String> {
 

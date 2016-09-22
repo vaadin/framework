@@ -24,6 +24,7 @@ import java.io.Serializable;
  * The sorting rule is simple and contains only the affected column's name and
  * the direction of the sort.
  */
+@Deprecated
 public class OrderBy implements Serializable {
     private String column;
     private boolean isAscending;

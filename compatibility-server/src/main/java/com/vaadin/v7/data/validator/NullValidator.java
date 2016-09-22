@@ -26,6 +26,7 @@ import com.vaadin.v7.data.Validator;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class NullValidator implements Validator {
 
     private boolean onlyNullAllowed;

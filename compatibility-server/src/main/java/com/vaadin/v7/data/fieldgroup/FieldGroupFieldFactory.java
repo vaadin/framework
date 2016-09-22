@@ -26,6 +26,7 @@ import com.vaadin.v7.ui.Field;
  * @author Vaadin Ltd.
  * @since 7.0
  */
+@Deprecated
 public interface FieldGroupFieldFactory extends Serializable {
     /**
      * Creates a field based on the data type that we want to edit

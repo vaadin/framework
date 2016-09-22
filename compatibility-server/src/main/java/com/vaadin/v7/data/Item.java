@@ -29,6 +29,7 @@ import java.util.Collection;
  * @author Vaadin Ltd
  * @since 3.0
  */
+@Deprecated
 public interface Item extends Serializable {
 
     /**
@@ -89,6 +90,7 @@ public interface Item extends Serializable {
      * Interface implemented by viewer classes capable of using an Item as a
      * data source.
      */
+    @Deprecated
     public interface Viewer extends Serializable {
 
         /**
@@ -116,6 +118,7 @@ public interface Item extends Serializable {
      * restrict the class from editing the contents of an internally.
      * </p>
      */
+    @Deprecated
     public interface Editor extends Item.Viewer, Serializable {
 
     }
@@ -130,6 +133,7 @@ public interface Item extends Serializable {
      * this event.
      * </p>
      */
+    @Deprecated
     public interface PropertySetChangeEvent extends Serializable {
 
         /**
@@ -144,6 +148,7 @@ public interface Item extends Serializable {
      * The listener interface for receiving <code>PropertySetChangeEvent</code>
      * objects.
      */
+    @Deprecated
     public interface PropertySetChangeListener extends Serializable {
 
         /**
@@ -169,6 +174,7 @@ public interface Item extends Serializable {
      * be able to implement an interface.
      * </p>
      */
+    @Deprecated
     public interface PropertySetChangeNotifier extends Serializable {
 
         /**

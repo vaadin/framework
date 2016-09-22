@@ -68,6 +68,7 @@ import java.util.Collection;
  *
  * @since 6.5
  */
+@Deprecated
 public class BeanContainer<IDTYPE, BEANTYPE>
         extends AbstractBeanContainer<IDTYPE, BEANTYPE> {
 

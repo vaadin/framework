@@ -29,6 +29,7 @@ import com.vaadin.v7.data.Property;
  *
  * @since 6.6
  */
+@Deprecated
 public class NestedPropertyDescriptor<BT>
         implements VaadinPropertyDescriptor<BT> {
 
@@ -49,7 +50,7 @@ public class NestedPropertyDescriptor<BT>
     public NestedPropertyDescriptor(String name, Class<BT> beanType)
             throws IllegalArgumentException {
         this.name = name;
-        NestedMethodProperty<?> property = new NestedMethodProperty<Object>(
+        NestedMethodProperty<?> property = new NestedMethodProperty<>(
                 beanType, name);
         this.propertyType = property.getType();
     }
@@ -66,7 +67,7 @@ public class NestedPropertyDescriptor<BT>
 
     @Override
     public Property<?> createProperty(BT bean) {
-        return new NestedMethodProperty<Object>(bean, name);
+        return new NestedMethodProperty<>(bean, name);
     }
 
 }

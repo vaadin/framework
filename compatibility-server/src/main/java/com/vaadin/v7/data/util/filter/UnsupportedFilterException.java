@@ -28,6 +28,7 @@ import java.io.Serializable;
  *
  * @since 6.6
  */
+@Deprecated
 public class UnsupportedFilterException extends RuntimeException
         implements Serializable {
     public UnsupportedFilterException() {

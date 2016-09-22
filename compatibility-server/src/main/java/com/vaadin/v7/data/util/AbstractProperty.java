@@ -30,6 +30,7 @@ import com.vaadin.v7.data.Property;
  *
  * @since 6.6
  */
+@Deprecated
 public abstract class AbstractProperty<T> implements Property<T>,
         Property.ValueChangeNotifier, Property.ReadOnlyStatusChangeNotifier {
 
@@ -75,6 +76,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
      * An <code>Event</code> object specifying the Property whose read-only
      * status has been changed.
      */
+    @Deprecated
     protected static class ReadOnlyStatusChangeEvent
             extends java.util.EventObject
             implements Property.ReadOnlyStatusChangeEvent {
@@ -111,7 +113,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
     public void addReadOnlyStatusChangeListener(
             Property.ReadOnlyStatusChangeListener listener) {
         if (readOnlyStatusChangeListeners == null) {
-            readOnlyStatusChangeListeners = new LinkedList<ReadOnlyStatusChangeListener>();
+            readOnlyStatusChangeListeners = new LinkedList<>();
         }
         readOnlyStatusChangeListeners.add(listener);
     }
@@ -197,7 +199,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
     @Override
     public void addValueChangeListener(ValueChangeListener listener) {
         if (valueChangeListeners == null) {
-            valueChangeListeners = new LinkedList<ValueChangeListener>();
+            valueChangeListeners = new LinkedList<>();
         }
         valueChangeListeners.add(listener);
 

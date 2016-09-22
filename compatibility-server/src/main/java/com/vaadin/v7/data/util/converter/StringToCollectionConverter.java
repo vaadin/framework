@@ -38,6 +38,7 @@ import java.util.Locale;
  *
  * @author Vaadin Ltd
  */
+@Deprecated
 public class StringToCollectionConverter
         implements Converter<String, Collection> {
 
@@ -202,6 +203,7 @@ public class StringToCollectionConverter
      *
      * @author Vaadin Ltd
      */
+    @Deprecated
     public static class DefaultCollectionFactory implements CollectionFactory {
 
         @Override
@@ -230,6 +232,7 @@ public class StringToCollectionConverter
      *
      * @author Vaadin Ltd
      */
+    @Deprecated
     public interface CollectionFactory extends Serializable {
 
         /**

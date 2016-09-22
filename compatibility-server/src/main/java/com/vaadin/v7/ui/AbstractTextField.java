@@ -503,6 +503,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     /**
      * Different modes how the TextField can trigger {@link TextChangeEvent}s.
      */
+    @Deprecated
     public enum TextChangeEventMode {
 
         /**
@@ -593,6 +594,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         return textChangeEventTimeout;
     }
 
+    @Deprecated
     public static class TextChangeEventImpl extends TextChangeEvent {
         private String curText;
         private int cursorPosition;

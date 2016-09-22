@@ -59,6 +59,7 @@ import com.vaadin.v7.data.Property;
  * @author Vaadin Ltd.
  * @since 3.0
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class MethodProperty<T> extends AbstractProperty<T> {
 
@@ -688,6 +689,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * @since 3.0
      */
     @SuppressWarnings("rawtypes")
+    @Deprecated
     // Exceptions cannot be parameterized, ever.
     public static class MethodException extends RuntimeException {
 

@@ -32,6 +32,7 @@ import elemental.json.JsonObject;
  * @since 7.6
  * @author Vaadin Ltd
  */
+@Deprecated
 public interface DataGenerator extends Serializable {
 
     /**

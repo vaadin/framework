@@ -42,6 +42,7 @@ import com.vaadin.v7.data.Property;
  * @author Vaadin Ltd.
  * @since 3.0
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class FilesystemContainer implements Container.Hierarchical {
 
@@ -80,7 +81,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     static {
 
-        FILE_PROPERTIES = new ArrayList<String>();
+        FILE_PROPERTIES = new ArrayList<>();
         FILE_PROPERTIES.add(PROPERTY_NAME);
         FILE_PROPERTIES.add(PROPERTY_ICON);
         FILE_PROPERTIES.add(PROPERTY_SIZE);
@@ -440,7 +441,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     public Collection<File> getItemIds() {
 
         if (recursive) {
-            final Collection<File> col = new ArrayList<File>();
+            final Collection<File> col = new ArrayList<>();
             for (int i = 0; i < roots.length; i++) {
                 addItemIds(col, roots[i]);
             }
@@ -614,6 +615,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @Deprecated
     public class FileItem implements Item {
 
         /**
@@ -769,6 +771,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @Deprecated
     public class FileExtensionFilter implements FilenameFilter, Serializable {
 
         private final String filter;

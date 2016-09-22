@@ -67,6 +67,7 @@ import com.vaadin.v7.shared.ui.datefield.TextualDateFieldState;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class DateField extends AbstractField<Date> implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, LegacyComponent {
 
@@ -1005,6 +1006,7 @@ public class DateField extends AbstractField<Date> implements
         return timeZone;
     }
 
+    @Deprecated
     public static class UnparsableDateString
             extends Validator.InvalidValueException {
 

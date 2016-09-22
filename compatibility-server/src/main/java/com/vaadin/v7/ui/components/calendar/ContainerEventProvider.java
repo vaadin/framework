@@ -50,6 +50,7 @@ import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider.EventSet
  * @author Vaadin Ltd.
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class ContainerEventProvider
         implements CalendarEditableEventProvider, EventSetChangeNotifier,
         EventChangeNotifier, EventMoveHandler, EventResizeHandler,
@@ -84,14 +85,14 @@ public class ContainerEventProvider
     /**
      * Listeners attached to the container
      */
-    private final List<EventSetChangeListener> eventSetChangeListeners = new LinkedList<CalendarEventProvider.EventSetChangeListener>();
-    private final List<EventChangeListener> eventChangeListeners = new LinkedList<CalendarEvent.EventChangeListener>();
+    private final List<EventSetChangeListener> eventSetChangeListeners = new LinkedList<>();
+    private final List<EventChangeListener> eventChangeListeners = new LinkedList<>();
 
     /**
      * The event cache contains the events previously created by
      * {@link #getEvents(Date, Date)}
      */
-    private final List<CalendarEvent> eventCache = new LinkedList<CalendarEvent>();
+    private final List<CalendarEvent> eventCache = new LinkedList<>();
 
     /**
      * The container used as datasource

@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import com.vaadin.server.VaadinSession;
 
+@Deprecated
 public class ConverterUtil implements Serializable {
 
     /**

@@ -29,6 +29,7 @@ import java.util.Set;
  * usable upon release.
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
 
     private int initialConnections = 5;
@@ -85,8 +86,8 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
     }
 
     private void initializeConnections() throws SQLException {
-        availableConnections = new HashSet<Connection>(initialConnections);
-        reservedConnections = new HashSet<Connection>(initialConnections);
+        availableConnections = new HashSet<>(initialConnections);
+        reservedConnections = new HashSet<>(initialConnections);
         for (int i = 0; i < initialConnections; i++) {
             availableConnections.add(createConnection());
         }

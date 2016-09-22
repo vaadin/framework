@@ -34,6 +34,7 @@ import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
 
 @SuppressWarnings("serial")
+@Deprecated
 public class FreeformQuery extends AbstractTransactionalQuery
         implements QueryDelegate {
 
@@ -68,7 +69,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
             JDBCConnectionPool connectionPool) {
         super(connectionPool);
         if (primaryKeyColumns == null) {
-            primaryKeyColumns = new ArrayList<String>();
+            primaryKeyColumns = new ArrayList<>();
         }
         if (primaryKeyColumns.contains("")) {
             throw new IllegalArgumentException(

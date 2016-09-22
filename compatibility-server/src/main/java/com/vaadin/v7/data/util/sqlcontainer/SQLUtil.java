@@ -17,6 +17,7 @@ package com.vaadin.v7.data.util.sqlcontainer;
 
 import java.io.Serializable;
 
+@Deprecated
 public class SQLUtil implements Serializable {
     /**
      * Escapes different special characters in strings that are passed to SQL.

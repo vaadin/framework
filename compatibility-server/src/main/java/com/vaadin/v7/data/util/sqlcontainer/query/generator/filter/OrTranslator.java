@@ -19,6 +19,7 @@ import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.util.filter.Or;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
 
+@Deprecated
 public class OrTranslator implements FilterTranslator {
 
     @Override

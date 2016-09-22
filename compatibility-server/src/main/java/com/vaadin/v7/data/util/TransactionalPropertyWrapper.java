@@ -41,6 +41,7 @@ import com.vaadin.v7.data.Property.ValueChangeNotifier;
  *
  * @param <T>
  */
+@Deprecated
 public class TransactionalPropertyWrapper<T> extends AbstractProperty<T>
         implements ValueChangeNotifier, Property.Transactional<T> {
 

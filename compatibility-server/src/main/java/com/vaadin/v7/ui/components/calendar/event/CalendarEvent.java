@@ -33,6 +33,7 @@ import java.util.Date;
  * @author Vaadin Ltd.
  *
  */
+@Deprecated
 public interface CalendarEvent extends Serializable {
 
     /**
@@ -93,6 +94,7 @@ public interface CalendarEvent extends Serializable {
      * Event to signal that an event has changed.
      */
     @SuppressWarnings("serial")
+    @Deprecated
     public class EventChangeEvent implements Serializable {
 
         private CalendarEvent source;
@@ -113,6 +115,7 @@ public interface CalendarEvent extends Serializable {
     /**
      * Listener for EventSetChange events.
      */
+    @Deprecated
     public interface EventChangeListener extends Serializable {
 
         /**
@@ -124,6 +127,7 @@ public interface CalendarEvent extends Serializable {
     /**
      * Notifier interface for EventChange events.
      */
+    @Deprecated
     public interface EventChangeNotifier extends Serializable {
 
         /**

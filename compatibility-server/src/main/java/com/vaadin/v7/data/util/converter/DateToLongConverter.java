@@ -25,6 +25,7 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.0
  */
+@Deprecated
 public class DateToLongConverter implements Converter<Date, Long> {
 
     /*

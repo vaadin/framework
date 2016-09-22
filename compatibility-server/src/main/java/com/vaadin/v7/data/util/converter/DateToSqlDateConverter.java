@@ -32,6 +32,7 @@ import java.util.Locale;
  * @since 7.1
  * @author Vaadin Ltd
  */
+@Deprecated
 public class DateToSqlDateConverter implements Converter<Date, java.sql.Date> {
 
     @Override

@@ -37,6 +37,7 @@ import com.vaadin.v7.data.Container;
  *
  * @since 6.6
  */
+@Deprecated
 public abstract class AbstractContainer implements Container {
 
     /**
@@ -57,6 +58,7 @@ public abstract class AbstractContainer implements Container {
      * concerned by the change, but subclasses can provide additional
      * information about the changes.
      */
+    @Deprecated
     protected static class BasePropertySetChangeEvent extends EventObject
             implements Container.PropertySetChangeEvent, Serializable {
 
@@ -78,6 +80,7 @@ public abstract class AbstractContainer implements Container {
      * performed, but subclasses can add provide additional information about
      * the changes.
      */
+    @Deprecated
     protected static class BaseItemSetChangeEvent extends EventObject
             implements Container.ItemSetChangeEvent, Serializable {
 

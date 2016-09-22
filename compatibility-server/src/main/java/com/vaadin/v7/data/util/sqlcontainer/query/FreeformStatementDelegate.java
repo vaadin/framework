@@ -27,6 +27,7 @@ import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
  * is advisable to implement this interface instead of the FreeformQueryDelegate
  * whenever possible.
  */
+@Deprecated
 public interface FreeformStatementDelegate extends FreeformQueryDelegate {
     /**
      * Should return a new instance of StatementHelper that contains the query

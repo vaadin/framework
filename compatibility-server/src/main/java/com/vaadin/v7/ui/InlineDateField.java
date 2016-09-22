@@ -31,6 +31,7 @@ import com.vaadin.v7.data.Property;
  * @author Vaadin Ltd.
  * @since 5.0
  */
+@Deprecated
 public class InlineDateField extends DateField {
 
     public InlineDateField() {

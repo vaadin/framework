@@ -38,6 +38,7 @@ import com.vaadin.v7.data.Property;
  * provided a default comparator is used.
  *
  */
+@Deprecated
 public class DefaultItemSorter implements ItemSorter {
 
     private java.lang.Object[] sortPropertyIds;
@@ -165,8 +166,8 @@ public class DefaultItemSorter implements ItemSorter {
         this.container = container;
 
         // Removes any non-sortable property ids
-        final List<Object> ids = new ArrayList<Object>();
-        final List<Boolean> orders = new ArrayList<Boolean>();
+        final List<Object> ids = new ArrayList<>();
+        final List<Boolean> orders = new ArrayList<>();
         final Collection<?> sortable = container
                 .getSortableContainerPropertyIds();
         for (int i = 0; i < propertyId.length; i++) {
@@ -191,6 +192,7 @@ public class DefaultItemSorter implements ItemSorter {
      * compares can be cast to Comparable.
      *
      */
+    @Deprecated
     public static class DefaultPropertyValueComparator
             implements Comparator<Object>, Serializable {
 

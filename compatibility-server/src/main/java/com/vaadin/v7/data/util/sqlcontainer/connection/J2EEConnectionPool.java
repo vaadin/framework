@@ -24,6 +24,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+@Deprecated
 public class J2EEConnectionPool implements JDBCConnectionPool {
 
     private String dataSourceJndiName;

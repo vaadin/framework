@@ -44,6 +44,7 @@ import com.vaadin.v7.data.Validator;
  * @author Petri Hakala
  * @author Henri Sara
  */
+@Deprecated
 public class BeanValidator implements Validator {
 
     private static final long serialVersionUID = 1L;
@@ -58,6 +59,7 @@ public class BeanValidator implements Validator {
      * Simple implementation of a message interpolator context that returns
      * fixed values.
      */
+    @Deprecated
     protected static class SimpleContext implements Context, Serializable {
 
         private final Object value;

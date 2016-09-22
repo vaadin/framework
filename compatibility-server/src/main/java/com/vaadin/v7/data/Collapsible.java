@@ -37,6 +37,7 @@ import com.vaadin.v7.data.Container.Ordered;
  * <p>
  *
  */
+@Deprecated
 public interface Collapsible extends Hierarchical, Ordered {
 
     /**

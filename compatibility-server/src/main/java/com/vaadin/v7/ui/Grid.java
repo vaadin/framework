@@ -184,6 +184,7 @@ import elemental.json.JsonValue;
  * @since 7.4
  * @author Vaadin Ltd
  */
+@Deprecated
 public class Grid extends AbstractFocusable implements SelectionNotifier,
         SortNotifier, SelectiveRenderer, ItemClickNotifier {
 
@@ -192,6 +193,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *
      * @since 7.5.0
      */
+    @Deprecated
     public interface ColumnVisibilityChangeListener extends Serializable {
         /**
          * Called when a column has become hidden or unhidden.
@@ -206,6 +208,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *
      * @since 7.5.0
      */
+    @Deprecated
     public static class ColumnVisibilityChangeEvent extends Component.Event {
 
         private final Column column;
@@ -272,6 +275,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @author Vaadin Ltd
      * @see DetailsGenerator#NULL
      */
+    @Deprecated
     public interface DetailsGenerator extends Serializable {
 
         /** A details generator that provides no details */
@@ -309,6 +313,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *
      * @since 7.6.1
      */
+    @Deprecated
     public final static class DetailComponentManager
             extends AbstractGridExtension implements DataGenerator {
 
@@ -560,6 +565,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Aims to fields of suitable type and with suitable size for use in the
      * editor row.
      */
+    @Deprecated
     public static class EditorFieldFactory
             extends DefaultFieldGroupFieldFactory {
         private static final EditorFieldFactory INSTANCE = new EditorFieldFactory();
@@ -611,6 +617,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Error handler for the editor
      */
+    @Deprecated
     public interface EditorErrorHandler extends Serializable {
 
         /**
@@ -627,6 +634,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *
      * @since 7.6
      */
+    @Deprecated
     public static class GridContextClickEvent extends ContextClickEvent {
 
         private final Object itemId;
@@ -692,6 +700,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * An event which is fired when saving the editor fails
      */
+    @Deprecated
     public static class CommitErrorEvent extends Component.Event {
 
         private CommitException cause;
@@ -775,6 +784,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *
      * @since 7.5.0
      */
+    @Deprecated
     public interface ColumnReorderListener extends Serializable {
 
         /**
@@ -791,6 +801,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *
      * @since 7.5.0
      */
+    @Deprecated
     public static class ColumnReorderEvent extends Component.Event {
 
         private final boolean userOriginated;
@@ -825,6 +836,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *
      * @since 7.6
      */
+    @Deprecated
     public interface ColumnResizeListener extends Serializable {
 
         /**
@@ -842,6 +854,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *
      * @since 7.6
      */
+    @Deprecated
     public static class ColumnResizeEvent extends Component.Event {
 
         private final Column column;
@@ -886,6 +899,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Interface for an editor event listener
      */
+    @Deprecated
     public interface EditorListener extends Serializable {
 
         public static final Method EDITOR_OPEN_METHOD = ReflectTools.findMethod(
@@ -925,6 +939,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Base class for editor related events
      */
+    @Deprecated
     public static abstract class EditorEvent extends Component.Event {
 
         private Object itemID;
@@ -946,6 +961,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * This event gets fired when an editor is opened
      */
+    @Deprecated
     public static class EditorOpenEvent extends EditorEvent {
 
         public EditorOpenEvent(Grid source, Object itemID) {
@@ -957,6 +973,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * This event gets fired when an editor is opened while another row is being
      * edited (i.e. editor focus moves elsewhere)
      */
+    @Deprecated
     public static class EditorMoveEvent extends EditorEvent {
 
         public EditorMoveEvent(Grid source, Object itemID) {
@@ -968,6 +985,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * This event gets fired when an editor is dismissed or closed by other
      * means.
      */
+    @Deprecated
     public static class EditorCloseEvent extends EditorEvent {
 
         public EditorCloseEvent(Grid source, Object itemID) {
@@ -979,6 +997,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Default error handler for the editor
      *
      */
+    @Deprecated
     public class DefaultEditorErrorHandler implements EditorErrorHandler {
 
         @Override
@@ -1045,6 +1064,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @see Grid#setSelectionMode(SelectionMode)
      * @see Grid#setSelectionModel(SelectionModel)
      */
+    @Deprecated
     public enum SelectionMode {
         /** A SelectionMode that maps to {@link SingleSelectionModel} */
         SINGLE {
@@ -1078,6 +1098,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * The server-side interface that controls Grid's selection state.
      * SelectionModel should extend {@link AbstractGridExtension}.
      */
+    @Deprecated
     public interface SelectionModel extends Serializable, Extension {
         /**
          * Checks whether an item is selected or not.
@@ -1127,6 +1148,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * something is forbidden to do in e.g. the user interface, it must also
          * be forbidden to do in the server-side and client-side APIs.
          */
+        @Deprecated
         public interface Multi extends SelectionModel {
 
             /**
@@ -1257,6 +1279,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * something is forbidden to do in e.g. the user interface, it must also
          * be forbidden to do in the server-side and client-side APIs.
          */
+        @Deprecated
         public interface Single extends SelectionModel {
 
             /**
@@ -1316,6 +1339,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * developer is unable to select something programmatically, it is not
          * allowed for the end-user to select anything, either.
          */
+        @Deprecated
         public interface None extends SelectionModel {
 
             /**
@@ -1340,6 +1364,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * A base class for SelectionModels that contains some of the logic that is
      * reusable.
      */
+    @Deprecated
     public static abstract class AbstractSelectionModel extends
             AbstractGridExtension implements SelectionModel, DataGenerator {
         protected final LinkedHashSet<Object> selection = new LinkedHashSet<>();
@@ -1437,6 +1462,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * A default implementation of a {@link SelectionModel.Single}
      */
+    @Deprecated
     public static class SingleSelectionModel extends AbstractSelectionModel
             implements SelectionModel.Single {
 
@@ -1542,6 +1568,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * A default implementation for a {@link SelectionModel.None}
      */
+    @Deprecated
     public static class NoSelectionModel extends AbstractSelectionModel
             implements SelectionModel.None {
 
@@ -1569,6 +1596,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * A default implementation of a {@link SelectionModel.Multi}
      */
+    @Deprecated
     public static class MultiSelectionModel extends AbstractSelectionModel
             implements SelectionModel.Multi {
 
@@ -1901,6 +1929,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * should not be stored anywhere outside of the method providing these
      * instances.
      */
+    @Deprecated
     public static class RowReference implements Serializable {
         private final Grid grid;
 
@@ -1963,6 +1992,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * should not be stored anywhere outside of the method providing these
      * instances.
      */
+    @Deprecated
     public static class CellReference implements Serializable {
         private final RowReference rowReference;
 
@@ -2038,6 +2068,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *
      * @see Grid#setRowStyleGenerator(RowStyleGenerator)
      */
+    @Deprecated
     public interface RowStyleGenerator extends Serializable {
 
         /**
@@ -2056,6 +2087,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *
      * @see Grid#setCellStyleGenerator(CellStyleGenerator)
      */
+    @Deprecated
     public interface CellStyleGenerator extends Serializable {
 
         /**
@@ -2079,6 +2111,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *
      * @since 7.6
      */
+    @Deprecated
     public interface RowDescriptionGenerator extends Serializable {
 
         /**
@@ -2103,6 +2136,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *
      * @since 7.6
      */
+    @Deprecated
     public interface CellDescriptionGenerator extends Serializable {
 
         /**
@@ -2217,6 +2251,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @param <ROWTYPE>
      *            the type of the rows in the section
      */
+    @Deprecated
     public abstract static class StaticSection<ROWTYPE extends StaticSection.StaticRow<?>>
             implements Serializable {
 
@@ -2226,6 +2261,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * @param <CELLTYPE>
          *            the type of the cells in the row
          */
+        @Deprecated
         public abstract static class StaticRow<CELLTYPE extends StaticCell>
                 implements Serializable {
 
@@ -2481,6 +2517,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         /**
          * A header or footer cell. Has a simple textual caption.
          */
+        @Deprecated
         abstract static class StaticCell implements Serializable {
 
             private CellState cellState = new CellState();
@@ -2966,6 +3003,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Represents the header section of a Grid.
      */
+    @Deprecated
     protected static class Header extends StaticSection<HeaderRow> {
 
         private HeaderRow defaultRow = null;
@@ -3073,6 +3111,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Represents a header row in Grid.
      */
+    @Deprecated
     public static class HeaderRow extends StaticSection.StaticRow<HeaderCell> {
 
         protected HeaderRow(StaticSection<?> section) {
@@ -3125,6 +3164,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Represents a header cell in Grid. Can be a merged cell for multiple
      * columns.
      */
+    @Deprecated
     public static class HeaderCell extends StaticSection.StaticCell {
 
         protected HeaderCell(HeaderRow row) {
@@ -3136,6 +3176,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Represents the footer section of a Grid. By default Footer is not
      * visible.
      */
+    @Deprecated
     protected static class Footer extends StaticSection<FooterRow> {
 
         private final GridStaticSectionState footerState = new GridStaticSectionState();
@@ -3164,6 +3205,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Represents a footer row in Grid.
      */
+    @Deprecated
     public static class FooterRow extends StaticSection.StaticRow<FooterCell> {
 
         protected FooterRow(StaticSection<?> section) {
@@ -3185,6 +3227,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * Represents a footer cell in Grid.
      */
+    @Deprecated
     public static class FooterCell extends StaticSection.StaticCell {
 
         protected FooterCell(FooterRow row) {
@@ -3196,6 +3239,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * A column in the grid. Can be obtained by calling
      * {@link Grid#getColumn(Object propertyId)}.
      */
+    @Deprecated
     public static class Column implements Serializable {
 
         /**
@@ -4126,6 +4170,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @param <T>
      *            the type this renderer knows how to present
      */
+    @Deprecated
     public static abstract class AbstractRenderer<T>
             extends AbstractGridExtension implements Renderer<T> {
 
@@ -4284,6 +4329,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *
      * @since 7.5
      */
+    @Deprecated
     public static abstract class AbstractGridExtension
             extends AbstractExtension {
 

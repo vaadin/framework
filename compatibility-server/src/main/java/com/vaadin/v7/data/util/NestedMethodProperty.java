@@ -42,6 +42,7 @@ import com.vaadin.v7.data.util.MethodProperty.MethodException;
  *
  * @since 6.6
  */
+@Deprecated
 public class NestedMethodProperty<T> extends AbstractProperty<T> {
 
     // needed for de-serialization
@@ -124,7 +125,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
     private void initialize(Class<?> beanClass, String propertyName)
             throws IllegalArgumentException {
 
-        List<Method> getMethods = new ArrayList<Method>();
+        List<Method> getMethods = new ArrayList<>();
 
         String lastSimplePropertyName = propertyName;
         Class<?> lastClass = beanClass;

@@ -129,6 +129,7 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
      * @author Vaadin Ltd
      * @since 7.0
      */
+    @Deprecated
     public static class ConversionException extends RuntimeException {
 
         /**

@@ -31,6 +31,7 @@ import com.vaadin.v7.data.Item;
  *
  * @since 6.6
  */
+@Deprecated
 public final class And extends AbstractJunctionFilter {
 
     /**

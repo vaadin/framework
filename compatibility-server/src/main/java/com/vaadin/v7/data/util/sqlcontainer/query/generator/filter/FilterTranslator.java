@@ -20,6 +20,7 @@ import java.io.Serializable;
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
 
+@Deprecated
 public interface FilterTranslator extends Serializable {
     public boolean translatesFilter(Filter filter);
 

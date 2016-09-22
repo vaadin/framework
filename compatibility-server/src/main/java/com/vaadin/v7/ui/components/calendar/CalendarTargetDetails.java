@@ -33,6 +33,7 @@ import com.vaadin.v7.ui.Calendar;
  * @author Vaadin Ltd.
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class CalendarTargetDetails extends TargetDetailsImpl {
 
     private boolean hasDropTime;

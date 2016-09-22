@@ -20,6 +20,7 @@ import com.vaadin.v7.data.util.filter.IsNull;
 import com.vaadin.v7.data.util.filter.Not;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
 
+@Deprecated
 public class NotTranslator implements FilterTranslator {
 
     @Override

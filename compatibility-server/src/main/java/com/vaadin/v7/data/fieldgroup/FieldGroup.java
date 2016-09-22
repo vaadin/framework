@@ -51,6 +51,7 @@ import com.vaadin.v7.ui.Field;
  * @author Vaadin Ltd
  * @since 7.0
  */
+@Deprecated
 public class FieldGroup implements Serializable {
 
     private Item itemDataSource;
@@ -59,9 +60,9 @@ public class FieldGroup implements Serializable {
     private boolean enabled = true;
     private boolean readOnly = false;
 
-    private HashMap<Object, Field<?>> propertyIdToField = new HashMap<Object, Field<?>>();
-    private LinkedHashMap<Field<?>, Object> fieldToPropertyId = new LinkedHashMap<Field<?>, Object>();
-    private List<CommitHandler> commitHandlers = new ArrayList<CommitHandler>();
+    private HashMap<Object, Field<?>> propertyIdToField = new HashMap<>();
+    private LinkedHashMap<Field<?>, Object> fieldToPropertyId = new LinkedHashMap<>();
+    private List<CommitHandler> commitHandlers = new ArrayList<>();
 
     /**
      * The field factory used by builder methods.
@@ -281,7 +282,7 @@ public class FieldGroup implements Serializable {
      */
     protected <T> Property.Transactional<T> wrapInTransactionalProperty(
             Property<T> itemProperty) {
-        return new TransactionalPropertyWrapper<T>(itemProperty);
+        return new TransactionalPropertyWrapper<>(itemProperty);
     }
 
     private void throwIfFieldIsNull(Field<?> field, Object propertyId) {
@@ -440,9 +441,9 @@ public class FieldGroup implements Serializable {
      */
     public Collection<Object> getUnboundPropertyIds() {
         if (getItemDataSource() == null) {
-            return new ArrayList<Object>();
+            return new ArrayList<>();
         }
-        List<Object> unboundPropertyIds = new ArrayList<Object>();
+        List<Object> unboundPropertyIds = new ArrayList<>();
         unboundPropertyIds.addAll(getItemDataSource().getItemPropertyIds());
         unboundPropertyIds.removeAll(propertyIdToField.keySet());
         return unboundPropertyIds;
@@ -495,7 +496,7 @@ public class FieldGroup implements Serializable {
      *         commits succeeded
      */
     private Map<Field<?>, InvalidValueException> commitFields() {
-        Map<Field<?>, InvalidValueException> invalidValueExceptions = new HashMap<Field<?>, InvalidValueException>();
+        Map<Field<?>, InvalidValueException> invalidValueExceptions = new HashMap<>();
 
         for (Field<?> f : fieldToPropertyId.keySet()) {
             try {
@@ -514,6 +515,7 @@ public class FieldGroup implements Serializable {
      *
      * @since 7.4
      */
+    @Deprecated
     public static class FieldGroupInvalidValueException
             extends InvalidValueException {
         private Map<Field<?>, InvalidValueException> invalidValueExceptions;
@@ -691,6 +693,7 @@ public class FieldGroup implements Serializable {
      * of the commit and cause the commit to be aborted by throwing a
      * {@link CommitException}.
      */
+    @Deprecated
     public interface CommitHandler extends Serializable {
         /**
          * Called before changes are committed to the field and the item is
@@ -723,6 +726,7 @@ public class FieldGroup implements Serializable {
      * FIXME javadoc
      *
      */
+    @Deprecated
     public static class CommitEvent implements Serializable {
         private FieldGroup fieldBinder;
 
@@ -1047,6 +1051,7 @@ public class FieldGroup implements Serializable {
      * fields did not pass validation
      *
      */
+    @Deprecated
     public static class CommitException extends Exception {
 
         private FieldGroup fieldGroup;
@@ -1086,7 +1091,7 @@ public class FieldGroup implements Serializable {
                 return ((FieldGroupInvalidValueException) getCause())
                         .getInvalidFields();
             }
-            return new HashMap<Field<?>, InvalidValueException>();
+            return new HashMap<>();
         }
 
         /**
@@ -1101,6 +1106,7 @@ public class FieldGroup implements Serializable {
 
     }
 
+    @Deprecated
     public static class BindException extends RuntimeException {
 
         public BindException(String message) {
@@ -1113,6 +1119,7 @@ public class FieldGroup implements Serializable {
 
     }
 
+    @Deprecated
     public static class SearchException extends RuntimeException {
 
         public SearchException(String message) {
@@ -1226,7 +1233,7 @@ public class FieldGroup implements Serializable {
      */
     protected static List<java.lang.reflect.Field> getFieldsInDeclareOrder(
             Class searchClass) {
-        ArrayList<java.lang.reflect.Field> memberFieldInOrder = new ArrayList<java.lang.reflect.Field>();
+        ArrayList<java.lang.reflect.Field> memberFieldInOrder = new ArrayList<>();
 
         while (searchClass != null) {
             for (java.lang.reflect.Field memberField : searchClass

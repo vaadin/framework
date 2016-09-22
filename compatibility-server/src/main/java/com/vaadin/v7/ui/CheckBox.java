@@ -33,6 +33,7 @@ import com.vaadin.v7.data.Property;
 import com.vaadin.v7.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.v7.shared.ui.checkbox.CheckBoxState;
 
+@Deprecated
 public class CheckBox extends AbstractField<Boolean> {
 
     private CheckBoxServerRpc rpc = new CheckBoxServerRpc() {

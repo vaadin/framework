@@ -68,6 +68,7 @@ import com.vaadin.v7.ui.Tree.ExpandListener;
  * share UI state in the container.
  */
 @SuppressWarnings({ "serial" })
+@Deprecated
 public class TreeTable extends Table implements Hierarchical {
 
     private interface ContainerStrategy extends Serializable {
@@ -196,7 +197,7 @@ public class TreeTable extends Table implements Hierarchical {
      */
     private class HierarchicalStrategy extends AbstractStrategy {
 
-        private final HashSet<Object> openItems = new HashSet<Object>();
+        private final HashSet<Object> openItems = new HashSet<>();
 
         @Override
         public boolean isNodeOpen(Object itemId) {
@@ -283,7 +284,7 @@ public class TreeTable extends Table implements Hierarchical {
          */
         private List<Object> getPreOrder() {
             if (preOrder == null) {
-                preOrder = new ArrayList<Object>();
+                preOrder = new ArrayList<>();
                 Collection<?> rootItemIds = getContainerDataSource()
                         .rootItemIds();
                 for (Object id : rootItemIds) {
@@ -894,7 +895,7 @@ public class TreeTable extends Table implements Hierarchical {
 
     @Override
     protected List<Object> getItemIds(int firstIndex, int rows) {
-        List<Object> itemIds = new ArrayList<Object>();
+        List<Object> itemIds = new ArrayList<>();
         for (int i = firstIndex; i < firstIndex + rows; i++) {
             itemIds.add(getIdByIndex(i));
         }
@@ -908,8 +909,8 @@ public class TreeTable extends Table implements Hierarchical {
             return;
         }
 
-        Set<String> selected = new HashSet<String>();
-        Stack<Object> parents = new Stack<Object>();
+        Set<String> selected = new HashSet<>();
+        Stack<Object> parents = new Stack<>();
         int lastDepth = -1;
 
         for (Element tr : tbody.children()) {

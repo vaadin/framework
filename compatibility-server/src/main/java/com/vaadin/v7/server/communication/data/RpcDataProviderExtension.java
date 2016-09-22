@@ -62,6 +62,7 @@ import elemental.json.JsonObject;
  * @since 7.4
  * @author Vaadin Ltd
  */
+@Deprecated
 public class RpcDataProviderExtension extends AbstractExtension {
 
     /**
@@ -71,9 +72,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private class ActiveItemHandler implements Serializable, DataGenerator {
 
-        private final Map<Object, GridValueChangeListener> activeItemMap = new HashMap<Object, GridValueChangeListener>();
-        private final KeyMapper<Object> keyMapper = new KeyMapper<Object>();
-        private final Set<Object> droppedItems = new HashSet<Object>();
+        private final Map<Object, GridValueChangeListener> activeItemMap = new HashMap<>();
+        private final KeyMapper<Object> keyMapper = new KeyMapper<>();
+        private final Set<Object> droppedItems = new HashSet<>();
 
         /**
          * Registers ValueChangeListeners for given item ids.
@@ -117,7 +118,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * @return collection of item ids
          */
         public Collection<Object> getActiveItemIds() {
-            return new HashSet<Object>(activeItemMap.keySet());
+            return new HashSet<>(activeItemMap.keySet());
         }
 
         /**
@@ -126,7 +127,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * @return collection of value change listeners
          */
         public Collection<GridValueChangeListener> getValueChangeListeners() {
-            return new HashSet<GridValueChangeListener>(activeItemMap.values());
+            return new HashSet<>(activeItemMap.values());
         }
 
         @Override
@@ -244,7 +245,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
             else {
                 // Remove obsolete value change listeners.
-                Set<Object> keySet = new HashSet<Object>(
+                Set<Object> keySet = new HashSet<>(
                         activeItemHandler.activeItemMap.keySet());
                 for (Object itemId : keySet) {
                     activeItemHandler.removeListener(itemId);
@@ -272,7 +273,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     /** Size possibly changed with a bare ItemSetChangeEvent */
     private boolean bareItemSetTriggeredSizeChange = false;
 
-    private final Set<DataGenerator> dataGenerators = new LinkedHashSet<DataGenerator>();
+    private final Set<DataGenerator> dataGenerators = new LinkedHashSet<>();
 
     private final ActiveItemHandler activeItemHandler = new ActiveItemHandler();
 
@@ -282,6 +283,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * @param container
      *            the container to make available
      */
+    @Deprecated
     public RpcDataProviderExtension(Indexed container) {
         this.container = container;
         rpc = getRpcProxy(DataProviderRpc.class);
@@ -456,7 +458,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private void insertRowData(final int index, final int count) {
         if (rowChanges == null) {
-            rowChanges = new ArrayList<Runnable>();
+            rowChanges = new ArrayList<>();
         }
 
         if (rowChanges.isEmpty()) {
@@ -489,7 +491,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private void removeRowData(final int index, final int count) {
         if (rowChanges == null) {
-            rowChanges = new ArrayList<Runnable>();
+            rowChanges = new ArrayList<>();
         }
 
         if (rowChanges.isEmpty()) {
@@ -514,7 +516,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     public void updateRowData(Object itemId) {
         if (updatedItemIds == null) {
-            updatedItemIds = new LinkedHashSet<Object>();
+            updatedItemIds = new LinkedHashSet<>();
         }
 
         if (updatedItemIds.isEmpty()) {

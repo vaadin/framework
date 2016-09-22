@@ -40,10 +40,11 @@ import com.vaadin.v7.shared.ui.optiongroup.OptionGroupState;
  * Configures select to be used as an option group.
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class OptionGroup extends AbstractSelect
         implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
-    private Set<Object> disabledItemIds = new HashSet<Object>();
+    private Set<Object> disabledItemIds = new HashSet<>();
 
     public OptionGroup() {
         super();

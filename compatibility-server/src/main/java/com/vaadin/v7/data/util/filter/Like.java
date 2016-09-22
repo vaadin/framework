@@ -18,6 +18,7 @@ package com.vaadin.v7.data.util.filter;
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.Item;
 
+@Deprecated
 public class Like implements Filter {
     private final Object propertyId;
     private final String value;

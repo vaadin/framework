@@ -47,6 +47,7 @@ import com.vaadin.v7.data.Property;
  * @author Vaadin Ltd.
  * @since 3.0
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class ContainerHierarchicalWrapper implements Container.Hierarchical,
         Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier {
@@ -118,10 +119,10 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
         // Create initial order if needed
         if (!hierarchical) {
-            noChildrenAllowed = new HashSet<Object>();
-            parent = new Hashtable<Object, Object>();
-            children = new Hashtable<Object, LinkedList<Object>>();
-            roots = new LinkedHashSet<Object>(container.getItemIds());
+            noChildrenAllowed = new HashSet<>();
+            parent = new Hashtable<>();
+            children = new Hashtable<>();
+            roots = new LinkedHashSet<>(container.getItemIds());
         }
 
         updateHierarchicalWrapper();
@@ -141,10 +142,10 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             // Recreate hierarchy and data structures if missing
             if (noChildrenAllowed == null || parent == null || children == null
                     || roots == null) {
-                noChildrenAllowed = new HashSet<Object>();
-                parent = new Hashtable<Object, Object>();
-                children = new Hashtable<Object, LinkedList<Object>>();
-                roots = new LinkedHashSet<Object>(container.getItemIds());
+                noChildrenAllowed = new HashSet<>();
+                parent = new Hashtable<>();
+                children = new Hashtable<>();
+                roots = new LinkedHashSet<>(container.getItemIds());
             }
 
             // Check that the hierarchy is up-to-date
@@ -157,7 +158,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
                         itemIds);
 
                 // Calculate the set of all items in the hierarchy
-                final HashSet<Object> s = new HashSet<Object>();
+                final HashSet<Object> s = new HashSet<>();
                 s.addAll(parent.keySet());
                 s.addAll(children.keySet());
                 s.addAll(roots);
@@ -182,7 +183,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
                 Object[] array = roots.toArray();
                 Arrays.sort(array, basedOnOrderFromWrappedContainer);
-                roots = new LinkedHashSet<Object>();
+                roots = new LinkedHashSet<>();
                 for (int i = 0; i < array.length; i++) {
                     roots.add(array[i]);
                 }
@@ -475,7 +476,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
         parent.put(itemId, newParentId);
         LinkedList<Object> pcl = children.get(newParentId);
         if (pcl == null) {
-            pcl = new LinkedList<Object>();
+            pcl = new LinkedList<>();
             children.put(newParentId, pcl);
         }
         pcl.add(itemId);

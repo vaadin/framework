@@ -35,6 +35,7 @@ import com.vaadin.v7.data.Property;
  *
  * @since 6.6
  */
+@Deprecated
 public final class SimpleStringFilter implements Filter {
 
     final Object propertyId;

@@ -33,6 +33,7 @@ import elemental.json.JsonValue;
  * @since 7.4
  * @author Vaadin Ltd
  */
+@Deprecated
 public interface Renderer<T> extends Extension {
 
     /**

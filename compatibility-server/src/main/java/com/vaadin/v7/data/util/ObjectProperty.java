@@ -26,6 +26,7 @@ import com.vaadin.v7.data.Property;
  * @author Vaadin Ltd.
  * @since 3.0
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class ObjectProperty<T> extends AbstractProperty<T> {
 

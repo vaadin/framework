@@ -24,6 +24,7 @@ package com.vaadin.v7.data.validator;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class StringLengthValidator extends AbstractStringValidator {
 
     private Integer minLength = null;

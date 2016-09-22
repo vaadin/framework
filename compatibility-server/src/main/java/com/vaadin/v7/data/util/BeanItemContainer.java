@@ -51,6 +51,7 @@ import java.util.Collection;
  *
  * @since 5.4
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class BeanItemContainer<BEANTYPE>
         extends AbstractBeanContainer<BEANTYPE, BEANTYPE> {

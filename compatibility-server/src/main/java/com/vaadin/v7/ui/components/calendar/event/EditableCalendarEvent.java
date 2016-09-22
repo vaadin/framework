@@ -35,6 +35,7 @@ import java.util.Date;
  * @since 7.1
  * @author Vaadin Ltd.
  */
+@Deprecated
 public interface EditableCalendarEvent extends CalendarEvent {
 
     /**

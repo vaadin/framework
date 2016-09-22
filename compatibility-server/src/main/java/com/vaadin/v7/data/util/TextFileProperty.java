@@ -37,6 +37,7 @@ import java.nio.charset.Charset;
  * are supported but only fire when setReadOnly(boolean) is explicitly called.
  *
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class TextFileProperty extends AbstractProperty<String> {
 

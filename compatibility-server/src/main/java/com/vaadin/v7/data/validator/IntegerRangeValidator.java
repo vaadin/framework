@@ -22,6 +22,7 @@ package com.vaadin.v7.data.validator;
  * @since 5.4
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class IntegerRangeValidator extends RangeValidator<Integer> {
 
     /**

@@ -30,6 +30,7 @@ import com.vaadin.v7.data.Property;
  *
  * @since 6.6
  */
+@Deprecated
 public interface VaadinPropertyDescriptor<BT> extends Serializable {
     /**
      * Returns the name of the property.

@@ -37,6 +37,7 @@ import com.vaadin.v7.ui.Grid.Column;
  * @since 7.4
  * @author Vaadin Ltd
  */
+@Deprecated
 public class ClickableRenderer<T> extends AbstractRenderer<T> {
 
     /**
@@ -45,6 +46,7 @@ public class ClickableRenderer<T> extends AbstractRenderer<T> {
      *
      * @see {@link ButtonRenderer#addClickListener(RendererClickListener)}
      */
+    @Deprecated
     public interface RendererClickListener extends ConnectorEventListener {
 
         static final Method CLICK_METHOD = ReflectTools.findMethod(
@@ -62,6 +64,7 @@ public class ClickableRenderer<T> extends AbstractRenderer<T> {
     /**
      * An event fired when a button rendered by a ButtonRenderer is clicked.
      */
+    @Deprecated
     public static class RendererClickEvent extends ClickEvent {
 
         private Object itemId;

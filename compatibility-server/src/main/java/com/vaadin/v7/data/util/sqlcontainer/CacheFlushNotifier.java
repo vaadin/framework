@@ -29,13 +29,14 @@ import com.vaadin.v7.data.util.sqlcontainer.query.TableQuery;
  * CacheFlushNotifier is a simple static notification mechanism to inform other
  * SQLContainers that the contents of their caches may have become stale.
  */
+@Deprecated
 class CacheFlushNotifier implements Serializable {
     /*
      * SQLContainer instance reference list and dead reference queue. Used for
      * the cache flush notification feature.
      */
-    private static List<WeakReference<SQLContainer>> allInstances = new ArrayList<WeakReference<SQLContainer>>();
-    private static ReferenceQueue<SQLContainer> deadInstances = new ReferenceQueue<SQLContainer>();
+    private static List<WeakReference<SQLContainer>> allInstances = new ArrayList<>();
+    private static ReferenceQueue<SQLContainer> deadInstances = new ReferenceQueue<>();
 
     /**
      * Adds the given SQLContainer to the cache flush notification receiver list
@@ -46,7 +47,7 @@ class CacheFlushNotifier implements Serializable {
     public static void addInstance(SQLContainer c) {
         removeDeadReferences();
         if (c != null) {
-            allInstances.add(new WeakReference<SQLContainer>(c, deadInstances));
+            allInstances.add(new WeakReference<>(c, deadInstances));
         }
     }
 

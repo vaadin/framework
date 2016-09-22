@@ -23,6 +23,7 @@ package com.vaadin.v7.ui.renderers;
  * @since 7.4
  * @author Vaadin Ltd
  */
+@Deprecated
 public class ButtonRenderer extends ClickableRenderer<String> {
 
     /**

@@ -29,6 +29,7 @@ import com.vaadin.v7.shared.ui.twincolselect.TwinColSelectState;
  * side for selected items.
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class TwinColSelect extends AbstractSelect {
 
     private int rows = 0;

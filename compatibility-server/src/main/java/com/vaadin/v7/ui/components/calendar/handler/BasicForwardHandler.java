@@ -29,6 +29,7 @@ import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.ForwardHandl
  * @author Vaadin Ltd.
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class BasicForwardHandler implements ForwardHandler {
 
     /*

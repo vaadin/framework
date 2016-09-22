@@ -29,6 +29,7 @@ import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.DateClickHan
  * @author Vaadin Ltd.
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class BasicDateClickHandler implements DateClickHandler {
 
     /*

@@ -33,6 +33,7 @@ import com.vaadin.v7.data.Container;
  * @since 6.0
  * @see FormFieldFactory
  */
+@Deprecated
 public interface TableFieldFactory extends Serializable {
     /**
      * Creates a field based on the Container, item id, property id and the

@@ -33,6 +33,7 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.0
  */
+@Deprecated
 public class StringToBooleanConverter implements Converter<String, Boolean> {
 
     private final String trueString;

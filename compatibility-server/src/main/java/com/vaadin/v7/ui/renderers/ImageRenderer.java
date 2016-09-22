@@ -33,6 +33,7 @@ import elemental.json.JsonValue;
  * @since 7.4
  * @author Vaadin Ltd
  */
+@Deprecated
 public class ImageRenderer extends ClickableRenderer<Resource> {
 
     /**

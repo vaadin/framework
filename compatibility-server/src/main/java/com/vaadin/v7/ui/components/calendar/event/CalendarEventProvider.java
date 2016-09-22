@@ -26,6 +26,7 @@ import java.util.List;
  * @since 7.1.0
  * @author Vaadin Ltd.
  */
+@Deprecated
 public interface CalendarEventProvider extends Serializable {
     /**
      * <p>
@@ -58,6 +59,7 @@ public interface CalendarEventProvider extends Serializable {
      *
      */
     @SuppressWarnings("serial")
+    @Deprecated
     public class EventSetChangeEvent implements Serializable {
 
         private CalendarEventProvider source;
@@ -79,6 +81,7 @@ public interface CalendarEventProvider extends Serializable {
     /**
      * Listener for EventSetChange events.
      */
+    @Deprecated
     public interface EventSetChangeListener extends Serializable {
 
         /**
@@ -90,6 +93,7 @@ public interface CalendarEventProvider extends Serializable {
     /**
      * Notifier interface for EventSetChange events.
      */
+    @Deprecated
     public interface EventSetChangeNotifier extends Serializable {
 
         /**

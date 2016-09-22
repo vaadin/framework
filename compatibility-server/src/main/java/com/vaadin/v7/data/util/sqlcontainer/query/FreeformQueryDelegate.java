@@ -23,6 +23,7 @@ import java.util.List;
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.util.sqlcontainer.RowItem;
 
+@Deprecated
 public interface FreeformQueryDelegate extends Serializable {
     /**
      * Should return the SQL query string to be performed. This method is

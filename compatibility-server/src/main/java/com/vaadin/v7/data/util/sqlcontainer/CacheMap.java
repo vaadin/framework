@@ -23,6 +23,7 @@ import java.util.Map;
  * number of items. In SQLContainer this is used for RowItem -cache. Cache size
  * will be two times the page length parameter of the container.
  */
+@Deprecated
 class CacheMap<K, V> extends LinkedHashMap<K, V> {
     private static final long serialVersionUID = 679999766473555231L;
     private int cacheLimit = SQLContainer.CACHE_RATIO

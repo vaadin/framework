@@ -25,6 +25,7 @@ import java.util.Arrays;
  * the primary key columns of the identified row. This allows easy equals()
  * -comparison of RowItems.
  */
+@Deprecated
 public class RowId implements Serializable {
     private static final long serialVersionUID = -3161778404698901258L;
     protected Object[] id;

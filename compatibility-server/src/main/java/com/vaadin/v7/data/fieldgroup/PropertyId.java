@@ -57,6 +57,7 @@ import com.vaadin.v7.ui.Field;
  */
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
+@Deprecated
 public @interface PropertyId {
     String value();
 }

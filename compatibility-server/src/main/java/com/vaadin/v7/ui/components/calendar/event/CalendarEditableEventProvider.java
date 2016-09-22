@@ -22,6 +22,7 @@ package com.vaadin.v7.ui.components.calendar.event;
  * @since 7.1.0
  * @author Vaadin Ltd.
  */
+@Deprecated
 public interface CalendarEditableEventProvider extends CalendarEventProvider {
 
     /**

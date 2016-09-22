@@ -28,6 +28,7 @@ import com.vaadin.v7.data.Container.Indexed;
  *
  * @since 7.0
  */
+@Deprecated
 public class ContainerHelpers implements Serializable {
 
     /**
@@ -83,7 +84,7 @@ public class ContainerHelpers implements Serializable {
             endIndex = container.size();
         }
 
-        ArrayList<Object> rangeOfIds = new ArrayList<Object>();
+        ArrayList<Object> rangeOfIds = new ArrayList<>();
         for (int i = startIndex; i < endIndex; i++) {
             Object idByIndex = container.getIdByIndex(i);
             if (idByIndex == null) {

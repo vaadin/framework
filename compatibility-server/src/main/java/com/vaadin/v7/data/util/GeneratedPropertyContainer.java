@@ -59,6 +59,7 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
  * @since 7.4
  * @author Vaadin Ltd
  */
+@Deprecated
 public class GeneratedPropertyContainer extends AbstractContainer
         implements Container.Indexed, Container.Sortable, Container.Filterable,
         Container.PropertySetChangeNotifier, Container.ItemSetChangeNotifier {
@@ -70,11 +71,12 @@ public class GeneratedPropertyContainer extends AbstractContainer
     private Filterable filterableContainer = null;
 
     /* Removed properties which are hidden but not actually removed */
-    private final Set<Object> removedProperties = new HashSet<Object>();
+    private final Set<Object> removedProperties = new HashSet<>();
 
     /**
      * Property implementation for generated properties
      */
+    @Deprecated
     protected static class GeneratedProperty<T> implements Property<T> {
 
         private Item item;
@@ -126,6 +128,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
      * belongs to the wrapped container. To reach that Item use
      * {@link #getWrappedItem()}
      */
+    @Deprecated
     public class GeneratedPropertyItem implements Item {
 
         private Item wrappedItem;
@@ -147,7 +150,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
 
         @Override
         public Collection<?> getItemPropertyIds() {
-            Set<Object> wrappedProperties = new LinkedHashSet<Object>(
+            Set<Object> wrappedProperties = new LinkedHashSet<>(
                     wrappedItem.getItemPropertyIds());
             wrappedProperties.removeAll(removedProperties);
             wrappedProperties.addAll(propertyGenerators.keySet());
@@ -217,6 +220,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
      * event is fired from wrapped container and needs to be reconstructed to
      * act like it actually came from this container.
      */
+    @Deprecated
     protected abstract class GeneratedItemAddOrRemoveEvent
             implements Serializable {
 
@@ -248,6 +252,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
         }
     };
 
+    @Deprecated
     protected class GeneratedItemRemoveEvent
             extends GeneratedItemAddOrRemoveEvent implements ItemRemoveEvent {
 
@@ -262,6 +267,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
         }
     }
 
+    @Deprecated
     protected class GeneratedItemAddEvent extends GeneratedItemAddOrRemoveEvent
             implements ItemAddEvent {
 
@@ -283,16 +289,17 @@ public class GeneratedPropertyContainer extends AbstractContainer
      * @param container
      *            underlying indexed container
      */
+    @Deprecated
     public GeneratedPropertyContainer(Container.Indexed container) {
         wrappedContainer = container;
-        propertyGenerators = new HashMap<Object, PropertyValueGenerator<?>>();
+        propertyGenerators = new HashMap<>();
 
         if (wrappedContainer instanceof Sortable) {
             sortableContainer = (Sortable) wrappedContainer;
         }
 
         if (wrappedContainer instanceof Filterable) {
-            activeFilters = new HashMap<Filter, List<Filter>>();
+            activeFilters = new HashMap<>();
             filterableContainer = (Filterable) wrappedContainer;
         } else {
             activeFilters = null;
@@ -376,7 +383,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
     private <T> Property<T> createProperty(final Item item,
             final Object propertyId, final Object itemId,
             final PropertyValueGenerator<T> generator) {
-        return new GeneratedProperty<T>(item, propertyId, itemId, generator);
+        return new GeneratedProperty<>(item, propertyId, itemId, generator);
     }
 
     /* Listener functionality */
@@ -433,7 +440,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
                     "Wrapped container is not filterable");
         }
 
-        List<Filter> addedFilters = new ArrayList<Filter>();
+        List<Filter> addedFilters = new ArrayList<>();
         for (Entry<?, PropertyValueGenerator<?>> entry : propertyGenerators
                 .entrySet()) {
             Object property = entry.getKey();
@@ -504,8 +511,8 @@ public class GeneratedPropertyContainer extends AbstractContainer
             return;
         }
 
-        List<Object> actualSortProperties = new ArrayList<Object>();
-        List<Boolean> actualSortDirections = new ArrayList<Boolean>();
+        List<Object> actualSortProperties = new ArrayList<>();
+        List<Boolean> actualSortDirections = new ArrayList<>();
 
         for (int i = 0; i < propertyId.length; ++i) {
             Object property = propertyId[i];
@@ -548,7 +555,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
             return Collections.emptySet();
         }
 
-        Set<Object> sortablePropertySet = new HashSet<Object>(
+        Set<Object> sortablePropertySet = new HashSet<>(
                 sortableContainer.getSortableContainerPropertyIds());
         for (Entry<?, PropertyValueGenerator<?>> entry : propertyGenerators
                 .entrySet()) {
@@ -625,7 +632,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
      */
     @Override
     public Collection<?> getContainerPropertyIds() {
-        Set<Object> wrappedProperties = new LinkedHashSet<Object>(
+        Set<Object> wrappedProperties = new LinkedHashSet<>(
                 wrappedContainer.getContainerPropertyIds());
         wrappedProperties.removeAll(removedProperties);
         wrappedProperties.addAll(propertyGenerators.keySet());

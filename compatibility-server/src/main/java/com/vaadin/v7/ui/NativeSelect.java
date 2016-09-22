@@ -33,6 +33,7 @@ import com.vaadin.v7.data.Container;
  * better choice.
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class NativeSelect extends AbstractSelect
         implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 

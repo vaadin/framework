@@ -34,6 +34,7 @@ import com.vaadin.v7.shared.ui.datefield.PopupDateFieldState;
  * @author Vaadin Ltd.
  * @since 5.0
  */
+@Deprecated
 public class PopupDateField extends DateField {
 
     private String inputPrompt = null;

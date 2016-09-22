@@ -35,6 +35,7 @@ import com.vaadin.v7.data.Property;
  *
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class ItemClickEvent extends ClickEvent implements Serializable {
     private Item item;
     private Object itemId;
@@ -90,6 +91,7 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
         }
     }
 
+    @Deprecated
     public interface ItemClickListener extends Serializable {
         public void itemClick(ItemClickEvent event);
     }
@@ -112,6 +114,7 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
      * @see ItemClickListener
      * @see ItemClickEvent
      */
+    @Deprecated
     public interface ItemClickNotifier extends Serializable {
         /**
          * Register a listener to handle {@link ItemClickEvent}s.

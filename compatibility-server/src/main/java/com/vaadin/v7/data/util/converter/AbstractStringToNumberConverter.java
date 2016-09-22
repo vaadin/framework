@@ -32,6 +32,7 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.1
  */
+@Deprecated
 public abstract class AbstractStringToNumberConverter<T>
         implements Converter<String, T> {
 

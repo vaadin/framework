@@ -49,6 +49,7 @@ import com.vaadin.v7.shared.ui.combobox.FilteringMode;
  *
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class ComboBox extends AbstractSelect
         implements AbstractSelect.Filtering, FieldEvents.BlurNotifier,
         FieldEvents.FocusNotifier {
@@ -61,6 +62,7 @@ public class ComboBox extends AbstractSelect
      * @since 7.5.6
      * @see ComboBox#setItemStyleGenerator(ItemStyleGenerator)
      */
+    @Deprecated
     public interface ItemStyleGenerator extends Serializable {
 
         /**
@@ -300,7 +302,7 @@ public class ComboBox extends AbstractSelect
             final boolean paintNullSelection = needNullSelectOption
                     && currentPage == 0 && !nullFilteredOut;
 
-            List<ComboBoxItem> items = new ArrayList<ComboBoxItem>();
+            List<ComboBoxItem> items = new ArrayList<>();
 
             if (paintNullSelection) {
                 ComboBoxItem item = new ComboBoxItem();
@@ -700,7 +702,7 @@ public class ComboBox extends AbstractSelect
     protected List<?> getFilteredOptions() {
         if (!isFilteringNeeded()) {
             prevfilterstring = null;
-            filteredOptions = new LinkedList<Object>(getItemIds());
+            filteredOptions = new LinkedList<>(getItemIds());
             return filteredOptions;
         }
 
@@ -717,7 +719,7 @@ public class ComboBox extends AbstractSelect
         }
         prevfilterstring = filterstring;
 
-        filteredOptions = new LinkedList<Object>();
+        filteredOptions = new LinkedList<>();
         for (final Iterator<?> it = items.iterator(); it.hasNext();) {
             final Object itemId = it.next();
             String caption = getItemCaption(itemId);

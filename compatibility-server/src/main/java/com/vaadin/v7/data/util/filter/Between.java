@@ -21,6 +21,7 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.Item;
 
+@Deprecated
 public class Between implements Filter {
 
     private final Object propertyId;

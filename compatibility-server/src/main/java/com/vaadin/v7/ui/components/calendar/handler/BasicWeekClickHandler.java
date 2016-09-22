@@ -30,6 +30,7 @@ import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.WeekClickHan
  * @author Vaadin Ltd.
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class BasicWeekClickHandler implements WeekClickHandler {
 
     /*

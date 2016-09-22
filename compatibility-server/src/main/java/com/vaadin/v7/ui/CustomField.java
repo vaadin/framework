@@ -45,6 +45,7 @@ import com.vaadin.v7.data.Property;
  *
  * @since 7.0
  */
+@Deprecated
 public abstract class CustomField<T> extends AbstractField<T>
         implements HasComponents {
 

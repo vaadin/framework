@@ -27,6 +27,7 @@ import com.vaadin.v7.data.Container;
  * lazyloading, and other advanced features.
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class ListSelect extends AbstractSelect {
 
     private int rows = 0;

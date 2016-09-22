@@ -31,6 +31,7 @@ import com.vaadin.shared.ui.datefield.Resolution;
  * @author Vaadin Ltd.
  * @since 7.0
  */
+@Deprecated
 public class DateRangeValidator extends RangeValidator<Date> {
 
     /**

@@ -56,6 +56,7 @@ import com.vaadin.v7.shared.ui.label.LabelState;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class Label extends AbstractComponent implements Property<String>,
         Property.Viewer, Property.ValueChangeListener,
         Property.ValueChangeNotifier, Comparable<Label> {
@@ -331,6 +332,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @Deprecated
     public static class ValueChangeEvent extends Component.Event
             implements Property.ValueChangeEvent {
 

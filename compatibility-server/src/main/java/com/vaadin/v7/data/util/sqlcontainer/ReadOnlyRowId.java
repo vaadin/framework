@@ -15,6 +15,7 @@
  */
 package com.vaadin.v7.data.util.sqlcontainer;
 
+@Deprecated
 public class ReadOnlyRowId extends RowId {
     private static final long serialVersionUID = -2626764781642012467L;
     private final Integer rowNum;

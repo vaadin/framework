@@ -24,6 +24,7 @@ import java.math.BigDecimal;
  * @since 7.4
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class BigDecimalRangeValidator extends RangeValidator<BigDecimal> {
 
     /**

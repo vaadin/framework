@@ -20,6 +20,7 @@ import com.vaadin.v7.data.util.filter.Like;
 import com.vaadin.v7.data.util.filter.SimpleStringFilter;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
 
+@Deprecated
 public class SimpleStringTranslator implements FilterTranslator {
 
     @Override

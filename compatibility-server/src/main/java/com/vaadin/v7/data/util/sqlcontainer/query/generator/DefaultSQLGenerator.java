@@ -34,6 +34,7 @@ import com.vaadin.v7.data.util.sqlcontainer.query.generator.filter.StringDecorat
  * @author Jonatan Kronqvist / Vaadin Ltd
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class DefaultSQLGenerator implements SQLGenerator {
 
     private Class<? extends StatementHelper> statementHelperClass = null;
@@ -327,7 +328,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
     }
 
     protected Map<String, Object> generateColumnToValueMap(RowItem item) {
-        Map<String, Object> columnToValueMap = new HashMap<String, Object>();
+        Map<String, Object> columnToValueMap = new HashMap<>();
         for (Object id : item.getItemPropertyIds()) {
             ColumnProperty cp = (ColumnProperty) item.getItemProperty(id);
             /* Prevent "rownum" usage as a column name if MSSQL or ORACLE */
@@ -344,7 +345,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
     }
 
     protected Map<String, Object> generateRowIdentifiers(RowItem item) {
-        Map<String, Object> rowIdentifiers = new HashMap<String, Object>();
+        Map<String, Object> rowIdentifiers = new HashMap<>();
         for (Object id : item.getItemPropertyIds()) {
             ColumnProperty cp = (ColumnProperty) item.getItemProperty(id);
             /* Prevent "rownum" usage as a column name if MSSQL or ORACLE */

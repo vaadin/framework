@@ -26,6 +26,7 @@ import com.vaadin.v7.data.Container.Sortable;
  * The <code>ItemSorter</code> interface can be used in <code>Sortable</code>
  * implementations to provide a custom sorting method.
  */
+@Deprecated
 public interface ItemSorter
         extends Comparator<Object>, Cloneable, Serializable {
 

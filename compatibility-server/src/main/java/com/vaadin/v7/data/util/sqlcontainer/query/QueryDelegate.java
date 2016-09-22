@@ -24,6 +24,7 @@ import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.util.sqlcontainer.RowId;
 import com.vaadin.v7.data.util.sqlcontainer.RowItem;
 
+@Deprecated
 public interface QueryDelegate extends Serializable {
     /**
      * Generates and executes a query to determine the current row count from
@@ -169,6 +170,7 @@ public interface QueryDelegate extends Serializable {
      * An <code>Event</code> object specifying the old and new RowId of an added
      * item after the addition has been successfully committed.
      */
+    @Deprecated
     public interface RowIdChangeEvent extends Serializable {
         /**
          * Gets the old (temporary) RowId of the added row that raised this
@@ -188,6 +190,7 @@ public interface QueryDelegate extends Serializable {
     }
 
     /** RowId change listener interface. */
+    @Deprecated
     public interface RowIdChangeListener extends Serializable {
         /**
          * Lets the listener know that a RowId has been changed.
@@ -203,6 +206,7 @@ public interface QueryDelegate extends Serializable {
      * that it will generate a <code>RowIdChangeEvent</code> when it performs a
      * database commit that may change the RowId.
      */
+    @Deprecated
     public interface RowIdChangeNotifier extends Serializable {
         /**
          * Adds a RowIdChangeListener for the object.

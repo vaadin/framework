@@ -35,6 +35,7 @@ import com.vaadin.data.util.BeanUtil;
  * @since 3.0
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class BeanItem<BT> extends PropertysetItem {
 
     /**
@@ -185,7 +186,7 @@ public class BeanItem<BT> extends PropertysetItem {
      */
     static <BT> LinkedHashMap<String, VaadinPropertyDescriptor<BT>> getPropertyDescriptors(
             final Class<BT> beanClass) {
-        final LinkedHashMap<String, VaadinPropertyDescriptor<BT>> pdMap = new LinkedHashMap<String, VaadinPropertyDescriptor<BT>>();
+        final LinkedHashMap<String, VaadinPropertyDescriptor<BT>> pdMap = new LinkedHashMap<>();
 
         // Try to introspect, if it fails, we just have an empty Item
         try {
@@ -198,7 +199,7 @@ public class BeanItem<BT> extends PropertysetItem {
                 final Method getMethod = pd.getReadMethod();
                 if ((getMethod != null)
                         && getMethod.getDeclaringClass() != Object.class) {
-                    VaadinPropertyDescriptor<BT> vaadinPropertyDescriptor = new MethodPropertyDescriptor<BT>(
+                    VaadinPropertyDescriptor<BT> vaadinPropertyDescriptor = new MethodPropertyDescriptor<>(
                             pd.getName(), pd.getPropertyType(),
                             pd.getReadMethod(), pd.getWriteMethod());
                     pdMap.put(pd.getName(), vaadinPropertyDescriptor);
@@ -222,7 +223,7 @@ public class BeanItem<BT> extends PropertysetItem {
      *            not specified
      */
     public void expandProperty(String propertyId, String... subPropertyIds) {
-        Set<String> subPropertySet = new HashSet<String>(
+        Set<String> subPropertySet = new HashSet<>(
                 Arrays.asList(subPropertyIds));
 
         if (0 == subPropertyIds.length) {
@@ -251,7 +252,7 @@ public class BeanItem<BT> extends PropertysetItem {
      */
     public void addNestedProperty(String nestedPropertyId) {
         addItemProperty(nestedPropertyId,
-                new NestedMethodProperty<Object>(getBean(), nestedPropertyId));
+                new NestedMethodProperty<>(getBean(), nestedPropertyId));
     }
 
     /**

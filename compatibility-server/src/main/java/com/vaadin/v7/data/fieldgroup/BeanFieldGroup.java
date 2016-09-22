@@ -26,6 +26,7 @@ import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.data.validator.BeanValidator;
 import com.vaadin.v7.ui.Field;
 
+@Deprecated
 public class BeanFieldGroup<T> extends FieldGroup {
 
     private final Class<T> beanType;
@@ -35,7 +36,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
 
     public BeanFieldGroup(Class<T> beanType) {
         this.beanType = beanType;
-        this.defaultValidators = new HashMap<Field<?>, BeanValidator>();
+        this.defaultValidators = new HashMap<>();
     }
 
     @Override
@@ -116,7 +117,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
         if (bean == null) {
             setItemDataSource((Item) null);
         } else {
-            setItemDataSource(new BeanItem<T>(bean, beanType));
+            setItemDataSource(new BeanItem<>(bean, beanType));
         }
     }
 
@@ -259,7 +260,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
     private static <T> BeanFieldGroup<T> createAndBindFields(T bean,
             Object objectWithMemberFields, boolean buffered) {
         @SuppressWarnings("unchecked")
-        BeanFieldGroup<T> beanFieldGroup = new BeanFieldGroup<T>(
+        BeanFieldGroup<T> beanFieldGroup = new BeanFieldGroup<>(
                 (Class<T>) bean.getClass());
         beanFieldGroup.setItemDataSource(bean);
         beanFieldGroup.setBuffered(buffered);
