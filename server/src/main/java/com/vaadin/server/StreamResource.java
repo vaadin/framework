@@ -203,7 +203,7 @@ public class StreamResource implements ConnectorResource {
      * <p>
      * This gives the adapter the possibility cache streams sent to the client.
      * The caching may be made in adapter or at the client if the client
-     * supports caching. Zero or negavive value disbales the caching of this
+     * supports caching. Zero or negative value disables the caching of this
      * stream.
      * </p>
      *
