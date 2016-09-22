@@ -21,7 +21,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.data.DataGenerator;
 import com.vaadin.server.data.DataSource;
-import com.vaadin.shared.ui.optiongroup.RadioButtonGroupConstants;
+import com.vaadin.shared.ui.ListingJsonConstants;
 import com.vaadin.shared.ui.optiongroup.RadioButtonGroupState;
 import elemental.json.JsonObject;
 
@@ -98,22 +98,22 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T> {
         addDataGenerator(new DataGenerator<T>() {
             @Override
             public void generateData(T data, JsonObject jsonObject) {
-                jsonObject.put(RadioButtonGroupConstants.JSONKEY_ITEM_VALUE,
+                jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_VALUE,
                         itemCaptionProvider.apply(data));
                 Resource icon = itemIconProvider.apply(data);
                 if (icon != null) {
                     String iconUrl = ResourceReference
                             .create(icon, RadioButtonGroup.this, null).getURL();
-                    jsonObject.put(RadioButtonGroupConstants.JSONKEY_ITEM_ICON,
+                    jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_ICON,
                             iconUrl);
                 }
                 if (!itemEnabledProvider.test(data)) {
-                    jsonObject.put(RadioButtonGroupConstants.JSONKEY_ITEM_DISABLED,
+                    jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_DISABLED,
                             true);
                 }
 
                 if (getSelectionModel().isSelected(data)) {
-                    jsonObject.put(RadioButtonGroupConstants.JSONKEY_ITEM_SELECTED,
+                    jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_SELECTED,
                             true);
                 }
             }

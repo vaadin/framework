@@ -13,18 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.optiongroup;
+package com.vaadin.shared.ui;
 
 import java.io.Serializable;
 
-public class RadioButtonGroupConstants implements Serializable {
+public class ListingJsonConstants implements Serializable {
     public static final String JSONKEY_ITEM_DISABLED = "d";
 
     public static final String JSONKEY_ITEM_ICON = "i";
 
     public static final String JSONKEY_ITEM_VALUE = "v";
-
-    public static final String JSONKEY_ITEM_KEY = "k";
 
     public static final String JSONKEY_ITEM_SELECTED = "s";
 }

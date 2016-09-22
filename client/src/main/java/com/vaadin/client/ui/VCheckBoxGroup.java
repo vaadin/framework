@@ -16,8 +16,6 @@
 
 package com.vaadin.client.ui;
 
-import static com.vaadin.shared.ui.optiongroup.CheckBoxGroupConstants.JSONKEY_ITEM_DISABLED;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,7 +36,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.ui.optiongroup.CheckBoxGroupConstants;
+import com.vaadin.shared.ui.ListingJsonConstants;
 
 import elemental.json.JsonObject;
 
@@ -77,7 +75,7 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
 
     public VCheckBoxGroup() {
         optionsContainer = new FlowPanel();
-        initWidget(this.optionsContainer);
+        initWidget(optionsContainer);
         optionsContainer.setStyleName(CLASSNAME);
         optionsToItems = new HashMap<>();
         selectionChangeListeners = new ArrayList<>();
@@ -98,14 +96,14 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
         optionsContainer.clear();
         for (JsonObject item : items) {
             String itemHtml = item
-                    .getString(CheckBoxGroupConstants.JSONKEY_ITEM_VALUE);
+                    .getString(ListingJsonConstants.JSONKEY_ITEM_VALUE);
             if (!isHtmlContentAllowed()) {
                 itemHtml = WidgetUtil.escapeHTML(itemHtml);
             }
             VCheckBox checkBox = new VCheckBox();
 
             String iconUrl = item
-                    .getString(CheckBoxGroupConstants.JSONKEY_ITEM_ICON);
+                    .getString(ListingJsonConstants.JSONKEY_ITEM_ICON);
             if (iconUrl != null && iconUrl.length() != 0) {
                 Icon icon = client.getIcon(iconUrl);
                 itemHtml = icon.getElement().getString() + itemHtml;
@@ -115,10 +113,8 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
             checkBox.addClickHandler(this);
             checkBox.setHTML(itemHtml);
             checkBox.setValue(item
-                    .getBoolean(CheckBoxGroupConstants.JSONKEY_ITEM_SELECTED));
-            boolean optionEnabled = !item.getBoolean(JSONKEY_ITEM_DISABLED);
-            boolean enabled = optionEnabled && !isReadonly() && isEnabled();
-            checkBox.setEnabled(enabled);
+                    .getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
+            setOptionEnabled(checkBox, item);
 
             optionsContainer.add(checkBox);
             optionsToItems.put(checkBox, item);
@@ -152,18 +148,20 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
         }
     }
 
-    protected void updateEnabledState() {
-        boolean optionGroupEnabled = isEnabled() && !isReadonly();
-        // sets options enabled according to the widget's enabled,
-        // readonly and each options own enabled
-        for (Map.Entry<VCheckBox, JsonObject> entry : optionsToItems
-                .entrySet()) {
-            VCheckBox checkBox = entry.getKey();
-            JsonObject value = entry.getValue();
-            Boolean isOptionEnabled = !value
-                    .getBoolean(CheckBoxGroupConstants.JSONKEY_ITEM_DISABLED);
-            checkBox.setEnabled(optionGroupEnabled && isOptionEnabled);
-        }
+    /**
+     * Updates the checkbox's enabled state according to the widget's enabled,
+     * read only and the item's enabled.
+     *
+     * @param checkBox
+     *            the checkbox to update
+     * @param item
+     *            the item for the checkbox
+     */
+    protected void setOptionEnabled(VCheckBox checkBox, JsonObject item) {
+        boolean optionEnabled = !item
+                .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
+        boolean enabled = optionEnabled && !isReadonly() && isEnabled();
+        checkBox.setEnabled(enabled);
     }
 
     @Override
@@ -194,7 +192,7 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
     public void setReadonly(boolean readonly) {
         if (this.readonly != readonly) {
             this.readonly = readonly;
-            updateEnabledState();
+            optionsToItems.forEach(this::setOptionEnabled);
         }
     }
 
@@ -202,7 +200,7 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
     public void setEnabled(boolean enabled) {
         if (this.enabled != enabled) {
             this.enabled = enabled;
-            updateEnabledState();
+            optionsToItems.forEach(this::setOptionEnabled);
         }
     }
 

@@ -13,18 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.optiongroup;
+package com.vaadin.shared.ui.twincolselect;
 
-import java.io.Serializable;
+import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.shared.ui.TabIndexState;
 
-public class CheckBoxGroupConstants implements Serializable {
-    public static final String JSONKEY_ITEM_DISABLED = "d";
+/**
+ * Shared state for the TwinColSelect component.
+ *
+ * @since 7.0
+ */
+public class TwinColSelectState extends TabIndexState {
+    {
+        primaryStyleName = "v-select-twincol";
+    }
+    @DelegateToWidget
+    public int rows;
 
-    public static final String JSONKEY_ITEM_ICON = "i";
-
-    public static final String JSONKEY_ITEM_VALUE = "v";
-
-    public static final String JSONKEY_ITEM_KEY = "k";
-
-    public static final String JSONKEY_ITEM_SELECTED = "s";
+    public String leftColumnCaption;
+    public String rightColumnCaption;
 }

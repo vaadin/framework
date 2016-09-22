@@ -15,14 +15,10 @@
  */
 package com.vaadin.tests.components.checkbox;
 
-import java.util.function.Function;
-import java.util.stream.IntStream;
-
 import com.vaadin.server.FontAwesome;
-import com.vaadin.server.Resource;
-import com.vaadin.shared.data.selection.SelectionModel.Multi;
-import com.vaadin.tests.components.abstractlisting.AbstractListingTestUI;
+import com.vaadin.tests.components.abstractlisting.AbstractMultiSelectTestUI;
 import com.vaadin.ui.CheckBoxGroup;
+import com.vaadin.ui.IconGenerator;
 
 /**
  * Test UI for CheckBoxGroup component
@@ -30,11 +26,9 @@ import com.vaadin.ui.CheckBoxGroup;
  * @author Vaadin Ltd
  */
 public class CheckBoxGroupTestUI
-        extends AbstractListingTestUI<CheckBoxGroup<Object>> {
+        extends AbstractMultiSelectTestUI<CheckBoxGroup<Object>> {
 
-    private final String selectionCategory = "Selection";
-
-    private static final Function<Object, Resource> DEFAULT_ICON_PROVIDER = item -> "Item 2"
+    private static final IconGenerator<Object> DEFAULT_ICON_GENERATOR = item -> "Item 2"
             .equals(item) ? ICON_16_HELP_PNG_CACHEABLE : null;
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -46,7 +40,7 @@ public class CheckBoxGroupTestUI
     @Override
     protected CheckBoxGroup<Object> constructComponent() {
         CheckBoxGroup<Object> checkBoxGroup = super.constructComponent();
-        checkBoxGroup.setItemIconProvider(DEFAULT_ICON_PROVIDER);
+        checkBoxGroup.setItemIconGenerator(DEFAULT_ICON_GENERATOR);
         checkBoxGroup.setItemEnabledProvider(item -> !"Item 10".equals(item));
         return checkBoxGroup;
     }
@@ -54,68 +48,23 @@ public class CheckBoxGroupTestUI
     @Override
     protected void createActions() {
         super.createActions();
-        createListenerMenu();
-        createSelectionMenu();
-        createItemProviderMenu();
+        createItemIconGenerator();
     }
 
-    protected void createSelectionMenu() {
-        createClickAction(
-                "Clear selection", selectionCategory, (component, item,
-                        data) -> component.getSelectionModel().deselectAll(),
-                "");
-
-        Command<CheckBoxGroup<Object>, String> toggleSelection = (component,
-                item, data) -> toggleSelection(item);
-
-        IntStream.of(0, 1, 5, 10, 25).mapToObj(i -> "Item " + i)
-                .forEach(item -> {
-                    createClickAction("Toggle " + item, selectionCategory,
-                            toggleSelection, item);
-                });
-    }
-
-    private void toggleSelection(String item) {
-        Multi<Object> selectionModel = getComponent().getSelectionModel();
-        if (selectionModel.isSelected(item)) {
-            selectionModel.deselect(item);
-        } else {
-            selectionModel.select(item);
-        }
-    }
-
-    private void createItemProviderMenu() {
-        createBooleanAction("Use Item Caption Provider", "Item Provider", false,
-                this::useItemCaptionProvider);
-        createBooleanAction("Use Item Icon Provider", "Item Provider", false,
+    private void createItemIconGenerator() {
+        createBooleanAction("Use Item Icon Generator", "Item Generator", false,
                 this::useItemIconProvider);
-    }
-
-    private void useItemCaptionProvider(CheckBoxGroup<Object> group,
-            boolean activate, Object data) {
-        if (activate) {
-            group.setItemCaptionProvider(item -> item.toString() + " Caption");
-        } else {
-            group.setItemCaptionProvider(item -> item.toString());
-        }
-        group.getDataSource().refreshAll();
     }
 
     private void useItemIconProvider(CheckBoxGroup<Object> group,
             boolean activate, Object data) {
         if (activate) {
-            group.setItemIconProvider(
+            group.setItemIconGenerator(
                     item -> FontAwesome.values()[getIndex(item) + 1]);
         } else {
-            group.setItemIconProvider(DEFAULT_ICON_PROVIDER);
+            group.setItemIconGenerator(DEFAULT_ICON_GENERATOR);
         }
         group.getDataSource().refreshAll();
-    }
-
-    protected void createListenerMenu() {
-        createListenerAction("Selection listener", "Listeners",
-                c -> c.addSelectionListener(
-                        e -> log("Selected: " + e.getNewSelection())));
     }
 
     private int getIndex(Object item) {

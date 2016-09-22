@@ -23,24 +23,19 @@ import java.util.EnumSet;
  * @author Vaadin Ltd
  * @since 8.0
  */
-public class CheckBoxGroupBoVTest
-{
+public class CheckBoxGroupBoVTest {
     public enum Status {
-        STATE_A,
-        STATE_B,
-        STATE_C,
-        STATE_D;
+        STATE_A, STATE_B, STATE_C, STATE_D;
 
         public String getCaption() {
             return "** " + toString();
         }
     }
 
-
     public void createOptionGroup() {
         CheckBoxGroup<Status> s = new CheckBoxGroup<>();
         s.setItems(EnumSet.allOf(Status.class));
-        s.setItemCaptionProvider(Status::getCaption);
+        s.setItemCaptionGenerator(Status::getCaption);
     }
 
 }

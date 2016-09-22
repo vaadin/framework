@@ -1,7 +1,10 @@
 package com.vaadin.tests.components.select;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.tests.components.ComponentTestCase;
-import com.vaadin.v7.ui.TwinColSelect;
+import com.vaadin.ui.TwinColSelect;
 
 public class TwinColSelects extends ComponentTestCase<TwinColSelect> {
 
@@ -13,7 +16,7 @@ public class TwinColSelects extends ComponentTestCase<TwinColSelect> {
     @Override
     protected void initializeComponents() {
 
-        TwinColSelect tws = createTwinColSelect("400x<auto>");
+        TwinColSelect<String> tws = createTwinColSelect("400x<auto>");
         tws.setWidth("400px");
         tws.setHeight("-1px");
         addTestComponent(tws);
@@ -34,14 +37,13 @@ public class TwinColSelects extends ComponentTestCase<TwinColSelect> {
 
     }
 
-    private TwinColSelect createTwinColSelect(String caption) {
-        TwinColSelect select = new TwinColSelect(caption);
-        select.addContainerProperty(CAPTION, String.class, null);
+    private TwinColSelect<String> createTwinColSelect(String caption) {
+        TwinColSelect<String> select = new TwinColSelect<>(caption);
+        List<String> items = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            select.addItem("" + i).getItemProperty(CAPTION)
-                    .setValue("Item " + i);
+            items.add("Item " + i);
         }
-        select.setImmediate(true);
+        select.setItems(items);
         return select;
     }
 

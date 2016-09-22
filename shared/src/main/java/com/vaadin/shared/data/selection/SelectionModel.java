@@ -16,9 +16,13 @@
 package com.vaadin.shared.data.selection;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Models the selection logic of a {@code Listing} component. Determines how
@@ -60,7 +64,7 @@ public interface SelectionModel<T> extends Serializable {
         /**
          * Sets the current selection to the given item, or clears selection if
          * given {@code null}.
-         * 
+         *
          * @param item
          *            the item to select or {@code null} to clear selection
          */
@@ -78,11 +82,11 @@ public interface SelectionModel<T> extends Serializable {
          *
          * @return a singleton set of the selected item if any, an empty set
          *         otherwise
-         * 
+         *
          * @see #getSelectedItem()
          */
         @Override
-        default Set<T> getSelectedItems() {
+        public default Set<T> getSelectedItems() {
             return getSelectedItem().map(Collections::singleton)
                     .orElse(Collections.emptySet());
         }
@@ -98,10 +102,77 @@ public interface SelectionModel<T> extends Serializable {
     public interface Multi<T> extends SelectionModel<T> {
 
         /**
-         * Adds the given items to the set of currently selected items.
+         * Adds the given item to the set of currently selected items.
+         * <p>
+         * By default this does not clear any previous selection. To do that,
+         * use {@link #deselectAll()}.
+         * <p>
+         * If the the item was already selected, this is a NO-OP.
+         *
+         * @param item
+         *            the item to add to selection, not {@code null}
          */
         @Override
-        public void select(T item);
+        public default void select(T item) {
+            Objects.requireNonNull(item);
+            selectItems(item);
+        };
+
+        /**
+         * Adds the given items to the set of currently selected items.
+         * <p>
+         * By default this does not clear any previous selection. To do that,
+         * use {@link #deselectAll()}.
+         * <p>
+         * If the all the items were already selected, this is a NO-OP.
+         * <p>
+         * This is a short-hand for {@link #updateSelection(Set, Set)} with
+         * nothing to deselect.
+         *
+         * @param items
+         *            to add to selection, not {@code null}
+         */
+        public default void selectItems(T... items) {
+            Objects.requireNonNull(items);
+            Stream.of(items).forEach(Objects::requireNonNull);
+
+            updateSelection(new LinkedHashSet<>(Arrays.asList(items)),
+                    Collections.emptySet());
+        }
+
+        /**
+         * Removes the given items from the set of currently selected items.
+         * <p>
+         * If the none of the items were selected, this is a NO-OP.
+         * <p>
+         * This is a short-hand for {@link #updateSelection(Set, Set)} with
+         * nothing to select.
+         *
+         * @param items
+         *            to remove from selection, not {@code null}
+         */
+        public default void deselectItems(T... items) {
+            Objects.requireNonNull(items);
+            Stream.of(items).forEach(Objects::requireNonNull);
+
+            updateSelection(Collections.emptySet(),
+                    new LinkedHashSet<>(Arrays.asList(items)));
+        }
+
+        /**
+         * Updates the selection by adding and removing the given items from it.
+         * <p>
+         * If all the added items were already selected and the removed items
+         * were not selected, this is a NO-OP.
+         * <p>
+         * Duplicate items (in both add & remove sets) are ignored.
+         *
+         * @param addedItems
+         *            the items to add, not {@code null}
+         * @param removedItems
+         *            the items to remove, not {@code null}
+         */
+        public void updateSelection(Set<T> addedItems, Set<T> removedItems);
     }
 
     /**

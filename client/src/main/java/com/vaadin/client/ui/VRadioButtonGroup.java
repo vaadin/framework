@@ -16,6 +16,13 @@
 
 package com.vaadin.client.ui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -33,17 +40,9 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
-import com.vaadin.shared.ui.optiongroup.RadioButtonGroupConstants;
+import com.vaadin.shared.ui.ListingJsonConstants;
+
 import elemental.json.JsonObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-
-import static com.vaadin.shared.ui.optiongroup.RadioButtonGroupConstants.JSONKEY_ITEM_DISABLED;
 
 /**
  * The client-side widget for the {@code RadioButtonGroup} component.
@@ -83,7 +82,7 @@ public class VRadioButtonGroup extends Composite implements Field, ClickHandler,
     public VRadioButtonGroup() {
         groupId = DOM.createUniqueId();
         optionsContainer = new FlowPanel();
-        initWidget(this.optionsContainer);
+        initWidget(optionsContainer);
         optionsContainer.setStyleName(CLASSNAME);
         optionsToItems = new HashMap<>();
         keyToOptions = new HashMap<>();
@@ -107,14 +106,14 @@ public class VRadioButtonGroup extends Composite implements Field, ClickHandler,
         keyToOptions.clear();
         for (JsonObject item : items) {
             String itemHtml = item
-                    .getString(RadioButtonGroupConstants.JSONKEY_ITEM_VALUE);
+                    .getString(ListingJsonConstants.JSONKEY_ITEM_VALUE);
             if (!isHtmlContentAllowed()) {
                 itemHtml = WidgetUtil.escapeHTML(itemHtml);
             }
             RadioButton radioButton = new RadioButton(groupId);
 
             String iconUrl = item
-                    .getString(RadioButtonGroupConstants.JSONKEY_ITEM_ICON);
+                    .getString(ListingJsonConstants.JSONKEY_ITEM_ICON);
             if (iconUrl != null && iconUrl.length() != 0) {
                 Icon icon = client.getIcon(iconUrl);
                 itemHtml = icon.getElement().getString() + itemHtml;
@@ -124,8 +123,9 @@ public class VRadioButtonGroup extends Composite implements Field, ClickHandler,
             radioButton.addClickHandler(this);
             radioButton.setHTML(itemHtml);
             radioButton.setValue(item
-                    .getBoolean(RadioButtonGroupConstants.JSONKEY_ITEM_SELECTED));
-            boolean optionEnabled = !item.getBoolean(JSONKEY_ITEM_DISABLED);
+                    .getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
+            boolean optionEnabled = !item
+                    .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
             boolean enabled = optionEnabled && !isReadonly() && isEnabled();
             radioButton.setEnabled(enabled);
             String key = item.getString(DataCommunicatorConstants.KEY);
@@ -175,7 +175,7 @@ public class VRadioButtonGroup extends Composite implements Field, ClickHandler,
             RadioButton radioButton = entry.getKey();
             JsonObject value = entry.getValue();
             Boolean isOptionEnabled = !value
-                    .getBoolean(RadioButtonGroupConstants.JSONKEY_ITEM_DISABLED);
+                    .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
             radioButton.setEnabled(radioButtonEnabled && isOptionEnabled);
         }
     }
@@ -229,7 +229,7 @@ public class VRadioButtonGroup extends Composite implements Field, ClickHandler,
 
     public void selectItemKey(String selectedItemKey) {
         RadioButton radioButton = keyToOptions.get(selectedItemKey);
-        assert radioButton!=null;
+        assert radioButton != null;
         radioButton.setValue(true);
     }
 }

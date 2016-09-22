@@ -1,6 +1,6 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -122,15 +122,16 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
     }
 
     @Test
-    public void itemCaptionProvider() {
-        selectMenuPath("Component", "Item Provider",
-                "Use Item Caption Provider");
+    public void itemCaptionGenerator() {
+        selectMenuPath("Component", "Item Generator",
+                "Use Item Caption Generator");
         assertItems(20, " Caption");
     }
 
     @Test
-    public void itemIconProvider() {
-        selectMenuPath("Component", "Item Provider", "Use Item Icon Provider");
+    public void itemIconGenerator() {
+        selectMenuPath("Component", "Item Generator",
+                "Use Item Icon Generator");
         assertItemSuffices(20);
         List<WebElement> icons = getSelect()
                 .findElements(By.cssSelector(".v-icon.FontAwesome"));

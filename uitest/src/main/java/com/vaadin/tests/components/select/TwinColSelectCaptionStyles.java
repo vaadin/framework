@@ -3,14 +3,15 @@ package com.vaadin.tests.components.select;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.v7.ui.TwinColSelect;
+import com.vaadin.ui.TwinColSelect;
 
 public class TwinColSelectCaptionStyles extends TestBase {
 
     @Override
     protected void setup() {
         setTheme("tests-tickets");
-        final TwinColSelect sel = new TwinColSelect("Component caption");
+        final TwinColSelect<String> sel = new TwinColSelect<>(
+                "Component caption");
         sel.setLeftColumnCaption("Left caption");
         sel.setRightColumnCaption("Right caption");
         sel.setStyleName("styled-twincol-captions");

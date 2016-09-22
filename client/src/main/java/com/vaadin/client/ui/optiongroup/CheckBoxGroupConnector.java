@@ -17,14 +17,16 @@
 package com.vaadin.client.ui.optiongroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.VCheckBoxGroup;
+import com.vaadin.shared.data.selection.MultiSelectServerRpc;
 import com.vaadin.shared.data.selection.SelectionModel;
-import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.optiongroup.CheckBoxGroupState;
 import com.vaadin.ui.CheckBoxGroup;
@@ -43,13 +45,14 @@ public class CheckBoxGroupConnector
     }
 
     private void selectionChanged(JsonObject changedItem, Boolean selected) {
-        SelectionServerRpc rpc = getRpcProxy(SelectionServerRpc.class);
+        MultiSelectServerRpc rpc = getRpcProxy(MultiSelectServerRpc.class);
         String key = getRowKey(changedItem);
-
+        HashSet<String> change = new HashSet<>();
+        change.add(key);
         if (Boolean.TRUE.equals(selected)) {
-            rpc.select(key);
+            rpc.updateSelection(change, Collections.emptySet());
         } else {
-            rpc.deselect(key);
+            rpc.updateSelection(Collections.emptySet(), change);
         }
     }
 
