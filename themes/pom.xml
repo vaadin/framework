@@ -1,376 +1,390 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.vaadin</groupId>
-		<artifactId>vaadin-root</artifactId>
-		<version>7.7-SNAPSHOT</version>
-	</parent>
-	<groupId>com.vaadin</groupId>
-	<artifactId>vaadin-themes</artifactId>
-	<name>vaadin-themes</name>
-	<packaging>jar</packaging>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-root</artifactId>
+        <version>7.7-SNAPSHOT</version>
+    </parent>
+    <groupId>com.vaadin</groupId>
+    <artifactId>vaadin-themes</artifactId>
+    <name>vaadin-themes</name>
+    <packaging>jar</packaging>
 
-	<url>https://vaadin.com/</url>
-	<description>Vaadin themes</description>
+    <url>https://vaadin.com/</url>
+    <description>Vaadin themes</description>
 
-	<dependencies>
-		<!-- Maven plugin scans for vaadin-server... -->
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>vaadin-server</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>vaadin-buildhelpers</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
+    <dependencies>
+        <!-- Maven plugin scans for vaadin-server... -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>vaadin-server</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>vaadin-buildhelpers</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-sass-compiler</artifactId>
-			<version>${vaadin.sass.version}</version>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-sass-compiler</artifactId>
+            <version>${vaadin.sass.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<!-- remove cssparser override once sass-compiler is updated -->
-		<dependency>
-			<groupId>net.sourceforge.cssparser</groupId>
-			<artifactId>cssparser</artifactId>
-			<version>0.9.11</version>
-			<scope>provided</scope>
-		</dependency>
+        <!-- remove cssparser override once sass-compiler is updated -->
+        <dependency>
+            <groupId>net.sourceforge.cssparser</groupId>
+            <artifactId>cssparser</artifactId>
+            <version>0.9.11</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>com.carrotsearch</groupId>
-			<artifactId>smartsprites</artifactId>
-			<version>0.2.10</version>
-			<scope>provided</scope>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.carrotsearch</groupId>
+            <artifactId>smartsprites</artifactId>
+            <version>0.2.10</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-theme-sources</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/main/themes</directory>
-									<filtering>false</filtering>
-									<excludes>
-										<exclude>**/base.scss</exclude>
-										<exclude>**/valo/shared/_global.scss</exclude>
-									</excludes>
-								</resource>
-								<resource>
-									<directory>src/main/themes</directory>
-									<filtering>true</filtering>
-									<includes>
-										<include>**/base.scss</include>
-										<include>**/valo/shared/_global.scss</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-theme-sources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/themes</directory>
+                                    <filtering>false</filtering>
+                                    <excludes>
+                                        <exclude>**/base.scss</exclude>
+                                        <exclude>**/valo/shared/_global.scss</exclude>
+                                    </excludes>
+                                </resource>
+                                <resource>
+                                    <directory>src/main/themes</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>**/base.scss</include>
+                                        <include>**/valo/shared/_global.scss</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
 
-			<plugin>
-				<groupId>com.vaadin</groupId>
-				<artifactId>vaadin-maven-plugin</artifactId>
-				<configuration>
-					<compressTheme>true</compressTheme>
-					<warSourceDirectory>${project.build.outputDirectory}</warSourceDirectory>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>compile-theme</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-maven-plugin</artifactId>
+                <configuration>
+                    <compressTheme>true</compressTheme>
+                    <warSourceDirectory>${project.build.outputDirectory}</warSourceDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>compile-theme</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>compile-legacy-base</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<classpathScope>compile</classpathScope>
-							<executable>${java.home}/bin/java</executable>
-							<arguments>
-								<argument>-classpath</argument>
-								<classpath />
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>compile-legacy-base</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>compile</classpathScope>
+                            <executable>${java.home}/bin/java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath />
 
-								<argument>com.vaadin.sass.SassCompiler</argument>
-								<argument> ${project.build.outputDirectory}/VAADIN/themes/base/legacy-styles.scss</argument>
-								<argument> ${project.build.outputDirectory}/VAADIN/themes/base/legacy-styles.css</argument>
-							</arguments>
-						</configuration>
-					</execution>
+                                <argument>com.vaadin.sass.SassCompiler</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/base/legacy-styles.scss</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/base/legacy-styles.css</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
 
-					<execution>
-						<id>compile-legacy-chameleon</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<classpathScope>compile</classpathScope>
-							<executable>${java.home}/bin/java</executable>
-							<arguments>
-								<argument>-classpath</argument>
-								<classpath />
+                    <execution>
+                        <id>compile-legacy-chameleon</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>compile</classpathScope>
+                            <executable>${java.home}/bin/java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath />
 
-								<argument>com.vaadin.sass.SassCompiler</argument>
-								<argument> ${project.build.outputDirectory}/VAADIN/themes/chameleon/legacy-styles.scss</argument>
-								<argument> ${project.build.outputDirectory}/VAADIN/themes/chameleon/legacy-styles.css</argument>
-							</arguments>
-						</configuration>
-					</execution>
-					<execution>
-						<id>compile-legacy-liferay</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<classpathScope>compile</classpathScope>
-							<executable>${java.home}/bin/java</executable>
-							<arguments>
-								<argument>-classpath</argument>
-								<classpath />
+                                <argument>com.vaadin.sass.SassCompiler</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/chameleon/legacy-styles.scss</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/chameleon/legacy-styles.css</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>compile-legacy-liferay</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>compile</classpathScope>
+                            <executable>${java.home}/bin/java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath />
 
-								<argument>com.vaadin.sass.SassCompiler</argument>
-								<argument> ${project.build.outputDirectory}/VAADIN/themes/liferay/legacy-styles.scss</argument>
-								<argument> ${project.build.outputDirectory}/VAADIN/themes/liferay/legacy-styles.css</argument>
-							</arguments>
-						</configuration>
-					</execution>
-					<execution>
-						<id>compile-legacy-reindeer</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<classpathScope>compile</classpathScope>
-							<executable>${java.home}/bin/java</executable>
-							<arguments>
-								<argument>-classpath</argument>
-								<classpath />
+                                <argument>com.vaadin.sass.SassCompiler</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/liferay/legacy-styles.scss</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/liferay/legacy-styles.css</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>compile-legacy-reindeer</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>compile</classpathScope>
+                            <executable>${java.home}/bin/java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath />
 
-								<argument>com.vaadin.sass.SassCompiler</argument>
-								<argument> ${project.build.outputDirectory}/VAADIN/themes/reindeer/legacy-styles.scss</argument>
-								<argument> ${project.build.outputDirectory}/VAADIN/themes/reindeer/legacy-styles.css</argument>
-							</arguments>
-						</configuration>
-					</execution>
-					<execution>
-						<id>compile-legacy-runo</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<classpathScope>compile</classpathScope>
-							<executable>${java.home}/bin/java</executable>
-							<arguments>
-								<argument>-classpath</argument>
-								<classpath />
+                                <argument>com.vaadin.sass.SassCompiler</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/reindeer/legacy-styles.scss</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/reindeer/legacy-styles.css</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>compile-legacy-runo</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>compile</classpathScope>
+                            <executable>${java.home}/bin/java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath />
 
-								<argument>com.vaadin.sass.SassCompiler</argument>
-								<argument> ${project.build.outputDirectory}/VAADIN/themes/runo/legacy-styles.scss</argument>
-								<argument> ${project.build.outputDirectory}/VAADIN/themes/runo/legacy-styles.css</argument>
-							</arguments>
-						</configuration>
-					</execution>
-					<execution>
-						<id>smart-sprite-reindeer</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<classpathScope>compile</classpathScope>
-							<executable>${java.home}/bin/java</executable>
-							<arguments>
-								<argument>-classpath</argument>
-								<classpath />
+                                <argument>com.vaadin.sass.SassCompiler</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/runo/legacy-styles.scss</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/runo/legacy-styles.css</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>smart-sprite-reindeer</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>compile</classpathScope>
+                            <executable>${java.home}/bin/java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath />
 
-								<argument>org.carrot2.labs.smartsprites.SmartSprites</argument>
+                                <argument>org.carrot2.labs.smartsprites.SmartSprites</argument>
 
-								<argument>--sprite-png-depth</argument>
-								<argument>AUTO</argument>
+                                <argument>--sprite-png-depth</argument>
+                                <argument>AUTO</argument>
 
-								<argument>--css-file-encoding</argument>
-								<argument>UTF-8</argument>
+                                <argument>--css-file-encoding</argument>
+                                <argument>UTF-8</argument>
 
-								<argument>--root-dir-path</argument>
-								<argument>${project.build.outputDirectory}/VAADIN/themes/reindeer</argument>
+                                <argument>--root-dir-path</argument>
+                                <argument>${project.build.outputDirectory}/VAADIN/themes/reindeer</argument>
 
-								<argument>--log-level</argument>
-								<argument>WARN</argument>
-							</arguments>
-						</configuration>
-					</execution>
-					<execution>
-						<id>generate-export-package</id>
-						<phase>package</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<classpathScope>compile</classpathScope>
-							<executable>${java.home}/bin/java</executable>
-							<arguments>
-								<argument>-Dvaadin.version=${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</argument>
-								<argument>-DincludeNumberPackages=0</argument>
+                                <argument>--log-level</argument>
+                                <argument>WARN</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-export-package</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>compile</classpathScope>
+                            <executable>${java.home}/bin/java</executable>
+                            <arguments>
+                                <argument>-Dvaadin.version=${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</argument>
+                                <argument>-DincludeNumberPackages=0</argument>
 
-								<argument>-classpath</argument>
-								<classpath />
+                                <argument>-classpath</argument>
+                                <classpath />
 
-								<argument>com.vaadin.buildhelpers.GeneratePackageExports</argument>
+                                <argument>com.vaadin.buildhelpers.GeneratePackageExports</argument>
 
-								<argument>${project.build.directory}/${project.build.finalName}.${project.packaging}</argument>
-								<argument>VAADIN/themes</argument>
-							</arguments>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+                                <argument>${project.build.directory}/${project.build.finalName}.${project.packaging}</argument>
+                                <argument>VAADIN/themes</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>repackage-reindeer</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<target>
-								<property name="reindeer.theme.path"
-									value="${project.build.outputDirectory}/VAADIN/themes/reindeer/" />
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>repackage-reindeer</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <property name="reindeer.theme.path"
+                                    value="${project.build.outputDirectory}/VAADIN/themes/reindeer/" />
 
-								<move file="${reindeer.theme.path}/styles-sprite.css"
-									tofile="${reindeer.theme.path}/styles.css" />
+                                <move
+                                    file="${reindeer.theme.path}/styles-sprite.css"
+                                    tofile="${reindeer.theme.path}/styles.css" />
 
-								<move file="${reindeer.theme.path}/legacy-styles-sprite.css"
-									tofile="${reindeer.theme.path}/legacy-styles.css" />
+                                <move
+                                    file="${reindeer.theme.path}/legacy-styles-sprite.css"
+                                    tofile="${reindeer.theme.path}/legacy-styles.css" />
 
-								<gzip src="${reindeer.theme.path}/styles.css" destfile="${reindeer.theme.path}/styles.css.gz" />
-							</target>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+                                <gzip
+                                    src="${reindeer.theme.path}/styles.css"
+                                    destfile="${reindeer.theme.path}/styles.css.gz" />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<extensions>true</extensions>
-				<configuration>
-					<instructions>
-						<Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</Bundle-Version>
-						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
-						<!-- Export package is handled in exec plugin -->
-						<Export-Package></Export-Package>
-						<Import-Package></Import-Package>
-					</instructions>
-				</configuration>
-				<executions>
-					<execution>
-						<id>bundle-manifest</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>manifest</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</Bundle-Version>
+                        <Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
+                        <!-- Export package is handled in exec plugin -->
+                        <Export-Package></Export-Package>
+                        <Import-Package></Import-Package>
+                    </instructions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>bundle-manifest</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<archive>
-						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-						<index>false</index>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-		</plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                        <index>false</index>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
 
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<artifactId>maven-source-plugin</artifactId>
-					<configuration>
-						<skipSource>true</skipSource>
-					</configuration>
-				</plugin>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.codehaus.mojo
-										</groupId>
-										<artifactId>
-											exec-maven-plugin
-										</artifactId>
-										<versionRange>
-											[1.4.0,)
-										</versionRange>
-										<goals>
-											<goal>exec</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore />
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <configuration>
+                        <skipSource>true</skipSource>
+                    </configuration>
+                </plugin>
+                <!--This plugin's configuration is used to store Eclipse 
+                    m2e settings only. It has no influence on the Maven build itself. -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.codehaus.mojo
+                                        </groupId>
+                                        <artifactId>
+                                            exec-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.4.0,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>exec</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
 </project>
