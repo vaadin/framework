@@ -27,6 +27,7 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.embedded.EmbeddedConstants;
 import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
 
@@ -524,23 +525,17 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      * the user clicks inside the component. Depending on the content the event
      * may be blocked and in that case no event is fired.
      *
-     * Use {@link #removeListener(ClickListener)} to remove the listener.
+     * @see Registration
      *
      * @param listener
      *            The listener to add
+     * @return a registration object for removing the listener
      */
-    public void addClickListener(ClickListener listener) {
+    public Registration addClickListener(ClickListener listener) {
         addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class, listener,
                 ClickListener.clickMethod);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addClickListener(ClickListener)}
-     **/
-    @Deprecated
-    public void addListener(ClickListener listener) {
-        addClickListener(listener);
+        return () -> removeListener(EventId.CLICK_EVENT_IDENTIFIER,
+                ClickEvent.class, listener);
     }
 
     /**
@@ -549,19 +544,15 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      *
      * @param listener
      *            The listener to remove
+     *
+     * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
+     *             registration object returned from
+     *             {@link #addClickListener(ClickListener)}.
      */
+    @Deprecated
     public void removeClickListener(ClickListener listener) {
         removeListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
                 listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeClickListener(ClickListener)}
-     **/
-    @Deprecated
-    public void removeListener(ClickListener listener) {
-        removeClickListener(listener);
     }
 
     @Override

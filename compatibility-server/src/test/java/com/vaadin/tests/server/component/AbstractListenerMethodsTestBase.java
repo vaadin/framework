@@ -9,7 +9,6 @@ import java.util.Set;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 
-import com.vaadin.shared.Registration;
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.ui.Component;
 
@@ -100,13 +99,11 @@ public abstract class AbstractListenerMethodsTestBase {
         verifyListeners(c, eventClass);
 
         // Add one listener and verify
-        Registration listener1Registration = addListener(c, mockListener1,
-                listenerClass);
+        addListener(c, mockListener1, listenerClass);
         verifyListeners(c, eventClass, mockListener1);
 
         // Add another listener and verify
-        Registration listener2Registration = addListener(c, mockListener2,
-                listenerClass);
+        addListener(c, mockListener2, listenerClass);
         verifyListeners(c, eventClass, mockListener1, mockListener2);
 
         // Ensure we can fetch using parent class also
@@ -116,21 +113,30 @@ public abstract class AbstractListenerMethodsTestBase {
         }
 
         // Remove the first and verify
-        listener1Registration.remove();
+        removeListener(c, mockListener1, listenerClass);
         verifyListeners(c, eventClass, mockListener2);
 
         // Remove the remaining and verify
-        listener2Registration.remove();
+        removeListener(c, mockListener2, listenerClass);
         verifyListeners(c, eventClass);
 
     }
 
-    private Registration addListener(Object c, Object listener1,
+    private void removeListener(Object c, Object listener,
             Class<?> listenerClass) throws IllegalArgumentException,
             IllegalAccessException, InvocationTargetException,
             SecurityException, NoSuchMethodException {
+        Method method = getRemoveListenerMethod(c.getClass(), listenerClass);
+        method.invoke(c, listener);
+
+    }
+
+    private void addListener(Object c, Object listener1, Class<?> listenerClass)
+            throws IllegalArgumentException, IllegalAccessException,
+            InvocationTargetException, SecurityException,
+            NoSuchMethodException {
         Method method = getAddListenerMethod(c.getClass(), listenerClass);
-        return (Registration) method.invoke(c, listener1);
+        method.invoke(c, listener1);
     }
 
     private Collection<?> getListeners(Object c, Class<?> eventType)
@@ -148,14 +154,16 @@ public abstract class AbstractListenerMethodsTestBase {
 
     private Method getAddListenerMethod(Class<?> cls, Class<?> listenerClass)
             throws SecurityException, NoSuchMethodException {
-        Method addListenerMethod = cls.getMethod(
-                "add" + listenerClass.getSimpleName(), listenerClass);
-        if (addListenerMethod.getReturnType() != Registration.class) {
-            throw new NoSuchMethodException(
-                    cls.getSimpleName() + ".add" + listenerClass.getSimpleName()
-                            + " has wrong return type, expected Registration");
-        }
-        return addListenerMethod;
+        return cls.getMethod("add" + listenerClass.getSimpleName(),
+                listenerClass);
+
+    }
+
+    private Method getRemoveListenerMethod(Class<?> cls, Class<?> listenerClass)
+            throws SecurityException, NoSuchMethodException {
+        return cls.getMethod("remove" + listenerClass.getSimpleName(),
+                listenerClass);
+
     }
 
     private void verifyListeners(Object c, Class<?> eventClass,

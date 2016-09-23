@@ -40,22 +40,23 @@ public class SubWindowWithUndefinedHeight extends TestBase {
         final TabSheet tabsheet = new TabSheet();
         tabsheet.addComponent(tabButton);
         tabsheet.addComponent(table);
-        tabsheet.addListener(new TabSheet.SelectedTabChangeListener() {
-            @Override
-            public void selectedTabChange(
-                    TabSheet.SelectedTabChangeEvent event) {
-                if (tabsheet.getSelectedTab() == tabButton) {
-                    tabsheet.setSizeUndefined();
-                    layout.setSizeUndefined();
-                    subwindow.setSizeUndefined();
-                } else if (tabsheet.getSelectedTab() == table) {
-                    subwindow.setWidth("500px");
-                    subwindow.setHeight("500px");
-                    layout.setSizeFull();
-                    tabsheet.setSizeFull();
-                }
-            }
-        });
+        tabsheet.addSelectedTabChangeListener(
+                new TabSheet.SelectedTabChangeListener() {
+                    @Override
+                    public void selectedTabChange(
+                            TabSheet.SelectedTabChangeEvent event) {
+                        if (tabsheet.getSelectedTab() == tabButton) {
+                            tabsheet.setSizeUndefined();
+                            layout.setSizeUndefined();
+                            subwindow.setSizeUndefined();
+                        } else if (tabsheet.getSelectedTab() == table) {
+                            subwindow.setWidth("500px");
+                            subwindow.setHeight("500px");
+                            layout.setSizeFull();
+                            tabsheet.setSizeFull();
+                        }
+                    }
+                });
         layout.addComponent(tabsheet);
 
         Button button = new Button("click me", new Button.ClickListener() {

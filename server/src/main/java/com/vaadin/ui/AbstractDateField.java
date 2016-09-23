@@ -32,11 +32,14 @@ import com.vaadin.data.Result;
 import com.vaadin.data.validator.RangeValidator;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.BlurNotifier;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.UserError;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.datefield.DateFieldConstants;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
@@ -52,7 +55,7 @@ import com.vaadin.ui.declarative.DesignContext;
  *
  */
 public abstract class AbstractDateField extends AbstractField<Date>
-        implements LegacyComponent {
+        implements LegacyComponent, FocusNotifier, BlurNotifier {
 
     /**
      * Value of the field.
@@ -669,46 +672,30 @@ public abstract class AbstractDateField extends AbstractField<Date>
         markAsDirty();
     }
 
-    /**
-     * Adds a <code>FocusListener</code> to the Component which gets fired when
-     * a <code>LegacyField</code> receives keyboard focus.
-     *
-     * @param listener
-     * @see FocusListener
-     */
-    public void addFocusListener(FocusListener listener) {
+    @Override
+    public Registration addFocusListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
+        return () -> removeListener(FocusEvent.EVENT_ID, FocusEvent.class,
+                listener);
     }
 
-    /**
-     * Removes a <code>FocusListener</code> from the Component.
-     *
-     * @param listener
-     * @see FocusListener
-     */
+    @Override
+    @Deprecated
     public void removeFocusListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }
 
-    /**
-     * Adds a <code>BlurListener</code> to the Component which gets fired when a
-     * <code>LegacyField</code> loses keyboard focus.
-     *
-     * @param listener
-     * @see BlurListener
-     */
-    public void addBlurListener(BlurListener listener) {
+    @Override
+    public Registration addBlurListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
+        return () -> removeListener(BlurEvent.EVENT_ID, BlurEvent.class,
+                listener);
     }
 
-    /**
-     * Removes a <code>BlurListener</code> from the Component.
-     *
-     * @param listener
-     * @see BlurListener
-     */
+    @Override
+    @Deprecated
     public void removeBlurListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }

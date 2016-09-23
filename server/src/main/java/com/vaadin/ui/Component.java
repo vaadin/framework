@@ -29,6 +29,7 @@ import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.VariableOwner;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
@@ -972,10 +973,11 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      *
      * @param listener
      *            the new Listener to be registered.
+     * @return a registration object for removing this listener
      * @see Component.Event
-     * @see #removeListener(Listener)
+     * @see Registration
      */
-    public void addListener(Component.Listener listener);
+    public Registration addListener(Component.Listener listener);
 
     /**
      * Removes a previously registered component event listener from this
@@ -984,7 +986,12 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @param listener
      *            the listener to be removed.
      * @see #addListener(Listener)
+     *
+     * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
+     *             registration object returned from
+     *             {@link #addListener(Component.Listener)}.
      */
+    @Deprecated
     public void removeListener(Component.Listener listener);
 
     /**

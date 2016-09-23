@@ -23,6 +23,7 @@ import java.util.EventObject;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import com.vaadin.server.ErrorEvent;
@@ -51,6 +52,7 @@ public class EventRouter implements MethodEventSource {
      */
     @Override
     public void addListener(Class<?> eventType, Object object, Method method) {
+        Objects.requireNonNull(object, "Listener must not be null.");
         if (listenerList == null) {
             listenerList = new LinkedHashSet<>();
         }
@@ -65,6 +67,7 @@ public class EventRouter implements MethodEventSource {
     @Override
     public void addListener(Class<?> eventType, Object object,
             String methodName) {
+        Objects.requireNonNull(object, "Listener must not be null.");
         if (listenerList == null) {
             listenerList = new LinkedHashSet<>();
         }

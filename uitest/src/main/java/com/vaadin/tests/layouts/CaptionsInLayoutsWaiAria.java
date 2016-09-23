@@ -68,7 +68,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
 
     private Component addCaptionText() {
         Button b = new Button("Add caption text");
-        b.addListener(new ClickListener() {
+        b.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

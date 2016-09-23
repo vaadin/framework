@@ -25,6 +25,7 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.Navigator.UriFragmentManager;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
+import com.vaadin.shared.Registration;
 
 public class UriFragmentManagerTest {
 
@@ -49,12 +50,13 @@ public class UriFragmentManagerTest {
     @Test
     public void testListener() {
         // create mocks
-        IMocksControl control = EasyMock.createControl();
+        IMocksControl control = EasyMock.createNiceControl();
         Navigator navigator = control.createMock(Navigator.class);
         Page page = control.createMock(Page.class);
 
         UriFragmentManager manager = new UriFragmentManager(page);
         manager.setNavigator(navigator);
+        control.resetToNice();
 
         EasyMock.expect(page.getUriFragment()).andReturn("!test");
         navigator.navigateTo("test");
@@ -100,9 +102,10 @@ public class UriFragmentManagerTest {
         }
 
         @Override
-        public void addUriFragmentChangedListener(
+        public Registration addUriFragmentChangedListener(
                 UriFragmentChangedListener listener) {
             addUriFragmentCalled = true;
+            return () -> removeUriFragmentCalled = true;
         }
 
         @Override

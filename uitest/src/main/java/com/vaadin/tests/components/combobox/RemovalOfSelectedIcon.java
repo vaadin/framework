@@ -20,7 +20,7 @@ public class RemovalOfSelectedIcon extends TestBase {
 
         Button btClear = new Button("Clear button");
         btClear.setImmediate(true);
-        btClear.addListener(new Button.ClickListener() {
+        btClear.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

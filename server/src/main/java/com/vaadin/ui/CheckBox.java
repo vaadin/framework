@@ -21,18 +21,21 @@ import java.util.Collection;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
+import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.shared.ui.checkbox.CheckBoxState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
-public class CheckBox extends AbstractField<Boolean> {
+public class CheckBox extends AbstractField<Boolean>
+        implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
     private CheckBoxServerRpc rpc = new CheckBoxServerRpc() {
 
@@ -145,20 +148,30 @@ public class CheckBox extends AbstractField<Boolean> {
         getState().checked = value;
     }
 
-    public void addBlurListener(BlurListener listener) {
+    @Override
+    public Registration addBlurListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
+        return () -> removeListener(BlurEvent.EVENT_ID, BlurEvent.class,
+                listener);
     }
 
+    @Override
+    @Deprecated
     public void removeBlurListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 
-    public void addFocusListener(FocusListener listener) {
+    @Override
+    public Registration addFocusListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
+        return () -> removeListener(FocusEvent.EVENT_ID, FocusEvent.class,
+                listener);
     }
 
+    @Override
+    @Deprecated
     public void removeFocusListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }

@@ -25,7 +25,7 @@ public class ReplaceComponentNPE extends TestBase {
         outer.setMargin(true);
 
         Button changer = new Button("ReplaceComponent");
-        changer.addListener(new Button.ClickListener() {
+        changer.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 getLayout().replaceComponent(button, outer);

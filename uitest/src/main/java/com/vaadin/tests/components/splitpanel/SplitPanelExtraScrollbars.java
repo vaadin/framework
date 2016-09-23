@@ -39,7 +39,7 @@ public class SplitPanelExtraScrollbars extends AbstractTestCase
     private Button createButton(String height) {
         Button b = new NativeButton("A BIG button");
         b.setHeight(height);
-        b.addListener(this);
+        b.addClickListener(this);
         return b;
     }
 

@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.vaadin.server.ComponentSizeValidator;
+import com.vaadin.shared.Registration;
 
 /**
  * Extension to {@link AbstractComponent} that defines the default
@@ -99,72 +100,40 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     /* documented in interface */
     @Override
-    public void addComponentAttachListener(ComponentAttachListener listener) {
+    public Registration addComponentAttachListener(
+            ComponentAttachListener listener) {
         addListener(ComponentAttachEvent.class, listener,
                 ComponentAttachListener.attachMethod);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addComponentAttachListener(com.vaadin.ui.ComponentContainer.ComponentAttachListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(ComponentAttachListener listener) {
-        addComponentAttachListener(listener);
+        return () -> removeListener(ComponentAttachEvent.class, listener,
+                ComponentAttachListener.attachMethod);
     }
 
     /* documented in interface */
     @Override
+    @Deprecated
     public void removeComponentAttachListener(
             ComponentAttachListener listener) {
         removeListener(ComponentAttachEvent.class, listener,
                 ComponentAttachListener.attachMethod);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addComponentDetachListener(com.vaadin.ui.ComponentContainer.ComponentDetachListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(ComponentDetachListener listener) {
-        addComponentDetachListener(listener);
-    }
-
     /* documented in interface */
     @Override
-    public void addComponentDetachListener(ComponentDetachListener listener) {
+    public Registration addComponentDetachListener(
+            ComponentDetachListener listener) {
         addListener(ComponentDetachEvent.class, listener,
+                ComponentDetachListener.detachMethod);
+        return () -> removeListener(ComponentDetachEvent.class, listener,
                 ComponentDetachListener.detachMethod);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeComponentAttachListener(com.vaadin.ui.ComponentContainer.ComponentAttachListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(ComponentAttachListener listener) {
-        removeComponentAttachListener(listener);
-    }
-
     /* documented in interface */
     @Override
+    @Deprecated
     public void removeComponentDetachListener(
             ComponentDetachListener listener) {
         removeListener(ComponentDetachEvent.class, listener,
                 ComponentDetachListener.detachMethod);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeComponentDetachListener(com.vaadin.ui.ComponentContainer.ComponentDetachListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(ComponentDetachListener listener) {
-        removeComponentDetachListener(listener);
     }
 
     /**

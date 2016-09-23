@@ -18,6 +18,7 @@ package com.vaadin.event;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 import com.vaadin.util.ReflectTools;
@@ -98,10 +99,12 @@ public interface UIEvents {
          *
          * @see UI#setPollInterval(int)
          * @see #removePollListener(PollListener)
+         * @see Registration
          * @param listener
-         *            the {@link PollListener} to add
+         *            the {@link PollListener} to add, not null
+         * @return a registration object for removing the listener
          */
-        public void addPollListener(PollListener listener);
+        public Registration addPollListener(PollListener listener);
 
         /**
          * Remove a poll listener.
@@ -109,7 +112,12 @@ public interface UIEvents {
          * @see #addPollListener(PollListener)
          * @param listener
          *            the listener to be removed
+         *
+         * @deprecated As of 8.0, replaced by {@link Registration#remove()} in
+         *             the registration object returned from
+         *             {@link #addPollListener(PollListener)}.
          */
+        @Deprecated
         public void removePollListener(PollListener listener);
     }
 

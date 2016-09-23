@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -40,7 +40,6 @@ import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.FailedListener;
 import com.vaadin.ui.Upload.FinishedEvent;
-import com.vaadin.ui.Upload.FinishedListener;
 import com.vaadin.ui.Upload.StartedEvent;
 import com.vaadin.ui.Upload.StartedListener;
 import com.vaadin.ui.Upload.SucceededEvent;
@@ -76,12 +75,12 @@ public class TestForStyledUpload extends LegacyApplication
         up = new Upload(null, buffer);
         up.setButtonCaption("Select file");
         up.setImmediate(true);
-        up.addListener((FinishedListener) this);
-        up.addListener((FailedListener) this);
-        up.addListener((SucceededListener) this);
-        up.addListener((StartedListener) this);
+        up.addFinishedListener(this);
+        up.addFailedListener(this);
+        up.addSucceededListener(this);
+        up.addStartedListener(this);
 
-        up.addListener(new Upload.ProgressListener() {
+        up.addProgressListener(new Upload.ProgressListener() {
 
             @Override
             public void updateProgress(long readBytes, long contentLenght) {
@@ -128,7 +127,7 @@ public class TestForStyledUpload extends LegacyApplication
         main.addComponent(status);
 
         Button cancel = new Button("Cancel current upload");
-        cancel.addListener(new Button.ClickListener() {
+        cancel.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 buffer.cancel();
@@ -138,7 +137,7 @@ public class TestForStyledUpload extends LegacyApplication
         main.addComponent(cancel);
 
         final Button restart = new Button("Restart demo application");
-        restart.addListener(new Button.ClickListener() {
+        restart.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

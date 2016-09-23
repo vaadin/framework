@@ -15,9 +15,9 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeButton;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.OptionGroup;
-import com.vaadin.v7.ui.TextField;
 
 public class FocusAndBlurListeners extends TestBase {
 
@@ -37,7 +37,6 @@ public class FocusAndBlurListeners extends TestBase {
             Label msg = new Label(new Date() + " Blurred "
                     + event.getComponent().getCaption());
             messages.addComponentAsFirst(msg);
-
         }
     };
     private VerticalLayout messages = new VerticalLayout();
@@ -72,7 +71,7 @@ public class FocusAndBlurListeners extends TestBase {
         ogm.setMultiSelect(true);
         l.addComponent(ogm);
 
-        btn.addListener(new ClickListener() {
+        btn.addClickListener(new ClickListener() {
 
             private int i;
 

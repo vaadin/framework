@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.shared.EventId;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.Event;
@@ -45,20 +46,27 @@ public interface FieldEvents {
          * when a <code>Field</code> receives keyboard focus.
          *
          * @param listener
+         *            the focus listener to add, not null
+         * @return a registration object for removing the listener
          * @see FocusListener
-         * @since 6.2
+         * @see Registration
+         * @since 8.0
          */
-        public void addFocusListener(FocusListener listener);
+        public Registration addFocusListener(FocusListener listener);
 
         /**
-         * Removes a <code>FocusListener</code> from the Component.
+         * Removes a <code>BlurListener</code> from the Component.
          *
          * @param listener
          * @see FocusListener
          * @since 6.2
+         *
+         * @deprecated As of 8.0, replaced by {@link Registration#remove()} in
+         *             the registration object returned from
+         *             {@link #addFocusListener(FocusListener)}.
          */
+        @Deprecated
         public void removeFocusListener(FocusListener listener);
-
     }
 
     /**
@@ -75,21 +83,31 @@ public interface FieldEvents {
          * Adds a <code>BlurListener</code> to the Component which gets fired
          * when a <code>Field</code> loses keyboard focus.
          *
-         * @param listener
          * @see BlurListener
-         * @since 6.2
+         * @see Registration
+         * @since 8.0
+         *
+         * @param listener
+         *            the blur listener to add, not null
+         * @return a registration object for removing the listener
          */
-        public void addBlurListener(BlurListener listener);
+        public Registration addBlurListener(BlurListener listener);
 
         /**
          * Removes a <code>BlurListener</code> from the Component.
          *
-         * @param listener
          * @see BlurListener
          * @since 6.2
+         *
+         * @param listener
+         *            the listener to remove
+         * 
+         * @deprecated As of 8.0, replaced by {@link Registration#remove()} in
+         *             the registration object returned from
+         *             {@link #addFocusListener(FocusListener)}.
          */
+        @Deprecated
         public void removeBlurListener(BlurListener listener);
-
     }
 
     /**

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
@@ -57,6 +58,7 @@ import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ContextClickRpc;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -787,16 +789,14 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * implemented interface.
      */
     @Override
-    public void addListener(Component.Listener listener) {
+    public Registration addListener(Component.Listener listener) {
         addListener(Component.Event.class, listener, COMPONENT_EVENT_METHOD);
+        return () -> removeListener(Component.Event.class, listener,
+                COMPONENT_EVENT_METHOD);
     }
 
-    /*
-     * Removes a previously registered listener from this component. Don't add a
-     * JavaDoc comment here, we use the default documentation from implemented
-     * interface.
-     */
     @Override
+    @Deprecated
     public void removeListener(Component.Listener listener) {
         removeListener(Component.Event.class, listener, COMPONENT_EVENT_METHOD);
     }
@@ -1084,8 +1084,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
             }
         } else {
             // remove responsive extensions
-            List<Extension> extensions = new ArrayList<>(
-                    getExtensions());
+            List<Extension> extensions = new ArrayList<>(getExtensions());
             for (Extension e : extensions) {
                 if (e instanceof Responsive) {
                     removeExtension(e);
@@ -1263,8 +1262,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *         implementation
      */
     protected Collection<String> getCustomAttributes() {
-        ArrayList<String> l = new ArrayList<>(
-                Arrays.asList(customAttributes));
+        ArrayList<String> l = new ArrayList<>(Arrays.asList(customAttributes));
         if (this instanceof Focusable) {
             l.add("tab-index");
             l.add("tabindex");
@@ -1365,10 +1363,13 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     }
 
-    public void addShortcutListener(ShortcutListener shortcut) {
+    public Registration addShortcutListener(ShortcutListener shortcut) {
+        Objects.requireNonNull(shortcut, "Listener must not be null.");
         getActionManager().addAction(shortcut);
+        return () -> getActionManager().removeAction(shortcut);
     }
 
+    @Deprecated
     public void removeShortcutListener(ShortcutListener shortcut) {
         getActionManager().removeAction(shortcut);
     }
@@ -1394,7 +1395,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     @Override
-    public void addContextClickListener(ContextClickListener listener) {
+    public Registration addContextClickListener(ContextClickListener listener) {
         // Register default Context Click RPC if needed. This RPC won't be
         // called if there are no listeners on the server-side. A client-side
         // connector can override this and use a different RPC channel.
@@ -1410,9 +1411,12 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
         addListener(EventId.CONTEXT_CLICK, ContextClickEvent.class, listener,
                 ContextClickEvent.CONTEXT_CLICK_METHOD);
+        return () -> removeListener(EventId.CONTEXT_CLICK,
+                ContextClickEvent.class, listener);
     }
 
     @Override
+    @Deprecated
     public void removeContextClickListener(ContextClickListener listener) {
         removeListener(EventId.CONTEXT_CLICK, ContextClickEvent.class,
                 listener);

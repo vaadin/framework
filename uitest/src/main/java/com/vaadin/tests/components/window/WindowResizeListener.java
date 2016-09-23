@@ -80,7 +80,7 @@ class ResizeListenerWindow extends Window {
         hl.addComponent(new Label("Current size: "));
         hl.addComponent(sizeLabel);
 
-        addListener(new ResizeListener() {
+        addResizeListener(new ResizeListener() {
             @Override
             public void windowResized(ResizeEvent e) {
                 updateLabel();

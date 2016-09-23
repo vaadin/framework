@@ -18,7 +18,7 @@ public class NativeButtonHtml extends TestBase {
         addComponent(b);
 
         final NativeButton swapButton = new NativeButton("<i>Swap button<i>");
-        swapButton.addListener(new Button.ClickListener() {
+        swapButton.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

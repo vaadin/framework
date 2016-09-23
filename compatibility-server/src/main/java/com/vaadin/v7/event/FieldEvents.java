@@ -20,6 +20,9 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEventListener;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.ui.Component;
 import com.vaadin.util.ReflectTools;
 import com.vaadin.v7.ui.Field;
@@ -31,6 +34,68 @@ import com.vaadin.v7.ui.TextField;
  */
 @Deprecated
 public interface FieldEvents {
+
+    /**
+     * The interface for adding and removing <code>FocusEvent</code> listeners.
+     * By implementing this interface a class explicitly announces that it will
+     * generate a <code>FocusEvent</code> when it receives keyboard focus.
+     *
+     * @since 6.2
+     * @see FocusListener
+     * @see FocusEvent
+     */
+    @Deprecated
+    public interface FocusNotifier extends Serializable {
+        /**
+         * Adds a <code>FocusListener</code> to the Component which gets fired
+         * when a <code>Field</code> receives keyboard focus.
+         *
+         * @param listener
+         * @see FocusListener
+         * @since 6.2
+         */
+        public void addFocusListener(FocusListener listener);
+
+        /**
+         * Removes a <code>FocusListener</code> from the Component.
+         *
+         * @param listener
+         * @see FocusListener
+         * @since 6.2
+         */
+        public void removeFocusListener(FocusListener listener);
+    }
+
+    /**
+     * The interface for adding and removing <code>BlurEvent</code> listeners.
+     * By implementing this interface a class explicitly announces that it will
+     * generate a <code>BlurEvent</code> when it loses keyboard focus.
+     *
+     * @since 6.2
+     * @see BlurListener
+     * @see BlurEvent
+     */
+    @Deprecated
+    public interface BlurNotifier extends Serializable {
+        /**
+         * Adds a <code>BlurListener</code> to the Component which gets fired
+         * when a <code>Field</code> loses keyboard focus.
+         *
+         * @param listener
+         * @see BlurListener
+         * @since 6.2
+         */
+        public void addBlurListener(BlurListener listener);
+
+        /**
+         * Removes a <code>BlurListener</code> from the Component.
+         *
+         * @param listener
+         * @see BlurListener
+         * @since 6.2
+         */
+        public void removeBlurListener(BlurListener listener);
+    }
 
     /**
      * TextChangeEvents are fired when the user is editing the text content of a

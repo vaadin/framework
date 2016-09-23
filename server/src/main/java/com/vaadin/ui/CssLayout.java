@@ -17,6 +17,7 @@ package com.vaadin.ui;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import org.jsoup.nodes.Element;
 
@@ -26,6 +27,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.csslayout.CssLayoutServerRpc;
 import com.vaadin.shared.ui.csslayout.CssLayoutState;
 import com.vaadin.ui.declarative.DesignContext;
@@ -303,36 +305,19 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     }
 
     @Override
-    public void addLayoutClickListener(LayoutClickListener listener) {
+    public Registration addLayoutClickListener(LayoutClickListener listener) {
         addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addLayoutClickListener(LayoutClickListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(LayoutClickListener listener) {
-        addLayoutClickListener(listener);
-    }
-
-    @Override
-    public void removeLayoutClickListener(LayoutClickListener listener) {
-        removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
+        return () -> removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeLayoutClickListener(LayoutClickListener)}
-     **/
     @Override
     @Deprecated
-    public void removeListener(LayoutClickListener listener) {
-        removeLayoutClickListener(listener);
+    public void removeLayoutClickListener(LayoutClickListener listener) {
+        removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
+                LayoutClickEvent.class, listener);
     }
 
     /**
@@ -397,5 +382,4 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
             designElement.appendChild(childNode);
         }
     }
-
 }

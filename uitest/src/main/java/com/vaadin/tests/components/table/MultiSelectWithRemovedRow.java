@@ -47,7 +47,7 @@ public class MultiSelectWithRemovedRow extends TestBase {
         addComponent(table);
 
         Button showButton = new Button("Show selection");
-        showButton.addListener(new Button.ClickListener() {
+        showButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
                 Collection<?> selection = (Collection<?>) table.getValue();
@@ -57,7 +57,7 @@ public class MultiSelectWithRemovedRow extends TestBase {
         addComponent(showButton);
 
         Button removeButton = new Button("Remove selection");
-        removeButton.addListener(new Button.ClickListener() {
+        removeButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
                 Collection<?> selection = (Collection<?>) table.getValue();

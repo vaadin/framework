@@ -329,7 +329,7 @@ public class LegacyWindow extends UI {
      */
     @Deprecated
     public void addListener(BrowserWindowResizeListener resizeListener) {
-        getPage().addListener(resizeListener);
+        getPage().addBrowserWindowResizeListener(resizeListener);
     }
 
     /**
@@ -342,7 +342,7 @@ public class LegacyWindow extends UI {
      */
     @Deprecated
     public void removeListener(BrowserWindowResizeListener resizeListener) {
-        getPage().removeListener(resizeListener);
+        getPage().removeBrowserWindowResizeListener(resizeListener);
     }
 
     /**

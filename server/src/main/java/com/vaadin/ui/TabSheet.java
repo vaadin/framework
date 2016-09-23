@@ -39,6 +39,7 @@ import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ComponentConstants;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.tabsheet.TabState;
 import com.vaadin.shared.ui.tabsheet.TabsheetClientRpc;
 import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
@@ -843,45 +844,38 @@ public class TabSheet extends AbstractComponentContainer
     }
 
     /**
-     * Adds a tab selection listener
+     * Adds a tab selection listener.
+     *
+     * @see Registration
      *
      * @param listener
-     *            the Listener to be added.
+     *            the Listener to be added, not null
+     * @return a registration object for removing the listener
      */
-    public void addSelectedTabChangeListener(
+    public Registration addSelectedTabChangeListener(
             SelectedTabChangeListener listener) {
         addListener(SelectedTabChangeEvent.class, listener,
+                SELECTED_TAB_CHANGE_METHOD);
+        return () -> removeListener(SelectedTabChangeEvent.class, listener,
                 SELECTED_TAB_CHANGE_METHOD);
     }
 
     /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addSelectedTabChangeListener(SelectedTabChangeListener)}
-     **/
-    @Deprecated
-    public void addListener(SelectedTabChangeListener listener) {
-        addSelectedTabChangeListener(listener);
-    }
-
-    /**
-     * Removes a tab selection listener
+     * Removes a tab selection listener.
      *
      * @param listener
      *            the Listener to be removed.
+     *
+     * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
+     *             registration object returned from
+     *             {@link #removeSelectedTabChangeListener(SelectedTabChangeListener)}
+     *             .
      */
+    @Deprecated
     public void removeSelectedTabChangeListener(
             SelectedTabChangeListener listener) {
         removeListener(SelectedTabChangeEvent.class, listener,
                 SELECTED_TAB_CHANGE_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeSelectedTabChangeListener(SelectedTabChangeListener)}
-     **/
-    @Deprecated
-    public void removeListener(SelectedTabChangeListener listener) {
-        removeSelectedTabChangeListener(listener);
     }
 
     /**
@@ -1399,23 +1393,29 @@ public class TabSheet extends AbstractComponentContainer
     }
 
     @Override
-    public void addBlurListener(BlurListener listener) {
+    public Registration addBlurListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
+        return () -> removeListener(BlurEvent.EVENT_ID, BlurEvent.class,
+                listener);
     }
 
     @Override
+    @Deprecated
     public void removeBlurListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 
     @Override
-    public void addFocusListener(FocusListener listener) {
+    public Registration addFocusListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
+        return () -> removeListener(FocusEvent.EVENT_ID, FocusEvent.class,
+                listener);
     }
 
     @Override
+    @Deprecated
     public void removeFocusListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }

@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGridServerRpc;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGridState;
@@ -182,15 +183,10 @@ public class ColorPickerGrid extends AbstractComponent
         markAsDirty();
     }
 
-    /**
-     * Adds a color change listener
-     *
-     * @param listener
-     *            The color change listener
-     */
     @Override
-    public void addColorChangeListener(ColorChangeListener listener) {
+    public Registration addColorChangeListener(ColorChangeListener listener) {
         addListener(ColorChangeEvent.class, listener, COLOR_CHANGE_METHOD);
+        return () -> removeListener(ColorChangeEvent.class, listener);
     }
 
     @Override
@@ -198,13 +194,8 @@ public class ColorPickerGrid extends AbstractComponent
         return colorGrid[x][y];
     }
 
-    /**
-     * Removes a color change listener
-     *
-     * @param listener
-     *            The listener
-     */
     @Override
+    @Deprecated
     public void removeColorChangeListener(ColorChangeListener listener) {
         removeListener(ColorChangeEvent.class, listener);
     }

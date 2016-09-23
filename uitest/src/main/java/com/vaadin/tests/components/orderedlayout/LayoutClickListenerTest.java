@@ -58,7 +58,7 @@ public class LayoutClickListenerTest extends TestBase {
         layout.addComponent(nestedLayout);
 
         // Listen for layout click events
-        layout.addListener(new LayoutClickListener() {
+        layout.addLayoutClickListener(new LayoutClickListener() {
             @Override
             public void layoutClick(LayoutClickEvent event) {
 

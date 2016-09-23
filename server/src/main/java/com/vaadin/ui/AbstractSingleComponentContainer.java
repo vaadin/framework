@@ -24,6 +24,7 @@ import org.jsoup.select.Elements;
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
 
@@ -57,14 +58,17 @@ public abstract class AbstractSingleComponentContainer extends AbstractComponent
 
     /* documented in interface */
     @Override
-    public void addComponentAttachListener(ComponentAttachListener listener) {
+    public Registration addComponentAttachListener(
+            ComponentAttachListener listener) {
         addListener(ComponentAttachEvent.class, listener,
                 ComponentAttachListener.attachMethod);
-
+        return () -> removeListener(ComponentAttachEvent.class, listener,
+                ComponentAttachListener.attachMethod);
     }
 
     /* documented in interface */
     @Override
+    @Deprecated
     public void removeComponentAttachListener(
             ComponentAttachListener listener) {
         removeListener(ComponentAttachEvent.class, listener,
@@ -73,13 +77,17 @@ public abstract class AbstractSingleComponentContainer extends AbstractComponent
 
     /* documented in interface */
     @Override
-    public void addComponentDetachListener(ComponentDetachListener listener) {
+    public Registration addComponentDetachListener(
+            ComponentDetachListener listener) {
         addListener(ComponentDetachEvent.class, listener,
+                ComponentDetachListener.detachMethod);
+        return () -> removeListener(ComponentDetachEvent.class, listener,
                 ComponentDetachListener.detachMethod);
     }
 
     /* documented in interface */
     @Override
+    @Deprecated
     public void removeComponentDetachListener(
             ComponentDetachListener listener) {
         removeListener(ComponentDetachEvent.class, listener,

@@ -498,7 +498,7 @@ public class DDTest6 extends TestBase {
             l.addComponent(new Embedded(null, icon2));
             l.addComponent(new Label(name));
 
-            l.addListener(new LayoutClickListener() {
+            l.addLayoutClickListener(new LayoutClickListener() {
                 @Override
                 @SuppressWarnings("static-access")
                 public void layoutClick(LayoutClickEvent event) {

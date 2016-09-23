@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -133,80 +133,83 @@ public class TestBench extends com.vaadin.server.LegacyApplication
         VerticalLayout lo = new VerticalLayout();
         lo.addComponent(menu);
 
-        mainWindow.getPage().addListener(new Page.UriFragmentChangedListener() {
-            @Override
-            public void uriFragmentChanged(UriFragmentChangedEvent source) {
-                String fragment = source.getUriFragment();
-                if (fragment != null && !"".equals(fragment)) {
-                    // try to find a proper test class
+        mainWindow.getPage().addUriFragmentChangedListener(
+                new Page.UriFragmentChangedListener() {
+                    @Override
+                    public void uriFragmentChanged(
+                            UriFragmentChangedEvent source) {
+                        String fragment = source.getUriFragment();
+                        if (fragment != null && !"".equals(fragment)) {
+                            // try to find a proper test class
 
-                    // exact match
-                    Iterator<?> iterator = menu.getItemIds().iterator();
-                    while (iterator.hasNext()) {
-                        Object next = iterator.next();
-                        if (next instanceof Class) {
-                            Class<?> c = (Class<?>) next;
-                            String string = c.getName();
-                            if (string.equals(fragment)) {
-                                menu.setValue(c);
-                                mainLayout.setSplitPosition(0);
-                                return;
+                            // exact match
+                            Iterator<?> iterator = menu.getItemIds().iterator();
+                            while (iterator.hasNext()) {
+                                Object next = iterator.next();
+                                if (next instanceof Class) {
+                                    Class<?> c = (Class<?>) next;
+                                    String string = c.getName();
+                                    if (string.equals(fragment)) {
+                                        menu.setValue(c);
+                                        mainLayout.setSplitPosition(0);
+                                        return;
+                                    }
+                                }
                             }
-                        }
-                    }
 
-                    // simple name match
-                    iterator = menu.getItemIds().iterator();
-                    while (iterator.hasNext()) {
-                        Object next = iterator.next();
-                        if (next instanceof Class) {
-                            Class<?> c = (Class<?>) next;
-                            String string = c.getSimpleName();
-                            if (string.equals(fragment)) {
-                                menu.setValue(c);
-                                mainLayout.setSplitPosition(0);
-                                return;
+                            // simple name match
+                            iterator = menu.getItemIds().iterator();
+                            while (iterator.hasNext()) {
+                                Object next = iterator.next();
+                                if (next instanceof Class) {
+                                    Class<?> c = (Class<?>) next;
+                                    String string = c.getSimpleName();
+                                    if (string.equals(fragment)) {
+                                        menu.setValue(c);
+                                        mainLayout.setSplitPosition(0);
+                                        return;
+                                    }
+                                }
                             }
-                        }
-                    }
-                    // ticket match
-                    iterator = menu.getItemIds().iterator();
-                    while (iterator.hasNext()) {
-                        Object next = iterator.next();
-                        if (next instanceof Class) {
-                            Class<?> c = (Class<?>) next;
-                            String string = c.getSimpleName();
-                            if (string.startsWith("Ticket" + fragment)) {
-                                menu.setValue(c);
-                                mainLayout.setSplitPosition(0);
-                                return;
+                            // ticket match
+                            iterator = menu.getItemIds().iterator();
+                            while (iterator.hasNext()) {
+                                Object next = iterator.next();
+                                if (next instanceof Class) {
+                                    Class<?> c = (Class<?>) next;
+                                    String string = c.getSimpleName();
+                                    if (string
+                                            .startsWith("Ticket" + fragment)) {
+                                        menu.setValue(c);
+                                        mainLayout.setSplitPosition(0);
+                                        return;
+                                    }
+                                }
                             }
-                        }
-                    }
 
-                    // just partly mach lowercase
-                    iterator = menu.getItemIds().iterator();
-                    while (iterator.hasNext()) {
-                        Object next = iterator.next();
-                        if (next instanceof Class) {
-                            Class<?> c = (Class<?>) next;
-                            String string = c.getSimpleName();
-                            if (string.toLowerCase()
-                                    .contains(fragment.toLowerCase())) {
-                                menu.setValue(c);
-                                mainLayout.setSplitPosition(0);
-                                return;
+                            // just partly mach lowercase
+                            iterator = menu.getItemIds().iterator();
+                            while (iterator.hasNext()) {
+                                Object next = iterator.next();
+                                if (next instanceof Class) {
+                                    Class<?> c = (Class<?>) next;
+                                    String string = c.getSimpleName();
+                                    if (string.toLowerCase()
+                                            .contains(fragment.toLowerCase())) {
+                                        menu.setValue(c);
+                                        mainLayout.setSplitPosition(0);
+                                        return;
+                                    }
+                                }
                             }
+
+                            getMainWindow().showNotification(
+                                    "No potential matc for #" + fragment);
+
                         }
+
                     }
-
-                    getMainWindow().showNotification(
-                            "No potential matc for #" + fragment);
-
-                }
-
-            }
-        });
+                });
 
         mainLayout.addComponent(lo);
 

@@ -43,6 +43,7 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.shared.ui.window.WindowRole;
 import com.vaadin.shared.ui.window.WindowServerRpc;
@@ -106,8 +107,7 @@ public class Window extends Panel
     /**
      * Holds registered CloseShortcut instances for query and later removal
      */
-    private List<CloseShortcut> closeShortcuts = new ArrayList<>(
-            4);
+    private List<CloseShortcut> closeShortcuts = new ArrayList<>(4);
 
     /**
      * Creates a new, empty window
@@ -406,19 +406,12 @@ public class Window extends Panel
      * </p>
      *
      * @param listener
-     *            the CloseListener to add.
+     *            the CloseListener to add, not null
      */
-    public void addCloseListener(CloseListener listener) {
+    public Registration addCloseListener(CloseListener listener) {
         addListener(CloseEvent.class, listener, WINDOW_CLOSE_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addCloseListener(CloseListener)}
-     **/
-    @Deprecated
-    public void addListener(CloseListener listener) {
-        addCloseListener(listener);
+        return () -> removeListener(CloseEvent.class, listener,
+                WINDOW_CLOSE_METHOD);
     }
 
     /**
@@ -431,17 +424,9 @@ public class Window extends Panel
      * @param listener
      *            the CloseListener to remove.
      */
+    @Deprecated
     public void removeCloseListener(CloseListener listener) {
         removeListener(CloseEvent.class, listener, WINDOW_CLOSE_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeCloseListener(CloseListener)}
-     **/
-    @Deprecated
-    public void removeListener(CloseListener listener) {
-        removeCloseListener(listener);
     }
 
     protected void fireClose() {
@@ -523,8 +508,11 @@ public class Window extends Panel
      * @param listener
      *            the WindowModeChangeListener to add.
      */
-    public void addWindowModeChangeListener(WindowModeChangeListener listener) {
+    public Registration addWindowModeChangeListener(
+            WindowModeChangeListener listener) {
         addListener(WindowModeChangeEvent.class, listener,
+                WindowModeChangeListener.windowModeChangeMethod);
+        return () -> removeListener(WindowModeChangeEvent.class, listener,
                 WindowModeChangeListener.windowModeChangeMethod);
     }
 
@@ -534,6 +522,7 @@ public class Window extends Panel
      * @param listener
      *            the WindowModeChangeListener to remove.
      */
+    @Deprecated
     public void removeWindowModeChangeListener(
             WindowModeChangeListener listener) {
         removeListener(WindowModeChangeEvent.class, listener,
@@ -597,19 +586,15 @@ public class Window extends Panel
     /**
      * Add a resize listener.
      *
+     * @see Registration
+     *
      * @param listener
+     *            the listener to add, not null
+     * @return a registration object for removing the listener
      */
-    public void addResizeListener(ResizeListener listener) {
+    public Registration addResizeListener(ResizeListener listener) {
         addListener(ResizeEvent.class, listener, WINDOW_RESIZE_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addResizeListener(ResizeListener)}
-     **/
-    @Deprecated
-    public void addListener(ResizeListener listener) {
-        addResizeListener(listener);
+        return () -> removeListener(ResizeEvent.class, listener);
     }
 
     /**
@@ -617,17 +602,9 @@ public class Window extends Panel
      *
      * @param listener
      */
+    @Deprecated
     public void removeResizeListener(ResizeListener listener) {
         removeListener(ResizeEvent.class, listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeResizeListener(ResizeListener)}
-     **/
-    @Deprecated
-    public void removeListener(ResizeListener listener) {
-        removeResizeListener(listener);
     }
 
     /**
@@ -1085,12 +1062,15 @@ public class Window extends Panel
      * .event.FieldEvents.FocusListener)
      */
     @Override
-    public void addFocusListener(FocusListener listener) {
+    public Registration addFocusListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
+        return () -> removeListener(FocusEvent.EVENT_ID, FocusEvent.class,
+                listener);
     }
 
     @Override
+    @Deprecated
     public void removeFocusListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }
@@ -1103,12 +1083,15 @@ public class Window extends Panel
      * event.FieldEvents.BlurListener)
      */
     @Override
-    public void addBlurListener(BlurListener listener) {
+    public Registration addBlurListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
+        return () -> removeListener(BlurEvent.EVENT_ID, BlurEvent.class,
+                listener);
     }
 
     @Override
+    @Deprecated
     public void removeBlurListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }

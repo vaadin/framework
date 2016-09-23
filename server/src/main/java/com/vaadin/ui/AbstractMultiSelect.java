@@ -303,7 +303,6 @@ public abstract class AbstractMultiSelect<T>
      */
     public Registration addSelectionListener(
             MultiSelectionListener<T> listener) {
-        Objects.requireNonNull(listener, "listener cannot be null");
         addListener(MultiSelectionEvent.class, listener,
                 SELECTION_CHANGE_METHOD);
         return () -> removeListener(MultiSelectionEvent.class, listener);

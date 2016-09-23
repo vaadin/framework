@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -72,7 +72,7 @@ public class TestForContainerFilterable extends CustomComponent {
         t.setContainerDataSource(ic);
 
         // Handler
-        filterButton.addListener(new Button.ClickListener() {
+        filterButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 ic.removeAllContainerFilters();

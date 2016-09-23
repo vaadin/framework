@@ -23,7 +23,7 @@ public class ButtonHtml extends TestBase {
         addComponent(b);
 
         final Button swapButton = new Button("<i>Swap button<i>");
-        swapButton.addListener(new Button.ClickListener() {
+        swapButton.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

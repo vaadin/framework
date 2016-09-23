@@ -27,7 +27,7 @@ public class ComboBoxCombinedWithEnterShortcut extends TestBase {
 
         Button aButton = new Button("Show Value");
         aButton.setClickShortcut(KeyCode.ENTER);
-        aButton.addListener(new Button.ClickListener() {
+        aButton.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

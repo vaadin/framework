@@ -23,7 +23,6 @@ import java.util.Set;
 
 import org.jsoup.nodes.Element;
 
-import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
@@ -33,6 +32,7 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.v7.data.Container;
+import com.vaadin.v7.event.FieldEvents;
 import com.vaadin.v7.shared.ui.optiongroup.OptionGroupConstants;
 import com.vaadin.v7.shared.ui.optiongroup.OptionGroupState;
 

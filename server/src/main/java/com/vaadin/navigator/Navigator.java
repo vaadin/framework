@@ -722,8 +722,7 @@ public class Navigator implements Serializable {
         // a copy of the listener list is needed to avoid
         // ConcurrentModificationException as a listener can add/remove
         // listeners
-        for (ViewChangeListener l : new ArrayList<>(
-                listeners)) {
+        for (ViewChangeListener l : new ArrayList<>(listeners)) {
             if (!l.beforeViewChange(event)) {
                 return false;
             }
@@ -786,8 +785,7 @@ public class Navigator implements Serializable {
         // a copy of the listener list is needed to avoid
         // ConcurrentModificationException as a listener can add/remove
         // listeners
-        for (ViewChangeListener l : new ArrayList<>(
-                listeners)) {
+        for (ViewChangeListener l : new ArrayList<>(listeners)) {
             l.afterViewChange(event);
         }
     }

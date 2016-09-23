@@ -66,9 +66,9 @@ public class TabSheetTest<T extends TabSheet> extends
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((SelectedTabChangeListener) TabSheetTest.this);
+                c.addSelectedTabChangeListener(TabSheetTest.this);
             } else {
-                c.removeListener((SelectedTabChangeListener) TabSheetTest.this);
+                c.removeSelectedTabChangeListener(TabSheetTest.this);
             }
 
         }

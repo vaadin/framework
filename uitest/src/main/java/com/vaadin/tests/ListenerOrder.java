@@ -47,18 +47,18 @@ public class ListenerOrder extends com.vaadin.server.LegacyApplication
         MyClickListener mutualListener = new MyClickListener("mutual1");
 
         addListeners(b1, 1);
-        b1.addListener(mutualListener);
-        b1.addListener(mutualListener);
-        b1.addListener(this);
-        b1.addListener(mutualListener);
+        b1.addClickListener(mutualListener);
+        b1.addClickListener(mutualListener);
+        b1.addClickListener(this);
+        b1.addClickListener(mutualListener);
         Button.ClickListener b1Listener = addListeners(b1, 3);
-        b1.addListener(mutualListener);
-        b1.addListener(this);
+        b1.addClickListener(mutualListener);
+        b1.addClickListener(this);
         // b1.addListener((ValueChangeListener) this);
-        b1.addListener(mutualListener);
-        b1.removeListener(b1Listener);
+        b1.addClickListener(mutualListener);
+        b1.removeClickListener(b1Listener);
         // remove non-existing listener
-        b1.removeListener(new Button.ClickListener() {
+        b1.removeClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
             }
@@ -103,7 +103,7 @@ public class ListenerOrder extends com.vaadin.server.LegacyApplication
         Button.ClickListener listener = null;
         for (int i = 0; i < count; i++) {
             listener = new MyClickListener(name);
-            b.addListener(listener);
+            b.addClickListener(listener);
         }
         // return last listener added
         return listener;

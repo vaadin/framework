@@ -29,7 +29,7 @@ public class ComboBoxInPopupView extends TestBase {
         final ComboBox cb2 = new ComboBox();
         cb2.setWidth("260px");
         PopupView pv2 = new PopupView("<u>2. focused (click)</u>", cb2);
-        pv2.addListener(new PopupVisibilityListener() {
+        pv2.addPopupVisibilityListener(new PopupVisibilityListener() {
 
             @Override
             public void popupVisibilityChange(PopupVisibilityEvent event) {

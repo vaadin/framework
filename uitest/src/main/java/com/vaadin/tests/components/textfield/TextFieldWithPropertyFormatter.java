@@ -95,14 +95,14 @@ public class TextFieldWithPropertyFormatter extends TestBase {
 
         Button b = new Button(
                 "Sync (typing 12345.6789 and clicking this should format field)");
-        b.addListener(new ClickListener() {
+        b.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
             }
         });
         addComponent(b);
         b = new Button("Set '12345.6789' to textfield on the server side");
-        b.addListener(new ClickListener() {
+        b.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 tf1.setValue("12345.6789");

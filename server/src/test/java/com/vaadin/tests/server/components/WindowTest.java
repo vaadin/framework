@@ -7,6 +7,7 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
@@ -35,7 +36,8 @@ public class WindowTest {
         EasyMock.replay(cl);
 
         // Add listener and send a close event -> should end up in listener once
-        window.addListener(cl);
+        Registration windowCloseListenerRegistration = window
+                .addCloseListener(cl);
         sendClose(window);
 
         // Ensure listener was called once
@@ -43,7 +45,7 @@ public class WindowTest {
 
         // Remove the listener and send close event -> should not end up in
         // listener
-        window.removeListener(cl);
+        windowCloseListenerRegistration.remove();
         sendClose(window);
 
         // Ensure listener still has been called only once
@@ -63,7 +65,8 @@ public class WindowTest {
 
         // Add listener and send a resize event -> should end up in listener
         // once
-        window.addListener(rl);
+        Registration windowResizeListenerRegistration = window
+                .addResizeListener(rl);
         sendResize(window);
 
         // Ensure listener was called once
@@ -71,7 +74,7 @@ public class WindowTest {
 
         // Remove the listener and send close event -> should not end up in
         // listener
-        window.removeListener(rl);
+        windowResizeListenerRegistration.remove();
         sendResize(window);
 
         // Ensure listener still has been called only once

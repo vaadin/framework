@@ -89,7 +89,7 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase {
                 log(this);
             }
         };
-        okButton.addListener(new ClickListener() {
+        okButton.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

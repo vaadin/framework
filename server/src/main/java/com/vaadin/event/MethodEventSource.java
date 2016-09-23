@@ -57,6 +57,8 @@ public interface MethodEventSource extends Serializable {
      * @throws java.lang.IllegalArgumentException
      *             unless <code>method</code> has exactly one match in
      *             <code>object</code>
+     * @throws NullPointerException
+     *             if {@code object} is {@code null}
      */
     public void addListener(Class<?> eventType, Object object, Method method);
 
@@ -90,6 +92,8 @@ public interface MethodEventSource extends Serializable {
      * @throws java.lang.IllegalArgumentException
      *             unless <code>method</code> has exactly one match in
      *             <code>object</code>
+     * @throws NullPointerException
+     *             if {@code object} is {@code null}
      */
     public void addListener(Class<?> eventType, Object object,
             String methodName);

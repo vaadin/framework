@@ -101,7 +101,6 @@ public abstract class AbstractField<T> extends AbstractComponent
     @Override
     public Registration addValueChangeListener(
             ValueChangeListener<? super T> listener) {
-        Objects.requireNonNull(listener, "listener cannot be null");
         addListener(ValueChange.class, listener, VALUE_CHANGE_METHOD);
         return () -> removeListener(ValueChange.class, listener);
     }

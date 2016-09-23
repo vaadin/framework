@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
+import com.vaadin.shared.Registration;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -50,10 +51,13 @@ public interface HasComponents extends Component, Iterable<Component> {
         /**
          * Listens the component attach events.
          *
+         * @see Registration
+         *
          * @param listener
-         *            the listener to add.
+         *            the listener to add, not null
+         * @return a registration object for removing the listener
          */
-        public void addComponentAttachListener(
+        public Registration addComponentAttachListener(
                 ComponentAttachListener listener);
 
         /**
@@ -61,19 +65,26 @@ public interface HasComponents extends Component, Iterable<Component> {
          *
          * @param listener
          *            the listener to removed.
+         *
+         * @deprecated As of 8.0, replaced by {@link Registration#remove()} in
+         *             the registration object returned from
+         *             {@link #addComponentAttachListener(ComponentAttachListener)}
+         *             .
          */
+        @Deprecated
         public void removeComponentAttachListener(
                 ComponentAttachListener listener);
 
         /**
          * Listens the component detach events.
          */
-        public void addComponentDetachListener(
+        public Registration addComponentDetachListener(
                 ComponentDetachListener listener);
 
         /**
          * Stops the listening component detach events.
          */
+        @Deprecated
         public void removeComponentDetachListener(
                 ComponentDetachListener listener);
     }

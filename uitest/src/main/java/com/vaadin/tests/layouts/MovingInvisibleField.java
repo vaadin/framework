@@ -21,7 +21,7 @@ public class MovingInvisibleField extends TestBase {
                 "A visible text field");
         tfHidden.setVisible(false);
         Button b = new Button("Move hidden textfield to other layout");
-        b.addListener(new ClickListener() {
+        b.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

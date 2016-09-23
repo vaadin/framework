@@ -40,7 +40,7 @@ public class ForceSubmit extends TestBase implements Receiver {
 
         addComponent(u);
 
-        u.addListener(new Upload.FinishedListener() {
+        u.addFinishedListener(new Upload.FinishedListener() {
             @Override
             public void uploadFinished(FinishedEvent event) {
                 String filename = event.getFilename();
@@ -50,14 +50,14 @@ public class ForceSubmit extends TestBase implements Receiver {
             }
         });
 
-        u.addListener(new Upload.FailedListener() {
+        u.addFailedListener(new Upload.FailedListener() {
             @Override
             public void uploadFailed(FailedEvent event) {
                 getMainWindow().showNotification("Failed. No file selected?");
             }
         });
 
-        u.addListener(new Upload.StartedListener() {
+        u.addStartedListener(new Upload.StartedListener() {
             @Override
             public void uploadStarted(StartedEvent event) {
                 getMainWindow().showNotification(
@@ -67,7 +67,7 @@ public class ForceSubmit extends TestBase implements Receiver {
 
         Button button = new Button(
                 "I'm an external button (not the uploads builtin), hit me to start upload.");
-        button.addListener(new ClickListener() {
+        button.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 u.submitUpload();

@@ -18,13 +18,13 @@ package com.vaadin.v7.ui;
 
 import java.util.Collection;
 
-import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.v7.data.Container;
+import com.vaadin.v7.event.FieldEvents;
 
 /**
  * This is a simple drop-down select without, for instance, support for

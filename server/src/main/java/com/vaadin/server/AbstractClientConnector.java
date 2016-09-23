@@ -30,11 +30,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.SharedState;
@@ -95,9 +97,11 @@ public abstract class AbstractClientConnector
     private static final ConcurrentHashMap<Class<? extends AbstractClientConnector>, Class<? extends SharedState>> stateTypeCache = new ConcurrentHashMap<>();
 
     @Override
-    public void addAttachListener(AttachListener listener) {
+    public Registration addAttachListener(AttachListener listener) {
         addListener(AttachEvent.ATTACH_EVENT_IDENTIFIER, AttachEvent.class,
                 listener, AttachListener.attachMethod);
+        return () -> removeListener(AttachEvent.ATTACH_EVENT_IDENTIFIER,
+                AttachEvent.class, listener);
     }
 
     @Override
@@ -107,9 +111,11 @@ public abstract class AbstractClientConnector
     }
 
     @Override
-    public void addDetachListener(DetachListener listener) {
+    public Registration addDetachListener(DetachListener listener) {
         addListener(DetachEvent.DETACH_EVENT_IDENTIFIER, DetachEvent.class,
                 listener, DetachListener.detachMethod);
+        return () -> removeListener(DetachEvent.DETACH_EVENT_IDENTIFIER,
+                DetachEvent.class, listener);
     }
 
     @Override

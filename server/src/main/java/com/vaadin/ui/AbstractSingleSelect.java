@@ -269,7 +269,6 @@ public abstract class AbstractSingleSelect<T> extends
      */
     public Registration addSelectionListener(
             SingleSelectionListener<T> listener) {
-        Objects.requireNonNull(listener, "listener cannot be null");
         addListener(SingleSelectionChange.class, listener,
                 SELECTION_CHANGE_METHOD);
         return () -> removeListener(SingleSelectionChange.class, listener);

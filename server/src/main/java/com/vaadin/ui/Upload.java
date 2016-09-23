@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 
 import com.vaadin.server.NoInputStreamException;
 import com.vaadin.server.NoOutputStreamException;
@@ -29,6 +30,7 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.StreamVariable.StreamingProgressEvent;
 import com.vaadin.shared.EventId;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.upload.UploadClientRpc;
 import com.vaadin.shared.ui.upload.UploadServerRpc;
 import com.vaadin.shared.ui.upload.UploadState;
@@ -65,9 +67,9 @@ import com.vaadin.util.ReflectTools;
  * button.
  *
  * <p>
- * Note! Because of browser dependent implementations of <input type="file">
- * element, setting size for Upload component is not supported. For some
- * browsers setting size may work to some extend.
+ * Note! Because of browser dependent implementations of
+ * <input type="file"> element, setting size for Upload component is not
+ * supported. For some browsers setting size may work to some extend.
  *
  * @author Vaadin Ltd.
  * @since 3.0
@@ -627,19 +629,12 @@ public class Upload extends AbstractComponent
      * Adds the upload started event listener.
      *
      * @param listener
-     *            the Listener to be added.
+     *            the Listener to be added, not null
      */
-    public void addStartedListener(StartedListener listener) {
+    public Registration addStartedListener(StartedListener listener) {
         addListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addStartedListener(StartedListener)}
-     **/
-    @Deprecated
-    public void addListener(StartedListener listener) {
-        addStartedListener(listener);
+        return () -> removeListener(StartedEvent.class, listener,
+                UPLOAD_STARTED_METHOD);
     }
 
     /**
@@ -648,36 +643,21 @@ public class Upload extends AbstractComponent
      * @param listener
      *            the Listener to be removed.
      */
+    @Deprecated
     public void removeStartedListener(StartedListener listener) {
         removeListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeStartedListener(StartedListener)}
-     **/
-    @Deprecated
-    public void removeListener(StartedListener listener) {
-        removeStartedListener(listener);
     }
 
     /**
      * Adds the upload received event listener.
      *
      * @param listener
-     *            the Listener to be added.
+     *            the Listener to be added, not null
      */
-    public void addFinishedListener(FinishedListener listener) {
+    public Registration addFinishedListener(FinishedListener listener) {
         addListener(FinishedEvent.class, listener, UPLOAD_FINISHED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addFinishedListener(FinishedListener)}
-     **/
-    @Deprecated
-    public void addListener(FinishedListener listener) {
-        addFinishedListener(listener);
+        return () -> removeListener(FinishedEvent.class, listener,
+                UPLOAD_FINISHED_METHOD);
     }
 
     /**
@@ -686,36 +666,21 @@ public class Upload extends AbstractComponent
      * @param listener
      *            the Listener to be removed.
      */
+    @Deprecated
     public void removeFinishedListener(FinishedListener listener) {
         removeListener(FinishedEvent.class, listener, UPLOAD_FINISHED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeFinishedListener(FinishedListener)}
-     **/
-    @Deprecated
-    public void removeListener(FinishedListener listener) {
-        removeFinishedListener(listener);
     }
 
     /**
      * Adds the upload interrupted event listener.
      *
      * @param listener
-     *            the Listener to be added.
+     *            the Listener to be added, not null
      */
-    public void addFailedListener(FailedListener listener) {
+    public Registration addFailedListener(FailedListener listener) {
         addListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addFailedListener(FailedListener)}
-     **/
-    @Deprecated
-    public void addListener(FailedListener listener) {
-        addFailedListener(listener);
+        return () -> removeListener(FailedEvent.class, listener,
+                UPLOAD_FAILED_METHOD);
     }
 
     /**
@@ -724,36 +689,21 @@ public class Upload extends AbstractComponent
      * @param listener
      *            the Listener to be removed.
      */
+    @Deprecated
     public void removeFailedListener(FailedListener listener) {
         removeListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeFailedListener(FailedListener)}
-     **/
-    @Deprecated
-    public void removeListener(FailedListener listener) {
-        removeFailedListener(listener);
     }
 
     /**
      * Adds the upload success event listener.
      *
      * @param listener
-     *            the Listener to be added.
+     *            the Listener to be added, not null
      */
-    public void addSucceededListener(SucceededListener listener) {
+    public Registration addSucceededListener(SucceededListener listener) {
         addListener(SucceededEvent.class, listener, UPLOAD_SUCCEEDED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addSucceededListener(SucceededListener)}
-     **/
-    @Deprecated
-    public void addListener(SucceededListener listener) {
-        addSucceededListener(listener);
+        return () -> removeListener(SucceededEvent.class, listener,
+                UPLOAD_SUCCEEDED_METHOD);
     }
 
     /**
@@ -762,17 +712,9 @@ public class Upload extends AbstractComponent
      * @param listener
      *            the Listener to be removed.
      */
+    @Deprecated
     public void removeSucceededListener(SucceededListener listener) {
         removeListener(SucceededEvent.class, listener, UPLOAD_SUCCEEDED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeSucceededListener(SucceededListener)}
-     **/
-    @Deprecated
-    public void removeListener(SucceededListener listener) {
-        removeSucceededListener(listener);
     }
 
     /**
@@ -781,20 +723,17 @@ public class Upload extends AbstractComponent
      * @param listener
      *            the progress listener to be added
      */
-    public void addProgressListener(ProgressListener listener) {
+    public Registration addProgressListener(ProgressListener listener) {
+        Objects.requireNonNull(listener, "Listener must not be null.");
         if (progressListeners == null) {
             progressListeners = new LinkedHashSet<>();
         }
         progressListeners.add(listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addProgressListener(ProgressListener)}
-     **/
-    @Deprecated
-    public void addListener(ProgressListener listener) {
-        addProgressListener(listener);
+        return () -> {
+            if (progressListeners != null) {
+                progressListeners.remove(listener);
+            }
+        };
     }
 
     /**
@@ -803,6 +742,7 @@ public class Upload extends AbstractComponent
      * @param listener
      *            the progress listener to be removed
      */
+    @Deprecated
     public void removeProgressListener(ProgressListener listener) {
         if (progressListeners != null) {
             progressListeners.remove(listener);
@@ -813,11 +753,13 @@ public class Upload extends AbstractComponent
      * Adds a filename change event listener
      *
      * @param listener
-     *            the Listener to add
+     *            the Listener to add, not null
      */
-    public void addChangeListener(ChangeListener listener) {
+    public Registration addChangeListener(ChangeListener listener) {
         super.addListener(EventId.CHANGE, ChangeEvent.class, listener,
                 ChangeListener.FILENAME_CHANGED);
+        return () -> super.removeListener(EventId.CHANGE, ChangeEvent.class,
+                listener);
     }
 
     /**
@@ -826,17 +768,9 @@ public class Upload extends AbstractComponent
      * @param listener
      *            the listener to be removed
      */
+    @Deprecated
     public void removeChangeListener(ChangeListener listener) {
         super.removeListener(EventId.CHANGE, ChangeEvent.class, listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeProgressListener(ProgressListener)}
-     **/
-    @Deprecated
-    public void removeListener(ProgressListener listener) {
-        removeProgressListener(listener);
     }
 
     /**

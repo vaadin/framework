@@ -21,7 +21,7 @@ public class AddNonRenderedRow extends TestBase {
         }
 
         Button addrowButton = new Button("Add row");
-        addrowButton.addListener(new ClickListener() {
+        addrowButton.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent pEvent) {
                 addRow();

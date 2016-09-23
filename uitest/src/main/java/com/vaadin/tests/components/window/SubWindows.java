@@ -31,7 +31,7 @@ public class SubWindows extends TestBase {
 
     private Component createRemoveButton() {
         Button b = new Button("Remove");
-        b.addListener(new ClickListener() {
+        b.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

@@ -22,7 +22,7 @@ public class TestUploadFilename extends TestBase {
         addComponent(upload);
         addComponent(result);
 
-        upload.addListener(new Upload.FinishedListener() {
+        upload.addFinishedListener(new Upload.FinishedListener() {
             @Override
             public void uploadFinished(FinishedEvent event) {
                 result.setValue("Got file (should not contain path): "

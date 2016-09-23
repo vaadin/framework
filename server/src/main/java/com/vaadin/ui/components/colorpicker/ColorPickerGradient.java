@@ -17,11 +17,12 @@ package com.vaadin.ui.components.colorpicker;
 
 import java.lang.reflect.Method;
 
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGradientServerRpc;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGradientState;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractColorPicker.Coordinates2Color;
+import com.vaadin.ui.AbstractComponent;
 
 /**
  * A component that represents a color gradient within a color picker.
@@ -103,11 +104,13 @@ public class ColorPickerGradient extends AbstractComponent
     }
 
     @Override
-    public void addColorChangeListener(ColorChangeListener listener) {
+    public Registration addColorChangeListener(ColorChangeListener listener) {
         addListener(ColorChangeEvent.class, listener, COLOR_CHANGE_METHOD);
+        return () -> removeListener(ColorChangeEvent.class, listener);
     }
 
     @Override
+    @Deprecated
     public void removeColorChangeListener(ColorChangeListener listener) {
         removeListener(ColorChangeEvent.class, listener);
     }

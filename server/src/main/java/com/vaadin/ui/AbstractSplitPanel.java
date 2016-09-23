@@ -29,6 +29,7 @@ import com.vaadin.server.SizeWithUnit;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelRpc;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState.SplitterState;
@@ -575,32 +576,18 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     }
 
-    public void addSplitterClickListener(SplitterClickListener listener) {
+    public Registration addSplitterClickListener(
+            SplitterClickListener listener) {
         addListener(EventId.CLICK_EVENT_IDENTIFIER, SplitterClickEvent.class,
                 listener, SplitterClickListener.clickMethod);
+        return () -> removeListener(EventId.CLICK_EVENT_IDENTIFIER,
+                SplitterClickEvent.class, listener);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addSplitterClickListener(SplitterClickListener)}
-     **/
     @Deprecated
-    public void addListener(SplitterClickListener listener) {
-        addSplitterClickListener(listener);
-    }
-
     public void removeSplitterClickListener(SplitterClickListener listener) {
         removeListener(EventId.CLICK_EVENT_IDENTIFIER, SplitterClickEvent.class,
                 listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeSplitterClickListener(SplitterClickListener)}
-     **/
-    @Deprecated
-    public void removeListener(SplitterClickListener listener) {
-        removeSplitterClickListener(listener);
     }
 
     /**
@@ -610,10 +597,11 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * @param listener
      *            {@link SplitPositionChangeListener} to be registered.
      */
-    public void addSplitPositionChangeListener(
+    public Registration addSplitPositionChangeListener(
             SplitPositionChangeListener listener) {
         addListener(SplitPositionChangeEvent.class, listener,
                 SplitPositionChangeListener.moveMethod);
+        return () -> removeListener(SplitPositionChangeEvent.class, listener);
     }
 
     /**
@@ -623,6 +611,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * @param listener
      *            SplitPositionChangeListener to be removed.
      */
+    @Deprecated
     public void removeSplitPositionChangeListener(
             SplitPositionChangeListener listener) {
         removeListener(SplitPositionChangeEvent.class, listener);

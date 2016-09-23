@@ -30,7 +30,7 @@ public class InsertRowInMiddle extends AbstractTestUI {
         final GridLayout layout = new GridLayout(1, 2);
         layout.addComponent(new Label("some row"), 0, 0);
         Button newRowButton = new Button("Insert Row");
-        newRowButton.addListener(new Button.ClickListener() {
+        newRowButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 layout.insertRow(1);

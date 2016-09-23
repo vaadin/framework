@@ -44,7 +44,7 @@ public class ComplexGLColumnExpansionWithColSpan extends AbstractTestCase {
         gl.addComponent(b2, 0, 2);
         b1.setWidth(270, Sizeable.UNITS_PIXELS);
         b2.setWidth(270, Sizeable.UNITS_PIXELS);
-        b1.addListener(new Button.ClickListener() {
+        b1.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 cols++;
@@ -70,7 +70,7 @@ public class ComplexGLColumnExpansionWithColSpan extends AbstractTestCase {
         mainLayout.setExpandRatio(gl, 100);
         Button restart = new Button("restart");
         mainLayout.addComponent(restart);
-        restart.addListener(new Button.ClickListener() {
+        restart.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 close();

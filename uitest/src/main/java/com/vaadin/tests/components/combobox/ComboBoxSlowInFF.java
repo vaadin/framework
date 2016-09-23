@@ -23,7 +23,7 @@ public class ComboBoxSlowInFF extends TestBase {
         }
 
         Button fill = new Button("fill it");
-        fill.addListener(new Button.ClickListener() {
+        fill.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 t.removeAllItems();

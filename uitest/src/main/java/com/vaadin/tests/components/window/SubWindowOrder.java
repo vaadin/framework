@@ -63,8 +63,8 @@ public class SubWindowOrder extends TestBase {
             addComponent(winSel);
             addComponent(bf);
             addComponent(toggleModality);
-            bf.addListener(this);
-            toggleModality.addListener(this);
+            bf.addClickListener(this);
+            toggleModality.addClickListener(this);
         }
 
         @Override

@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.util.ReflectTools;
@@ -72,35 +73,27 @@ public interface LayoutEvents {
          * The child component that was clicked is included in the
          * {@link LayoutClickEvent}.
          *
-         * Use {@link #removeListener(LayoutClickListener)} to remove the
-         * listener.
+         * @see Registration
          *
          * @param listener
          *            The listener to add
+         * @return a registration object for removing the listener
          */
-        public void addLayoutClickListener(LayoutClickListener listener);
-
-        /**
-         * @deprecated As of 7.0, replaced by
-         *             {@link #addLayoutClickListener(LayoutClickListener)}
-         **/
-        @Deprecated
-        public void addListener(LayoutClickListener listener);
+        public Registration addLayoutClickListener(
+                LayoutClickListener listener);
 
         /**
          * Removes an LayoutClickListener.
          *
          * @param listener
          *            LayoutClickListener to be removed
+         *
+         * @deprecated As of 8.0, replaced by {@link Registration#remove()} in
+         *             the registration object returned from
+         *             {@link #addLayoutClickListener(LayoutClickListener)}.
          */
-        public void removeLayoutClickListener(LayoutClickListener listener);
-
-        /**
-         * @deprecated As of 7.0, replaced by
-         *             {@link #removeLayoutClickListener(LayoutClickListener)}
-         **/
         @Deprecated
-        public void removeListener(LayoutClickListener listener);
+        public void removeLayoutClickListener(LayoutClickListener listener);
     }
 
     /**

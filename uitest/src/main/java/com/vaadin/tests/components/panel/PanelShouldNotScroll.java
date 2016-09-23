@@ -23,7 +23,7 @@ public class PanelShouldNotScroll extends TestBase {
         p.setHeight("600px");
         pl.addComponent(foo());
         addMore = new Button("Add");
-        addMore.addListener(new ClickListener() {
+        addMore.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 pl.removeComponent(addMore);

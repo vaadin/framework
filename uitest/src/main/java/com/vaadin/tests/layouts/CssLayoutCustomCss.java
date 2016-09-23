@@ -52,7 +52,7 @@ public class CssLayoutCustomCss extends TestBase implements ClickListener {
     private Button createButton(String string) {
         NativeButton button = new NativeButton(string);
         css.put(button, string);
-        button.addListener(this);
+        button.addClickListener(this);
         return button;
     }
 

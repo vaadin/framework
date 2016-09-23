@@ -36,7 +36,6 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
 
     @Override
     public Registration addDataSourceListener(DataSourceListener listener) {
-        Objects.requireNonNull(listener, "listener cannot be null");
         addListener(DataChangeEvent.class, listener,
                 DataSourceListener.class.getMethods()[0]);
         return () -> removeListener(DataChangeEvent.class, listener);

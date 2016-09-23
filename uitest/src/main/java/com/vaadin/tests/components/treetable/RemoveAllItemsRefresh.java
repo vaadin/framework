@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -50,7 +50,7 @@ public class RemoveAllItemsRefresh extends TestBase {
         addComponent(treeLayout);
 
         Button cleanUp = new Button("clear");
-        cleanUp.addListener(new ClickListener() {
+        cleanUp.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 treeContainer.removeAllItems();
@@ -59,7 +59,7 @@ public class RemoveAllItemsRefresh extends TestBase {
         addComponent(cleanUp);
 
         Button refresh = new Button("fill");
-        refresh.addListener(new ClickListener() {
+        refresh.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 fill();

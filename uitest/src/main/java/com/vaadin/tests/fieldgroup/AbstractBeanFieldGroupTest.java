@@ -57,7 +57,7 @@ public abstract class AbstractBeanFieldGroupTest extends TestBase {
     protected Button getCommitButton() {
         if (commitButton == null) {
             commitButton = new Button("Commit");
-            commitButton.addListener(new ClickListener() {
+            commitButton.addClickListener(new ClickListener() {
 
                 @Override
                 public void buttonClick(ClickEvent event) {

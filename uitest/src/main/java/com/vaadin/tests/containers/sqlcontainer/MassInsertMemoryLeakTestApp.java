@@ -34,7 +34,7 @@ public class MassInsertMemoryLeakTestApp extends LegacyApplication {
     public void init() {
         setMainWindow(new LegacyWindow("SQLContainer Test", buildLayout()));
 
-        process.addListener(new Button.ClickListener() {
+        process.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 MassInsert mi = new MassInsert();

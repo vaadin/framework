@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -85,5 +85,4 @@ public class TestDateField extends CustomComponent {
         df.setIcon(res);
         super.attach();
     }
-
 }

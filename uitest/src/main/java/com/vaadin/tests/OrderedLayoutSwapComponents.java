@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -71,7 +71,7 @@ public class OrderedLayoutSwapComponents extends CustomComponent {
             ol.setId(name.replaceAll(" ", ""));
             ol.addComponent(new Label(name));
             up = new Button("up");
-            up.addListener(new Button.ClickListener() {
+            up.addClickListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {
                     int newIndex = order.indexOf(MyComponent.this) - 1;
@@ -89,7 +89,7 @@ public class OrderedLayoutSwapComponents extends CustomComponent {
             ol.addComponent(up);
 
             down = new Button("down");
-            down.addListener(new Button.ClickListener() {
+            down.addClickListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {
                     int newIndex = order.indexOf(MyComponent.this) + 1;

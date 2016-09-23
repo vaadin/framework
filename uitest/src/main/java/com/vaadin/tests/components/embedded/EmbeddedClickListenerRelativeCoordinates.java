@@ -17,7 +17,7 @@ public class EmbeddedClickListenerRelativeCoordinates extends TestBase {
         xLabel.setId("x");
         final Label yLabel = new Label();
         yLabel.setId("y");
-        e.addListener(new ClickListener() {
+        e.addClickListener(new ClickListener() {
 
             @Override
             public void click(ClickEvent event) {

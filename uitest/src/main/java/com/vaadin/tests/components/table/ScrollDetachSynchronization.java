@@ -45,7 +45,7 @@ public class ScrollDetachSynchronization extends TestBase {
         mainLayout.addComponent(firstLayout);
         mainLayout.setExpandRatio(firstLayout, 1);
 
-        first.addListener(new Button.ClickListener() {
+        first.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -55,7 +55,7 @@ public class ScrollDetachSynchronization extends TestBase {
                 }
             }
         });
-        second.addListener(new Button.ClickListener() {
+        second.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

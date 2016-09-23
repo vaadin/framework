@@ -381,7 +381,7 @@ public class BoxLayoutTest extends AbstractTestUI {
         l.addComponent(label);
         l.addComponent(new Button("Component 2"));
 
-        l.addListener(new LayoutClickListener() {
+        l.addLayoutClickListener(new LayoutClickListener() {
             @Override
             public void layoutClick(LayoutClickEvent event) {
                 if (event.getChildComponent() == null

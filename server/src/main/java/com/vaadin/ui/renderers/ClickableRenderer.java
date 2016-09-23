@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
@@ -38,8 +39,7 @@ import com.vaadin.util.ReflectTools;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public abstract class ClickableRenderer<T, V>
-        extends AbstractRenderer<T, V> {
+public abstract class ClickableRenderer<T, V> extends AbstractRenderer<T, V> {
 
     /**
      * An interface for listening to {@link RendererClickEvent renderer click
@@ -147,11 +147,12 @@ public abstract class ClickableRenderer<T, V>
      * every time one of the buttons rendered by this renderer is clicked.
      *
      * @param listener
-     *            the click listener to be added
+     *            the click listener to be added, not null
      */
-    public void addClickListener(RendererClickListener<T> listener) {
+    public Registration addClickListener(RendererClickListener<T> listener) {
         addListener(RendererClickEvent.class, listener,
                 RendererClickListener.CLICK_METHOD);
+        return () -> removeListener(RendererClickEvent.class, listener);
     }
 
     /**
@@ -160,6 +161,7 @@ public abstract class ClickableRenderer<T, V>
      * @param listener
      *            the click listener to be removed
      */
+    @Deprecated
     public void removeClickListener(RendererClickListener<T> listener) {
         removeListener(RendererClickEvent.class, listener);
     }

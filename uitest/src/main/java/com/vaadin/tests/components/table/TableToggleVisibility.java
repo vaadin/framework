@@ -138,7 +138,7 @@ public class TableToggleVisibility extends AbstractTestCase {
 
             setCaption("- " + table.getCaption());
 
-            addListener(new ClickListener() {
+            addClickListener(new ClickListener() {
 
                 @Override
                 public void buttonClick(ClickEvent event) {

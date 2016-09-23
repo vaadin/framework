@@ -18,10 +18,12 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Objects;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.shared.ui.colorpicker.ColorPickerServerRpc;
 import com.vaadin.shared.ui.colorpicker.ColorPickerState;
@@ -217,11 +219,13 @@ public abstract class AbstractColorPicker extends AbstractComponent
     }
 
     @Override
-    public void addColorChangeListener(ColorChangeListener listener) {
+    public Registration addColorChangeListener(ColorChangeListener listener) {
         addListener(ColorChangeEvent.class, listener, COLOR_CHANGE_METHOD);
+        return () -> removeListener(ColorChangeEvent.class, listener);
     }
 
     @Override
+    @Deprecated
     public void removeColorChangeListener(ColorChangeListener listener) {
         removeListener(ColorChangeEvent.class, listener);
     }

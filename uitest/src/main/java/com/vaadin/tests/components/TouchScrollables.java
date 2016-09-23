@@ -118,7 +118,7 @@ public class TouchScrollables extends TestBase {
         final Table table = new Table();
 
         Button button = new Button("Toggle lazyloading");
-        button.addListener(new Button.ClickListener() {
+        button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 if (table.getCacheRate() == 100) {
@@ -133,7 +133,7 @@ public class TouchScrollables extends TestBase {
         cssLayout.addComponent(button);
 
         button = new Button("Toggle selectable");
-        button.addListener(new Button.ClickListener() {
+        button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 table.setSelectable(!table.isSelectable());

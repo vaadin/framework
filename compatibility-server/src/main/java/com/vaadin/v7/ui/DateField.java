@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 
 import org.jsoup.nodes.Element;
 
-import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
@@ -45,6 +44,7 @@ import com.vaadin.v7.data.Validator;
 import com.vaadin.v7.data.Validator.InvalidValueException;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.validator.DateRangeValidator;
+import com.vaadin.v7.event.FieldEvents;
 import com.vaadin.v7.shared.ui.datefield.DateFieldConstants;
 import com.vaadin.v7.shared.ui.datefield.TextualDateFieldState;
 
@@ -73,7 +73,7 @@ public class DateField extends AbstractField<Date> implements
 
     /**
      * Resolution identifier: seconds.
-     * 
+     *
      * @deprecated As of 7.0, use {@link Resolution#SECOND}
      */
     @Deprecated

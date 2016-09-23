@@ -27,6 +27,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.event.EventRouter;
+import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.PageState;
@@ -506,24 +508,18 @@ public class Page implements Serializable {
      *
      * @see #getUriFragment()
      * @see #setUriFragment(String)
-     * @see #removeUriFragmentChangedListener(UriFragmentChangedListener)
+     * @see Registration
      *
      * @param listener
      *            the URI fragment listener to add
+     * @return a registration object for removing the listener
      */
-    public void addUriFragmentChangedListener(
+    public Registration addUriFragmentChangedListener(
             Page.UriFragmentChangedListener listener) {
         addListener(UriFragmentChangedEvent.class, listener,
                 URI_FRAGMENT_CHANGED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addUriFragmentChangedListener(UriFragmentChangedListener)}
-     **/
-    @Deprecated
-    public void addListener(Page.UriFragmentChangedListener listener) {
-        addUriFragmentChangedListener(listener);
+        return () -> removeListener(UriFragmentChangedEvent.class, listener,
+                URI_FRAGMENT_CHANGED_METHOD);
     }
 
     /**
@@ -533,20 +529,16 @@ public class Page implements Serializable {
      *            the URI fragment listener to remove
      *
      * @see Page#addUriFragmentChangedListener(UriFragmentChangedListener)
+     *
+     * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
+     *             registration object returned from
+     *             {@link #addUriFragmentChangedListener(FocusListener)}.
      */
+    @Deprecated
     public void removeUriFragmentChangedListener(
             Page.UriFragmentChangedListener listener) {
         removeListener(UriFragmentChangedEvent.class, listener,
                 URI_FRAGMENT_CHANGED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeUriFragmentChangedListener(UriFragmentChangedListener)}
-     **/
-    @Deprecated
-    public void removeListener(Page.UriFragmentChangedListener listener) {
-        removeUriFragmentChangedListener(listener);
     }
 
     /**
@@ -745,24 +737,23 @@ public class Page implements Serializable {
      *
      * @param resizeListener
      *            the listener to add
+     * @return a registration object for removing the listener
      *
      * @see BrowserWindowResizeListener#browserWindowResized(BrowserWindowResizeEvent)
      * @see UI#setResizeLazy(boolean)
+     * @see Registration
      */
-    public void addBrowserWindowResizeListener(
+    public Registration addBrowserWindowResizeListener(
             BrowserWindowResizeListener resizeListener) {
         addListener(BrowserWindowResizeEvent.class, resizeListener,
                 BROWSER_RESIZE_METHOD);
         getState(true).hasResizeListeners = true;
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addBrowserWindowResizeListener(BrowserWindowResizeListener)}
-     **/
-    @Deprecated
-    public void addListener(BrowserWindowResizeListener resizeListener) {
-        addBrowserWindowResizeListener(resizeListener);
+        return () -> {
+            removeListener(BrowserWindowResizeEvent.class, resizeListener,
+                    BROWSER_RESIZE_METHOD);
+            getState(true).hasResizeListeners = hasEventRouter()
+                    && eventRouter.hasListeners(BrowserWindowResizeEvent.class);
+        };
     }
 
     /**
@@ -771,22 +762,19 @@ public class Page implements Serializable {
      *
      * @param resizeListener
      *            the listener to remove
+     *
+     * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
+     *             registration object returned from
+     *             {@link #addBrowserWindowResizeListener(BrowserWindowResizeListener)}
+     *             .
      */
+    @Deprecated
     public void removeBrowserWindowResizeListener(
             BrowserWindowResizeListener resizeListener) {
         removeListener(BrowserWindowResizeEvent.class, resizeListener,
                 BROWSER_RESIZE_METHOD);
         getState(true).hasResizeListeners = hasEventRouter()
                 && eventRouter.hasListeners(BrowserWindowResizeEvent.class);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeBrowserWindowResizeListener(BrowserWindowResizeListener)}
-     **/
-    @Deprecated
-    public void removeListener(BrowserWindowResizeListener resizeListener) {
-        removeBrowserWindowResizeListener(resizeListener);
     }
 
     /**

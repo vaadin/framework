@@ -25,8 +25,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.colorpicker.Color;
+import com.vaadin.ui.AbstractColorPicker.Coordinates2Color;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -39,7 +41,6 @@ import com.vaadin.ui.Slider.ValueOutOfBoundsException;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.AbstractColorPicker.Coordinates2Color;
 
 /**
  * A component that represents color selection popup within a color picker.
@@ -569,11 +570,13 @@ public class ColorPickerPopup extends Window
     }
 
     @Override
-    public void addColorChangeListener(ColorChangeListener listener) {
+    public Registration addColorChangeListener(ColorChangeListener listener) {
         addListener(ColorChangeEvent.class, listener, COLOR_CHANGE_METHOD);
+        return () -> removeListener(ColorChangeEvent.class, listener);
     }
 
     @Override
+    @Deprecated
     public void removeColorChangeListener(ColorChangeListener listener) {
         removeListener(ColorChangeEvent.class, listener);
     }

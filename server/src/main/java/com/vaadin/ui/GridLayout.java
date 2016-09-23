@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import org.jsoup.nodes.Attributes;
@@ -39,6 +40,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.gridlayout.GridLayoutServerRpc;
 import com.vaadin.shared.ui.gridlayout.GridLayoutState;
@@ -445,6 +447,7 @@ public class GridLayout extends AbstractLayout
         return components.size();
     }
 
+    @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
 
@@ -1163,36 +1166,19 @@ public class GridLayout extends AbstractLayout
     }
 
     @Override
-    public void addLayoutClickListener(LayoutClickListener listener) {
+    public Registration addLayoutClickListener(LayoutClickListener listener) {
         addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addLayoutClickListener(LayoutClickListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(LayoutClickListener listener) {
-        addLayoutClickListener(listener);
-    }
-
-    @Override
-    public void removeLayoutClickListener(LayoutClickListener listener) {
-        removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
+        return () -> removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeLayoutClickListener(LayoutClickListener)}
-     **/
     @Override
     @Deprecated
-    public void removeListener(LayoutClickListener listener) {
-        removeLayoutClickListener(listener);
+    public void removeLayoutClickListener(LayoutClickListener listener) {
+        removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
+                LayoutClickEvent.class, listener);
     }
 
     /*

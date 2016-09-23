@@ -25,7 +25,7 @@ public class TableModifcationsWhenScrolledRight extends TestBase {
         }
         t.addItem(row).getItemProperty("name").setValue("Row" + row);
 
-        btn.addListener(new ClickListener() {
+        btn.addClickListener(new ClickListener() {
             Integer row = 2;
 
             @Override

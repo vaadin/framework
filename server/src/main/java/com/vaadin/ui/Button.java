@@ -30,6 +30,7 @@ import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.button.ButtonServerRpc;
 import com.vaadin.shared.ui.button.ButtonState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -118,7 +119,7 @@ public class Button extends AbstractFocusable
      */
     public Button(String caption, ClickListener listener) {
         this(caption);
-        addListener(listener);
+        addClickListener(listener);
     }
 
     /**
@@ -306,21 +307,17 @@ public class Button extends AbstractFocusable
     /**
      * Adds the button click listener.
      *
+     * @see Registration
+     *
      * @param listener
      *            the Listener to be added.
+     * @return a registration object for removing the listener
      */
-    public void addClickListener(ClickListener listener) {
+    public Registration addClickListener(ClickListener listener) {
         addListener(ClickEvent.class, listener,
                 ClickListener.BUTTON_CLICK_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addClickListener(ClickListener)}
-     **/
-    @Deprecated
-    public void addListener(ClickListener listener) {
-        addClickListener(listener);
+        return () -> removeListener(ClickEvent.class, listener,
+                ClickListener.BUTTON_CLICK_METHOD);
     }
 
     /**
@@ -328,19 +325,15 @@ public class Button extends AbstractFocusable
      *
      * @param listener
      *            the Listener to be removed.
+     * 
+     * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
+     *             registration object returned from
+     *             {@link #addClickListener(ClickListener)}.
      */
+    @Deprecated
     public void removeClickListener(ClickListener listener) {
         removeListener(ClickEvent.class, listener,
                 ClickListener.BUTTON_CLICK_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeClickListener(ClickListener)}
-     **/
-    @Deprecated
-    public void removeListener(ClickListener listener) {
-        removeClickListener(listener);
     }
 
     /**

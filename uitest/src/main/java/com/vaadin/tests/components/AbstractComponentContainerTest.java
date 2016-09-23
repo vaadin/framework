@@ -7,17 +7,15 @@ import java.util.LinkedHashMap;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HasComponents.ComponentAttachEvent;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.HasComponents.ComponentAttachListener;
-import com.vaadin.ui.HasComponents.ComponentDetachEvent;
 import com.vaadin.ui.HasComponents.ComponentDetachListener;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.DateField;
+import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.RichTextArea;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextArea;
 import com.vaadin.v7.ui.TextField;
@@ -147,11 +145,11 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener(
-                        (ComponentAttachListener) AbstractComponentContainerTest.this);
+                c.addComponentAttachListener(
+                        AbstractComponentContainerTest.this);
             } else {
-                c.removeListener(
-                        (ComponentAttachListener) AbstractComponentContainerTest.this);
+                c.removeComponentAttachListener(
+                        AbstractComponentContainerTest.this);
             }
         }
     };
@@ -161,11 +159,11 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener(
-                        (ComponentDetachListener) AbstractComponentContainerTest.this);
+                c.addComponentDetachListener(
+                        AbstractComponentContainerTest.this);
             } else {
-                c.removeListener(
-                        (ComponentDetachListener) AbstractComponentContainerTest.this);
+                c.removeComponentDetachListener(
+                        AbstractComponentContainerTest.this);
             }
         }
     };

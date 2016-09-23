@@ -64,7 +64,7 @@ public class TableReduceContainerSize extends TestBase {
             final Label label = new Label();
             addComponent(label);
             Button button = new Button("Click");
-            button.addListener(new Button.ClickListener() {
+            button.addClickListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {
                     try {
@@ -80,7 +80,7 @@ public class TableReduceContainerSize extends TestBase {
             });
             addComponent(button);
             Button button2 = new Button("Filter");
-            button2.addListener(new Button.ClickListener() {
+            button2.addClickListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {
                     try {

@@ -53,7 +53,7 @@ public class FocusingComponents extends CustomComponent {
         }
 
         Button focus = new Button("focus");
-        focus.addListener(new Button.ClickListener() {
+        focus.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 f.focus();

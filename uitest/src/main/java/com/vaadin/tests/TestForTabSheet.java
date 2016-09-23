@@ -17,10 +17,10 @@ public class TestForTabSheet extends CustomComponent
     TestForTabSheet() {
         setCompositionRoot(tabsheet);
 
-        tabsheet.addListener(this);
+        tabsheet.addSelectedTabChangeListener(this);
 
         /* Listen for button click events. */
-        tab1_root.addListener(this);
+        tab1_root.addClickListener(this);
         tabsheet.addTab(tab1_root, "First Tab", null);
 
         /* A tab that is initially disabled. */

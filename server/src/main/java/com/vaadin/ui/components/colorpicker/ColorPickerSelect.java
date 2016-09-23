@@ -18,6 +18,7 @@ package com.vaadin.ui.components.colorpicker;
 import java.util.EnumSet;
 
 import com.vaadin.data.HasValue.ValueChange;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
@@ -200,11 +201,12 @@ public class ColorPickerSelect extends CustomComponent
     }
 
     @Override
-    public void addColorChangeListener(ColorChangeListener listener) {
-        grid.addColorChangeListener(listener);
+    public Registration addColorChangeListener(ColorChangeListener listener) {
+        return grid.addColorChangeListener(listener);
     }
 
     @Override
+    @Deprecated
     public void removeColorChangeListener(ColorChangeListener listener) {
         grid.removeColorChangeListener(listener);
     }

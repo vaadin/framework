@@ -34,6 +34,7 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.dd.DragEventType;
 import com.vaadin.ui.Component;
@@ -360,18 +361,26 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     }
 
     @Override
-    public void addAttachListener(AttachListener listener) {
+    public Registration addAttachListener(AttachListener listener) {
+        return () -> {
+            /* NO-OP */
+        };
     }
 
     @Override
+    @Deprecated
     public void removeAttachListener(AttachListener listener) {
     }
 
     @Override
-    public void addDetachListener(DetachListener listener) {
+    public Registration addDetachListener(DetachListener listener) {
+        return () -> {
+            /* NO-OP */
+        };
     }
 
     @Override
+    @Deprecated
     public void removeDetachListener(DetachListener listener) {
     }
 

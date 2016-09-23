@@ -18,8 +18,10 @@ package com.vaadin.event;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component;
 import com.vaadin.util.ReflectTools;
 
@@ -64,10 +66,14 @@ public class ContextClickEvent extends ClickEvent {
          * Adds a context click listener that gets notified when a context click
          * happens.
          *
+         * @see Registration
+         *
          * @param listener
-         *            the context click listener to add
+         *            the context click listener to add, not null
+         * @return a registration object for removing the listener
          */
-        public void addContextClickListener(ContextClickListener listener);
+        public Registration addContextClickListener(
+                ContextClickListener listener);
 
         /**
          * Removes a context click listener that was previously added with
@@ -75,7 +81,12 @@ public class ContextClickEvent extends ClickEvent {
          *
          * @param listener
          *            the context click listener to remove
+         *
+         * @deprecated As of 8.0, replaced by {@link Registration#remove()} in
+         *             the registration object returned from
+         *             {@link #addContextClickListener(FocusListener)}.
          */
+        @Deprecated
         public void removeContextClickListener(ContextClickListener listener);
     }
 

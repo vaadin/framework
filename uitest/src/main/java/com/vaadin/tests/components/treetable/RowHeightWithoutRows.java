@@ -23,7 +23,7 @@ public class RowHeightWithoutRows extends TestBase {
 
         Button refresh = new Button("Add two elements");
         addComponent(refresh);
-        refresh.addListener(new ClickListener() {
+        refresh.addClickListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
                 addTwoElements();
             }
@@ -31,7 +31,7 @@ public class RowHeightWithoutRows extends TestBase {
 
         Button reset = new Button("Reset");
         addComponent(reset);
-        reset.addListener(new ClickListener() {
+        reset.addClickListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
                 container.removeAllItems();
             }
@@ -39,7 +39,7 @@ public class RowHeightWithoutRows extends TestBase {
 
         Button refresh5 = new Button("Add five elements");
         addComponent(refresh5);
-        refresh5.addListener(new ClickListener() {
+        refresh5.addClickListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
                 container.addBean(new User("John", "Doe"));
                 container.addBean(new User("Mark", "Twain"));

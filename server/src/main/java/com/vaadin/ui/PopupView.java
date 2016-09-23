@@ -24,6 +24,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.popupview.PopupViewServerRpc;
 import com.vaadin.shared.ui.popupview.PopupViewState;
 import com.vaadin.ui.declarative.DesignContext;
@@ -334,25 +335,19 @@ public class PopupView extends AbstractComponent implements HasComponents {
      * Add a listener that is called whenever the visibility of the popup is
      * changed.
      *
-     * @param listener
-     *            the listener to add
      * @see PopupVisibilityListener
      * @see PopupVisibilityEvent
-     * @see #removeListener(PopupVisibilityListener)
      *
+     * @param listener
+     *            the listener to add, not null
+     * @return a registration object for removing the listener
      */
-    public void addPopupVisibilityListener(PopupVisibilityListener listener) {
+    public Registration addPopupVisibilityListener(
+            PopupVisibilityListener listener) {
         addListener(PopupVisibilityEvent.class, listener,
                 POPUP_VISIBILITY_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addPopupVisibilityListener(PopupVisibilityListener)}
-     **/
-    @Deprecated
-    public void addListener(PopupVisibilityListener listener) {
-        addPopupVisibilityListener(listener);
+        return () -> removeListener(PopupVisibilityEvent.class, listener,
+                POPUP_VISIBILITY_METHOD);
     }
 
     /**
@@ -363,20 +358,16 @@ public class PopupView extends AbstractComponent implements HasComponents {
      *            the listener to remove
      * @see PopupVisibilityListener
      * @see #addListener(PopupVisibilityListener)
+     *
+     * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
+     *             registration object returned from
+     *             {@link #addPopupVisibilityListener(PopupVisibilityListener)}.
      */
+    @Deprecated
     public void removePopupVisibilityListener(
             PopupVisibilityListener listener) {
         removeListener(PopupVisibilityEvent.class, listener,
                 POPUP_VISIBILITY_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removePopupVisibilityListener(PopupVisibilityListener)}
-     **/
-    @Deprecated
-    public void removeListener(PopupVisibilityListener listener) {
-        removePopupVisibilityListener(listener);
     }
 
     /**

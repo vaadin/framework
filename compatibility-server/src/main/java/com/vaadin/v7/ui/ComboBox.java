@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
@@ -34,6 +33,7 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.util.filter.SimpleStringFilter;
+import com.vaadin.v7.event.FieldEvents;
 import com.vaadin.v7.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.v7.shared.ui.combobox.ComboBoxState;
 import com.vaadin.v7.shared.ui.combobox.FilteringMode;

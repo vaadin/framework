@@ -23,6 +23,7 @@ import java.util.List;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.ui.UI;
 import com.vaadin.util.ReflectTools;
@@ -95,12 +96,14 @@ public interface ClientConnector extends Connector {
         public void detach(DetachEvent event);
     }
 
-    public void addAttachListener(AttachListener listener);
+    public Registration addAttachListener(AttachListener listener);
 
+    @Deprecated
     public void removeAttachListener(AttachListener listener);
 
-    public void addDetachListener(DetachListener listener);
+    public Registration addDetachListener(DetachListener listener);
 
+    @Deprecated
     public void removeDetachListener(DetachListener listener);
 
     /**

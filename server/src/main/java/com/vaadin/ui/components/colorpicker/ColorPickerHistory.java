@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.CustomComponent;
 
@@ -188,24 +189,14 @@ public class ColorPickerHistory extends CustomComponent
         return getColorHistory().contains(c);
     }
 
-    /**
-     * Adds a color change listener
-     *
-     * @param listener
-     *            The listener
-     */
     @Override
-    public void addColorChangeListener(ColorChangeListener listener) {
+    public Registration addColorChangeListener(ColorChangeListener listener) {
         addListener(ColorChangeEvent.class, listener, COLOR_CHANGE_METHOD);
+        return () -> removeListener(ColorChangeEvent.class, listener);
     }
 
-    /**
-     * Removes a color change listener
-     *
-     * @param listener
-     *            The listener
-     */
     @Override
+    @Deprecated
     public void removeColorChangeListener(ColorChangeListener listener) {
         removeListener(ColorChangeEvent.class, listener);
     }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -116,7 +116,7 @@ public class TestForUpload extends CustomComponent
             }
         });
 
-        up.addListener(new StartedListener() {
+        up.addStartedListener(new StartedListener() {
             private static final long serialVersionUID = 5508883803861085154L;
 
             @Override
@@ -130,7 +130,7 @@ public class TestForUpload extends CustomComponent
             }
         });
 
-        up.addListener(new Upload.FinishedListener() {
+        up.addFinishedListener(new Upload.FinishedListener() {
             private static final long serialVersionUID = -3773034195991947371L;
 
             @Override
@@ -174,7 +174,7 @@ public class TestForUpload extends CustomComponent
             }
         });
 
-        up.addListener(new Upload.ProgressListener() {
+        up.addProgressListener(new Upload.ProgressListener() {
 
             @Override
             public void updateProgress(long readBytes, long contentLenght) {
@@ -205,7 +205,7 @@ public class TestForUpload extends CustomComponent
         main.addComponent(beSluggish);
         main.addComponent(throwExecption);
         main.addComponent(interrupt);
-        interrupt.addListener(new Button.ClickListener() {
+        interrupt.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 up.interruptUpload();
@@ -246,7 +246,7 @@ public class TestForUpload extends CustomComponent
         main.addComponent(status);
 
         final Button restart = new Button("R");
-        restart.addListener(new Button.ClickListener() {
+        restart.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

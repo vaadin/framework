@@ -20,21 +20,21 @@ public class ChangeDataSourcePageLengthZero extends TestBase {
         setupContainer(tt, 20);
         addComponent(tt);
         Button page1 = new Button("Set new data source (20 items)");
-        page1.addListener(new Button.ClickListener() {
+        page1.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 setupContainer(tt, 20);
             }
         });
         Button page2 = new Button("Set new data source (10 items)");
-        page2.addListener(new Button.ClickListener() {
+        page2.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 setupContainer(tt, 10);
             }
         });
         Button addButton = new Button("Add item");
-        addButton.addListener(new Button.ClickListener() {
+        addButton.addClickListener(new Button.ClickListener() {
             private int i = 1;
 
             @Override

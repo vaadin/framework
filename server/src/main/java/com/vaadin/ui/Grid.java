@@ -2020,7 +2020,6 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      * @return a registration for the listener
      */
     public Registration addColumnResizeListener(ColumnResizeListener listener) {
-        Objects.requireNonNull(listener, "listener cannot be null");
         addListener(ColumnResizeEvent.class, listener, COLUMN_RESIZE_METHOD);
         return () -> removeListener(ColumnResizeEvent.class, listener,
                 COLUMN_RESIZE_METHOD);
@@ -2036,7 +2035,6 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      */
     public Registration addItemClickListener(
             ItemClickListener<? super T> listener) {
-        Objects.requireNonNull(listener, "listener cannot be null");
         addListener(GridConstants.ITEM_CLICK_EVENT_ID, ItemClick.class,
                 listener, ITEM_CLICK_METHOD);
         return () -> removeListener(ItemClick.class, listener);
@@ -2051,7 +2049,6 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      */
     public Registration addColumnVisibilityChangeListener(
             ColumnVisibilityChangeListener listener) {
-        Objects.requireNonNull(listener, "listener cannot be null");
         addListener(ColumnVisibilityChangeEvent.class, listener,
                 COLUMN_VISIBILITY_METHOD);
         return () -> removeListener(ColumnVisibilityChangeEvent.class, listener,

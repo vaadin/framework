@@ -23,7 +23,7 @@ public class TextFieldWithProperty extends TestBase {
 
         Button b = new Button(
                 "Set BAR to underlaying property (should propagate to UI)");
-        b.addListener(new ClickListener() {
+        b.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 op.setValue("BAR");

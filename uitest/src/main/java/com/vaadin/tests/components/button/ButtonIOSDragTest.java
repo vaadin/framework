@@ -32,7 +32,7 @@ public class ButtonIOSDragTest extends AbstractTestUI {
         final VerticalLayout layout = new VerticalLayout();
 
         Button offset = new Button("Drag me");
-        offset.addListener(new ClickListener() {
+        offset.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
                 Notification.show("Button clicked!");

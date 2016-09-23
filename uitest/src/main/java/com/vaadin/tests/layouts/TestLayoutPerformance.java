@@ -63,7 +63,7 @@ public class TestLayoutPerformance extends TestBase {
 
         Button b = new Button("Render component");
 
-        b.addListener(new Button.ClickListener() {
+        b.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

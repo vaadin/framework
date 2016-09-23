@@ -41,6 +41,7 @@ import com.vaadin.navigator.ViewProvider;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.Registration;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView2;
 import com.vaadin.ui.Component;
@@ -226,9 +227,10 @@ public class NavigatorTest {
         }
 
         @Override
-        public void addUriFragmentChangedListener(
+        public Registration addUriFragmentChangedListener(
                 UriFragmentChangedListener listener) {
             addUriFragmentCalled = true;
+            return () -> removeUriFragmentCalled = true;
         }
 
         @Override

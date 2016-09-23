@@ -17,20 +17,32 @@ package com.vaadin.ui.components.colorpicker;
 
 import java.io.Serializable;
 
+import com.vaadin.shared.Registration;
+
 public interface HasColorChangeListener extends Serializable {
 
     /**
      * Adds a {@link ColorChangeListener} to the component.
      *
+     * @see Registration
+     *
      * @param listener
+     *            the listener to add, not null
+     * @return a registration object for removing the listener
      */
-    void addColorChangeListener(ColorChangeListener listener);
+    Registration addColorChangeListener(ColorChangeListener listener);
 
     /**
      * Removes a {@link ColorChangeListener} from the component.
      *
      * @param listener
+     *            the listener to remove
+     * 
+     * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
+     *             registration object returned from
+     *             {@link #addColorChangeListener(ColorChangeListener)}.
      */
+    @Deprecated
     void removeColorChangeListener(ColorChangeListener listener);
 
 }

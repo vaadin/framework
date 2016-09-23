@@ -19,6 +19,7 @@ package com.vaadin.event;
 import java.io.Serializable;
 
 import com.vaadin.server.Resource;
+import com.vaadin.shared.Registration;
 
 /**
  * Implements the action framework. This class contains subinterfaces for action
@@ -106,8 +107,14 @@ public class Action implements Serializable {
     }
 
     public interface ShortcutNotifier extends Serializable {
-        public void addShortcutListener(ShortcutListener shortcut);
+        public Registration addShortcutListener(ShortcutListener shortcut);
 
+        /**
+         * @deprecated As of 8.0, replaced by {@link Registration#remove()} in
+         *             the registration object returned from
+         *             {@link #addShortcutListener(ShortcutListener)}.
+         */
+        @Deprecated
         public void removeShortcutListener(ShortcutListener shortcut);
     }
 

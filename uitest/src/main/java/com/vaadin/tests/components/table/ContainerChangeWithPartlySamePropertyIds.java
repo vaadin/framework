@@ -67,7 +67,7 @@ public class ContainerChangeWithPartlySamePropertyIds extends TestBase {
         public TableTestComponent() {
 
             Button switchContainerButton = new Button("switch container");
-            switchContainerButton.addListener(new ClickListener() {
+            switchContainerButton.addClickListener(new ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {
                     if (testTable.getContainerDataSource() == containerA) {
@@ -80,7 +80,7 @@ public class ContainerChangeWithPartlySamePropertyIds extends TestBase {
             this.addComponent(switchContainerButton);
 
             Button clearButton = new Button("clear (click twice)");
-            clearButton.addListener(new ClickListener() {
+            clearButton.addClickListener(new ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {
                     try {

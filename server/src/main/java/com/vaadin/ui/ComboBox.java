@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.event.FieldEvents;
@@ -288,23 +287,29 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
     }
 
     @Override
-    public void addBlurListener(BlurListener listener) {
+    public Registration addBlurListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
+        return () -> removeListener(BlurEvent.EVENT_ID, BlurEvent.class,
+                listener);
     }
 
     @Override
+    @Deprecated
     public void removeBlurListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 
     @Override
-    public void addFocusListener(FocusListener listener) {
+    public Registration addFocusListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
+        return () -> removeListener(FocusEvent.EVENT_ID, FocusEvent.class,
+                listener);
     }
 
     @Override
+    @Deprecated
     public void removeFocusListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }

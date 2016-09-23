@@ -25,12 +25,14 @@ public class SplitPanelReversePosition extends TestBase {
         hsplit.setSizeFull();
         hsplit.setImmediate(true);
         hsplit.setSplitPosition(100, Sizeable.UNITS_PIXELS, hsplitReversed);
-        hsplit.addListener(new HorizontalSplitPanel.SplitterClickListener() {
-            @Override
-            public void splitterClick(SplitterClickEvent event) {
-                getMainWindow().showNotification("Horizontal Splitter Clicked");
-            }
-        });
+        hsplit.addSplitterClickListener(
+                new HorizontalSplitPanel.SplitterClickListener() {
+                    @Override
+                    public void splitterClick(SplitterClickEvent event) {
+                        getMainWindow().showNotification(
+                                "Horizontal Splitter Clicked");
+                    }
+                });
 
         TextArea area = new TextArea("");
         area.setSizeFull();
@@ -40,7 +42,7 @@ public class SplitPanelReversePosition extends TestBase {
         vsplit.setSizeFull();
         vsplit.setImmediate(true);
         vsplit.setSplitPosition(10, Sizeable.UNITS_PERCENTAGE, vsplitReversed);
-        vsplit.addListener(new SplitterClickListener() {
+        vsplit.addSplitterClickListener(new SplitterClickListener() {
             @Override
             public void splitterClick(SplitterClickEvent event) {
                 getMainWindow().showNotification("Vertical Splitter Clicked");

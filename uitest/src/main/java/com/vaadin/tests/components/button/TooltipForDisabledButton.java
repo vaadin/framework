@@ -25,7 +25,7 @@ public class TooltipForDisabledButton extends TestBase {
         buttonEnabled.setDescription("Tooltip for enabled");
         buttonDisabled.setDescription("Tooltip for disabled");
 
-        buttonDisabled.addListener(new Button.ClickListener() {
+        buttonDisabled.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -34,7 +34,7 @@ public class TooltipForDisabledButton extends TestBase {
 
         });
 
-        buttonEnabled.addListener(new Button.ClickListener() {
+        buttonEnabled.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

@@ -44,7 +44,7 @@ public class TableContextMenuOnField extends TestBase {
                 VerticalLayout layout = new VerticalLayout();
                 layout.addComponent(new TextField());
 
-                layout.addListener(new LayoutClickListener() {
+                layout.addLayoutClickListener(new LayoutClickListener() {
 
                     @Override
                     public void layoutClick(LayoutClickEvent event) {

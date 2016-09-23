@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -56,12 +56,12 @@ public class ModalWindow extends com.vaadin.server.LegacyApplication
 
         // Main window button
         final Button b = new Button("Test Button in main window");
-        b.addListener(this);
+        b.addClickListener(this);
         b.setTabIndex(2);
         main.addComponent(b);
 
         reopen = new Button("Open modal subwindow");
-        reopen.addListener(this);
+        reopen.addClickListener(this);
         reopen.setTabIndex(3);
         main.addComponent(reopen);
 
@@ -95,7 +95,7 @@ public class ModalWindow extends com.vaadin.server.LegacyApplication
         // Modal window button
         final Button b = new Button("Test Button in modal window");
         b.setTabIndex(5);
-        b.addListener(this);
+        b.addClickListener(this);
         layout.addComponent(b);
     }
 }

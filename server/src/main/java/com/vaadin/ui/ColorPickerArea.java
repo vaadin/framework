@@ -73,5 +73,4 @@ public class ColorPickerArea extends AbstractColorPicker {
             getState().width = "30px";
         }
     }
-
 }

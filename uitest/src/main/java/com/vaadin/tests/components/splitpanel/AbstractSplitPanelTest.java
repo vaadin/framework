@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.splitpanel;
 
 import com.vaadin.server.Sizeable;
-import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.tests.components.AbstractComponentContainerTest;
 import com.vaadin.ui.AbstractSplitPanel;
 import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;
@@ -16,11 +15,9 @@ public abstract class AbstractSplitPanelTest<T extends AbstractSplitPanel>
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener(
-                        (SplitterClickListener) AbstractSplitPanelTest.this);
+                c.addSplitterClickListener(AbstractSplitPanelTest.this);
             } else {
-                c.removeListener(
-                        (SplitterClickListener) AbstractSplitPanelTest.this);
+                c.removeSplitterClickListener(AbstractSplitPanelTest.this);
             }
 
         }
