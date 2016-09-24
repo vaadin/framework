@@ -11,7 +11,6 @@
     <name>vaadin-uitest</name>
     <packaging>war</packaging>
     <properties>
-        <jetty.version>9.3.9.v20160517</jetty.version>
         <skip.uitest.deployment>true</skip.uitest.deployment>
     </properties>
 
