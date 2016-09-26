@@ -825,7 +825,7 @@ public class VTree extends FocusElementPanel
          */
         public boolean isCaptionElement(
                 com.google.gwt.dom.client.Element target) {
-            return (target == nodeCaptionSpan
+            return (nodeCaptionSpan.isOrHasChild(target)
                     || (icon != null && target == icon.getElement()));
         }
 

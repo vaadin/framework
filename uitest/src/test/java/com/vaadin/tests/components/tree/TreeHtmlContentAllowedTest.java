@@ -37,19 +37,32 @@ public class TreeHtmlContentAllowedTest extends SingleBrowserTest {
                 "unchecked", toggle.getValue());
 
         // Markup is seen as plain text
-        assertTreeCaptionTexts("Just text", "Some <b>html</b>");
+        assertTreeCaptionTexts("Just text", "Some <b>html</b>",
+                "Child <span id='my-html-element'>element html</span>");
 
         toggle.click();
-        assertTreeCaptionTexts("Just text", "Some html");
+        assertTreeCaptionTexts("Just text", "Some html", "Child element html");
 
         // Expand the HTML parent
         findElements(By.className("v-tree-node")).get(1).click();
 
-        assertTreeCaptionTexts("Just text", "Some html", "Child html");
+        assertTreeCaptionTexts("Just text", "Some html", "Child html",
+                "Child element html");
 
         toggle.click();
         assertTreeCaptionTexts("Just text", "Some <b>html</b>",
-                "Child <i>html</i>");
+                "Child <i>html</i>",
+                "Child <span id='my-html-element'>element html</span>");
+
+        toggle.click();
+        findElements(By.id("my-html-element")).get(0).click();
+        assertHtmlElementSelected();
+
+    }
+
+    private void assertHtmlElementSelected() {
+        TreeElement tree = $(TreeElement.class).first();
+        Assert.assertEquals(tree.getValue(), "Child element html");
     }
 
     private void assertTreeCaptionTexts(String... captions) {
