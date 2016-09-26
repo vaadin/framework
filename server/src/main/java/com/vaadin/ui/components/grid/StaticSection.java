@@ -17,6 +17,8 @@ package com.vaadin.ui.components.grid;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,7 @@ import java.util.Objects;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.ui.grid.SectionState.CellState;
 import com.vaadin.shared.ui.grid.SectionState.RowState;
+import com.vaadin.ui.Grid.Column;
 
 /**
  * Represents the header or footer section of a Grid.
@@ -48,9 +51,9 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
     public abstract static class StaticRow<CELL extends StaticCell>
             implements Serializable {
 
-        private RowState rowState = new RowState();
-        private StaticSection<?> section;
-        private Map<Object, CELL> cells = new LinkedHashMap<>();
+        private final RowState rowState = new RowState();
+        private final StaticSection<?> section;
+        private final Map<Object, CELL> cells = new LinkedHashMap<>();
 
         /**
          * Creates a new row belonging to the given section.
@@ -118,10 +121,17 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          *
          * @param columnId
          *            the id of the column
-         * @return the cell for the given column or null if not found
+         * @return the cell for the given column
+         * 
+         * @throws IllegalArgumentException
+         *             if no cell was found for the column id
          */
         public CELL getCell(String columnId) {
             CELL cell = cells.get(columnId);
+            if (cell == null) {
+                throw new IllegalArgumentException(
+                        "No cell found for column id " + columnId);
+            }
             return cell;
         }
     }
@@ -186,7 +196,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         }
     }
 
-    private List<ROW> rows = new ArrayList<>();
+    private final List<ROW> rows = new ArrayList<>();
 
     /**
      * Creates a new row instance.
@@ -204,6 +214,8 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
      * @return the section state
      */
     protected abstract SectionState getState(boolean markAsDirty);
+
+    protected abstract Collection<? extends Column<?, ?>> getColumns();
 
     /**
      * Marks the state of this section as modified.
@@ -225,6 +237,9 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         ROW row = createRow();
         rows.add(index, row);
         getState(true).rows.add(index, row.getRowState());
+
+        getColumns().stream().forEach(column -> row.addCell(column.getId()));
+
         return row;
     }
 
@@ -303,5 +318,14 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         for (ROW row : rows) {
             row.removeCell(columnId);
         }
+    }
+
+    /**
+     * Returns an unmodifiable list of the rows in this section.
+     * 
+     * @return the rows in this section
+     */
+    protected List<ROW> getRows() {
+        return Collections.unmodifiableList(rows);
     }
 }

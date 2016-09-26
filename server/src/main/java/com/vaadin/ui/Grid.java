@@ -51,6 +51,7 @@ import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.ui.components.grid.Header;
+import com.vaadin.ui.components.grid.Header.Row;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.ui.renderers.Renderer;
 import com.vaadin.ui.renderers.TextRenderer;
@@ -873,13 +874,19 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
          * Sets the header caption for this column.
          *
          * @param caption
-         *            the header caption
+         *            the header caption, not null
          *
          * @return this column
          */
         public Column<T, V> setCaption(String caption) {
             Objects.requireNonNull(caption, "Header caption can't be null");
             getState().caption = caption;
+
+            HeaderRow row = getParent().getDefaultHeaderRow();
+            if (row != null) {
+                row.getCell(getId()).setText(caption);
+            }
+
             return this;
         }
 
@@ -1428,8 +1435,10 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
          * Returns the cell on this row corresponding to the given column id.
          * 
          * @param columnId
-         *            the id of the column whose header cell to get
+         *            the id of the column whose header cell to get, not null
          * @return the header cell
+         * @throws IllegalArgumentException
+         *             if there is no such column in the grid
          */
         public HeaderCell getCell(String columnId);
 
@@ -1437,8 +1446,10 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
          * Returns the cell on this row corresponding to the given column.
          * 
          * @param column
-         *            the column whose header cell to get
+         *            the column whose header cell to get, not null
          * @return the header cell
+         * @throws IllegalArgumentException
+         *             if there is no such column in the grid
          */
         public default HeaderCell getCell(Column<?, ?> column) {
             return getCell(column.getId());
@@ -1461,10 +1472,23 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
          * Sets the textual caption of this cell.
          * 
          * @param text
-         *            the header caption to set
+         *            the header caption to set, not null
          */
         public void setText(String text);
     }
+
+    private class HeaderImpl extends Header {
+
+        @Override
+        protected SectionState getState(boolean markAsDirty) {
+            return Grid.this.getState(markAsDirty).header;
+        }
+
+        @Override
+        protected Collection<Column<T, ?>> getColumns() {
+            return Grid.this.getColumns();
+        }
+    };
 
     private KeyMapper<Column<T, ?>> columnKeys = new KeyMapper<>();
     private Set<Column<T, ?>> columnSet = new LinkedHashSet<>();
@@ -1474,12 +1498,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     private StyleGenerator<T> styleGenerator = item -> null;
     private DescriptionGenerator<T> descriptionGenerator;
 
-    private Header header = new Header() {
-        @Override
-        protected SectionState getState(boolean markAsDirty) {
-            return Grid.this.getState(markAsDirty).header;
-        }
-    };
+    private Header header = new HeaderImpl();
 
     /**
      * Constructor for the {@link Grid} component.
@@ -1488,7 +1507,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         setSelectionModel(new SingleSelection());
         registerRpc(new GridServerRpcImpl());
 
-        appendHeaderRow();
+        setDefaultHeaderRow(appendHeaderRow());
 
         detailsManager = new DetailsManager<>();
         addExtension(detailsManager);
@@ -1545,10 +1564,8 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
 
         getHeader().addColumn(columnId);
 
-        if (getHeaderRowCount() > 0) {
-            // TODO Default header API to be added in a later patch
-            HeaderRow defaultHeader = getHeaderRow(0);
-            defaultHeader.getCell(columnId).setText(caption);
+        if (getDefaultHeaderRow() != null) {
+            getDefaultHeaderRow().getCell(columnId).setText(caption);
         }
 
         return column;
@@ -1580,7 +1597,9 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         if (columnSet.remove(column)) {
             columnKeys.remove(column);
             removeDataGenerator(column);
+            getHeader().removeColumn(column.getId());
             column.remove();
+
         }
     }
 
@@ -1846,14 +1865,14 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     /**
      * Returns the header row at the given index.
      *
-     * @param rowIndex
+     * @param index
      *            the index of the row, where the topmost row has index zero
      * @return the header row at the index
      * @throws IndexOutOfBoundsException
      *             if {@code rowIndex < 0 || rowIndex >= getHeaderRowCount()}
      */
-    public HeaderRow getHeaderRow(int rowIndex) {
-        return getHeader().getRow(rowIndex);
+    public HeaderRow getHeaderRow(int index) {
+        return getHeader().getRow(index);
     }
 
     /**
@@ -1917,7 +1936,8 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     }
 
     /**
-     * Removes the given row from the header section.
+     * Removes the given row from the header section. Removing a default row
+     * sets the Grid to have no default row.
      *
      * @param row
      *            the header row to be removed, not null
@@ -1937,25 +1957,54 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     /**
      * Removes the row at the given position from the header section.
      *
-     * @param rowIndex
+     * @param index
      *            the index of the row to remove, where the topmost row has
      *            index zero
      *
      * @throws IndexOutOfBoundsException
-     *             if {@code rowIndex < 0 || rowIndex >= getHeaderRowCount()}
+     *             if {@code index < 0 || index >= getHeaderRowCount()}
      * 
      * @see #removeHeaderRow(HeaderRow)
      * @see #addHeaderRowAt(int)
      * @see #appendHeaderRow()
      * @see #prependHeaderRow()
      */
-    public void removeHeaderRow(int rowIndex) {
-        getHeader().removeRow(rowIndex);
+    public void removeHeaderRow(int index) {
+        getHeader().removeRow(index);
+    }
+
+    /**
+     * Returns the current default row of the header.
+     *
+     * @return the default row or null if no default row set
+     * 
+     * @see #setDefaultHeaderRow(HeaderRow)
+     */
+    public HeaderRow getDefaultHeaderRow() {
+        return header.getDefaultRow();
+    }
+
+    /**
+     * Sets the default row of the header. The default row is a special header
+     * row that displays column captions and sort indicators. By default Grid
+     * has a single row which is also the default row. When a header row is set
+     * as the default row, any existing cell content is replaced by the column
+     * captions.
+     *
+     * @param row
+     *            the new default row, or null for no default row
+     *
+     * @throws IllegalArgumentException
+     *             if the header does not contain the row
+     */
+    public void setDefaultHeaderRow(HeaderRow row) {
+        header.setDefaultRow((Row) row);
     }
 
     /**
      * Returns the header section of this grid. The default header contains a
-     * single row displaying the column captions.
+     * single row, set as the {@linkplain #setDefaultHeaderRow(HeaderRow)
+     * default row}.
      *
      * @return the header section
      */
@@ -1994,7 +2043,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     }
 
     /**
-     * Registers a new column visibility change listener
+     * Registers a new column visibility change listener.
      *
      * @param listener
      *            the listener to register, not null

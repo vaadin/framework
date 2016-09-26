@@ -219,10 +219,13 @@ public class GridConnector
         layout();
     }
 
+    /**
+     * Updates the grid header section on state change.
+     */
     @OnStateChange("header")
     void updateHeader() {
-        final SectionState state = getState().header;
         final Grid<JsonObject> grid = getWidget();
+        final SectionState state = getState().header;
 
         while (grid.getHeaderRowCount() > 0) {
             grid.removeHeaderRow(0);
@@ -230,14 +233,14 @@ public class GridConnector
 
         for (RowState rowState : state.rows) {
             HeaderRow row = grid.appendHeaderRow();
+
             rowState.cells.forEach((columnId, cellState) -> {
                 row.getCell(getColumn(columnId)).setText(cellState.text);
             });
-        }
 
-        if (grid.getHeaderRowCount() > 0) {
-            // TODO Default header handling to be added in a later patch
-            grid.setDefaultHeaderRow(grid.getHeaderRow(0));
+            if (rowState.defaultHeader) {
+                grid.setDefaultHeaderRow(row);
+            }
         }
     }
 

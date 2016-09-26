@@ -16,7 +16,9 @@ import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.DetailsGenerator;
+import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
@@ -33,8 +35,6 @@ import com.vaadin.ui.renderers.ProgressBarRenderer;
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridBasics extends AbstractTestUIWithLog {
 
-    public static final String[] COLUMN_CAPTIONS  = { "Column 0", "Column 1", "Column 2", "Row Number", "Date", "HTML String", "Big Random", "Small Random" };
-
     public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4 = "Row numbers for 3/4";
     public static final String ROW_STYLE_GENERATOR_NONE = "None";
     public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS = "Row numbers";
@@ -45,6 +45,10 @@ public class GridBasics extends AbstractTestUIWithLog {
     public static final String CELL_STYLE_GENERATOR_SPECIAL = "Special for 1/4 Column 1";
     public static final String CELL_STYLE_GENERATOR_EMPTY = "Empty string";
     public static final String CELL_STYLE_GENERATOR_NULL = "Null";
+
+    public static final String[] COLUMN_CAPTIONS = { "Column 0", "Column 1",
+            "Column 2", "Row Number", "Date", "HTML String", "Big Random",
+            "Small Random" };
 
     private static class DetailedDetailsGenerator
             implements DetailsGenerator<DataObject> {
@@ -139,7 +143,8 @@ public class GridBasics extends AbstractTestUIWithLog {
 
         grid.addColumn(COLUMN_CAPTIONS[3], DataObject::getRowNumber,
                 new NumberRenderer());
-        grid.addColumn(COLUMN_CAPTIONS[4], DataObject::getDate, new DateRenderer());
+        grid.addColumn(COLUMN_CAPTIONS[4], DataObject::getDate,
+                new DateRenderer());
         grid.addColumn(COLUMN_CAPTIONS[5], DataObject::getHtmlString,
                 new HtmlRenderer());
         grid.addColumn(COLUMN_CAPTIONS[6], DataObject::getBigRandom,
@@ -298,13 +303,29 @@ public class GridBasics extends AbstractTestUIWithLog {
 
     private void createHeaderMenu(MenuItem headerMenu) {
         headerMenu.addItem("Append header row", menuItem -> {
-            grid.appendHeaderRow();
+            HeaderRow row = grid.appendHeaderRow();
+
+            int i = 0;
+            for (Column<?, ?> column : grid.getColumns()) {
+                row.getCell(column).setText("Header cell " + i++);
+            }
         });
         headerMenu.addItem("Prepend header row", menuItem -> {
-            grid.prependHeaderRow();
+            HeaderRow row = grid.prependHeaderRow();
+
+            int i = 0;
+            for (Column<?, ?> column : grid.getColumns()) {
+                row.getCell(column).setText("Header cell " + i++);
+            }
         });
         headerMenu.addItem("Remove first header row", menuItem -> {
             grid.removeHeaderRow(0);
+        });
+        headerMenu.addItem("Set first row as default", menuItem -> {
+            grid.setDefaultHeaderRow(grid.getHeaderRow(0));
+        });
+        headerMenu.addItem("Set no default row", menuItem -> {
+            grid.setDefaultHeaderRow(null);
         });
     }
 

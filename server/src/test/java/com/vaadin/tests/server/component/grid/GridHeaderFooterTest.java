@@ -16,8 +16,11 @@
 package com.vaadin.tests.server.component.grid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
+
+import java.util.function.Function;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,28 +32,10 @@ import com.vaadin.ui.Grid.HeaderRow;
 public class GridHeaderFooterTest {
 
     private Grid<String> grid;
-    private Column<?, ?> column1, column2;
 
     @Before
     public void setUp() {
         grid = new Grid<>();
-
-        column1 = grid.addColumn("First", s -> s.substring(0, 1));
-        column2 = grid.addColumn("Rest", s -> s.substring(1));
-    }
-
-    @Test
-    public void initialState_hasDefaultHeader() {
-        assertEquals(1, grid.getHeaderRowCount());
-        HeaderRow defaultHeader = grid.getHeaderRow(0);
-        assertEquals("First", defaultHeader.getCell(column1).getText());
-        assertEquals("Rest", defaultHeader.getCell(column2).getText());
-    }
-
-    @Test
-    public void initialState_defaultHeaderRemovable() {
-        grid.removeHeaderRow(0);
-        assertEquals(0, grid.getHeaderRowCount());
     }
 
     @Test
@@ -151,5 +136,20 @@ public class GridHeaderFooterTest {
             fail("unexpected exception: " + e);
         }
         grid.removeHeaderRow(row);
+    }
+
+    @Test
+    public void addColumn_headerCellAdded() {
+        Column<?, ?> column = grid.addColumn("Col", Function.identity());
+
+        assertNotNull(grid.getHeaderRow(0).getCell(column));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removeColumn_headerCellRemoved() {
+        Column<String, ?> column = grid.addColumn("Col", Function.identity());
+        grid.removeColumn(column);
+
+        grid.getHeaderRow(0).getCell(column);
     }
 }
