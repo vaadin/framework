@@ -21,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -373,5 +374,38 @@ public class GridSelectionTest {
                 mockListener.getRemoved().iterator().next());
         assertEquals("selectedRows is correct", itemId2Present,
                 grid.getSelectedRow());
+    }
+
+    @Test
+    public void selectionChangeEventWhenChangingSelectionModeSingleToNone() {
+        grid.select(itemId1Present);
+        Assert.assertEquals(itemId1Present, grid.getSelectedRow());
+        mockListener.clearEvent();
+        grid.setSelectionMode(SelectionMode.NONE);
+        assertTrue(mockListener.eventHasHappened());
+        assertTrue(mockListener.getRemoved().contains(itemId1Present));
+    }
+
+    @Test
+    public void selectionChangeEventWhenChangingSelectionModeMultiToNone() {
+        grid.setSelectionMode(SelectionMode.MULTI);
+        grid.select(itemId1Present);
+        grid.select(itemId2Present);
+        mockListener.clearEvent();
+        grid.setSelectionMode(SelectionMode.NONE);
+        assertTrue(mockListener.eventHasHappened());
+        assertTrue(mockListener.getRemoved().contains(itemId1Present));
+        assertTrue(mockListener.getRemoved().contains(itemId2Present));
+    }
+
+    @Test
+    public void noSelectionChangeEventWhenChanginModeWithNoneSelected() {
+        mockListener.clearEvent();
+        grid.setSelectionMode(SelectionMode.SINGLE);
+        assertFalse(mockListener.eventHasHappened());
+        grid.setSelectionMode(SelectionMode.NONE);
+        assertFalse(mockListener.eventHasHappened());
+        grid.setSelectionMode(SelectionMode.MULTI);
+        assertFalse(mockListener.eventHasHappened());
     }
 }

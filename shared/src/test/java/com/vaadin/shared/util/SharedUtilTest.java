@@ -118,4 +118,64 @@ public class SharedUtilTest {
         }
     }
 
+    @Test
+    public void duplicatesInArray() {
+        Assert.assertTrue(
+                SharedUtil.containsDuplicates(new Object[] { "a", "a" }));
+        Assert.assertTrue(
+                SharedUtil.containsDuplicates(new Object[] { "a", "b", "a" }));
+        Assert.assertTrue(SharedUtil
+                .containsDuplicates(new Object[] { "a", "b", "a", "b" }));
+        Assert.assertTrue(
+                SharedUtil.containsDuplicates(new Object[] { 1, "b", 1 }));
+
+        Assert.assertFalse(SharedUtil.containsDuplicates(new Object[] {}));
+        Assert.assertFalse(SharedUtil.containsDuplicates(new Object[] { "a" }));
+        Assert.assertFalse(
+                SharedUtil.containsDuplicates(new Object[] { "a", "b" }));
+        Assert.assertFalse(
+                SharedUtil.containsDuplicates(new Object[] { "1", 1 }));
+    }
+
+    @Test
+    public void getDuplicates() {
+        Assert.assertEquals("", SharedUtil.getDuplicates(new Object[] { "a" }));
+        Assert.assertEquals("a",
+                SharedUtil.getDuplicates(new Object[] { "a", "a" }));
+        Assert.assertEquals("a, b",
+                SharedUtil.getDuplicates(new Object[] { "a", "b", "a", "b" }));
+        Assert.assertEquals("a, b, c", SharedUtil
+                .getDuplicates(new Object[] { "c", "a", "b", "a", "b", "c" }));
+        Assert.assertEquals("1.2",
+                SharedUtil.getDuplicates(new Object[] { 1.2, "a", 1.2 }));
+    }
+
+    @Test
+    public void propertyIdToHumanFriendly() {
+        Assert.assertEquals("", SharedUtil.propertyIdToHumanFriendly(""));
+        Assert.assertEquals("First Name",
+                SharedUtil.propertyIdToHumanFriendly("firstName"));
+        Assert.assertEquals("First Name",
+                SharedUtil.propertyIdToHumanFriendly("FirstName"));
+        Assert.assertEquals("First Name",
+                SharedUtil.propertyIdToHumanFriendly("FIRST_NAME"));
+        Assert.assertEquals("Firstname",
+                SharedUtil.propertyIdToHumanFriendly("FIRSTNAME"));
+
+        Assert.assertEquals("2015 Q3",
+                SharedUtil.propertyIdToHumanFriendly("2015_Q3"));
+        Assert.assertEquals("Column X",
+                SharedUtil.propertyIdToHumanFriendly("_COLUMN_X"));
+        Assert.assertEquals("Column X",
+                SharedUtil.propertyIdToHumanFriendly("__COLUMN_X"));
+        Assert.assertEquals("1column Foobar",
+                SharedUtil.propertyIdToHumanFriendly("1COLUMN_FOOBAR"));
+        Assert.assertEquals("Result 2015",
+                SharedUtil.propertyIdToHumanFriendly("RESULT_2015"));
+        Assert.assertEquals("2015result",
+                SharedUtil.propertyIdToHumanFriendly("2015RESULT"));
+        Assert.assertEquals("Result2015",
+                SharedUtil.propertyIdToHumanFriendly("RESULT2015"));
+
+    }
 }

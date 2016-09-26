@@ -39,7 +39,7 @@ offered under a dual licensing agreement so that they can be used in open source
 projects for free, and many have a trial period for closed-source development.
 Commercial Vaadin add-ons distributed under the CVAL license require installing
 a license key as instructed in
-<<dummy/../../../framework/addons/addons-cval#addons.cval, "Installing Commercial Vaadin Add-on Licence">>.
+<<dummy/../../../framework/addons/addons-cval#addons.cval, "Installing Commercial Vaadin Add-on License">>.
 
 == Feedback and Support
 

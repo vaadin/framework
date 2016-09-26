@@ -89,9 +89,9 @@ import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.ConverterUtil;
 import com.vaadin.v7.event.ItemClickEvent;
-import com.vaadin.v7.event.SelectionEvent;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickNotifier;
+import com.vaadin.v7.event.SelectionEvent;
 import com.vaadin.v7.event.SelectionEvent.SelectionListener;
 import com.vaadin.v7.event.SelectionEvent.SelectionNotifier;
 import com.vaadin.v7.server.communication.data.DataGenerator;
@@ -1909,7 +1909,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         private void updateAllSelectedState() {
             int totalRowCount = getParentGrid().datasource.size();
             int rows = Math.min(totalRowCount, selectionLimit);
-            if (getState().allSelected != selection.size() >= rows) {
+            if (totalRowCount == 0) {
+                getState().allSelected = false;
+            } else {
                 getState().allSelected = selection.size() >= rows;
             }
         }
@@ -5356,6 +5358,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *            properties in the desired column order
      */
     public void setColumns(Object... propertyIds) {
+        if (SharedUtil.containsDuplicates(propertyIds)) {
+            throw new IllegalArgumentException(
+                    "The propertyIds array contains duplicates: "
+                            + SharedUtil.getDuplicates(propertyIds));
+        }
         Set<?> removePids = new HashSet<>(columns.keySet());
         removePids.removeAll(Arrays.asList(propertyIds));
         for (Object removePid : removePids) {
@@ -5378,6 +5385,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *            properties in the order columns should be
      */
     public void setColumnOrder(Object... propertyIds) {
+        if (SharedUtil.containsDuplicates(propertyIds)) {
+            throw new IllegalArgumentException(
+                    "The propertyIds array contains duplicates: "
+                            + SharedUtil.getDuplicates(propertyIds));
+        }
         List<String> columnOrder = new ArrayList<>();
         for (Object propertyId : propertyIds) {
             if (columns.containsKey(propertyId)) {
@@ -5600,7 +5612,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Takes a new {@link SelectionModel} into use.
      * <p>
      * The SelectionModel that is previously in use will have all its items
-     * deselected.
+     * deselected. If any items were selected, this will fire a
+     * {@link SelectionEvent}.
      * <p>
      * If the given SelectionModel is already in use, this method does nothing.
      *
@@ -5617,13 +5630,27 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         if (this.selectionModel != selectionModel) {
+            Collection<Object> oldSelection;
             // this.selectionModel is null on init
             if (this.selectionModel != null) {
+                oldSelection = this.selectionModel.getSelectedRows();
                 this.selectionModel.remove();
+            } else {
+                oldSelection = Collections.emptyList();
             }
 
             this.selectionModel = selectionModel;
             selectionModel.setGrid(this);
+            Collection<Object> newSelection = this.selectionModel
+                    .getSelectedRows();
+
+            if (!SharedUtil.equals(oldSelection, newSelection)) {
+                fireSelectionEvent(oldSelection, newSelection);
+            }
+
+            // selection is included in the row data, so the client needs to be
+            // updated
+            datasourceExtension.refreshCache();
         }
     }
 
@@ -6708,6 +6735,22 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         return itemId;
+    }
+
+    /**
+     * Refreshes, i.e. causes the client side to re-render the rows with the
+     * given item ids.
+     * <p>
+     * Calling this for a row which is not currently rendered on the client side
+     * has no effect.
+     *
+     * @param itemIds
+     *            the item id(s) of the row to refresh.
+     */
+    public void refreshRows(Object... itemIds) {
+        for (Object itemId : itemIds) {
+            datasourceExtension.updateRowData(itemId);
+        }
     }
 
     private static Logger getLogger() {

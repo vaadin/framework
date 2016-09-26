@@ -1463,4 +1463,15 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         return addHandler(handler, WindowMoveEvent.getType());
     }
 
+    /**
+     * Checks if a modal window is currently open.
+     * 
+     * @return <code>true</code> if a modal window is open, <code>false</code>
+     *         otherwise.
+     */
+    public static boolean isModalWindowOpen() {
+        return Document.get().getBody()
+                .hasClassName(MODAL_WINDOW_OPEN_CLASSNAME);
+    }
+
 }

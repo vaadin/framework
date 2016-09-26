@@ -350,9 +350,12 @@ public class LayoutManager {
 
             int firedListeners = 0;
             if (!listenersToFire.isEmpty()) {
+                HashSet<Element> listenersCopy = new HashSet<Element>(
+                        listenersToFire);
+                listenersToFire.clear();
                 firedListeners = listenersToFire.size();
                 Profiler.enter("Layout fire resize events");
-                for (Element element : listenersToFire) {
+                for (Element element : listenersCopy) {
                     Collection<ElementResizeListener> listeners = elementResizeListeners
                             .get(element);
                     if (listeners != null) {
@@ -393,8 +396,6 @@ public class LayoutManager {
                                 "Layout fire resize events - listeners not null");
                     }
                 }
-                listenersToFire.clear();
-
                 Profiler.leave("Layout fire resize events");
             }
 

@@ -16,6 +16,9 @@
 package com.vaadin.shared.util;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 
 /**
@@ -123,6 +126,31 @@ public class SharedUtil implements Serializable {
         return join(parts, " ");
     }
 
+    /**
+     * Converts an UPPER_CASE_STRING to a human friendly format (Upper Case
+     * String).
+     * <p>
+     * Splits words on {@code _}. Examples:
+     * <p>
+     * {@literal MY_BEAN_CONTAINER} becomes {@literal My Bean Container}
+     * {@literal AWESOME_URL_FACTORY} becomes {@literal Awesome Url Factory}
+     * {@literal SOMETHING} becomes {@literal Something}
+     *
+     * @since 7.7.4
+     * @param upperCaseUnderscoreString
+     *            The input string in UPPER_CASE_UNDERSCORE format
+     * @return A human friendly version of the input
+     */
+    public static String upperCaseUnderscoreToHumanFriendly(
+            String upperCaseUnderscoreString) {
+        String[] parts = upperCaseUnderscoreString.replaceFirst("^_*", "")
+                .split("_");
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = capitalize(parts[i].toLowerCase(Locale.ENGLISH));
+        }
+        return join(parts, " ");
+    }
+
     private static boolean isAllUpperCase(String string) {
         for (int i = 0; i < string.length(); i++) {
             char c = string.charAt(i);
@@ -145,6 +173,9 @@ public class SharedUtil implements Serializable {
      * @return The constructed string of words and separators
      */
     public static String join(String[] parts, String separator) {
+        if (parts.length == 0) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < parts.length; i++) {
             sb.append(parts[i]);
@@ -195,6 +226,11 @@ public class SharedUtil implements Serializable {
         int dotLocation = string.lastIndexOf('.');
         if (dotLocation > 0 && dotLocation < string.length() - 1) {
             string = string.substring(dotLocation + 1);
+        }
+
+        if (string.matches("^[0-9A-Z_]+$")) {
+            // Deal with UPPER_CASE_PROPERTY_IDS
+            return upperCaseUnderscoreToHumanFriendly(string);
         }
 
         return camelCaseToHumanFriendly(string);
@@ -264,6 +300,41 @@ public class SharedUtil implements Serializable {
         }
 
         return join(parts, "");
+    }
+
+    /**
+     * Checks if the given array contains duplicates (according to
+     * {@link Object#equals(Object)}.
+     * 
+     * @param values
+     *            the array to check for duplicates
+     * @return <code>true</code> if the array contains duplicates,
+     *         <code>false</code> otherwise
+     */
+    public static boolean containsDuplicates(Object[] values) {
+        int uniqueCount = new HashSet<Object>(Arrays.asList(values)).size();
+        return uniqueCount != values.length;
+    }
+
+    /**
+     * Return duplicate values in the given array in the format
+     * "duplicateValue1, duplicateValue2".
+     * 
+     * @param values
+     *            the values to check for duplicates
+     * @return a comma separated string of duplicates or an empty string if no
+     *         duplicates were found
+     */
+    public static String getDuplicates(Object[] values) {
+        HashSet<Object> set = new HashSet<Object>();
+        LinkedHashSet<String> duplicates = new LinkedHashSet<String>();
+        for (Object o : values) {
+            if (!set.add(o)) {
+                duplicates.add(String.valueOf(o));
+            }
+
+        }
+        return join(duplicates.toArray(new String[duplicates.size()]), ", ");
     }
 
 }
