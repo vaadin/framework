@@ -31,6 +31,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
@@ -66,9 +67,12 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ComputedStyle;
+import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
+import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.Field;
@@ -83,9 +87,9 @@ import com.vaadin.client.ui.aria.HandlesAriaRequired;
 import com.vaadin.client.ui.menubar.MenuBar;
 import com.vaadin.client.ui.menubar.MenuItem;
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.v7.client.ui.combobox.ComboBoxConnector;
 import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 
 /**
@@ -112,22 +116,17 @@ public class VFilterSelect extends Composite
         /**
          * Constructor
          *
-         * @param key
-         *            item key, empty string for a special null item not in
-         *            container
-         * @param caption
-         *            item caption
-         * @param style
-         *            item style name, can be empty string
-         * @param untranslatedIconUri
-         *            icon URI or null
+         * @param uidl
+         *            The UIDL recieved from the server
          */
-        public FilterSelectSuggestion(String key, String caption, String style,
-                String untranslatedIconUri) {
-            this.key = key;
-            this.caption = caption;
-            this.style = style;
-            this.untranslatedIconUri = untranslatedIconUri;
+        public FilterSelectSuggestion(UIDL uidl) {
+            key = uidl.getStringAttribute("key");
+            caption = uidl.getStringAttribute("caption");
+            style = uidl.getStringAttribute("style");
+
+            if (uidl.hasAttribute("icon")) {
+                untranslatedIconUri = uidl.getStringAttribute("icon");
+            }
         }
 
         /**
@@ -139,7 +138,6 @@ public class VFilterSelect extends Composite
         @Override
         public String getDisplayString() {
             final StringBuffer sb = new StringBuffer();
-            ApplicationConnection client = connector.getConnection();
             final Icon icon = client
                     .getIcon(client.translateVaadinUri(untranslatedIconUri));
             if (icon != null) {
@@ -181,15 +179,13 @@ public class VFilterSelect extends Composite
          * @return
          */
         public String getIconUri() {
-            ApplicationConnection client = connector.getConnection();
             return client.translateVaadinUri(untranslatedIconUri);
         }
 
         /**
          * Gets the style set for this suggestion item. Styles are typically set
-         * by a server-side
-         * {@link com.vaadin.v7.ui.ComboBox.ItemStyleGenerator}. The returned
-         * style is prefixed by <code>v-filterselect-item-</code>.
+         * by a server-side {@link com.vaadin.ui.ComboBox.ItemStyleGenerator}.
+         * The returned style is prefixed by <code>v-filterselect-item-</code>.
          *
          * @since 7.5.6
          * @return the style name to use, or <code>null</code> to not apply any
@@ -247,12 +243,12 @@ public class VFilterSelect extends Composite
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-
+        
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-
+        
                 @com.vaadin.v7.client.ui.VFilterSelect.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;
@@ -306,8 +302,7 @@ public class VFilterSelect extends Composite
 
                     // "Scroll" if change exceeds item height
                     while (Math.abs(deltaSum) >= SCROLL_UNIT_PX) {
-                        if (!filterSelect.dataReceivedHandler
-                                .isWaitingForFilteringResponse()) {
+                        if (!filterSelect.waitingForFilteringResponse) {
                             // Move selection if page flip is not in progress
                             if (deltaSum < 0) {
                                 filterSelect.suggestionPopup.selectPrevItem();
@@ -474,6 +469,15 @@ public class VFilterSelect extends Composite
                             .clearWidth();
 
                     setPopupPositionAndShow(popup);
+                    // Fix for #14173
+                    // IE9 and IE10 have a bug, when resize an a element with
+                    // box-shadow.
+                    // IE9 and IE10 need explicit update to remove extra
+                    // box-shadows
+                    if (BrowserInfo.get().isIE9()
+                            || BrowserInfo.get().isIE10()) {
+                        forceReflow();
+                    }
                 }
             });
         }
@@ -604,7 +608,7 @@ public class VFilterSelect extends Composite
             public void run() {
                 debug("VFS.SP.LPS: run()");
                 if (pagesToScroll != 0) {
-                    if (!dataReceivedHandler.isWaitingForFilteringResponse()) {
+                    if (!waitingForFilteringResponse) {
                         /*
                          * Avoid scrolling while we are waiting for a response
                          * because otherwise the waiting flag will be reset in
@@ -853,6 +857,10 @@ public class VFilterSelect extends Composite
                     menu.setWidth(Window.getClientWidth() + "px");
 
                 }
+                if (BrowserInfo.get().isIE()
+                        && BrowserInfo.get().getBrowserMajorVersion() < 10) {
+                    setTdWidth(menu.getElement(), Window.getClientWidth() - 8);
+                }
             }
 
             setPopupPosition(left, top);
@@ -896,6 +904,44 @@ public class VFilterSelect extends Composite
                 width = WidgetUtil.escapeAttribute(suggestionPopupWidth);
             }
             menu.setWidth(width);
+
+            // IE8 or 9?
+            if (BrowserInfo.get().isIE()
+                    && BrowserInfo.get().getBrowserMajorVersion() < 10) {
+                // using legacy mode?
+                if (suggestionPopupWidth == null) {
+                    // set the TD widths manually as these browsers do not
+                    // respect display: block; width:100% rules
+                    setTdWidth(menu.getElement(), naturalMenuWidth);
+                } else {
+                    int compensation = WidgetUtil
+                            .measureHorizontalPaddingAndBorder(
+                                    menu.getElement(), 4);
+                    setTdWidth(menu.getElement(),
+                            menu.getOffsetWidth() - compensation);
+                }
+
+            }
+        }
+
+        /**
+         * Descends to child elements until finds TD elements and sets their
+         * width in pixels. Can be used to workaround IE8 & 9 TD element
+         * display: block issues
+         *
+         * @param parent
+         * @param width
+         */
+        private void setTdWidth(Node parent, int width) {
+            for (int i = 0; i < parent.getChildCount(); i++) {
+                Node child = parent.getChild(i);
+                if ("td".equals(child.getNodeName().toLowerCase())) {
+                    ((Element) child).getStyle().setWidth(width, Unit.PX);
+                } else {
+                    setTdWidth(child, width);
+                }
+
+            }
         }
 
         /**
@@ -952,10 +998,13 @@ public class VFilterSelect extends Composite
         /**
          * Updates style names in suggestion popup to help theme building.
          *
+         * @param uidl
+         *            UIDL for the whole combo box
          * @param componentState
          *            shared state of the combo box
          */
-        public void updateStyleNames(AbstractComponentState componentState) {
+        public void updateStyleNames(UIDL uidl,
+                AbstractComponentState componentState) {
             debug("VFS.SP: updateStyleNames()");
             setStyleName(
                     VFilterSelect.this.getStylePrimaryName() + "-suggestpopup");
@@ -1073,11 +1122,18 @@ public class VFilterSelect extends Composite
 
                 isFirstIteration = false;
             }
+            if (suggestionPopupWidth != null && BrowserInfo.get().isIE()
+                    && BrowserInfo.get().getBrowserMajorVersion() < 10) {
+                // set TD width to a low value so that they won't mandate the
+                // suggestion pop-up width
+                suggestionPopup.setTdWidth(suggestionPopup.menu.getElement(),
+                        1);
+            }
         }
 
         /**
          * Send the current selection to the server. Triggered when a selection
-         * is made with the ENTER key.
+         * is made or on a blur event.
          */
         public void doSelectedItemAction() {
             debug("VFS.SM: doSelectedItemAction()");
@@ -1092,22 +1148,31 @@ public class VFilterSelect extends Composite
                 }
                 // null is not visible on pages != 0, and not visible when
                 // filtering: handle separately
-                connector.requestFirstPage();
+                client.updateVariable(paintableId, "filter", "", false);
+                client.updateVariable(paintableId, "page", 0, false);
+                client.updateVariable(paintableId, "selected", new String[] {},
+                        immediate);
+                afterUpdateClientVariables();
 
                 suggestionPopup.hide();
                 return;
             }
 
-            dataReceivedHandler.doPostFilterWhenReady();
+            updateSelectionWhenReponseIsReceived = waitingForFilteringResponse;
+            if (!waitingForFilteringResponse) {
+                doPostFilterSelectedItemAction();
+            }
         }
 
         /**
-         * Triggered after a selection has been made.
+         * Triggered after a selection has been made
          */
         public void doPostFilterSelectedItemAction() {
             debug("VFS.SM: doPostFilterSelectedItemAction()");
             final MenuItem item = getSelectedItem();
             final String enteredItemValue = tb.getText();
+
+            updateSelectionWhenReponseIsReceived = false;
 
             // check for exact match in menu
             int p = getItems().size();
@@ -1136,7 +1201,9 @@ public class VFilterSelect extends Composite
                      * Store last sent new item string to avoid double sends
                      */
                     lastNewItemString = enteredItemValue;
-                    connector.sendNewItem(enteredItemValue);
+                    client.updateVariable(paintableId, "newitem",
+                            enteredItemValue, immediate);
+                    afterUpdateClientVariables();
                 }
             } else if (item != null && !"".equals(lastFilter)
                     && (filteringmode == FilteringMode.CONTAINS
@@ -1330,197 +1397,6 @@ public class VFilterSelect extends Composite
 
     }
 
-    /**
-     * Handler receiving notifications from the connector and updating the
-     * widget state accordingly.
-     *
-     * This class is still subject to change and should not be considered as
-     * public stable API.
-     *
-     * @since 8.0
-     */
-    public class DataReceivedHandler {
-
-        private Runnable navigationCallback = null;
-        /**
-         * Set true when popupopened has been clicked. Cleared on each
-         * UIDL-update. This handles the special case where are not filtering
-         * yet and the selected value has changed on the server-side. See #2119
-         * <p>
-         * For internal use only. May be removed or replaced in the future.
-         */
-        private boolean popupOpenerClicked = false;
-        private boolean performPostFilteringOnDataReceived = false;
-        /** For internal use only. May be removed or replaced in the future. */
-        private boolean waitingForFilteringResponse = false;
-
-        /**
-         * Called by the connector when new data for the last requested filter
-         * is received from the server.
-         */
-        public void dataReceived() {
-            suggestionPopup.showSuggestions(currentSuggestions, currentPage,
-                    totalMatches);
-
-            waitingForFilteringResponse = false;
-
-            if (!popupOpenerClicked) {
-                navigateItemAfterPageChange();
-            }
-
-            if (performPostFilteringOnDataReceived) {
-                performPostFilteringOnDataReceived = false;
-                suggestionPopup.menu.doPostFilterSelectedItemAction();
-            }
-
-            popupOpenerClicked = false;
-        }
-
-        /*
-         * This method navigates to the proper item in the combobox page. This
-         * should be executed after setSuggestions() method which is called from
-         * vFilterSelect.showSuggestions(). ShowSuggestions() method builds the
-         * page content. As far as setSuggestions() method is called as
-         * deferred, navigateItemAfterPageChange method should be also be called
-         * as deferred. #11333
-         */
-        private void navigateItemAfterPageChange() {
-            if (navigationCallback != null) {
-                // pageChangeCallback is not reset here but after any server
-                // request in case you are in between two requests both changing
-                // the page back and forth
-
-                // we're paging w/ arrows
-                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        if (navigationCallback != null) {
-                            navigationCallback.run();
-                        }
-                    }
-                });
-            }
-        }
-
-        /**
-         * Called by the connector when any request has been sent to the server,
-         * before waiting for a reply.
-         */
-        public void anyRequestSentToServer() {
-            navigationCallback = null;
-        }
-
-        /**
-         * Set a callback that is invoked when a page change occurs if there
-         * have not been intervening requests to the server. The callback is
-         * reset when any additional request is made to the server.
-         *
-         * @param callback
-         */
-        public void setNavigationCallback(Runnable callback) {
-            navigationCallback = callback;
-        }
-
-        /**
-         * Record that the popup opener has been clicked and the popup should be
-         * opened on the next request.
-         *
-         * This handles the special case where are not filtering yet and the
-         * selected value has changed on the server-side. See #2119. The flag is
-         * cleared on each UIDL reply.
-         */
-        public void popupOpenerClicked() {
-            popupOpenerClicked = true;
-        }
-
-        /**
-         * Cancel a pending request to perform post-filtering actions.
-         */
-        private void cancelPendingPostFiltering() {
-            performPostFilteringOnDataReceived = false;
-        }
-
-        /**
-         * Called by the connector when it has finished handling any reply from
-         * the server, regardless of what was updated.
-         */
-        public void serverReplyHandled() {
-            popupOpenerClicked = false;
-        }
-
-        /**
-         * For internal use only - this method will be removed in the future.
-         *
-         * @return true if the combo box is waiting for a reply from the server
-         *         with a new page of data, false otherwise
-         */
-        public boolean isWaitingForFilteringResponse() {
-            return waitingForFilteringResponse;
-        }
-
-        /**
-         * Set a flag that filtering of options is pending a response from the
-         * server.
-         */
-        private void startWaitingForFilteringResponse() {
-            waitingForFilteringResponse = true;
-        }
-
-        /**
-         * Perform the post-filter action either now (if not waiting for a
-         * server response) or when a response is received.
-         */
-        private void doPostFilterWhenReady() {
-            if (isWaitingForFilteringResponse()) {
-                performPostFilteringOnDataReceived = true;
-            } else {
-                performPostFilteringOnDataReceived = false;
-                suggestionPopup.menu.doPostFilterSelectedItemAction();
-            }
-        }
-
-        /**
-         * Perform selection (if appropriate) based on a reply from the server.
-         * When this method is called, the suggestions have been reset if new
-         * ones (different from the previous list) were received from the
-         * server.
-         *
-         * @param selectedKey
-         *            new selected key or null if none given by the server
-         * @param selectedCaption
-         *            new selected item caption if sent by the server or null -
-         *            this is used when the selected item is not on the current
-         *            page
-         * @param oldSuggestionTextMatchTheOldSelection
-         *            true if the old filtering text box contents matched
-         *            exactly the old selection
-         */
-        public void updateSelectionFromServer(String selectedKey,
-                String selectedCaption,
-                boolean oldSuggestionTextMatchTheOldSelection) {
-            // when filtering with empty filter, server sets the selected key
-            // to "", which we don't select here. Otherwise we won't be able to
-            // reset back to the item that was selected before filtering
-            // started.
-            if (selectedKey != null && !selectedKey.equals("")) {
-                performSelection(selectedKey,
-                        oldSuggestionTextMatchTheOldSelection,
-                        !isWaitingForFilteringResponse() || popupOpenerClicked);
-                setSelectedCaption(null);
-            } else if (!isWaitingForFilteringResponse()
-                    && selectedCaption != null) {
-                // scrolling to correct page is disabled, caption is passed as a
-                // special parameter
-                setSelectedCaption(selectedCaption);
-            } else {
-                if (!isWaitingForFilteringResponse() || popupOpenerClicked) {
-                    resetSelection(popupOpenerClicked);
-                }
-            }
-        }
-
-    }
-
     @Deprecated
     public static final FilteringMode FILTERINGMODE_OFF = FilteringMode.OFF;
     @Deprecated
@@ -1583,7 +1459,10 @@ public class VFilterSelect extends Composite
     private IconWidget selectedItemIcon;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public ComboBoxConnector connector;
+    public ApplicationConnection client;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public String paintableId;
 
     /** For internal use only. May be removed or replaced in the future. */
     public int currentPage;
@@ -1594,16 +1473,33 @@ public class VFilterSelect extends Composite
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */
-    public final List<FilterSelectSuggestion> currentSuggestions = new ArrayList<FilterSelectSuggestion>();
+    public final List<FilterSelectSuggestion> currentSuggestions = new ArrayList<>();
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public boolean immediate;
 
     /** For internal use only. May be removed or replaced in the future. */
     public String selectedOptionKey;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public boolean waitingForFilteringResponse = false;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public boolean updateSelectionWhenReponseIsReceived = false;
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean initDone = false;
 
     /** For internal use only. May be removed or replaced in the future. */
     public String lastFilter = "";
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public enum Select {
+        NONE, FIRST, LAST
+    }
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public Select selectPopupItemWhenResponseIsReceived = Select.NONE;
 
     /**
      * The current suggestion selected from the dropdown. This is one of the
@@ -1644,6 +1540,15 @@ public class VFilterSelect extends Composite
     /** For internal use only. May be removed or replaced in the future. */
     public boolean prompting = false;
 
+    /**
+     * Set true when popupopened has been clicked. Cleared on each UIDL-update.
+     * This handles the special case where are not filtering yet and the
+     * selected value has changed on the server-side. See #2119
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     */
+    public boolean popupOpenerClicked;
+
     /** For internal use only. May be removed or replaced in the future. */
     public int suggestionPopupMinWidth = 0;
 
@@ -1666,8 +1571,6 @@ public class VFilterSelect extends Composite
      * field even for filtering.
      */
     private boolean textInputEnabled = true;
-
-    private final DataReceivedHandler dataReceivedHandler = new DataReceivedHandler();
 
     /**
      * Default constructor.
@@ -1808,7 +1711,22 @@ public class VFilterSelect extends Composite
      *            The filter to apply to the components
      */
     public void filterOptions(int page, String filter) {
-        debug("VFS: filterOptions(" + page + ", " + filter + ")");
+        filterOptions(page, filter, true);
+    }
+
+    /**
+     * Filters the options at certain page using the given filter
+     *
+     * @param page
+     *            The page to filter
+     * @param filter
+     *            The filter to apply to the options
+     * @param immediate
+     *            Whether to send the options request immediately
+     */
+    private void filterOptions(int page, String filter, boolean immediate) {
+        debug("VFS: filterOptions(" + page + ", " + filter + ", " + immediate
+                + ")");
 
         if (filter.equals(lastFilter) && currentPage == page) {
             if (!suggestionPopup.isAttached()) {
@@ -1829,8 +1747,10 @@ public class VFilterSelect extends Composite
             }
         }
 
-        dataReceivedHandler.startWaitingForFilteringResponse();
-        connector.requestPage(filter, page);
+        waitingForFilteringResponse = true;
+        client.updateVariable(paintableId, "filter", filter, false);
+        client.updateVariable(paintableId, "page", page, immediate);
+        afterUpdateClientVariables();
 
         lastFilter = filter;
         currentPage = page;
@@ -1928,7 +1848,7 @@ public class VFilterSelect extends Composite
             debug("VFS: onSuggestionSelected(" + suggestion.caption + ": "
                     + suggestion.key + ")");
         }
-        dataReceivedHandler.cancelPendingPostFiltering();
+        updateSelectionWhenReponseIsReceived = false;
 
         currentSuggestion = suggestion;
         String newKey;
@@ -1951,7 +1871,9 @@ public class VFilterSelect extends Composite
         if (!(newKey.equals(selectedOptionKey)
                 || ("".equals(newKey) && selectedOptionKey == null))) {
             selectedOptionKey = newKey;
-            connector.sendSelection(selectedOptionKey);
+            client.updateVariable(paintableId, "selected",
+                    new String[] { selectedOptionKey }, immediate);
+            afterUpdateClientVariables();
 
             // currentPage = -1; // forget the page
         }
@@ -1962,7 +1884,9 @@ public class VFilterSelect extends Composite
             // hard to interpret that new clause added here :-(
             selectedOptionKey = newKey;
             explicitSelectedCaption = null;
-            connector.sendSelection(selectedOptionKey);
+            client.updateVariable(paintableId, "selected",
+                    new String[] { selectedOptionKey }, immediate);
+            afterUpdateClientVariables();
         }
 
         suggestionPopup.hide();
@@ -1987,8 +1911,7 @@ public class VFilterSelect extends Composite
             if (selectedItemIcon != null) {
                 panel.remove(selectedItemIcon);
             }
-            selectedItemIcon = new IconWidget(
-                    connector.getConnection().getIcon(iconUri));
+            selectedItemIcon = new IconWidget(client.getIcon(iconUri));
             // Older IE versions don't scale icon correctly if DOM
             // contains height and width attributes.
             selectedItemIcon.getElement().removeAttribute("height");
@@ -2005,7 +1928,7 @@ public class VFilterSelect extends Composite
     }
 
     private void afterSelectedItemIconChange() {
-        if (BrowserInfo.get().isWebkit()) {
+        if (BrowserInfo.get().isWebkit() || BrowserInfo.get().isIE8()) {
             // Some browsers need a nudge to reposition the text field
             forceReflow();
         }
@@ -2013,88 +1936,6 @@ public class VFilterSelect extends Composite
         if (selectedItemIcon != null) {
             updateSelectedIconPosition();
         }
-    }
-
-    /**
-     * Perform selection based on a message from the server.
-     *
-     * This method is called when the server gave a non-empty selected item key,
-     * whereas null selection is handled by {@link #resetSelection()} and the
-     * special case where the selected item is not on the current page is
-     * handled separately by the caller.
-     *
-     * @param selectedKey
-     *            non-empty selected item key
-     * @param oldSuggestionTextMatchTheOldSelection
-     *            true if the suggestion box text matched the previous selection
-     *            before the message from the server updating the selection
-     * @param updatePromptAndSelectionIfMatchFound
-     */
-    private void performSelection(String selectedKey,
-            boolean oldSuggestionTextMatchTheOldSelection,
-            boolean updatePromptAndSelectionIfMatchFound) {
-        // some item selected
-        for (FilterSelectSuggestion suggestion : currentSuggestions) {
-            String suggestionKey = suggestion.getOptionKey();
-            if (!suggestionKey.equals(selectedKey)) {
-                continue;
-            }
-            // at this point, suggestion key matches the new selection key
-            if (updatePromptAndSelectionIfMatchFound) {
-                if (!suggestionKey.equals(selectedOptionKey)
-                        || suggestion.getReplacementString()
-                                .equals(tb.getText())
-                        || oldSuggestionTextMatchTheOldSelection) {
-                    // Update text field if we've got a new
-                    // selection
-                    // Also update if we've got the same text to
-                    // retain old text selection behavior
-                    // OR if selected item caption is changed.
-                    setPromptingOff(suggestion.getReplacementString());
-                    selectedOptionKey = suggestionKey;
-                }
-            }
-            currentSuggestion = suggestion;
-            setSelectedItemIcon(suggestion.getIconUri());
-            // only a single item can be selected
-            break;
-        }
-    }
-
-    /**
-     * Reset the selection of the combo box to an empty string if focused, the
-     * input prompt if not.
-     *
-     * This method also clears the current suggestion and the selected option
-     * key.
-     */
-    private void resetSelection(boolean useSelectedCaption) {
-        // select nulled
-        if (!focused) {
-            // TODO it is unclear whether this is really needed anymore -
-            // client.updateComponent used to overwrite all styles so we had to
-            // set them again
-            setPromptingOff("");
-            if (enabled && !readonly) {
-                setPromptingOn();
-            }
-        } else {
-            // we have focus in field, prompting can't be set on,
-            // instead just clear the input if the value has changed from
-            // something else to null
-            if (selectedOptionKey != null
-                    || (allowNewItem && !tb.getValue().isEmpty())) {
-                if (useSelectedCaption && getSelectedCaption() != null) {
-                    tb.setValue(getSelectedCaption());
-                    tb.selectAll();
-                } else {
-                    tb.setValue("");
-                }
-            }
-        }
-        currentSuggestion = null; // #13217
-        setSelectedItemIcon(null);
-        selectedOptionKey = null;
     }
 
     private void forceReflow() {
@@ -2116,7 +1957,7 @@ public class VFilterSelect extends Composite
                 Unit.PX);
     }
 
-    private static Set<Integer> navigationKeyCodes = new HashSet<Integer>();
+    private static Set<Integer> navigationKeyCodes = new HashSet<>();
     static {
         navigationKeyCodes.add(KeyCodes.KEY_DOWN);
         navigationKeyCodes.add(KeyCodes.KEY_UP);
@@ -2141,7 +1982,7 @@ public class VFilterSelect extends Composite
             if (enableDebug) {
                 debug("VFS: key down: " + keyCode);
             }
-            if (dataReceivedHandler.isWaitingForFilteringResponse()
+            if (waitingForFilteringResponse
                     && navigationKeyCodes.contains(keyCode)) {
                 /*
                  * Keyboard navigation events should not be handled while we are
@@ -2290,12 +2131,7 @@ public class VFilterSelect extends Composite
     private void selectPrevPage() {
         if (currentPage > 0) {
             filterOptions(currentPage - 1, lastFilter);
-            dataReceivedHandler.setNavigationCallback(new Runnable() {
-                @Override
-                public void run() {
-                    suggestionPopup.selectLastItem();
-                }
-            });
+            selectPopupItemWhenResponseIsReceived = Select.LAST;
         }
     }
 
@@ -2305,12 +2141,7 @@ public class VFilterSelect extends Composite
     private void selectNextPage() {
         if (hasNextPage()) {
             filterOptions(currentPage + 1, lastFilter);
-            dataReceivedHandler.setNavigationCallback(new Runnable() {
-                @Override
-                public void run() {
-                    suggestionPopup.selectFirstItem();
-                }
-            });
+            selectPopupItemWhenResponseIsReceived = Select.FIRST;
         }
     }
 
@@ -2394,8 +2225,13 @@ public class VFilterSelect extends Composite
             // ask suggestionPopup if it was just closed, we are using GWT
             // Popup's auto close feature
             if (!suggestionPopup.isJustClosed()) {
-                filterOptions(-1, "");
-                dataReceivedHandler.popupOpenerClicked();
+                // If a focus event is not going to be sent, send the options
+                // request immediately; otherwise queue in the same burst as the
+                // focus event. Fixes #8321.
+                boolean immediate = focused
+                        || !client.hasEventListeners(this, EventId.FOCUS);
+                filterOptions(-1, "", immediate);
+                popupOpenerClicked = true;
                 lastFilter = "";
             }
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
@@ -2488,9 +2324,14 @@ public class VFilterSelect extends Composite
         }
         addStyleDependentName("focus");
 
-        connector.sendFocusEvent();
+        if (client.hasEventListeners(this, EventId.FOCUS)) {
+            client.updateVariable(paintableId, EventId.FOCUS, "", true);
+            afterUpdateClientVariables();
+        }
 
-        connector.getConnection().getVTooltip()
+        ComponentConnector connector = ConnectorMap.get(client)
+                .getConnector(this);
+        client.getVTooltip()
                 .showAssistive(connector.getTooltipInfo(getElement()));
     }
 
@@ -2552,7 +2393,10 @@ public class VFilterSelect extends Composite
         }
         removeStyleDependentName("focus");
 
-        connector.sendBlurEvent();
+        if (client.hasEventListeners(this, EventId.BLUR)) {
+            client.updateVariable(paintableId, EventId.BLUR, "", true);
+            afterUpdateClientVariables();
+        }
     }
 
     /*
@@ -2578,7 +2422,10 @@ public class VFilterSelect extends Composite
      * For internal use only. May be removed or replaced in the future.
      */
     public void updateRootWidth() {
-        if (connector.isUndefinedWidth()) {
+        ComponentConnector paintable = ConnectorMap.get(client)
+                .getConnector(this);
+
+        if (paintable.isUndefinedWidth()) {
 
             /*
              * When the select has a undefined with we need to check that we are
@@ -2734,9 +2581,19 @@ public class VFilterSelect extends Composite
         AriaHelper.bindCaption(tb, captionElement);
     }
 
+    /*
+     * Anything that should be set after the client updates the server.
+     */
+    private void afterUpdateClientVariables() {
+        // We need this here to be consistent with the all the calls.
+        // Then set your specific selection type only after
+        // client.updateVariable() method call.
+        selectPopupItemWhenResponseIsReceived = Select.NONE;
+    }
+
     @Override
     public boolean isWorkPending() {
-        return dataReceivedHandler.isWaitingForFilteringResponse()
+        return waitingForFilteringResponse
                 || suggestionPopup.lazyPageScroller.isRunning();
     }
 
@@ -2763,16 +2620,6 @@ public class VFilterSelect extends Composite
      */
     public String getSelectedCaption() {
         return explicitSelectedCaption;
-    }
-
-    /**
-     * Returns a handler receiving notifications from the connector about
-     * communications.
-     *
-     * @return the dataReceivedHandler
-     */
-    public DataReceivedHandler getDataReceivedHandler() {
-        return dataReceivedHandler;
     }
 
 }

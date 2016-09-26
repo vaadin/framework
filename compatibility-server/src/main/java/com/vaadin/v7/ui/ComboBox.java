@@ -27,16 +27,14 @@ import java.util.Map;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
-import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
-import com.vaadin.ui.Component;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.util.filter.SimpleStringFilter;
-import com.vaadin.v7.shared.ui.combobox.ComboBoxServerRpc;
+import com.vaadin.v7.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.v7.shared.ui.combobox.ComboBoxState;
 import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 
@@ -79,58 +77,17 @@ public class ComboBox extends AbstractSelect
         public String getStyle(ComboBox source, Object itemId);
     }
 
-    private ComboBoxServerRpc rpc = new ComboBoxServerRpc() {
-        @Override
-        public void createNewItem(String itemValue) {
-            if (isNewItemsAllowed()) {
-                // New option entered (and it is allowed)
-                if (itemValue != null && itemValue.length() > 0) {
-                    getNewItemHandler().addNewItem(itemValue);
-                    // rebuild list
-                    filterstring = null;
-                    prevfilterstring = null;
-                }
-            }
-        }
+    private String inputPrompt = null;
 
-        @Override
-        public void setSelectedItem(String item) {
-            if (item == null) {
-                setValue(null, true);
-            } else {
-                final Object id = itemIdMapper.get(item);
-                if (id != null && id.equals(getNullSelectionItemId())) {
-                    setValue(null, true);
-                } else {
-                    setValue(id, true);
-                }
-            }
-        }
-
-        @Override
-        public void requestPage(String filter, int page) {
-            filterstring = filter;
-            if (filterstring != null) {
-                filterstring = filterstring.toLowerCase(getLocale());
-            }
-            currentPage = page;
-
-            // TODO this should trigger a data-only update instead of a full
-            // repaint
-            requestRepaint();
-        }
-    };
-
-    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(
-            this) {
-        @Override
-        protected void fireEvent(Component.Event event) {
-            ComboBox.this.fireEvent(event);
-        }
-    };
+    /**
+     * Holds value of property pageLength. 0 disables paging.
+     */
+    protected int pageLength = 10;
 
     // Current page when the user is 'paging' trough options
     private int currentPage = -1;
+
+    private FilteringMode filteringMode = FilteringMode.STARTSWITH;
 
     private String filterstring;
     private String prevfilterstring;
@@ -166,35 +123,40 @@ public class ComboBox extends AbstractSelect
      */
     private boolean scrollToSelectedItem = true;
 
+    private String suggestionPopupWidth = null;
+
+    /**
+     * If text input is not allowed, the ComboBox behaves like a pretty
+     * NativeSelect - the user can not enter any text and clicking the text
+     * field opens the drop down with options
+     */
+    private boolean textInputAllowed = true;
+
     private ItemStyleGenerator itemStyleGenerator = null;
 
     public ComboBox() {
-        init();
+        initDefaults();
     }
 
     public ComboBox(String caption, Collection<?> options) {
         super(caption, options);
-        init();
+        initDefaults();
     }
 
     public ComboBox(String caption, Container dataSource) {
         super(caption, dataSource);
-        init();
+        initDefaults();
     }
 
     public ComboBox(String caption) {
         super(caption);
-        init();
+        initDefaults();
     }
 
     /**
-     * Initialize the ComboBox with default settings and register client to
-     * server RPC implementation.
+     * Initialize the ComboBox with default settings
      */
-    private void init() {
-        registerRpc(rpc);
-        registerRpc(focusBlurRpc);
-
+    private void initDefaults() {
         setNewItemsAllowed(false);
         setImmediate(true);
     }
@@ -206,7 +168,7 @@ public class ComboBox extends AbstractSelect
      * @return the current input prompt, or null if not enabled
      */
     public String getInputPrompt() {
-        return getState(false).inputPrompt;
+        return inputPrompt;
     }
 
     /**
@@ -217,45 +179,41 @@ public class ComboBox extends AbstractSelect
      *            the desired input prompt, or null to disable
      */
     public void setInputPrompt(String inputPrompt) {
-        getState().inputPrompt = inputPrompt;
+        this.inputPrompt = inputPrompt;
+        markAsDirty();
     }
 
     private boolean isFilteringNeeded() {
         return filterstring != null && filterstring.length() > 0
-                && getFilteringMode() != FilteringMode.OFF;
-    }
-
-    /**
-     * A class representing an item in a ComboBox for server to client
-     * communication. This class is for internal use only and subject to change.
-     *
-     * @since 8.0
-     */
-    private static class ComboBoxItem implements Serializable {
-        String key = "";
-        String caption = "";
-        String style = null;
-        Resource icon = null;
-
-        // constructor for a null item
-        public ComboBoxItem() {
-        }
-
-        public ComboBoxItem(String key, String caption, String style,
-                Resource icon) {
-            this.key = key;
-            this.caption = caption;
-            this.style = style;
-            this.icon = icon;
-        }
+                && filteringMode != FilteringMode.OFF;
     }
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         isPainting = true;
         try {
+            if (inputPrompt != null) {
+                target.addAttribute(ComboBoxConstants.ATTR_INPUTPROMPT,
+                        inputPrompt);
+            }
+
+            if (!textInputAllowed) {
+                target.addAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT, true);
+            }
+
             // clear caption change listeners
             getCaptionChangeListener().clear();
+
+            // The tab ordering number
+            if (getTabIndex() != 0) {
+                target.addAttribute("tabindex", getTabIndex());
+            }
+
+            // If the field is modified, but not committed, set modified
+            // attribute
+            if (isModified()) {
+                target.addAttribute("modified", true);
+            }
 
             if (isNewItemsAllowed()) {
                 target.addAttribute("allownewitem", true);
@@ -274,8 +232,19 @@ public class ComboBox extends AbstractSelect
             String[] selectedKeys = new String[(getValue() == null
                     && getNullSelectionItemId() == null ? 0 : 1)];
 
+            target.addAttribute("pagelength", pageLength);
+
+            if (suggestionPopupWidth != null) {
+                target.addAttribute("suggestionPopupWidth",
+                        suggestionPopupWidth);
+            }
+
+            target.addAttribute("filteringmode", getFilteringMode().toString());
+
             // Paints the options and create array of selected id keys
             int keyIndex = 0;
+
+            target.startTag("options");
 
             if (currentPage < 0) {
                 optionRequest = false;
@@ -285,7 +254,8 @@ public class ComboBox extends AbstractSelect
 
             boolean nullFilteredOut = isFilteringNeeded();
             // null option is needed and not filtered out, even if not on
-            // current page
+            // current
+            // page
             boolean nullOptionVisible = needNullSelectOption
                     && !nullFilteredOut;
 
@@ -296,18 +266,20 @@ public class ComboBox extends AbstractSelect
                 // filtering
                 options = getFilteredOptions();
                 filteredSize = options.size();
-                options = sanitetizeList(options, nullOptionVisible);
+                options = sanitizeList(options, nullOptionVisible);
             }
 
             final boolean paintNullSelection = needNullSelectOption
                     && currentPage == 0 && !nullFilteredOut;
 
-            List<ComboBoxItem> items = new ArrayList<>();
-
             if (paintNullSelection) {
-                ComboBoxItem item = new ComboBoxItem();
-                item.style = getItemStyle(null);
-                items.add(item);
+                target.startTag("so");
+                target.addAttribute("caption", "");
+                target.addAttribute("key", "");
+
+                paintItemStyle(target, null);
+
+                target.endTag("so");
             }
 
             final Iterator<?> i = options.iterator();
@@ -327,31 +299,24 @@ public class ComboBox extends AbstractSelect
                 final String key = itemIdMapper.key(id);
                 final String caption = getItemCaption(id);
                 final Resource icon = getItemIcon(id);
-
                 getCaptionChangeListener().addNotifierForItem(id);
 
-                // Prepare to paint the option
-                ComboBoxItem item = new ComboBoxItem(key, caption,
-                        getItemStyle(id), icon);
-                items.add(item);
+                // Paints the option
+                target.startTag("so");
+                if (icon != null) {
+                    target.addAttribute("icon", icon);
+                }
+                target.addAttribute("caption", caption);
+                if (id != null && id.equals(getNullSelectionItemId())) {
+                    target.addAttribute("nullselection", true);
+                }
+                target.addAttribute("key", key);
                 if (keyIndex < selectedKeys.length && isSelected(id)) {
                     // at most one item can be selected at a time
                     selectedKeys[keyIndex++] = key;
                 }
-            }
 
-            // paint the items
-            target.startTag("options");
-            for (ComboBoxItem item : items) {
-                target.startTag("so");
-                if (item.icon != null) {
-                    target.addAttribute("icon", item.icon);
-                }
-                target.addAttribute("caption", item.caption);
-                target.addAttribute("key", item.key);
-                if (item.style != null) {
-                    target.addAttribute("style", item.style);
-                }
+                paintItemStyle(target, id);
 
                 target.endTag("so");
             }
@@ -389,11 +354,14 @@ public class ComboBox extends AbstractSelect
 
     }
 
-    private String getItemStyle(Object itemId) throws PaintException {
+    private void paintItemStyle(PaintTarget target, Object itemId)
+            throws PaintException {
         if (itemStyleGenerator != null) {
-            return itemStyleGenerator.getStyle(this, itemId);
+            String style = itemStyleGenerator.getStyle(this, itemId);
+            if (style != null && !style.isEmpty()) {
+                target.addAttribute("style", style);
+            }
         }
-        return null;
     }
 
     /**
@@ -409,7 +377,8 @@ public class ComboBox extends AbstractSelect
      *            selection
      */
     public void setTextInputAllowed(boolean textInputAllowed) {
-        getState().textInputAllowed = textInputAllowed;
+        this.textInputAllowed = textInputAllowed;
+        markAsDirty();
     }
 
     /**
@@ -421,17 +390,12 @@ public class ComboBox extends AbstractSelect
      * @return
      */
     public boolean isTextInputAllowed() {
-        return getState(false).textInputAllowed;
+        return textInputAllowed;
     }
 
     @Override
     protected ComboBoxState getState() {
         return (ComboBoxState) super.getState();
-    }
-
-    @Override
-    protected ComboBoxState getState(boolean markAsDirty) {
-        return (ComboBoxState) super.getState(markAsDirty);
     }
 
     /**
@@ -446,7 +410,7 @@ public class ComboBox extends AbstractSelect
      * {@link #canUseContainerFilter()}).
      *
      * Use {@link #getFilteredOptions()} and
-     * {@link #sanitetizeList(List, boolean)} if this is not the case.
+     * {@link #sanitizeList(List, boolean)} if this is not the case.
      *
      * @param needNullSelectOption
      * @return filtered list of options (may be empty) or null if cannot use
@@ -455,7 +419,7 @@ public class ComboBox extends AbstractSelect
     protected List<?> getOptionsWithFilter(boolean needNullSelectOption) {
         Container container = getContainerDataSource();
 
-        if (getPageLength() == 0 && !isFilteringNeeded()) {
+        if (pageLength == 0 && !isFilteringNeeded()) {
             // no paging or filtering: return all items
             filteredSize = container.size();
             assert filteredSize >= 0;
@@ -470,7 +434,7 @@ public class ComboBox extends AbstractSelect
 
         Filterable filterable = (Filterable) container;
 
-        Filter filter = buildFilter(filterstring, getFilteringMode());
+        Filter filter = buildFilter(filterstring, filteringMode);
 
         // adding and removing filters leads to extraneous item set
         // change events from the underlying container, but the ComboBox does
@@ -563,23 +527,25 @@ public class ComboBox extends AbstractSelect
 
     /**
      * Makes correct sublist of given list of options.
-     *
+     * <p>
      * If paint is not an option request (affected by page or filter change),
      * page will be the one where possible selection exists.
-     *
+     * <p>
      * Detects proper first and last item in list to return right page of
      * options. Also, if the current page is beyond the end of the list, it will
      * be adjusted.
+     * <p>
+     * Package private only for testing purposes.
      *
      * @param options
      * @param needNullSelectOption
      *            flag to indicate if nullselect option needs to be taken into
      *            consideration
      */
-    private List<?> sanitetizeList(List<?> options,
-            boolean needNullSelectOption) {
-
-        if (getPageLength() != 0 && options.size() > getPageLength()) {
+    List<?> sanitizeList(List<?> options, boolean needNullSelectOption) {
+        int totalRows = options.size() + (needNullSelectOption ? 1 : 0);
+        if (pageLength != 0 && totalRows > pageLength) {
+            // options will not fit on one page
 
             int indexToEnsureInView = -1;
 
@@ -625,7 +591,7 @@ public class ComboBox extends AbstractSelect
             int size) {
         // Not all options are visible, find out which ones are on the
         // current "page".
-        int first = currentPage * getPageLength();
+        int first = currentPage * pageLength;
         if (needNullSelectOption && currentPage > 0) {
             first--;
         }
@@ -652,7 +618,7 @@ public class ComboBox extends AbstractSelect
     private int getLastItemIndexOnCurrentPage(boolean needNullSelectOption,
             int size, int first) {
         // page length usable for non-null items
-        int effectivePageLength = getPageLength()
+        int effectivePageLength = pageLength
                 - (needNullSelectOption && (currentPage == 0) ? 1 : 0);
         return Math.min(size - 1, first + effectivePageLength - 1);
     }
@@ -680,12 +646,12 @@ public class ComboBox extends AbstractSelect
             int indexToEnsureInView, int size) {
         if (indexToEnsureInView != -1) {
             int newPage = (indexToEnsureInView + (needNullSelectOption ? 1 : 0))
-                    / getPageLength();
+                    / pageLength;
             page = newPage;
         }
         // adjust the current page if beyond the end of the list
-        if (page * getPageLength() > size) {
-            page = (size + (needNullSelectOption ? 1 : 0)) / getPageLength();
+        if (page * pageLength > size) {
+            page = (size + (needNullSelectOption ? 1 : 0)) / pageLength;
         }
         return page;
     }
@@ -728,7 +694,7 @@ public class ComboBox extends AbstractSelect
             } else {
                 caption = caption.toLowerCase(getLocale());
             }
-            switch (getFilteringMode()) {
+            switch (filteringMode) {
             case CONTAINS:
                 if (caption.indexOf(filterstring) > -1) {
                     filteredOptions.add(itemId);
@@ -757,17 +723,66 @@ public class ComboBox extends AbstractSelect
         // Not calling super.changeVariables due the history of select
         // component hierarchy
 
-        // all the client to server requests are now handled by RPC
+        // Selection change
+        if (variables.containsKey("selected")) {
+            final String[] ka = (String[]) variables.get("selected");
+
+            // Single select mode
+            if (ka.length == 0) {
+
+                // Allows deselection only if the deselected item is visible
+                final Object current = getValue();
+                final Collection<?> visible = getVisibleItemIds();
+                if (visible != null && visible.contains(current)) {
+                    setValue(null, true);
+                }
+            } else {
+                final Object id = itemIdMapper.get(ka[0]);
+                if (id != null && id.equals(getNullSelectionItemId())) {
+                    setValue(null, true);
+                } else {
+                    setValue(id, true);
+                }
+            }
+        }
+
+        String newFilter;
+        if ((newFilter = (String) variables.get("filter")) != null) {
+            // this is a filter request
+            currentPage = ((Integer) variables.get("page")).intValue();
+            filterstring = newFilter;
+            if (filterstring != null) {
+                filterstring = filterstring.toLowerCase(getLocale());
+            }
+            requestRepaint();
+        } else if (isNewItemsAllowed()) {
+            // New option entered (and it is allowed)
+            final String newitem = (String) variables.get("newitem");
+            if (newitem != null && newitem.length() > 0) {
+                getNewItemHandler().addNewItem(newitem);
+                // rebuild list
+                filterstring = null;
+                prevfilterstring = null;
+            }
+        }
+
+        if (variables.containsKey(FocusEvent.EVENT_ID)) {
+            fireEvent(new FocusEvent(this));
+        }
+        if (variables.containsKey(BlurEvent.EVENT_ID)) {
+            fireEvent(new BlurEvent(this));
+        }
+
     }
 
     @Override
     public void setFilteringMode(FilteringMode filteringMode) {
-        getState().filteringMode = filteringMode;
+        this.filteringMode = filteringMode;
     }
 
     @Override
     public FilteringMode getFilteringMode() {
-        return getState(false).filteringMode;
+        return filteringMode;
     }
 
     @Override
@@ -797,7 +812,7 @@ public class ComboBox extends AbstractSelect
      *
      * @deprecated As of 7.0, use {@link ListSelect}, {@link OptionGroup} or
      *             {@link TwinColSelect} instead
-     * @see com.vaadin.v7.ui.AbstractSelect#setMultiSelect(boolean)
+     * @see com.vaadin.ui.AbstractSelect#setMultiSelect(boolean)
      * @throws UnsupportedOperationException
      *             if trying to activate multiselect mode
      */
@@ -816,7 +831,7 @@ public class ComboBox extends AbstractSelect
      * @deprecated As of 7.0, use {@link ListSelect}, {@link OptionGroup} or
      *             {@link TwinColSelect} instead
      *
-     * @see com.vaadin.v7.ui.AbstractSelect#isMultiSelect()
+     * @see com.vaadin.ui.AbstractSelect#isMultiSelect()
      *
      * @return false
      */
@@ -832,7 +847,7 @@ public class ComboBox extends AbstractSelect
      * @return the pageLength
      */
     public int getPageLength() {
-        return getState(false).pageLength;
+        return pageLength;
     }
 
     /**
@@ -842,7 +857,7 @@ public class ComboBox extends AbstractSelect
      * @since 7.7
      */
     public String getPopupWidth() {
-        return getState(false).suggestionPopupWidth;
+        return suggestionPopupWidth;
     }
 
     /**
@@ -853,7 +868,8 @@ public class ComboBox extends AbstractSelect
      *            the pageLength to set
      */
     public void setPageLength(int pageLength) {
-        getState().pageLength = pageLength;
+        this.pageLength = pageLength;
+        markAsDirty();
     }
 
     /**
@@ -867,7 +883,8 @@ public class ComboBox extends AbstractSelect
      *            the width
      */
     public void setPopupWidth(String width) {
-        getState().suggestionPopupWidth = width;
+        suggestionPopupWidth = width;
+        markAsDirty();
     }
 
     /**

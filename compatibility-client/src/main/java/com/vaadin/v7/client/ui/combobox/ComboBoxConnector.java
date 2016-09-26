@@ -19,65 +19,28 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
-import com.vaadin.client.Profiler;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.communication.RpcProxy;
-import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.SimpleManagedLayout;
-import com.vaadin.shared.EventId;
-import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.v7.client.ui.AbstractFieldConnector;
 import com.vaadin.v7.client.ui.VFilterSelect;
-import com.vaadin.v7.client.ui.VFilterSelect.DataReceivedHandler;
 import com.vaadin.v7.client.ui.VFilterSelect.FilterSelectSuggestion;
-import com.vaadin.v7.shared.ui.combobox.ComboBoxServerRpc;
+import com.vaadin.v7.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.v7.shared.ui.combobox.ComboBoxState;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 import com.vaadin.v7.ui.ComboBox;
 
 @Connect(ComboBox.class)
 public class ComboBoxConnector extends AbstractFieldConnector
         implements Paintable, SimpleManagedLayout {
 
-    protected ComboBoxServerRpc rpc = RpcProxy.create(ComboBoxServerRpc.class,
-            this);
-
-    protected FocusAndBlurServerRpc focusAndBlurRpc = RpcProxy
-            .create(FocusAndBlurServerRpc.class, this);
-
-    @Override
-    protected void init() {
-        super.init();
-        getWidget().connector = this;
-    }
-
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-
-        Profiler.enter("ComboBoxConnector.onStateChanged update content");
-
-        getWidget().readonly = isReadOnly();
-        getWidget().updateReadOnly();
-
-        getWidget().setTextInputEnabled(getState().textInputAllowed);
-
-        if (getState().inputPrompt != null) {
-            getWidget().inputPrompt = getState().inputPrompt;
-        } else {
-            getWidget().inputPrompt = "";
-        }
-
-        getWidget().pageLength = getState().pageLength;
-
-        getWidget().filteringmode = getState().filteringMode;
-
-        getWidget().suggestionPopupWidth = getState().suggestionPopupWidth;
-
-        Profiler.leave("ComboBoxConnector.onStateChanged update content");
-    }
+    // oldSuggestionTextMatchTheOldSelection is used to detect when it's safe to
+    // update textbox text by a changed item caption.
+    private boolean oldSuggestionTextMatchTheOldSelection;
 
     /*
      * (non-Javadoc)
@@ -87,12 +50,34 @@ public class ComboBoxConnector extends AbstractFieldConnector
      */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        // Save details
+        getWidget().client = client;
+        getWidget().paintableId = uidl.getId();
+
+        getWidget().readonly = isReadOnly();
+        getWidget().updateReadOnly();
+
         if (!isRealUpdate(uidl)) {
             return;
         }
 
+        // Inverse logic here to make the default case (text input enabled)
+        // work without additional UIDL messages
+        boolean noTextInput = uidl
+                .hasAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT)
+                && uidl.getBooleanAttribute(
+                        ComboBoxConstants.ATTR_NO_TEXT_INPUT);
+        getWidget().setTextInputEnabled(!noTextInput);
+
         // not a FocusWidget -> needs own tabindex handling
         getWidget().tb.setTabIndex(getState().tabIndex);
+
+        if (uidl.hasAttribute("filteringmode")) {
+            getWidget().filteringmode = FilteringMode
+                    .valueOf(uidl.getStringAttribute("filteringmode"));
+        }
+
+        getWidget().immediate = getState().immediate;
 
         getWidget().nullSelectionAllowed = uidl.hasAttribute("nullselect");
 
@@ -101,7 +86,33 @@ public class ComboBoxConnector extends AbstractFieldConnector
 
         getWidget().currentPage = uidl.getIntVariable("page");
 
-        getWidget().suggestionPopup.updateStyleNames(getState());
+        if (uidl.hasAttribute("pagelength")) {
+            getWidget().pageLength = uidl.getIntAttribute("pagelength");
+        }
+
+        if (uidl.hasAttribute(ComboBoxConstants.ATTR_INPUTPROMPT)) {
+            // input prompt changed from server
+            getWidget().inputPrompt = uidl
+                    .getStringAttribute(ComboBoxConstants.ATTR_INPUTPROMPT);
+        } else {
+            getWidget().inputPrompt = "";
+        }
+
+        if (uidl.hasAttribute("suggestionPopupWidth")) {
+            getWidget().suggestionPopupWidth = uidl
+                    .getStringAttribute("suggestionPopupWidth");
+        } else {
+            getWidget().suggestionPopupWidth = null;
+        }
+
+        if (uidl.hasAttribute("suggestionPopupWidth")) {
+            getWidget().suggestionPopupWidth = uidl
+                    .getStringAttribute("suggestionPopupWidth");
+        } else {
+            getWidget().suggestionPopupWidth = null;
+        }
+
+        getWidget().suggestionPopup.updateStyleNames(uidl, getState());
 
         getWidget().allowNewItem = uidl.hasAttribute("allownewitem");
         getWidget().lastNewItemString = null;
@@ -113,21 +124,12 @@ public class ComboBoxConnector extends AbstractFieldConnector
             getWidget().totalMatches = 0;
         }
 
-        List<FilterSelectSuggestion> newSuggestions = new ArrayList<FilterSelectSuggestion>();
+        List<FilterSelectSuggestion> newSuggestions = new ArrayList<>();
 
         for (final Iterator<?> i = options.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
-            String key = optionUidl.getStringAttribute("key");
-            String caption = optionUidl.getStringAttribute("caption");
-            String style = optionUidl.getStringAttribute("style");
-
-            String untranslatedIconUri = null;
-            if (optionUidl.hasAttribute("icon")) {
-                untranslatedIconUri = optionUidl.getStringAttribute("icon");
-            }
-
             final FilterSelectSuggestion suggestion = getWidget().new FilterSelectSuggestion(
-                    key, caption, style, untranslatedIconUri);
+                    optionUidl);
             newSuggestions.add(suggestion);
         }
 
@@ -139,15 +141,13 @@ public class ComboBoxConnector extends AbstractFieldConnector
         // popup. Popup needs to be repopulated with suggestions from UIDL.
         boolean popupOpenAndCleared = false;
 
-        // oldSuggestionTextMatchTheOldSelection is used to detect when it's
-        // safe to update textbox text by a changed item caption.
-        boolean oldSuggestionTextMatchesTheOldSelection = false;
+        oldSuggestionTextMatchTheOldSelection = false;
 
         if (suggestionsChanged) {
-            oldSuggestionTextMatchesTheOldSelection = isWidgetsCurrentSelectionTextInTextBox();
+            oldSuggestionTextMatchTheOldSelection = isWidgetsCurrentSelectionTextInTextBox();
             getWidget().currentSuggestions.clear();
 
-            if (!getDataReceivedHandler().isWaitingForFilteringResponse()) {
+            if (!getWidget().waitingForFilteringResponse) {
                 /*
                  * Clear the current suggestions as the server response always
                  * includes the new ones. Exception is when filtering, then we
@@ -180,33 +180,61 @@ public class ComboBoxConnector extends AbstractFieldConnector
         //
         ) {
 
-            // single selected key (can be empty string) or empty array for null
-            // selection
             String[] selectedKeys = uidl.getStringArrayVariable("selected");
-            String selectedKey = null;
-            if (selectedKeys.length == 1) {
-                selectedKey = selectedKeys[0];
-            }
-            // selected item caption in case it is not on the current page
-            String selectedCaption = null;
-            if (uidl.hasAttribute("selectedCaption")) {
-                selectedCaption = uidl.getStringAttribute("selectedCaption");
-            }
 
-            getDataReceivedHandler().updateSelectionFromServer(selectedKey,
-                    selectedCaption, oldSuggestionTextMatchesTheOldSelection);
+            // when filtering with empty filter, server sets the selected key
+            // to "", which we don't select here. Otherwise we won't be able to
+            // reset back to the item that was selected before filtering
+            // started.
+            if (selectedKeys.length > 0 && !selectedKeys[0].equals("")) {
+                performSelection(selectedKeys[0]);
+                // if selected key is available, assume caption is know based on
+                // it as well and clear selected caption
+                getWidget().setSelectedCaption(null);
+
+            } else if (!getWidget().waitingForFilteringResponse
+                    && uidl.hasAttribute("selectedCaption")) {
+                // scrolling to correct page is disabled, caption is passed as a
+                // special parameter
+                getWidget().setSelectedCaption(
+                        uidl.getStringAttribute("selectedCaption"));
+            } else {
+                resetSelection();
+            }
         }
 
-        // TODO even this condition should probably be moved to the handler
-        if ((getDataReceivedHandler().isWaitingForFilteringResponse()
-                && getWidget().lastFilter.toLowerCase()
-                        .equals(uidl.getStringVariable("filter")))
+        if ((getWidget().waitingForFilteringResponse && getWidget().lastFilter
+                .toLowerCase().equals(uidl.getStringVariable("filter")))
                 || popupOpenAndCleared) {
-            getDataReceivedHandler().dataReceived();
+
+            getWidget().suggestionPopup.showSuggestions(
+                    getWidget().currentSuggestions, getWidget().currentPage,
+                    getWidget().totalMatches);
+
+            getWidget().waitingForFilteringResponse = false;
+
+            if (!getWidget().popupOpenerClicked
+                    && getWidget().selectPopupItemWhenResponseIsReceived != VFilterSelect.Select.NONE) {
+
+                // we're paging w/ arrows
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        navigateItemAfterPageChange();
+                    }
+                });
+            }
+
+            if (getWidget().updateSelectionWhenReponseIsReceived) {
+                getWidget().suggestionPopup.menu
+                        .doPostFilterSelectedItemAction();
+            }
         }
 
         // Calculate minimum textarea width
         getWidget().updateSuggestionPopupMinWidth();
+
+        getWidget().popupOpenerClicked = false;
 
         /*
          * if this is our first time we need to recalculate the root width.
@@ -223,9 +251,58 @@ public class ComboBoxConnector extends AbstractFieldConnector
         }
 
         getWidget().initDone = true;
+    }
 
-        // TODO this should perhaps be moved to be a part of dataReceived()
-        getDataReceivedHandler().serverReplyHandled();
+    /*
+     * This method navigates to the proper item in the combobox page. This
+     * should be executed after setSuggestions() method which is called from
+     * vFilterSelect.showSuggestions(). ShowSuggestions() method builds the page
+     * content. As far as setSuggestions() method is called as deferred,
+     * navigateItemAfterPageChange method should be also be called as deferred.
+     * #11333
+     */
+    private void navigateItemAfterPageChange() {
+        if (getWidget().selectPopupItemWhenResponseIsReceived == VFilterSelect.Select.LAST) {
+            getWidget().suggestionPopup.selectLastItem();
+        } else {
+            getWidget().suggestionPopup.selectFirstItem();
+        }
+
+        // If you're in between 2 requests both changing the page back and
+        // forth, you don't want this here, instead you need it before any
+        // other request.
+        // getWidget().selectPopupItemWhenResponseIsReceived =
+        // VFilterSelect.Select.NONE; // reset
+    }
+
+    private void performSelection(String selectedKey) {
+        // some item selected
+        for (FilterSelectSuggestion suggestion : getWidget().currentSuggestions) {
+            String suggestionKey = suggestion.getOptionKey();
+            if (!suggestionKey.equals(selectedKey)) {
+                continue;
+            }
+            if (!getWidget().waitingForFilteringResponse
+                    || getWidget().popupOpenerClicked) {
+                if (!suggestionKey.equals(getWidget().selectedOptionKey)
+                        || suggestion.getReplacementString()
+                                .equals(getWidget().tb.getText())
+                        || oldSuggestionTextMatchTheOldSelection) {
+                    // Update text field if we've got a new
+                    // selection
+                    // Also update if we've got the same text to
+                    // retain old text selection behavior
+                    // OR if selected item caption is changed.
+                    getWidget()
+                            .setPromptingOff(suggestion.getReplacementString());
+                    getWidget().selectedOptionKey = suggestionKey;
+                }
+            }
+            getWidget().currentSuggestion = suggestion;
+            getWidget().setSelectedItemIcon(suggestion.getIconUri());
+            // only a single item can be selected
+            break;
+        }
     }
 
     private boolean isWidgetsCurrentSelectionTextInTextBox() {
@@ -234,13 +311,48 @@ public class ComboBoxConnector extends AbstractFieldConnector
                         .equals(getWidget().tb.getText());
     }
 
+    private void resetSelection() {
+        if (!getWidget().waitingForFilteringResponse
+                || getWidget().popupOpenerClicked) {
+            // select nulled
+            if (!getWidget().focused) {
+                /*
+                 * client.updateComponent overwrites all styles so we must
+                 * ALWAYS set the prompting style at this point, even though we
+                 * think it has been set already...
+                 */
+                getWidget().setPromptingOff("");
+                if (getWidget().enabled && !getWidget().readonly) {
+                    getWidget().setPromptingOn();
+                }
+            } else {
+                // we have focus in field, prompting can't be set on, instead
+                // just clear the input if the value has changed from something
+                // else to null
+                if (getWidget().selectedOptionKey != null
+                        || (getWidget().allowNewItem
+                                && !getWidget().tb.getValue().isEmpty())) {
+
+                    boolean openedPopupWithNonScrollingMode = (getWidget().popupOpenerClicked
+                            && getWidget().getSelectedCaption() != null);
+                    if (!openedPopupWithNonScrollingMode) {
+                        getWidget().tb.setValue("");
+                    } else {
+                        getWidget().tb
+                                .setValue(getWidget().getSelectedCaption());
+                        getWidget().tb.selectAll();
+                    }
+                }
+            }
+            getWidget().currentSuggestion = null; // #13217
+            getWidget().setSelectedItemIcon(null);
+            getWidget().selectedOptionKey = null;
+        }
+    }
+
     @Override
     public VFilterSelect getWidget() {
         return (VFilterSelect) super.getWidget();
-    }
-
-    private DataReceivedHandler getDataReceivedHandler() {
-        return getWidget().getDataReceivedHandler();
     }
 
     @Override
@@ -261,118 +373,6 @@ public class ComboBoxConnector extends AbstractFieldConnector
         super.setWidgetEnabled(widgetEnabled);
         getWidget().enabled = widgetEnabled;
         getWidget().tb.setEnabled(widgetEnabled);
-    }
-
-    /*
-     * These methods exist to move communications out of VFilterSelect, and may
-     * be refactored/removed in the future
-     */
-
-    /**
-     * Send a message about a newly created item to the server.
-     *
-     * This method is for internal use only and may be removed in future
-     * versions.
-     *
-     * @since 8.0
-     * @param itemValue
-     *            user entered string value for the new item
-     */
-    public void sendNewItem(String itemValue) {
-        rpc.createNewItem(itemValue);
-        afterSendRequestToServer();
-    }
-
-    /**
-     * Send a message to the server to request the first page of items without
-     * filtering or selection.
-     *
-     * This method is for internal use only and may be removed in future
-     * versions.
-     *
-     * @since 8.0
-     */
-    public void requestFirstPage() {
-        sendSelection(null);
-        requestPage("", 0);
-    }
-
-    /**
-     * Send a message to the server to request a page of items with a given
-     * filter.
-     *
-     * This method is for internal use only and may be removed in future
-     * versions.
-     *
-     * @since 8.0
-     * @param filter
-     *            the current filter string
-     * @param page
-     *            the page number to get
-     */
-    public void requestPage(String filter, int page) {
-        rpc.requestPage(filter, page);
-        afterSendRequestToServer();
-    }
-
-    /**
-     * Send a message to the server updating the current selection.
-     *
-     * This method is for internal use only and may be removed in future
-     * versions.
-     *
-     * @since 8.0
-     * @param selection
-     *            the current selection
-     */
-    public void sendSelection(String selection) {
-        rpc.setSelectedItem(selection);
-        afterSendRequestToServer();
-    }
-
-    /**
-     * Notify the server that the combo box received focus.
-     *
-     * For timing reasons, ConnectorFocusAndBlurHandler is not used at the
-     * moment.
-     *
-     * This method is for internal use only and may be removed in future
-     * versions.
-     *
-     * @since 8.0
-     */
-    public void sendFocusEvent() {
-        boolean registeredListeners = hasEventListener(EventId.FOCUS);
-        if (registeredListeners) {
-            focusAndBlurRpc.focus();
-            afterSendRequestToServer();
-        }
-    }
-
-    /**
-     * Notify the server that the combo box lost focus.
-     *
-     * For timing reasons, ConnectorFocusAndBlurHandler is not used at the
-     * moment.
-     *
-     * This method is for internal use only and may be removed in future
-     * versions.
-     *
-     * @since 8.0
-     */
-    public void sendBlurEvent() {
-        boolean registeredListeners = hasEventListener(EventId.BLUR);
-        if (registeredListeners) {
-            focusAndBlurRpc.blur();
-            afterSendRequestToServer();
-        }
-    }
-
-    /*
-     * Called after any request to server.
-     */
-    private void afterSendRequestToServer() {
-        getDataReceivedHandler().anyRequestSentToServer();
     }
 
 }

@@ -1,10 +1,10 @@
 package com.vaadin.v7.tests.server.components;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Before;
 
-import com.vaadin.server.ServerRpcManager;
-import com.vaadin.server.ServerRpcMethodInvocation;
-import com.vaadin.v7.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.v7.tests.server.component.abstractfield.AbstractFieldValueChangeTestBase;
 import com.vaadin.v7.ui.AbstractField;
 import com.vaadin.v7.ui.ComboBox;
@@ -20,28 +20,16 @@ public class ComboBoxValueChangeTest
 
     @Before
     public void setUp() {
-        ComboBox combo = new ComboBox() {
-            @Override
-            public String getConnectorId() {
-                return "id";
-            }
-        };
+        ComboBox combo = new ComboBox();
         combo.addItem("myvalue");
         super.setUp(combo);
     }
 
     @Override
     protected void setValue(AbstractField<Object> field) {
-        ComboBox combo = (ComboBox) field;
-        ServerRpcMethodInvocation invocation = new ServerRpcMethodInvocation(
-                combo.getConnectorId(), ComboBoxServerRpc.class,
-                "setSelectedItem", 1);
-        invocation.setParameters(new Object[] { "myvalue" });
-        try {
-            ServerRpcManager.applyInvocation(combo, invocation);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("selected", new String[] { "myvalue" });
+        ((ComboBox) field).changeVariables(field, variables);
     }
 
 }

@@ -26,40 +26,4 @@ public class ComboBoxState extends AbstractSelectState {
     {
         primaryStyleName = "v-filterselect";
     }
-
-    /**
-     * If text input is not allowed, the ComboBox behaves like a pretty
-     * NativeSelect - the user can not enter any text and clicking the text
-     * field opens the drop down with options.
-     *
-     * @since 8.0
-     */
-    public boolean textInputAllowed = true;
-
-    /**
-     * A textual prompt that is displayed when the select would otherwise be
-     * empty, to prompt the user for input.
-     *
-     * @since 8.0
-     */
-    public String inputPrompt = null;
-
-    /**
-     * Number of items to show per page or 0 to disable paging.
-     */
-    public int pageLength = 10;
-
-    /**
-     * Current filtering mode (look for match of the user typed string in the
-     * beginning of the item caption or anywhere in the item caption).
-     */
-    public FilteringMode filteringMode = FilteringMode.STARTSWITH;
-
-    /**
-     * Suggestion pop-up's width as a CSS string. By using relative units (e.g.
-     * "50%") it's possible to set the popup's width relative to the ComboBox
-     * itself.
-     */
-    public String suggestionPopupWidth = null;
-
 }
