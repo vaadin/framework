@@ -17,6 +17,7 @@ package com.vaadin.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.EventObject;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ import java.util.logging.Logger;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Result;
-import com.vaadin.data.validator.DateRangeValidator;
+import com.vaadin.data.validator.RangeValidator;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
@@ -792,9 +793,10 @@ public abstract class AbstractDateField extends AbstractField<Date>
             uiHasValidDateString = true;
             setComponentError(new UserError(currentParseErrorMessage));
         } else {
-            DateRangeValidator validator = new DateRangeValidator(
-                    getDateOutOfRangeMessage(), getRangeStart(getResolution()),
-                    getRangeEnd(getResolution()), getResolution());
+            RangeValidator<Date> validator = new RangeValidator<>(
+                    getDateOutOfRangeMessage(), Comparator.naturalOrder(),
+                    getRangeStart(getResolution()),
+                    getRangeEnd(getResolution()));
             Result<Date> result = validator.apply(value);
             if (result.isError()) {
                 setComponentError(new UserError(getDateOutOfRangeMessage()));

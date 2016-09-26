@@ -15,36 +15,24 @@
  */
 package com.vaadin.data.validator;
 
+import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.Date;
-
-import com.vaadin.shared.ui.datefield.Resolution;
 
 /**
- * Validator for validating that a Date is inside a given range.
- *
- * <p>
- * Note that the comparison is done directly on the Date object so take care
- * that the hours/minutes/seconds/milliseconds of the min/max values are
- * properly set.
- * </p>
+ * Validator for validating that a {@link LocalDate} is inside a given range.
  *
  * @author Vaadin Ltd.
  * @since 8.0
  */
-public class DateRangeValidator extends RangeValidator<Date> {
+public class DateRangeValidator extends RangeValidator<LocalDate> {
 
     /**
-     * Creates a validator for checking that an Date is within a given range.
+     * Creates a validator for checking that a LocalDate is within a given
+     * range.
      * <p>
      * By default the range is inclusive i.e. both minValue and maxValue are
      * valid values. Use {@link #setMinValueIncluded(boolean)} or
      * {@link #setMaxValueIncluded(boolean)} to change it.
-     * </p>
-     * <p>
-     * Note that the comparison is done directly on the Date object so take care
-     * that the hours/minutes/seconds/milliseconds of the min/max values are
-     * properly set.
      * </p>
      *
      * @param errorMessage
@@ -54,8 +42,8 @@ public class DateRangeValidator extends RangeValidator<Date> {
      * @param maxValue
      *            The maximum value to accept or null for no limit
      */
-    public DateRangeValidator(String errorMessage, Date minValue, Date maxValue,
-            Resolution resolution) {
+    public DateRangeValidator(String errorMessage, LocalDate minValue,
+            LocalDate maxValue) {
         super(errorMessage, Comparator.naturalOrder(), minValue, maxValue);
     }
 
