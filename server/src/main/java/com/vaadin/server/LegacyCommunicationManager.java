@@ -31,7 +31,9 @@ import java.util.logging.Logger;
 import com.vaadin.server.ClientConnector.ConnectorErrorEvent;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JavaScriptConnectorState;
+import com.vaadin.shared.JavaScriptExtensionState;
 import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.ui.JavaScriptComponentState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.HasComponents;
@@ -94,9 +96,8 @@ public class LegacyCommunicationManager implements Serializable {
         ConnectorTracker connectorTracker = uI.getConnectorTracker();
         Class<? extends SharedState> stateType = connector.getStateType();
         JsonValue diffState = connectorTracker.getDiffState(connector);
-        boolean supportsDiffState = !JavaScriptConnectorState.class
-                .isAssignableFrom(stateType);
-        if (diffState == null && supportsDiffState) {
+
+        if (diffState == null) {
             // Use an empty state object as reference for full
             // repaints
             diffState = referenceDiffStates.get(stateType);
@@ -107,15 +108,24 @@ public class LegacyCommunicationManager implements Serializable {
         }
         EncodeResult encodeResult = JsonCodec.encode(state, diffState,
                 stateType, uI.getConnectorTracker());
-        if (supportsDiffState) {
-            connectorTracker.setDiffState(connector,
-                    (JsonObject) encodeResult.getEncodedValue());
-        }
+        connectorTracker.setDiffState(connector,
+                (JsonObject) encodeResult.getEncodedValue());
+
         return (JsonObject) encodeResult.getDiff();
     }
 
     private static JsonValue createReferenceDiffStateState(
             Class<? extends SharedState> stateType) {
+        if (JavaScriptConnectorState.class.isAssignableFrom(stateType)) {
+            /*
+             * For JS state types, we should only include the framework-provided
+             * state fields in the reference diffstate since other fields are
+             * not know by the client and would therefore not get the right
+             * initial value if it would be recorded in the diffstate.
+             */
+            stateType = findJsStateReferenceType(stateType);
+        }
+
         try {
             SharedState referenceState = stateType.newInstance();
             EncodeResult encodeResult = JsonCodec.encode(referenceState, null,
@@ -127,6 +137,35 @@ public class LegacyCommunicationManager implements Serializable {
                     stateType.getName());
             return null;
         }
+    }
+
+    /**
+     * Finds the highest super class which implements
+     * {@link JavaScriptConnectorState}. In practice, this finds either
+     * {@link JavaScriptComponentState} or {@link JavaScriptExtensionState}.
+     * This is used to find which state properties the client side knows
+     * something about.
+     *
+     * @param stateType
+     *            the state type for which the reference type should be found
+     * @return the found reference type
+     */
+    private static Class<? extends SharedState> findJsStateReferenceType(
+            Class<? extends SharedState> stateType) {
+        assert JavaScriptConnectorState.class.isAssignableFrom(stateType);
+
+        Class<?> type = stateType;
+
+        while (type != null) {
+            Class<?> superclass = type.getSuperclass();
+            if (!JavaScriptConnectorState.class.isAssignableFrom(superclass)) {
+                break;
+            }
+
+            type = superclass;
+        }
+
+        return type.asSubclass(SharedState.class);
     }
 
     /**
