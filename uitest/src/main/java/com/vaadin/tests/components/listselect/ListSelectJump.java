@@ -8,8 +8,7 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.AbstractSelect;
-import com.vaadin.v7.ui.ListSelect;
+import com.vaadin.ui.ListSelect;
 
 public class ListSelectJump extends AbstractTestUI {
 
@@ -26,12 +25,8 @@ public class ListSelectJump extends AbstractTestUI {
         for (int i = 1; i <= 25; i++) {
             list.add("Option #" + i);
         }
-        ListSelect listSelect = new ListSelect(null, list);
-        listSelect.setNullSelectionAllowed(false);
-        listSelect.setMultiSelect(true);
-        listSelect.setImmediate(false);
+        ListSelect<String> listSelect = new ListSelect<>(null, list);
         listSelect.setRows(5);
-        listSelect.setItemCaptionMode(AbstractSelect.ItemCaptionMode.ID);
         listSelect.setId("listselect");
         addComponent(listSelect);
         Button button = new Button("Press Me");

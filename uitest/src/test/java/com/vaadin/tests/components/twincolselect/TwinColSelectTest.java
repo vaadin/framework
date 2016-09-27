@@ -99,9 +99,17 @@ public class TwinColSelectTest extends MultiBrowserTest {
     public void disabled_clickToSelect() {
         selectMenuPath("Component", "State", "Enabled");
 
-        Assert.assertTrue(getTwinColSelect().findElements(By.tagName("input"))
-                .stream()
+        List<WebElement> selects = getTwinColSelect()
+                .findElements(By.tagName("select"));
+        Assert.assertEquals(2, selects.size());
+        Assert.assertTrue(selects.stream()
                 .allMatch(element -> element.getAttribute("disabled") != null));
+
+        List<WebElement> buttons = getTwinColSelect()
+                .findElements(By.className("v-button"));
+        Assert.assertEquals(2, buttons.size());
+        buttons.forEach(button -> Assert.assertEquals("v-button v-disabled",
+                button.getAttribute("className")));
 
         selectMenuPath("Component", "Listeners", "Selection listener");
 
@@ -126,10 +134,24 @@ public class TwinColSelectTest extends MultiBrowserTest {
         selectMenuPath("Component", "State", "Enabled");
         selectMenuPath("Component", "Listeners", "Selection listener");
 
+        List<WebElement> selects = getTwinColSelect()
+                .findElements(By.tagName("select"));
+        Assert.assertEquals(2, selects.size());
+        Assert.assertTrue(selects.stream()
+                .allMatch(element -> element.getAttribute("disabled") != null));
+
+        List<WebElement> buttons = getTwinColSelect()
+                .findElements(By.className("v-button"));
+        Assert.assertEquals(2, buttons.size());
+        buttons.forEach(button -> Assert.assertEquals("v-button v-disabled",
+                button.getAttribute("className")));
+
         selectItems("Item 4");
         assertNothingSelected();
 
         selectMenuPath("Component", "State", "Enabled");
+
+        assertElementNotPresent(By.className("v-disabled"));
 
         selectItems("Item 5");
         Assert.assertEquals("3. Selected: [Item 5]", getLogRow(0));

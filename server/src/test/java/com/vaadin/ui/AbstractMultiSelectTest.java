@@ -41,7 +41,8 @@ public class AbstractMultiSelectTest {
 
     @Parameters(name = "{0}")
     public static Iterable<AbstractMultiSelect<String>> multiSelects() {
-        return Arrays.asList(new CheckBoxGroup<>(), new TwinColSelect<>());
+        return Arrays.asList(new CheckBoxGroup<>(), new TwinColSelect<>(),
+                new ListSelect<>());
     }
 
     @Parameter
@@ -90,6 +91,11 @@ public class AbstractMultiSelectTest {
 
         selectionModel.deselectItems("2", "1", "4", "5");
         assertSelectionOrder(selectionModel, "3", "7", "8");
+
+        selectionModel.updateSelection(
+                new LinkedHashSet<>(Arrays.asList("5", "2")),
+                new LinkedHashSet<>(Arrays.asList("3", "8")));
+        assertSelectionOrder(selectionModel, "7", "5", "2");
     }
 
     @Test

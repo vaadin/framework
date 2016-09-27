@@ -15,20 +15,27 @@
  */
 package com.vaadin.tests.components.listselect;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.data.ListDataSource;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.v7.data.util.IndexedContainer;
-import com.vaadin.v7.ui.ListSelect;
+import com.vaadin.ui.ListSelect;
 
+// FIXME this test should be updated once the datasource supports CRUD operations #77
 public class ListSelectAddRemoveItems extends AbstractTestUIWithLog {
 
-    private IndexedContainer container = new IndexedContainer();
+    private ListDataSource<String> dataSource = new ListDataSource<>(
+            Collections.emptyList());
+    private ListSelect<String> listSelect;
 
     @Override
     protected void setup(VaadinRequest request) {
-        ListSelect listSelect = new ListSelect("ListSelect", container);
+        listSelect = new ListSelect<>("ListSelect", dataSource);
         listSelect.setWidth("100px");
         listSelect.setRows(10);
 
@@ -36,87 +43,87 @@ public class ListSelectAddRemoveItems extends AbstractTestUIWithLog {
         logContainer();
 
         addComponent(listSelect);
-        addComponent(new Button("Reset", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                resetContainer();
-                log.clear();
-                logContainer();
-            }
+        addComponent(new Button("Reset", event -> {
+            resetContainer();
+            log.clear();
+            logContainer();
         }));
 
-        addComponent(new Button("Add first", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                container.addItemAt(0, "first");
-                logContainer();
-            }
+        addComponent(new Button("Add first", event -> {
+            List<String> list = dataSource.apply(null)
+                    .collect(Collectors.toList());
+            list.add(0, "first");
+            dataSource = new ListDataSource<>(list);
+            listSelect.setDataSource(dataSource);
+            logContainer();
         }));
 
-        addComponent(new Button("Add middle", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                container.addItemAt(container.size() / 2, "middle");
-                logContainer();
-            }
+        addComponent(new Button("Add middle", event -> {
+            List<String> list = dataSource.apply(null)
+                    .collect(Collectors.toList());
+            list.add(list.size() / 2, "middle");
+            dataSource = new ListDataSource<>(list);
+            listSelect.setDataSource(dataSource);
+            logContainer();
         }));
 
-        addComponent(new Button("Add last", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                container.addItem("last");
-                logContainer();
-            }
+        addComponent(new Button("Add last", event -> {
+            List<String> list = dataSource.apply(null)
+                    .collect(Collectors.toList());
+            list.add("last");
+            dataSource = new ListDataSource<>(list);
+            listSelect.setDataSource(dataSource);
+            logContainer();
         }));
 
-        addComponent(new Button("Swap", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Object lastItem = container.lastItemId();
-                Object firstItem = container.firstItemId();
-                if (lastItem != firstItem) {
-                    container.removeItem(lastItem);
-                    container.removeItem(firstItem);
+        addComponent(new Button("Swap", event -> {
+            List<String> list = dataSource.apply(null)
+                    .collect(Collectors.toList());
+            Collections.swap(list, 0, list.size() - 1);
+            dataSource = new ListDataSource<>(list);
+            listSelect.setDataSource(dataSource);
 
-                    container.addItemAt(0, lastItem);
-                    container.addItem(firstItem);
-                }
-
-                logContainer();
-            }
+            logContainer();
         }));
 
-        addComponent(new Button("Remove first", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                container.removeItem(container.firstItemId());
-                logContainer();
-            }
+        addComponent(new Button("Remove first", event -> {
+            List<String> list = dataSource.apply(null)
+                    .collect(Collectors.toList());
+            list.remove(0);
+
+            dataSource = new ListDataSource<>(list);
+            listSelect.setDataSource(dataSource);
+
+            logContainer();
         }));
 
-        addComponent(new Button("Remove middle", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                container.removeItem(
-                        container.getIdByIndex(container.size() / 2));
-                logContainer();
-            }
+        addComponent(new Button("Remove middle", event -> {
+            List<String> list = dataSource.apply(null)
+                    .collect(Collectors.toList());
+            list.remove(list.size() / 2);
+            dataSource = new ListDataSource<>(list);
+            listSelect.setDataSource(dataSource);
+            logContainer();
         }));
 
-        addComponent(new Button("Remove last", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                container.removeItem(container.lastItemId());
-                logContainer();
-            }
+        addComponent(new Button("Remove last", event -> {
+            List<String> list = dataSource.apply(null)
+                    .collect(Collectors.toList());
+            list.remove(list.size() - 1);
+
+            dataSource = new ListDataSource<>(list);
+            listSelect.setDataSource(dataSource);
+
+            logContainer();
         }));
 
     }
 
     private void logContainer() {
         StringBuilder b = new StringBuilder();
-        for (int i = 0; i < container.size(); i++) {
-            Object id = container.getIdByIndex(i);
+        List<String> list = dataSource.apply(null).collect(Collectors.toList());
+        for (int i = 0; i < list.size(); i++) {
+            Object id = list.get(i);
             if (i != 0) {
                 b.append(", ");
             }
@@ -127,10 +134,8 @@ public class ListSelectAddRemoveItems extends AbstractTestUIWithLog {
     }
 
     public void resetContainer() {
-        container.removeAllItems();
-        for (String value : new String[] { "a", "b", "c" }) {
-            container.addItem(value);
-        }
+        dataSource = new ListDataSource<>(Arrays.asList("a", "b", "c"));
+        listSelect.setDataSource(dataSource);
     }
 
     @Override

@@ -28,28 +28,28 @@ public class ListSelectAddRemoveItemsTest extends SingleBrowserTest {
     @Test
     public void testAddAndRemove() {
         openTestURL();
-        assertOptions("", "a", "b", "c");
+        assertOptions("a", "b", "c");
 
         click("Add first");
-        assertOptions("", "first", "a", "b", "c");
+        assertOptions("first", "a", "b", "c");
 
         click("Swap");
-        assertOptions("", "c", "a", "b", "first");
+        assertOptions("c", "a", "b", "first");
 
         click("Remove first");
-        assertOptions("", "a", "b", "first");
+        assertOptions("a", "b", "first");
 
         click("Add middle");
-        assertOptions("", "a", "middle", "b", "first");
+        assertOptions("a", "middle", "b", "first");
 
         click("Add last");
-        assertOptions("", "a", "middle", "b", "first", "last");
+        assertOptions("a", "middle", "b", "first", "last");
 
         click("Remove middle");
-        assertOptions("", "a", "middle", "first", "last");
+        assertOptions("a", "middle", "first", "last");
 
         click("Reset");
-        assertOptions("", "a", "b", "c");
+        assertOptions("a", "b", "c");
     }
 
     private void assertOptions(String... options) {
