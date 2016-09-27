@@ -22,14 +22,12 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.DateTimeService;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VCalendarPanel.FocusChangeListener;
-import com.vaadin.client.ui.VCalendarPanel.TimeChangeListener;
 import com.vaadin.client.ui.VPopupCalendar;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.datefield.PopupDateFieldState;
+import com.vaadin.shared.ui.datefield.DateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbstractDateField;
 
@@ -106,7 +104,7 @@ public class DateFieldConnector extends TextualDateConnector {
         }
 
         if (getWidget().getCurrentResolution()
-                .getCalendarField() <= Resolution.MONTH.getCalendarField()) {
+                .compareTo(Resolution.MONTH) >= 0) {
             getWidget().calendar
                     .setFocusChangeListener(new FocusChangeListener() {
                         @Override
@@ -121,35 +119,6 @@ public class DateFieldConnector extends TextualDateConnector {
                     });
         } else {
             getWidget().calendar.setFocusChangeListener(null);
-        }
-
-        if (getWidget().getCurrentResolution()
-                .getCalendarField() > Resolution.DAY.getCalendarField()) {
-            getWidget().calendar
-                    .setTimeChangeListener(new TimeChangeListener() {
-                        @Override
-                        public void changed(int hour, int min, int sec,
-                                int msec) {
-                            Date d = getWidget().getDate();
-                            if (d == null) {
-                                // date currently null, use the value from
-                                // calendarPanel
-                                // (~ client time at the init of the widget)
-                                d = (Date) getWidget().calendar.getDate()
-                                        .clone();
-                            }
-                            d.setHours(hour);
-                            d.setMinutes(min);
-                            d.setSeconds(sec);
-                            DateTimeService.setMilliseconds(d, msec);
-
-                            // Always update time changes to the server
-                            getWidget().updateValue(d);
-
-                            // Update text field
-                            getWidget().buildDate();
-                        }
-                    });
         }
 
         if (getWidget().isReadonly()) {
@@ -172,8 +141,8 @@ public class DateFieldConnector extends TextualDateConnector {
     }
 
     @Override
-    public PopupDateFieldState getState() {
-        return (PopupDateFieldState) super.getState();
+    public DateFieldState getState() {
+        return (DateFieldState) super.getState();
     }
 
     @Override

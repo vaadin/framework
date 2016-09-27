@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.datefield;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -22,7 +22,7 @@ public class DateFieldIsValid extends AbstractTestUIWithLog {
     }
 
     private String pattern = "dd/MM/yy";
-    private SimpleDateFormat format = new SimpleDateFormat(pattern);
+    private DateTimeFormatter format = DateTimeFormatter.ofPattern(pattern);
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -45,7 +45,7 @@ public class DateFieldIsValid extends AbstractTestUIWithLog {
      * @param value
      * @return
      */
-    protected String format(Date value) {
+    protected String format(LocalDate value) {
         if (value != null) {
             return format.format(value);
         } else {

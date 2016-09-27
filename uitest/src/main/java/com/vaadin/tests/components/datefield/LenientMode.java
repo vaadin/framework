@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.datefield;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Locale;
 
 import com.vaadin.data.HasValue.ValueChange;
@@ -11,7 +11,8 @@ import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
 
-public class LenientMode extends TestBase implements ValueChangeListener<Date> {
+public class LenientMode extends TestBase
+        implements ValueChangeListener<LocalDate> {
 
     private static final long serialVersionUID = -9064553409580072387L;
 
@@ -28,8 +29,7 @@ public class LenientMode extends TestBase implements ValueChangeListener<Date> {
     @Override
     protected void setup() {
 
-        @SuppressWarnings("deprecation")
-        Date d = new Date(2009 - 1900, 12 - 1, 31, 23, 59, 59);
+        LocalDate d = LocalDate.of(2009, 12, 31);
 
         AbstractDateField df = new TestDateField("Lenient ");
         df.setLocale(new Locale("fi"));
@@ -76,7 +76,7 @@ public class LenientMode extends TestBase implements ValueChangeListener<Date> {
     }
 
     @Override
-    public void accept(ValueChange<Date> event) {
+    public void accept(ValueChange<LocalDate> event) {
         getMainWindow().showNotification("New value" + event.getValue());
     }
 

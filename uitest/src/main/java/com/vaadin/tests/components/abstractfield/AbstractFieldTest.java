@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.abstractfield;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Locale;
 
 import com.vaadin.data.HasValue.ValueChange;
@@ -137,13 +137,13 @@ public abstract class AbstractFieldTest<T extends AbstractField<V>, V>
         // Distinguish between null and 'null'
         String value = "null";
         if (o != null) {
-            if (o instanceof Date) {
-                Date d = (Date) o;
-                // Dec 31, 2068 23:09:26.531
-                String pattern = "MMM d, yyyy HH:mm:ss.SSS";
-                SimpleDateFormat format = new SimpleDateFormat(pattern,
-                        new Locale("en", "US"));
-                value = format.format(d);
+            if (o instanceof LocalDate) {
+                LocalDate date = (LocalDate) o;
+                // Dec 31, 2068
+                String pattern = "MMM d, yyyy";
+                DateTimeFormatter format = DateTimeFormatter.ofPattern(pattern,
+                        Locale.ENGLISH);
+                value = format.format(date);
             } else {
                 value = "'" + o.toString() + "'";
             }

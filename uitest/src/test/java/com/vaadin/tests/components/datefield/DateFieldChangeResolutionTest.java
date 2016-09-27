@@ -31,23 +31,13 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class DateFieldChangeResolutionTest extends MultiBrowserTest {
 
     private WebElement dateFieldButton, textField;
-    private WebElement resolutionSecond, resolutionMinute, resolutionHour,
-            resolutionDay, resolutionMonth, resolutionYear;
+    private WebElement resolutionDay, resolutionMonth, resolutionYear;
 
     @Test
     public void changeResolutionBetweenYearAndMonth() throws Exception {
         initialize();
         click(resolutionMonth);
         checkHeaderAndBody(Resolution.MONTH, true);
-        click(resolutionYear);
-        checkHeaderAndBody(Resolution.YEAR, true);
-    }
-
-    @Test
-    public void changeResolutionBetweenYearAndSecond() throws Exception {
-        initialize();
-        click(resolutionSecond);
-        checkHeaderAndBody(Resolution.SECOND, true);
         click(resolutionYear);
         checkHeaderAndBody(Resolution.YEAR, true);
     }
@@ -75,12 +65,8 @@ public class DateFieldChangeResolutionTest extends MultiBrowserTest {
                 textField.getAttribute("value").isEmpty());
         // Change resolutions and check that the selected date is not lost and
         // that the calendar has the correct resolution.
-        click(resolutionHour);
-        checkHeaderAndBody(Resolution.HOUR, false);
         click(resolutionYear);
         checkHeaderAndBody(Resolution.YEAR, false);
-        click(resolutionMinute);
-        checkHeaderAndBody(Resolution.MINUTE, false);
     }
 
     private void initialize() {
@@ -90,9 +76,6 @@ public class DateFieldChangeResolutionTest extends MultiBrowserTest {
                 .findElement(By.className("v-datefield-button"));
         textField = dateField
                 .findElement(By.className("v-datefield-textfield"));
-        resolutionSecond = driver.findElement(By.id(BUTTON_BASE_ID + "second"));
-        resolutionMinute = driver.findElement(By.id(BUTTON_BASE_ID + "minute"));
-        resolutionHour = driver.findElement(By.id(BUTTON_BASE_ID + "hour"));
         resolutionDay = driver.findElement(By.id(BUTTON_BASE_ID + "day"));
         resolutionMonth = driver.findElement(By.id(BUTTON_BASE_ID + "month"));
         resolutionYear = driver.findElement(By.id(BUTTON_BASE_ID + "year"));
@@ -105,14 +88,12 @@ public class DateFieldChangeResolutionTest extends MultiBrowserTest {
         sleep(100);
         // Open the popup calendar, perform checks and close the popup.
         openPopupDateField();
-        if (resolution.getCalendarField() >= Resolution.MONTH
-                .getCalendarField()) {
+        if (resolution.compareTo(Resolution.MONTH) <= 0) {
             checkMonthHeader();
         } else {
             checkYearHeader();
         }
-        if (resolution.getCalendarField() >= Resolution.DAY
-                .getCalendarField()) {
+        if (resolution.compareTo(Resolution.DAY) <= 0) {
             assertTrue(
                     "A calendar with the chosen resolution should have a body",
                     calendarHasBody());

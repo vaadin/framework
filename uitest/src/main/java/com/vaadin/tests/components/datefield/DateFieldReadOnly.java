@@ -1,10 +1,9 @@
 package com.vaadin.tests.components.datefield;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
@@ -28,8 +27,6 @@ public class DateFieldReadOnly extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         final AbstractDateField timeField = new TestDateField(
                 "A read-only datefield");
-        timeField.setResolution(Resolution.SECOND);
-        timeField.setDateFormat("HH:mm:ss");
         timeField.setCaption(null);
         timeField.setIcon(null);
         timeField.setWidth("8em");
@@ -37,10 +34,7 @@ public class DateFieldReadOnly extends AbstractTestUI {
         timeField.setLocale(new Locale("fi"));
 
         // Set date so that testing always has same time
-        Calendar c = Calendar.getInstance(Locale.ENGLISH);
-        c.set(2009, 05, 12, 0, 0, 0);
-
-        timeField.setValue(c.getTime());
+        timeField.setValue(LocalDate.of(2009, 6, 12));
         timeField.setReadOnly(true);
 
         addComponent(timeField);

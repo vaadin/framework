@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.uitest.components;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.tests.components.uitest.TestSampler;
@@ -17,7 +16,7 @@ public class DatesCssTest extends GridLayout {
     private TestSampler parent;
     private int debugIdCounter = 0;
 
-    private Calendar cal = new GregorianCalendar(2012, 8, 11, 18, 00, 00);
+    private LocalDate date = LocalDate.of(2012, 9, 11);
 
     public DatesCssTest(TestSampler parent) {
         super(5, 2);
@@ -31,12 +30,12 @@ public class DatesCssTest extends GridLayout {
 
         AbstractDateField df = new DateField("Popup date field");
         df.setId("datefield" + debugIdCounter++);
-        df.setValue(cal.getTime());
+        df.setValue(date);
         addComponent(df);
 
         df = new InlineDateField("Inline date field");
         df.setId("datefield" + debugIdCounter++);
-        df.setValue(cal.getTime());
+        df.setValue(date);
         addComponent(df);
 
         createDateFieldWith(null, null, "130px");
@@ -50,7 +49,7 @@ public class DatesCssTest extends GridLayout {
             String width) {
         AbstractDateField df = new TestDateField("Date field");
         df.setId("datefield" + debugIdCounter++);
-        df.setValue(cal.getTime());
+        df.setValue(date);
 
         if (caption != null) {
             df.setCaption(caption);

@@ -15,7 +15,7 @@
  */
 package com.vaadin.ui;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * A date entry component, which displays the actual date selector inline.
@@ -28,27 +28,27 @@ import java.util.Date;
 public class InlineDateField extends AbstractDateField {
 
     /**
-     * Constructs an empty <code>DateField</code> with no caption.
+     * Constructs an empty <code>InlineDateField</code> with no caption.
      */
     public InlineDateField() {
         super();
     }
 
     /**
-     * Constructs a new <code>DateField</code> with the given caption and
+     * Constructs a new <code>InlineDateField</code> with the given caption and
      * initial text contents.
      *
      * @param caption
      *            the caption <code>String</code> for the editor.
      * @param value
-     *            the Date value.
+     *            the LocalDate value.
      */
-    public InlineDateField(String caption, Date value) {
+    public InlineDateField(String caption, LocalDate value) {
         super(caption, value);
     }
 
     /**
-     * Constructs an empty <code>DateField</code> with caption.
+     * Constructs an empty <code>InlineDateField</code> with caption.
      *
      * @param caption
      *            the caption of the datefield.

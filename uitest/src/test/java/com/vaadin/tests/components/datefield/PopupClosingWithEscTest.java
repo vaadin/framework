@@ -21,26 +21,10 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class PopupClosingWithEscTest extends MultiBrowserTest {
-
-    @Test
-    public void testPopupClosingFromTimeSelect() {
-        openTestURL();
-
-        openPopup("minute");
-        assertTrue(isPopupVisible());
-
-        // Send ESC to the select element to simulate user being
-        // focused on the select while hitting the ESC key.
-        WebElement select = driver.findElement(
-                By.cssSelector(".v-datefield-popup select:first-child"));
-        select.sendKeys(Keys.ESCAPE);
-        assertFalse(isPopupVisible());
-    }
 
     @Test
     public void testPopupClosingDayResolution() {

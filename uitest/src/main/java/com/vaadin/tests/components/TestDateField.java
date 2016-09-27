@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.components;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.vaadin.ui.AbstractDateField;
 
@@ -48,9 +48,9 @@ public class TestDateField extends AbstractDateField {
      * @param caption
      *            the caption <code>String</code> for the editor.
      * @param value
-     *            the Date value.
+     *            the {@link LocalDate} value.
      */
-    public TestDateField(String caption, Date value) {
+    public TestDateField(String caption, LocalDate value) {
         setValue(value);
         setCaption(caption);
     }

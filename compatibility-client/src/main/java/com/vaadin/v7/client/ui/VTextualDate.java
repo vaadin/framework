@@ -41,7 +41,7 @@ import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
 import com.vaadin.client.ui.aria.HandlesAriaRequired;
 import com.vaadin.shared.EventId;
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.v7.shared.ui.datefield.Resolution;
 
 public class VTextualDate extends VDateField implements Field, ChangeHandler,
         Focusable, SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,

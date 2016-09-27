@@ -20,9 +20,9 @@ import java.util.Date;
 
 import com.google.gwt.event.dom.client.DomEvent;
 import com.vaadin.client.DateTimeService;
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.v7.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.v7.client.ui.VCalendarPanel.SubmitListener;
+import com.vaadin.v7.shared.ui.datefield.Resolution;
 
 /**
  * A client side implementation for InlineDateField

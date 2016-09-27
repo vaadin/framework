@@ -23,11 +23,8 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
@@ -48,9 +45,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DateTimeService;
@@ -94,14 +89,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     public interface FocusChangeListener {
         void focusChanged(Date focusedDate);
-    }
-
-    /**
-     * Dispatches an event when the panel when time is changed
-     */
-    public interface TimeChangeListener {
-
-        void changed(int hour, int min, int sec, int msec);
     }
 
     /**
@@ -169,8 +156,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     private VEventButton nextMonth;
 
-    private VTime time;
-
     private FlexTable days = new FlexTable();
 
     private Resolution resolution = Resolution.YEAR;
@@ -196,8 +181,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private SubmitListener submitListener;
 
     private FocusChangeListener focusChangeListener;
-
-    private TimeChangeListener timeChangeListener;
 
     private boolean hasFocus = false;
 
@@ -238,8 +221,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     private void focusDay(Date date) {
         // Only used when calender body is present
-        if (resolution.getCalendarField() > Resolution.MONTH
-                .getCalendarField()) {
+        if (isDay(getResolution())) {
             if (focusedDay != null) {
                 focusedDay.removeStyleDependentName(CN_FOCUSED);
             }
@@ -263,6 +245,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 }
             }
         }
+    }
+
+    private boolean isDay(Resolution resolution) {
+        return Resolution.DAY.equals(resolution);
     }
 
     /**
@@ -344,10 +330,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     public void setResolution(Resolution resolution) {
         this.resolution = resolution;
-        if (time != null) {
-            time.removeFromParent();
-            time = null;
-        }
     }
 
     private boolean isReadonly() {
@@ -685,8 +667,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
             if (day > 6) {
                 day = 0;
             }
-            if (getResolution().getCalendarField() > Resolution.MONTH
-                    .getCalendarField()) {
+            if (isDay(getResolution())) {
                 days.setHTML(headerRow, firstWeekdayColumn + i, "<strong>"
                         + getDateTimeService().getShortDay(day) + "</strong>");
             } else {
@@ -772,16 +753,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Do we need the time selector
-     *
-     * @return True if it is required
-     */
-    private boolean isTimeSelectorNeeded() {
-        return getResolution().getCalendarField() > Resolution.DAY
-                .getCalendarField();
-    }
-
-    /**
      * Updates the calendar and text field with the selected dates.
      */
     public void renderCalendar() {
@@ -812,29 +783,17 @@ public class VCalendarPanel extends FocusableFlexTable implements
             displayedMonth = new FocusedDate(now.getYear(), now.getMonth(), 1);
         }
 
-        if (updateDate && getResolution().getCalendarField() <= Resolution.MONTH
-                .getCalendarField() && focusChangeListener != null) {
+        if (updateDate && !isDay(getResolution())
+                && focusChangeListener != null) {
             focusChangeListener.focusChanged(new Date(focusedDate.getTime()));
         }
 
-        final boolean needsMonth = getResolution()
-                .getCalendarField() > Resolution.YEAR.getCalendarField();
-        boolean needsBody = getResolution().getCalendarField() >= Resolution.DAY
-                .getCalendarField();
+        final boolean needsMonth = !getResolution().equals(Resolution.YEAR);
+        boolean needsBody = isDay(getResolution());
         buildCalendarHeader(needsMonth);
         clearCalendarBody(!needsBody);
         if (needsBody) {
             buildCalendarBody();
-        }
-
-        if (isTimeSelectorNeeded()) {
-            time = new VTime();
-            setWidget(2, 0, time);
-            getFlexCellFormatter().setColSpan(2, 0, 5);
-            getFlexCellFormatter().setStyleName(2, 0,
-                    parent.getStylePrimaryName() + "-calendarpanel-time");
-        } else if (time != null) {
-            remove(time);
         }
 
         initialRenderDone = true;
@@ -1105,23 +1064,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
      *            The keydown/keypress event
      */
     private void handleKeyPress(DomEvent<?> event) {
-        // Special handling for events from time ListBoxes.
-        if (time != null && time.getElement().isOrHasChild(
-                (Node) event.getNativeEvent().getEventTarget().cast())) {
-            int nativeKeyCode = event.getNativeEvent().getKeyCode();
-            if (nativeKeyCode == getSelectKey()) {
-                onSubmit(); // submit if enter key hit down on listboxes
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            if (nativeKeyCode == getCloseKey()) {
-                onCancel(); // cancel if ESC key hit down on listboxes
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            return;
-        }
-
         // Check tabs
         int keycode = event.getNativeEvent().getKeyCode();
         if (keycode == KeyCodes.KEY_TAB
@@ -1610,8 +1552,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 // confusion, but this is only needed (and allowed) when we have
                 // a day
                 // resolution
-                if (getResolution().getCalendarField() >= Resolution.DAY
-                        .getCalendarField()) {
+                if (isDay(getResolution())) {
                     value = null;
                 }
             } else {
@@ -1624,300 +1565,19 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     1);
         }
 
-        // Re-render calendar if the displayed month is changed,
-        // or if a time selector is needed but does not exist.
-        if ((isTimeSelectorNeeded() && time == null)
-                || oldDisplayedMonth == null || value == null
+        // Re-render calendar if the displayed month is changed.
+        if (oldDisplayedMonth == null || value == null
                 || oldDisplayedMonth.getYear() != value.getYear()
                 || oldDisplayedMonth.getMonth() != value.getMonth()) {
             renderCalendar();
         } else {
             focusDay(focusedDate);
             selectFocused();
-            if (isTimeSelectorNeeded()) {
-                time.updateTimes();
-            }
         }
 
         if (!hasFocus) {
             focusDay(null);
         }
-    }
-
-    /**
-     * TimeSelector is a widget consisting of list boxes that modifie the Date
-     * object that is given for.
-     *
-     */
-    public class VTime extends FlowPanel implements ChangeHandler {
-
-        private ListBox hours;
-
-        private ListBox mins;
-
-        private ListBox sec;
-
-        private ListBox ampm;
-
-        /**
-         * Constructor
-         */
-        public VTime() {
-            super();
-            setStyleName(VDateField.CLASSNAME + "-time");
-            buildTime();
-        }
-
-        private ListBox createListBox() {
-            ListBox lb = new ListBox();
-            lb.setStyleName("v-select");
-            lb.addChangeHandler(this);
-            lb.addBlurHandler(VCalendarPanel.this);
-            lb.addFocusHandler(VCalendarPanel.this);
-            return lb;
-        }
-
-        /**
-         * Constructs the ListBoxes and updates their value
-         *
-         * @param redraw
-         *            Should new instances of the listboxes be created
-         */
-        private void buildTime() {
-            clear();
-
-            hours = createListBox();
-            if (getDateTimeService().isTwelveHourClock()) {
-                hours.addItem("12");
-                for (int i = 1; i < 12; i++) {
-                    hours.addItem((i < 10) ? "0" + i : "" + i);
-                }
-            } else {
-                for (int i = 0; i < 24; i++) {
-                    hours.addItem((i < 10) ? "0" + i : "" + i);
-                }
-            }
-
-            hours.addChangeHandler(this);
-            if (getDateTimeService().isTwelveHourClock()) {
-                ampm = createListBox();
-                final String[] ampmText = getDateTimeService().getAmPmStrings();
-                ampm.addItem(ampmText[0]);
-                ampm.addItem(ampmText[1]);
-                ampm.addChangeHandler(this);
-            }
-
-            if (getResolution().getCalendarField() >= Resolution.MINUTE
-                    .getCalendarField()) {
-                mins = createListBox();
-                for (int i = 0; i < 60; i++) {
-                    mins.addItem((i < 10) ? "0" + i : "" + i);
-                }
-                mins.addChangeHandler(this);
-            }
-            if (getResolution().getCalendarField() >= Resolution.SECOND
-                    .getCalendarField()) {
-                sec = createListBox();
-                for (int i = 0; i < 60; i++) {
-                    sec.addItem((i < 10) ? "0" + i : "" + i);
-                }
-                sec.addChangeHandler(this);
-            }
-
-            final String delimiter = getDateTimeService().getClockDelimeter();
-            if (isReadonly()) {
-                int h = 0;
-                if (value != null) {
-                    h = value.getHours();
-                }
-                if (getDateTimeService().isTwelveHourClock()) {
-                    h -= h < 12 ? 0 : 12;
-                }
-                add(new VLabel(h < 10 ? "0" + h : "" + h));
-            } else {
-                add(hours);
-            }
-
-            if (getResolution().getCalendarField() >= Resolution.MINUTE
-                    .getCalendarField()) {
-                add(new VLabel(delimiter));
-                if (isReadonly()) {
-                    final int m = mins.getSelectedIndex();
-                    add(new VLabel(m < 10 ? "0" + m : "" + m));
-                } else {
-                    add(mins);
-                }
-            }
-            if (getResolution().getCalendarField() >= Resolution.SECOND
-                    .getCalendarField()) {
-                add(new VLabel(delimiter));
-                if (isReadonly()) {
-                    final int s = sec.getSelectedIndex();
-                    add(new VLabel(s < 10 ? "0" + s : "" + s));
-                } else {
-                    add(sec);
-                }
-            }
-            if (getResolution() == Resolution.HOUR) {
-                add(new VLabel(delimiter + "00")); // o'clock
-            }
-            if (getDateTimeService().isTwelveHourClock()) {
-                add(new VLabel("&nbsp;"));
-                if (isReadonly()) {
-                    int i = 0;
-                    if (value != null) {
-                        i = (value.getHours() < 12) ? 0 : 1;
-                    }
-                    add(new VLabel(ampm.getItemText(i)));
-                } else {
-                    add(ampm);
-                }
-            }
-
-            if (isReadonly()) {
-                return;
-            }
-
-            // Update times
-            updateTimes();
-
-            ListBox lastDropDown = getLastDropDown();
-            lastDropDown.addKeyDownHandler(new KeyDownHandler() {
-                @Override
-                public void onKeyDown(KeyDownEvent event) {
-                    boolean shiftKey = event.getNativeEvent().getShiftKey();
-                    if (shiftKey) {
-                        return;
-                    } else {
-                        int nativeKeyCode = event.getNativeKeyCode();
-                        if (nativeKeyCode == KeyCodes.KEY_TAB) {
-                            onTabOut(event);
-                        }
-                    }
-                }
-            });
-
-        }
-
-        private ListBox getLastDropDown() {
-            int i = getWidgetCount() - 1;
-            while (i >= 0) {
-                Widget widget = getWidget(i);
-                if (widget instanceof ListBox) {
-                    return (ListBox) widget;
-                }
-                i--;
-            }
-            return null;
-        }
-
-        /**
-         * Updates the valus to correspond to the values in value
-         */
-        public void updateTimes() {
-            if (value == null) {
-                value = new Date();
-            }
-            if (getDateTimeService().isTwelveHourClock()) {
-                int h = value.getHours();
-                ampm.setSelectedIndex(h < 12 ? 0 : 1);
-                h -= ampm.getSelectedIndex() * 12;
-                hours.setSelectedIndex(h);
-            } else {
-                hours.setSelectedIndex(value.getHours());
-            }
-            if (getResolution().getCalendarField() >= Resolution.MINUTE
-                    .getCalendarField()) {
-                mins.setSelectedIndex(value.getMinutes());
-            }
-            if (getResolution().getCalendarField() >= Resolution.SECOND
-                    .getCalendarField()) {
-                sec.setSelectedIndex(value.getSeconds());
-            }
-            if (getDateTimeService().isTwelveHourClock()) {
-                ampm.setSelectedIndex(value.getHours() < 12 ? 0 : 1);
-            }
-
-            hours.setEnabled(isEnabled());
-            if (mins != null) {
-                mins.setEnabled(isEnabled());
-            }
-            if (sec != null) {
-                sec.setEnabled(isEnabled());
-            }
-            if (ampm != null) {
-                ampm.setEnabled(isEnabled());
-            }
-
-        }
-
-        private DateTimeService getDateTimeService() {
-            if (dateTimeService == null) {
-                dateTimeService = new DateTimeService();
-            }
-            return dateTimeService;
-        }
-
-        /*
-         * (non-Javadoc) VT
-         *
-         * @see
-         * com.google.gwt.event.dom.client.ChangeHandler#onChange(com.google.gwt
-         * .event.dom.client.ChangeEvent)
-         */
-        @Override
-        public void onChange(ChangeEvent event) {
-            /*
-             * Value from dropdowns gets always set for the value. Like year and
-             * month when resolution is month or year.
-             */
-            if (event.getSource() == hours) {
-                int h = hours.getSelectedIndex();
-                if (getDateTimeService().isTwelveHourClock()) {
-                    h = h + ampm.getSelectedIndex() * 12;
-                }
-                value.setHours(h);
-                if (timeChangeListener != null) {
-                    timeChangeListener.changed(h, value.getMinutes(),
-                            value.getSeconds(),
-                            DateTimeService.getMilliseconds(value));
-                }
-                event.preventDefault();
-                event.stopPropagation();
-            } else if (event.getSource() == mins) {
-                final int m = mins.getSelectedIndex();
-                value.setMinutes(m);
-                if (timeChangeListener != null) {
-                    timeChangeListener.changed(value.getHours(), m,
-                            value.getSeconds(),
-                            DateTimeService.getMilliseconds(value));
-                }
-                event.preventDefault();
-                event.stopPropagation();
-            } else if (event.getSource() == sec) {
-                final int s = sec.getSelectedIndex();
-                value.setSeconds(s);
-                if (timeChangeListener != null) {
-                    timeChangeListener.changed(value.getHours(),
-                            value.getMinutes(), s,
-                            DateTimeService.getMilliseconds(value));
-                }
-                event.preventDefault();
-                event.stopPropagation();
-            } else if (event.getSource() == ampm) {
-                final int h = hours.getSelectedIndex()
-                        + (ampm.getSelectedIndex() * 12);
-                value.setHours(h);
-                if (timeChangeListener != null) {
-                    timeChangeListener.changed(h, value.getMinutes(),
-                            value.getSeconds(),
-                            DateTimeService.getMilliseconds(value));
-                }
-                event.preventDefault();
-                event.stopPropagation();
-            }
-        }
-
     }
 
     /**
@@ -1986,15 +1646,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     public void setFocusChangeListener(FocusChangeListener listener) {
         focusChangeListener = listener;
-    }
-
-    /**
-     * The time change listener is triggered when the user changes the time.
-     *
-     * @param listener
-     */
-    public void setTimeChangeListener(TimeChangeListener listener) {
-        timeChangeListener = listener;
     }
 
     /**
@@ -2083,17 +1734,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 }
                 return SUBPART_DAY + id;
             }
-        } else if (time != null) {
-            if (contains(time.hours, subElement)) {
-                return SUBPART_HOUR_SELECT;
-            } else if (contains(time.mins, subElement)) {
-                return SUBPART_MINUTE_SELECT;
-            } else if (contains(time.sec, subElement)) {
-                return SUBPART_SECS_SELECT;
-            } else if (contains(time.ampm, subElement)) {
-                return SUBPART_AMPM_SELECT;
-
-            }
         } else if (getCellFormatter().getElement(0, 2)
                 .isOrHasChild(subElement)) {
             return SUBPART_MONTH_YEAR_HEADER;
@@ -2131,18 +1771,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
         if (SUBPART_PREV_YEAR.equals(subPart)) {
             return prevYear.getElement();
-        }
-        if (SUBPART_HOUR_SELECT.equals(subPart)) {
-            return time.hours.getElement();
-        }
-        if (SUBPART_MINUTE_SELECT.equals(subPart)) {
-            return time.mins.getElement();
-        }
-        if (SUBPART_SECS_SELECT.equals(subPart)) {
-            return time.sec.getElement();
-        }
-        if (SUBPART_AMPM_SELECT.equals(subPart)) {
-            return time.ampm.getElement();
         }
         if (subPart.startsWith(SUBPART_DAY)) {
             // Zero or negative ids map to days in the preceding month,

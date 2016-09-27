@@ -20,8 +20,8 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.vaadin.shared.ui.datefield.Resolution;
 
 /**
@@ -235,15 +235,9 @@ public class DateTimeService {
         start += s.getHours() * 10000l;
         end += e.getHours() * 10000l;
         target += date.getHours() * 10000l;
-        if (resolution == Resolution.HOUR) {
-            return (start <= target && end >= target);
-        }
         start += s.getMinutes() * 100l;
         end += e.getMinutes() * 100l;
         target += date.getMinutes() * 100l;
-        if (resolution == Resolution.MINUTE) {
-            return (start <= target && end >= target);
-        }
         start += s.getSeconds();
         end += e.getSeconds();
         target += date.getSeconds();

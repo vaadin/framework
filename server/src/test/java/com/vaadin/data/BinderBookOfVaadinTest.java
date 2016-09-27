@@ -15,8 +15,7 @@
  */
 package com.vaadin.data;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
@@ -33,9 +32,9 @@ import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.TextField;
 
@@ -116,13 +115,13 @@ public class BinderBookOfVaadinTest {
     }
 
     public static class Trip {
-        private Date returnDate;
+        private LocalDate returnDate;
 
-        public Date getReturnDate() {
+        public LocalDate getReturnDate() {
             return returnDate;
         }
 
-        public void setReturnDate(Date returnDate) {
+        public void setReturnDate(LocalDate returnDate) {
             this.returnDate = returnDate;
         }
     }
@@ -304,20 +303,18 @@ public class BinderBookOfVaadinTest {
         DateField departing = new DateField("Departing");
         DateField returning = new DateField("Returning");
 
-        Binding<Trip, Date, Date> returnBinding = binder.forField(returning)
-                .withValidator(
-                        returnDate -> !returnDate.before(departing.getValue()),
+        Binding<Trip, LocalDate, LocalDate> returnBinding = binder
+                .forField(returning).withValidator(
+                        returnDate -> !returnDate
+                                .isBefore(departing.getValue()),
                         "Cannot return before departing");
 
         returnBinding.bind(Trip::getReturnDate, Trip::setReturnDate);
         departing.addValueChangeListener(event -> returnBinding.validate());
 
-        Calendar calendar = Calendar.getInstance();
-        Date past = calendar.getTime();
-        calendar.add(1, Calendar.DAY_OF_YEAR);
-        Date before = calendar.getTime();
-        calendar.add(1, Calendar.DAY_OF_YEAR);
-        Date after = calendar.getTime();
+        LocalDate past = LocalDate.now();
+        LocalDate before = past.plusDays(1);
+        LocalDate after = before.plusDays(1);
 
         departing.setValue(before);
         returning.setValue(after);
@@ -359,25 +356,23 @@ public class BinderBookOfVaadinTest {
         DateField departing = new DateField("Departing");
         DateField returning = new DateField("Returning");
 
-        Binding<Trip, Date, Date> returnBinding = binder.forField(returning)
-                .withValidator(
-                        returnDate -> !returnDate.before(departing.getValue()),
+        Binding<Trip, LocalDate, LocalDate> returnBinding = binder
+                .forField(returning).withValidator(
+                        returnDate -> !returnDate
+                                .isBefore(departing.getValue()),
                         "Cannot return before departing");
 
         returnBinding.bind(Trip::getReturnDate, Trip::setReturnDate);
         departing.addValueChangeListener(event -> returnBinding.validate());
 
-        Calendar calendar = Calendar.getInstance();
-        Date past = calendar.getTime();
-        calendar.add(1, Calendar.DAY_OF_YEAR);
-        Date before = calendar.getTime();
-        calendar.add(1, Calendar.DAY_OF_YEAR);
-        Date after = calendar.getTime();
+        LocalDate past = LocalDate.now();
+        LocalDate before = past.plusDays(1);
+        LocalDate after = before.plusDays(1);
 
         departing.setValue(before);
         returning.setValue(after);
 
-        ValidationStatus<Date> result = returnBinding.validate();
+        ValidationStatus<LocalDate> result = returnBinding.validate();
         Assert.assertFalse(result.isError());
         Assert.assertNull(departing.getComponentError());
 
@@ -465,8 +460,7 @@ public class BinderBookOfVaadinTest {
 
     @Test
     public void binder_saveIfValid() {
-        BeanBinder<BookPerson> binder = new BeanBinder<BookPerson>(
-                BookPerson.class);
+        BeanBinder<BookPerson> binder = new BeanBinder<>(BookPerson.class);
 
         // Phone or email has to be specified for the bean
         Validator<BookPerson> phoneOrEmail = Validator.from(

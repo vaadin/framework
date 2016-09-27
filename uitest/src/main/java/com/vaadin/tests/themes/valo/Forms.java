@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -71,7 +71,7 @@ public class Forms extends VerticalLayout implements View {
         form.addComponent(name);
 
         AbstractDateField birthday = new TestDateField("Birthday");
-        birthday.setValue(new Date(80, 0, 31));
+        birthday.setValue(LocalDate.of(1980, 1, 31));
         form.addComponent(birthday);
 
         TextField username = new TextField("Username");

@@ -25,7 +25,7 @@ Button sayHelloButton = new Button("Say hello", clickEvent -> {
 });
 ----
 
-Each field implementation has its own specific value type – the type of a [classname]#TextField# is [classname]#String#, the type of a [classname]#Slider# is [classname]#Double#, the type of a [classname]#PopupDateField# is [classname]#LocalDate#, and so on.
+Each field implementation has its own specific value type – the type of a [classname]#TextField# is [classname]#String#, the type of a [classname]#Slider# is [classname]#Double#, the type of a [classname]#DateField# is [classname]#LocalDate#, and so on.
 
 == Reacting to Value Changes
 

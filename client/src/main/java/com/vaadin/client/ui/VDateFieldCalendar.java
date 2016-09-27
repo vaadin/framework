@@ -19,7 +19,6 @@ package com.vaadin.client.ui;
 import java.util.Date;
 
 import com.google.gwt.event.dom.client.DomEvent;
-import com.vaadin.client.DateTimeService;
 import com.vaadin.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.client.ui.VCalendarPanel.SubmitListener;
 import com.vaadin.shared.ui.datefield.Resolution;
@@ -79,40 +78,12 @@ public class VDateFieldCalendar extends VDateField {
             setCurrentDate((Date) date2.clone());
             getClient().updateVariable(getId(), "year", date2.getYear() + 1900,
                     false);
-            if (getCurrentResolution().getCalendarField() > Resolution.YEAR
-                    .getCalendarField()) {
+            if (getCurrentResolution().compareTo(Resolution.YEAR) < 0) {
                 getClient().updateVariable(getId(), "month",
                         date2.getMonth() + 1, false);
-                if (getCurrentResolution().getCalendarField() > Resolution.MONTH
-                        .getCalendarField()) {
+                if (getCurrentResolution().compareTo(Resolution.MONTH) < 0) {
                     getClient().updateVariable(getId(), "day", date2.getDate(),
                             false);
-                    if (getCurrentResolution()
-                            .getCalendarField() > Resolution.DAY
-                                    .getCalendarField()) {
-                        getClient().updateVariable(getId(), "hour",
-                                date2.getHours(), false);
-                        if (getCurrentResolution()
-                                .getCalendarField() > Resolution.HOUR
-                                        .getCalendarField()) {
-                            getClient().updateVariable(getId(), "min",
-                                    date2.getMinutes(), false);
-                            if (getCurrentResolution()
-                                    .getCalendarField() > Resolution.MINUTE
-                                            .getCalendarField()) {
-                                getClient().updateVariable(getId(), "sec",
-                                        date2.getSeconds(), false);
-                                if (getCurrentResolution()
-                                        .getCalendarField() > Resolution.SECOND
-                                                .getCalendarField()) {
-                                    getClient().updateVariable(getId(),
-                                            "msec", DateTimeService
-                                                    .getMilliseconds(date2),
-                                            false);
-                                }
-                            }
-                        }
-                    }
                 }
             }
             if (isImmediate()) {

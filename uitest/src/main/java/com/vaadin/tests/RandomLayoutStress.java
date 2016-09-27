@@ -16,6 +16,7 @@
 
 package com.vaadin.tests;
 
+import java.time.LocalDate;
 import java.util.Random;
 
 import com.vaadin.server.ExternalResource;
@@ -184,13 +185,13 @@ public class RandomLayoutStress extends com.vaadin.server.LegacyApplication {
             // Datefield
             result = new TestDateField();
             ((AbstractDateField) result).setStyleName("calendar");
-            ((AbstractDateField) result).setValue(new java.util.Date());
+            ((AbstractDateField) result).setValue(LocalDate.now());
             result.setCaption("Calendar component " + caption);
             break;
         case 7:
             // Datefield
             result = new TestDateField();
-            ((AbstractDateField) result).setValue(new java.util.Date());
+            ((AbstractDateField) result).setValue(LocalDate.now());
             result.setCaption("Calendar component " + caption);
             break;
         }

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.datefield;
+package com.vaadin.v7.shared.ui.datefield;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,25 @@ import java.util.List;
  * @since 7.0
  */
 public enum Resolution {
-    DAY, MONTH, YEAR;
+    // Values from Calendar.SECOND etc. Set as ints to avoid Calendar dependency
+    // (does not exist on the client side)
+    SECOND(13), MINUTE(12), HOUR(11), DAY(5), MONTH(2), YEAR(1);
+
+    private int calendarField;
+
+    private Resolution(int calendarField) {
+        this.calendarField = calendarField;
+    }
+
+    /**
+     * Returns the field in java.util.Calendar that corresponds to this
+     * resolution.
+     *
+     * @return one of the field numbers used by Calendar
+     */
+    public int getCalendarField() {
+        return calendarField;
+    }
 
     /**
      * Returns the resolutions that are higher or equal to the given resolution,
@@ -63,5 +81,4 @@ public enum Resolution {
         }
         return resolutions;
     }
-
 }

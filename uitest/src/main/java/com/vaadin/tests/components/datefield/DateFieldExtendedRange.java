@@ -1,27 +1,22 @@
 package com.vaadin.tests.components.datefield;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.AbstractDateField;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.InlineDateField;
-import com.vaadin.ui.DateField;
 
 @SuppressWarnings("serial")
 public class DateFieldExtendedRange extends TestBase {
 
-    private Calendar date = Calendar.getInstance();
-
     @Override
     protected void setup() {
-        date.set(2011, 0, 1);
-
         GridLayout layout = new GridLayout(2, 3);
         layout.setWidth("600px");
         layout.setSpacing(true);
@@ -49,15 +44,8 @@ public class DateFieldExtendedRange extends TestBase {
 
         addComponent(layout);
 
-        addComponent(new Button("Change date", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                date.set(2010, 1, 16);
-                for (AbstractDateField f : fields) {
-                    f.setValue(date.getTime());
-                }
-            }
-        }));
+        addComponent(new Button("Change date", event -> Stream.of(fields)
+                .forEach(field -> field.setValue(LocalDate.of(2010, 2, 16)))));
     }
 
     @Override
@@ -72,9 +60,10 @@ public class DateFieldExtendedRange extends TestBase {
 
     private AbstractDateField makeDateField(boolean isPopup, Locale locale,
             String caption) {
-        AbstractDateField df = isPopup ? new DateField() : new InlineDateField();
+        AbstractDateField df = isPopup ? new DateField()
+                : new InlineDateField();
         df.setResolution(Resolution.DAY);
-        df.setValue(date.getTime());
+        df.setValue(LocalDate.of(2011, 1, 1));
         df.setLocale(locale);
         df.setCaption(caption);
         return df;

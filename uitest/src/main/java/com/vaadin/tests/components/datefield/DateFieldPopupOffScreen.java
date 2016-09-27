@@ -1,9 +1,8 @@
 package com.vaadin.tests.components.datefield;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Locale;
 
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
@@ -59,10 +58,9 @@ public class DateFieldPopupOffScreen extends AbstractTestCase {
     private AbstractDateField createDateField() {
         AbstractDateField df = new TestDateField();
         df.setLocale(new Locale("fi"));
-        df.setResolution(Resolution.SECOND);
         df.setDescription(
                 "This is a long, multiline tooltip.<br/>It should always be on screen so it can be read.");
-        df.setValue(new Date(1000000L));
+        df.setValue(LocalDate.of(2000, 1, 1));
         return df;
     }
 }

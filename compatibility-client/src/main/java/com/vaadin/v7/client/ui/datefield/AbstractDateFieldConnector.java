@@ -22,10 +22,10 @@ import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.v7.client.ui.AbstractFieldConnector;
 import com.vaadin.v7.client.ui.VDateField;
 import com.vaadin.v7.shared.ui.datefield.DateFieldConstants;
+import com.vaadin.v7.shared.ui.datefield.Resolution;
 
 public class AbstractDateFieldConnector extends AbstractFieldConnector
         implements Paintable {

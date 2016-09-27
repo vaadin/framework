@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
@@ -29,9 +29,6 @@ public class CustomDateFormatEEE extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(2014, 2, 14); // Friday
-
         AbstractDateField df = new TestDateField(
                 "Should display 14/03/2014 Fri");
         df.setResolution(Resolution.DAY);
@@ -39,7 +36,7 @@ public class CustomDateFormatEEE extends AbstractTestUI {
 
         String pattern = "dd/MM/yyyy EEE";
         df.setDateFormat(pattern);
-        df.setValue(cal.getTime());
+        df.setValue(LocalDate.of(2014, 3, 14)); // Friday
         df.setWidth("200px");
 
         VerticalLayout layout = new VerticalLayout();

@@ -17,7 +17,7 @@ package com.vaadin.shared.ui.datefield;
 
 import com.vaadin.shared.annotations.NoLayout;
 
-public class PopupDateFieldState extends TextualDateFieldState {
+public class DateFieldState extends TextualDateFieldState {
     public static final String DESCRIPTION_FOR_ASSISTIVE_DEVICES = "Arrow down key opens calendar element for choosing the date";
 
     {

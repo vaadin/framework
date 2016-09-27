@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.datefield;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -42,10 +42,9 @@ public class DateFields extends ComponentTestCase<DateField> {
 
     private DateField createPopupDateField(String caption, String width,
             Locale locale) {
-        DateField pd = new DateField(
-                caption + "(" + locale.toString() + ")");
+        DateField pd = new DateField(caption + "(" + locale.toString() + ")");
         pd.setWidth(width);
-        pd.setValue(new Date(12312312313L));
+        pd.setValue(LocalDate.of(1970, 05, 23));
         pd.setLocale(locale);
         pd.setResolution(Resolution.YEAR);
 
@@ -70,19 +69,8 @@ public class DateFields extends ComponentTestCase<DateField> {
         options.put("Year", Resolution.YEAR);
         options.put("Month", Resolution.MONTH);
         options.put("Day", Resolution.DAY);
-        options.put("Hour", Resolution.HOUR);
-        options.put("Min", Resolution.MINUTE);
-        options.put("Sec", Resolution.SECOND);
         return createSelectAction("Resolution", options, "Year",
-                new Command<DateField, Resolution>() {
-
-                    @Override
-                    public void execute(DateField c, Resolution value,
-                            Object data) {
-                        c.setResolution(value);
-
-                    }
-                });
+                (field, value, data) -> field.setResolution(value));
     }
 
     private Component createInputPromptSelectAction() {

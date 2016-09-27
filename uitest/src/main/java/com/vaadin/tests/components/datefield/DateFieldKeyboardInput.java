@@ -15,23 +15,19 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import java.time.LocalDate;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.Label;
 
 public class DateFieldKeyboardInput extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Calendar c = new GregorianCalendar(Locale.ENGLISH);
-        c.set(2014, 0, 15);
         final DateField dateField = new DateField("Select date",
-                c.getTime());
+                LocalDate.of(2014, 1, 15));
         dateField.setDateFormat("dd.MM.yyyy");
         addComponent(dateField);
         dateField.addValueChangeListener(

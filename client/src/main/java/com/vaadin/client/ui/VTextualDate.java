@@ -132,30 +132,6 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                     String frmString = LocaleService
                             .getDateFormat(currentLocale);
                     frmString = cleanFormat(frmString);
-                    // String delim = LocaleService
-                    // .getClockDelimiter(currentLocale);
-                    if (currentResolution.getCalendarField() >= Resolution.HOUR
-                            .getCalendarField()) {
-                        if (dts.isTwelveHourClock()) {
-                            frmString += " hh";
-                        } else {
-                            frmString += " HH";
-                        }
-                        if (currentResolution
-                                .getCalendarField() >= Resolution.MINUTE
-                                        .getCalendarField()) {
-                            frmString += ":mm";
-                            if (currentResolution
-                                    .getCalendarField() >= Resolution.SECOND
-                                            .getCalendarField()) {
-                                frmString += ":ss";
-                            }
-                        }
-                        if (dts.isTwelveHourClock()) {
-                            frmString += " aaa";
-                        }
-
-                    }
 
                     formatStr = frmString;
                 } catch (LocaleNotLoadedException e) {
@@ -283,47 +259,24 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         getClient().updateVariable(getId(), "year",
                 currentDate != null ? currentDate.getYear() + 1900 : -1,
                 currentResolution == Resolution.YEAR && immediate);
-        if (currentResolution.getCalendarField() >= Resolution.MONTH
-                .getCalendarField()) {
+        if (currentResolution.compareTo(Resolution.MONTH) <= 0) {
             getClient().updateVariable(getId(), "month",
                     currentDate != null ? currentDate.getMonth() + 1 : -1,
                     currentResolution == Resolution.MONTH && immediate);
         }
-        if (currentResolution.getCalendarField() >= Resolution.DAY
-                .getCalendarField()) {
+        if (currentResolution.compareTo(Resolution.DAY) <= 0) {
             getClient().updateVariable(getId(), "day",
                     currentDate != null ? currentDate.getDate() : -1,
                     currentResolution == Resolution.DAY && immediate);
         }
-        if (currentResolution.getCalendarField() >= Resolution.HOUR
-                .getCalendarField()) {
-            getClient().updateVariable(getId(), "hour",
-                    currentDate != null ? currentDate.getHours() : -1,
-                    currentResolution == Resolution.HOUR && immediate);
-        }
-        if (currentResolution.getCalendarField() >= Resolution.MINUTE
-                .getCalendarField()) {
-            getClient().updateVariable(getId(), "min",
-                    currentDate != null ? currentDate.getMinutes() : -1,
-                    currentResolution == Resolution.MINUTE && immediate);
-        }
-        if (currentResolution.getCalendarField() >= Resolution.SECOND
-                .getCalendarField()) {
-            getClient().updateVariable(getId(), "sec",
-                    currentDate != null ? currentDate.getSeconds() : -1,
-                    currentResolution == Resolution.SECOND && immediate);
-        }
-
     }
 
     private String cleanFormat(String format) {
         // Remove unnecessary d & M if resolution is too low
-        if (currentResolution.getCalendarField() < Resolution.DAY
-                .getCalendarField()) {
+        if (currentResolution.compareTo(Resolution.DAY) > 0) {
             format = format.replaceAll("d", "");
         }
-        if (currentResolution.getCalendarField() < Resolution.MONTH
-                .getCalendarField()) {
+        if (currentResolution.compareTo(Resolution.MONTH) > 0) {
             format = format.replaceAll("M", "");
         }
 

@@ -51,7 +51,7 @@ import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.client.ui.VCalendarPanel.SubmitListener;
 import com.vaadin.client.ui.aria.AriaHelper;
-import com.vaadin.shared.ui.datefield.PopupDateFieldState;
+import com.vaadin.shared.ui.datefield.DateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
 
 /**
@@ -130,7 +130,7 @@ public class VPopupCalendar extends VTextualDate
         // Description of the usage of the widget for assisitve device users
         descriptionForAssisitveDevicesElement = DOM.createDiv();
         descriptionForAssisitveDevicesElement.setInnerText(
-                PopupDateFieldState.DESCRIPTION_FOR_ASSISTIVE_DEVICES);
+                DateFieldState.DESCRIPTION_FOR_ASSISTIVE_DEVICES);
         AriaHelper.ensureHasId(descriptionForAssisitveDevicesElement);
         Roles.getTextboxRole().setAriaDescribedbyProperty(text.getElement(),
                 Id.of(descriptionForAssisitveDevicesElement));
@@ -222,32 +222,12 @@ public class VPopupCalendar extends VTextualDate
             setCurrentDate((Date) newDate.clone());
             getClient().updateVariable(getId(), "year",
                     newDate.getYear() + 1900, false);
-            if (getCurrentResolution().getCalendarField() > Resolution.YEAR
-                    .getCalendarField()) {
+            if (getCurrentResolution().compareTo(Resolution.YEAR) < 0) {
                 getClient().updateVariable(getId(), "month",
                         newDate.getMonth() + 1, false);
-                if (getCurrentResolution().getCalendarField() > Resolution.MONTH
-                        .getCalendarField()) {
+                if (getCurrentResolution().compareTo(Resolution.MONTH) < 0) {
                     getClient().updateVariable(getId(), "day",
                             newDate.getDate(), false);
-                    if (getCurrentResolution()
-                            .getCalendarField() > Resolution.DAY
-                                    .getCalendarField()) {
-                        getClient().updateVariable(getId(), "hour",
-                                newDate.getHours(), false);
-                        if (getCurrentResolution()
-                                .getCalendarField() > Resolution.HOUR
-                                        .getCalendarField()) {
-                            getClient().updateVariable(getId(), "min",
-                                    newDate.getMinutes(), false);
-                            if (getCurrentResolution()
-                                    .getCalendarField() > Resolution.MINUTE
-                                            .getCalendarField()) {
-                                getClient().updateVariable(getId(), "sec",
-                                        newDate.getSeconds(), false);
-                            }
-                        }
-                    }
                 }
             }
         }

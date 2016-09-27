@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -25,22 +24,16 @@ import com.vaadin.ui.InlineDateField;
 
 public class DisabledInlineDateField extends AbstractTestUI {
 
-    private static final Date testDate;
-    static {
-        Calendar cal = Calendar.getInstance();
-        cal.set(2014, 5, 5);
-        testDate = cal.getTime();
-    }
-
     @Override
     protected void setup(VaadinRequest request) {
         AbstractDateField df = new InlineDateField("Disabled");
-        df.setValue(testDate);
+        LocalDate date = LocalDate.of(2014, 6, 5);
+        df.setValue(date);
         df.setEnabled(false);
         addComponent(df);
 
         df = new InlineDateField("Read-only");
-        df.setValue(testDate);
+        df.setValue(date);
         df.setReadOnly(true);
         addComponent(df);
     }

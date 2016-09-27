@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Locale;
 
 import com.vaadin.navigator.View;
@@ -77,7 +77,7 @@ public class DateFields extends VerticalLayout implements View {
         Button today = new Button("Today", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                date2.setValue(new Date());
+                date2.setValue(LocalDate.now());
             }
         });
         group.addComponent(today);
@@ -87,27 +87,6 @@ public class DateFields extends VerticalLayout implements View {
         row.addComponent(date);
         date.setWidth("260px");
         date.setHeight("60px");
-
-        date = new TestDateField("Second resolution");
-        setDate(date);
-        date.setResolution(Resolution.SECOND);
-        row.addComponent(date);
-
-        date = new TestDateField("Minute resolution");
-        setDate(date);
-        date.setResolution(Resolution.MINUTE);
-        row.addComponent(date);
-
-        date = new TestDateField("Hour resolution");
-        setDate(date);
-        date.setResolution(Resolution.HOUR);
-        row.addComponent(date);
-
-        date = new TestDateField("Disabled");
-        setDate(date);
-        date.setResolution(Resolution.HOUR);
-        date.setEnabled(false);
-        row.addComponent(date);
 
         date = new TestDateField("Day resolution");
         setDate(date);
@@ -167,12 +146,6 @@ public class DateFields extends VerticalLayout implements View {
         date.setShowISOWeekNumbers(true);
         row.addComponent(date);
 
-        date = new TestDateField("US locale");
-        setDate(date);
-        date.setResolution(Resolution.SECOND);
-        date.setLocale(new Locale("en", "US"));
-        row.addComponent(date);
-
         date = new TestDateField("Custom format");
         setDate(date);
         date.setDateFormat("E dd/MM/yyyy");
@@ -218,20 +191,19 @@ public class DateFields extends VerticalLayout implements View {
     private void setDateRange(AbstractDateField date) {
         date.setRangeStart(getDefaultDate());
 
-        Date endDate = getDefaultDate();
-        endDate.setMonth(endDate.getMonth() + 1);
-        date.setRangeEnd(endDate);
+        LocalDate endDate = getDefaultDate();
+        date.setRangeEnd(endDate.plusMonths(1));
     }
 
     private void setDate(AbstractDateField date) {
         date.setValue(getDefaultDate());
     }
 
-    private Date getDefaultDate() {
+    private LocalDate getDefaultDate() {
         if (ValoThemeUI.isTestMode()) {
-            return new Date(2014 - 1900, 5, 7);
+            return LocalDate.of(2014, 6, 7);
         } else {
-            return new Date();
+            return LocalDate.now();
         }
     }
 

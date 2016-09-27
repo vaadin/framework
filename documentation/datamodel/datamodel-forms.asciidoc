@@ -200,12 +200,12 @@ We can save the binding to a local variable and trigger a revalidation when anot
 
 [source, java]
 ----
-PopupDateField departing = new PopupDateField("Departing");
-PopupDateField returning = new PopupDateField("Returning");
+DateField departing = new DateField("Departing");
+DateField returning = new DateField("Returning");
 
 // Store return date binding so we can revalidate it later
-Binding<Trip, Date, Date> returnBinding = binder.forField(returning)
-  .withValidator(returnDate -> !returnDate.before(departing.getValue()),
+Binding<Trip, LocalDate, LocalDate> returnBinding = binder.forField(returning)
+  .withValidator(returnDate -> !returnDate.isBefore(departing.getValue()),
   "Cannot return before departing");
 returnBinding.bind(Trip::getReturnDate, Trip::setReturnDate);
 

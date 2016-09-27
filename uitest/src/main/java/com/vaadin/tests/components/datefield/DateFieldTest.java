@@ -39,14 +39,6 @@ public class DateFieldTest extends AbstractDateFieldTest<DateField> {
 
     private void createTextEnabledAction(String category) {
         this.createBooleanAction("Text field enabled", category, true,
-                new Command<DateField, Boolean>() {
-
-                    @Override
-                    public void execute(DateField c, Boolean value,
-                            Object data) {
-                        c.setTextFieldEnabled(value);
-                    }
-
-                });
+                (field, value, data) -> field.setTextFieldEnabled(value));
     }
 }

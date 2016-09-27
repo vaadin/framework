@@ -1,9 +1,8 @@
 package com.vaadin.tests.components.datefield;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.vaadin.server.UserError;
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
@@ -14,8 +13,7 @@ public class DatePopupStyleName extends TestBase {
         setTheme("reindeer-tests");
 
         final AbstractDateField df = new TestDateField();
-        df.setValue(new Date(1203910239L));
-        df.setResolution(Resolution.SECOND);
+        df.setValue(LocalDate.of(1970, 1, 15));
         df.setWidth("200px");
         df.setRequired(true);
         df.setComponentError(new UserError("abc"));

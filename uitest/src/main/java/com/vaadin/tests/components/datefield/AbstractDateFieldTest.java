@@ -2,8 +2,7 @@ package com.vaadin.tests.components.datefield;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
@@ -13,7 +12,7 @@ import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.ui.AbstractDateField;
 
 public class AbstractDateFieldTest<T extends AbstractDateField>
-        extends AbstractFieldTest<T, Date> {
+        extends AbstractFieldTest<T, LocalDate> {
 
     @SuppressWarnings("unchecked")
     @Override
@@ -21,10 +20,10 @@ public class AbstractDateFieldTest<T extends AbstractDateField>
         return (Class<T>) TestDateField.class;
     }
 
-    private Command<T, Date> setValue = new Command<T, Date>() {
+    private Command<T, LocalDate> setValue = new Command<T, LocalDate>() {
 
         @Override
-        public void execute(T c, Date value, Object data) {
+        public void execute(T c, LocalDate value, Object data) {
             c.setValue(value);
         }
     };
@@ -43,18 +42,10 @@ public class AbstractDateFieldTest<T extends AbstractDateField>
     }
 
     private void createSetValueAction(String category) {
-        LinkedHashMap<String, Date> options = new LinkedHashMap<>();
+        LinkedHashMap<String, LocalDate> options = new LinkedHashMap<>();
         options.put("(null)", null);
-        options.put("(current time)", new Date());
-        Calendar c = Calendar.getInstance(new Locale("fi", "FI"));
-        c.clear();
-        c.set(2010, 12 - 1, 12, 12, 0, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        options.put("2010-12-12 12:00:00.000", c.getTime());
-        c.clear();
-        c.set(2000, 1 - 1, 2, 3, 4, 5);
-        c.set(Calendar.MILLISECOND, 6);
-        options.put("2000-01-02 03:04:05.006", c.getTime());
+        options.put("(current time)", LocalDate.now());
+        options.put("2010-12-12", LocalDate.of(2010, 12, 12));
         createMultiClickAction("Set value", category, options, setValue, null);
     }
 
@@ -103,9 +94,6 @@ public class AbstractDateFieldTest<T extends AbstractDateField>
         options.put("Year", Resolution.YEAR);
         options.put("Month", Resolution.MONTH);
         options.put("Day", Resolution.DAY);
-        options.put("Hour", Resolution.HOUR);
-        options.put("Min", Resolution.MINUTE);
-        options.put("Sec", Resolution.SECOND);
 
         createSelectAction("Resolution", category, options, "Year",
                 resolutionCommand);

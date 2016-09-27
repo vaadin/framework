@@ -15,8 +15,6 @@
  */
 package com.vaadin.client.ui.datefield;
 
-import java.util.Date;
-
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.Paintable;
@@ -24,6 +22,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.VDateField;
+import com.vaadin.client.ui.VTextualDate;
 import com.vaadin.shared.ui.datefield.DateFieldConstants;
 import com.vaadin.shared.ui.datefield.Resolution;
 
@@ -65,13 +64,7 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
                         && getWidget().dts.getFirstDayOfWeek() == 1);
 
         Resolution newResolution;
-        if (uidl.hasVariable("sec")) {
-            newResolution = Resolution.SECOND;
-        } else if (uidl.hasVariable("min")) {
-            newResolution = Resolution.MINUTE;
-        } else if (uidl.hasVariable("hour")) {
-            newResolution = Resolution.HOUR;
-        } else if (uidl.hasVariable("day")) {
+        if (uidl.hasVariable("day")) {
             newResolution = Resolution.DAY;
         } else if (uidl.hasVariable("month")) {
             newResolution = Resolution.MONTH;
@@ -95,21 +88,14 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
 
         final Resolution resolution = getWidget().getCurrentResolution();
         final int year = uidl.getIntVariable("year");
-        final int month = (resolution.getCalendarField() >= Resolution.MONTH
-                .getCalendarField()) ? uidl.getIntVariable("month") : -1;
-        final int day = (resolution.getCalendarField() >= Resolution.DAY
-                .getCalendarField()) ? uidl.getIntVariable("day") : -1;
-        final int hour = (resolution.getCalendarField() >= Resolution.HOUR
-                .getCalendarField()) ? uidl.getIntVariable("hour") : 0;
-        final int min = (resolution.getCalendarField() >= Resolution.MINUTE
-                .getCalendarField()) ? uidl.getIntVariable("min") : 0;
-        final int sec = (resolution.getCalendarField() >= Resolution.SECOND
-                .getCalendarField()) ? uidl.getIntVariable("sec") : 0;
+        final int month = resolution.compareTo(Resolution.MONTH) <= 0
+                ? uidl.getIntVariable("month") : -1;
+        final int day = resolution.compareTo(Resolution.DAY) <= 0
+                ? uidl.getIntVariable("day") : -1;
 
         // Construct new date for this datefield (only if not null)
         if (year > -1) {
-            getWidget().setCurrentDate(new Date((long) getWidget().getTime(year,
-                    month, day, hour, min, sec, 0)));
+            getWidget().setCurrentDate(VTextualDate.getTime(year, month, day));
         } else {
             getWidget().setCurrentDate(null);
         }

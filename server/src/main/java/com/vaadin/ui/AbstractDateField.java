@@ -16,20 +16,21 @@
 package com.vaadin.ui;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Result;
-import com.vaadin.data.validator.RangeValidator;
+import com.vaadin.data.validator.DateRangeValidator;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.BlurNotifier;
@@ -47,30 +48,25 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
- * A date editor component with <code>java.util.Date</code> as an input value.
+ * A date editor component with {@link LocalDate} as an input value.
  *
  * @author Vaadin Ltd
  *
  * @since 8.0
  *
  */
-public abstract class AbstractDateField extends AbstractField<Date>
+public abstract class AbstractDateField extends AbstractField<LocalDate>
         implements LegacyComponent, FocusNotifier, BlurNotifier {
 
     /**
      * Value of the field.
      */
-    private Date value;
+    private LocalDate value;
 
     /**
      * Specified smallest modifiable unit for the date field.
      */
     private Resolution resolution = Resolution.DAY;
-
-    /**
-     * The internal calendar to be used in java.utl.Date conversions.
-     */
-    private transient Calendar calendar;
 
     /**
      * Overridden format string
@@ -96,8 +92,6 @@ public abstract class AbstractDateField extends AbstractField<Date>
 
     private String defaultParseErrorMessage = "Date format not recognized";
 
-    private TimeZone timeZone = null;
-
     private static Map<Resolution, String> variableNameForResolution = new HashMap<>();
 
     private String dateOutOfRangeMessage = "Date is out of allowed range";
@@ -110,9 +104,6 @@ public abstract class AbstractDateField extends AbstractField<Date>
     private boolean preventValueChangeEvent;
 
     static {
-        variableNameForResolution.put(Resolution.SECOND, "sec");
-        variableNameForResolution.put(Resolution.MINUTE, "min");
-        variableNameForResolution.put(Resolution.HOUR, "hour");
         variableNameForResolution.put(Resolution.DAY, "day");
         variableNameForResolution.put(Resolution.MONTH, "month");
         variableNameForResolution.put(Resolution.YEAR, "year");
@@ -143,9 +134,9 @@ public abstract class AbstractDateField extends AbstractField<Date>
      * @param caption
      *            the caption <code>String</code> for the editor.
      * @param value
-     *            the Date value.
+     *            the LocalDate value.
      */
-    public AbstractDateField(String caption, Date value) {
+    public AbstractDateField(String caption, LocalDate value) {
         setValue(value);
         setCaption(caption);
     }
@@ -166,7 +157,7 @@ public abstract class AbstractDateField extends AbstractField<Date>
         }
 
         if (getDateFormat() != null) {
-            target.addAttribute("format", dateFormat);
+            target.addAttribute("format", getDateFormat());
         }
 
         if (!isLenient()) {
@@ -181,9 +172,7 @@ public abstract class AbstractDateField extends AbstractField<Date>
          * app or refresh.
          */
 
-        // Gets the calendar
-        final Calendar calendar = getCalendar();
-        final Date currentDate = getValue();
+        final LocalDate currentDate = getValue();
 
         // Only paint variables for the resolution and up, e.g. Resolution DAY
         // paints DAY,MONTH,YEAR
@@ -191,11 +180,7 @@ public abstract class AbstractDateField extends AbstractField<Date>
                 .getResolutionsHigherOrEqualTo(resolution)) {
             int value = -1;
             if (currentDate != null) {
-                value = calendar.get(res.getCalendarField());
-                if (res == Resolution.MONTH) {
-                    // Calendar month is zero based
-                    value++;
-                }
+                value = getDateValue(currentDate, res);
             }
             target.addVariable(this, variableNameForResolution.get(res), value);
         }
@@ -211,14 +196,12 @@ public abstract class AbstractDateField extends AbstractField<Date>
 
         if (!isReadOnly() && (variables.containsKey("year")
                 || variables.containsKey("month")
-                || variables.containsKey("day") || variables.containsKey("hour")
-                || variables.containsKey("min") || variables.containsKey("sec")
-                || variables.containsKey("msec")
+                || variables.containsKey("day")
                 || variables.containsKey("dateString"))) {
 
             // Old and new dates
-            final Date oldDate = getValue();
-            Date newDate = null;
+            final LocalDate oldDate = getValue();
+            LocalDate newDate = null;
 
             // this enables analyzing invalid input on the server
             final String newDateString = (String) variables.get("dateString");
@@ -226,55 +209,37 @@ public abstract class AbstractDateField extends AbstractField<Date>
 
             // Gets the new date in parts
             boolean hasChanges = false;
-            Map<Resolution, Integer> calendarFieldChanges = new HashMap<>();
+            Map<Resolution, Integer> calendarFields = new HashMap<>();
 
-            for (Resolution r : Resolution
-                    .getResolutionsHigherOrEqualTo(resolution)) {
+            for (Resolution resolution : Resolution
+                    .getResolutionsHigherOrEqualTo(getResolution())) {
                 // Only handle what the client is allowed to send. The same
                 // resolutions that are painted
-                String variableName = variableNameForResolution.get(r);
+                String variableName = variableNameForResolution.get(resolution);
 
+                Integer value = getDateValue(oldDate, resolution);
                 if (variables.containsKey(variableName)) {
-                    Integer value = (Integer) variables.get(variableName);
-                    if (r == Resolution.MONTH) {
-                        // Calendar MONTH is zero based
-                        value--;
-                    }
-                    if (value >= 0) {
+                    Integer newValue = (Integer) variables.get(variableName);
+                    if (newValue >= 0) {
                         hasChanges = true;
-                        calendarFieldChanges.put(r, value);
+                        value = newValue;
                     }
                 }
+                calendarFields.put(resolution, value);
             }
 
             // If no new variable values were received, use the previous value
             if (!hasChanges) {
                 newDate = null;
             } else {
-                // Clone the calendar for date operation
-                final Calendar cal = getCalendar();
-
-                // Update the value based on the received info
-                // Must set in this order to avoid invalid dates (or wrong
-                // dates if lenient is true) in calendar
-                for (int r = Resolution.YEAR.ordinal(); r >= 0; r--) {
-                    Resolution res = Resolution.values()[r];
-                    if (calendarFieldChanges.containsKey(res)) {
-
-                        // Field resolution should be included. Others are
-                        // skipped so that client can not make unexpected
-                        // changes (e.g. day change even though resolution is
-                        // year).
-                        Integer newValue = calendarFieldChanges.get(res);
-                        cal.set(res.getCalendarField(), newValue);
-                    }
-                }
-                newDate = cal.getTime();
+                newDate = LocalDate.of(calendarFields.get(Resolution.YEAR),
+                        calendarFields.getOrDefault(Resolution.MONTH, 1),
+                        calendarFields.getOrDefault(Resolution.DAY, 1));
             }
 
             if (newDate == null && dateString != null
                     && !dateString.isEmpty()) {
-                Result<Date> parsedDate = handleUnparsableDateString(
+                Result<LocalDate> parsedDate = handleUnparsableDateString(
                         dateString);
                 if (parsedDate.isError()) {
 
@@ -365,17 +330,15 @@ public abstract class AbstractDateField extends AbstractField<Date>
      * @param startDate
      *            - the allowed range's start date
      */
-    public void setRangeStart(Date startDate) {
-        if (startDate != null && getState().rangeEnd != null
-                && startDate.after(getState().rangeEnd)) {
+    public void setRangeStart(LocalDate startDate) {
+        Date date = convertLocalDate(startDate);
+        if (date != null && getState().rangeEnd != null
+                && date.after(getState().rangeEnd)) {
             throw new IllegalStateException(
                     "startDate cannot be later than endDate");
         }
 
-        // Create a defensive copy against issues when using java.sql.Date (and
-        // also against mutable Date).
-        getState().rangeStart = startDate != null
-                ? new Date(startDate.getTime()) : null;
+        getState().rangeStart = date;
     }
 
     /**
@@ -431,35 +394,33 @@ public abstract class AbstractDateField extends AbstractField<Date>
      *            - the allowed range's end date (inclusive, based on the
      *            current resolution)
      */
-    public void setRangeEnd(Date endDate) {
-        if (endDate != null && getState().rangeStart != null
-                && getState().rangeStart.after(endDate)) {
+    public void setRangeEnd(LocalDate endDate) {
+        Date date = convertLocalDate(endDate);
+        if (date != null && getState().rangeStart != null
+                && getState().rangeStart.after(date)) {
             throw new IllegalStateException(
                     "endDate cannot be earlier than startDate");
         }
 
-        // Create a defensive copy against issues when using java.sql.Date (and
-        // also against mutable Date).
-        getState().rangeEnd = endDate != null ? new Date(endDate.getTime())
-                : null;
+        getState().rangeEnd = date;
     }
 
     /**
      * Returns the precise rangeStart used.
      *
-     * @return the precise rangeStart used
+     * @return the precise rangeStart used, may be null.
      */
-    public Date getRangeStart() {
-        return getState(false).rangeStart;
+    public LocalDate getRangeStart() {
+        return convertDate(getState(false).rangeStart);
     }
 
     /**
      * Returns the precise rangeEnd used.
      *
-     * @return the precise rangeEnd used
+     * @return the precise rangeEnd used, may be null.
      */
-    public Date getRangeEnd() {
-        return getState(false).rangeEnd;
+    public LocalDate getRangeEnd() {
+        return convertDate(getState(false).rangeEnd);
     }
 
     /**
@@ -519,12 +480,12 @@ public abstract class AbstractDateField extends AbstractField<Date>
     }
 
     @Override
-    public Date getValue() {
+    public LocalDate getValue() {
         return value;
     }
 
     @Override
-    public void setValue(Date value) {
+    public void setValue(LocalDate value) {
         /*
          * First handle special case when the client side component have a date
          * string but value is null (e.g. unparsable date string typed in by the
@@ -567,64 +528,6 @@ public abstract class AbstractDateField extends AbstractField<Date>
     }
 
     /**
-     * Returns new instance calendar used in Date conversions.
-     *
-     * Returns new clone of the calendar object initialized using the the
-     * current date (if available)
-     *
-     * If this is no calendar is assigned the <code>Calendar.getInstance</code>
-     * is used.
-     *
-     * @return the Calendar.
-     * @see #setCalendar(Calendar)
-     */
-    private Calendar getCalendar() {
-
-        // Makes sure we have an calendar instance
-        if (calendar == null) {
-            calendar = Calendar.getInstance();
-            // Start by a zeroed calendar to avoid having values for lower
-            // resolution variables e.g. time when resolution is day
-            int min, field;
-            for (Resolution r : Resolution
-                    .getResolutionsLowerThan(resolution)) {
-                field = r.getCalendarField();
-                min = calendar.getActualMinimum(field);
-                calendar.set(field, min);
-            }
-            calendar.set(Calendar.MILLISECOND, 0);
-        }
-
-        // Clone the instance
-        final Calendar newCal = (Calendar) calendar.clone();
-
-        final TimeZone currentTimeZone = getTimeZone();
-        if (currentTimeZone != null) {
-            newCal.setTimeZone(currentTimeZone);
-        }
-
-        final Date currentDate = getValue();
-        if (currentDate != null) {
-            newCal.setTime(currentDate);
-        }
-        return newCal;
-    }
-
-    /**
-     * Gets the time zone used by this field. The time zone is used to convert
-     * the absolute time in a Date object to a logical time displayed in the
-     * selector and to convert the select time back to a Date object.
-     *
-     * If {@code null} is returned, the current default time zone returned by
-     * {@code TimeZone.getDefault()} is used.
-     *
-     * @return the current time zone
-     */
-    public TimeZone getTimeZone() {
-        return timeZone;
-    }
-
-    /**
      * Return the error message that is shown if the user inputted value can't
      * be parsed into a Date object. If
      * {@link #handleUnparsableDateString(String)} is overridden and it throws a
@@ -653,23 +556,6 @@ public abstract class AbstractDateField extends AbstractField<Date>
      */
     public void setParseErrorMessage(String parsingErrorMessage) {
         defaultParseErrorMessage = parsingErrorMessage;
-    }
-
-    /**
-     * Sets the time zone used by this date field. The time zone is used to
-     * convert the absolute time in a Date object to a logical time displayed in
-     * the selector and to convert the select time back to a Date object.
-     *
-     * If no time zone has been set, the current default time zone returned by
-     * {@code TimeZone.getDefault()} is used.
-     *
-     * @see #getTimeZone()
-     * @param timeZone
-     *            the time zone to use for time calculations.
-     */
-    public void setTimeZone(TimeZone timeZone) {
-        this.timeZone = timeZone;
-        markAsDirty();
     }
 
     @Override
@@ -704,14 +590,14 @@ public abstract class AbstractDateField extends AbstractField<Date>
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         if (design.hasAttr("value") && !design.attr("value").isEmpty()) {
-            Date date = DesignAttributeHandler.getFormatter()
-                    .parse(design.attr("value"), Date.class);
+            LocalDate date = DesignAttributeHandler.getFormatter()
+                    .parse(design.attr("value"), LocalDate.class);
             // formatting will return null if it cannot parse the string
             if (date == null) {
                 Logger.getLogger(AbstractDateField.class.getName()).info(
                         "cannot parse " + design.attr("value") + " as date");
             }
-            setValue(date);
+            doSetValue(date);
         }
     }
 
@@ -750,7 +636,7 @@ public abstract class AbstractDateField extends AbstractField<Date>
      *            date string to handle
      * @return result that contains parsed Date as a value or an error
      */
-    protected Result<Date> handleUnparsableDateString(String dateString) {
+    protected Result<LocalDate> handleUnparsableDateString(String dateString) {
         return Result.error(getParseErrorMessage());
     }
 
@@ -765,7 +651,7 @@ public abstract class AbstractDateField extends AbstractField<Date>
     }
 
     @Override
-    protected void doSetValue(Date value) {
+    protected void doSetValue(LocalDate value) {
         // Also set the internal dateString
         if (value != null) {
             dateString = value.toString();
@@ -780,87 +666,61 @@ public abstract class AbstractDateField extends AbstractField<Date>
             uiHasValidDateString = true;
             setComponentError(new UserError(currentParseErrorMessage));
         } else {
-            RangeValidator<Date> validator = new RangeValidator<>(
-                    getDateOutOfRangeMessage(), Comparator.naturalOrder(),
-                    getRangeStart(getResolution()),
-                    getRangeEnd(getResolution()));
-            Result<Date> result = validator.apply(value);
+            DateRangeValidator validator = new DateRangeValidator(
+                    getDateOutOfRangeMessage(),
+                    getDate(getRangeStart(), getResolution()),
+                    getDate(getRangeEnd(), getResolution()));
+            Result<LocalDate> result = validator.apply(value);
             if (result.isError()) {
                 setComponentError(new UserError(getDateOutOfRangeMessage()));
             }
         }
     }
 
-    /**
-     * Gets the start range for a certain resolution. The range is inclusive, so
-     * if <code>rangeStart</code> is set to one millisecond before year n and
-     * resolution is set to YEAR, any date in year n - 1 will be accepted.
-     * Lowest supported resolution is DAY.
-     *
-     * @param forResolution
-     *            - the range conforms to the resolution
-     * @return
-     */
-    private Date getRangeStart(Resolution forResolution) {
-        if (getState(false).rangeStart == null) {
+    private LocalDate getDate(LocalDate date, Resolution forResolution) {
+        if (date == null) {
             return null;
         }
-        Calendar startCal = Calendar.getInstance();
-        startCal.setTime(getState(false).rangeStart);
-
         if (forResolution == Resolution.YEAR) {
-            startCal.set(startCal.get(Calendar.YEAR), 0, 1, 0, 0, 0);
+            return date.withDayOfYear(1);
         } else if (forResolution == Resolution.MONTH) {
-            startCal.set(startCal.get(Calendar.YEAR),
-                    startCal.get(Calendar.MONTH), 1, 0, 0, 0);
+            return date.withDayOfMonth(1);
         } else {
-            startCal.set(startCal.get(Calendar.YEAR),
-                    startCal.get(Calendar.MONTH), startCal.get(Calendar.DATE),
-                    0, 0, 0);
+            return date;
         }
-
-        startCal.set(Calendar.MILLISECOND, 0);
-        return startCal.getTime();
     }
 
-    /**
-     * Gets the end range for a certain resolution. The range is inclusive, so
-     * if rangeEnd is set to zero milliseconds past year n and resolution is set
-     * to YEAR, any date in year n will be accepted. Resolutions lower than DAY
-     * will be interpreted on a DAY level. That is, everything below DATE is
-     * cleared
-     *
-     * @param forResolution
-     *            - the range conforms to the resolution
-     * @return
-     */
-    private Date getRangeEnd(Resolution forResolution) {
-        // We need to set the correct resolution for the dates,
-        // otherwise the range validator will complain
+    private int getDateValue(LocalDate date, Resolution resolution) {
+        LocalDate value = date;
+        if (value == null) {
+            value = LocalDate.of(1, 1, 1);
+        }
+        switch (resolution) {
+        case DAY:
+            return value.getDayOfMonth();
+        case MONTH:
+            return value.getMonthValue();
+        case YEAR:
+            return value.getYear();
+        default:
+            assert false : "Unexpected resolution argument " + resolution;
+            return -1;
+        }
+    }
 
-        Date rangeEnd = getState(false).rangeEnd;
-        if (rangeEnd == null) {
+    private Date convertLocalDate(LocalDate date) {
+        if (date == null) {
             return null;
         }
+        return Date.from(date.atStartOfDay(ZoneOffset.UTC).toInstant());
+    }
 
-        Calendar endCal = Calendar.getInstance();
-        endCal.setTime(rangeEnd);
-
-        if (forResolution == Resolution.YEAR) {
-            // Adding one year (minresolution) and clearing the rest.
-            endCal.set(endCal.get(Calendar.YEAR) + 1, 0, 1, 0, 0, 0);
-        } else if (forResolution == Resolution.MONTH) {
-            // Adding one month (minresolution) and clearing the rest.
-            endCal.set(endCal.get(Calendar.YEAR),
-                    endCal.get(Calendar.MONTH) + 1, 1, 0, 0, 0);
-        } else {
-            endCal.set(endCal.get(Calendar.YEAR), endCal.get(Calendar.MONTH),
-                    endCal.get(Calendar.DATE) + 1, 0, 0, 0);
+    private LocalDate convertDate(Date date) {
+        if (date == null) {
+            return null;
         }
-        // removing one millisecond will now get the endDate to return to
-        // current resolution's set time span (year or month)
-        endCal.set(Calendar.MILLISECOND, -1);
-        return endCal.getTime();
+        return Instant.ofEpochMilli(date.getTime()).atZone(ZoneOffset.UTC)
+                .toLocalDate();
     }
 
 }

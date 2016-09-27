@@ -1,9 +1,7 @@
 package com.vaadin.tests.components.datefield;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
@@ -14,16 +12,15 @@ import com.vaadin.ui.Label;
 
 public class DateFieldDayResolutionOffset extends AbstractTestUI {
 
-    private final String initialDateString = "09/01/2014 00:00:00";
+    private final String initialDateString = "09/01/2014";
 
     @Override
     protected void setup(VaadinRequest request) {
         final Label dateValue = new Label(initialDateString);
         dateValue.setId("dateValue");
 
-        final TimeZone timezone = TimeZone.getTimeZone("GMT");
-        final SimpleDateFormat dateformat = getDateFormat(timezone);
-        final AbstractDateField dateField = getDateField(timezone, dateformat);
+        final DateTimeFormatter dateformat = getDateFormat();
+        final AbstractDateField dateField = getDateField(dateformat);
 
         addComponent(dateValue);
         addComponent(dateField);
@@ -32,24 +29,18 @@ public class DateFieldDayResolutionOffset extends AbstractTestUI {
                 .setValue(dateformat.format(dateField.getValue())));
     }
 
-    private AbstractDateField getDateField(TimeZone timezone,
-            SimpleDateFormat dateformat) {
+    private AbstractDateField getDateField(DateTimeFormatter dateformat) {
         final AbstractDateField dateField = new TestDateField();
-        try {
-            Date initialDate = dateformat.parse(initialDateString);
-            dateField.setResolution(Resolution.DAY);
-            dateField.setTimeZone(timezone);
-            dateField.setValue(initialDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        LocalDate initialDate = dateformat.parse(initialDateString,
+                LocalDate::from);
+        dateField.setResolution(Resolution.DAY);
+        dateField.setValue(initialDate);
         return dateField;
     }
 
-    private SimpleDateFormat getDateFormat(TimeZone timezone) {
-        final SimpleDateFormat dateformat = new SimpleDateFormat(
-                "MM/dd/yyyy HH:mm:ss");
-        dateformat.setTimeZone(timezone);
+    private DateTimeFormatter getDateFormat() {
+        final DateTimeFormatter dateformat = DateTimeFormatter
+                .ofPattern("MM/dd/yyyy");
         return dateformat;
     }
 

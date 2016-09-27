@@ -18,11 +18,9 @@ package com.vaadin.client.ui.datefield;
 import java.util.Date;
 
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.DateTimeService;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VCalendarPanel.FocusChangeListener;
-import com.vaadin.client.ui.VCalendarPanel.TimeChangeListener;
 import com.vaadin.client.ui.VDateFieldCalendar;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.datefield.InlineDateFieldState;
@@ -54,34 +52,7 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
         }
 
         if (getWidget().getCurrentResolution()
-                .getCalendarField() > Resolution.DAY.getCalendarField()) {
-            getWidget().calendarPanel
-                    .setTimeChangeListener(new TimeChangeListener() {
-                        @Override
-                        public void changed(int hour, int min, int sec,
-                                int msec) {
-                            Date d = getWidget().getDate();
-                            if (d == null) {
-                                // date currently null, use the value from
-                                // calendarPanel
-                                // (~ client time at the init of the widget)
-                                d = (Date) getWidget().calendarPanel.getDate()
-                                        .clone();
-                            }
-                            d.setHours(hour);
-                            d.setMinutes(min);
-                            d.setSeconds(sec);
-                            DateTimeService.setMilliseconds(d, msec);
-
-                            // Always update time changes to the server
-                            getWidget().calendarPanel.setDate(d);
-                            getWidget().updateValueFromPanel();
-                        }
-                    });
-        }
-
-        if (getWidget().getCurrentResolution()
-                .getCalendarField() <= Resolution.MONTH.getCalendarField()) {
+                .compareTo(Resolution.MONTH) >= 0) {
             getWidget().calendarPanel
                     .setFocusChangeListener(new FocusChangeListener() {
                         @Override

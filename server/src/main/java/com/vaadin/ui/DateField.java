@@ -15,11 +15,11 @@
  */
 package com.vaadin.ui;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.shared.ui.datefield.PopupDateFieldState;
+import com.vaadin.shared.ui.datefield.DateFieldState;
 
 /**
  * A date entry component, which displays the actual date selector as a popup.
@@ -34,27 +34,27 @@ public class DateField extends AbstractDateField {
     private String inputPrompt = null;
 
     /**
-     * Constructs an empty <code>PopupDateField</code> with no caption.
+     * Constructs an empty <code>DateField</code> with no caption.
      */
     public DateField() {
         super();
     }
 
     /**
-     * Constructs a new <code>PopupDateField</code> with the given caption and
+     * Constructs a new <code>DateField</code> with the given caption and
      * initial text contents.
      *
      * @param caption
      *            the caption <code>String</code> for the editor.
      * @param value
-     *            the Date value.
+     *            the LocalDate value.
      */
-    public DateField(String caption, Date value) {
+    public DateField(String caption, LocalDate value) {
         super(caption, value);
     }
 
     /**
-     * Constructs an empty <code>PopupDateField</code> with caption.
+     * Constructs an empty <code>DateField</code> with caption.
      *
      * @param caption
      *            the caption of the datefield.
@@ -94,19 +94,19 @@ public class DateField extends AbstractDateField {
     }
 
     @Override
-    protected PopupDateFieldState getState() {
-        return (PopupDateFieldState) super.getState();
+    protected DateFieldState getState() {
+        return (DateFieldState) super.getState();
     }
 
     @Override
-    protected PopupDateFieldState getState(boolean markAsDirty) {
-        return (PopupDateFieldState) super.getState(markAsDirty);
+    protected DateFieldState getState(boolean markAsDirty) {
+        return (DateFieldState) super.getState(markAsDirty);
     }
 
     /**
      * Checks whether the text field is enabled (default) or not.
      *
-     * @see PopupDateField#setTextFieldEnabled(boolean);
+     * @see #setTextFieldEnabled(boolean)
      *
      * @return <b>true</b> if the text field is enabled, <b>false</b> otherwise.
      */

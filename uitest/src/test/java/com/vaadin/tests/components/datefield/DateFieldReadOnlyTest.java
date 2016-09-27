@@ -17,15 +17,15 @@ public class DateFieldReadOnlyTest extends MultiBrowserTest {
             throws IOException, InterruptedException {
         openTestURL();
 
-        compareScreen("initial");
+        compareScreen("initial-date");
         toggleReadOnly();
 
         openPopup();
-        compareScreen("readwrite-popup");
+        compareScreen("readwrite-popup-date");
 
         closePopup();
         toggleReadOnly();
-        compareScreen("readonly");
+        compareScreen("readonly-date");
     }
 
     private void closePopup() {
@@ -36,8 +36,8 @@ public class DateFieldReadOnlyTest extends MultiBrowserTest {
     private void openPopup() {
         // waiting for openPopup() in TB4 beta1:
         // http://dev.vaadin.com/ticket/13766
-        $(AbstractDateFieldElement.class).first().findElement(By.tagName("button"))
-                .click();
+        $(AbstractDateFieldElement.class).first()
+                .findElement(By.tagName("button")).click();
     }
 
     private void toggleReadOnly() {

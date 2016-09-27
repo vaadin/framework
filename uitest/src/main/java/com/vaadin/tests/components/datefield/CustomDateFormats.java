@@ -2,7 +2,8 @@ package com.vaadin.tests.components.datefield;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -137,9 +138,6 @@ public class CustomDateFormats extends TestBase {
 
     private void addDateField(GridLayout gridLayout, String pattern,
             Locale locale, String expectedDateFormat) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(2010, 1, 1);
-
         Label serversideValueLabel = new Label();
 
         AbstractDateField df = new TestDateField();
@@ -158,16 +156,16 @@ public class CustomDateFormats extends TestBase {
         usedDebugIds.add(debugId);
 
         df.setData(new Data(serversideValueLabel, pattern));
-        df.setValue(cal.getTime());
+        df.setValue(LocalDate.of(2010, 2, 1));
         df.addValueChangeListener(event -> updateServerSideLabel(
                 (AbstractDateField) event.getConnector()));
 
         Label patternLabel = new Label(pattern);
         patternLabel.setWidth(null);
-        SimpleDateFormat expDateFormat = new SimpleDateFormat(
-                expectedDateFormat, locale);
+        DateTimeFormatter expDateFormat = DateTimeFormatter
+                .ofPattern(expectedDateFormat, locale);
 
-        Label expectedLabel = new Label(expDateFormat.format(cal.getTime()));
+        Label expectedLabel = new Label(expDateFormat.format(df.getValue()));
         if (!pattern.equals(expectedDateFormat)) {
             expectedLabel
                     .setValue(expectedLabel.getValue() + " (differs from JDK)");

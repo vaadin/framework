@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import com.vaadin.data.HasValue;
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.CheckBoxWithPropertyDataSource;
 import com.vaadin.ui.CheckBox;
@@ -119,7 +118,6 @@ public class DateFieldRangeValidation extends TestBase {
     private PopupDateField createDateField() {
         PopupDateField df = new PopupDateField();
         df.setLocale(new Locale("en", "US"));
-        df.setResolution(Resolution.DAY);
         df.setBuffered(false);
         df.setImmediate(true);
         return df;

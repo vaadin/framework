@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.datefield;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -40,12 +40,12 @@ public class DateFieldWhenChangingValueAndEnablingParent
         main.addComponent(sub);
 
         chk.addValueChangeListener(event -> {
-            df1.setValue(new Date());
-            df2.setValue(new Date());
-            pdf1.setValue(new Date());
-            pdf2.setValue(new Date());
-            pdf3.setValue(new Date());
-            pdf4.setValue(new Date());
+            df1.setValue(LocalDate.now());
+            df2.setValue(LocalDate.now());
+            pdf1.setValue(LocalDate.now());
+            pdf2.setValue(LocalDate.now());
+            pdf3.setValue(LocalDate.now());
+            pdf4.setValue(LocalDate.now());
             sub.setEnabled(chk.getValue());
         });
     }

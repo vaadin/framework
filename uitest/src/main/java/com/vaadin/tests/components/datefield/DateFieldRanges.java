@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.datefield;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -54,9 +55,6 @@ public class DateFieldRanges extends AbstractTestUI {
     }
 
     private void initializeControlFields() {
-        resoSelect.addItem(Resolution.MINUTE);
-        resoSelect.addItem(Resolution.SECOND);
-        resoSelect.addItem(Resolution.HOUR);
         resoSelect.addItem(Resolution.DAY);
         resoSelect.addItem(Resolution.MONTH);
         resoSelect.addItem(Resolution.YEAR);
@@ -225,9 +223,9 @@ public class DateFieldRanges extends AbstractTestUI {
     }
 
     private void updateValuesForDateField(AbstractDateField df) {
-        Date fromVal = fromRange.getValue();
-        Date toVal = toRange.getValue();
-        Date value = valueDF.getValue();
+        LocalDate fromVal = fromRange.getValue();
+        LocalDate toVal = toRange.getValue();
+        LocalDate value = valueDF.getValue();
         Resolution r = (Resolution) resoSelect.getValue();
         boolean immediate = immediateCB.getValue();
 

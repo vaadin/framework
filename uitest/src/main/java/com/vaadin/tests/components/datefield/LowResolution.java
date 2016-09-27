@@ -1,11 +1,13 @@
 package com.vaadin.tests.components.datefield;
 
+import java.time.LocalDate;
+
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.InlineDateField;
 
 @SuppressWarnings("serial")
 public class LowResolution extends TestBase {
@@ -13,7 +15,7 @@ public class LowResolution extends TestBase {
     @Override
     protected void setup() {
         final DateField dateField = new DateField();
-        dateField.setValue(new java.util.Date());
+        dateField.setValue(LocalDate.now());
         dateField.setResolution(Resolution.MONTH);
         dateField.addValueChangeListener(event -> getMainWindow()
                 .showNotification("Date now" + event.getValue()));
@@ -29,7 +31,7 @@ public class LowResolution extends TestBase {
         getLayout().addComponent(dateField3);
 
         final InlineDateField dateField2 = new InlineDateField();
-        dateField2.setValue(new java.util.Date());
+        dateField2.setValue(LocalDate.now());
         dateField2.setResolution(Resolution.MONTH);
         dateField2.addValueChangeListener(event -> getMainWindow()
                 .showNotification("Date now" + event.getValue()));

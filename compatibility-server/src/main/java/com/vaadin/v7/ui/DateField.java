@@ -34,7 +34,6 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -46,6 +45,7 @@ import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.validator.DateRangeValidator;
 import com.vaadin.v7.event.FieldEvents;
 import com.vaadin.v7.shared.ui.datefield.DateFieldConstants;
+import com.vaadin.v7.shared.ui.datefield.Resolution;
 import com.vaadin.v7.shared.ui.datefield.TextualDateFieldState;
 
 /**

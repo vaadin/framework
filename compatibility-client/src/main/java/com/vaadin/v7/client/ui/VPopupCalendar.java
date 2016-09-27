@@ -52,10 +52,10 @@ import com.vaadin.client.ui.Field;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.aria.AriaHelper;
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.v7.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.v7.client.ui.VCalendarPanel.SubmitListener;
 import com.vaadin.v7.shared.ui.datefield.PopupDateFieldState;
+import com.vaadin.v7.shared.ui.datefield.Resolution;
 
 /**
  * Represents a date selection component with a text field and a popup date

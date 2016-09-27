@@ -37,24 +37,8 @@ public class VDateField extends FlowPanel implements Field, HasEnabled {
     /** For internal use only. May be removed or replaced in the future. */
     public boolean immediate;
 
-    @Deprecated
-    public static final Resolution RESOLUTION_YEAR = Resolution.YEAR;
-    @Deprecated
-    public static final Resolution RESOLUTION_MONTH = Resolution.MONTH;
-    @Deprecated
-    public static final Resolution RESOLUTION_DAY = Resolution.DAY;
-    @Deprecated
-    public static final Resolution RESOLUTION_HOUR = Resolution.HOUR;
-    @Deprecated
-    public static final Resolution RESOLUTION_MIN = Resolution.MINUTE;
-    @Deprecated
-    public static final Resolution RESOLUTION_SEC = Resolution.SECOND;
-
     /** For internal use only. May be removed or replaced in the future. */
     public static String resolutionToString(Resolution res) {
-        if (res.getCalendarField() > Resolution.DAY.getCalendarField()) {
-            return "full";
-        }
         if (res == Resolution.DAY) {
             return "day";
         }
@@ -89,37 +73,20 @@ public class VDateField extends FlowPanel implements Field, HasEnabled {
     }
 
     /**
-     * We need this redundant native function because Java's Date object doesn't
-     * have a setMilliseconds method.
-     * <p>
      * For internal use only. May be removed or replaced in the future.
      */
-    public static native double getTime(int y, int m, int d, int h, int mi,
-            int s, int ms)
-    /*-{
-       try {
-       	var date = new Date(2000,1,1,1); // don't use current date here
-       	if(y && y >= 0) date.setFullYear(y);
-       	if(m && m >= 1) date.setMonth(m-1);
-       	if(d && d >= 0) date.setDate(d);
-       	if(h >= 0) date.setHours(h);
-       	if(mi >= 0) date.setMinutes(mi);
-       	if(s >= 0) date.setSeconds(s);
-       	if(ms >= 0) date.setMilliseconds(ms);
-       	return date.getTime();
-       } catch (e) {
-       	// TODO print some error message on the console
-       	//console.log(e);
-       	return (new Date()).getTime();
-       }
-    }-*/;
-
-    public int getMilliseconds() {
-        return DateTimeService.getMilliseconds(date);
-    }
-
-    public void setMilliseconds(int ms) {
-        DateTimeService.setMilliseconds(date, ms);
+    public static Date getTime(int year, int month, int day) {
+        Date date = new Date(2000 - 1900, 0, 1);
+        if (year >= 0) {
+            date.setYear(year - 1900);
+        }
+        if (month >= 0) {
+            date.setMonth(month - 1);
+        }
+        if (day >= 0) {
+            date.setDate(day);
+        }
+        return date;
     }
 
     public Resolution getCurrentResolution() {
