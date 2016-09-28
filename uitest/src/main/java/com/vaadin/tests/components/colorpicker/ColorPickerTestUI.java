@@ -50,7 +50,7 @@ public class ColorPickerTestUI extends AbstractTestUI {
 
     @Override
     public String getTestDescription() {
-        return "Vaadin 7 compatible ColorPicker";
+        return "Vaadin 8 compatible ColorPicker";
     }
 
     @Override

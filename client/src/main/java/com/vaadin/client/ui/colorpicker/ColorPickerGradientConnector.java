@@ -19,8 +19,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.RpcProxy;
-import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
@@ -64,22 +64,18 @@ public class ColorPickerGradientConnector extends AbstractComponentConnector
     }
 
     @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-        if (stateChangeEvent.hasPropertyChanged("cursorX")
-                || stateChangeEvent.hasPropertyChanged("cursorY")) {
-
-            getWidget().setCursor(getState().cursorX, getState().cursorY);
-        }
-        if (stateChangeEvent.hasPropertyChanged("bgColor")) {
-            getWidget().setBGColor(getState().bgColor);
-        }
-    }
-
-    @Override
     protected void init() {
         super.init();
         getWidget().addMouseUpHandler(this);
     }
 
+    @OnStateChange({ "cursorX", "cursorY" })
+    void updateCursor() {
+        getWidget().setCursor(getState().cursorX, getState().cursorY);
+    }
+
+    @OnStateChange("bgColor")
+    void updateBgColor() {
+        getWidget().setBGColor(getState().bgColor);
+    }
 }

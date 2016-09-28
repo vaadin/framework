@@ -101,13 +101,11 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
 
     protected PopupStyle popupStyle = PopupStyle.POPUP_NORMAL;
 
-    /** The popup window. */
     private ColorPickerPopup window;
 
     /** The currently selected color. */
     protected Color color;
 
-    /** The UI. */
     private UI parent;
 
     private String popupCaption = null;
@@ -452,10 +450,10 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
                 window.setImmediate(true);
                 window.addCloseListener(
                         event -> getState().popupVisible = false);
-                window.addColorChangeListener(
-                        event -> setValue(event.getColor()));
+                window.addValueChangeListener(
+                        event -> setValue(event.getValue()));
 
-                window.getHistory().setColor(color);
+                window.getHistory().setValue(color);
                 window.setPositionX(positionX);
                 window.setPositionY(positionY);
                 window.setVisible(true);
@@ -471,8 +469,8 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
                 window.setHistoryVisible(historyVisible);
                 window.setPreviewVisible(textfieldVisible);
 
-                window.setColor(color);
-                window.getHistory().setColor(color);
+                window.setValue(color);
+                window.getHistory().setValue(color);
                 window.setVisible(true);
 
                 parent.addWindow(window);

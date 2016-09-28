@@ -15,9 +15,9 @@
  */
 package com.vaadin.ui.components.colorpicker;
 
-import java.lang.reflect.Method;
+import java.util.Objects;
 
-import com.vaadin.data.HasValue.ValueChange;
+import com.vaadin.data.HasValue;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.Component;
@@ -29,22 +29,10 @@ import com.vaadin.ui.TextField;
  *
  * @since 7.0.0
  */
-public class ColorPickerPreview extends CssLayout implements ColorSelector {
+public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
 
     private static final String STYLE_DARK_COLOR = "v-textfield-dark";
     private static final String STYLE_LIGHT_COLOR = "v-textfield-light";
-
-    private static final Method COLOR_CHANGE_METHOD;
-    static {
-        try {
-            COLOR_CHANGE_METHOD = ColorChangeListener.class.getDeclaredMethod(
-                    "colorChanged", new Class[] { ColorChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
-            // This should never happen
-            throw new java.lang.RuntimeException(
-                    "Internal error finding methods in ColorPicker");
-        }
-    }
 
     /** The color. */
     private Color color;
@@ -74,11 +62,11 @@ public class ColorPickerPreview extends CssLayout implements ColorSelector {
      */
     public ColorPickerPreview(Color color) {
         this();
-        setColor(color);
+        setValue(color);
     }
 
     @Override
-    public void setColor(Color color) {
+    public void setValue(Color color) {
         this.color = color;
 
         // Unregister listener
@@ -107,23 +95,20 @@ public class ColorPickerPreview extends CssLayout implements ColorSelector {
     }
 
     @Override
-    public Color getColor() {
+    public Color getValue() {
         return color;
     }
 
     @Override
-    public Registration addColorChangeListener(ColorChangeListener listener) {
-        addListener(ColorChangeEvent.class, listener, COLOR_CHANGE_METHOD);
-        return () -> removeListener(ColorChangeEvent.class, listener);
+    public Registration addValueChangeListener(
+            ValueChangeListener<? super Color> listener) {
+        Objects.requireNonNull(listener, "listener cannot be null");
+        addListener(ValueChange.class, listener,
+                ValueChangeListener.VALUE_CHANGE_METHOD);
+        return () -> removeListener(ValueChange.class, listener);
     }
 
-    @Override
-    @Deprecated
-    public void removeColorChangeListener(ColorChangeListener listener) {
-        removeListener(ColorChangeEvent.class, listener);
-    }
-
-    public void valueChange(ValueChange<String> event) {
+    private void valueChange(ValueChange<String> event) {
         String value = event.getValue();
         try {
             if (value != null) {
@@ -177,8 +162,8 @@ public class ColorPickerPreview extends CssLayout implements ColorSelector {
                 }
 
                 oldValue = value;
-                fireEvent(new ColorChangeEvent((Component) field.getData(),
-                        color));
+                fireEvent(new ValueChange<>((Component) field.getData(),
+                        color, event.isUserOriginated()));
             }
 
         } catch (NumberFormatException nfe) {
@@ -187,9 +172,6 @@ public class ColorPickerPreview extends CssLayout implements ColorSelector {
         }
     }
 
-    /**
-     * Called when the component is refreshing
-     */
     @Override
     protected String getCss(Component c) {
         return "background: " + color.getCSS();

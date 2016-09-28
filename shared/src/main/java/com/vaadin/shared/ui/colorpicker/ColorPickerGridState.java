@@ -15,14 +15,14 @@
  */
 package com.vaadin.shared.ui.colorpicker;
 
-import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.AbstractFieldState;
 
 /**
  * Default shared state implementation for ColorPickerGrid.
  *
  * @since 7.0.0
  */
-public class ColorPickerGridState extends AbstractComponentState {
+public class ColorPickerGridState extends AbstractFieldState {
 
     public int rowCount;
 

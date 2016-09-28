@@ -16,37 +16,22 @@
 package com.vaadin.ui.components.colorpicker;
 
 import java.awt.Point;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGridServerRpc;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGridState;
-import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.AbstractField;
 
 /**
  * A component that represents a color selection grid within a color picker.
  *
  * @since 7.0.0
  */
-public class ColorPickerGrid extends AbstractComponent
-        implements ColorSelector {
+public class ColorPickerGrid extends AbstractField<Color> {
 
     private static final String STYLENAME = "v-colorpicker-grid";
-
-    private static final Method COLOR_CHANGE_METHOD;
-    static {
-        try {
-            COLOR_CHANGE_METHOD = ColorChangeListener.class.getDeclaredMethod(
-                    "colorChanged", new Class[] { ColorChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
-            // This should never happen
-            throw new java.lang.RuntimeException(
-                    "Internal error finding methods in ColorPicker");
-        }
-    }
 
     private ColorPickerGridServerRpc rpc = new ColorPickerGridServerRpc() {
 
@@ -54,14 +39,14 @@ public class ColorPickerGrid extends AbstractComponent
         public void select(int x, int y) {
             ColorPickerGrid.this.x = x;
             ColorPickerGrid.this.y = y;
-
-            fireColorChanged(colorGrid[y][x]);
+            fireEvent(new ValueChange<>(ColorPickerGrid.this,
+                    colorGrid[y][x], true));
         }
 
         @Override
         public void refresh() {
-            for (int row = 0; row < rows; row++) {
-                for (int col = 0; col < columns; col++) {
+            for (int row = 0; row < getRows(); row++) {
+                for (int col = 0; col < getColumns(); col++) {
                     changedColors.put(new Point(row, col), colorGrid[row][col]);
                 }
             }
@@ -70,32 +55,21 @@ public class ColorPickerGrid extends AbstractComponent
         }
     };
 
-    /** The x-coordinate. */
+    /** The selected x coordinate. */
     private int x = 0;
 
-    /** The y-coordinate. */
+    /** The selected y coordinate. */
     private int y = 0;
 
-    /** The rows. */
-    private int rows;
+    private Color[][] colorGrid;
 
-    /** The columns. */
-    private int columns;
-
-    /** The color grid. */
-    private Color[][] colorGrid = new Color[1][1];
-
-    /** The changed colors. */
-    private final Map<Point, Color> changedColors = new HashMap<Point, Color>();
+    private final Map<Point, Color> changedColors = new HashMap<>();
 
     /**
      * Instantiates a new color picker grid.
      */
     public ColorPickerGrid() {
-        registerRpc(rpc);
-        setPrimaryStyleName(STYLENAME);
-        setColorGrid(new Color[1][1]);
-        setColor(Color.WHITE);
+        this(1, 1);
     }
 
     /**
@@ -107,10 +81,8 @@ public class ColorPickerGrid extends AbstractComponent
      *            the columns
      */
     public ColorPickerGrid(int rows, int columns) {
-        registerRpc(rpc);
-        setPrimaryStyleName(STYLENAME);
-        setColorGrid(new Color[rows][columns]);
-        setColor(Color.WHITE);
+        this(new Color[rows][columns]);
+        setValue(Color.WHITE);
     }
 
     /**
@@ -126,20 +98,18 @@ public class ColorPickerGrid extends AbstractComponent
     }
 
     private void setColumnCount(int columns) {
-        this.columns = columns;
         getState().columnCount = columns;
     }
 
     private void setRowCount(int rows) {
-        this.rows = rows;
         getState().rowCount = rows;
     }
 
     private void sendChangedColors() {
         if (!changedColors.isEmpty()) {
             String[] colors = new String[changedColors.size()];
-            String[] XCoords = new String[changedColors.size()];
-            String[] YCoords = new String[changedColors.size()];
+            String[] xCoords = new String[changedColors.size()];
+            String[] yCoords = new String[changedColors.size()];
             int counter = 0;
             for (Point p : changedColors.keySet()) {
                 Color c = changedColors.get(p);
@@ -150,13 +120,13 @@ public class ColorPickerGrid extends AbstractComponent
                 String color = c.getCSS();
 
                 colors[counter] = color;
-                XCoords[counter] = String.valueOf((int) p.getX());
-                YCoords[counter] = String.valueOf((int) p.getY());
+                xCoords[counter] = String.valueOf((int) p.getX());
+                yCoords[counter] = String.valueOf((int) p.getY());
                 counter++;
             }
             getState().changedColor = colors;
-            getState().changedX = XCoords;
-            getState().changedY = YCoords;
+            getState().changedX = xCoords;
+            getState().changedY = yCoords;
 
             changedColors.clear();
         }
@@ -173,39 +143,12 @@ public class ColorPickerGrid extends AbstractComponent
         setColumnCount(colors[0].length);
         colorGrid = colors;
 
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < columns; col++) {
+        for (int row = 0; row < getRows(); row++) {
+            for (int col = 0; col < getColumns(); col++) {
                 changedColors.put(new Point(row, col), colorGrid[row][col]);
             }
         }
         sendChangedColors();
-
-        markAsDirty();
-    }
-
-    @Override
-    public Registration addColorChangeListener(ColorChangeListener listener) {
-        addListener(ColorChangeEvent.class, listener, COLOR_CHANGE_METHOD);
-        return () -> removeListener(ColorChangeEvent.class, listener);
-    }
-
-    @Override
-    public Color getColor() {
-        return colorGrid[x][y];
-    }
-
-    @Override
-    @Deprecated
-    public void removeColorChangeListener(ColorChangeListener listener) {
-        removeListener(ColorChangeEvent.class, listener);
-    }
-
-    @Override
-    public void setColor(Color color) {
-        colorGrid[x][y] = color;
-        changedColors.put(new Point(x, y), color);
-        sendChangedColors();
-        markAsDirty();
     }
 
     /**
@@ -217,7 +160,7 @@ public class ColorPickerGrid extends AbstractComponent
      *            the y
      */
     public void setPosition(int x, int y) {
-        if (x >= 0 && x < columns && y >= 0 && y < rows) {
+        if (x >= 0 && x < getColumns() && y >= 0 && y < getRows()) {
             this.x = x;
             this.y = y;
         }
@@ -232,18 +175,33 @@ public class ColorPickerGrid extends AbstractComponent
         return new int[] { x, y };
     }
 
-    /**
-     * Notifies the listeners that a color change has occurred
-     *
-     * @param color
-     *            The color which it changed to
-     */
-    public void fireColorChanged(Color color) {
-        fireEvent(new ColorChangeEvent(this, color));
+    @Override
+    public Color getValue() {
+        return colorGrid[x][y];
+    }
+
+    @Override
+    protected void doSetValue(Color color) {
+        colorGrid[x][y] = color;
+        changedColors.put(new Point(x, y), color);
+        sendChangedColors();
     }
 
     @Override
     protected ColorPickerGridState getState() {
         return (ColorPickerGridState) super.getState();
+    }
+
+    @Override
+    protected ColorPickerGridState getState(boolean markAsDirty) {
+        return (ColorPickerGridState) super.getState(markAsDirty);
+    }
+
+    private int getColumns() {
+        return getState(false).columnCount;
+    }
+
+    private int getRows() {
+        return getState(false).rowCount;
     }
 }

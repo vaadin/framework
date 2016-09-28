@@ -16,11 +16,13 @@
 package com.vaadin.data;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.EventListener;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.shared.Registration;
+import com.vaadin.util.ReflectTools;
 
 /**
  * A generic interface for field components and other user interface objects
@@ -116,6 +118,11 @@ public interface HasValue<V> extends Serializable {
     @FunctionalInterface
     public interface ValueChangeListener<V> extends
             EventListener<ValueChange<V>> {
+
+        @Deprecated
+        public static final Method VALUE_CHANGE_METHOD = ReflectTools
+                .findMethod(ValueChangeListener.class, "accept",
+                        ValueChange.class);
 
         /**
          * Invoked when this listener receives a value change event from an

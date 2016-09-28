@@ -15,15 +15,16 @@
  */
 package com.vaadin.ui.components.colorpicker;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vaadin.data.HasValue;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.colorpicker.Color;
@@ -31,7 +32,6 @@ import com.vaadin.ui.AbstractColorPicker.Coordinates2Color;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
@@ -46,22 +46,9 @@ import com.vaadin.ui.Window;
  *
  * @since 7.0.0
  */
-public class ColorPickerPopup extends Window
-        implements ClickListener, ColorChangeListener, ColorSelector {
+public class ColorPickerPopup extends Window implements HasValue<Color> {
 
     private static final String STYLENAME = "v-colorpicker-popup";
-
-    private static final Method COLOR_CHANGE_METHOD;
-    static {
-        try {
-            COLOR_CHANGE_METHOD = ColorChangeListener.class.getDeclaredMethod(
-                    "colorChanged", new Class[] { ColorChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
-            // This should never happen
-            throw new java.lang.RuntimeException(
-                    "Internal error finding methods in ColorPicker");
-        }
-    }
 
     /** The tabs. */
     private final TabSheet tabs = new TabSheet();
@@ -130,7 +117,7 @@ public class ColorPickerPopup extends Window
     private ColorPickerSelect colorSelect;
 
     /** The selectors. */
-    private final Set<ColorSelector> selectors = new HashSet<>();
+    private final Set<HasValue<Color>> selectors = new HashSet<>();
 
     /**
      * Set true while the slider values are updated after colorChange. When
@@ -155,7 +142,7 @@ public class ColorPickerPopup extends Window
         setImmediate(true);
         // Create the history
         history = new ColorPickerHistory();
-        history.addColorChangeListener(this);
+        history.addValueChangeListener(this::colorChanged);
     }
 
     /**
@@ -175,21 +162,21 @@ public class ColorPickerPopup extends Window
         rgbPreview = new ColorPickerPreview(selectedColor);
         rgbPreview.setWidth("240px");
         rgbPreview.setHeight("20px");
-        rgbPreview.addColorChangeListener(this);
+        rgbPreview.addValueChangeListener(this::colorChanged);
         selectors.add(rgbPreview);
 
         // Create the preview on the hsv tab
         hsvPreview = new ColorPickerPreview(selectedColor);
         hsvPreview.setWidth("240px");
         hsvPreview.setHeight("20px");
-        hsvPreview.addColorChangeListener(this);
+        hsvPreview.addValueChangeListener(this::colorChanged);
         selectors.add(hsvPreview);
 
         // Create the preview on the swatches tab
         selPreview = new ColorPickerPreview(selectedColor);
         selPreview.setWidth("100%");
         selPreview.setHeight("20px");
-        selPreview.addColorChangeListener(this);
+        selPreview.addValueChangeListener(this::colorChanged);
         selectors.add(selPreview);
 
         // Create the tabs
@@ -231,7 +218,7 @@ public class ColorPickerPopup extends Window
         layout.addComponent(historyContainer);
 
         // Add the resize button for the history
-        resize.addClickListener(this);
+        resize.addClickListener(this::resizeButtonClick);
         resize.setData(new Boolean(false));
         resize.setWidth("100%");
         resize.setHeight("10px");
@@ -240,10 +227,10 @@ public class ColorPickerPopup extends Window
 
         // Add the buttons
         ok.setWidth("70px");
-        ok.addClickListener(this);
+        ok.addClickListener(this::okButtonClick);
 
         cancel.setWidth("70px");
-        cancel.addClickListener(this);
+        cancel.addClickListener(this::cancelButtonClick);
 
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.addComponent(ok);
@@ -268,8 +255,8 @@ public class ColorPickerPopup extends Window
 
         // Add the RGB color gradient
         rgbGradient = new ColorPickerGradient("rgb-gradient", rgbConverter);
-        rgbGradient.setColor(color);
-        rgbGradient.addColorChangeListener(this);
+        rgbGradient.setValue(color);
+        rgbGradient.addValueChangeListener(this::colorChanged);
         rgbLayout.addComponent(rgbGradient);
         selectors.add(rgbGradient);
 
@@ -287,7 +274,7 @@ public class ColorPickerPopup extends Window
             if (!updatingColors) {
                 Color newColor = new Color((int) red, selectedColor.getGreen(),
                         selectedColor.getBlue());
-                setColor(newColor);
+                setValue(newColor);
             }
         });
 
@@ -298,7 +285,7 @@ public class ColorPickerPopup extends Window
             if (!updatingColors) {
                 Color newColor = new Color(selectedColor.getRed(), (int) green,
                         selectedColor.getBlue());
-                setColor(newColor);
+                setValue(newColor);
             }
         });
         sliders.addComponent(greenSlider);
@@ -308,7 +295,7 @@ public class ColorPickerPopup extends Window
             if (!updatingColors) {
                 Color newColor = new Color(selectedColor.getRed(),
                         selectedColor.getGreen(), (int) blue);
-                setColor(newColor);
+                setValue(newColor);
             }
         });
         sliders.addComponent(blueSlider);
@@ -340,8 +327,8 @@ public class ColorPickerPopup extends Window
 
         // Add the hsv gradient
         hsvGradient = new ColorPickerGradient("hsv-gradient", hsvConverter);
-        hsvGradient.setColor(color);
-        hsvGradient.addColorChangeListener(this);
+        hsvGradient.setValue(color);
+        hsvGradient.addValueChangeListener(this::colorChanged);
         hsvLayout.addComponent(hsvGradient);
         selectors.add(hsvGradient);
 
@@ -372,7 +359,7 @@ public class ColorPickerPopup extends Window
                 // Set the color
                 Color newColor = new Color(
                         Color.HSVtoRGB(hue, saturation, value));
-                setColor(newColor);
+                setValue(newColor);
 
                 /*
                  * Set the background color of the hue gradient. This has to be
@@ -398,7 +385,7 @@ public class ColorPickerPopup extends Window
                         .parseFloat(valueSlider.getValue().toString())) / 100f;
                 Color newColor = new Color(
                         Color.HSVtoRGB(hue, saturation, value));
-                setColor(newColor);
+                setValue(newColor);
             }
         });
         sliders.addComponent(saturationSlider);
@@ -418,7 +405,7 @@ public class ColorPickerPopup extends Window
 
                 Color newColor = new Color(
                         Color.HSVtoRGB(hue, saturation, value));
-                setColor(newColor);
+                setValue(newColor);
             }
         });
 
@@ -440,42 +427,33 @@ public class ColorPickerPopup extends Window
         selLayout.addStyleName("seltab");
 
         colorSelect = new ColorPickerSelect();
-        colorSelect.addColorChangeListener(this);
+        colorSelect.addValueChangeListener(this::colorChanged);
         selLayout.addComponent(colorSelect);
 
         return selLayout;
     }
 
-    @Override
-    public void buttonClick(ClickEvent event) {
-        if (event.getButton() == resize) {
+    private void resizeButtonClick(ClickEvent event) {
 
-            boolean minimize = (Boolean) resize.getData();
-            if (minimize) {
-                historyContainer.setHeight("27px");
-                history.setHeight("22px");
-            } else {
-                historyContainer.setHeight("90px");
-                history.setHeight("85px");
-            }
-
-            resize.setData(new Boolean(!minimize));
-
-        } else if (event.getButton() == ok) {
-            history.setColor(getColor());
-            fireColorChanged();
-            close();
-
-        } else if (event.getButton() == cancel) {
-            close();
+        boolean minimize = (Boolean) resize.getData();
+        if (minimize) {
+            historyContainer.setHeight("27px");
+            history.setHeight("22px");
+        } else {
+            historyContainer.setHeight("90px");
+            history.setHeight("85px");
         }
+
+        resize.setData(new Boolean(!minimize));
     }
 
-    /**
-     * Notifies the listeners that the color changed.
-     */
-    public void fireColorChanged() {
-        fireEvent(new ColorChangeEvent(this, getColor()));
+    private void okButtonClick(ClickEvent event) {
+        fireEvent(new ValueChange<>(this, true));
+        close();
+    }
+
+    private void cancelButtonClick(ClickEvent event) {
+        close();
     }
 
     /**
@@ -488,25 +466,34 @@ public class ColorPickerPopup extends Window
     }
 
     @Override
-    public void setColor(Color color) {
+    public void setValue(Color color) {
         if (color == null) {
             return;
         }
 
         selectedColor = color;
 
-        hsvGradient.setColor(selectedColor);
-        hsvPreview.setColor(selectedColor);
+        hsvGradient.setValue(selectedColor);
+        hsvPreview.setValue(selectedColor);
 
-        rgbGradient.setColor(selectedColor);
-        rgbPreview.setColor(selectedColor);
+        rgbGradient.setValue(selectedColor);
+        rgbPreview.setValue(selectedColor);
 
-        selPreview.setColor(selectedColor);
+        selPreview.setValue(selectedColor);
     }
 
     @Override
-    public Color getColor() {
+    public Color getValue() {
         return selectedColor;
+    }
+
+    @Override
+    public Registration addValueChangeListener(
+            ValueChangeListener<? super Color> listener) {
+        Objects.requireNonNull(listener, "listener cannot be null");
+        addListener(ValueChange.class, listener,
+                ValueChangeListener.VALUE_CHANGE_METHOD);
+        return () -> removeListener(ValueChange.class, listener);
     }
 
     /**
@@ -518,9 +505,8 @@ public class ColorPickerPopup extends Window
         return Collections.unmodifiableList(history.getHistory());
     }
 
-    @Override
-    public void colorChanged(ColorChangeEvent event) {
-        setColor(event.getColor());
+    private void colorChanged(ValueChange<Color> event) {
+        setValue(event.getValue());
 
         updatingColors = true;
 
@@ -530,10 +516,10 @@ public class ColorPickerPopup extends Window
 
         updatingColors = false;
 
-        for (ColorSelector s : selectors) {
+        for (HasValue<Color> s : selectors) {
             if (event.getSource() != s && s != this
-                    && s.getColor() != selectedColor) {
-                s.setColor(selectedColor);
+                    && s.getValue() != selectedColor) {
+                s.setValue(selectedColor);
             }
         }
     }
@@ -560,18 +546,6 @@ public class ColorPickerPopup extends Window
             getLogger().log(Level.WARNING, "Unable to set HSV color value to "
                     + hsv[0] + "," + hsv[1] + "," + hsv[2], e);
         }
-    }
-
-    @Override
-    public Registration addColorChangeListener(ColorChangeListener listener) {
-        addListener(ColorChangeEvent.class, listener, COLOR_CHANGE_METHOD);
-        return () -> removeListener(ColorChangeEvent.class, listener);
-    }
-
-    @Override
-    @Deprecated
-    public void removeColorChangeListener(ColorChangeListener listener) {
-        removeListener(ColorChangeEvent.class, listener);
     }
 
     /**
@@ -649,6 +623,7 @@ public class ColorPickerPopup extends Window
      * Sets the visibility of the History.
      *
      * @param visible
+     *            {@code true} to show the history, {@code false} to hide it
      */
     public void setHistoryVisible(boolean visible) {
         historyContainer.setVisible(visible);
@@ -659,6 +634,7 @@ public class ColorPickerPopup extends Window
      * Sets the preview visibility.
      *
      * @param visible
+     *            {@code true} to show the preview, {@code false} to hide it
      */
     public void setPreviewVisible(boolean visible) {
         hsvPreview.setVisible(visible);

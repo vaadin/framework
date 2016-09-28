@@ -15,7 +15,6 @@
  */
 package com.vaadin.ui.components.colorpicker;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,57 +22,43 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.colorpicker.Color;
-import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.CustomField;
 
 /**
  * A component that represents color selection history within a color picker.
  *
  * @since 7.0.0
  */
-public class ColorPickerHistory extends CustomComponent
-        implements ColorSelector, ColorChangeListener {
+public class ColorPickerHistory extends CustomField<Color> {
 
     private static final String STYLENAME = "v-colorpicker-history";
 
-    private static final Method COLOR_CHANGE_METHOD;
-    static {
-        try {
-            COLOR_CHANGE_METHOD = ColorChangeListener.class.getDeclaredMethod(
-                    "colorChanged", new Class[] { ColorChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
-            // This should never happen
-            throw new java.lang.RuntimeException(
-                    "Internal error finding methods in ColorPicker");
-        }
-    }
+    private static final int ROWS = 4;
 
-    /** The rows. */
-    private static final int rows = 4;
-
-    /** The columns. */
-    private static final int columns = 15;
+    private static final int COLUMNS = 15;
 
     /** Temporary color history for when the component is detached. */
-    private ArrayBlockingQueue<Color> tempHistory = new ArrayBlockingQueue<Color>(
-            rows * columns);
+    private ArrayBlockingQueue<Color> tempHistory = new ArrayBlockingQueue<>(
+            ROWS * COLUMNS);
 
-    /** The grid. */
-    private final ColorPickerGrid grid;
-
-    /**
-     * Instantiates a new color picker history.
-     */
-    public ColorPickerHistory() {
+    @Override
+    protected Component initContent() {
         setPrimaryStyleName(STYLENAME);
 
-        grid = new ColorPickerGrid(rows, columns);
+        ColorPickerGrid grid = new ColorPickerGrid(ROWS, COLUMNS);
         grid.setWidth("100%");
         grid.setPosition(0, 0);
-        grid.addColorChangeListener(this);
+        grid.addValueChangeListener(event -> fireEvent(new ValueChange<>(this,
+                event.isUserOriginated())));
 
-        setCompositionRoot(grid);
+        return grid;
+    }
+
+    @Override
+    protected ColorPickerGrid getContent() {
+        return (ColorPickerGrid) super.getContent();
     }
 
     @Override
@@ -83,13 +68,13 @@ public class ColorPickerHistory extends CustomComponent
     }
 
     private void createColorHistoryIfNecessary() {
-        List<Color> tempColors = new ArrayList<Color>(tempHistory);
+        List<Color> tempColors = new ArrayList<>(tempHistory);
         if (getSession().getAttribute("colorPickerHistory") == null) {
             getSession().setAttribute("colorPickerHistory",
-                    new ArrayBlockingQueue<Color>(rows * columns));
+                    new ArrayBlockingQueue<Color>(ROWS * COLUMNS));
         }
         for (Color color : tempColors) {
-            setColor(color);
+            setValue(color);
         }
         tempHistory.clear();
     }
@@ -109,11 +94,16 @@ public class ColorPickerHistory extends CustomComponent
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
-        grid.setHeight(height);
+        getContent().setHeight(height);
     }
 
     @Override
-    public void setColor(Color color) {
+    public Color getValue() {
+        return getColorHistory().peek();
+    }
+
+    @Override
+    protected void doSetValue(Color color) {
 
         ArrayBlockingQueue<Color> colorHistory = getColorHistory();
 
@@ -135,7 +125,7 @@ public class ColorPickerHistory extends CustomComponent
             }
         }
 
-        List<Color> colorList = new ArrayList<Color>(colorHistory);
+        List<Color> colorList = new ArrayList<>(colorHistory);
 
         // Invert order of colors
         Collections.reverse(colorList);
@@ -144,11 +134,11 @@ public class ColorPickerHistory extends CustomComponent
         Collections.swap(colorList, colorList.indexOf(color), 0);
 
         // Create 2d color map
-        Color[][] colors = new Color[rows][columns];
+        Color[][] colors = new Color[ROWS][COLUMNS];
         iter = colorList.iterator();
 
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < columns; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLUMNS; col++) {
                 if (iter.hasNext()) {
                     colors[row][col] = iter.next();
                 } else {
@@ -157,13 +147,8 @@ public class ColorPickerHistory extends CustomComponent
             }
         }
 
-        grid.setColorGrid(colors);
-        grid.markAsDirty();
-    }
-
-    @Override
-    public Color getColor() {
-        return getColorHistory().peek();
+        getContent().setColorGrid(colors);
+        getContent().markAsDirty();
     }
 
     /**
@@ -187,22 +172,5 @@ public class ColorPickerHistory extends CustomComponent
      */
     public boolean hasColor(Color c) {
         return getColorHistory().contains(c);
-    }
-
-    @Override
-    public Registration addColorChangeListener(ColorChangeListener listener) {
-        addListener(ColorChangeEvent.class, listener, COLOR_CHANGE_METHOD);
-        return () -> removeListener(ColorChangeEvent.class, listener);
-    }
-
-    @Override
-    @Deprecated
-    public void removeColorChangeListener(ColorChangeListener listener) {
-        removeListener(ColorChangeEvent.class, listener);
-    }
-
-    @Override
-    public void colorChanged(ColorChangeEvent event) {
-        fireEvent(new ColorChangeEvent(this, event.getColor()));
     }
 }
