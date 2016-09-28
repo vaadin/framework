@@ -34,7 +34,7 @@ public class AbstractColorPickerDeclarativeTest
                 + " history-visibility=false textfield-visibility=false />";
         ColorPicker colorPicker = new ColorPicker();
         int colorInt = Integer.parseInt("fafafa", 16);
-        colorPicker.setColor(new Color(colorInt));
+        colorPicker.setValue(new Color(colorInt));
         colorPicker.setDefaultCaptionEnabled(true);
         colorPicker.setPosition(100, 100);
         colorPicker.setPopupStyle(PopupStyle.POPUP_SIMPLE);
@@ -63,7 +63,7 @@ public class AbstractColorPickerDeclarativeTest
                 + " history-visibility=false textfield-visibility=false />";
         AbstractColorPicker colorPicker = new ColorPickerArea();
         int colorInt = Integer.parseInt("fafafa", 16);
-        colorPicker.setColor(new Color(colorInt));
+        colorPicker.setValue(new Color(colorInt));
         colorPicker.setDefaultCaptionEnabled(true);
         colorPicker.setPosition(100, 100);
         colorPicker.setPopupStyle(PopupStyle.POPUP_SIMPLE);

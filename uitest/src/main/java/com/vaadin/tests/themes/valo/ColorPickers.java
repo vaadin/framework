@@ -18,11 +18,11 @@ package com.vaadin.tests.themes.valo;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.colorpicker.Color;
+import com.vaadin.ui.AbstractColorPicker.PopupStyle;
 import com.vaadin.ui.ColorPicker;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.AbstractColorPicker.PopupStyle;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class ColorPickers extends VerticalLayout implements View {
@@ -43,7 +43,7 @@ public class ColorPickers extends VerticalLayout implements View {
         ColorPicker cp = new ColorPicker();
         cp.setDefaultCaptionEnabled(true);
         cp.setIcon(testIcon.get());
-        cp.setColor(new Color(138, 73, 115));
+        cp.setValue(new Color(138, 73, 115));
         row.addComponent(cp);
 
         cp = new ColorPicker();

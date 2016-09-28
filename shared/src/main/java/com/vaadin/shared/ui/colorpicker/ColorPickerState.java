@@ -15,7 +15,7 @@
  */
 package com.vaadin.shared.ui.colorpicker;
 
-import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.annotations.DelegateToWidget;
 
 /**
@@ -23,7 +23,7 @@ import com.vaadin.shared.annotations.DelegateToWidget;
  *
  * @since 7.0.0
  */
-public class ColorPickerState extends AbstractComponentState {
+public class ColorPickerState extends AbstractFieldState {
     {
         primaryStyleName = "v-colorpicker";
     }
@@ -35,5 +35,4 @@ public class ColorPickerState extends AbstractComponentState {
     public String color = null;
 
     public boolean showDefaultCaption;
-
 }

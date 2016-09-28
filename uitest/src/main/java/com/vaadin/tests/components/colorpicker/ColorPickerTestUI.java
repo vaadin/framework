@@ -26,6 +26,8 @@ import java.util.Date;
 
 import javax.imageio.ImageIO;
 
+import com.vaadin.annotations.Widgetset;
+import com.vaadin.data.HasValue.ValueChange;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.colorpicker.Color;
@@ -42,11 +44,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.components.colorpicker.ColorChangeEvent;
-import com.vaadin.ui.components.colorpicker.ColorChangeListener;
 
-public class ColorPickerTestUI extends AbstractTestUI
-        implements ColorChangeListener {
+@Widgetset("com.vaadin.DefaultWidgetSet")
+public class ColorPickerTestUI extends AbstractTestUI {
 
     @Override
     public String getTestDescription() {
@@ -274,14 +274,14 @@ public class ColorPickerTestUI extends AbstractTestUI
         HorizontalLayout layout1 = createHorizontalLayout();
 
         colorpicker1 = new ColorPicker("Foreground", foregroundColor);
-        colorpicker1.setHtmlContentAllowed(true);
-        colorpicker1.addColorChangeListener(this);
+        colorpicker1.setCaptionAsHtml(true);
+        colorpicker1.addValueChangeListener(this::colorChanged);
         colorpicker1.setId("colorpicker1");
         layout1.addComponent(colorpicker1);
         layout1.setComponentAlignment(colorpicker1, Alignment.MIDDLE_CENTER);
 
         colorpicker2 = new ColorPicker("Background", backgroundColor);
-        colorpicker2.addColorChangeListener(this);
+        colorpicker2.addValueChangeListener(this::colorChanged);
         colorpicker2.setId("colorpicker2");
         layout1.addComponent(colorpicker2);
         layout1.setComponentAlignment(colorpicker2, Alignment.MIDDLE_CENTER);
@@ -294,7 +294,7 @@ public class ColorPickerTestUI extends AbstractTestUI
         HorizontalLayout layout2 = createHorizontalLayout();
 
         colorpicker3 = new ColorPicker("Foreground", foregroundColor);
-        colorpicker3.addColorChangeListener(this);
+        colorpicker3.addValueChangeListener(this::colorChanged);
         colorpicker3.setWidth("120px");
         colorpicker3.setCaption("Foreground");
         colorpicker3.setId("colorpicker3");
@@ -302,7 +302,7 @@ public class ColorPickerTestUI extends AbstractTestUI
         layout2.setComponentAlignment(colorpicker3, Alignment.MIDDLE_CENTER);
 
         colorpicker4 = new ColorPicker("Background", backgroundColor);
-        colorpicker4.addColorChangeListener(this);
+        colorpicker4.addValueChangeListener(this::colorChanged);
         colorpicker4.setWidth("120px");
         colorpicker4.setCaption("Background");
         colorpicker4.setId("colorpicker4");
@@ -318,7 +318,7 @@ public class ColorPickerTestUI extends AbstractTestUI
 
         colorpicker5 = new ColorPickerArea("Foreground", foregroundColor);
         colorpicker5.setCaption("Foreground");
-        colorpicker5.addColorChangeListener(this);
+        colorpicker5.addValueChangeListener(this::colorChanged);
         colorpicker5.setId("colorpicker5");
         layout3.addComponent(colorpicker5);
         layout3.setComponentAlignment(colorpicker5, Alignment.MIDDLE_CENTER);
@@ -326,7 +326,7 @@ public class ColorPickerTestUI extends AbstractTestUI
         colorpicker6 = new ColorPickerArea("Background", backgroundColor);
         colorpicker6.setCaption("Background");
         colorpicker6.setDefaultCaptionEnabled(false);
-        colorpicker6.addColorChangeListener(this);
+        colorpicker6.addValueChangeListener(this::colorChanged);
         colorpicker6.setId("colorpicker6");
         layout3.addComponent(colorpicker6);
         layout3.setComponentAlignment(colorpicker6, Alignment.MIDDLE_CENTER);
@@ -451,36 +451,35 @@ public class ColorPickerTestUI extends AbstractTestUI
         display.setSource(imageresource);
     }
 
-    @Override
-    public void colorChanged(ColorChangeEvent event) {
+    private void colorChanged(ValueChange<Color> event) {
         if (event.getSource() == colorpicker1
                 || event.getSource() == colorpicker3
                 || event.getSource() == colorpicker5) {
-            foregroundColor = event.getColor();
+            foregroundColor = event.getValue();
 
             if (event.getSource() != colorpicker1) {
-                colorpicker1.setColor(event.getColor());
+                colorpicker1.setValue(event.getValue());
             }
             if (event.getSource() != colorpicker3) {
-                colorpicker3.setColor(event.getColor());
+                colorpicker3.setValue(event.getValue());
             }
             if (event.getSource() != colorpicker5) {
-                colorpicker5.setColor(event.getColor());
+                colorpicker5.setValue(event.getValue());
             }
 
         } else if (event.getSource() == colorpicker2
                 || event.getSource() == colorpicker4
                 || event.getSource() == colorpicker6) {
-            backgroundColor = event.getColor();
+            backgroundColor = event.getValue();
 
             if (event.getSource() != colorpicker2) {
-                colorpicker2.setColor(event.getColor());
+                colorpicker2.setValue(event.getValue());
             }
             if (event.getSource() != colorpicker4) {
-                colorpicker4.setColor(event.getColor());
+                colorpicker4.setValue(event.getValue());
             }
             if (event.getSource() != colorpicker6) {
-                colorpicker6.setColor(event.getColor());
+                colorpicker6.setValue(event.getValue());
             }
 
         } else {

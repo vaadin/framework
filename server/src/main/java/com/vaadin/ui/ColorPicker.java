@@ -63,5 +63,4 @@ public class ColorPicker extends AbstractColorPicker {
         setPrimaryStyleName(STYLENAME_BUTTON);
         addStyleName(STYLENAME_DEFAULT);
     }
-
 }
