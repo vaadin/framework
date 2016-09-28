@@ -107,14 +107,14 @@ public class VColorPickerGradient extends FocusPanel implements
     /**
      * Returns the latest x-coordinate for pressed-down mouse cursor.
      */
-    protected int getCursorX() {
+    public int getCursorX() {
         return cursorX;
     }
 
     /**
      * Returns the latest y-coordinate for pressed-down mouse cursor.
      */
-    protected int getCursorY() {
+    public int getCursorY() {
         return cursorY;
     }
 
@@ -123,7 +123,7 @@ public class VColorPickerGradient extends FocusPanel implements
      *
      * @param bgColor
      */
-    protected void setBGColor(String bgColor) {
+    public void setBGColor(String bgColor) {
         if (bgColor == null) {
             background.getElement().getStyle().clearBackgroundColor();
         } else {

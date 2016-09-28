@@ -68,11 +68,13 @@ public class VColorPickerGrid extends AbsolutePanel
     /**
      * Updates the row and column count and creates a new grid based on them.
      * The new grid replaces the old grid if one existed.
-     *
+     * <p>
+     * For internal use only. May be renamed or removed in a future release.
+     * 
      * @param rowCount
      * @param columnCount
      */
-    protected void updateGrid(int rowCount, int columnCount) {
+    public void updateGrid(int rowCount, int columnCount) {
         rows = rowCount;
         columns = columnCount;
         this.remove(grid);
@@ -83,12 +85,14 @@ public class VColorPickerGrid extends AbsolutePanel
      * Updates the changed colors within the grid based on the given x- and
      * y-coordinates. Nothing happens if any of the parameters is null or the
      * parameter lengths don't match.
+     * <p>
+     * For internal use only. May be renamed or removed in a future release.
      *
      * @param changedColor
      * @param changedX
      * @param changedY
      */
-    protected void updateColor(String[] changedColor, String[] changedX,
+    public void updateColor(String[] changedColor, String[] changedX,
             String[] changedY) {
         if (changedColor != null && changedX != null && changedY != null) {
             if (changedColor.length == changedX.length
@@ -109,22 +113,24 @@ public class VColorPickerGrid extends AbsolutePanel
     /**
      * Returns currently selected x-coordinate of the grid.
      */
-    protected int getSelectedX() {
+    public int getSelectedX() {
         return selectedX;
     }
 
     /**
      * Returns currently selected y-coordinate of the grid.
      */
-    protected int getSelectedY() {
+    public int getSelectedY() {
         return selectedY;
     }
 
     /**
      * Returns true if the colors have been successfully updated at least once,
      * false otherwise.
+     * <p>
+     * For internal use only. May be renamed or removed in a future release.
      */
-    protected boolean isGridLoaded() {
+    public boolean isGridLoaded() {
         return gridLoaded;
     }
 
