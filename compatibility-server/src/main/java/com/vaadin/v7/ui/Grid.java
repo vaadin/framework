@@ -4560,6 +4560,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     private Object editedItemId = null;
     private boolean editorActive = false;
+    /**
+     * True while the editor is storing the field values, i.e. commiting the
+     * field group.
+     */
+    private boolean editorSaving = false;
     private FieldGroup editorFieldGroup = new CustomFieldGroup();
 
     private CellStyleGenerator cellStyleGenerator;
@@ -6902,7 +6907,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * @see FieldGroup#commit()
      */
     public void saveEditor() throws CommitException {
-        editorFieldGroup.commit();
+        try {
+            editorSaving = true;
+            editorFieldGroup.commit();
+        } finally {
+            editorSaving = false;
+        }
     }
 
     /**
@@ -6910,6 +6920,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * possible unsaved changes in the editor fields.
      */
     public void cancelEditor() {
+        if (editorSaving) {
+            // If the editor is already saving the values, it's too late to
+            // cancel it. This prevents item set changes from propagating during
+            // save, causing discard to be run during commit.
+            return;
+        }
         if (isEditorActive()) {
             getEditorRpc()
                     .cancel(getContainerDataSource().indexOfId(editedItemId));

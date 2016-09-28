@@ -15,15 +15,20 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -119,6 +124,30 @@ public class GridColumnHidingTest extends MultiBrowserTest {
                 "custom age column caption".equals(elements.get(1).getText()));
     }
 
+    @Test
+    public void testShrinkColumnToZeroWithHiddenColumn() {
+        openTestURL();
+
+        // hide all
+        $(ButtonElement.class).get(3).click();
+
+        ButtonElement toggleNameColumn = $(ButtonElement.class).get(0);
+        ButtonElement toggleEmailColumn = $(ButtonElement.class).get(2);
+
+        // Show
+        toggleNameColumn.click();
+        toggleEmailColumn.click();
+
+        GridElement gridElement = $(GridElement.class).first();
+
+        GridCellElement cell = gridElement.getCell(0, 1);
+        dragResizeColumn(1, 0, -cell.getSize().getWidth());
+        assertGreaterOrEqual("Cell got too small.", cell.getSize().getWidth(),
+                10);
+        assertEquals(gridElement.getCell(0, 0).getLocation().getY(),
+                gridElement.getCell(0, 1).getLocation().getY());
+    }
+
     protected WebElement getSidebarOpenButton(GridElement grid) {
         List<WebElement> elements = grid
                 .findElements(By.className("v-grid-sidebar-button"));
@@ -145,5 +174,16 @@ public class GridColumnHidingTest extends MultiBrowserTest {
         List<WebElement> elements = findElements(
                 By.className("v-grid-sidebar-popup"));
         return elements.isEmpty() ? null : elements.get(0);
+    }
+
+    private void dragResizeColumn(int columnIndex, int posX, int offset) {
+        GridElement gridElement = $(GridElement.class).first();
+
+        GridCellElement headerCell = gridElement.getHeaderCell(0, columnIndex);
+        Dimension size = headerCell.getSize();
+        new Actions(getDriver())
+                .moveToElement(headerCell, size.getWidth() + posX,
+                        size.getHeight() / 2)
+                .clickAndHold().moveByOffset(offset, 0).release().perform();
     }
 }

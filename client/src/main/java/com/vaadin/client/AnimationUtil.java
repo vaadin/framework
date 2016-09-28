@@ -19,7 +19,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
-import com.vaadin.client.AnimationUtil.AnimationEndListener;
 
 /**
  * Utility methods for working with CSS transitions and animations.
@@ -67,15 +66,15 @@ public class AnimationUtil {
         listener.@com.vaadin.client.AnimationUtil.AnimationEndListener::onAnimationEnd(Lcom/google/gwt/dom/client/NativeEvent;)(e);
       });
       callbackFunc.listener = listener;
-
+    
       elem.addEventListener(@com.vaadin.client.AnimationUtil::ANIMATION_END_EVENT_NAME, callbackFunc, false);
-
+    
       // Store function reference for later removal
       if(!elem._vaadin_animationend_callbacks) {
         elem._vaadin_animationend_callbacks = [];
       }
       elem._vaadin_animationend_callbacks.push(callbackFunc);
-
+    
       return callbackFunc;
     }-*/;
 
@@ -138,7 +137,7 @@ public class AnimationUtil {
             return event.mozAnimationName;
         else if(event.oAnimationName)
             return event.oAnimationName;
-
+    
         return "";
     }-*/;
 
@@ -146,22 +145,22 @@ public class AnimationUtil {
     public static native String getAnimationName(ComputedStyle cstyle)
     /*-{
         var cs = cstyle.@com.vaadin.client.ComputedStyle::computedStyle;
-
+    
         if(!cs.getPropertyValue)
             return "";
-
+    
         if(cs.getPropertyValue("-webkit-animation-name"))
             return cs.getPropertyValue("-webkit-animation-name");
-
+    
         else if(cs.getPropertyValue("animation-name"))
             return cs.getPropertyValue("animation-name");
-
+    
         else if(cs.getPropertyValue("-moz-animation-name"))
             return cs.getPropertyValue("-moz-animation-name");
-
+    
         else if(cs.getPropertyValue("-o-animation-name"))
             return cs.getPropertyValue("-o-animation-name");
-
+    
         return "";
     }-*/;
 
@@ -176,7 +175,7 @@ public class AnimationUtil {
           'MozAnimation': 'animationend',
           'WebkitAnimation': 'webkitAnimationEnd'
         }
-
+    
         for(var a in anims){
             if( el.style[a] !== undefined ){
                 return anims[a];
@@ -195,7 +194,7 @@ public class AnimationUtil {
           'mozAnimation',
           'webkitAnimation'
         ]
-
+    
         for(var i=0; i < anims.length; i++) {
             if( el.style[anims[i]] !== undefined ){
                 return anims[i];

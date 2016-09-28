@@ -223,8 +223,21 @@ public class ClassPathExplorer {
 
                 if (!widgetsets.containsKey(classname)) {
                     String packagePath = packageName.replaceAll("\\.", "/");
-                    String basePath = location.getFile()
-                            .replaceAll("/" + packagePath + "$", "");
+
+                    String basePath = location.getFile();
+                    if (basePath.endsWith("/" + packagePath)) {
+                        basePath = basePath.replaceAll("/" + packagePath + "$",
+                                "");
+                    } else if (basePath.endsWith("/" + packagePath + "/")) {
+                        basePath = basePath.replaceAll("/" + packagePath + "/$",
+                                "");
+                    } else {
+                        throw new IllegalStateException(
+                                "Error trying to find base path, location ("
+                                        + location.getFile()
+                                        + ") does not end in expected '/"
+                                        + packagePath + "'");
+                    }
                     try {
                         URL url = new URL(location.getProtocol(),
                                 location.getHost(), location.getPort(),
@@ -453,8 +466,8 @@ public class ClassPathExplorer {
                         && !dirs[i].getPath().contains(File.separator + ".")) {
                     String key = dirs[i].getCanonicalPath() + "/" + name
                             + dirs[i].getName();
-                    locations.put(key,
-                            dirs[i].getCanonicalFile().toURI().toURL());
+                    URL url = dirs[i].getCanonicalFile().toURI().toURL();
+                    locations.put(key, url);
                 }
             } catch (Exception ioe) {
                 return;

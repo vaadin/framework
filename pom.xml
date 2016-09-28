@@ -13,13 +13,14 @@
     <version>8.0-SNAPSHOT</version>
 
     <prerequisites>
-        <maven>3.0.5</maven>
+        <maven>3.1.0</maven>
     </prerequisites>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Used version numbers for dependencies -->
         <liferay.portal.version>6.0.2</liferay.portal.version>
@@ -43,6 +44,9 @@
 
         <!-- Dependency unpack directory -->
         <dependency.unpack.directory>${project.build.directory}/dependency-unpack</dependency.unpack.directory>
+        
+        <jetty.version>9.3.7.v20160115</jetty.version>
+        <phantomjs.version>2.1.1</phantomjs.version>
     </properties>
 
     <!-- TODO: remove this after maven plugin has been released -->
@@ -135,6 +139,14 @@
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-sass-compiler</artifactId>
                 <version>${vaadin.sass.version}</version>
+                <exclusions>
+                <!-- No need to have the minifier included for development 
+                    mode on-the-fly compilation -->
+                <exclusion>
+                    <groupId>com.yahoo.platform.yui</groupId>
+                    <artifactId>yuicompressor</artifactId>
+                </exclusion>
+            </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.carrotsearch</groupId>
@@ -340,6 +352,15 @@
                     <version>2.19.1</version>
                 </plugin>
                 <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.19.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.klieber</groupId>
+                    <artifactId>phantomjs-maven-plugin</artifactId>
+                    <version>0.7</version>
+                </plugin>
+                <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>1.8</version>
                 </plugin>
@@ -436,6 +457,25 @@
                                         <ignore></ignore>
                                     </action>
                                 </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            com.github.klieber
+                                        </groupId>
+                                        <artifactId>
+                                            phantomjs-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [0.7,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>install</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
                             </pluginExecutions>
                         </lifecycleMappingMetadata>
                     </configuration>
@@ -502,6 +542,12 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>slowtest</id>
+            <modules>
+                <module>test</module>
+            </modules>
+        </profile>
         <profile>
             <id>release</id>
             <activation>

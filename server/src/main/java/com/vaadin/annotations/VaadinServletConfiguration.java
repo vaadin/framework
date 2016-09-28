@@ -122,11 +122,14 @@ public @interface VaadinServletConfiguration {
 
     /**
      * The default widgetset to use for the servlet. The default value is
-     * <code>com.vaadin.DefaultWidgetSet</code>.
+     * <code>""</code>, which will cause
+     * <code>com.vaadin.DefaultWidgetSet</code> to be used unless overridden by
+     * an init parameter or unless an automatically generated
+     * <code>AppWidgetset</code> is used.
      *
      * @return the default widgetset name
      */
     @InitParameterName(VaadinServlet.PARAMETER_WIDGETSET)
-    public String widgetset() default VaadinServlet.DEFAULT_WIDGETSET;
+    public String widgetset() default "";
 
 }

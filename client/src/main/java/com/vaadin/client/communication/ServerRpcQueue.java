@@ -226,10 +226,11 @@ public class ServerRpcQueue {
      */
     public boolean showLoadingIndicator() {
         for (MethodInvocation invocation : getAll()) {
-            if (isLegacyVariableChange(invocation)) {
+            if (isLegacyVariableChange(invocation)
+                    || isJavascriptRpc(invocation)) {
                 // Always show loading indicator for legacy requests
                 return true;
-            } else if (!isJavascriptRpc(invocation)) {
+            } else {
                 Type type = new Type(invocation.getInterfaceName(), null);
                 Method method = type.getMethod(invocation.getMethodName());
                 if (!TypeDataStore.isNoLoadingIndicator(method)) {

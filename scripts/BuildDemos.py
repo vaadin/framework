@@ -18,6 +18,7 @@ from xml.etree.ElementTree import ElementTree
 demos = {
 	"dashboard" : "https://github.com/vaadin/dashboard-demo.git",
 	"addressbook" : "https://github.com/vaadin/addressbook.git",
+	"framework8-demo" : "https://github.com/vaadin/framework8-demo",
 	"sampler" : "demos/sampler"
 #	"my-demo" : ("my_demo_url_or_path", "my-demo-dev-branch")
 }

@@ -21,9 +21,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
@@ -295,6 +297,35 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
         verifyColumnNotFrozen(2);
     }
 
+    @Test
+    public void showColumnAndScrollbarWhenScrolledDownAndVisibleRowsChange()
+            throws Exception {
+        // Set a (un)suitable height
+        selectMenuPath("Component", "Size", "HeightMode Row");
+        selectMenuPath("Component", "Size", "Height by Rows", "4.33 rows");
+
+        toggleAllColumnsHidable();
+
+        // Hide all but the first 3
+        getSidebarOpenButton().click();
+        for (int i = 3; i < 12; i++) {
+            getColumnHidingToggle(i).click();
+        }
+
+        getSidebarOpenButton().click();
+
+        // Scroll all the way to the end
+        $(GridElement.class).first().scrollToRow(999);
+
+        // Show the fourth column
+        getSidebarOpenButton().click();
+        getColumnHidingToggle(3).click();
+
+        // Make sure that the new column contains the data it should
+        Assert.assertEquals("(999, 3)",
+                getGridElement().getCell(999, 3).getText());
+    }
+
     private void verifyColumnFrozen(int index) {
         assertTrue(getGridElement().getHeaderCell(0, index).isFrozen());
     }
@@ -305,6 +336,10 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
 
     private void toggleColumnHidable(int index) {
         selectMenuPath("Component", "Columns", "Column " + index, "Hidable");
+    }
+
+    private void toggleAllColumnsHidable() {
+        selectMenuPath("Component", "Columns", "All columns hidable");
     }
 
     private void addRemoveColumn(int index) {

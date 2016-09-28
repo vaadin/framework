@@ -457,6 +457,11 @@ public class ListDataSource<T> implements DataSource<T> {
         };
     }
 
+    @Override
+    public boolean isWaitingForData() {
+        return false;
+    }
+
     private Stream<DataChangeHandler> getHandlers() {
         Set<DataChangeHandler> copy = new LinkedHashSet<>(changeHandlers);
         return copy.stream();

@@ -41,10 +41,14 @@ public class GridColumnHiding extends AbstractTestUI {
         grid.addColumnVisibilityChangeListener(event -> visibilityChangeLabel
                 .setValue(event.getColumn().isHidden() + ""));
 
+        Button toggleHidden = new Button("Toggle all column hidden state",
+                event -> grid.getColumns().forEach(
+                        column -> column.setHidden(!column.isHidden())));
+
         grid.setItems(Arrays.asList(Person.createTestPerson1(),
                 Person.createTestPerson2()));
 
         addComponents(grid, toggleNameColumn, toggleAgeColumn,
-                toggleEmailColumn, visibilityChangeLabel);
+                toggleEmailColumn, visibilityChangeLabel, toggleHidden);
     }
 }

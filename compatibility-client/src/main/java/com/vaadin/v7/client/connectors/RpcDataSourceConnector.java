@@ -73,7 +73,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
             registerRpc(DataProviderRpc.class, new DataProviderRpc() {
                 @Override
                 public void setRowData(int firstRow, JsonArray rowArray) {
-                    ArrayList<JsonObject> rows = new ArrayList<JsonObject>(
+                    ArrayList<JsonObject> rows = new ArrayList<>(
                             rowArray.length());
                     for (int i = 0; i < rowArray.length(); i++) {
                         JsonObject rowObject = rowArray.getObject(i);
@@ -239,6 +239,11 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
             if (!isPinned(row)) {
                 droppedRowKeys.set(droppedRowKeys.length(), getRowKey(row));
             }
+        }
+
+        @Override
+        protected boolean canFetchData() {
+            return isEnabled();
         }
     }
 
