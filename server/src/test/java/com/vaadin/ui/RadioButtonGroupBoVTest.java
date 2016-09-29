@@ -40,7 +40,7 @@ public class RadioButtonGroupBoVTest
     public void createOptionGroup() {
         RadioButtonGroup<Status> s = new RadioButtonGroup<>();
         s.setItems(EnumSet.allOf(Status.class));
-        s.setItemCaptionProvider(Status::getCaption);
+        s.setItemCaptionGenerator(Status::getCaption);
     }
 
 }

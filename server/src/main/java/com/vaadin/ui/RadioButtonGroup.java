@@ -16,6 +16,10 @@
 
 package com.vaadin.ui;
 
+import java.util.Collection;
+import java.util.Objects;
+import java.util.function.Predicate;
+
 import com.vaadin.data.Listing;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
@@ -23,16 +27,12 @@ import com.vaadin.server.data.DataGenerator;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.shared.ui.ListingJsonConstants;
 import com.vaadin.shared.ui.optiongroup.RadioButtonGroupState;
+
 import elemental.json.JsonObject;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 /**
- * A group of RadioButtons. Individual radiobuttons are made from items supplied by
- * a {@link DataSource}. RadioButtons may have captions and icons.
+ * A group of RadioButtons. Individual radiobuttons are made from items supplied
+ * by a {@link DataSource}. RadioButtons may have captions and icons.
  *
  * @param <T>
  *            item type
@@ -41,9 +41,9 @@ import java.util.function.Predicate;
  */
 public class RadioButtonGroup<T> extends AbstractSingleSelect<T> {
 
-    private Function<T, Resource> itemIconProvider = item -> null;
+    private IconGenerator<T> itemIconGenerator = item -> null;
 
-    private Function<T, String> itemCaptionProvider = String::valueOf;
+    private ItemCaptionGenerator<T> itemCaptionGenerator = String::valueOf;
 
     private Predicate<T> itemEnabledProvider = item -> true;
 
@@ -98,9 +98,14 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T> {
         addDataGenerator(new DataGenerator<T>() {
             @Override
             public void generateData(T data, JsonObject jsonObject) {
-                jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_VALUE,
-                        itemCaptionProvider.apply(data));
-                Resource icon = itemIconProvider.apply(data);
+                String caption = getItemCaptionGenerator().apply(data);
+                if (caption != null) {
+                    jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_VALUE,
+                            caption);
+                } else {
+                    jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_VALUE, "");
+                }
+                Resource icon = getItemIconGenerator().apply(data);
                 if (icon != null) {
                     String iconUrl = ResourceReference
                             .create(icon, RadioButtonGroup.this, null).getURL();
@@ -161,52 +166,58 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T> {
     }
 
     /**
-     * Returns the item icons provider.
+     * Returns the item icon generator.
      *
-     * @return the icons provider for items
+     * @return the currently set icon generator
      * @see #setItemIconProvider
+     * @see IconGenerator
      */
-    public Function<T, Resource> getItemIconProvider() {
-        return itemIconProvider;
+    public IconGenerator<T> getItemIconGenerator() {
+        return itemIconGenerator;
     }
 
     /**
-     * Sets the item icon provider for this radiobutton group. The icon provider is
-     * queried for each item to optionally display an icon next to the item
-     * caption. If the provider returns null for an item, no icon is displayed.
-     * The default provider always returns null (no icons).
+     * Sets the item icon generator for this radiobutton group. The icon
+     * generator is queried for each item to optionally display an icon next to
+     * the item caption. If the provider returns null for an item, no icon is
+     * displayed. The default provider always returns null (no icons).
      *
-     * @param itemIconProvider
-     *            icons provider, not null
+     * @param itemIconGenerator
+     *            the icon generator, not null
+     * @see IconGenerator
      */
-    public void setItemIconProvider(Function<T, Resource> itemIconProvider) {
-        Objects.requireNonNull(itemIconProvider);
-        this.itemIconProvider = itemIconProvider;
+    public void setItemIconGenerator(IconGenerator<T> itemIconGenerator) {
+        Objects.requireNonNull(itemIconGenerator,
+                "Item icon generator cannot be null.");
+        this.itemIconGenerator = itemIconGenerator;
     }
 
     /**
-     * Returns the item caption provider.
+     * Returns the currently set item caption generator.
      *
-     * @return the captions provider
-     * @see #setItemCaptionProvider
+     * @return the currently set caption generator
+     * @see #setItemCaptionGenerator
+     * @see ItemCaptionGenerator
      */
-    public Function<T, String> getItemCaptionProvider() {
-        return itemCaptionProvider;
+    public ItemCaptionGenerator<T> getItemCaptionGenerator() {
+        return itemCaptionGenerator;
     }
 
     /**
-     * Sets the item caption provider for this radiobutton group. The caption
-     * provider is queried for each item to optionally display an item textual
-     * representation. The default provider returns
+     * Sets the item caption generator for this radiobutton group. The caption
+     * generator is queried for each item to optionally display an item textual
+     * representation. The default generator returns
      * {@code String.valueOf(item)}.
      *
-     * @param itemCaptionProvider
-     *            the item caption provider, not null
+     * @param itemCaptionGenerator
+     *            the item caption generator, not null
+     * @see ItemCaptionGenerator
      */
-    public void setItemCaptionProvider(
-            Function<T, String> itemCaptionProvider) {
-        Objects.requireNonNull(itemCaptionProvider);
-        this.itemCaptionProvider = itemCaptionProvider;
+    public void setItemCaptionGenerator(
+            ItemCaptionGenerator<T> itemCaptionGenerator) {
+        Objects.requireNonNull(itemCaptionGenerator,
+                "Item caption generator cannot be null.");
+        this.itemCaptionGenerator = itemCaptionGenerator;
     }
 
     /**
@@ -220,8 +231,8 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T> {
     }
 
     /**
-     * Sets the item enabled predicate for this radiobutton group. The predicate is
-     * applied to each item to determine whether the item should be enabled
+     * Sets the item enabled predicate for this radiobutton group. The predicate
+     * is applied to each item to determine whether the item should be enabled
      * (true) or disabled (false). Disabled items are displayed as grayed out
      * and the user cannot select them. The default predicate always returns
      * true (all the items are enabled).

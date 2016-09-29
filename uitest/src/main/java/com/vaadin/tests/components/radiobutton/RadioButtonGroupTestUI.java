@@ -15,10 +15,12 @@
  */
 package com.vaadin.tests.components.radiobutton;
 
+import java.util.LinkedHashMap;
 import java.util.stream.IntStream;
 
 import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.tests.components.abstractlisting.AbstractListingTestUI;
+import com.vaadin.ui.ItemCaptionGenerator;
 import com.vaadin.ui.RadioButtonGroup;
 
 /**
@@ -42,7 +44,7 @@ public class RadioButtonGroupTestUI
         super.createActions();
         createListenerMenu();
         createSelectionMenu();
-        createItemProviderMenu();
+        createItemGeneratorMenu();
     }
 
     protected void createSelectionMenu() {
@@ -59,19 +61,18 @@ public class RadioButtonGroupTestUI
                         selectionCategory, toggleSelection, item));
     }
 
-    private void createItemProviderMenu() {
-        createBooleanAction("Use Item Caption Provider", "Item Provider", false,
-                this::useItemCaptionProvider);
-    }
+    private void createItemGeneratorMenu() {
+        LinkedHashMap<String, ItemCaptionGenerator<Object>> options = new LinkedHashMap<>();
+        options.put("Null Caption Generator", item -> null);
+        options.put("Default Caption Generator", item -> item.toString());
+        options.put("Custom Caption Generator",
+                item -> item.toString() + " Caption");
 
-    private void useItemCaptionProvider(RadioButtonGroup<Object> group,
-            boolean activate, Object data) {
-        if (activate) {
-            group.setItemCaptionProvider(item -> item.toString() + " Caption");
-        } else {
-            group.setItemCaptionProvider(item -> item.toString());
-        }
-        group.getDataSource().refreshAll();
+        createSelectAction("Item Caption Generator", "Item Generator", options,
+                "None", (radioButtonGroup, captionGenerator, data) -> {
+                    radioButtonGroup.setItemCaptionGenerator(captionGenerator);
+                    radioButtonGroup.getDataSource().refreshAll();
+                }, true);
     }
 
     private void toggleSelection(String item) {

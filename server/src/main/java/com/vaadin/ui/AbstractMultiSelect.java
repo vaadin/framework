@@ -229,8 +229,13 @@ public abstract class AbstractMultiSelect<T>
     private class MultiSelectDataGenerator implements DataGenerator<T> {
         @Override
         public void generateData(T data, JsonObject jsonObject) {
-            jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_VALUE,
-                    getItemCaptionGenerator().apply(data));
+            String caption = getItemCaptionGenerator().apply(data);
+            if (caption != null) {
+                jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_VALUE,
+                        caption);
+            } else {
+                jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_VALUE, "");
+            }
             Resource icon = getItemIconGenerator().apply(data);
             if (icon != null) {
                 String iconUrl = ResourceReference
@@ -381,8 +386,8 @@ public abstract class AbstractMultiSelect<T>
 
     /**
      * Sets the item enabled predicate for this multiselect. The predicate is
-     * applied to each item to determine whether the item should be enabled
-     * ({@code true}) or disabled ({@code false}). Disabled items are displayed
+     * applied to each item to determine whether the item should be enabled (
+     * {@code true}) or disabled ({@code false}). Disabled items are displayed
      * as grayed out and the user cannot select them. The default predicate
      * always returns {@code true} (all the items are enabled).
      * <p>

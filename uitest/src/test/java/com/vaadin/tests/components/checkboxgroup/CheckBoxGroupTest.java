@@ -123,9 +123,18 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
 
     @Test
     public void itemCaptionGenerator() {
-        selectMenuPath("Component", "Item Generator",
-                "Use Item Caption Generator");
+        selectMenuPath("Component", "Item Generator", "Item Caption Generator",
+                "Custom Caption Generator");
         assertItems(20, " Caption");
+    }
+
+    @Test
+    public void nullItemCaptionGenerator() {
+        selectMenuPath("Component", "Item Generator", "Item Caption Generator",
+                "Null Caption Generator");
+        for (String text : getSelect().getOptions()) {
+            Assert.assertEquals("", text);
+        }
     }
 
     @Test

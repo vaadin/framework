@@ -112,10 +112,19 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
     }
 
     @Test
-    public void itemCaptionProvider() {
-        selectMenuPath("Component", "Item Provider",
-                "Use Item Caption Provider");
+    public void itemCaptionGenerator() {
+        selectMenuPath("Component", "Item Generator", "Item Caption Generator",
+                "Custom Caption Generator");
         assertItems(20, " Caption");
+    }
+
+    @Test
+    public void nullItemCaptionGenerator() {
+        selectMenuPath("Component", "Item Generator", "Item Caption Generator",
+                "Null Caption Generator");
+        for (String text : getSelect().getOptions()) {
+            Assert.assertEquals("", text);
+        }
     }
 
     @Test
@@ -162,5 +171,4 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         }
         assertEquals("Number of items", count, i);
     }
-
 }

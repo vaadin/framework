@@ -1,11 +1,13 @@
 package com.vaadin.tests.components.abstractlisting;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.vaadin.shared.data.selection.SelectionModel.Multi;
 import com.vaadin.ui.AbstractMultiSelect;
+import com.vaadin.ui.ItemCaptionGenerator;
 
 public abstract class AbstractMultiSelectTestUI<MULTISELECT extends AbstractMultiSelect<Object>>
         extends AbstractListingTestUI<MULTISELECT> {
@@ -21,19 +23,18 @@ public abstract class AbstractMultiSelectTestUI<MULTISELECT extends AbstractMult
     }
 
     protected void createItemCaptionGeneratorMenu() {
-        createBooleanAction("Use Item Caption Generator", "Item Generator",
-                false, this::useItemCaptionProvider);
-    }
+        LinkedHashMap<String, ItemCaptionGenerator<Object>> options = new LinkedHashMap<>();
+        options.put("Null Caption Generator", item -> null);
+        options.put("Default Caption Generator", item -> item.toString());
+        options.put("Custom Caption Generator",
+                item -> item.toString() + " Caption");
 
-    private void useItemCaptionProvider(MULTISELECT select, boolean activate,
-            Object data) {
-        if (activate) {
-            select.setItemCaptionGenerator(
-                    item -> item.toString() + " Caption");
-        } else {
-            select.setItemCaptionGenerator(item -> item.toString());
-        }
-        select.getDataSource().refreshAll();
+        createSelectAction("Item Caption Generator", "Item Generator", options,
+                "None", (abstractMultiSelect, captionGenerator, data) -> {
+                    abstractMultiSelect
+                            .setItemCaptionGenerator(captionGenerator);
+                    abstractMultiSelect.getDataSource().refreshAll();
+                }, true);
     }
 
     protected void createSelectionMenu() {

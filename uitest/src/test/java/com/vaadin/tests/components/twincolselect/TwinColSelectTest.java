@@ -167,10 +167,19 @@ public class TwinColSelectTest extends MultiBrowserTest {
     }
 
     @Test
-    public void itemCaptionProvider() {
-        selectMenuPath("Component", "Item Generator",
-                "Use Item Caption Generator");
+    public void itemCaptionGenerator() {
+        selectMenuPath("Component", "Item Generator", "Item Caption Generator",
+                "Custom Caption Generator");
         assertItems(20, " Caption");
+    }
+
+    @Test
+    public void nullItemCaptionGenerator() {
+        selectMenuPath("Component", "Item Generator", "Item Caption Generator",
+                "Null Caption Generator");
+        for (String text : getTwinColSelect().getOptions()) {
+            Assert.assertEquals("", text);
+        }
     }
 
     @Test
