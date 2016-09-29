@@ -229,7 +229,8 @@ public class VRadioButtonGroup extends Composite implements Field, ClickHandler,
 
     public void selectItemKey(String selectedItemKey) {
         RadioButton radioButton = keyToOptions.get(selectedItemKey);
-        assert radioButton != null;
-        radioButton.setValue(true);
+        if(radioButton!=null) {//Items might not be loaded yet
+            radioButton.setValue(true);
+        }
     }
 }

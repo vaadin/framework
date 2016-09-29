@@ -169,7 +169,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T> {
      * Returns the item icon generator.
      *
      * @return the currently set icon generator
-     * @see #setItemIconProvider
+     * @see #setItemIconGenerator
      * @see IconGenerator
      */
     public IconGenerator<T> getItemIconGenerator() {
@@ -179,8 +179,8 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T> {
     /**
      * Sets the item icon generator for this radiobutton group. The icon
      * generator is queried for each item to optionally display an icon next to
-     * the item caption. If the provider returns null for an item, no icon is
-     * displayed. The default provider always returns null (no icons).
+     * the item caption. If the generator returns null for an item, no icon is
+     * displayed. The default generator always returns null (no icons).
      *
      * @param itemIconGenerator
      *            the icon generator, not null
