@@ -521,19 +521,19 @@ public class ValoTheme {
 
     /***************************************************************************
      *
-     * OptionGroup styles
+     * RadioButtonGroup/CheckBoxGroup styles
      *
      **************************************************************************/
 
     /**
-     * Small size option group. Can be combined with any other OptionGroup
-     * style.
+     * Small size option group. Can be combined with any other
+     * RadioButtonGroup/CheckBoxGroup style.
      */
     public static final String OPTIONGROUP_SMALL = "small";
 
     /**
-     * Large size option group. Can be combined with any other OptionGroup
-     * style.
+     * Large size option group. Can be combined with any other
+     * RadioButtonGroup/CheckBoxGroup style.
      */
     public static final String OPTIONGROUP_LARGE = "large";
 

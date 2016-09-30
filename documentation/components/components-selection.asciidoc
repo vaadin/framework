@@ -24,8 +24,11 @@ A vertical list box for selecting items in either single or multiple selection m
 Provides selection using the native selection component of the browser, typically a drop-down list for single selection and a multi-line list in multiselect mode.
 This uses the [literal]#++<select>++# element in HTML.
 
-[classname]#OptionGroup# (<<components-optiongroup#components.optiongroup,"OptionGroup">>)::
-Shows the items as a vertically arranged group of radio buttons in the single selection mode and of check boxes in multiple selection mode.
+[classname]#RadioButtonGroup# (<<components-optiongroups#components.optiongroups,"CheckBoxGroup and RadioButtonGroup">>)::
+Shows the items as a vertically arranged group of radio buttons in single selection mode.
+
+[classname]#CheckBoxGroup# (<<components-optiongroups#components.optiongroups,"CheckBoxGroup and RadioButtonGroup">>)::
+Shows the items as a vertically arranged group of check boxes in multiple selection mode.
 
 [classname]#TwinColSelect# (<<components-twincolselect#components.twincolselect, "TwinColSelect">>)::
 Shows two list boxes side by side where the user can select items from a list of available items and move them to a list of selected items using control buttons.
@@ -304,22 +307,15 @@ endif::web[]
 [[components.selection.multiple]]
 == Multiple Selection
 
-Some selection components, such as [classname]#OptionGroup# and
-[classname]#ListSelect# support a multiple selection mode, which you can enable
-with [methodname]#setSelectionMode(SelectionMode.MULTI)#.
-For [classname]#TwinColSelect#, which is especially intended for
-multiple selection, it is enabled by default.
+Some selection components, such as [classname]#CheckBoxGroup#,
+[classname]#ListSelect# and [classname]#TwinColSelect# are multiselect components, 
+they extend [classname]#AbstractMultiSelect# class.
 
 
-[source, java]
-----
-myselect.setSelectionMode(SelectionMode.MULTI);
-----
-
-In multiple selection mode the [interfacename]#Select# value is a
-[classname]#Collection# of the items of the currently selected items.
-You can get and set the selection with the [methodname]#getSelected()# and
-[methodname]#setSelected()# methods as usual.
+Multiselect components use the [interfacename]#SelectionModel.Multi# selection model.
+This model allows to select multiple items.
+You can get and set the selection with the [methodname]#SelectionModel.getSelectedItems()# and
+[methodname]#SelectionModel.Multi.selectItems()# methods.
 
 A change in the selection will trigger a [classname]#SelectionChange#, which
 you can handle with a [classname]#SelectionChangeListener#. The
@@ -333,14 +329,11 @@ ListSelect<String> select = new ListSelect<>("My Selection");
 select.setItems("Mercury", "Venus", "Earth",
     "Mars", "Jupiter", "Saturn", "Uranus", "Neptune");
 
-// Multiple selection mode
-select.setSelectionMode(SelectionMode.MULTI);
-
 // Feedback on value changes
-select.addSelectionChangeListener(event -> {
+select.addSelectionListener(event -> {
         // Some feedback
         layout.addComponent(new Label("Selected: " +
-            event.getSelected()));
+            event.getNewSelection()));
     }
 });
 

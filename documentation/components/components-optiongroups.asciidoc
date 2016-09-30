@@ -1,85 +1,80 @@
 ---
-title: OptionGroup
+title: CheckBoxGroup and RadioButtonGroup
 order: 19
 layout: page
 ---
 
-[[components.optiongroup]]
-= [classname]#OptionGroup#
+[[components.optiongroups]]
+= [classname]#CheckBoxGroup# and [classname]#RadioButtonGroup#
 
 ifdef::web[]
 [.sampler]
 image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/multiple-value/option-group"]
 endif::web[]
 
-[classname]#OptionGroup# is a selection component that allows selection from a
-group of radio buttons in single selection mode. In multiple selection mode, the
-items show up as check boxes. The common selection component features are
+[classname]#RadioButtonGroup# is a single selection component that allows 
+selection from a group of radio buttons. [classname]#CheckBoxGroup# is a multi selection
+component where items displayed as check boxes. The common selection component features are
 described in
 <<dummy/../../../framework/components/components-selection#components.selection,"Selection Components">>.
 
-[[figure.components.optiongroup]]
-.Option Button Group in Single and Multiple Selection Mode
+[[figure.components.optiongroups]]
+.RadioButtonGroup and CheckBoxGroup
 image::img/optiongroup-basic.png[width=45%, scaledwidth=70%]
-
-Option group is by default in single selection mode. Multiple selection is
-enabled with [methodname]#setMultiSelect()#.
-
 
 [source, java]
 ----
 // A single-select radio button group
-OptionGroup<String> single =
-    new OptionGroup<>("Single Selection");
+RadioButtonGroup<String> single =
+    new RadioButtonGroup<>("Single Selection");
 single.setItems("Single", "Sola", "Yksi");
 
 // A multi-select check box group
-OptionGroup<String> multi =
-    new OptionGroup<>("Multiple Selection");
-multi.setMultiSelect(true);
+CheckBoxGroup<String> multi =
+    new CheckBoxGroup<>("Multiple Selection");
 multi.setItems("Many", "Muchos", "Monta");
 ----
 
-<<figure.components.optiongroup>> shows the [classname]#OptionGroup# in both
-single and multiple selection mode.
+<<figure.components.optiongroups>> shows the [classname]#RadioButtonGroup#  and 
+[classname]#CheckBoxGroup#.
 
 You can also create check boxes individually using the [classname]#CheckBox#
 class, as described in
 <<dummy/../../../framework/components/components-checkbox#components.checkbox,"CheckBox">>.
-The advantages of the [classname]#OptionGroup# component are that as it
+The advantages of the [classname]#CheckBoxGroup# component are that as it
 maintains the individual check box objects, you can get an array of the
 currently selected items easily, and that you can easily change the appearance
-of a single component.
+of a single component and use it with a [classname]#Binder#.
 
 ifdef::web[]
-[[components.optiongroup.disabling]]
+
+[[components.optiongroups.disabling]]
 == Disabling Items
 
-You can disable individual items in an [classname]#OptionGroup# with
-[methodname]#setItemEnabled()#. The user can not select or deselect disabled
-items in multi-select mode, but in single-select mode the use can change the
+You can disable individual items in a [classname]#RadioButtonGroup# or a [classname]#CheckBoxGroup# with
+[methodname]#setItemEnabledProvider()#. The user can not select or deselect disabled
+items in a [classname]#CheckBoxGroup#, but in a [classname]#RadioButtonGroup# the user can change the
 selection from a disabled to an enabled item. The selections can be changed
-programmatically regardless of whether an item is enabled or disabled. You can
-find out whether an item is enabled with [methodname]#isItemEnabled()#.
+programmatically regardless of whether an item is enabled or disabled.
 
 [source, java]
 ----
-// Have an option group with some items
-OptionGroup<String> group = new OptionGroup<>("My Disabled Group");
+// Have a radio button group with some items
+RadioButtonGroup<String> group = new RadioButtonGroup<>("My Disabled Group");
 group.setItems("One", "Two", "Three");
 
 // Disable one item
-group.setItemEnabled("Two", false);
+group.setItemEnabledProvider( item-> !"Two".equals(item));
 ----
 
-[[figure.components.optiongroup.disabling]]
-.[classname]#OptionGroup# with a Disabled Item
+[[figure.components.optiongroups.disabling]]
+.[classname]#RadioButtonGroup# with a Disabled Item
 image::img/optiongroup-disabling.png[width=25%, scaledwidth=50%]
 
 Setting an item as disabled turns on the [literal]#++v-disabled++# style for it.
 endif::web[]
 
-[[components.optiongroup.css]]
+[[components.optiongroups.css]]
 == CSS Style Rules
 
 
@@ -100,7 +95,7 @@ regardless of the option type. Disabled items have additionally the
 
 ifdef::web[]
 
-[[components.optiongroup.css.horizontal]]
+[[components.optiongroups.css.horizontal]]
 === Horizontal Layout
 
 The options are normally laid out vertically. You can use horizontal layout by
@@ -131,10 +126,10 @@ undefined.
 
 Use of the above rules requires setting a custom [literal]#++horizontal++# style
 name for the component. The result is shown in
-<<figure.components.optiongroup.horizontal>>.
+<<figure.components.optiongroups.horizontal>>.
 
-[[figure.components.optiongroup.horizontal]]
-.Horizontal [classname]#OptionGroup#
+[[figure.components.optiongroups.horizontal]]
+.Horizontal [classname]#RadioButtonGroup#
 image::img/optiongroup-horizontal.png[width=35%, scaledwidth=50%]
 
 endif::web[]

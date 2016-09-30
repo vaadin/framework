@@ -16,9 +16,8 @@ endif::web[]
 checked or unchecked. The caption of the check box will be placed right of the
 actual check box. Vaadin provides two ways to create check boxes: individual
 check boxes with the [classname]#CheckBox# component described in this section
-and check box groups with the [classname]#OptionGroup# component in multiple
-selection mode, as described in
-<<dummy/../../../framework/components/components-optiongroup#components.optiongroup,"OptionGroup">>.
+and check box groups with the [classname]#CheckBoxGroup# component, as described in
+<<dummy/../../../framework/components/components-optiongroups#components.optiongroups,"CheckBoxGroup and RadioButtonGroup">>.
 
 Clicking on a check box will change its state. The state is a [classname]#Boolean#
 property that you can set with the [methodname]#setValue()# method and obtain with

@@ -15,6 +15,6 @@ TODO
 ** Code example: Setting, getting and reacting to events from a NativeSelect
 ** Design question: Is nullSelectionAllowed a feature of each component or a feature of the selection model?
 * Other listings can be configured to allow selecting one or many items. Depending on how it is configured, it uses a different selection model type for working with the selection.
-** Code example: OptionGroup in single / multi mode. Using different selection model types to access the selection.
+** Code example: CheckBoxGroup/RadioButtonGroup. Using different selection model types to access the selection.
 ** Code example: Using each selection model type with a Binder
 ////
