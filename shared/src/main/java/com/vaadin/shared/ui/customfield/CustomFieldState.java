@@ -16,14 +16,21 @@
 package com.vaadin.shared.ui.customfield;
 
 import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.Connector;
 
 /**
  * State class for CustomField.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  *
  */
 public class CustomFieldState extends AbstractFieldState {
+
+    /**
+     * The component which should receive focus events instead of the custom
+     * field wrapper.
+     */
+    public Connector focusDelegate;
 
 }
