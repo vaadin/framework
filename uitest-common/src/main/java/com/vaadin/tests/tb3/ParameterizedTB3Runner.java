@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.model.FrameworkMethod;
@@ -161,6 +162,20 @@ public class ParameterizedTB3Runner extends TB3Runner {
         public String getName() {
             return parent.getName() + "[" + value + "]";
         };
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!TBMethodWithBefore.class.isInstance(obj)) {
+                return false;
+            }
+
+            TBMethodWithBefore otherTbMethod = (TBMethodWithBefore) obj;
+
+            return super.equals(obj)
+                    && Objects.equals(otherTbMethod.parent, parent)
+                    && Objects.equals(otherTbMethod.setter, setter)
+                    && Objects.equals(otherTbMethod.value, value);
+        }
 
     }
 }
