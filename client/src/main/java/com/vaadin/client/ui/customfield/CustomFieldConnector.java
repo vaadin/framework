@@ -17,16 +17,20 @@ package com.vaadin.client.ui.customfield;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
+import com.vaadin.client.Focusable;
 import com.vaadin.client.HasComponentsConnector;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
-import com.vaadin.client.ui.VCustomComponent;
+import com.vaadin.client.ui.VCustomField;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.customfield.CustomFieldState;
 import com.vaadin.ui.CustomField;
 
 @Connect(value = CustomField.class)
@@ -43,13 +47,44 @@ public class CustomFieldConnector extends AbstractFieldConnector
     }
 
     @Override
-    public VCustomComponent getWidget() {
-        return (VCustomComponent) super.getWidget();
+    public CustomFieldState getState() {
+        return (CustomFieldState) super.getState();
+    }
+
+    @Override
+    public VCustomField getWidget() {
+        return (VCustomField) super.getWidget();
     }
 
     @Override
     public void updateCaption(ComponentConnector connector) {
         // NOP, custom field does not render the caption of its content
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        if (getState().focusDelegate != null) {
+            Widget widget = ((ComponentConnector) getState().focusDelegate)
+                    .getWidget();
+            if (widget instanceof Focusable) {
+                getWidget().setFocusDelegate((Focusable) widget);
+            } else if (widget instanceof com.google.gwt.user.client.ui.Focusable) {
+                getWidget().setFocusDelegate(
+                        (com.google.gwt.user.client.ui.Focusable) widget);
+            } else {
+                getLogger().warning(
+                        "The given focus delegate does not implement Focusable: "
+                                + widget.getClass().getName());
+            }
+        } else {
+            getWidget().setFocusDelegate((Focusable) null);
+        }
+
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(CustomFieldConnector.class.getName());
     }
 
     @Override

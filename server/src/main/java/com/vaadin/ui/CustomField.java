@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 import com.vaadin.data.Property;
+import com.vaadin.shared.ui.customfield.CustomFieldState;
 
 /**
  * A {@link Field} whose UI content can be constructed by the user, enabling the
@@ -150,4 +151,64 @@ public abstract class CustomField<T> extends AbstractField<T>
     public Iterator<Component> iterator() {
         return new ComponentIterator();
     }
+
+    @Override
+    protected CustomFieldState getState() {
+        return (CustomFieldState) super.getState();
+    }
+
+    @Override
+    protected CustomFieldState getState(boolean markAsDirty) {
+        return (CustomFieldState) super.getState(markAsDirty);
+    }
+
+    /**
+     * Sets the component to which all methods from the {@link Focusable}
+     * interface should be delegated.
+     * <p>
+     * Set this to a wrapped field to include that field in the tabbing order,
+     * to make it receive focus when {@link #focus()} is called and to make it
+     * be correctly focused when used as a Grid editor component.
+     * <p>
+     * By default, {@link Focusable} events are handled by the super class and
+     * ultimately ignored.
+     * 
+     * @param focusDelegate
+     *            the focusable component to which focus events are redirected
+     */
+    public void setFocusDelegate(Focusable focusDelegate) {
+        getState().focusDelegate = focusDelegate;
+    }
+
+    private Focusable getFocusable() {
+        return (Focusable) getState(false).focusDelegate;
+    }
+
+    @Override
+    public void focus() {
+        if (getFocusable() != null) {
+            getFocusable().focus();
+        } else {
+            super.focus();
+        }
+    }
+
+    @Override
+    public int getTabIndex() {
+        if (getFocusable() != null) {
+            return getFocusable().getTabIndex();
+        } else {
+            return super.getTabIndex();
+        }
+    }
+
+    @Override
+    public void setTabIndex(int tabIndex) {
+        if (getFocusable() != null) {
+            getFocusable().setTabIndex(tabIndex);
+        } else {
+            super.setTabIndex(tabIndex);
+        }
+    }
+
 }

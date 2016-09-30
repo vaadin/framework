@@ -73,6 +73,8 @@ public class GridEditorCustomField extends AbstractTestUIWithLog {
             Button addCountryButton = new Button("New");
             fieldLayout.addComponent(addCountryButton);
 
+            setFocusDelegate(cityComboBox);
+
             return fieldLayout;
         }
 
