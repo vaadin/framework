@@ -16,6 +16,7 @@
 package com.vaadin.tests.themes.valo;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Locale;
 
 import com.vaadin.navigator.View;
@@ -175,7 +176,7 @@ public class DateFields extends VerticalLayout implements View {
         row.addComponent(date);
 
         PropertysetItem item = new PropertysetItem();
-        item.addItemProperty("date", new ObjectProperty<>(getDefaultDate()));
+        item.addItemProperty("date", new ObjectProperty<>(getDefaultOldDate()));
 
         FormLayout form = new FormLayout();
         form.setMargin(false);
@@ -204,6 +205,14 @@ public class DateFields extends VerticalLayout implements View {
             return LocalDate.of(2014, 6, 7);
         } else {
             return LocalDate.now();
+        }
+    }
+
+    private Date getDefaultOldDate() {
+        if (ValoThemeUI.isTestMode()) {
+            return new Date(2014 - 1900, 5, 7);
+        } else {
+            return new Date();
         }
     }
 
