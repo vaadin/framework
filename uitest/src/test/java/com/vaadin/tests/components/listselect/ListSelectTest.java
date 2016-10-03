@@ -166,8 +166,8 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
 
     @Test
     public void itemCaptionProvider() {
-        selectMenuPath("Component", "Item Generator",
-                "Use Item Caption Generator");
+        selectMenuPath("Component", "Item Generator", "Item Caption Generator",
+                "Custom Caption Generator");
         assertItems(20, " Caption");
     }
 
