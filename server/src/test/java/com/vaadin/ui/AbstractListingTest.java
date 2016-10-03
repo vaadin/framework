@@ -70,7 +70,7 @@ public class AbstractListingTest {
     public void testSetItemsWithCollection() {
         listing.setItems(items);
         List<String> list = new LinkedList<>(items);
-        listing.getDataSource().apply(new Query()).forEach(
+        listing.getDataSource().fetch(new Query()).forEach(
                 str -> Assert.assertTrue("Unexpected item in data source",
                         list.remove(str)));
         Assert.assertTrue("Not all items from list were in data source",
@@ -80,7 +80,7 @@ public class AbstractListingTest {
     @Test
     public void testSetItemsWithVarargs() {
         listing.setItems(ITEM_ARRAY);
-        listing.getDataSource().apply(new Query()).forEach(
+        listing.getDataSource().fetch(new Query()).forEach(
                 str -> Assert.assertTrue("Unexpected item in data source",
                         items.remove(str)));
         Assert.assertTrue("Not all items from list were in data source",

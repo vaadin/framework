@@ -228,7 +228,7 @@ public class DataCommunicator<T> extends AbstractExtension {
         if (initial || reset) {
             int dataSourceSize;
             if (getDataSource().isInMemory() && inMemoryFilter != null) {
-                dataSourceSize = (int) getDataSource().apply(new Query())
+                dataSourceSize = (int) getDataSource().fetch(new Query())
                         .filter(inMemoryFilter).count();
             } else {
                 dataSourceSize = getDataSource().size(new Query(filters));
@@ -244,7 +244,7 @@ public class DataCommunicator<T> extends AbstractExtension {
 
             if (getDataSource().isInMemory()) {
                 // We can safely request all the data when in memory
-                rowsToPush = getDataSource().apply(new Query());
+                rowsToPush = getDataSource().fetch(new Query());
                 if (inMemoryFilter != null) {
                     rowsToPush = rowsToPush.filter(inMemoryFilter);
                 }
@@ -254,7 +254,7 @@ public class DataCommunicator<T> extends AbstractExtension {
                 rowsToPush = rowsToPush.skip(offset).limit(limit);
             } else {
                 Query query = new Query(offset, limit, backEndSorting, filters);
-                rowsToPush = getDataSource().apply(query);
+                rowsToPush = getDataSource().fetch(query);
             }
             pushData(offset, rowsToPush);
         }

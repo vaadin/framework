@@ -63,7 +63,7 @@ public class ListDataSource<T> extends AbstractDataSource<T> {
     }
 
     @Override
-    public Stream<T> apply(Query query) {
+    public Stream<T> fetch(Query query) {
         Stream<T> stream = backend.stream();
         if (sortOrder != null) {
             stream = stream.sorted(sortOrder);
@@ -117,7 +117,7 @@ public class ListDataSource<T> extends AbstractDataSource<T> {
      * return the full size.
      */
     @Override
-    public int size(Query t) {
+    public int size(Query query) {
         return backend.size();
     }
 

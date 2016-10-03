@@ -31,7 +31,7 @@ public class AbstractDataSourceTest {
 
     private static class TestDataSource extends AbstractDataSource<Object> {
         @Override
-        public Stream<Object> apply(Query t) {
+        public Stream<Object> fetch(Query t) {
             return null;
         }
 

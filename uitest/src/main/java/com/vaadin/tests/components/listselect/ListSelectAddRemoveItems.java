@@ -50,7 +50,7 @@ public class ListSelectAddRemoveItems extends AbstractTestUIWithLog {
         }));
 
         addComponent(new Button("Add first", event -> {
-            List<String> list = dataSource.apply(null)
+            List<String> list = dataSource.fetch(null)
                     .collect(Collectors.toList());
             list.add(0, "first");
             dataSource = new ListDataSource<>(list);
@@ -59,7 +59,7 @@ public class ListSelectAddRemoveItems extends AbstractTestUIWithLog {
         }));
 
         addComponent(new Button("Add middle", event -> {
-            List<String> list = dataSource.apply(null)
+            List<String> list = dataSource.fetch(null)
                     .collect(Collectors.toList());
             list.add(list.size() / 2, "middle");
             dataSource = new ListDataSource<>(list);
@@ -68,7 +68,7 @@ public class ListSelectAddRemoveItems extends AbstractTestUIWithLog {
         }));
 
         addComponent(new Button("Add last", event -> {
-            List<String> list = dataSource.apply(null)
+            List<String> list = dataSource.fetch(null)
                     .collect(Collectors.toList());
             list.add("last");
             dataSource = new ListDataSource<>(list);
@@ -77,7 +77,7 @@ public class ListSelectAddRemoveItems extends AbstractTestUIWithLog {
         }));
 
         addComponent(new Button("Swap", event -> {
-            List<String> list = dataSource.apply(null)
+            List<String> list = dataSource.fetch(null)
                     .collect(Collectors.toList());
             Collections.swap(list, 0, list.size() - 1);
             dataSource = new ListDataSource<>(list);
@@ -87,7 +87,7 @@ public class ListSelectAddRemoveItems extends AbstractTestUIWithLog {
         }));
 
         addComponent(new Button("Remove first", event -> {
-            List<String> list = dataSource.apply(null)
+            List<String> list = dataSource.fetch(null)
                     .collect(Collectors.toList());
             list.remove(0);
 
@@ -98,7 +98,7 @@ public class ListSelectAddRemoveItems extends AbstractTestUIWithLog {
         }));
 
         addComponent(new Button("Remove middle", event -> {
-            List<String> list = dataSource.apply(null)
+            List<String> list = dataSource.fetch(null)
                     .collect(Collectors.toList());
             list.remove(list.size() / 2);
             dataSource = new ListDataSource<>(list);
@@ -107,7 +107,7 @@ public class ListSelectAddRemoveItems extends AbstractTestUIWithLog {
         }));
 
         addComponent(new Button("Remove last", event -> {
-            List<String> list = dataSource.apply(null)
+            List<String> list = dataSource.fetch(null)
                     .collect(Collectors.toList());
             list.remove(list.size() - 1);
 
@@ -121,7 +121,7 @@ public class ListSelectAddRemoveItems extends AbstractTestUIWithLog {
 
     private void logContainer() {
         StringBuilder b = new StringBuilder();
-        List<String> list = dataSource.apply(null).collect(Collectors.toList());
+        List<String> list = dataSource.fetch(null).collect(Collectors.toList());
         for (int i = 0; i < list.size(); i++) {
             Object id = list.get(i);
             if (i != 0) {

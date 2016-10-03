@@ -50,13 +50,13 @@ public class BackEndDataSource<T> extends AbstractDataSource<T> {
     }
 
     @Override
-    public Stream<T> apply(Query t) {
-        return request.apply(t);
+    public Stream<T> fetch(Query query) {
+        return request.apply(query);
     }
 
     @Override
-    public int size(Query t) {
-        return sizeCallback.apply(t);
+    public int size(Query query) {
+        return sizeCallback.apply(query);
     }
 
     /**

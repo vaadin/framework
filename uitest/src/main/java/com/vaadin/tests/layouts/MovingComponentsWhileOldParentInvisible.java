@@ -53,7 +53,7 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
         });
 
         componentContainerSelect.setValue(componentContainerSelect
-                .getDataSource().apply(new Query()).iterator().next());
+                .getDataSource().fetch(new Query()).iterator().next());
         Button but1 = new Button("Move in and out of component container",
                 new Button.ClickListener() {
 

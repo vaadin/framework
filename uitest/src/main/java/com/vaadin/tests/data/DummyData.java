@@ -34,9 +34,9 @@ public class DummyData extends AbstractTestUIWithLog {
         }
 
         @Override
-        public Stream<String> apply(Query query) {
+        public Stream<String> fetch(Query query) {
             log("Backend request #" + (count++));
-            return super.apply(query);
+            return super.fetch(query);
         }
     }
 

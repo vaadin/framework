@@ -29,7 +29,7 @@ public class ListDataSourceTest {
     @Test
     public void testListContainsAllData() {
         List<StrBean> list = new LinkedList<>(data);
-        dataSource.apply(new Query())
+        dataSource.fetch(new Query())
                 .forEach(str -> assertTrue(
                         "Data source contained values not in original data",
                         list.remove(str)));
@@ -42,7 +42,7 @@ public class ListDataSourceTest {
         Comparator<StrBean> comp = Comparator.comparing(StrBean::getValue)
                 .thenComparing(StrBean::getRandomNumber)
                 .thenComparing(StrBean::getId);
-        List<StrBean> list = dataSource.sortingBy(comp).apply(new Query())
+        List<StrBean> list = dataSource.sortingBy(comp).fetch(new Query())
                 .collect(Collectors.toList());
 
         // First value in data is { Xyz, 10, 100 } which should be last in list
@@ -63,7 +63,7 @@ public class ListDataSourceTest {
     public void testDefatulSortWithSpecifiedPostSort() {
         Comparator<StrBean> comp = Comparator.comparing(StrBean::getValue)
                 .thenComparing(Comparator.comparing(StrBean::getId).reversed());
-        List<StrBean> list = dataSource.sortingBy(comp).apply(new Query())
+        List<StrBean> list = dataSource.sortingBy(comp).fetch(new Query())
                 // The sort here should come e.g from a Component
                 .sorted(Comparator.comparing(StrBean::getRandomNumber))
                 .collect(Collectors.toList());
@@ -91,7 +91,7 @@ public class ListDataSourceTest {
     @Test
     public void testDefatulSortWithFunction() {
         List<StrBean> list = dataSource.sortingBy(StrBean::getValue)
-                .apply(new Query()).collect(Collectors.toList());
+                .fetch(new Query()).collect(Collectors.toList());
 
         Assert.assertEquals("Sorted data and original data sizes don't match",
                 data.size(), list.size());
@@ -114,7 +114,7 @@ public class ListDataSourceTest {
         data.set(0, bean);
         dataSource.refreshAll();
 
-        List<StrBean> list = dataSource.apply(query)
+        List<StrBean> list = dataSource.fetch(query)
                 .collect(Collectors.toList());
         StrBean first = list.get(0);
         Assert.assertEquals(bean.getValue(), first.getValue());
@@ -133,7 +133,7 @@ public class ListDataSourceTest {
         bean.setValue("foo");
         dataSource.refreshAll();
 
-        List<StrBean> list = dataSource.apply(query)
+        List<StrBean> list = dataSource.fetch(query)
                 .collect(Collectors.toList());
         StrBean first = list.get(0);
         Assert.assertEquals("foo", first.getValue());
@@ -153,7 +153,7 @@ public class ListDataSourceTest {
                 .sortingBy(Comparator.comparing(StrBean::getId));
         dSource.refreshAll();
 
-        List<StrBean> list = dSource.apply(query).collect(Collectors.toList());
+        List<StrBean> list = dSource.fetch(query).collect(Collectors.toList());
         StrBean first = list.get(0);
         Assert.assertEquals(bean.getValue(), first.getValue());
         Assert.assertEquals(bean.getRandomNumber(), first.getRandomNumber());
@@ -172,7 +172,7 @@ public class ListDataSourceTest {
         data.add(0, bean);
         dataSource.refreshAll();
 
-        List<StrBean> list = dataSource.apply(query)
+        List<StrBean> list = dataSource.fetch(query)
                 .collect(Collectors.toList());
         StrBean first = list.get(0);
         Assert.assertEquals(bean.getValue(), first.getValue());

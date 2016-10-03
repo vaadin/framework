@@ -18,7 +18,6 @@ package com.vaadin.server.data;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.vaadin.shared.Registration;
@@ -37,8 +36,7 @@ import com.vaadin.shared.Registration;
  *
  * @since 8.0
  */
-public interface DataSource<T>
-        extends Function<Query, Stream<T>>, Serializable {
+public interface DataSource<T> extends Serializable {
 
     /**
      * Gets whether the DataSource content all available in memory or does it
@@ -56,6 +54,16 @@ public interface DataSource<T>
      * @return the size of the data source
      */
     int size(Query t);
+
+    /**
+     * Fetches data from this DataSource using given {@code query}.
+     * 
+     * @param query
+     *            given query to request data
+     * @return the result of the query request: a stream of data objects, not
+     *         {@code null}
+     */
+    Stream<T> fetch(Query query);
 
     /**
      * Refreshes all data based on currently available data in the underlying
