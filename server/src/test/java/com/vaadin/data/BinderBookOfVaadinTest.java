@@ -18,11 +18,13 @@ package com.vaadin.data;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.vaadin.data.Binder.Binding;
@@ -30,6 +32,7 @@ import com.vaadin.data.ValidationStatus.Status;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.EmailValidator;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
@@ -711,5 +714,121 @@ public class BinderBookOfVaadinTest {
         Assert.assertEquals(message + "\n" + message2,
                 formStatusLabel.getValue());
 
+    }
+
+    @Test
+    @Ignore
+    public void statusChangeListener_binderIsNotBound() {
+        Button saveButton = new Button();
+        Button resetButton = new Button();
+
+        AtomicBoolean eventIsFired = new AtomicBoolean(false);
+
+        binder.addStatusChangeListener(event -> {
+            boolean isValid = !event.hasValidationErrors();
+            boolean hasChanges = event.getBinder().hasChanges();
+            eventIsFired.set(true);
+
+            saveButton.setEnabled(hasChanges && isValid);
+            resetButton.setEnabled(hasChanges);
+        });
+        binder.forField(field)
+                .withValidator(new StringLengthValidator("", 1, 3))
+                .bind(BookPerson::getLastName, BookPerson::setLastName);
+        // no changes
+        Assert.assertFalse(saveButton.isEnabled());
+        Assert.assertFalse(resetButton.isEnabled());
+        verifyEventIsFired(eventIsFired);
+
+        BookPerson person = new BookPerson(2000, 1);
+        binder.load(person);
+        // no changes
+        Assert.assertFalse(saveButton.isEnabled());
+        Assert.assertFalse(resetButton.isEnabled());
+        verifyEventIsFired(eventIsFired);
+
+        field.setValue("a");
+        // binder is not bound, no event fired
+        // no changes: see #375. There should be a change and enabled state
+        Assert.assertTrue(saveButton.isEnabled());
+        Assert.assertTrue(resetButton.isEnabled());
+        Assert.assertTrue(eventIsFired.get());
+
+        binder.saveIfValid(person);
+        // no changes
+        Assert.assertFalse(saveButton.isEnabled());
+        Assert.assertFalse(resetButton.isEnabled());
+        verifyEventIsFired(eventIsFired);
+
+        binder.validate();
+        // no changes
+        Assert.assertFalse(saveButton.isEnabled());
+        Assert.assertFalse(resetButton.isEnabled());
+        verifyEventIsFired(eventIsFired);
+
+        field.setValue("");
+        // binder is not bound, no event fired
+        // no changes: see #375. There should be a change and disabled state for
+        // save button because of failed validation
+        Assert.assertFalse(saveButton.isEnabled());
+        Assert.assertTrue(resetButton.isEnabled());
+        Assert.assertTrue(eventIsFired.get());
+    }
+
+    @Test
+    public void statusChangeListener_binderIsBound() {
+        Button saveButton = new Button();
+        Button resetButton = new Button();
+
+        AtomicBoolean eventIsFired = new AtomicBoolean(false);
+
+        binder.addStatusChangeListener(event -> {
+            boolean isValid = !event.hasValidationErrors();
+            boolean hasChanges = event.getBinder().hasChanges();
+            eventIsFired.set(true);
+
+            saveButton.setEnabled(hasChanges && isValid);
+            resetButton.setEnabled(hasChanges);
+        });
+        binder.forField(field)
+                .withValidator(new StringLengthValidator("", 1, 3))
+                .bind(BookPerson::getLastName, BookPerson::setLastName);
+        // no changes
+        Assert.assertFalse(saveButton.isEnabled());
+        Assert.assertFalse(resetButton.isEnabled());
+        verifyEventIsFired(eventIsFired);
+
+        BookPerson person = new BookPerson(2000, 1);
+        binder.bind(person);
+        // no changes
+        Assert.assertFalse(saveButton.isEnabled());
+        Assert.assertFalse(resetButton.isEnabled());
+        verifyEventIsFired(eventIsFired);
+
+        field.setValue("a");
+        // there are valid changes
+        Assert.assertTrue(saveButton.isEnabled());
+        Assert.assertTrue(resetButton.isEnabled());
+        verifyEventIsFired(eventIsFired);
+
+        field.setValue("");
+        // there are invalid changes
+        Assert.assertFalse(saveButton.isEnabled());
+        Assert.assertTrue(resetButton.isEnabled());
+        verifyEventIsFired(eventIsFired);
+
+        // set valid value
+        field.setValue("a");
+        verifyEventIsFired(eventIsFired);
+        binder.saveIfValid(person);
+        // there are no changes.
+        Assert.assertFalse(saveButton.isEnabled());
+        Assert.assertFalse(resetButton.isEnabled());
+        verifyEventIsFired(eventIsFired);
+    }
+
+    private void verifyEventIsFired(AtomicBoolean flag) {
+        Assert.assertTrue(flag.get());
+        flag.set(false);
     }
 }

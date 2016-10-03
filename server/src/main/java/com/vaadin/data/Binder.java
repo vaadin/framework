@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.event.EventRouter;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
@@ -435,6 +436,7 @@ public class Binder<BEAN> implements Serializable {
             this.setter = setter;
             getBinder().bindings.add(this);
             getBinder().getBean().ifPresent(this::bind);
+            getBinder().fireStatusChangeEvent(false);
         }
 
         @Override
@@ -533,6 +535,7 @@ public class Binder<BEAN> implements Serializable {
             getBinder().getValidationStatusHandler()
                     .accept(new BinderValidationStatus<>(getBinder(),
                             Arrays.asList(status), Collections.emptyList()));
+            getBinder().fireStatusChangeEvent(status.isError());
             return status;
         }
 
@@ -544,8 +547,8 @@ public class Binder<BEAN> implements Serializable {
          */
         private ValidationStatus<TARGET> doValidation() {
             FIELDVALUE fieldValue = field.getValue();
-            Result<TARGET> dataValue = converterValidatorChain.convertToModel(
-                    fieldValue, findLocale());
+            Result<TARGET> dataValue = converterValidatorChain
+                    .convertToModel(fieldValue, findLocale());
             return new ValidationStatus<>(this, dataValue);
         }
 
@@ -566,8 +569,8 @@ public class Binder<BEAN> implements Serializable {
         }
 
         private FIELDVALUE convertDataToFieldType(BEAN bean) {
-            return converterValidatorChain.convertToPresentation(
-                    getter.apply(bean), findLocale());
+            return converterValidatorChain
+                    .convertToPresentation(getter.apply(bean), findLocale());
         }
 
         /**
@@ -577,7 +580,7 @@ public class Binder<BEAN> implements Serializable {
          *            the new value
          */
         private void handleFieldValueChange(BEAN bean) {
-            binder.setHasChanges(true);
+            getBinder().setHasChanges(true);
             // store field value if valid
             ValidationStatus<TARGET> fieldValidationStatus = storeFieldValue(
                     bean);
@@ -585,14 +588,15 @@ public class Binder<BEAN> implements Serializable {
             // if all field level validations pass, run bean level validation
             if (!getBinder().bindings.stream().map(BindingImpl::doValidation)
                     .anyMatch(ValidationStatus::isError)) {
-                binderValidationResults = binder.validateItem(bean);
+                binderValidationResults = getBinder().validateItem(bean);
             } else {
                 binderValidationResults = Collections.emptyList();
             }
-            binder.getValidationStatusHandler()
-                    .accept(new BinderValidationStatus<>(binder,
-                            Arrays.asList(fieldValidationStatus),
-                            binderValidationResults));
+            BinderValidationStatus<BEAN> status = new BinderValidationStatus<>(
+                    binder, Arrays.asList(fieldValidationStatus),
+                    binderValidationResults);
+            getBinder().getValidationStatusHandler().accept(status);
+            getBinder().fireStatusChangeEvent(status.hasErrors());
         }
 
         /**
@@ -668,6 +672,8 @@ public class Binder<BEAN> implements Serializable {
 
     private final List<Validator<? super BEAN>> validators = new ArrayList<>();
 
+    private EventRouter eventRouter;
+
     private Label statusLabel;
 
     private BinderValidationStatusHandler statusHandler;
@@ -742,9 +748,9 @@ public class Binder<BEAN> implements Serializable {
             @Override
             public Registration addValueChangeListener(
                     ValueChangeListener<? super SELECTVALUE> listener) {
-                return select.addSelectionListener(e -> listener.accept(
-                        new ValueChange<>(select, getValue(), e
-                                .isUserOriginated())));
+                return select.addSelectionListener(
+                        e -> listener.accept(new ValueChange<>(select,
+                                getValue(), e.isUserOriginated())));
             }
         });
     }
@@ -916,7 +922,7 @@ public class Binder<BEAN> implements Serializable {
      * <pre>
      * class Feature {
      *     public enum Browser { CHROME, EDGE, FIREFOX, IE, OPERA, SAFARI }
-
+    
      *     public Set&lt;Browser> getSupportedBrowsers() { ... }
      *     public void setSupportedBrowsers(Set&lt;Browser> title) { ... }
      * }
@@ -964,13 +970,14 @@ public class Binder<BEAN> implements Serializable {
      */
     public void bind(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
-        unbind();
+        doUnbind(false);
         this.bean = bean;
         bindings.forEach(b -> b.bind(bean));
         // if there has been field value change listeners that trigger
         // validation, need to make sure the validation errors are cleared
         getValidationStatusHandler()
                 .accept(BinderValidationStatus.createUnresolvedStatus(this));
+        fireStatusChangeEvent(false);
     }
 
     /**
@@ -978,13 +985,7 @@ public class Binder<BEAN> implements Serializable {
      * nothing.
      */
     public void unbind() {
-        setHasChanges(false);
-        if (bean != null) {
-            bean = null;
-            bindings.forEach(BindingImpl::unbind);
-        }
-        getValidationStatusHandler()
-                .accept(BinderValidationStatus.createUnresolvedStatus(this));
+        doUnbind(true);
     }
 
     /**
@@ -1009,6 +1010,7 @@ public class Binder<BEAN> implements Serializable {
 
         getValidationStatusHandler()
                 .accept(BinderValidationStatus.createUnresolvedStatus(this));
+        fireStatusChangeEvent(false);
     }
 
     /**
@@ -1073,6 +1075,7 @@ public class Binder<BEAN> implements Serializable {
      * @return a list of field validation errors if such occur, otherwise a list
      *         of bean validation errors.
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private BinderValidationStatus<BEAN> doSaveIfValid(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
         // First run fields level validation
@@ -1080,6 +1083,7 @@ public class Binder<BEAN> implements Serializable {
         // If no validation errors then update bean
         if (bindingStatuses.stream().filter(ValidationStatus::isError).findAny()
                 .isPresent()) {
+            fireStatusChangeEvent(true);
             return new BinderValidationStatus<>(this, bindingStatuses,
                     Collections.emptyList());
         }
@@ -1092,8 +1096,9 @@ public class Binder<BEAN> implements Serializable {
         bindings.forEach(binding -> binding.storeFieldValue(bean));
         // Now run bean level validation against the updated bean
         List<Result<?>> binderResults = validateItem(bean);
-        if (binderResults.stream().filter(Result::isError).findAny()
-                .isPresent()) {
+        boolean hasErrors = binderResults.stream().filter(Result::isError)
+                .findAny().isPresent();
+        if (hasErrors) {
             // Item validator failed, revert values
             bindings.forEach((BindingImpl binding) -> binding.setBeanValue(bean,
                     oldValues.get(binding)));
@@ -1101,6 +1106,7 @@ public class Binder<BEAN> implements Serializable {
             // Save successful, reset hasChanges to false
             setHasChanges(false);
         }
+        fireStatusChangeEvent(hasErrors);
         return new BinderValidationStatus<>(this, bindingStatuses,
                 binderResults);
     }
@@ -1150,6 +1156,7 @@ public class Binder<BEAN> implements Serializable {
                     bindingStatuses, validateItem(bean));
         }
         getValidationStatusHandler().accept(validationStatus);
+        fireStatusChangeEvent(validationStatus.hasErrors());
         return validationStatus;
     }
 
@@ -1271,6 +1278,43 @@ public class Binder<BEAN> implements Serializable {
     public BinderValidationStatusHandler getValidationStatusHandler() {
         return Optional.ofNullable(statusHandler)
                 .orElse(this::handleBinderValidationStatus);
+    }
+
+    /**
+     * Adds status change listener to the binder.
+     * <p>
+     * The {@link Binder} status is changed whenever any of the following
+     * happens:
+     * <ul>
+     * <li>if it's bound and any of its bound field or select has been changed
+     * <li>{@link #save(Object)} or {@link #saveIfValid(Object)} is called
+     * <li>{@link #load(Object)} is called
+     * <li>{@link #bind(Object)} is called
+     * <li>{@link #unbind(Object)} is called
+     * <li>{@link Binding#bind(Function, BiConsumer)} is called
+     * <li>{@link Binder#validate()} or {@link Binding#validate()} is called
+     * </ul>
+     * 
+     * @see #load(Object)
+     * @see #save(Object)
+     * @see #saveIfValid(Object)
+     * @see #bind(Object)
+     * @see #unbind()
+     * @see #forField(HasValue)
+     * @see #forSelect(AbstractMultiSelect)
+     * @See {@link #validate()}
+     * @see Binding#validate()
+     * @see Binding#bind(Object)
+     * 
+     * @param listener
+     *            status change listener to add, not null
+     * @return a registration for the listener
+     */
+    public Registration addStatusChangeListener(StatusChangeListener listener) {
+        getEventRouter().addListener(StatusChangeEvent.class, listener,
+                StatusChangeListener.class.getDeclaredMethods()[0]);
+        return () -> getEventRouter().removeListener(StatusChangeEvent.class,
+                listener);
     }
 
     /**
@@ -1400,4 +1444,35 @@ public class Binder<BEAN> implements Serializable {
     public boolean hasChanges() {
         return hasChanges;
     }
+
+    /**
+     * Returns the event router for this binder.
+     * 
+     * @return the event router, not null
+     */
+    protected EventRouter getEventRouter() {
+        if (eventRouter == null) {
+            eventRouter = new EventRouter();
+        }
+        return eventRouter;
+    }
+
+    private void doUnbind(boolean fireStatusEvent) {
+        setHasChanges(false);
+        if (bean != null) {
+            bean = null;
+            bindings.forEach(BindingImpl::unbind);
+        }
+        getValidationStatusHandler()
+                .accept(BinderValidationStatus.createUnresolvedStatus(this));
+        if (fireStatusEvent) {
+            fireStatusChangeEvent(false);
+        }
+    }
+
+    private void fireStatusChangeEvent(boolean hasValidationErrors) {
+        getEventRouter()
+                .fireEvent(new StatusChangeEvent(this, hasValidationErrors));
+    }
+
 }
