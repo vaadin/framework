@@ -1,6 +1,8 @@
 package com.vaadin.tests.components.grid.basics;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -49,6 +51,35 @@ public class GridBasics extends AbstractTestUIWithLog {
     public static final String[] COLUMN_CAPTIONS = { "Column 0", "Column 1",
             "Column 2", "Row Number", "Date", "HTML String", "Big Random",
             "Small Random" };
+
+    private final Command toggleReorderListenerCommand = new Command() {
+        private Registration registration = null;
+
+        @Override
+        public void menuSelected(MenuItem selectedItem) {
+            removeRegistration();
+            if (selectedItem.isChecked()) {
+                registration = grid.addColumnReorderListener(event -> {
+                    List<String> columnCaptions = new ArrayList<String>();
+                    for (Column<DataObject, ?> column : grid.getColumns()) {
+                        columnCaptions.add(column.getCaption());
+                    }
+                    log("Columns reordered, userOriginated: "
+                            + event.isUserOriginated());
+                    log("Column order: " + columnCaptions.toString());
+                });
+                log("Registered a column reorder listener.");
+            }
+        }
+
+        private void removeRegistration() {
+            if (registration != null) {
+                registration.remove();
+                registration = null;
+                log("Removed a column reorder listener.");
+            }
+        }
+    };
 
     private static class DetailedDetailsGenerator
             implements DetailsGenerator<DataObject> {
@@ -109,6 +140,7 @@ public class GridBasics extends AbstractTestUIWithLog {
     private List<DataObject> data;
     private int watchingCount = 0;
     private PersistingDetailsGenerator persistingDetails;
+    private List<Column<DataObject, ?>> initialColumnOrder;
 
     public GridBasics() {
         generators.put("NULL", null);
@@ -167,7 +199,49 @@ public class GridBasics extends AbstractTestUIWithLog {
         createDetailsMenu(componentMenu.addItem("Details", null));
         createBodyMenu(componentMenu.addItem("Body rows", null));
         createHeaderMenu(componentMenu.addItem("Header", null));
+        createColumnsMenu(componentMenu.addItem("Columns", null));
         return menu;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void createColumnsMenu(MenuItem columnsMenu) {
+        for (int i = 0; i < grid.getColumns().size(); i++) {
+            final int index = i;
+            MenuItem columnMenu = columnsMenu.addItem("Column " + i, null);
+            columnMenu.addItem("Move left", selectedItem -> {
+                if (index > 0) {
+                    List<Column<DataObject, ?>> columnOrder = new ArrayList<>(
+                            grid.getColumns());
+                    Collections.swap(columnOrder, index, index - 1);
+                    grid.setColumnOrder(columnOrder
+                            .toArray(new Column[columnOrder.size()]));
+                }
+            });
+            columnMenu.addItem("Move right", selectedItem -> {
+                if (index < grid.getColumns().size() - 1) {
+                    List<Column<DataObject, ?>> columnOrder = new ArrayList<>(
+                            grid.getColumns());
+                    Collections.swap(columnOrder, index, index + 1);
+                    grid.setColumnOrder(columnOrder
+                            .toArray(new Column[columnOrder.size()]));
+                }
+            });
+            columnMenu
+                    .addItem("Sortable",
+                            selectedItem -> grid.getColumns().get(index)
+                                    .setSortable(selectedItem.isChecked()))
+                    .setCheckable(true);
+            columnMenu
+                    .addItem("Hidable",
+                            selectedItem -> grid.getColumns().get(index)
+                                    .setHidable(selectedItem.isChecked()))
+                    .setCheckable(true);
+            columnMenu
+                    .addItem("Hidden",
+                            selectedItem -> grid.getColumns().get(index)
+                                    .setHidden(selectedItem.isChecked()))
+                    .setCheckable(true);
+        }
     }
 
     private void createSizeMenu(MenuItem sizeMenu) {
@@ -238,6 +312,14 @@ public class GridBasics extends AbstractTestUIWithLog {
                 }
             }
         }).setCheckable(true);
+
+        stateMenu.addItem("Column reorder listener",
+                toggleReorderListenerCommand).setCheckable(true);
+
+        stateMenu
+                .addItem("Column Reordering", selectedItem -> grid
+                        .setColumnReorderingAllowed(selectedItem.isChecked()))
+                .setCheckable(true);
     }
 
     private void createRowStyleMenu(MenuItem rowStyleMenu) {

@@ -20,7 +20,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
@@ -132,7 +134,7 @@ public class GridConnector
      *            the id of the column to get
      * @return the column with the given id
      */
-    public Column<?, ?> getColumn(String columnId) {
+    public Column<?, JsonObject> getColumn(String columnId) {
         return idToColumn.get(columnId);
     }
 
@@ -180,6 +182,16 @@ public class GridConnector
                         getColumnId(event.getColumn()), event.isHidden());
             }
         });
+        getWidget().addColumnReorderHandler(event -> {
+            if (event.isUserOriginated()) {
+                List<String> newColumnOrder = mapColumnsToIds(
+                        event.getNewColumnOrder());
+                List<String> oldColumnOrder = mapColumnsToIds(
+                        event.getOldColumnOrder());
+                getRpcProxy(GridServerRpc.class)
+                        .columnsReordered(newColumnOrder, oldColumnOrder);
+            }
+        });
         getWidget().addColumnResizeHandler(event -> {
             Column<?, JsonObject> column = event.getColumn();
             getRpcProxy(GridServerRpc.class).columnResized(getColumnId(column),
@@ -217,6 +229,13 @@ public class GridConnector
         });
 
         layout();
+    }
+
+    @SuppressWarnings("unchecked")
+    @OnStateChange("columnOrder")
+    void updateColumnOrder() {
+        getWidget().setColumnOrder(getState().columnOrder.stream()
+                .map(this::getColumn).toArray(size -> new Column[size]));
     }
 
     /**
@@ -445,5 +464,10 @@ public class GridConnector
             }
         }
         return false;
+    }
+
+    private List<String> mapColumnsToIds(List<Column<?, JsonObject>> columns) {
+        return columns.stream().map(this::getColumnId).filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 }

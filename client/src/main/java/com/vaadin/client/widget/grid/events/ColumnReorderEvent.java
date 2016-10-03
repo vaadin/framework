@@ -15,7 +15,10 @@
  */
 package com.vaadin.client.widget.grid.events;
 
+import java.util.List;
+
 import com.google.gwt.event.shared.GwtEvent;
+import com.vaadin.client.widgets.Grid.Column;
 
 /**
  * An event for notifying that the columns in the Grid have been reordered.
@@ -35,6 +38,48 @@ public class ColumnReorderEvent<T> extends GwtEvent<ColumnReorderHandler<T>> {
 
     public static final Type<ColumnReorderHandler<?>> getType() {
         return TYPE;
+    }
+
+    private final List<Column<?, T>> oldColumnOrder;
+
+    private final List<Column<?, T>> newColumnOrder;
+
+    private final boolean userOriginated;
+
+    public ColumnReorderEvent(List<Column<?, T>> oldColumnOrder,
+            List<Column<?, T>> newColumnOrder, boolean userOriginated) {
+        this.oldColumnOrder = oldColumnOrder;
+        this.newColumnOrder = newColumnOrder;
+        this.userOriginated = userOriginated;
+    }
+
+    /**
+     * Gets the ordering of columns prior to this event.
+     *
+     * @return the list of columns in the grid's order prior to this event
+     */
+    public List<Column<?, T>> getOldColumnOrder() {
+        return oldColumnOrder;
+    }
+
+    /**
+     * Gets the new ordering of columns.
+     *
+     * @return the list of columns in the grid's current order
+     */
+    public List<Column<?, T>> getNewColumnOrder() {
+        return newColumnOrder;
+    }
+
+    /**
+     * Check whether this event originated from the user reordering columns or
+     * via API call.
+     *
+     * @return {@code true} if columns were reordered by the user, {@code false}
+     *         if not
+     */
+    public boolean isUserOriginated() {
+        return userOriginated;
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

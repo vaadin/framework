@@ -17,6 +17,7 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,11 +33,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.EventListener;
+import com.vaadin.server.EncodeResult;
+import com.vaadin.server.JsonCodec;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.MouseEventDetails;
@@ -73,6 +77,11 @@ import elemental.json.JsonValue;
 public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
 
     @Deprecated
+    private static final Method COLUMN_REORDER_METHOD = ReflectTools.findMethod(
+            ColumnReorderListener.class, "columnReorder",
+            ColumnReorderEvent.class);
+
+    @Deprecated
     private static final Method COLUMN_RESIZE_METHOD = ReflectTools.findMethod(
             ColumnResizeListener.class, "columnResize",
             ColumnResizeEvent.class);
@@ -88,10 +97,24 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
                     ColumnVisibilityChangeEvent.class);
 
     /**
-     * An event listener for column resize events in the Grid.
-     *
-     * @since 7.6
+     * An event listener for column reorder events in the Grid.
      */
+    @FunctionalInterface
+    public interface ColumnReorderListener extends Serializable {
+
+        /**
+         * Called when the columns of the grid have been reordered.
+         *
+         * @param event
+         *            An event providing more information
+         */
+        void columnReorder(ColumnReorderEvent event);
+    }
+
+    /**
+     * An event listener for column resize events in the Grid.
+     */
+    @FunctionalInterface
     public interface ColumnResizeListener extends Serializable {
 
         /**
@@ -104,10 +127,39 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     }
 
     /**
+     * An event that is fired when the columns are reordered.
+     */
+    public static class ColumnReorderEvent extends Component.Event {
+
+        private final boolean userOriginated;
+
+        /**
+         *
+         * @param source
+         *            the grid where the event originated from
+         * @param userOriginated
+         *            <code>true</code> if event is a result of user
+         *            interaction, <code>false</code> if from API call
+         */
+        public ColumnReorderEvent(Grid source, boolean userOriginated) {
+            super(source);
+            this.userOriginated = userOriginated;
+        }
+
+        /**
+         * Returns <code>true</code> if the column reorder was done by the user,
+         * <code>false</code> if not and it was triggered by server side code.
+         *
+         * @return <code>true</code> if event is a result of user interaction
+         */
+        public boolean isUserOriginated() {
+            return userOriginated;
+        }
+    }
+
+    /**
      * An event that is fired when a column is resized, either programmatically
      * or by the user.
-     *
-     * @since 7.6
      */
     public static class ColumnResizeEvent extends Component.Event {
 
@@ -324,6 +376,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      *
      * @since 7.5.0
      */
+    @FunctionalInterface
     public interface ColumnVisibilityChangeListener extends Serializable {
 
         /**
@@ -522,7 +575,39 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         @Override
         public void columnsReordered(List<String> newColumnOrder,
                 List<String> oldColumnOrder) {
-            // TODO Auto-generated method stub
+            final String diffStateKey = "columnOrder";
+            ConnectorTracker connectorTracker = getUI().getConnectorTracker();
+            JsonObject diffState = connectorTracker.getDiffState(Grid.this);
+            // discard the change if the columns have been reordered from
+            // the server side, as the server side is always right
+            if (getState(false).columnOrder.equals(oldColumnOrder)) {
+                // Don't mark as dirty since client has the state already
+                getState(false).columnOrder = newColumnOrder;
+                // write changes to diffState so that possible reverting the
+                // column order is sent to client
+                assert diffState
+                        .hasKey(diffStateKey) : "Field name has changed";
+                Type type = null;
+                try {
+                    type = (getState(false).getClass()
+                            .getDeclaredField(diffStateKey).getGenericType());
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                }
+                EncodeResult encodeResult = JsonCodec.encode(
+                        getState(false).columnOrder, diffState, type,
+                        connectorTracker);
+
+                diffState.put(diffStateKey, encodeResult.getEncodedValue());
+                fireColumnReorderEvent(true);
+            } else {
+                // make sure the client is reverted to the order that the
+                // server thinks it is
+                diffState.remove(diffStateKey);
+                markAsDirty();
+            }
         }
 
         @Override
@@ -1433,7 +1518,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
 
         /**
          * Returns the cell on this row corresponding to the given column id.
-         * 
+         *
          * @param columnId
          *            the id of the column whose header cell to get, not null
          * @return the header cell
@@ -1444,7 +1529,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
 
         /**
          * Returns the cell on this row corresponding to the given column.
-         * 
+         *
          * @param column
          *            the column whose header cell to get, not null
          * @return the header cell
@@ -1463,14 +1548,14 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
 
         /**
          * Returns the textual caption of this cell.
-         * 
+         *
          * @return the header caption
          */
         public String getText();
 
         /**
          * Sets the textual caption of this cell.
-         * 
+         *
          * @param text
          *            the header caption to set, not null
          */
@@ -1555,19 +1640,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
             AbstractRenderer<? super T, V> renderer) {
         final Column<T, V> column = new Column<>(caption, valueProvider,
                 renderer);
-        final String columnId = columnKeys.key(column);
-
-        column.extend(this);
-        column.setId(columnId);
-        columnSet.add(column);
-        addDataGenerator(column);
-
-        getHeader().addColumn(columnId);
-
-        if (getDefaultHeaderRow() != null) {
-            getDefaultHeaderRow().getCell(columnId).setText(caption);
-        }
-
+        addColumn(column);
         return column;
     }
 
@@ -1585,6 +1658,27 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     public Column<T, String> addColumn(String caption,
             Function<T, String> valueProvider) {
         return addColumn(caption, valueProvider, new TextRenderer());
+    }
+
+    private void addColumn(Column<T, ?> column) {
+        if (getColumns().contains(column)) {
+            return;
+        }
+
+        final String columnId = columnKeys.key(column);
+
+        column.extend(this);
+        column.setId(columnId);
+        columnSet.add(column);
+        addDataGenerator(column);
+
+        getState().columnOrder.add(columnId);
+        getHeader().addColumn(columnId);
+
+        if (getDefaultHeaderRow() != null) {
+            getDefaultHeaderRow().getCell(columnId)
+                    .setText(column.getCaption());
+        }
     }
 
     /**
@@ -1645,8 +1739,9 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      *
      * @return unmodifiable collection of columns
      */
-    public Collection<Column<T, ?>> getColumns() {
-        return Collections.unmodifiableSet(columnSet);
+    public List<Column<T, ?>> getColumns() {
+        return Collections.unmodifiableList(getState(false).columnOrder.stream()
+                .map(this::getColumn).collect(Collectors.toList()));
     }
 
     /**
@@ -1894,10 +1989,10 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      *            the index at which to insert the row, where the topmost row
      *            has index zero
      * @return the inserted header row
-     * 
+     *
      * @throws IndexOutOfBoundsException
      *             if {@code rowIndex < 0 || rowIndex > getHeaderRowCount()}
-     * 
+     *
      * @see #appendHeaderRow()
      * @see #prependHeaderRow()
      * @see #removeHeaderRow(HeaderRow)
@@ -1911,7 +2006,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      * Adds a new row at the bottom of the header section.
      *
      * @return the appended header row
-     * 
+     *
      * @see #prependHeaderRow()
      * @see #addHeaderRowAt(int)
      * @see #removeHeaderRow(HeaderRow)
@@ -1925,7 +2020,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      * Adds a new row at the top of the header section.
      *
      * @return the prepended header row
-     * 
+     *
      * @see #appendHeaderRow()
      * @see #addHeaderRowAt(int)
      * @see #removeHeaderRow(HeaderRow)
@@ -1944,7 +2039,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      *
      * @throws IllegalArgumentException
      *             if the header does not contain the row
-     * 
+     *
      * @see #removeHeaderRow(int)
      * @see #addHeaderRowAt(int)
      * @see #appendHeaderRow()
@@ -1963,7 +2058,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      *
      * @throws IndexOutOfBoundsException
      *             if {@code index < 0 || index >= getHeaderRowCount()}
-     * 
+     *
      * @see #removeHeaderRow(HeaderRow)
      * @see #addHeaderRowAt(int)
      * @see #appendHeaderRow()
@@ -1977,7 +2072,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      * Returns the current default row of the header.
      *
      * @return the default row or null if no default row set
-     * 
+     *
      * @see #setDefaultHeaderRow(HeaderRow)
      */
     public HeaderRow getDefaultHeaderRow() {
@@ -2010,6 +2105,20 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      */
     protected Header getHeader() {
         return header;
+    }
+
+    /**
+     * Registers a new column reorder listener.
+     *
+     * @param listener
+     *            the listener to register, not null
+     * @return a registration for the listener
+     */
+    public Registration addColumnReorderListener(
+            ColumnReorderListener listener) {
+        addListener(ColumnReorderEvent.class, listener, COLUMN_REORDER_METHOD);
+        return () -> removeListener(ColumnReorderEvent.class, listener,
+                COLUMN_REORDER_METHOD);
     }
 
     /**
@@ -2055,6 +2164,82 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
                 COLUMN_VISIBILITY_METHOD);
     }
 
+    /**
+     * Returns whether column reordering is allowed. Default value is
+     * <code>false</code>.
+     *
+     * @return true if reordering is allowed
+     */
+    public boolean isColumnReorderingAllowed() {
+        return getState(false).columnReorderingAllowed;
+    }
+
+    /**
+     * Sets whether or not column reordering is allowed. Default value is
+     * <code>false</code>.
+     *
+     * @param columnReorderingAllowed
+     *            specifies whether column reordering is allowed
+     */
+    public void setColumnReorderingAllowed(boolean columnReorderingAllowed) {
+        if (isColumnReorderingAllowed() != columnReorderingAllowed) {
+            getState().columnReorderingAllowed = columnReorderingAllowed;
+        }
+    }
+
+    /**
+     * Sets the columns and their order for the grid. Columns currently in this
+     * grid that are not present in columns are removed. Similarly, any new
+     * column in columns will be added to this grid.
+     *
+     * @param columns
+     *            the columns to set
+     */
+    public void setColumns(Column<T, ?>... columns) {
+        List<Column<T, ?>> currentColumns = getColumns();
+        Set<Column<T, ?>> removeColumns = new HashSet<>(currentColumns);
+        Set<Column<T, ?>> addColumns = Arrays.stream(columns)
+                .collect(Collectors.toSet());
+
+        removeColumns.removeAll(addColumns);
+        removeColumns.stream().forEach(this::removeColumn);
+
+        addColumns.removeAll(currentColumns);
+        addColumns.stream().forEach(this::addColumn);
+
+        setColumnOrder(columns);
+    }
+
+    /**
+     * Sets a new column order for the grid. All columns which are not ordered
+     * here will remain in the order they were before as the last columns of
+     * grid.
+     *
+     * @param columns
+     *            the columns in the order they should be
+     */
+    public void setColumnOrder(Column<T, ?>... columns) {
+        List<String> columnOrder = new ArrayList<>();
+        for (Column<T, ?> column : columns) {
+            if (columnSet.contains(column)) {
+                columnOrder.add(column.getId());
+            } else {
+                throw new IllegalArgumentException(
+                        "setColumnOrder should not be called "
+                                + "with columns that are not in the grid.");
+            }
+        }
+
+        List<String> stateColumnOrder = getState().columnOrder;
+        if (stateColumnOrder.size() != columnOrder.size()) {
+            stateColumnOrder.removeAll(columnOrder);
+            columnOrder.addAll(stateColumnOrder);
+        }
+
+        getState().columnOrder = columnOrder;
+        fireColumnReorderEvent(false);
+    }
+
     @Override
     protected GridState getState() {
         return getState(true);
@@ -2077,6 +2262,10 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
             c.setParent(null);
             markAsDirty();
         }
+    }
+
+    private void fireColumnReorderEvent(boolean userOriginated) {
+        fireEvent(new ColumnReorderEvent(this, userOriginated));
     }
 
     private void fireColumnResizeEvent(Column<?, ?> column,

@@ -4372,7 +4372,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
                 Column<?, T>[] array = reordered
                         .toArray(new Column[reordered.size()]);
-                setColumnOrder(array);
+                setColumnOrder(true, array);
                 transferCellFocusOnDrop();
             } // else no reordering
         }
@@ -8171,6 +8171,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *            array of columns in wanted order
      */
     public void setColumnOrder(Column<?, T>... orderedColumns) {
+        setColumnOrder(false, orderedColumns);
+    }
+
+    private void setColumnOrder(boolean isUserOriginated,
+            Column<?, T>... orderedColumns) {
+        List<Column<?, T>> oldOrder = new ArrayList<>(columns);
         ColumnConfiguration conf = getEscalator().getColumnConfiguration();
 
         // Trigger ComplexRenderer.destroy for old content
@@ -8221,7 +8227,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         columnHider.updateTogglesOrder();
 
-        fireEvent(new ColumnReorderEvent<T>());
+        fireEvent(new ColumnReorderEvent<T>(oldOrder, newOrder,
+                isUserOriginated));
     }
 
     /**
