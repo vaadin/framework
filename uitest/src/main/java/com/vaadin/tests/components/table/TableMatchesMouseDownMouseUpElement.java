@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -12,7 +12,7 @@ import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.Label;
 import com.vaadin.v7.ui.Table;
 
-public class TableMatchesMouseDownMouseUpElement extends AbstractTestUI {
+public class TableMatchesMouseDownMouseUpElement extends AbstractReindeerTestUI {
 
     static final String CLEAR_BUTTON_ID = "clear-button-id";
 

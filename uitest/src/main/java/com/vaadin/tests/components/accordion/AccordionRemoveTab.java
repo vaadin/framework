@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.accordion;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -30,7 +30,7 @@ import com.vaadin.ui.VerticalLayout;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class AccordionRemoveTab extends AbstractTestUI {
+public class AccordionRemoveTab extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

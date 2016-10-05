@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.formlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 
-public class NestedFormLayouts extends AbstractTestUI {
+public class NestedFormLayouts extends AbstractReindeerTestUI {
 
     private FormLayout outer;
     private FormLayout inner1;

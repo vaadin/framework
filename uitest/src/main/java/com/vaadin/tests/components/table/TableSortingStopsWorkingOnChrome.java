@@ -2,7 +2,6 @@ package com.vaadin.tests.components.table;
 
 import java.io.Serializable;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
@@ -17,7 +16,6 @@ import com.vaadin.v7.ui.Table.ColumnReorderListener;
 import com.vaadin.v7.ui.Table.HeaderClickEvent;
 import com.vaadin.v7.ui.Table.HeaderClickListener;
 
-@Theme("valo")
 @SuppressWarnings("serial")
 public class TableSortingStopsWorkingOnChrome extends AbstractTestUI {
 

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
@@ -17,7 +17,7 @@ import com.vaadin.v7.data.util.sqlcontainer.query.TableQuery;
 import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 import com.vaadin.v7.ui.ComboBox;
 
-public class TableQueryWithNonUniqueFirstPrimaryKey extends AbstractTestUI {
+public class TableQueryWithNonUniqueFirstPrimaryKey extends AbstractReindeerTestUI {
 
     @Override
     public void setup(VaadinRequest request) {

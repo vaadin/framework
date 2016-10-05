@@ -16,11 +16,11 @@
 package com.vaadin.tests.components.datefield;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
 
-public class DisabledDateFieldPopup extends AbstractTestUI {
+public class DisabledDateFieldPopup extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

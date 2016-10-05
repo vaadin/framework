@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
@@ -12,7 +12,7 @@ import com.vaadin.v7.ui.AbstractSelect.ItemDescriptionGenerator;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextField;
 
-public class TableItemDescriptionGeneratorUI extends AbstractTestUI {
+public class TableItemDescriptionGeneratorUI extends AbstractReindeerTestUI {
 
     private final String TEXT_PROPERTY_ID = "Text";
     private final String GEN_WIDGET_PROPERTY_ID = "Generated component";

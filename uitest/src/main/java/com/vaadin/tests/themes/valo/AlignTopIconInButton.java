@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -27,7 +26,6 @@ import com.vaadin.ui.themes.ValoTheme;
  *
  * @author Vaadin Ltd
  */
-@Theme("valo")
 public class AlignTopIconInButton extends AbstractTestUI {
 
     @Override

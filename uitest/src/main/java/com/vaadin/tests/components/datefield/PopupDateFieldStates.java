@@ -3,12 +3,12 @@ package com.vaadin.tests.components.datefield;
 import java.time.LocalDate;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 
 @SuppressWarnings("serial")
-public class PopupDateFieldStates extends AbstractTestUI {
+public class PopupDateFieldStates extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

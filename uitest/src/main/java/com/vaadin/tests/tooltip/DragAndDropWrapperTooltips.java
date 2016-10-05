@@ -11,7 +11,7 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -19,7 +19,7 @@ import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
-public class DragAndDropWrapperTooltips extends AbstractTestUI {
+public class DragAndDropWrapperTooltips extends AbstractReindeerTestUI {
 
     private final String BASE = ".v-widget.greenblock {vertical-align: middle; float:left; width:60px;height:60px;background: green !important; padding:0; margin:2px;-webkit-transition: width 0.3s ease-in-out;color: white;}";
     private final String B2 = ".v-widget.b2 {background-color: red !important;}";

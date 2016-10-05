@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.notification;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 
@@ -25,7 +25,7 @@ import com.vaadin.ui.Notification.Type;
  *
  * @author Vaadin Ltd
  */
-public class NotificationDelay extends AbstractTestUI {
+public class NotificationDelay extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

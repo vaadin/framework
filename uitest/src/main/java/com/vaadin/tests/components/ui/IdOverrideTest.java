@@ -4,7 +4,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.server.IdTestLabel;
 import com.vaadin.ui.Button;
@@ -14,7 +14,7 @@ import com.vaadin.ui.Label;
 
 @Widgetset(TestingWidgetSet.NAME)
 @Theme("tests-tickets")
-public class IdOverrideTest extends AbstractTestUI {
+public class IdOverrideTest extends AbstractReindeerTestUI {
 
     @Override
     protected String getTestDescription() {

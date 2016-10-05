@@ -16,14 +16,14 @@
 package com.vaadin.tests.components.splitpanel;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractSplitPanel;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalSplitPanel;
 
-public class SplitPanelStyleLeak extends AbstractTestUI {
+public class SplitPanelStyleLeak extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

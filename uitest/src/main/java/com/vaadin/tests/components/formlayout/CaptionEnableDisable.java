@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.formlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
@@ -9,7 +9,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.v7.ui.NativeSelect;
 
-public class CaptionEnableDisable extends AbstractTestUI {
+public class CaptionEnableDisable extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

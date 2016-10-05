@@ -17,7 +17,6 @@ package com.vaadin.v7.tests.components.grid;
 
 import java.util.Collection;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.PersonContainer;
@@ -27,7 +26,6 @@ import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.Column;
 import com.vaadin.v7.ui.OptionGroup;
 
-@Theme("valo")
 public class SortableHeaderStyles extends AbstractTestUI {
 
     @Override

@@ -18,14 +18,14 @@ package com.vaadin.tests.components.javascriptcomponent;
 
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CssLayout;
 
-public class JavaScriptResizeListener extends AbstractTestUI {
+public class JavaScriptResizeListener extends AbstractReindeerTestUI {
 
     @JavaScript("ResizeJsConnector.js")
     public class ResizeJsComponent extends AbstractJavaScriptComponent {

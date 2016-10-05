@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 
-public class ListSelectJump extends AbstractTestUI {
+public class ListSelectJump extends AbstractReindeerTestUI {
 
     @Override
     public void setup(VaadinRequest request) {

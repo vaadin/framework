@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.window;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.VerticalLayout;
@@ -27,7 +27,7 @@ import com.vaadin.ui.Window;
  * @since
  * @author Vaadin Ltd
  */
-public class ComboboxScrollableWindow extends AbstractTestUI {
+public class ComboboxScrollableWindow extends AbstractReindeerTestUI {
 
     static final String WINDOW_ID = "window";
     static final String COMBOBOX_ID = "combobox";

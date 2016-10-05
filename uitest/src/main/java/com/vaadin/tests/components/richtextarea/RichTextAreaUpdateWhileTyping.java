@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.richtextarea;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.shared.ui.progressindicator.ProgressIndicatorServerRpc;
 import com.vaadin.v7.ui.ProgressIndicator;
 import com.vaadin.ui.RichTextArea;
 
-public class RichTextAreaUpdateWhileTyping extends AbstractTestUI {
+public class RichTextAreaUpdateWhileTyping extends AbstractReindeerTestUI {
 
     private RichTextArea rta;
 

@@ -12,7 +12,7 @@ import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.RowHeaderMode;
 
-public class SaneErrors extends AbstractTestUI {
+public class SaneErrors extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

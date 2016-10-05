@@ -7,7 +7,7 @@ import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.ServerRpcManager.RpcInvocationException;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -17,7 +17,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.VerticalLayout;
 
-public class ErrorHandlers extends AbstractTestUI {
+public class ErrorHandlers extends AbstractReindeerTestUI {
 
     public static class NotificationErrorHandler implements ErrorHandler {
 

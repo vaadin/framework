@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
@@ -31,7 +31,7 @@ import com.vaadin.v7.ui.TextField;
  *
  * @author Vaadin Ltd
  */
-public class TableScrollUpOnSelect extends AbstractTestUI {
+public class TableScrollUpOnSelect extends AbstractReindeerTestUI {
     public TextField text = null;
 
     @Override

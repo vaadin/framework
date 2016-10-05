@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.application;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -38,7 +37,6 @@ import com.vaadin.v7.ui.TextField;
  * @since
  * @author Vaadin Ltd
  */
-@Theme("valo")
 public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
 
     private static class Response {

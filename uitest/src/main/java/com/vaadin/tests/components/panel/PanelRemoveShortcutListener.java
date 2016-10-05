@@ -18,7 +18,7 @@ package com.vaadin.tests.components.panel;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -31,7 +31,7 @@ import com.vaadin.ui.TextField;
  *
  * @author Vaadin Ltd
  */
-public class PanelRemoveShortcutListener extends AbstractTestUI {
+public class PanelRemoveShortcutListener extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

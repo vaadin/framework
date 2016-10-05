@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.popupview.ReopenPopupView;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
@@ -35,7 +35,7 @@ import com.vaadin.ui.Link;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.UI;
 
-public class BrowserPopupExtensionTest extends AbstractTestUI {
+public class BrowserPopupExtensionTest extends AbstractReindeerTestUI {
 
     public static class ShowParamsUI extends UI {
         @Override

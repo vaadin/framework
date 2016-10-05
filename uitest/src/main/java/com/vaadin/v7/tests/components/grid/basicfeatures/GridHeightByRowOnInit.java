@@ -15,17 +15,14 @@
  */
 package com.vaadin.v7.tests.components.grid.basicfeatures;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.shared.ui.grid.HeightMode;
 import com.vaadin.v7.ui.Grid;
 
 @Title("Server Grid height by row on init")
-@Theme(ValoTheme.THEME_NAME)
 public class GridHeightByRowOnInit extends UI {
 
     private static final String PROPERTY = "Property";

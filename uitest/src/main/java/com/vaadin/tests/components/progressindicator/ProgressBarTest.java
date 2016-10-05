@@ -17,7 +17,7 @@
 package com.vaadin.tests.components.progressindicator;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -25,7 +25,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.ProgressBar;
 import com.vaadin.v7.ui.ProgressIndicator;
 
-public class ProgressBarTest extends AbstractTestUI {
+public class ProgressBarTest extends AbstractReindeerTestUI {
 
     private Label updatedFromBackround;
     private Thread updateThread = new Thread() {

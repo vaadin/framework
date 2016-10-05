@@ -19,7 +19,7 @@ import org.atmosphere.util.Version;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.communication.PushMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 
 /**
@@ -27,7 +27,7 @@ import com.vaadin.ui.Label;
  *
  * @author Vaadin Ltd
  */
-public class PushVersionInfo extends AbstractTestUI {
+public class PushVersionInfo extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

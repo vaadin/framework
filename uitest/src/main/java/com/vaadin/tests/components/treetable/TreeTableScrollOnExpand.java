@@ -16,10 +16,10 @@
 package com.vaadin.tests.components.treetable;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.ui.TreeTable;
 
-public class TreeTableScrollOnExpand extends AbstractTestUI {
+public class TreeTableScrollOnExpand extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

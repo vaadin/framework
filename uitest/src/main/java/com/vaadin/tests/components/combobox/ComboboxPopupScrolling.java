@@ -3,13 +3,11 @@ package com.vaadin.tests.components.combobox;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 
-@Theme("valo")
 public class ComboboxPopupScrolling extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {

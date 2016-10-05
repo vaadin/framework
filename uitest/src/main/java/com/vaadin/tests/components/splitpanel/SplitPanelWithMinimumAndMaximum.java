@@ -2,7 +2,7 @@ package com.vaadin.tests.components.splitpanel;
 
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
@@ -11,7 +11,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
-public class SplitPanelWithMinimumAndMaximum extends AbstractTestUI {
+public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

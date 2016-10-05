@@ -19,11 +19,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.ui.Grid;
 
 @SuppressWarnings("serial")
-public class GridDragAndDrop extends AbstractTestUI {
+public class GridDragAndDrop extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

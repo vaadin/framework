@@ -16,12 +16,12 @@
 package com.vaadin.tests.layouts.customlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
 
 @SuppressWarnings("serial")
-public class DefaultLocationInCustomLayout extends AbstractTestUI {
+public class DefaultLocationInCustomLayout extends AbstractReindeerTestUI {
 
     protected static final String BUTTON_ID = "DefaultLocationInCustomLayoutTestButtonId";
 

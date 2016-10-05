@@ -15,8 +15,6 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.annotations.Theme;
-
 /**
  * Test UI for date field Popup calendar in Valo theme.
  *
@@ -24,7 +22,6 @@ import com.vaadin.annotations.Theme;
  *
  * @author Vaadin Ltd
  */
-@Theme("valo")
 public class ValoDateFieldPopupPosition extends DateFieldPopupPosition {
 
 }

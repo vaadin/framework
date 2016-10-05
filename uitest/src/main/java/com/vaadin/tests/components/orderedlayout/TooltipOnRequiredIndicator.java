@@ -20,12 +20,12 @@
 package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.TextField;
 
-public class TooltipOnRequiredIndicator extends AbstractTestUI {
+public class TooltipOnRequiredIndicator extends AbstractReindeerTestUI {
 
     /*
      * (non-Javadoc)

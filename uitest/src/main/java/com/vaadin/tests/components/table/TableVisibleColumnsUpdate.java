@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.ui.Table;
 
-public class TableVisibleColumnsUpdate extends AbstractTestUI {
+public class TableVisibleColumnsUpdate extends AbstractReindeerTestUI {
 
     private String[] cols1 = new String[] { "p1", "p2", "p3" };
     private String[] cols2 = new String[] { "p1", "p4", "p3" };

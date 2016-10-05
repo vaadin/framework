@@ -16,7 +16,7 @@
 package com.vaadin.tests.application;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -24,7 +24,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SelectiveRenderer;
 
-public class MissingHierarchyDetection extends AbstractTestUI {
+public class MissingHierarchyDetection extends AbstractReindeerTestUI {
 
     private boolean isChildRendered = true;
     private BrokenCssLayout brokenLayout = new BrokenCssLayout();

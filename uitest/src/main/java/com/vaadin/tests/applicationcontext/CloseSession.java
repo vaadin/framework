@@ -23,13 +23,13 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedHttpSession;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 
-public class CloseSession extends AbstractTestUI {
+public class CloseSession extends AbstractReindeerTestUI {
     private static final String OLD_HASH_PARAM = "oldHash";
     private static final String OLD_SESSION_ID_PARAM = "oldSessionId";
 

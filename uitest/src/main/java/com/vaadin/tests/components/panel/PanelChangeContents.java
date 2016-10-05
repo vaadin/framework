@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.panel;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -25,7 +25,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
-public class PanelChangeContents extends AbstractTestUI
+public class PanelChangeContents extends AbstractReindeerTestUI
         implements ClickListener {
 
     VerticalLayout stats = new VerticalLayout();

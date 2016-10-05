@@ -4,10 +4,10 @@ import java.util.Properties;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 
-public class DeploymentConfiguration extends AbstractTestUI {
+public class DeploymentConfiguration extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

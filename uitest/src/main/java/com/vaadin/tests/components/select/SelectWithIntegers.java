@@ -19,12 +19,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.ui.AbstractSelect;
 import com.vaadin.v7.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.v7.ui.ListSelect;
 
-public class SelectWithIntegers extends AbstractTestUI {
+public class SelectWithIntegers extends AbstractReindeerTestUI {
     private final List<Integer> years = Arrays.asList(2014, 2015, 2016);
 
     @Override

@@ -18,12 +18,12 @@ package com.vaadin.tests.components.table;
 import java.util.Set;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.Table;
 
-public class SelectAllRows extends AbstractTestUI {
+public class SelectAllRows extends AbstractReindeerTestUI {
 
     static final String TABLE = "table";
     static final String COUNT_SELECTED_BUTTON = "button";

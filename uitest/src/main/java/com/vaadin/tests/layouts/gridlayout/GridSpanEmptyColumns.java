@@ -16,7 +16,7 @@
 package com.vaadin.tests.layouts.gridlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 
@@ -25,7 +25,7 @@ import com.vaadin.ui.Label;
  * @since
  * @author Vaadin Ltd
  */
-public class GridSpanEmptyColumns extends AbstractTestUI {
+public class GridSpanEmptyColumns extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

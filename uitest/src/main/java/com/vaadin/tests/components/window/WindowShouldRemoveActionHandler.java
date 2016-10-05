@@ -9,14 +9,14 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.v7.ui.TextField;
 
-public class WindowShouldRemoveActionHandler extends AbstractTestUI {
+public class WindowShouldRemoveActionHandler extends AbstractReindeerTestUI {
 
     @Override
     protected String getTestDescription() {

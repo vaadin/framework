@@ -17,7 +17,6 @@ package com.vaadin.v7.tests.components.grid;
 
 import java.util.ArrayList;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -27,7 +26,6 @@ import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.ui.Grid;
 
-@Theme("valo")
 public class GridColumnWidthRecalculation extends AbstractTestUI {
 
     @Override
@@ -68,8 +66,7 @@ public class GridColumnWidthRecalculation extends AbstractTestUI {
         Indexed dataSource = grid.getContainerDataSource();
         Object itemId = dataSource.getItemIds().iterator().next();
         Item item = dataSource.getItem(itemId);
-        ArrayList<Object> pIds = new ArrayList<>(
-                item.getItemPropertyIds());
+        ArrayList<Object> pIds = new ArrayList<>(item.getItemPropertyIds());
         for (int i = 0; i < pIds.size() / 2; i++) {
             int j = pIds.size() - 1 - i;
             Object pid1 = pIds.get(i);

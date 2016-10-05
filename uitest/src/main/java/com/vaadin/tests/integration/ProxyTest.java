@@ -29,14 +29,14 @@ import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServletService;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.VerticalLayout;
 
 @PreserveOnRefresh
-public class ProxyTest extends AbstractTestUI {
+public class ProxyTest extends AbstractReindeerTestUI {
 
     private Server server;
 

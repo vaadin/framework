@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.button;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -24,7 +24,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
-public class ButtonClick extends AbstractTestUI {
+public class ButtonClick extends AbstractReindeerTestUI {
 
     public final static String SUCCESS_TEXT = "Click received succesfully!";
     public final static String WRONG_BUTTON_TEXT = "Wrong button clicked.";

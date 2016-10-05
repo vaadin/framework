@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.ui;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
 
-public class ComboboxSelectedItemText extends AbstractTestUIWithLog {
+public class ComboboxSelectedItemText extends AbstractReindeerTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         getLayout().addComponent(new Label(

@@ -16,11 +16,11 @@
 package com.vaadin.tests.components.datefield;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
 
-public class DateFieldPopupClosing extends AbstractTestUI {
+public class DateFieldPopupClosing extends AbstractReindeerTestUI {
 
     static final String DATEFIELD_ID = "datefield";
 

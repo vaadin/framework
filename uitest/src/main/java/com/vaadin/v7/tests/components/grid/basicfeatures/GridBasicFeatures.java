@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.data.sort.Sort;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.event.SelectionEvent;
@@ -87,6 +88,7 @@ import com.vaadin.v7.ui.renderers.NumberRenderer;
  * @since
  * @author Vaadin Ltd
  */
+@Theme("valo")
 public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
     public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4 = "Row numbers for 3/4";
@@ -115,9 +117,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         @Override
         public void select(SelectionEvent event) {
             Iterator<Object> iter = event.getAdded().iterator();
-            Object addedRow = (iter.hasNext() ? iter.next() : "none");
+            Object addedRow = iter.hasNext() ? iter.next() : "none";
             iter = event.getRemoved().iterator();
-            Object removedRow = (iter.hasNext() ? iter.next() : "none");
+            Object removedRow = iter.hasNext() ? iter.next() : "none";
             log("SelectionEvent: Added " + addedRow + ", Removed "
                     + removedRow);
         }
@@ -224,7 +226,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         @Override
         public Component getDetails(RowReference rowReference) {
             return new Label("You are watching item id "
-                    + rowReference.getItemId() + " (" + (id++) + ")");
+                    + rowReference.getItemId() + " (" + id++ + ")");
         }
     };
 
@@ -558,7 +560,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         } else {
                             Object[] idsArray = new Object[ids.size()];
                             for (int i = 0; i < ids.size(); ++i) {
-                                idsArray[i] = ids.get((ids.size() - 1) - i);
+                                idsArray[i] = ids.get(ids.size() - 1 - i);
                             }
                             c.setColumnOrder(idsArray);
                         }

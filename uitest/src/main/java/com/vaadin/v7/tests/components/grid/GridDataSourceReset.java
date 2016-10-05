@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -28,7 +28,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.ui.Grid;
 
-public class GridDataSourceReset extends AbstractTestUI {
+public class GridDataSourceReset extends AbstractReindeerTestUI {
 
     BeanItemContainer<ComplexPerson> container;
     List<ComplexPerson> persons;

@@ -17,7 +17,7 @@ package com.vaadin.tests.components.splitpanel;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
@@ -28,7 +28,7 @@ import com.vaadin.ui.VerticalSplitPanel;
  *
  * @author Vaadin Ltd
  */
-public class HorizontalSplitPanelHeight extends AbstractTestUI {
+public class HorizontalSplitPanelHeight extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

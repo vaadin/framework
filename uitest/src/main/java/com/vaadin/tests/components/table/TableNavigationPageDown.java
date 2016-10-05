@@ -16,10 +16,10 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.ui.Table;
 
-public class TableNavigationPageDown extends AbstractTestUI {
+public class TableNavigationPageDown extends AbstractReindeerTestUI {
 
     private final static int ROW_NUMBER = 50;
 

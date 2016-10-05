@@ -26,7 +26,7 @@ import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
@@ -63,7 +63,7 @@ public class CommunicationError extends UIProvider {
         return CommunicationErrorUI.class;
     }
 
-    public static class CommunicationErrorUI extends AbstractTestUI {
+    public static class CommunicationErrorUI extends AbstractReindeerTestUI {
 
         @Override
         protected void setup(VaadinRequest request) {

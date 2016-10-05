@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
 
 @SuppressWarnings("serial")
 public class ComboSelectedValueBeyondTheFirstDropdownPage
-        extends AbstractTestUI {
+        extends AbstractReindeerTestUI {
 
     protected static final int ITEM_COUNT = 21;
     protected static final String ITEM_NAME_TEMPLATE = "Item %d";

@@ -17,7 +17,7 @@ package com.vaadin.v7.tests.components.grid;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -30,7 +30,7 @@ import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.Column;
 
 @Theme(Reindeer.THEME_NAME)
-public class GridColumnExpand extends AbstractTestUI {
+public class GridColumnExpand extends AbstractReindeerTestUI {
     private Grid grid;
     private Label firstInfo = new Label();
     private Label secondInfo = new Label();

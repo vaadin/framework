@@ -19,7 +19,7 @@ import com.vaadin.data.sort.Sort;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.data.sort.SortDirection;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -34,7 +34,7 @@ import com.vaadin.v7.data.util.filter.Compare;
 import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
 import com.vaadin.v7.ui.Grid;
 
-public class GridGeneratedProperties extends AbstractTestUI {
+public class GridGeneratedProperties extends AbstractReindeerTestUI {
 
     private GeneratedPropertyContainer container;
     static double MILES_CONVERSION = 0.6214d;

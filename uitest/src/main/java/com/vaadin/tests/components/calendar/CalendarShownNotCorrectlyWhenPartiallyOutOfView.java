@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.ui.Calendar;
 import com.vaadin.v7.ui.Calendar.TimeFormat;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventResizeHandler;
@@ -36,7 +36,7 @@ import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
  */
 @Theme("tests-calendar")
 public class CalendarShownNotCorrectlyWhenPartiallyOutOfView
-        extends AbstractTestUI {
+        extends AbstractReindeerTestUI {
 
     private static final long serialVersionUID = 1L;
     private Calendar calendar;

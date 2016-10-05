@@ -18,12 +18,12 @@ package com.vaadin.tests.components.table;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.DefaultConverterFactory;
 import com.vaadin.v7.ui.Table;
 
-public class TableWithCustomConverterFactory extends AbstractTestUI {
+public class TableWithCustomConverterFactory extends AbstractReindeerTestUI {
 
     public static class MyIntegerConverter
             implements Converter<String, Integer> {

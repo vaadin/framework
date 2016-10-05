@@ -20,7 +20,7 @@ import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.ContextClickEvent.ContextClickListener;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
@@ -31,7 +31,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.TextArea;
 
 @Widgetset(TestingWidgetSet.NAME)
-public class BrowserContextMenuInSubComponent extends AbstractTestUI {
+public class BrowserContextMenuInSubComponent extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

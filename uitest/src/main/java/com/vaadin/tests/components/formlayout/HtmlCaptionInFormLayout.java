@@ -16,13 +16,13 @@
 package com.vaadin.tests.components.formlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.v7.ui.TextField;
 
-public class HtmlCaptionInFormLayout extends AbstractTestUI {
+public class HtmlCaptionInFormLayout extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         final TextField asHtml = new TextField("Contains <b>HTML</b>");

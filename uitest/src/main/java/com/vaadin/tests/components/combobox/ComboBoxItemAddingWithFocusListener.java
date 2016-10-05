@@ -18,7 +18,7 @@ package com.vaadin.tests.components.combobox;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.v7.ui.ComboBox;
 
@@ -28,7 +28,7 @@ import com.vaadin.v7.ui.ComboBox;
  *
  * @author Vaadin Ltd
  */
-public class ComboBoxItemAddingWithFocusListener extends AbstractTestUI {
+public class ComboBoxItemAddingWithFocusListener extends AbstractReindeerTestUI {
 
     private ComboBox cBox;
 

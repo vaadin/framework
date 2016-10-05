@@ -20,7 +20,7 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.Label;
@@ -33,7 +33,7 @@ import com.vaadin.v7.ui.Table;
  * @since
  * @author Vaadin Ltd
  */
-public class DndEmptyTable extends AbstractTestUI {
+public class DndEmptyTable extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

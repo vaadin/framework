@@ -20,7 +20,7 @@ import java.util.List;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.server.data.ListDataSource;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 
@@ -28,7 +28,7 @@ import com.vaadin.ui.Grid;
  * @author Vaadin Ltd
  *
  */
-public class RefreshDataSource extends AbstractTestUI {
+public class RefreshDataSource extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

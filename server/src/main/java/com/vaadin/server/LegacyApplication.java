@@ -40,7 +40,7 @@ import com.vaadin.ui.UI;
 @Deprecated
 public abstract class LegacyApplication implements ErrorHandler {
     private LegacyWindow mainWindow;
-    private String theme;
+    private String theme = "reindeer";
 
     private Map<String, LegacyWindow> legacyUINames = new HashMap<>();
 
@@ -104,6 +104,9 @@ public abstract class LegacyApplication implements ErrorHandler {
 
     /**
      * Sets the application's theme.
+     * <p>
+     * The default theme for {@link LegacyApplication} is reindeer, unlike for
+     * {@link UI} the default theme is valo.
      * <p>
      * Note that this theme can be overridden for a specific UI with
      * {@link VaadinSession#getThemeForUI(UI)}. Setting theme to be

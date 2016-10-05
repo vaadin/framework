@@ -17,7 +17,7 @@ package com.vaadin.tests.components.absolutelayout;
 
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -30,7 +30,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.PasswordField;
 import com.vaadin.v7.ui.TextField;
 
-public class AbsoluteLayoutHideComponent extends AbstractTestUI {
+public class AbsoluteLayoutHideComponent extends AbstractReindeerTestUI {
 
     private AbsoluteLayout mainLayout;
     private VerticalLayout topBar = new VerticalLayout();

@@ -16,12 +16,12 @@
 package com.vaadin.tests.components.window;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 
 //Tests that  invisible divs don't overlap windows and don't block mouse events
-public class WindowShadow extends AbstractTestUI {
+public class WindowShadow extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

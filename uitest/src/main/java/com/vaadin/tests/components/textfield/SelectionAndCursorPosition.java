@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.textfield;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -11,7 +11,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.v7.ui.TextArea;
 
-public class SelectionAndCursorPosition extends AbstractTestUI {
+public class SelectionAndCursorPosition extends AbstractReindeerTestUI {
 
     static final String DEFAULT_TEXT = "So we have some text to select";
     static final String TEXTFIELD_ID = "tf";

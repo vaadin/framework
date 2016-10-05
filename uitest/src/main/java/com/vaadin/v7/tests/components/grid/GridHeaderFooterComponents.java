@@ -15,7 +15,6 @@
  */
 package com.vaadin.v7.tests.components.grid;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
@@ -28,7 +27,6 @@ import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.FooterRow;
 import com.vaadin.v7.ui.Grid.HeaderRow;
 
-@Theme("valo")
 public class GridHeaderFooterComponents extends AbstractTestUIWithLog {
 
     @Override

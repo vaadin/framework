@@ -20,14 +20,14 @@
 package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
 
-public class TabSheetWithTabIds extends AbstractTestUI {
+public class TabSheetWithTabIds extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

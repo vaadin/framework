@@ -1,7 +1,7 @@
 package com.vaadin.tests.validation;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
@@ -11,7 +11,7 @@ import com.vaadin.v7.data.validator.StringLengthValidator;
 import com.vaadin.v7.ui.TextField;
 
 @SuppressWarnings("deprecation")
-public class ValidationOfRequiredEmptyFields extends AbstractTestUI {
+public class ValidationOfRequiredEmptyFields extends AbstractReindeerTestUI {
 
     private TextField tf;
     private CheckBox requiredInput;

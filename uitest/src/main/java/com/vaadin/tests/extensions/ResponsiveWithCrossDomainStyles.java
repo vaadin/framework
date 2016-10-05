@@ -17,12 +17,12 @@ package com.vaadin.tests.extensions;
 
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 
 @StyleSheet("http://fonts.googleapis.com/css?family=Cabin+Sketch")
-public class ResponsiveWithCrossDomainStyles extends AbstractTestUI {
+public class ResponsiveWithCrossDomainStyles extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

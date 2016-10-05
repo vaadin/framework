@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.accordion;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -10,7 +10,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet.Tab;
 
 @SuppressWarnings("serial")
-public class AccordionTabIds extends AbstractTestUI {
+public class AccordionTabIds extends AbstractReindeerTestUI {
 
     protected static final String FIRST_TAB_ID = "ID 1";
     protected static final String FIRST_TAB_MESSAGE = "First tab";

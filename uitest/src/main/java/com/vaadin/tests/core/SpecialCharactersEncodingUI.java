@@ -1,12 +1,12 @@
 package com.vaadin.tests.core;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.TextField;
 
-public class SpecialCharactersEncodingUI extends AbstractTestUI {
+public class SpecialCharactersEncodingUI extends AbstractReindeerTestUI {
 
     public static String textWithZwnj = "\ufeffछुट्‌याउनेछन्  क्ष  क्‌ष  क्‍ष";
 

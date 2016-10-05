@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
@@ -30,7 +30,7 @@ import com.vaadin.ui.VerticalLayout;
  * @since
  * @author Vaadin Ltd
  */
-public class TabSpaceNotScroll extends AbstractTestUI {
+public class TabSpaceNotScroll extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

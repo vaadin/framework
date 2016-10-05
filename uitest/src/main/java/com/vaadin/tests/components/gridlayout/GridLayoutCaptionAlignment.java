@@ -16,12 +16,12 @@
 package com.vaadin.tests.components.gridlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.v7.ui.TextField;
 
-public class GridLayoutCaptionAlignment extends AbstractTestUI {
+public class GridLayoutCaptionAlignment extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

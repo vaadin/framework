@@ -19,7 +19,6 @@ import java.io.OutputStream;
 
 import org.apache.commons.io.output.NullOutputStream;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -36,7 +35,6 @@ import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
 import com.vaadin.ui.Html5File;
 import com.vaadin.ui.Label;
 
-@Theme("valo")
 public class SingleUseDragAndDropUpload extends AbstractTestUIWithLog {
 
     @Override

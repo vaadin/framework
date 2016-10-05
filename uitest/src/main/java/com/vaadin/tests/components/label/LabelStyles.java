@@ -16,13 +16,13 @@
 package com.vaadin.tests.components.label;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.themes.Reindeer;
 
-public class LabelStyles extends AbstractTestUI {
+public class LabelStyles extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

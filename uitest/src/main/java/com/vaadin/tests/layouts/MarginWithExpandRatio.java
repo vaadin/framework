@@ -17,7 +17,7 @@
 package com.vaadin.tests.layouts;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -26,7 +26,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
-public class MarginWithExpandRatio extends AbstractTestUI {
+public class MarginWithExpandRatio extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

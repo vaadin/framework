@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.menubar;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
@@ -27,7 +27,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
  *
  * @author Vaadin Ltd
  */
-public class MenuTooltip extends AbstractTestUI {
+public class MenuTooltip extends AbstractReindeerTestUI {
     /*
      * (non-Javadoc)
      *

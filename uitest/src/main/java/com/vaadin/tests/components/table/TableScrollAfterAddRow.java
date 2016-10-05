@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
@@ -46,7 +46,7 @@ import com.vaadin.v7.ui.Table;
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")
-public class TableScrollAfterAddRow extends AbstractTestUI {
+public class TableScrollAfterAddRow extends AbstractReindeerTestUI {
 
     /*
      * (non-Javadoc)

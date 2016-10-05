@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.window;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
@@ -26,7 +26,7 @@ import com.vaadin.ui.Window;
  *
  * @author Vaadin Ltd
  */
-public class ToolTipInWindow extends AbstractTestUI {
+public class ToolTipInWindow extends AbstractReindeerTestUI {
 
     Window window;
 

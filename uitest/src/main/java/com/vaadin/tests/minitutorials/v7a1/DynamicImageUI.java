@@ -11,10 +11,10 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Image;
 
-public class DynamicImageUI extends AbstractTestUI {
+public class DynamicImageUI extends AbstractReindeerTestUI {
     public static final String IMAGE_URL = "myimage.png";
 
     private final RequestHandler requestHandler = new RequestHandler() {

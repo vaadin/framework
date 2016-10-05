@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.data.Validator;
@@ -13,7 +13,7 @@ import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.data.validator.BeanValidator;
 import com.vaadin.v7.ui.TextField;
 
-public class MultipleValidationErrors extends AbstractTestUI {
+public class MultipleValidationErrors extends AbstractReindeerTestUI {
 
     public static final String FIRST_NAME_NOT_NULL_VALIDATION_MESSAGE = "first name is null";
     public static final String LAST_NAME_NOT_NULL_VALIDATION_MESSAGE = "last name is null";

@@ -18,7 +18,7 @@ package com.vaadin.v7.tests.components.grid.basicfeatures;
 import com.vaadin.data.sort.Sort;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.data.sort.SortDirection;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.data.Container;
@@ -26,7 +26,7 @@ import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Grid;
 
-public class GridSortingIndicators extends AbstractTestUI {
+public class GridSortingIndicators extends AbstractReindeerTestUI {
 
     private static int FOO_MIN = 4;
     private static int BAR_MULTIPLIER = 3;

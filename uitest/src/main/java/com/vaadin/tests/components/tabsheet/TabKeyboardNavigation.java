@@ -7,7 +7,7 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -29,7 +29,7 @@ import com.vaadin.v7.ui.TextField;
  * @since
  * @author Vaadin Ltd
  */
-public class TabKeyboardNavigation extends AbstractTestUI {
+public class TabKeyboardNavigation extends AbstractReindeerTestUI {
 
     int index = 1;
     ArrayList<Component> tabs = new ArrayList<>();

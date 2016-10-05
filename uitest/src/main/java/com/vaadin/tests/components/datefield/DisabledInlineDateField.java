@@ -18,11 +18,11 @@ package com.vaadin.tests.components.datefield;
 import java.time.LocalDate;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.InlineDateField;
 
-public class DisabledInlineDateField extends AbstractTestUI {
+public class DisabledInlineDateField extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

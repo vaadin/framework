@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
@@ -30,7 +30,7 @@ import com.vaadin.ui.TabSheet.Tab;
  * @since
  * @author Vaadin Ltd
  */
-public class NewSelectionAfterTabRemove extends AbstractTestUI {
+public class NewSelectionAfterTabRemove extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

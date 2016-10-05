@@ -15,7 +15,6 @@
  */
 package com.vaadin.v7.tests.components.grid;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.util.Person;
 import com.vaadin.tests.util.PersonContainer;
@@ -28,13 +27,11 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.DetailsGenerator;
 import com.vaadin.v7.ui.Grid.RowReference;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 
-@Theme(ValoTheme.THEME_NAME)
 public class GridDetailsLocation extends UI {
 
     private final DetailsGenerator detailsGenerator = new DetailsGenerator() {

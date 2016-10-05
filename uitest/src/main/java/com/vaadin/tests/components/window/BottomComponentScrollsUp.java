@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -40,7 +40,7 @@ import com.vaadin.ui.Window;
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")
-public class BottomComponentScrollsUp extends AbstractTestUI {
+public class BottomComponentScrollsUp extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

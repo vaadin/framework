@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
@@ -28,7 +28,7 @@ import com.vaadin.ui.TabSheet.Tab;
  * @since
  * @author Vaadin Ltd
  */
-public class TabSheetClose extends AbstractTestUI {
+public class TabSheetClose extends AbstractReindeerTestUI {
 
     /*
      * (non-Javadoc)

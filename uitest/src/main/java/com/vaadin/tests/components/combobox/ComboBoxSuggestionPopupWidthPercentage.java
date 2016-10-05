@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.ComboBox;
 
-public class ComboBoxSuggestionPopupWidthPercentage extends AbstractTestUI {
+public class ComboBoxSuggestionPopupWidthPercentage extends AbstractReindeerTestUI {
 
     private static List<String> items = Arrays.asList("abc", "cde", "efg",
             "ghi", "ijk", "more items 1", "more items 2", "more items 3",

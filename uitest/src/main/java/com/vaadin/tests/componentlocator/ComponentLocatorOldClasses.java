@@ -1,9 +1,9 @@
 package com.vaadin.tests.componentlocator;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 
-public class ComponentLocatorOldClasses extends AbstractTestUI {
+public class ComponentLocatorOldClasses extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

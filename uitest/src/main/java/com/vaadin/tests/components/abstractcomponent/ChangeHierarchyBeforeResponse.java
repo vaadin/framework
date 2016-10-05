@@ -16,13 +16,13 @@
 package com.vaadin.tests.components.abstractcomponent;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 
-public class ChangeHierarchyBeforeResponse extends AbstractTestUI {
+public class ChangeHierarchyBeforeResponse extends AbstractReindeerTestUI {
     private CssLayout layout = new CssLayout() {
         @Override
         public void beforeClientResponse(boolean initial) {

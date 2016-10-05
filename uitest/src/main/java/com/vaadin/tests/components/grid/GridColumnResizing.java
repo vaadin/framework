@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
@@ -13,7 +13,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.renderers.NumberRenderer;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")
-public class GridColumnResizing extends AbstractTestUI {
+public class GridColumnResizing extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

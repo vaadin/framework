@@ -18,7 +18,7 @@ package com.vaadin.tests.components.popupview;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupView;
@@ -30,7 +30,7 @@ import com.vaadin.v7.ui.TextField;
  *
  * @author Vaadin Ltd
  */
-public class PopupViewShortcutActionHandler extends AbstractTestUI {
+public class PopupViewShortcutActionHandler extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

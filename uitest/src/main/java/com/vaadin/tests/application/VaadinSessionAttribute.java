@@ -17,12 +17,12 @@
 package com.vaadin.tests.application;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
 
-public class VaadinSessionAttribute extends AbstractTestUI {
+public class VaadinSessionAttribute extends AbstractReindeerTestUI {
 
     private static final String ATTR_NAME = "myAttribute";
 

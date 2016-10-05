@@ -18,11 +18,11 @@ package com.vaadin.tests.components.javascriptcomponent;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.JavaScriptComponentState;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 
-public class JavaScriptPreloading extends AbstractTestUI {
+public class JavaScriptPreloading extends AbstractReindeerTestUI {
 
     public static class JsLabelState extends JavaScriptComponentState {
         public String xhtml;

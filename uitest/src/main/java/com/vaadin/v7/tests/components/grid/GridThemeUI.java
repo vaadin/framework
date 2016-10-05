@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
@@ -37,7 +36,6 @@ import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.renderers.DateRenderer;
 
-@Theme("valo")
 public class GridThemeUI extends AbstractTestUIWithLog {
 
     private Grid grid;

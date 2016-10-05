@@ -23,7 +23,7 @@ import com.vaadin.ui.Button;
  *
  * @author Vaadin Ltd
  */
-public class TooltipDelay extends AbstractTestUI {
+public class TooltipDelay extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest vaadinRequest) {

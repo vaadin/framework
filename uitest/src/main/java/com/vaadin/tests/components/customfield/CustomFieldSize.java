@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.customfield;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomField;
 import com.vaadin.ui.TextField;
@@ -27,7 +27,7 @@ import com.vaadin.ui.VerticalLayout;
  * @since
  * @author Vaadin Ltd
  */
-public class CustomFieldSize extends AbstractTestUI {
+public class CustomFieldSize extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

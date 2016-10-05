@@ -27,7 +27,7 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.ui.Calendar;
 import com.vaadin.v7.ui.Table;
@@ -36,7 +36,7 @@ import com.vaadin.v7.ui.Table.TableTransferable;
 import com.vaadin.v7.ui.components.calendar.CalendarTargetDetails;
 import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
 
-public class CalendarDragAndDrop extends AbstractTestUI {
+public class CalendarDragAndDrop extends AbstractReindeerTestUI {
 
     private Calendar calendar;
 

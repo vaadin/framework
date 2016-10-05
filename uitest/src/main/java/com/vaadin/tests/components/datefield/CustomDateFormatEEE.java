@@ -20,12 +20,12 @@ import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.VerticalLayout;
 
-public class CustomDateFormatEEE extends AbstractTestUI {
+public class CustomDateFormatEEE extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

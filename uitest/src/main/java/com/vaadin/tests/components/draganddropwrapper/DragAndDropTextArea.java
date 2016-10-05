@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.draganddropwrapper;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.VerticalLayout;
@@ -28,7 +28,7 @@ import com.vaadin.v7.ui.TextArea;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class DragAndDropTextArea extends AbstractTestUI {
+public class DragAndDropTextArea extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

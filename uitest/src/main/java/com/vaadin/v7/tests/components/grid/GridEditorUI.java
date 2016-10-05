@@ -16,13 +16,13 @@
 package com.vaadin.v7.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.PasswordField;
 import com.vaadin.v7.ui.TextField;
 
-public class GridEditorUI extends AbstractTestUI {
+public class GridEditorUI extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

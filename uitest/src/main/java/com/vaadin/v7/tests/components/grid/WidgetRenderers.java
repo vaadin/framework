@@ -18,7 +18,7 @@ package com.vaadin.v7.tests.components.grid;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.NativeButton;
@@ -33,7 +33,7 @@ import com.vaadin.v7.ui.renderers.ImageRenderer;
 import com.vaadin.v7.ui.renderers.ProgressBarRenderer;
 
 @SuppressWarnings("all")
-public class WidgetRenderers extends AbstractTestUI {
+public class WidgetRenderers extends AbstractReindeerTestUI {
 
     static final String PROPERTY_ID = "property id";
 

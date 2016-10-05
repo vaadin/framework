@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.formlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.FormLayout;
 
 /**
@@ -25,7 +25,7 @@ import com.vaadin.ui.FormLayout;
  *
  * @author Vaadin Ltd
  */
-public class StylePrefix extends AbstractTestUI {
+public class StylePrefix extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

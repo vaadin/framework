@@ -1,6 +1,5 @@
 package com.vaadin.v7.tests.components.grid;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
@@ -13,7 +12,6 @@ import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.HeaderRow;
 import com.vaadin.v7.ui.TextField;
 
-@Theme("valo")
 public class GridApplyFilterWhenScrolledDown extends UI {
 
     private Grid grid = new Grid();

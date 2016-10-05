@@ -15,7 +15,7 @@ import com.vaadin.ui.Layout.SpacingHandler;
 import com.vaadin.v7.ui.Field;
 
 public abstract class AbstractComponentTestCase<T extends AbstractComponent>
-        extends AbstractTestUI {
+        extends AbstractReindeerTestUI {
 
     protected static final ThemeResource ICON_16_HELP_PNG_CACHEABLE = cacheableThemeResource(
             "../runo/icons/16/help.png");

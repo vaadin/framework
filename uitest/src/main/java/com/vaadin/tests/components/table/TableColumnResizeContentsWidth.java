@@ -1,14 +1,14 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.ColumnGenerator;
 import com.vaadin.v7.ui.TextField;
 
-public class TableColumnResizeContentsWidth extends AbstractTestUI {
+public class TableColumnResizeContentsWidth extends AbstractReindeerTestUI {
 
     private static final String COL1 = "COL1";
 

@@ -18,7 +18,7 @@ package com.vaadin.tests.minitutorials.v7a3;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.minitutorials.v7a3.Refresher.RefreshEvent;
 import com.vaadin.tests.minitutorials.v7a3.Refresher.RefreshListener;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
@@ -26,7 +26,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 
 @Widgetset(TestingWidgetSet.NAME)
-public class RefresherTestUI extends AbstractTestUI {
+public class RefresherTestUI extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

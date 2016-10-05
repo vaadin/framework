@@ -21,7 +21,7 @@ import java.util.Locale;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.ui.Calendar;
 import com.vaadin.v7.ui.Calendar.TimeFormat;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventResizeHandler;
@@ -33,7 +33,7 @@ import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
  * @author Vaadin Ltd
  */
 @Theme("tests-calendar")
-public class CalendarBackwardForward extends AbstractTestUI {
+public class CalendarBackwardForward extends AbstractReindeerTestUI {
 
     private static final long serialVersionUID = 1L;
     private Calendar calendar;

@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
 
-public class ComboBoxSlow extends AbstractTestUI {
+public class ComboBoxSlow extends AbstractReindeerTestUI {
 
     private Log log = new Log(5);
 

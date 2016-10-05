@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -25,7 +25,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
-public class InsertComponentInHorizontalLayout extends AbstractTestUI {
+public class InsertComponentInHorizontalLayout extends AbstractReindeerTestUI {
     private VerticalLayout layout;
     int added = 1;
 

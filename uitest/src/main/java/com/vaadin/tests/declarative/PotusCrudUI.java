@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.declarative;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 
@@ -24,7 +23,6 @@ import com.vaadin.ui.UI;
  * @since
  * @author Vaadin Ltd
  */
-@Theme("valo")
 public class PotusCrudUI extends UI {
 
     @Override

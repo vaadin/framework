@@ -16,7 +16,7 @@
 package com.vaadin.tests.layouts;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
@@ -39,7 +39,7 @@ import com.vaadin.v7.ui.TextField;
  * @since
  * @author Vaadin Ltd
  */
-public class HtmlInCaption extends AbstractTestUI {
+public class HtmlInCaption extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

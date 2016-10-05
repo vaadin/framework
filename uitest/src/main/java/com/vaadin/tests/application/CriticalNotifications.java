@@ -22,13 +22,13 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinService;
 import com.vaadin.shared.JsonConstants;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 
-public class CriticalNotifications extends AbstractTestUI {
+public class CriticalNotifications extends AbstractReindeerTestUI {
 
     private SystemMessages systemMessages;
     private CheckBox includeDetails;

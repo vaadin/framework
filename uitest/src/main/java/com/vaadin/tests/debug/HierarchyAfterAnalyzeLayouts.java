@@ -17,10 +17,10 @@
 package com.vaadin.tests.debug;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 
-public class HierarchyAfterAnalyzeLayouts extends AbstractTestUI {
+public class HierarchyAfterAnalyzeLayouts extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

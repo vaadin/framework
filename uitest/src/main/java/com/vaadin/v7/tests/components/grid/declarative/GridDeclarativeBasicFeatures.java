@@ -15,12 +15,10 @@
  */
 package com.vaadin.v7.tests.components.grid.declarative;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.tests.components.DeclarativeTestUI;
 import com.vaadin.tests.components.DeclarativeTestUI.DeclarativeUI;
 
 @SuppressWarnings("serial")
-@Theme("valo")
 @DeclarativeUI("GridBasicFeatures.html")
 public class GridDeclarativeBasicFeatures extends DeclarativeTestUI {
 

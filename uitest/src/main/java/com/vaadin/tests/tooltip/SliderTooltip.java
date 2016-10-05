@@ -1,10 +1,10 @@
 package com.vaadin.tests.tooltip;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Slider;
 
-public class SliderTooltip extends AbstractTestUI {
+public class SliderTooltip extends AbstractReindeerTestUI {
 
     /*
      * (non-Javadoc)

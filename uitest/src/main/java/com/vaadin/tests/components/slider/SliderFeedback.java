@@ -16,10 +16,10 @@
 package com.vaadin.tests.components.slider;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Slider;
 
-public class SliderFeedback extends AbstractTestUI {
+public class SliderFeedback extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

@@ -18,7 +18,7 @@ package com.vaadin.tests.components.table;
 import java.util.Set;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
@@ -33,7 +33,7 @@ import com.vaadin.v7.ui.Table;
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")
-public class AddSelectionToRemovedRange extends AbstractTestUI {
+public class AddSelectionToRemovedRange extends AbstractReindeerTestUI {
 
     @Override
     @SuppressWarnings("unchecked")

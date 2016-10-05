@@ -23,7 +23,7 @@ import com.vaadin.annotations.Push;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ConnectorTracker;
@@ -32,7 +32,7 @@ import com.vaadin.v7.ui.Table;
 import elemental.json.JsonObject;
 
 @Push
-public class TableRemovedQuicklySendsInvalidRpcCalls extends AbstractTestUI {
+public class TableRemovedQuicklySendsInvalidRpcCalls extends AbstractReindeerTestUI {
 
     public static final String SUCCESS_CAPTION = "Success!";
     public static final String BUTTON_ID = "blinkbutton";

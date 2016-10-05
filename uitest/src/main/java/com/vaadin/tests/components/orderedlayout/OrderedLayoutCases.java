@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
@@ -22,7 +22,7 @@ import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.NativeSelect;
 
 @Theme("tests-components")
-public class OrderedLayoutCases extends AbstractTestUI {
+public class OrderedLayoutCases extends AbstractReindeerTestUI {
 
     private static final String[] dimensionValues = { "-1px", "5px", "350px",
             "800px", "100%", "50%" };

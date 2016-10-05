@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -18,7 +18,7 @@ import com.vaadin.v7.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.v7.data.util.sqlcontainer.query.TableQuery;
 import com.vaadin.v7.ui.Table;
 
-public class TableSqlContainer extends AbstractTestUI {
+public class TableSqlContainer extends AbstractReindeerTestUI {
 
     protected Table table;
 

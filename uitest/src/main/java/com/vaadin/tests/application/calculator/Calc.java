@@ -17,7 +17,7 @@
 package com.vaadin.tests.application.calculator;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -32,7 +32,7 @@ import com.vaadin.v7.ui.Table.ColumnHeaderMode;
 import com.vaadin.v7.ui.TextField;
 
 @SuppressWarnings("serial")
-public class Calc extends AbstractTestUI {
+public class Calc extends AbstractReindeerTestUI {
 
     private class Log extends VerticalLayout {
 

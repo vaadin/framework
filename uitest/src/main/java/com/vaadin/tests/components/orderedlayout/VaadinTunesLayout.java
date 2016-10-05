@@ -6,7 +6,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.slider.SliderOrientation;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -21,7 +21,7 @@ import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.Table;
 
 @Theme("tests-components")
-public class VaadinTunesLayout extends AbstractTestUI {
+public class VaadinTunesLayout extends AbstractReindeerTestUI {
 
     @Override
     public void setup(VaadinRequest request) {

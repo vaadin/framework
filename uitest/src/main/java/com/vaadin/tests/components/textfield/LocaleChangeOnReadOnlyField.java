@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.v7.ui.TextField;
 
-public class LocaleChangeOnReadOnlyField extends AbstractTestUI {
+public class LocaleChangeOnReadOnlyField extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

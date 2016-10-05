@@ -3,7 +3,7 @@ package com.vaadin.tests.components.orderedlayout;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -16,7 +16,7 @@ import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextArea;
 import com.vaadin.v7.ui.TextField;
 
-public class VerticalLayoutWithEmptyLabel extends AbstractTestUI {
+public class VerticalLayoutWithEmptyLabel extends AbstractReindeerTestUI {
 
     private static final float UPPER_BAR_HEIGHT = 42;
 

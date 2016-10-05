@@ -15,7 +15,6 @@
  */
 package com.vaadin.v7.tests.components.grid;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.components.beanitemcontainer.BeanItemContainerGenerator;
@@ -29,7 +28,6 @@ import com.vaadin.v7.ui.Grid.HeaderCell;
 import com.vaadin.v7.ui.Grid.HeaderRow;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 
-@Theme("valo")
 public class GridHeaderStyleNames extends AbstractTestUIWithLog {
 
     private HeaderCell ageHeaderCell;

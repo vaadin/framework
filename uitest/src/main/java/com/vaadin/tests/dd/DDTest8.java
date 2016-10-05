@@ -9,7 +9,7 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.Or;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.HierarchicalContainer;
 import com.vaadin.v7.event.DataBoundTransferable;
@@ -21,7 +21,7 @@ import com.vaadin.v7.ui.Tree.TreeTargetDetails;
 /**
  * DD playground. Better quality example/prototype codes in {@link DDTest2}.
  */
-public class DDTest8 extends AbstractTestUI {
+public class DDTest8 extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

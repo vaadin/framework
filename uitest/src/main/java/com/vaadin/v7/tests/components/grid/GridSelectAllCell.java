@@ -1,11 +1,9 @@
 package com.vaadin.v7.tests.components.grid;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.v7.ui.Grid;
 
-@Theme("valo")
 public class GridSelectAllCell extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {

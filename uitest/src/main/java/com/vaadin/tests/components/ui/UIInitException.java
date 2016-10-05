@@ -1,9 +1,9 @@
 package com.vaadin.tests.components.ui;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 
-public class UIInitException extends AbstractTestUI {
+public class UIInitException extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

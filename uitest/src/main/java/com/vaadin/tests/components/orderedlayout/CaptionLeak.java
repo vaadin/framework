@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -17,7 +17,7 @@ import com.vaadin.v7.ui.TextField;
  * @since 7.1.13
  * @author Vaadin Ltd
  */
-public class CaptionLeak extends AbstractTestUI {
+public class CaptionLeak extends AbstractReindeerTestUI {
 
     /*
      * (non-Javadoc)

@@ -16,12 +16,12 @@
 package com.vaadin.v7.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.Grid;
 
-public class GridWidthIncrease extends AbstractTestUI {
+public class GridWidthIncrease extends AbstractReindeerTestUI {
 
     public static int COLUMN_COUNT = 5;
 

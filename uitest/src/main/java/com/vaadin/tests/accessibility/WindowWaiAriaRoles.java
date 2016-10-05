@@ -19,7 +19,7 @@ import java.util.Stack;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.window.WindowRole;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -30,7 +30,7 @@ import com.vaadin.ui.Window;
  *
  * @author Vaadin Ltd
  */
-public class WindowWaiAriaRoles extends AbstractTestUI {
+public class WindowWaiAriaRoles extends AbstractReindeerTestUI {
     Stack<Window> windows = new Stack<>();
 
     /*

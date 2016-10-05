@@ -15,7 +15,6 @@
  */
 package com.vaadin.v7.tests.components.grid.basicfeatures.server;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
@@ -30,7 +29,6 @@ import com.vaadin.v7.ui.Grid;
  *
  * @author Vaadin Ltd
  */
-@Theme("valo")
 public class GridClearContainer extends AbstractTestUIWithLog {
 
     private IndexedContainer ic;

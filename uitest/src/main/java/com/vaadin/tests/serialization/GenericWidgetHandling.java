@@ -17,12 +17,12 @@ package com.vaadin.tests.serialization;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.server.GenericWidgetComponent;
 
 @Widgetset(TestingWidgetSet.NAME)
-public class GenericWidgetHandling extends AbstractTestUI {
+public class GenericWidgetHandling extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

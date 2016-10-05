@@ -16,11 +16,11 @@
 package com.vaadin.tests.components.textfield;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.ui.TextField;
 
-public class TextFieldWithDataSourceAndInputPrompt extends AbstractTestUI {
+public class TextFieldWithDataSourceAndInputPrompt extends AbstractReindeerTestUI {
     public static class Pojo {
         private String string;
 

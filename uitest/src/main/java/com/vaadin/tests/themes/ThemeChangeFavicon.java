@@ -18,11 +18,11 @@ package com.vaadin.tests.themes;
 import java.util.Arrays;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 
-public class ThemeChangeFavicon extends AbstractTestUI {
+public class ThemeChangeFavicon extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

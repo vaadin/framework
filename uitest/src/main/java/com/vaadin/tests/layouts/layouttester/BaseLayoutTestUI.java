@@ -20,7 +20,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -40,7 +40,7 @@ import com.vaadin.v7.ui.TextField;
  *
  * Base class for Layout tests.
  */
-public abstract class BaseLayoutTestUI extends AbstractTestUI {
+public abstract class BaseLayoutTestUI extends AbstractReindeerTestUI {
     protected static final String FOLDER_16_PNG = "../icons/runo/16/folder.png";
     protected static final String CALENDAR_32_PNG = "../runo/icons/16/calendar.png";
     protected static final String LOCK_16_PNG = "../runo/icons/16/lock.png";

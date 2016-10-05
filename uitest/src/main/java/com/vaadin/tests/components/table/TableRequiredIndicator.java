@@ -16,13 +16,13 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Notification;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.Table;
 
-public class TableRequiredIndicator extends AbstractTestUI {
+public class TableRequiredIndicator extends AbstractReindeerTestUI {
 
     static final String TABLE = "table";
     static final String COUNT_SELECTED_BUTTON = "button";

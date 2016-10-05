@@ -17,7 +17,6 @@ package com.vaadin.v7.tests.components.grid;
 
 import java.util.Random;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -27,7 +26,6 @@ import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 
-@Theme("valo")
 public class GridSubPixelProblemWrapping extends AbstractTestUI {
 
     Random r = new Random();

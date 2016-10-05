@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.treetable;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.v7.ui.Tree.ExpandEvent;
@@ -9,7 +9,7 @@ import com.vaadin.v7.ui.Tree.ExpandListener;
 import com.vaadin.v7.ui.TreeTable;
 
 @SuppressWarnings("serial")
-public class TreeTableContainerHierarchicalWrapper extends AbstractTestUI {
+public class TreeTableContainerHierarchicalWrapper extends AbstractReindeerTestUI {
 
     TreeTable treetable = new TreeTable();
     BeanItemContainer<Bean> beanContainer = new BeanItemContainer<>(

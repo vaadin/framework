@@ -17,10 +17,10 @@ package com.vaadin.tests.tooltip;
 
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 
-public class TooltipAndJavascript extends AbstractTestUI {
+public class TooltipAndJavascript extends AbstractReindeerTestUI {
 
     @JavaScript("tooltipandjavascript.js")
     public static class MyButton extends Button {

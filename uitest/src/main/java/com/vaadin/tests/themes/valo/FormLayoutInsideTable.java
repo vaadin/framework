@@ -1,14 +1,11 @@
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.v7.ui.Table;
 
-@Theme(ValoTheme.THEME_NAME)
 public class FormLayoutInsideTable extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {

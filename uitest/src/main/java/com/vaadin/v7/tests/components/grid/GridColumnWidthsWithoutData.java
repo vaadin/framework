@@ -18,7 +18,7 @@ package com.vaadin.v7.tests.components.grid;
 import java.util.EnumSet;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.VerticalLayout;
@@ -28,7 +28,7 @@ import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 import com.vaadin.v7.ui.NativeSelect;
 
-public class GridColumnWidthsWithoutData extends AbstractTestUI {
+public class GridColumnWidthsWithoutData extends AbstractReindeerTestUI {
 
     private SelectionMode selectionMode = SelectionMode.NONE;
     private Grid grid = createGrid(true);

@@ -11,7 +11,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
@@ -32,7 +32,7 @@ import com.vaadin.v7.ui.TextField;
 
 @Theme("tests-components")
 @PreserveOnRefresh
-public class BoxLayoutTest extends AbstractTestUI {
+public class BoxLayoutTest extends AbstractReindeerTestUI {
 
     protected AbstractOrderedLayout view;
 

@@ -16,7 +16,7 @@
 package com.vaadin.v7.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.data.Container.Indexed;
@@ -28,7 +28,7 @@ import com.vaadin.v7.ui.Grid.HeaderRow;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 import com.vaadin.v7.ui.renderers.NumberRenderer;
 
-public class GridColspans extends AbstractTestUI {
+public class GridColspans extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

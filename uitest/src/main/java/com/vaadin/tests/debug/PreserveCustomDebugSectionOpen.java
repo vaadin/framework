@@ -17,12 +17,12 @@ package com.vaadin.tests.debug;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.Label;
 
 @Widgetset(TestingWidgetSet.NAME)
-public class PreserveCustomDebugSectionOpen extends AbstractTestUI {
+public class PreserveCustomDebugSectionOpen extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

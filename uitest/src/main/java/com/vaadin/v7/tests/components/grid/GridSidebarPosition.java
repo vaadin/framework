@@ -15,14 +15,12 @@
  */
 package com.vaadin.v7.tests.components.grid;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.ui.Grid;
 
-@Theme("valo")
 public class GridSidebarPosition extends AbstractTestUI {
 
     static final String POPUP_ABOVE = "above";

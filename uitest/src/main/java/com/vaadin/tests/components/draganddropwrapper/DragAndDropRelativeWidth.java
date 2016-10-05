@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.draganddropwrapper;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
@@ -27,7 +27,7 @@ import com.vaadin.ui.Label;
  *
  * @author Vaadin Ltd
  */
-public class DragAndDropRelativeWidth extends AbstractTestUI {
+public class DragAndDropRelativeWidth extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

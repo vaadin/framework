@@ -6,7 +6,7 @@ import com.vaadin.launcher.ApplicationRunnerServlet;
 import com.vaadin.server.CustomizedSystemMessages;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -16,7 +16,7 @@ import com.vaadin.v7.ui.NativeSelect;
 
 import elemental.json.JsonObject;
 
-public class SystemMessages extends AbstractTestUI {
+public class SystemMessages extends AbstractReindeerTestUI {
 
     public class MyButton extends Button {
         private boolean fail = false;

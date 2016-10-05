@@ -17,13 +17,13 @@ package com.vaadin.v7.tests.components.grid;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.client.v7.grid.GridDataChangeHandlerWidget;
 import com.vaadin.tests.widgetset.server.TestWidgetComponent;
 
 @Widgetset(TestingWidgetSet.NAME)
-public class GridClientDataChangeHandler extends AbstractTestUI {
+public class GridClientDataChangeHandler extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

@@ -6,7 +6,7 @@ import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
@@ -21,7 +21,7 @@ import com.vaadin.v7.ui.DateField;
 import com.vaadin.v7.ui.InlineDateField;
 import com.vaadin.v7.ui.NativeSelect;
 
-public class LegacyDateFieldRanges extends AbstractTestUI {
+public class LegacyDateFieldRanges extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {

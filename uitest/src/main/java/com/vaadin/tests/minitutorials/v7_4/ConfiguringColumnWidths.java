@@ -15,13 +15,11 @@
  */
 package com.vaadin.tests.minitutorials.v7_4;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 
-@Theme("valo")
 public class ConfiguringColumnWidths extends UI {
 
     @Override

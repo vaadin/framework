@@ -2,13 +2,13 @@ package com.vaadin.tests.components.colorpicker;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.colorpicker.Color;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.ColorPickerArea;
 
 /**
  * Tests the HSV tab slider values when initially opening the tab.
  */
-public class ColorPickerHsvTest extends AbstractTestUI {
+public class ColorPickerHsvTest extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

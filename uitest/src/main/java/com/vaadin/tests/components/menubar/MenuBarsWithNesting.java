@@ -19,7 +19,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -35,7 +35,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
  * @author Vaadin
  */
 @SuppressWarnings("serial")
-public class MenuBarsWithNesting extends AbstractTestUI {
+public class MenuBarsWithNesting extends AbstractReindeerTestUI {
 
     // The label displays the last selection.
     private final Label label = new Label("Initial content");

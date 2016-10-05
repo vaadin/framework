@@ -3,7 +3,6 @@ package com.vaadin.v7.tests.components.grid;
 import java.util.List;
 import java.util.Random;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.CheckBox;
@@ -16,7 +15,6 @@ import com.vaadin.v7.ui.renderers.HtmlRenderer;
 import com.vaadin.v7.ui.renderers.TextRenderer;
 
 @SuppressWarnings("serial")
-@Theme("valo")
 public class GridSwitchRenderers extends AbstractTestUIWithLog {
     private static final int MANUALLY_FORMATTED_COLUMNS = 1;
     private static final int COLUMNS = 3;

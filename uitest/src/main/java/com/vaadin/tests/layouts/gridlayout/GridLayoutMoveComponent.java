@@ -1,14 +1,14 @@
 package com.vaadin.tests.layouts.gridlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.TextField;
 
-public class GridLayoutMoveComponent extends AbstractTestUI {
+public class GridLayoutMoveComponent extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

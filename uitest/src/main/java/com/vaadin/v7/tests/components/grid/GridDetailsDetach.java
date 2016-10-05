@@ -16,7 +16,7 @@
 package com.vaadin.v7.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -30,7 +30,7 @@ import com.vaadin.v7.ui.Grid.DetailsGenerator;
 import com.vaadin.v7.ui.Grid.RowReference;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 
-public class GridDetailsDetach extends AbstractTestUI {
+public class GridDetailsDetach extends AbstractReindeerTestUI {
 
     private Grid currentGrid;
 

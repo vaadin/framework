@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -29,7 +29,7 @@ import com.vaadin.v7.ui.Table;
  * @since
  * @author Vaadin Ltd
  */
-public class MemoryLeakTable extends AbstractTestUI {
+public class MemoryLeakTable extends AbstractReindeerTestUI {
     Button btnAdd = new Button("Add rows");
     Button btnRemove = new Button("Remove rows");
     Button btnTenTimes = new Button("Do ten times");

@@ -1,14 +1,14 @@
 package com.vaadin.tests.tooltip;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.ui.TextField;
 
-public class TooltipConfiguration extends AbstractTestUIWithLog {
+public class TooltipConfiguration extends AbstractReindeerTestUIWithLog {
 
     private TextField closeTimeout;
     private TextField quickOpenTimeout;

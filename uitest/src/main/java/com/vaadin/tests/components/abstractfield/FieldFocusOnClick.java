@@ -3,13 +3,13 @@ package com.vaadin.tests.components.abstractfield;
 import java.util.Arrays;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.v7.ui.OptionGroup;
 import com.vaadin.v7.ui.TextField;
 
-public class FieldFocusOnClick extends AbstractTestUI {
+public class FieldFocusOnClick extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

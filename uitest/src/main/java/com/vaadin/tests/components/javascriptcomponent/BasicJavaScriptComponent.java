@@ -29,7 +29,7 @@ import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.JavaScriptComponentState;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.Button;
@@ -41,7 +41,7 @@ import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
 
-public class BasicJavaScriptComponent extends AbstractTestUI {
+public class BasicJavaScriptComponent extends AbstractReindeerTestUI {
 
     public interface TestRpc extends ServerRpc, ClientRpc {
         public void sendRpc(String message);

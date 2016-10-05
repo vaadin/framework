@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
@@ -17,7 +17,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.TextField;
 
-public class RequiredIndicatorForFieldsWithoutCaption extends AbstractTestUI {
+public class RequiredIndicatorForFieldsWithoutCaption extends AbstractReindeerTestUI {
     private Set<Field> fields = new HashSet<>();
 
     @Override

@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -27,7 +27,7 @@ import com.vaadin.v7.ui.Table;
  * Test that column width is restored after restoring column visibility
  */
 @SuppressWarnings("serial")
-public class TableToggleColumnVisibilityWidth extends AbstractTestUI {
+public class TableToggleColumnVisibilityWidth extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

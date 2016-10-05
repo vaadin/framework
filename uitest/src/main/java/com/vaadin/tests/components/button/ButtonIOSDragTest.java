@@ -17,7 +17,7 @@
 package com.vaadin.tests.components.button;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.DragAndDropWrapper;
@@ -25,7 +25,7 @@ import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 
-public class ButtonIOSDragTest extends AbstractTestUI {
+public class ButtonIOSDragTest extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

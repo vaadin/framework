@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.uitest;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
-public class UIScrolling extends AbstractTestUI {
+public class UIScrolling extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Upload;
@@ -25,7 +24,6 @@ import com.vaadin.ui.Upload;
  * @since
  * @author Vaadin Ltd
  */
-@Theme("valo")
 public class ImmediateUpload extends AbstractTestUI {
 
     /*

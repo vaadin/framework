@@ -20,13 +20,13 @@ import com.vaadin.launcher.CustomDeploymentConfiguration;
 import com.vaadin.launcher.CustomDeploymentConfiguration.Conf;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 
 @CustomDeploymentConfiguration({
         @Conf(name = "customParam", value = "customValue"),
         @Conf(name = "resourceCacheTime", value = "3599") })
-public class CustomDeploymentConf extends AbstractTestUI {
+public class CustomDeploymentConf extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

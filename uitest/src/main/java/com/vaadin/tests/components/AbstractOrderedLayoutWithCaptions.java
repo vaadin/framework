@@ -27,7 +27,7 @@ import com.vaadin.v7.ui.TextField;
  *
  * @author Vaadin Ltd
  */
-public class AbstractOrderedLayoutWithCaptions extends AbstractTestUI {
+public class AbstractOrderedLayoutWithCaptions extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

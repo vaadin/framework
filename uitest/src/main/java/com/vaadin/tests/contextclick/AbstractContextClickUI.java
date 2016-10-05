@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.contextclick;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.ContextClickEvent.ContextClickListener;
 import com.vaadin.server.VaadinRequest;
@@ -25,7 +24,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 
-@Theme("valo")
 public abstract class AbstractContextClickUI<T extends AbstractComponent, E extends ContextClickEvent>
         extends AbstractTestUIWithLog {
 

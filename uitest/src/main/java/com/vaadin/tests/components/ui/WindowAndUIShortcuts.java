@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.ui;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
@@ -10,9 +9,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.themes.ValoTheme;
 
-@Theme(ValoTheme.THEME_NAME)
 public class WindowAndUIShortcuts extends UI {
 
     @Override

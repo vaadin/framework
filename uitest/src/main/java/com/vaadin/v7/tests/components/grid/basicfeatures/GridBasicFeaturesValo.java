@@ -15,14 +15,5 @@
  */
 package com.vaadin.v7.tests.components.grid.basicfeatures;
 
-import com.vaadin.annotations.Theme;
-import com.vaadin.ui.themes.ValoTheme;
-
-@Theme(ValoTheme.THEME_NAME)
 public class GridBasicFeaturesValo extends GridBasicFeatures {
-    @Override
-    @Deprecated
-    public String getTheme() {
-        return ValoTheme.THEME_NAME;
-    }
 }

@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.tree;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.v7.ui.Tree;
 
-public class SelectItemAfterRemove extends AbstractTestUI {
+public class SelectItemAfterRemove extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

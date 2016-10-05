@@ -16,13 +16,13 @@
 package com.vaadin.tests.components.upload;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 
 // We're explicitly testing only immediate uploads here because non-immediate
 // width issues still require planning before we can provide a fix.
-public class UploadImmediateButtonWidth extends AbstractTestUI {
+public class UploadImmediateButtonWidth extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

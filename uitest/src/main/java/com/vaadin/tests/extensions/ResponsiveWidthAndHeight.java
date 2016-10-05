@@ -19,12 +19,12 @@ package com.vaadin.tests.extensions;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 
 @Theme("tests-responsive")
-public class ResponsiveWidthAndHeight extends AbstractTestUI {
+public class ResponsiveWidthAndHeight extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

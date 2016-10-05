@@ -6,7 +6,7 @@ import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.shared.ui.ui.NotificationRole;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -25,7 +25,7 @@ import com.vaadin.v7.ui.TextArea;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class NotificationsWaiAria extends AbstractTestUI {
+public class NotificationsWaiAria extends AbstractReindeerTestUI {
 
     private static final String CAPTION = "CAPTION";
 

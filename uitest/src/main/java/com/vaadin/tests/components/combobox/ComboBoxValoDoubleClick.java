@@ -18,12 +18,10 @@ package com.vaadin.tests.components.combobox;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.ComboBox;
 
-@Theme("valo")
 public class ComboBoxValoDoubleClick extends AbstractTestUI {
 
     // Quite impossible to autotest reliably as there must be a click to open
@@ -32,7 +30,7 @@ public class ComboBoxValoDoubleClick extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         ComboBox<String> cb = new ComboBox<>("Double-click Me");
-        List<String> items = new ArrayList<String>();
+        List<String> items = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             items.add("Item-" + i);
         }

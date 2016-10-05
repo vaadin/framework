@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.v7.data.util.BeanItemContainer;
@@ -26,14 +25,12 @@ import com.vaadin.v7.ui.Table;
  *
  * @author Vaadin Ltd
  */
-@Theme("valo")
 public class CollapsibleTableColumn extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
         Table table = new Table();
-        BeanItemContainer<Bean> container = new BeanItemContainer<>(
-                Bean.class);
+        BeanItemContainer<Bean> container = new BeanItemContainer<>(Bean.class);
         Bean bean = new Bean();
         bean.setName("name");
         bean.setId(1);

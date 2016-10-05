@@ -16,7 +16,7 @@
 package com.vaadin.tests.resources;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 
 /**
  * This class tests the caching behavior of PublishedFileHandler.
@@ -36,7 +36,7 @@ import com.vaadin.tests.components.AbstractTestUI;
  * @since
  * @author Vaadin Ltd
  */
-public class PublishedFileHandlerCaching extends AbstractTestUI {
+public class PublishedFileHandlerCaching extends AbstractReindeerTestUI {
 
     /**
      * generated serialVersionUID

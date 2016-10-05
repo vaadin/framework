@@ -17,11 +17,11 @@
 package com.vaadin.tests.serialization;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 
-public class ChangeStateWhenReattaching extends AbstractTestUI {
+public class ChangeStateWhenReattaching extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

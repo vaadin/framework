@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.gridlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -26,7 +26,7 @@ import com.vaadin.v7.ui.TextField;
 /**
  * Test for grid required indicator location within slots.
  */
-public class GridLayoutRequiredIndicatorLocation extends AbstractTestUI {
+public class GridLayoutRequiredIndicatorLocation extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

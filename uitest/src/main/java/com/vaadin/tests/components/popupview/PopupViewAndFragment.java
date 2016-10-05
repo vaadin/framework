@@ -16,13 +16,13 @@
 package com.vaadin.tests.components.popupview;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupView;
 
-public class PopupViewAndFragment extends AbstractTestUI {
+public class PopupViewAndFragment extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

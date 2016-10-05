@@ -22,14 +22,14 @@ import java.util.Set;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.Table;
 
-public class TableMoveFocusWithSelection extends AbstractTestUI {
+public class TableMoveFocusWithSelection extends AbstractReindeerTestUI {
 
     /*
      * (non-Javadoc)

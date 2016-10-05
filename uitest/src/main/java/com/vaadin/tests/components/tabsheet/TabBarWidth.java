@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -29,7 +29,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  * Created for ticket <a href="http://dev.vaadin.com/ticket/12805">#12805</a>.
  */
-public class TabBarWidth extends AbstractTestUI {
+public class TabBarWidth extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

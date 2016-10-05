@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.treetable;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.Container.Hierarchical;
 import com.vaadin.v7.data.util.HierarchicalContainer;
 import com.vaadin.v7.ui.TreeTable;
 
-public class TreeTablePartialUpdatesPageLength0 extends AbstractTestUI {
+public class TreeTablePartialUpdatesPageLength0 extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

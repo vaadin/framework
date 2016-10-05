@@ -2,14 +2,14 @@ package com.vaadin.tests.components.grid;
 
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.CheckBoxRenderer;
 import com.vaadin.ui.renderers.ImageRenderer;
 
-public class GridClickableRenderers extends AbstractTestUI {
+public class GridClickableRenderers extends AbstractReindeerTestUI {
 
     private static class TestPOJO {
         String testText;

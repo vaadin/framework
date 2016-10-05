@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
@@ -32,7 +32,7 @@ import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider;
 
-public class CalendarHtmlInEvents extends AbstractTestUIWithLog {
+public class CalendarHtmlInEvents extends AbstractReindeerTestUIWithLog {
 
     private Calendar calendar = new Calendar();
 

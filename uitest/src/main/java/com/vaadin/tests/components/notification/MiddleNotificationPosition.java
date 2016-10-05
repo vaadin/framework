@@ -17,7 +17,7 @@ package com.vaadin.tests.components.notification;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Position;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -29,7 +29,7 @@ import com.vaadin.ui.Notification;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class MiddleNotificationPosition extends AbstractTestUI {
+public class MiddleNotificationPosition extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

@@ -17,13 +17,13 @@ package com.vaadin.tests.components.nativebutton;
 
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.NativeButton;
 
-public class NativeButtonIconAndText extends AbstractTestUI
+public class NativeButtonIconAndText extends AbstractReindeerTestUI
         implements ClickListener {
 
     static final String UPDATED_ALTERNATE_TEXT = "Now has alternate text";

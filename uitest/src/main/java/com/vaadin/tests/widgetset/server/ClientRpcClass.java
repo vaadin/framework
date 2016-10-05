@@ -17,11 +17,11 @@ package com.vaadin.tests.widgetset.server;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 
 @Widgetset(TestingWidgetSet.NAME)
-public class ClientRpcClass extends AbstractTestUI {
+public class ClientRpcClass extends AbstractReindeerTestUI {
 
     public static String TEST_COMPONENT_ID = "testComponent";
 

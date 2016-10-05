@@ -20,7 +20,7 @@
 package com.vaadin.tests.components.slider;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Slider;
 
 /**
@@ -28,7 +28,7 @@ import com.vaadin.ui.Slider;
  *
  * @author Vaadin Ltd
  */
-public class SliderUpdateFromValueChange extends AbstractTestUI {
+public class SliderUpdateFromValueChange extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

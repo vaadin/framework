@@ -4,11 +4,11 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.util.converter.StringToDoubleConverter;
 import com.vaadin.v7.ui.Table;
 
-public class FormatTableValue extends AbstractTestUI {
+public class FormatTableValue extends AbstractReindeerTestUI {
 
     private static final String PERCENT_PROPERTY = "percent";
     private static final String CURRENCY_PROPERTY = "currency";

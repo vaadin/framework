@@ -17,7 +17,7 @@ package com.vaadin.tests.widgetset.server.csrf.ui;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.server.csrf.CsrfButton;
 import com.vaadin.ui.Button;
@@ -31,7 +31,7 @@ import com.vaadin.ui.Label;
  */
 @SuppressWarnings("serial")
 @Widgetset(TestingWidgetSet.NAME)
-public abstract class AbstractCsrfTokenUI extends AbstractTestUI {
+public abstract class AbstractCsrfTokenUI extends AbstractReindeerTestUI {
 
     public static final String PRESS_ID = "PressMe";
 

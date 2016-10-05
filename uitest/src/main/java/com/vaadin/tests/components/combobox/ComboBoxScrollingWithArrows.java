@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.VerticalLayout;
@@ -27,7 +27,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Test UI verifying navigating in combobox via arrow keys.
  */
-public class ComboBoxScrollingWithArrows extends AbstractTestUI {
+public class ComboBoxScrollingWithArrows extends AbstractReindeerTestUI {
     final String DESCRIPTION = "When positioned on last item in the page and press downArrow key - should open new page and set focus on the first item.";
 
     /*

@@ -17,7 +17,7 @@ package com.vaadin.tests.components.textarea;
 
 import com.vaadin.event.UIEvents;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -42,7 +42,7 @@ import com.vaadin.ui.TextField;
  * @since
  * @author Vaadin Ltd
  */
-public class TextAreaSizeResetted extends AbstractTestUI {
+public class TextAreaSizeResetted extends AbstractReindeerTestUI {
 
     public static final int TEXTAREAHEIGHT = 200;
     public static final int TEXTAREAWIDTH = 200;

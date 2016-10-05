@@ -3,12 +3,12 @@ package com.vaadin.tests.components.table;
 import java.util.Collection;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.ui.Table;
 
-public class LongMultiselect extends AbstractTestUI {
+public class LongMultiselect extends AbstractReindeerTestUI {
 
     private enum ItemProperty {
         COLUMN1, COLUMN2

@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.util.IndexedContainer;
@@ -28,7 +28,7 @@ import com.vaadin.v7.ui.TextField;
  * When type fast and then press tab didn't add new item. Uses SlowComboBox,
  * which has a delay in setVariables method
  */
-public class ComboBoxTabWhenFilter extends AbstractTestUI {
+public class ComboBoxTabWhenFilter extends AbstractReindeerTestUI {
     public static final String DESCRIPTION = "Adding new item by typing fast plus then press TAB, very quickly, should add new item and change focus.";
 
     @Override

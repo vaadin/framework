@@ -15,14 +15,12 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.v7.ui.Table;
 
-@Theme("valo")
 public class TableWithEmptyCaption extends AbstractTestUI {
 
     @Override

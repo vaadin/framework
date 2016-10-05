@@ -16,12 +16,12 @@
 package com.vaadin.tests.components.slider;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Slider;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.ui.Table;
 
-public class HiddenSliderHandle extends AbstractTestUI {
+public class HiddenSliderHandle extends AbstractReindeerTestUI {
 
     private static final long serialVersionUID = 1L;
 

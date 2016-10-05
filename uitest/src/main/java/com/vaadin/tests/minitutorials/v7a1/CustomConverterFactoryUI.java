@@ -1,10 +1,10 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.ui.TextField;
 
-public class CustomConverterFactoryUI extends AbstractTestUI {
+public class CustomConverterFactoryUI extends AbstractReindeerTestUI {
     @Override
     public void setup(VaadinRequest request) {
         getSession().setConverterFactory(new MyConverterFactory());

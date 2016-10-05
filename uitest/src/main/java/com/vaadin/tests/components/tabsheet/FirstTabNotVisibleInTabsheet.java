@@ -1,14 +1,14 @@
 package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
-public class FirstTabNotVisibleInTabsheet extends AbstractTestUI {
+public class FirstTabNotVisibleInTabsheet extends AbstractReindeerTestUI {
 
     private TabSheet.Tab firstTab;
 

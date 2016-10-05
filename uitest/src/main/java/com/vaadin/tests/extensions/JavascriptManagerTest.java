@@ -17,7 +17,7 @@
 package com.vaadin.tests.extensions;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.JavaScriptFunction;
@@ -25,7 +25,7 @@ import com.vaadin.ui.JavaScriptFunction;
 import elemental.json.JsonArray;
 import elemental.json.JsonNull;
 
-public class JavascriptManagerTest extends AbstractTestUI {
+public class JavascriptManagerTest extends AbstractReindeerTestUI {
 
     private Log log = new Log(5);
 

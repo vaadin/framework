@@ -6,7 +6,7 @@ import java.util.List;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -26,7 +26,7 @@ import com.vaadin.v7.ui.AbstractField;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.TextField;
 
-public class CaptionsInLayouts extends AbstractTestUI {
+public class CaptionsInLayouts extends AbstractReindeerTestUI {
 
     private static final Object CAPTION = "CAPTION";
     private static final Object CLASS = "C";

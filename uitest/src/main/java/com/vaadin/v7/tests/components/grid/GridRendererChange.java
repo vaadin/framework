@@ -16,7 +16,7 @@
 package com.vaadin.v7.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
@@ -25,7 +25,7 @@ import com.vaadin.v7.ui.renderers.ButtonRenderer;
 import com.vaadin.v7.ui.renderers.HtmlRenderer;
 import com.vaadin.v7.ui.renderers.TextRenderer;
 
-public class GridRendererChange extends AbstractTestUI {
+public class GridRendererChange extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

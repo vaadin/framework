@@ -19,7 +19,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
@@ -34,7 +34,7 @@ import com.vaadin.v7.ui.TextField;
  * @author Vaadin Ltd
  */
 @Theme("reindeer")
-public class InputPromptGetText extends AbstractTestUI {
+public class InputPromptGetText extends AbstractReindeerTestUI {
 
     static final String FIELD = "field";
     static final String BUTTON = "button";

@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.ComboBox;
 
-public class ComboBoxIdenticalItems extends AbstractTestUI {
+public class ComboBoxIdenticalItems extends AbstractReindeerTestUI {
 
     private Log log = new Log(5);
 

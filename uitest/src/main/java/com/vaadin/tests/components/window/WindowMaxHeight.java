@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.window;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
@@ -8,7 +7,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
-@Theme("valo")
 public class WindowMaxHeight extends UI {
 
     @Override

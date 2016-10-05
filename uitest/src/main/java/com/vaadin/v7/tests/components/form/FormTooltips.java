@@ -19,14 +19,14 @@ import java.util.Arrays;
 
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.ui.Form;
 import com.vaadin.v7.ui.TextField;
 
-public class FormTooltips extends AbstractTestUI {
+public class FormTooltips extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

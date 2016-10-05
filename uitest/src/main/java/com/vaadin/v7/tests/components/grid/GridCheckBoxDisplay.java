@@ -18,11 +18,11 @@ package com.vaadin.v7.tests.components.grid;
 import java.io.Serializable;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.ui.Grid;
 
-public class GridCheckBoxDisplay extends AbstractTestUI {
+public class GridCheckBoxDisplay extends AbstractReindeerTestUI {
 
     private static final long serialVersionUID = -5575892909354637168L;
     private BeanItemContainer<Todo> todoContainer = new BeanItemContainer<>(

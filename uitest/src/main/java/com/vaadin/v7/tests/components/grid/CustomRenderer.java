@@ -17,7 +17,7 @@ package com.vaadin.v7.tests.components.grid;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.client.SimpleTestBean;
 import com.vaadin.ui.Label;
@@ -28,7 +28,7 @@ import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 
 @Widgetset(TestingWidgetSet.NAME)
-public class CustomRenderer extends AbstractTestUI {
+public class CustomRenderer extends AbstractReindeerTestUI {
 
     private static final Object INT_ARRAY_PROPERTY = "int array";
     private static final Object VOID_PROPERTY = "void";

@@ -24,7 +24,7 @@ import java.util.List;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.Calendar;
 import com.vaadin.v7.ui.Calendar.TimeFormat;
@@ -33,7 +33,7 @@ import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider;
 
-public class CalendarActionEventSource extends AbstractTestUI {
+public class CalendarActionEventSource extends AbstractReindeerTestUI {
 
     private Calendar calendar;
 

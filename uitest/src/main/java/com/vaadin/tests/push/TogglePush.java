@@ -20,13 +20,13 @@ import java.util.TimerTask;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.communication.PushMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 
-public class TogglePush extends AbstractTestUI {
+public class TogglePush extends AbstractReindeerTestUI {
     private final Label counterLabel = new Label();
     private int counter = 0;
 

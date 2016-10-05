@@ -16,10 +16,10 @@
 package com.vaadin.tests.components.datefield;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.InlineDateField;
 
-public class DateFieldFastForward extends AbstractTestUI {
+public class DateFieldFastForward extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

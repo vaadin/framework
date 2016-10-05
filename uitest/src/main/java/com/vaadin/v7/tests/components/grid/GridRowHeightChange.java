@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Property;
@@ -12,7 +12,7 @@ import com.vaadin.v7.shared.ui.grid.HeightMode;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.NativeSelect;
 
-public class GridRowHeightChange extends AbstractTestUI {
+public class GridRowHeightChange extends AbstractReindeerTestUI {
 
     private final List<String> themes = Arrays.asList("valo", "reindeer",
             "runo", "chameleon", "base");

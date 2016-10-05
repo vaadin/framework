@@ -18,7 +18,7 @@ package com.vaadin.tests.components.combobox;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.data.DataSource;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.ComboBox;
 
 /**
@@ -26,7 +26,7 @@ import com.vaadin.ui.ComboBox;
  *
  * @author Vaadin Ltd
  */
-public class ComboBoxClickIcon extends AbstractTestUI {
+public class ComboBoxClickIcon extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

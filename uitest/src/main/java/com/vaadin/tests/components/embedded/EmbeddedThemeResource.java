@@ -17,7 +17,7 @@ package com.vaadin.tests.components.embedded;
 
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
@@ -31,7 +31,7 @@ import com.vaadin.ui.themes.Reindeer;
  *
  * @author Vaadin Ltd
  */
-public class EmbeddedThemeResource extends AbstractTestUI {
+public class EmbeddedThemeResource extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

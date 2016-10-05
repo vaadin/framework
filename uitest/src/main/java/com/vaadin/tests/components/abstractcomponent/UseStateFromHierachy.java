@@ -18,7 +18,7 @@ package com.vaadin.tests.components.abstractcomponent;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.server.UseStateFromHierachyComponent;
 import com.vaadin.ui.Button;
@@ -26,7 +26,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
 @Widgetset(TestingWidgetSet.NAME)
-public class UseStateFromHierachy extends AbstractTestUI {
+public class UseStateFromHierachy extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

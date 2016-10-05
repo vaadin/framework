@@ -2,14 +2,14 @@ package com.vaadin.tests.components.javascriptcomponent;
 
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptFunction;
 import com.vaadin.ui.Label;
 
 import elemental.json.JsonArray;
 
-public class JSComponentLoadingIndicator extends AbstractTestUI {
+public class JSComponentLoadingIndicator extends AbstractReindeerTestUI {
 
     @JavaScript({ "JSComponent.js" })
     public class JSComponent extends AbstractJavaScriptComponent {

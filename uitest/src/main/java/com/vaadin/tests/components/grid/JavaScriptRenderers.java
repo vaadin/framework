@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Grid;
 
-public class JavaScriptRenderers extends AbstractTestUI {
+public class JavaScriptRenderers extends AbstractReindeerTestUI {
 
     public static class ItemBean {
         private Integer id;

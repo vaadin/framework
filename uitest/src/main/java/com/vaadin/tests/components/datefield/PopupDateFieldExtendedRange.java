@@ -6,12 +6,12 @@ import java.util.stream.Stream;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 
 @SuppressWarnings("serial")
-public class PopupDateFieldExtendedRange extends AbstractTestUI {
+public class PopupDateFieldExtendedRange extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

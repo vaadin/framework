@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.menubar;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
@@ -27,7 +27,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class SpaceMenuBarNavigation extends AbstractTestUI implements Command {
+public class SpaceMenuBarNavigation extends AbstractReindeerTestUI implements Command {
 
     @Override
     protected void setup(VaadinRequest request) {

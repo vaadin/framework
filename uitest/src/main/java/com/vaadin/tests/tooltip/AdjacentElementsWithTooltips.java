@@ -16,7 +16,7 @@
 package com.vaadin.tests.tooltip;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
@@ -28,7 +28,7 @@ import com.vaadin.ui.TooltipConfiguration;
  *
  * @author Vaadin Ltd
  */
-public class AdjacentElementsWithTooltips extends AbstractTestUI {
+public class AdjacentElementsWithTooltips extends AbstractReindeerTestUI {
 
     private int buttonCount = 0;
 

@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.ItemDataSource;
 import com.vaadin.ui.ComboBox;
 
@@ -25,7 +25,7 @@ import com.vaadin.ui.ComboBox;
  *
  * @author Vaadin Ltd
  */
-public class ComboBoxMousewheel extends AbstractTestUI {
+public class ComboBoxMousewheel extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

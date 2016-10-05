@@ -15,14 +15,12 @@
  */
 package com.vaadin.tests.components.window;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
-@Theme("valo")
 public class MaximizeRestoreWindowWithManagedLayout extends AbstractTestUI {
 
     @Override

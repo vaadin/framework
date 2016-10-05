@@ -18,11 +18,11 @@ package com.vaadin.tests.components.checkbox;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 
-public class CheckBoxRpcCount extends AbstractTestUI {
+public class CheckBoxRpcCount extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

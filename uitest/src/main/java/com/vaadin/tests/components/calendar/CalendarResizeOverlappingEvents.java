@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.ui.Calendar;
 import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
@@ -33,7 +33,7 @@ import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider;
  *
  * @author Vaadin Ltd
  */
-public class CalendarResizeOverlappingEvents extends AbstractTestUI {
+public class CalendarResizeOverlappingEvents extends AbstractReindeerTestUI {
 
     /*
      * (non-Javadoc)

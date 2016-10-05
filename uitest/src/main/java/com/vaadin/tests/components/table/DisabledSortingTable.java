@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.v7.ui.Table;
 
-public class DisabledSortingTable extends AbstractTestUI {
+public class DisabledSortingTable extends AbstractReindeerTestUI {
 
     @SuppressWarnings("unchecked")
     @Override

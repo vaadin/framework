@@ -21,13 +21,13 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.elements.DateFieldElement;
 
 /**
- * Test for date field popup calendar position in default theme.
+ * Test for date field popup calendar position in reindeer theme.
  *
  * Test method is defined in super class.
  *
  * @author Vaadin Ltd
  */
-public class DefaultDateFieldPopupPositionTest
+public class ReindeerDateFieldPopupPositionTest
         extends DateFieldPopupPositionTest {
 
     @Override

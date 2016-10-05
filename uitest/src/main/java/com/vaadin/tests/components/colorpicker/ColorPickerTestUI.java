@@ -32,7 +32,7 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractColorPicker;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CheckBox;
@@ -46,7 +46,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")
-public class ColorPickerTestUI extends AbstractTestUI {
+public class ColorPickerTestUI extends AbstractReindeerTestUI {
 
     @Override
     public String getTestDescription() {

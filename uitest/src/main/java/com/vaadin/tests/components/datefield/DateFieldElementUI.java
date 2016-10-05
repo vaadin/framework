@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.datefield;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.DateField;
 
-public class DateFieldElementUI extends AbstractTestUI {
+public class DateFieldElementUI extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         addComponent(new DateField());

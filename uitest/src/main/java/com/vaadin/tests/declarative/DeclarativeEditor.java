@@ -21,7 +21,6 @@ import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
@@ -37,7 +36,6 @@ import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.Property.ValueChangeNotifier;
 
-@Theme("valo")
 public class DeclarativeEditor extends UI {
 
     private VerticalLayout treeHolder;
@@ -117,7 +115,7 @@ public class DeclarativeEditor extends UI {
         }
 
         if (component instanceof HasComponents) {
-            for (Component c : ((HasComponents) component)) {
+            for (Component c : (HasComponents) component) {
                 addValueChangeListeners(c);
             }
         }

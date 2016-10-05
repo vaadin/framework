@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -24,7 +24,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  * @author Vaadin Ltd
  */
-public class NestedLayoutCaptionHover extends AbstractTestUI {
+public class NestedLayoutCaptionHover extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

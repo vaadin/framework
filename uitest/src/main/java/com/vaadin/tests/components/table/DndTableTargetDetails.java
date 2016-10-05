@@ -22,7 +22,7 @@ import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.util.BeanItemContainer;
@@ -35,7 +35,7 @@ import com.vaadin.v7.ui.Table.TableDragMode;
  *
  * @author Vaadin Ltd
  */
-public class DndTableTargetDetails extends AbstractTestUI {
+public class DndTableTargetDetails extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

@@ -18,11 +18,11 @@ package com.vaadin.tests.components.ui;
 
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 
 @PreserveOnRefresh
-public class UIRefresh extends AbstractTestUI {
+public class UIRefresh extends AbstractReindeerTestUI {
 
     public static final String REINIT_ID = "reinit";
 

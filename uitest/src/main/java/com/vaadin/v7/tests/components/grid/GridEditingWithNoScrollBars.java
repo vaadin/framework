@@ -16,13 +16,13 @@
 package com.vaadin.v7.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.Column;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 
-public class GridEditingWithNoScrollBars extends AbstractTestUI {
+public class GridEditingWithNoScrollBars extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

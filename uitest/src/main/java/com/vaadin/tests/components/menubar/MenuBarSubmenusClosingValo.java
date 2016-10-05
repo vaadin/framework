@@ -1,12 +1,10 @@
 package com.vaadin.tests.components.menubar;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 
-@Theme("valo")
 public class MenuBarSubmenusClosingValo extends AbstractTestUI {
 
     private MenuItem edit;

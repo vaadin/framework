@@ -23,7 +23,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.JavaScriptExtensionState;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.JavaScriptFunction;
@@ -31,7 +31,7 @@ import com.vaadin.ui.Notification;
 
 import elemental.json.JsonArray;
 
-public class SimpleJavaScriptExtensionTest extends AbstractTestUI {
+public class SimpleJavaScriptExtensionTest extends AbstractReindeerTestUI {
 
     public static class SimpleJavaScriptExtensionState
             extends JavaScriptExtensionState {

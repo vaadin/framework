@@ -36,7 +36,7 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.widgetset.client.ComplexTestBean;
 import com.vaadin.tests.widgetset.client.SerializerTestRpc;
@@ -49,7 +49,7 @@ import elemental.json.JsonString;
 import elemental.json.JsonValue;
 
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
-public class SerializerTest extends AbstractTestUI {
+public class SerializerTest extends AbstractReindeerTestUI {
 
     private Log log = new Log(80);
 

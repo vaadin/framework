@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.window;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -25,7 +25,7 @@ import com.vaadin.ui.Window;
  * @since 7.1.9
  * @author Vaadin Ltd
  */
-public class ScrollingBodyElementWithModalOpened extends AbstractTestUI {
+public class ScrollingBodyElementWithModalOpened extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

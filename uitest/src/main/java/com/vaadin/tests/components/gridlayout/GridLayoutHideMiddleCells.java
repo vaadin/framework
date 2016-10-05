@@ -18,7 +18,7 @@ package com.vaadin.tests.components.gridlayout;
 import java.util.Random;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
@@ -26,7 +26,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
-public class GridLayoutHideMiddleCells extends AbstractTestUI {
+public class GridLayoutHideMiddleCells extends AbstractReindeerTestUI {
     GridLayout gridLayout;
     GridLayout gridLayout2;
 

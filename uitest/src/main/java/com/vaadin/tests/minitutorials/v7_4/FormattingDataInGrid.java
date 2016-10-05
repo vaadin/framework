@@ -18,7 +18,6 @@ package com.vaadin.tests.minitutorials.v7_4;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 import com.vaadin.v7.data.util.converter.Converter;
@@ -29,7 +28,6 @@ import com.vaadin.v7.ui.Grid.CellStyleGenerator;
 import com.vaadin.v7.ui.renderers.HtmlRenderer;
 import com.vaadin.v7.ui.renderers.NumberRenderer;
 
-@Theme("valo")
 public class FormattingDataInGrid extends UI {
 
     @Override

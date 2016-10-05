@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Layout;
@@ -25,7 +25,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.Table;
 
 @SuppressWarnings("serial")
-public class TableSizeInTabsheet extends AbstractTestUI {
+public class TableSizeInTabsheet extends AbstractReindeerTestUI {
 
     static final String TABLE = "table";
     static final String TABSHEET = "tabsheet";

@@ -22,11 +22,11 @@ import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
-public class AxessingWebPageAndBrowserInfoUI extends AbstractTestUI {
+public class AxessingWebPageAndBrowserInfoUI extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

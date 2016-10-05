@@ -1,14 +1,14 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.ui.Table;
 
 @SuppressWarnings("serial")
-public class ReloadWidgets extends AbstractTestUI {
+public class ReloadWidgets extends AbstractReindeerTestUI {
 
     int pressed = 0;
 

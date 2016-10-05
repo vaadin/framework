@@ -17,10 +17,10 @@ package com.vaadin.tests.components.page;
 
 import com.vaadin.annotations.Title;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 
 @Title("bar")
-public class PageTitle extends AbstractTestUI {
+public class PageTitle extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

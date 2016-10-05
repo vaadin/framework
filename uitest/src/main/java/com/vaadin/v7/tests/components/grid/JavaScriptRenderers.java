@@ -16,12 +16,12 @@
 package com.vaadin.v7.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Grid;
 
-public class JavaScriptRenderers extends AbstractTestUI {
+public class JavaScriptRenderers extends AbstractReindeerTestUI {
 
     public static class MyBean {
         private int integer;

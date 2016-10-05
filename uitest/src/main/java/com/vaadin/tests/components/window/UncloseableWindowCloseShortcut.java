@@ -16,11 +16,11 @@
 package com.vaadin.tests.components.window;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
-public class UncloseableWindowCloseShortcut extends AbstractTestUI {
+public class UncloseableWindowCloseShortcut extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

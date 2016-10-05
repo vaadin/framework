@@ -17,7 +17,7 @@ package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.ui.ComboBox;
 
@@ -27,7 +27,7 @@ import com.vaadin.v7.ui.ComboBox;
  *
  * @author Vaadin Ltd
  */
-public class ComboBoxOnSmallScreen extends AbstractTestUI {
+public class ComboBoxOnSmallScreen extends AbstractReindeerTestUI {
 
     private static final String PID = "captionPID";
 

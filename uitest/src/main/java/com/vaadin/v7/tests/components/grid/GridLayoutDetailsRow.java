@@ -16,7 +16,7 @@
 package com.vaadin.v7.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -31,7 +31,7 @@ import com.vaadin.v7.ui.Grid.RowReference;
  *
  * @author Vaadin Ltd
  */
-public class GridLayoutDetailsRow extends AbstractTestUI {
+public class GridLayoutDetailsRow extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

@@ -13,15 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.datefield;
+package com.vaadin.tests.components;
 
-/**
- * Test UI for date field Popup calendar in default theme.
- *
- * All UI initialization is defined in super class.
- *
- * @author Vaadin Ltd
- */
-public class DefaultDateFieldPopupPosition extends DateFieldPopupPosition {
+import com.vaadin.annotations.Theme;
 
+@Theme("reindeer")
+public abstract class AbstractReindeerTestUI extends AbstractTestUI {
 }

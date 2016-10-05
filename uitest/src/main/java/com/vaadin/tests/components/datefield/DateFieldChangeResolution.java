@@ -17,7 +17,7 @@ package com.vaadin.tests.components.datefield;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -26,7 +26,7 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 
-public class DateFieldChangeResolution extends AbstractTestUI {
+public class DateFieldChangeResolution extends AbstractReindeerTestUI {
 
     public static final String DATEFIELD_ID = "datefield";
     // The ID of a button is BUTTON_BASE_ID + resolution, e.g. button-month

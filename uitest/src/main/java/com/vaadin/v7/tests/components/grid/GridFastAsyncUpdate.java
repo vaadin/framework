@@ -7,7 +7,6 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 import com.vaadin.annotations.Push;
-import com.vaadin.annotations.Theme;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
@@ -22,7 +21,6 @@ import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 
 @Push
-@Theme("valo")
 @SuppressWarnings("serial")
 public class GridFastAsyncUpdate extends AbstractTestUI {
 

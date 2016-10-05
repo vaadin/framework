@@ -20,7 +20,7 @@ import java.util.Locale;
 
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.SelectionMode;
@@ -35,7 +35,7 @@ import com.vaadin.v7.ui.renderers.ProgressBarRenderer;
 import com.vaadin.v7.ui.renderers.TextRenderer;
 
 @SuppressWarnings("all")
-public class NullRenderers extends AbstractTestUI {
+public class NullRenderers extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

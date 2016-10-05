@@ -16,12 +16,12 @@
 package com.vaadin.tests.components.gridlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.GridLayout;
 
-public class GridLayoutExtraSpacing extends AbstractTestUI {
+public class GridLayoutExtraSpacing extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

@@ -18,7 +18,7 @@ package com.vaadin.v7.tests.components.grid;
 import java.io.Serializable;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
@@ -29,7 +29,7 @@ import com.vaadin.v7.ui.Grid.SelectionMode;
 import com.vaadin.v7.ui.Grid.SelectionModel;
 import com.vaadin.v7.ui.renderers.NumberRenderer;
 
-public class GridHeaderFormatChange extends AbstractTestUI {
+public class GridHeaderFormatChange extends AbstractReindeerTestUI {
 
     private static final long serialVersionUID = -2787771187365766027L;
 

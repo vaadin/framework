@@ -152,7 +152,7 @@ public interface Constants {
     @Deprecated
     static final String ERROR_NO_UI_FOUND = "No UIProvider returned a UI for the request.";
 
-    static final String DEFAULT_THEME_NAME = "reindeer";
+    static final String DEFAULT_THEME_NAME = "valo";
 
     static final String INVALID_SECURITY_KEY_MSG = "Invalid security key.";
 

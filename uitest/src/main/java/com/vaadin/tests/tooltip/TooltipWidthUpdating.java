@@ -1,7 +1,7 @@
 package com.vaadin.tests.tooltip;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.VerticalLayout;
@@ -13,7 +13,7 @@ import com.vaadin.v7.ui.TextField;
  *
  * @author Vaadin Ltd
  */
-public class TooltipWidthUpdating extends AbstractTestUI {
+public class TooltipWidthUpdating extends AbstractReindeerTestUI {
 
     private static final long serialVersionUID = 1L;
     protected static final String SHORT_TOOLTIP_TEXT = "This is a short tooltip";

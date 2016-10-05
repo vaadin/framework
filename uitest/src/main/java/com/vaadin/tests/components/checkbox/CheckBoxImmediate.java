@@ -17,11 +17,11 @@ package com.vaadin.tests.components.checkbox;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 
-public class CheckBoxImmediate extends AbstractTestUI {
+public class CheckBoxImmediate extends AbstractReindeerTestUI {
     private int count = 0;
 
     @Override

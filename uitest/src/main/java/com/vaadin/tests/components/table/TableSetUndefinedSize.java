@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.ui.Table;
 
-public class TableSetUndefinedSize extends AbstractTestUI {
+public class TableSetUndefinedSize extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         getLayout().setSizeFull();

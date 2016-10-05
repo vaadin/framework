@@ -3,7 +3,7 @@ package com.vaadin.tests.components.table;
 import java.util.Date;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -13,7 +13,7 @@ import com.vaadin.v7.data.util.BeanContainer;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.ui.Table;
 
-public class TableWithContainerRequiringEqualsForItemId extends AbstractTestUI {
+public class TableWithContainerRequiringEqualsForItemId extends AbstractReindeerTestUI {
 
     private MyEntityContainer container = new MyEntityContainer();
     private Log log = new Log(10);

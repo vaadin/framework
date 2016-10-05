@@ -24,12 +24,12 @@ import com.vaadin.server.BootstrapListener;
 import com.vaadin.server.BootstrapPageResponse;
 import com.vaadin.server.BootstrapResponse;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 
-public class BootstrapModifyUI extends AbstractTestUI {
+public class BootstrapModifyUI extends AbstractReindeerTestUI {
     private static final String INSTALLED_ATRIBUTE_NAME = BootstrapModifyUI.class
             .getName() + ".installed";
 

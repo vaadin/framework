@@ -6,14 +6,14 @@ import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.CacheUpdateException;
 
-public class SetDataSourceWithPropertyIds extends AbstractTestUI {
+public class SetDataSourceWithPropertyIds extends AbstractReindeerTestUI {
 
     @Override
     protected String getTestDescription() {

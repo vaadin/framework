@@ -16,12 +16,12 @@
 package com.vaadin.v7.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.Container.Indexed;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Grid;
 
-public class GridAddAndRemoveDataOnInit extends AbstractTestUI {
+public class GridAddAndRemoveDataOnInit extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

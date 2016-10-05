@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.formlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextField;
 
-public class TableInFormLayoutCausesScrolling extends AbstractTestUI {
+public class TableInFormLayoutCausesScrolling extends AbstractReindeerTestUI {
 
     @Override
     public void setup(VaadinRequest request) {

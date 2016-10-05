@@ -18,11 +18,11 @@ package com.vaadin.tests.widgetset.server;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 
 @Widgetset(TestingWidgetSet.NAME)
-public class ReplaceComponentUI extends AbstractTestUI {
+public class ReplaceComponentUI extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

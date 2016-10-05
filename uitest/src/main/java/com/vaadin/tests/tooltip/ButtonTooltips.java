@@ -1,12 +1,12 @@
 package com.vaadin.tests.tooltip;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
 
-public class ButtonTooltips extends AbstractTestUI {
+public class ButtonTooltips extends AbstractReindeerTestUI {
 
     public static final String shortDescription = "Another";
     public static final String longDescription = "long descidescidescpription";

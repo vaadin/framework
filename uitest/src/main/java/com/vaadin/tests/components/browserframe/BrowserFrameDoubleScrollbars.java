@@ -2,11 +2,11 @@ package com.vaadin.tests.components.browserframe;
 
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.TabSheet;
 
-public class BrowserFrameDoubleScrollbars extends AbstractTestUI {
+public class BrowserFrameDoubleScrollbars extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {

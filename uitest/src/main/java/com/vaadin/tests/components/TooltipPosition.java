@@ -26,7 +26,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  * @author Vaadin Ltd
  */
-public class TooltipPosition extends AbstractTestUI {
+public class TooltipPosition extends AbstractReindeerTestUI {
 
     public static final int NUMBER_OF_BUTTONS = 5;
 

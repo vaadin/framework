@@ -18,11 +18,11 @@ package com.vaadin.tests.minitutorials.v7b5;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServletService;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 
-public class HandlingLogout extends AbstractTestUI {
+public class HandlingLogout extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

@@ -19,13 +19,13 @@ package com.vaadin.tests.push;
 import com.vaadin.annotations.Push;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ui.Transport;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
 @Push(transport = Transport.STREAMING)
-public class BarInUIDL extends AbstractTestUI {
+public class BarInUIDL extends AbstractReindeerTestUI {
 
     /*
      * (non-Javadoc)

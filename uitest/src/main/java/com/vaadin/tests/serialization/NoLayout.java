@@ -17,7 +17,7 @@ package com.vaadin.tests.serialization;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.server.LayoutDetector;
 import com.vaadin.ui.Button;
@@ -26,7 +26,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.JavaScript;
 
 @Widgetset(TestingWidgetSet.NAME)
-public class NoLayout extends AbstractTestUI {
+public class NoLayout extends AbstractReindeerTestUI {
     private final LayoutDetector layoutDetector = new LayoutDetector();
 
     @Override

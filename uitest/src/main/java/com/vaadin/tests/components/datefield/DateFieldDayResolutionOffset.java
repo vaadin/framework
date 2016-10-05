@@ -5,12 +5,12 @@ import java.time.format.DateTimeFormatter;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Label;
 
-public class DateFieldDayResolutionOffset extends AbstractTestUI {
+public class DateFieldDayResolutionOffset extends AbstractReindeerTestUI {
 
     private final String initialDateString = "09/01/2014";
 

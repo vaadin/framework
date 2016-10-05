@@ -2,7 +2,7 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.themes.BaseTheme;
@@ -10,7 +10,7 @@ import com.vaadin.v7.data.Item;
 import com.vaadin.v7.ui.Table;
 
 @Theme("tests-tickets")
-public class TableRowHeight2 extends AbstractTestUI {
+public class TableRowHeight2 extends AbstractReindeerTestUI {
 
     @Override
     protected String getTestDescription() {

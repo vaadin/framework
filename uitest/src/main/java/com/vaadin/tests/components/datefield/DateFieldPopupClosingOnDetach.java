@@ -21,11 +21,11 @@ import java.util.TimerTask;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
 
-public class DateFieldPopupClosingOnDetach extends AbstractTestUI {
+public class DateFieldPopupClosingOnDetach extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

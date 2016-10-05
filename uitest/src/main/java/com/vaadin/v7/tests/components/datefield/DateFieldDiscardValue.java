@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -24,7 +24,7 @@ import com.vaadin.v7.ui.DateField;
  * @author Vaadin Ltd
  *
  */
-public class DateFieldDiscardValue extends AbstractTestUI {
+public class DateFieldDiscardValue extends AbstractReindeerTestUI {
 
     public static final String PROP_NONULL = "A field with a valid date in the data source property";
     public static final String PROP_NULL_VALUE = "A field with a null value in the data source property";

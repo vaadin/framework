@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.util.BeanContainer;
@@ -31,7 +31,7 @@ import com.vaadin.v7.ui.Table;
  */
 
 @SuppressWarnings("serial")
-public class SetPageFirstItemLoadsNeededRowsOnly extends AbstractTestUI {
+public class SetPageFirstItemLoadsNeededRowsOnly extends AbstractReindeerTestUI {
 
     /*
      * (non-Javadoc)

@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
 import com.vaadin.v7.data.Container;
@@ -10,7 +10,7 @@ import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.HeaderClickEvent;
 
-public class HeaderClick extends AbstractTestUI {
+public class HeaderClick extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

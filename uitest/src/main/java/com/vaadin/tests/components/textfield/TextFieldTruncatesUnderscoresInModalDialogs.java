@@ -18,7 +18,7 @@ package com.vaadin.tests.components.textfield;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.FormLayout;
@@ -28,7 +28,7 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 @Theme("chameleon")
 public class TextFieldTruncatesUnderscoresInModalDialogs
-        extends AbstractTestUI {
+        extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

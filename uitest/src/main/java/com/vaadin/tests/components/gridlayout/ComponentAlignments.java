@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.gridlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.VerticalLayout;
@@ -26,7 +26,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  * @author Vaadin Ltd
  */
-public class ComponentAlignments extends AbstractTestUI {
+public class ComponentAlignments extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

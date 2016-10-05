@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.table;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
@@ -24,7 +23,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.ui.Table;
 
-@Theme("valo")
 public class TableColumnWidthsAndSorting extends AbstractTestUIWithLog {
 
     @Override

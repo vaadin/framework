@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.ui.Calendar;
 import com.vaadin.v7.ui.Calendar.TimeFormat;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventResizeHandler;
@@ -35,7 +35,7 @@ import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
  *         dates(week/day view) (#12521)
  */
 @Theme("tests-calendar")
-public class CalendarVisibleHours extends AbstractTestUI {
+public class CalendarVisibleHours extends AbstractReindeerTestUI {
 
     private static final long serialVersionUID = 1L;
     private Calendar calendar;

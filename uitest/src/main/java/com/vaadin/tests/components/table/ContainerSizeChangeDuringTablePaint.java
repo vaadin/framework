@@ -21,7 +21,7 @@ import java.util.Iterator;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.data.Container;
@@ -29,7 +29,7 @@ import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Table;
 
-public class ContainerSizeChangeDuringTablePaint extends AbstractTestUI {
+public class ContainerSizeChangeDuringTablePaint extends AbstractReindeerTestUI {
 
     /**
      * A test {@link Table} that simply acts a hook for when Vaadin starts

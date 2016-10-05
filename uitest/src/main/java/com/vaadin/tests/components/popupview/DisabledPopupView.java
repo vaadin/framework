@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.popupview;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.PopupView;
 
-public class DisabledPopupView extends AbstractTestUI {
+public class DisabledPopupView extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

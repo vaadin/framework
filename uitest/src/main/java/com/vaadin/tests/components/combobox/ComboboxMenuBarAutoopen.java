@@ -18,7 +18,7 @@ package com.vaadin.tests.components.combobox;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.data.DataSource;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
@@ -31,7 +31,7 @@ import com.vaadin.ui.Notification.Type;
  *
  * @author Vaadin Ltd
  */
-public class ComboboxMenuBarAutoopen extends AbstractTestUI {
+public class ComboboxMenuBarAutoopen extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

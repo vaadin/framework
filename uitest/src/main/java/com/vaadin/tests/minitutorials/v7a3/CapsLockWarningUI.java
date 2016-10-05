@@ -18,12 +18,12 @@ package com.vaadin.tests.minitutorials.v7a3;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.PasswordField;
 
 @Widgetset(TestingWidgetSet.NAME)
-public class CapsLockWarningUI extends AbstractTestUI {
+public class CapsLockWarningUI extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

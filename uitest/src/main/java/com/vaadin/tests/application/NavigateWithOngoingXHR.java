@@ -24,12 +24,12 @@ import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Link;
 import com.vaadin.v7.shared.ui.progressindicator.ProgressIndicatorServerRpc;
 import com.vaadin.v7.ui.ProgressIndicator;
 
-public class NavigateWithOngoingXHR extends AbstractTestUI {
+public class NavigateWithOngoingXHR extends AbstractReindeerTestUI {
     private final RequestHandler slowRequestHandler = new RequestHandler() {
         @Override
         public boolean handleRequest(VaadinSession session,

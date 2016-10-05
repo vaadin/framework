@@ -3,7 +3,7 @@ package com.vaadin.tests.push;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Push;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -11,7 +11,7 @@ import com.vaadin.ui.Label;
 
 @PreserveOnRefresh
 @Push
-public class PushWithPreserveOnRefresh extends AbstractTestUI {
+public class PushWithPreserveOnRefresh extends AbstractReindeerTestUI {
 
     private Log log = new Log(5);
     private int times = 0;

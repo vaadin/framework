@@ -5,10 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.ui.Calendar;
 
-public class CalendarWeekSelection extends AbstractTestUI {
+public class CalendarWeekSelection extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         Calendar calendar = new Calendar();

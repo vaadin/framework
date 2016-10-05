@@ -17,7 +17,7 @@ package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 
@@ -27,7 +27,7 @@ import com.vaadin.ui.TabSheet;
  * @author Vaadin Ltd
  */
 @Theme("chameleon")
-public class TabsheetNotEnoughHorizontalSpace extends AbstractTestUI {
+public class TabsheetNotEnoughHorizontalSpace extends AbstractReindeerTestUI {
 
     private TabSheet tabsheet = new TabSheet();
 

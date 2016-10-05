@@ -18,7 +18,6 @@ package com.vaadin.v7.tests.components.grid;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
@@ -29,7 +28,6 @@ import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.CustomField;
 import com.vaadin.v7.ui.Grid;
 
-@Theme("valo")
 public class GridEditorCustomField extends AbstractTestUIWithLog {
 
     @Override

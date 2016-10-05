@@ -7,7 +7,7 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.v7.data.Item;
@@ -21,7 +21,7 @@ import com.vaadin.v7.ui.Table.RowHeaderMode;
 import com.vaadin.v7.ui.Table.TableDragMode;
 import com.vaadin.v7.ui.TextField;
 
-public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
+public class TableClickAndDragOnIconAndComponents extends AbstractReindeerTestUI {
 
     private static final long serialVersionUID = -2534880024131980135L;
     private Table table;

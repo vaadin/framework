@@ -16,12 +16,12 @@
 package com.vaadin.tests.layouts;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 
-public class RelativeSizeInUndefinedCssLayout extends AbstractTestUI {
+public class RelativeSizeInUndefinedCssLayout extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

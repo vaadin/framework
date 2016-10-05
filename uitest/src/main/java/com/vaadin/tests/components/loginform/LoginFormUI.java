@@ -3,7 +3,7 @@ package com.vaadin.tests.components.loginform;
 import java.util.Optional;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
@@ -11,7 +11,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.VerticalLayout;
 
-public class LoginFormUI extends AbstractTestUI {
+public class LoginFormUI extends AbstractReindeerTestUI {
 
     private HorizontalLayout loginFormLayout;
     protected LoginForm loginForm;

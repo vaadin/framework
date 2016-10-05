@@ -18,12 +18,12 @@ package com.vaadin.tests.serialization;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.server.DelegateWithoutStateClassComponent;
 
 @Widgetset(TestingWidgetSet.NAME)
-public class DelegateWithoutStateClassTest extends AbstractTestUI {
+public class DelegateWithoutStateClassTest extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

@@ -16,7 +16,7 @@
 package com.vaadin.tests.components.optiongroup;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.OptionGroup;
@@ -26,7 +26,7 @@ import com.vaadin.v7.ui.OptionGroup;
  *
  * @author Vaadin Ltd
  */
-public class OptionGroupRetainFocusKeyboardValueChange extends AbstractTestUI {
+public class OptionGroupRetainFocusKeyboardValueChange extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

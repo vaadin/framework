@@ -27,14 +27,14 @@ import java.util.Date;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 
-public class UISerialization extends AbstractTestUI {
+public class UISerialization extends AbstractReindeerTestUI {
 
     private Log log = new Log(5);
 

@@ -17,7 +17,7 @@ package com.vaadin.tests.components.popupview;
 
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupView;
 
@@ -30,7 +30,7 @@ import com.vaadin.ui.PopupView;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class PopupViewWithExtension extends AbstractTestUI {
+public class PopupViewWithExtension extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

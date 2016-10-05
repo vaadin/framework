@@ -16,7 +16,7 @@
 package com.vaadin.tests.tooltip;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.validator.IntegerRangeValidator;
 import com.vaadin.v7.ui.TextField;
 
@@ -24,7 +24,7 @@ import com.vaadin.v7.ui.TextField;
  *
  * UI test class for Tooltip with integer range validator.
  */
-public class ValidatorCaptionTooltip extends AbstractTestUI {
+public class ValidatorCaptionTooltip extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

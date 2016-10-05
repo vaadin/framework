@@ -6,11 +6,11 @@ import java.io.InputStream;
 import com.vaadin.server.FileDownloader;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 
-public class IframeIsOpenedInNonIOS extends AbstractTestUI {
+public class IframeIsOpenedInNonIOS extends AbstractReindeerTestUI {
 
     public static final String FILE_CONTENT = "New text file";
     public static final String FILE_NAME = "textfile.txt";

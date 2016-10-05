@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.ColumnHeaderMode;
 
-public class HeaderUpdateWhenNoRows extends AbstractTestUI {
+public class HeaderUpdateWhenNoRows extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

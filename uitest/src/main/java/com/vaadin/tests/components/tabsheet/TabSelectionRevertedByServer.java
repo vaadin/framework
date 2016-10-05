@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
@@ -21,7 +21,7 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
  * @since
  * @author Vaadin Ltd
  */
-public class TabSelectionRevertedByServer extends AbstractTestUI {
+public class TabSelectionRevertedByServer extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

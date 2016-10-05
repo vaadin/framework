@@ -17,13 +17,13 @@ package com.vaadin.tests.components.abstractcomponent;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.VaadinClasses;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.LegacyWindow;
 
-public class AllComponentTooltipTest extends AbstractTestUI {
+public class AllComponentTooltipTest extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

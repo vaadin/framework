@@ -7,11 +7,11 @@ package com.vaadin.tests.components.ui;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.WebBrowser;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 
-public class UIInitBrowserDetails extends AbstractTestUI {
+public class UIInitBrowserDetails extends AbstractReindeerTestUI {
 
     private GridLayout l = new GridLayout(3, 1);
     private VaadinRequest r;

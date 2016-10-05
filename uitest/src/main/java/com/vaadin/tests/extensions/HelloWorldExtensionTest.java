@@ -17,12 +17,12 @@ package com.vaadin.tests.extensions;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
-public class HelloWorldExtensionTest extends AbstractTestUI {
+public class HelloWorldExtensionTest extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

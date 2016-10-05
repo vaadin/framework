@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.ui;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
@@ -31,7 +30,6 @@ import com.vaadin.ui.themes.ValoTheme;
  * @since
  * @author Vaadin Ltd
  */
-@Theme("valo")
 public class UnnecessaryPaddingInResponsiveUI extends UI {
 
     @Override

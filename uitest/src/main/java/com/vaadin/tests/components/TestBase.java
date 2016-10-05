@@ -8,8 +8,9 @@ import com.vaadin.ui.VerticalLayout;
 
 /**
  *
- * @deprecated Use {@link AbstractTestUI} or {@link AbstractTestUIWithLog}
- *             instead. TestBase is a LegacyApplication
+ * @deprecated Use {@link AbstractReindeerTestUI} or
+ *             {@link AbstractTestUIWithLog} instead. TestBase is a
+ *             LegacyApplication
  */
 @Deprecated
 public abstract class TestBase extends AbstractTestCase {

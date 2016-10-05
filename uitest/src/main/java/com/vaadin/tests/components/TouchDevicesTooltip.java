@@ -11,7 +11,7 @@ import com.vaadin.v7.data.validator.IntegerRangeValidator;
 import com.vaadin.v7.ui.TextField;
 
 @Viewport(value = "width=device-width,height=device-height")
-public class TouchDevicesTooltip extends AbstractTestUI {
+public class TouchDevicesTooltip extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

@@ -18,14 +18,14 @@ package com.vaadin.v7.tests.components.grid;
 import java.util.Collection;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.Validator;
 import com.vaadin.v7.data.Validator.InvalidValueException;
 import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Label;
 
-public class GridWithLabelEditor extends AbstractTestUI {
+public class GridWithLabelEditor extends AbstractReindeerTestUI {
 
     public class LabelEditor extends Label implements Field<String> {
 

@@ -21,11 +21,11 @@ import java.util.List;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 
-public class GridThemeChange extends AbstractTestUI {
+public class GridThemeChange extends AbstractReindeerTestUI {
     private final List<String> themes = Arrays.asList("valo", "reindeer",
             "runo", "chameleon", "base");
 

@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
 
-public class ComboBoxMouseSelectEnter extends AbstractTestUI {
+public class ComboBoxMouseSelectEnter extends AbstractReindeerTestUI {
     protected ComboBox<String> comboBox;
 
     @Override

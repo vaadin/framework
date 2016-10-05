@@ -3,15 +3,12 @@ package com.vaadin.tests.components.calendar;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.v7.ui.Calendar;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents;
 import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
 
-@Theme(ValoTheme.THEME_NAME)
 public class CalendarReadOnly extends AbstractTestUI {
 
     @Override

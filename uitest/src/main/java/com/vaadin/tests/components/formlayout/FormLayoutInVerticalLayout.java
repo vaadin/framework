@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.formlayout;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CssLayout;
@@ -29,7 +28,6 @@ import com.vaadin.v7.ui.TextField;
  *
  * @author Vaadin Ltd
  */
-@Theme("valo")
 public class FormLayoutInVerticalLayout extends AbstractTestUI {
 
     @Override

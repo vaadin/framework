@@ -6,7 +6,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
 
-public class OutOfSync extends AbstractTestUI {
+public class OutOfSync extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

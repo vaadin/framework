@@ -2,11 +2,11 @@ package com.vaadin.tests.components.notification;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Position;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
 
-public class ChromeBottomNotification extends AbstractTestUI {
+public class ChromeBottomNotification extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         addButton("Show notification", new Button.ClickListener() {

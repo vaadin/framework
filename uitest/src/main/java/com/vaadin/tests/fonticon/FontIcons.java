@@ -25,7 +25,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Position;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -57,7 +57,7 @@ import com.vaadin.v7.ui.TextArea;
 import com.vaadin.v7.ui.Tree;
 import com.vaadin.v7.ui.TwinColSelect;
 
-public class FontIcons extends AbstractTestUI {
+public class FontIcons extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

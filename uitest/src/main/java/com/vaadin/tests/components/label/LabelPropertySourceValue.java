@@ -1,14 +1,14 @@
 package com.vaadin.tests.components.label;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.data.util.ObjectProperty;
 import com.vaadin.v7.ui.Label;
 
-public class LabelPropertySourceValue extends AbstractTestUI {
+public class LabelPropertySourceValue extends AbstractReindeerTestUI {
     private Label label;
 
     @Override

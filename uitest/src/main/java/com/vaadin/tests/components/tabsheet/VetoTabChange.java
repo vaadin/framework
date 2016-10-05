@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.tabsheet;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
@@ -23,7 +22,6 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 
-@Theme("valo")
 public class VetoTabChange extends AbstractTestUI {
 
     @Override

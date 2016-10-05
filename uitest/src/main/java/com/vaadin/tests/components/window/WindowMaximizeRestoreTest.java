@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.window.WindowMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
@@ -17,7 +17,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.WindowModeChangeEvent;
 import com.vaadin.ui.Window.WindowModeChangeListener;
 
-public class WindowMaximizeRestoreTest extends AbstractTestUI {
+public class WindowMaximizeRestoreTest extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         Button addButton = new Button("Add new Window");

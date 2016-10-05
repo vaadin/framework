@@ -16,13 +16,13 @@
 package com.vaadin.tests.components.customcomponent;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 
-public class CustomComponentChildVisibility extends AbstractTestUI {
+public class CustomComponentChildVisibility extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

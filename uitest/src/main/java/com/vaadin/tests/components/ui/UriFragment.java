@@ -3,12 +3,12 @@ package com.vaadin.tests.components.ui;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
-public class UriFragment extends AbstractTestUI {
+public class UriFragment extends AbstractReindeerTestUI {
 
     private final Label fragmentLabel = new Label();
 

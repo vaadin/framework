@@ -17,7 +17,7 @@ package com.vaadin.tests.components.gridlayout;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.server.ScrollableGridLayout;
 import com.vaadin.ui.Alignment;
@@ -26,7 +26,7 @@ import com.vaadin.ui.GridLayout;
 
 @Widgetset(TestingWidgetSet.NAME)
 public class GridLayoutFractionalSizeAndAlignment
-        extends AbstractTestUIWithLog {
+        extends AbstractReindeerTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {

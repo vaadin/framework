@@ -2,12 +2,12 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.Table;
 
-public class TableRowScrolledBottom extends AbstractTestUI {
+public class TableRowScrolledBottom extends AbstractReindeerTestUI {
 
     final static String part1 = "This is a test item with long text so that there is something to see Nr. ";
     final static String part2 = ". This text must be long otherwise the timing issue on Firefox does not occur. This works fine in IE";

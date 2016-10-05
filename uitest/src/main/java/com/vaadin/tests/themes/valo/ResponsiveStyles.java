@@ -15,11 +15,9 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 
-@Theme("valo")
 public class ResponsiveStyles extends UI {
 
     @Override

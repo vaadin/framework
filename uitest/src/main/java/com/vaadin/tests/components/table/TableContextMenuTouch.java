@@ -2,7 +2,7 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.event.Action;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
@@ -13,7 +13,7 @@ import com.vaadin.v7.ui.Table;
  * Differs from TableContextMenu by number of items, their numbering and
  * immediate/selectable/multiselect toggling
  */
-public class TableContextMenuTouch extends AbstractTestUI {
+public class TableContextMenuTouch extends AbstractReindeerTestUI {
 
     private static final Action ACTION_MYACTION = new Action("Action!!");
 

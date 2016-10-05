@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.Calendar;
@@ -34,7 +34,7 @@ import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider.EventSet
  *
  * @author Vaadin Ltd
  */
-public class CalendarMonthViewDndEvent extends AbstractTestUI {
+public class CalendarMonthViewDndEvent extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

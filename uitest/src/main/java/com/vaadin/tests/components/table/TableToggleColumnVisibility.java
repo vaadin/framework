@@ -17,7 +17,7 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -29,7 +29,7 @@ import com.vaadin.v7.ui.Table;
  * alignment
  */
 @SuppressWarnings("serial")
-public class TableToggleColumnVisibility extends AbstractTestUI {
+public class TableToggleColumnVisibility extends AbstractReindeerTestUI {
 
     private final Object[][] columnSets = new Object[][] { { "Name" },
             { "Name", "Last Name" }, { "Last Name", "Name" } };

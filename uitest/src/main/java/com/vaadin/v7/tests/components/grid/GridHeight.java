@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
@@ -42,7 +42,7 @@ import com.vaadin.v7.ui.OptionGroup;
  *
  * @author Vaadin Ltd
  */
-public class GridHeight extends AbstractTestUI {
+public class GridHeight extends AbstractReindeerTestUI {
 
     static final String FULL = "Full";
     static final String UNDEFINED = "Undefined";
