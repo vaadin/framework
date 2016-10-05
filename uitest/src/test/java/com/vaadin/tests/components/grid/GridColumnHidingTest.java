@@ -182,8 +182,10 @@ public class GridColumnHidingTest extends MultiBrowserTest {
         GridCellElement headerCell = gridElement.getHeaderCell(0, columnIndex);
         Dimension size = headerCell.getSize();
         new Actions(getDriver())
-                .moveToElement(headerCell, size.getWidth() + posX,
-                        size.getHeight() / 2)
+                .moveByOffset(
+                        headerCell.getLocation().getX() + size.getWidth()
+                                + posX,
+                        headerCell.getLocation().getY() + size.getHeight() / 2)
                 .clickAndHold().moveByOffset(offset, 0).release().perform();
     }
 }
