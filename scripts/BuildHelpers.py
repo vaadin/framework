@@ -78,7 +78,7 @@ def mavenValidate(artifactId, mvnCmd = mavenCmd, logFile = sys.stdout, version =
 	cmd = [mvnCmd]
 	cmd.append("-Dvaadin.version=%s" % (version))
 	# Enforcer does not always seem to take vaadin.version into account, skip until this can be resolved
-    cmd.append("-Denforcer.skip=true")
+	cmd.append("-Denforcer.skip=true")
 	if mavenParams is not None:
 		cmd.extend(mavenParams.strip('"').split(" "))
 	cmd.extend(["clean", "package", "validate"])
