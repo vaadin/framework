@@ -22,7 +22,6 @@ import java.util.Map.Entry;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
-import com.vaadin.annotations.Widgetset;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.navigator.Navigator;
@@ -61,7 +60,6 @@ import com.vaadin.v7.ui.NativeSelect;
 
 @Theme("tests-valo")
 @Title("Valo Theme Test")
-@Widgetset("com.vaadin.DefaultWidgetSet")
 @PreserveOnRefresh
 public class ValoThemeUI extends UI {
 
