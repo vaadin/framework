@@ -470,9 +470,23 @@ public abstract class UI extends AbstractSingleComponentContainer
                             "Error while detaching UI from session", e);
                 }
                 // Disable push when the UI is detached. Otherwise the
-                // push connection and possibly VaadinSession will live on.
+                // push connection and possibly VaadinSession will live
+                // on.
                 getPushConfiguration().setPushMode(PushMode.DISABLED);
-                setPushConnection(null);
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // This intentionally does disconnect without locking
+                        // the VaadinSession to avoid deadlocks where the server
+                        // uses a lock for the websocket connection
+
+                        // See https://dev.vaadin.com/ticket/18436
+                        // The underlying problem is
+                        // https://dev.vaadin.com/ticket/16919
+                        setPushConnection(null);
+                    }
+                }).start();
             }
             this.session = session;
         }
