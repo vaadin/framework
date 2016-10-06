@@ -183,12 +183,6 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
-                <exclusions>
-                   <exclusion>
-                       <artifactId>hamcrest-core</artifactId>
-                       <groupId>org.hamcrest</groupId>
-                   </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.easymock</groupId>
@@ -227,14 +221,8 @@
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
+                <artifactId>mockito-all</artifactId>
                 <version>1.9.5</version>
-                <exclusions>
-                   <exclusion>
-                      <artifactId>hamcrest-core</artifactId>
-                      <groupId>org.hamcrest</groupId>
-                  </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>
@@ -303,7 +291,7 @@
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
+            <artifactId>mockito-all</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
