@@ -105,7 +105,7 @@ public class TestForUpload extends CustomComponent
         main.addComponent(textFieldValue);
 
         up = new Upload("Upload", buffer);
-        up.setImmediate(true);
+        up.setImmediateMode(true);
         up.addListener(new Listener() {
             private static final long serialVersionUID = -8319074730512324303L;
 

@@ -36,7 +36,7 @@ public class TestImmediateUploadInFormLayout
         FormLayout formLayout = new FormLayout();
         formLayout.setWidth("100%");
         Upload u = new Upload("Upload in FormLayout", this);
-        u.setImmediate(true);
+        u.setImmediateMode(true);
         formLayout.addComponent(u);
         addTestComponent(formLayout);
 

@@ -62,14 +62,14 @@ import com.vaadin.util.ReflectTools;
  * ProgressListener and updating the indicator in updateProgress().
  *
  * <p>
- * Setting upload component immediate initiates the upload as soon as a file is
- * selected, instead of the common pattern of file selection field and upload
- * button.
+ * Setting upload component immediate with {@link #setImmediateMode(boolean)}
+ * initiates the upload as soon as a file is selected, instead of the common
+ * pattern of file selection field and upload button.
  *
  * <p>
- * Note! Because of browser dependent implementations of
- * <input type="file"> element, setting size for Upload component is not
- * supported. For some browsers setting size may work to some extend.
+ * Note! Because of browser dependent implementations of <input type="file">
+ * element, setting size for Upload component is not supported. For some
+ * browsers setting size may work to some extend.
  *
  * @author Vaadin Ltd.
  * @since 3.0
@@ -991,7 +991,7 @@ public class Upload extends AbstractComponent
      * {@link #submitUpload()}.
      * <p>
      * In case the Upload is used in immediate mode using
-     * {@link #setImmediate(boolean)}, the file choose (html input with type
+     * {@link #setImmediateMode(boolean)}, the file choose (html input with type
      * "file") is hidden and only the button with this text is shown.
      * <p>
      *
@@ -1048,8 +1048,8 @@ public class Upload extends AbstractComponent
 
                 @Override
                 public boolean listenProgress() {
-                    return (progressListeners != null
-                            && !progressListeners.isEmpty());
+                    return progressListeners != null
+                            && !progressListeners.isEmpty();
                 }
 
                 @Override
@@ -1128,28 +1128,39 @@ public class Upload extends AbstractComponent
     }
 
     /**
-     * Returns the immediate mode of the component.
+     * Sets the immediate mode of the upload.
      * <p>
-     * An immediate mode Upload component displays the browser file choosing
+     * If the upload is in immediate mode, it displays the browser file choosing
      * button immediately, whereas a non-immediate upload only shows a Vaadin
      * button.
      * <p>
      * The default mode of an Upload component is non-immediate.
      *
-     * @return true if the component is in immediate mode, false if the
-     *         component if not in immediate mode
+     * @param immediateMode
+     *            {@code true} for immediate mode, {@code false} for not
      */
-    @Override
-    public boolean isImmediate() {
-        if (getExplicitImmediateValue() != null) {
-            return getExplicitImmediateValue();
-        } else {
-            return false;
-        }
+    public void setImmediateMode(boolean immediateMode) {
+        getState().immediateMode = immediateMode;
+    }
+
+    /**
+     * Returns the immediate mode of the upload.
+     *
+     * @return {@code true} if the upload is in immediate mode, {@code false} if
+     *         the upload is not in immediate mode
+     * @see #setImmediateMode(boolean)
+     */
+    public boolean isImmediateMode() {
+        return getState(false).immediateMode;
     }
 
     @Override
     protected UploadState getState() {
         return (UploadState) super.getState();
+    }
+
+    @Override
+    protected UploadState getState(boolean markAsDirty) {
+        return (UploadState) super.getState(markAsDirty);
     }
 }

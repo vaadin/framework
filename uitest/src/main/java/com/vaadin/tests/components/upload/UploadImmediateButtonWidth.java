@@ -44,7 +44,7 @@ public class UploadImmediateButtonWidth extends AbstractReindeerTestUI {
 
         upload.setId(id);
         upload.setWidth(width);
-        upload.setImmediate(true);
+        upload.setImmediateMode(true);
 
         return upload;
     }

@@ -74,7 +74,7 @@ public class TestForStyledUpload extends LegacyApplication
 
         up = new Upload(null, buffer);
         up.setButtonCaption("Select file");
-        up.setImmediate(true);
+        up.setImmediateMode(true);
         up.addFinishedListener(this);
         up.addFailedListener(this);
         up.addSucceededListener(this);

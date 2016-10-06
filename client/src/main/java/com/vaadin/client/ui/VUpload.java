@@ -48,15 +48,17 @@ import com.vaadin.shared.ui.upload.UploadServerRpc;
  * Note, we are not using GWT FormPanel as we want to listen submitcomplete
  * events even though the upload component is already detached.
  *
+ * @author Vaadin Ltd
+ *
  */
 public class VUpload extends SimplePanel {
 
-    private final class MyFileUpload extends FileUpload {
+    private final class VFileUpload extends FileUpload {
         @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             if (event.getTypeInt() == Event.ONCHANGE) {
-                if (immediate && fu.getFilename() != null
+                if (isImmediateMode() && fu.getFilename() != null
                         && !"".equals(fu.getFilename())) {
                     submit();
                 }
@@ -80,7 +82,7 @@ public class VUpload extends SimplePanel {
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */
-    public FileUpload fu = new MyFileUpload();
+    public FileUpload fu = new VFileUpload();
 
     Panel panel = new FlowPanel();
 
@@ -118,7 +120,7 @@ public class VUpload extends SimplePanel {
 
     private boolean enabled = true;
 
-    private boolean immediate;
+    private boolean immediateMode;
 
     private Hidden maxfilesize = new Hidden();
 
@@ -144,7 +146,7 @@ public class VUpload extends SimplePanel {
         submitButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                if (immediate) {
+                if (isImmediateMode()) {
                     // fire click on upload (eg. focused button and hit space)
                     fireNativeClick(fu.getElement());
                 } else {
@@ -162,16 +164,34 @@ public class VUpload extends SimplePanel {
       form.enctype = encoding;
     }-*/;
 
-    /** For internal use only. May be removed or replaced in the future. */
-    public void setImmediate(boolean booleanAttribute) {
-        if (immediate != booleanAttribute) {
-            immediate = booleanAttribute;
-            if (immediate) {
+    /**
+     * Sets the upload in immediate mode.
+     *
+     * @param immediateMode
+     *            {@code true} for immediate mode, {@code false} for
+     *            non-immediate mode
+     */
+    public void setImmediateMode(boolean immediateMode) {
+        if (this.immediateMode != immediateMode) {
+            this.immediateMode = immediateMode;
+            if (immediateMode) {
                 fu.sinkEvents(Event.ONCHANGE);
                 fu.sinkEvents(Event.ONFOCUS);
+            } else {
+                fu.unsinkEvents(Event.ONCHANGE);
+                fu.unsinkEvents(Event.ONFOCUS);
             }
         }
-        setStyleName(getElement(), CLASSNAME + "-immediate", immediate);
+        setStyleName(getElement(), CLASSNAME + "-immediate", immediateMode);
+    }
+
+    /**
+     * Returns whether this component is in immediate mode or not.
+     *
+     * @return {@code true} for immediate mode, {@code false} for not
+     */
+    public boolean isImmediateMode() {
+        return immediateMode;
     }
 
     private static native void fireNativeClick(Element element)
@@ -223,12 +243,12 @@ public class VUpload extends SimplePanel {
     private void rebuildPanel() {
         panel.remove(submitButton);
         panel.remove(fu);
-        fu = new MyFileUpload();
+        fu = new VFileUpload();
         fu.setName(paintableId + "_file");
         fu.getElement().setPropertyBoolean("disabled", !enabled);
         panel.add(fu);
         panel.add(submitButton);
-        if (immediate) {
+        if (isImmediateMode()) {
             fu.sinkEvents(Event.ONCHANGE);
         }
     }

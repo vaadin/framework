@@ -44,7 +44,7 @@ public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
 
         final Upload u;
         u = new Upload(null, this);
-        u.setImmediate(true);
+        u.setImmediateMode(true);
         addTestComponent(u);
 
         l = new Label(getUploadcount());
