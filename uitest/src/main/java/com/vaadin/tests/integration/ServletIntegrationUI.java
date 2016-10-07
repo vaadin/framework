@@ -1,6 +1,7 @@
 package com.vaadin.tests.integration;
 
 import com.vaadin.annotations.DesignRoot;
+import com.vaadin.annotations.Theme;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
@@ -13,6 +14,7 @@ import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.Table;
 
+@Theme("reindeer")
 public class ServletIntegrationUI extends UI {
 
     @Override
