@@ -31,12 +31,7 @@ public class NativeSelectElement extends AbstractSelectElement {
     @Override
     protected void init() {
         super.init();
-        // FIXME: Newer NativeSelect has different DOM structure.
-        if (getTagName().equals("select")) {
-            selectElement = new Select(this);
-        } else {
-            selectElement = new Select(findElement(By.tagName("select")));
-        }
+        selectElement = new Select(findElement(By.tagName("select")));
     }
 
     public List<TestBenchElement> getOptions() {

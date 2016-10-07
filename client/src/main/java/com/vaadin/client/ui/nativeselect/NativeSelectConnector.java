@@ -32,12 +32,12 @@ import elemental.json.JsonObject;
 
 /**
  * The client-side connector for the {@code NativeSelect} component.
- * 
+ *
  * @author Vaadin Ltd.
- * 
+ *
  * @see com.vaadin.ui.NativeSelect
  * @see com.vaadin.client.ui.VNativeSelect
- * 
+ *
  * @since 8.0
  */
 @Connect(com.vaadin.ui.NativeSelect.class)
@@ -53,9 +53,11 @@ public class NativeSelectConnector
     @Override
     protected void init() {
         super.init();
-
-        selectionChangeRegistration = getWidget().addChangeHandler(
-                e -> selectionRpc.select(getWidget().getSelectedValue()));
+        getWidget().getListBox()
+                .setStyleName(NativeSelectState.STYLE_NAME + "-select");
+        selectionChangeRegistration = getWidget().getListBox()
+                .addChangeHandler(e -> selectionRpc
+                        .select(getWidget().getListBox().getSelectedValue()));
     }
 
     @Override
@@ -83,7 +85,7 @@ public class NativeSelectConnector
     @OnStateChange("readOnly")
     @SuppressWarnings("deprecation")
     void updateWidgetReadOnly() {
-        getWidget().setEnabled(isEnabled() && !isReadOnly());
+        getWidget().getListBox().setEnabled(isEnabled() && !isReadOnly());
     }
 
     @OnStateChange("selectedItemKey")
@@ -100,7 +102,7 @@ public class NativeSelectConnector
      * A data change handler registered to the data source. Updates the data
      * items and selection status when the data source notifies of new changes
      * from the server side.
-     * 
+     *
      * @param range
      *            the new range of data items
      */
@@ -110,7 +112,7 @@ public class NativeSelectConnector
                         + range;
 
         final VNativeSelect select = getWidget();
-        final int itemCount = select.getItemCount();
+        final int itemCount = select.getListBox().getItemCount();
 
         for (int i = range.getStart(); i < range.getEnd(); i++) {
 
@@ -118,17 +120,19 @@ public class NativeSelectConnector
 
             if (i < itemCount) {
                 // Reuse and update an existing item
-                select.setItemText(i, getRowData(row).asString());
-                select.setValue(i, getRowKey(row));
+                select.getListBox().setItemText(i, getRowData(row).asString());
+                select.getListBox().setValue(i, getRowKey(row));
             } else {
                 // Add new items if the new dataset is larger than the old
-                select.addItem(getRowData(row).asString(), getRowKey(row));
+                select.getListBox().addItem(getRowData(row).asString(),
+                        getRowKey(row));
             }
         }
 
-        for (int i = select.getItemCount() - 1; i >= range.getEnd(); i--) {
+        for (int i = select.getListBox().getItemCount() - 1; i >= range
+                .getEnd(); i--) {
             // Remove extra items if the new dataset is smaller than the old
-            select.removeItem(i);
+            select.getListBox().removeItem(i);
         }
         updateSelectedItem();
     }
