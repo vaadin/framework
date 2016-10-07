@@ -631,6 +631,7 @@
             </activation>
             <modules>
                 <module>server</module>
+                <module>push</module>
                 <module>client</module>
                 <module>compatibility-server</module>
                 <module>compatibility-client</module>
