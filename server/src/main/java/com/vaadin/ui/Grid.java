@@ -41,7 +41,6 @@ import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.EventListener;
 import com.vaadin.server.EncodeResult;
 import com.vaadin.server.JsonCodec;
-import com.vaadin.server.KeyMapper;
 import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
@@ -54,6 +53,7 @@ import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
+import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
 import com.vaadin.ui.renderers.AbstractRenderer;
@@ -841,7 +841,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         public void generateData(T data, JsonObject jsonObject) {
             ColumnState state = getState(false);
 
-            String communicationId = state.id;
+            String communicationId = getConnectorId();
 
             assert communicationId != null : "No communication ID set for column "
                     + state.caption;
@@ -1575,8 +1575,9 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         }
     };
 
-    private KeyMapper<Column<T, ?>> columnKeys = new KeyMapper<>();
     private Set<Column<T, ?>> columnSet = new LinkedHashSet<>();
+    private Map<String, Column<T, ?>> columnKeys = new HashMap<>();
+
     private List<SortOrder<Column<T, ?>>> sortOrder = new ArrayList<>();
     private DetailsManager<T> detailsManager;
     private Set<Component> extensionComponents = new HashSet<>();
@@ -1584,6 +1585,8 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     private DescriptionGenerator<T> descriptionGenerator;
 
     private Header header = new HeaderImpl();
+
+    private int counter = 0;
 
     /**
      * Constructor for the {@link Grid} component.
@@ -1619,11 +1622,11 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     }
 
     /**
-     * Adds a new column to this {@link Grid} with given header caption, typed
+     * Adds a new column to this {@link Grid} with given identifier, typed
      * renderer and value provider.
      *
-     * @param caption
-     *            the header caption
+     * @param identifier
+     *            the identifier in camel case for the new column
      * @param valueProvider
      *            the value provider
      * @param renderer
@@ -1635,48 +1638,86 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      *
      * @see {@link AbstractRenderer}
      */
-    public <V> Column<T, V> addColumn(String caption,
+    public <V> Column<T, V> addColumn(String identifier,
             Function<T, ? extends V> valueProvider,
             AbstractRenderer<? super T, V> renderer) {
-        final Column<T, V> column = new Column<>(caption, valueProvider,
+        assert !columnKeys.containsKey(identifier) : "Duplicate identifier: "
+                + identifier;
+
+        final Column<T, V> column = new Column<>(
+                SharedUtil.camelCaseToHumanFriendly(identifier), valueProvider,
                 renderer);
-        addColumn(column);
+        addColumn(identifier, column);
         return column;
     }
 
     /**
-     * Adds a new text column to this {@link Grid} with given header caption
+     * Adds a new text column to this {@link Grid} with given identifier and
      * string value provider. The column will use a {@link TextRenderer}.
      *
-     * @param caption
+     * @param identifier
      *            the header caption
      * @param valueProvider
      *            the value provider
      *
      * @return the new column
      */
-    public Column<T, String> addColumn(String caption,
+    public Column<T, String> addColumn(String identifier,
             Function<T, String> valueProvider) {
-        return addColumn(caption, valueProvider, new TextRenderer());
+        return addColumn(identifier, valueProvider, new TextRenderer());
     }
 
-    private void addColumn(Column<T, ?> column) {
+    /**
+     * Adds a new text column to this {@link Grid} with string value provider.
+     * The column will use a {@link TextRenderer}. Identifier for the column is
+     * generated automatically.
+     *
+     * @param valueProvider
+     *            the value provider
+     *
+     * @return the new column
+     */
+    public Column<T, String> addColumn(Function<T, String> valueProvider) {
+        return addColumn(getGeneratedIdentifier(), valueProvider,
+                new TextRenderer());
+    }
+
+    /**
+     * Adds a new column to this {@link Grid} with typed renderer and value
+     * provider. Identifier for the column is generated automatically.
+     *
+     * @param valueProvider
+     *            the value provider
+     * @param renderer
+     *            the column value class
+     * @param <V>
+     *            the column value type
+     *
+     * @return the new column
+     *
+     * @see {@link AbstractRenderer}
+     */
+    public <V> Column<T, V> addColumn(Function<T, ? extends V> valueProvider,
+            AbstractRenderer<? super T, V> renderer) {
+        return addColumn(getGeneratedIdentifier(), valueProvider, renderer);
+    }
+
+    private void addColumn(String identifier, Column<T, ?> column) {
         if (getColumns().contains(column)) {
             return;
         }
 
-        final String columnId = columnKeys.key(column);
-
         column.extend(this);
-        column.setId(columnId);
         columnSet.add(column);
+        columnKeys.put(identifier, column);
+        column.setId(identifier);
         addDataGenerator(column);
 
-        getState().columnOrder.add(columnId);
-        getHeader().addColumn(columnId);
+        getState().columnOrder.add(identifier);
+        getHeader().addColumn(identifier);
 
         if (getDefaultHeaderRow() != null) {
-            getDefaultHeaderRow().getCell(columnId)
+            getDefaultHeaderRow().getCell(identifier)
                     .setText(column.getCaption());
         }
     }
@@ -1689,7 +1730,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      */
     public void removeColumn(Column<T, ?> column) {
         if (columnSet.remove(column)) {
-            columnKeys.remove(column);
+            columnKeys.remove(column.getId());
             removeDataGenerator(column);
             getHeader().removeColumn(column.getId());
             column.remove();
@@ -2205,9 +2246,22 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         removeColumns.stream().forEach(this::removeColumn);
 
         addColumns.removeAll(currentColumns);
-        addColumns.stream().forEach(this::addColumn);
+        addColumns.stream().forEach(c -> addColumn(getIdentifier(c), c));
 
         setColumnOrder(columns);
+    }
+
+    private String getIdentifier(Column<T, ?> column) {
+        return columnKeys.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(column))
+                .map(entry -> entry.getKey()).findFirst()
+                .orElse(getGeneratedIdentifier());
+    }
+
+    private String getGeneratedIdentifier() {
+        String columnId = "generatedColumn" + counter;
+        counter = counter + 1;
+        return columnId;
     }
 
     /**

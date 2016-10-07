@@ -43,7 +43,8 @@ public class GridColumnReorderTest extends GridBasicsTest {
     public void testColumnReorder_onReorder_columnReorderEventTriggered() {
         selectMenuPath("Component", "Header", "Prepend header row");
         selectMenuPath("Component", "State", "Column reorder listener");
-        selectMenuPath("Component", "Columns", "Column " + 3, "Move left");
+        selectMenuPath("Component", "Columns", GridBasics.COLUMN_CAPTIONS[3],
+                "Move left");
 
         assertEquals("1. Registered a column reorder listener.", getLogRow(2));
         assertEquals("2. Columns reordered, userOriginated: false",
@@ -51,7 +52,8 @@ public class GridColumnReorderTest extends GridBasicsTest {
         assertColumnHeaderOrder(0, 1, 3, 2);
 
         // trigger another event
-        selectMenuPath("Component", "Columns", "Column " + 3, "Move left");
+        selectMenuPath("Component", "Columns", GridBasics.COLUMN_CAPTIONS[3],
+                "Move right");
         assertColumnHeaderOrder(0, 1, 2, 3);
 
         // test drag and drop is user originated

@@ -166,23 +166,23 @@ public class GridBasics extends AbstractReindeerTestUIWithLog {
         grid = new Grid<>();
         grid.setItems(data);
 
-        grid.addColumn(COLUMN_CAPTIONS[0],
-                dataObj -> "(" + dataObj.getRowNumber() + ", 0)");
-        grid.addColumn(COLUMN_CAPTIONS[1],
-                dataObj -> "(" + dataObj.getRowNumber() + ", 1)");
-        grid.addColumn(COLUMN_CAPTIONS[2],
-                dataObj -> "(" + dataObj.getRowNumber() + ", 2)");
+        grid.addColumn(dataObj -> "(" + dataObj.getRowNumber() + ", 0)")
+                .setCaption(COLUMN_CAPTIONS[0]);
+        grid.addColumn(dataObj -> "(" + dataObj.getRowNumber() + ", 1)")
+                .setCaption(COLUMN_CAPTIONS[1]);
+        grid.addColumn(dataObj -> "(" + dataObj.getRowNumber() + ", 2)")
+                .setCaption(COLUMN_CAPTIONS[2]);
 
-        grid.addColumn(COLUMN_CAPTIONS[3], DataObject::getRowNumber,
-                new NumberRenderer());
-        grid.addColumn(COLUMN_CAPTIONS[4], DataObject::getDate,
-                new DateRenderer());
-        grid.addColumn(COLUMN_CAPTIONS[5], DataObject::getHtmlString,
-                new HtmlRenderer());
-        grid.addColumn(COLUMN_CAPTIONS[6], DataObject::getBigRandom,
-                new NumberRenderer());
-        grid.addColumn(COLUMN_CAPTIONS[7], data -> data.getSmallRandom() / 5d,
-                new ProgressBarRenderer());
+        grid.addColumn(DataObject::getRowNumber, new NumberRenderer())
+                .setCaption(COLUMN_CAPTIONS[3]);
+        grid.addColumn(DataObject::getDate, new DateRenderer())
+                .setCaption(COLUMN_CAPTIONS[4]);
+        grid.addColumn(DataObject::getHtmlString, new HtmlRenderer())
+                .setCaption(COLUMN_CAPTIONS[5]);
+        grid.addColumn(DataObject::getBigRandom, new NumberRenderer())
+                .setCaption(COLUMN_CAPTIONS[6]);
+        grid.addColumn(data -> data.getSmallRandom() / 5d,
+                new ProgressBarRenderer()).setCaption(COLUMN_CAPTIONS[7]);
 
         grid.addSelectionListener(e -> log("Selected: " + e.getValue()));
 
@@ -205,10 +205,10 @@ public class GridBasics extends AbstractReindeerTestUIWithLog {
 
     @SuppressWarnings("unchecked")
     private void createColumnsMenu(MenuItem columnsMenu) {
-        for (int i = 0; i < grid.getColumns().size(); i++) {
-            final int index = i;
-            MenuItem columnMenu = columnsMenu.addItem("Column " + i, null);
+        for (Column<DataObject, ?> col : grid.getColumns()) {
+            MenuItem columnMenu = columnsMenu.addItem(col.getCaption(), null);
             columnMenu.addItem("Move left", selectedItem -> {
+                int index = grid.getColumns().indexOf(col);
                 if (index > 0) {
                     List<Column<DataObject, ?>> columnOrder = new ArrayList<>(
                             grid.getColumns());
@@ -218,6 +218,7 @@ public class GridBasics extends AbstractReindeerTestUIWithLog {
                 }
             });
             columnMenu.addItem("Move right", selectedItem -> {
+                int index = grid.getColumns().indexOf(col);
                 if (index < grid.getColumns().size() - 1) {
                     List<Column<DataObject, ?>> columnOrder = new ArrayList<>(
                             grid.getColumns());
@@ -228,17 +229,17 @@ public class GridBasics extends AbstractReindeerTestUIWithLog {
             });
             columnMenu
                     .addItem("Sortable",
-                            selectedItem -> grid.getColumns().get(index)
+                            selectedItem -> col
                                     .setSortable(selectedItem.isChecked()))
                     .setCheckable(true);
             columnMenu
                     .addItem("Hidable",
-                            selectedItem -> grid.getColumns().get(index)
+                            selectedItem -> col
                                     .setHidable(selectedItem.isChecked()))
                     .setCheckable(true);
             columnMenu
                     .addItem("Hidden",
-                            selectedItem -> grid.getColumns().get(index)
+                            selectedItem -> col
                                     .setHidden(selectedItem.isChecked()))
                     .setCheckable(true);
         }

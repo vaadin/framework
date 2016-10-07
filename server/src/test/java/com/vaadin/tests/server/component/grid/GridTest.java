@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.renderers.NumberRenderer;
 
 public class GridTest {
 
@@ -18,6 +19,8 @@ public class GridTest {
     public void setUp() {
         grid = new Grid<>();
         grid.addColumn("foo", Function.identity());
+        grid.addColumn(String::length, new NumberRenderer());
+        grid.addColumn("randomColumnId", Function.identity());
     }
 
     @Test
@@ -34,7 +37,7 @@ public class GridTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testFrozenColumnCountTooBig() {
-        grid.setFrozenColumnCount(2);
+        grid.setFrozenColumnCount(5);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -49,5 +52,26 @@ public class GridTest {
             assertEquals("Frozen column count not updated", i,
                     grid.getFrozenColumnCount());
         }
+    }
+
+    @Test
+    public void testGridColumnIdentifier() {
+        grid.getColumn("foo").setCaption("Bar");
+        assertEquals("Column header not updated correctly", "Bar",
+                grid.getHeaderRow(0).getCell("foo").getText());
+    }
+
+    @Test
+    public void testGridColumnGeneratedIdentifier() {
+        assertEquals("Unexpected caption on a generated Column",
+                "Generated Column0",
+                grid.getColumn("generatedColumn0").getCaption());
+    }
+
+    @Test
+    public void testGridColumnCaptionFromIdentifier() {
+        assertEquals("Unexpected caption on a generated Column",
+                "Random Column Id",
+                grid.getColumn("randomColumnId").getCaption());
     }
 }

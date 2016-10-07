@@ -36,7 +36,20 @@ import elemental.json.JsonValue;
 @Connect(com.vaadin.ui.Grid.Column.class)
 public class ColumnConnector extends AbstractExtensionConnector {
 
-    private Column<Object, JsonObject> column;
+    static abstract class CustomColumn extends Column<Object, JsonObject> {
+
+        private final String connectorId;
+
+        CustomColumn(String connectorId) {
+            this.connectorId = connectorId;
+        }
+
+        public String getConnectorId() {
+            return connectorId;
+        }
+    }
+
+    private CustomColumn column;
 
     /* This parent is needed because it's no longer available in onUnregister */
     private GridConnector parent;
@@ -44,16 +57,15 @@ public class ColumnConnector extends AbstractExtensionConnector {
     @Override
     protected void extend(ServerConnector target) {
         parent = getParent();
-        String columnId = getState().id;
-        column = new Column<Object, JsonObject>() {
+        column = new CustomColumn(getConnectorId()) {
 
             @Override
             public Object getValue(JsonObject row) {
                 final JsonObject rowData = row
                         .getObject(DataCommunicatorConstants.DATA);
 
-                if (rowData.hasKey(columnId)) {
-                    final JsonValue columnValue = rowData.get(columnId);
+                if (rowData.hasKey(getConnectorId())) {
+                    final JsonValue columnValue = rowData.get(getConnectorId());
 
                     return getRendererConnector().decode(columnValue);
                 }
@@ -62,7 +74,7 @@ public class ColumnConnector extends AbstractExtensionConnector {
             }
         };
         column.setRenderer(getRendererConnector().getRenderer());
-        getParent().addColumn(column, columnId);
+        getParent().addColumn(column, getState().id);
     }
 
     @SuppressWarnings("unchecked")

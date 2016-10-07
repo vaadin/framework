@@ -38,6 +38,7 @@ import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.connectors.AbstractListingConnector;
+import com.vaadin.client.connectors.grid.ColumnConnector.CustomColumn;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.widget.grid.CellReference;
@@ -107,8 +108,8 @@ public class GridConnector
     }
 
     /* Map to keep track of all added columns */
-    private Map<Column<?, JsonObject>, String> columnToIdMap = new HashMap<>();
-    private Map<String, Column<?, JsonObject>> idToColumn = new HashMap<>();
+    private Map<CustomColumn, String> columnToIdMap = new HashMap<>();
+    private Map<String, CustomColumn> idToColumn = new HashMap<>();
 
     /* Child component list for HasComponentsConnector */
     private List<ComponentConnector> childComponents;
@@ -134,7 +135,7 @@ public class GridConnector
      *            the id of the column to get
      * @return the column with the given id
      */
-    public Column<?, JsonObject> getColumn(String columnId) {
+    public CustomColumn getColumn(String columnId) {
         return idToColumn.get(columnId);
     }
 
@@ -164,8 +165,8 @@ public class GridConnector
             }
 
             Column<?, JsonObject> column = cellRef.getColumn();
-            if (columnToIdMap.containsKey(column)) {
-                String id = columnToIdMap.get(column);
+            if (column instanceof CustomColumn) {
+                String id = ((CustomColumn) column).getConnectorId();
                 JsonObject cellStyles = row
                         .getObject(GridState.JSONKEY_CELLSTYLES);
                 if (cellStyles.hasKey(id)) {
@@ -284,7 +285,7 @@ public class GridConnector
      * @param id
      *            communication id
      */
-    public void addColumn(Column<?, JsonObject> column, String id) {
+    public void addColumn(CustomColumn column, String id) {
         assert !columnToIdMap.containsKey(column) && !columnToIdMap
                 .containsValue(id) : "Column with given id already exists.";
         getWidget().addColumn(column);
@@ -299,7 +300,7 @@ public class GridConnector
      * @param column
      *            column to remove
      */
-    public void removeColumn(Column<?, JsonObject> column) {
+    public void removeColumn(CustomColumn column) {
         assert columnToIdMap
                 .containsKey(column) : "Given Column does not exist.";
         getWidget().removeColumn(column);
@@ -407,11 +408,11 @@ public class GridConnector
                     || row.hasKey(GridState.JSONKEY_CELLDESCRIPTION))) {
 
                 Column<?, JsonObject> column = cell.getColumn();
-                if (columnToIdMap.containsKey(column)) {
+                if (column instanceof CustomColumn) {
                     JsonObject cellDescriptions = row
                             .getObject(GridState.JSONKEY_CELLDESCRIPTION);
 
-                    String id = columnToIdMap.get(column);
+                    String id = ((CustomColumn) column).getConnectorId();
                     if (cellDescriptions != null
                             && cellDescriptions.hasKey(id)) {
                         return new TooltipInfo(cellDescriptions.getString(id));
