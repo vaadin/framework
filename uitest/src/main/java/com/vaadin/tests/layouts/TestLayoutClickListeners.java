@@ -3,7 +3,7 @@ package com.vaadin.tests.layouts;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -16,7 +16,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.TextArea;
 
-public class TestLayoutClickListeners extends AbstractTestUIWithLog {
+public class TestLayoutClickListeners extends AbstractReindeerTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {

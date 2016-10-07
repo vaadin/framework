@@ -14,7 +14,7 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.HeightMode;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
@@ -35,7 +35,7 @@ import com.vaadin.ui.renderers.NumberRenderer;
 import com.vaadin.ui.renderers.ProgressBarRenderer;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")
-public class GridBasics extends AbstractTestUIWithLog {
+public class GridBasics extends AbstractReindeerTestUIWithLog {
 
     public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4 = "Row numbers for 3/4";
     public static final String ROW_STYLE_GENERATOR_NONE = "None";
@@ -60,7 +60,7 @@ public class GridBasics extends AbstractTestUIWithLog {
             removeRegistration();
             if (selectedItem.isChecked()) {
                 registration = grid.addColumnReorderListener(event -> {
-                    List<String> columnCaptions = new ArrayList<String>();
+                    List<String> columnCaptions = new ArrayList<>();
                     for (Column<DataObject, ?> column : grid.getColumns()) {
                         columnCaptions.add(column.getCaption());
                     }
@@ -275,15 +275,12 @@ public class GridBasics extends AbstractTestUIWithLog {
                         : null))
                 .setCheckable(true);
         stateMenu
-                .addItem("Cell description generator",
-                        item -> grid.getColumns().stream().findFirst()
-                                .ifPresent(
-                                        c -> c.setDescriptionGenerator(
-                                                item.isChecked()
-                                                        ? t -> "Cell tooltip for row "
-                                                                + t.getRowNumber()
-                                                                + ", Column 0"
-                                                        : null)))
+                .addItem("Cell description generator", item -> grid.getColumns()
+                        .stream().findFirst()
+                        .ifPresent(c -> c.setDescriptionGenerator(
+                                item.isChecked() ? t -> "Cell tooltip for row "
+                                        + t.getRowNumber() + ", Column 0"
+                                        : null)))
                 .setCheckable(true);
         stateMenu.addItem("Item click listener", new Command() {
 

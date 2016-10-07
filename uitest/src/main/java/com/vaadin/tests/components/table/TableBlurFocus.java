@@ -22,7 +22,7 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -36,7 +36,7 @@ import com.vaadin.v7.ui.Table;
  *
  * @author Vaadin Ltd
  */
-public class TableBlurFocus extends AbstractTestUIWithLog {
+public class TableBlurFocus extends AbstractReindeerTestUIWithLog {
 
     enum Columns {
         COLUMN1, COLUMN2, COLUMN3, COLUMN4, COLUMN5
