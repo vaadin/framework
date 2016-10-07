@@ -47,7 +47,6 @@
         
         <jetty.version>9.3.7.v20160115</jetty.version>
         <phantomjs.version>2.1.1</phantomjs.version>
-        <skipApiDiff></skipApiDiff>
     </properties>
 
     <!-- TODO: remove this after maven plugin has been released -->
@@ -86,28 +85,6 @@
         <url>https://github.com/vaadin/vaadin</url>
     </scm>
 
-
-    <modules>
-        <module>buildhelpers</module>
-        <module>shared</module>
-        <module>push</module>
-        <module>server</module>
-        <module>client</module>
-        <module>client-compiler</module>
-        <module>client-compiled</module>
-        <module>themes</module>
-        <module>widgets</module>
-        <module>uitest-common</module>
-        <module>uitest</module>
-        <module>liferay</module>
-        <module>all</module>
-        <module>compatibility-server</module>
-        <module>compatibility-client</module>
-        <module>compatibility-client-compiled</module>
-        <module>compatibility-shared</module>
-        <!-- Nexus staging bug needs the last module to be deployed. -->
-        <module>bom</module>
-    </modules>
 
     <dependencyManagement>
         <dependencies>
@@ -549,6 +526,38 @@
 
     <profiles>
         <profile>
+            <!--  Profile is triggered unless apiDiff property is defined:
+                  always except "apicmp" profile which is disjoint with this profile
+            !-->
+            <id>default</id>
+            <activation>
+                <property>
+                    <name>!apiDiff</name>
+                </property>
+            </activation>
+            <modules>
+                <module>buildhelpers</module>
+                <module>shared</module>
+                <module>push</module>
+                <module>server</module>
+                <module>client</module>
+                <module>client-compiler</module>
+                <module>client-compiled</module>
+                <module>themes</module>
+                <module>widgets</module>
+                <module>uitest-common</module>
+                <module>uitest</module>
+                <module>liferay</module>
+                <module>all</module>
+                <module>compatibility-server</module>
+                <module>compatibility-client</module>
+                <module>compatibility-client-compiled</module>
+                <module>compatibility-shared</module>
+                <!-- Nexus staging bug needs the last module to be deployed. -->
+                <module>bom</module>
+            </modules>
+        </profile>
+        <profile>
             <id>slowtest</id>
             <modules>
                 <module>test</module>
@@ -607,10 +616,28 @@
             </build>
         </profile>
         <profile>
+            <!--  Profile is triggered if apiDiff property is defined:
+                  this profile is disjoint with default profile.
+                  It allows to prevent running build for all available modules 
+                  but restricts a number of modules to specified here only
+                  (which allows to avoid long time compilation for projects 
+                  that are not needed since japicmp works with compiled classes).
+            !-->
             <id>apicmp</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>apiDiff</name>
+                </property>
             </activation>
+            <modules>
+                <module>server</module>
+                <module>client</module>
+                <module>compatibility-server</module>
+                <module>compatibility-client</module>
+                <module>client-compiler</module>
+                <module>shared</module>
+                <module>compatibility-shared</module>
+            </modules>
             <build>
                 <plugins>
                     <plugin>
@@ -649,8 +676,9 @@
                         </executions>
                     </plugin>
                 </plugins>
-        </build>
+            </build>
         </profile>
     </profiles>
 
 </project>
+
