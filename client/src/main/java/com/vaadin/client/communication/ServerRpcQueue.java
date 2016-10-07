@@ -103,12 +103,6 @@ public class ServerRpcQueue {
      *
      * @param invocation
      *            RPC method invocation
-     * @param delayed
-     *            <code>false</code> to trigger sending within a short time
-     *            window (possibly combining subsequent calls to a single
-     *            request), <code>true</code> to let the framework delay sending
-     *            of RPC calls and variable changes until the next non-delayed
-     *            change
      * @param lastOnly
      *            <code>true</code> to remove all previously delayed invocations
      *            of the same method that were also enqueued with lastonly set

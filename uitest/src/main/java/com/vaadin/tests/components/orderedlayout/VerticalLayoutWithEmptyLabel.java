@@ -191,9 +191,6 @@ public class VerticalLayoutWithEmptyLabel extends AbstractReindeerTestUI {
             filterFoobarField.setMaxLength(16);
             // this.filterFoobarField.setStyleName("pexp-fixed-width");
 
-            // Configure incoming checkbox
-            incomingOnlyField.setImmediate(true);
-
             // Add filter inputs for phone # and foobar ID
             tableControlsLayout.addComponent(filterPhoneField);
             tableControlsLayout.addComponent(filterFoobarField);

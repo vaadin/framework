@@ -37,7 +37,6 @@ public class Wordwrap extends TestBase {
                 area2.setCaption("Nonwrapping");
             }
         });
-        onoff.setImmediate(true);
 
         addComponent(onoff);
     }

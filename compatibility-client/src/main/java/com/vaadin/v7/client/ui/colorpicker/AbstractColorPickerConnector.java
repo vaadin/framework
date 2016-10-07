@@ -18,7 +18,7 @@ package com.vaadin.v7.client.ui.colorpicker;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.v7.client.ui.AbstractLegacyComponentConnector;
 import com.vaadin.v7.shared.ui.colorpicker.ColorPickerState;
 
 /**
@@ -29,7 +29,7 @@ import com.vaadin.v7.shared.ui.colorpicker.ColorPickerState;
  */
 @Deprecated
 public abstract class AbstractColorPickerConnector
-        extends AbstractComponentConnector implements ClickHandler {
+        extends AbstractLegacyComponentConnector implements ClickHandler {
 
     private static final String DEFAULT_WIDTH_STYLE = "v-default-caption-width";
 

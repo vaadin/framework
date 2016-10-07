@@ -175,9 +175,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 getRpcProxy(UIServerRpc.class).resize(event.getHeight(),
                         event.getWidth(), Window.getClientWidth(),
                         Window.getClientHeight());
-                if (getState().immediate || getPageState().hasResizeListeners) {
-                    getConnection().getServerRpcQueue().flush();
-                }
+                getConnection().getServerRpcQueue().flush();
             }
         });
         getWidget().addScrollHandler(new ScrollHandler() {
@@ -211,7 +209,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         boolean firstPaint = getWidget().connection == null;
         getWidget().connection = client;
 
-        getWidget().immediate = getState().immediate;
         getWidget().resizeLazy = uidl.hasAttribute(UIConstants.RESIZE_LAZY);
         // this also implicitly removes old styles
         String styles = "";

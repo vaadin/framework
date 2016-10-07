@@ -37,7 +37,6 @@ import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.CompositeErrorMessage;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -83,7 +82,7 @@ import com.vaadin.v7.shared.AbstractFieldState;
  */
 @SuppressWarnings("serial")
 @Deprecated
-public abstract class AbstractField<T> extends AbstractComponent
+public abstract class AbstractField<T> extends AbstractLegacyComponent
         implements Field<T>, Property.ReadOnlyStatusChangeListener,
         Property.ReadOnlyStatusChangeNotifier, Action.ShortcutNotifier {
 
@@ -211,7 +210,7 @@ public abstract class AbstractField<T> extends AbstractComponent
     @Override
     public boolean isReadOnly() {
         return super.isReadOnly()
-                || (dataSource != null && dataSource.isReadOnly());
+                || dataSource != null && dataSource.isReadOnly();
     }
 
     /**
@@ -253,7 +252,7 @@ public abstract class AbstractField<T> extends AbstractComponent
     public void commit()
             throws Buffered.SourceException, InvalidValueException {
         if (dataSource != null && !dataSource.isReadOnly()) {
-            if ((isInvalidCommitted() || isValid())) {
+            if (isInvalidCommitted() || isValid()) {
                 try {
 
                     // Commits the value to datasource.
@@ -662,7 +661,7 @@ public abstract class AbstractField<T> extends AbstractComponent
 
         // Fires value change if the value has changed
         T value = getInternalValue();
-        if ((value != oldValue) && ((value != null && !value.equals(oldValue))
+        if (value != oldValue && (value != null && !value.equals(oldValue)
                 || value == null)) {
             fireValueChange(false);
         }
@@ -1521,7 +1520,7 @@ public abstract class AbstractField<T> extends AbstractComponent
 
     @Override
     public boolean isEmpty() {
-        return (getFieldValue() == null);
+        return getFieldValue() == null;
     }
 
     @Override

@@ -42,7 +42,6 @@ public class CssLayoutCustomCss extends TestBase implements ClickListener {
 
     private Component createMarginsToggle() {
         final CheckBox cb = new CheckBox("Margins");
-        cb.setImmediate(true);
         cb.addValueChangeListener(
                 event -> ((MarginHandler) layout).setMargin(cb.getValue()));
 

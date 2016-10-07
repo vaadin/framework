@@ -35,7 +35,6 @@ public class ValueAfterClearingContainer extends TestBase {
 
         addComponent(table);
         final CheckBox multiselect = new CheckBox("Multiselect");
-        multiselect.setImmediate(true);
         multiselect.setId("multiselect");
         multiselect.addValueChangeListener(event -> {
             Boolean value = multiselect.getValue();

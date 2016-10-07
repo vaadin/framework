@@ -110,7 +110,7 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
      */
     private void handleDropRequest(DropTarget dropTarget,
             Map<String, Object> variables) {
-        DropHandler dropHandler = (dropTarget).getDropHandler();
+        DropHandler dropHandler = dropTarget.getDropHandler();
         if (dropHandler == null) {
             // No dropHandler returned so no drop can be performed.
             getLogger().log(Level.FINE,
@@ -217,14 +217,20 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         return transferable;
     }
 
+    /**
+     * <p>
+     * Tests if the variable owner is enabled or not. The terminal should not
+     * send any variable changes to disabled variable owners.
+     * </p>
+     * Implementation detail: this method is originally from the VariableOwner
+     * class, which has been removed in Vaadin 8.
+     *
+     * @return <code>true</code> if the variable owner is enabled,
+     *         <code>false</code> if not
+     */
     @Override
     public boolean isEnabled() {
         return isConnectorEnabled();
-    }
-
-    @Override
-    public boolean isImmediate() {
-        return true;
     }
 
     public void printJSONResponse(Writer outWriter) throws IOException {

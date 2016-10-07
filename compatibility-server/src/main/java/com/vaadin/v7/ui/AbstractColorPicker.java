@@ -22,7 +22,6 @@ import java.util.Collection;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
@@ -43,7 +42,7 @@ import com.vaadin.v7.ui.components.colorpicker.ColorSelector;
  * @since 7.0.0
  */
 @Deprecated
-public abstract class AbstractColorPicker extends AbstractComponent
+public abstract class AbstractColorPicker extends AbstractLegacyComponent
         implements CloseListener, ColorSelector {
     private static final Method COLOR_CHANGE_METHOD;
     static {
@@ -478,7 +477,6 @@ public abstract class AbstractColorPicker extends AbstractComponent
                 window.setHistoryVisible(historyVisible);
                 window.setPreviewVisible(textfieldVisible);
 
-                window.setImmediate(true);
                 window.addCloseListener(this);
                 window.addColorChangeListener(new ColorChangeListener() {
                     @Override
@@ -576,7 +574,7 @@ public abstract class AbstractColorPicker extends AbstractComponent
         DesignAttributeHandler.writeAttribute("color", attribute,
                 color.getCSS(), Color.WHITE.getCSS(), String.class);
         DesignAttributeHandler.writeAttribute("popup-style", attribute,
-                (popupStyle == PopupStyle.POPUP_NORMAL ? "normal" : "simple"),
+                popupStyle == PopupStyle.POPUP_NORMAL ? "normal" : "simple",
                 "normal", String.class);
         DesignAttributeHandler.writeAttribute("position", attribute,
                 positionX + "," + positionY, "0,0", String.class);

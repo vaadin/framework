@@ -33,20 +33,17 @@ public class HeaderClick extends AbstractReindeerTestUI {
         });
 
         CheckBox immediateCheckbox = new CheckBox("Immediate");
-        immediateCheckbox.setImmediate(true);
         immediateCheckbox.setValue(table.isImmediate());
         immediateCheckbox.addValueChangeListener(
                 event -> table.setImmediate(event.getValue()));
 
         CheckBox sortEnabledCheckbox = new CheckBox("Sortable");
-        sortEnabledCheckbox.setImmediate(true);
         sortEnabledCheckbox.setValue(table.isSortEnabled());
         sortEnabledCheckbox.addValueChangeListener(
                 event -> table.setSortEnabled(event.getValue()));
 
         CheckBox columnReorderingCheckbox = new CheckBox(
                 "Column reordering allowed");
-        columnReorderingCheckbox.setImmediate(true);
         columnReorderingCheckbox.setValue(table.isColumnReorderingAllowed());
         columnReorderingCheckbox.addValueChangeListener(
                 event -> table.setColumnReorderingAllowed(event.getValue()));

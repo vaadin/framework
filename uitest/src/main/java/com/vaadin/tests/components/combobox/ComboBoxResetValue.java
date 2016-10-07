@@ -23,7 +23,6 @@ public class ComboBoxResetValue extends AbstractReindeerTestUI {
         final ComboBox cbNullSelectionNotAllowed = getComboBoxWithNullSelectionNotAllowed();
 
         Button b = new Button("Reset");
-        b.setImmediate(true);
         b.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {

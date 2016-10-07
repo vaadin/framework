@@ -397,7 +397,6 @@ public class CalendarTest extends GridLayout implements View {
 
     private void initHideWeekEndButton() {
         hideWeekendsButton = new CheckBox("Hide weekends");
-        hideWeekendsButton.setImmediate(true);
         hideWeekendsButton.addValueChangeListener(
                 event -> setWeekendsHidden(hideWeekendsButton.getValue()));
     }
@@ -417,14 +416,12 @@ public class CalendarTest extends GridLayout implements View {
 
     private void initReadOnlyButton() {
         readOnlyButton = new CheckBox("Read-only mode");
-        readOnlyButton.setImmediate(true);
         readOnlyButton.addValueChangeListener(event -> calendarComponent
                 .setReadOnly(readOnlyButton.getValue()));
     }
 
     private void initDisabledButton() {
         disabledButton = new CheckBox("Disabled");
-        disabledButton.setImmediate(true);
         disabledButton.addValueChangeListener(event -> calendarComponent
                 .setEnabled(!disabledButton.getValue()));
     }
@@ -503,7 +500,6 @@ public class CalendarTest extends GridLayout implements View {
 
     private CheckBox createCheckBox(String caption) {
         CheckBox cb = new CheckBox(caption);
-        cb.setImmediate(true);
         return cb;
     }
 

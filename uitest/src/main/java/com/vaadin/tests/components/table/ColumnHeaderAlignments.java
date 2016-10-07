@@ -42,7 +42,6 @@ public class ColumnHeaderAlignments extends TestBase {
             barTable.setFooterVisible(visible);
             bazTable.setFooterVisible(visible);
         });
-        footers.setImmediate(true);
         addComponent(footers);
         HorizontalLayout tables = new HorizontalLayout();
         fooTable = createTable(null);

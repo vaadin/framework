@@ -92,9 +92,6 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
 
     @Override
     protected void setup() {
-        brokenContainer.setImmediate(true);
-        brokenGenerator.setImmediate(true);
-        clearTableOnError.setImmediate(true);
         clearTableOnError.addValueChangeListener(event -> {
             Boolean value = clearTableOnError.getValue();
             setErrorHandler(value != null ? value : false);

@@ -113,7 +113,6 @@ public abstract class ComponentTestCase<T extends AbstractComponent>
                 event -> doCommand(command, event.getValue()));
 
         checkBox.setValue(initialState);
-        checkBox.setImmediate(true);
 
         checkBox.setId("checkboxaction-" + caption);
         // Set default value for all components
@@ -135,7 +134,6 @@ public abstract class ComponentTestCase<T extends AbstractComponent>
         });
 
         button.setId("buttonaction-" + caption);
-        button.setImmediate(true);
 
         return button;
     }

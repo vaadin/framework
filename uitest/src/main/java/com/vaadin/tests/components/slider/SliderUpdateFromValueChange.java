@@ -41,7 +41,6 @@ public class SliderUpdateFromValueChange extends AbstractReindeerTestUI {
             slider.markAsDirty();
 
         });
-        slider.setImmediate(true);
         slider.setWidth(200, Unit.PIXELS);
 
         addComponent(slider);

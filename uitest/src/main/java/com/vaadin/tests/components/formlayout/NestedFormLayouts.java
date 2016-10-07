@@ -60,14 +60,12 @@ public class NestedFormLayouts extends AbstractReindeerTestUI {
 
         final CheckBox spacingCheckBox = new CheckBox("Spacings", false);
         spacingCheckBox.setId("spacings");
-        spacingCheckBox.setImmediate(true);
         spacingCheckBox.addValueChangeListener(
                 event -> setLayoutSpacing(spacingCheckBox.getValue()));
         addComponent(spacingCheckBox);
 
         final CheckBox marginCheckBox = new CheckBox("Margins", false);
         marginCheckBox.setId("margins");
-        marginCheckBox.setImmediate(true);
         marginCheckBox.addValueChangeListener(
                 event -> setLayoutMargin(marginCheckBox.getValue()));
         addComponent(marginCheckBox);

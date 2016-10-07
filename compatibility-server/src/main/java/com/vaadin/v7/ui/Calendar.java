@@ -49,7 +49,6 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -119,7 +118,7 @@ import com.vaadin.v7.ui.components.calendar.handler.BasicWeekClickHandler;
  */
 @SuppressWarnings("serial")
 @Deprecated
-public class Calendar extends AbstractComponent
+public class Calendar extends AbstractLegacyComponent
         implements CalendarComponentEvents.NavigationNotifier,
         CalendarComponentEvents.EventMoveNotifier,
         CalendarComponentEvents.RangeSelectNotifier,
@@ -440,7 +439,7 @@ public class Calendar extends AbstractComponent
     }
 
     private void setupCalendarEvents() {
-        int durationInDays = (int) (((endDate.getTime()) - startDate.getTime())
+        int durationInDays = (int) ((endDate.getTime() - startDate.getTime())
                 / DateConstants.DAYINMILLIS);
         durationInDays++;
         if (durationInDays > 60) {
@@ -503,7 +502,7 @@ public class Calendar extends AbstractComponent
             endDate = getEndDate();
         }
 
-        int durationInDays = (int) (((endDate.getTime()) - startDate.getTime())
+        int durationInDays = (int) ((endDate.getTime() - startDate.getTime())
                 / DateConstants.DAYINMILLIS);
         durationInDays++;
         if (durationInDays > 60) {
@@ -524,7 +523,7 @@ public class Calendar extends AbstractComponent
         df_date.setTimeZone(currentCalendar.getTimeZone());
         df_time.setTimeZone(currentCalendar.getTimeZone());
 
-        state.now = (df_date.format(now) + " " + df_time.format(now));
+        state.now = df_date.format(now) + " " + df_time.format(now);
 
         Date firstDateToShow = expandStartDate(startDate, durationInDays > 7);
         Date lastDateToShow = expandEndDate(endDate, durationInDays > 7);
@@ -570,7 +569,7 @@ public class Calendar extends AbstractComponent
                     cal.add(java.util.Calendar.SECOND, -1);
                     Date end = cal.getTime();
 
-                    boolean monthView = (durationInDays > 7);
+                    boolean monthView = durationInDays > 7;
 
                     /**
                      * If in day or week view add actions for each half-an-hour.
@@ -903,9 +902,9 @@ public class Calendar extends AbstractComponent
      *            The date caption pattern.
      */
     public void setWeeklyCaptionFormat(String dateFormatPattern) {
-        if ((weeklyCaptionFormat == null && dateFormatPattern != null)
-                || (weeklyCaptionFormat != null
-                        && !weeklyCaptionFormat.equals(dateFormatPattern))) {
+        if (weeklyCaptionFormat == null && dateFormatPattern != null
+                || weeklyCaptionFormat != null
+                        && !weeklyCaptionFormat.equals(dateFormatPattern)) {
             weeklyCaptionFormat = dateFormatPattern;
             markAsDirty();
         }
@@ -932,7 +931,7 @@ public class Calendar extends AbstractComponent
 
         // monday first
         if (calendar.getFirstDayOfWeek() == java.util.Calendar.MONDAY) {
-            fow = (fow == java.util.Calendar.SUNDAY) ? 7 : fow - 1;
+            fow = fow == java.util.Calendar.SUNDAY ? 7 : fow - 1;
         }
 
         return fow;
@@ -1985,8 +1984,7 @@ public class Calendar extends AbstractComponent
 
         if (currentTimeFormat != null) {
             design.attr("time-format",
-                    (currentTimeFormat == TimeFormat.Format12H ? "12h"
-                            : "24h"));
+                    currentTimeFormat == TimeFormat.Format12H ? "12h" : "24h");
         }
         if (startDate != null) {
             design.attr("start-date", df_date.format(getStartDate()));

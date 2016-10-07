@@ -145,7 +145,6 @@ public class CustomDateFormats extends TestBase {
         df.setLocale(locale);
         df.setWidth("300px");
         df.setDateFormat(pattern);
-        df.setImmediate(true);
         String debugId = pattern.replace('/', 'X');
         // only certain characters are allowed in debug IDs
         debugId = debugId.replaceAll("[^-a-zA-Z .'_]", "X");

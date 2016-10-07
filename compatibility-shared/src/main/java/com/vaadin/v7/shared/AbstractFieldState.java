@@ -15,7 +15,7 @@
  */
 package com.vaadin.v7.shared;
 
-import com.vaadin.shared.ui.TabIndexState;
+import com.vaadin.shared.annotations.NoLayout;
 
 /**
  * Shared state for {@link com.vaadin.ui.AbstractField}.
@@ -24,9 +24,14 @@ import com.vaadin.shared.ui.TabIndexState;
  * @since 7.0.0
  *
  */
-public class AbstractFieldState extends TabIndexState {
+public class AbstractFieldState extends AbstractLegacyComponentState {
     public boolean propertyReadOnly = false;
     public boolean hideErrors = false;
     public boolean required = false;
     public boolean modified = false;
+    /**
+     * The <i>tabulator index</i> of the field.
+     */
+    @NoLayout
+    public int tabIndex = 0;
 }

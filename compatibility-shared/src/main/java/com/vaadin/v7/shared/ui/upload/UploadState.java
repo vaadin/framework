@@ -15,14 +15,14 @@
  */
 package com.vaadin.v7.shared.ui.upload;
 
-import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.v7.shared.AbstractLegacyComponentState;
 
 /**
  * Shared state for the Upload component.
  *
  * @since 7.6
  */
-public class UploadState extends AbstractComponentState {
+public class UploadState extends AbstractLegacyComponentState {
 
     {
         primaryStyleName = "v-upload";

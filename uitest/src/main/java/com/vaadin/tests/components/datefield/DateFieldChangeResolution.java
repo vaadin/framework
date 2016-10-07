@@ -37,7 +37,6 @@ public class DateFieldChangeResolution extends AbstractReindeerTestUI {
         final AbstractDateField dateField = new DateField("Enter date");
         dateField.setResolution(Resolution.YEAR);
         dateField.setId(DATEFIELD_ID);
-        dateField.setImmediate(true);
         addComponent(dateField);
 
         Label l = new Label("Select resolution");

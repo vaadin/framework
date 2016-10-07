@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,8 +17,8 @@ package com.vaadin.tests.components.formlayout;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.FormLayout;
 
 public class FormLayoutErrorHover extends AbstractReindeerTestUI {
 
@@ -26,7 +26,6 @@ public class FormLayoutErrorHover extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         FormLayout formLayout = new FormLayout();
         DateField fromDate = new DateField("Date");
-        fromDate.setImmediate(true);
         formLayout.addComponent(fromDate);
 
         addComponent(formLayout);

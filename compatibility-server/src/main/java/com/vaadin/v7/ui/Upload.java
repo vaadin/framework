@@ -31,7 +31,6 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.server.StreamVariable.StreamingProgressEvent;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.Registration;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.util.ReflectTools;
@@ -79,7 +78,7 @@ import com.vaadin.v7.shared.ui.upload.UploadState;
  */
 @SuppressWarnings("serial")
 @Deprecated
-public class Upload extends AbstractComponent
+public class Upload extends AbstractLegacyComponent
         implements Component.Focusable, LegacyComponent {
 
     /**

@@ -82,16 +82,13 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     /* COMMANDS */
 
-    protected Command<T, String> widthCommand = (t, value, data) -> t.setWidth(
-            value);
+    protected Command<T, String> widthCommand = (t, value, data) -> t
+            .setWidth(value);
     protected Command<T, String> heightCommand = (t, value, data) -> t
             .setHeight(value);
 
     protected Command<T, Boolean> enabledCommand = (c, enabled, data) -> c
             .setEnabled(enabled);
-
-    protected Command<T, Boolean> immediateCommand = (c, immediate, data) -> c
-            .setImmediate(immediate);
 
     protected Command<T, Boolean> errorIndicatorCommand = (c, enabled,
             data) -> {
@@ -131,8 +128,8 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
     protected Command<T, Boolean> visibleCommand = (c, enabled, data) -> c
             .setVisible(enabled);
 
-    protected Command<T, Resource> iconCommand = (c, value, data) -> c.setIcon(
-            value);
+    protected Command<T, Resource> iconCommand = (c, value, data) -> c
+            .setIcon(value);
     protected Command<T, String> captionCommand = (c, value, data) -> c
             .setCaption(value);
 

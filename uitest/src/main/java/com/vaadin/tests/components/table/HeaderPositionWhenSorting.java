@@ -22,7 +22,6 @@ public class HeaderPositionWhenSorting extends AbstractReindeerTestUI
     @Override
     protected void setup(VaadinRequest request) {
         CheckBox cb = new CheckBox("Item click listener");
-        cb.setImmediate(true);
         cb.addValueChangeListener(event -> {
             if (event.getValue()) {
                 table.addItemClickListener(HeaderPositionWhenSorting.this);
@@ -33,7 +32,6 @@ public class HeaderPositionWhenSorting extends AbstractReindeerTestUI
         addComponent(cb);
 
         CheckBox cbActionHandler = new CheckBox("Action handler");
-        cbActionHandler.setImmediate(true);
         cbActionHandler.addValueChangeListener(event -> {
             if (event.getValue()) {
                 table.addActionHandler(HeaderPositionWhenSorting.this);
@@ -45,7 +43,6 @@ public class HeaderPositionWhenSorting extends AbstractReindeerTestUI
 
         CheckBox cbActionHasActions = new CheckBox(
                 "Action handler has actions");
-        cbActionHasActions.setImmediate(true);
         cbActionHasActions.addValueChangeListener(event -> {
             actionHandlerHasActions = event.getValue();
 

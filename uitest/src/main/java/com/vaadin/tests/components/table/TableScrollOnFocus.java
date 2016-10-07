@@ -10,7 +10,6 @@ public class TableScrollOnFocus extends TestBase {
         final Table table = new Table();
         final CheckBox chkSelectable = new CheckBox("selectable");
 
-        chkSelectable.setImmediate(true);
         chkSelectable.addValueChangeListener(
                 event -> table.setSelectable(chkSelectable.getValue()));
 

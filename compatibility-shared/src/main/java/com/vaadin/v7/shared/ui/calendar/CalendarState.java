@@ -17,13 +17,13 @@ package com.vaadin.v7.shared.ui.calendar;
 
 import java.util.List;
 
-import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.v7.shared.AbstractLegacyComponentState;
 
 /**
  * @since 7.1.0
  * @author Vaadin Ltd.
  */
-public class CalendarState extends AbstractComponentState {
+public class CalendarState extends AbstractLegacyComponentState {
 
     public boolean format24H;
     public String[] dayNames;

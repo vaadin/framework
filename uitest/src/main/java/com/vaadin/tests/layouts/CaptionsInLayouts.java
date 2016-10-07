@@ -79,7 +79,6 @@ public class CaptionsInLayouts extends AbstractReindeerTestUI {
 
     private Component toggleRequired() {
         CheckBox requiredToggle = new CheckBox();
-        requiredToggle.setImmediate(true);
         requiredToggle.setCaption("Required");
         requiredToggle
                 .addValueChangeListener(event -> setRequired(event.getValue()));
@@ -88,7 +87,6 @@ public class CaptionsInLayouts extends AbstractReindeerTestUI {
 
     private Component toggleIcon() {
         CheckBox iconToggle = new CheckBox();
-        iconToggle.setImmediate(true);
         iconToggle.setCaption("Icons");
         iconToggle.addValueChangeListener(event -> setIcon(event.getValue()));
         return iconToggle;
@@ -114,7 +112,6 @@ public class CaptionsInLayouts extends AbstractReindeerTestUI {
 
     private Component toggleError() {
         CheckBox errorToggle = new CheckBox();
-        errorToggle.setImmediate(true);
         errorToggle.setCaption("Error");
         errorToggle.addValueChangeListener(event -> setError(event.getValue()));
         return errorToggle;

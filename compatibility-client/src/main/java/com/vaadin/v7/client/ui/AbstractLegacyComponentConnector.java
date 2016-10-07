@@ -18,6 +18,7 @@ package com.vaadin.v7.client.ui;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.v7.shared.AbstractLegacyComponentState;
 
 /**
  * Legacy connector for Vaadin 7 compatibility connectors. Needed because
@@ -26,7 +27,9 @@ import com.vaadin.shared.communication.ServerRpc;
  *
  * @author Vaadin Ltd
  * @since 8.0
+ * @deprecated only used for Vaadin 7 compatiblity components
  */
+@Deprecated
 public class AbstractLegacyComponentConnector
         extends AbstractComponentConnector {
 
@@ -35,5 +38,10 @@ public class AbstractLegacyComponentConnector
     @Override
     protected <T extends ServerRpc> T getRpcProxy(Class<T> rpcInterface) {
         return super.getRpcProxy(rpcInterface);
+    }
+
+    @Override
+    public AbstractLegacyComponentState getState() {
+        return (AbstractLegacyComponentState) super.getState();
     }
 }

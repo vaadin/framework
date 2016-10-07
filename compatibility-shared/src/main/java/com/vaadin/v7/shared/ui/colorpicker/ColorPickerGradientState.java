@@ -15,7 +15,7 @@
  */
 package com.vaadin.v7.shared.ui.colorpicker;
 
-import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.v7.shared.AbstractLegacyComponentState;
 
 /**
  * Default shared state implementation for ColorPickerGradient.
@@ -23,7 +23,7 @@ import com.vaadin.shared.AbstractComponentState;
  * @since 7.0.0
  */
 @Deprecated
-public class ColorPickerGradientState extends AbstractComponentState {
+public class ColorPickerGradientState extends AbstractLegacyComponentState {
 
     public int cursorX;
 

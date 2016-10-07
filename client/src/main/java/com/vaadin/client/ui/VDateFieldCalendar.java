@@ -86,9 +86,7 @@ public class VDateFieldCalendar extends VDateField {
                             false);
                 }
             }
-            if (isImmediate()) {
-                getClient().sendPendingVariableChanges();
-            }
+            getClient().sendPendingVariableChanges();
         }
     }
 

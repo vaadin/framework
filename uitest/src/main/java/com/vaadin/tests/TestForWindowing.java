@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -95,7 +95,6 @@ public class TestForWindowing extends CustomComponent {
                         s.setMax(13);
                         s.setMin(12);
                         s.setResolution(2);
-                        s.setImmediate(true);
                         // s.setOrientation(Slider.ORIENTATION_VERTICAL);
                         // s.setArrows(false);
 

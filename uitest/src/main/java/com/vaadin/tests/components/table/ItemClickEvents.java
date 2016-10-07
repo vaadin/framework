@@ -137,7 +137,6 @@ public class ItemClickEvents extends AbstractReindeerTestUI {
         CheckBox b = new CheckBox("immediate");
         b.setValue(c.isImmediate());
         b.addValueChangeListener(event -> c.setImmediate(event.getValue()));
-        b.setImmediate(true);
         layout.addComponent(b);
         b = new CheckBox("selectable");
         if (c instanceof Table) {
@@ -149,18 +148,15 @@ public class ItemClickEvents extends AbstractReindeerTestUI {
             b.addValueChangeListener(
                     event -> ((Tree) c).setSelectable(event.getValue()));
         }
-        b.setImmediate(true);
         layout.addComponent(b);
         b = new CheckBox("nullsel");
         b.setValue(c.isNullSelectionAllowed());
         b.addValueChangeListener(
                 event -> c.setNullSelectionAllowed(event.getValue()));
-        b.setImmediate(true);
         layout.addComponent(b);
         b = new CheckBox("multi");
         b.setValue(c.isMultiSelect());
         b.addValueChangeListener(event -> c.setMultiSelect(event.getValue()));
-        b.setImmediate(true);
         layout.addComponent(b);
         return layout;
     }

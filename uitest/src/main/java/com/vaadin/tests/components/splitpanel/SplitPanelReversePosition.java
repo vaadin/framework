@@ -23,7 +23,6 @@ public class SplitPanelReversePosition extends TestBase {
 
         final HorizontalSplitPanel hsplit = new HorizontalSplitPanel();
         hsplit.setSizeFull();
-        hsplit.setImmediate(true);
         hsplit.setSplitPosition(100, Sizeable.UNITS_PIXELS, hsplitReversed);
         hsplit.addSplitterClickListener(
                 new HorizontalSplitPanel.SplitterClickListener() {
@@ -40,7 +39,6 @@ public class SplitPanelReversePosition extends TestBase {
 
         final VerticalSplitPanel vsplit = new VerticalSplitPanel();
         vsplit.setSizeFull();
-        vsplit.setImmediate(true);
         vsplit.setSplitPosition(10, Sizeable.UNITS_PERCENTAGE, vsplitReversed);
         vsplit.addSplitterClickListener(new SplitterClickListener() {
             @Override

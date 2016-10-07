@@ -38,7 +38,6 @@ public class ButtonsTest extends com.vaadin.server.LegacyApplication {
             }
         });
         themeToggle.setStyleName("small");
-        themeToggle.setImmediate(true);
 
         styleToggle = new CheckBox("Black style");
         styleToggle.addValueChangeListener(event -> {
@@ -48,7 +47,6 @@ public class ButtonsTest extends com.vaadin.server.LegacyApplication {
                 main.getContent().setStyleName("");
             }
         });
-        styleToggle.setImmediate(true);
         styleToggle.setStyleName("small");
 
         iconToggle = new CheckBox("64x icons");
@@ -56,7 +54,6 @@ public class ButtonsTest extends com.vaadin.server.LegacyApplication {
             largeIcons = !largeIcons;
             recreateAll();
         });
-        iconToggle.setImmediate(true);
         iconToggle.setStyleName("small");
 
         nativeToggle = new CheckBox("Native buttons");
@@ -64,7 +61,6 @@ public class ButtonsTest extends com.vaadin.server.LegacyApplication {
             nativeButtons = !nativeButtons;
             recreateAll();
         });
-        nativeToggle.setImmediate(true);
         nativeToggle.setStyleName("small");
 
         toggles.setSpacing(true);

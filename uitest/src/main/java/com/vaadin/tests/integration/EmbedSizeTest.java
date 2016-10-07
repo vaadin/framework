@@ -16,7 +16,6 @@ public class EmbedSizeTest extends TestBase {
         LegacyWindow mainWindow = getMainWindow();
         mainWindow.setSizeUndefined();
         mainWindow.getContent().setSizeUndefined();
-        mainWindow.setImmediate(true);
 
         CheckBox lazyCheckBox = new CheckBox("Lazy resize");
         lazyCheckBox.addValueChangeListener(event -> {
@@ -25,7 +24,6 @@ public class EmbedSizeTest extends TestBase {
             log.log("Resize lazy: " + resizeLazy);
         });
         lazyCheckBox.setValue(Boolean.FALSE);
-        lazyCheckBox.setImmediate(true);
         addComponent(lazyCheckBox);
 
         addComponent(log);

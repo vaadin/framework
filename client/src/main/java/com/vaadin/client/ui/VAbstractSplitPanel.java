@@ -96,9 +96,6 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     /** For internal use only. May be removed or replaced in the future. */
     public ApplicationConnection client;
 
-    /** For internal use only. May be removed or replaced in the future. */
-    public boolean immediate;
-
     /**
      * The current position of the split handle in either percentages or pixels
      * <p>
@@ -406,8 +403,8 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         int pixelPosition = DOM.getElementPropertyInt(splitter, "offsetTop");
 
         // reposition splitter in case it is out of box
-        if ((pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize)
-                || (positionReversed && pixelPosition < 0)) {
+        if (pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize
+                || positionReversed && pixelPosition < 0) {
             pixelPosition = wholeSize - getSplitterSize();
             if (pixelPosition < 0) {
                 pixelPosition = 0;
@@ -418,8 +415,8 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         }
 
         firstContainer.getStyle().setHeight(pixelPosition, Unit.PX);
-        int secondContainerHeight = (wholeSize - pixelPosition
-                - getSplitterSize());
+        int secondContainerHeight = wholeSize - pixelPosition
+                - getSplitterSize();
         if (secondContainerHeight < 0) {
             secondContainerHeight = 0;
         }
@@ -456,8 +453,8 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         int pixelPosition = DOM.getElementPropertyInt(splitter, "offsetLeft");
 
         // reposition splitter in case it is out of box
-        if ((pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize)
-                || (positionReversed && pixelPosition < 0)) {
+        if (pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize
+                || positionReversed && pixelPosition < 0) {
             pixelPosition = wholeSize - getSplitterSize();
             if (pixelPosition < 0) {
                 pixelPosition = 0;
@@ -468,8 +465,8 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         }
 
         firstContainer.getStyle().setWidth(pixelPosition, Unit.PX);
-        int secondContainerWidth = (wholeSize - pixelPosition
-                - getSplitterSize());
+        int secondContainerWidth = wholeSize - pixelPosition
+                - getSplitterSize();
         if (secondContainerWidth < 0) {
             secondContainerWidth = 0;
         }
@@ -667,7 +664,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         } else {
             // Reversed position
             if (positionReversed) {
-                position = (getOffsetWidth() - newX - getSplitterSize()) + "px";
+                position = getOffsetWidth() - newX - getSplitterSize() + "px";
             } else {
                 position = newX + "px";
             }
@@ -700,8 +697,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         } else {
             // Reversed position
             if (positionReversed) {
-                position = (getOffsetHeight() - newY - getSplitterSize())
-                        + "px";
+                position = getOffsetHeight() - newY - getSplitterSize() + "px";
             } else {
                 position = newY + "px";
             }
@@ -789,7 +785,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
      * @return true if the browser requires a dragging curtain
      */
     private boolean isDraggingCurtainRequired() {
-        return (BrowserInfo.get().isGecko() || BrowserInfo.get().isWebkit());
+        return BrowserInfo.get().isGecko() || BrowserInfo.get().isWebkit();
     }
 
     /**

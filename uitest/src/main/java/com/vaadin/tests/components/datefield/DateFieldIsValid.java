@@ -27,7 +27,6 @@ public class DateFieldIsValid extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         final AbstractDateField dateField = new TestDateField("Insert Date: ");
-        dateField.setImmediate(true);
         dateField.setDateFormat(pattern);
 
         dateField.addValueChangeListener(event -> log("valueChange: value: "

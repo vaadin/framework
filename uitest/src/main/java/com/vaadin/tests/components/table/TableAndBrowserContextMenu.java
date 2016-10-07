@@ -20,7 +20,6 @@ public class TableAndBrowserContextMenu extends TestBase
     @Override
     public void setup() {
         CheckBox cb = new CheckBox("Item click listener");
-        cb.setImmediate(true);
         cb.addValueChangeListener(event -> {
             if (event.getValue()) {
                 table.addListener(TableAndBrowserContextMenu.this);
@@ -31,7 +30,6 @@ public class TableAndBrowserContextMenu extends TestBase
         addComponent(cb);
 
         CheckBox cbActionHandler = new CheckBox("Action handler");
-        cbActionHandler.setImmediate(true);
         cbActionHandler.addValueChangeListener(event -> {
             if (event.getValue()) {
                 table.addActionHandler(TableAndBrowserContextMenu.this);
@@ -43,7 +41,6 @@ public class TableAndBrowserContextMenu extends TestBase
 
         CheckBox cbActionHasActions = new CheckBox(
                 "Action handler has actions");
-        cbActionHasActions.setImmediate(true);
         cbActionHasActions.addValueChangeListener(event -> {
             actionHandlerHasActions = event.getValue();
 

@@ -70,7 +70,6 @@ public class GridDetailsLocation extends UI {
         layout.addComponent(checkbox);
 
         numberTextField = new TextField("Row");
-        numberTextField.setImmediate(true);
         layout.addComponent(numberTextField);
 
         layout.addComponent(

@@ -1,14 +1,12 @@
-package com.vaadin.tests.server.component.abstractcomponent;
+package com.vaadin.v7.ui;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.ui.AbstractComponent;
-
-public class AbstractComponentTest {
-    AbstractComponent component = new AbstractComponent() {
+public class AbstractLegacyComponentTest {
+    AbstractLegacyComponent component = new AbstractLegacyComponent() {
     };
 
     @Test

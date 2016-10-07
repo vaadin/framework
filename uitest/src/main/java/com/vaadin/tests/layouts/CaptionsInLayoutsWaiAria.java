@@ -87,7 +87,6 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
 
     private Component toggleRequired() {
         CheckBox requiredToggle = new CheckBox();
-        requiredToggle.setImmediate(true);
         requiredToggle.setCaption("Required");
         requiredToggle
                 .addValueChangeListener(event -> setRequired(event.getValue()));
@@ -96,7 +95,6 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
 
     private Component toggleIcon() {
         CheckBox iconToggle = new CheckBox();
-        iconToggle.setImmediate(true);
         iconToggle.setCaption("Icons");
         iconToggle.addValueChangeListener(event -> setIcon(event.getValue()));
         return iconToggle;
@@ -104,7 +102,6 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
 
     private Component toggleReadOnly() {
         CheckBox readOnlyToggle = new CheckBox();
-        readOnlyToggle.setImmediate(true);
         readOnlyToggle.setCaption("Read only");
         readOnlyToggle
                 .addValueChangeListener(event -> setReadOnly(event.getValue()));
@@ -114,7 +111,6 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
 
     private Component toggleEnabled() {
         CheckBox enabledToggle = new CheckBox();
-        enabledToggle.setImmediate(true);
         enabledToggle.setValue(true);
         enabledToggle.setCaption("Enabled");
         enabledToggle
@@ -125,7 +121,6 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
 
     private Component toggleInvalid() {
         CheckBox invalid = new CheckBox("Invalid");
-        invalid.setImmediate(true);
         invalid.addValueChangeListener(event -> setInvalid(event.getValue()));
 
         return invalid;
@@ -177,7 +172,6 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
 
     private Component toggleError() {
         CheckBox errorToggle = new CheckBox();
-        errorToggle.setImmediate(true);
         errorToggle.setCaption("Error");
         errorToggle.addValueChangeListener(event -> setError(event.getValue()));
         return errorToggle;

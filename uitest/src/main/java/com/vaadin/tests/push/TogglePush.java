@@ -42,7 +42,6 @@ public class TogglePush extends AbstractReindeerTestUI {
         CheckBox pushSetting = new CheckBox("Push enabled");
         pushSetting.setValue(Boolean
                 .valueOf(getPushConfiguration().getPushMode().isEnabled()));
-        pushSetting.setImmediate(true);
         pushSetting.addValueChangeListener(event -> {
             if (event.getValue()) {
                 getPushConfiguration().setPushMode(PushMode.AUTOMATIC);

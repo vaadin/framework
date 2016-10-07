@@ -25,7 +25,6 @@ public class TextFieldInputPromptAndClickShortcut extends TestBase {
         button.setClickShortcut(KeyCode.ESCAPE);
 
         final CheckBox inputPromptSelection = new CheckBox("Input prompt");
-        inputPromptSelection.setImmediate(true);
         inputPromptSelection.addValueChangeListener(event -> {
             if (event.getValue()) {
                 textField.setInputPrompt("Input prompt");
@@ -34,7 +33,6 @@ public class TextFieldInputPromptAndClickShortcut extends TestBase {
             }
             log.log("Set input prompt: " + textField.getInputPrompt());
         });
-        inputPromptSelection.setImmediate(true);
 
         addComponent(textField);
         addComponent(button);

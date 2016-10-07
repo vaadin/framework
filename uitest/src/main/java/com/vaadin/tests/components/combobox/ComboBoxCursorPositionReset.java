@@ -30,7 +30,6 @@ public class ComboBoxCursorPositionReset extends AbstractReindeerTestUI {
         setContent(root);
 
         ComboBox<String> combo = new ComboBox<>();
-        combo.setImmediate(true);
         root.addComponent(combo);
         combo.setItems("Hello World", "Please click on the text");
 

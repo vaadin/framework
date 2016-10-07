@@ -27,7 +27,6 @@ public class ValidationOfRequiredEmptyFields extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         requiredInput = new CheckBox("Field required");
-        requiredInput.setImmediate(true);
         requiredInput.addValueChangeListener(
                 event -> tf.setRequired(requiredInput.getValue()));
 
@@ -41,7 +40,6 @@ public class ValidationOfRequiredEmptyFields extends AbstractReindeerTestUI {
         });
 
         integerValidatorInput = new CheckBox("Integer validator");
-        integerValidatorInput.setImmediate(true);
         integerValidatorInput.addValueChangeListener(event -> {
             if (integerValidatorInput.getValue()) {
                 tf.addValidator(integerValidator);
@@ -50,7 +48,6 @@ public class ValidationOfRequiredEmptyFields extends AbstractReindeerTestUI {
             }
         });
         stringLengthValidatorInput = new CheckBox("String length validator");
-        stringLengthValidatorInput.setImmediate(true);
         stringLengthValidatorInput.addValueChangeListener(event -> {
             if (stringLengthValidatorInput.getValue()) {
                 tf.addValidator(stringLengthValidator);

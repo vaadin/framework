@@ -21,10 +21,10 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.colorpicker.VColorPickerGradient;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.v7.client.ui.AbstractLegacyComponentConnector;
 import com.vaadin.v7.shared.ui.colorpicker.ColorPickerGradientServerRpc;
 import com.vaadin.v7.shared.ui.colorpicker.ColorPickerGradientState;
 
@@ -37,8 +37,8 @@ import com.vaadin.v7.shared.ui.colorpicker.ColorPickerGradientState;
  * @since 7.0.0
  */
 @Connect(value = com.vaadin.v7.ui.components.colorpicker.ColorPickerGradient.class, loadStyle = LoadStyle.LAZY)
-public class ColorPickerGradientConnector extends AbstractComponentConnector
-        implements MouseUpHandler {
+public class ColorPickerGradientConnector
+        extends AbstractLegacyComponentConnector implements MouseUpHandler {
 
     private ColorPickerGradientServerRpc rpc = RpcProxy
             .create(ColorPickerGradientServerRpc.class, this);

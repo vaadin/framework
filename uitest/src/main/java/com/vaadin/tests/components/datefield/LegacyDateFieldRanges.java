@@ -113,7 +113,6 @@ public class LegacyDateFieldRanges extends AbstractReindeerTestUI {
         });
 
         immediateCB.setValue(true);
-        immediateCB.setImmediate(true);
         immediateCB.addValueChangeListener(event -> {
             inlineDynamicDateField.setImmediate(immediateCB.getValue());
             dynamicDateField.setImmediate(immediateCB.getValue());

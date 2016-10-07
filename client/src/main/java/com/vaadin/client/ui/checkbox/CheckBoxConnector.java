@@ -109,7 +109,6 @@ public class CheckBoxConnector extends AbstractFieldConnector
         VCaption.setCaptionText(getWidget(), getState());
 
         getWidget().setValue(getState().checked);
-        getWidget().immediate = getState().immediate;
     }
 
     @Override
@@ -140,9 +139,7 @@ public class CheckBoxConnector extends AbstractFieldConnector
                             getWidget().getElement());
             getRpcProxy(CheckBoxServerRpc.class).setChecked(getState().checked,
                     details);
-            if (getState().immediate) {
-                getConnection().sendPendingVariableChanges();
-            }
+            getConnection().sendPendingVariableChanges();
         }
     }
 

@@ -23,7 +23,6 @@ import java.util.Locale;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
@@ -57,7 +56,7 @@ import com.vaadin.v7.shared.ui.label.LabelState;
  */
 @SuppressWarnings("serial")
 @Deprecated
-public class Label extends AbstractComponent implements Property<String>,
+public class Label extends AbstractLegacyComponent implements Property<String>,
         Property.Viewer, Property.ValueChangeListener,
         Property.ValueChangeNotifier, Comparable<Label> {
 

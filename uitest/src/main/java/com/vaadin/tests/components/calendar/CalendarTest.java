@@ -207,7 +207,7 @@ public class CalendarTest extends UI {
             setLocale(defaultLocale);
         }
 
-        if (parameters.containsKey(("secondsResolution"))) {
+        if (parameters.containsKey("secondsResolution")) {
             useSecondResolution = true;
         }
 
@@ -437,7 +437,6 @@ public class CalendarTest extends UI {
 
     private void initHideWeekEndButton() {
         hideWeekendsButton = new CheckBox("Hide weekends");
-        hideWeekendsButton.setImmediate(true);
         hideWeekendsButton.addValueChangeListener(
                 event -> setWeekendsHidden(hideWeekendsButton.getValue()));
     }
@@ -457,14 +456,12 @@ public class CalendarTest extends UI {
 
     private void initReadOnlyButton() {
         readOnlyButton = new CheckBox("Read-only mode");
-        readOnlyButton.setImmediate(true);
         readOnlyButton.addValueChangeListener(event -> calendarComponent
                 .setReadOnly(readOnlyButton.getValue()));
     }
 
     private void initDisabledButton() {
         disabledButton = new CheckBox("Disabled");
-        disabledButton.setImmediate(true);
         disabledButton.addValueChangeListener(event -> calendarComponent
                 .setEnabled(!disabledButton.getValue()));
     }
@@ -534,7 +531,6 @@ public class CalendarTest extends UI {
 
     private CheckBox createCheckBox(String caption) {
         CheckBox cb = new CheckBox(caption);
-        cb.setImmediate(true);
         return cb;
     }
 

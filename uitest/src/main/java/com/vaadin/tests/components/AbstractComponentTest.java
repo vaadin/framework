@@ -228,8 +228,6 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
      * when overriding.
      */
     protected void createActions() {
-        createBooleanAction("Immediate", CATEGORY_STATE, true,
-                immediateCommand);
         createBooleanAction("Enabled", CATEGORY_STATE, true, enabledCommand);
         createBooleanAction("Readonly", CATEGORY_STATE, false, readonlyCommand);
         createBooleanAction("Visible", CATEGORY_STATE, true, visibleCommand);
@@ -543,7 +541,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
     }
 
     protected boolean isSelected(MenuItem item) {
-        return (item.getIcon() != null);
+        return item.getIcon() != null;
     }
 
     private <VALUETYPE> MenuBar.Command singleSelectMenuCommand(
@@ -686,8 +684,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
                     Registration registration;
 
                     @Override
-                    public void execute(T c, Boolean enabled,
-                            Object data) {
+                    public void execute(T c, Boolean enabled, Object data) {
                         if (enabled) {
                             registration = addListener.apply(c);
                         } else if (registration != null) {

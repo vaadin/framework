@@ -139,7 +139,6 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
         setContent(layout);
         setStyleName(STYLENAME);
         setResizable(false);
-        setImmediate(true);
         // Create the history
         history = new ColorPickerHistory();
         history.addValueChangeListener(this::colorChanged);
@@ -147,7 +146,7 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
 
     /**
      * Instantiates a new color picker popup.
-     * 
+     *
      * @param initialColor
      *            the initially selected color
      */
@@ -307,7 +306,6 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
 
     private Slider createRGBSlider(String caption, String styleName) {
         Slider redSlider = new Slider(caption, 0, 255);
-        redSlider.setImmediate(true);
         redSlider.setStyleName("rgb-slider");
         redSlider.setWidth("220px");
         redSlider.addStyleName(styleName);
@@ -345,16 +343,14 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
         hueSlider.setStyleName("hsv-slider");
         hueSlider.addStyleName("hue-slider");
         hueSlider.setWidth("220px");
-        hueSlider.setImmediate(true);
         hueSlider.addValueChangeListener(event -> {
             if (!updatingColors) {
-                float hue = (Float.parseFloat(event.getValue().toString()))
+                float hue = Float.parseFloat(event.getValue().toString())
                         / 360f;
-                float saturation = (Float
-                        .parseFloat(saturationSlider.getValue().toString()))
-                        / 100f;
-                float value = (Float
-                        .parseFloat(valueSlider.getValue().toString())) / 100f;
+                float saturation = Float.parseFloat(
+                        saturationSlider.getValue().toString()) / 100f;
+                float value = Float
+                        .parseFloat(valueSlider.getValue().toString()) / 100f;
 
                 // Set the color
                 Color newColor = new Color(
@@ -374,15 +370,14 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
 
         saturationSlider.setStyleName("hsv-slider");
         saturationSlider.setWidth("220px");
-        saturationSlider.setImmediate(true);
         saturationSlider.addValueChangeListener(event -> {
             if (!updatingColors) {
-                float hue = (Float.parseFloat(hueSlider.getValue().toString()))
+                float hue = Float.parseFloat(hueSlider.getValue().toString())
                         / 360f;
-                float saturation = (Float
-                        .parseFloat(event.getValue().toString())) / 100f;
-                float value = (Float
-                        .parseFloat(valueSlider.getValue().toString())) / 100f;
+                float saturation = Float.parseFloat(event.getValue().toString())
+                        / 100f;
+                float value = Float
+                        .parseFloat(valueSlider.getValue().toString()) / 100f;
                 Color newColor = new Color(
                         Color.HSVtoRGB(hue, saturation, value));
                 setValue(newColor);
@@ -392,15 +387,13 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
 
         valueSlider.setStyleName("hsv-slider");
         valueSlider.setWidth("220px");
-        valueSlider.setImmediate(true);
         valueSlider.addValueChangeListener(event -> {
             if (!updatingColors) {
-                float hue = (Float.parseFloat(hueSlider.getValue().toString()))
+                float hue = Float.parseFloat(hueSlider.getValue().toString())
                         / 360f;
-                float saturation = (Float
-                        .parseFloat(saturationSlider.getValue().toString()))
-                        / 100f;
-                float value = (Float.parseFloat(event.getValue().toString()))
+                float saturation = Float.parseFloat(
+                        saturationSlider.getValue().toString()) / 100f;
+                float value = Float.parseFloat(event.getValue().toString())
                         / 100f;
 
                 Color newColor = new Color(
@@ -647,7 +640,7 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
 
         @Override
         public Color calculate(int x, int y) {
-            float h = (x / 220f);
+            float h = x / 220f;
             float s = 1f;
             float v = 1f;
 
@@ -699,8 +692,8 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
 
         @Override
         public Color calculate(int x, int y) {
-            float saturation = 1f - (y / 220.0f);
-            float value = (x / 220.0f);
+            float saturation = 1f - y / 220.0f;
+            float value = x / 220.0f;
             float hue = Float.parseFloat(hueSlider.getValue().toString())
                     / 360f;
 

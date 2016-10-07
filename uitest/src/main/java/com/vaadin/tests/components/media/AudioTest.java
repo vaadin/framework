@@ -51,25 +51,21 @@ public class AudioTest extends TestBase {
         checkBox.setValue(audio.isShowControls());
         checkBox.addValueChangeListener(
                 event -> audio.setShowControls(event.getValue()));
-        checkBox.setImmediate(true);
         addComponent(checkBox);
         checkBox = new CheckBox("HtmlContentAllowed");
         checkBox.setValue(audio.isHtmlContentAllowed());
         checkBox.addValueChangeListener(
                 event -> audio.setHtmlContentAllowed(event.getValue()));
-        checkBox.setImmediate(true);
         addComponent(checkBox);
         checkBox = new CheckBox("muted");
         checkBox.setValue(audio.isMuted());
         checkBox.addValueChangeListener(
                 event -> audio.setMuted(event.getValue()));
-        checkBox.setImmediate(true);
         addComponent(checkBox);
         checkBox = new CheckBox("autoplay");
         checkBox.setValue(audio.isAutoplay());
         checkBox.addValueChangeListener(
                 event -> audio.setAutoplay(event.getValue()));
-        checkBox.setImmediate(true);
         addComponent(checkBox);
 
         Button b = new Button("Change", new Button.ClickListener() {

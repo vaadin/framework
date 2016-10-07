@@ -91,7 +91,6 @@ public class TableUndefinedSize extends TestBase {
                 log.log("Column 1 hidden");
             }
         });
-        cb.setImmediate(true);
         visibilities.addComponent(cb);
 
         cb = new CheckBox("Column 2");
@@ -106,7 +105,6 @@ public class TableUndefinedSize extends TestBase {
                 log.log("Column 2 hidden");
             }
         });
-        cb.setImmediate(true);
         visibilities.addComponent(cb);
 
         cb = new CheckBox("Column 3");
@@ -122,7 +120,6 @@ public class TableUndefinedSize extends TestBase {
                 log.log("Column 3 hidden");
             }
         });
-        cb.setImmediate(true);
         visibilities.addComponent(cb);
 
         addComponent(log);

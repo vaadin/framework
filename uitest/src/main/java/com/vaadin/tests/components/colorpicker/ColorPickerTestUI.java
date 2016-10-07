@@ -227,7 +227,6 @@ public class ColorPickerTestUI extends AbstractReindeerTestUI {
             rgbVisible = event.getValue();
             setPopupVisibilities();
         });
-        rgbBox.setImmediate(true);
         rgbBox.setId("rgbBox");
         optLayout.addComponent(rgbBox);
 
@@ -236,7 +235,6 @@ public class ColorPickerTestUI extends AbstractReindeerTestUI {
             hsvVisible = event.getValue();
             setPopupVisibilities();
         });
-        hsvBox.setImmediate(true);
         hsvBox.setId("hsvBox");
         optLayout.addComponent(hsvBox);
 
@@ -245,7 +243,6 @@ public class ColorPickerTestUI extends AbstractReindeerTestUI {
             swaVisible = event.getValue();
             setPopupVisibilities();
         });
-        swaBox.setImmediate(true);
         swaBox.setId("swaBox");
         optLayout.addComponent(swaBox);
 
@@ -254,7 +251,6 @@ public class ColorPickerTestUI extends AbstractReindeerTestUI {
             historyVisible = event.getValue();
             setPopupVisibilities();
         });
-        hisBox.setImmediate(true);
         hisBox.setId("hisBox");
         optLayout.addComponent(hisBox);
 
@@ -263,7 +259,6 @@ public class ColorPickerTestUI extends AbstractReindeerTestUI {
             txtfieldVisible = event.getValue();
             setPopupVisibilities();
         });
-        txtBox.setImmediate(true);
         txtBox.setId("txtBox");
         optLayout.addComponent(txtBox);
 

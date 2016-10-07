@@ -33,13 +33,11 @@ public class TreeDragStart extends TestBase {
         final Tree tree = new Tree("Inventory");
 
         CheckBox checkBox = new CheckBox("Enabled");
-        checkBox.setImmediate(true);
         checkBox.setValue(true);
         checkBox.addValueChangeListener(
                 event -> tree.setEnabled(!tree.isEnabled()));
         addComponent(checkBox);
         checkBox = new CheckBox("Drag start");
-        checkBox.setImmediate(true);
         checkBox.setValue(true);
         checkBox.addValueChangeListener(event -> {
             if (event.getValue()) {
@@ -99,8 +97,7 @@ public class TreeDragStart extends TestBase {
                 if (sourceItemId instanceof BeanItem<?>) {
                     beanItem = (BeanItem<?>) sourceItemId;
                 } else if (sourceItemId instanceof InventoryObject) {
-                    beanItem = new BeanItem<>(
-                            (InventoryObject) sourceItemId);
+                    beanItem = new BeanItem<>((InventoryObject) sourceItemId);
                 }
 
                 // Remove the item from the source container and

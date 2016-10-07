@@ -44,14 +44,12 @@ public class FooterClick extends AbstractTestUIWithLog {
         });
 
         CheckBox immediateCheckbox = new CheckBox("Immediate");
-        immediateCheckbox.setImmediate(true);
         immediateCheckbox.setValue(table.isImmediate());
         immediateCheckbox.addValueChangeListener(
                 event -> table.setImmediate(event.getValue()));
 
         CheckBox columnReorderingCheckbox = new CheckBox(
                 "Column reordering allowed");
-        columnReorderingCheckbox.setImmediate(true);
         columnReorderingCheckbox.setValue(table.isColumnReorderingAllowed());
         columnReorderingCheckbox.addValueChangeListener(
                 event -> table.setColumnReorderingAllowed(event.getValue()));

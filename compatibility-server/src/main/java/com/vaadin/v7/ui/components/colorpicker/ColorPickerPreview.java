@@ -59,7 +59,6 @@ public class ColorPickerPreview extends CssLayout implements ColorSelector,
 
     private ColorPickerPreview() {
         setStyleName("v-colorpicker-preview");
-        setImmediate(true);
         field = new TextField();
         field.setImmediate(true);
         field.setSizeFull();

@@ -46,23 +46,18 @@ public class Tabsheets extends VerticalLayout implements View {
         addComponent(wrap);
 
         final CheckBox closable = new CheckBox("Closable");
-        closable.setImmediate(true);
         wrap.addComponent(closable);
 
         final CheckBox overflow = new CheckBox("Overflow");
-        overflow.setImmediate(true);
         wrap.addComponent(overflow);
 
         final CheckBox caption = new CheckBox("Captions", true);
-        caption.setImmediate(true);
         wrap.addComponent(caption);
 
         final CheckBox icon = new CheckBox("Icons");
-        icon.setImmediate(true);
         wrap.addComponent(icon);
 
         final CheckBox disable = new CheckBox("Disable tabs");
-        disable.setImmediate(true);
         wrap.addComponent(disable);
 
         Label h3 = new Label("Additional Styles");
@@ -76,35 +71,27 @@ public class Tabsheets extends VerticalLayout implements View {
         addComponent(wrap);
 
         final CheckBox framed = new CheckBox("Framed", true);
-        framed.setImmediate(true);
         wrap.addComponent(framed);
 
         final CheckBox centered = new CheckBox("Centered tabs");
-        centered.setImmediate(true);
         wrap.addComponent(centered);
 
         final CheckBox rightAlign = new CheckBox("Right-aligned tabs");
-        rightAlign.setImmediate(true);
         wrap.addComponent(rightAlign);
 
         final CheckBox equal = new CheckBox("Equal-width tabs");
-        equal.setImmediate(true);
         wrap.addComponent(equal);
 
         final CheckBox padded = new CheckBox("Padded tabbar");
-        padded.setImmediate(true);
         wrap.addComponent(padded);
 
         final CheckBox compact = new CheckBox("Compact");
-        compact.setImmediate(true);
         wrap.addComponent(compact);
 
         final CheckBox iconsOnTop = new CheckBox("Icons on top");
-        iconsOnTop.setImmediate(true);
         wrap.addComponent(iconsOnTop);
 
         final CheckBox selectedOnly = new CheckBox("Selected tab closable");
-        selectedOnly.setImmediate(true);
         wrap.addComponent(selectedOnly);
 
         HasValue.ValueChangeListener<Boolean> update = event -> {

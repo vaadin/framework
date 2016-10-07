@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2016 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -55,7 +55,7 @@ import com.vaadin.v7.shared.form.FormState;
 
 /**
  * Form component provides easy way of creating and managing sets fields.
- * 
+ *
  * <p>
  * <code>Form</code> is a container for fields implementing {@link Field}
  * interface. It provides support for any layouts and provides buffering
@@ -64,7 +64,7 @@ import com.vaadin.v7.shared.form.FormState;
  * setting immediateness, etc. Also direct mechanism for replacing existing
  * fields with selections is given.
  * </p>
- * 
+ *
  * <p>
  * <code>Form</code> provides customizable editor for classes implementing
  * {@link com.vaadin.data.Item} interface. Also the form itself implements this
@@ -78,7 +78,7 @@ import com.vaadin.v7.shared.form.FormState;
  * properties of any class following bean pattern, can be accessed trough
  * {@link com.vaadin.data.util.BeanItem}.
  * </p>
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  * @deprecated As of 7.0, use {@link FieldGroup} instead of {@link Form} for
@@ -134,7 +134,7 @@ public class Form extends AbstractField<Object>
     /**
      * Form needs to repaint itself if child fields value changes due possible
      * change in form validity.
-     * 
+     *
      * TODO introduce ValidityChangeEvent (#6239) and start using it instead.
      * See e.g. DateField#notifyFormOfValidityChange().
      */
@@ -164,7 +164,7 @@ public class Form extends AbstractField<Object>
 
     /**
      * Constructs a new form with default layout.
-     * 
+     *
      * <p>
      * By default the form uses {@link FormLayout}.
      * </p>
@@ -176,7 +176,7 @@ public class Form extends AbstractField<Object>
 
     /**
      * Constructs a new form with given {@link Layout}.
-     * 
+     *
      * @param formLayout
      *            the layout of the form.
      */
@@ -187,7 +187,7 @@ public class Form extends AbstractField<Object>
     /**
      * Constructs a new form with given {@link Layout} and
      * {@link FormFieldFactory}.
-     * 
+     *
      * @param formLayout
      *            the layout of the form.
      * @param fieldFactory
@@ -231,7 +231,7 @@ public class Form extends AbstractField<Object>
     /**
      * The error message of a Form is the error of the first field with a
      * non-empty error.
-     * 
+     *
      * Empty error messages of the contained fields are skipped, because an
      * empty error indicator would be confusing to the user, especially if there
      * are errors that have something to display. This is also the reason why
@@ -284,15 +284,15 @@ public class Form extends AbstractField<Object>
 
     /**
      * Controls the making validation visible implicitly on commit.
-     * 
+     *
      * Having commit() call setValidationVisible(true) implicitly is the default
      * behaviour. You can disable the implicit setting by setting this property
      * as false.
-     * 
+     *
      * It is useful, because you usually want to start with the form free of
      * errors and only display them after the user clicks Ok. You can disable
      * the implicit setting by setting this property as false.
-     * 
+     *
      * @param makeVisible
      *            If true (default), validation is made visible when commit() is
      *            called. If false, the visibility is left as it is.
@@ -303,9 +303,9 @@ public class Form extends AbstractField<Object>
 
     /**
      * Is validation made automatically visible on commit?
-     * 
+     *
      * See setValidationVisibleOnCommit().
-     * 
+     *
      * @return true if validation is made automatically visible on commit.
      */
     public boolean isValidationVisibleOnCommit() {
@@ -339,7 +339,7 @@ public class Form extends AbstractField<Object>
         // Try to commit all
         for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
             try {
-                final Field<?> f = (fields.get(i.next()));
+                final Field<?> f = fields.get(i.next());
                 // Commit only non-readonly fields.
                 if (!f.isReadOnly()) {
                     f.commit();
@@ -387,7 +387,7 @@ public class Form extends AbstractField<Object>
         // Try to discard all changes
         for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
             try {
-                (fields.get(i.next())).discard();
+                fields.get(i.next()).discard();
             } catch (final Buffered.SourceException e) {
                 if (problems == null) {
                     problems = new LinkedList<>();
@@ -445,14 +445,14 @@ public class Form extends AbstractField<Object>
             this.buffered = buffered;
             for (final Iterator<Object> i = propertyIds.iterator(); i
                     .hasNext();) {
-                (fields.get(i.next())).setBuffered(buffered);
+                fields.get(i.next()).setBuffered(buffered);
             }
         }
     }
 
     /**
      * Adds a new property to form and create corresponding field.
-     * 
+     *
      * @see com.vaadin.data.Item#addItemProperty(Object, Property)
      */
     @Override
@@ -488,16 +488,16 @@ public class Form extends AbstractField<Object>
 
     /**
      * Registers the field with the form and adds the field to the form layout.
-     * 
+     *
      * <p>
      * The property id must not be already used in the form.
      * </p>
-     * 
+     *
      * <p>
      * This field is added to the layout using the
      * {@link #attachField(Object, Field)} method.
      * </p>
-     * 
+     *
      * @param propertyId
      *            the Property id the the field.
      * @param field
@@ -512,12 +512,12 @@ public class Form extends AbstractField<Object>
     /**
      * Register the field with the form. All registered fields are validated
      * when the form is validated and also committed when the form is committed.
-     * 
+     *
      * <p>
      * The property id must not be already used in the form.
      * </p>
-     * 
-     * 
+     *
+     *
      * @param propertyId
      *            the Property id of the field.
      * @param field
@@ -539,8 +539,8 @@ public class Form extends AbstractField<Object>
         // form.
         // Should this also include invalidCommitted (#3993)?
         field.setBuffered(buffered);
-        if (isImmediate() && field instanceof AbstractComponent) {
-            ((AbstractComponent) field).setImmediate(true);
+        if (isImmediate() && field instanceof AbstractLegacyComponent) {
+            ((AbstractLegacyComponent) field).setImmediate(true);
         }
     }
 
@@ -553,11 +553,11 @@ public class Form extends AbstractField<Object>
      * CustomLayout location given by the string representation of the property
      * id using {@link CustomLayout#addComponent(Component, String)}.
      * </p>
-     * 
+     *
      * <p>
      * Override this method to control how the fields are added to the layout.
      * </p>
-     * 
+     *
      * @param propertyId
      * @param field
      */
@@ -577,13 +577,13 @@ public class Form extends AbstractField<Object>
 
     /**
      * The property identified by the property id.
-     * 
+     *
      * <p>
      * The property data source of the field specified with property id is
      * returned. If there is a (with specified property id) having no data
      * source, the field is returned instead of the data source.
      * </p>
-     * 
+     *
      * @see com.vaadin.data.Item#getItemProperty(Object)
      */
     @Override
@@ -604,7 +604,7 @@ public class Form extends AbstractField<Object>
 
     /**
      * Gets the field identified by the propertyid.
-     * 
+     *
      * @param propertyId
      *            the id of the property.
      */
@@ -620,7 +620,7 @@ public class Form extends AbstractField<Object>
 
     /**
      * Removes the property and corresponding field from the form.
-     * 
+     *
      * @see com.vaadin.data.Item#removeItemProperty(Object)
      */
     @Override
@@ -647,7 +647,7 @@ public class Form extends AbstractField<Object>
      * Override this method to control how the fields are removed from the
      * layout.
      * </p>
-     * 
+     *
      * @param field
      *            the field to be detached from the forms layout.
      */
@@ -660,7 +660,7 @@ public class Form extends AbstractField<Object>
 
     /**
      * Removes all properties and fields from the form.
-     * 
+     *
      * @return the Success of the operation. Removal of all fields succeeded if
      *         (and only if) the return value is <code>true</code>.
      */
@@ -685,12 +685,12 @@ public class Form extends AbstractField<Object>
 
     /**
      * Sets the item datasource for the form.
-     * 
+     *
      * <p>
      * Setting item datasource clears any fields, the form might contain and
      * adds all the properties as fields to the form.
      * </p>
-     * 
+     *
      * @see com.vaadin.data.Item.Viewer#setItemDataSource(Item)
      */
     @Override
@@ -702,13 +702,13 @@ public class Form extends AbstractField<Object>
     /**
      * Set the item datasource for the form, but limit the form contents to
      * specified properties of the item.
-     * 
+     *
      * <p>
      * Setting item datasource clears any fields, the form might contain and
      * adds the specified the properties as fields to the form, in the specified
      * order.
      * </p>
-     * 
+     *
      * @see com.vaadin.data.Item.Viewer#setItemDataSource(Item)
      */
     public void setItemDataSource(Item newDataSource,
@@ -759,7 +759,7 @@ public class Form extends AbstractField<Object>
      * property straight to Field. If Property.Viewer type property (e.g.
      * PropertyFormatter) is already set for field, the property is bound to
      * that Property.Viewer.
-     * 
+     *
      * @param propertyId
      * @param property
      * @param field
@@ -771,7 +771,7 @@ public class Form extends AbstractField<Object>
         // expect developer has e.g. PropertyFormatter that he wishes to use and
         // assign the property to the Viewer instead.
         boolean hasFilterProperty = field.getPropertyDataSource() != null
-                && (field.getPropertyDataSource() instanceof Property.Viewer);
+                && field.getPropertyDataSource() instanceof Property.Viewer;
         if (hasFilterProperty) {
             ((Property.Viewer) field.getPropertyDataSource())
                     .setPropertyDataSource(property);
@@ -782,12 +782,12 @@ public class Form extends AbstractField<Object>
 
     /**
      * Gets the layout of the form.
-     * 
+     *
      * <p>
      * By default form uses <code>OrderedLayout</code> with <code>form</code>
      * -style.
      * </p>
-     * 
+     *
      * @return the Layout of the form.
      */
     public Layout getLayout() {
@@ -796,11 +796,11 @@ public class Form extends AbstractField<Object>
 
     /**
      * Sets the layout of the form.
-     * 
+     *
      * <p>
      * If set to null then Form uses a FormLayout by default.
      * </p>
-     * 
+     *
      * @param layout
      *            the layout of the form.
      */
@@ -839,16 +839,16 @@ public class Form extends AbstractField<Object>
 
     /**
      * Sets the form field to be selectable from static list of changes.
-     * 
+     *
      * <p>
      * The list values and descriptions are given as array. The value-array must
      * contain the current value of the field and the lengths of the arrays must
      * match. Null values are not supported.
      * </p>
-     * 
+     *
      * Note: since Vaadin 7.0, returns an {@link AbstractSelect} instead of a
      * {@link Select}.
-     * 
+     *
      * @param propertyId
      *            the id of the property.
      * @param values
@@ -883,7 +883,7 @@ public class Form extends AbstractField<Object>
         boolean isMultiselect = false;
         for (int i = 0; i < values.length && !found; i++) {
             if (values[i] == value
-                    || (value != null && value.equals(values[i]))) {
+                    || value != null && value.equals(values[i])) {
                 found = true;
             }
         }
@@ -895,7 +895,7 @@ public class Form extends AbstractField<Object>
                     found = false;
                     for (int i = 0; i < values.length && !found; i++) {
                         if (values[i] == val
-                                || (val != null && val.equals(values[i]))) {
+                                || val != null && val.equals(values[i])) {
                             found = true;
                         }
                     }
@@ -958,20 +958,20 @@ public class Form extends AbstractField<Object>
 
     /**
      * Checks the validity of the Form and all of its fields.
-     * 
+     *
      * @see com.vaadin.legacy.data.Validatable#validate()
      */
     @Override
     public void validate() throws Validator.InvalidValueException {
         super.validate();
         for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
-            (fields.get(i.next())).validate();
+            fields.get(i.next()).validate();
         }
     }
 
     /**
      * Checks the validabtable object accept invalid values.
-     * 
+     *
      * @see com.vaadin.legacy.data.Validatable#isInvalidAllowed()
      */
     @Override
@@ -981,7 +981,7 @@ public class Form extends AbstractField<Object>
 
     /**
      * Should the validabtable object accept invalid values.
-     * 
+     *
      * @see com.vaadin.legacy.data.Validatable#setInvalidAllowed(boolean)
      */
     @Override
@@ -992,24 +992,24 @@ public class Form extends AbstractField<Object>
 
     /**
      * Sets the component's to read-only mode to the specified state.
-     * 
+     *
      * @see com.vaadin.ui.Component#setReadOnly(boolean)
      */
     @Override
     public void setReadOnly(boolean readOnly) {
         super.setReadOnly(readOnly);
         for (final Iterator<?> i = propertyIds.iterator(); i.hasNext();) {
-            (fields.get(i.next())).setReadOnly(readOnly);
+            fields.get(i.next()).setReadOnly(readOnly);
         }
     }
 
     /**
      * Sets the field factory used by this Form to genarate Fields for
      * properties.
-     * 
+     *
      * {@link FormFieldFactory} is used to create fields for form properties.
      * {@link DefaultFieldFactory} is used by default.
-     * 
+     *
      * @param fieldFactory
      *            the new factory used to create the fields.
      * @see Field
@@ -1021,7 +1021,7 @@ public class Form extends AbstractField<Object>
 
     /**
      * Get the field factory of the form.
-     * 
+     *
      * @return the FormFieldFactory Factory used to create the fields.
      */
     public FormFieldFactory getFormFieldFactory() {
@@ -1030,7 +1030,7 @@ public class Form extends AbstractField<Object>
 
     /**
      * Gets the field type.
-     * 
+     *
      * @see com.vaadin.legacy.ui.AbstractField#getType()
      */
     @Override
@@ -1043,9 +1043,9 @@ public class Form extends AbstractField<Object>
 
     /**
      * Sets the internal value.
-     * 
+     *
      * This is relevant when the Form is used as Field.
-     * 
+     *
      * @see com.vaadin.legacy.ui.AbstractField#setInternalValue(java.lang.Object)
      */
     @Override
@@ -1067,7 +1067,7 @@ public class Form extends AbstractField<Object>
      * Gets the first focusable field in form. If there are enabled,
      * non-read-only fields, the first one of them is returned. Otherwise, the
      * field for the first property (or null if none) is returned.
-     * 
+     *
      * @return the Field.
      */
     private Field<?> getFirstFocusableField() {
@@ -1093,9 +1093,9 @@ public class Form extends AbstractField<Object>
 
     /**
      * Updates the internal form datasource.
-     * 
+     *
      * Method setFormDataSource.
-     * 
+     *
      * @param data
      * @param properties
      */
@@ -1121,7 +1121,7 @@ public class Form extends AbstractField<Object>
 
     /**
      * Returns the visibleProperties.
-     * 
+     *
      * @return the Collection of visible Item properites.
      */
     public Collection<?> getVisibleItemProperties() {
@@ -1130,7 +1130,7 @@ public class Form extends AbstractField<Object>
 
     /**
      * Sets the visibleProperties.
-     * 
+     *
      * @param visibleProperties
      *            the visibleProperties to set.
      */
@@ -1145,7 +1145,7 @@ public class Form extends AbstractField<Object>
 
     /**
      * Sets the visibleProperties.
-     * 
+     *
      * @param visibleProperties
      *            the visibleProperties to set.
      */
@@ -1159,7 +1159,7 @@ public class Form extends AbstractField<Object>
 
     /**
      * Focuses the first field in the form.
-     * 
+     *
      * @see com.vaadin.ui.Component.Focusable#focus()
      */
     @Override
@@ -1172,7 +1172,7 @@ public class Form extends AbstractField<Object>
 
     /**
      * Sets the Tabulator index of this Focusable component.
-     * 
+     *
      * @see com.vaadin.ui.Component.Focusable#setTabIndex(int)
      */
     @Override
@@ -1180,7 +1180,7 @@ public class Form extends AbstractField<Object>
         super.setTabIndex(tabIndex);
         for (final Iterator<?> i = getItemPropertyIds().iterator(); i
                 .hasNext();) {
-            (getField(i.next())).setTabIndex(tabIndex);
+            getField(i.next()).setTabIndex(tabIndex);
         }
     }
 
@@ -1193,8 +1193,8 @@ public class Form extends AbstractField<Object>
         super.setImmediate(immediate);
         for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
             Field<?> f = i.next();
-            if (f instanceof AbstractComponent) {
-                ((AbstractComponent) f).setImmediate(immediate);
+            if (f instanceof AbstractLegacyComponent) {
+                ((AbstractLegacyComponent) f).setImmediate(immediate);
             }
         }
     }
@@ -1203,7 +1203,7 @@ public class Form extends AbstractField<Object>
      * {@inheritDoc}
      * <p>
      * A Form is empty if all of its fields are empty.
-     * 
+     *
      */
     @Override
     public boolean isEmpty() {
@@ -1222,7 +1222,7 @@ public class Form extends AbstractField<Object>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractField#clear()
      */
     @Override
@@ -1237,7 +1237,7 @@ public class Form extends AbstractField<Object>
 
     /**
      * Adding validators directly to form is not supported.
-     * 
+     *
      * Add the validators to form fields instead.
      */
     @Override
@@ -1248,7 +1248,7 @@ public class Form extends AbstractField<Object>
     /**
      * Returns a layout that is rendered below normal form contents. This area
      * can be used for example to include buttons related to form contents.
-     * 
+     *
      * @return layout rendered below normal form contents or null if no footer
      *         is used
      */
@@ -1259,7 +1259,7 @@ public class Form extends AbstractField<Object>
     /**
      * Sets the layout that is rendered below normal form contents. No footer is
      * rendered if this is set to null, .
-     * 
+     *
      * @param footer
      *            the new footer layout
      */
@@ -1295,7 +1295,7 @@ public class Form extends AbstractField<Object>
      * {@link AbstractField}. The ownActionManager handles Actions attached to
      * this Form specifically, while the ActionManager in AbstractField
      * delegates to the containing Window (i.e global Actions).
-     * 
+     *
      * @return
      */
     protected ActionManager getOwnActionManager() {

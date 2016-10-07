@@ -50,7 +50,6 @@ public class JavaScriptResizeListener extends AbstractReindeerTestUI {
                 }));
         addComponent(new CheckBox("Listener active") {
             {
-                setImmediate(true);
                 addValueChangeListener(event -> resizeJsComponent
                         .setListenerEnabled(event.getValue()));
             }

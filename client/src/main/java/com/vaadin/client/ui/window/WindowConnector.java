@@ -218,7 +218,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         }
 
         ComponentConnector content = getContent();
-        boolean hasContent = (content != null);
+        boolean hasContent = content != null;
         Element contentElement = window.contentPanel.getElement();
 
         Style contentStyle = window.contents.getStyle();
@@ -387,8 +387,6 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
                 getState().assistiveTabStopBottomText);
 
         clickEventHandler.handleEventHandlerRegistration();
-
-        window.immediate = state.immediate;
 
         window.setClosable(!isReadOnly());
         // initialize position from state

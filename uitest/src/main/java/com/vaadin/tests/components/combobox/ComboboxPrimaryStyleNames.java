@@ -11,7 +11,6 @@ public class ComboboxPrimaryStyleNames extends TestBase {
     protected void setup() {
         final ComboBox<String> box = new ComboBox(null,
                 DataSource.create("Value 1", "Value 2", "Value 3", "Value 4"));
-        box.setImmediate(true);
         box.setPrimaryStyleName("my-combobox");
 
         addComponent(box);

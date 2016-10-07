@@ -92,7 +92,6 @@ public class BeanItemContainerFilteringTest extends TestBase {
                             filterString.getValue().toString(), false, false);
                 }
             });
-            cb.setImmediate(true);
             vl.addComponent(cb);
 
             nextLabel = new Label();
@@ -112,7 +111,6 @@ public class BeanItemContainerFilteringTest extends TestBase {
                             nextLabel.setCaption("Next id: " + nextToAdd);
                         }
                     });
-            addItemButton.setImmediate(true);
             vl.addComponent(addItemButton);
 
             final Button addItemAfterButton = new Button("addItemAfter()",
@@ -136,7 +134,6 @@ public class BeanItemContainerFilteringTest extends TestBase {
                             nextLabel.setCaption("Next id: " + nextToAdd);
                         }
                     });
-            addItemAfterButton.setImmediate(true);
             vl.addComponent(addItemAfterButton);
 
             position = new TextField("Position:", "0");
@@ -162,7 +159,6 @@ public class BeanItemContainerFilteringTest extends TestBase {
                             nextLabel.setCaption("Next id: " + nextToAdd);
                         }
                     });
-            addItemAtButton.setImmediate(true);
             vl.addComponent(addItemAtButton);
 
             getLayout().addComponent(table);

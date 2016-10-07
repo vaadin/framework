@@ -36,7 +36,6 @@ public class ReadOnlyOptionGroup extends AbstractReindeerTestUI {
         optionGroup.setNewItemsAllowed(true);
 
         final CheckBox readOnlyCheckbox = new CheckBox("read-only");
-        readOnlyCheckbox.setImmediate(true);
         readOnlyCheckbox.addValueChangeListener(
                 event -> optionGroup.setReadOnly(readOnlyCheckbox.getValue()));
         readOnlyCheckbox.setValue(Boolean.TRUE);

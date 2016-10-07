@@ -149,8 +149,8 @@ public class CSSInjectWithColorpicker extends UI {
             Styles styles = Page.getCurrent().getStyles();
 
             // inject the new color as a style
-            styles.add(".v-app .v-textarea.text-label { color:"
-                    + color.getCSS() + "; }");
+            styles.add(".v-app .v-textarea.text-label { color:" + color.getCSS()
+                    + "; }");
         });
 
         return textColor;
@@ -160,14 +160,13 @@ public class CSSInjectWithColorpicker extends UI {
      * Creates a font family selection dialog
      */
     private Component createFontSelect() {
-        final ComboBox<String> select = new ComboBox<>(null, Arrays.asList(
-                "Arial", "Helvetica", "Verdana", "Courier", "Times",
-                "sans-serif"));
+        final ComboBox<String> select = new ComboBox<>(null,
+                Arrays.asList("Arial", "Helvetica", "Verdana", "Courier",
+                        "Times", "sans-serif"));
         select.setValue("Arial");
         select.setWidth("200px");
         select.setPlaceholder("Font");
         select.setDescription("Font");
-        select.setImmediate(true);
         select.setEmptySelectionAllowed(false);
         select.addValueChangeListener(event -> {
             // Get the new font family
@@ -196,7 +195,6 @@ public class CSSInjectWithColorpicker extends UI {
         select.setValue(12);
         select.setPlaceholder("Font size");
         select.setDescription("Font size");
-        select.setImmediate(true);
         select.setEmptySelectionAllowed(false);
         select.addValueChangeListener(event -> {
             // Get the new font size

@@ -38,7 +38,6 @@ public class DragAndDropDisable extends AbstractReindeerTestUI {
 
             final CheckBox enabled = new CheckBox("Enabled", true);
             addComponent(enabled);
-            enabled.setImmediate(true);
             enabled.addValueChangeListener(
                     event -> dnd.setEnabled(event.getValue()));
 
@@ -72,7 +71,6 @@ public class DragAndDropDisable extends AbstractReindeerTestUI {
 
             final CheckBox enabled = new CheckBox("Enabled", true);
             addComponent(enabled);
-            enabled.setImmediate(true);
             enabled.addValueChangeListener(
                     event -> dnd.setEnabled(event.getValue()));
 
@@ -116,7 +114,6 @@ public class DragAndDropDisable extends AbstractReindeerTestUI {
             });
             final CheckBox enabled = new CheckBox("Enabled", true);
             addComponent(enabled);
-            enabled.setImmediate(true);
             enabled.addValueChangeListener(
                     event -> tbl.setEnabled(event.getValue()));
         }

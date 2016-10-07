@@ -27,7 +27,6 @@ public class HeaderUpdateWhenNoRows extends AbstractReindeerTestUI {
             }
         });
 
-        showHeaders.setImmediate(true);
         showHeaders.setValue(true);
 
         addComponent(showHeaders);

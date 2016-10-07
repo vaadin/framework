@@ -46,14 +46,12 @@ public class Footer extends AbstractReindeerTestUI {
         options.setSpacing(true);
 
         final CheckBox visible = new CheckBox("Footers Visible", true);
-        visible.setImmediate(true);
         visible.addValueChangeListener(
                 event -> table.setFooterVisible(visible.getValue()));
 
         options.addComponent(visible);
 
         final TextField footer1Value = new TextField(null, "Footer1");
-        footer1Value.setImmediate(true);
         Button footer1Btn = new Button("Change", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
@@ -67,7 +65,6 @@ public class Footer extends AbstractReindeerTestUI {
         options.addComponent(footer1);
 
         final TextField footer2Value = new TextField(null, "Footer2");
-        footer2Value.setImmediate(true);
         Button footer2Btn = new Button("Change", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
@@ -81,7 +78,6 @@ public class Footer extends AbstractReindeerTestUI {
         options.addComponent(footer2);
 
         final TextField footer3Value = new TextField(null, "Footer3");
-        footer3Value.setImmediate(true);
         Button footer3Btn = new Button("Change", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {

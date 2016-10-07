@@ -118,8 +118,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     private HasComponents parent;
 
-    private Boolean explicitImmediateValue;
-
     protected static final String DESIGN_ATTR_PLAIN_TEXT = "plain-text";
 
     /* Constructor */
@@ -434,50 +432,12 @@ public abstract class AbstractComponent extends AbstractClientConnector
             return false;
         } else if (!super.isConnectorEnabled()) {
             return false;
-        } else if ((getParent() instanceof SelectiveRenderer)
+        } else if (getParent() instanceof SelectiveRenderer
                 && !((SelectiveRenderer) getParent()).isRendered(this)) {
             return false;
         } else {
             return true;
         }
-    }
-
-    /**
-     * Returns the explicitly set immediate value.
-     *
-     * @return the explicitly set immediate value or null if
-     *         {@link #setImmediate(boolean)} has not been explicitly invoked
-     */
-    protected Boolean getExplicitImmediateValue() {
-        return explicitImmediateValue;
-    }
-
-    /**
-     * Returns the immediate mode of the component.
-     * <p>
-     * Since Vaadin 8, the default mode is immediate.
-     *
-     * @return true if the component is in immediate mode (explicitly or
-     *         implicitly set), false if the component if not in immediate mode
-     */
-    public boolean isImmediate() {
-        if (explicitImmediateValue != null) {
-            return explicitImmediateValue;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * Sets the component's immediate mode to the specified status.
-     *
-     * @param immediate
-     *            the boolean value specifying if the component should be in the
-     *            immediate mode after the call.
-     */
-    public void setImmediate(boolean immediate) {
-        explicitImmediateValue = immediate;
-        getState().immediate = immediate;
     }
 
     /*
@@ -771,8 +731,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
         } else {
             getState().errorMessage = null;
         }
-
-        getState().immediate = isImmediate();
     }
 
     /* General event framework */
@@ -1001,11 +959,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
                         design.attr(attribute));
             }
 
-        }
-        // handle immediate
-        if (attr.hasKey("immediate")) {
-            setImmediate(DesignAttributeHandler.getFormatter()
-                    .parse(attr.get("immediate"), Boolean.class));
         }
 
         // handle locale
@@ -1288,11 +1241,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
         // handle default attributes
         for (String attribute : getDefaultAttributes()) {
             DesignAttributeHandler.writeAttribute(this, attribute, attr, def);
-        }
-        // handle immediate
-        if (explicitImmediateValue != null) {
-            DesignAttributeHandler.writeAttribute("immediate", attr,
-                    explicitImmediateValue, def.isImmediate(), Boolean.class);
         }
         // handle locale
         if (getLocale() != null && (getParent() == null

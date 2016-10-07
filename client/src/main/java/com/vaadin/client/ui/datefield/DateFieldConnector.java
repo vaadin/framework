@@ -56,9 +56,7 @@ public class DateFieldConnector extends TextualDateConnector {
                  * a day/enter/clicking outside of popup) then the new value is
                  * communicated to the server.
                  */
-                if (getWidget().isImmediate()) {
-                    getConnection().getServerRpcQueue().flush();
-                }
+                getConnection().getServerRpcQueue().flush();
             }
         });
     }

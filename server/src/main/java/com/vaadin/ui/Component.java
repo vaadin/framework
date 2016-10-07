@@ -858,7 +858,6 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      *         // Some miscellaneous component
      *         TextField name = new TextField(&quot;Say it all here&quot;);
      *         name.addListener(this);
-     *         name.setImmediate(true);
      *         layout.addComponent(name);
      *
      *         // Handle button clicks as generic events instead
@@ -940,7 +939,6 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      *         // Some miscellaneous component
      *         TextField name = new TextField(&quot;Say it all here&quot;);
      *         name.addListener(this);
-     *         name.setImmediate(true);
      *         layout.addComponent(name);
      *
      *         // Handle button clicks as generic events instead

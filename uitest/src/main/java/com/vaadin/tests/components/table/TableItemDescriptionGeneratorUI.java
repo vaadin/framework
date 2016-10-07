@@ -29,18 +29,15 @@ public class TableItemDescriptionGeneratorUI extends AbstractReindeerTestUI {
         componentDescription
                 .addValueChangeListener(event -> table.setContainerDataSource(
                         createContainer(componentDescription.getValue())));
-        componentDescription.setImmediate(true);
         componentDescription.setValue(true);
         tableCellItemDescription = new CheckBox("Tooltip on table cells");
         tableCellItemDescription
                 .addValueChangeListener(event -> table.refreshRowCache());
-        tableCellItemDescription.setImmediate(true);
         tableCellItemDescription.setValue(true);
 
         tableRowItemDescription = new CheckBox("Tooltip on table Rows");
         tableRowItemDescription
                 .addValueChangeListener(event -> table.refreshRowCache());
-        tableRowItemDescription.setImmediate(true);
         tableRowItemDescription.setValue(true);
 
         addComponent(componentDescription);

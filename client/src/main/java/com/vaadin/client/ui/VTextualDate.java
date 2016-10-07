@@ -258,16 +258,16 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         Date currentDate = getDate();
         getClient().updateVariable(getId(), "year",
                 currentDate != null ? currentDate.getYear() + 1900 : -1,
-                currentResolution == Resolution.YEAR && immediate);
+                currentResolution == Resolution.YEAR);
         if (currentResolution.compareTo(Resolution.MONTH) <= 0) {
             getClient().updateVariable(getId(), "month",
                     currentDate != null ? currentDate.getMonth() + 1 : -1,
-                    currentResolution == Resolution.MONTH && immediate);
+                    currentResolution == Resolution.MONTH);
         }
         if (currentResolution.compareTo(Resolution.DAY) <= 0) {
             getClient().updateVariable(getId(), "day",
                     currentDate != null ? currentDate.getDate() : -1,
-                    currentResolution == Resolution.DAY && immediate);
+                    currentResolution == Resolution.DAY);
         }
     }
 

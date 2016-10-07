@@ -37,11 +37,6 @@ public class DisabledParentLayout extends AbstractReindeerTestUI {
 
         final VerticalLayout pane = new VerticalLayout();
         AbstractDateField dateField = new TestDateField();
-        // If the field is immediate, the UI behaves differently (the value is
-        // updated and an error is indicated earlier instead of showing the date
-        // selector on the first click as the test expects. Keeping as
-        // non-immediate to test the old expected behavior.
-        dateField.setImmediate(false);
         pane.addComponent(dateField);
 
         content.addComponent(pane);

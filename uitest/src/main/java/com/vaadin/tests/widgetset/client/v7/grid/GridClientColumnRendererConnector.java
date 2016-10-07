@@ -30,7 +30,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
-import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.widgetset.server.v7.grid.GridClientColumnRenderers;
@@ -41,6 +40,7 @@ import com.vaadin.v7.client.renderers.NumberRenderer;
 import com.vaadin.v7.client.renderers.Renderer;
 import com.vaadin.v7.client.renderers.TextRenderer;
 import com.vaadin.v7.client.renderers.WidgetRenderer;
+import com.vaadin.v7.client.ui.AbstractLegacyComponentConnector;
 import com.vaadin.v7.client.widget.grid.CellReference;
 import com.vaadin.v7.client.widget.grid.RendererCellReference;
 import com.vaadin.v7.client.widget.grid.datasources.ListDataSource;
@@ -53,7 +53,7 @@ import com.vaadin.v7.client.widgets.Grid;
 
 @Connect(GridClientColumnRenderers.GridController.class)
 public class GridClientColumnRendererConnector
-        extends AbstractComponentConnector {
+        extends AbstractLegacyComponentConnector {
 
     public static enum Renderers {
         TEXT_RENDERER, WIDGET_RENDERER, HTML_RENDERER, NUMBER_RENDERER, DATE_RENDERER, CPLX_RENDERER;

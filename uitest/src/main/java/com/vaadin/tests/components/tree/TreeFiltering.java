@@ -42,7 +42,6 @@ public class TreeFiltering extends TestBase {
 
         final CheckBox filterType = new CheckBox(
                 "Include parent when filtering", true);
-        filterType.setImmediate(true);
         filterType.addValueChangeListener(event -> {
             cont.setIncludeParentsWhenFiltering(event.getValue());
             ccTree.markAsDirty();

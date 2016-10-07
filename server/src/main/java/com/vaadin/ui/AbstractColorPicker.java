@@ -154,7 +154,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
 
     /**
      * Returns the current selected color of this color picker.
-     * 
+     *
      * @return the selected color, not null
      */
     @Override
@@ -165,7 +165,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
     /**
      * Sets the selected color of this color picker. If the new color is not
      * equal to getValue(), fires a value change event.
-     * 
+     *
      * @param color
      *            the new selected color, not null
      */
@@ -191,7 +191,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
     /**
      * Returns true if the component shows the default caption (css-code for the
      * currently selected color, e.g. #ffffff) if no other caption is available.
-     * 
+     *
      * @return {@code true} if the default caption is enabled, {@code false}
      *         otherwise
      */
@@ -447,7 +447,6 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
                 window.setHistoryVisible(historyVisible);
                 window.setPreviewVisible(textfieldVisible);
 
-                window.setImmediate(true);
                 window.addCloseListener(
                         event -> getState().popupVisible = false);
                 window.addValueChangeListener(
@@ -515,7 +514,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
         DesignAttributeHandler.writeAttribute("color", attribute,
                 getValue().getCSS(), Color.WHITE.getCSS(), String.class);
         DesignAttributeHandler.writeAttribute("popup-style", attribute,
-                (popupStyle == PopupStyle.POPUP_NORMAL ? "normal" : "simple"),
+                popupStyle == PopupStyle.POPUP_NORMAL ? "normal" : "simple",
                 "normal", String.class);
         DesignAttributeHandler.writeAttribute("position", attribute,
                 positionX + "," + positionY, "0,0", String.class);

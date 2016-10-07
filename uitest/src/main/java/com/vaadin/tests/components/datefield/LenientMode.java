@@ -35,7 +35,6 @@ public class LenientMode extends TestBase
         df.setLocale(new Locale("fi"));
         df.setResolution(Resolution.DAY);
         df.setLenient(true);
-        df.setImmediate(true);
         df.setValue(d);
 
         AbstractDateField df2 = new TestDateField("Normal ");
@@ -43,7 +42,6 @@ public class LenientMode extends TestBase
         df2.setResolution(Resolution.DAY);
         // df2.setLenient(false);
         df2.setValue(null);
-        df2.setImmediate(true);
         df2.setValue(d);
 
         addComponent(df);
@@ -55,14 +53,12 @@ public class LenientMode extends TestBase
         df = new TestDateField("Lenient with time");
         df.setLocale(new Locale("fi"));
         df.setLenient(true);
-        df.setImmediate(true);
         df.setValue(d);
 
         df2 = new TestDateField("Normal with time");
         df2.setLocale(new Locale("fi"));
         // df2.setLenient(false);
         df2.setValue(null);
-        df2.setImmediate(true);
         df2.setValue(d);
 
         addComponent(df);

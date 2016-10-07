@@ -35,9 +35,6 @@ public class VDateField extends FlowPanel implements Field, HasEnabled {
     public ApplicationConnection client;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public boolean immediate;
-
-    /** For internal use only. May be removed or replaced in the future. */
     public static String resolutionToString(Resolution res) {
         if (res == Resolution.DAY) {
             return "day";
@@ -111,14 +108,6 @@ public class VDateField extends FlowPanel implements Field, HasEnabled {
 
     public void setCurrentDate(Date date) {
         this.date = date;
-    }
-
-    public boolean isImmediate() {
-        return immediate;
-    }
-
-    public void setImmediate(boolean immediate) {
-        this.immediate = immediate;
     }
 
     public boolean isReadonly() {

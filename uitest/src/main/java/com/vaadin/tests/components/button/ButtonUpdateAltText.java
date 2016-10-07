@@ -49,7 +49,6 @@ public class ButtonUpdateAltText extends AbstractReindeerTestUI {
         addComponent(btn);
 
         final CheckBox enable = new CheckBox("Enable alt text", true);
-        enable.setImmediate(true);
         enable.addValueChangeListener(event -> {
             if (event.getValue()) {
                 btn.setIconAlternateText("alt text");

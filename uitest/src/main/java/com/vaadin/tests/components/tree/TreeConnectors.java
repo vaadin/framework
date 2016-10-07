@@ -22,7 +22,6 @@ public class TreeConnectors extends TestBase {
     protected void setup() {
         CheckBox cb = new CheckBox("Connectors");
         cb.setValue(false);
-        cb.setImmediate(true);
         cb.addValueChangeListener(event -> {
             if (event.getValue()) {
                 tree.addStyleName(BaseTheme.TREE_CONNECTORS);

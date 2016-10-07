@@ -21,10 +21,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.colorpicker.VColorPickerGrid;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.v7.client.ui.AbstractLegacyComponentConnector;
 import com.vaadin.v7.shared.ui.colorpicker.ColorPickerGridServerRpc;
 import com.vaadin.v7.shared.ui.colorpicker.ColorPickerGridState;
 
@@ -37,7 +37,7 @@ import com.vaadin.v7.shared.ui.colorpicker.ColorPickerGridState;
  * @since 7.0.0
  */
 @Connect(value = com.vaadin.v7.ui.components.colorpicker.ColorPickerGrid.class, loadStyle = LoadStyle.LAZY)
-public class ColorPickerGridConnector extends AbstractComponentConnector
+public class ColorPickerGridConnector extends AbstractLegacyComponentConnector
         implements ClickHandler {
 
     private ColorPickerGridServerRpc rpc = RpcProxy

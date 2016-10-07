@@ -67,20 +67,16 @@ public class DateFieldUnparsableDate extends TestBase {
     protected void setup() {
         MyDateField df = new MyDateField(
                 "Returns the old value for invalid dates");
-        df.setImmediate(true);
         addComponent(df);
 
         MyDateField2 df2 = new MyDateField2("Returns empty for invalid dates");
-        df2.setImmediate(true);
         addComponent(df2);
 
         MyDateField3 df3 = new MyDateField3(
                 "Throws an exception for invalid dates");
-        df3.setImmediate(true);
         addComponent(df3);
 
         MyDateField4 df4 = new MyDateField4("Can convert 'today'");
-        df4.setImmediate(true);
         addComponent(df4);
 
     }

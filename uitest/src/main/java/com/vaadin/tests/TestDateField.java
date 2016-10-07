@@ -52,7 +52,6 @@ public class TestDateField extends CustomComponent {
         df.setCaption("DateField caption " + df);
         df.setDescription("DateField description " + df);
         df.setComponentError(errorMsg);
-        df.setImmediate(true);
         // FIXME: bug #1138 this makes datefield to render with unknown
         // component (UIDL tree debug)
         df.addStyleName("thisShouldBeHarmless");

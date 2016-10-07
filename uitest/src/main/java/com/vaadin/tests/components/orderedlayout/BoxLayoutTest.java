@@ -102,7 +102,6 @@ public class BoxLayoutTest extends AbstractReindeerTestUI {
         header.addComponent(title);
 
         final CheckBox vertical = new CheckBox("Vertical", !horizontal);
-        vertical.setImmediate(true);
         vertical.addValueChangeListener(event -> {
             view.removeAllComponents();
 
@@ -200,13 +199,11 @@ public class BoxLayoutTest extends AbstractReindeerTestUI {
 
         final CheckBox margin = new CheckBox("Margin", false);
         margin.addValueChangeListener(event -> l.setMargin(event.getValue()));
-        margin.setImmediate(true);
         layout.addComponent(margin);
         layout.addComponent(margin);
 
         final CheckBox spacing = new CheckBox("Spacing", false);
         spacing.addValueChangeListener(event -> l.setSpacing(event.getValue()));
-        spacing.setImmediate(true);
         layout.addComponent(spacing);
 
         // Cell controls
@@ -238,13 +235,12 @@ public class BoxLayoutTest extends AbstractReindeerTestUI {
                 if (target == null) {
                     return;
                 }
-                l.setComponentAlignment(target, ((Alignment) align.getValue()));
+                l.setComponentAlignment(target, (Alignment) align.getValue());
             }
         });
         cell.addComponent(align);
 
         expand = new CheckBox("Expand");
-        expand.setImmediate(true);
         expand.setEnabled(false);
         expand.addValueChangeListener(event -> {
             if (target != null) {
@@ -343,7 +339,6 @@ public class BoxLayoutTest extends AbstractReindeerTestUI {
         component.addComponent(componentDescription);
 
         componentError = new CheckBox("Error");
-        componentError.setImmediate(true);
         componentError.setEnabled(false);
         componentError.addValueChangeListener(event -> {
             if (target != null) {
@@ -354,7 +349,6 @@ public class BoxLayoutTest extends AbstractReindeerTestUI {
         component.addComponent(componentError);
 
         componentRequired = new CheckBox("Required");
-        componentRequired.setImmediate(true);
         componentRequired.setEnabled(false);
         componentRequired.addValueChangeListener(event -> {
             if (target != null && target instanceof AbstractField) {

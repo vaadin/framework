@@ -13,7 +13,6 @@ import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.InlineDateField;
@@ -35,7 +34,6 @@ public class DateFieldRanges extends AbstractReindeerTestUI {
     private AbstractDateField fromRange = new TestDateField("Range start");
     private AbstractDateField toRange = new TestDateField("Range end");
     private AbstractDateField valueDF = new TestDateField("Value");
-    private CheckBox immediateCB = new CheckBox("Immediate");
     private Button recreate = new Button("Recreate static datefields");
     private Button clearRangeButton = new Button("Clear range");
 
@@ -73,31 +71,21 @@ public class DateFieldRanges extends AbstractReindeerTestUI {
         });
 
         fromRange.setValue(null);
-        fromRange.setImmediate(true);
         fromRange.addValueChangeListener(event -> {
             inlineDynamicDateField.setRangeStart(fromRange.getValue());
             dynamicDateField.setRangeStart(fromRange.getValue());
         });
 
         toRange.setValue(null);
-        toRange.setImmediate(true);
         toRange.addValueChangeListener(event -> {
             inlineDynamicDateField.setRangeEnd(toRange.getValue());
             dynamicDateField.setRangeEnd(toRange.getValue());
         });
 
         valueDF.setValue(null);
-        valueDF.setImmediate(true);
         valueDF.addValueChangeListener(event -> {
             inlineDynamicDateField.setValue(valueDF.getValue());
             dynamicDateField.setValue(valueDF.getValue());
-        });
-
-        immediateCB.setValue(true);
-        immediateCB.setImmediate(true);
-        immediateCB.addValueChangeListener(event -> {
-            inlineDynamicDateField.setImmediate(immediateCB.getValue());
-            dynamicDateField.setImmediate(immediateCB.getValue());
         });
 
         recreate.addClickListener(new Button.ClickListener() {
@@ -132,7 +120,6 @@ public class DateFieldRanges extends AbstractReindeerTestUI {
         fromRange.setId("fromRange");
         toRange.setId("toRange");
         valueDF.setId("valueDF");
-        immediateCB.setId("immediateCB");
         recreate.setId("recreate");
         clearRangeButton.setId("clearRangeButton");
         dynamicDateField.setId("dynamicDateField");
@@ -162,7 +149,6 @@ public class DateFieldRanges extends AbstractReindeerTestUI {
         hl.addComponent(fromRange);
         hl.addComponent(toRange);
         hl.addComponent(valueDF);
-        hl.addComponent(immediateCB);
         hl.addComponent(recreate);
         hl.addComponent(clearRangeButton);
         addComponent(hl);
@@ -227,14 +213,11 @@ public class DateFieldRanges extends AbstractReindeerTestUI {
         LocalDate toVal = toRange.getValue();
         LocalDate value = valueDF.getValue();
         Resolution r = (Resolution) resoSelect.getValue();
-        boolean immediate = immediateCB.getValue();
 
         df.setValue(value);
         df.setResolution(r);
         df.setRangeStart(fromVal);
         df.setRangeEnd(toVal);
-        df.setImmediate(immediate);
-
     }
 
 }

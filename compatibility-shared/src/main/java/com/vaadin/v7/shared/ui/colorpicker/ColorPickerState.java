@@ -15,8 +15,8 @@
  */
 package com.vaadin.v7.shared.ui.colorpicker;
 
-import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.v7.shared.AbstractLegacyComponentState;
 
 /**
  * Default shared state implementation for AbstractColorPicker.
@@ -24,7 +24,7 @@ import com.vaadin.shared.annotations.DelegateToWidget;
  * @since 7.0.0
  */
 @Deprecated
-public class ColorPickerState extends AbstractComponentState {
+public class ColorPickerState extends AbstractLegacyComponentState {
     {
         primaryStyleName = "v-colorpicker";
     }

@@ -25,7 +25,6 @@ public class ComboBoxParentDisable extends AbstractTestUIWithLog {
         combo.setItems("Item 1", "Item 2", "Item 3", "Item 4");
         combo.addValueChangeListener(
                 event -> log.log("you made a selection change"));
-        combo.setImmediate(true);
 
         Button btn1 = new Button("Click me");
         btn1.addClickListener(event -> log.log("you clicked me"));

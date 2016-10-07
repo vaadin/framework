@@ -27,7 +27,6 @@ public class ReducingRoundTrips extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         PasswordField passwordField = new PasswordField("Enter password");
-        passwordField.setImmediate(true);
         CapsLockWarningWithRpc capsLockWarningWithRpc = new CapsLockWarningWithRpc();
 
         capsLockWarningWithRpc.extend(passwordField);

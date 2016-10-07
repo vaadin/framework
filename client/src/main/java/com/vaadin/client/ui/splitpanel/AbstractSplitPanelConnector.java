@@ -124,8 +124,6 @@ public abstract class AbstractSplitPanelConnector extends
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        getWidget().immediate = getState().immediate;
-
         getWidget().setEnabled(isEnabled());
 
         clickEventHandler.handleEventHandlerRegistration();

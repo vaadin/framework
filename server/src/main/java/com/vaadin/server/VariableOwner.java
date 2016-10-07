@@ -62,24 +62,4 @@ public interface VariableOwner extends Serializable {
      */
     public boolean isEnabled();
 
-    /**
-     * <p>
-     * Tests if the variable owner is in immediate mode or not. Being in
-     * immediate mode means that all variable changes are required to be sent
-     * back from the terminal immediately when they occur.
-     * </p>
-     *
-     * <p>
-     * <strong>Note:</strong> <code>VariableOwner</code> does not include a set-
-     * method for the immediateness property. This is because not all
-     * VariableOwners wish to offer the functionality. Such VariableOwners are
-     * never in the immediate mode, thus they always return <code>false</code>
-     * in {@link #isImmediate()}.
-     * </p>
-     *
-     * @return <code>true</code> if the component is in immediate mode,
-     *         <code>false</code> if not.
-     */
-    public boolean isImmediate();
-
 }

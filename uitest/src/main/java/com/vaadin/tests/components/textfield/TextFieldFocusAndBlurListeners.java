@@ -36,7 +36,7 @@ public class TextFieldFocusAndBlurListeners extends TestBase
         TextField tf2 = new TextField("TextField 2",
                 "Has focus, blur and valuechange listeners");
         tf2.setWidth("300px");
-        tf2.addValueChangeListener(l -> this.valueChange(tf2));
+        tf2.addValueChangeListener(l -> valueChange(tf2));
         tf2.addFocusListener(this);
         tf2.addBlurListener(this);
 
@@ -45,15 +45,14 @@ public class TextFieldFocusAndBlurListeners extends TestBase
         TextField tf3 = new TextField("TextField 3",
                 "Has non-immediate valuechange listener");
         tf3.setWidth("300px");
-        tf3.addValueChangeListener(l -> this.valueChange(tf3));
+        tf3.addValueChangeListener(l -> valueChange(tf3));
 
         addComponent(tf3);
 
         TextField tf4 = new TextField("TextField 4",
                 "Has immediate valuechange listener");
         tf4.setWidth("300px");
-        tf4.setImmediate(true);
-        tf4.addValueChangeListener(l -> this.valueChange(tf4));
+        tf4.addValueChangeListener(l -> valueChange(tf4));
 
         addComponent(tf4);
     }

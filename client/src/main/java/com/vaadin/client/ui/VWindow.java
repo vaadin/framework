@@ -188,9 +188,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      */
     public boolean centered = false;
 
-    /** For internal use only. May be removed or replaced in the future. */
-    public boolean immediate;
-
     private Element wrapper;
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -548,7 +545,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     private static void focusTopmostModalWindow() {
         VWindow topmost = getTopmostWindow();
-        if ((topmost != null) && (topmost.vaadinModality)) {
+        if (topmost != null && topmost.vaadinModality) {
             topmost.focus();
         }
     }
@@ -1109,7 +1106,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         if (updateVariables) {
             // sending width back always as pixels, no need for unit
             client.updateVariable(id, "width", w, false);
-            client.updateVariable(id, "height", h, immediate);
+            client.updateVariable(id, "height", h, true);
         }
 
         if (updateVariables || !resizeLazy) {

@@ -33,7 +33,6 @@ public class SelectionAndCursorPosition extends AbstractReindeerTestUI {
         Panel panel = new Panel(fl);
         panel.setCaption("Hackers panel");
         CheckBox ml = new CheckBox("Multiline");
-        ml.setImmediate(true);
         // FIXME re-add this when TextArea has been replaced with vaadin8
         // version
         // ml.addListener(new Property.ValueChangeListener() {

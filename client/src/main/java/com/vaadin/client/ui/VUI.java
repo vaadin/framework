@@ -97,9 +97,6 @@ public class VUI extends SimplePanel implements ResizeHandler,
     private int parentHeight;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public boolean immediate;
-
-    /** For internal use only. May be removed or replaced in the future. */
     public boolean resizeLazy = false;
 
     private HandlerRegistration historyHandlerRegistration;

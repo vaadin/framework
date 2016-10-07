@@ -15,14 +15,16 @@
  */
 package com.vaadin.v7.client.ui;
 
+import com.google.gwt.user.client.ui.Focusable;
 import com.vaadin.client.StyleConstants;
-import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.HasErrorIndicator;
 import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.v7.shared.AbstractFieldState;
 
 @Deprecated
-public abstract class AbstractFieldConnector extends AbstractComponentConnector
+public abstract class AbstractFieldConnector
+        extends AbstractLegacyComponentConnector
         implements HasRequiredIndicator, HasErrorIndicator {
 
     @Override
@@ -70,5 +72,15 @@ public abstract class AbstractFieldConnector extends AbstractComponentConnector
 
         getWidget().setStyleName(StyleConstants.REQUIRED,
                 isRequiredIndicatorVisible());
+    }
+
+    @OnStateChange("tabIndex")
+    void updateTabIndex() {
+        // AbstractFieldState is not inheriting TabIndexState because of
+        // AbstractLegacyComponentState, thus need to set tab index here
+        // (instead of AbstractComponentConnector)
+        if (getWidget() instanceof Focusable) {
+            ((Focusable) getWidget()).setTabIndex(getState().tabIndex);
+        }
     }
 }

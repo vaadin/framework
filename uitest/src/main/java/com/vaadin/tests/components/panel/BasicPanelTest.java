@@ -39,7 +39,6 @@ public class BasicPanelTest extends TestBase {
         panel.setContent(panelLayout);
 
         final CheckBox heightSelection = new CheckBox("Undefined height");
-        heightSelection.setImmediate(true);
         heightSelection.addValueChangeListener(event -> {
             if (heightSelection.getValue() == Boolean.TRUE) {
                 panel.setHeight(null);
@@ -66,7 +65,6 @@ public class BasicPanelTest extends TestBase {
 
         panel.setScrollTop(50);
         panel.setScrollLeft(50);
-        panel.setImmediate(true);
 
         updateLabelText();
     }

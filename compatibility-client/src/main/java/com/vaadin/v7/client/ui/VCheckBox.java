@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.ui;
+package com.vaadin.v7.client.ui;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -25,6 +25,8 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
 import com.vaadin.client.VTooltip;
+import com.vaadin.client.ui.Field;
+import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
 import com.vaadin.client.ui.aria.HandlesAriaRequired;
@@ -36,6 +38,9 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
 
     /** For internal use only. May be removed or replaced in the future. */
     public String id;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public boolean immediate;
 
     /** For internal use only. May be removed or replaced in the future. */
     public ApplicationConnection client;

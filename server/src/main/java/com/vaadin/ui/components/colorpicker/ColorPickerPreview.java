@@ -46,9 +46,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
 
     private ColorPickerPreview() {
         setStyleName("v-colorpicker-preview");
-        setImmediate(true);
         field = new TextField();
-        field.setImmediate(true);
         field.setSizeFull();
         field.setStyleName("v-colorpicker-preview-textfield");
         field.setData(this);
@@ -162,8 +160,8 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
                 }
 
                 oldValue = value;
-                fireEvent(new ValueChange<>((Component) field.getData(),
-                        color, event.isUserOriginated()));
+                fireEvent(new ValueChange<>((Component) field.getData(), color,
+                        event.isUserOriginated()));
             }
 
         } catch (NumberFormatException nfe) {

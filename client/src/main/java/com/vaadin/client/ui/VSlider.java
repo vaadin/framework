@@ -52,7 +52,6 @@ public class VSlider extends SimpleFocusablePanel
 
     protected String id;
 
-    protected boolean immediate;
     protected boolean disabled;
     protected boolean readonly;
 
@@ -214,7 +213,7 @@ public class VSlider extends SimpleFocusablePanel
                     @Override
                     public void execute() {
                         final Element p = getElement();
-                        if (p.getPropertyInt(domProperty) > (MIN_SIZE + 5)
+                        if (p.getPropertyInt(domProperty) > MIN_SIZE + 5
                                 || propertyNotNullOrEmpty(styleAttribute, p)) {
                             if (isVertical()) {
                                 setHeight();
@@ -283,10 +282,10 @@ public class VSlider extends SimpleFocusablePanel
             increaseValue(true);
         } else if (DOM.eventGetType(event) == Event.MOUSEEVENTS) {
             processBaseEvent(event);
-        } else if ((BrowserInfo.get().isGecko()
-                && DOM.eventGetType(event) == Event.ONKEYPRESS)
-                || (!BrowserInfo.get().isGecko()
-                        && DOM.eventGetType(event) == Event.ONKEYDOWN)) {
+        } else if (BrowserInfo.get().isGecko()
+                && DOM.eventGetType(event) == Event.ONKEYPRESS
+                || !BrowserInfo.get().isGecko()
+                        && DOM.eventGetType(event) == Event.ONKEYDOWN) {
 
             if (handleNavigation(event.getKeyCode(), event.getCtrlKey(),
                     event.getShiftKey())) {
@@ -406,10 +405,10 @@ public class VSlider extends SimpleFocusablePanel
         }
 
         if (isVertical()) {
-            v = ((baseSize - (coord - baseOffset))
-                    / (double) (baseSize - handleSize)) * (max - min) + min;
+            v = (baseSize - (coord - baseOffset))
+                    / (double) (baseSize - handleSize) * (max - min) + min;
         } else {
-            v = ((coord - baseOffset) / (double) (baseSize - handleSize))
+            v = (coord - baseOffset) / (double) (baseSize - handleSize)
                     * (max - min) + min;
         }
 
@@ -475,8 +474,8 @@ public class VSlider extends SimpleFocusablePanel
             return false;
         }
 
-        if ((keycode == getNavigationUpKey() && isVertical())
-                || (keycode == getNavigationRightKey() && !isVertical())) {
+        if (keycode == getNavigationUpKey() && isVertical()
+                || keycode == getNavigationRightKey() && !isVertical()) {
             if (shift) {
                 for (int a = 0; a < acceleration; a++) {
                     increaseValue(false);
@@ -487,7 +486,7 @@ public class VSlider extends SimpleFocusablePanel
             }
             return true;
         } else if (keycode == getNavigationDownKey() && isVertical()
-                || (keycode == getNavigationLeftKey() && !isVertical())) {
+                || keycode == getNavigationLeftKey() && !isVertical()) {
             if (shift) {
                 for (int a = 0; a < acceleration; a++) {
                     decreaseValue(false);
@@ -554,10 +553,6 @@ public class VSlider extends SimpleFocusablePanel
         this.id = id;
     }
 
-    public void setImmediate(boolean immediate) {
-        this.immediate = immediate;
-    }
-
     public void setDisabled(boolean disabled) {
         this.disabled = disabled;
     }
@@ -614,7 +609,7 @@ public class VSlider extends SimpleFocusablePanel
                 : "offsetWidth";
         final int handleSize = handle.getPropertyInt(domProperty);
         final int baseSize = base.getPropertyInt(domProperty)
-                - (2 * BASE_BORDER_WIDTH);
+                - 2 * BASE_BORDER_WIDTH;
 
         final int range = baseSize - handleSize;
         double v = value.doubleValue();

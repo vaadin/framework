@@ -15,7 +15,6 @@ public class AddItemToEmptyTable extends TestBase {
     protected void setup() {
         CheckBox cb = new CheckBox("Set first column width");
         cb.setValue(false);
-        cb.setImmediate(true);
         cb.addValueChangeListener(event -> {
             if (event.getValue()) {
                 rightTable.setColumnWidth("name", 150);
@@ -27,7 +26,6 @@ public class AddItemToEmptyTable extends TestBase {
 
         cb = new CheckBox("Set second column width");
         cb.setValue(true);
-        cb.setImmediate(true);
         cb.addValueChangeListener(event -> {
             if (event.getValue()) {
                 rightTable.setColumnWidth("info", 20);

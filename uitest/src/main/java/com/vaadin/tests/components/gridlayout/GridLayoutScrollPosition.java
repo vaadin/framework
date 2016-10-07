@@ -44,7 +44,6 @@ public class GridLayoutScrollPosition extends AbstractReindeerTestUI {
                 "Hide / Show toggleable components");
         visibilityToggleCheckBox.setId("visibility-toggle");
         visibilityToggleCheckBox.setHeight("2000px");
-        visibilityToggleCheckBox.setImmediate(true);
         visibilityToggleCheckBox.setValue(false); // Initially unchecked
         gridLayout.addComponent(visibilityToggleCheckBox);
 

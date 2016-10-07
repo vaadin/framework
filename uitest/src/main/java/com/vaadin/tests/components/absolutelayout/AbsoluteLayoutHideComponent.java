@@ -41,7 +41,6 @@ public class AbsoluteLayoutHideComponent extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         mainLayout = new AbsoluteLayout();
-        mainLayout.setImmediate(true);
         mainLayout.setWidth("100%");
         mainLayout.setHeight("100%");
 
@@ -70,7 +69,6 @@ public class AbsoluteLayoutHideComponent extends AbstractReindeerTestUI {
         // btnLogin
         Button btnLogin = new Button();
         btnLogin.setCaption("Login");
-        btnLogin.setImmediate(false);
         btnLogin.setWidth("-1px");
         btnLogin.setHeight("-1px");
         btnLogin.addClickListener(new Button.ClickListener() {
@@ -112,7 +110,6 @@ public class AbsoluteLayoutHideComponent extends AbstractReindeerTestUI {
         GridLayout gridButtons = new GridLayout(2, 3);
 
         Button btn1 = new Button("Button one");
-        btn1.setImmediate(true);
         btn1.addClickListener(new Button.ClickListener() {
 
             @Override
@@ -122,7 +119,6 @@ public class AbsoluteLayoutHideComponent extends AbstractReindeerTestUI {
         gridButtons.addComponent(btn1, 0, 0);
 
         Button btn2 = new Button("Button two");
-        btn2.setImmediate(true);
         btn2.addClickListener(new Button.ClickListener() {
 
             @Override
@@ -132,7 +128,6 @@ public class AbsoluteLayoutHideComponent extends AbstractReindeerTestUI {
         gridButtons.addComponent(btn2, 0, 1);
 
         Button btn3 = new Button("Button three");
-        btn3.setImmediate(true);
         btn3.addClickListener(new Button.ClickListener() {
 
             @Override

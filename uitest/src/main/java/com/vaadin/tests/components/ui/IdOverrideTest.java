@@ -39,7 +39,6 @@ public class IdOverrideTest extends AbstractReindeerTestUI {
         final IdTestLabel idTestLabelWithId = new IdTestLabel("set id");
         idTestLabelWithId.setSizeUndefined();
         idTestLabelWithId.setId("set10179");
-        idTestLabelWithId.setImmediate(true);
         addComponent(idTestLabelWithId);
 
         final Label label = new Label("no id");
@@ -66,7 +65,6 @@ public class IdOverrideTest extends AbstractReindeerTestUI {
             }
         });
         button.setId("toggle");
-        button.setImmediate(true);
         addComponent(button);
     }
 

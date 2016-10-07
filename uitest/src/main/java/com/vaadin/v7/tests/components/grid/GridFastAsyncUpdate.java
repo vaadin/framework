@@ -126,7 +126,6 @@ public class GridFastAsyncUpdate extends AbstractTestUI {
 
         grid = new Grid(container);
         grid.setWidth("100%");
-        grid.setImmediate(true);
         grid.setSelectionMode(SelectionMode.SINGLE);
         grid.addSelectionListener(new SelectionListener() {
             @Override

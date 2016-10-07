@@ -17,14 +17,14 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.TextField;
 
-public class RequiredIndicatorForFieldsWithoutCaption extends AbstractReindeerTestUI {
+public class RequiredIndicatorForFieldsWithoutCaption
+        extends AbstractReindeerTestUI {
     private Set<Field> fields = new HashSet<>();
 
     @Override
     protected void setup(VaadinRequest request) {
 
         CheckBox required = new CheckBox("Fields required", true);
-        required.setImmediate(true);
         required.addValueChangeListener(event -> {
             boolean newRequired = event.getValue();
             for (Field f : fields) {

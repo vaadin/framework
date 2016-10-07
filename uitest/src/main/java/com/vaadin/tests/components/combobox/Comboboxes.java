@@ -76,7 +76,6 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
         addTestComponent(s8);
 
         ComboBox<StringBean> s9 = new PageLength0ComboBox();
-        s9.setImmediate(true);
         s9.setCaption("Pagelength 0");
         populate(s9, 15);
         s9.setItemCaptionGenerator(StringBean::getValue);

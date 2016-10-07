@@ -38,12 +38,10 @@ public class DoublesInTable extends TestBase {
     @Override
     protected void setup() {
         editMode = new CheckBox("Edit mode");
-        editMode.setImmediate(true);
         editMode.addValueChangeListener(
                 event -> table.setEditable(editMode.getValue()));
 
         useCustomConverters = new CheckBox("Use custom converters");
-        useCustomConverters.setImmediate(true);
         useCustomConverters.addValueChangeListener(event -> recreateTable());
 
         localeSelect = createLocaleSelect();
@@ -77,23 +75,22 @@ public class DoublesInTable extends TestBase {
     }
 
     private static BeanItemContainer<Person> createContainer(int nr) {
-        BeanItemContainer<Person> bic = new BeanItemContainer<>(
-                Person.class);
+        BeanItemContainer<Person> bic = new BeanItemContainer<>(Person.class);
         for (int i = 1; i <= nr; i++) {
             Person p = new Person();
             p.setFirstName("First " + i);
             p.setLastName("Last " + i);
             p.setAge(i);
-            p.setDeceased((i % 5 - 2) == 0);
+            p.setDeceased(i % 5 - 2 == 0);
             p.setEmail("person" + i + "@mail.com");
             p.setRent(new BigDecimal(i * 1250.25));
             p.setSalary(3000 + i);
-            p.setSex((i % 4) == 0 ? Sex.MALE : Sex.FEMALE);
+            p.setSex(i % 4 == 0 ? Sex.MALE : Sex.FEMALE);
             p.setBirthDate(new Date(2011 - 1900 - p.getAge(), 11 - 1, 24));
             if (i % 42 == 0) {
                 p.setSex(Sex.UNKNOWN);
             }
-            String city = "City " + (i / 10);
+            String city = "City " + i / 10;
             Country country = Country.FINLAND;
             Address address = new Address("Street " + i, 12345 + i * 2, city,
                     country);

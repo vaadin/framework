@@ -137,7 +137,6 @@ public class EmptyRowsWhenScrolling extends UI {
         private AbsoluteLayout buildMainLayout() {
             // common part: create layout
             mainLayout = new AbsoluteLayout();
-            mainLayout.setImmediate(false);
             mainLayout.setWidth("100%");
             mainLayout.setHeight("100%");
 
@@ -156,7 +155,6 @@ public class EmptyRowsWhenScrolling extends UI {
         private VerticalLayout buildVerticalLayout_1() {
             // common part: create layout
             verticalLayout_1 = new VerticalLayout();
-            verticalLayout_1.setImmediate(false);
             verticalLayout_1.setWidth("100.0%");
             verticalLayout_1.setHeight("100.0%");
             verticalLayout_1.setMargin(false);
@@ -180,7 +178,6 @@ public class EmptyRowsWhenScrolling extends UI {
         private HorizontalLayout buildHorizontalLayout_1() {
             // common part: create layout
             horizontalLayout_1 = new HorizontalLayout();
-            horizontalLayout_1.setImmediate(false);
             horizontalLayout_1.setWidth("100.0%");
             horizontalLayout_1.setHeight("-1px");
             horizontalLayout_1.setMargin(false);
@@ -188,7 +185,6 @@ public class EmptyRowsWhenScrolling extends UI {
             // btnRefreshTable
             setBtnRefreshTable(new Button());
             getBtnRefreshTable().setCaption("Reload table row cache");
-            getBtnRefreshTable().setImmediate(false);
             getBtnRefreshTable().setWidth("-1px");
             getBtnRefreshTable().setHeight("-1px");
             horizontalLayout_1.addComponent(getBtnRefreshTable());

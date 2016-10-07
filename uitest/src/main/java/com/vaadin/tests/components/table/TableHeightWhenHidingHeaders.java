@@ -47,7 +47,6 @@ public class TableHeightWhenHidingHeaders extends AbstractTestCase {
             }
         });
         showHeaders.setValue(true);
-        showHeaders.setImmediate(true);
 
         mainWindow.addComponent(showHeaders);
         mainWindow.addComponent(table);

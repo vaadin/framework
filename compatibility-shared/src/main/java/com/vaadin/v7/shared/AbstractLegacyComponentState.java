@@ -13,26 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.shared.ui.colorpicker;
+package com.vaadin.v7.shared;
 
-import com.vaadin.v7.shared.AbstractLegacyComponentState;
+import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.annotations.NoLayout;
 
 /**
- * Default shared state implementation for ColorPickerGrid.
+ * Shared state for AbstractLegacyComponent.
  *
- * @since 7.0.0
+ * @author Vaadin Ltd
+ * @since 8.0
+ * @deprecated only used for Vaadin 7 compatiblity components
  */
 @Deprecated
-public class ColorPickerGridState extends AbstractLegacyComponentState {
-
-    public int rowCount;
-
-    public int columnCount;
-
-    public String[] changedX;
-
-    public String[] changedY;
-
-    public String[] changedColor;
-
+public class AbstractLegacyComponentState extends AbstractComponentState {
+    @NoLayout
+    public boolean immediate = false;
 }
