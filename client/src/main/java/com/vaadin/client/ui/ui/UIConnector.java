@@ -506,6 +506,9 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         shortcutContextWidget.addDomHandler(new KeyDownHandler() {
             @Override
             public void onKeyDown(KeyDownEvent event) {
+                if (VWindow.isModalWindowOpen()) {
+                    return;
+                }
                 if (getWidget().actionHandler != null) {
                     Element target = Element
                             .as(event.getNativeEvent().getEventTarget());
