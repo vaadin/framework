@@ -2376,6 +2376,9 @@ public class VFilterSelect extends Composite
 
         focused = false;
         if (!readonly) {
+            if (textInputEnabled && allowNewItem) {
+                suggestionPopup.menu.doSelectedItemAction();
+            }
             if (selectedOptionKey == null) {
                 if (explicitSelectedCaption != null) {
                     setPromptingOff(explicitSelectedCaption);
