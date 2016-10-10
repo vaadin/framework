@@ -231,7 +231,7 @@
                     <instructions>
                         <Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
                         <Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</Bundle-Version>
-                        <Export-Package>com.vaadin.*;version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}"</Export-Package>
+                        <Export-Package>VAADIN;version=${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion},com.vaadin.*;version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}"</Export-Package>
                         <Import-Package>javax.servlet;version="2.4",
                             javax.servlet.http;version="2.4",
                             javax.validation;version="${javax.validation.version}";resolution:=optional,
