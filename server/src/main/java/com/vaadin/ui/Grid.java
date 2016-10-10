@@ -6670,6 +6670,22 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         return itemId;
     }
 
+    /**
+     * Refreshes, i.e. causes the client side to re-render the rows with the
+     * given item ids.
+     * <p>
+     * Calling this for a row which is not currently rendered on the client side
+     * has no effect.
+     * 
+     * @param itemIds
+     *            the item id(s) of the row to refresh.
+     */
+    public void refreshRows(Object... itemIds) {
+        for (Object itemId : itemIds) {
+            datasourceExtension.updateRowData(itemId);
+        }
+    }
+
     private static Logger getLogger() {
         return Logger.getLogger(Grid.class.getName());
     }
