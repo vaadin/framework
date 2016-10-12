@@ -150,4 +150,32 @@ public class SharedUtilTest {
                 SharedUtil.getDuplicates(new Object[] { 1.2, "a", 1.2 }));
     }
 
+    @Test
+    public void propertyIdToHumanFriendly() {
+        Assert.assertEquals("", SharedUtil.propertyIdToHumanFriendly(""));
+        Assert.assertEquals("First Name",
+                SharedUtil.propertyIdToHumanFriendly("firstName"));
+        Assert.assertEquals("First Name",
+                SharedUtil.propertyIdToHumanFriendly("FirstName"));
+        Assert.assertEquals("First Name",
+                SharedUtil.propertyIdToHumanFriendly("FIRST_NAME"));
+        Assert.assertEquals("Firstname",
+                SharedUtil.propertyIdToHumanFriendly("FIRSTNAME"));
+
+        Assert.assertEquals("2015 Q3",
+                SharedUtil.propertyIdToHumanFriendly("2015_Q3"));
+        Assert.assertEquals("Column X",
+                SharedUtil.propertyIdToHumanFriendly("_COLUMN_X"));
+        Assert.assertEquals("Column X",
+                SharedUtil.propertyIdToHumanFriendly("__COLUMN_X"));
+        Assert.assertEquals("1column Foobar",
+                SharedUtil.propertyIdToHumanFriendly("1COLUMN_FOOBAR"));
+        Assert.assertEquals("Result 2015",
+                SharedUtil.propertyIdToHumanFriendly("RESULT_2015"));
+        Assert.assertEquals("2015result",
+                SharedUtil.propertyIdToHumanFriendly("2015RESULT"));
+        Assert.assertEquals("Result2015",
+                SharedUtil.propertyIdToHumanFriendly("RESULT2015"));
+
+    }
 }
