@@ -17,8 +17,6 @@ package com.vaadin.ui;
 
 import java.time.LocalDate;
 
-import com.vaadin.server.PaintException;
-import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.datefield.DateFieldState;
 
 /**
@@ -30,8 +28,6 @@ import com.vaadin.shared.ui.datefield.DateFieldState;
  * @since 8.0
  */
 public class DateField extends AbstractDateField {
-
-    private String inputPrompt = null;
 
     /**
      * Constructs an empty <code>DateField</code> with no caption.
@@ -63,34 +59,25 @@ public class DateField extends AbstractDateField {
         super(caption);
     }
 
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-
-        if (inputPrompt != null) {
-            target.addAttribute("prompt", inputPrompt);
-        }
+    /**
+     * Returns the current placeholder text.
+     *
+     * @see #setPlaceholder(String)
+     * @return the placeholder text
+     */
+    public String getPlaceholder() {
+        return getState(false).placeholder;
     }
 
     /**
-     * Gets the current input prompt.
+     * Sets the placeholder text. The placeholder is text that is displayed when
+     * the field would otherwise be empty, to prompt the user for input.
      *
-     * @see #setInputPrompt(String)
-     * @return the current input prompt, or null if not enabled
+     * @param placeholder
+     *            the placeholder text to set
      */
-    public String getInputPrompt() {
-        return inputPrompt;
-    }
-
-    /**
-     * Sets the input prompt - a textual prompt that is displayed when the field
-     * would otherwise be empty, to prompt the user for input.
-     *
-     * @param inputPrompt
-     */
-    public void setInputPrompt(String inputPrompt) {
-        this.inputPrompt = inputPrompt;
-        markAsDirty();
+    public void setPlaceholder(String placeholder) {
+        getState().placeholder = placeholder;
     }
 
     @Override

@@ -33,14 +33,14 @@ import com.vaadin.ui.DateField;
 public class DateFieldDeclarativeTest extends DeclarativeTestBase<DateField> {
 
     private String getBasicDesign() {
-        return "<vaadin-date-field assistive-text='at' text-field-enabled='false' show-iso-week-numbers range-end=\"2019-01-15\" input-prompt=\"Pick a day\" value=\"2003-02-27\"></vaadin-date-field>";
+        return "<vaadin-date-field assistive-text='at' text-field-enabled='false' show-iso-week-numbers range-end=\"2019-01-15\" placeholder=\"Pick a day\" value=\"2003-02-27\"></vaadin-date-field>";
     }
 
     private DateField getBasicExpected() {
         DateField pdf = new DateField();
         pdf.setShowISOWeekNumbers(true);
         pdf.setRangeEnd(LocalDate.of(2019, 01, 15));
-        pdf.setInputPrompt("Pick a day");
+        pdf.setPlaceholder("Pick a day");
         pdf.setValue(LocalDate.of(2003, 2, 27));
         pdf.setTextFieldEnabled(false);
         pdf.setAssistiveText("at");

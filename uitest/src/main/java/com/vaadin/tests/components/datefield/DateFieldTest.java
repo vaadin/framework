@@ -31,7 +31,7 @@ public class DateFieldTest extends AbstractDateFieldTest<DateField> {
                     @Override
                     public void execute(DateField c, String value,
                             Object data) {
-                        c.setInputPrompt(value);
+                        c.setPlaceholder(value);
 
                     }
                 });

@@ -85,7 +85,7 @@ public class DateFields extends ComponentTestCase<DateField> {
                     @Override
                     public void execute(DateField c, String value,
                             Object data) {
-                        c.setInputPrompt(value);
+                        c.setPlaceholder(value);
 
                     }
                 });

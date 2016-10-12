@@ -38,9 +38,6 @@ public class TextualDateConnector extends AbstractDateFieldConnector {
             getWidget().formatStr = uidl.getStringAttribute("format");
         }
 
-        getWidget().inputPrompt = uidl
-                .getStringAttribute(VTextualDate.ATTR_INPUTPROMPT);
-
         getWidget().lenient = !uidl.getBooleanAttribute("strict");
 
         getWidget().buildDate();

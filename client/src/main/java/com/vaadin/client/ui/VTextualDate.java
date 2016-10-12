@@ -56,16 +56,6 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public boolean lenient;
 
-    private static final String CLASSNAME_PROMPT = "prompt";
-
-    /** For internal use only. May be removed or replaced in the future. */
-    public static final String ATTR_INPUTPROMPT = "prompt";
-
-    /** For internal use only. May be removed or replaced in the future. */
-    public String inputPrompt = "";
-
-    private boolean prompting = false;
-
     public VTextualDate() {
         super();
         text = new TextBox();
@@ -75,10 +65,6 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
             public void onFocus(FocusEvent event) {
                 text.addStyleName(VTextField.CLASSNAME + "-"
                         + VTextField.CLASSNAME_FOCUS);
-                if (prompting) {
-                    text.setText("");
-                    setPrompting(false);
-                }
                 if (getClient() != null && getClient()
                         .hasEventListeners(VTextualDate.this, EventId.FOCUS)) {
                     getClient().updateVariable(getId(), EventId.FOCUS, "",
@@ -95,11 +81,6 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                 text.removeStyleName(VTextField.CLASSNAME + "-"
                         + VTextField.CLASSNAME_FOCUS);
                 String value = getText();
-                setPrompting(inputPrompt != null
-                        && (value == null || "".equals(value)));
-                if (prompting) {
-                    text.setText(readonly ? "" : inputPrompt);
-                }
                 if (getClient() != null && getClient()
                         .hasEventListeners(VTextualDate.this, EventId.BLUR)) {
                     getClient().updateVariable(getId(), EventId.BLUR, "", true);
@@ -204,15 +185,6 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         text.setEnabled(enabled);
     }
 
-    protected void setPrompting(boolean prompting) {
-        this.prompting = prompting;
-        if (prompting) {
-            addStyleDependentName(CLASSNAME_PROMPT);
-        } else {
-            removeStyleDependentName(CLASSNAME_PROMPT);
-        }
-    }
-
     @Override
     @SuppressWarnings("deprecation")
     public void onChange(ChangeEvent event) {
@@ -307,23 +279,35 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         text.setFocus(true);
     }
 
-    protected String getText() {
-        if (prompting) {
-            return "";
+    /**
+     * Sets the placeholder for this textual date input.
+     *
+     * @param placeholder
+     *            the placeholder to set, or {@code null} to clear
+     */
+    public void setPlaceholder(String placeholder) {
+        if (placeholder != null) {
+            text.getElement().setAttribute("placeholder", placeholder);
+        } else {
+            text.getElement().removeAttribute("placeholder");
         }
+    }
+
+    /**
+     * Gets the set placeholder this textual date input, or an empty string if
+     * none is set.
+     *
+     * @return the placeholder or an empty string if none set
+     */
+    public String getPlaceHolder() {
+        return text.getElement().getAttribute("placeholder");
+    }
+
+    protected String getText() {
         return text.getText();
     }
 
     protected void setText(String text) {
-        if (inputPrompt != null && (text == null || "".equals(text))
-                && !this.text.getStyleName().contains(VTextField.CLASSNAME + "-"
-                        + VTextField.CLASSNAME_FOCUS)) {
-            text = readonly ? "" : inputPrompt;
-            setPrompting(true);
-        } else {
-            setPrompting(false);
-        }
-
         this.text.setText(text);
     }
 

@@ -15,6 +15,7 @@
  */
 package com.vaadin.shared.ui.datefield;
 
+import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.annotations.NoLayout;
 
 public class DateFieldState extends TextualDateFieldState {
@@ -27,4 +28,7 @@ public class DateFieldState extends TextualDateFieldState {
     public boolean textFieldEnabled = true;
     @NoLayout
     public String descriptionForAssistiveDevices = DESCRIPTION_FOR_ASSISTIVE_DEVICES;
+    @NoLayout
+    @DelegateToWidget
+    public String placeholder = null;
 }
