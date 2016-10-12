@@ -563,14 +563,20 @@ We can also define our own status handler to provide a custom way of handling st
 
 [source, java]
 ----
+// We will first set the status label's content mode to HTML
+// in order to display generated error messages separated by a <br> tag
+formStatusLabel.setContentMode(ContentMode.HTML);
+
 BinderValidationStatusHandler defaultHandler = binder.getValidationStatusHandler();
 
 binder.setValidationStatusHandler(status -> {
     // create an error message on failed bean level validations
     List<Result<?>> errors = status.getBeanValidationErrors();
+    // collect all bean level error messages into a single string,
+    // separating each message with a <br> tag
     String errorMessage = errors.stream().map(Result::getMessage)
-        .map(o -> o.get()).collect(Collectors.joining("\n"));
-    // show error in a label
+        .map(o -> o.get()).collect(Collectors.joining("<br>"));
+    // finally, display all bean level validation errors in a single label
     formStatusLabel.setValue(errorMessage);
     formStatusLabel.setVisible(!errorMessage.isEmpty());
 
