@@ -410,4 +410,22 @@ public class GridColumnsTest {
 
         assertThat(firstColumn.getHeaderCaption(), is("Column0"));
     }
+
+    @Test(expected = IllegalStateException.class)
+    public void addColumnManyTimes() {
+        grid.removeAllColumns();
+        grid.addColumn("column0");
+        grid.addColumn("column0");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setColumnDuplicates() {
+        grid.removeAllColumns();
+        grid.setColumns("column0", "column0");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setColumnOrderDuplicates() {
+        grid.setColumnOrder("column0", "column0");
+    }
 }
