@@ -104,6 +104,7 @@ import com.vaadin.shared.ui.grid.selection.MultiSelectionModelState;
 import com.vaadin.shared.ui.grid.selection.SingleSelectionModelServerRpc;
 import com.vaadin.shared.ui.grid.selection.SingleSelectionModelState;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.Grid.SelectionModel;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
@@ -5305,6 +5306,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *            properties in the desired column order
      */
     public void setColumns(Object... propertyIds) {
+        if (SharedUtil.containsDuplicates(propertyIds)) {
+            throw new IllegalArgumentException(
+                    "The propertyIds array contains duplicates: "
+                            + SharedUtil.getDuplicates(propertyIds));
+        }
         Set<?> removePids = new HashSet<Object>(columns.keySet());
         removePids.removeAll(Arrays.asList(propertyIds));
         for (Object removePid : removePids) {
@@ -5327,6 +5333,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *            properties in the order columns should be
      */
     public void setColumnOrder(Object... propertyIds) {
+        if (SharedUtil.containsDuplicates(propertyIds)) {
+            throw new IllegalArgumentException(
+                    "The propertyIds array contains duplicates: "
+                            + SharedUtil.getDuplicates(propertyIds));
+        }
         List<String> columnOrder = new ArrayList<String>();
         for (Object propertyId : propertyIds) {
             if (columns.containsKey(propertyId)) {
