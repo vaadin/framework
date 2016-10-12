@@ -126,6 +126,31 @@ public class SharedUtil implements Serializable {
         return join(parts, " ");
     }
 
+    /**
+     * Converts an UPPER_CASE_STRING to a human friendly format (Upper Case
+     * String).
+     * <p>
+     * Splits words on {@code _}. Examples:
+     * <p>
+     * {@literal MY_BEAN_CONTAINER} becomes {@literal My Bean Container}
+     * {@literal AWESOME_URL_FACTORY} becomes {@literal Awesome Url Factory}
+     * {@literal SOMETHING} becomes {@literal Something}
+     *
+     * @since
+     * @param upperCaseUnderscoreString
+     *            The input string in UPPER_CASE_UNDERSCORE format
+     * @return A human friendly version of the input
+     */
+    public static String upperCaseUnderscoreToHumanFriendly(
+            String upperCaseUnderscoreString) {
+        String[] parts = upperCaseUnderscoreString.replaceFirst("^_*", "")
+                .split("_");
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = capitalize(parts[i].toLowerCase(Locale.ENGLISH));
+        }
+        return join(parts, " ");
+    }
+
     private static boolean isAllUpperCase(String string) {
         for (int i = 0; i < string.length(); i++) {
             char c = string.charAt(i);
@@ -201,6 +226,11 @@ public class SharedUtil implements Serializable {
         int dotLocation = string.lastIndexOf('.');
         if (dotLocation > 0 && dotLocation < string.length() - 1) {
             string = string.substring(dotLocation + 1);
+        }
+
+        if (string.matches("^[0-9A-Z_]+$")) {
+            // Deal with UPPER_CASE_PROPERTY_IDS
+            return upperCaseUnderscoreToHumanFriendly(string);
         }
 
         return camelCaseToHumanFriendly(string);
