@@ -16,6 +16,9 @@
 package com.vaadin.shared.util;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 
 /**
@@ -145,6 +148,9 @@ public class SharedUtil implements Serializable {
      * @return The constructed string of words and separators
      */
     public static String join(String[] parts, String separator) {
+        if (parts.length == 0) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < parts.length; i++) {
             sb.append(parts[i]);
@@ -264,6 +270,41 @@ public class SharedUtil implements Serializable {
         }
 
         return join(parts, "");
+    }
+
+    /**
+     * Checks if the given array contains duplicates (according to
+     * {@link Object#equals(Object)}.
+     * 
+     * @param values
+     *            the array to check for duplicates
+     * @return <code>true</code> if the array contains duplicates,
+     *         <code>false</code> otherwise
+     */
+    public static boolean containsDuplicates(Object[] values) {
+        int uniqueCount = new HashSet<Object>(Arrays.asList(values)).size();
+        return uniqueCount != values.length;
+    }
+
+    /**
+     * Return duplicate values in the given array in the format
+     * "duplicateValue1, duplicateValue2".
+     * 
+     * @param values
+     *            the values to check for duplicates
+     * @return a comma separated string of duplicates or an empty string if no
+     *         duplicates were found
+     */
+    public static String getDuplicates(Object[] values) {
+        HashSet<Object> set = new HashSet<Object>();
+        LinkedHashSet<String> duplicates = new LinkedHashSet<String>();
+        for (Object o : values) {
+            if (!set.add(o)) {
+                duplicates.add(String.valueOf(o));
+            }
+
+        }
+        return join(duplicates.toArray(new String[duplicates.size()]), ", ");
     }
 
 }

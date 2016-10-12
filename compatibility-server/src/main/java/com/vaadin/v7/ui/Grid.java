@@ -5367,6 +5367,11 @@ public class Grid extends AbstractComponent
      *            properties in the desired column order
      */
     public void setColumns(Object... propertyIds) {
+        if (SharedUtil.containsDuplicates(propertyIds)) {
+            throw new IllegalArgumentException(
+                    "The propertyIds array contains duplicates: "
+                            + SharedUtil.getDuplicates(propertyIds));
+        }
         Set<?> removePids = new HashSet<>(columns.keySet());
         removePids.removeAll(Arrays.asList(propertyIds));
         for (Object removePid : removePids) {
@@ -5389,6 +5394,11 @@ public class Grid extends AbstractComponent
      *            properties in the order columns should be
      */
     public void setColumnOrder(Object... propertyIds) {
+        if (SharedUtil.containsDuplicates(propertyIds)) {
+            throw new IllegalArgumentException(
+                    "The propertyIds array contains duplicates: "
+                            + SharedUtil.getDuplicates(propertyIds));
+        }
         List<String> columnOrder = new ArrayList<>();
         for (Object propertyId : propertyIds) {
             if (columns.containsKey(propertyId)) {
