@@ -572,10 +572,16 @@ BinderValidationStatusHandler defaultHandler = binder.getValidationStatusHandler
 binder.setValidationStatusHandler(status -> {
     // create an error message on failed bean level validations
     List<Result<?>> errors = status.getBeanValidationErrors();
+
     // collect all bean level error messages into a single string,
     // separating each message with a <br> tag
     String errorMessage = errors.stream().map(Result::getMessage)
-        .map(o -> o.get()).collect(Collectors.joining("<br>"));
+        .map(o -> o.get())
+        // sanitize the individual error strings to avoid code injection
+        // since we are displaying the resulting string as HTML
+        .map(errorString -> Jsoup.clean(errorString, Whitelist.simpleText()))
+        .collect(Collectors.joining("<br>"));
+
     // finally, display all bean level validation errors in a single label
     formStatusLabel.setValue(errorMessage);
     formStatusLabel.setVisible(!errorMessage.isEmpty());
