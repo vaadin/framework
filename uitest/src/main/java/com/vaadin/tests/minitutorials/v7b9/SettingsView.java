@@ -13,12 +13,12 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.util.ObjectProperty;
 import com.vaadin.v7.ui.DateField;
 import com.vaadin.v7.ui.InlineDateField;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 public class SettingsView extends Panel implements View {
 

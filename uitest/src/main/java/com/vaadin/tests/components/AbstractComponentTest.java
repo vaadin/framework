@@ -26,7 +26,7 @@ import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.themes.BaseTheme;
+import com.vaadin.v7.ui.themes.BaseTheme;
 
 @Theme("tests-components")
 public abstract class AbstractComponentTest<T extends AbstractComponent> extends

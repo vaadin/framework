@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.closeTo;
 
 import org.junit.Test;
 
-import com.vaadin.ui.themes.ChameleonTheme;
+import com.vaadin.v7.ui.themes.ChameleonTheme;
 
 public class UploadImmediateButtonWidthChameleonTest
         extends UploadImmediateButtonWidthTest {

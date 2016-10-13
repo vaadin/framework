@@ -25,9 +25,9 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.Column;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 @Theme(Reindeer.THEME_NAME)
 public class GridColumnExpand extends AbstractReindeerTestUI {

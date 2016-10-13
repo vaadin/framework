@@ -14,8 +14,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 public class BasicPerformanceTest extends UI {
 

@@ -12,8 +12,8 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 public class LayoutResizeTest extends TestBase {
 

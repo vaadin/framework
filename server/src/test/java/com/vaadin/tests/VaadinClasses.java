@@ -28,7 +28,6 @@ import com.vaadin.ui.PopupView;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.themes.BaseTheme;
 
 @SuppressWarnings("deprecation")
 public class VaadinClasses {
@@ -62,9 +61,9 @@ public class VaadinClasses {
         }
     }
 
-    public static List<Class<? extends BaseTheme>> getThemeClasses() {
+    public static List<Class<? extends Object>> getThemeClasses() {
         try {
-            return findClasses(BaseTheme.class, "com.vaadin.ui.themes");
+            return findClasses(Object.class, "com.vaadin.ui.themes");
         } catch (IOException e) {
             e.printStackTrace();
             return null;

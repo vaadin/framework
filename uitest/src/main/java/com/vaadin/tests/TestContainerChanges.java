@@ -10,7 +10,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
@@ -20,6 +19,7 @@ import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.ListSelect;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 /**
  * @author marc

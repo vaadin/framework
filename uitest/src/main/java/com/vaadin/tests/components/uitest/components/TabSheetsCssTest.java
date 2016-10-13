@@ -5,8 +5,8 @@ import com.vaadin.server.UserError;
 import com.vaadin.tests.components.uitest.TestSampler;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.themes.Reindeer;
-import com.vaadin.ui.themes.Runo;
+import com.vaadin.v7.ui.themes.Reindeer;
+import com.vaadin.v7.ui.themes.Runo;
 
 public class TabSheetsCssTest {
 

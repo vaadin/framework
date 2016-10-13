@@ -48,8 +48,6 @@ import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
-import com.vaadin.ui.themes.Reindeer;
-import com.vaadin.ui.themes.Runo;
 
 /**
  * TabSheet component.
@@ -68,9 +66,7 @@ import com.vaadin.ui.themes.Runo;
  * TabSheet.
  *
  * The {@link TabSheet} can be styled with the .v-tabsheet, .v-tabsheet-tabs and
- * .v-tabsheet-content styles. Themes may also have pre-defined variations of
- * the tab sheet presentation, such as {@link Reindeer#TABSHEET_BORDERLESS},
- * {@link Runo#TABSHEET_SMALL} and several other styles in {@link Reindeer}.
+ * .v-tabsheet-content styles.
  *
  * The current implementation does not load the tabs to the UI before the first
  * time they are shown, but this may change in future releases.

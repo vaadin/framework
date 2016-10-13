@@ -8,8 +8,8 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 public class TreeWithIcons extends TestBase {
 

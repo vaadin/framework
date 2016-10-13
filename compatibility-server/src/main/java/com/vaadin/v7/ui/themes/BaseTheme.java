@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui.themes;
+package com.vaadin.v7.ui.themes;
 
 /**
  * <p>
@@ -34,6 +34,7 @@ package com.vaadin.ui.themes;
  * @since 6.3.0
  *
  */
+@Deprecated
 public class BaseTheme {
 
     public static final String THEME_NAME = "base";

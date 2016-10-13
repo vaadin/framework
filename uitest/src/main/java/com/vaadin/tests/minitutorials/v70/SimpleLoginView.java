@@ -8,11 +8,11 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.v7.data.validator.AbstractValidator;
 import com.vaadin.v7.data.validator.EmailValidator;
 import com.vaadin.v7.ui.PasswordField;
 import com.vaadin.v7.ui.TextField;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 public class SimpleLoginView extends CustomComponent
         implements View, Button.ClickListener {

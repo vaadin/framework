@@ -19,7 +19,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.ProgressBar;
-import com.vaadin.ui.themes.Runo;
+import com.vaadin.v7.ui.themes.Runo;
 
 @Theme(Runo.THEME_NAME)
 public class ProgressBarStaticRuno extends AbstractReindeerTestUI {

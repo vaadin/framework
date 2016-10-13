@@ -7,9 +7,9 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.uitest.TestSampler;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.themes.ChameleonTheme;
-import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.themes.ChameleonTheme;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 public class TablesCssTest extends GridLayout {
 

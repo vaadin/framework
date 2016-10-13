@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.closeTo;
 
 import org.junit.Test;
 
-import com.vaadin.ui.themes.Runo;
+import com.vaadin.v7.ui.themes.Runo;
 
 public class UploadImmediateButtonWidthRunoTest
         extends UploadImmediateButtonWidthTest {

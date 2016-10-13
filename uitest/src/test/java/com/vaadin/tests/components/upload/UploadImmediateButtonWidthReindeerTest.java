@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.closeTo;
 
 import org.junit.Test;
 
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 public class UploadImmediateButtonWidthReindeerTest
         extends UploadImmediateButtonWidthTest {

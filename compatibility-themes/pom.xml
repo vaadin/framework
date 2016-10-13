@@ -7,12 +7,12 @@
         <artifactId>vaadin-root</artifactId>
         <version>8.0-SNAPSHOT</version>
     </parent>
-    <artifactId>vaadin-themes</artifactId>
-    <name>vaadin-themes</name>
+    <artifactId>vaadin-compatibility-themes</artifactId>
+    <name>vaadin-compatibility-themes</name>
     <packaging>jar</packaging>
 
     <url>https://vaadin.com/</url>
-    <description>Vaadin themes</description>
+    <description>Vaadin compatibility themes</description>
 
     <dependencies>
         <!-- Maven plugin scans for vaadin-server... -->
@@ -66,14 +66,14 @@
                                     <directory>src/main/themes</directory>
                                     <filtering>false</filtering>
                                     <excludes>
-                                        <exclude>**/valo/shared/_global.scss</exclude>
+                                        <exclude>**/base.scss</exclude>
                                     </excludes>
                                 </resource>
                                 <resource>
                                     <directory>src/main/themes</directory>
                                     <filtering>true</filtering>
                                     <includes>
-                                        <include>**/valo/shared/_global.scss</include>
+                                        <include>**/base.scss</include>
                                     </includes>
                                 </resource>
                             </resources>
@@ -105,6 +105,120 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>compile-legacy-base</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>compile</classpathScope>
+                            <executable>${java.home}/bin/java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath />
+
+                                <argument>com.vaadin.sass.SassCompiler</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/base/legacy-styles.scss</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/base/legacy-styles.css</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>compile-legacy-chameleon</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>compile</classpathScope>
+                            <executable>${java.home}/bin/java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath />
+
+                                <argument>com.vaadin.sass.SassCompiler</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/chameleon/legacy-styles.scss</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/chameleon/legacy-styles.css</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>compile-legacy-reindeer</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>compile</classpathScope>
+                            <executable>${java.home}/bin/java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath />
+
+                                <argument>com.vaadin.sass.SassCompiler</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/reindeer/legacy-styles.scss</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/reindeer/legacy-styles.css</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>compile-legacy-runo</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>compile</classpathScope>
+                            <executable>${java.home}/bin/java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath />
+
+                                <argument>com.vaadin.sass.SassCompiler</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/runo/legacy-styles.scss</argument>
+                                <argument>
+                                    ${project.build.outputDirectory}/VAADIN/themes/runo/legacy-styles.css</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>smart-sprite-reindeer</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>compile</classpathScope>
+                            <executable>${java.home}/bin/java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath />
+
+                                <argument>org.carrot2.labs.smartsprites.SmartSprites</argument>
+
+                                <argument>--sprite-png-depth</argument>
+                                <argument>AUTO</argument>
+
+                                <argument>--css-file-encoding</argument>
+                                <argument>UTF-8</argument>
+
+                                <argument>--root-dir-path</argument>
+                                <argument>${project.build.outputDirectory}/VAADIN/themes/reindeer</argument>
+
+                                <argument>--log-level</argument>
+                                <argument>WARN</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>generate-export-package</id>
                         <phase>package</phase>
                         <goals>
@@ -125,6 +239,37 @@
                                 <argument>${project.build.directory}/${project.build.finalName}.${project.packaging}</argument>
                                 <argument>VAADIN/themes</argument>
                             </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>repackage-reindeer</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <property name="reindeer.theme.path"
+                                    value="${project.build.outputDirectory}/VAADIN/themes/reindeer/" />
+
+                                <move
+                                    file="${reindeer.theme.path}/styles-sprite.css"
+                                    tofile="${reindeer.theme.path}/styles.css" />
+
+                                <move
+                                    file="${reindeer.theme.path}/legacy-styles-sprite.css"
+                                    tofile="${reindeer.theme.path}/legacy-styles.css" />
+
+                                <gzip
+                                    src="${reindeer.theme.path}/styles.css"
+                                    destfile="${reindeer.theme.path}/styles.css.gz" />
+                            </target>
                         </configuration>
                     </execution>
                 </executions>

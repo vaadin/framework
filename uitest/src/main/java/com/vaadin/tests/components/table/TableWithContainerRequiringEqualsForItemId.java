@@ -8,12 +8,13 @@ import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.v7.data.util.BeanContainer;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.themes.Reindeer;
 
-public class TableWithContainerRequiringEqualsForItemId extends AbstractReindeerTestUI {
+public class TableWithContainerRequiringEqualsForItemId
+        extends AbstractReindeerTestUI {
 
     private MyEntityContainer container = new MyEntityContainer();
     private Log log = new Log(10);
