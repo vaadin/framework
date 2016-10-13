@@ -28,11 +28,19 @@ import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.shared.ui.grid.selection.MultiSelectionModelState;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.MultiSelectionModel;
-import com.vaadin.ui.Grid.SelectionMode;
 
 public class MultiSelectionModelTest {
+
+    private static class MultiSelectionModel
+            extends com.vaadin.ui.Grid.MultiSelectionModel {
+        @Override
+        protected MultiSelectionModelState getState() {
+            // Overridden to be accessible from test
+            return super.getState();
+        }
+    }
 
     private Object itemId1Present = "itemId1Present";
     private Object itemId2Present = "itemId2Present";
@@ -52,8 +60,8 @@ public class MultiSelectionModelTest {
     public void setUp() {
         dataSource = createDataSource();
         grid = new Grid(dataSource);
-        grid.setSelectionMode(SelectionMode.MULTI);
-        model = (MultiSelectionModel) grid.getSelectionModel();
+        model = new MultiSelectionModel();
+        grid.setSelectionModel(model);
     }
 
     @After
@@ -102,6 +110,17 @@ public class MultiSelectionModelTest {
         }
 
         verifyCurrentSelection(itemId1Present, itemId2Present);
+    }
+
+    @Test
+    public void testSelectAllWithoutItems() throws Throwable {
+        Assert.assertFalse(model.getState().allSelected);
+        dataSource.removeAllItems();
+        Assert.assertFalse(model.getState().allSelected);
+        model.select();
+        Assert.assertFalse(model.getState().allSelected);
+        model.deselect();
+        Assert.assertFalse(model.getState().allSelected);
     }
 
     @Test

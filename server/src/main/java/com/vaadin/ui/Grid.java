@@ -1878,7 +1878,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         private void updateAllSelectedState() {
             int totalRowCount = getParentGrid().datasource.size();
             int rows = Math.min(totalRowCount, selectionLimit);
-            if (getState().allSelected != selection.size() >= rows) {
+            if (totalRowCount == 0) {
+                getState().allSelected = false;
+            } else {
                 getState().allSelected = selection.size() >= rows;
             }
         }
