@@ -18,6 +18,10 @@ package com.vaadin.tests.performance;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.annotation.WebServlet;
+
+import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.server.VaadinServlet;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Grid;
@@ -27,6 +31,17 @@ import com.vaadin.ui.Grid;
  *
  */
 public class GridMemory extends AbstractBeansMemoryTest<Grid<Person>> {
+
+    public static final String PATH = "/grid-memory/";
+
+    /**
+     * The main servlet for the application.
+     */
+    @WebServlet(urlPatterns = PATH
+            + "*", name = "GridServlet", asyncSupported = true)
+    @VaadinServletConfiguration(ui = GridMemory.class, productionMode = false)
+    public static class Servlet extends VaadinServlet {
+    }
 
     @Override
     protected Grid<Person> createComponent() {

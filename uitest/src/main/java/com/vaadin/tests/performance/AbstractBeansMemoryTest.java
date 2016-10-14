@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.performance;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
@@ -24,34 +25,65 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.HasComponents;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+
+import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
 
 /**
  * @author Vaadin Ltd
  *
  */
 public abstract class AbstractBeansMemoryTest<T extends AbstractComponent>
-        extends AbstractTestUI {
+        extends UI {
 
     private int dataSize;
     private boolean isInMemory;
     private boolean isDataOnly;
 
-    @Override
-    protected void setup(VaadinRequest request) {
-        T component = createComponent();
-        setData(null, 1000000, component, true);
-        addComponent(createMenu(component));
+    private Label logLabel;
+    private Label memoryLabel;
 
-        addComponent(component);
+    @Override
+    protected void init(VaadinRequest request) {
+        String items = request.getParameter("items");
+        int itemsCount = 1;
+        if (items != null) {
+            itemsCount = Integer.parseInt(items);
+        }
+
+        VerticalLayout layout = new VerticalLayout();
+        setContent(layout);
+        layout.addComponent(new Label(getClass().getSimpleName()));
+
+        memoryLabel = new Label();
+        memoryLabel.setId("memory");
+        layout.addComponent(memoryLabel);
+
+        logLabel = new Label();
+        logLabel.setId("log");
+        layout.addComponent(logLabel);
+
+        T component = createComponent();
+        setData(null, itemsCount, component, true);
+        layout.addComponent(createMenu(component));
+
+        layout.addComponent(component);
+
+        Button close = new Button("Close UI", event -> close());
+        close.setId("close");
+        layout.addComponent(close);
     }
 
     protected abstract T createComponent();
@@ -92,12 +124,19 @@ public abstract class AbstractBeansMemoryTest<T extends AbstractComponent>
 
     protected abstract void setBackendContainer(T component, List<Person> data);
 
+    @Override
+    public VerticalLayout getContent() {
+        return (VerticalLayout) super.getContent();
+    }
+
+    @SuppressWarnings("restriction")
     private void setData(MenuItem item, int size, T component,
             boolean memoryContainer) {
         if (item != null) {
             MenuItem parent = item.getParent();
             parent.getChildren().stream().filter(itm -> !itm.equals(item))
                     .forEach(itm -> itm.setChecked(false));
+            logLabel.setValue(item.getText());
         }
         dataSize = size;
         isInMemory = memoryContainer;
@@ -112,6 +151,24 @@ public abstract class AbstractBeansMemoryTest<T extends AbstractComponent>
             setInMemoryContainer(component, persons);
         } else {
             setBackendContainer(component, persons);
+        }
+
+        HasComponents container = component.getParent();
+        setParent(component, null);
+        memoryLabel.setValue(
+                String.valueOf(ObjectSizeCalculator.getObjectSize(component)));
+
+        setParent(component, container);
+    }
+
+    private void setParent(Component component, Component parent) {
+        try {
+            Field field = AbstractComponent.class.getDeclaredField("parent");
+            field.setAccessible(true);
+            field.set(component, parent);
+        } catch (NoSuchFieldException | SecurityException
+                | IllegalArgumentException | IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -141,10 +198,12 @@ public abstract class AbstractBeansMemoryTest<T extends AbstractComponent>
     }
 
     private void createContainerSizeMenu(MenuItem menu, T component) {
-        List<MenuItem> items = IntStream.of(1, 100000, 500000, 1000000)
+        List<MenuItem> items = IntStream.of(1, 10000, 100000, 500000, 1000000)
                 .mapToObj(size -> addContainerSizeMenu(size, menu, component))
                 .collect(Collectors.toList());
-        items.get(items.size() - 1).setChecked(true);
+        if (dataSize == 1) {
+            items.get(0).setChecked(true);
+        }
     }
 
     private MenuItem addContainerSizeMenu(int size, MenuItem menu,

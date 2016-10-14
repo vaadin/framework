@@ -680,6 +680,15 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>measurements</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+        </profile>
     </profiles>
 
 </project>

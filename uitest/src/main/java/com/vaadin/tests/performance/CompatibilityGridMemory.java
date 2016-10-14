@@ -19,6 +19,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import javax.servlet.annotation.WebServlet;
+
+import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.server.VaadinServlet;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.v7.data.Item;
@@ -32,6 +36,17 @@ import com.vaadin.v7.ui.Grid;
  *
  */
 public class CompatibilityGridMemory extends AbstractBeansMemoryTest<Grid> {
+
+    public static final String PATH = "/grid-compatibility-memory/";
+
+    /**
+     * The main servlet for the application.
+     */
+    @WebServlet(urlPatterns = PATH
+            + "*", name = "CompatibilityGridServlet", asyncSupported = true)
+    @VaadinServletConfiguration(ui = CompatibilityGridMemory.class, productionMode = false, widgetset = "com.vaadin.v7.Vaadin7WidgetSet")
+    public static class Servlet extends VaadinServlet {
+    }
 
     private static class ColumnGenerator
             extends PropertyValueGenerator<String> {
