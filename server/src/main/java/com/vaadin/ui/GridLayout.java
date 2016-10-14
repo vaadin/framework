@@ -740,7 +740,7 @@ public class GridLayout extends AbstractLayout
 
         // Forget expands for removed columns
         if (columns < getColumns()) {
-            for (int i = columns - 1; i < getColumns(); i++) {
+            for (int i = columns; i < getColumns(); i++) {
                 columnExpandRatio.remove(i);
                 getState().explicitColRatios.remove(i);
             }
@@ -790,7 +790,7 @@ public class GridLayout extends AbstractLayout
         }
         // Forget expands for removed rows
         if (rows < getRows()) {
-            for (int i = rows - 1; i < getRows(); i++) {
+            for (int i = rows; i < getRows(); i++) {
                 rowExpandRatio.remove(i);
                 getState().explicitRowRatios.remove(i);
             }
